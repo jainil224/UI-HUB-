@@ -5,13 +5,13 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Anton", sans-serif;
   --font-heading: "Space+Grotesk", sans-serif;
-  --color-brand-orange: #FF5C00;
-  --color-brand-black: #0A0A0A;
+  --color-brand-green: #00FF00;
+  --color-brand-black: #000000;
 }
 
 @layer base {
   body {
-    @apply bg-brand-black text-white selection:bg-brand-orange selection:text-white;
+    @apply bg-brand-black text-white selection:bg-brand-green selection:text-white;
   }
 }
 
@@ -19,8 +19,8 @@
   @apply bg-white/5 backdrop-blur-lg border border-white/10;
 }
 
-.orange-glow {
-  box-shadow: 0 0 20px rgba(255, 92, 0, 0.3);
+.green-glow {
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
 }
 
 .text-stroke {
