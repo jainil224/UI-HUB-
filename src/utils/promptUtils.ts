@@ -1,71 +1,87 @@
 export type AISystem = 'antigravity' | 'lovable' | 'cursor';
 
+export interface VibeMeta {
+    behavior: string;
+    states: {
+        from: string;
+        to: string;
+    };
+    cssProperties: string[];
+}
+
 interface PromptData {
     animationName: string;
     language: 'js' | 'ts';
     styling: 'tailwind' | 'css';
+    meta: VibeMeta;
 }
 
 export const generateVibePrompt = (tool: AISystem, data: PromptData): string => {
-    const { animationName, language, styling } = data;
+    const { animationName, language, styling, meta } = data;
     const langFull = language === 'ts' ? 'TypeScript' : 'JavaScript';
     const styleFull = styling === 'tailwind' ? 'Tailwind CSS' : 'Vanilla CSS';
 
-    const baseRequirements = `
-- Feature: ${animationName}
-- Technology: React, ${langFull}, ${styleFull}
-- Core Logic: Strictly preserve existing UI layout, theme, and spacing.
-- Animation: Must be smooth, high-performance, and production-ready.
-- Interactivity: Include a clear way to trigger/reset the animation.
+    const baseContext = `
+Animation: ${animationName}
+Behavior: ${meta.behavior}
+States:
+- From: ${meta.states.from}
+- To: ${meta.states.to}
+Key CSS: ${meta.cssProperties.join(', ')}
+Stack: React, ${langFull}, ${styleFull}
 `;
 
-    const templates: Record<AISystem, string> = {
+    const instructions = {
         antigravity: `
-# GOAL: Implement ${animationName}
-Develop a premium, highly-interactive text animation component.
+# ROLE: Senior Frontend Engineer
+# TASK: Implement ${animationName} component
 
-## SYSTEM REQUIREMENTS
-${baseRequirements}
+## COMPONENT SPECIFICATIONS
+${baseContext}
 
-## TECHNICAL SPECIFICATIONS
-- Use modern best practices for ${langFull} and ${styleFull}.
-- Ensure the animation logic is encapsulated and reusable.
-- Provide a clean, modular implementation without external animation libraries if possible, or use framer-motion/gsap if specified in the existing codebase.
+## IMPLEMENTATION RULES
+1. **No UI Changes**: Strictly preserve the existing layout, theme, and spacing.
+2. **Encapsulation**: Component must be self-contained and modular.
+3. **Performance**: Use CSS transitions or framer-motion for 60fps performance.
+4. **Trigger**: Implement a clear trigger mechanism (e.g., on mount or hover).
+5. **Code Style**: Production-ready ${langFull} with clean architecture.
 
-## OUTPUT RULES
-- Do NOT modify the surrounding page structure.
-- Return only the component code and necessary styles.
-- Include a brief comment on how to integrate the component.
+## OUTPUT FORMAT
+- Return ONLY the component code.
+- Ensure it is copy-paste ready into the UI-HUB project.
 `,
         lovable: `
-I want to add a beautiful "${animationName}" to my React project.
+Hi! I want to add a beautiful "${animationName}" to my React site.
 
-### Technical Details:
+### What it should do:
+${meta.behavior}
+It moves from "${meta.states.from}" to "${meta.states.to}".
+
+### My Tech Stack:
 - Language: ${langFull}
 - Styling: ${styleFull}
-${baseRequirements}
 
-### Design Vibe:
-- Modern, premium, and professional.
-- Smooth transitions and subtle micro-interactions.
-- Must work perfectly on all screen sizes.
-
-Please provide the complete, working code that I can drop directly into my project. Make sure it doesn't break any existing styles!
+### Requirements:
+- Make it look premium and smooth.
+- It must be responsive and work well with my existing design.
+- Please provide the full working code!
 `,
         cursor: `
 Implement ${animationName} component.
-Stack: React, ${langFull}, ${styleFull}.
+React, ${langFull}, ${styleFull}.
 
-Requirements:
-${baseRequirements}
+Meta:
+- Behavior: ${meta.behavior}
+- States: ${meta.states.from} -> ${meta.states.to}
+- Styles: ${meta.cssProperties.join(', ')}
 
-Implementation Logic:
-1. Create a standalone component for the animation.
-2. Use ${styling === 'tailwind' ? 'Tailwind utility classes' : 'scscoped CSS'} for styling.
-3. Ensure performance optimization for high-density text.
-4. No extra explanations, just clean, production-ready code.
+Guidelines:
+- Modular implementation.
+- Clean ${langFull} patterns.
+- Direct output, no filler.
+- Ensure 100% working logic.
 `
     };
 
-    return templates[tool].trim();
+    return instructions[tool].trim();
 };

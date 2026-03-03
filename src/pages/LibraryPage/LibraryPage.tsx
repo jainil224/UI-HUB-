@@ -53,6 +53,12 @@ const LibraryPage = () => {
                 { id: "blocks", name: "Blocks", prompt: "Generate a block-based grid animation." },
                 { id: "animated-beam", name: "Animated Beam", prompt: "Generate an animated beam connecting components." }
             ]
+        },
+        {
+            name: "Background",
+            items: [
+                { id: "grid-background", name: "Grid Background", prompt: "Generate an animated grid background effect." }
+            ]
         }
     ];
 
@@ -91,9 +97,9 @@ const LibraryPage = () => {
                 <div className="max-w-6xl mx-auto">
                     <AnimatePresence mode="wait">
                         <div key={activeComponentId}>
-                            <ComponentDetail 
-                                item={activeItem} 
-                                onBack={() => {}} 
+                            <ComponentDetail
+                                item={activeItem}
+                                onBack={() => { }}
                             />
                         </div>
                     </AnimatePresence>

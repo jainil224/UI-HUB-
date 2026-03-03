@@ -20,6 +20,8 @@ const Hero = () => {
                 </video>
                 {/* Enhanced Dynamic Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-black/80 z-10" />
+                {/* Surgical Watermark Hide */}
+                <div className="absolute bottom-0 right-0 w-32 h-16 bg-black z-20 pointer-events-none" />
             </div>
 
             {/* Grid Pattern - Adjusted for mobile */}
