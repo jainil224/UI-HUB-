@@ -265,5 +265,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("sparkles-background", "Sparkles Background"),
         code: `import { SparklesBackground } from '@/components/ui/sparkles-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <SparklesBackground title="Sparkles background" />\n  </div>\n);`,
         vibePrompt: "Create a beautiful twinkling sparkles background effect with high-performance WebGL particles."
+    },
+    {
+        id: "isometric-grid-background",
+        title: "Isometric Grid Background",
+        category: "background",
+        preview: renderComponent("isometric-grid-background", "Isometric Grid Background"),
+        code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground title="Tailwind is Awesome" />\n  </div>\n);`,
+        vibePrompt: "Create a mesmerizing, skewed isometric grid background that illuminates with random colors on hover."
     }
 ];

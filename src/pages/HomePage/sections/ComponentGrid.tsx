@@ -14,7 +14,7 @@ const showcaseIds = [
     'spotlight-cards',
     'beam-grid-background',
     'wavy-text',
-    'image-reveal',
+    'isometric-grid-background',
     'blocks'
 ];
 
