@@ -424,24 +424,24 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     <div className="flex flex-wrap gap-4">
                         <button
                             onClick={() => setTab('preview')}
-                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
                         >
-                            <Eye size={16} />
+                            <Eye size={14} className="md:w-4 md:h-4" />
                             Preview
                         </button>
                         <button
                             onClick={() => setTab('code')}
-                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
                         >
-                            <Code size={16} />
+                            <Code size={14} className="md:w-4 md:h-4" />
                             Code
                         </button>
                         <button
                             onClick={() => setTab('vibe')}
-                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-brand-green text-black border border-brand-green shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'bg-brand-green/10 text-brand-green border border-brand-green/30 hover:bg-brand-green/20 hover:border-brand-green/60 hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]'}`}
                         >
-                            <Zap size={16} />
-                            Vibe Prompt
+                            <Zap size={14} className={`${tab === 'vibe' ? 'fill-black' : ''} md:w-4 md:h-4`} />
+                            Vibe
                         </button>
                     </div>
 
@@ -454,8 +454,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 onClick={() => setResetKey(prev => prev + 1)}
                                 className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green hover:bg-brand-green hover:text-black transition-all text-sm font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.15)] hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] shrink-0 group"
                             >
-                                <RotateCcw key={resetKey} size={16} className={`${resetKey > 0 ? 'animate-spin-once' : ''} transition-transform group-hover:-rotate-90`} />
-                                Replay Animation
+                                <RotateCcw key={resetKey} size={14} className={`${resetKey > 0 ? 'animate-spin-once' : ''} transition-transform group-hover:-rotate-90 md:w-4 md:h-4`} />
+                                Replay
                             </motion.button>
                         )}
                     </AnimatePresence>
@@ -471,9 +471,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         exit={{ opacity: 0, x: 20 }}
                         className="space-y-12"
                     >
-                        <div className="aspect-video w-full glass rounded-[3rem] relative overflow-hidden flex items-center justify-center group bg-black/20 border border-white/5">
-                            <div className="text-center w-full px-8">
-                                <div className="flex justify-center" key={resetKey}>
+                        <div className="aspect-[4/3] md:aspect-video w-full glass rounded-[2rem] md:rounded-[3rem] relative overflow-hidden flex items-center justify-center group bg-black/20 border border-white/5">
+                            <div className="text-center w-full px-4 md:px-8">
+                                <div className="flex justify-center scale-75 md:scale-100" key={resetKey}>
                                     {item.preview}
                                 </div>
                             </div>
@@ -481,9 +481,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                         {/* Props Table */}
                         {componentConfig.props.length > 0 && (
-                            <section className="space-y-8">
-                                <h3 className="text-3xl font-display uppercase tracking-tight text-white px-2">Props</h3>
-                                <div className="glass rounded-[2rem] border border-white/5 overflow-hidden bg-black/20 p-4">
+                            <section className="space-y-6 md:space-y-8">
+                                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white px-2">Props</h3>
+                                <div className="glass rounded-[1.5rem] md:rounded-[2rem] border border-white/5 overflow-hidden bg-black/20 p-2 md:p-4">
                                     <PropsTable props={componentConfig.props} />
                                 </div>
                             </section>
@@ -499,19 +499,19 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     >
                         {/* Install Section */}
                         <section>
-                            <h3 className="text-3xl font-display uppercase tracking-tight text-white mb-8">Install</h3>
-                            <div className="flex gap-4 mb-8">
+                            <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white mb-6 md:mb-8">Install</h3>
+                            <div className="flex flex-wrap gap-2 md:gap-4 mb-6 md:mb-8">
                                 <button
                                     onClick={() => setInstallMethod('cli')}
-                                    className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest border transition-all ${installMethod === 'cli' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:text-white'}`}
+                                    className={`px-5 md:px-6 py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest border transition-all ${installMethod === 'cli' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:text-white'}`}
                                 >CLI</button>
                                 <button
                                     onClick={() => setInstallMethod('manual')}
-                                    className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest border transition-all ${installMethod === 'manual' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:text-white'}`}
+                                    className={`px-5 md:px-6 py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest border transition-all ${installMethod === 'manual' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:text-white'}`}
                                 >Manual</button>
                             </div>
 
-                            <div className="glass rounded-3xl overflow-hidden border border-white/5 bg-black/20">
+                            <div className="glass rounded-2xl md:rounded-3xl overflow-hidden border border-white/5 bg-black/20">
                                 <AnimatePresence mode="wait">
                                     {installMethod === 'manual' && (
                                         <motion.div
@@ -611,72 +611,71 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         className="space-y-12"
                     >
                         {/* Tool Selector */}
-                        <section className="space-y-8">
-                            <h3 className="text-3xl font-display uppercase tracking-tight text-white px-2">Select AI Tool</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <section className="space-y-6 md:space-y-8">
+                            <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white px-2">Select AI Tool</h3>
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                                 {(['antigravity', 'lovable', 'cursor', 'advance'] as const).map(tool => (
                                     <button
                                         key={tool}
                                         onClick={() => setAiSystem(tool)}
-                                        className={`p-8 rounded-[2rem] border transition-all text-left relative overflow-hidden group h-[180px] flex flex-col justify-between ${aiSystem === tool ? 'bg-brand-green/10 border-brand-green/30 shadow-[0_0_30px_rgba(0,255,0,0.1)]' : 'bg-white/5 border-white/10 hover:border-brand-green/30 hover:shadow-[0_0_30px_rgba(0,255,0,0.1)] hover:scale-[1.03] duration-300'}`}
+                                        className={`p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border transition-all text-left relative overflow-hidden group h-[140px] md:h-[180px] flex flex-col justify-between ${aiSystem === tool ? 'bg-brand-green/10 border-brand-green/30 shadow-[0_0_30px_rgba(0,255,0,0.1)]' : 'bg-white/5 border-white/10 hover:border-brand-green/30 hover:shadow-[0_0_30px_rgba(0,255,0,0.1)] hover:scale-[1.03] duration-300'}`}
                                     >
-                                        <div className="relative z-10">
-                                            <div className="flex items-center justify-between mb-4">
-                                                <p className={`text-[10px] uppercase tracking-widest font-bold ${aiSystem === tool ? 'text-brand-green' : 'text-white/40'}`}>
+                                        <div className="relative z-10 w-full">
+                                            <div className="flex items-center justify-between mb-2 md:mb-4">
+                                                <p className={`text-[8px] md:text-[10px] uppercase tracking-widest font-bold ${aiSystem === tool ? 'text-brand-green' : 'text-white/40'}`}>
                                                     {tool === 'antigravity' ? 'UI Hub' : tool === 'lovable' ? 'Platform' : tool === 'cursor' ? 'IDE' : 'SYSTEM'}
                                                 </p>
                                                 <div className={`transition-all duration-300 ${aiSystem === tool ? 'text-brand-green scale-110' : 'text-white/20 group-hover:text-brand-green'}`}>
                                                     {tool === 'antigravity' ? (
-                                                        <Zap size={24} />
+                                                        <Zap size={18} className="md:w-6 md:h-6" />
                                                     ) : tool === 'lovable' ? (
-                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                        <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
                                                             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                                         </svg>
                                                     ) : tool === 'cursor' ? (
-                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                        <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
                                                             <path d="M13 3l-2 3H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5l2-3H13z" />
                                                             <path d="M11 11v4M9 13h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                                                         </svg>
                                                     ) : (
-                                                        <Brain size={24} />
+                                                        <Brain size={18} className="md:w-6 md:h-6" />
                                                     )}
                                                 </div>
                                             </div>
-                                            <h4 className="text-2xl font-display uppercase tracking-tight text-white w-full pr-2">
-                                                {tool === 'advance' ? 'Advance AI Prompt' : tool.charAt(0).toUpperCase() + tool.slice(1)}
+                                            <h4 className="text-sm md:text-2xl font-display uppercase tracking-tight text-white w-full pr-2">
+                                                {tool === 'advance' ? 'Advance' : tool.charAt(0).toUpperCase() + tool.slice(1)}
                                             </h4>
                                         </div>
                                         {aiSystem === tool && (
                                             <motion.div layoutId="tool-glow" className="absolute inset-0 bg-brand-green/2 blur-2xl pointer-events-none" />
                                         )}
-                                        <div className={`mt-auto flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${aiSystem === tool ? 'text-brand-green opacity-100' : 'text-brand-green opacity-0 group-hover:opacity-100'}`}>
+                                        <div className={`mt-auto flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${aiSystem === tool ? 'text-brand-green opacity-100' : 'text-brand-green opacity-0 group-hover:opacity-100'}`}>
                                             <div className={`w-1 h-1 rounded-full ${aiSystem === tool ? 'bg-brand-green animate-pulse' : 'bg-brand-green'}`} />
-                                            {tool === 'advance' ? 'Pro Mode' : 'Active System'}
+                                            {tool === 'advance' ? 'Pro' : 'Active'}
                                         </div>
                                     </button>
                                 ))}
-
                             </div>
                         </section>
 
                         {/* Prompt Display */}
-                        <section className="space-y-8">
-                            <div className="flex items-center justify-between px-2">
-                                <h3 className="text-3xl font-display uppercase tracking-tight text-white">Vibe Prompt</h3>
+                        <section className="space-y-6 md:space-y-8">
+                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-2">
+                                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white">Vibe Prompt</h3>
                                 <button
                                     onClick={() => {
                                         navigator.clipboard.writeText(fullVibePrompt);
                                         setCopied('vibe');
                                         setTimeout(() => setCopied(null), 2000);
                                     }}
-                                    className={`flex items-center gap-3 px-8 py-3 rounded-xl transition-all text-sm font-bold uppercase tracking-widest ${copied === 'vibe' ? 'bg-brand-green text-black' : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'}`}
+                                    className={`flex items-center justify-center gap-3 px-6 md:px-8 py-3 rounded-xl transition-all text-[10px] md:text-sm font-bold uppercase tracking-widest ${copied === 'vibe' ? 'bg-brand-green text-black' : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'}`}
                                 >
                                     {copied === 'vibe' ? <Check size={18} /> : <Copy size={18} />}
                                     {copied === 'vibe' ? 'Copied!' : 'Copy Prompt'}
                                 </button>
                             </div>
-                            <div className="glass rounded-[2.5rem] overflow-hidden border border-white/5 relative bg-black/40">
-                                <div className="p-8 text-xs leading-relaxed max-h-[600px] overflow-auto">
+                            <div className="glass rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/5 relative bg-black/40">
+                                <div className="p-6 md:p-8 text-[10px] md:text-xs leading-relaxed max-h-[400px] md:max-h-[600px] overflow-auto">
                                     <pre className="font-sans whitespace-pre-wrap"><CodeHighlighter code={fullVibePrompt} /></pre>
                                 </div>
                             </div>

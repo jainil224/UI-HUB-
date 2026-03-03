@@ -37,8 +37,8 @@ const BackgroundShowcase = () => {
                             key={bg.id}
                             onClick={() => setActiveBg(bg.id)}
                             className={`px-6 py-3 rounded-full font-medium transition-all duration-300 ${activeBg === bg.id
-                                    ? 'bg-brand-green text-black scale-105 shadow-[0_0_20px_rgba(0,255,0,0.3)]'
-                                    : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                                ? 'bg-brand-green text-black scale-105 shadow-[0_0_20px_rgba(0,255,0,0.3)]'
+                                : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
                                 }`}
                         >
                             {bg.title}

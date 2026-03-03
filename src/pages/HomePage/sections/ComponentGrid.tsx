@@ -20,6 +20,7 @@ const showcaseIds = [
 
 const ComponentGrid = () => {
     const navigate = useNavigate();
+    const [activeHover, setActiveHover] = React.useState<string | null>(null);
 
     // Filter down to the curated list, keeping the original order specified above if possible,
     // or just checking if the array includes the ID.
@@ -41,13 +42,23 @@ const ComponentGrid = () => {
                     <div
                         key={comp!.id}
                         onClick={() => navigate(`/library?id=${comp!.id}`)}
+                        onMouseEnter={() => setActiveHover(comp!.id)}
+                        onMouseLeave={() => setActiveHover(null)}
                         className="group relative h-[320px] bg-[#0A0A0A] rounded-3xl border border-white/[0.05] overflow-hidden flex items-center justify-center hover:bg-[#111111] hover:border-white/[0.1] transition-all duration-300 cursor-pointer"
                     >
                         {/* Interactive Preview Container */}
                         <div className="w-full h-full flex items-center justify-center p-8 absolute inset-0 z-10 transition-transform duration-500 group-hover:scale-105">
-                            {/* For certain effects we might need to restrict their bounds or they might overflow */}
                             <div className="w-full h-full flex items-center justify-center relative overflow-hidden rounded-xl">
-                                {comp!.preview}
+                                {activeHover === comp!.id ? (
+                                    comp!.preview
+                                ) : (
+                                    <div className="flex flex-col items-center gap-4 opacity-20 group-hover:opacity-40 transition-opacity">
+                                        <div className="w-12 h-12 rounded-xl border border-white/20 flex items-center justify-center">
+                                            <span className="text-sm font-bold">{comp!.id.charAt(0).toUpperCase()}</span>
+                                        </div>
+                                        <span className="text-[10px] uppercase tracking-widest font-medium">Click to preview</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
 

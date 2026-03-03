@@ -1,12 +1,18 @@
-import React from 'react';
-import { motion } from 'motion/react';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ExternalLink, Layers, MousePointer2, Layout } from 'lucide-react';
 import backgroundVideo from '../../../Assets/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4';
 
 const Hero = () => {
     return (
-        <section id="hero" className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 py-20 overflow-hidden">
+        <section
+            id="hero"
+            className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 py-20 overflow-hidden scanlines"
+        >
+            {/* Cinematic Overlays */}
+            <div className="absolute inset-0 noise-overlay pointer-events-none z-20" />
+
             {/* Background Video */}
             <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
                 <video
@@ -20,75 +26,123 @@ const Hero = () => {
                     Your browser does not support the video tag.
                 </video>
                 {/* Enhanced Dynamic Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-black/80 z-10" />
-                {/* Surgical Watermark Hide */}
-                <div className="absolute bottom-0 right-0 w-32 h-16 bg-black z-20 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90 z-10" />
             </div>
 
-            {/* Grid Pattern - Adjusted for mobile */}
+            {/* Grid Pattern */}
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.05] md:opacity-10 pointer-events-none z-20" />
 
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
                 className="text-center z-30 w-full max-w-4xl"
             >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest mb-8">
-                    <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" />
-                    v2.0 is now live
-                </div>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.2 }}
+                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 border border-brand-green/20 text-[10px] font-bold uppercase tracking-[0.2em] mb-10 backdrop-blur-md"
+                >
+                    <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse shadow-[0_0_8px_#00FF00]" />
+                    <span className="text-brand-green/90">v2.0 is now live</span>
+                </motion.div>
 
-                <h1 className="text-5xl sm:text-7xl md:text-[10rem] font-display leading-[0.85] uppercase tracking-tighter mb-8 shadow-black/50 drop-shadow-2xl px-4">
-                    Craft the <br />
-                    <span className="text-brand-green">Future</span> of UI
+                <h1 className="text-4xl sm:text-6xl md:text-[8.5rem] font-display font-black leading-[0.8] uppercase tracking-[0.08em] mb-12 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] px-4">
+                    <motion.span
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-white/40 text-[0.6em] block tracking-[0.2em] mb-2 font-medium"
+                    >
+                        Craft the
+                    </motion.span>
+                    <motion.span
+                        initial={{ opacity: 0, scale: 1.1 }}
+                        animate={{
+                            opacity: 1,
+                            scale: 1,
+                            textShadow: [
+                                "0 0 10px rgba(0, 255, 26, 0.3)",
+                                "0 0 18px rgba(0, 255, 26, 0.5)",
+                                "0 0 10px rgba(0, 255, 26, 0.3)"
+                            ]
+                        }}
+                        transition={{
+                            opacity: { delay: 0.5, duration: 0.8 },
+                            scale: { delay: 0.5, duration: 0.8 },
+                            textShadow: { repeat: Infinity, duration: 4, ease: "easeInOut" }
+                        }}
+                        className="bg-gradient-to-b from-[#00FF1A] via-[#00FF1A] to-[#008A0E] bg-clip-text text-transparent transition-all duration-700"
+                    >
+                        Future
+                    </motion.span>
+                    <motion.span
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="block text-[0.8em] tracking-[0.15em] mt-2"
+                    >
+                        of UI
+                    </motion.span>
                 </h1>
 
-                <p className="max-w-xl mx-auto text-white/80 text-base md:text-xl mb-12 font-light leading-relaxed drop-shadow-md px-4">
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6 }}
+                    className="max-w-xl mx-auto text-white/50 text-base md:text-lg mb-14 font-light leading-relaxed tracking-wide px-6"
+                >
                     A curated collection of minimal, high-performance UI components built for modern web experiences. Simple, bold, and effective.
-                </p>
+                </motion.p>
 
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-6">
-                    <Link to="/library">
-                        <button className="w-full sm:w-auto bg-brand-green text-black font-bold px-10 py-4 rounded-full text-lg hover:scale-105 active:scale-95 transition-all green-glow">
-                            Component Library
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                    className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-8 px-4"
+                >
+                    <Link to="/library" className="w-full sm:w-auto">
+                        <button className="w-full bg-brand-green text-black font-black px-12 py-5 rounded-full text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all green-glow group relative overflow-hidden">
+                            <span className="relative z-10">Explore Library</span>
+                            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
                         </button>
                     </Link>
-                    <button className="w-full sm:w-auto glass text-white font-bold px-10 py-4 rounded-full text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                        Documentation <ExternalLink size={18} />
+                    <button className="w-full sm:w-auto glass text-white/80 font-bold px-12 py-5 rounded-full text-sm uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-3">
+                        Github Repo <ExternalLink size={16} />
                     </button>
-                </div>
+                </motion.div>
             </motion.div>
 
-            <div className="mt-16 md:mt-24 w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 opacity-80 md:opacity-60 hover:opacity-100 transition-opacity duration-700 z-30 px-6">
-                <div className="glass p-4 md:p-6 rounded-2xl flex items-center gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                        <Layers size={20} className="text-brand-green md:w-6 md:h-6" />
+            <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.9, duration: 1 }}
+                className="mt-16 md:mt-24 w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 z-30 px-4"
+            >
+                {[
+                    { icon: Layers, label: 'Components', value: '500+ Assets' },
+                    { icon: MousePointer2, label: 'Interactions', value: 'Smooth Motion' },
+                    { icon: Layout, label: 'Layouts', value: 'Bento Grids' }
+                ].map((item, i) => (
+                    <div
+                        key={i}
+                        className="group glass p-6 md:p-8 rounded-3xl flex items-center gap-6 border-white/5 hover:border-brand-green/30 hover:bg-brand-green/[0.02] transition-all duration-500 cursor-default"
+                    >
+                        <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center shrink-0 border border-brand-green/20 group-hover:scale-110 transition-transform duration-500 group-hover:bg-brand-green/20 group-hover:shadow-[0_0_20px_rgba(0,255,0,0.2)]">
+                            <item.icon size={24} className="text-brand-green" />
+                        </div>
+                        <div>
+                            <div className="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em] leading-none mb-2 group-hover:text-brand-green/60 transition-colors">
+                                {item.label}
+                            </div>
+                            <div className="text-xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors">
+                                {item.value}
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <div className="text-[10px] text-white/60 font-bold uppercase tracking-widest leading-none mb-1">Components</div>
-                        <div className="text-lg md:text-xl font-bold">500+ Assets</div>
-                    </div>
-                </div>
-                <div className="glass p-4 md:p-6 rounded-2xl flex items-center gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                        <MousePointer2 size={20} className="text-brand-green md:w-6 md:h-6" />
-                    </div>
-                    <div>
-                        <div className="text-[10px] text-white/60 font-bold uppercase tracking-widest leading-none mb-1">Interactions</div>
-                        <div className="text-lg md:text-xl font-bold">Smooth Motion</div>
-                    </div>
-                </div>
-                <div className="glass p-4 md:p-6 rounded-2xl flex items-center gap-4">
-                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                        <Layout size={20} className="text-brand-green md:w-6 md:h-6" />
-                    </div>
-                    <div>
-                        <div className="text-[10px] text-white/60 font-bold uppercase tracking-widest leading-none mb-1">Layouts</div>
-                        <div className="text-lg md:text-xl font-bold">Bento Grids</div>
-                    </div>
-                </div>
-            </div>
+                ))}
+            </motion.div>
         </section>
     );
 };
