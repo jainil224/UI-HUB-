@@ -201,5 +201,37 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("novatrix-background", "Novatrix Background"),
         code: `// Implementation for Novatrix Background\nexport const NovatrixBackground = () => (\n  <div className="w-full h-full bg-gradient-to-br from-indigo-950 to-purple-900 flex items-center justify-center animate-pulse">\n    NOVATRIX NEBULA\n  </div>\n);`,
         vibePrompt: "Create a deep space nebula animated background using WebGL or layered CSS gradients with slow rotation effect."
+    },
+    {
+        id: "beam-grid-background",
+        title: "Beam Grid Background",
+        category: "background",
+        preview: renderComponent("beam-grid-background", "Beam Grid Background"),
+        code: `// ... Beam Grid Background code is quite large, see the repo ...\nimport BeamGridBackground from '@/components/ui/BeamGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px]">\n    <BeamGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n    />\n  </div>\n);`,
+        vibePrompt: "Create a premium Beam grid background that has dynamic light beams traversing a grid with glow."
+    },
+    {
+        id: "fall-beam-background",
+        title: "Fall Beam Background",
+        category: "background",
+        preview: renderComponent("fall-beam-background", "Fall Beam Background"),
+        code: `import FallBeamBackground from '@/components/ui/FallBeamBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <FallBeamBackground\n      className="bg-transparent"\n      lineCount={30}\n      beamColorClass="cyan-400"\n    />\n  </div>\n);`,
+        vibePrompt: "Create a premium Matrix-style glowing vertical falling beams animation."
+    },
+    {
+        id: "hell-background",
+        title: "Hell Background",
+        category: "background",
+        preview: renderComponent("hell-background", "Hell Background"),
+        code: `import HellBackground from '@/components/ui/HellBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <HellBackground color="#DE443B" backdropBlurAmount="none" />\n  </div>\n);`,
+        vibePrompt: "Create a WebGL background effect that simulates a chaotic inferno or hellish environment using GLSL shaders."
+    },
+    {
+        id: "interactive-grid-background",
+        title: "Interactive Grid Background",
+        category: "background",
+        preview: renderComponent("interactive-grid-background", "Interactive Grid Background"),
+        code: `import InteractiveGridBackground from '@/components/ui/InteractiveGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <InteractiveGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n      effectColor="rgba(0,255,0,0.5)"\n      darkEffectColor="rgba(0,255,0,0.5)"\n    />\n  </div>\n);`,
+        vibePrompt: "Create a premium glowing interactive grid background with trailing effect when hovered or idle."
     }
 ];

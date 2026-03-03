@@ -644,3 +644,8 @@ export const GridBackground = () => (
         <div className="text-white/40 font-display text-2xl font-bold uppercase tracking-widest">GRID ALIVE</div>
     </div>
 );
+
+export { default as BeamGridBackground } from '../ui/BeamGridBackground';
+export { default as FallBeamBackground } from '../ui/FallBeamBackground';
+export { default as HellBackground } from '../ui/HellBackground';
+export { default as InteractiveGridBackground } from '../ui/InteractiveGridBackground';
