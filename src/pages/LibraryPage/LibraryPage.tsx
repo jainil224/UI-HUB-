@@ -41,9 +41,9 @@ const LibraryPage = () => {
     ];
 
     return (
-        <div className="pt-20 bg-brand-black min-h-screen text-white flex">
+        <div className="pt-20 bg-brand-black h-screen text-white flex overflow-hidden">
             {/* Sidebar */}
-            <aside className="w-64 border-r border-white/5 p-6 overflow-y-auto hidden md:block shrink-0">
+            <aside className="w-64 border-r border-white/5 p-6 h-full overflow-y-auto hidden md:block shrink-0 scrollbar-hide">
                 {categories.map((cat, idx) => (
                     <div key={idx} className="mb-10">
                         <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-4">{cat.name}</h4>
@@ -63,7 +63,7 @@ const LibraryPage = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 p-8 md:p-12 overflow-y-auto">
+            <main className="flex-1 p-8 md:p-12 h-full overflow-y-auto scrollbar-hide">
                 <div className="max-w-6xl mx-auto">
                     <AnimatePresence mode="wait">
                         <div key={activeComponent.id}>
