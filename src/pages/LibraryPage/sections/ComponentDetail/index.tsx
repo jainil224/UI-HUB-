@@ -441,7 +441,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-brand-green text-black border border-brand-green shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'bg-brand-green/10 text-brand-green border border-brand-green/30 hover:bg-brand-green/20 hover:border-brand-green/60 hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]'}`}
                         >
                             <Zap size={14} className={`${tab === 'vibe' ? 'fill-black' : ''} md:w-4 md:h-4`} />
-                            Vibe
+                            Vibe Prompt
                         </button>
                     </div>
 
