@@ -649,3 +649,7 @@ export { default as BeamGridBackground } from '../ui/BeamGridBackground';
 export { default as FallBeamBackground } from '../ui/FallBeamBackground';
 export { default as HellBackground } from '../ui/HellBackground';
 export { default as InteractiveGridBackground } from '../ui/InteractiveGridBackground';
+export { default as ParticlesBackground } from '../ui/ParticlesBackground';
+export { default as WaveBackground } from '../ui/WaveBackground';
+export { default as LinesBackground } from '../ui/background-paths';
+

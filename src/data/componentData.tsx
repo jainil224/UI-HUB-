@@ -233,5 +233,29 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("interactive-grid-background", "Interactive Grid Background"),
         code: `import InteractiveGridBackground from '@/components/ui/InteractiveGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <InteractiveGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n      effectColor="rgba(0,255,0,0.5)"\n      darkEffectColor="rgba(0,255,0,0.5)"\n    />\n  </div>\n);`,
         vibePrompt: "Create a premium glowing interactive grid background with trailing effect when hovered or idle."
+    },
+    {
+        id: "particles-background",
+        title: "Particles Background",
+        category: "background",
+        preview: renderComponent("particles-background", "Particles Background"),
+        code: `import ParticlesBackground from '@/components/ui/ParticlesBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <ParticlesBackground colors={['#ff223e', '#5d1eb2', '#ff7300']} size={3} />\n  </div>\n);`,
+        vibePrompt: "Create an interactive particles animation background with glowing particles that move dynamically."
+    },
+    {
+        id: "wave-background",
+        title: "Wave Background",
+        category: "background",
+        preview: renderComponent("wave-background", "Wave Background"),
+        code: `import WaveBackground from '@/components/ui/WaveBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <WaveBackground />\n  </div>\n);`,
+        vibePrompt: "Create a WebGL wave background effect."
+    },
+    {
+        id: "lines-background",
+        title: "Lines Background",
+        category: "background",
+        preview: renderComponent("lines-background", "Lines Background"),
+        code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" />\n  </div>\n);`,
+        vibePrompt: "Create an animated background with SVG paths flowing smoothly behind text."
     }
 ];
