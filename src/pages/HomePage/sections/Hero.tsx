@@ -20,11 +20,12 @@ const Hero = () => {
                     muted
                     loop
                     playsInline
-                    className="w-full h-full object-cover object-center"
+                    className="hidden md:block w-full h-full object-cover object-center"
                 >
                     <source src={backgroundVideo} type="video/mp4" />
-                    Your browser does not support the video tag.
                 </video>
+                {/* Mobile Fallback Image */}
+                <div className="md:hidden absolute inset-0 bg-[#050505] bg-[url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2664&auto=format&fit=crop')] bg-cover bg-center opacity-30" />
                 {/* Enhanced Dynamic Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90 z-10" />
             </div>
@@ -44,7 +45,7 @@ const Hero = () => {
                     transition={{ delay: 0.2 }}
                     className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 border border-brand-green/20 text-[10px] font-bold uppercase tracking-[0.2em] mb-10 backdrop-blur-md"
                 >
-                    <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse shadow-[0_0_8px_#00FF00]" />
+                    <span className="w-2 h-2 rounded-full bg-brand-green md:animate-pulse shadow-[0_0_8px_#00FF00]" />
                     <span className="text-brand-green/90">v2.0 is now live</span>
                 </motion.div>
 
@@ -71,7 +72,10 @@ const Hero = () => {
                         transition={{
                             opacity: { delay: 0.5, duration: 0.8 },
                             scale: { delay: 0.5, duration: 0.8 },
-                            textShadow: { repeat: Infinity, duration: 4, ease: "easeInOut" }
+                            textShadow: { repeat: Infinity, duration: 4, ease: "easeInOut", repeatType: "reverse", repeatDelay: 0 }
+                        }}
+                        style={{
+                            textShadow: "0 0 10px rgba(0, 255, 26, 0.3)" // Default for static
                         }}
                         className="bg-gradient-to-b from-[#00FF1A] via-[#00FF1A] to-[#008A0E] bg-clip-text text-transparent transition-all duration-700"
                     >

@@ -9,7 +9,7 @@ export const DockText = () => (
     <motion.div
         initial={{ scale: 0.8, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="text-6xl md:text-8xl font-display font-bold text-brand-green tracking-tighter"
+        className="text-6xl md:text-8xl font-display font-bold text-white tracking-tighter"
     >
         DOCK TEXT
     </motion.div>
