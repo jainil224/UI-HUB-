@@ -5,7 +5,7 @@ import * as VisualEffects from '../components/animations/VisualEffects';
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect";
+    category: "text" | "effect" | "background";
     preview: React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -181,7 +181,7 @@ export const componentList: ComponentItem[] = [
     {
         id: "grid-background",
         title: "Grid Background",
-        category: "effect",
+        category: "background",
         preview: renderComponent("grid-background", "Grid Background"),
         code: `export const GridBackground = () => (\n  <div className="w-full h-full absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>\n);`,
         vibePrompt: "Generate an animated grid background effect with a radial gradient mask."
@@ -189,7 +189,7 @@ export const componentList: ComponentItem[] = [
     {
         id: "hacker-background",
         title: "Hacker Background",
-        category: "effect",
+        category: "background",
         preview: renderComponent("hacker-background", "Hacker Background"),
         code: `// Implementation for Hacker Background\nexport const HackerBackground = () => (\n  <div className="w-full h-full bg-black text-green-500 font-mono flex items-center justify-center">\n    01010101 MATRIX 10101010\n  </div>\n);`,
         vibePrompt: "Create a digital rain matrix hacker background effect using HTML Canvas and requestAnimationFrame in React."
@@ -197,7 +197,7 @@ export const componentList: ComponentItem[] = [
     {
         id: "novatrix-background",
         title: "Novatrix Background",
-        category: "effect",
+        category: "background",
         preview: renderComponent("novatrix-background", "Novatrix Background"),
         code: `// Implementation for Novatrix Background\nexport const NovatrixBackground = () => (\n  <div className="w-full h-full bg-gradient-to-br from-indigo-950 to-purple-900 flex items-center justify-center animate-pulse">\n    NOVATRIX NEBULA\n  </div>\n);`,
         vibePrompt: "Create a deep space nebula animated background using WebGL or layered CSS gradients with slow rotation effect."

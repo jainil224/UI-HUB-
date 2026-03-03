@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
 import { ExternalLink, Layers, MousePointer2, Layout } from 'lucide-react';
 import backgroundVideo from '../../../Assets/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4';
 
@@ -48,9 +49,11 @@ const Hero = () => {
                 </p>
 
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-6">
-                    <button className="w-full sm:w-auto bg-brand-green text-black font-bold px-10 py-4 rounded-full text-lg hover:scale-105 active:scale-95 transition-all green-glow">
-                        Explore Components
-                    </button>
+                    <Link to="/library">
+                        <button className="w-full sm:w-auto bg-brand-green text-black font-bold px-10 py-4 rounded-full text-lg hover:scale-105 active:scale-95 transition-all green-glow">
+                            Component Library
+                        </button>
+                    </Link>
                     <button className="w-full sm:w-auto glass text-white font-bold px-10 py-4 rounded-full text-lg hover:bg-white/10 transition-all flex items-center justify-center gap-2">
                         Documentation <ExternalLink size={18} />
                     </button>

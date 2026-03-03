@@ -9,7 +9,7 @@ interface Category {
 }
 
 const LibraryPage = () => {
-    const defaultComponent = componentList.find(c => c.id === 'font-weight') || componentList[0];
+    const defaultComponent = componentList.find(c => c.id === 'blur-text') || componentList[0];
     const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
 
     // Grouping the structured data into categories dynamically
@@ -21,6 +21,10 @@ const LibraryPage = () => {
         {
             name: "Visual Effects",
             items: componentList.filter(item => item.category === 'effect')
+        },
+        {
+            name: "Backgrounds",
+            items: componentList.filter(item => item.category === 'background')
         }
     ];
 

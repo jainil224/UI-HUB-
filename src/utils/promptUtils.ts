@@ -83,18 +83,18 @@ Guidelines:
 - Ensure 100% working logic.
 `,
         advance: `// ==========================================
-// UI HUB  - AI EXPERT PROMPT
+// UI HUB - AI EXPERT PROMPT
 // ==========================================
 // Component: ${animationName}
-// Language: ${langFull}
+// Language: ${langFull} (${language.toUpperCase()}X)
 // Source: https://ui-hub-design.vercel.app/
 // Description: Premium, accessible, high-performance UI component.
 // ==========================================
 
 /* AI INSTRUCTION:
-1. You are a Senior Frontend Engineer implementing a premium component from UI HUB.
+1. You are a Senior Frontend Engineer implementing a premium component from UI HUB (Lightswind UI).
 2. INTEGRATION CHECKLIST:
-   - Ensure dependencies are installed: npm i clsx tailwind-merge
+   - Ensure dependencies are installed: npm i clsx tailwind-merge framer-motion
    - REQUIRED UTILITY: This component requires a 'cn' helper (lib/utils.ts):
 
 ts
