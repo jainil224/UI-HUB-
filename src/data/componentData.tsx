@@ -257,5 +257,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("lines-background", "Lines Background"),
         code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" />\n  </div>\n);`,
         vibePrompt: "Create an animated background with SVG paths flowing smoothly behind text."
+    },
+    {
+        id: "sparkles-background",
+        title: "Sparkles Background",
+        category: "background",
+        preview: renderComponent("sparkles-background", "Sparkles Background"),
+        code: `import { SparklesBackground } from '@/components/ui/sparkles-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <SparklesBackground title="Sparkles background" />\n  </div>\n);`,
+        vibePrompt: "Create a beautiful twinkling sparkles background effect with high-performance WebGL particles."
     }
 ];

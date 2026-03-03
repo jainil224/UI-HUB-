@@ -1,15 +1,11 @@
 import React from 'react';
 import Hero from './sections/Hero';
-import ButtonShowcase from './sections/ButtonShowcase';
-import CardShowcase from './sections/CardShowcase';
-import HoverEffectShowcase from './sections/HoverEffectShowcase';
+import ComponentGrid from './sections/ComponentGrid';
 
 const HomePage = () => (
     <>
         <Hero />
-        <ButtonShowcase />
-        <CardShowcase />
-        <HoverEffectShowcase />
+        <ComponentGrid />
     </>
 );
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ComponentDetail from './sections/ComponentDetail';
 import { componentList, ComponentItem } from '../../data/componentData';
 
@@ -9,8 +10,19 @@ interface Category {
 }
 
 const LibraryPage = () => {
-    const defaultComponent = componentList.find(c => c.id === 'blur-text') || componentList[0];
+    const location = useLocation();
+    const navigate = useNavigate();
+    const queryParams = new URLSearchParams(location.search);
+    const idFromUrl = queryParams.get('id');
+
+    const defaultComponent = componentList.find(c => c.id === idFromUrl) || componentList.find(c => c.id === 'blur-text') || componentList[0];
     const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
+
+    // Update URL when component changes
+    const handleComponentSelect = (item: ComponentItem) => {
+        setActiveComponent(item);
+        navigate(`/library?id=${item.id}`, { replace: true });
+    };
 
     // Grouping the structured data into categories dynamically
     const categories: Category[] = [
@@ -39,7 +51,7 @@ const LibraryPage = () => {
                             {cat.items.map((item) => (
                                 <li
                                     key={item.id}
-                                    onClick={() => setActiveComponent(item)}
+                                    onClick={() => handleComponentSelect(item)}
                                     className={`cursor-pointer text-sm transition-colors hover:text-brand-green flex items-center justify-between ${activeComponent.id === item.id ? 'text-brand-green font-bold' : 'text-white/60'}`}
                                 >
                                     <span>{item.title}</span>

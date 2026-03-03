@@ -652,4 +652,5 @@ export { default as InteractiveGridBackground } from '../ui/InteractiveGridBackg
 export { default as ParticlesBackground } from '../ui/ParticlesBackground';
 export { default as WaveBackground } from '../ui/WaveBackground';
 export { default as LinesBackground } from '../ui/background-paths';
+export { default as SparklesBackground } from '../ui/sparkles-background';
 

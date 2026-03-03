@@ -16,10 +16,7 @@ const Navbar = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/60">
                 <Link to="/" className="hover:text-brand-green transition-colors">Home</Link>
-                <a href="/#buttons" className="hover:text-brand-green transition-colors">Buttons</a>
-                <a href="/#cards" className="hover:text-brand-green transition-colors">Cards</a>
                 <Link to="/library" className="hover:text-brand-green transition-colors">Component Library</Link>
-                <a href="/#hover" className="hover:text-brand-green transition-colors">Effects</a>
             </div>
 
             <div className="flex items-center gap-4">
@@ -50,10 +47,7 @@ const Navbar = () => {
                     >
                         <div className="flex flex-col gap-4 text-lg font-medium text-white/60">
                             <Link to="/" onClick={() => setIsOpen(false)} className="hover:text-brand-green transition-colors">Home</Link>
-                            <a href="/#buttons" onClick={() => setIsOpen(false)} className="hover:text-brand-green transition-colors">Buttons</a>
-                            <a href="/#cards" onClick={() => setIsOpen(false)} className="hover:text-brand-green transition-colors">Cards</a>
                             <Link to="/library" onClick={() => setIsOpen(false)} className="hover:text-brand-green transition-colors">Component Library</Link>
-                            <a href="/#hover" onClick={() => setIsOpen(false)} className="hover:text-brand-green transition-colors">Effects</a>
                         </div>
                         <div className="flex flex-col gap-4 pt-4 border-t border-white/5">
                             <button className="flex items-center gap-2 text-white/60">
