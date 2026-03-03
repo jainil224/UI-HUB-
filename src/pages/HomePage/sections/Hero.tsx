@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'motion/react';
+import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ExternalLink, Layers, MousePointer2, Layout } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import backgroundVideo from '../../../Assets/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4';
 
 const Hero = () => {
@@ -20,12 +20,10 @@ const Hero = () => {
                     muted
                     loop
                     playsInline
-                    className="hidden md:block w-full h-full object-cover object-center"
+                    className="w-full h-full object-cover object-center scale-110"
                 >
                     <source src={backgroundVideo} type="video/mp4" />
                 </video>
-                {/* Mobile Fallback Image */}
-                <div className="md:hidden absolute inset-0 bg-[#050505] bg-[url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2664&auto=format&fit=crop')] bg-cover bg-center opacity-30" />
                 {/* Enhanced Dynamic Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90 z-10" />
             </div>
@@ -118,35 +116,6 @@ const Hero = () => {
                 </motion.div>
             </motion.div>
 
-            <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9, duration: 1 }}
-                className="mt-16 md:mt-24 w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 z-30 px-4"
-            >
-                {[
-                    { icon: Layers, label: 'Components', value: '500+ Assets' },
-                    { icon: MousePointer2, label: 'Interactions', value: 'Smooth Motion' },
-                    { icon: Layout, label: 'Layouts', value: 'Bento Grids' }
-                ].map((item, i) => (
-                    <div
-                        key={i}
-                        className="group glass p-6 md:p-8 rounded-3xl flex items-center gap-6 border-white/5 hover:border-brand-green/30 hover:bg-brand-green/[0.02] transition-all duration-500 cursor-default"
-                    >
-                        <div className="w-14 h-14 rounded-2xl bg-brand-green/10 flex items-center justify-center shrink-0 border border-brand-green/20 group-hover:scale-110 transition-transform duration-500 group-hover:bg-brand-green/20 group-hover:shadow-[0_0_20px_rgba(0,255,0,0.2)]">
-                            <item.icon size={24} className="text-brand-green" />
-                        </div>
-                        <div>
-                            <div className="text-[10px] text-white/30 font-bold uppercase tracking-[0.2em] leading-none mb-2 group-hover:text-brand-green/60 transition-colors">
-                                {item.label}
-                            </div>
-                            <div className="text-xl font-bold tracking-tight text-white/90 group-hover:text-white transition-colors">
-                                {item.value}
-                            </div>
-                        </div>
-                    </div>
-                ))}
-            </motion.div>
         </section>
     );
 };
