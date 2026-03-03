@@ -1,4 +1,4 @@
-export type AISystem = 'antigravity' | 'lovable' | 'cursor';
+export type AISystem = 'antigravity' | 'lovable' | 'cursor' | 'advance';
 
 export interface VibeMeta {
     behavior: string;
@@ -14,6 +14,7 @@ interface PromptData {
     language: 'js' | 'ts';
     styling: 'tailwind' | 'css';
     meta: VibeMeta;
+    code?: string;
 }
 
 export const generateVibePrompt = (tool: AISystem, data: PromptData): string => {
@@ -80,7 +81,36 @@ Guidelines:
 - Clean ${langFull} patterns.
 - Direct output, no filler.
 - Ensure 100% working logic.
-`
+`,
+        advance: `// ==========================================
+// UI HUB  - AI EXPERT PROMPT
+// ==========================================
+// Component: ${animationName}
+// Language: ${langFull}
+// Source: https://ui-hub-design.vercel.app/
+// Description: Premium, accessible, high-performance UI component.
+// ==========================================
+
+/* AI INSTRUCTION:
+1. You are a Senior Frontend Engineer implementing a premium component from UI HUB.
+2. INTEGRATION CHECKLIST:
+   - Ensure dependencies are installed: npm i clsx tailwind-merge
+   - REQUIRED UTILITY: This component requires a 'cn' helper (lib/utils.ts):
+
+ts
+     import { clsx, type ClassValue } from "clsx";
+     import { twMerge } from "tailwind-merge";
+     export function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)); }
+
+   - STYLING: Fully dark-mode compatible. Ensure Tailwind's 'dark' selector is active.
+   - ACCESSIBILITY: Maintain all ARIA roles and semantic structure.
+*/
+
+// --- START OF COMPONENT CODE ---
+
+${data.code || ''}
+
+// --- END OF COMPONENT ---`
     };
 
     return instructions[tool].trim();
