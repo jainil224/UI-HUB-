@@ -250,6 +250,117 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             states: { from: "static grid", to: "animated moving grid lines" },
             cssProperties: ["background-image", "mask-image", "animation"]
         }
+    },
+    "hacker-background": {
+        props: [],
+        vibeMeta: {
+            behavior: "A matrix-style digital rain background using HTML Canvas.",
+            states: { from: "black", to: "animated green rain" },
+            cssProperties: ["canvas", "font-family: mono"]
+        }
+    },
+    "novatrix-background": {
+        props: [],
+        vibeMeta: {
+            behavior: "A deep space nebula effect using slow-moving gradients and pulse animations.",
+            states: { from: "static gradient", to: "pulsing nebula" },
+            cssProperties: ["background-image", "animation: pulse"]
+        }
+    },
+    "beam-grid-background": {
+        props: [
+            { name: "gridColor", type: "string", default: '"rgba(255,255,255,0.05)"', description: "Color of the static grid" },
+            { name: "beamIntensity", type: "number", default: "0.5", description: "Bightness of the beams" }
+        ],
+        vibeMeta: {
+            behavior: "Dynamic light beams traversing a grid with glow.",
+            states: { from: "grid", to: "moving beams" },
+            cssProperties: ["mask-image", "background-image"]
+        }
+    },
+    "fall-beam-background": {
+        props: [
+            { name: "lineCount", type: "number", default: "20", description: "Number of falling beams" },
+            { name: "beamColorClass", type: "string", default: "'cyan-400'", description: "Tailwind color class for the beam" }
+        ],
+        vibeMeta: {
+            behavior: "Matrix-style glowing vertical falling beams animation.",
+            states: { from: "static lines", to: "falling glowing beams" },
+            cssProperties: ["animation: fall", "background: linear-gradient"]
+        }
+    },
+    "hell-background": {
+        props: [
+            { name: "color", type: "string", default: '"#DE443B"', description: "Primary hellfire color" },
+            { name: "backdropBlurAmount", type: "BlurSize", default: '"none"', description: "Amount of blur applied" }
+        ],
+        vibeMeta: {
+            behavior: "A chaotic WebGL inferno effect using GLSL shaders.",
+            states: { from: "still fire", to: "swirling hellfire" },
+            cssProperties: ["gl_FragColor", "canvas", "backdrop-filter"]
+        }
+    },
+    "interactive-grid-background": {
+        props: [
+            { name: "gridSize", type: "number", default: "50", description: "Size of the grid cells" },
+            { name: "effectColor", type: "string", default: '"rgba(0, 255, 0, 0.5)"', description: "Color of the hover glow effect" }
+        ],
+        vibeMeta: {
+            behavior: "Glow-on-hover interactive grid with trailing effects.",
+            states: { from: "dark grid", to: "glowing trailing cells" },
+            cssProperties: ["canvas", "shadowBlur", "fillRect"]
+        }
+    },
+    "particles-background": {
+        props: [
+            { name: "colors", type: "string[]", default: "['#ff223e', '#5d1eb2', '#ff7300']", description: "Theme colors for particles" },
+            { name: "size", type: "number", default: "3", description: "Base size of particles" }
+        ],
+        vibeMeta: {
+            behavior: "Floating interactive particle system with glow and movement.",
+            states: { from: "still particles", to: "moving floating particles" },
+            cssProperties: ["canvas", "filter: blur", "svg: feGaussianBlur"]
+        }
+    },
+    "wave-background": {
+        props: [
+            { name: "backdropBlurAmount", type: "BlurSize", default: '"sm"', description: "Blur intensity on top" }
+        ],
+        vibeMeta: {
+            behavior: "Flowing WebGL waves using multi-sine GLSL distortion.",
+            states: { from: "flat color", to: "moving color waves" },
+            cssProperties: ["sin()", "gl_FragCoord", "canvas"]
+        }
+    },
+    "lines-background": {
+        props: [
+            { name: "title", type: "string", default: '""', description: "Optional title to display" }
+        ],
+        vibeMeta: {
+            behavior: "Smooth SVG path flow animation creating a dynamic liquid-like background.",
+            states: { from: "static paths", to: "flowing paths" },
+            cssProperties: ["svg", "path", "animation"]
+        }
+    },
+    "sparkles-background": {
+        props: [
+            { name: "title", type: "string", default: '""', description: "Optional title to display" }
+        ],
+        vibeMeta: {
+            behavior: "Twinkling starfield/sparkles using high-performance particles.",
+            states: { from: "dark sky", to: "twinkling sparkles" },
+            cssProperties: ["canvas", "particle-system", "opacity-flicker"]
+        }
+    },
+    "isometric-grid-background": {
+        props: [
+            { name: "title", type: "string", default: '""', description: "Optional title to display" }
+        ],
+        vibeMeta: {
+            behavior: "Skewed isometric grid that illuminates random cells on hover.",
+            states: { from: "flat grid", to: "illuminated isometric grid" },
+            cssProperties: ["transform: skew", "grid-layout", "glow"]
+        }
     }
 };
 
@@ -472,8 +583,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         className="space-y-12"
                     >
                         <div className="aspect-[4/3] md:aspect-video w-full glass rounded-[2rem] md:rounded-[3rem] relative overflow-hidden flex items-center justify-center group bg-black/20 border border-white/5">
-                            <div className="text-center w-full px-4 md:px-8">
-                                <div className="flex justify-center scale-75 md:scale-100" key={resetKey}>
+                            <div className={`text-center w-full ${item.category === 'background' ? 'h-full' : 'px-4 md:px-8'}`}>
+                                <div className={`flex justify-center ${item.category === 'background' ? 'h-full w-full' : 'scale-75 md:scale-100'}`} key={resetKey}>
                                     {item.preview}
                                 </div>
                             </div>

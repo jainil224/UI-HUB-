@@ -205,7 +205,7 @@ function HellBackground({
     const finalBlurClass = blurClassMap[backdropBlurAmount as BlurSize] || blurClassMap["sm"];
 
     return (
-        <div className={cn("w-full max-w-screen h-full overflow-hidden absolute inset-0 text-white flex items-center justify-center font-bold text-3xl z-[-1]", className)}>
+        <div className={cn("w-full max-w-screen h-full overflow-hidden absolute inset-0 z-0", className)}>
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 w-full max-w-screen h-full overflow-hidden z-0"

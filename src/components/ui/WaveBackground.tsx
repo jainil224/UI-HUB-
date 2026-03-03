@@ -132,14 +132,17 @@ function WaveBackground({
                 return;
             }
 
-            const width = canvas.clientWidth;
-            const height = canvas.clientHeight;
-            canvas.width = width;
-            canvas.height = height;
+            const width = containerRef.current?.clientWidth || canvas.clientWidth;
+            const height = containerRef.current?.clientHeight || canvas.clientHeight;
+
+            if (canvas.width !== width || canvas.height !== height) {
+                canvas.width = width;
+                canvas.height = height;
+                gl.viewport(0, 0, width, height);
+            }
 
             // Ensure the program is used before setting uniforms (Critical for React Strict Mode)
             gl.useProgram(program);
-            gl.viewport(0, 0, width, height);
 
             const currentTime = (Date.now() - startTime) / 1000;
 
@@ -164,7 +167,7 @@ function WaveBackground({
     const finalBlurClass = blurClassMap[backdropBlurAmount] || blurClassMap["sm"];
 
     return (
-        <div ref={containerRef} className={cn("w-full max-w-screen h-full overflow-hidden", className)}>
+        <div ref={containerRef} className={cn("w-full max-w-screen h-full overflow-hidden absolute inset-0 z-0", className)}>
             <canvas
                 ref={canvasRef}
                 className="absolute inset-0 w-full max-w-screen h-full overflow-hidden"

@@ -43,8 +43,9 @@ const FallBeamBackground: React.FC<FallBeamBackgroundProps> = ({
     const dynamicStyles = `
     .fall-beam-line {
       position: absolute;
-      width: 1px;
-      /* Background for the line itself (dim white) */
+      width: 2px;
+      /* Background for the line itself (dim white for better visibility) */
+      background: rgba(255, 255, 255, 0.05);
       height: 100%; /* Cover the full height of the container */
       z-index: 10;
     }
@@ -54,13 +55,15 @@ const FallBeamBackground: React.FC<FallBeamBackgroundProps> = ({
       position: absolute;
       left: 0;
       width: 100%;
-      height: 80px;
-      /* Dynamic beam glow color gradient */
+      height: 120px;
+      /* Dynamic beam glow color gradient - more prominent */
       background: linear-gradient(
         to bottom,
         rgba(255, 255, 255, 0),
-        var(--beam-glow-color)
+        var(--beam-glow-color) 70%,
+        white 100%
       );
+      box-shadow: 0 0 15px var(--beam-glow-color);
       animation: fall var(--ani-duration) var(--ani-delay) linear infinite;
     }
 

@@ -26,7 +26,7 @@ export interface BeamGridBackgroundProps extends React.HTMLProps<HTMLDivElement>
 
 const BeamGridBackground: React.FC<BeamGridBackgroundProps> = ({
     gridSize = 40,
-    gridColor = "#e5e7eb",
+    gridColor = "#27272a",
     darkGridColor = "#27272a",
     beamColor = "rgba(0, 180, 255, 0.8)",
     darkBeamColor = "rgba(0, 255, 255, 0.8)",
@@ -269,7 +269,7 @@ const BeamGridBackground: React.FC<BeamGridBackgroundProps> = ({
             />
             {showFade && (
                 <div
-                    className="pointer-events-none absolute inset-0 bg-white dark:bg-black"
+                    className="pointer-events-none absolute inset-0 bg-black"
                     style={{
                         maskImage: `radial-gradient(ellipse at center, transparent ${fadeIntensity}%, black)`,
                         WebkitMaskImage: `radial-gradient(ellipse at center, transparent ${fadeIntensity}%, black)`,
