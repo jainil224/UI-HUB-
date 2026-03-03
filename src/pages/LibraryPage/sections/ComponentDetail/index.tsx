@@ -406,7 +406,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             className="flex flex-col gap-8 pb-24"
         >
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-2">
                 <button
                     onClick={onBack}
                     className="flex items-center gap-2 text-white/40 hover:text-brand-green transition-colors text-sm font-bold uppercase tracking-widest"
@@ -414,43 +414,51 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     <ChevronLeft size={16} />
                     Back to Library
                 </button>
-                <div className="flex gap-4">
-                    <button
-                        onClick={() => setResetKey(prev => prev + 1)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white/60 hover:text-white transition-all text-sm font-bold uppercase tracking-widest group"
-                    >
-                        <RotateCcw key={resetKey} size={14} className={`${resetKey > 0 ? 'animate-spin-once' : ''} group-hover:text-brand-green transition-colors`} />
-                        Reset
-                    </button>
-                </div>
             </div>
 
             <div className="flex flex-col">
                 <h2 className="text-4xl md:text-8xl font-display uppercase tracking-tighter text-white mb-8">
                     {item.title}
                 </h2>
-                <div className="flex flex-wrap gap-4 mb-12">
-                    <button
-                        onClick={() => setTab('preview')}
-                        className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
-                    >
-                        <Eye size={16} />
-                        Preview
-                    </button>
-                    <button
-                        onClick={() => setTab('code')}
-                        className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
-                    >
-                        <Code size={16} />
-                        Code
-                    </button>
-                    <button
-                        onClick={() => setTab('vibe')}
-                        className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
-                    >
-                        <Zap size={16} />
-                        Vibe Prompt
-                    </button>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+                    <div className="flex flex-wrap gap-4">
+                        <button
+                            onClick={() => setTab('preview')}
+                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                        >
+                            <Eye size={16} />
+                            Preview
+                        </button>
+                        <button
+                            onClick={() => setTab('code')}
+                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                        >
+                            <Code size={16} />
+                            Code
+                        </button>
+                        <button
+                            onClick={() => setTab('vibe')}
+                            className={`flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                        >
+                            <Zap size={16} />
+                            Vibe Prompt
+                        </button>
+                    </div>
+
+                    <AnimatePresence>
+                        {tab === 'preview' && (
+                            <motion.button
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                onClick={() => setResetKey(prev => prev + 1)}
+                                className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green hover:bg-brand-green hover:text-black transition-all text-sm font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.15)] hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] shrink-0 group"
+                            >
+                                <RotateCcw key={resetKey} size={16} className={`${resetKey > 0 ? 'animate-spin-once' : ''} transition-transform group-hover:-rotate-90`} />
+                                Replay Animation
+                            </motion.button>
+                        )}
+                    </AnimatePresence>
                 </div>
             </div>
 
