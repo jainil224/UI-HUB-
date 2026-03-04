@@ -472,7 +472,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     // Dynamic states
     const [installMethod, setInstallMethod] = React.useState<'cli' | 'manual'>('cli');
     const [pkgManager, setPkgManager] = React.useState<'npm' | 'pnpm' | 'yarn' | 'bun'>('npm');
-    const [lang, setLang] = React.useState<'js' | 'ts'>('ts');
+    const [lang, setLang] = React.useState<'js' | 'ts' | 'html'>('ts');
     const [styling, setStyling] = React.useState<'tailwind' | 'css'>('tailwind');
     const [aiSystem, setAiSystem] = React.useState<AISystem>('antigravity');
 
@@ -685,7 +685,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     onChange={setLang}
                                     options={[
                                         { id: 'ts', name: 'TypeScript' },
-                                        { id: 'js', name: 'JavaScript' }
+                                        { id: 'js', name: 'JavaScript' },
+                                        { id: 'html', name: 'HTML' }
                                     ]}
                                 />
 
@@ -702,13 +703,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                             <div className="glass rounded-[2.5rem] overflow-hidden border border-white/5 relative bg-black/40">
                                 <button
-                                    onClick={() => handleCopy(item.code, 'source')}
+                                    onClick={() => handleCopy(getComponentCode(item.id, { lang, styling }), 'source')}
                                     className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'source' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
                                 >
                                     {copied === 'source' ? <Check size={18} /> : <Copy size={18} />}
                                 </button>
                                 <div className="p-8 text-xs leading-relaxed max-h-[600px] overflow-auto">
-                                    <pre className="font-sans"><code><CodeHighlighter code={item.code} /></code></pre>
+                                    <pre className="font-sans"><code><CodeHighlighter code={getComponentCode(item.id, { lang, styling })} /></code></pre>
                                 </div>
                             </div>
                         </section>

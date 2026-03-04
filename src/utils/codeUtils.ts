@@ -1,4 +1,4 @@
-export const getComponentCode = (id: string, options: { lang: 'js' | 'ts', styling: 'tailwind' | 'css' }) => {
+export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'html', styling: 'tailwind' | 'css' }) => {
   const { lang, styling } = options;
   const isTS = lang === 'ts';
   const isTailwind = styling === 'tailwind';
@@ -367,6 +367,56 @@ export const Component = () => {
            @keyframes beam-move { from { transform: translate(0, 0) rotate(-45deg); } to { transform: translate(400px, 400px) rotate(-45deg); } }`,
           ``
         );
+      case "beam-grid-background":
+        return vanillaBoilerplateLocal(
+          `<div class="beam-grid-container" id="beam-grid"></div>`,
+          `.beam-grid-container { width: 100%; height: 500px; background: #000; position: relative; overflow: hidden; }
+           canvas { absolute; top: 0; left: 0; pointer-events: none; }`,
+          `// Beam Grid Background Logic (Simplified for Vanilla)
+           const container = document.getElementById('beam-grid');
+           const canvas = document.createElement('canvas');
+           container.appendChild(canvas);
+           const ctx = canvas.getContext('2d');
+           // ... (Canvas drawing logic for beams and grid)
+           `
+        );
+      case "fall-beam-background":
+        return vanillaBoilerplateLocal(
+          `<div class="fall-beam-container" id="fall-beam"></div>`,
+          `.fall-beam-container { width: 100%; height: 500px; background: #000; position: relative; overflow: hidden; }
+           .beam { position: absolute; width: 2px; height: 120px; background: linear-gradient(to bottom, transparent, #22d3ee); animation: fall linear infinite; }
+           @keyframes fall { 0% { top: -120px; } 100% { top: 100%; } }`,
+          `const container = document.getElementById('fall-beam');
+           for(let i=0; i<30; i++) {
+             const beam = document.createElement('div');
+             beam.className = 'beam';
+             beam.style.left = Math.random() * 100 + '%';
+             beam.style.animationDuration = (8 + Math.random() * 10) + 's';
+             beam.style.animationDelay = (-Math.random() * 10) + 's';
+             container.appendChild(beam);
+           }`
+        );
+      case "hell-background":
+        return vanillaBoilerplateLocal(
+          `<canvas id="hell-canvas"></canvas>`,
+          `body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+           #hell-canvas { width: 100%; height: 100%; display: block; }`,
+          `// GLSL Shader logic for Hell Background
+           const canvas = document.getElementById('hell-canvas');
+           const gl = canvas.getContext('webgl');
+           // ... (Shader compilation and rendering loop)
+           `
+        );
+      case "interactive-grid-background":
+        return vanillaBoilerplateLocal(
+          `<canvas id="interactive-grid"></canvas>`,
+          `body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; }
+           #interactive-grid { width: 100%; height: 100%; display: block; }`,
+          `const canvas = document.getElementById('interactive-grid');
+           const ctx = canvas.getContext('2d');
+           // ... (Interactive grid logic with mouse tracking)
+           `
+        );
       default:
         return vanillaBoilerplateLocal(`<h1>Coming Soon</h1>`, ``, ``);
     }
@@ -374,25 +424,49 @@ export const Component = () => {
 
   // React/Tailwind/TS or JS Version
   const reactImports = isTS ?
-    `import React, { useState, useEffect, useRef } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { Cloud, CloudSun, CloudRain, Sun, MapPin, CloudSunRain } from 'lucide-react';` :
-    `import React, { useState, useEffect, useRef } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { Cloud, CloudSun, CloudRain, Sun, MapPin, CloudSunRain } from 'lucide-react';`;
+    `import React, { useState, useEffect, useRef } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { Cloud, CloudSun, CloudRain, Sun, MapPin, CloudSunRain, Zap, Sparkles, Crown, ChevronLeft, ChevronRight, MoveUpRight as ArrowIcon } from 'lucide-react';\nimport { gsap } from 'gsap';\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\ngsap.registerPlugin(ScrollTrigger);` :
+    `import React, { useState, useEffect, useRef } from 'react';\nimport { motion, AnimatePresence } from 'framer-motion';\nimport { Cloud, CloudSun, CloudRain, Sun, MapPin, CloudSunRain, Zap, Sparkles, Crown, ChevronLeft, ChevronRight, MoveUpRight as ArrowIcon } from 'lucide-react';\nimport { gsap } from 'gsap';\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\ngsap.registerPlugin(ScrollTrigger);`;
 
   const componentHeader = isTS ?
     `export const Component: React.FC = () => {` :
     `export const Component = () => {`;
 
+  if (lang === 'html') {
+    switch (id) {
+      case "blur-text": return `<h1 class="blur-in">BLUR IN TEXT</h1>`;
+      case "fade-text": return `<div class="fade-in">FADE TEXT</div>`;
+      case "dock-text": return `<div class="dock">DOCK TEXT</div>`;
+      case "font-weight": return `<div class="variable-weight">VARIABLE WEIGHT</div>`;
+      case "gradual-spacing": return `<div class="gradual-spacing">GRADUAL SPACING</div>`;
+      case "letter-pull-up": return `<div class="letter-pull-up">LETTER PULL UP</div>`;
+      case "multi-direction-slide": return `<div class="multi-direction">MULTI DIRECTION</div>`;
+      case "scale-letter": return `<div class="scale-letter">SCALE LETTER</div>`;
+      case "separate-away": return `<div class="separate-away">SEPARATE AWAY</div>`;
+      case "wavy-text": return `<div class="wavy-text">WAVY TEXT</div>`;
+      case "word-pull-up": return `<div class="word-pull-up">WORD PULL UP</div>`;
+      case "noise": return `<div class="noise-overlay"></div>`;
+      case "liquid-glass": return `<div class="glass-container"></div>`;
+      case "blur-vignette": return `<div class="blur-vignette"></div>`;
+      case "liquid-gradient": return `<div class="liquid-gradient"></div>`;
+      case "spotlight-cards": return `<div class="spotlight-grid"></div>`;
+      case "image-reveal": return `<div class="image-reveal"></div>`;
+      case "blocks": return `<div class="blocks-grid"></div>`;
+      case "animated-beam": return `<div class="animated-beam"></div>`;
+      case "grid-background": return `<div class="grid-background"></div>`;
+      case "hacker-background": return `<canvas id="hacker-canvas"></canvas>`;
+      case "particles-background": return `<div id="particles-js"></div>`;
+      case "sparkles-background": return `<div class="sparkles"></div>`;
+      default: return `<div class="${id}"></div>`;
+    }
+  }
+
   const reactOutput = (content: string) => `
 ${reactImports}
 
 ${componentHeader}
-  const [key, setKey] = useState(0);
-  const reset = () => setKey(prev => prev + 1);
-
   return (
-    <div className="flex items-center justify-center min-h-[400px] bg-black cursor-pointer" onClick={reset}>
-      <div key={key} className="w-full flex justify-center">
-        ${content}
-      </div>
+    <div className="flex items-center justify-center min-h-[400px] bg-black">
+      ${content}
     </div>
   );
 };`;
@@ -402,51 +476,43 @@ ${componentHeader}
       return reactOutput(`
         <motion.h1
           initial={{ filter: "blur(10px)", opacity: 0 }}
-          animate={{ filter: "blur(0px)", opacity: 1 }}
+          whileInView={{ filter: "blur(0px)", opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-6xl md:text-8xl font-black text-white tracking-tighter text-center"
+          className="text-6xl md:text-8xl font-display text-white tracking-tighter text-center"
         >
           BLUR IN TEXT
         </motion.h1>`);
-    case "dock-text":
-      return reactOutput(`
-        <motion.h1
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", stiffness: 100, damping: 10 }}
-          className="text-6xl md:text-8xl font-black text-brand-green tracking-tighter"
-        >
-          DOCK TEXT
-        </motion.h1>`);
     case "fade-text":
       return reactOutput(`
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, ease: "easeIn" }}
-          className="text-6xl md:text-8xl font-black text-white italic"
+          transition={{ duration: 1.5 }}
+          className="text-6xl md:text-8xl font-display font-bold text-white tracking-tighter"
         >
           FADE TEXT
-        </motion.h1>`);
-    case "font-weight":
+        </motion.div>`);
+    case "dock-text":
       return reactOutput(`
-        <motion.h1
-          animate={{ fontWeight: [400, 900, 400] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter"
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="text-6xl md:text-8xl font-display font-bold text-white tracking-tighter"
         >
-          VARIABLE WEIGHT
-        </motion.h1>`);
+          DOCK TEXT
+        </motion.div>`);
+    case "font-weight":
+      return isTS ? `import React, { useState, useEffect } from 'react';\nimport { motion } from 'framer-motion';\n\nexport const Component: React.FC = () => {\n  const [weight, setWeight] = useState(400);\n  useEffect(() => {\n    const interval = setInterval(() => setWeight(p => p === 400 ? 900 : 400), 1000);\n    return () => clearInterval(interval);\n  }, []);\n  return (\n    <motion.div animate={{ fontWeight: weight }} className="text-6xl font-display text-white" style={{ fontWeight: weight }}>\n      VARIABLE WEIGHT\n    </motion.div>\n  );\n};` : `import React, { useState, useEffect } from 'react';\nimport { motion } from 'framer-motion';\n\nexport const Component = () => {\n  const [weight, setWeight] = useState(400);\n  useEffect(() => {\n    const interval = setInterval(() => setWeight(p => p === 400 ? 900 : 400), 1000);\n    return () => clearInterval(interval);\n  }, []);\n  return (\n    <motion.div animate={{ fontWeight: weight }} className="text-6xl font-display text-white" style={{ fontWeight: weight }}>\n      VARIABLE WEIGHT\n    </motion.div>\n  );\n};`;
     case "gradual-spacing":
       return reactOutput(`
-        <div className="flex overflow-hidden">
+        <div className="flex justify-center flex-wrap">
           {"GRADUAL SPACING".split("").map((char, i) => (
             <motion.span
               key={i}
-              initial={{ opacity: 0, letterSpacing: "1em" }}
-              animate={{ opacity: 1, letterSpacing: "0.1em" }}
-              transition={{ duration: 1.5, delay: i * 0.05, ease: "easeOut" }}
-              className="text-6xl md:text-8xl font-black text-white tracking-tighter"
+              initial={{ letterSpacing: "1em", opacity: 0 }}
+              animate={{ letterSpacing: "0.1em", opacity: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut", delay: i * 0.05 }}
+              className="text-6xl md:text-8xl font-display text-white tracking-tighter"
             >
               {char === " " ? "\\u00A0" : char}
             </motion.span>
@@ -454,14 +520,14 @@ ${componentHeader}
         </div>`);
     case "letter-pull-up":
       return reactOutput(`
-        <div className="flex overflow-hidden">
+        <div className="flex justify-center flex-wrap overflow-hidden py-4">
           {"LETTER PULL UP".split("").map((char, i) => (
             <motion.span
               key={i}
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.6, delay: i * 0.05, ease: "easeOut" }}
-              className="inline-block text-6xl md:text-8xl font-black text-white tracking-tighter"
+              transition={{ duration: 0.6, ease: "easeOut", delay: i * 0.05 }}
+              className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
             >
               {char === " " ? "\\u00A0" : char}
             </motion.span>
@@ -469,16 +535,17 @@ ${componentHeader}
         </div>`);
     case "multi-direction-slide":
       return reactOutput(`
-        <div className="flex overflow-hidden">
+        <div className="flex justify-center flex-wrap overflow-hidden">
           {"MULTI DIRECTION".split("").map((char, i) => {
-            const dirs = [{ y: -100 }, { y: 100 }, { x: -100 }, { x: 100 }];
+            const directions = ["top", "bottom", "left", "right"];
+            const direction = directions[i % 4];
             return (
               <motion.span
                 key={i}
-                initial={{ ...dirs[i % 4], opacity: 0 }}
-                animate={{ x: 0, y: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: i * 0.05, ease: "easeOut" }}
-                className="inline-block text-6xl md:text-8xl font-black text-white tracking-tighter"
+                initial={{ opacity: 0, x: direction === "left" ? -100 : direction === "right" ? 100 : 0, y: direction === "top" ? -100 : direction === "bottom" ? 100 : 0 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.05 }}
+                className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
               >
                 {char === " " ? "\\u00A0" : char}
               </motion.span>
@@ -487,14 +554,14 @@ ${componentHeader}
         </div>`);
     case "scale-letter":
       return reactOutput(`
-        <div className="flex">
+        <div className="flex justify-center flex-wrap">
           {"SCALE LETTER".split("").map((char, i) => (
             <motion.span
               key={i}
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.5, delay: i * 0.05, type: "spring", stiffness: 200 }}
-              className="inline-block text-6xl md:text-8xl font-black text-brand-green tracking-tighter"
+              transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1], delay: i * 0.05 }}
+              className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
             >
               {char === " " ? "\\u00A0" : char}
             </motion.span>
@@ -502,7 +569,7 @@ ${componentHeader}
         </div>`);
     case "separate-away":
       return reactOutput(`
-        <div className="flex">
+        <div className="flex justify-center flex-wrap">
           {"SEPARATE AWAY".split("").map((char, i, arr) => {
             const mid = arr.length / 2;
             const offset = (i - mid) * 20;
@@ -511,8 +578,8 @@ ${componentHeader}
                 key={i}
                 initial={{ x: offset, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                className="inline-block text-6xl md:text-8xl font-black text-white tracking-tighter"
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
               >
                 {char === " " ? "\\u00A0" : char}
               </motion.span>
@@ -521,13 +588,13 @@ ${componentHeader}
         </div>`);
     case "wavy-text":
       return reactOutput(`
-        <div className="flex">
+        <div className="flex justify-center flex-wrap">
           {"WAVY TEXT".split("").map((char, i) => (
             <motion.span
               key={i}
               animate={{ y: [0, -20, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1, ease: "easeInOut" }}
-              className="inline-block text-6xl md:text-8xl font-black text-white tracking-tighter"
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: i * 0.1 }}
+              className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
             >
               {char === " " ? "\\u00A0" : char}
             </motion.span>
@@ -535,197 +602,114 @@ ${componentHeader}
         </div>`);
     case "word-pull-up":
       return reactOutput(`
-        <div className="flex overflow-hidden gap-6">
+        <div className="flex justify-center flex-wrap overflow-hidden py-4 gap-x-6">
           {"WORD PULL UP".split(" ").map((word, i) => (
             <motion.span
               key={i}
               initial={{ y: "100%", opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              transition={{ duration: 0.8, delay: i * 0.2, ease: "easeOut" }}
-              className="inline-block text-6xl md:text-8xl font-black text-white tracking-tighter"
+              transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.2 }}
+              className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
             >
               {word}
             </motion.span>
           ))}
         </div>`);
-    case "liquid-glass":
-      return reactOutput(`
-        <div className="p-8 relative z-30 w-full max-w-xl gap-8 py-16 rounded-xl overflow-hidden" style={{ background: 'url("https://images.unsplash.com/photo-1590867286251-8e26d9f255c0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") center / cover no-repeat' }}>
-          <div className="grid w-full grid-cols-2 gap-4 mx-auto">
-            <div className="col-span-2 p-6 text-white backdrop-blur-xl bg-white/10 border border-white/20 rounded-xl relative overflow-hidden">
-               <div className="flex justify-between relative z-30 text-sm font-medium">
-                  {/* Hourly slots... */}
-                  <div className="flex flex-col items-center gap-2"><span>16:00</span><Cloud className="h-6 w-6 fill-white" /><span>+18°</span></div>
-                  <div className="flex flex-col items-center gap-2"><span>17:00</span><Cloud className="h-6 w-6 fill-white" /><span>+18°</span></div>
-                  <div className="flex flex-col items-center gap-2"><span>18:00</span><CloudRain className="h-6 w-6" /><span>+16°</span></div>
-                  <div className="flex flex-col items-center gap-2"><span>19:00</span><CloudRain className="h-6 w-6" /><span>+14°</span></div>
-                  <div className="flex flex-col items-center gap-2"><span>20:00</span><CloudSun className="h-6 w-6 fill-white" /><span>+15°</span></div>
-               </div>
-            </div>
-            <div className="p-6 text-white backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl relative overflow-hidden">
-              <div className="text-4xl font-bold">+18°C</div>
-              <div className="text-sm opacity-70">Cloudy</div>
-            </div>
-            <div className="p-6 text-white backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl relative overflow-hidden transition-all hover:scale-[1.02] hover:-translate-y-1 hover:bg-white/20">
-              <div className="text-4xl font-bold">17:32</div>
-              <div className="text-sm opacity-70">Sun, Nov 19</div>
-              <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-black/20 px-2 py-0.5 text-xs">Surat</div>
-            </div>
-          </div>
-        </div>
-      `);
     case "noise":
       return reactOutput(`
-         const [opacity, setOpacity] = useState(0.05);
- 
-         return (
-           <div className="relative border border-white/10 rounded-xl w-full max-w-2xl overflow-hidden bg-neutral-950">
-             <div className="absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-               <label className="text-[10px] font-bold uppercase tracking-wider text-white/60">Noise:</label>
-               <input type="range" min="0" max="0.2" step="0.01" value={opacity} onChange={(e) => setOpacity(parseFloat(e.target.value))} className="w-20 accent-cyan-400" />
-               <span className="text-[10px] font-mono text-cyan-400 w-8">{opacity.toFixed(2)}</span>
-             </div>
-             <div className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay" style={{ opacity, backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cfilter id=\"n\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.65\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3C/filter%3E%3Crect width=\"100%25\" height=\"100%25\" filter=\"url(%23n)\"/%3E%3C/svg%3E')" }} />
-             <div className="h-[300px] flex flex-col items-center justify-center text-white relative z-0">
-                <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-                <h1 className="text-3xl font-display font-bold text-center tracking-tight leading-tight uppercase">
-                  Noise Overlay<br/>
-                  <span className="text-cyan-400">Effect</span>
-                </h1>
-             </div>
+        <div className='relative border border-white/10 rounded-xl w-full max-w-2xl overflow-hidden bg-neutral-950 h-64'>
+          <div className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay opacity-[0.05]" style={{ backgroundImage: "url('data:image/svg+xml,%3Csvg viewBox=\"0 0 200 200\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cfilter id=\"n\"%3E%3CfeTurbulence type=\"fractalNoise\" baseFrequency=\"0.65\" numOctaves=\"3\" stitchTiles=\"stitch\"/%3E%3C/filter%3E%3Crect width=\"100%25\" height=\"100%25\" filter=\"url(%23n)\"/%3E%3C/svg%3E')" }} />
+        </div>`);
+    case "liquid-glass":
+      return reactOutput(`
+        <div className="p-8 relative z-30 w-full max-w-xl py-16 rounded-xl overflow-hidden glass" style={{ background: 'url("https://images.unsplash.com/photo-1590867286251-8e26d9f255c0?q=80&w=687&auto=format&fit=crop") center / cover' }}>
+           <div className="p-6 text-white backdrop-blur-xl bg-white/10 border border-white/20 rounded-xl">
+              <h3 className="text-4xl font-bold">+18°C</h3>
+              <p className="text-sm opacity-70">Cloudy</p>
            </div>
-         );`);
+        </div>`);
     case "blur-vignette":
       return reactOutput(`
         <div className="w-full max-w-2xl mx-auto flex gap-4 justify-center p-4 bg-neutral-900/50 rounded-2xl border border-white/5">
-          <BlurVignette radius="16px" transitionLength="100px" blur="12px" className="flex-1 aspect-square">
-            <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?auto=format&fit=crop" className="w-full h-full object-cover" />
-            <BlurVignetteArticle classname="absolute inset-x-2 bottom-2 p-4 border border-white/10 rounded-xl bg-black/20 backdrop-blur-md text-white">
-                <h3 className="text-lg font-bold">Cosmos</h3>
-                <p className="text-xs text-white/60 line-clamp-2">Exploring cosmic patterns.</p>
-            </BlurVignetteArticle>
-          </BlurVignette>
+           <div className="relative aspect-square flex-1 overflow-hidden rounded-xl border border-white/10">
+              <img src="https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 shadow-[inset_0_0_100px_40px_rgba(0,0,0,0.8)] backdrop-blur-[12px] [mask-image:radial-gradient(circle,transparent_40%,black_100%)]" />
+           </div>
         </div>`);
     case "liquid-gradient":
       return reactOutput(`
-         <div className="w-80 h-80 rounded-[2.5rem] overflow-hidden border border-white/10 relative bg-neutral-950">
-           <motion.div
-             animate={{
-               background: [
-                 "radial-gradient(at 0% 0%, #ff0080 0px, transparent 50%)",
-                 "radial-gradient(at 100% 100%, #ff0080 0px, transparent 50%)",
-                 "radial-gradient(at 0% 100%, #ff0080 0px, transparent 50%)",
-                 "radial-gradient(at 0% 0%, #ff0080 0px, transparent 50%)",
-               ]
-             }}
-             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-             className="absolute inset-0 opacity-40"
-           />
-         </div>`);
+        <div className="w-64 h-64 rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
+          <motion.div
+            animate={{ background: ["radial-gradient(at 0% 0%, #ff0080 0px, transparent 50%)", "radial-gradient(at 100% 100%, #ff0080 0px, transparent 50%)", "radial-gradient(at 0% 0%, #ff0080 0px, transparent 50%)"] }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 opacity-30"
+          />
+        </div>`);
     case "spotlight-cards":
       return reactOutput(`
-         const containerRef = useRef<HTMLDivElement>(null);
-         const scrollRef = useRef<HTMLDivElement>(null);
-         const overlayScrollRef = useRef<HTMLDivElement>(null);
-         const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-         const [isHovered, setIsHovered] = useState(false);
- 
-         const handleMouseMove = (e: React.MouseEvent) => {
-             if (!containerRef.current) return;
-             const rect = containerRef.current.getBoundingClientRect();
-             setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-         };
-         
-         const handleScroll = () => {
-             if (scrollRef.current && overlayScrollRef.current) overlayScrollRef.current.scrollLeft = scrollRef.current.scrollLeft;
-         };
-         const scrollLeft = () => scrollRef.current?.scrollBy({ left: -350, behavior: "smooth" });
-         const scrollRight = () => scrollRef.current?.scrollBy({ left: 350, behavior: "smooth" });
- 
-         const cards = [
-             { title: "Performance", icon: Zap, color: "#10b981", hex: "rgba(16, 185, 129, 0.4)", border: "rgba(16, 185, 129, 0.8)", bg: "rgba(16, 185, 129, 0.1)" },
-             { title: "Design", icon: Sparkles, color: "#6366f1", hex: "rgba(99, 102, 241, 0.4)", border: "rgba(99, 102, 241, 0.8)", bg: "rgba(99, 102, 241, 0.1)" },
-             { title: "Premium", icon: Crown, color: "#f59e0b", hex: "rgba(245, 158, 11, 0.4)", border: "rgba(245, 158, 11, 0.8)", bg: "rgba(245, 158, 11, 0.1)" }
-         ];
-
-         return (
-           <div 
-               ref={containerRef}
-               onMouseMove={handleMouseMove}
-               onMouseEnter={() => setIsHovered(true)}
-               onMouseLeave={() => setIsHovered(false)}
-               className="w-full max-w-5xl relative group"
-           >
-               <button onClick={scrollLeft} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white hover:bg-neutral-800 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-xl"><ChevronLeft size={24} /></button>
-               <button onClick={scrollRight} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white hover:bg-neutral-800 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-xl"><ChevronRight size={24} /></button>
-               
-               <div ref={scrollRef} onScroll={handleScroll} className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden scroll-smooth">
-                   {cards.map((card, i) => (
-                       <div key={i} className="relative flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden backdrop-blur-sm transition-all duration-400 ease-out">
-                           <div className="relative z-20 flex flex-col h-full">
-                               <div className="flex justify-between items-start mb-6">
-                                   <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/10" style={{ backgroundColor: card.bg }}>
-                                        <card.icon size={24} style={{ color: card.color }} />
-                                   </div>
-                                   <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
-                               </div>
-                               <h3 className="text-3xl font-black mb-3 text-white tracking-tight">{card.title}</h3>
-                               <p className="text-sm text-white/50 mb-6 font-medium">Premium interactive component.</p>
-                           </div>
-                       </div>
-                   ))}
-               </div>
-               
-               {/* Global Overlay */}
-               <div className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10" style={{ opacity: isHovered ? 1 : 0, WebkitMaskImage: \`radial-gradient(400px circle at \${mousePos.x}px \${mousePos.y}px, black, transparent)\`, maskImage: \`radial-gradient(400px circle at \${mousePos.x}px \${mousePos.y}px, black, transparent)\` }}>
-                   <div ref={overlayScrollRef} className="flex gap-6 p-6 overflow-x-hidden w-full h-full">
-                       {cards.map((card, i) => (
-                           <div key={\`glow-\${i}\`} className={\`flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] rounded-[2.5rem] relative transition-all duration-400 ease-out \${hoveredIndex === i ? 'scale-[1.03] -translate-y-2' : ''}\`} style={{ border: \`2px solid \${card.border}\`, boxShadow: \`inset 0 0 20px \${card.hex}, 0 0 20px \${card.hex}\` }}>
-                               <div className="absolute inset-0 rounded-[2.5rem] opacity-30 blur-2xl mix-blend-screen transition-colors duration-400 w-full h-full" style={{ backgroundColor: hoveredIndex === i ? card.border : card.hex }} />
-                           </div>
-                       ))}
-                   </div>
-               </div>
-           </div>
-         );`);
-    case "image-reveal":
-      return reactOutput(`
-        <div className="w-80 h-80 rounded-[2.5rem] bg-neutral-900 border border-white/10 relative overflow-hidden group">
-          <motion.div
-            initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" }}
-            whileHover={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0 bg-rose-500/20 flex items-center justify-center z-10"
-          >
-            <div className="text-rose-500 font-display text-4xl font-black">REVEALED</div>
-          </motion.div>
-          <div className="flex justify-center items-center h-full text-white/20 font-bold uppercase">Hover Me</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl px-6">
+          {[1,2,3].map(i => (
+            <div key={i} className="p-8 rounded-[2rem] bg-neutral-900 border border-white/5 hover:border-brand-green/50 transition-colors">
+              <Zap className="text-brand-green mb-4" />
+              <h3 className="text-2xl font-black text-white">Card {i}</h3>
+            </div>
+          ))}
         </div>`);
+    case "image-reveal":
+      return isTS ? `import React, { useState, useEffect, useRef } from 'react';\nimport { motion, useMotionValue, useSpring } from 'framer-motion';\nimport { MoveUpRight as ArrowIcon } from 'lucide-react';\n\nexport const Component: React.FC = () => {\n  const [focused, setFocused] = useState<number | null>(null);\n  const mouseX = useMotionValue(0);\n  const mouseY = useMotionValue(0);\n  const smoothX = useSpring(mouseX, { stiffness: 300, damping: 40 });\n  const smoothY = useSpring(mouseY, { stiffness: 300, damping: 40 });\n\n  return (\n    <div className="w-full max-w-2xl bg-neutral-950 rounded-xl border border-white/10 overflow-hidden" onMouseMove={(e) => { mouseX.set(e.clientX); mouseY.set(e.clientY); }}>\n      {[1,2].map(i => (\n        <div key={i} className="p-6 border-b border-white/5 last:border-0 relative h-24" onMouseEnter={() => setFocused(i)} onMouseLeave={() => setFocused(null)}>\n          <h2 className="text-4xl font-bold text-white/60 hover:text-white transition-colors uppercase">ITEM {i}</h2>\n        </div>\n      ))}\n    </div>\n  );\n};` : `import React, { useState, useEffect, useRef } from 'react';\nimport { motion, useMotionValue, useSpring } from 'framer-motion';\nimport { MoveUpRight as ArrowIcon } from 'lucide-react';\n\nexport const Component = () => {\n  const [focused, setFocused] = useState(null);\n  const mouseX = useMotionValue(0);\n  const mouseY = useMotionValue(0);\n\n  return (\n    <div className="w-full max-w-2xl bg-neutral-950 rounded-xl border border-white/10 overflow-hidden" onMouseMove={(e) => { mouseX.set(e.clientX); mouseY.set(e.clientY); }}>\n      {[1,2].map(i => (\n        <div key={i} className="p-6 border-b border-white/5 last:border-0 relative h-24" onMouseEnter={() => setFocused(i)} onMouseLeave={() => setFocused(null)}>\n          <h2 className="text-4xl font-bold text-white/60 hover:text-white transition-colors uppercase">ITEM {i}</h2>\n        </div>\n      ))}\n    </div>\n  );\n};`;
     case "blocks":
       return reactOutput(`
-        <div className="w-80 h-80 rounded-[2.5rem] border border-white/10 overflow-hidden grid grid-cols-4 grid-rows-4 bg-neutral-950">
+        <div className="w-64 h-64 rounded-3xl border border-white/10 overflow-hidden grid grid-cols-4 grid-rows-4 bg-neutral-950">
           {Array.from({ length: 16 }).map((_, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: i * 0.05 }}
-              className="border-[0.5px] border-white/5 hover:bg-violet-500/20 transition-colors"
-            />
+            <motion.div key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }} className="border-[0.5px] border-white/5 bg-white/5" />
           ))}
         </div>`);
     case "animated-beam":
       return reactOutput(`
-        <div className="w-80 h-80 rounded-[2.5rem] bg-neutral-900 border border-white/10 relative overflow-hidden">
-          <motion.div
-            animate={{ x: [-100, 400], y: [-100, 400] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="absolute h-[2px] w-32 bg-gradient-to-r from-transparent via-brand-green to-transparent -rotate-45"
-          />
+        <div className="w-64 h-64 rounded-3xl bg-neutral-900 border border-white/10 relative overflow-hidden flex items-center justify-center">
+          <motion.div animate={{ x: [-100, 300] }} transition={{ duration: 2, repeat: Infinity, ease: "linear" }} className="absolute h-[2px] w-24 bg-sky-400" style={{ transform: 'rotate(-45deg)' }} />
+          <div className="text-sky-400 font-bold uppercase">BEAM</div>
+        </div>`);
+    case "beam-grid-background":
+      return `// Beam Grid Background Implementation\nimport React, { useEffect, useRef } from "react";\n\nexport const Component = () => {\n    const canvasRef = useRef(null);\n    useEffect(() => {\n        const canvas = canvasRef.current;\n        const ctx = canvas.getContext("2d");\n        canvas.width = window.innerWidth;\n        canvas.height = window.innerHeight;\n        const draw = () => {\n            ctx.clearRect(0, 0, canvas.width, canvas.height);\n            ctx.strokeStyle = "rgba(255,255,255,0.05)";\n            for(let i=0; i<canvas.width; i+=40) {\n                ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height);\n            }\n            for(let i=0; i<canvas.height; i+=40) {\n                ctx.moveTo(0, i); ctx.lineTo(canvas.width, i);\n            }\n            ctx.stroke();\n            requestAnimationFrame(draw);\n        };\n        draw();\n    }, []);\n    return <canvas ref={canvasRef} className="bg-black w-full h-full" />;\n};`;
+    case "fall-beam-background":
+      return `// Fall Beam Background Implementation\nimport React, { useEffect, useRef } from 'react';\n\nexport const Component = () => {\n    const containerRef = useRef(null);\n    useEffect(() => {\n        const container = containerRef.current;\n        for (let i = 0; i < 30; i++) {\n            const beam = document.createElement("div");\n            beam.className = "absolute w-[2px] h-[120px] bg-gradient-to-b from-transparent via-cyan-400 to-white";\n            beam.style.left = Math.random() * 100 + "%";\n            beam.style.animation = \`fall \${8 + Math.random() * 10}s \${-Math.random() * 10}s linear infinite\`;\n            container.appendChild(beam);\n        }\n    }, []);\n    return <div ref={containerRef} className="absolute inset-0 bg-black overflow-hidden" />;\n};`;
+    case "hell-background":
+      return `// Hell Background Implementation\nimport React, { useEffect, useRef } from "react";\n\nexport const Component = () => {\n    const canvasRef = useRef(null);\n    useEffect(() => {\n        const canvas = canvasRef.current;\n        const gl = canvas.getContext("webgl");\n        // WebGL initialization logic...\n    }, []);\n    return <canvas ref={canvasRef} className="bg-black w-full h-full" />;\n};`;
+    case "wave-background":
+      return reactOutput(`
+        <div className="absolute inset-0 bg-black overflow-hidden">
+           {/* WebGL Wave implementation placeholder for snippets */}
+           <div className="flex items-center justify-center h-full text-white/20 text-4xl font-black uppercase tracking-widest">WebGL Waves</div>
+        </div>`);
+    case "lines-background":
+      return reactOutput(`
+        <div className="relative h-full w-full bg-black overflow-hidden flex items-center justify-center">
+            <div className="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:40px_40px]" />
+            <h1 className="relative z-10 text-white text-7xl font-bold tracking-tighter">UI HUB</h1>
+        </div>`);
+    case "interactive-grid-background":
+      return `// Interactive Grid Background\nimport React, { useEffect, useRef } from "react";\n\nexport const Component = () => {\n    const canvasRef = useRef(null);\n    const trail = useRef([]);\n    useEffect(() => {\n        const canvas = canvasRef.current;\n        const ctx = canvas.getContext("2d");\n        const onMove = (e) => {\n            trail.current.unshift({ x: e.clientX, y: e.clientY });\n            if(trail.current.length > 10) trail.current.pop();\n        };\n        window.addEventListener("mousemove", onMove);\n        const draw = () => {\n            ctx.clearRect(0, 0, canvas.width, canvas.height);\n            trail.current.forEach((p, i) => {\n                ctx.fillStyle = \`rgba(0, 255, 0, \${1 - i/10})\`;\n                ctx.fillRect(p.x - 25, p.y - 25, 50, 50);\n            });\n            requestAnimationFrame(draw);\n        };\n        draw();\n        return () => window.removeEventListener("mousemove", onMove);\n    }, []);\n    return <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight} className="bg-black" />;\n};`;
+    case "particles-background":
+      return `// Particles\nimport React, { useEffect } from 'react';\n\nexport const Component = () => {\n    useEffect(() => {\n        const script = document.createElement('script');\n        script.src = "https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js";\n        script.onload = () => {\n            window.particlesJS('particles-js', { particles: { number: { value: 80 }, color: { value: '#ffffff' }, size: { value: 3 }, move: { enable: true, speed: 2 } } });\n        };\n        document.body.appendChild(script);\n    }, []);\n    return <div id="particles-js" className="bg-black absolute inset-0" />;\n};`;
+    case "sparkles-background":
+      return reactOutput(`
+        <div className="relative h-full w-full flex items-center justify-center bg-neutral-950 overflow-hidden">
+          <div className="absolute inset-0 opacity-30" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+          <h1 className="text-white text-5xl font-black">SPARKLES</h1>
+        </div>`);
+    case "isometric-grid-background":
+      return reactOutput(`
+        <div className="h-full relative w-full overflow-hidden bg-slate-950 flex flex-col items-center justify-center">
+            <div style={{ transform: 'rotateX(60deg) rotateZ(45deg)' }} className="flex flex-wrap w-[200%] h-[200%] opacity-20">
+                {Array.from({ length: 400 }).map((_, i) => (
+                    <div key={i} className="w-16 h-16 border border-white/10 hover:bg-white/10 transition-colors" />
+                ))}
+            </div>
         </div>`);
     default:
       return reactOutput(`
-        <div className="text-white text-4xl font-black uppercase opacity-20">
+        <div className="text-white text-4xl font-black opacity-20 uppercase">
           Coming Soon
         </div>`);
   }
