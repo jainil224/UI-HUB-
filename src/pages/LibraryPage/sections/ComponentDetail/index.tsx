@@ -678,7 +678,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <div className="aspect-[4/3] md:aspect-video w-full glass rounded-[2rem] md:rounded-[3rem] relative overflow-hidden flex items-center justify-center group bg-black/20 border border-white/5">
                             <div className={`text-center w-full ${item.category === 'background' ? 'h-full' : 'px-4 md:px-8'}`}>
                                 <div className={`flex justify-center ${item.category === 'background' ? 'h-full w-full' : 'scale-75 md:scale-100'}`} key={resetKey}>
-                                    {item.preview}
+                                    {item.preview()}
                                 </div>
                             </div>
                         </div>
@@ -904,26 +904,91 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
                         </section>
 
-                        {/* Prompt Display */}
+                        {/* Vibe Prompt Section - AI Terminal UI */}
                         <section className="space-y-6 md:space-y-8">
-                            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-2">
-                                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white">Vibe Prompt</h3>
-                                <button
-                                    onClick={() => {
-                                        navigator.clipboard.writeText(fullVibePrompt);
-                                        setCopied('vibe');
-                                        setTimeout(() => setCopied(null), 2000);
-                                    }}
-                                    className={`flex items-center justify-center gap-3 px-6 md:px-8 py-3 rounded-xl transition-all text-[10px] md:text-sm font-bold uppercase tracking-widest ${copied === 'vibe' ? 'bg-brand-green text-black' : 'bg-white/5 border border-white/10 text-white hover:bg-white/10'}`}
-                                >
-                                    {copied === 'vibe' ? <Check size={18} /> : <Copy size={18} />}
-                                    {copied === 'vibe' ? 'Copied!' : 'Copy Prompt'}
-                                </button>
-                            </div>
-                            <div className="glass rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/5 relative bg-black/40">
-                                <div className="p-6 md:p-8 text-[10px] md:text-xs leading-relaxed max-h-[400px] md:max-h-[600px] overflow-auto">
-                                    <pre className="font-sans whitespace-pre-wrap"><CodeHighlighter code={fullVibePrompt} /></pre>
+                            <div className="flex items-end justify-between px-2">
+                                <div className="space-y-1">
+                                    <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white">Vibe Prompt</h3>
+                                    <p className="text-[10px] uppercase tracking-[0.3em] text-brand-green/50 font-black">AI Generation Blueprint</p>
                                 </div>
+                            </div>
+
+                            <div className="relative group/terminal">
+                                {/* Terminal Container */}
+                                <div className="glass rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/10 relative bg-[#050505]/80 backdrop-blur-3xl shadow-2xl">
+                                    {/* Scanline/Texture Overlay */}
+                                    <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay z-10" />
+
+                                    {/* Terminal Header / Toolbar */}
+                                    <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02] relative z-20">
+                                        <div className="flex items-center gap-4">
+                                            {/* OS Dots */}
+                                            <div className="flex gap-1.5">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] shadow-[0_0_8px_rgba(255,95,86,0.3)]" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] shadow-[0_0_8px_rgba(255,189,46,0.3)]" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F] shadow-[0_0_8px_rgba(39,201,63,0.3)]" />
+                                            </div>
+                                            <div className="h-4 w-px bg-white/10 mx-2" />
+                                            {/* System Path/Label */}
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
+                                                <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">//</span>
+                                                <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">engine_output.log</span>
+                                            </div>
+                                        </div>
+
+                                        {/* Center Label - Made with love */}
+                                        <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5">
+                                            <span className="text-[8px] font-black uppercase tracking-widest animate-terminal-green-blink-delay">Made with ❤️ by Jainil Patel</span>
+                                        </div>
+
+                                        {/* Copy Button - Premium Terminal Style */}
+                                        <div className="relative group/copybtn">
+                                            {/* Glow aura */}
+                                            <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
+                                            <button
+                                                onClick={() => {
+                                                    navigator.clipboard.writeText(fullVibePrompt);
+                                                    setCopied('vibe');
+                                                    setTimeout(() => setCopied(null), 2000);
+                                                }}
+                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${copied === 'vibe'
+                                                    ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_20px_rgba(0,255,0,0.4)]'
+                                                    : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5 hover:shadow-[0_0_12px_rgba(0,255,0,0.15)]'
+                                                    }`}
+                                            >
+                                                {copied === 'vibe' ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}
+                                                <span>{copied === 'vibe' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* Terminal Content */}
+                                    <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20">
+                                        <pre className="font-mono whitespace-pre-wrap"><CodeHighlighter code={fullVibePrompt} /></pre>
+                                    </div>
+
+                                    {/* Bottom Status Bar */}
+                                    <div className="px-6 py-3 border-t border-white/5 bg-white/[0.01] flex items-center justify-between relative z-20">
+                                        {/* Left */}
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-1 h-1 rounded-full bg-brand-green animate-pulse" />
+                                            <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold">Terminal Active</span>
+                                        </div>
+
+                                        {/* Center - UI HUB */}
+                                        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5">
+                                            <img src="/logo.png" alt="UI HUB" className="w-3 h-3 object-contain opacity-40" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+                                            <span className="text-[8px] uppercase tracking-widest font-bold animate-terminal-green-blink">UI HUB</span>
+                                        </div>
+
+                                        {/* Right */}
+                                        <span className="text-[8px] uppercase tracking-widest text-white/10 font-bold">UTF-8 // LN: {fullVibePrompt.split('\n').length}</span>
+                                    </div>
+                                </div>
+
+                                {/* Decorative Background Glow */}
+                                <div className="absolute -inset-4 bg-brand-green/5 blur-3xl rounded-[4rem] group-hover/terminal:bg-brand-green/10 transition-colors duration-1000 -z-10" />
                             </div>
                         </section>
                     </motion.div>

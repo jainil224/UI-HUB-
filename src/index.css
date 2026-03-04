@@ -90,10 +90,40 @@
   animation-delay: 2s;
 }
 
+@keyframes terminal-green-blink {
+
+  0%,
+  85%,
+  90%,
+  95%,
+  100% {
+    opacity: 1;
+    color: #00FF00;
+    text-shadow: 0 0 8px #00FF00, 0 0 16px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 255, 0, 0.2);
+  }
+
+  87%,
+  92% {
+    opacity: 0.3;
+    color: rgba(0, 255, 0, 0.3);
+    text-shadow: none;
+  }
+}
+
+.animate-terminal-green-blink {
+  animation: terminal-green-blink 3s infinite;
+}
+
+.animate-terminal-green-blink-delay {
+  animation: terminal-green-blink 3s infinite;
+  animation-delay: 1.5s;
+}
+
 @keyframes shine {
   0% {
     transform: translateX(-150%) skewX(-25deg);
   }
+
   100% {
     transform: translateX(300%) skewX(-25deg);
   }

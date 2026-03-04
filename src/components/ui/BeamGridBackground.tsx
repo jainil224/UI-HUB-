@@ -140,7 +140,7 @@ const BeamGridBackground: React.FC<BeamGridBackgroundProps> = ({
             lastMouseMoveRef.current = Date.now();
         };
 
-        if (interactive) window.addEventListener("mousemove", updateMouse);
+        if (interactive) container.addEventListener("mousemove", updateMouse);
 
         let animationFrameId: number;
 
@@ -239,7 +239,7 @@ const BeamGridBackground: React.FC<BeamGridBackgroundProps> = ({
         draw();
 
         return () => {
-            if (interactive) window.removeEventListener("mousemove", updateMouse);
+            if (interactive) container.removeEventListener("mousemove", updateMouse);
             cancelAnimationFrame(animationFrameId);
         };
     }, [

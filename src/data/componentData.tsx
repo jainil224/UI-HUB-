@@ -6,22 +6,28 @@ export type ComponentItem = {
     id: string;
     title: string;
     category: "text" | "effect" | "background";
-    preview: React.ReactNode;
+    preview: () => React.ReactNode;
     code: string;
     vibePrompt: string;
 };
 
-// Simplified component resolver based on existing logic
-const renderComponent = (id: string, name: string) => {
-    const rawName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
-    const CompName = id.endsWith('-text') ? rawName : `${rawName}Text`;
+// Lazy component resolver - returns a factory function to avoid eager initialization
+const renderComponent = (id: string, _name: string): (() => React.ReactNode) => {
+    return () => {
+        const rawName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
+        const CompName = id.endsWith('-text') ? rawName : `${rawName}Text`;
 
-    const Comp = (Animations as any)[CompName] ||
-        (VisualEffects as any)[rawName] ||
-        (Animations as any)[rawName] ||
-        (VisualEffects as any)[CompName];
+        const Comp = (Animations as any)[CompName] ||
+            (VisualEffects as any)[rawName] ||
+            (Animations as any)[rawName] ||
+            (VisualEffects as any)[CompName];
 
-    return Comp ? React.createElement(Comp) : <div className="text-6xl md:text-9xl font-display font-bold uppercase tracking-normal opacity-20">PREVIEW</div>;
+        return Comp ? React.createElement(Comp) : (
+            <div className="text-6xl md:text-9xl font-display font-bold uppercase tracking-normal opacity-20">
+                PREVIEW
+            </div>
+        );
+    };
 };
 
 // Assuming these prompts apply as they were defined in VibeMeta

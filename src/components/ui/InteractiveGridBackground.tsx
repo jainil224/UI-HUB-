@@ -92,8 +92,11 @@ const InteractiveGridBackground: React.FC<InteractiveGridBackgroundProps> = ({
             }
         };
 
-        window.addEventListener("mousemove", handleMouseMove);
-        return () => window.removeEventListener("mousemove", handleMouseMove);
+        const container = containerRef.current;
+        if (!container) return;
+
+        container.addEventListener("mousemove", handleMouseMove);
+        return () => container.removeEventListener("mousemove", handleMouseMove);
     }, [gridSize, trailLength]);
 
     // Drawing logic

@@ -637,7 +637,66 @@ export const AnimatedBeam = () => (
     </div>
 );
 
-// 9. Grid Background
+// 10. Hacker Background (Matrix Rain)
+export const HackerBackground = () => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let width = canvas.width = canvas.parentElement?.clientWidth || 400;
+        let height = canvas.height = canvas.parentElement?.clientHeight || 400;
+
+        const columns = Math.floor(width / 20);
+        const drops: number[] = new Array(columns).fill(1);
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}<>[]^~";
+
+        let animationFrameId: number;
+
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = '#0F0';
+            ctx.font = '15px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * 20, drops[i] * 20);
+
+                if (drops[i] * 20 > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+            animationFrameId = requestAnimationFrame(draw);
+        };
+
+        const handleResize = () => {
+            width = canvas.width = canvas.parentElement?.clientWidth || 400;
+            height = canvas.height = canvas.parentElement?.clientHeight || 400;
+        };
+
+        window.addEventListener('resize', handleResize);
+        draw();
+
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return (
+        <div className="w-full h-full bg-black relative overflow-hidden">
+            <canvas ref={canvasRef} className="absolute inset-0" />
+        </div>
+    );
+};
+
+// 11. Grid Background
 export const GridBackground = () => (
     <div className="w-full h-64 rounded-3xl border border-white/10 overflow-hidden relative bg-neutral-950 flex items-center justify-center isolate">
         <div className="absolute inset-0 z-[-1] h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
