@@ -454,6 +454,51 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["framer-motion", "clsx", "tailwind-merge"],
             requirements: ["Isometric CSS transform (skew/rotate)", "Reactive cell-level mouse tracking", "Luminescent glow transitions", "Perspective-aware layout scaling"]
         }
+    },
+    // Buttons
+    "glow-button": {
+        props: [],
+        vibeMeta: {
+            behavior: "Creates an intense, blurred box-shadow behind the button when the user hovers.",
+            states: { from: "flat styling", to: "glowing shadow" },
+            cssProperties: ["box-shadow", "transition", "transform"],
+            description: "A minimal, modern button utilizing Tailwind for an intense glowing drop shadow on hover.",
+            libraries: ["tailwindcss"],
+            requirements: ["Hover state pseudo-classes", "Custom intense drop shadow", "Smooth transition duration", "High-contrast text"]
+        }
+    },
+    "border-beam": {
+        props: [
+            { name: "size", type: "number", default: "50", description: "The width dimension of the sweeping animated beam." },
+            { name: "duration", type: "number", default: "6", description: "The total duration of the animation loop in seconds." },
+            { name: "colorFrom", type: "string", default: '"#7400ff"', description: "The starting hex color of the beam's gradient." },
+            { name: "colorTo", type: "string", default: '"#9b41ff"', description: "The ending hex color of the beam's gradient." },
+            { name: "beamBorderRadius", type: "number", default: "undefined", description: "Optional border radius applied to the beam element itself." },
+            { name: "glowIntensity", type: "number", default: "0", description: "Multiplication factor for a luminescent drop-shadow effect." }
+        ],
+        vibeMeta: {
+            behavior: "Animates a continuous, masked linear gradient beam of light sweeping endlessly across the horizontal axis.",
+            states: { from: "off-screen left", to: "sweeping right" },
+            cssProperties: ["mask-image", "background-gradient", "transform: left", "box-shadow"],
+            description: "Premium animated linear beam of light sweeping horizontally.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Transparent clip-box masking", "Infinite linear-timing animation loops", "Smooth directional gradient interpolation"]
+        }
+    },
+    "shatter-button": {
+        props: [
+            { name: "shardCount", type: "number", default: "20", description: "Number of geometric glass shards generated upon clicking." },
+            { name: "shatterColor", type: "string", default: '"#00ffff"', description: "Base HEX color determining the overall accent color, explosion ring, and shard geometry." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Optional callback fired when the shatter animation initializes." }
+        ],
+        vibeMeta: {
+            behavior: "Explodes the core button into dynamic, randomly-generated physics-based vector polygons when clicked, alongside an expanding sonic ring.",
+            states: { from: "solid glowing state", to: "dispersed shards and expanding ring" },
+            cssProperties: ["clip-path: polygon", "transform", "box-shadow", "background: linear-gradient"],
+            description: "Interactive physics-based shattering glass button with exit sequences.",
+            libraries: ["framer-motion"],
+            requirements: ["Dynamic SVG polygon generation math", "Randomized radial explosion physics per shard", "Staggered exit animations", "Expanding pulse ring effect"]
+        }
     }
 };
 
