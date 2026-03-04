@@ -27,7 +27,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Animate characters by blurring them from a high value to zero while increasing opacity.",
             states: { from: "opacity: 0, filter: blur(10px)", to: "opacity: 1, filter: blur(0px)" },
-            cssProperties: ["filter", "opacity", "transition"]
+            cssProperties: ["filter", "opacity", "transition"],
+            description: "A premium character-by-character blur-in reveal effect.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Per-character staggered animation", "Blur-to-sharp transition", "Opacity fade-in", "Smooth cubic-bezier easing"]
         }
     },
     // ... (rest of text animations would be here, skipping for brevity but assuming they stay)
@@ -41,7 +44,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Scale text characters based on proximity to the cursor, creating a fisheye effect.",
             states: { from: "scale: 1", to: "scale: 1.5 (proximity-based)" },
-            cssProperties: ["transform", "transition-timing-function"]
+            cssProperties: ["transform", "transition-timing-function"],
+            description: "Interactive fisheye dock effect for text characters.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Mouse proximity detection", "Dynamic scaling per character", "Smooth spring physics", "Performance-optimized hover handling"]
         }
     },
     "fade-text": {
@@ -53,7 +59,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Simple and elegant fade-in animation for text transitions.",
             states: { from: "opacity: 0", to: "opacity: 1" },
-            cssProperties: ["opacity", "transition"]
+            cssProperties: ["opacity", "transition"],
+            description: "Clean and professional text fade-in component.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Smooth opacity transition", "Adjustable duration and delay", "Direct DOM mounting reveal"]
         }
     },
     "font-weight": {
@@ -65,7 +74,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Animate font-weight smoothly between two specified numerical values.",
             states: { from: "font-weight: 400", to: "font-weight: 900" },
-            cssProperties: ["font-weight", "font-variation-settings"]
+            cssProperties: ["font-weight", "font-variation-settings"],
+            description: "Dynamic variable font weight animation.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Variable font support", "Numeric font-weight interpolation", "Smooth weight shifting loop or trigger"]
         }
     },
     "gradual-spacing": {
@@ -77,7 +89,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Increase letter-spacing gradually for each character in a staggered sequence.",
             states: { from: "letter-spacing: -0.5em, opacity: 0", to: "letter-spacing: normal, opacity: 1" },
-            cssProperties: ["letter-spacing", "opacity", "transition"]
+            cssProperties: ["letter-spacing", "opacity", "transition"],
+            description: "Cinematic text expansion with staggered letter spacing.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Staggered character reveal", "Letter-spacing interpolation", "Opacity fade-in", "Expansive motion feel"]
         }
     },
     "letter-pull-up": {
@@ -89,7 +104,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Characters slide up from below the baseline into their final position with a staggered offset.",
             states: { from: "transform: translateY(100%), opacity: 0", to: "transform: translateY(0), opacity: 1" },
-            cssProperties: ["transform", "opacity", "transition"]
+            cssProperties: ["transform", "opacity", "transition"],
+            description: "Modern slide-up character reveal effect.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Vertical slide-in from Y-offset", "Staggered letter timing", "Smooth spring reveal", "Overflow-hidden container clipping"]
         }
     },
     "multi-direction-slide": {
@@ -101,7 +119,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Text elements slide into view from multiple directions (left, right, top, bottom) simultaneously.",
             states: { from: "transform: translate(±50px), opacity: 0", to: "transform: translate(0), opacity: 1" },
-            cssProperties: ["transform", "opacity", "transition"]
+            cssProperties: ["transform", "opacity", "transition"],
+            description: "Dynamic multi-directional entrance animation for text.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Dynamic direction calculation", "Simultaneous staggered reveals", "Elastic exit/entrance feel"]
         }
     },
     "scale-letter": {
@@ -113,7 +134,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Scale each character from zero to its natural size with a spring or ease-out effect.",
             states: { from: "transform: scale(0), opacity: 0", to: "transform: scale(1), opacity: 1" },
-            cssProperties: ["transform", "opacity", "transition"]
+            cssProperties: ["transform", "opacity", "transition"],
+            description: "Playful character-by-character scaling reveal.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Spring physics for scale", "Staggered letter reveal", "Transform-origin centering", "Opacity fade-in"]
         }
     },
     "separate-away": {
@@ -125,7 +149,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Characters move away from each other along the X-axis upon interaction or mount.",
             states: { from: "transform: translateX(0)", to: "transform: translateX(±15px)" },
-            cssProperties: ["transform", "transition"]
+            cssProperties: ["transform", "transition"],
+            description: "Interactive character separation effect.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["X-axis displacement animation", "Symmetrical separation logic", "Interactive hover triggers", "Smooth return-to-original-state transition"]
         }
     },
     "wavy-text": {
@@ -137,7 +164,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Continuous vertical wave motion applied to characters using a periodic sine function.",
             states: { from: "transform: translateY(0)", to: "transform: translateY(±8px) loop" },
-            cssProperties: ["transform", "transition"]
+            cssProperties: ["transform", "transition"],
+            description: "Hypnotic continuous wavy text animation.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Sine-wave vertical oscillation", "Seamless looping animation", "Per-character phase offset", "Smooth 60fps motion"]
         }
     },
     "word-pull-up": {
@@ -149,7 +179,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Full words slide up from below the baseline with opacity fade-in.",
             states: { from: "transform: translateY(20px), opacity: 0", to: "transform: translateY(0), opacity: 1" },
-            cssProperties: ["transform", "opacity", "transition"]
+            cssProperties: ["transform", "opacity", "transition"],
+            description: "Modern word-by-word reveal effect.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Word-level splitting and mapping", "Staggered slide-up animation", "Opacity reveal", "Container clipping (overflow-hidden)"]
         }
     },
     // Visual Effects
@@ -163,7 +196,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Premium weather dashboard interface utilizing multiple layers of glassmorphism, backdrop-blur, and Lucide icons.",
             states: { from: "transparent overlays", to: "vivid glassmorphism with high-contrast content" },
-            cssProperties: ["backdrop-filter", "background", "border", "grid-layout"]
+            cssProperties: ["backdrop-filter", "background", "border", "grid-layout"],
+            description: "A state-of-the-art glassmorphism weather dashboard layout.",
+            libraries: ["framer-motion", "lucide-react", "clsx", "tailwind-merge"],
+            requirements: ["Multi-layered glassmorphism", "Dynamic backdrop-blur intensity", "Smooth entry animations for weather cards", "Responsive grid architecture"]
         }
     },
     "noise": {
@@ -173,7 +209,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Subtle animated grain effect using SVG turbulence for a cinematic digital aesthetic.",
             states: { from: "static", to: "animated turbulence overlay" },
-            cssProperties: ["filter", "mix-blend-mode", "opacity"]
+            cssProperties: ["filter", "mix-blend-mode", "opacity"],
+            description: "Animated cinematic noise grain effect for depth and texture.",
+            libraries: ["clsx", "tailwind-merge"],
+            requirements: ["SVG feTurbulence base", "Dynamic opacity mapping", "Optimized animation performance", "Seamless grain looping"]
         }
     },
     "blur-vignette": {
@@ -186,7 +225,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Radial mask that applies a heavy blur to the edges, focusing visual attention on the center.",
             states: { from: "clear", to: "blurred edges via radial-mask" },
-            cssProperties: ["backdrop-filter", "mask-image", "WebkitMaskImage"]
+            cssProperties: ["backdrop-filter", "mask-image", "WebkitMaskImage"],
+            description: "Professional radial blur vignette effect for focus.",
+            libraries: ["clsx", "tailwind-merge"],
+            requirements: ["Linear/Radial mask implementation", "Dynamic blur intensity", "Responsive vignette scaling", "High-performance backdrop filtering"]
         }
     },
     "liquid-gradient": {
@@ -196,7 +238,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Morphing radial gradients that shift smoothly to create a fluid, organic light effect.",
             states: { from: "static gradient", to: "shifting radial-gradient loop" },
-            cssProperties: ["background", "transform", "transition"]
+            cssProperties: ["background", "transform", "transition"],
+            description: "Hyper-smooth morphing mesh gradients for a premium feel.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Multiple animated radial gradients", "Smooth color interpolation", "Organic movement patterns", "Luminescent glow effect"]
         }
     },
     "spotlight-cards": {
@@ -208,7 +253,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Premium 3-card layout with individual color themes, Lucide icons, and a synchronized cursor-glow system with branding.",
             states: { from: "dark", to: "active glow and border highlight" },
-            cssProperties: ["mask-image", "background", "backdrop-filter"]
+            cssProperties: ["mask-image", "background", "backdrop-filter"],
+            description: "Interactive spotlight grid with cursor-tracking luminosity.",
+            libraries: ["framer-motion", "lucide-react", "clsx", "tailwind-merge"],
+            requirements: ["Real-time mouse tracking", "Synchronized glow effect across multiple cards", "Dynamic color themes per card", "Premium border highlight logic"]
         }
     },
     "image-reveal": {
@@ -218,7 +266,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Reveals content behind a mask using a sliding or clip-path transition on hover.",
             states: { from: "clipped/hidden", to: "full polygon reveal" },
-            cssProperties: ["clip-path", "transform", "transition"]
+            cssProperties: ["clip-path", "transform", "transition"],
+            description: "Cinematic image reveal effect using SVG clip-paths.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Custom clip-path polygon animation", "Hover-triggered masking", "Smooth ease-in-out transition", "Responsive container fitting"]
         }
     },
     "blocks": {
@@ -228,7 +279,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Staggered grid of blocks that fade or scale into view, responding to hover states.",
             states: { from: "empty grid", to: "staggered block appear" },
-            cssProperties: ["display: grid", "scale", "opacity"]
+            cssProperties: ["display: grid", "scale", "opacity"],
+            description: "Staggered block entrance animation for grid layouts.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Dynamic grid block generation", "Staggered entrance timing", "Scale-up or opacity-fade reveal", "High-performance CSS grid usage"]
         }
     },
     "animated-beam": {
@@ -238,7 +292,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "High-speed linear light beam that sweeps across the container in a rhythmic loop.",
             states: { from: "off-screen", to: "infinite linear sweep" },
-            cssProperties: ["background-image", "transform", "animation"]
+            cssProperties: ["background-image", "transform", "animation"],
+            description: "Futuristic high-speed scanning beam animation.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Infinite linear translation loop", "Luminescent linear gradient", "Synchronized sweep speed", "Dark mode glow optimization"]
         }
     },
     "grid-background": {
@@ -248,7 +305,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "A subtle animated grid background with a radial gradient mask.",
             states: { from: "static grid", to: "animated moving grid lines" },
-            cssProperties: ["background-image", "mask-image", "animation"]
+            cssProperties: ["background-image", "mask-image", "animation"],
+            description: "Premium technical grid background with movement.",
+            libraries: ["clsx", "tailwind-merge"],
+            requirements: ["Repetitive background-image grid", "Radial gradient masking", "Subtle translate animation", "Responsive scaling"]
         }
     },
     "hacker-background": {
@@ -256,7 +316,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "A matrix-style digital rain background using HTML Canvas.",
             states: { from: "black", to: "animated green rain" },
-            cssProperties: ["canvas", "font-family: mono"]
+            cssProperties: ["canvas", "font-family: mono"],
+            description: "Iconic matrix digital rain canvas effect.",
+            libraries: ["clsx", "tailwind-merge"],
+            requirements: ["Direct Canvas API rendering", "Character rain stream logic", "Fading tail effect", "Performance-optimized draw loop"]
         }
     },
     "novatrix-background": {
@@ -264,7 +327,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "A deep space nebula effect using slow-moving gradients and pulse animations.",
             states: { from: "static gradient", to: "pulsing nebula" },
-            cssProperties: ["background-image", "animation: pulse"]
+            cssProperties: ["background-image", "animation: pulse"],
+            description: "Slow-moving organic atmospheric nebula background.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Animated mesh gradients", "Slow-pulse opacity loops", "Subtle transform drifting", "Dark mode aesthetic focus"]
         }
     },
     "beam-grid-background": {
@@ -275,7 +341,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Dynamic light beams traversing a grid with glow.",
             states: { from: "grid", to: "moving beams" },
-            cssProperties: ["mask-image", "background-image"]
+            cssProperties: ["mask-image", "background-image"],
+            description: "High-tech beam grid with light propagation.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Grid background pattern", "Staggered beam translations", "Glow-on-movement intensity", "Seamless infinite loops"]
         }
     },
     "fall-beam-background": {
@@ -286,7 +355,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Matrix-style glowing vertical falling beams animation.",
             states: { from: "static lines", to: "falling glowing beams" },
-            cssProperties: ["animation: fall", "background: linear-gradient"]
+            cssProperties: ["animation: fall", "background: linear-gradient"],
+            description: "Advanced glowing digital fall effect with vertical beams.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Dynamic vertical translation loops", "Tailwind-based color themes", "Glow intensity pulsing", "Responsive line count distribution"]
         }
     },
     "hell-background": {
@@ -297,7 +369,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "A chaotic WebGL inferno effect using GLSL shaders.",
             states: { from: "still fire", to: "swirling hellfire" },
-            cssProperties: ["gl_FragColor", "canvas", "backdrop-filter"]
+            cssProperties: ["gl_FragColor", "canvas", "backdrop-filter"],
+            description: "High-performance WebGL shader background featuring chaotic fluid fire dynamics.",
+            libraries: ["three", "clsx", "tailwind-merge"],
+            requirements: ["Custom GLSL fragment shaders", "WebGL canvas integration", "Simplex noise distortion", "Frame-buffer based fluid dynamics", "Performance-optimized fragment calculations"]
         }
     },
     "interactive-grid-background": {
@@ -308,7 +383,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Glow-on-hover interactive grid with trailing effects.",
             states: { from: "dark grid", to: "glowing trailing cells" },
-            cssProperties: ["canvas", "shadowBlur", "fillRect"]
+            cssProperties: ["canvas", "shadowBlur", "fillRect"],
+            description: "Interactive reactive grid using Canvas for responsive mouse feedback.",
+            libraries: ["clsx", "tailwind-merge"],
+            requirements: ["Real-time mouse position tracking", "Proximity-based cell illumination", "Fading cell trails logic", "High-performance Canvas draw loop"]
         }
     },
     "particles-background": {
@@ -319,7 +397,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Floating interactive particle system with glow and movement.",
             states: { from: "still particles", to: "moving floating particles" },
-            cssProperties: ["canvas", "filter: blur", "svg: feGaussianBlur"]
+            cssProperties: ["canvas", "filter: blur", "svg: feGaussianBlur"],
+            description: "Sophisticated interactive particle field with organic motion.",
+            libraries: ["clsx", "tailwind-merge"],
+            requirements: ["Canvas 2D particle simulation", "Mouse repelling/attracting logic", "Dynamic particle color interpolation", "Blur-filter based glow effects"]
         }
     },
     "wave-background": {
@@ -329,7 +410,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Flowing WebGL waves using multi-sine GLSL distortion.",
             states: { from: "flat color", to: "moving color waves" },
-            cssProperties: ["sin()", "gl_FragCoord", "canvas"]
+            cssProperties: ["sin()", "gl_FragCoord", "canvas"],
+            description: "Ultra-smooth WebGL wave background using procedural noise and sine-summation.",
+            libraries: ["three", "simplex-noise", "clsx", "tailwind-merge"],
+            requirements: ["Three.js Scene and Camera setup", "Vertex disruption logic via Simplex Noise", "Interactive mouse distortion on waves", "Adjustable amplitude and frequency parameters", "Resource disposal for optimized memory management"]
         }
     },
     "lines-background": {
@@ -339,7 +423,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Smooth SVG path flow animation creating a dynamic liquid-like background.",
             states: { from: "static paths", to: "flowing paths" },
-            cssProperties: ["svg", "path", "animation"]
+            cssProperties: ["svg", "path", "animation"],
+            description: "Elegant liquid-style SVG path animations.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Dynamic SVG path generation", "Bezier curve interpolation", "Staggered wave motion along paths", "Responsive SVG viewport scaling"]
         }
     },
     "sparkles-background": {
@@ -349,7 +436,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Twinkling starfield/sparkles using high-performance particles.",
             states: { from: "dark sky", to: "twinkling sparkles" },
-            cssProperties: ["canvas", "particle-system", "opacity-flicker"]
+            cssProperties: ["canvas", "particle-system", "opacity-flicker"],
+            description: "Mesmerizing twinkling sparkle/star field animation.",
+            libraries: ["clsx", "tailwind-merge"],
+            requirements: ["High-density particle simulation", "Individual particle opacity flickering", "Subtle drift motion", "Performance-optimized dot rendering"]
         }
     },
     "isometric-grid-background": {
@@ -359,7 +449,10 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         vibeMeta: {
             behavior: "Skewed isometric grid that illuminates random cells on hover.",
             states: { from: "flat grid", to: "illuminated isometric grid" },
-            cssProperties: ["transform: skew", "grid-layout", "glow"]
+            cssProperties: ["transform: skew", "grid-layout", "glow"],
+            description: "Future-tech isometric grid with reactive cell lighting.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Isometric CSS transform (skew/rotate)", "Reactive cell-level mouse tracking", "Luminescent glow transitions", "Perspective-aware layout scaling"]
         }
     }
 };
@@ -723,48 +816,63 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         className="space-y-12"
                     >
                         {/* Tool Selector */}
-                        <section className="space-y-6 md:space-y-8">
-                            <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white px-2">Select AI Tool</h3>
-                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                        <section className="space-y-6 md:space-y-10">
+                            <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:px-4">
                                 {(['antigravity', 'lovable', 'cursor', 'advance'] as const).map(tool => (
                                     <button
                                         key={tool}
                                         onClick={() => setAiSystem(tool)}
-                                        className={`p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border transition-all text-left relative overflow-hidden group h-[140px] md:h-[180px] flex flex-col justify-between ${aiSystem === tool ? 'bg-brand-green/10 border-brand-green/30 shadow-[0_0_30px_rgba(0,255,0,0.1)]' : 'bg-white/5 border-white/10 hover:border-brand-green/30 hover:shadow-[0_0_30px_rgba(0,255,0,0.1)] hover:scale-[1.03] duration-300'}`}
+                                        className={`p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border transition-all text-left relative overflow-hidden group min-h-[140px] md:min-h-[180px] flex flex-col justify-between ${aiSystem === tool ? 'bg-[#050505] border-brand-green shadow-[0_0_40px_rgba(0,255,0,0.15)] ring-1 ring-brand-green/30' : 'bg-[#0A0A0A] border-white/5 hover:border-white/10 hover:scale-[1.01] duration-500'}`}
                                     >
-                                        <div className="relative z-10 w-full">
-                                            <div className="flex items-center justify-between mb-2 md:mb-4">
-                                                <p className={`text-[8px] md:text-[10px] uppercase tracking-widest font-bold ${aiSystem === tool ? 'text-brand-green' : 'text-white/40'}`}>
-                                                    {tool === 'antigravity' ? 'UI Hub' : tool === 'lovable' ? 'Platform' : tool === 'cursor' ? 'IDE' : 'SYSTEM'}
+                                        {/* Shine Effect */}
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
+                                            <div className="absolute inset-x-[-150%] top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
+                                        </div>
+
+                                        <div className="relative z-10 w-full flex flex-col gap-6">
+                                            <div className="flex items-center justify-between">
+                                                <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${aiSystem === tool ? 'text-brand-green' : 'text-white/20'}`}>
+                                                    {tool === 'antigravity' ? 'UI HUB' : tool === 'lovable' ? 'PLATFORM' : tool === 'cursor' ? 'IDE' : 'SYSTEM'}
                                                 </p>
-                                                <div className={`transition-all duration-300 ${aiSystem === tool ? 'text-brand-green scale-110' : 'text-white/20 group-hover:text-brand-green'}`}>
+                                                <div className={`transition-all duration-700 ease-out ${aiSystem === tool ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
                                                     {tool === 'antigravity' ? (
-                                                        <Zap size={18} className="md:w-6 md:h-6" />
+                                                        <Zap size={20} className="md:w-6 md:h-6" />
                                                     ) : tool === 'lovable' ? (
-                                                        <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
+                                                        <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
                                                             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                                                         </svg>
                                                     ) : tool === 'cursor' ? (
-                                                        <svg className="w-4 h-4 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
-                                                            <path d="M13 3l-2 3H6a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V8a2 2 0 00-2-2h-5l2-3H13z" />
-                                                            <path d="M11 11v4M9 13h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                                        </svg>
+                                                        <div className="relative w-5 h-5 md:w-6 md:h-6">
+                                                            <div className="absolute inset-0 border-2 border-current rounded-sm flex items-center justify-center">
+                                                                <div className="w-1.5 h-1.5 border-r border-b border-current" />
+                                                            </div>
+                                                            <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#0A0A0A] flex items-center justify-center">
+                                                                <div className="text-[10px] font-bold">+</div>
+                                                            </div>
+                                                        </div>
                                                     ) : (
-                                                        <Brain size={18} className="md:w-6 md:h-6" />
+                                                        <Brain size={20} className="md:w-6 md:h-6" />
                                                     )}
                                                 </div>
                                             </div>
-                                            <h4 className="text-sm md:text-2xl font-display uppercase tracking-tight text-white w-full pr-2">
-                                                {tool === 'advance' ? 'Advance' : tool.charAt(0).toUpperCase() + tool.slice(1)}
+
+                                            <h4 className={`text-xl md:text-2xl lg:text-3xl font-display uppercase tracking-tighter transition-all duration-500 leading-none ${aiSystem === tool ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
+                                                {tool}
                                             </h4>
                                         </div>
-                                        {aiSystem === tool && (
-                                            <motion.div layoutId="tool-glow" className="absolute inset-0 bg-brand-green/2 blur-2xl pointer-events-none" />
-                                        )}
-                                        <div className={`mt-auto flex items-center gap-2 text-[8px] md:text-[10px] font-bold uppercase tracking-widest transition-all duration-500 ${aiSystem === tool ? 'text-brand-green opacity-100' : 'text-brand-green opacity-0 group-hover:opacity-100'}`}>
-                                            <div className={`w-1 h-1 rounded-full ${aiSystem === tool ? 'bg-brand-green animate-pulse' : 'bg-brand-green'}`} />
-                                            {tool === 'advance' ? 'Pro' : 'Active'}
+
+                                        <div className={`flex items-center gap-2 mt-4 transition-all duration-700 ${aiSystem === tool ? 'opacity-100' : 'opacity-0 translate-y-1'}`}>
+                                            <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.6)]" />
+                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/90">Active</span>
                                         </div>
+
+                                        {aiSystem === tool && (
+                                            <motion.div
+                                                layoutId="active-tool-glow"
+                                                className="absolute inset-0 bg-gradient-to-br from-brand-green/[0.04] via-transparent to-transparent pointer-events-none"
+                                            />
+                                        )}
                                     </button>
                                 ))}
                             </div>

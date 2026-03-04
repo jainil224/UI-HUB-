@@ -89,3 +89,16 @@
   animation: lightning-blink-purple 4s infinite;
   animation-delay: 2s;
 }
+
+@keyframes shine {
+  0% {
+    transform: translateX(-150%) skewX(-25deg);
+  }
+  100% {
+    transform: translateX(300%) skewX(-25deg);
+  }
+}
+
+.animate-shine {
+  animation: shine 5s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
