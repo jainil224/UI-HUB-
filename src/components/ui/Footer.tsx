@@ -1,11 +1,12 @@
 import React from 'react';
 import { Github, Twitter, Linkedin, Instagram } from 'lucide-react';
+import Logo from './Logo';
 
 const Footer = () => (
     <footer className="w-full py-12 px-6 border-t border-white/5 bg-brand-black">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-brand-green rounded-sm flex items-center justify-center font-display text-xl text-black">U</div>
+                <Logo />
                 <span className="font-heading font-bold text-xl tracking-tighter">UI HUB</span>
             </div>
 

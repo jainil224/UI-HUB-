@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import backgroundVideo from '../../../Assets/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4';
+import Logo from '../../../components/ui/Logo';
 
 const Hero = () => {
     return (

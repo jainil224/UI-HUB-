@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Github, Menu, X } from 'lucide-react';
+import Logo from './Logo';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -9,7 +10,7 @@ const Navbar = () => {
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-brand-black/80 backdrop-blur-md border-b border-white/5">
             <Link to="/" className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-brand-green rounded-sm flex items-center justify-center font-display text-xl text-black">U</div>
+                <Logo />
                 <span className="font-heading font-bold text-xl tracking-tighter">UI HUB</span>
             </Link>
 
