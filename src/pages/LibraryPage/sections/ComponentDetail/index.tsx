@@ -833,7 +833,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         <div className="relative z-10 w-full flex flex-col gap-6">
                                             <div className="flex items-center justify-between">
                                                 <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${aiSystem === tool ? 'text-brand-green' : 'text-white/20'}`}>
-                                                    {tool === 'antigravity' ? 'UI HUB' : tool === 'lovable' ? 'PLATFORM' : tool === 'cursor' ? 'IDE' : 'SYSTEM'}
+                                                    {tool === 'antigravity' ? 'VIBE ENGINE' : tool === 'lovable' ? 'PLATFORM HUB' : tool === 'cursor' ? 'SMART LDE' : 'ADVANCED SYSTEM'}
                                                 </p>
                                                 <div className={`transition-all duration-700 ease-out ${aiSystem === tool ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
                                                     {tool === 'antigravity' ? (
