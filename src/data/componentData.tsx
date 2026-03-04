@@ -5,7 +5,7 @@ import * as VisualEffects from '../components/animations/VisualEffects';
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background";
+    category: "text" | "effect" | "background" | "button";
     preview: () => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -279,5 +279,29 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("isometric-grid-background", "Isometric Grid Background"),
         code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground title="Tailwind is Awesome" />\n  </div>\n);`,
         vibePrompt: "Create a mesmerizing, skewed isometric grid background that illuminates with random colors on hover."
+    },
+    {
+        id: "glow-button",
+        title: "Glow Button",
+        category: "button",
+        preview: renderComponent("glow-button", "Glow Button"),
+        code: `export const GlowButton = () => (\n  <button className="px-6 py-3 rounded-full bg-green-500 text-black font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all">\n    Glow Button\n  </button>\n);`,
+        vibePrompt: "Create a modern button with a glowing hover effect using Tailwind CSS."
+    },
+    {
+        id: "border-beam",
+        title: "Border Beam",
+        category: "button",
+        preview: renderComponent("border-beam", "Border Beam"),
+        code: `import { BorderBeam } from '@/components/ui/border-beam';\n\nexport const Demo = () => (\n  <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">\n    Border Beam\n    <BorderBeam size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />\n  </button>\n);`,
+        vibePrompt: "Create a button with an animated Border Beam effect around its perimeter using Framer Motion."
+    },
+    {
+        id: "shatter-button",
+        title: "Shatter Button",
+        category: "button",
+        preview: renderComponent("shatter-button", "Shatter Button"),
+        code: `import { ShatterButton } from '@/components/ui/shatter-button';\n\nexport const Demo = () => (\n  <ShatterButton shatterColor="#00ffff" shardCount={30}>\n    Click Now\n  </ShatterButton>\n);`,
+        vibePrompt: "Create a button that shatters into physics-based glass shards when clicked, using Framer Motion."
     }
 ];

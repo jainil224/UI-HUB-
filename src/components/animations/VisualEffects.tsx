@@ -714,3 +714,33 @@ export { default as LinesBackground } from '../ui/background-paths';
 export { default as SparklesBackground } from '../ui/sparkles-background';
 export { IsometricGridBackground } from '../ui/isometric-grid-background';
 
+// Button Previews
+import { BorderBeam as BorderBeamUI } from '../ui/border-beam';
+
+export const GlowButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <button className="px-6 py-3 rounded-full bg-green-500 text-black font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all">
+            Glow Button
+        </button>
+    </div>
+);
+
+export const BorderBeam = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">
+            Border Beam
+            <BorderBeamUI size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />
+        </button>
+    </div>
+);
+
+import { ShatterButton as ShatterButtonUI } from '../ui/shatter-button';
+
+export const ShatterButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <ShatterButtonUI shatterColor="#00ffff" shardCount={20}>
+            Click Now
+        </ShatterButtonUI>
+    </div>
+);
+
