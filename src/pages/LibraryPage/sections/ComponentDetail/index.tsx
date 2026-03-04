@@ -499,6 +499,22 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["framer-motion"],
             requirements: ["Dynamic SVG polygon generation math", "Randomized radial explosion physics per shard", "Staggered exit animations", "Expanding pulse ring effect"]
         }
+    },
+    // Adding CornerBorderButton properties 
+    "corner-border-button": {
+        props: [
+            { name: "baseColor", type: "string", default: '"#0b1a2a"', description: "The button background color in resting state." },
+            { name: "hoverColor", type: "string", default: '"#ff3b4d"', description: "The background color applied to the overlay upon hover." },
+            { name: "borderColor", type: "string", default: '"#60daff"', description: "Controls the hex color code for the animated linear SVG edges and glowing corner points." }
+        ],
+        vibeMeta: {
+            behavior: "On hover, four independent border strokes animate simultaneously from opposite direction corner nodes to draw a seamless full rectangle enclosure.",
+            states: { from: "static corners", to: "active rectangle frame" },
+            cssProperties: ["width, height", "absolute positioning", "box-shadow"],
+            description: "A 60fps responsive button frame expanding directly from fixed corner joints.",
+            libraries: ["tailwindcss"],
+            requirements: ["Top/bottom horizontal line expansion", "Left/right vertical propagation sequence", "Opposing directional flow", "Staggered sub-pixel transition delays for fluid continuous tracking"]
+        }
     }
 };
 
