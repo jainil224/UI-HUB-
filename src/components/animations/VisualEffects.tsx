@@ -738,9 +738,19 @@ import { ShatterButton as ShatterButtonUI } from '../ui/shatter-button';
 
 export const ShatterButton = () => (
     <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
-        <ShatterButtonUI shatterColor="#00ffff" shardCount={20}>
+        <ShatterButtonUI shatterColor="#00ffff" shardCount={30}>
             Click Now
         </ShatterButtonUI>
+    </div>
+);
+
+import { CornerBorderButton as CornerBorderButtonUI } from '../ui/corner-border-button';
+
+export const CornerBorderButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <CornerBorderButtonUI baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">
+            BUTTON
+        </CornerBorderButtonUI>
     </div>
 );
 

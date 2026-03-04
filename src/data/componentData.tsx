@@ -303,5 +303,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("shatter-button", "Shatter Button"),
         code: `import { ShatterButton } from '@/components/ui/shatter-button';\n\nexport const Demo = () => (\n  <ShatterButton shatterColor="#00ffff" shardCount={30}>\n    Click Now\n  </ShatterButton>\n);`,
         vibePrompt: "Create a button that shatters into physics-based glass shards when clicked, using Framer Motion."
+    },
+    {
+        id: "corner-border-button",
+        title: "Corner Border",
+        category: "button",
+        preview: renderComponent("corner-border-button", "Corner Border Button"),
+        code: `import { CornerBorderButton } from '@/components/ui/corner-border-button';\n\nexport const Demo = () => (\n  <CornerBorderButton baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">\n    BUTTON\n  </CornerBorderButton>\n);`,
+        vibePrompt: "Create a button with glowing corner accents that expand into a full border on hover."
     }
 ];
