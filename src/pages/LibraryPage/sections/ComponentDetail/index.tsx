@@ -621,31 +621,31 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             </div>
 
             <div className="flex flex-col">
-                <h2 className="text-4xl md:text-8xl font-display uppercase tracking-tighter text-white mb-8">
+                <h2 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-display uppercase tracking-tighter text-white mb-5 md:mb-8 leading-none">
                     {item.title}
                 </h2>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                    <div className="flex flex-wrap gap-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-6 md:mb-12">
+                    <div className="flex flex-wrap gap-2 md:gap-4">
                         <button
                             onClick={() => setTab('preview')}
-                            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                            className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
                         >
-                            <Eye size={14} className="md:w-4 md:h-4" />
+                            <Eye size={13} className="md:w-4 md:h-4" />
                             Preview
                         </button>
                         <button
                             onClick={() => setTab('code')}
-                            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                            className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
                         >
-                            <Code size={14} className="md:w-4 md:h-4" />
+                            <Code size={13} className="md:w-4 md:h-4" />
                             Code
                         </button>
                         <button
                             onClick={() => setTab('vibe')}
-                            className={`flex items-center gap-2 px-6 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-brand-green text-black border border-brand-green shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'bg-brand-green/10 text-brand-green border border-brand-green/30 hover:bg-brand-green/20 hover:border-brand-green/60 hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]'}`}
+                            className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-brand-green text-black border border-brand-green shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'bg-brand-green/10 text-brand-green border border-brand-green/30 hover:bg-brand-green/20 hover:border-brand-green/60 hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]'}`}
                         >
-                            <Zap size={14} className={`${tab === 'vibe' ? 'fill-black' : ''} md:w-4 md:h-4`} />
-                            Vibe Prompt
+                            <Zap size={13} className={`${tab === 'vibe' ? 'fill-black' : ''} md:w-4 md:h-4`} />
+                            Vibe
                         </button>
                     </div>
 
@@ -675,9 +675,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         exit={{ opacity: 0, x: 20 }}
                         className="space-y-12"
                     >
-                        <div className="aspect-[4/3] md:aspect-video w-full glass rounded-[2rem] md:rounded-[3rem] relative overflow-hidden flex items-center justify-center group bg-black/20 border border-white/5">
-                            <div className={`text-center w-full ${item.category === 'background' ? 'h-full' : 'px-4 md:px-8'}`}>
-                                <div className={`flex justify-center ${item.category === 'background' ? 'h-full w-full' : 'scale-75 md:scale-100'}`} key={resetKey}>
+                        <div className="min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center group bg-black/20 border border-white/5">
+                            <div className={`text-center w-full ${item.category === 'background' ? 'h-full' : 'px-2 md:px-8'}`}>
+                                <div className={`flex justify-center ${item.category === 'background' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
                                     {item.preview()}
                                 </div>
                             </div>
@@ -929,17 +929,19 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F] shadow-[0_0_8px_rgba(39,201,63,0.3)]" />
                                             </div>
                                             <div className="h-4 w-px bg-white/10 mx-2" />
-                                            {/* System Path/Label */}
-                                            <div className="flex items-center gap-2">
+                                            {/* System Path/Label — hide verbose path on mobile */}
+                                            <div className="hidden sm:flex items-center gap-2">
                                                 <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
                                                 <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">//</span>
                                                 <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">engine_output.log</span>
                                             </div>
+                                            {/* On mobile: just show the AI system name */}
+                                            <span className="sm:hidden text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
                                         </div>
 
-                                        {/* Center Label - Made with love */}
-                                        <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5">
-                                            <span className="text-[8px] font-black uppercase tracking-widest animate-terminal-green-blink-delay">Made with ❤️ by Jainil Patel</span>
+                                        {/* Center Label - Made with love - visible on all screens */}
+                                        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 pointer-events-none">
+                                            <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest animate-terminal-green-blink-delay whitespace-nowrap">Made with ❤️ by Jainil Patel</span>
                                         </div>
 
                                         {/* Copy Button - Premium Terminal Style */}
