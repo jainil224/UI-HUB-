@@ -18,6 +18,10 @@ export interface CornerBorderButtonProps extends React.ButtonHTMLAttributes<HTML
      * The color of the animated border strokes and corners.
      */
     borderColor?: string
+    /**
+     * Optional custom inline styles.
+     */
+    style?: React.CSSProperties
 }
 
 export function CornerBorderButton({
@@ -32,7 +36,7 @@ export function CornerBorderButton({
     return (
         <button
             className={cn(
-                "group relative inline-flex items-center justify-center p-4 min-w-[220px] min-h-[70px]",
+                "group/btn relative inline-flex items-center justify-center p-4 min-w-[220px] min-h-[70px]",
                 "font-bold uppercase tracking-widest text-white transition-colors duration-400 ease-in-out",
                 className
             )}
@@ -47,7 +51,7 @@ export function CornerBorderButton({
         Using absolute positioning to overlay the base color cleanly 
       */}
             <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 ease-in-out z-0"
+                className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-400 ease-in-out z-0"
                 style={{ backgroundColor: hoverColor }}
             />
 
@@ -71,25 +75,25 @@ export function CornerBorderButton({
 
             {/* Top Border (from left to right) */}
             <span
-                className="absolute top-0 left-0 h-[2px] w-0 group-hover:w-full transition-all duration-300 ease-out z-10 pointer-events-none"
+                className="absolute top-0 left-0 h-[2px] w-0 group-hover/btn:w-full transition-all duration-300 ease-out z-10 pointer-events-none"
                 style={{ backgroundColor: borderColor, boxShadow: `0 0 8px ${borderColor}` }}
             />
 
             {/* Right Border (from top to bottom) */}
             <span
-                className="absolute top-0 right-0 w-[2px] h-0 group-hover:h-full transition-all duration-300 delay-100 ease-out z-10 pointer-events-none"
+                className="absolute top-0 right-0 w-[2px] h-0 group-hover/btn:h-full transition-all duration-300 delay-100 ease-out z-10 pointer-events-none"
                 style={{ backgroundColor: borderColor, boxShadow: `0 0 8px ${borderColor}` }}
             />
 
             {/* Bottom Border (from right to left) */}
             <span
-                className="absolute bottom-0 right-0 h-[2px] w-0 group-hover:w-full transition-all duration-300 ease-out z-10 pointer-events-none"
+                className="absolute bottom-0 right-0 h-[2px] w-0 group-hover/btn:w-full transition-all duration-300 ease-out z-10 pointer-events-none"
                 style={{ backgroundColor: borderColor, boxShadow: `0 0 8px ${borderColor}` }}
             />
 
             {/* Left Border (from bottom to top) */}
             <span
-                className="absolute bottom-0 left-0 w-[2px] h-0 group-hover:h-full transition-all duration-300 delay-100 ease-out z-10 pointer-events-none"
+                className="absolute bottom-0 left-0 w-[2px] h-0 group-hover/btn:h-full transition-all duration-300 delay-100 ease-out z-10 pointer-events-none"
                 style={{ backgroundColor: borderColor, boxShadow: `0 0 8px ${borderColor}` }}
             />
 
