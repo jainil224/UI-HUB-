@@ -98,28 +98,19 @@ export const LetterPullUpText = ({ text = "LETTER PULL UP" }) => {
 };
 
 export const MultiDirectionSlideText = ({ text = "MULTI DIRECTION" }) => {
-    const directions = ["top", "bottom", "left", "right"];
     return (
-        <div className="flex justify-center flex-wrap overflow-hidden">
-            {text.split("").map((char, i) => {
-                const direction = directions[i % 4];
-                const initial = {
-                    opacity: 0,
-                    x: direction === "left" ? -100 : direction === "right" ? 100 : 0,
-                    y: direction === "top" ? -100 : direction === "bottom" ? 100 : 0,
-                };
-                return (
-                    <motion.span
-                        key={i}
-                        initial={initial}
-                        animate={{ opacity: 1, x: 0, y: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.05 }}
-                        className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
-                    >
-                        {char === " " ? "\u00A0" : char}
-                    </motion.span>
-                );
-            })}
+        <div className="flex justify-center flex-wrap overflow-hidden px-4">
+            {text.split("").map((char, i) => (
+                <motion.span
+                    key={i}
+                    initial={{ opacity: 0, x: -50, y: i % 2 === 0 ? -20 : 20 }}
+                    animate={{ opacity: 1, x: 0, y: 0 }}
+                    transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.05 }}
+                    className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
+                >
+                    {char === " " ? "\u00A0" : char}
+                </motion.span>
+            ))}
         </div>
     );
 };
@@ -144,22 +135,18 @@ export const ScaleLetterText = ({ text = "SCALE LETTER" }) => {
 
 export const SeparateAwayText = ({ text = "SEPARATE AWAY" }) => {
     return (
-        <div className="flex justify-center flex-wrap">
-            {text.split("").map((char, i, arr) => {
-                const mid = arr.length / 2;
-                const offset = (i - mid) * 20;
-                return (
-                    <motion.span
-                        key={i}
-                        initial={{ x: offset, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                        className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
-                    >
-                        {char === " " ? "\u00A0" : char}
-                    </motion.span>
-                );
-            })}
+        <div className="flex justify-center flex-wrap px-4">
+            {text.split("").map((char, i) => (
+                <motion.span
+                    key={i}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.08 }}
+                    className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
+                >
+                    {char === " " ? "\u00A0" : char}
+                </motion.span>
+            ))}
         </div>
     );
 };

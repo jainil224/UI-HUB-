@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, ChevronDown, Brain
+    Check, Copy, Zap, ChevronDown, Brain, Cpu
 } from 'lucide-react';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
 import * as Animations from '../../../../components/animations/TextAnimations';
@@ -818,13 +818,37 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         {/* Tool Selector */}
                         <section className="space-y-6 md:space-y-10">
                             <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:px-4">
-                                {(['antigravity', 'lovable', 'cursor', 'advance'] as const).map(tool => (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
+                                {(['antigravity', 'lovable', 'cursor', 'claude', 'advance'] as const).map(tool => (
                                     <button
                                         key={tool}
                                         onClick={() => setAiSystem(tool)}
-                                        className={`p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] border transition-all text-left relative overflow-hidden group min-h-[140px] md:min-h-[180px] flex flex-col justify-between ${aiSystem === tool ? 'bg-[#050505] border-brand-green shadow-[0_0_40px_rgba(0,255,0,0.15)] ring-1 ring-brand-green/30' : 'bg-[#0A0A0A] border-white/5 hover:border-white/10 hover:scale-[1.01] duration-500'}`}
+                                        className={`p-5 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border transition-all text-left relative overflow-hidden group min-h-[130px] md:min-h-[160px] flex flex-col justify-between ${aiSystem === tool ? 'bg-[#050505] border-brand-green/50 shadow-[0_0_40px_rgba(0,255,0,0.1)] ring-1 ring-brand-green/30' : 'bg-white/[0.02] backdrop-blur-xl border-white/5 hover:border-white/10 hover:scale-[1.01] duration-500'}`}
                                     >
+                                        {/* Scanline/Texture Overlay */}
+                                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+
+                                        {/* Animated Border for Active Tool */}
+                                        {aiSystem === tool && (
+                                            <motion.div
+                                                layoutId="active-border"
+                                                className="absolute inset-0 border border-brand-green/60 z-20 pointer-events-none rounded-[inherit]"
+                                                initial={{ opacity: 0 }}
+                                                animate={{
+                                                    opacity: [0.7, 1, 0.7],
+                                                    boxShadow: [
+                                                        "0 0 15px rgba(0,255,0,0.1), inset 0 0 10px rgba(0,255,0,0.1)",
+                                                        "0 0 35px rgba(0,255,0,0.3), inset 0 0 20px rgba(0,255,0,0.2)",
+                                                        "0 0 15px rgba(0,255,0,0.1), inset 0 0 10px rgba(0,255,0,0.1)"
+                                                    ]
+                                                }}
+                                                transition={{
+                                                    opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" },
+                                                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+                                                }}
+                                            />
+                                        )}
+
                                         {/* Shine Effect */}
                                         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
                                             <div className="absolute inset-x-[-150%] top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
@@ -833,7 +857,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         <div className="relative z-10 w-full flex flex-col gap-6">
                                             <div className="flex items-center justify-between">
                                                 <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${aiSystem === tool ? 'text-brand-green' : 'text-white/20'}`}>
-                                                    {tool === 'antigravity' ? 'VIBE ENGINE' : tool === 'lovable' ? 'PLATFORM HUB' : tool === 'cursor' ? 'SMART LDE' : 'ADVANCED SYSTEM'}
+                                                    {tool === 'antigravity' ? 'VIBE ENGINE' : tool === 'lovable' ? 'PLATFORM HUB' : tool === 'cursor' ? 'SMART LDE' : tool === 'claude' ? 'INTELLIGENT MODEL' : 'ADVANCED SYSTEM'}
                                                 </p>
                                                 <div className={`transition-all duration-700 ease-out ${aiSystem === tool ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
                                                     {tool === 'antigravity' ? (
@@ -851,13 +875,15 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                                 <div className="text-[10px] font-bold">+</div>
                                                             </div>
                                                         </div>
+                                                    ) : tool === 'claude' ? (
+                                                        <Cpu size={20} className="md:w-6 md:h-6" />
                                                     ) : (
                                                         <Brain size={20} className="md:w-6 md:h-6" />
                                                     )}
                                                 </div>
                                             </div>
 
-                                            <h4 className={`text-xl md:text-2xl lg:text-3xl font-display uppercase tracking-tighter transition-all duration-500 leading-none ${aiSystem === tool ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
+                                            <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${aiSystem === tool ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
                                                 {tool}
                                             </h4>
                                         </div>
@@ -870,7 +896,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         {aiSystem === tool && (
                                             <motion.div
                                                 layoutId="active-tool-glow"
-                                                className="absolute inset-0 bg-gradient-to-br from-brand-green/[0.04] via-transparent to-transparent pointer-events-none"
+                                                className="absolute inset-0 bg-gradient-to-br from-brand-green/[0.08] via-transparent to-transparent pointer-events-none"
                                             />
                                         )}
                                     </button>

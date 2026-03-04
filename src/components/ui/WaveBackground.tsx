@@ -20,7 +20,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
 
     for(float i = 1.0; i < 8.0; i++) {
         uv.y += i * 0.1 / i * 
-            sin(uv.x * i * i + iTime * 0.5) * sin(uv.y * i * i + iTime * 0.5);
+            sin(uv.x * i * i - iTime * 0.5) * sin(uv.y * i * i + iTime * 0.5);
     }
 
     vec3 col;

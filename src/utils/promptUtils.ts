@@ -1,4 +1,4 @@
-export type AISystem = 'antigravity' | 'lovable' | 'cursor' | 'advance';
+export type AISystem = 'antigravity' | 'lovable' | 'cursor' | 'claude' | 'advance';
 
 export interface VibeMeta {
     behavior: string;
@@ -21,9 +21,141 @@ interface PromptData {
 }
 
 export const generateVibePrompt = (tool: AISystem, data: PromptData): string => {
-    const { animationName, language, styling, meta } = data;
+    const { animationName, language, styling, meta, code } = data;
     const langFull = language === 'ts' ? 'TypeScript (TSX)' : language === 'js' ? 'JavaScript (JSX)' : 'HTML/CSS';
     const styleFull = styling === 'tailwind' ? 'Tailwind CSS' : 'Vanilla CSS';
+
+    if (tool === 'claude') {
+        const divider = "────────────────────────────────────────";
+        return `
+╭──────────────────────────────────────────────╮
+             UI HUB • CLAUDE AI PROMPT
+╰──────────────────────────────────────────────╯
+
+PROJECT CONTEXT
+You are generating a premium UI component for a modern web application built with React and Next.js.
+
+Component Name
+${animationName || 'Component'}
+
+Component Type
+${meta.description || 'UI Component'}
+
+
+${divider}
+TECHNOLOGY STACK
+${divider}
+
+Language
+${langFull}
+
+Framework
+React / Next.js
+
+Rendering Engine
+${(meta.libraries || []).includes('three') ? 'Three.js' : (meta.libraries || []).includes('framer-motion') ? 'Framer Motion' : 'Vanilla CSS / SVG'}
+
+Supporting Libraries
+${(meta.libraries || ['clsx', 'tailwind-merge']).join('\n')}
+
+
+${divider}
+DEPENDENCY SETUP
+${divider}
+
+Install the following dependencies:
+
+npm install ${(meta.libraries || ['clsx', 'tailwind-merge']).join(' ')}
+
+
+${divider}
+UTILITY REQUIREMENT
+${divider}
+
+Create a helper utility if it does not already exist.
+
+File path:
+lib/utils.ts
+
+Code:
+
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+
+${divider}
+COMPONENT OBJECTIVE
+${divider}
+
+Build a reusable React component that renders a ${meta.description || 'premium UI effect'}.
+
+The animation must be powered by ${meta.libraries?.includes('three') ? 'Three.js' : 'Framer Motion'} and follow the specific performance guidelines.
+
+
+${divider}
+FEATURE SPECIFICATION
+${divider}
+
+The component must support:
+
+${(meta.requirements || ['Premium design architecture', 'Responsive rendering', 'Dark mode compatibility']).map(req => `• ${req}`).join('  \n')}
+
+
+${divider}
+PERFORMANCE CONSTRAINTS
+${divider}
+
+Ensure the component:
+
+• Maintains smooth 60fps rendering
+• Uses requestAnimationFrame
+• Properly disposes resources (if applicable)
+• Prevents memory leaks
+• Updates correctly on window resize
+
+
+${divider}
+EXPECTED RESULT
+${divider}
+
+Return one complete file:
+
+components/${animationName.replace(/\s+/g, '')}.tsx
+
+The code must be:
+
+• Production-ready
+• Fully typed with TypeScript
+• Cleanly structured
+• Optimized for performance
+
+
+${divider}
+SOURCE CODE REFERENCE
+${divider}
+
+${code || '// Source code reference not available for this component.'}
+
+
+${divider}
+RESPONSE RULES
+${divider}
+
+Return only the final working component code.
+
+Do not include explanations.
+
+Do not rename the component.
+
+Use the SOURCE CODE REFERENCE as the primary blueprint to ensure 100% accuracy.
+
+Follow modern React and TypeScript best practices.
+`.trim();
+    }
 
     if (tool === 'advance') {
         const libs = meta.libraries || ['framer-motion', 'clsx', 'tailwind-merge', 'lucide-react'];
@@ -115,6 +247,14 @@ The code must be:
 • Clean and maintainable  
 • Optimized for performance  
 
+
+# ==========================================
+# SOURCE CODE REFERENCE
+# ==========================================
+
+${code || '// Source code reference not available for this component.'}
+
+
 # ==========================================
 # IMPORTANT
 # ==========================================
@@ -122,6 +262,8 @@ The code must be:
 Do not modify layout structure.
 
 Follow modern frontend best practices.
+
+Use the SOURCE CODE REFERENCE as the primary blueprint to ensure 100% accuracy.
 
 Return only the full working component code.
 `.trim();
