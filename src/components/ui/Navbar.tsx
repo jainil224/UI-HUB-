@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Github, Menu, X } from 'lucide-react';
 import Logo from './Logo';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const location = useLocation();
+
+    const isLibrary = location.pathname.startsWith('/library');
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 bg-brand-black/80 backdrop-blur-md border-b border-white/5">
@@ -15,9 +18,9 @@ const Navbar = () => {
             </Link>
 
             {/* Desktop Menu */}
-            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-white/60">
-                <Link to="/" className="hover:text-brand-green transition-colors">Home</Link>
-                <Link to="/library" className="hover:text-brand-green transition-colors">Component Library</Link>
+            <div className="hidden md:flex items-center gap-8 text-sm font-medium">
+                <Link to="/" className={`transition-colors hover:text-brand-green ${!isLibrary ? 'text-white' : 'text-white/60'}`}>Home</Link>
+                <Link to="/library" className={`transition-colors hover:text-brand-green ${isLibrary ? 'text-white' : 'text-white/60'}`}>Component Library</Link>
             </div>
 
             <div className="flex items-center gap-4">

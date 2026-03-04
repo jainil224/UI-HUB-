@@ -687,7 +687,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         {componentConfig.props.length > 0 && (
                             <section className="space-y-6 md:space-y-8">
                                 <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white px-2">Props</h3>
-                                <div className="glass rounded-[1.5rem] md:rounded-[2rem] border border-white/5 overflow-hidden bg-black/20 p-2 md:p-4">
+                                <div className="rounded-[1.5rem] md:rounded-[2rem] border border-white/10 overflow-hidden bg-[#09090b] p-2 md:p-4 shadow-2xl">
                                     <PropsTable props={componentConfig.props} />
                                 </div>
                             </section>
@@ -704,18 +704,18 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         {/* Install Section */}
                         <section>
                             <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white mb-6 md:mb-8">Install</h3>
-                            <div className="flex flex-wrap gap-2 md:gap-4 mb-6 md:mb-8">
+                            <div className="inline-flex glass p-1.5 rounded-full mb-6 md:mb-8 border border-white/5 bg-black/20">
                                 <button
                                     onClick={() => setInstallMethod('cli')}
-                                    className={`px-5 md:px-6 py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest border transition-all ${installMethod === 'cli' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:text-white'}`}
+                                    className={`px-6 md:px-8 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all border ${installMethod === 'cli' ? 'bg-[#09090b] text-white border-white/20 shadow-lg' : 'bg-transparent text-white/40 border-transparent hover:text-white'}`}
                                 >CLI</button>
                                 <button
                                     onClick={() => setInstallMethod('manual')}
-                                    className={`px-5 md:px-6 py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-widest border transition-all ${installMethod === 'manual' ? 'bg-white/10 border-white/20 text-white' : 'border-white/5 text-white/40 hover:text-white'}`}
+                                    className={`px-6 md:px-8 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all border ${installMethod === 'manual' ? 'bg-[#09090b] text-white border-white/20 shadow-lg' : 'bg-transparent text-white/40 border-transparent hover:text-white'}`}
                                 >Manual</button>
                             </div>
 
-                            <div className="glass rounded-2xl md:rounded-3xl overflow-hidden border border-white/5 bg-black/20">
+                            <div className="rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 bg-[#09090b] shadow-2xl">
                                 <AnimatePresence mode="wait">
                                     {installMethod === 'manual' && (
                                         <motion.div
@@ -723,7 +723,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             initial={{ opacity: 0, height: 0 }}
                                             animate={{ opacity: 1, height: 'auto' }}
                                             exit={{ opacity: 0, height: 0 }}
-                                            className="flex border-b border-white/5 bg-black/20"
+                                            className="flex border-b border-white/5"
                                         >
                                             {(['npm', 'pnpm', 'yarn', 'bun'] as const).map(m => (
                                                 <button
@@ -740,7 +740,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
-                                <div className="p-8 flex items-center justify-between bg-black/40">
+                                <div className="p-8 flex items-center justify-between">
                                     <code className="text-brand-green font-mono text-sm">{getInstallCommand(pkgManager, installMethod)}</code>
                                     <button
                                         onClick={() => handleCopy(getInstallCommand(pkgManager, installMethod), 'install')}
@@ -755,15 +755,15 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         {/* Usage Section */}
                         <section>
                             <h3 className="text-3xl font-display uppercase tracking-tight text-white mb-2">Usage <span className="text-sm font-sans tracking-normal text-white/30 lowercase">(with your settings)</span></h3>
-                            <div className="glass rounded-3xl overflow-hidden border border-white/5 relative bg-black/40">
+                            <div className="rounded-3xl overflow-hidden border border-white/10 relative bg-[#09090b] shadow-2xl">
                                 <button
                                     onClick={() => handleCopy(usageCode, 'usage')}
                                     className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'usage' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
                                 >
                                     {copied === 'usage' ? <Check size={18} /> : <Copy size={18} />}
                                 </button>
-                                <div className="p-8 leading-relaxed overflow-auto">
-                                    <pre className="font-sans"><CodeHighlighter code={usageCode} /></pre>
+                                <div className="p-6 md:p-8 leading-relaxed overflow-auto custom-scrollbar">
+                                    <pre className="font-sans text-xs md:text-sm"><CodeHighlighter code={usageCode} /></pre>
                                 </div>
                             </div>
                         </section>
@@ -794,14 +794,14 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 />
                             </div>
 
-                            <div className="glass rounded-[2.5rem] overflow-hidden border border-white/5 relative bg-black/40">
+                            <div className="rounded-[2.5rem] overflow-hidden border border-white/10 relative bg-[#09090b] shadow-2xl">
                                 <button
                                     onClick={() => handleCopy(getComponentCode(item.id, { lang, styling }), 'source')}
                                     className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'source' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
                                 >
                                     {copied === 'source' ? <Check size={18} /> : <Copy size={18} />}
                                 </button>
-                                <div className="p-8 text-xs leading-relaxed max-h-[600px] overflow-auto">
+                                <div className="p-6 md:p-8 text-xs leading-relaxed max-h-[600px] overflow-auto custom-scrollbar">
                                     <pre className="font-sans"><code><CodeHighlighter code={getComponentCode(item.id, { lang, styling })} /></code></pre>
                                 </div>
                             </div>
@@ -964,7 +964,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                                         {/* Center Label - Made with love - properly flows on mobile, absolute center on desktop */}
                                         <div className="flex justify-center sm:absolute sm:left-1/2 sm:-translate-x-1/2 items-center gap-1 pointer-events-none">
-                                            <span className="text-[8px] font-black uppercase tracking-[0.15em] sm:tracking-widest animate-terminal-green-blink-delay whitespace-nowrap text-white/50 sm:text-white">Made with ❤️ by Jainil Patel</span>
+                                            <span className="text-[8px] font-black uppercase tracking-[0.15em] sm:tracking-widest animate-terminal-purple-blink-delay whitespace-nowrap text-white/50 sm:text-white">Made with ❤️ by Jainil Patel</span>
                                         </div>
 
                                         {/* Desktop Copy Button */}

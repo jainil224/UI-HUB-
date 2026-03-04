@@ -12,7 +12,7 @@ const AppShell = () => {
 
   return (
     <div className="bg-brand-black min-h-screen text-white selection:bg-brand-green selection:text-black">
-      {!isLibrary && <Navbar />}
+      <Navbar />
 
       <Routes>
         <Route path="/" element={<HomePage />} />

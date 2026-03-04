@@ -33,8 +33,7 @@ const LibraryPage = () => {
     ];
 
     return (
-        // h-dvh handles mobile browser chrome correctly; flex-col on mobile, flex-row on desktop
-        <div className="h-dvh bg-brand-black text-white flex flex-col md:flex-row overflow-hidden relative">
+        <div className="h-dvh bg-brand-black text-white flex flex-col md:flex-row overflow-hidden relative pt-[73px]">
 
             {/* ── Mobile top nav bar ── */}
             <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/5 shrink-0 z-30">
@@ -113,7 +112,7 @@ const LibraryPage = () => {
             </AnimatePresence>
 
             {/* ── Desktop sidebar ── */}
-            <aside className="hidden md:block w-64 shrink-0 border-r border-white/5 h-full overflow-y-auto scrollbar-hide p-6 pt-24">
+            <aside className="hidden md:block w-64 shrink-0 border-r border-white/5 h-full overflow-y-auto scrollbar-hide p-6 pt-8">
                 {/* Home link in desktop sidebar */}
                 <Link to="/" className="flex items-center gap-2 text-white/40 hover:text-brand-green text-xs font-bold uppercase tracking-widest mb-8 transition-colors">
                     <Home size={14} />
@@ -138,10 +137,7 @@ const LibraryPage = () => {
                 ))}
             </aside>
 
-            {/* ── Main scrollable content ──
-                min-h-0 is critical: without it, flex-1 in a flex-col doesn't shrink
-                and overflow-y-auto won't scroll — the content just overflows the screen. */}
-            <main className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4 pt-5 md:p-12 md:pt-24">
+            <main className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4 pt-5 md:p-12 md:pt-12">
                 <div className="max-w-6xl mx-auto">
                     <AnimatePresence mode="wait">
                         <div key={activeComponent.id}>
