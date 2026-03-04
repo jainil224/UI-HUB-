@@ -327,5 +327,21 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("payment-transaction-button", "Payment Transaction Button"),
         code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton />\n);`,
         vibePrompt: "Create a modern animated 'New Transaction Card' UI component with hover interactions where a credit card slides into a POS terminal."
+    },
+    {
+        id: "magic-card-effect",
+        title: "Magic Card Effect",
+        category: "button",
+        preview: renderComponent("magic-card-effect", "Magic Card Effect"),
+        code: `import { MagicCard } from '@/components/ui/magic-card';\n\nexport const Demo = () => (\n  <MagicCard className="flex flex-col items-center justify-center cursor-pointer shadow-2xl" gradientColor="#262626">\n    <div className="p-12 flex flex-col items-center gap-4 text-center">\n      <p className="text-4xl font-display font-bold text-white tracking-tight">Magic Card</p>\n      <p className="text-white/50 text-sm font-medium">Hover to reveal the magic</p>\n    </div>\n  </MagicCard>\n);`,
+        vibePrompt: "Create a spotlight effect that follows your mouse cursor and highlights borders on hover using framer-motion."
+    },
+    {
+        id: "rainbow-button",
+        title: "Rainbow Button",
+        category: "button",
+        preview: renderComponent("rainbow-button", "Rainbow Button"),
+        code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <div className="flex gap-4">\n    <RainbowButton>Rainbow Button</RainbowButton>\n    <RainbowButton variant="outline">Outline Variant</RainbowButton>\n  </div>\n);`,
+        vibePrompt: "Create an animated button with a continuous rainbow border effect and a subtle glow using CSS animations."
     }
 ];

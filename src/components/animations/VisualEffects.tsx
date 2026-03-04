@@ -10,6 +10,8 @@ import {
     CloudSunRain,
 } from 'lucide-react';
 import { PaymentTransactionButton as PaymentTransactionButtonUI } from '../ui/payment-transaction-button';
+import { MagicCard as MagicCardUI } from '../ui/magic-card';
+import { RainbowButton as RainbowButtonUI } from '../ui/rainbow-button';
 
 // 1. Liquid-Glass (Weather Dashboard Example)
 export const LiquidGlass = () => {
@@ -766,6 +768,35 @@ export const MarqueeHoverButton = () => (
 export const PaymentTransactionButton = () => (
     <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-full min-h-[300px]">
         <PaymentTransactionButtonUI />
+    </div>
+);
+
+export const MagicCardEffect = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-full min-h-[400px]">
+        <MagicCardUI
+            className="flex flex-col items-center justify-center cursor-pointer shadow-2xl bg-neutral-900/80 border-white/10"
+            gradientColor="rgba(255, 255, 255, 0.15)"
+            gradientFrom="#38bdf8"
+            gradientTo="#818cf8"
+            gradientSize={300}
+        >
+            <div className="p-16 flex flex-col items-center gap-6 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                    <Sparkles className="text-white w-8 h-8" />
+                </div>
+                <div>
+                    <h3 className="text-4xl font-display font-bold text-white tracking-tight mb-2">Magic Card</h3>
+                    <p className="text-white/60 text-base font-medium">Move your mouse to reveal the glow</p>
+                </div>
+            </div>
+        </MagicCardUI>
+    </div>
+);
+
+export const RainbowButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64 gap-4">
+        <RainbowButtonUI>Rainbow Button</RainbowButtonUI>
+        <RainbowButtonUI variant="outline">Outline Variant</RainbowButtonUI>
     </div>
 );
 
