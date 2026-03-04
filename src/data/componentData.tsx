@@ -341,7 +341,7 @@ export const componentList: ComponentItem[] = [
         title: "Rainbow Button",
         category: "button",
         preview: renderComponent("rainbow-button", "Rainbow Button"),
-        code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <div className="flex gap-4">\n    <RainbowButton>Rainbow Button</RainbowButton>\n    <RainbowButton variant="outline">Outline Variant</RainbowButton>\n  </div>\n);`,
+        code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <RainbowButton>Rainbow Button</RainbowButton>\n);`,
         vibePrompt: "Create an animated button with a continuous rainbow border effect and a subtle glow using CSS animations."
     }
 ];

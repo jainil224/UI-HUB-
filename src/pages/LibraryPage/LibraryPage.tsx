@@ -27,7 +27,7 @@ const LibraryPage = () => {
     };
 
     const categories: Category[] = [
-        { name: "Buttons", items: componentList.filter(item => item.category === 'button') },
+        { name: "Buttons/hover effcats", items: componentList.filter(item => item.category === 'button') },
         { name: "Text Animations", items: componentList.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: componentList.filter(item => item.category === 'effect') },
         { name: "Backgrounds", items: componentList.filter(item => item.category === 'background') },

@@ -794,9 +794,8 @@ export const MagicCardEffect = () => (
 );
 
 export const RainbowButton = () => (
-    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64 gap-4">
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
         <RainbowButtonUI>Rainbow Button</RainbowButtonUI>
-        <RainbowButtonUI variant="outline">Outline Variant</RainbowButtonUI>
     </div>
 );
 
