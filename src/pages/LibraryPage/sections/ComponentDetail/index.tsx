@@ -645,7 +645,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-brand-green text-black border border-brand-green shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'bg-brand-green/10 text-brand-green border border-brand-green/30 hover:bg-brand-green/20 hover:border-brand-green/60 hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]'}`}
                         >
                             <Zap size={13} className={`${tab === 'vibe' ? 'fill-black' : ''} md:w-4 md:h-4`} />
-                            Vibe
+                            Vibe Prompt
                         </button>
                     </div>
 
@@ -920,32 +920,55 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay z-10" />
 
                                     {/* Terminal Header / Toolbar */}
-                                    <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.02] relative z-20">
-                                        <div className="flex items-center gap-4">
-                                            {/* OS Dots */}
-                                            <div className="flex gap-1.5">
-                                                <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] shadow-[0_0_8px_rgba(255,95,86,0.3)]" />
-                                                <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] shadow-[0_0_8px_rgba(255,189,46,0.3)]" />
-                                                <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F] shadow-[0_0_8px_rgba(39,201,63,0.3)]" />
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5 bg-white/[0.02] relative z-20 gap-3 sm:gap-0">
+
+                                        <div className="flex items-center justify-between w-full sm:w-auto">
+                                            <div className="flex items-center gap-3 sm:gap-4">
+                                                {/* OS Dots */}
+                                                <div className="flex gap-1.5">
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] shadow-[0_0_8px_rgba(255,95,86,0.3)]" />
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] shadow-[0_0_8px_rgba(255,189,46,0.3)]" />
+                                                    <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F] shadow-[0_0_8px_rgba(39,201,63,0.3)]" />
+                                                </div>
+                                                <div className="h-4 w-px bg-white/10 mx-1 sm:mx-2" />
+                                                {/* System Path/Label — hide verbose path on mobile */}
+                                                <div className="hidden sm:flex items-center gap-2">
+                                                    <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
+                                                    <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">//</span>
+                                                    <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">engine_output.log</span>
+                                                </div>
+                                                {/* On mobile: just show the AI system name */}
+                                                <span className="sm:hidden text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
                                             </div>
-                                            <div className="h-4 w-px bg-white/10 mx-2" />
-                                            {/* System Path/Label — hide verbose path on mobile */}
-                                            <div className="hidden sm:flex items-center gap-2">
-                                                <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
-                                                <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">//</span>
-                                                <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">engine_output.log</span>
+
+                                            {/* Mobile Copy Button */}
+                                            <div className="relative group/copybtn sm:hidden">
+                                                {/* Glow aura */}
+                                                <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0'}`} />
+                                                <button
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(fullVibePrompt);
+                                                        setCopied('vibe');
+                                                        setTimeout(() => setCopied(null), 2000);
+                                                    }}
+                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${copied === 'vibe'
+                                                        ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_15px_rgba(0,255,0,0.4)]'
+                                                        : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 active:bg-[#00FF00]/10'
+                                                        }`}
+                                                >
+                                                    {copied === 'vibe' ? <Check size={10} strokeWidth={2.5} /> : <Copy size={10} />}
+                                                    <span>{copied === 'vibe' ? 'Saved' : 'Copy'}</span>
+                                                </button>
                                             </div>
-                                            {/* On mobile: just show the AI system name */}
-                                            <span className="sm:hidden text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
                                         </div>
 
-                                        {/* Center Label - Made with love - visible on all screens */}
-                                        <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1 pointer-events-none">
-                                            <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-widest animate-terminal-green-blink-delay whitespace-nowrap">Made with ❤️ by Jainil Patel</span>
+                                        {/* Center Label - Made with love - properly flows on mobile, absolute center on desktop */}
+                                        <div className="flex justify-center sm:absolute sm:left-1/2 sm:-translate-x-1/2 items-center gap-1 pointer-events-none">
+                                            <span className="text-[8px] font-black uppercase tracking-[0.15em] sm:tracking-widest animate-terminal-green-blink-delay whitespace-nowrap text-white/50 sm:text-white">Made with ❤️ by Jainil Patel</span>
                                         </div>
 
-                                        {/* Copy Button - Premium Terminal Style */}
-                                        <div className="relative group/copybtn">
+                                        {/* Desktop Copy Button */}
+                                        <div className="relative group/copybtn hidden sm:block">
                                             {/* Glow aura */}
                                             <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
                                             <button
