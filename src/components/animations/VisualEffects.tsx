@@ -754,3 +754,11 @@ export const CornerBorderButton = () => (
     </div>
 );
 
+import { MarqueeHoverButton as MarqueeHoverButtonUI } from '../ui/marquee-hover-button';
+
+export const MarqueeHoverButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <MarqueeHoverButtonUI label="Hover Me" />
+    </div>
+);
+

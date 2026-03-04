@@ -311,5 +311,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("corner-border-button", "Corner Border Button"),
         code: `import { CornerBorderButton } from '@/components/ui/corner-border-button';\n\nexport const Demo = () => (\n  <CornerBorderButton baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">\n    BUTTON\n  </CornerBorderButton>\n);`,
         vibePrompt: "Create a button with glowing corner accents that expand into a full border on hover."
+    },
+    {
+        id: "marquee-hover-button",
+        title: "Marquee Hover",
+        category: "button",
+        preview: renderComponent("marquee-hover-button", "Marquee Hover Button"),
+        code: `import { MarqueeHoverButton } from '@/components/ui/marquee-hover-button';\n\nexport const Demo = () => (\n  <MarqueeHoverButton label="Hover Me" />\n);`,
+        vibePrompt: "Create a button that swaps its text for an infinitely scrolling marquee animation smoothly on hover."
     }
 ];

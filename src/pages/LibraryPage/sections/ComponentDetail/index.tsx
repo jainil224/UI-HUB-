@@ -515,6 +515,21 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["tailwindcss"],
             requirements: ["Top/bottom horizontal line expansion", "Left/right vertical propagation sequence", "Opposing directional flow", "Staggered sub-pixel transition delays for fluid continuous tracking"]
         }
+    },
+    // Adding MarqueeHoverButton properties
+    "marquee-hover-button": {
+        props: [
+            { name: "label", type: "string", default: '"Button"', description: "The text to display inside the button and on the scrolling marquee." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disables interaction and applies lowered opacity." }
+        ],
+        vibeMeta: {
+            behavior: "On hover, the default static label fades out, revealing an infinitely scrolling marquee animation containing the same text.",
+            states: { from: "static text", to: "continuous horizontal scrolling marquee" },
+            cssProperties: ["opacity", "transform: translateX", "overflow: hidden"],
+            description: "Interactive button showing an endlessly scrolling marquee on hover.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Framer Motion linear easing loop", "Duplicated span text to fill the scrolling gap", "Seamless infinite transform animation", "Crossfade transition between static label and marquee"]
+        }
     }
 };
 
