@@ -319,5 +319,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("marquee-hover-button", "Marquee Hover Button"),
         code: `import { MarqueeHoverButton } from '@/components/ui/marquee-hover-button';\n\nexport const Demo = () => (\n  <MarqueeHoverButton label="Hover Me" />\n);`,
         vibePrompt: "Create a button that swaps its text for an infinitely scrolling marquee animation smoothly on hover."
+    },
+    {
+        id: "payment-transaction-button",
+        title: "Payment Transaction",
+        category: "button",
+        preview: renderComponent("payment-transaction-button", "Payment Transaction Button"),
+        code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton />\n);`,
+        vibePrompt: "Create a modern animated 'New Transaction Card' UI component with hover interactions where a credit card slides into a POS terminal."
     }
 ];

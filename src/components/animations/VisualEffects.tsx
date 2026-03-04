@@ -9,6 +9,7 @@ import {
     MapPin,
     CloudSunRain,
 } from 'lucide-react';
+import { PaymentTransactionButton as PaymentTransactionButtonUI } from '../ui/payment-transaction-button';
 
 // 1. Liquid-Glass (Weather Dashboard Example)
 export const LiquidGlass = () => {
@@ -759,6 +760,12 @@ import { MarqueeHoverButton as MarqueeHoverButtonUI } from '../ui/marquee-hover-
 export const MarqueeHoverButton = () => (
     <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
         <MarqueeHoverButtonUI label="Hover Me" />
+    </div>
+);
+
+export const PaymentTransactionButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-full min-h-[300px]">
+        <PaymentTransactionButtonUI />
     </div>
 );
 
