@@ -351,5 +351,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("social-tooltip-buttons", "Social Tooltip Hover Buttons"),
         code: `import { SocialTooltipButtons } from "@/components/animations/SocialTooltipButtons";\n\nexport const Demo = () => (\n  <SocialTooltipButtons />\n);`,
         vibePrompt: "Create a list of social icons that reveal brand-colored tooltips with a smooth bounce animation on hover."
+    },
+    {
+        id: "orbit-button",
+        title: "Orbit Button",
+        category: "button",
+        preview: renderComponent("orbit-button", "Orbit Button"),
+        code: `import { OrbitButton } from "@/components/ui/OrbitButton";\n\nexport const Demo = () => (\n  <OrbitButton label="Orbit Button" color="cyan" />\n);`,
+        vibePrompt: "Futuristic button with planetary particles orbiting around a neon core."
     }
 ];

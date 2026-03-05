@@ -530,6 +530,22 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["framer-motion", "clsx", "tailwind-merge"],
             requirements: ["Framer Motion linear easing loop", "Duplicated span text to fill the scrolling gap", "Seamless infinite transform animation", "Crossfade transition between static label and marquee"]
         }
+    },
+    "orbit-button": {
+        props: [
+            { name: "label", type: "string", default: '"Orbit Button"', description: "The text to display inside the button." },
+            { name: "color", type: '"blue" | "purple" | "cyan"', default: '"cyan"', description: "The neon color theme for the button and particles." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Optional click handler." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
+        ],
+        vibeMeta: {
+            behavior: "A central neon button with multiple particles orbiting it at different speeds and radii. Hovering increases rotation speed and glow intensity.",
+            states: { from: "gentle slow orbit", to: "fast orbit with intense neon glow" },
+            cssProperties: ["transform", "box-shadow", "backdrop-filter", "filter"],
+            description: "Futuristic planetary orbit animation for a premium button component.",
+            libraries: ["framer-motion", "tailwindcss"],
+            requirements: ["Continuous rotation loops", "Speed scaling on hover", "Neon box-shadow glows", "Glassmorphic button base"]
+        }
     }
 };
 
