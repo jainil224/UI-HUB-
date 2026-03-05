@@ -14,6 +14,8 @@ interface ParticlesBackgroundProps {
     countMobile?: number;
     zIndex?: number;
     height?: string;
+    speed?: number;
+    interactive?: boolean;
 }
 
 const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
@@ -24,6 +26,8 @@ const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
     countMobile = 40,
     zIndex = 0,
     height = '100vh',
+    speed = 2,
+    interactive = false,
 }) => {
     useLayoutEffect(() => {
         const script = document.createElement('script');
@@ -62,7 +66,7 @@ const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
                         },
                         move: {
                             enable: true,
-                            speed: 2,
+                            speed: speed,
                             direction: 'none',
                             random: true,
                             straight: false,
@@ -73,10 +77,12 @@ const ParticlesBackground: React.FC<ParticlesBackgroundProps> = ({
                         detect_on: 'canvas',
                         events: {
                             onhover: {
-                                enable: false,
+                                enable: interactive,
+                                mode: 'repulse'
                             },
                             onclick: {
-                                enable: false,
+                                enable: interactive,
+                                mode: 'push'
                             },
                             resize: true,
                         },

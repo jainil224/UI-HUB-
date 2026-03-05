@@ -12,6 +12,8 @@ export interface HellBackgroundProps {
     backdropBlurAmount?: BlurSize;
     className?: string;
     color?: string; // e.g., "#FF0000"
+    speed?: number;
+    intensity?: number;
 }
 
 /**

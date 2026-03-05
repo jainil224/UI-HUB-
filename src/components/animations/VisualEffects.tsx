@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 import { motion, useMotionValue, useSpring } from 'motion/react';
+import { SocialTooltipButtons } from './SocialTooltipButtons';
+export { SocialTooltipButtons };
 import { LiquidGlassCard } from '../ui/LiquidGlassCard';
 import {
     Cloud,
@@ -23,11 +25,15 @@ import { RainbowButton as RainbowButtonUI } from '../ui/rainbow-button';
 // 1. Liquid-Glass (Weather Dashboard Example)
 export interface LiquidGlassProps {
     backgroundImage?: string;
+    location?: string;
+    temp?: string;
     className?: string;
 }
 
 export const LiquidGlass = ({
     backgroundImage = "url('https://images.unsplash.com/photo-1590867286251-8e26d9f255c0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+    location = "Surat",
+    temp = "+18°C",
     className = ""
 }: LiquidGlassProps) => {
     return (
@@ -87,8 +93,8 @@ export const LiquidGlass = ({
                     className='rounded-3xl p-6 text-white bg-white/5 '
                 >
                     <div className='relative z-30 flex flex-col items-start justify-center h-full w-full'>
-                        <div className='text-4xl font-semibold'>+18°C</div>
-                        <div className='text-sm opacity-70'>Cloudy +18°/+5°</div>
+                        <div className='text-4xl font-semibold'>{temp}</div>
+                        <div className='text-sm opacity-70'>Cloudy {temp}/+5°</div>
                     </div>
                 </LiquidGlassCard>
 
@@ -104,7 +110,7 @@ export const LiquidGlass = ({
                         <div className='text-sm opacity-70'>Sun, Nov 19</div>
                         <button className='mt-2 inline-flex items-center gap-1 rounded-full bg-black/20 backdrop-blur-xl px-2 py-0.5 text-xs font-medium'>
                             <MapPin className='h-3 w-3' />
-                            Surat
+                            {location}
                         </button>
                     </div>
                 </LiquidGlassCard>
@@ -147,19 +153,19 @@ export const LiquidGlass = ({
 
 // 2. Noise
 export interface NoiseProps {
-    initialOpacity?: number;
+    opacity?: number;
     baseFrequency?: string;
     numOctaves?: string;
     className?: string;
 }
 
 export const Noise = ({
-    initialOpacity = 0.05,
+    opacity = 0.05,
     baseFrequency = "0.65",
     numOctaves = "3",
     className = ""
 }: NoiseProps) => {
-    const [opacity, setOpacity] = useState(initialOpacity);
+    const [noiseOpacity, setNoiseOpacity] = useState(opacity);
 
     return (
         <div className={cn('relative border border-white/10 rounded-xl w-full max-w-2xl overflow-hidden bg-neutral-950', className)}>
@@ -173,17 +179,17 @@ export const Noise = ({
                     min='0'
                     max='0.2'
                     step='0.01'
-                    value={opacity}
-                    onChange={(e) => setOpacity(parseFloat(e.target.value))}
+                    value={noiseOpacity}
+                    onChange={(e) => setNoiseOpacity(parseFloat(e.target.value))}
                     className="w-20 accent-cyan-400"
                 />
-                <span className='text-[10px] font-mono text-cyan-400 w-8'>{opacity.toFixed(2)}</span>
+                <span className='text-[10px] font-mono text-cyan-400 w-8'>{noiseOpacity.toFixed(2)}</span>
             </div>
 
             <div
-                className="absolute inset-0 z-10 pointer-events-none opacity-[0.05] mix-blend-overlay"
+                className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay"
                 style={{
-                    opacity: opacity,
+                    opacity: noiseOpacity,
                     backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${baseFrequency}' numOctaves='${numOctaves}' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
                 }}
             ></div>
@@ -205,12 +211,20 @@ import { BlurVignette, BlurVignetteArticle } from '../ui/blur-vignette';
 export interface BlurVignetteEffectProps {
     blur?: string;
     radius?: string;
+    image1?: string;
+    image2?: string;
+    title1?: string;
+    title2?: string;
     className?: string;
 }
 
 export const BlurVignetteEffect = ({
     blur = "12px",
     radius = "16px",
+    image1 = 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1000&auto=format&fit=crop',
+    image2 = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop',
+    title1 = "Cosmos",
+    title2 = "Abstract",
     className = ""
 }: BlurVignetteEffectProps) => {
     return (
@@ -223,12 +237,12 @@ export const BlurVignetteEffect = ({
                 className="flex-1 aspect-square"
             >
                 <img
-                    src='https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1000&auto=format&fit=crop'
+                    src={image1}
                     alt='abstract'
                     className='w-full h-full object-cover'
                 />
                 <BlurVignetteArticle classname='absolute inset-x-2 bottom-2 p-4 border border-white/10 rounded-xl bg-black/20 backdrop-blur-md text-white'>
-                    <h3 className='text-lg font-bold'>Cosmos</h3>
+                    <h3 className='text-lg font-bold'>{title1}</h3>
                     <p className='text-xs text-white/60 line-clamp-2'>
                         Deep space explorations and mesmerizing cosmic patterns.
                     </p>
@@ -236,21 +250,21 @@ export const BlurVignetteEffect = ({
             </BlurVignette>
 
             <BlurVignette
-                radius='16px'
+                radius={radius}
                 inset='0px'
                 transitionLength='100px'
-                blur='12px'
+                blur={blur}
                 className="flex-1 aspect-square hidden sm:block"
             >
                 <img
-                    src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop'
+                    src={image2}
                     alt='abstract'
                     className='w-full h-full object-cover'
                 />
                 <BlurVignetteArticle classname='absolute inset-x-2 bottom-2 p-4 border border-white/10 rounded-xl bg-black/20 backdrop-blur-md text-white'>
-                    <h3 className='text-lg font-bold'>Abstract</h3>
+                    <h3 className='text-lg font-bold'>{title2}</h3>
                     <p className='text-xs text-white/60 line-clamp-2'>
-                        Flowing gradients and organic shapes in motion.
+                        Elegant abstract shapes and minimalist visual storytelling.
                     </p>
                 </BlurVignetteArticle>
             </BlurVignette>
@@ -296,11 +310,15 @@ export const LiquidGradient = ({
 export interface SpotlightCardsProps {
     className?: string;
     defaultCardColors?: string[];
+    title?: string;
+    description?: string;
 }
 
 export const SpotlightCards = ({
     className = "",
-    defaultCardColors = ['#10b981', '#6366f1', '#f59e0b']
+    defaultCardColors = ['#10b981', '#6366f1', '#f59e0b'],
+    title = "Platform Features",
+    description = "Discover the power of our high-performance component library."
 }: SpotlightCardsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -433,74 +451,25 @@ export const SpotlightCards = ({
                     className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden scroll-smooth"
                 >
                     {cards.map((card, i) => (
-                        {/* Minimal Bottom Glow */ }
-                        < div
-                                className = "absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover/card:opacity-80 transition-opacity duration-500 pointer-events-none"
-                                style = {{
-                        background: `radial-gradient(ellipse at bottom, ${card.hex} 0%, transparent 60%)`
-                    }}
-                            />
-                    <div
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] opacity-50 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
-                        style={{
-                            background: `linear-gradient(to right, transparent, ${card.accent}, transparent)`
-                        }}
-                    />
-
-                    <div className="relative z-20 flex flex-col h-full">
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
-                                <card.icon size={24} style={{ color: card.accent }} />
-                            </div>
-                            <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
-                        </div>
-
-                        <h3 className="text-3xl font-display font-black mb-3 text-white tracking-tight">
-                            {card.title}
-                        </h3>
-                        <p className="text-sm text-white/50 leading-relaxed mb-6 font-medium">
-                            {card.text}
-                        </p>
-
-                        <ul className="mt-auto space-y-3">
-                            {card.bullets.map((bullet, idx) => (
-                                <li key={idx} className="flex items-center gap-3 text-xs text-white/40 font-medium">
-                                    <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
-                                        <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-                                    </div>
-                                    {bullet}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-                    ))}
-            </div>
-
-            {/* Global Overlay for Perfectly Synchronized Border Glow & Illumination */}
-            <div
-                className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
-                style={{
-                    opacity: isHovered ? 1 : 0,
-                    WebkitMaskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
-                    maskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
-                }}
-            >
-                <div
-                    ref={overlayScrollRef}
-                    className="flex gap-6 p-6 overflow-x-hidden w-full h-full"
-                >
-                    {cards.map((card, i) => (
                         <div
-                            key={`glow-${i}`}
-                            className={`flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] relative transition-all duration-400 ease-out`}
-                            style={{
-                                border: `1px solid ${card.accent}`,
-                                backgroundColor: `${card.accent}15`,
-                                boxShadow: `0 0 0 1px inset ${card.accent}`,
-                            }}
+                            key={i}
+                            className="relative flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden backdrop-blur-sm transition-all duration-400 ease-out group/card"
                         >
-                            <div className="relative z-20 flex flex-col h-full pointer-events-none">
+                            {/* Minimal Bottom Glow */}
+                            <div
+                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover/card:opacity-80 transition-opacity duration-500 pointer-events-none"
+                                style={{
+                                    background: `radial-gradient(ellipse at bottom, ${card.hex} 0%, transparent 60%)`
+                                }}
+                            />
+                            <div
+                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] opacity-50 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+                                style={{
+                                    background: `linear-gradient(to right, transparent, ${card.accent}, transparent)`
+                                }}
+                            />
+
+                            <div className="relative z-20 flex flex-col h-full">
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
                                         <card.icon size={24} style={{ color: card.accent }} />
@@ -529,16 +498,72 @@ export const SpotlightCards = ({
                         </div>
                     ))}
                 </div>
+
+                {/* Global Overlay for Perfectly Synchronized Border Glow & Illumination */}
+                <div
+                    className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
+                    style={{
+                        opacity: isHovered ? 1 : 0,
+                        WebkitMaskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
+                        maskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
+                    }}
+                >
+                    <div
+                        ref={overlayScrollRef}
+                        className="flex gap-6 p-6 overflow-x-hidden w-full h-full"
+                    >
+                        {cards.map((card, i) => (
+                            <div
+                                key={`glow-${i}`}
+                                className={`flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] relative transition-all duration-400 ease-out`}
+                                style={{
+                                    border: `1px solid ${card.accent}`,
+                                    backgroundColor: `${card.accent}15`,
+                                    boxShadow: `0 0 0 1px inset ${card.accent}`,
+                                }}
+                            >
+                                <div className="relative z-20 flex flex-col h-full pointer-events-none">
+                                    <div className="flex justify-between items-start mb-6">
+                                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
+                                            <card.icon size={24} style={{ color: card.accent }} />
+                                        </div>
+                                        <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
+                                    </div>
+
+                                    <h3 className="text-3xl font-display font-black mb-3 text-white tracking-tight">
+                                        {card.title}
+                                    </h3>
+                                    <p className="text-sm text-white/50 leading-relaxed mb-6 font-medium">
+                                        {card.text}
+                                    </p>
+
+                                    <ul className="mt-auto space-y-3">
+                                        {card.bullets.map((bullet, idx) => (
+                                            <li key={idx} className="flex items-center gap-3 text-xs text-white/40 font-medium">
+                                                <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
+                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                                                </div>
+                                                {bullet}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
-        </div>
         </div >
     );
 };
 
 // 6. Image Reveal
-import { useMotionValue, useSpring } from "framer-motion";
-
 // 6. Image Reveal
+interface VisualItem {
+    key: number;
+    url: string;
+    label: string;
+}
 const visualData: VisualItem[] = [
     {
         key: 1,
@@ -569,13 +594,14 @@ export interface ImageRevealProps {
 
 export const ImageReveal = ({
     items = visualData,
+    hoverText = "REVEAL",
     className = ""
-}: ImageRevealProps) => {
+}: ImageRevealProps & { hoverText?: string }) => {
     const [focusedItem, setFocusedItem] = useState<VisualItem | null>(null);
     const [isLargeScreen, setIsLargeScreen] = useState(true);
 
     const cursorX = useMotionValue(0);
-    const cursorY = useMotionValue(0);
+    const cursorY = useSpring(cursorX, { stiffness: 300, damping: 40 });
     const smoothX = useSpring(cursorX, { stiffness: 300, damping: 40 });
     const smoothY = useSpring(cursorY, { stiffness: 300, damping: 40 });
 
@@ -791,28 +817,40 @@ export interface GridBackgroundProps {
     gridColor?: string;
     className?: string;
     label?: string;
+    maskRadius?: number | string;
+    opacity?: number;
 }
 
 export const GridBackground = ({
     gridSize = 24,
     gridColor = "#80808012",
     className = "",
-    label = "GRID ALIVE"
-}: GridBackgroundProps) => (
-    <div className={cn("w-full h-64 rounded-3xl border border-white/10 overflow-hidden relative bg-neutral-950 flex items-center justify-center isolate", className)}>
-        <div
-            className="absolute inset-0 z-[-1] h-full w-full bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"
-            style={{
-                backgroundSize: `${gridSize}px ${gridSize}px`,
-                // @ts-ignore
-                "--grid-color": gridColor
-            }}
-        ></div>
-        <div className="text-white/40 font-display text-2xl font-bold uppercase tracking-widest">{label}</div>
-    </div>
-);
+    label = "GRID ALIVE",
+    maskRadius = "50% 50% at 50% 50%",
+    opacity = 1
+}: GridBackgroundProps) => {
+    const maskStyle = typeof maskRadius === 'number'
+        ? `radial-gradient(ellipse ${maskRadius}% ${maskRadius}% at 50% 50%, #000 70%, transparent 100%)`
+        : `radial-gradient(${maskRadius}, #000 70%, transparent 100%)`;
+
+    return (
+        <div className={cn("w-full h-full absolute inset-0 z-0", className)} style={{ opacity }}>
+            <div
+                className="absolute inset-0 bg-black"
+                style={{
+                    backgroundImage: `linear-gradient(to right, ${gridColor} 1px, transparent 1px), linear-gradient(to bottom, ${gridColor} 1px, transparent 1px)`,
+                    backgroundSize: `${gridSize}px ${gridSize}px`,
+                    maskImage: maskStyle,
+                    WebkitMaskImage: maskStyle,
+                }}
+            />
+            <div className="text-white/40 font-display text-2xl font-bold uppercase tracking-widest">{label}</div>
+        </div>
+    );
+};
 
 export { default as BeamGridBackground } from '../ui/BeamGridBackground';
+export { default as NovatrixBackground } from '../ui/NovatrixBackground';
 export { default as FallBeamBackground } from '../ui/FallBeamBackground';
 export { default as HellBackground } from '../ui/HellBackground';
 export { default as InteractiveGridBackground } from '../ui/InteractiveGridBackground';
@@ -872,7 +910,7 @@ export const MarqueeHoverButton = () => (
 
 export const PaymentTransactionButton = () => (
     <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-full min-h-[300px]">
-        <PaymentTransactionButtonUI />
+        <PaymentTransactionButtonUI label="Send Payment" accentColor="#38bdf8" currencySymbol="€" />
     </div>
 );
 

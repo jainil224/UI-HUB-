@@ -3,9 +3,20 @@ import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "../../lib/utils";
 
-export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
-    const rows = new Array(60).fill(1);
-    const cols = new Array(40).fill(1);
+export const BoxesCore = ({
+    className,
+    rowsCount = 60,
+    colsCount = 40,
+    customColors,
+    ...rest
+}: {
+    className?: string;
+    rowsCount?: number;
+    colsCount?: number;
+    customColors?: string[];
+}) => {
+    const rows = new Array(rowsCount).fill(1);
+    const cols = new Array(colsCount).fill(1);
 
     // Using direct color values instead of CSS variables
     const colors = [
@@ -20,8 +31,10 @@ export const BoxesCore = ({ className, ...rest }: { className?: string }) => {
         "rgb(196 181 253)", // violet-300
     ];
 
+    const activeColors = customColors || colors;
+
     const getRandomColor = () => {
-        return colors[Math.floor(Math.random() * colors.length)];
+        return activeColors[Math.floor(Math.random() * activeColors.length)];
     };
 
     return (

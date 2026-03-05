@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { cn } from "../../lib/utils";
 
-function FloatingPaths({ position }: { position: number }) {
+function FloatingPaths({ position, pathColor = "currentColor", opacity = 0.1 }: { position: number, pathColor?: string, opacity?: number }) {
     const paths = Array.from({ length: 36 }, (_, i) => ({
         id: i,
         d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position
@@ -26,7 +26,7 @@ function FloatingPaths({ position }: { position: number }) {
                     <motion.path
                         key={path.id}
                         d={path.d}
-                        stroke="currentColor"
+                        stroke={pathColor}
                         strokeWidth={path.width}
                         strokeOpacity={0.1 + path.id * 0.03}
                         initial={{ pathLength: 0.3, opacity: 0.6 }}
@@ -50,19 +50,23 @@ function FloatingPaths({ position }: { position: number }) {
 export interface BackgroundPathsProps {
     title?: string;
     className?: string;
+    pathColor?: string;
+    opacity?: number;
 }
 
 export function BackgroundPaths({
     title = "UI HUB",
-    className = ""
+    className = "",
+    pathColor = "currentColor",
+    opacity = 1
 }: BackgroundPathsProps) {
     const words = title.split(" ");
 
     return (
         <div className={cn("relative min-h-[400px] h-full w-full flex items-center justify-center overflow-hidden bg-black", className)}>
-            <div className="absolute inset-0">
-                <FloatingPaths position={1} />
-                <FloatingPaths position={-1} />
+            <div className="absolute inset-0" style={{ opacity }}>
+                <FloatingPaths position={1} pathColor={pathColor} />
+                <FloatingPaths position={-1} pathColor={pathColor} />
             </div>
 
             <div className="relative z-10 container mx-auto px-4 md:px-6 text-center">

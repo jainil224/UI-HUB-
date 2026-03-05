@@ -14,13 +14,15 @@ precision mediump float;
 
 uniform vec2 iResolution;
 uniform float iTime;
+uniform float uSpeed;
+uniform float uIntensity;
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec2 uv = (2.0 * fragCoord - iResolution.xy) / min(iResolution.x, iResolution.y);
 
     for(float i = 1.0; i < 8.0; i++) {
         uv.y += i * 0.1 / i * 
-            sin(uv.x * i * i - iTime * 0.5) * sin(uv.y * i * i + iTime * 0.5);
+            sin(uv.x * i * i - iTime * uSpeed) * sin(uv.y * i * i + iTime * uSpeed) * uIntensity;
     }
 
     vec3 col;
@@ -41,6 +43,8 @@ export type BlurSize = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
 interface WaveBackgroundProps {
     backdropBlurAmount?: BlurSize;
     className?: string;
+    speed?: number;
+    intensity?: number;
 }
 
 const blurClassMap: Record<BlurSize, string> = {
@@ -56,6 +60,8 @@ const blurClassMap: Record<BlurSize, string> = {
 function WaveBackground({
     backdropBlurAmount = "sm",
     className = "",
+    speed = 0.5,
+    intensity = 1.0
 }: WaveBackgroundProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -122,6 +128,8 @@ function WaveBackground({
 
         const iResolutionLocation = gl.getUniformLocation(program, "iResolution");
         const iTimeLocation = gl.getUniformLocation(program, "iTime");
+        const uSpeedLocation = gl.getUniformLocation(program, "uSpeed");
+        const uIntensityLocation = gl.getUniformLocation(program, "uIntensity");
 
         let startTime = Date.now();
         let animationFrameId: number;
@@ -148,6 +156,8 @@ function WaveBackground({
 
             gl.uniform2f(iResolutionLocation, width, height);
             gl.uniform1f(iTimeLocation, currentTime);
+            gl.uniform1f(uSpeedLocation, speed);
+            gl.uniform1f(uIntensityLocation, intensity);
 
             gl.drawArrays(gl.TRIANGLES, 0, 6);
             animationFrameId = requestAnimationFrame(render);
@@ -162,7 +172,7 @@ function WaveBackground({
             gl.deleteShader(fragmentShader);
             gl.deleteBuffer(positionBuffer);
         };
-    }, []);
+    }, [speed, intensity]);
 
     const finalBlurClass = blurClassMap[backdropBlurAmount] || blurClassMap["sm"];
 

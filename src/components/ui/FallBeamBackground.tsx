@@ -2,38 +2,21 @@ import React, { useEffect, useRef } from 'react';
 
 // Define the component's props for flexibility and professionalism
 export interface FallBeamBackgroundProps {
-    /**
-     * Optional Tailwind CSS class name to apply to the main container.
-     * Useful for layout adjustments or margins.
-     */
     className?: string;
-    /**
-     * Number of lines (beams) to render. Default is 20.
-     */
     lineCount?: number;
-    /**
-     * Text to display over the beam effect.
-     */
     displayText?: string;
-    /**
-     * Tailwind color class for the glowing beam trail.
-     * E.g., 'blue-400', 'green-400', 'red-400'. Default is 'cyan-400'.
-     */
     beamColorClass?: string;
+    beamColor?: string;
+    opacity?: number;
 }
 
-/**
- * A lightweight, theme-aware falling beam background component.
- * It dynamically creates vertical beam lines via JavaScript/React and applies CSS animations.
- *
- * NOTE: Ensure the parent container has a defined height/width and `position: relative`
- * for the background to cover it correctly.
- */
 const FallBeamBackground: React.FC<FallBeamBackgroundProps> = ({
     className = '',
     lineCount = 20,
     displayText,
     beamColorClass = 'cyan-400',
+    beamColor,
+    opacity = 1
 }) => {
     // 💡 FIX: Corrected the type from HTMLDivDivElement to HTMLDivElement
     const containerRef = useRef<HTMLDivElement>(null);
@@ -93,11 +76,12 @@ const FallBeamBackground: React.FC<FallBeamBackgroundProps> = ({
         // Clear any previous lines before rendering new ones (important for re-renders)
         container.querySelectorAll('.fall-beam-line').forEach(line => line.remove());
 
-        const glowColor = getColorValue(beamColorClass);
+        const glowColor = beamColor || getColorValue(beamColorClass);
 
         for (let i = 1; i <= lineCount; i++) {
             const line = document.createElement("div");
             line.classList.add("fall-beam-line");
+            line.style.opacity = opacity.toString();
 
             // Calculate the 'left' position with a slight random jitter
             const leftPosition = `${i * (100 / lineCount) + Math.random() * 5 - 5}%`;

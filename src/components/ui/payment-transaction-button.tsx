@@ -1,17 +1,39 @@
 import React from 'react';
+import { cn } from "../../lib/utils";
 
-export const PaymentTransactionButton: React.FC = () => {
+interface PaymentTransactionButtonProps {
+    label?: string;
+    accentColor?: string;
+    posColor?: string;
+    cardColor?: string;
+    currencySymbol?: string;
+    className?: string;
+    onClick?: () => void;
+}
+
+export const PaymentTransactionButton: React.FC<PaymentTransactionButtonProps> = ({
+    label = "New Transaction",
+    accentColor = "#5de2a3",
+    posColor = "#1f1f1f",
+    cardColor = "#2b2b2b",
+    currencySymbol = "$",
+    className = "",
+    onClick
+}) => {
     return (
-        <div className="payment-transaction-wrapper">
+        <div
+            className={cn("payment-transaction-wrapper", className)}
+            onClick={onClick}
+        >
             <style>{`
                 .payment-transaction-wrapper {
-                    --bg-green: #5de2a3;
+                    --bg-green: ${accentColor};
                     --bg-white: #ffffff;
                     --bg-hover-gray: #f9f7f9;
                     --text-color: #1a1a1a;
-                    --card-color: #2b2b2b;
+                    --card-color: ${cardColor};
                     --card-chip: #ffd700;
-                    --pos-color: #1f1f1f;
+                    --pos-color: ${posColor};
                     --pos-screen: #e2feca;
                     
                     display: flex;
@@ -240,7 +262,7 @@ export const PaymentTransactionButton: React.FC = () => {
                         <div className="pt-pos-slot"></div>
                         <div className="pt-pos-screen">
                             <div className="pt-pos-screen-inner">
-                                <span className="pt-pos-symbol">$</span>
+                                <span className="pt-pos-symbol">{currencySymbol}</span>
                             </div>
                         </div>
                         <div className="pt-pos-keys">
@@ -250,7 +272,7 @@ export const PaymentTransactionButton: React.FC = () => {
                     </div>
                 </div>
                 <div className="pt-right">
-                    <span className="pt-text">New Transaction</span>
+                    <span className="pt-text">{label}</span>
                     <svg
                         className="pt-arrow"
                         xmlns="http://www.w3.org/2000/svg"

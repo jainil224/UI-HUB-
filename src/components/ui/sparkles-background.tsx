@@ -8,6 +8,9 @@ export interface SparklesBackgroundProps {
     title?: string;
     className?: string;
     particleColor?: string;
+    density?: number;
+    minSize?: number;
+    maxSize?: number;
 }
 
 export interface IsometricGridBackgroundProps {
@@ -18,7 +21,10 @@ export interface IsometricGridBackgroundProps {
 export function SparklesBackground({
     title = "Sparkles background",
     className = "",
-    particleColor = "#FFFFFF"
+    particleColor = "#FFFFFF",
+    density = 100,
+    minSize = 0.6,
+    maxSize = 2.4
 }: SparklesBackgroundProps) {
     const words = title.split(" ");
 
@@ -29,9 +35,9 @@ export function SparklesBackground({
                 <SparklesCore
                     id="tsparticlesfullpage"
                     background="transparent"
-                    minSize={0.6}
-                    maxSize={2.4}
-                    particleDensity={100}
+                    minSize={minSize}
+                    maxSize={maxSize}
+                    particleDensity={density}
                     className="w-full h-full"
                     particleColor={particleColor}
                 />

@@ -68,8 +68,8 @@ export const componentList: ComponentItem[] = [
         id: "noise",
         title: "Noise Background",
         category: "effect",
-        preview: renderComponent("noise", "Noise Background"),
-        code: `export const Noise = () => (\n  <div className="absolute inset-0 z-50 pointer-events-none opacity-[0.05] mix-blend-overlay">\n    <svg className="absolute inset-0 w-full h-full">\n      <filter id="noise">\n        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" />\n      </filter>\n      <rect width="100%" height="100%" filter="url(#noise)" />\n    </svg>\n  </div>\n);`,
+        preview: () => <VisualEffects.Noise opacity={0.1} />,
+        code: `import { Noise } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-64 overflow-hidden bg-black">\n    <h1 className="text-white text-4xl p-8">Noise Overlay</h1>\n    <Noise opacity={0.15} />\n  </div>\n);`,
         vibePrompt: "Create a cinematic digital noise grain overlay effect using SVG turbulence and CSS mix-blend-mode."
     },
     {
@@ -132,8 +132,8 @@ export const componentList: ComponentItem[] = [
         id: "liquid-glass",
         title: "Liquid Glass",
         category: "effect",
-        preview: renderComponent("liquid-glass", "Liquid Glass"),
-        code: `export const LiquidGlass = () => (\n  <div className="w-64 h-64 rounded-xl bg-white/5 backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)]"></div>\n);`,
+        preview: () => <VisualEffects.LiquidGlass location="LONDON" temp="18" />,
+        code: `import { LiquidGlass } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[300px] flex items-center justify-center bg-neutral-900">\n    <LiquidGlass location="NEW YORK" temp="22" />\n  </div>\n);`,
         vibePrompt: "Premium weather dashboard interface utilizing multiple layers of glassmorphism, backdrop-blur, and Lucide icons."
     },
     {
@@ -156,8 +156,8 @@ export const componentList: ComponentItem[] = [
         id: "spotlight-cards",
         title: "Spotlight Cards",
         category: "effect",
-        preview: renderComponent("spotlight-cards", "Spotlight Cards"),
-        code: `export const SpotlightCards = () => (\n  <div className="grid grid-cols-3 gap-4">\n    <div className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-colors">Card 1</div>\n    <div className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-colors">Card 2</div>\n    <div className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-green-500/50 transition-colors">Card 3</div>\n  </div>\n);`,
+        preview: () => <VisualEffects.SpotlightCards title="Feature" description="Hover to reveal the hidden spotlight effect." />,
+        code: `import { SpotlightCards } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <SpotlightCards \n    title="Service" \n    description="Innovative solutions for your modern business needs." \n  />\n);`,
         vibePrompt: "Premium 3-card layout with individual color themes, Lucide icons, and a synchronized cursor-glow system with branding."
     },
     {
@@ -188,8 +188,8 @@ export const componentList: ComponentItem[] = [
         id: "grid-background",
         title: "Grid Background",
         category: "background",
-        preview: renderComponent("grid-background", "Grid Background"),
-        code: `export const GridBackground = () => (\n  <div className="w-full h-full absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>\n);`,
+        preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.GridBackground opacity={0.5} maskRadius={40} /></div>,
+        code: `import { GridBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden bg-black">\n    <GridBackground opacity={0.6} maskRadius={30} />\n  </div>\n);`,
         vibePrompt: "Generate an animated grid background effect with a radial gradient mask."
     },
     {
@@ -204,8 +204,8 @@ export const componentList: ComponentItem[] = [
         id: "novatrix-background",
         title: "Novatrix Background",
         category: "background",
-        preview: renderComponent("novatrix-background", "Novatrix Background"),
-        code: `// Implementation for Novatrix Background\nexport const NovatrixBackground = () => (\n  <div className="w-full h-full bg-gradient-to-br from-indigo-950 to-purple-900 flex items-center justify-center animate-pulse">\n    NOVATRIX NEBULA\n  </div>\n);`,
+        preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.NovatrixBackground title="NEBULA" /></div>,
+        code: `import { NovatrixBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden">\n    <NovatrixBackground \n      title="UI HUB" \n      colorFrom="#1a1a2e" \n      colorTo="#16213e" \n      opacity={0.8} \n    />\n  </div>\n);`,
         vibePrompt: "Create a deep space nebula animated background using WebGL or layered CSS gradients with slow rotation effect."
     },
     {
@@ -228,8 +228,8 @@ export const componentList: ComponentItem[] = [
         id: "hell-background",
         title: "Hell Background",
         category: "background",
-        preview: renderComponent("hell-background", "Hell Background"),
-        code: `import HellBackground from '@/components/ui/HellBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <HellBackground color="#DE443B" backdropBlurAmount="none" />\n  </div>\n);`,
+        preview: () => <div className="w-full h-full relative"><VisualEffects.HellBackground intensity={1.5} speed={0.8} /></div>,
+        code: `import { HellBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <HellBackground color="#DE443B" intensity={1.5} speed={1.0} />\n  </div>\n);`,
         vibePrompt: "Create a WebGL background effect that simulates a chaotic inferno or hellish environment using GLSL shaders."
     },
     {
@@ -244,8 +244,8 @@ export const componentList: ComponentItem[] = [
         id: "particles-background",
         title: "Particles Background",
         category: "background",
-        preview: renderComponent("particles-background", "Particles Background"),
-        code: `import ParticlesBackground from '@/components/ui/ParticlesBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <ParticlesBackground colors={['#ff223e', '#5d1eb2', '#ff7300']} size={3} />\n  </div>\n);`,
+        preview: () => <div className="w-full h-full relative"><VisualEffects.ParticlesBackground speed={3} interactive={true} /></div>,
+        code: `import { ParticlesBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <ParticlesBackground \n      colors={['#ff223e', '#5d1eb2', '#ff7300']} \n      size={3} \n      speed={2.5} \n      interactive={true} \n    />\n  </div>\n);`,
         vibePrompt: "Create an interactive particles animation background with glowing particles that move dynamically."
     },
     {
@@ -260,8 +260,8 @@ export const componentList: ComponentItem[] = [
         id: "lines-background",
         title: "Lines Background",
         category: "background",
-        preview: renderComponent("lines-background", "Lines Background"),
-        code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" />\n  </div>\n);`,
+        preview: () => <div className="w-full h-full relative"><VisualEffects.LinesBackground title="LINES" pathColor="#9c40ff" /></div>,
+        code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" pathColor="rgba(255,255,255,0.2)" opacity={0.5} />\n  </div>\n);`,
         vibePrompt: "Create an animated background with SVG paths flowing smoothly behind text."
     },
     {
@@ -276,8 +276,8 @@ export const componentList: ComponentItem[] = [
         id: "isometric-grid-background",
         title: "Isometric Grid Background",
         category: "background",
-        preview: renderComponent("isometric-grid-background", "Isometric Grid Background"),
-        code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground title="Tailwind is Awesome" />\n  </div>\n);`,
+        preview: () => <div className="w-full h-full relative"><VisualEffects.IsometricGridBackground title="ISOMETRIC" /></div>,
+        code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground \n      title="Tailwind is Awesome" \n      boxProps={{\n        rowsCount: 50,\n        colsCount: 30,\n        customColors: ["#ffaa40", "#9c40ff"]\n      }}\n    />\n  </div>\n);`,
         vibePrompt: "Create a mesmerizing, skewed isometric grid background that illuminates with random colors on hover."
     },
     {
@@ -325,7 +325,7 @@ export const componentList: ComponentItem[] = [
         title: "Payment Transaction",
         category: "button",
         preview: renderComponent("payment-transaction-button", "Payment Transaction Button"),
-        code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton />\n);`,
+        code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton \n    label="Send Payment" \n    accentColor="#38bdf8" \n    currencySymbol="€"\n  />\n);`,
         vibePrompt: "Create a modern animated 'New Transaction Card' UI component with hover interactions where a credit card slides into a POS terminal."
     },
     {
@@ -343,5 +343,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("rainbow-button", "Rainbow Button"),
         code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <RainbowButton>Rainbow Button</RainbowButton>\n);`,
         vibePrompt: "Create an animated button with a continuous rainbow border effect and a subtle glow using CSS animations."
+    },
+    {
+        id: "social-tooltip-buttons",
+        title: "Social Tooltip Hover Buttons",
+        category: "button",
+        preview: renderComponent("social-tooltip-buttons", "Social Tooltip Hover Buttons"),
+        code: `import { SocialTooltipButtons } from "@/components/animations/SocialTooltipButtons";\n\nexport const Demo = () => (\n  <SocialTooltipButtons />\n);`,
+        vibePrompt: "Create a list of social icons that reveal brand-colored tooltips with a smooth bounce animation on hover."
     }
 ];
