@@ -1,11 +1,142 @@
-import React from 'react';
+import React, { useRef, useCallback } from 'react';
 import * as Animations from '../components/animations/TextAnimations';
 import * as VisualEffects from '../components/animations/VisualEffects';
+import { AuroraCursor } from '../components/ui/AuroraCursor';
+
+// ── stable star positions (deterministic, no per-render Math.random) ─────────
+const AURORA_DOTS = Array.from({ length: 40 }, (_, i) => ({
+    top: ((i * 73 + 17) % 97).toFixed(1),
+    left: ((i * 53 + 31) % 97).toFixed(1),
+    size: i % 4 === 0 ? 3 : 2,
+    opacity: i % 5 === 0 ? 0.28 : 0.10,
+    dur: 3 + (i % 4),
+    delay: (i * 0.27) % 3,
+}));
+
+// ── Aurora Cursor scoped preview (blob tracks mouse inside card) ────────────
+const AuroraCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const blobRef = useRef<HTMLDivElement>(null);
+    const pos = useRef({ x: -999, y: -999 });
+    const target = useRef({ x: -999, y: -999 });
+    const vel = useRef({ x: 0, y: 0 });
+    const rafId = useRef<number>(0);
+    const BLOB_SIZE = 160;
+    const HALF = BLOB_SIZE / 2;
+
+    const animate = useCallback(() => {
+        vel.current.x += (target.current.x - pos.current.x) * 0.07;
+        vel.current.y += (target.current.y - pos.current.y) * 0.07;
+        vel.current.x *= 0.80;
+        vel.current.y *= 0.80;
+        pos.current.x += vel.current.x;
+        pos.current.y += vel.current.y;
+        if (blobRef.current) {
+            blobRef.current.style.transform =
+                `translate(${pos.current.x - HALF}px, ${pos.current.y - HALF}px)`;
+        }
+        rafId.current = requestAnimationFrame(animate);
+    }, [HALF]);
+
+    const onEnter = useCallback(() => { rafId.current = requestAnimationFrame(animate); }, [animate]);
+    const onLeave = useCallback(() => { cancelAnimationFrame(rafId.current); }, []);
+    const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        target.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+    }, []);
+
+    return (
+        <div
+            ref={containerRef}
+            onMouseMove={onMove}
+            onMouseEnter={onEnter}
+            onMouseLeave={onLeave}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: 'radial-gradient(ellipse at 50% 55%, #080618 0%, #020208 100%)',
+                overflow: 'hidden',
+                cursor: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+            }}
+        >
+            <style>{`
+                @keyframes ac-shift  { 0%{background-position:0% 50%}  50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+                @keyframes ac-morph  {
+                    0%  {border-radius:60% 40% 30% 70%/60% 30% 70% 40%}
+                    25% {border-radius:40% 60% 70% 30%/40% 70% 30% 60%}
+                    50% {border-radius:50% 50% 40% 60%/30% 60% 40% 70%}
+                    75% {border-radius:30% 70% 60% 40%/70% 40% 60% 30%}
+                    100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}
+                }
+                @keyframes ac-pulse   { 0%,100%{opacity:.60} 50%{opacity:.90} }
+                @keyframes ac-twinkle { 0%,100%{opacity:.06} 50%{opacity:.30} }
+            `}</style>
+
+            {/* ── Aurora blob ── */}
+            <div ref={blobRef} style={{
+                position: 'absolute', top: 0, left: 0,
+                width: BLOB_SIZE, height: BLOB_SIZE,
+                pointerEvents: 'none', willChange: 'transform',
+            }}>
+                <div style={{
+                    width: '100%', height: '100%',
+                    background: [
+                        'radial-gradient(circle at 30% 30%,rgba(139,92,246,.95) 0%,transparent 55%)',
+                        'radial-gradient(circle at 70% 60%,rgba(6,182,212,.90)  0%,transparent 55%)',
+                        'radial-gradient(circle at 50% 80%,rgba(236,72,153,.80) 0%,transparent 50%)',
+                        'radial-gradient(circle at 20% 70%,rgba(99,102,241,.85) 0%,transparent 50%)',
+                        'radial-gradient(circle at 80% 20%,rgba(34,211,238,.70) 0%,transparent 50%)',
+                    ].join(','),
+                    backgroundSize: '400% 400%',
+                    filter: `blur(${BLOB_SIZE * 0.24}px)`,
+                    mixBlendMode: 'screen',
+                    animation: 'ac-shift 8s ease infinite, ac-morph 12s ease-in-out infinite, ac-pulse 4s ease-in-out infinite',
+                }} />
+            </div>
+
+            {/* ── Star field ── */}
+            {AURORA_DOTS.map((d, i) => (
+                <div key={i} style={{
+                    position: 'absolute',
+                    width: d.size, height: d.size,
+                    borderRadius: '50%',
+                    background: `rgba(200,180,255,${d.opacity})`,
+                    top: `${d.top}%`, left: `${d.left}%`,
+                    animation: `ac-twinkle ${d.dur}s ease-in-out infinite`,
+                    animationDelay: `${d.delay}s`,
+                }} />
+            ))}
+
+            {/* ── Label ── */}
+            <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>
+                    Move your cursor
+                </div>
+                <div style={{
+                    fontSize: 38, fontWeight: 900, letterSpacing: '-0.03em',
+                    background: 'linear-gradient(135deg,#c084fc 0%,#67e8f9 50%,#f472b6 100%)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    filter: 'drop-shadow(0 0 28px rgba(139,92,246,0.55))',
+                }}>
+                    Aurora Cursor
+                </div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                    Northern lights · CSS blur · Spring physics
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button";
+    category: "text" | "effect" | "background" | "button" | "cursor";
     preview: () => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -383,5 +514,25 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("neon-flicker-button", "Neon Flicker Button"),
         code: `import { NeonFlickerButton } from "@/components/ui/NeonFlickerButton";\n\nexport const Demo = () => (\n  <NeonFlickerButton label="Neon Flicker" color="red" />\n);`,
         vibePrompt: "Cyberpunk-inspired button with a smooth, randomized neon flicker effect and intense glow transitions."
+    },
+    {
+        id: "aurora-cursor",
+        title: "Aurora Cursor",
+        category: "cursor",
+        preview: () => <AuroraCursorPreview />,
+        code: `import { AuroraCursor } from '@/components/ui/AuroraCursor';
+
+// Drop <AuroraCursor /> anywhere in your app (e.g. App.tsx or a layout root).
+// It attaches to the window and follows the mouse at the page level.
+export const Demo = () => (
+  <div className="relative w-full h-[400px] bg-[#050510] rounded-2xl overflow-hidden flex items-center justify-center">
+    {/* Aurora follows the real mouse — works globally */}
+    <AuroraCursor size={320} />
+    <p className="text-white/40 text-sm tracking-widest uppercase font-bold">
+      Move your cursor around
+    </p>
+  </div>
+);`,
+        vibePrompt: "Create a premium aurora borealis cursor effect — a soft glowing gradient blob (purple, cyan, pink, indigo) that follows the mouse with spring physics, continuously morphing shape and shifting colors like northern lights. Use CSS blur + mix-blend-mode:screen on a dark background. Lightweight, no external dependencies."
     }
 ];

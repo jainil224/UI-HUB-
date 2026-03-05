@@ -31,7 +31,8 @@ const LibraryPage = () => {
         { name: "Text Animations", items: componentList.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: componentList.filter(item => item.category === 'effect') },
         { name: "Backgrounds", items: componentList.filter(item => item.category === 'background') },
-    ];
+        { name: "Cursor Effects", items: componentList.filter(item => item.category === 'cursor') },
+    ].filter(cat => cat.items.length > 0);
 
     return (
         <div className="h-dvh bg-brand-black text-white flex flex-col md:flex-row overflow-hidden relative pt-[73px]">

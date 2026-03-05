@@ -816,8 +816,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         className="space-y-12"
                     >
                         <div className="min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center bg-black/20 border border-white/5">
-                            <div className={`text-center w-full ${item.category === 'background' ? 'h-full' : 'px-2 md:px-8'}`}>
-                                <div className={`flex justify-center ${item.category === 'background' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
+                            <div className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' ? 'h-full' : 'px-2 md:px-8'}`}>
+                                <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
                                     {item.preview()}
                                 </div>
                             </div>
