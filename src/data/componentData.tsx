@@ -7,6 +7,7 @@ import { MagneticBackground } from '../components/ui/MagneticBackground';
 import BlackHoleCursor from '../components/ui/BlackHoleCursor';
 import { TargetCursor } from '../components/ui/TargetCursor';
 import { SpaceBackground } from '../components/ui/SpaceBackground';
+import { NeuralNetworkBackground } from '../components/ui/NeuralNetworkBackground';
 
 
 // ── Magnetic Cursor scoped preview ────────────
@@ -558,6 +559,69 @@ const SpaceBackgroundPreview: React.FC = () => {
         </div>
     );
 };
+
+
+// ── Neural Network Background scoped preview ────────────
+const NeuralNetworkPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            color: '#fff',
+            fontFamily: 'Inter, sans-serif'
+        }}>
+            <NeuralNetworkBackground interactive={true} />
+
+            <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
+                <h2 style={{
+                    fontSize: '3rem',
+                    fontWeight: 900,
+                    letterSpacing: '-0.05em',
+                    marginBottom: '16px',
+                    background: 'linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.4) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    filter: 'drop-shadow(0 0 20px rgba(34, 211, 238, 0.5))'
+                }}>
+                    Neural Network
+                </h2>
+                <p style={{
+                    color: 'rgba(255,255,255,0.6)',
+                    fontSize: '0.9rem',
+                    maxWidth: '400px',
+                    lineHeight: '1.6',
+                    margin: '0 auto',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.2em'
+                }}>
+                    Intelligent Node-Based Background
+                </p>
+            </div>
+
+            <div style={{
+                marginTop: '40px',
+                padding: '8px 20px',
+                borderRadius: '4px',
+                border: '1px solid rgba(34, 211, 238, 0.3)',
+                background: 'rgba(34, 211, 238, 0.05)',
+                fontSize: '0.7rem',
+                fontWeight: 700,
+                letterSpacing: '0.2em',
+                color: '#22d3ee',
+                zIndex: 1,
+                textTransform: 'uppercase'
+            }}>
+                AI-Powered Interface
+            </div>
+        </div>
+    );
+};
+
 
 
 
@@ -1685,6 +1749,14 @@ export const Demo = () => (
         preview: () => <SpaceBackgroundPreview />,
         code: `import { SpaceBackground } from '@/components/ui/SpaceBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <SpaceBackground \n      starCount={400} \n      nebulaCount={6} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">\n        COSMIC VOYAGE\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: "Create a premium immersive cosmic space background with animated starfields, multi-layer parallax depth, and soft glowing nebula clouds in purple, blue, and pink using HTML Canvas for 60fps performance."
+    },
+    {
+        id: "neural-network-background",
+        title: "Neural Network Background",
+        category: "background",
+        preview: () => <NeuralNetworkPreview />,
+        code: `import { NeuralNetworkBackground } from '@/components/ui/NeuralNetworkBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <NeuralNetworkBackground \n      nodeCount={120} \n      connectionDistance={150} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase">\n        Neural Core\n      </h1>\n    </div>\n  </div>\n);`,
+        vibePrompt: "Create a futuristic AI-style neural network background made of nodes (dots) connected by animated lines. Dots should connect with thin animated lines when they are close to each other. Nodes near the cursor should move slightly and connections should dynamically form around the cursor. Use HTML5 Canvas for smooth 60fps performance."
     }
 ];
 
