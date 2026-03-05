@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
+import { Github, ArrowRight } from 'lucide-react';
 import backgroundVideo from '../../../Assets/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4';
 import Logo from '../../../components/ui/Logo';
 
@@ -107,12 +107,16 @@ const Hero = () => {
                 >
                     <Link to="/library" className="w-full sm:w-auto">
                         <button className="w-full bg-brand-green text-black font-black px-12 py-5 rounded-full text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all green-glow group relative overflow-hidden">
-                            <span className="relative z-10">Explore Library</span>
-                            <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
+                            <span className="relative z-10 flex items-center justify-center gap-2">
+                                Explore Components
+                                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                            </span>
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full hover:animate-shimmer" />
                         </button>
                     </Link>
                     <button className="w-full sm:w-auto glass text-white/80 font-bold px-12 py-5 rounded-full text-sm uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-3">
-                        Github Repo <ExternalLink size={16} />
+                        <Github size={20} />
+                        View Source
                     </button>
                 </motion.div>
             </motion.div>

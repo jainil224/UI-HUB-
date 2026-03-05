@@ -44,7 +44,7 @@ const Navbar = () => {
                                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                                 />
                             )}
-                            <span className="relative z-10">{label}</span>
+                            <span className="relative z-10" style={{ display: 'inline-block' }}>{label}</span>
                         </Link>
                     ))}
                 </div>
@@ -64,7 +64,7 @@ const Navbar = () => {
                     {/* Get Started */}
                     <button className="hidden sm:flex relative overflow-hidden items-center gap-1.5 bg-brand-green text-black px-5 py-2 rounded-full text-sm font-bold hover:shadow-[0_0_28px_rgba(0,255,0,0.45)] active:scale-95 transition-all duration-300">
                         <Sparkles size={12} className="shrink-0" />
-                        Get Started
+                        <span>Get Started</span>
                         <motion.span
                             className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 pointer-events-none"
                             initial={{ x: '-150%' }}

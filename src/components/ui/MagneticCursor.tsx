@@ -98,10 +98,20 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
                 const tx = dx * strength * 0.38;
                 const ty = dy * strength * 0.38;
                 el.style.transform = `translate(${tx}px, ${ty}px) scale(${1 + strength * 0.04})`;
-                el.style.boxShadow = `0 0 ${20 + strength * 30}px rgba(139,92,246,${0.2 + strength * 0.4})`;
+                el.style.boxShadow = `0 0 ${20 + strength * 30}px rgba(6,182,212,${0.2 + strength * 0.4})`;
+
+                const content = el.querySelector('.mc-content') as HTMLElement;
+                if (content) {
+                    content.style.transform = `translate(${tx * 0.45}px, ${ty * 0.45}px)`;
+                }
             } else {
                 el.style.transform = 'translate(0,0) scale(1)';
                 el.style.boxShadow = '';
+
+                const content = el.querySelector('.mc-content') as HTMLElement;
+                if (content) {
+                    content.style.transform = 'translate(0,0)';
+                }
             }
         });
 
@@ -118,19 +128,6 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
         if (!related?.closest('[data-magnetic]')) isHover.current = false;
     }, []);
 
-    useEffect(() => {
-        window.addEventListener('mousemove', onMouseMove, { passive: true });
-        window.addEventListener('mouseover', onOver, { passive: true });
-        window.addEventListener('mouseout', onOut, { passive: true });
-        rafId.current = requestAnimationFrame(animate);
-        return () => {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mouseover', onOver);
-            window.removeEventListener('mouseout', onOut);
-            cancelAnimationFrame(rafId.current);
-        };
-    }, [onMouseMove, onOver, onOut, animate]);
-
     // Public imperative handle: register/unregister magnetic elements
     const registerMagnet = useCallback((el: HTMLElement | null) => {
         if (!el) return;
@@ -143,14 +140,59 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
         };
     }, []);
 
-    // expose registerMagnet via context or just return helpers
-    (MagneticCursor as any)._register = registerMagnet;
+    useEffect(() => {
+        window.addEventListener('mousemove', onMouseMove, { passive: true });
+        window.addEventListener('mouseover', onOver, { passive: true });
+        window.addEventListener('mouseout', onOut, { passive: true });
+
+        // Auto-register elements with [data-magnetic]
+        // Add a small delay to ensure React has committed all elements to the DOM
+        const scan = () => {
+            const elements = document.querySelectorAll('[data-magnetic]');
+            elements.forEach(el => registerMagnet(el as HTMLElement));
+        };
+
+        const timer = setTimeout(scan, 100);
+
+        const observer = new MutationObserver((mutations) => {
+            let shouldScan = false;
+            for (const mutation of mutations) {
+                if (mutation.type === 'childList') {
+                    shouldScan = true;
+                    break;
+                }
+            }
+            if (shouldScan) scan();
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        rafId.current = requestAnimationFrame(animate);
+        return () => {
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseover', onOver);
+            window.removeEventListener('mouseout', onOut);
+            clearTimeout(timer);
+            observer.disconnect();
+            cancelAnimationFrame(rafId.current);
+        };
+    }, [onMouseMove, onOver, onOut, animate, registerMagnet]);
+
+    // Expose registration globally so disparate components can register themselves
+    useEffect(() => {
+        (window as any)._magneticCursorRegister = registerMagnet;
+        return () => {
+            delete (window as any)._magneticCursorRegister;
+        };
+    }, [registerMagnet]);
 
     const pos = containerRef ? 'absolute' : 'fixed';
 
     return (
         <div className={className} style={{ position: pos, top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}>
             <style>{`
+                body { cursor: none !important; }
+                a, button, [role="button"] { cursor: none !important; }
                 .mc-dot  { transition: transform 0.08s linear, opacity 0.3s; }
                 .mc-halo { transition: transform 0.25s ease, opacity 0.3s; }
             `}</style>
@@ -160,7 +202,7 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
                 position: pos, top: 0, left: 0,
                 width: cursorSize, height: cursorSize,
                 borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(200,150,255,1) 0%, rgba(99,102,241,0.8) 60%, transparent 100%)',
+                background: 'radial-gradient(circle, rgba(165,243,252,1) 0%, rgba(6,182,212,0.8) 60%, transparent 100%)',
                 filter: 'blur(1px)',
                 willChange: 'transform',
             }} />
@@ -170,8 +212,8 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
                 position: pos, top: 0, left: 0,
                 width: 56, height: 56,
                 borderRadius: '50%',
-                border: '1.5px solid rgba(139,92,246,0.5)',
-                background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
+                border: '1.5px solid rgba(6,182,212,0.5)',
+                background: 'radial-gradient(circle, rgba(6,182,212,0.08) 0%, transparent 70%)',
                 filter: 'blur(0.5px)',
                 willChange: 'transform',
             }} />

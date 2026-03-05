@@ -4,6 +4,7 @@ import * as VisualEffects from '../components/animations/VisualEffects';
 import { AuroraCursor } from '../components/ui/AuroraCursor';
 import { MagneticCursor } from '../components/ui/MagneticCursor';
 import { MagneticBackground } from '../components/ui/MagneticBackground';
+import BlackHoleCursor from '../components/ui/BlackHoleCursor';
 
 // ── Magnetic Cursor scoped preview ────────────
 const MagneticCursorPreview: React.FC = () => {
@@ -15,9 +16,10 @@ const MagneticCursorPreview: React.FC = () => {
         // Register the buttons as magnetic elements
         const buttons = document.querySelectorAll('.mc-demo-btn, .mc-nav-btn');
         let unregisters: (() => void)[] = [];
-        if ((MagneticCursor as any)._register) {
+        const register = (window as any)._magneticCursorRegister;
+        if (register) {
             buttons.forEach(btn => {
-                const unreg = (MagneticCursor as any)._register(btn as HTMLElement);
+                const unreg = register(btn as HTMLElement);
                 if (unreg) unregisters.push(unreg);
             });
         }
@@ -31,7 +33,8 @@ const MagneticCursorPreview: React.FC = () => {
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '100%',
-                background: 'radial-gradient(ellipse at 50% 100%, #150e28 0%, #050508 100%)',
+                background: '#020204',
+                backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.03) 0%, transparent 80%), radial-gradient(circle at 20% 20%, rgba(139, 92, 246, 0.02) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%), radial-gradient(circle at 50% 50%, #0b0b1a 0%, #020204 100%)',
                 overflow: 'hidden',
                 cursor: 'none',
                 display: 'flex',
@@ -71,10 +74,13 @@ const MagneticCursorPreview: React.FC = () => {
                             border: 'none',
                             cursor: 'pointer',
                             outline: 'none',
-                            transition: 'color 0.2s ease, background 0.2s ease'
+                            transition: 'color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease',
+                            boxShadow: activeNav === i ? 'inset 0 1px 0 rgba(255,255,255,0.1)' : 'none',
                         }}
                     >
-                        {label}
+                        <span className="mc-content" style={{ display: 'inline-block', transition: 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)', pointerEvents: 'none' }}>
+                            {label}
+                        </span>
                     </button>
                 ))}
             </div>
@@ -101,27 +107,120 @@ const MagneticCursorPreview: React.FC = () => {
                         key={i}
                         className="mc-demo-btn"
                         style={{
-                            padding: '12px 24px',
+                            padding: '12px 28px',
                             fontSize: 14,
                             fontWeight: 600,
-                            color: 'rgba(255,255,255,0.9)',
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            borderRadius: 12,
+                            color: 'rgba(255,255,255,0.95)',
+                            background: 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)',
+                            border: '1px solid rgba(255,255,255,0.12)',
+                            borderRadius: 999,
                             cursor: 'pointer',
                             outline: 'none',
-                            backdropFilter: 'blur(8px)',
+                            backdropFilter: 'blur(12px)',
+                            boxShadow: '0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)',
                         }}
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
+                        onMouseEnter={(e) => {
+                            setIsHovered(true);
+                            e.currentTarget.style.background = 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.06) 100%)';
+                        }}
+                        onMouseLeave={(e) => {
+                            setIsHovered(false);
+                            e.currentTarget.style.background = 'linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%)';
+                        }}
                     >
-                        {label}
+                        <span className="mc-content" style={{ display: 'inline-block', transition: 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)', pointerEvents: 'none' }}>
+                            {label}
+                        </span>
                     </button>
                 ))}
             </div>
 
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase', zIndex: 10 }}>
                 Hover buttons to snap · Magnetic Physics
+            </div>
+        </div>
+    );
+};
+
+// ── Black Hole Cursor scoped preview ────────────
+const BlackHoleCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div
+            ref={containerRef}
+            className="group"
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: '#030008', // Deep darkest space
+                overflow: 'hidden',
+                cursor: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 20,
+            }}
+        >
+            <BlackHoleCursor gravityRadius={250} containerRef={containerRef} />
+
+            {/* Cosmic Navigation / Title */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, zIndex: 10, pointerEvents: 'none' }}>
+                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.4em', color: '#c4b5fd', textTransform: 'uppercase', opacity: 0.6 }}>
+                    Event Horizon
+                </div>
+                <div style={{
+                    fontSize: 48, fontWeight: 900, letterSpacing: '-0.05em',
+                    color: '#fff',
+                    textShadow: '0 0 40px rgba(139, 92, 246, 0.8), 0 0 80px rgba(6, 182, 212, 0.4)',
+                }}>
+                    Black Hole
+                </div>
+            </div>
+
+            {/* Interactive elements to test gravity pulse effect */}
+            <div style={{ display: 'flex', gap: 24, zIndex: 10, marginTop: 24 }}>
+                {['Singularity', 'Wormhole', 'Nebula'].map((label, i) => (
+                    <button
+                        key={i}
+                        className="bh-demo-btn"
+                        style={{
+                            padding: '10px 24px',
+                            fontSize: 12,
+                            fontWeight: 700,
+                            letterSpacing: '0.1em',
+                            textTransform: 'uppercase',
+                            color: '#fff',
+                            background: 'transparent',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: '100px',
+                            cursor: 'pointer',
+                            outline: 'none',
+                            boxShadow: 'inset 0 0 20px rgba(139,92,246,0.1)',
+                            backdropFilter: 'blur(4px)',
+                            transition: 'all 0.3s ease',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                            e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)';
+                            e.currentTarget.style.boxShadow = '0 0 20px rgba(139,92,246,0.3), inset 0 0 20px rgba(139,92,246,0.2)';
+                            e.currentTarget.style.transform = 'scale(1.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'transparent';
+                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                            e.currentTarget.style.boxShadow = 'inset 0 0 20px rgba(139,92,246,0.1)';
+                            e.currentTarget.style.transform = 'scale(1)';
+                        }}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
+
+            <div style={{ position: 'absolute', bottom: 32, fontSize: 10, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.2em', textTransform: 'uppercase', zIndex: 10 }}>
+                Hover buttons to expand gravitational center
             </div>
         </div>
     );
@@ -328,6 +427,325 @@ const renderComponent = (id: string, _name: string): (() => React.ReactNode) => 
 
 // Assuming these prompts apply as they were defined in VibeMeta
 export const componentList: ComponentItem[] = [
+    {
+        id: "black-hole-cursor",
+        title: "Black Hole Cursor",
+        category: "cursor",
+        preview: () => <BlackHoleCursorPreview />,
+        code: `import React, { useEffect, useRef } from 'react';
+
+interface BlackHoleCursorProps {
+    /** Distance at which particles feel the gravitational pull */
+    gravityRadius?: number;
+    className?: string;
+    /** Track mouse relative to this container if provided */
+    containerRef?: React.RefObject<HTMLElement>;
+}
+
+export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
+    gravityRadius = 250,
+    className = '',
+    containerRef,
+}) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const coreRef = useRef<HTMLDivElement>(null);
+    const mouse = useRef({ x: -999, y: -999, isActive: false, isHover: false });
+    const smoothMouse = useRef({ x: -999, y: -999 });
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let particles: any[] = [];
+        let animationFrameId: number;
+        let width = 0;
+        let height = 0;
+
+        // Premium deep space cosmic colors
+        const colors = [
+            'rgba(139, 92, 246, 0.9)', // Violet
+            'rgba(67, 56, 202, 0.9)',  // Indigo
+            'rgba(6, 182, 212, 0.9)',  // Cyan
+            'rgba(192, 132, 252, 0.9)', // Light Purple
+            'rgba(255, 255, 255, 0.8)'  // White star
+        ];
+
+        const initParticles = () => {
+            particles = [];
+            const numParticles = Math.floor((width * height) / 11000);
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(createParticle(true));
+            }
+        };
+
+        const createParticle = (randomizePosition = false) => {
+            let x, y;
+            if (randomizePosition) {
+                x = Math.random() * width;
+                y = Math.random() * height;
+            } else {
+                // Spawn continuously at the edges
+                const edge = Math.floor(Math.random() * 4);
+                if (edge === 0) { x = Math.random() * width; y = -20; }
+                else if (edge === 1) { x = width + 20; y = Math.random() * height; }
+                else if (edge === 2) { x = Math.random() * width; y = height + 20; }
+                else { x = -20; y = Math.random() * height; }
+            }
+            return {
+                x,
+                y,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                size: Math.random() * 1.5 + 0.5,
+                color: colors[Math.floor(Math.random() * colors.length)]
+            };
+        };
+
+        const resize = () => {
+            const container = containerRef?.current || window;
+            width = container === window ? window.innerWidth : (container as HTMLElement).getBoundingClientRect().width;
+            height = container === window ? window.innerHeight : (container as HTMLElement).getBoundingClientRect().height;
+            canvas.width = width;
+            canvas.height = height;
+            initParticles();
+        };
+
+        // Delay initial resize slightly to ensure container is fully rendered
+        setTimeout(resize, 0);
+        window.addEventListener('resize', resize);
+
+        const render = () => {
+            ctx.clearRect(0, 0, width, height);
+
+            // Smooth interpolation for the cursor core itself
+            smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.12;
+            smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.12;
+
+            if (coreRef.current) {
+                if (mouse.current.isActive) {
+                    coreRef.current.style.transform = \`translate(\${smoothMouse.current.x}px, \${smoothMouse.current.y}px) scale(\${mouse.current.isHover ? 1.3 : 1})\`;
+                    coreRef.current.style.opacity = '1';
+                    if (mouse.current.isHover) {
+                        coreRef.current.style.filter = 'brightness(1.5)';
+                    } else {
+                        coreRef.current.style.filter = 'brightness(1)';
+                    }
+                } else {
+                    coreRef.current.style.opacity = '0';
+                }
+            }
+
+            const currentGravityRadius = mouse.current.isHover ? gravityRadius * 1.5 : gravityRadius;
+
+            // Update & draw particles
+            for (let i = 0; i < particles.length; i++) {
+                let p = particles[i];
+
+                if (mouse.current.isActive) {
+                    const dx = smoothMouse.current.x - p.x;
+                    const dy = smoothMouse.current.y - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < currentGravityRadius) {
+                        const force = (currentGravityRadius - dist) / currentGravityRadius;
+                        const angle = Math.atan2(dy, dx);
+
+                        // Vector mathematics for spiraling inward:
+                        // Pull directly towards center
+                        const pull = force * (mouse.current.isHover ? 1.5 : 1.0);
+                        // Tangential velocity creates the spiral
+                        const spiral = force * 2.5;
+
+                        p.vx += Math.cos(angle) * pull - Math.sin(angle) * spiral;
+                        p.vy += Math.sin(angle) * pull + Math.cos(angle) * spiral;
+
+                        // Add friction inside the gravity well so they actually fall in
+                        p.vx *= 0.94;
+                        p.vy *= 0.94;
+
+                        // Visual warp effect when caught in gravity well
+                        ctx.shadowBlur = force * 15;
+                        ctx.shadowColor = p.color;
+
+                        // If sucked into event horizon, recycle particle
+                        if (dist < 15) {
+                            particles[i] = createParticle(false);
+                            continue;
+                        }
+                    } else {
+                        // mild friction / drift out in deep space
+                        ctx.shadowBlur = 0;
+                        p.vx += (Math.random() - 0.5) * 0.05;
+                        p.vy += (Math.random() - 0.5) * 0.05;
+                        p.vx *= 0.99;
+                        p.vy *= 0.99;
+                    }
+                } else {
+                    ctx.shadowBlur = 0;
+                    p.vx += (Math.random() - 0.5) * 0.02;
+                    p.vy += (Math.random() - 0.5) * 0.02;
+                    p.vx *= 0.99;
+                    p.vy *= 0.99;
+                }
+
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Fade particles naturally as they approach the absolute center (Event Horizon)
+                let alpha = 1;
+                if (mouse.current.isActive) {
+                    const dx = smoothMouse.current.x - p.x;
+                    const dy = smoothMouse.current.y - p.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 40) {
+                        alpha = Math.max(0, (dist - 15) / 25);
+                    }
+                }
+
+                ctx.globalAlpha = alpha;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = p.color;
+                ctx.fill();
+
+                // Recycle if out of bounds
+                if (p.x < -100 || p.x > width + 100 || p.y < -100 || p.y > height + 100) {
+                    particles[i] = createParticle(false);
+                }
+            }
+
+            ctx.globalAlpha = 1;
+
+            animationFrameId = requestAnimationFrame(render);
+        };
+
+        render();
+
+        const onMouseMove = (e: MouseEvent) => {
+            mouse.current.isActive = true;
+            if (containerRef?.current) {
+                const rect = containerRef.current.getBoundingClientRect();
+                mouse.current.x = e.clientX - rect.left;
+                mouse.current.y = e.clientY - rect.top;
+            } else {
+                mouse.current.x = e.clientX;
+                mouse.current.y = e.clientY;
+            }
+        };
+
+        const onMouseLeave = () => {
+            mouse.current.isActive = false;
+        };
+
+        // Detect hover over interactive elements (buttons, links)
+        const onMouseOverElement = (e: MouseEvent) => {
+            const target = e.target as HTMLElement;
+            if (target.tagName.toLowerCase() === 'button' || target.tagName.toLowerCase() === 'a' || target.closest('button, a, [data-magnetic]')) {
+                mouse.current.isHover = true;
+            }
+        };
+
+        const onMouseOutElement = (e: MouseEvent) => {
+            const related = e.relatedTarget as HTMLElement;
+            if (!related || (!related.tagName || (related.tagName.toLowerCase() !== 'button' && related.tagName.toLowerCase() !== 'a' && !related.closest('button, a, [data-magnetic]')))) {
+                mouse.current.isHover = false;
+            }
+        };
+
+        const container = containerRef?.current || window;
+        container.addEventListener('mousemove', onMouseMove as any, { passive: true });
+        container.addEventListener('mouseleave', onMouseLeave as any, { passive: true });
+        container.addEventListener('mouseover', onMouseOverElement as any, { passive: true });
+        container.addEventListener('mouseout', onMouseOutElement as any, { passive: true });
+
+        return () => {
+            window.removeEventListener('resize', resize);
+            container.removeEventListener('mousemove', onMouseMove as any);
+            container.removeEventListener('mouseleave', onMouseLeave as any);
+            container.removeEventListener('mouseover', onMouseOverElement as any);
+            container.removeEventListener('mouseout', onMouseOutElement as any);
+            cancelAnimationFrame(animationFrameId);
+        };
+    }, [containerRef, gravityRadius]);
+
+    const pos = containerRef ? 'absolute' : 'fixed';
+
+    return (
+        <div className={className} style={{ position: pos, top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999, overflow: 'hidden' }}>
+            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', pointerEvents: 'none' }} />
+
+            {/* Black Hole Core DOM Element */}
+            <div
+                ref={coreRef}
+                style={{
+                    position: 'absolute',
+                    top: 0, left: 0,
+                    width: 0, height: 0,
+                    opacity: 0,
+                    transition: 'opacity 0.5s ease, transform 0.1s linear, filter 0.3s ease',
+                    pointerEvents: 'none',
+                }}
+            >
+                {/* Center Pitch Black */}
+                <div style={{
+                    position: 'absolute',
+                    top: -16, left: -16,
+                    width: 32, height: 32,
+                    backgroundColor: '#000',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 20px 10px rgba(0,0,0,0.9), 0 0 40px 15px rgba(67, 56, 202, 0.4)',
+                    zIndex: 2,
+                }} />
+
+                {/* Primary Accretion Disk (Spinning) */}
+                <div className="bh-spin-fast" style={{
+                    position: 'absolute',
+                    top: -45, left: -45,
+                    width: 90, height: 90,
+                    borderRadius: '50%',
+                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(139,92,246,0.3) 20%, rgba(6,182,212,0.9) 50%, rgba(139,92,246,0.3) 80%, transparent 100%)',
+                    filter: 'blur(6px)',
+                    zIndex: 1,
+                }} />
+
+                {/* Secondary Accretion Disk (Reverse Spin for distortion effect) */}
+                <div className="bh-spin-slow-reverse" style={{
+                    position: 'absolute',
+                    top: -60, left: -60,
+                    width: 120, height: 120,
+                    borderRadius: '50%',
+                    background: 'conic-gradient(from 180deg, transparent 0%, rgba(76,29,149,0.2) 20%, rgba(26,10,60,0.4) 50%, transparent 80%)',
+                    filter: 'blur(10px)',
+                    zIndex: 0,
+                }} />
+            </div>
+
+            <style>{\`
+                @keyframes bh-spin-fast {
+                    100% { transform: rotate(360deg) scaleY(0.7); }
+                }
+                @keyframes bh-spin-slow-reverse {
+                    100% { transform: rotate(-360deg) scaleY(0.8); }
+                }
+                .bh-spin-fast {
+                    animation: bh-spin-fast 2s linear infinite;
+                transform: scaleY(0.7); 
+                }
+                .bh-spin-slow-reverse {
+                    animation: bh-spin-slow-reverse 4s linear infinite;
+                transform: scaleY(0.8);
+                }
+            \`}</style>
+        </div>
+    );
+};
+
+export default BlackHoleCursor;
+`,
+        vibePrompt: "Create a stunning black hole gravity cursor effect using Canvas particles that spiral into a central dark core."
+    },
     {
         id: "magnetic-cursor",
         title: "Magnetic Cursor",
