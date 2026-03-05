@@ -29,20 +29,19 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         let width = 0;
         let height = 0;
 
-        // Premium deep space cosmic colors
+        // Cinematic Deep Space Colors (Star temperatures)
         const colors = [
-            'rgba(165, 243, 252, 1)',   // Bright Cyan
-            'rgba(139, 92, 246, 1)',   // Violet
-            'rgba(255, 170, 0, 0.9)',   // Golden Plasma
-            'rgba(255, 102, 0, 0.8)',   // Deep Orange
-            'rgba(255, 255, 255, 0.9)', // Pure White (stars)
-            'rgba(255, 255, 255, 0.3)'  // Dim White (distant stars)
+            'rgba(255, 255, 255, 0.9)', // White star
+            'rgba(165, 243, 252, 0.9)', // Blue-White
+            'rgba(192, 132, 252, 0.7)', // Violet-White
+            'rgba(255, 230, 200, 0.8)', // Warm-White
+            'rgba(255, 255, 255, 0.2)'  // Distant stardust
         ];
 
         const initParticles = () => {
             particles = [];
-            // Maximum density for an ultra-rich star field (divisor changed from 6000 to 3000)
-            const numParticles = Math.floor((width * height) / 3000);
+            // Cinematic Galactic Density
+            const numParticles = Math.floor((width * height) / 2000);
             for (let i = 0; i < numParticles; i++) {
                 particles.push(createParticle(true));
             }
@@ -51,25 +50,31 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         const createParticle = (randomizePosition = false) => {
             let x, y;
             if (randomizePosition) {
-                x = Math.random() * width;
-                y = Math.random() * height;
+                // Focus density towards the center for a galactic core look
+                if (Math.random() < 0.4) {
+                    x = width / 2 + (Math.random() - 0.5) * width * 0.4;
+                    y = height / 2 + (Math.random() - 0.5) * height * 0.4;
+                } else {
+                    x = Math.random() * width;
+                    y = Math.random() * height;
+                }
             } else {
                 const edge = Math.floor(Math.random() * 4);
-                if (edge === 0) { x = Math.random() * width; y = -20; }
-                else if (edge === 1) { x = width + 20; y = Math.random() * height; }
-                else if (edge === 2) { x = Math.random() * width; y = height + 20; }
-                else { x = -20; y = Math.random() * height; }
+                if (edge === 0) { x = Math.random() * width; y = -10; }
+                else if (edge === 1) { x = width + 10; y = Math.random() * height; }
+                else if (edge === 2) { x = Math.random() * width; y = height + 10; }
+                else { x = -10; y = Math.random() * height; }
             }
             const magnitude = Math.random();
             return {
                 x,
                 y,
-                vx: (Math.random() - 0.5) * 0.3,
-                vy: (Math.random() - 0.3) * 0.3,
-                // Even more variety: from tiny dust to bright stars
-                size: magnitude < 0.05 ? Math.random() * 2.8 + 0.5 : magnitude < 0.3 ? Math.random() * 1.2 + 0.2 : Math.random() * 0.6 + 0.1,
+                vx: (Math.random() - 0.5) * 0.25,
+                vy: (Math.random() - 0.3) * 0.25,
+                // Cinematic variety: very tiny dust vs occasional bright stars
+                size: magnitude < 0.02 ? Math.random() * 3 + 1 : magnitude < 0.2 ? Math.random() * 1.5 + 0.5 : Math.random() * 0.8 + 0.1,
                 color: colors[Math.floor(Math.random() * colors.length)],
-                twinkle: Math.random() * 0.03 + 0.005,
+                twinkle: Math.random() * 0.04 + 0.005,
                 phase: Math.random() * Math.PI * 2
             };
         };
@@ -227,8 +232,39 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
     const pos = containerRef ? 'absolute' : 'fixed';
 
     return (
-        <div className={className} style={{ position: pos, top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999, overflow: 'hidden' }}>
-            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', pointerEvents: 'none' }} />
+        <div className={className} style={{ position: pos, top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999, overflow: 'hidden', background: '#000' }}>
+            {/* --- Deep Space Nebula Layers --- */}
+            {/* Broad Ambient Nebula */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(circle at 30% 40%, rgba(67, 56, 202, 0.08) 0%, transparent 60%), radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.05) 0%, transparent 60%)',
+                zIndex: -3,
+            }} />
+
+            {/* Cosmic Cloud 1 */}
+            <div style={{
+                position: 'absolute',
+                top: '10%', left: '20%',
+                width: '60%', height: '60%',
+                background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.04) 0%, transparent 70%)',
+                filter: 'blur(60px)',
+                zIndex: -2,
+                transform: 'rotate(-15deg)',
+            }} />
+
+            {/* Cosmic Cloud 2 */}
+            <div style={{
+                position: 'absolute',
+                bottom: '10%', right: '15%',
+                width: '50%', height: '50%',
+                background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.03) 0%, transparent 70%)',
+                filter: 'blur(50px)',
+                zIndex: -2,
+                transform: 'rotate(20deg)',
+            }} />
+
+            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', pointerEvents: 'none', position: 'absolute', inset: 0, zIndex: -1 }} />
 
             <div
                 ref={coreRef}
