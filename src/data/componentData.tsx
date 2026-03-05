@@ -6,6 +6,8 @@ import { MagneticCursor } from '../components/ui/MagneticCursor';
 import { MagneticBackground } from '../components/ui/MagneticBackground';
 import BlackHoleCursor from '../components/ui/BlackHoleCursor';
 import { TargetCursor } from '../components/ui/TargetCursor';
+import { SpaceBackground } from '../components/ui/SpaceBackground';
+
 
 // ── Magnetic Cursor scoped preview ────────────
 const MagneticCursorPreview: React.FC = () => {
@@ -497,6 +499,66 @@ const TargetCursorPreview: React.FC = () => {
         </div>
     );
 };
+
+// ── Space Background scoped preview ────────────
+const SpaceBackgroundPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            color: '#fff',
+            fontFamily: 'Inter, sans-serif'
+        }}>
+            <SpaceBackground interactive={true} />
+
+            <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
+                <h2 style={{
+                    fontSize: '3.5rem',
+                    fontWeight: 900,
+                    letterSpacing: '-0.05em',
+                    marginBottom: '16px',
+                    background: 'linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.4) 100%)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    filter: 'drop-shadow(0 0 30px rgba(147, 51, 234, 0.5))'
+                }}>
+                    Space Background
+                </h2>
+                <p style={{
+                    color: 'rgba(255,255,255,0.6)',
+                    fontSize: '1rem',
+                    maxWidth: '400px',
+                    lineHeight: '1.6',
+                    margin: '0 auto'
+                }}>
+                    High-performance cosmic starfield with animated nebulas and interactive parallax depth.
+                </p>
+            </div>
+
+            <div style={{
+                marginTop: '40px',
+                padding: '12px 24px',
+                borderRadius: '999px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                letterSpacing: '0.1em',
+                color: 'rgba(255,255,255,0.8)',
+                zIndex: 1,
+                backdropFilter: 'blur(10px)'
+            }}>
+                EXPLORE THE COSMOS
+            </div>
+        </div>
+    );
+};
+
 
 
 export type ComponentItem = {
@@ -1615,5 +1677,14 @@ export const Demo = () => (
   </div>
 );`,
         vibePrompt: "Create a premium aurora borealis cursor effect — a soft glowing gradient blob (purple, cyan, pink, indigo) that follows the mouse with spring physics, continuously morphing shape and shifting colors like northern lights. Use CSS blur + mix-blend-mode:screen on a dark background. Lightweight, no external dependencies."
+    },
+    {
+        id: "space-background",
+        title: "Space Background",
+        category: "background",
+        preview: () => <SpaceBackgroundPreview />,
+        code: `import { SpaceBackground } from '@/components/ui/SpaceBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <SpaceBackground \n      starCount={400} \n      nebulaCount={6} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">\n        COSMIC VOYAGE\n      </h1>\n    </div>\n  </div>\n);`,
+        vibePrompt: "Create a premium immersive cosmic space background with animated starfields, multi-layer parallax depth, and soft glowing nebula clouds in purple, blue, and pink using HTML Canvas for 60fps performance."
     }
 ];
+
