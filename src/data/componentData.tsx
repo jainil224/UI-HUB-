@@ -9,6 +9,8 @@ import { TargetCursor } from '../components/ui/TargetCursor';
 import { SpaceBackground } from '../components/ui/SpaceBackground';
 import { NeuralNetworkBackground } from '../components/ui/NeuralNetworkBackground';
 import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
+import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
+import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
 
 
 // ── Magnetic Cursor scoped preview ────────────
@@ -517,52 +519,10 @@ const SpaceBackgroundPreview: React.FC = () => {
             fontFamily: 'Inter, sans-serif'
         }}>
             <SpaceBackground interactive={true} />
-
-            <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
-                <h2 style={{
-                    fontSize: '3.5rem',
-                    fontWeight: 900,
-                    letterSpacing: '-0.05em',
-                    marginBottom: '16px',
-                    background: 'linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.4) 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 30px rgba(147, 51, 234, 0.5))'
-                }}>
-                    Space Background
-                </h2>
-                <p style={{
-                    color: 'rgba(255,255,255,0.6)',
-                    fontSize: '1rem',
-                    maxWidth: '400px',
-                    lineHeight: '1.6',
-                    margin: '0 auto'
-                }}>
-                    High-performance cosmic starfield with animated nebulas and interactive parallax depth.
-                </p>
-            </div>
-
-            <div style={{
-                marginTop: '40px',
-                padding: '12px 24px',
-                borderRadius: '999px',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                fontSize: '0.8rem',
-                fontWeight: 600,
-                letterSpacing: '0.1em',
-                color: 'rgba(255,255,255,0.8)',
-                zIndex: 1,
-                backdropFilter: 'blur(10px)'
-            }}>
-                EXPLORE THE COSMOS
-            </div>
         </div>
     );
 };
 
-
-// ── Neural Network Background scoped preview ────────────
 const NeuralNetworkPreview: React.FC = () => {
     return (
         <div style={{
@@ -577,54 +537,10 @@ const NeuralNetworkPreview: React.FC = () => {
             fontFamily: 'Inter, sans-serif'
         }}>
             <NeuralNetworkBackground interactive={true} />
-
-            <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
-                <h2 style={{
-                    fontSize: '3rem',
-                    fontWeight: 900,
-                    letterSpacing: '-0.05em',
-                    marginBottom: '16px',
-                    background: 'linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.4) 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 20px rgba(34, 211, 238, 0.5))'
-                }}>
-                    Neural Network
-                </h2>
-                <p style={{
-                    color: 'rgba(255,255,255,0.6)',
-                    fontSize: '0.9rem',
-                    maxWidth: '400px',
-                    lineHeight: '1.6',
-                    margin: '0 auto',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.2em'
-                }}>
-                    Intelligent Node-Based Background
-                </p>
-            </div>
-
-            <div style={{
-                marginTop: '40px',
-                padding: '8px 20px',
-                borderRadius: '4px',
-                border: '1px solid rgba(34, 211, 238, 0.3)',
-                background: 'rgba(34, 211, 238, 0.05)',
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                letterSpacing: '0.2em',
-                color: '#22d3ee',
-                zIndex: 1,
-                textTransform: 'uppercase'
-            }}>
-                AI-Powered Interface
-            </div>
         </div>
     );
 };
 
-
-// ── Black Hole Background scoped preview ────────────
 const BlackHolePreview: React.FC = () => {
     return (
         <div style={{
@@ -639,41 +555,48 @@ const BlackHolePreview: React.FC = () => {
             fontFamily: 'Inter, sans-serif'
         }}>
             <BlackHoleBackground />
-
-            <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
-                <h2 style={{
-                    fontSize: '3.5rem',
-                    fontWeight: 900,
-                    letterSpacing: '-0.05em',
-                    marginBottom: '8px',
-                    color: '#fff',
-                    textTransform: 'uppercase',
-                    filter: 'drop-shadow(0 0 20px rgba(79, 70, 229, 0.8))'
-                }}>
-                    Singularity
-                </h2>
-                <div style={{
-                    height: '2px',
-                    width: '60px',
-                    background: 'linear-gradient(90deg, transparent, #22d3ee, transparent)',
-                    margin: '12px auto'
-                }} />
-                <p style={{
-                    color: 'rgba(255,255,255,0.5)',
-                    fontSize: '0.8rem',
-                    maxWidth: '400px',
-                    lineHeight: '1.6',
-                    margin: '0 auto',
-                    letterSpacing: '0.3em',
-                    textTransform: 'uppercase',
-                    fontWeight: 600
-                }}>
-                    Gravitational Vortex Engine
-                </p>
-            </div>
         </div>
     );
 };
+
+// ── Warp Speed Background scoped preview ────────────
+const WarpSpeedPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            color: '#fff',
+            fontFamily: 'Inter, sans-serif'
+        }}>
+            <WarpSpeedBackground />
+        </div>
+    );
+};
+
+// ── Mouse Gravity Background scoped preview ────────────
+const MouseGravityPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            color: '#fff',
+            fontFamily: 'Inter, sans-serif'
+        }}>
+            <MouseGravityBackground />
+        </div>
+    );
+};
+
 
 
 
@@ -1819,6 +1742,22 @@ export const Demo = () => (
         preview: () => <BlackHolePreview />,
         code: `import { BlackHoleBackground } from '@/components/ui/BlackHoleBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <BlackHoleBackground \n      particleCount={600} \n      coreColor="rgba(79, 70, 229, 0.4)" \n      accentColor="#22d3ee" \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-black text-white tracking-widest uppercase opacity-80">\n        Gravitational Core\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: "Create a cosmic black hole vortex animation where particles spiral toward the center like a gravitational singularity. Use HTML5 Canvas to maintain 60fps performance and implement realistic radial acceleration and mouse-influenced bending."
+    },
+    {
+        id: "warp-speed-background",
+        title: "Warp Speed Background",
+        category: "background",
+        preview: () => <WarpSpeedPreview />,
+        code: `import { WarpSpeedBackground } from '@/components/ui/WarpSpeedBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <WarpSpeedBackground \n      starCount={800} \n      speed={15} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-white tracking-[0.3em] uppercase italic opacity-70">\n        Light Speed\n      </h1>\n    </div>\n  </div>\n);`,
+        vibePrompt: "Create a premium space warp-speed effect where stars stretch into long light streaks, simulating hyperspace travel at extreme speed with 3D depth and smooth Canvas motion-blur."
+    },
+    {
+        id: "mouse-gravity-background",
+        title: "Mouse Gravity Background",
+        category: "background",
+        preview: () => <MouseGravityPreview />,
+        code: `import { MouseGravityBackground } from '@/components/ui/MouseGravityBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <MouseGravityBackground \n      particleCount={150} \n      attractionForce={0.06} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400/50 tracking-widest uppercase pointer-events-none">\n        Gravity Field\n      </h1>\n    </div>\n  </div>\n);`,
+        vibePrompt: "Create a premium interactive background where particles are attracted to the cursor like gravity. Use HTML5 Canvas for smooth 60fps performance and implement realistic momentum and damping physics."
     }
 ];
 
