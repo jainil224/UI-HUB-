@@ -21,6 +21,7 @@ const AuroraCursorPreview: React.FC = () => {
     const target = useRef({ x: -999, y: -999 });
     const vel = useRef({ x: 0, y: 0 });
     const rafId = useRef<number>(0);
+    const [activeNav, setActiveNav] = React.useState(0);
     const BLOB_SIZE = 160;
     const HALF = BLOB_SIZE / 2;
 
@@ -75,13 +76,15 @@ const AuroraCursorPreview: React.FC = () => {
                 }
                 @keyframes ac-pulse   { 0%,100%{opacity:.60} 50%{opacity:.90} }
                 @keyframes ac-twinkle { 0%,100%{opacity:.06} 50%{opacity:.30} }
+                .ac-nav-btn { transition: background 0.22s, color 0.22s, box-shadow 0.22s; }
+                .ac-nav-btn:hover { background: rgba(255,255,255,0.10) !important; color: rgba(255,255,255,0.9) !important; }
             `}</style>
 
             {/* ── Aurora blob ── */}
             <div ref={blobRef} style={{
                 position: 'absolute', top: 0, left: 0,
                 width: BLOB_SIZE, height: BLOB_SIZE,
-                pointerEvents: 'none', willChange: 'transform',
+                pointerEvents: 'none', willChange: 'transform', zIndex: 1,
             }}>
                 <div style={{
                     width: '100%', height: '100%',
@@ -112,20 +115,58 @@ const AuroraCursorPreview: React.FC = () => {
                 }} />
             ))}
 
-            {/* ── Label ── */}
+            {/* ── Navbar — pinned to top ── */}
+            <div style={{
+                position: 'absolute', top: 20, left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 10,
+                display: 'flex', alignItems: 'center',
+                background: 'rgba(10,8,24,0.70)',
+                border: '1px solid rgba(255,255,255,0.10)',
+                borderRadius: 999,
+                padding: '5px 6px',
+                backdropFilter: 'blur(16px)',
+                boxShadow: '0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
+                whiteSpace: 'nowrap',
+            }}>
+                {['Home', 'About', 'Services'].map((label, i) => (
+                    <button
+                        key={i}
+                        className="ac-nav-btn"
+                        onClick={() => setActiveNav(i)}
+                        style={{
+                            padding: '8px 22px',
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: activeNav === i ? 'rgba(255,255,255,0.97)' : 'rgba(255,255,255,0.45)',
+                            borderRadius: 999,
+                            background: activeNav === i ? 'rgba(255,255,255,0.09)' : 'transparent',
+                            border: 'none',
+                            cursor: 'pointer',
+                            letterSpacing: '0.02em',
+                            outline: 'none',
+                            boxShadow: activeNav === i ? 'inset 0 1px 0 rgba(255,255,255,0.08)' : 'none',
+                        }}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
+
+            {/* ── Center title ── */}
             <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.32)', textTransform: 'uppercase' }}>
                     Move your cursor
                 </div>
                 <div style={{
-                    fontSize: 38, fontWeight: 900, letterSpacing: '-0.03em',
+                    fontSize: 36, fontWeight: 900, letterSpacing: '-0.03em',
                     background: 'linear-gradient(135deg,#c084fc 0%,#67e8f9 50%,#f472b6 100%)',
                     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 28px rgba(139,92,246,0.55))',
+                    filter: 'drop-shadow(0 0 24px rgba(139,92,246,0.5))',
                 }}>
                     Aurora Cursor
                 </div>
-                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.18em', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.14)', letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 4 }}>
                     Northern lights · CSS blur · Spring physics
                 </div>
             </div>
