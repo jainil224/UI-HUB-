@@ -229,17 +229,33 @@ const BlackHoleCursorPreview: React.FC = () => {
                     </div>
 
                     <style>{`
+                        .bh-demo-btn {
+                            overflow: hidden;
+                            position: relative;
+                            isolation: isolate;
+                        }
                         .bh-demo-btn:hover {
-                            border-color: rgba(165, 243, 252, 0.4);
-                            box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+                            border-color: rgba(165, 243, 252, 0.6);
+                            transform: scale(1.05);
+                            box-shadow: 
+                                0 0 20px rgba(139, 92, 246, 0.3),
+                                0 0 40px rgba(6, 182, 212, 0.15),
+                                inset 0 0 12px rgba(165, 243, 252, 0.1);
                         }
                         .bh-demo-btn:hover .btn-bh-core {
-                            width: 150%;
-                            padding-bottom: 150%;
+                            width: 140%;
+                            padding-bottom: 140%;
                             box-shadow: 
-                                0 0 40px 10px #000,
-                                0 0 15px 1px rgba(165, 243, 252, 0.6),
-                                inset 0 0 10px rgba(139, 92, 246, 0.4);
+                                0 0 50px 15px #000,
+                                0 0 20px 2px rgba(165, 243, 252, 0.8),
+                                0 0 40px 10px rgba(139, 92, 246, 0.4);
+                        }
+                        .bh-demo-btn span {
+                            transition: all 0.4s ease;
+                        }
+                        .bh-demo-btn:hover span {
+                            letter-spacing: 0.25em;
+                            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
                         }
                     `}</style>
                 </div>
