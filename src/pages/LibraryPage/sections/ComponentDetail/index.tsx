@@ -554,12 +554,12 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
         ],
         vibeMeta: {
-            behavior: "A button with a deep cosmic background, animated nebula glows, and twinkling star particles. Hovering intensifies the glows and star movement.",
-            states: { from: "slow cosmic drift", to: "bright galaxy with intense outer glow" },
-            cssProperties: ["background", "transform", "box-shadow", "filter"],
-            description: "Cyberpunk celestial animation for a premium futuristic button.",
+            behavior: "A multi-layered cosmic button featuring parallax rotating star fields, drifting nebulas, and an animated conic-gradient border. Hovering triggers a high-end light sweep and intensifies the outer neon aura.",
+            states: { from: "gentle cosmic rotation", to: "bright galactic bloom with interactive shimmer" },
+            cssProperties: ["background", "transform", "box-shadow", "filter", "conic-gradient"],
+            description: "Premium state-of-the-art celestial animation for futuristic high-end UIs.",
             libraries: ["framer-motion", "tailwindcss"],
-            requirements: ["Randomized particle generation", "Parallax star movement", "Layered nebula gradients", "Smooth scaling and glow expansion"]
+            requirements: ["Multi-layer parallax star fields", "Conic-gradient border rotation", "Interactive light sweep geometry", "Advanced neon aura interpolation"]
         }
     },
     "liquid-fill-button": {
