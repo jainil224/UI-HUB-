@@ -22,8 +22,12 @@ import { PaymentTransactionButton as PaymentTransactionButtonUI } from '../ui/pa
 import { MagicCard as MagicCardUI } from '../ui/magic-card';
 import { RainbowButton as RainbowButtonUI } from '../ui/rainbow-button';
 import { OrbitButton as OrbitButtonUI } from '../ui/OrbitButton';
+import { GalaxyButton as GalaxyButtonUI } from '../ui/GalaxyButton';
+import { LiquidFillButton as LiquidFillButtonUI } from '../ui/LiquidFillButton';
 
 export { OrbitButtonUI as OrbitButton };
+export { GalaxyButtonUI as GalaxyButton };
+export { LiquidFillButtonUI as LiquidFillButton };
 
 // 1. Liquid-Glass (Weather Dashboard Example)
 export interface LiquidGlassProps {

@@ -359,5 +359,21 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("orbit-button", "Orbit Button"),
         code: `import { OrbitButton } from "@/components/ui/OrbitButton";\n\nexport const Demo = () => (\n  <OrbitButton label="Orbit Button" color="cyan" />\n);`,
         vibePrompt: "Futuristic button with planetary particles orbiting around a neon core."
+    },
+    {
+        id: "galaxy-button",
+        title: "Galaxy Button",
+        category: "button",
+        preview: renderComponent("galaxy-button", "Galaxy Button"),
+        code: `import { GalaxyButton } from "@/components/ui/GalaxyButton";\n\nexport const Demo = () => (\n  <GalaxyButton label="Galaxy Button" />\n);`,
+        vibePrompt: "Futuristic button with an animated cosmic background, moving star particles, and premium neon glows."
+    },
+    {
+        id: "liquid-fill-button",
+        title: "Liquid Fill Button",
+        category: "button",
+        preview: renderComponent("liquid-fill-button", "Liquid Fill Button"),
+        code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
+        vibePrompt: "Premium button with a smooth SVG liquid wave filling animation that appears on hover."
     }
 ];

@@ -546,6 +546,37 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["framer-motion", "tailwindcss"],
             requirements: ["Continuous rotation loops", "Speed scaling on hover", "Neon box-shadow glows", "Glassmorphic button base"]
         }
+    },
+    "galaxy-button": {
+        props: [
+            { name: "label", type: "string", default: '"Galaxy Button"', description: "The text to display inside the button." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Optional click handler." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
+        ],
+        vibeMeta: {
+            behavior: "A button with a deep cosmic background, animated nebula glows, and twinkling star particles. Hovering intensifies the glows and star movement.",
+            states: { from: "slow cosmic drift", to: "bright galaxy with intense outer glow" },
+            cssProperties: ["background", "transform", "box-shadow", "filter"],
+            description: "Cyberpunk celestial animation for a premium futuristic button.",
+            libraries: ["framer-motion", "tailwindcss"],
+            requirements: ["Randomized particle generation", "Parallax star movement", "Layered nebula gradients", "Smooth scaling and glow expansion"]
+        }
+    },
+    "liquid-fill-button": {
+        props: [
+            { name: "label", type: "string", default: '"Liquid Fill"', description: "The text to display inside the button." },
+            { name: "liquidColor", type: "string", default: '"#06b6d4"', description: "The color of the liquid filling the button." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Optional click handler." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
+        ],
+        vibeMeta: {
+            behavior: "A button that fills with a smooth SVG wave animation when hovered. The liquid rises from the bottom, and the text color changes for contrast.",
+            states: { from: "empty outlined button", to: "filled button with organic wave motion" },
+            cssProperties: ["transform", "fill", "color", "box-shadow"],
+            description: "Organic liquid fill animation for modern UI components.",
+            libraries: ["framer-motion", "tailwindcss"],
+            requirements: ["SVG path wave math", "Continuous horizontal wave translation", "Stiffness and damping spring for fill level", "High-contrast text color interpolation"]
+        }
     }
 };
 
