@@ -280,41 +280,41 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                 {/* Lensing Glow Layer 1 - Deep blue ambient */}
                 <div style={{
                     position: 'absolute',
-                    top: -150, left: -150,
-                    width: 300, height: 300,
+                    top: -100, left: -100,
+                    width: 200, height: 200,
                     borderRadius: '50%',
                     background: 'radial-gradient(circle, rgba(67,56,202,0.12) 0%, rgba(67,56,202,0.03) 50%, transparent 80%)',
-                    filter: 'blur(30px)',
+                    filter: 'blur(25px)',
                     zIndex: -2,
                 }} />
 
                 {/* Lensing Glow Layer 2 - Violet flare */}
                 <div className="bh-flare" style={{
                     position: 'absolute',
-                    top: -100, left: -100,
-                    width: 200, height: 40,
+                    top: -70, left: -70,
+                    width: 140, height: 28,
                     borderRadius: '50%',
                     background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.15), transparent)',
-                    filter: 'blur(20px)',
+                    filter: 'blur(15px)',
                     zIndex: -1,
                 }} />
 
                 {/* Multi-layered Accretion Disk - Golden Plasma */}
                 <div className="bh-accretion-plasma" style={{
                     position: 'absolute',
-                    top: -70, left: -70,
-                    width: 140, height: 140,
+                    top: -45, left: -45,
+                    width: 90, height: 90,
                     borderRadius: '50%',
                     background: 'conic-gradient(from 0deg, transparent 0%, rgba(255,170,0,0.5) 15%, rgba(255,102,0,0.8) 35%, rgba(255,170,0,0.5) 55%, transparent 100%)',
-                    filter: 'blur(10px)',
+                    filter: 'blur(8px)',
                     zIndex: 0,
                 }} />
 
                 {/* Hot Inner Disk - Cyan/White */}
                 <div className="bh-accretion-inner" style={{
                     position: 'absolute',
-                    top: -48, left: -48,
-                    width: 96, height: 96,
+                    top: -30, left: -30,
+                    width: 60, height: 60,
                     borderRadius: '50%',
                     background: 'conic-gradient(from 90deg, transparent 0%, rgba(165,243,252,0.6) 25%, rgba(255,255,255,0.9) 50%, rgba(139,92,246,0.6) 75%, transparent 100%)',
                     filter: 'blur(3px)',
@@ -324,34 +324,34 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                 {/* Photon Sphere High Intensity Ring */}
                 <div className="bh-photon-ring" style={{
                     position: 'absolute',
-                    top: -19, left: -19,
-                    width: 38, height: 38,
+                    top: -15, left: -15,
+                    width: 30, height: 30,
                     borderRadius: '50%',
-                    border: '1.5px solid rgba(255,255,255,0.9)',
-                    boxShadow: '0 0 15px 2px rgba(165,243,252,1), inset 0 0 8px rgba(6,182,212,0.8)',
+                    border: '1.2px solid rgba(255,255,255,0.9)',
+                    boxShadow: '0 0 12px 2px rgba(165,243,252,1), inset 0 0 6px rgba(6,182,212,0.8)',
                     zIndex: 4,
                 }} />
 
                 {/* Event Horizon - Singularity Core */}
                 <div style={{
                     position: 'absolute',
-                    top: -16, left: -16,
-                    width: 33, height: 33,
+                    top: -13, left: -13,
+                    width: 25, height: 25,
                     backgroundColor: '#000',
                     borderRadius: '50%',
-                    boxShadow: '0 0 5px 2px rgba(139,92,246,0.9), 0 0 30px 10px rgba(0,0,0,1)',
+                    boxShadow: '0 0 6px 2px rgba(139,92,246,0.9), 0 0 25px 10px rgba(0,0,0,1)',
                     zIndex: 5,
                 }} />
 
                 {/* Lensing Distortion Highlights */}
                 <div className="bh-distort" style={{
                     position: 'absolute',
-                    top: -85, left: -85,
-                    width: 170, height: 170,
+                    top: -60, left: -60,
+                    width: 120, height: 120,
                     borderRadius: '50%',
                     border: '1px solid rgba(255,255,255,0.1)',
                     background: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 40%)',
-                    filter: 'blur(5px)',
+                    filter: 'blur(4px)',
                     zIndex: 2,
                 }} />
             </div>
