@@ -2,16 +2,28 @@
 
 import { motion } from "framer-motion";
 import { SparklesCore } from "./sparkles";
+import { cn } from "../../lib/utils";
+
+export interface SparklesBackgroundProps {
+    title?: string;
+    className?: string;
+    particleColor?: string;
+}
+
+export interface IsometricGridBackgroundProps {
+    title?: string;
+    className?: string;
+}
 
 export function SparklesBackground({
     title = "Sparkles background",
-}: {
-    title?: string;
-}) {
+    className = "",
+    particleColor = "#FFFFFF"
+}: SparklesBackgroundProps) {
     const words = title.split(" ");
 
     return (
-        <div className="relative min-h-[400px] h-full w-full flex items-center justify-center overflow-hidden bg-neutral-950">
+        <div className={cn("relative min-h-[400px] h-full w-full flex items-center justify-center overflow-hidden bg-neutral-950", className)}>
             {/* Core Sparkles Component */}
             <div className="w-full absolute inset-0 h-full pointer-events-none">
                 <SparklesCore
@@ -21,7 +33,7 @@ export function SparklesBackground({
                     maxSize={2.4}
                     particleDensity={100}
                     className="w-full h-full"
-                    particleColor="#FFFFFF"
+                    particleColor={particleColor}
                 />
             </div>
 

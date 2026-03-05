@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { cn } from "../../lib/utils";
 
 function FloatingPaths({ position }: { position: number }) {
     const paths = Array.from({ length: 36 }, (_, i) => ({
@@ -46,15 +47,19 @@ function FloatingPaths({ position }: { position: number }) {
     );
 }
 
+export interface BackgroundPathsProps {
+    title?: string;
+    className?: string;
+}
+
 export function BackgroundPaths({
     title = "UI HUB",
-}: {
-    title?: string;
-}) {
+    className = ""
+}: BackgroundPathsProps) {
     const words = title.split(" ");
 
     return (
-        <div className="relative min-h-[400px] h-full w-full flex items-center justify-center overflow-hidden bg-black">
+        <div className={cn("relative min-h-[400px] h-full w-full flex items-center justify-center overflow-hidden bg-black", className)}>
             <div className="absolute inset-0">
                 <FloatingPaths position={1} />
                 <FloatingPaths position={-1} />

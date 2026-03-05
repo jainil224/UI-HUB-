@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'motion/react';
+import { cn } from '@/lib/utils';
+import { motion, useMotionValue, useSpring } from 'motion/react';
 import { LiquidGlassCard } from '../ui/LiquidGlassCard';
 import {
     Cloud,
@@ -8,19 +9,32 @@ import {
     Sun,
     MapPin,
     CloudSunRain,
+    Zap,
+    Sparkles,
+    Crown,
+    ChevronLeft,
+    ChevronRight,
+    MoveUpRight as ArrowIcon
 } from 'lucide-react';
 import { PaymentTransactionButton as PaymentTransactionButtonUI } from '../ui/payment-transaction-button';
 import { MagicCard as MagicCardUI } from '../ui/magic-card';
 import { RainbowButton as RainbowButtonUI } from '../ui/rainbow-button';
 
 // 1. Liquid-Glass (Weather Dashboard Example)
-export const LiquidGlass = () => {
+export interface LiquidGlassProps {
+    backgroundImage?: string;
+    className?: string;
+}
+
+export const LiquidGlass = ({
+    backgroundImage = "url('https://images.unsplash.com/photo-1590867286251-8e26d9f255c0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+    className = ""
+}: LiquidGlassProps) => {
     return (
         <div
-            className='p-4 relative z-30 w-full max-w-2xl gap-8 py-8 rounded-xl overflow-hidden'
+            className={cn('p-4 relative z-30 w-full max-w-2xl gap-8 py-8 rounded-xl overflow-hidden', className)}
             style={{
-                background:
-                    'url("https://images.unsplash.com/photo-1590867286251-8e26d9f255c0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") center / cover no-repeat',
+                background: `${backgroundImage} center / cover no-repeat`,
             }}
         >
             <div className='grid w-full grid-cols-2 gap-4 mx-auto'>
@@ -132,11 +146,23 @@ export const LiquidGlass = () => {
 };
 
 // 2. Noise
-export const Noise = () => {
-    const [opacity, setOpacity] = useState(0.05);
+export interface NoiseProps {
+    initialOpacity?: number;
+    baseFrequency?: string;
+    numOctaves?: string;
+    className?: string;
+}
+
+export const Noise = ({
+    initialOpacity = 0.05,
+    baseFrequency = "0.65",
+    numOctaves = "3",
+    className = ""
+}: NoiseProps) => {
+    const [opacity, setOpacity] = useState(initialOpacity);
 
     return (
-        <div className='relative border border-white/10 rounded-xl w-full max-w-2xl overflow-hidden bg-neutral-950'>
+        <div className={cn('relative border border-white/10 rounded-xl w-full max-w-2xl overflow-hidden bg-neutral-950', className)}>
             <div className='absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10'>
                 <label htmlFor='opacity-slider' className='text-[10px] font-bold uppercase tracking-wider text-white/60'>
                     Noise:
@@ -158,7 +184,7 @@ export const Noise = () => {
                 className="absolute inset-0 z-10 pointer-events-none opacity-[0.05] mix-blend-overlay"
                 style={{
                     opacity: opacity,
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${baseFrequency}' numOctaves='${numOctaves}' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
                 }}
             ></div>
 
@@ -176,14 +202,24 @@ export const Noise = () => {
 // 3. Blur Vignette
 import { BlurVignette, BlurVignetteArticle } from '../ui/blur-vignette';
 
-export const BlurVignetteEffect = () => {
+export interface BlurVignetteEffectProps {
+    blur?: string;
+    radius?: string;
+    className?: string;
+}
+
+export const BlurVignetteEffect = ({
+    blur = "12px",
+    radius = "16px",
+    className = ""
+}: BlurVignetteEffectProps) => {
     return (
-        <div className='w-full max-w-2xl mx-auto flex gap-4 justify-center p-4 bg-neutral-900/50 rounded-2xl border border-white/5'>
+        <div className={cn('w-full max-w-2xl mx-auto flex gap-4 justify-center p-4 bg-neutral-900/50 rounded-2xl border border-white/5', className)}>
             <BlurVignette
-                radius='16px'
+                radius={radius}
                 inset='0px'
                 transitionLength='100px'
-                blur='12px'
+                blur={blur}
                 className="flex-1 aspect-square"
             >
                 <img
@@ -223,29 +259,49 @@ export const BlurVignetteEffect = () => {
 };
 
 // 4. Liquid Gradient
-export const LiquidGradient = () => (
-    <div className="w-64 h-64 rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
+export interface LiquidGradientProps {
+    color?: string;
+    opacity?: number;
+    duration?: number;
+    className?: string;
+}
+
+export const LiquidGradient = ({
+    color = "#ff0080",
+    opacity = 0.3,
+    duration = 10,
+    className = ""
+}: LiquidGradientProps) => (
+    <div className={cn("w-64 h-64 rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950", className)}>
         <motion.div
             animate={{
                 background: [
-                    "radial-gradient(at 0% 0%, #ff0080 0px, transparent 50%)",
-                    "radial-gradient(at 100% 100%, #ff0080 0px, transparent 50%)",
-                    "radial-gradient(at 0% 100%, #ff0080 0px, transparent 50%)",
-                    "radial-gradient(at 0% 0%, #ff0080 0px, transparent 50%)",
+                    `radial-gradient(at 0% 0%, ${color} 0px, transparent 50%)`,
+                    `radial-gradient(at 100% 100%, ${color} 0px, transparent 50%)`,
+                    `radial-gradient(at 0% 100%, ${color} 0px, transparent 50%)`,
+                    `radial-gradient(at 0% 0%, ${color} 0px, transparent 50%)`,
                 ]
             }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0 opacity-30"
+            transition={{ duration, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0"
+            style={{ opacity }}
         />
-        <div className="flex items-center justify-center h-full relative z-10 text-white/50 font-display text-xl font-bold uppercase">
+        <div className="flex items-center justify-center h-full relative z-10 text-white/50 font-display text-xl font-bold uppercase pointer-events-none">
             LIQUID GRADIENT
         </div>
     </div>
 );
 
-import { Zap, Sparkles, Crown, ChevronLeft, ChevronRight } from 'lucide-react';
+// 5. Spotlight Cards
+export interface SpotlightCardsProps {
+    className?: string;
+    defaultCardColors?: string[];
+}
 
-export const SpotlightCards = () => {
+export const SpotlightCards = ({
+    className = "",
+    defaultCardColors = ['#10b981', '#6366f1', '#f59e0b']
+}: SpotlightCardsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
     const overlayScrollRef = useRef<HTMLDivElement>(null);
@@ -253,7 +309,7 @@ export const SpotlightCards = () => {
     const [isHovered, setIsHovered] = useState(false);
 
     // Playground State
-    const [cardColors, setCardColors] = useState(['#10b981', '#6366f1', '#f59e0b']);
+    const [cardColors, setCardColors] = useState(defaultCardColors);
 
 
     const handleMouseMove = (e: React.MouseEvent) => {
@@ -366,7 +422,7 @@ export const SpotlightCards = () => {
                 </button>
                 <button
                     onClick={scrollRight}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white hover:bg-neutral-800 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-xl"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:-translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white hover:bg-neutral-800 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-xl"
                 >
                     <ChevronRight size={24} />
                 </button>
@@ -377,25 +433,74 @@ export const SpotlightCards = () => {
                     className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden scroll-smooth"
                 >
                     {cards.map((card, i) => (
-                        <div
-                            key={i}
-                            className={`relative flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden backdrop-blur-sm transition-all duration-400 ease-out group/card`}
-                        >
-                            {/* Minimal Bottom Glow */}
-                            <div
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover/card:opacity-80 transition-opacity duration-500 pointer-events-none"
-                                style={{
-                                    background: `radial-gradient(ellipse at bottom, ${card.hex} 0%, transparent 60%)`
-                                }}
+                        {/* Minimal Bottom Glow */ }
+                        < div
+                                className = "absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover/card:opacity-80 transition-opacity duration-500 pointer-events-none"
+                                style = {{
+                        background: `radial-gradient(ellipse at bottom, ${card.hex} 0%, transparent 60%)`
+                    }}
                             />
-                            <div
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] opacity-50 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
-                                style={{
-                                    background: `linear-gradient(to right, transparent, ${card.accent}, transparent)`
-                                }}
-                            />
+                    <div
+                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] opacity-50 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style={{
+                            background: `linear-gradient(to right, transparent, ${card.accent}, transparent)`
+                        }}
+                    />
 
-                            <div className="relative z-20 flex flex-col h-full">
+                    <div className="relative z-20 flex flex-col h-full">
+                        <div className="flex justify-between items-start mb-6">
+                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
+                                <card.icon size={24} style={{ color: card.accent }} />
+                            </div>
+                            <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
+                        </div>
+
+                        <h3 className="text-3xl font-display font-black mb-3 text-white tracking-tight">
+                            {card.title}
+                        </h3>
+                        <p className="text-sm text-white/50 leading-relaxed mb-6 font-medium">
+                            {card.text}
+                        </p>
+
+                        <ul className="mt-auto space-y-3">
+                            {card.bullets.map((bullet, idx) => (
+                                <li key={idx} className="flex items-center gap-3 text-xs text-white/40 font-medium">
+                                    <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                                    </div>
+                                    {bullet}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                    ))}
+            </div>
+
+            {/* Global Overlay for Perfectly Synchronized Border Glow & Illumination */}
+            <div
+                className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
+                style={{
+                    opacity: isHovered ? 1 : 0,
+                    WebkitMaskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
+                    maskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
+                }}
+            >
+                <div
+                    ref={overlayScrollRef}
+                    className="flex gap-6 p-6 overflow-x-hidden w-full h-full"
+                >
+                    {cards.map((card, i) => (
+                        <div
+                            key={`glow-${i}`}
+                            className={`flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] relative transition-all duration-400 ease-out`}
+                            style={{
+                                border: `1px solid ${card.accent}`,
+                                backgroundColor: `${card.accent}15`,
+                                boxShadow: `0 0 0 1px inset ${card.accent}`,
+                            }}
+                        >
+                            <div className="relative z-20 flex flex-col h-full pointer-events-none">
                                 <div className="flex justify-between items-start mb-6">
                                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
                                         <card.icon size={24} style={{ color: card.accent }} />
@@ -424,75 +529,16 @@ export const SpotlightCards = () => {
                         </div>
                     ))}
                 </div>
-
-                {/* Global Overlay for Perfectly Synchronized Border Glow & Illumination */}
-                <div
-                    className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
-                    style={{
-                        opacity: isHovered ? 1 : 0,
-                        WebkitMaskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
-                        maskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
-                    }}
-                >
-                    <div
-                        ref={overlayScrollRef}
-                        className="flex gap-6 p-6 overflow-x-hidden w-full h-full"
-                    >
-                        {cards.map((card, i) => (
-                            <div
-                                key={`glow-${i}`}
-                                className={`flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] relative transition-all duration-400 ease-out`}
-                                style={{
-                                    border: `1px solid ${card.accent}`,
-                                    backgroundColor: `${card.accent}15`,
-                                    boxShadow: `0 0 0 1px inset ${card.accent}`,
-                                }}
-                            >
-                                <div className="relative z-20 flex flex-col h-full pointer-events-none">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
-                                            <card.icon size={24} style={{ color: card.accent }} />
-                                        </div>
-                                        <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
-                                    </div>
-
-                                    <h3 className="text-3xl font-display font-black mb-3 text-white tracking-tight">
-                                        {card.title}
-                                    </h3>
-                                    <p className="text-sm text-white/50 leading-relaxed mb-6 font-medium">
-                                        {card.text}
-                                    </p>
-
-                                    <ul className="mt-auto space-y-3">
-                                        {card.bullets.map((bullet, idx) => (
-                                            <li key={idx} className="flex items-center gap-3 text-xs text-white/40 font-medium">
-                                                <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-                                                </div>
-                                                {bullet}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
             </div>
         </div>
+        </div >
     );
 };
 
 // 6. Image Reveal
-import { MoveUpRight as ArrowIcon } from "lucide-react";
 import { useMotionValue, useSpring } from "framer-motion";
 
-interface VisualItem {
-    key: number;
-    url: string;
-    label: string;
-}
-
+// 6. Image Reveal
 const visualData: VisualItem[] = [
     {
         key: 1,
@@ -516,7 +562,15 @@ const visualData: VisualItem[] = [
     },
 ];
 
-export const ImageReveal = () => {
+export interface ImageRevealProps {
+    items?: VisualItem[];
+    className?: string;
+}
+
+export const ImageReveal = ({
+    items = visualData,
+    className = ""
+}: ImageRevealProps) => {
     const [focusedItem, setFocusedItem] = useState<VisualItem | null>(null);
     const [isLargeScreen, setIsLargeScreen] = useState(true);
 
@@ -549,11 +603,11 @@ export const ImageReveal = () => {
 
     return (
         <div
-            className="relative mx-auto w-full max-w-2xl min-h-fit bg-neutral-950 rounded-xl border border-white/10 overflow-hidden"
+            className={cn("relative mx-auto w-full max-w-2xl min-h-fit bg-neutral-950 rounded-xl border border-white/10 overflow-hidden", className)}
             onMouseMove={onMouseTrack}
             onMouseLeave={onHoverDeactivate}
         >
-            {visualData.map((item) => (
+            {items.map((item) => (
                 <div
                     key={item.key}
                     className="p-6 cursor-pointer relative sm:flex items-center justify-between border-b border-white/5 last:border-0"
@@ -611,37 +665,69 @@ export const ImageReveal = () => {
 };
 
 // 7. Blocks
-export const Blocks = () => (
-    <div className="w-64 h-64 rounded-3xl border border-white/10 overflow-hidden grid grid-cols-4 grid-rows-4 bg-neutral-950">
-        {Array.from({ length: 16 }).map((_, i) => (
+export interface BlocksProps {
+    className?: string;
+    hoverColor?: string;
+    gridSize?: number;
+}
+
+export const Blocks = ({
+    className = "",
+    hoverColor = "hover:bg-violet-500/20",
+    gridSize = 16
+}: BlocksProps) => (
+    <div className={cn("w-64 h-64 rounded-3xl border border-white/10 overflow-hidden grid grid-cols-4 grid-rows-4 bg-neutral-950", className)}>
+        {Array.from({ length: gridSize }).map((_, i) => (
             <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.05, duration: 0.5 }}
-                className="border-[0.5px] border-white/5 bg-white/5 hover:bg-violet-500/20 transition-colors"
+                className={cn("border-[0.5px] border-white/5 bg-white/5 transition-colors", hoverColor)}
             />
         ))}
     </div>
 );
 
 // 8. Animated Beam
-export const AnimatedBeam = () => (
-    <div className="w-64 h-64 rounded-3xl bg-neutral-900 border border-white/10 relative overflow-hidden flex items-center justify-center">
+export interface AnimatedBeamProps {
+    color?: string;
+    duration?: number;
+    className?: string;
+}
+
+export const AnimatedBeam = ({
+    color = "sky-400",
+    duration = 2,
+    className = ""
+}: AnimatedBeamProps) => (
+    <div className={cn("w-64 h-64 rounded-3xl bg-neutral-900 border border-white/10 relative overflow-hidden flex items-center justify-center", className)}>
         <motion.div
             animate={{
                 x: [-100, 300],
             }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="absolute h-[2px] w-24 bg-gradient-to-r from-transparent via-sky-400 to-transparent"
+            transition={{ duration, repeat: Infinity, ease: "linear" }}
+            className={cn("absolute h-[2px] w-24 bg-gradient-to-r from-transparent to-transparent", `via-${color}`)}
             style={{ transform: 'rotate(-45deg)' }}
         />
-        <div className="text-sky-400 font-display text-2xl font-bold uppercase">BEAM</div>
+        <div className={cn("font-display text-2xl font-bold uppercase", `text-${color}`)}>BEAM</div>
     </div>
 );
 
 // 10. Hacker Background (Matrix Rain)
-export const HackerBackground = () => {
+export interface HackerBackgroundProps {
+    color?: string;
+    fontSize?: number;
+    className?: string;
+    speed?: number;
+}
+
+export const HackerBackground = ({
+    color = '#0F0',
+    fontSize = 15,
+    className = "",
+    speed = 1
+}: HackerBackgroundProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -655,7 +741,7 @@ export const HackerBackground = () => {
 
         const columns = Math.floor(width / 20);
         const drops: number[] = new Array(columns).fill(1);
-        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{}<>[]^~";
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%\"'#&_(),.;:?!\\|{ }<>[]^~";
 
         let animationFrameId: number;
 
@@ -663,8 +749,8 @@ export const HackerBackground = () => {
             ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, width, height);
 
-            ctx.fillStyle = '#0F0';
-            ctx.font = '15px monospace';
+            ctx.fillStyle = color;
+            ctx.font = `${fontSize}px monospace`;
 
             for (let i = 0; i < drops.length; i++) {
                 const text = chars[Math.floor(Math.random() * chars.length)];
@@ -673,7 +759,7 @@ export const HackerBackground = () => {
                 if (drops[i] * 20 > height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
-                drops[i]++;
+                drops[i] += speed;
             }
             animationFrameId = requestAnimationFrame(draw);
         };
@@ -693,17 +779,36 @@ export const HackerBackground = () => {
     }, []);
 
     return (
-        <div className="w-full h-full bg-black relative overflow-hidden">
+        <div className={cn("w-full h-full bg-black relative overflow-hidden", className)}>
             <canvas ref={canvasRef} className="absolute inset-0" />
         </div>
     );
 };
 
 // 11. Grid Background
-export const GridBackground = () => (
-    <div className="w-full h-64 rounded-3xl border border-white/10 overflow-hidden relative bg-neutral-950 flex items-center justify-center isolate">
-        <div className="absolute inset-0 z-[-1] h-full w-full bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
-        <div className="text-white/40 font-display text-2xl font-bold uppercase tracking-widest">GRID ALIVE</div>
+export interface GridBackgroundProps {
+    gridSize?: number;
+    gridColor?: string;
+    className?: string;
+    label?: string;
+}
+
+export const GridBackground = ({
+    gridSize = 24,
+    gridColor = "#80808012",
+    className = "",
+    label = "GRID ALIVE"
+}: GridBackgroundProps) => (
+    <div className={cn("w-full h-64 rounded-3xl border border-white/10 overflow-hidden relative bg-neutral-950 flex items-center justify-center isolate", className)}>
+        <div
+            className="absolute inset-0 z-[-1] h-full w-full bg-[linear-gradient(to_right,var(--grid-color)_1px,transparent_1px),linear-gradient(to_bottom,var(--grid-color)_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"
+            style={{
+                backgroundSize: `${gridSize}px ${gridSize}px`,
+                // @ts-ignore
+                "--grid-color": gridColor
+            }}
+        ></div>
+        <div className="text-white/40 font-display text-2xl font-bold uppercase tracking-widest">{label}</div>
     </div>
 );
 
