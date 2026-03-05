@@ -153,75 +153,97 @@ const BlackHoleCursorPreview: React.FC = () => {
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '100%',
-                background: '#030008', // Deep darkest space
+                background: '#000',
                 overflow: 'hidden',
                 cursor: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 20,
             }}
         >
-            <BlackHoleCursor gravityRadius={250} containerRef={containerRef} />
+            <BlackHoleCursor gravityRadius={250} containerRef={containerRef}>
+                {/* Mock Website Overlay */}
+                <div style={{ padding: '24px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {/* Mock Nav */}
+                    <nav style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 'auto' }}>
+                        <div style={{ display: 'flex', gap: 24 }}>
+                            {['Home', 'About', 'Library'].map(link => (
+                                <span key={link} style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer' }}>{link}</span>
+                            ))}
+                        </div>
+                    </nav>
 
-            {/* Cosmic Navigation / Title */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, zIndex: 10, pointerEvents: 'none' }}>
-                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.4em', color: '#c4b5fd', textTransform: 'uppercase', opacity: 0.6 }}>
-                    Event Horizon
-                </div>
-                <div style={{
-                    fontSize: 48, fontWeight: 900, letterSpacing: '-0.05em',
-                    color: '#fff',
-                    textShadow: '0 0 40px rgba(139, 92, 246, 0.8), 0 0 80px rgba(6, 182, 212, 0.4)',
-                }}>
-                    Black Hole
-                </div>
-            </div>
-
-            {/* Interactive elements to test gravity pulse effect */}
-            <div style={{ display: 'flex', gap: 24, zIndex: 10, marginTop: 24 }}>
-                {['Singularity', 'Wormhole', 'Nebula'].map((label, i) => (
-                    <button
-                        key={i}
-                        className="bh-demo-btn"
-                        style={{
-                            padding: '10px 24px',
-                            fontSize: 12,
-                            fontWeight: 700,
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
+                    {/* Hero Text */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: '20%' }}>
+                        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.4em', color: '#c4b5fd', textTransform: 'uppercase', opacity: 0.6 }}>
+                            Singularity Experience
+                        </div>
+                        <h1 style={{
+                            fontSize: 48, fontWeight: 900, letterSpacing: '-0.05em',
                             color: '#fff',
-                            background: 'transparent',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            borderRadius: '100px',
-                            cursor: 'pointer',
-                            outline: 'none',
-                            boxShadow: 'inset 0 0 20px rgba(139,92,246,0.1)',
-                            backdropFilter: 'blur(4px)',
-                            transition: 'all 0.3s ease',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                            e.currentTarget.style.borderColor = 'rgba(139,92,246,0.5)';
-                            e.currentTarget.style.boxShadow = '0 0 20px rgba(139,92,246,0.3), inset 0 0 20px rgba(139,92,246,0.2)';
-                            e.currentTarget.style.transform = 'scale(1.05)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'transparent';
-                            e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
-                            e.currentTarget.style.boxShadow = 'inset 0 0 20px rgba(139,92,246,0.1)';
-                            e.currentTarget.style.transform = 'scale(1)';
-                        }}
-                    >
-                        {label}
-                    </button>
-                ))}
-            </div>
+                            margin: 0,
+                            textShadow: '0 0 40px rgba(139, 92, 246, 0.8)',
+                        }}>
+                            Black Hole
+                        </h1>
+                        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, maxWidth: 300, textAlign: 'center', lineHeight: 1.6 }}>
+                            A high-fidelity space background with interactive particle physics.
+                        </p>
+                    </div>
+                    {/* Interactive elements to test gravity pulse effect */}
+                    <div style={{ display: 'flex', gap: 24, zIndex: 10, marginTop: 'auto', alignSelf: 'center', paddingBottom: '20px' }}>
+                        {['Singularity', 'Wormhole', 'Nebula'].map((label, i) => (
+                            <button
+                                key={i}
+                                className="bh-demo-btn group/btn"
+                                style={{
+                                    position: 'relative',
+                                    padding: '10px 24px',
+                                    fontSize: 12,
+                                    fontWeight: 700,
+                                    letterSpacing: '0.1rem',
+                                    textTransform: 'uppercase',
+                                    color: '#fff',
+                                    background: 'transparent',
+                                    border: '1px solid rgba(255,255,255,0.1)',
+                                    borderRadius: '8px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                                    pointerEvents: 'auto',
+                                    overflow: 'hidden'
+                                }}
+                            >
+                                {/* Inner Black Hole Effect */}
+                                <div className="btn-bh-core" style={{
+                                    position: 'absolute',
+                                    top: '50%', left: '50%',
+                                    width: '0%', height: '0%',
+                                    background: '#000',
+                                    borderRadius: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                                    zIndex: 0,
+                                    boxShadow: '0 0 0 0 rgba(139, 92, 246, 0)',
+                                }} />
 
-            <div style={{ position: 'absolute', bottom: 32, fontSize: 10, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.2em', textTransform: 'uppercase', zIndex: 10 }}>
-                Hover buttons to expand gravitational center
-            </div>
+                                <span className="relative z-10 transition-transform duration-300 inline-block group-hover/btn:scale-110 group-hover/btn:tracking-[0.2em]">{label}</span>
+                            </button>
+                        ))}
+                    </div>
+
+                    <style>{`
+                        .bh-demo-btn:hover {
+                            border-color: rgba(165, 243, 252, 0.4);
+                            box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+                        }
+                        .bh-demo-btn:hover .btn-bh-core {
+                            width: 150%;
+                            padding-bottom: 150%;
+                            box-shadow: 
+                                0 0 40px 10px #000,
+                                0 0 15px 1px rgba(165, 243, 252, 0.6),
+                                inset 0 0 10px rgba(139, 92, 246, 0.4);
+                        }
+                    `}</style>
+                </div>
+            </BlackHoleCursor>
         </div>
     );
 };

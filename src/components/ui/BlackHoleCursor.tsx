@@ -6,12 +6,14 @@ interface BlackHoleCursorProps {
     className?: string;
     /** Track mouse relative to this container if provided */
     containerRef?: React.RefObject<HTMLElement>;
+    children?: React.ReactNode;
 }
 
 export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
     gravityRadius = 250,
     className = '',
     containerRef,
+    children
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const coreRef = useRef<HTMLDivElement>(null);
@@ -265,6 +267,11 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
             }} />
 
             <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', pointerEvents: 'none', position: 'absolute', inset: 0, zIndex: -1 }} />
+
+            {/* Content Layer (Home, About etc) */}
+            <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', pointerEvents: 'auto' }}>
+                {children}
+            </div>
 
             <div
                 ref={coreRef}
