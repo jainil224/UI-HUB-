@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 interface Star {
     x: number;
@@ -10,6 +10,7 @@ interface Star {
     twinkleSpeed: number;
     layer: number;
     flare: boolean;
+    isUnstable: boolean;
 }
 
 interface Nebula {
@@ -31,6 +32,20 @@ interface ShootingStar {
     active: boolean;
 }
 
+interface Fragment {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    rotation: number;
+    vr: number;
+    size: number;
+    color: string;
+    opacity: number;
+    active: boolean;
+    points: { x: number; y: number }[];
+}
+
 interface SpaceBackgroundProps {
     className?: string;
     starCount?: number;
@@ -50,6 +65,7 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
     const stars = useRef<Star[]>([]);
     const nebulas = useRef<Nebula[]>([]);
     const shootingStars = useRef<ShootingStar[]>([]);
+    const fragments = useRef<Fragment[]>([]);
     const rafId = useRef<number>(0);
 
     const starColors = ['#FFFFFF', '#FFE9D2', '#D2EAFF', '#FFD2D2', '#FFF4EA'];
@@ -90,7 +106,6 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
 
             for (let i = 0; i < starCount; i++) {
                 let x, y;
-                // Bias some stars towards clusters
                 if (Math.random() > 0.6) {
                     const cluster = clusters[Math.floor(Math.random() * clusters.length)];
                     const angle = Math.random() * Math.PI * 2;
@@ -114,7 +129,8 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
                     targetOpacity: Math.random(),
                     twinkleSpeed: Math.random() * 0.015 + 0.005,
                     layer,
-                    flare: layer === 2 && Math.random() > 0.8
+                    flare: layer === 2 && Math.random() > 0.8,
+                    isUnstable: Math.random() > 0.995 // Rare unstable stars that can shatter
                 });
             }
             stars.current = newStars;
@@ -129,10 +145,67 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
                 speed: (Math.random() - 0.5) * 0.0005,
             }));
 
-            // Initialize Shooting Stars
             shootingStars.current = Array.from({ length: 3 }, () => ({
                 x: 0, y: 0, vx: 0, vy: 0, len: 0, opacity: 0, active: false
             }));
+
+            fragments.current = [];
+        };
+
+        const shatterStar = (star: Star) => {
+            const fragmentCount = 5 + Math.floor(Math.random() * 5);
+            for (let i = 0; i < fragmentCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 2 + 1;
+                const size = star.size * (0.3 + Math.random() * 0.5);
+
+                // Create sharp polygon points for the fragment
+                const points = [];
+                const sides = 3 + Math.floor(Math.random() * 3);
+                for (let j = 0; j < sides; j++) {
+                    const pAngle = (j / sides) * Math.PI * 2;
+                    const pDist = size * (0.5 + Math.random() * 1);
+                    points.push({ x: Math.cos(pAngle) * pDist, y: Math.sin(pAngle) * pDist });
+                }
+
+                fragments.current.push({
+                    x: star.x,
+                    y: star.y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    rotation: Math.random() * Math.PI * 2,
+                    vr: (Math.random() - 0.5) * 0.2,
+                    size,
+                    color: star.color,
+                    opacity: 1,
+                    active: true,
+                    points
+                });
+            }
+            // Reset the star to a new position after shattering
+            star.x = Math.random() * width;
+            star.y = Math.random() * height;
+            star.opacity = 0;
+        };
+
+        const drawFragment = (f: Fragment) => {
+            ctx.save();
+            ctx.translate(f.x, f.y);
+            ctx.rotate(f.rotation);
+            ctx.globalAlpha = f.opacity;
+            ctx.fillStyle = f.color;
+            ctx.shadowBlur = 4;
+            ctx.shadowColor = f.color;
+
+            ctx.beginPath();
+            ctx.moveTo(f.points[0].x, f.points[0].y);
+            for (let i = 1; i < f.points.length; i++) {
+                ctx.lineTo(f.points[i].x, f.points[i].y);
+            }
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.restore();
         };
 
         const drawStar = (star: Star, offsetX: number, offsetY: number) => {
@@ -142,7 +215,6 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
             const px = star.x + offsetX;
             const py = star.y + offsetY;
 
-            // Depth of Field Blur for layer 0
             if (star.layer === 0) {
                 ctx.shadowBlur = 0;
             } else if (star.layer === 1) {
@@ -157,26 +229,22 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
             ctx.arc(px, py, star.size, 0, Math.PI * 2);
             ctx.fill();
 
-            // Realistic Flare for bright/large stars
             if (star.flare && star.opacity > 0.5) {
                 ctx.shadowBlur = 0;
                 ctx.strokeStyle = star.color;
                 ctx.lineWidth = 0.5;
                 ctx.globalAlpha = star.opacity * 0.5;
 
-                // Vertical line
                 ctx.beginPath();
                 ctx.moveTo(px, py - star.size * 4);
                 ctx.lineTo(px, py + star.size * 4);
                 ctx.stroke();
 
-                // Horizontal line
                 ctx.beginPath();
                 ctx.moveTo(px - star.size * 4, py);
                 ctx.lineTo(px + star.size * 4, py);
                 ctx.stroke();
 
-                // Glow circle
                 const g = ctx.createRadialGradient(px, py, 0, px, py, star.size * 3);
                 g.addColorStop(0, star.color);
                 g.addColorStop(1, 'transparent');
@@ -192,7 +260,6 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
         };
 
         const animate = () => {
-            // Smooth mouse follow
             mouse.current.x += (targetMouse.current.x - mouse.current.x) * 0.05;
             mouse.current.y += (targetMouse.current.y - mouse.current.y) * 0.05;
 
@@ -200,7 +267,6 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
             ctx.fillStyle = '#020617';
             ctx.fillRect(0, 0, width, height);
 
-            // Draw Nebulas
             ctx.globalCompositeOperation = 'screen';
             nebulas.current.forEach(n => {
                 n.angle += n.speed;
@@ -221,28 +287,46 @@ export const SpaceBackground: React.FC<SpaceBackgroundProps> = ({
                 ctx.fill();
             });
 
-            // Draw Stars
             ctx.globalCompositeOperation = 'source-over';
             stars.current.forEach(star => {
-                // Star Movement (Diagonal slow drift)
                 star.y -= (star.layer + 1) * 0.02;
                 star.x -= (star.layer + 1) * 0.01;
 
                 if (star.y < -20) star.y = height + 20;
                 if (star.x < -20) star.x = width + 20;
 
-                // Mouse Parallax (Invert slightly for realism)
                 const offsetX = (mouse.current.x - width / 2) * (star.layer + 1) * 0.008;
                 const offsetY = (mouse.current.y - height / 2) * (star.layer + 1) * 0.008;
 
-                // Twinkle
                 star.opacity += (star.targetOpacity - star.opacity) * star.twinkleSpeed;
                 if (Math.abs(star.opacity - star.targetOpacity) < 0.1) {
                     star.targetOpacity = Math.random();
+                    // Shatter chance on twinkle cycle if unstable
+                    if (star.isUnstable && Math.random() > 0.98) {
+                        shatterStar(star);
+                    }
                 }
 
                 drawStar(star, offsetX, offsetY);
             });
+
+            // Handle fragments
+            fragments.current.forEach((f, i) => {
+                if (!f.active) return;
+                f.x += f.vx;
+                f.y += f.vy;
+                f.rotation += f.vr;
+                f.opacity *= 0.96;
+                if (f.opacity < 0.01) {
+                    f.active = false;
+                } else {
+                    drawFragment(f);
+                }
+            });
+            // Clean up inactive fragments
+            if (fragments.current.length > 50) {
+                fragments.current = fragments.current.filter(f => f.active);
+            }
 
             // Shooting Stars
             if (Math.random() < 0.005) {
