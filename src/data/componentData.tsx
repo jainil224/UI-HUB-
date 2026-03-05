@@ -1,7 +1,131 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import * as Animations from '../components/animations/TextAnimations';
 import * as VisualEffects from '../components/animations/VisualEffects';
 import { AuroraCursor } from '../components/ui/AuroraCursor';
+import { MagneticCursor } from '../components/ui/MagneticCursor';
+import { MagneticBackground } from '../components/ui/MagneticBackground';
+
+// ── Magnetic Cursor scoped preview ────────────
+const MagneticCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isHovered, setIsHovered] = useState(false);
+    const [activeNav, setActiveNav] = useState(0);
+
+    useEffect(() => {
+        // Register the buttons as magnetic elements
+        const buttons = document.querySelectorAll('.mc-demo-btn, .mc-nav-btn');
+        let unregisters: (() => void)[] = [];
+        if ((MagneticCursor as any)._register) {
+            buttons.forEach(btn => {
+                const unreg = (MagneticCursor as any)._register(btn as HTMLElement);
+                if (unreg) unregisters.push(unreg);
+            });
+        }
+        return () => unregisters.forEach(fn => fn());
+    }, []);
+
+    return (
+        <div
+            ref={containerRef}
+            className="group"
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: 'radial-gradient(ellipse at 50% 100%, #150e28 0%, #050508 100%)',
+                overflow: 'hidden',
+                cursor: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 40,
+            }}
+        >
+            <MagneticBackground containerRef={containerRef} />
+            <MagneticCursor cursorSize={20} magnetRadius={120} containerRef={containerRef} />
+
+            {/* Top Navigation Bar */}
+            <div style={{
+                position: 'absolute', top: 32, left: '50%', transform: 'translateX(-50%)',
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: 999,
+                padding: '6px',
+                display: 'flex', gap: 4,
+                backdropFilter: 'blur(24px)',
+                zIndex: 20,
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
+            }}>
+                {['Home', 'Components', 'Backgrounds', 'Text Animations', 'Effects', 'Contact'].map((label, i) => (
+                    <button
+                        key={i}
+                        className="mc-nav-btn"
+                        onClick={() => setActiveNav(i)}
+                        style={{
+                            padding: '8px 16px',
+                            fontSize: 13,
+                            fontWeight: 500,
+                            color: activeNav === i ? '#fff' : 'rgba(255,255,255,0.5)',
+                            background: activeNav === i ? 'rgba(255,255,255,0.1)' : 'transparent',
+                            borderRadius: 999,
+                            border: 'none',
+                            cursor: 'pointer',
+                            outline: 'none',
+                            transition: 'color 0.2s ease, background 0.2s ease'
+                        }}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
+
+            {/* Title */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, zIndex: 10, pointerEvents: 'none', /* Offset title down slightly */ marginTop: 40 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>
+                    Interact Below
+                </div>
+                <div style={{
+                    fontSize: 42, fontWeight: 900, letterSpacing: '-0.04em',
+                    background: 'linear-gradient(180deg, #fff 0%, #a5b4fc 100%)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                    filter: 'drop-shadow(0 0 32px rgba(165,180,252,0.4))',
+                }}>
+                    Magnetic Pull
+                </div>
+            </div>
+
+            {/* Magnetic buttons */}
+            <div style={{ display: 'flex', gap: 16, zIndex: 10 }}>
+                {['Projects', 'About', 'Contact'].map((label, i) => (
+                    <button
+                        key={i}
+                        className="mc-demo-btn"
+                        style={{
+                            padding: '12px 24px',
+                            fontSize: 14,
+                            fontWeight: 600,
+                            color: 'rgba(255,255,255,0.9)',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(255,255,255,0.1)',
+                            borderRadius: 12,
+                            cursor: 'pointer',
+                            outline: 'none',
+                            backdropFilter: 'blur(8px)',
+                        }}
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
+                    >
+                        {label}
+                    </button>
+                ))}
+            </div>
+
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase', zIndex: 10 }}>
+                Hover buttons to snap · Magnetic Physics
+            </div>
+        </div>
+    );
+};
 
 // ── stable star positions (deterministic, no per-render Math.random) ─────────
 const AURORA_DOTS = Array.from({ length: 40 }, (_, i) => ({
@@ -204,6 +328,177 @@ const renderComponent = (id: string, _name: string): (() => React.ReactNode) => 
 
 // Assuming these prompts apply as they were defined in VibeMeta
 export const componentList: ComponentItem[] = [
+    {
+        id: "magnetic-cursor",
+        title: "Magnetic Cursor",
+        category: "cursor",
+        preview: () => <MagneticCursorPreview />,
+        code: `import React, { useEffect, useRef, useCallback } from 'react';
+
+interface MagneticCursorProps {
+    magnetRadius?: number;
+    cursorSize?: number;
+    className?: string;
+    /** If provided, tracks mouse relative to this container and uses absolute positioning */
+    containerRef?: React.RefObject<HTMLElement>;
+}
+
+export const MagneticCursor: React.FC<MagneticCursorProps> = ({
+    magnetRadius = 120,
+    cursorSize = 20,
+    className = '',
+    containerRef,
+}) => {
+    const dotRef  = useRef<HTMLDivElement>(null);
+    const haloRef = useRef<HTMLDivElement>(null);
+
+    // Spring state (no React state to avoid re-renders)
+    const mouse   = useRef({ x: -999, y: -999 });
+    const dot     = useRef({ x: -999, y: -999 });
+    const dotVel  = useRef({ x: 0, y: 0 });
+    const halo    = useRef({ x: -999, y: -999 });
+    const haloVel = useRef({ x: 0, y: 0 });
+    const rafId   = useRef<number>(0);
+    const isHover = useRef(false);
+
+    // Magnetic elements registry
+    const magnets = useRef<HTMLElement[]>([]);
+
+    const onMouseMove = useCallback((e: MouseEvent) => {
+        if (containerRef?.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            mouse.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        } else {
+            mouse.current = { x: e.clientX, y: e.clientY };
+        }
+    }, [containerRef]);
+
+    const animate = useCallback(() => {
+        const mx = mouse.current.x;
+        const my = mouse.current.y;
+
+        // ── Dot (fast spring) ──────────────────────────────────
+        dotVel.current.x  += (mx - dot.current.x) * 0.22;
+        dotVel.current.y  += (my - dot.current.y) * 0.22;
+        dotVel.current.x  *= 0.72;
+        dotVel.current.y  *= 0.72;
+        dot.current.x     += dotVel.current.x;
+        dot.current.y     += dotVel.current.y;
+
+        // ── Halo (slow spring) ─────────────────────────────────
+        haloVel.current.x += (mx - halo.current.x) * 0.09;
+        haloVel.current.y += (my - halo.current.y) * 0.09;
+        haloVel.current.x *= 0.80;
+        haloVel.current.y *= 0.80;
+        halo.current.x    += haloVel.current.x;
+        halo.current.y    += haloVel.current.y;
+
+        const half = cursorSize / 2;
+        const haloHalf = isHover.current ? 36 : 28;
+
+        if (dotRef.current) {
+            dotRef.current.style.transform = \`translate(\${dot.current.x - half}px, \${dot.current.y - half}px) scale(\${isHover.current ? 1.7 : 1})\`;
+        }
+        if (haloRef.current) {
+            haloRef.current.style.transform = \`translate(\${halo.current.x - haloHalf}px, \${halo.current.y - haloHalf}px) scale(\${isHover.current ? 1.4 : 1})\`;
+        }
+
+        // ── Magnetic pull on nearby elements ───────────────────
+        magnets.current.forEach(el => {
+            const rect   = el.getBoundingClientRect();
+            const cx     = rect.left + rect.width  / 2;
+            const cy     = rect.top  + rect.height / 2;
+            const dx     = mx - cx;
+            const dy     = my - cy;
+            const dist   = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < magnetRadius) {
+                const strength = (1 - dist / magnetRadius);
+                const tx = dx * strength * 0.38;
+                const ty = dy * strength * 0.38;
+                el.style.transform  = \`translate(\${tx}px, \${ty}px) scale(\${1 + strength * 0.04})\`;
+                el.style.boxShadow  = \`0 0 \${20 + strength * 30}px rgba(139,92,246,\${0.2 + strength * 0.4})\`;
+            } else {
+                el.style.transform = 'translate(0,0) scale(1)';
+                el.style.boxShadow = '';
+            }
+        });
+
+        rafId.current = requestAnimationFrame(animate);
+    }, [cursorSize, magnetRadius]);
+
+    const onOver = useCallback((e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (target.closest('[data-magnetic]')) isHover.current = true;
+    }, []);
+
+    const onOut = useCallback((e: MouseEvent) => {
+        const related = e.relatedTarget as HTMLElement | null;
+        if (!related?.closest('[data-magnetic]')) isHover.current = false;
+    }, []);
+
+    useEffect(() => {
+        window.addEventListener('mousemove', onMouseMove, { passive: true });
+        window.addEventListener('mouseover',  onOver,     { passive: true });
+        window.addEventListener('mouseout',   onOut,      { passive: true });
+        rafId.current = requestAnimationFrame(animate);
+        return () => {
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseover',  onOver);
+            window.removeEventListener('mouseout',   onOut);
+            cancelAnimationFrame(rafId.current);
+        };
+    }, [onMouseMove, onOver, onOut, animate]);
+
+    // Public imperative handle: register/unregister magnetic elements
+    const registerMagnet = useCallback((el: HTMLElement | null) => {
+        if (!el) return;
+        el.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease';
+        el.setAttribute('data-magnetic', '');
+        if (!magnets.current.includes(el)) magnets.current.push(el);
+        return () => {
+            magnets.current = magnets.current.filter(m => m !== el);
+            el.style.transform = '';
+        };
+    }, []);
+
+    (MagneticCursor as any)._register = registerMagnet;
+
+    const pos = containerRef ? 'absolute' : 'fixed';
+
+    return (
+        <div className={className} style={{ position: pos, top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}>
+            <style>{\`
+                .mc-dot  { transition: transform 0.08s linear, opacity 0.3s; }
+                .mc-halo { transition: transform 0.25s ease, opacity 0.3s; }
+            \`}</style>
+            {/* Dot */}
+            <div ref={dotRef} className="mc-dot" style={{
+                position: pos, top: 0, left: 0,
+                width: cursorSize, height: cursorSize,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(200,150,255,1) 0%, rgba(99,102,241,0.8) 60%, transparent 100%)',
+                filter: 'blur(1px)',
+                willChange: 'transform',
+            }} />
+            {/* Halo */}
+            <div ref={haloRef} className="mc-halo" style={{
+                position: pos, top: 0, left: 0,
+                width: 56, height: 56,
+                borderRadius: '50%',
+                border: '1.5px solid rgba(139,92,246,0.5)',
+                background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
+                filter: 'blur(0.5px)',
+                willChange: 'transform',
+            }} />
+        </div>
+    );
+};
+
+export default MagneticCursor;
+`,
+        vibePrompt: "Build a futuristic magnetic cursor interaction where the cursor is a glowing dot with a halo, and it attracts nearby UI elements (buttons, cards) using distance-based spring physics. When hovering an element, the cursor enlarges and the element snaps towards the cursor center."
+    },
     {
         id: "blur-text",
         title: "Blur In Text",
