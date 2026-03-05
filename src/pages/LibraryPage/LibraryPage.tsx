@@ -141,12 +141,11 @@ const LibraryPage = () => {
             <main className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4 pt-5 md:p-12 md:pt-12">
                 <div className="max-w-6xl mx-auto">
                     <AnimatePresence mode="wait">
-                        <div key={activeComponent.id}>
-                            <ComponentDetail
-                                item={activeComponent}
-                                onBack={() => { }}
-                            />
-                        </div>
+                        <ComponentDetail
+                            key={activeComponent.id}
+                            item={activeComponent}
+                            onBack={() => { }}
+                        />
                     </AnimatePresence>
                 </div>
             </main>

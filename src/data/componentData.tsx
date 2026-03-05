@@ -375,5 +375,13 @@ export const componentList: ComponentItem[] = [
         preview: renderComponent("liquid-fill-button", "Liquid Fill Button"),
         code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
         vibePrompt: "Premium button with a smooth SVG liquid wave filling animation that appears on hover."
+    },
+    {
+        id: "neon-flicker-button",
+        title: "Neon Flicker Button",
+        category: "button",
+        preview: renderComponent("neon-flicker-button", "Neon Flicker Button"),
+        code: `import { NeonFlickerButton } from "@/components/ui/NeonFlickerButton";\n\nexport const Demo = () => (\n  <NeonFlickerButton label="Neon Flicker" color="red" />\n);`,
+        vibePrompt: "Cyberpunk-inspired button with a smooth, randomized neon flicker effect and intense glow transitions."
     }
 ];

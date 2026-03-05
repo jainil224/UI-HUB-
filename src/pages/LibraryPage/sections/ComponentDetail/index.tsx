@@ -577,6 +577,22 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["framer-motion", "tailwindcss"],
             requirements: ["SVG path wave math", "Continuous horizontal wave translation", "Stiffness and damping spring for fill level", "High-contrast text color interpolation"]
         }
+    },
+    "neon-flicker-button": {
+        props: [
+            { name: "label", type: "string", default: '"Neon Flicker"', description: "The text to display inside the button." },
+            { name: "color", type: '"blue" | "pink" | "purple" | "cyan" | "red"', default: '"red"', description: "The neon color theme for the button." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Optional click handler." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
+        ],
+        vibeMeta: {
+            behavior: "A cyberpunk button with a random flickering neon light effect and a pulsing glow. Hovering intensifies the flicker and glow, while triggering a high-end light sweep.",
+            states: { from: "subtle steady flicker", to: "bright intense neon with interactive light sweep" },
+            cssProperties: ["opacity", "box-shadow", "transform", "filter"],
+            description: "Futuristic cyberpunk neon interaction with randomized flicker physics.",
+            libraries: ["framer-motion", "tailwindcss"],
+            requirements: ["Randomized flicker timing loops", "Gaussian blur glow layers", "Linear light sweep geometry", "High-frequency opacity transitions"]
+        }
     }
 };
 
@@ -730,6 +746,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
             className="flex flex-col gap-8 pb-24"
         >
             {/* Header */}
