@@ -8,6 +8,7 @@ import BlackHoleCursor from '../components/ui/BlackHoleCursor';
 import { TargetCursor } from '../components/ui/TargetCursor';
 import { SpaceBackground } from '../components/ui/SpaceBackground';
 import { NeuralNetworkBackground } from '../components/ui/NeuralNetworkBackground';
+import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
 
 
 // ── Magnetic Cursor scoped preview ────────────
@@ -621,6 +622,59 @@ const NeuralNetworkPreview: React.FC = () => {
         </div>
     );
 };
+
+
+// ── Black Hole Background scoped preview ────────────
+const BlackHolePreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            color: '#fff',
+            fontFamily: 'Inter, sans-serif'
+        }}>
+            <BlackHoleBackground />
+
+            <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
+                <h2 style={{
+                    fontSize: '3.5rem',
+                    fontWeight: 900,
+                    letterSpacing: '-0.05em',
+                    marginBottom: '8px',
+                    color: '#fff',
+                    textTransform: 'uppercase',
+                    filter: 'drop-shadow(0 0 20px rgba(79, 70, 229, 0.8))'
+                }}>
+                    Singularity
+                </h2>
+                <div style={{
+                    height: '2px',
+                    width: '60px',
+                    background: 'linear-gradient(90deg, transparent, #22d3ee, transparent)',
+                    margin: '12px auto'
+                }} />
+                <p style={{
+                    color: 'rgba(255,255,255,0.5)',
+                    fontSize: '0.8rem',
+                    maxWidth: '400px',
+                    lineHeight: '1.6',
+                    margin: '0 auto',
+                    letterSpacing: '0.3em',
+                    textTransform: 'uppercase',
+                    fontWeight: 600
+                }}>
+                    Gravitational Vortex Engine
+                </p>
+            </div>
+        </div>
+    );
+};
+
 
 
 
@@ -1757,6 +1811,14 @@ export const Demo = () => (
         preview: () => <NeuralNetworkPreview />,
         code: `import { NeuralNetworkBackground } from '@/components/ui/NeuralNetworkBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <NeuralNetworkBackground \n      nodeCount={120} \n      connectionDistance={150} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase">\n        Neural Core\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: "Create a futuristic AI-style neural network background made of nodes (dots) connected by animated lines. Dots should connect with thin animated lines when they are close to each other. Nodes near the cursor should move slightly and connections should dynamically form around the cursor. Use HTML5 Canvas for smooth 60fps performance."
+    },
+    {
+        id: "black-hole-background",
+        title: "Black Hole Background",
+        category: "background",
+        preview: () => <BlackHolePreview />,
+        code: `import { BlackHoleBackground } from '@/components/ui/BlackHoleBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <BlackHoleBackground \n      particleCount={600} \n      coreColor="rgba(79, 70, 229, 0.4)" \n      accentColor="#22d3ee" \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-black text-white tracking-widest uppercase opacity-80">\n        Gravitational Core\n      </h1>\n    </div>\n  </div>\n);`,
+        vibePrompt: "Create a cosmic black hole vortex animation where particles spiral toward the center like a gravitational singularity. Use HTML5 Canvas to maintain 60fps performance and implement realistic radial acceleration and mouse-influenced bending."
     }
 ];
 
