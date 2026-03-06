@@ -13,7 +13,10 @@ const showcaseIds = [
     'stripe-mesh-background',
     'mouse-gravity-background',
     'corner-border-button',
-    'orbit-button'
+    'orbit-button',
+    'hacker-background',
+    'beam-grid-background',
+    'black-hole-cursor'
 ];
 
 const ComponentGrid = () => {
@@ -60,7 +63,11 @@ const ComponentGrid = () => {
                             onClick={() => handleCardInteract(comp!.id)}
                             onMouseEnter={() => setActiveId(comp!.id)}
                             onMouseLeave={() => setActiveId(null)}
-                            className="group relative h-[220px] sm:h-[260px] md:h-[300px] bg-[#050505] rounded-[24px] overflow-hidden flex items-center justify-center cursor-pointer select-none transition-all duration-500 hover:-translate-y-1"
+                            className="group relative h-[220px] sm:h-[260px] md:h-[300px] bg-[#050505] rounded-[24px] overflow-hidden flex items-center justify-center cursor-pointer select-none transition-all duration-500 hover:-translate-y-1 isolate"
+                            style={{
+                                // Stricter clipping for 3D/Canvas contexts inside the cards
+                                WebkitMaskImage: '-webkit-radial-gradient(white, black)'
+                            }}
                         >
                             {/* Inner border and shadow */}
                             <div className="absolute inset-0 rounded-[24px] ring-1 ring-white/[0.05] group-hover:ring-white/[0.15] group-hover:shadow-[inset_0px_0px_30px_rgba(255,255,255,0.02)] transition-all duration-500 z-30 pointer-events-none" />
@@ -69,10 +76,18 @@ const ComponentGrid = () => {
                             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
 
                             {/* Preview / Placeholder */}
-                            <div className="w-full h-full flex items-center justify-center absolute inset-0 z-20 overflow-hidden">
+                            <div className="w-full h-full flex items-center justify-center absolute inset-0 z-20 overflow-hidden rounded-[24px]">
                                 {isActive ? (
-                                    <div className="w-full h-full animate-in fade-in duration-500">
-                                        {comp!.preview()}
+                                    <div
+                                        className="absolute inset-0 w-full h-full animate-in fade-in duration-500 overflow-hidden"
+                                        style={{
+                                            pointerEvents: 'auto',
+                                        }}
+                                    >
+                                        {/* Scale down slightly and center to match reference images */}
+                                        <div className="w-full h-full flex items-center justify-center transform scale-[0.85] origin-center">
+                                            {comp!.preview()}
+                                        </div>
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-center gap-3 sm:gap-4 transition-all duration-500 group-hover:scale-105">

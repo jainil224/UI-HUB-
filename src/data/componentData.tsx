@@ -183,9 +183,6 @@ const BlackHoleCursorPreview: React.FC = () => {
 
                     {/* Hero Text */}
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: '20%' }}>
-                        <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.4em', color: '#c4b5fd', textTransform: 'uppercase', opacity: 0.6 }}>
-                            Singularity Experience
-                        </div>
                         <h1 style={{
                             fontSize: 48, fontWeight: 900, letterSpacing: '-0.05em',
                             color: '#fff',
@@ -194,9 +191,6 @@ const BlackHoleCursorPreview: React.FC = () => {
                         }}>
                             Black Hole
                         </h1>
-                        <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 14, maxWidth: 300, textAlign: 'center', lineHeight: 1.6 }}>
-                            A high-fidelity space background with interactive particle physics.
-                        </p>
                     </div>
                     {/* Interactive elements to test gravity pulse effect */}
                     <div style={{ display: 'flex', gap: 24, zIndex: 10, marginTop: 'auto', alignSelf: 'center', paddingBottom: '20px' }}>
@@ -464,7 +458,7 @@ const TargetCursorPreview: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                gap: 40,
+                gap: 24,
                 color: '#fff',
                 fontFamily: 'Inter, sans-serif'
             }}
@@ -472,25 +466,25 @@ const TargetCursorPreview: React.FC = () => {
             <TargetCursor containerRef={containerRef} targetSelector=".cursor-target" />
 
             <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '8px' }}>
+                <h2 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '8px' }}>
                     Targeting System
                 </h2>
-                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    Hover buttons to lock precision
+                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                    Hover to lock
                 </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px', zIndex: 10 }}>
-                {['UI', 'HUB', 'COMPONENTS', 'READY!'].map((text, i) => (
+            <div style={{ display: 'flex', gap: '12px', zIndex: 10 }}>
+                {['HUB', 'COMPONENTS', 'READY'].map((text, i) => (
                     <button
                         key={i}
                         className="cursor-target"
                         style={{
-                            padding: '16px 24px',
+                            padding: '12px 18px',
                             background: 'transparent',
                             border: '1px solid rgba(255,255,255,0.1)',
                             color: '#fff',
-                            fontSize: '0.8rem',
+                            fontSize: '0.75rem',
                             fontWeight: 700,
                             letterSpacing: '0.1em',
                             transition: 'all 0.3s ease',
@@ -1022,26 +1016,37 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
             const containerRect = containerRef?.current?.getBoundingClientRect();
             
             let centerX, centerY;
+            let scaleFactor = 1;
+
             if (containerRect) {
-                centerX = rect.left + rect.width / 2 - containerRect.left;
-                centerY = rect.top + rect.height / 2 - containerRect.top;
+                // If scaled via CSS transform, the bounding rect is physically smaller
+                // than the offset dimensions. We calculate the scale ratio to adjust.
+                if (containerRef.current) {
+                    scaleFactor = containerRect.width / containerRef.current.offsetWidth;
+                }
+
+                // Calculate center relative to the scaled container
+                centerX = (rect.left - containerRect.left) / scaleFactor + (rect.width / scaleFactor) / 2;
+                centerY = (rect.top - containerRect.top) / scaleFactor + (rect.height / scaleFactor) / 2;
             } else {
                 centerX = rect.left + rect.width / 2;
                 centerY = rect.top + rect.height / 2;
             }
 
             if (parallaxOn) {
-                const dx = mouse.current.x - centerX;
-                const dy = mouse.current.y - centerY;
-                targetX = centerX + dx * 0.15;
-                targetY = centerY + dy * 0.15;
+                // Mouse coordinates are already relative to container when containerRef exists
+                const mouseDx = (mouse.current.x / scaleFactor) - centerX;
+                const mouseDy = (mouse.current.y / scaleFactor) - centerY;
+                targetX = centerX + mouseDx * 0.15;
+                targetY = centerY + mouseDy * 0.15;
             } else {
                 targetX = centerX;
                 targetY = centerY;
             }
             
-            width = rect.width + 12;
-            height = rect.height + 12;
+            // Reduced padding and divided by scale to draw the brackets at the true unscaled DOM sizing
+            width = (rect.width / scaleFactor) + 8;
+            height = (rect.height / scaleFactor) + 8;
             targetRotate = 0;
         }
 
