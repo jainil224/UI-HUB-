@@ -16,9 +16,16 @@ const LibraryPage = () => {
     const queryParams = new URLSearchParams(location.search);
     const idFromUrl = queryParams.get('id');
 
-    const defaultComponent = componentList.find(c => c.id === idFromUrl) || componentList.find(c => c.id === 'blur-text') || componentList[0];
+    const defaultComponent = componentList.find(c => c.id === idFromUrl) || componentList.find(c => c.id === 'corner-border-button') || componentList[0];
     const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // Automatically sync URL with default component if no ID is present
+    React.useEffect(() => {
+        if (!idFromUrl) {
+            navigate(`/library?id=${defaultComponent.id}`, { replace: true });
+        }
+    }, [idFromUrl, navigate, defaultComponent.id]);
 
     const handleComponentSelect = (item: ComponentItem) => {
         setActiveComponent(item);
