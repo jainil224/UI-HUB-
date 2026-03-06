@@ -11,6 +11,10 @@ import { NeuralNetworkBackground } from '../components/ui/NeuralNetworkBackgroun
 import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
 import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
 import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
+import { HeartCursor } from '../components/ui/HeartCursor';
+import { StripeMeshBackground } from '../components/ui/StripeMeshBackground';
+import Logo from '../components/ui/Logo';
+
 
 
 // ── Magnetic Cursor scoped preview ────────────
@@ -593,6 +597,293 @@ const MouseGravityPreview: React.FC = () => {
             fontFamily: 'Inter, sans-serif'
         }}>
             <MouseGravityBackground />
+        </div>
+    );
+};
+
+// ── Stripe Mesh Gradient Background scoped preview ────────────
+const StripeMeshPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            overflow: 'hidden',
+        }}>
+            <StripeMeshBackground intensity={0.9} speed={0.8}>
+                <div style={{
+                    position: 'relative',
+                    zIndex: 20,
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}>
+                    {/* Mock Nav */}
+                    <nav style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '24px 40px',
+                        width: '100%',
+                    }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <Logo className="w-8 h-8" />
+                            <span style={{ fontSize: 20, fontWeight: 800, color: '#1a1f36', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>UI HUB</span>
+                        </div>
+                        <div style={{ display: 'flex', gap: 24, fontSize: 15, fontWeight: 600, color: '#4f566b' }}>
+                            <span>Components</span>
+                            <span>Templates</span>
+                            <span>Showcase</span>
+                            <span>Docs</span>
+                        </div>
+                        <button style={{
+                            padding: '8px 20px',
+                            background: '#1a1f36',
+                            color: '#fff',
+                            borderRadius: 20,
+                            fontSize: 14,
+                            fontWeight: 600,
+                            border: 'none',
+                            cursor: 'pointer',
+                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                        }}>Get Started</button>
+                    </nav>
+
+                    {/* Main Hero Mockup */}
+                    <div style={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '0 40px',
+                        textAlign: 'center',
+                        margin: '0 auto',
+                        maxWidth: 1000,
+                    }}>
+                        <div style={{
+                            padding: '8px 16px',
+                            background: 'rgba(99, 91, 255, 0.1)',
+                            borderRadius: 999,
+                            fontSize: 12,
+                            fontWeight: 700,
+                            color: '#635bff',
+                            marginBottom: 24,
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.1em'
+                        }}>
+                            Premium UI Surfaces
+                        </div>
+                        <h1 style={{
+                            fontSize: 80,
+                            fontWeight: 900,
+                            lineHeight: 1,
+                            color: '#1a1f36',
+                            marginBottom: 24,
+                            letterSpacing: '-0.04em'
+                        }}>
+                            Stripe Mesh Gradient<br />
+                            <span style={{
+                                background: 'linear-gradient(to right, #635bff, #ec4899)',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent'
+                            }}>For Modern Interfaces.</span>
+                        </h1>
+                        <p style={{
+                            fontSize: 20,
+                            color: '#4f566b',
+                            lineHeight: 1.6,
+                            marginBottom: 40,
+                            maxWidth: 700
+                        }}>
+                            Elevate your web applications with high-performance, 3D animated mesh backgrounds. Designed for depth, vibration, and pure aesthetic excellence.
+                        </p>
+                        <div style={{ display: 'flex', gap: 16 }}>
+                            <button style={{
+                                padding: '14px 32px',
+                                background: '#635bff',
+                                color: '#fff',
+                                borderRadius: 12,
+                                fontSize: 16,
+                                fontWeight: 700,
+                                border: 'none',
+                                cursor: 'pointer',
+                                boxShadow: '0 8px 20px rgba(99, 91, 255, 0.3)'
+                            }}>Browse Components</button>
+                            <button style={{
+                                padding: '14px 32px',
+                                background: 'rgba(255,255,255,0.8)',
+                                color: '#1a1f36',
+                                borderRadius: 12,
+                                fontSize: 16,
+                                fontWeight: 700,
+                                border: '1px solid rgba(0,0,0,0.05)',
+                                cursor: 'pointer',
+                                backdropFilter: 'blur(10px)'
+                            }}>
+                                View Documentation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </StripeMeshBackground>
+        </div>
+    );
+};
+
+
+// ── Heart Cursor scoped preview (Lovable Style) ────────────
+const HeartCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div
+            ref={containerRef}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: '#000',
+                overflow: 'hidden',
+                cursor: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+            }}
+        >
+            {/* Lovable-style Background Gradients */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                zIndex: 0,
+                pointerEvents: 'none',
+            }}>
+                {/* Blue blobs (sides) */}
+                <div style={{
+                    position: 'absolute',
+                    top: '20%',
+                    left: '-10%',
+                    width: '50%',
+                    height: '60%',
+                    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 70%)',
+                    filter: 'blur(80px)',
+                }} />
+                <div style={{
+                    position: 'absolute',
+                    top: '20%',
+                    right: '-10%',
+                    width: '50%',
+                    height: '60%',
+                    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 70%)',
+                    filter: 'blur(80px)',
+                }} />
+
+                {/* Pink Bottom Area */}
+                <div style={{
+                    position: 'absolute',
+                    bottom: '-10%',
+                    left: '0',
+                    width: '100%',
+                    height: '70%',
+                    background: 'radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.5) 0%, transparent 75%)',
+                    filter: 'blur(60px)',
+                }} />
+
+                {/* Vignette to keep top dark */}
+                <div style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 40%, transparent 70%, rgba(236, 72, 153, 0.1) 100%)',
+                }} />
+            </div>
+
+            <HeartCursor containerRef={containerRef} size={28} />
+
+            {/* Lovable Content Mockup */}
+            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', width: '100%', maxWidth: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
+                {/* Branding Badge */}
+                <div
+                    className="interactive"
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 12,
+                        marginBottom: -8,
+                        cursor: 'none'
+                    }}
+                >
+                    <Logo className="w-9 h-9" />
+                    <span style={{
+                        fontSize: 20,
+                        fontWeight: 800,
+                        color: '#fff',
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase'
+                    }}>UI HUB</span>
+                </div>
+
+                <h2
+                    className="interactive"
+                    style={{
+                        fontSize: 32,
+                        fontWeight: 600,
+                        color: '#fff',
+                        letterSpacing: '-0.02em',
+                        cursor: 'none'
+                    }}
+                >
+                    Ready to build, Hello?
+                </h2>
+
+                <div
+                    className="interactive"
+                    style={{
+                        width: '90%',
+                        background: 'rgba(28, 28, 28, 0.95)',
+                        borderRadius: 24,
+                        padding: '16px 20px',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 12,
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                        backdropFilter: 'blur(10px)',
+                        cursor: 'none'
+                    }}
+                >
+                    <div style={{ textAlign: 'left', color: 'rgba(255,255,255,0.4)', fontSize: 13, fontWeight: 500 }}>
+                        Search UI components, animations, and backgrounds.
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div className="interactive" style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.6)', cursor: 'none' }}>
+                            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </div>
+                        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+                            {/* Branding Icons */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <div style={{ width: 20, height: 20, background: '#10b981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#fff' }}>H</div>
+                                <div style={{ width: 22, height: 22, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#fff' }}>U</div>
+                            </div>
+                            <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.05em' }}>Plan</span>
+                            <div className="interactive" style={{ color: 'rgba(255,255,255,0.5)', cursor: 'none' }}>
+                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" /><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" /></svg>
+                            </div>
+                            <div className="interactive" style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'none' }}>
+                                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <style>{`
+                .interactive:hover {
+                    filter: brightness(1.3);
+                    transform: scale(1.05);
+                }
+            `}</style>
         </div>
     );
 };
@@ -1758,6 +2049,22 @@ export const Demo = () => (
         preview: () => <MouseGravityPreview />,
         code: `import { MouseGravityBackground } from '@/components/ui/MouseGravityBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <MouseGravityBackground \n      particleCount={150} \n      attractionForce={0.06} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400/50 tracking-widest uppercase pointer-events-none">\n        Gravity Field\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: "Create a premium interactive background where particles are attracted to the cursor like gravity. Use HTML5 Canvas for smooth 60fps performance and implement realistic momentum and damping physics."
+    },
+    {
+        id: "heart-cursor",
+        title: "Heart Cursor 💜",
+        category: "cursor",
+        preview: () => <HeartCursorPreview />,
+        code: `import { HeartCursor } from '@/components/ui/HeartCursor';\n\n// Wrap your content with the HeartCursor component.\n// It tracks the mouse smoothly and leaves trailing ripples.\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#0a0a0f] flex items-center justify-center">\n    <HeartCursor \n      size={24} \n      glowIntensity={0.8} \n      trailSpeed={0.05}\n    />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      Move your cursor to experience the love\n    </p>\n  </div>\n);`,
+        vibePrompt: "Create a premium interactive mouse cursor animation with a purple heart theme. The cursor should be a glowing purple heart with a soft neon glow and subtle gradient. It should follow the mouse with smooth easing and leave a trailing aura/ripple effect using Gaussian blur and radial gradients. Implement hover effects where the heart grows and glows brighter over interactive elements."
+    },
+    {
+        id: "stripe-mesh-background",
+        title: "Stripe Mesh Gradient",
+        category: "background",
+        preview: () => <StripeMeshPreview />,
+        code: `import { StripeMeshBackground } from '@/components/ui/StripeMeshBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-white shadow-2xl">\n    <StripeMeshBackground \n      intensity={0.9} \n      speed={0.8} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-[#1a1f36] tracking-tight">\n        STRIPE MESH\n      </h1>\n    </div>\n  </div>\n);`,
+        vibePrompt: "Create a vibrant, high-performance mesh gradient background inspired by Stripe's aesthetic. Use orange, purple, pink, and blue gradients with high blur and smooth flowing animations. Implement a white background with subtle diagonal overlays for a bright, premium finish."
     }
 ];
 
