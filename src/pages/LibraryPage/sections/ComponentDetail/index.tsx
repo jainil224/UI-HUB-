@@ -312,7 +312,11 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
     "hacker-background": {
-        props: [],
+        props: [
+            { name: "color", type: "string", default: '"#0F0"', description: "The hexadecimal color of the falling digital rain." },
+            { name: "fontSize", type: "number", default: "15", description: "The size in pixels of the monospace characters." },
+            { name: "speed", type: "number", default: "1", description: "Multiplier for the falling speed of the characters." }
+        ],
         vibeMeta: {
             behavior: "A matrix-style digital rain background using HTML Canvas.",
             states: { from: "black", to: "animated green rain" },
@@ -323,7 +327,12 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
     "novatrix-background": {
-        props: [],
+        props: [
+            { name: "colorFrom", type: "string", default: '"#1e1b4b"', description: "The starting gradient color of the nebula pulse." },
+            { name: "colorTo", type: "string", default: '"#581c87"', description: "The ending/radial glow color of the nebula pulse." },
+            { name: "opacity", type: "number", default: "1", description: "The overall opacity of the background scene." },
+            { name: "title", type: "string", default: '"NOVATRIX NEBULA"', description: "The glowing text displayed in the center of the background." }
+        ],
         vibeMeta: {
             behavior: "A deep space nebula effect using slow-moving gradients and pulse animations.",
             states: { from: "static gradient", to: "pulsing nebula" },
@@ -457,28 +466,78 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
     },
     // Buttons
     "glow-button": {
-        props: [],
+        props: [
+            { name: "label", type: "string", default: '"Glow Button"', description: "The text to display on the button." },
+            { name: "color", type: "string", default: '"#22c55e"', description: "The base color of the button which also defines the glow shadow color." }
+        ],
         vibeMeta: {
-            behavior: "Creates an intense, blurred box-shadow behind the button when the user hovers.",
-            states: { from: "flat styling", to: "glowing shadow" },
+            behavior: "A solid colored button that emits a vibrant, matching neon drop-shadow when the user hovers over it.",
+            states: { from: "flat background", to: "active glowing shadow" },
             cssProperties: ["box-shadow", "transition", "transform"],
             description: "A minimal, modern button utilizing Tailwind for an intense glowing drop shadow on hover.",
             libraries: ["tailwindcss"],
             requirements: ["Hover state pseudo-classes", "Custom intense drop shadow", "Smooth transition duration", "High-contrast text"]
         }
     },
-    "robot-3d-background": {
+    "payment-transaction-button": {
         props: [
-            { name: "showDownloadLink", type: "boolean", default: "true", description: "Shows the download button in the top-right corner" },
-            { name: "overlayOpacity", type: "number", default: "0.4", description: "Opacity of the dark overlay on top of the video" }
+            { name: "label", type: "string", default: '"New Transaction"', description: "The text to display inside the button." },
+            { name: "accentColor", type: "string", default: '"#5de2a3"', description: "The primary accent color used for the left banner gradient." },
+            { name: "posColor", type: "string", default: '"#1f1f1f"', description: "The color of the animated POS terminal illustration." },
+            { name: "cardColor", type: "string", default: '"#2b2b2b"', description: "The color of the animated credit card illustration." },
+            { name: "currencySymbol", type: "string", default: '"$"', description: "The currency symbol displayed on the POS screen." }
         ],
         vibeMeta: {
-            behavior: "Cinematic looping video background with high-end robotic animations and interactive overlays.",
-            states: { from: "dark cinematic scene", to: "bright robotic sliding transition" },
-            cssProperties: ["transform: translate", "backdrop-filter", "object-fit: cover"],
-            description: "A premium 3D motion background featuring high-fidelity robotic cubes and neon aesthetics.",
-            libraries: ["tailwindcss", "lucide-react"],
-            requirements: ["High-resolution video playback", "Responsive transformation logic", "Branded watermark integration", "Robust Blob-based asset download mechanism"]
+            behavior: "An interactive button containing a miniature 3D-like illustration of a credit card being inserted into a POS terminal. The animation triggers smoothly on hover.",
+            states: { from: "static illustration", to: "animated card insertion sequence" },
+            cssProperties: ["transform", "box-shadow", "transition", "absolute positioning"],
+            description: "A highly interactive payment transaction button with CSS-based micro-illustrations.",
+            libraries: ["No external libraries required"],
+            requirements: ["Complex CSS illustration techniques", "Staggered sub-animations (card, POS, text)", "Smooth cubic-bezier transitions", "Responsive layout scaling"]
+        }
+    },
+    "magic-card-effect": {
+        props: [
+            { name: "gradientSize", type: "number", default: "200", description: "The radius (in pixels) of the interactive glow following the cursor." },
+            { name: "gradientColor", type: "string", default: '"#262626"', description: "The base color of the radial glow masking the background." },
+            { name: "gradientOpacity", type: "number", default: "0.8", description: "The maximum opacity of the hover glow effect." },
+            { name: "gradientFrom", type: "string", default: '"#9E7AFF"', description: "The starting color of the animated border gradient." },
+            { name: "gradientTo", type: "string", default: '"#FE8BBB"', description: "The ending color of the animated border gradient." }
+        ],
+        vibeMeta: {
+            behavior: "A card element where the border and inner background illuminate with a radial gradient that smoothly tracks the user's mouse pointer position.",
+            states: { from: "dark themed card", to: "interactive pointer-tracked illumination" },
+            cssProperties: ["radial-gradient", "background-attachment", "opacity"],
+            description: "An interactive glassmorphic card where gradients follow the mouse cursor.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Mouse position event tracking", "Dynamic CSS gradient updates", "Smooth opacity transitions", "Frameloop optimization for performance"]
+        }
+    },
+    "rainbow-button": {
+        props: [
+            { name: "variant", type: '"default"', default: '"default"', description: "The visual style variant of the button." },
+            { name: "size", type: '"default" | "sm" | "lg" | "icon"', default: '"default"', description: "The size configuration of the button." }
+        ],
+        vibeMeta: {
+            behavior: "A sleek dark button bordered by a continuously scrolling, multicolored neon gradient strip.",
+            states: { from: "static button", to: "continuous animated rainbow border" },
+            cssProperties: ["background-image", "animation", "background-clip"],
+            description: "A premium button featuring a continuously spinning rainbow border animation.",
+            libraries: ["class-variance-authority", "tailwindcss"],
+            requirements: ["Linear gradient animation loops", "CSS background clipping techniques", "Performance-optimized keyframes", "CVA-based styling variants"]
+        }
+    },
+    "social-tooltip-buttons": {
+        props: [
+            { name: "icons", type: "SocialIconProps[]", default: "Default platforms", description: "An array of objects defining the social network name, brand color, and SVG icon." }
+        ],
+        vibeMeta: {
+            behavior: "A row of minimal white social icons. On hover, the button fills with the brand's specific color, and a heavily stylized 3D tooltip springs up from the button.",
+            states: { from: "minimal white icons", to: "branded colored icons with 3D tooltips" },
+            cssProperties: ["transform", "opacity", "background-color", "transition"],
+            description: "A set of premium social media links featuring highly interactive 3D springing tooltips and brand colors.",
+            libraries: ["tailwindcss"],
+            requirements: ["Spring physics using CSS cubic-bezier", "Dynamic CSS variables for brand colors", "Absolute positioned tooltip geometry", "Hover-state chaining across elements"]
         }
     },
     "border-beam": {
@@ -537,12 +596,106 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             { name: "disabled", type: "boolean", default: "false", description: "Disables interaction and applies lowered opacity." }
         ],
         vibeMeta: {
-            behavior: "On hover, the default static label fades out, revealing an infinitely scrolling marquee animation containing the same text.",
-            states: { from: "static text", to: "continuous horizontal scrolling marquee" },
-            cssProperties: ["opacity", "transform: translateX", "overflow: hidden"],
-            description: "Interactive button showing an endlessly scrolling marquee on hover.",
-            libraries: ["framer-motion", "clsx", "tailwind-merge"],
-            requirements: ["Framer Motion linear easing loop", "Duplicated span text to fill the scrolling gap", "Seamless infinite transform animation", "Crossfade transition between static label and marquee"]
+            behavior: "A button that displays a scrolling marquee of text when hovered.",
+            states: { from: "static text", to: "continuous scrolling text" },
+            cssProperties: ["animation: marquee", "overflow: hidden", "white-space: nowrap"],
+            description: "Attention-grabbing button with infinite text scrolling animation.",
+            libraries: ["tailwindcss"],
+            requirements: ["CSS infinite translation loops", "Duplicated span tags for seamless wrapping", "Overflow hiding masks"]
+        }
+    },
+    "space-background": {
+        props: [
+            { name: "starCount", type: "number", default: "400", description: "The total number of scattered stars to render in the scene." },
+            { name: "nebulaCount", type: "number", default: "6", description: "The number of slow-drifting colored nebula gas clouds." },
+            { name: "interactive", type: "boolean", default: "true", description: "Enables parallax shifting of stars based on mouse position." }
+        ],
+        vibeMeta: {
+            behavior: "A rich cosmic backdrop featuring multi-layered starry depth, twinkling points, and subtle nebula gas clouds using Canvas.",
+            states: { from: "flat background", to: "3D parallax starfield" },
+            cssProperties: ["canvas", "globalCompositeOperation", "shadowBlur"],
+            description: "Premium immersive space scene with depth and interaction.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D context", "Parallax layered motion", "Randomized geometric shard explosions on unstable stars"]
+        }
+    },
+    "neural-network-background": {
+        props: [
+            { name: "nodeCount", type: "number", default: "120", description: "The number of floating data nodes." },
+            { name: "connectionDistance", type: "number", default: "150", description: "The maximum pixel distance threshold for nodes to draw connecting lines." },
+            { name: "interactive", type: "boolean", default: "true", description: "Enables cursor magnetic repulsion and direct cursor connections." },
+            { name: "nodeColor", type: "string", default: '"#22d3ee"', description: "The hex color of the nodes." },
+            { name: "lineColor", type: "string", default: '"rgba(34, 211, 238, 0.2)"', description: "The base color of the connecting lines." }
+        ],
+        vibeMeta: {
+            behavior: "An AI-themed network of floating nodes that connect via vector lines based on proximity to each other and the user's cursor.",
+            states: { from: "floating dots", to: "connected neural web" },
+            cssProperties: ["canvas", "shadowBlur"],
+            description: "Futuristic interactive data web.",
+            libraries: ["react"],
+            requirements: ["Proximity distance checks (O(n^2))", "Mouse repulsion physics", "Sine-based pulsing opacity"]
+        }
+    },
+    "black-hole-background": {
+        props: [
+            { name: "particleCount", type: "number", default: "600", description: "The number of dust particles orbiting the singularity." },
+            { name: "coreColor", type: "string", default: '"rgba(79, 70, 229, 0.4)"', description: "The underlying glow color of the central vortex." },
+            { name: "accentColor", type: "string", default: '"#22d3ee"', description: "The color of the high-energy orbital particles." }
+        ],
+        vibeMeta: {
+            behavior: "A central glowing singularity that draws in swirling particles with simulated radial gravity and inverse quadratic acceleration.",
+            states: { from: "still particles", to: "swirling vortex" },
+            cssProperties: ["canvas", "radial-gradient", "globalCompositeOperation: screen"],
+            description: "Cinematic black hole accretion disk simulation.",
+            libraries: ["react"],
+            requirements: ["Polar coordinate tracking", "Inverse gravity simulation", "Core-collision respawning logic"]
+        }
+    },
+    "warp-speed-background": {
+        props: [
+            { name: "starCount", type: "number", default: "800", description: "Total number of stars in the hyperspace tunnel." },
+            { name: "speed", type: "number", default: "15", description: "The velocity factor at which stars rush toward the viewer." },
+            { name: "starColor", type: "string", default: '"#fff"', description: "The base color of the streaking stars." }
+        ],
+        vibeMeta: {
+            behavior: "A high-speed 3D tunnel effect where points stretch into long streaks originating from a central vanishing point.",
+            states: { from: "static stars", to: "rushing light streaks" },
+            cssProperties: ["canvas"],
+            description: "Classic sci-fi hyperspace warp drive effect.",
+            libraries: ["react"],
+            requirements: ["3D to 2D perspective projection", "Frame-buffer line drawing for trails", "Z-index wrapping"]
+        }
+    },
+    "mouse-gravity-background": {
+        props: [
+            { name: "particleCount", type: "number", default: "150", description: "The baseline number of persistent floating particles." },
+            { name: "attractionRadius", type: "number", default: "300", description: "The distance at which particles begin moving toward the cursor." },
+            { name: "attractionForce", type: "number", default: "0.05", description: "The multiplier dictating acceleration speed toward the cursor." },
+            { name: "particleColor", type: "string", default: '"#22d3ee"', description: "The primary theme color of half the particles." },
+            { name: "accentColor", type: "string", default: '"#a855f7"', description: "The secondary theme color of the remaining particles." },
+            { name: "enableTrail", type: "boolean", default: "true", description: "Enables spawning temporary particle trails directly behind the cursor." }
+        ],
+        vibeMeta: {
+            behavior: "Floating motes of light that aggressively accelerate toward the user's cursor when within range, mimicking a gravity well.",
+            states: { from: "drifting motes", to: "swarming cursor followers" },
+            cssProperties: ["canvas", "shadowBlur"],
+            description: "Responsive interactive particle swarm that tracks the cursor.",
+            libraries: ["react"],
+            requirements: ["Damping/Friction physics", "Mouse enter/leave lifecycle handling", "Temporary particle garbage collection"]
+        }
+    },
+    "stripe-mesh-background": {
+        props: [
+            { name: "intensity", type: "number", default: "0.8", description: "The global opacity of the underlying gradient blobs." },
+            { name: "speed", type: "number", default: "1", description: "A mutiplier that affects the duration of the CSS animation loops." }
+        ],
+        vibeMeta: {
+            behavior: "A vibrant, flowing aesthetic background combining heavily blurred CSS shapes, SVG visual noise, and a white vignette.",
+            states: { from: "static blobs", to: "fluid intermixing colors" },
+            cssProperties: ["filter: blur", "mix-blend-mode: multiply", "animation: linear infinite", "perspective"],
+            description: "Ultra-premium static/flow mesh gradient styled after modern SaaS landing pages.",
+            libraries: ["react"],
+            requirements: ["3D transforms (rotateX/Y)", "SVG fractalNoise filtering", "Multi-axis translation keyframes"]
         }
     },
     "orbit-button": {
