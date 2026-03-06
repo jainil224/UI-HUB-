@@ -25,11 +25,13 @@ import { OrbitButton as OrbitButtonUI } from '../ui/OrbitButton';
 import { GalaxyButton as GalaxyButtonUI } from '../ui/GalaxyButton';
 import { LiquidFillButton as LiquidFillButtonUI } from '../ui/LiquidFillButton';
 import { NeonFlickerButton as NeonFlickerButtonUI } from '../ui/NeonFlickerButton';
+import { Robot3DBackground as Robot3DBackgroundUI } from '../ui/Robot3DBackground';
 
 export { OrbitButtonUI as OrbitButton };
 export { GalaxyButtonUI as GalaxyButton };
 export { LiquidFillButtonUI as LiquidFillButton };
 export { NeonFlickerButtonUI as NeonFlickerButton };
+export { Robot3DBackgroundUI as Robot3DBackground };
 
 // 1. Liquid-Glass (Weather Dashboard Example)
 export interface LiquidGlassProps {

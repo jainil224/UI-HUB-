@@ -1855,6 +1855,15 @@ export default MagneticCursor;
         vibePrompt: "Create an interactive particles animation background with glowing particles that move dynamically."
     },
     {
+        id: "robot-3d-background",
+        title: "Robot 3D Background",
+        category: "background",
+        preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
+        code: `import { Robot3DBackground } from '@/components/ui/Robot3DBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <Robot3DBackground \n      overlayOpacity={0.4} \n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        ROBOTIC CORE\n      </h1>\n    </div>\n  </div>\n);\n\n// Video Resource: Robots_sliding_on_neon_platform_16a422a842.mp4
+// Download Link: /src/Assets/Robots_sliding_on_neon_platform_16a422a842.mp4`,
+        vibePrompt: "Create a cinematic 3D robotic background featuring small white AI cubes sliding on a neon-green conveyor above glossy black reflective water. The scene should feel futuristic and premium, with smooth sliding animations and realistic water ripples. This high-end asset includes a downloadable 4K MP4 video (branded with 'UI HUB') for seamless hero section integration."
+    },
+    {
         id: "wave-background",
         title: "Wave Background",
         category: "background",
@@ -1887,20 +1896,12 @@ export default MagneticCursor;
         vibePrompt: "Create a mesmerizing, skewed isometric grid background that illuminates with random colors on hover."
     },
     {
-        id: "glow-button",
-        title: "Glow Button",
+        id: "corner-border-button",
+        title: "Corner Border",
         category: "button",
-        preview: renderComponent("glow-button", "Glow Button"),
-        code: `export const GlowButton = () => (\n  <button className="px-6 py-3 rounded-full bg-green-500 text-black font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all">\n    Glow Button\n  </button>\n);`,
-        vibePrompt: "Create a modern button with a glowing hover effect using Tailwind CSS."
-    },
-    {
-        id: "border-beam",
-        title: "Border Beam",
-        category: "button",
-        preview: renderComponent("border-beam", "Border Beam"),
-        code: `import { BorderBeam } from '@/components/ui/border-beam';\n\nexport const Demo = () => (\n  <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">\n    Border Beam\n    <BorderBeam size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />\n  </button>\n);`,
-        vibePrompt: "Create a button with an animated Border Beam effect around its perimeter using Framer Motion."
+        preview: renderComponent("corner-border-button", "Corner Border Button"),
+        code: `import { CornerBorderButton } from '@/components/ui/corner-border-button';\n\nexport const Demo = () => (\n  <CornerBorderButton baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">\n    BUTTON\n  </CornerBorderButton>\n);`,
+        vibePrompt: "Create a button with glowing corner accents that expand into a full border on hover."
     },
     {
         id: "shatter-button",
@@ -1911,12 +1912,20 @@ export default MagneticCursor;
         vibePrompt: "Create a button that shatters into physics-based glass shards when clicked, using Framer Motion."
     },
     {
-        id: "corner-border-button",
-        title: "Corner Border",
+        id: "border-beam",
+        title: "Border Beam",
         category: "button",
-        preview: renderComponent("corner-border-button", "Corner Border Button"),
-        code: `import { CornerBorderButton } from '@/components/ui/corner-border-button';\n\nexport const Demo = () => (\n  <CornerBorderButton baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">\n    BUTTON\n  </CornerBorderButton>\n);`,
-        vibePrompt: "Create a button with glowing corner accents that expand into a full border on hover."
+        preview: renderComponent("border-beam", "Border Beam"),
+        code: `import { BorderBeam } from '@/components/ui/border-beam';\n\nexport const Demo = () => (\n  <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">\n    Border Beam\n    <BorderBeam size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />\n  </button>\n);`,
+        vibePrompt: "Create a button with an animated Border Beam effect around its perimeter using Framer Motion."
+    },
+    {
+        id: "glow-button",
+        title: "Glow Button",
+        category: "button",
+        preview: renderComponent("glow-button", "Glow Button"),
+        code: `export const GlowButton = () => (\n  <button className="px-6 py-3 rounded-full bg-green-500 text-black font-bold uppercase tracking-widest hover:shadow-[0_0_20px_rgba(34,197,94,0.5)] transition-all">\n    Glow Button\n  </button>\n);`,
+        vibePrompt: "Create a modern button with a glowing hover effect using Tailwind CSS."
     },
     {
         id: "marquee-hover-button",

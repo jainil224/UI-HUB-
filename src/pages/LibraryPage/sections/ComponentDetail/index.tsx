@@ -467,6 +467,20 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Hover state pseudo-classes", "Custom intense drop shadow", "Smooth transition duration", "High-contrast text"]
         }
     },
+    "robot-3d-background": {
+        props: [
+            { name: "showDownloadLink", type: "boolean", default: "true", description: "Shows the download button in the top-right corner" },
+            { name: "overlayOpacity", type: "number", default: "0.4", description: "Opacity of the dark overlay on top of the video" }
+        ],
+        vibeMeta: {
+            behavior: "Cinematic looping video background with high-end robotic animations and interactive overlays.",
+            states: { from: "dark cinematic scene", to: "bright robotic sliding transition" },
+            cssProperties: ["transform: translate", "backdrop-filter", "object-fit: cover"],
+            description: "A premium 3D motion background featuring high-fidelity robotic cubes and neon aesthetics.",
+            libraries: ["tailwindcss", "lucide-react"],
+            requirements: ["High-resolution video playback", "Responsive transformation logic", "Branded watermark integration", "Robust Blob-based asset download mechanism"]
+        }
+    },
     "border-beam": {
         props: [
             { name: "size", type: "number", default: "50", description: "The width dimension of the sweeping animated beam." },
@@ -997,7 +1011,17 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         <div className="relative z-10 w-full flex flex-col gap-6">
                                             <div className="flex items-center justify-between">
                                                 <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${aiSystem === tool ? 'text-brand-green' : 'text-white/20'}`}>
-                                                    {tool === 'antigravity' ? 'VIBE ENGINE' : tool === 'lovable' ? 'PLATFORM HUB' : tool === 'cursor' ? 'SMART LDE' : tool === 'claude' ? 'INTELLIGENT MODEL' : 'ADVANCED SYSTEM'}
+                                                    {item.id === 'robot-3d-background' ? (
+                                                        tool === 'antigravity' ? 'NEON ENGINE' :
+                                                            tool === 'lovable' ? 'ROBOTIC HUB' :
+                                                                tool === 'cursor' ? 'CYBER CORE' :
+                                                                    tool === 'claude' ? 'PHANTOM MODEL' : 'VOID SYSTEM'
+                                                    ) : (
+                                                        tool === 'antigravity' ? 'VIBE ENGINE' :
+                                                            tool === 'lovable' ? 'PLATFORM HUB' :
+                                                                tool === 'cursor' ? 'SMART LDE' :
+                                                                    tool === 'claude' ? 'INTELLIGENT MODEL' : 'ADVANCED SYSTEM'
+                                                    )}
                                                 </p>
                                                 <div className={`transition-all duration-700 ease-out ${aiSystem === tool ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
                                                     {tool === 'antigravity' ? (
