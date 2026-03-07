@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Github, ArrowRight } from 'lucide-react';
-import backgroundVideo from '../../../Assets/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4';
 import Logo from '../../../components/ui/Logo';
 
 const Hero = () => {
@@ -23,7 +22,7 @@ const Hero = () => {
                     playsInline
                     className="w-full h-full object-cover object-center scale-110"
                 >
-                    <source src={backgroundVideo} type="video/mp4" />
+                    <source src="/assets/videos/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4" type="video/mp4" />
                 </video>
                 {/* Enhanced Dynamic Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90 z-10" />

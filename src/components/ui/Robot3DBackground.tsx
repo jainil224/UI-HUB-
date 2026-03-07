@@ -15,7 +15,7 @@ export const Robot3DBackground: React.FC<Robot3DBackgroundProps> = ({
     overlayOpacity = 0.4,
     showDownloadLink = false,
 }) => {
-    const videoSrc = "/src/Assets/Robots_sliding_on_neon_platform_16a422a842.mp4";
+    const videoSrc = "/assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4";
 
     const handleDownload = async (e: React.MouseEvent) => {
         e.preventDefault();

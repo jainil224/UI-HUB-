@@ -1865,7 +1865,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
         code: `import { Robot3DBackground } from '@/components/ui/Robot3DBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <Robot3DBackground \n      overlayOpacity={0.4} \n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        ROBOTIC CORE\n      </h1>\n    </div>\n  </div>\n);\n\n// Video Resource: Robots_sliding_on_neon_platform_16a422a842.mp4
-// Download Link: /src/Assets/Robots_sliding_on_neon_platform_16a422a842.mp4`,
+// Download Link: /assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4`,
         vibePrompt: "Create a cinematic 3D robotic background featuring small white AI cubes sliding on a neon-green conveyor above glossy black reflective water. The scene should feel futuristic and premium, with smooth sliding animations and realistic water ripples. This high-end asset includes a downloadable 4K MP4 video (branded with 'UI HUB') for seamless hero section integration."
     },
     {
