@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 const stats = [
     { label: "Total Components", value: "85+", suffix: "" },
     { label: "Weekly Downloads", value: "24", suffix: "K" },
-    { label: "Average Rating", value: "4.9", suffix: "/5" },
+    { label: "Projects Built", value: "500", suffix: "+" },
     { label: "Rendering Performance", value: "10", suffix: "X" },
 ];
 
