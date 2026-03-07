@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { componentList } from '../../../data/componentData';
-import { ArrowUpRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Sparkles, MonitorPlay, MousePointer2, Component as ComponentIcon } from 'lucide-react';
+
+const getCategoryIcon = (category?: string, id?: string) => {
+    const className = "text-white/40 group-hover:text-white/90 transition-colors duration-500 group-hover:scale-110";
+    if (category === 'background' || id?.includes('background')) return <MonitorPlay size={22} className={className} />;
+    if (category === 'cursor' || id?.includes('cursor')) return <MousePointer2 size={22} className={className} />;
+    return <ComponentIcon size={22} className={className} />;
+};
 
 // We'll pick a curated subset of components that look good in a small grid
 const showcaseIds = [
@@ -28,8 +35,14 @@ const ComponentGrid = () => {
         .filter(Boolean);
 
     const handleCardInteract = (id: string) => {
-        // On mobile tap: toggle preview; on desktop this fires after mouseenter already set it
-        setActiveId(prev => (prev === id ? null : id));
+        // On desktop, hover sets activeId, so click will navigate.
+        // On mobile, first tap sets activeId (preview), second tap navigates.
+        if (activeId === id) {
+            navigate(`/library?id=${id}`);
+            window.scrollTo(0, 0);
+        } else {
+            setActiveId(id);
+        }
     };
 
     return (
@@ -90,9 +103,7 @@ const ComponentGrid = () => {
                                 ) : (
                                     <div className="flex flex-col items-center gap-4 transition-all duration-500 group-hover:scale-105">
                                         <div className="w-10 h-10 md:w-12 md:h-12 rounded-[14px] border border-white/[0.05] bg-[#050505] flex items-center justify-center group-hover:border-white/10 transition-all duration-500">
-                                            <span className="text-xs md:text-sm font-bold text-white/40 group-hover:text-white/70 transition-colors duration-500">
-                                                {comp!.id.charAt(0).toUpperCase()}
-                                            </span>
+                                            {getCategoryIcon(comp?.category, comp?.id)}
                                         </div>
                                         <div className="flex flex-col items-center">
                                             <span className="text-[8px] md:text-[9px] uppercase tracking-[0.3em] font-bold text-white/20 group-hover:text-[#a8896c] transition-colors duration-500">

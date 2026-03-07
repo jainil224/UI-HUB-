@@ -15,7 +15,7 @@ export const Robot3DBackground: React.FC<Robot3DBackgroundProps> = ({
     overlayOpacity = 0.4,
     showDownloadLink = false,
 }) => {
-    const videoSrc = "/assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4";
+    const videoSrc = `${import.meta.env.BASE_URL}assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4`;
 
     const handleDownload = async (e: React.MouseEvent) => {
         e.preventDefault();
@@ -44,6 +44,7 @@ export const Robot3DBackground: React.FC<Robot3DBackgroundProps> = ({
                 autoPlay
                 loop
                 muted
+                defaultMuted
                 playsInline
                 className="absolute top-1/2 left-1/2 min-w-full min-h-full object-cover"
                 style={{

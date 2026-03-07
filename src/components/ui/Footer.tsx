@@ -1,5 +1,5 @@
 import React from 'react';
-import { Github, Twitter, Linkedin, Instagram } from 'lucide-react';
+import { Github, Linkedin, Instagram } from 'lucide-react';
 import Logo from './Logo';
 
 const Footer = () => (
@@ -12,7 +12,6 @@ const Footer = () => (
 
             <div className="flex items-center gap-6">
                 <a href="https://github.com/jainil224" target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-white/5 rounded-full transition-colors text-white/40 hover:text-brand-green"><Github size={20} /></a>
-                <a href="#" className="p-2 hover:bg-white/5 rounded-full transition-colors text-white/40 hover:text-brand-green"><Twitter size={20} /></a>
                 <a href="https://www.linkedin.com/in/jainil-patel2224" target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-white/5 rounded-full transition-colors text-white/40 hover:text-brand-green"><Linkedin size={20} /></a>
                 <a href="https://www.instagram.com/jainilll_2208/" target="_blank" rel="noopener noreferrer" className="p-2 hover:bg-white/5 rounded-full transition-colors text-white/40 hover:text-brand-green"><Instagram size={20} /></a>
             </div>

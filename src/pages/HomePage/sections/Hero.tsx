@@ -18,12 +18,12 @@ const Hero = () => {
                 <video
                     autoPlay
                     muted
+                    defaultMuted
                     loop
                     playsInline
+                    src={`${import.meta.env.BASE_URL}assets/videos/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4`}
                     className="w-full h-full object-cover object-center scale-110"
-                >
-                    <source src="/assets/videos/Obsidian_crystal_orbiting_planet_97d2c01fed.mp4" type="video/mp4" />
-                </video>
+                />
                 {/* Enhanced Dynamic Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-black/90 z-10" />
             </div>
