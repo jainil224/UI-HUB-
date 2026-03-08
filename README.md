@@ -1,9 +1,7 @@
 <div align="center">
-  <img src="https://capsule-render.vercel.app/render?type=soft&color=auto&height=200&section=header&text=UI%20HUB&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
+  <video width="100%" height="auto" autoplay loop muted playsinline src="https://raw.githubusercontent.com/jainil224/UI-HUB-VIDEO-/main/UI%20HUB%20NEW.mp4" style="border-radius: 12px; border: 1px solid #333; shadow: 0 10px 30px rgba(0,0,0,0.5);"></video>
 
-  <div align="center">
-    <video width="100%" height="auto" autoplay loop muted playsinline src="https://raw.githubusercontent.com/jainil224/UI-HUB-VIDEO-/main/UI%20HUB%20NEW.mp4" style="border-radius: 12px; border: 1px solid #333; shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 20px;"></video>
-  </div>
+  <img src="https://capsule-render.vercel.app/render?type=soft&color=auto&height=200&section=header&text=UI%20HUB&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
 
   <p align="center">
     <img src="https://img.shields.io/badge/Author-Jainil%20Patel-FF0055?style=for-the-badge&logo=github&logoColor=white" alt="Author" />
@@ -32,9 +30,7 @@
 
 <br />
 
-<div align="center">
-  <video width="100%" height="auto" autoplay loop muted playsinline src="./public/assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4" style="border-radius: 12px; border: 1px solid #333; shadow: 0 10px 30px rgba(0,0,0,0.5)"></video>
-</div>
+<br />
 
 ---
 
