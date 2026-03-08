@@ -146,11 +146,10 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
 
         const handleMouseMove = (e: MouseEvent) => {
             const rect = canvas.getBoundingClientRect();
-            targetMouse.current = {
+            mouse.current = {
                 x: e.clientX - rect.left,
                 y: e.clientY - rect.top,
             };
-            mouse.current = targetMouse.current; // Direct update for better feel
         };
 
         window.addEventListener('resize', resize);
@@ -171,8 +170,7 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
     return (
         <canvas
             ref={canvasRef}
-            className={`fixed inset-0 w-full h-full -z-10 bg-[#020617] ${className}`}
-            style={{ touchAction: 'none' }}
+            className={`absolute inset-0 w-full h-full -z-10 bg-[#020617] ${className}`}
         />
     );
 };

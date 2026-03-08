@@ -47,14 +47,14 @@ const Hero = () => {
                     <span className="text-brand-green/90">v2.0 is now live</span>
                 </motion.div>
 
-                <h1 className="text-4xl sm:text-6xl md:text-[7.5rem] font-display font-black leading-[0.8] uppercase tracking-[0.08em] mb-12 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] px-4">
+                <h1 className="text-4xl sm:text-6xl md:text-[8.5rem] font-display font-black leading-[0.8] uppercase tracking-[0.08em] mb-12 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] px-4">
                     <motion.span
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.3 }}
-                        className="text-white/40 text-[0.3em] block tracking-[0.3em] mb-4 font-medium"
+                        className="text-white/40 text-[0.6em] block tracking-[0.2em] mb-2 font-medium"
                     >
-                        UI Hub — The Home of
+                        Craft the
                     </motion.span>
                     <motion.span
                         initial={{ opacity: 0, scale: 1.1 }}
@@ -63,53 +63,40 @@ const Hero = () => {
                             scale: 1,
                             textShadow: [
                                 "0 0 10px rgba(0, 255, 26, 0.3)",
-                                "0 0 25px rgba(0, 255, 26, 0.6)",
+                                "0 0 18px rgba(0, 255, 26, 0.5)",
                                 "0 0 10px rgba(0, 255, 26, 0.3)"
                             ]
                         }}
                         transition={{
                             opacity: { delay: 0.5, duration: 0.8 },
                             scale: { delay: 0.5, duration: 0.8 },
-                            textShadow: { repeat: Infinity, duration: 3, ease: "easeInOut", repeatType: "reverse" }
+                            textShadow: { repeat: Infinity, duration: 4, ease: "easeInOut", repeatType: "reverse", repeatDelay: 0 }
+                        }}
+                        style={{
+                            textShadow: "0 0 10px rgba(0, 255, 26, 0.3)" // Default for static
                         }}
                         className="bg-gradient-to-b from-[#00FF1A] via-[#00FF1A] to-[#008A0E] bg-clip-text text-transparent transition-all duration-700"
                     >
-                        Vibe
+                        Future
                     </motion.span>
                     <motion.span
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="block text-[0.8em] tracking-[0.1em] mt-4"
+                        className="block text-[0.8em] tracking-[0.15em] mt-2"
                     >
-                        Coding
+                        of UI
                     </motion.span>
                 </h1>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
                     transition={{ delay: 0.6 }}
-                    className="max-w-2xl mx-auto mb-14 px-6 space-y-4"
+                    className="max-w-xl mx-auto text-white/50 text-base md:text-lg mb-14 font-light leading-relaxed tracking-wide px-6"
                 >
-                    <p className="text-white/90 text-xl md:text-2xl font-bold tracking-tight">
-                        Why spend hours writing UI code?
-                    </p>
-                    <p className="text-white/60 text-base md:text-lg leading-relaxed">
-                        With <span className="text-brand-green font-bold">UI Hub</span>, you can generate beautiful, production-ready UI components instantly using AI-ready prompts and modern design patterns.
-                    </p>
-
-                    <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-[10px] md:text-[12px] font-bold uppercase tracking-[0.2em] text-white/40 border-y border-white/5 py-3 mt-6">
-                        <span className="flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-brand-green" /> Lovable</span>
-                        <span className="flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-brand-green" /> Claude</span>
-                        <span className="flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-brand-green" /> Antigravity</span>
-                        <span className="flex items-center gap-2"><span className="w-1 h-1 rounded-full bg-brand-green" /> Cursor</span>
-                    </div>
-
-                    <p className="text-white/80 text-sm md:text-base mt-8 font-medium italic">
-                        Stop building UI the old way. Start <span className="text-brand-green text-lg not-italic font-black">vibe coding</span> and ship faster.
-                    </p>
-                </motion.div>
+                    A curated collection of minimal, high-performance UI components built for modern web experiences. Simple, bold, and effective.
+                </motion.p>
 
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

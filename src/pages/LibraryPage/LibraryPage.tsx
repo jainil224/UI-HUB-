@@ -72,6 +72,7 @@ const LibraryPage = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
+                        data-lenis-prevent
                         className="fixed inset-0 bg-black/95 backdrop-blur-xl z-[999] md:hidden overflow-y-auto p-6"
                     >
                         <div className="flex justify-between items-center mb-8">
@@ -121,7 +122,7 @@ const LibraryPage = () => {
             </AnimatePresence>
 
             {/* ── Desktop sidebar ── */}
-            <aside className="hidden md:block w-64 shrink-0 border-r border-white/5 h-full overflow-y-auto scrollbar-hide p-6 pt-8">
+            <aside data-lenis-prevent className="hidden md:block w-64 shrink-0 border-r border-white/5 h-full overflow-y-auto p-6 pt-8">
                 {/* Home link in desktop sidebar */}
                 <Link to="/" className="flex items-center gap-2 text-white/40 hover:text-brand-green text-xs font-bold uppercase tracking-widest mb-8 transition-colors">
                     <Home size={14} />
@@ -146,7 +147,7 @@ const LibraryPage = () => {
                 ))}
             </aside>
 
-            <main className="flex-1 min-h-0 overflow-y-auto scrollbar-hide p-4 pt-5 md:p-12 md:pt-12">
+            <main data-lenis-prevent className="flex-1 min-h-0 overflow-y-auto p-4 pt-5 md:p-12 md:pt-12">
                 <div className="max-w-6xl mx-auto">
                     <AnimatePresence mode="wait">
                         <motion.div

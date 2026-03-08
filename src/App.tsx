@@ -24,10 +24,14 @@ const AppShell = () => {
   );
 };
 
+import SmoothScroll from './components/ui/SmoothScroll';
+
 function App() {
   return (
     <BrowserRouter>
-      <AppShell />
+      <SmoothScroll>
+        <AppShell />
+      </SmoothScroll>
     </BrowserRouter>
   );
 }

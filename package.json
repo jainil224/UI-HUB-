@@ -27,6 +27,7 @@
     "express": "^4.21.2",
     "framer-motion": "^12.34.4",
     "gsap": "^3.14.2",
+    "lenis": "^1.3.18",
     "lucide-react": "^0.546.0",
     "motion": "^12.34.5",
     "react": "^19.0.0",
