@@ -124,8 +124,8 @@ const VibePrompts = () => {
                     </span>
                 </div>
                 <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black tracking-tighter mb-8 leading-[1.1]">
-                    <span className="block text-white">Stop writing boilerplate.</span>
-                    <span className="block text-white/30 italic">Start vibe coding.</span>
+                    <span className="block text-white">Stop <span className="text-brand-green">writing </span>boilerplate.</span>
+                    <span className="block text-white/30 italic">Start <span className="text-brand-green">vibe </span>coding.</span>
                 </h2>
                 <p className="max-w-3xl text-white/50 text-base md:text-xl leading-relaxed font-light">
                     The new paradigm of UI engineering is <span className="text-white/80 font-bold">curation</span>, not just creation.

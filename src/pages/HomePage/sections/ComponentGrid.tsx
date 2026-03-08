@@ -31,6 +31,7 @@ import { motion } from 'framer-motion';
 const ComponentGrid = () => {
     const navigate = useNavigate();
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [isButtonHovered, setIsButtonHovered] = useState(false);
 
     const featuredComponents = showcaseIds
         .map(id => componentList.find(c => c.id === id))
@@ -176,15 +177,107 @@ const ComponentGrid = () => {
                 viewport={{ once: true }}
                 className="mt-16 md:mt-24 flex justify-center z-10 relative"
             >
-                <button
+                <motion.button
+                    onMouseEnter={() => setIsButtonHovered(true)}
+                    onMouseLeave={() => setIsButtonHovered(false)}
                     onClick={() => navigate('/library')}
-                    className="group relative flex items-center gap-3 px-8 py-3.5 rounded-full border border-white/[0.05] hover:border-brand-green/30 transition-all duration-500 cursor-pointer overflow-hidden backdrop-blur-md bg-black/50"
+                    whileHover={{ scale: 1.02, y: -4 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative flex items-center gap-8 px-14 py-6 bg-black text-white transition-all duration-500 cursor-pointer overflow-hidden isolate border border-white/[0.03]"
                 >
-                    <span className="text-white/60 group-hover:text-white text-[11px] font-bold uppercase tracking-[0.25em] transition-colors duration-500 relative z-10">
-                        View All Components
+                    {/* Corner Nodes - Static */}
+                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/10 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+
+                    {/* Animated Strokes - Simultaneous from corners */}
+
+                    {/* Top Edge (Left -> Right) */}
+                    <motion.div
+                        className="absolute top-0 left-0 h-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.2s_infinite]"
+                        initial={{ width: 0 }}
+                        animate={{ width: isButtonHovered ? "100%" : 0 }}
+                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+                    />
+
+                    {/* Left Edge (Top -> Bottom) */}
+                    <motion.div
+                        className="absolute top-0 left-0 w-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.25s_infinite]"
+                        initial={{ height: 0 }}
+                        animate={{ height: isButtonHovered ? "100%" : 0 }}
+                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+                    />
+
+                    {/* Bottom Edge (Right -> Left) */}
+                    <motion.div
+                        className="absolute bottom-0 right-0 h-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.22s_infinite]"
+                        initial={{ width: 0 }}
+                        animate={{ width: isButtonHovered ? "100%" : 0 }}
+                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+                    />
+
+                    {/* Right Edge (Bottom -> Top) */}
+                    <motion.div
+                        className="absolute bottom-0 right-0 w-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.27s_infinite]"
+                        initial={{ height: 0 }}
+                        animate={{ height: isButtonHovered ? "100%" : 0 }}
+                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+                    />
+
+                    <span className="relative z-10 text-white/40 group-hover:text-white text-[11px] md:text-[12px] font-black uppercase tracking-[0.4em] transition-all duration-500">
+                        <span className="relative inline-block">
+                            View All Components
+                            {/* Glitch Layers */}
+                            <span className="absolute top-0 left-0 -z-10 text-[#00ff0a] opacity-0 group-hover:opacity-70 group-hover:animate-[glitch_0.3s_infinite] pointer-events-none translate-x-[2px]">View All Components</span>
+                            <span className="absolute top-0 left-0 -z-10 text-[#ff3b4d] opacity-0 group-hover:opacity-70 group-hover:animate-[glitch_0.3s_infinite_reverse] pointer-events-none -translate-x-[2px]">View All Components</span>
+                        </span>
                     </span>
-                    <ArrowUpRight size={14} className="text-white/40 group-hover:text-brand-green transition-colors duration-500 relative z-10" />
-                </button>
+
+                    <motion.div
+                        animate={{
+                            rotate: isButtonHovered ? 45 : 0,
+                            x: isButtonHovered ? 4 : 0,
+                            y: isButtonHovered ? -4 : 0
+                        }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                        className="relative z-10"
+                    >
+                        <ArrowUpRight size={20} className="text-brand-green/50 group-hover:text-brand-green transition-all duration-500" />
+                    </motion.div>
+
+                    {/* Glitch Overlay Effect */}
+                    <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat" />
+
+                    {/* Laser Reveal Shimmer */}
+                    <motion.div
+                        initial={{ x: '-100%' }}
+                        animate={isButtonHovered ? { x: '100%' } : { x: '-100%' }}
+                        transition={{ duration: 0.7, ease: "easeInOut" }}
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent pointer-events-none z-10"
+                    />
+
+                    {/* Background Ambience */}
+                    <div className="absolute inset-0 bg-brand-green/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+                    <style>{`
+                        @keyframes glitch {
+                            0% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); }
+                            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+                            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -2px); }
+                            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 2px); }
+                            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
+                            100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
+                        }
+                        @keyframes jitter {
+                            0% { transform: translate(0, 0); }
+                            25% { transform: translate(-0.5px, 0.5px); opacity: 0.8; }
+                            50% { transform: translate(0.5px, -0.5px); opacity: 1; }
+                            75% { transform: translate(-0.5px, -0.5px); opacity: 0.9; }
+                            100% { transform: translate(0.5px, 0.5px); opacity: 1; }
+                        }
+                    `}</style>
+                </motion.button>
             </motion.div>
         </section>
     );
