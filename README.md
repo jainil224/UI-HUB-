@@ -1,26 +1,35 @@
 <div align="center">
-  <video width="1200" height="475" autoplay loop muted playsinline src="./public/assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4"></video>
+  <img src="https://capsule-render.vercel.app/render?type=soft&color=auto&height=200&section=header&text=UI%20HUB&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
 
-  <h1>UI HUB v2.0</h1>
-
-  <p>
-    <b>A curated collection of minimal, high-performance UI components built for modern web experiences.</b>
+  <p align="center">
+    <img src="https://img.shields.io/badge/Author-Jainil%20Patel-FF0055?style=for-the-badge&logo=github&logoColor=white" alt="Author" />
+    <img src="https://img.shields.io/badge/Status-v2.0-00FF88?style=for-the-badge&logo=rocket&logoColor=black" alt="Status" />
   </p>
 
-  <p>
-    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-    <img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
+  <p align="center">
+    <b>A high-performance, premium UI component library for the next generation of web interfaces.</b>
+  </p>
+
+  <p align="center">
+    <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
+    <img src="https://img.shields.io/badge/Vite_6-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" />
+    <img src="https://img.shields.io/badge/Tailwind_CSS_4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind" />
     <img src="https://img.shields.io/badge/Three.js-black?style=for-the-badge&logo=three.js&logoColor=white" alt="Three.js" />
     <img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
   </p>
 
-  <p>
+  <p align="center">
     <a href="#-key-features">Key Features</a> •
     <a href="#-component-library">Component Library</a> •
     <a href="#-getting-started">Getting Started</a> •
-    <a href="#-tech-stack">Tech Stack</a>
+    <a href="#-author">Author</a>
   </p>
+</div>
+
+<br />
+
+<div align="center">
+  <video width="100%" height="auto" autoplay loop muted playsinline src="./public/assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4" style="border-radius: 12px; border: 1px solid #333; shadow: 0 10px 30px rgba(0,0,0,0.5)"></video>
 </div>
 
 ---
@@ -55,6 +64,28 @@ Built with the latest and most performant technologies in the ecosystem:
 - **3D Graphics**: [Three.js](https://threejs.org/) & [React Three Fiber](https://docs.pmnd.rs/react-three-fiber/)
 - **Utilities**: [Lucide React Icons](https://lucide.dev/), [Clsx](https://github.com/lukeed/clsx), [Tailwind Merge](https://github.com/dcastil/tailwind-merge)
 
+## 🎨 Brand Identity
+
+UI HUB is defined by its futuristic, high-contrast aesthetic. Our design system is engineered to provide a premium "developer-core" experience.
+
+### 🌈 Color Palette
+Designed for maximum legibility and visual impact in dark mode:
+- **Neon Green**: `#00FF00` (Primary Action & Accent)
+- **Deep Velocity Black**: `#000000` (Primary Background)
+- **Glass Transparency**: `rgba(255, 255, 255, 0.07)` (UI Containers)
+
+### 🔡 Typography
+We use a curated selection of fonts to balance technical precision with modern flair:
+- **[Space Grotesk](https://fonts.google.com/specimen/Space+Grotesk)**: Primary heading font for a versatile, geometric look.
+- **[Orbitron](https://fonts.google.com/specimen/Orbitron)**: Display font used for branding and high-impact UI elements.
+- **[Inter](https://fonts.google.com/specimen/Inter)**: System-standard body font for optimal readability.
+
+### 💎 Design Principles
+- **Glassmorphism**: Subtle backgrounds with heavy backdrop blurs.
+- **Micro-animations**: Logic-driven motion for intuitive feedback.
+- **Futuristic Dark UI**: High-contrast elements optimized for developer dashboards and modern landing pages.
+
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -80,7 +111,6 @@ Built with the latest and most performant technologies in the ecosystem:
    ```bash
    cp .env.example .env.local
    ```
-   *Note: Add your `GEMINI_API_KEY` to enable AI-powered "vibe" generation.*
 
 4. **Launch Development Server:**
    ```bash
@@ -97,6 +127,14 @@ npm run build
 
 The production-ready assets will be located in the `dist/` directory, ready to be deployed to Vercel, Netlify, or AWS.
 
+## 👤 Author
+
+Developed and Maintained by **Jainil Patel**.
+
+<p align="left">
+  <a href="https://github.com/jainil224" target="blank"><img src="https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white" alt="Jainil Patel GitHub" /></a>
+</p>
+
 ## 📄 License
 
 This project is licensed under the **MIT License**. Feel free to use these components in your personal or commercial projects.
@@ -104,6 +142,6 @@ This project is licensed under the **MIT License**. Feel free to use these compo
 ---
 
 <div align="center">
-  <p>Built with ❤️ by the UI HUB Team</p>
+  <p>Crafted with ✨ by Jainil Patel</p>
   <p><i>Empowering the next generation of web interfaces.</i></p>
 </div>
