@@ -1,6 +1,10 @@
 <div align="center">
   <img src="https://capsule-render.vercel.app/render?type=soft&color=auto&height=200&section=header&text=UI%20HUB&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
 
+  <div align="center">
+    <video width="100%" height="auto" autoplay loop muted playsinline src="https://raw.githubusercontent.com/jainil224/UI-HUB-VIDEO-/main/UI%20HUB%20NEW.mp4" style="border-radius: 12px; border: 1px solid #333; shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 20px;"></video>
+  </div>
+
   <p align="center">
     <img src="https://img.shields.io/badge/Author-Jainil%20Patel-FF0055?style=for-the-badge&logo=github&logoColor=white" alt="Author" />
     <img src="https://img.shields.io/badge/Status-v2.0-00FF88?style=for-the-badge&logo=rocket&logoColor=black" alt="Status" />
