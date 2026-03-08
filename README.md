@@ -1,5 +1,5 @@
 <div align="center">
-  <video width="100%" height="auto" autoplay loop muted playsinline src="https://raw.githubusercontent.com/jainil224/UI-HUB-VIDEO-/main/UI%20HUB%20NEW.mp4" style="border-radius: 12px; border: 1px solid #333; shadow: 0 10px 30px rgba(0,0,0,0.5);"></video>
+  <video src="https://raw.githubusercontent.com/jainil224/UI-HUB-VIDEO-/main/UI%20HUB%20NEW.mp4" width="100%" autoplay loop muted playsinline></video>
 
   <img src="https://capsule-render.vercel.app/render?type=soft&color=auto&height=200&section=header&text=UI%20HUB&fontSize=70&animation=fadeIn&fontAlignY=38" width="100%" />
 
