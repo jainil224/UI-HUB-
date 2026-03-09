@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Github, ArrowRight } from 'lucide-react';
 import Logo from '../../../components/ui/Logo';
+import ViewSourceButton from '../../../components/ui/ViewSourceButton';
 
 const Hero = () => {
     return (
@@ -46,6 +47,7 @@ const Hero = () => {
                     <span className="w-2 h-2 rounded-full bg-brand-green md:animate-pulse shadow-[0_0_8px_#00FF00]" />
                     <span className="text-brand-green/90">v2.0 is now live</span>
                 </motion.div>
+
 
                 <h1 className="text-4xl sm:text-6xl md:text-[8.5rem] font-display font-black leading-[0.8] uppercase tracking-[0.08em] mb-12 drop-shadow-[0_10px_30px_rgba(0,0,0,0.8)] px-4">
                     <motion.span
@@ -113,10 +115,8 @@ const Hero = () => {
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full hover:animate-shimmer" />
                         </button>
                     </Link>
-                    <button className="w-full sm:w-auto glass text-white/80 font-bold px-12 py-5 rounded-full text-sm uppercase tracking-widest hover:bg-white/10 hover:text-white transition-all flex items-center justify-center gap-3">
-                        <Github size={20} />
-                        View Source
-                    </button>
+                    <ViewSourceButton className="w-full sm:w-auto" />
+
                 </motion.div>
             </motion.div>
 

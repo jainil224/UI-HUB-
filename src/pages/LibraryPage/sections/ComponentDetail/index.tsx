@@ -9,6 +9,7 @@ import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
 import { getComponentCode } from '../../../../utils/codeUtils';
 import { generateVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
+import GitHubStarButton from '../../../../components/ui/GitHubStarButton';
 
 interface ComponentConfig {
     props: { name: string; type: string; default: string; description: string }[];
@@ -928,9 +929,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             </div>
 
             <div className="flex flex-col">
-                <h2 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-display uppercase tracking-tighter text-white mb-5 md:mb-8 leading-none">
-                    {item.title}
-                </h2>
+                <div className="flex items-center justify-between gap-4 mb-5 md:mb-8">
+                    <h2 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-display uppercase tracking-tighter text-white leading-none">
+                        {item.title}
+                    </h2>
+                    <GitHubStarButton className="scale-125 md:scale-150 mr-4" />
+                </div>
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-6 md:mb-12">
                     <div className="flex flex-wrap gap-2 md:gap-4">
                         <button

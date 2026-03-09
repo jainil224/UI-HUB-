@@ -1,8 +1,76 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import { Github, Menu, X, Sparkles } from 'lucide-react';
 import Logo from './Logo';
+import GitHubStarButton from './GitHubStarButton';
+
+const MagneticButton = ({ children, className }: { children: React.ReactNode, className?: string }) => {
+    const ref = useRef<HTMLButtonElement>(null);
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
+    const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        const { clientX, clientY } = e;
+        const { left, top, width, height } = ref.current?.getBoundingClientRect() || { left: 0, top: 0, width: 0, height: 0 };
+        const center = { x: left + width / 2, y: top + height / 2 };
+        const distance = { x: clientX - center.x, y: clientY - center.y };
+
+        // Only pull if mouse is close enough
+        const pullFactor = 0.4;
+        x.set(distance.x * pullFactor);
+        y.set(distance.y * pullFactor);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
+
+    return (
+        <motion.button
+            ref={ref}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{ x: mouseX, y: mouseY }}
+            className={`relative overflow-hidden flex items-center gap-1.5 bg-brand-green text-black px-5 py-2 rounded-full text-sm font-bold shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-shadow duration-300 hover:shadow-[0_0_30px_rgba(0,255,0,0.4)] active:scale-95 ${className}`}
+        >
+            {/* Holographic Shimmer Layer */}
+            <motion.div
+                className="absolute inset-0 z-0 opacity-0 group-hover:opacity-100 pointer-events-none"
+                initial={false}
+                whileHover={{ opacity: 1 }}
+            >
+                <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12"
+                    animate={{
+                        x: ['-200%', '200%'],
+                    }}
+                    transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "linear",
+                    }}
+                />
+                {/* Iridescent Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-400/20 via-purple-400/20 via-pink-400/20 to-transparent mix-blend-overlay opacity-50" />
+            </motion.div>
+
+            {children}
+
+            {/* Standard Shine (keeping existing logic for extra flair) */}
+            <motion.span
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 pointer-events-none"
+                initial={{ x: '-150%' }}
+                whileHover={{ x: '150%' }}
+                transition={{ duration: 0.55, ease: 'easeInOut' }}
+            />
+        </motion.button>
+    );
+};
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -61,17 +129,13 @@ const Navbar = () => {
                         <Github size={16} className="text-white/50 group-hover:text-white transition-colors" />
                     </a>
 
+                    <GitHubStarButton className="hidden md:flex" />
+
                     {/* Get Started */}
-                    <button className="hidden sm:flex relative overflow-hidden items-center gap-1.5 bg-brand-green text-black px-5 py-2 rounded-full text-sm font-bold hover:shadow-[0_0_28px_rgba(0,255,0,0.45)] active:scale-95 transition-all duration-300">
-                        <Sparkles size={12} className="shrink-0" />
-                        <span>Get Started</span>
-                        <motion.span
-                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/35 to-transparent -skew-x-12 pointer-events-none"
-                            initial={{ x: '-150%' }}
-                            whileHover={{ x: '150%' }}
-                            transition={{ duration: 0.55, ease: 'easeInOut' }}
-                        />
-                    </button>
+                    <MagneticButton className="hidden sm:flex group">
+                        <Sparkles size={12} className="shrink-0 relative z-10" />
+                        <span className="relative z-10">Get Started</span>
+                    </MagneticButton>
 
                     {/* Mobile hamburger */}
                     <button
@@ -116,9 +180,10 @@ const Navbar = () => {
                                 </Link>
                             ))}
                         </div>
-                        <div className="flex gap-2.5 pt-3 border-t border-white/[0.07]">
+                        <div className="flex flex-wrap gap-2.5 pt-3 border-t border-white/[0.07]">
+                            <GitHubStarButton className="flex-1 justify-center" />
                             <a
-                                href="https://github.com"
+                                href="https://github.com/jainil224/UI-HUB-"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-white/55 text-sm font-medium flex-1"

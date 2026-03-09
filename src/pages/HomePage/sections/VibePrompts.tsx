@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Check, Sparkles, Cpu, Rocket, SquareTerminal } from 'lucide-react';
+import ViewSourceButton from '../../../components/ui/ViewSourceButton';
 
 const prompts = [
     {
@@ -127,10 +128,12 @@ const VibePrompts = () => {
                     <span className="block text-white">Stop <span className="text-brand-green">writing </span>boilerplate.</span>
                     <span className="block text-white/30 italic">Start <span className="text-brand-green">vibe </span>coding.</span>
                 </h2>
-                <p className="max-w-3xl text-white/50 text-base md:text-xl leading-relaxed font-light">
+                <p className="max-w-3xl text-white/50 text-base md:text-xl leading-relaxed font-light mb-10">
                     The new paradigm of UI engineering is <span className="text-white/80 font-bold">curation</span>, not just creation.
                     Copy these tested AI prompts to generate high-end components instantly using your favorite copilot.
                 </p>
+                <ViewSourceButton />
+
             </motion.div>
 
             {/* Grid */}

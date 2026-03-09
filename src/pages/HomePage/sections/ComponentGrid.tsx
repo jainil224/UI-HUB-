@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { componentList } from '../../../data/componentData';
 import { ArrowUpRight, Sparkles, MonitorPlay, MousePointer2, Component as ComponentIcon } from 'lucide-react';
+import ViewSourceButton from '../../../components/ui/ViewSourceButton';
 
 const getCategoryIcon = (category?: string, id?: string) => {
     const className = "text-white/40 group-hover:text-white/90 transition-colors duration-500 group-hover:scale-110";
@@ -87,9 +88,11 @@ const ComponentGrid = () => {
                     Explore Elements
                 </h2>
 
-                <p className="text-white/40 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-light">
+                <p className="text-white/40 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-light mb-8">
                     A collection of beautifully crafted, highly interactive components built to<br className="hidden md:block" /> elevate your next production-ready project.
                 </p>
+                <ViewSourceButton />
+
             </motion.div>
 
             {/* Grid */}
@@ -116,6 +119,7 @@ const ComponentGrid = () => {
                         >
                             {/* Inner border and shadow */}
                             <div className="absolute inset-0 rounded-3xl ring-1 ring-white/[0.03] group-hover:ring-white/[0.08] transition-all duration-500 z-30 pointer-events-none" />
+
 
                             {/* subtle gradient hover background */}
                             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
