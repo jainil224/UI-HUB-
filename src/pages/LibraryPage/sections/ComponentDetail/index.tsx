@@ -2,14 +2,16 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, ChevronDown, Brain, Cpu
+    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart
 } from 'lucide-react';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
 import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
 import { getComponentCode } from '../../../../utils/codeUtils';
 import { generateVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
-import GitHubStarButton from '../../../../components/ui/GitHubStarButton';
+import { useAuth } from '../../../../context/AuthContext';
+import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
+import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
 
 interface ComponentConfig {
     props: { name: string; type: string; default: string; description: string }[];
@@ -875,6 +877,34 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [lang, setLang] = React.useState<'js' | 'ts' | 'html'>('ts');
     const [styling, setStyling] = React.useState<'tailwind' | 'css'>('tailwind');
     const [aiSystem, setAiSystem] = React.useState<AISystem>('antigravity');
+    const { user } = useAuth();
+    const [isFavorited, setIsFavorited] = React.useState(false);
+    const [showAuthModal, setShowAuthModal] = React.useState(false);
+
+
+    React.useEffect(() => {
+        if (!user) {
+            setIsFavorited(false);
+            return;
+        }
+        const unsubscribe = getUserFavorites(user.uid, (favorites) => {
+            const found = favorites.find(f => f.componentId === item.id);
+            setIsFavorited(!!found);
+        });
+        return unsubscribe;
+    }, [user, item.id]);
+
+    const toggleFavorite = async () => {
+        if (!user) {
+            setShowAuthModal(true);
+            return;
+        }
+        if (isFavorited) {
+            await removeFromFavorites(user.uid, item.id);
+        } else {
+            await saveToFavorites(user.uid, item);
+        }
+    };
 
     const handleCopy = (text: string, id: string) => {
         navigator.clipboard.writeText(text);
@@ -933,47 +963,79 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     <h2 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-display uppercase tracking-tighter text-white leading-none">
                         {item.title}
                     </h2>
-                    <GitHubStarButton className="scale-125 md:scale-150 mr-4" />
-                </div>
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-6 md:mb-12">
-                    <div className="flex flex-wrap gap-2 md:gap-4">
-                        <button
-                            onClick={() => setTab('preview')}
-                            className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
-                        >
-                            <Eye size={13} className="md:w-4 md:h-4" />
-                            Preview
-                        </button>
-                        <button
-                            onClick={() => setTab('code')}
-                            className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
-                        >
-                            <Code size={13} className="md:w-4 md:h-4" />
-                            Code
-                        </button>
-                        <button
-                            onClick={() => setTab('vibe')}
-                            className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-brand-green text-black border border-brand-green shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'bg-brand-green/10 text-brand-green border border-brand-green/30 hover:bg-brand-green/20 hover:border-brand-green/60 hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]'}`}
-                        >
-                            <Zap size={13} className={`${tab === 'vibe' ? 'fill-black' : ''} md:w-4 md:h-4`} />
-                            Vibe Prompt
-                        </button>
-                    </div>
+                    <div className="flex items-center gap-4">
+                        <div className="relative group/heart">
+                            {/* Persistent Glow Aura */}
+                            <div className={`absolute -inset-4 rounded-full blur-2xl transition-opacity duration-700 ${isFavorited ? 'bg-red-500/20 opacity-100' : 'bg-white/5 opacity-0 group-hover/heart:opacity-100'}`} />
 
-                    <AnimatePresence>
-                        {tab === 'preview' && (
                             <motion.button
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                onClick={() => setResetKey(prev => prev + 1)}
-                                className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green hover:bg-brand-green hover:text-black transition-all text-sm font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.15)] hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] shrink-0 group"
+                                onClick={toggleFavorite}
+                                whileHover={{ scale: 1.15, y: -2 }}
+                                whileTap={{ scale: 0.9 }}
+                                className={`relative z-10 p-5 rounded-full border-2 transition-all duration-300 ${isFavorited
+                                    ? 'bg-red-500/10 border-red-500/50 text-red-500 shadow-[0_0_40px_rgba(239,68,68,0.4)]'
+                                    : 'bg-white/5 border-white/20 text-white/40 hover:text-white hover:border-white/40 hover:bg-white/10 shadow-2xl'
+                                    }`}
                             >
-                                <RotateCcw key={resetKey} size={14} className={`${resetKey > 0 ? 'animate-spin-once' : ''} transition-transform group-hover:-rotate-90 md:w-4 md:h-4`} />
-                                Replay
+                                <motion.div
+                                    animate={isFavorited ? {
+                                        scale: [1, 1.15, 1],
+                                        transition: { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+                                    } : {}}
+                                >
+                                    <Heart
+                                        size={28}
+                                        fill={isFavorited ? "currentColor" : "transparent"}
+                                        className={isFavorited ? 'drop-shadow-[0_0_12px_rgba(239,68,68,0.6)]' : 'transition-colors'}
+                                    />
+                                </motion.div>
                             </motion.button>
-                        )}
-                    </AnimatePresence>
+                        </div>
+                    </div>
+                </div>
+                <div className="flex flex-col lg:flex-row gap-12">
+                    <div className="flex-1 space-y-8">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-6 mb-6">
+                            <div className="flex flex-wrap gap-2 md:gap-4">
+                                <button
+                                    onClick={() => setTab('preview')}
+                                    className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                                >
+                                    <Eye size={13} className="md:w-4 md:h-4" />
+                                    Preview
+                                </button>
+                                <button
+                                    onClick={() => setTab('code')}
+                                    className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                                >
+                                    <Code size={13} className="md:w-4 md:h-4" />
+                                    Code
+                                </button>
+                                <button
+                                    onClick={() => setTab('vibe')}
+                                    className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'vibe' ? 'bg-brand-green text-black border border-brand-green shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'bg-brand-green/10 text-brand-green border border-brand-green/30 hover:bg-brand-green/20 hover:border-brand-green/60 hover:shadow-[0_0_15px_rgba(0,255,0,0.2)]'}`}
+                                >
+                                    <Zap size={13} className={`${tab === 'vibe' ? 'fill-black' : ''} md:w-4 md:h-4`} />
+                                    Vibe Prompt
+                                </button>
+                            </div>
+
+                            <AnimatePresence>
+                                {tab === 'preview' && (
+                                    <motion.button
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        onClick={() => setResetKey(prev => prev + 1)}
+                                        className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green hover:bg-brand-green hover:text-black transition-all text-sm font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.15)] hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] shrink-0 group"
+                                    >
+                                        <RotateCcw key={resetKey} size={14} className={`${resetKey > 0 ? 'animate-spin-once' : ''} transition-transform group-hover:-rotate-90 md:w-4 md:h-4`} />
+                                        Replay
+                                    </motion.button>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -986,8 +1048,50 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         exit={{ opacity: 0, x: 20 }}
                         className="space-y-12"
                     >
+                        <div className="flex flex-wrap items-center gap-6 px-2 mb-8">
+                            <div className="flex items-center gap-2">
+                                <div className="w-5 h-5 rounded-full bg-brand-green/20 border border-brand-green/30 flex items-center justify-center text-brand-green font-bold text-[10px]">
+                                    <Check size={10} strokeWidth={3} />
+                                </div>
+                                <div>
+                                    <p className="text-[10px] uppercase tracking-widest text-brand-green font-bold">Verified Asset</p>
+                                    <p className="text-[11px] font-bold text-white/40 leading-tight">UI Hub Curated</p>
+                                </div>
+                            </div>
+
+                            <div className="w-px h-8 bg-white/5" />
+
+                            <div className="flex items-center gap-3">
+                                <div>
+                                    <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold mb-1">Build Stack</p>
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/10 text-[10px] font-bold text-white/60">React 18</span>
+                                        <span className="px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/10 text-[10px] font-bold text-white/60">Tailwind CSS</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="w-px h-8 bg-white/5" />
+
+                            <div className="flex flex-col">
+                                <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold mb-1">Category</p>
+                                <span className="text-[11px] font-bold text-brand-green uppercase tracking-wider">{item.category}</span>
+                            </div>
+                        </div>
+
+                        {item.imageUrl && (
+                            <div className="mb-12">
+                                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white px-2 mb-6">Preview Image</h3>
+                                <div className="aspect-video w-full glass rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/5 bg-black/40">
+                                    <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                                </div>
+                            </div>
+                        )}
+
                         <div className="min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center bg-black/20 border border-white/5">
-                            <div className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' ? 'h-full' : 'px-2 md:px-8'}`}>
+                            <div
+                                className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' ? 'h-full' : 'px-2 md:px-8'}`}
+                            >
                                 <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
                                     {item.preview()}
                                 </div>
@@ -1340,6 +1444,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            <AuthRequiredModal
+                isOpen={showAuthModal}
+                onClose={() => setShowAuthModal(false)}
+                title="Save to Vault"
+                description="Sign in to your account to save this elite component to your personal collection."
+            />
         </motion.div>
     );
 };

@@ -894,6 +894,8 @@ export type ComponentItem = {
     preview: () => React.ReactNode;
     code: string;
     vibePrompt: string;
+    uploader?: string;
+    imageUrl?: string;
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization

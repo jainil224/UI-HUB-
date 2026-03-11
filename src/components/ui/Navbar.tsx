@@ -1,9 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
-import { Github, Menu, X, Sparkles } from 'lucide-react';
+import { Github, Menu, X, Sparkles, LogOut, User as UserIcon } from 'lucide-react';
 import Logo from './Logo';
 import GitHubStarButton from './GitHubStarButton';
+import { useAuth } from '../../context/AuthContext';
+import { auth } from '../../lib/firebase';
+import { signOut } from 'firebase/auth';
 
 const MagneticButton = ({ children, className }: { children: React.ReactNode, className?: string }) => {
     const ref = useRef<HTMLButtonElement>(null);
@@ -73,6 +76,7 @@ const MagneticButton = ({ children, className }: { children: React.ReactNode, cl
 };
 
 const Navbar = () => {
+    const { user } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
@@ -97,8 +101,9 @@ const Navbar = () => {
                 {/* ── Desktop nav links (pill switcher) ── */}
                 <div className="hidden md:flex items-center gap-0.5 bg-white/[0.05] border border-white/10 rounded-full px-1.5 py-1">
                     {[
-                        { to: '/', label: 'Home', active: !isLibrary },
+                        { to: '/', label: 'Home', active: !isLibrary && !['/favorites'].some(p => location.pathname === p) },
                         { to: '/library', label: 'Component Library', active: isLibrary },
+                        { to: '/favorites', label: 'Favorites', active: location.pathname === '/favorites' },
                     ].map(({ to, label, active }) => (
                         <Link
                             key={to}
@@ -131,11 +136,51 @@ const Navbar = () => {
 
                     <GitHubStarButton className="hidden md:flex" />
 
-                    {/* Get Started */}
-                    <MagneticButton className="hidden sm:flex group">
-                        <Sparkles size={12} className="shrink-0 relative z-10" />
-                        <span className="relative z-10">Get Started</span>
-                    </MagneticButton>
+                    {/* Get Started / User Menu */}
+                    {user && !user.isAnonymous ? (
+                        <motion.div
+                            initial={{ opacity: 0, x: 20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="flex items-center gap-1.5 p-1 pr-1.5 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule"
+                        >
+                            {/* Avatar */}
+                            <div className="relative flex items-center justify-center w-8 h-8 rounded-[11px] bg-gradient-to-br from-brand-green/20 to-brand-green/5 border border-brand-green/20 overflow-hidden shadow-[0_0_15px_rgba(0,255,159,0.1)]">
+                                {user.photoURL ? (
+                                    <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                    <UserIcon size={14} className="text-brand-green" />
+                                )}
+                                <div className="absolute inset-0 bg-gradient-to-tr from-brand-green/20 via-transparent to-transparent opacity-50" />
+                            </div>
+
+                            {/* User Info */}
+                            <div className="flex flex-col pr-2 pl-1">
+                                <span className="text-white text-[11px] font-black tracking-tight leading-tight truncate max-w-[80px]">
+                                    {user.displayName?.split(' ')[0] || 'Developer'}
+                                </span>
+                                <span className="text-brand-green/80 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1">
+                                    <Sparkles size={6} className="text-brand-green animate-pulse" />
+                                    Pro Member
+                                </span>
+                            </div>
+
+                            {/* Logout Action */}
+                            <button
+                                onClick={() => signOut(auth)}
+                                className="flex items-center justify-center w-7 h-7 rounded-[10px] bg-white/[0.06] border border-white/5 text-white/40 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-300"
+                                title="Sign Out"
+                            >
+                                <LogOut size={13} />
+                            </button>
+                        </motion.div>
+                    ) : (
+                        <Link to="/login">
+                            <MagneticButton className="hidden sm:flex group">
+                                <Sparkles size={12} className="shrink-0 relative z-10" />
+                                <span className="relative z-10">Sign In</span>
+                            </MagneticButton>
+                        </Link>
+                    )}
 
                     {/* Mobile hamburger */}
                     <button
@@ -164,8 +209,9 @@ const Navbar = () => {
                     >
                         <div className="flex flex-col gap-1.5">
                             {[
-                                { to: '/', label: 'Home', active: !isLibrary },
+                                { to: '/', label: 'Home', active: !isLibrary && !['/favorites'].some(p => location.pathname === p) },
                                 { to: '/library', label: 'Component Library', active: isLibrary },
+                                { to: '/favorites', label: 'Favorites', active: location.pathname === '/favorites' },
                             ].map(({ to, label, active }) => (
                                 <Link
                                     key={to}
@@ -182,17 +228,23 @@ const Navbar = () => {
                         </div>
                         <div className="flex flex-wrap gap-2.5 pt-3 border-t border-white/[0.07]">
                             <GitHubStarButton className="flex-1 justify-center" />
-                            <a
-                                href="https://github.com/jainil224/UI-HUB-"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white/[0.05] border border-white/10 text-white/55 text-sm font-medium flex-1"
-                            >
-                                <Github size={15} /> GitHub
-                            </a>
-                            <button className="flex items-center justify-center gap-1.5 bg-brand-green text-black px-4 py-2.5 rounded-xl text-sm font-bold flex-1">
-                                <Sparkles size={13} /> Get Started
-                            </button>
+                            {user && !user.isAnonymous ? (
+                                <button
+                                    onClick={() => {
+                                        signOut(auth);
+                                        setIsOpen(false);
+                                    }}
+                                    className="flex items-center justify-center gap-1.5 bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2.5 rounded-xl text-sm font-bold flex-1"
+                                >
+                                    <LogOut size={13} /> Sign Out
+                                </button>
+                            ) : (
+                                <Link to="/login" className="flex-1" onClick={() => setIsOpen(false)}>
+                                    <button className="w-full flex items-center justify-center gap-1.5 bg-brand-green text-black px-4 py-2.5 rounded-xl text-sm font-bold">
+                                        <Sparkles size={13} /> Sign In
+                                    </button>
+                                </Link>
+                            )}
                         </div>
                     </motion.div>
                 )}

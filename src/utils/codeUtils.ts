@@ -707,6 +707,8 @@ ${componentHeader}
                 ))}
             </div>
         </div>`);
+    case "robot-3d-background":
+      return `// Robot 3D Background Placeholder\n// Implementation involves Three.js and GLTF loading logic...`;
     default:
       return reactOutput(`
         <div className="text-white text-4xl font-black opacity-20 uppercase">

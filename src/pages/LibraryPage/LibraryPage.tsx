@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Menu as MenuIcon, X, ChevronRight, Home } from 'lucide-react';
-import ComponentDetail from './sections/ComponentDetail';
+import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
+import { db } from '../../lib/firebase';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 
 interface Category {
     name: string;
@@ -16,16 +18,47 @@ const LibraryPage = () => {
     const queryParams = new URLSearchParams(location.search);
     const idFromUrl = queryParams.get('id');
 
-    const defaultComponent = componentList.find(c => c.id === idFromUrl) || componentList.find(c => c.id === 'corner-border-button') || componentList[0];
+    const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
+
+    const allComponents = [...componentList, ...firebaseComponents];
+
+    const defaultComponent = allComponents.find(c => c.id === idFromUrl) || allComponents.find(c => c.id === 'corner-border-button') || allComponents[0];
     const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    useEffect(() => {
+        const q = query(collection(db, 'components'), orderBy('createdAt', 'desc'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const fetched = snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    title: data.componentName,
+                    description: data.description,
+                    category: 'custom', // Generic category for uploaded components
+                    code: data.code,
+                    uploader: data.uploaderName || 'Anonymous'
+                } as ComponentItem;
+            });
+            setFirebaseComponents(fetched);
+        });
+        return unsubscribe;
+    }, []);
+
+    // Sync activeComponent if it changes in the background or URL changes
+    useEffect(() => {
+        const found = allComponents.find(c => c.id === idFromUrl);
+        if (found) {
+            setActiveComponent(found);
+        }
+    }, [idFromUrl, firebaseComponents]);
+
     // Automatically sync URL with default component if no ID is present
-    React.useEffect(() => {
-        if (!idFromUrl) {
+    useEffect(() => {
+        if (!idFromUrl && allComponents.length > 0) {
             navigate(`/library?id=${defaultComponent.id}`, { replace: true });
         }
-    }, [idFromUrl, navigate, defaultComponent.id]);
+    }, [idFromUrl, navigate, defaultComponent.id, allComponents.length]);
 
     const handleComponentSelect = (item: ComponentItem) => {
         setActiveComponent(item);
@@ -34,11 +67,12 @@ const LibraryPage = () => {
     };
 
     const categories: Category[] = [
-        { name: "Buttons/hover effcats", items: componentList.filter(item => item.category === 'button') },
-        { name: "Text Animations", items: componentList.filter(item => item.category === 'text') },
-        { name: "Visual Effects", items: componentList.filter(item => item.category === 'effect') },
-        { name: "Backgrounds", items: componentList.filter(item => item.category === 'background') },
-        { name: "Cursor Effects", items: componentList.filter(item => item.category === 'cursor') },
+        { name: "Buttons/hover effcats", items: allComponents.filter(item => item.category === 'button') },
+        { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
+        { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
+        { name: "Backgrounds", items: allComponents.filter(item => item.category === 'background') },
+        { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
+        { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ].filter(cat => cat.items.length > 0);
 
     return (
