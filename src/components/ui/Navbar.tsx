@@ -126,7 +126,7 @@ const Navbar = () => {
                 <div className="flex items-center gap-2.5">
                     {/* GitHub */}
                     <a
-                        href="https://github.com"
+                        href="https://github.com/jainil224"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="hidden sm:flex items-center justify-center w-9 h-9 rounded-xl bg-white/[0.06] border border-white/10 hover:bg-white/10 hover:border-brand-green/40 hover:shadow-[0_0_12px_rgba(0,255,0,0.2)] transition-all duration-300 group"
