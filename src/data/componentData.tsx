@@ -12,7 +12,7 @@ import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
 import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
 import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
 import { HeartCursor } from '../components/ui/HeartCursor';
-import { StripeMeshBackground } from '../components/ui/StripeMeshBackground';
+
 import Logo from '../components/ui/Logo';
 
 
@@ -595,137 +595,7 @@ const MouseGravityPreview: React.FC = () => {
     );
 };
 
-// ── Stripe Mesh Gradient Background scoped preview ────────────
-const StripeMeshPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            minHeight: '100%',
-            overflow: 'hidden',
-        }}>
-            <StripeMeshBackground intensity={0.9} speed={0.8}>
-                <div style={{
-                    position: 'relative',
-                    zIndex: 20,
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}>
-                    {/* Mock Nav */}
-                    <nav style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '24px 40px',
-                        width: '100%',
-                    }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                            <Logo className="w-8 h-8" />
-                            <span style={{ fontSize: 20, fontWeight: 800, color: '#1a1f36', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>UI HUB</span>
-                        </div>
-                        <div style={{ display: 'flex', gap: 24, fontSize: 15, fontWeight: 600, color: '#4f566b' }}>
-                            <span>Components</span>
-                            <span>Templates</span>
-                            <span>Showcase</span>
-                            <span>Docs</span>
-                        </div>
-                        <button style={{
-                            padding: '8px 20px',
-                            background: '#1a1f36',
-                            color: '#fff',
-                            borderRadius: 20,
-                            fontSize: 14,
-                            fontWeight: 600,
-                            border: 'none',
-                            cursor: 'pointer',
-                            boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-                        }}>Get Started</button>
-                    </nav>
 
-                    {/* Main Hero Mockup */}
-                    <div style={{
-                        flex: 1,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: '0 40px',
-                        textAlign: 'center',
-                        margin: '0 auto',
-                        maxWidth: 1000,
-                    }}>
-                        <div style={{
-                            padding: '8px 16px',
-                            background: 'rgba(99, 91, 255, 0.1)',
-                            borderRadius: 999,
-                            fontSize: 12,
-                            fontWeight: 700,
-                            color: '#635bff',
-                            marginBottom: 24,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.1em'
-                        }}>
-                            Premium UI Surfaces
-                        </div>
-                        <h1 style={{
-                            fontSize: 80,
-                            fontWeight: 900,
-                            lineHeight: 1,
-                            color: '#1a1f36',
-                            marginBottom: 24,
-                            letterSpacing: '-0.04em'
-                        }}>
-                            Stripe Mesh Gradient<br />
-                            <span style={{
-                                background: 'linear-gradient(to right, #635bff, #ec4899)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent'
-                            }}>For Modern Interfaces.</span>
-                        </h1>
-                        <p style={{
-                            fontSize: 20,
-                            color: '#4f566b',
-                            lineHeight: 1.6,
-                            marginBottom: 40,
-                            maxWidth: 700
-                        }}>
-                            Elevate your web applications with high-performance, 3D animated mesh backgrounds. Designed for depth, vibration, and pure aesthetic excellence.
-                        </p>
-                        <div style={{ display: 'flex', gap: 16 }}>
-                            <button style={{
-                                padding: '14px 32px',
-                                background: '#635bff',
-                                color: '#fff',
-                                borderRadius: 12,
-                                fontSize: 16,
-                                fontWeight: 700,
-                                border: 'none',
-                                cursor: 'pointer',
-                                boxShadow: '0 8px 20px rgba(99, 91, 255, 0.3)'
-                            }}>Browse Components</button>
-                            <button style={{
-                                padding: '14px 32px',
-                                background: 'rgba(255,255,255,0.8)',
-                                color: '#1a1f36',
-                                borderRadius: 12,
-                                fontSize: 16,
-                                fontWeight: 700,
-                                border: '1px solid rgba(0,0,0,0.05)',
-                                cursor: 'pointer',
-                                backdropFilter: 'blur(10px)'
-                            }}>
-                                View Documentation
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </StripeMeshBackground>
-        </div>
-    );
-};
 
 
 // ── Heart Cursor scoped preview (Lovable Style) ────────────
@@ -2074,13 +1944,6 @@ export const Demo = () => (
         code: `import { HeartCursor } from '@/components/ui/HeartCursor';\n\n// Wrap your content with the HeartCursor component.\n// It tracks the mouse smoothly and leaves trailing ripples.\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#0a0a0f] flex items-center justify-center">\n    <HeartCursor \n      size={24} \n      glowIntensity={0.8} \n      trailSpeed={0.05}\n    />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      Move your cursor to experience the love\n    </p>\n  </div>\n);`,
         vibePrompt: "Create a premium interactive mouse cursor animation with a purple heart theme. The cursor should be a glowing purple heart with a soft neon glow and subtle gradient. It should follow the mouse with smooth easing and leave a trailing aura/ripple effect using Gaussian blur and radial gradients. Implement hover effects where the heart grows and glows brighter over interactive elements."
     },
-    {
-        id: "stripe-mesh-background",
-        title: "Stripe Mesh Gradient",
-        category: "background",
-        preview: () => <StripeMeshPreview />,
-        code: `import { StripeMeshBackground } from '@/components/ui/StripeMeshBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-white shadow-2xl">\n    <StripeMeshBackground \n      intensity={0.9} \n      speed={0.8} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-[#1a1f36] tracking-tight">\n        STRIPE MESH\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: "Create a vibrant, high-performance mesh gradient background inspired by Stripe's aesthetic. Use orange, purple, pink, and blue gradients with high blur and smooth flowing animations. Implement a white background with subtle diagonal overlays for a bright, premium finish."
-    }
+
 ];
 
