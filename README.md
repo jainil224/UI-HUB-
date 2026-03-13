@@ -139,7 +139,7 @@ Developed and Maintained by **Jainil Patel**.
 
 This project is licensed under the **MIT License**. Feel free to use these components in your personal or commercial projects.
 
------
+---
 
 <div align="center">
   <p>Crafted with ✨ by Jainil Patel</p>
