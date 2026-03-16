@@ -179,16 +179,26 @@ const FavoritesPage = () => {
                         </motion.div>
                     ) : (
                         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-                            <AnimatePresence mode='wait'>
+                            <AnimatePresence>
                                 {enrichedFavorites.map((fav, index) => (
                                     <motion.div
                                         key={fav.id}
-                                        initial={{ opacity: 0, y: 30 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        layout
+                                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        exit={{ 
+                                            opacity: 0, 
+                                            scale: 0.9,
+                                            filter: 'blur(10px)',
+                                            transition: { duration: 0.3, ease: [0.32, 0, 0.67, 0] }
+                                        }}
                                         transition={{ 
+                                            layout: { 
+                                                duration: 0.4, 
+                                                ease: [0.23, 1, 0.32, 1] 
+                                            },
                                             duration: 0.5, 
-                                            delay: index * 0.05,
+                                            delay: index * 0.03,
                                             ease: [0.23, 1, 0.32, 1]
                                         }}
                                         className="group/card relative h-full"

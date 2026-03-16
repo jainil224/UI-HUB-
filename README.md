@@ -101,31 +101,36 @@ We use a curated selection of fonts to balance technical precision with modern f
    cd UI-HUB-
    ```
 
-2. **Install dependencies:**
+2. **Frontend Setup:**
    ```bash
+   cd frontend
    npm install
-   ```
-
-3. **Configure Environment:**
-   Create a `.env.local` file by copying the example:
-   ```bash
    cp .env.example .env.local
+   npm run dev
    ```
 
-4. **Launch Development Server:**
+3. **Backend Setup:**
    ```bash
+   cd backend
+   npm install
    npm run dev
    ```
 
 ## 📦 Deployment
 
-Optimized for high-performance static hosting:
-
+### Frontend
 ```bash
+cd frontend
 npm run build
 ```
+Production-ready assets will be in `frontend/dist/`.
 
-The production-ready assets will be located in the `dist/` directory, ready to be deployed to Vercel, Netlify, or AWS.
+### Backend
+```bash
+cd backend
+npm start
+```
+
 
 ## 👤 Author
 
