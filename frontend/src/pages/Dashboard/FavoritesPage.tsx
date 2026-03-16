@@ -188,9 +188,10 @@ const FavoritesPage = () => {
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         exit={{ 
                                             opacity: 0, 
-                                            scale: 0.9,
-                                            filter: 'blur(10px)',
-                                            transition: { duration: 0.3, ease: [0.32, 0, 0.67, 0] }
+                                            scale: 0.85,
+                                            rotate: -4,
+                                            filter: 'blur(15px)',
+                                            transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] }
                                         }}
                                         transition={{ 
                                             layout: { 
@@ -204,9 +205,9 @@ const FavoritesPage = () => {
                                         className="group/card relative h-full"
                                     >
                                         {/* Card Outer Glow */}
-                                        <div className="absolute inset-0 bg-brand-green/0 group-hover/card:bg-brand-green/[0.03] blur-3xl transition-all duration-700 rounded-[3.5rem] -z-10" />
+                                        <div className="absolute inset-0 bg-brand-green/0 group-hover/card:bg-brand-green/[0.05] group-hover/card:shadow-[0_0_40px_rgba(0,255,10,0.07)] blur-3xl transition-all duration-700 rounded-[3.5rem] -z-10" />
                                         
-                                        <div className="gpu-accelerated relative h-full rounded-[3.5rem] p-6 flex flex-col border border-white/[0.08] group-hover/card:border-brand-green/30 overflow-hidden bg-[#050505] shadow-2xl transition-all duration-500">
+                                        <div className="gpu-accelerated relative h-full rounded-[3.5rem] p-6 flex flex-col border border-white/[0.08] group-hover/card:border-brand-green/40 overflow-hidden bg-[#050505] shadow-[0_40px_100px_rgba(0,0,0,0.6)] group-hover/card:shadow-[0_0_30px_rgba(0,255,10,0.1)] transition-all duration-500">
                                             {/* Top Utility Bar */}
                                             <div className="flex justify-between items-center px-4 pb-4">
                                                 <div className="space-y-1.5">
@@ -214,14 +215,21 @@ const FavoritesPage = () => {
                                                         <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-terminal-green-blink" />
                                                         <span className="text-[9px] font-black text-brand-green uppercase tracking-[0.4em] opacity-60">Verified Asset</span>
                                                     </div>
-                                                    <h3 className="text-2xl font-black leading-none tracking-tighter text-white group-hover/card:text-brand-green transition-colors duration-300">{fav.componentName}</h3>
+                                                    <h3 className="text-2xl font-black leading-none tracking-tighter text-white group-hover/card:text-brand-green transition-colors duration-300 drop-shadow-[0_0_10px_rgba(0,255,10,0)] group-hover/card:drop-shadow-[0_0_15px_rgba(0,255,10,0.3)]">{fav.componentName}</h3>
                                                 </div>
-                                                <button
+                                                <motion.button
+                                                    whileHover={{ 
+                                                        scale: 1.15, 
+                                                        boxShadow: "0 0 25px rgba(239, 68, 68, 0.4)",
+                                                        backgroundColor: "rgba(239, 68, 68, 0.15)"
+                                                    }}
+                                                    whileTap={{ scale: 0.9 }}
                                                     onClick={(e) => handleRemove(e, fav.componentId)}
-                                                    className="w-11 h-11 rounded-full bg-white/[0.03] border border-white/5 text-white/20 hover:text-red-500 hover:bg-red-500/10 hover:border-red-500/20 transition-all active:scale-90 flex items-center justify-center group/trash"
+                                                    className="w-11 h-11 rounded-full bg-white/[0.03] border border-white/5 text-white/20 hover:text-red-500 hover:border-red-500/30 transition-all flex items-center justify-center group/trash relative overflow-hidden"
                                                 >
-                                                    <Trash2 size={18} className="group-hover/trash:rotate-12 transition-transform" />
-                                                </button>
+                                                    <Trash2 size={18} className="relative z-10 transition-transform group-hover/trash:rotate-12" />
+                                                    <div className="absolute inset-0 bg-red-600 opacity-0 group-hover/trash:opacity-5 transition-opacity" />
+                                                </motion.button>
                                             </div>
 
                                             {/* Preview/Source Container */}
