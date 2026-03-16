@@ -1,0 +1,66 @@
+{
+  "name": "vite-plugin-mkcert",
+  "version": "1.17.10",
+  "description": "Provide certificates for vite's https dev service",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liuweiGL/vite-plugin-mkcert.git"
+  },
+  "keywords": [
+    "vite-plugin",
+    "certificate",
+    "https",
+    "mkcert"
+  ],
+  "author": "liuweigl",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/liuweiGL/vite-plugin-mkcert/issues"
+  },
+  "homepage": "https://github.com/liuweiGL/vite-plugin-mkcert#readme",
+  "engines": {
+    "node": ">=v16.7.0"
+  },
+  "types": "./dist/index.d.ts",
+  "module": "./dist/mkcert.mjs",
+  "main": "./dist/mkcert.js",
+  "files": [
+    "plugin",
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/mkcert.mjs",
+      "require": "./dist/mkcert.js"
+    }
+  },
+  "scripts": {
+    "test": "pnpm build && pnpm playground",
+    "playground": "rimraf .mkcert && vite -c playground/vite.config.ts --clearScreen false",
+    "build": "tsx ./scripts/build.mts",
+    "lint": "tsc --noEmit && biome lint --colors=force --fix --unsafe  \"plugin\" ",
+    "release": "semantic-release"
+  },
+  "dependencies": {
+    "axios": "^1.13.5",
+    "debug": "^4.4.3",
+    "picocolors": "^1.1.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.5",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/debug": "^4.1.12",
+    "@types/node": "^24.7.0",
+    "esbuild": "^0.25.10",
+    "rimraf": "^6.0.1",
+    "semantic-release": "^24.2.9",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vite": "7.1.9"
+  },
+  "peerDependencies": {
+    "vite": ">=3"
+  }
+}
