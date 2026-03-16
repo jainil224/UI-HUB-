@@ -229,8 +229,8 @@ const FavoritesPage = () => {
                                                 <motion.button
                                                     whileHover={{ 
                                                         scale: 1.25, 
-                                                        boxShadow: "0 0 30px rgba(239, 68, 68, 0.5)",
-                                                        backgroundColor: "rgba(239, 68, 68, 0.2)"
+                                                        boxShadow: "0 0 15px rgba(239, 68, 68, 0.3)",
+                                                        backgroundColor: "rgba(239, 68, 68, 0.1)"
                                                     }}
                                                     whileTap={{ scale: 0.9 }}
                                                     onClick={(e) => handleRemove(e, fav.componentId)}
