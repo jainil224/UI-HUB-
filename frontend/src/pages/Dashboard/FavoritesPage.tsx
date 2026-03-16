@@ -66,11 +66,20 @@ const FavoritesPage = () => {
         });
     }, [favoriteMetadata, allAvailableComponents]);
 
-    const handleRemove = async (e: React.MouseEvent, componentId: string) => {
+    const handleRemove = (e: React.MouseEvent, componentId: string) => {
         e.preventDefault();
         e.stopPropagation();
         if (!user) return;
-        await removeFromFavorites(user.uid, componentId);
+        
+        // Optimistic UI update: remove item from local state immediately
+        // This ensures the exit animation starts the exact moment the user clicks
+        setFavoriteMetadata(prev => prev.filter(fav => fav.componentId !== componentId));
+        
+        // Trigger server delete in background
+        removeFromFavorites(user.uid, componentId).catch(error => {
+            console.error("Error removing from favorites:", error);
+            // Optionally: we could re-fetch or show a toast here if it fails
+        });
     };
 
     const handleCopy = (e: React.MouseEvent, code: string, id: string) => {
@@ -219,15 +228,15 @@ const FavoritesPage = () => {
                                                 </div>
                                                 <motion.button
                                                     whileHover={{ 
-                                                        scale: 1.15, 
-                                                        boxShadow: "0 0 25px rgba(239, 68, 68, 0.4)",
-                                                        backgroundColor: "rgba(239, 68, 68, 0.15)"
+                                                        scale: 1.25, 
+                                                        boxShadow: "0 0 30px rgba(239, 68, 68, 0.5)",
+                                                        backgroundColor: "rgba(239, 68, 68, 0.2)"
                                                     }}
                                                     whileTap={{ scale: 0.9 }}
                                                     onClick={(e) => handleRemove(e, fav.componentId)}
-                                                    className="w-11 h-11 rounded-full bg-white/[0.03] border border-white/5 text-white/20 hover:text-red-500 hover:border-red-500/30 transition-all flex items-center justify-center group/trash relative overflow-hidden"
+                                                    className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/5 text-white/20 hover:text-red-500 hover:border-red-500/30 transition-all flex items-center justify-center group/trash relative overflow-hidden z-20"
                                                 >
-                                                    <Trash2 size={18} className="relative z-10 transition-transform group-hover/trash:rotate-12" />
+                                                    <Trash2 size={20} className="relative z-10 transition-transform group-hover/trash:rotate-12" />
                                                     <div className="absolute inset-0 bg-red-600 opacity-0 group-hover/trash:opacity-5 transition-opacity" />
                                                 </motion.button>
                                             </div>
@@ -349,8 +358,8 @@ const FavoritesPage = () => {
 
 
                                             {/* Edge Accents (Testimonials style) */}
-                                            <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-tr-[3.5rem]" />
-                                            <div className="absolute bottom-0 left-0 w-16 h-16 border-b border-l border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-bl-[3.5rem]" />
+                                            <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-tr-[3.5rem] pointer-events-none" />
+                                            <div className="absolute bottom-0 left-0 w-16 h-16 border-b border-l border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-bl-[3.5rem] pointer-events-none" />
                                         </div>
                                     </motion.div>
                                 ))}
