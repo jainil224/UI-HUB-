@@ -24,7 +24,7 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
     className = '',
     nodeCount = 120,
     connectionDistance = 150,
-    interactive = true,
+    interactive = false,
     nodeColor = '#22d3ee', // Cyan-400
     lineColor = 'rgba(34, 211, 238, 0.2)',
 }) => {
@@ -44,8 +44,9 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
         let height = window.innerHeight;
 
         const resize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
+            const rect = canvas.getBoundingClientRect();
+            width = rect.width;
+            height = rect.height;
             canvas.width = width * window.devicePixelRatio;
             canvas.height = height * window.devicePixelRatio;
             ctx.scale(window.devicePixelRatio, window.devicePixelRatio);

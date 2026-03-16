@@ -534,7 +534,7 @@ const NeuralNetworkPreview: React.FC = () => {
             color: '#fff',
             fontFamily: 'Inter, sans-serif'
         }}>
-            <NeuralNetworkBackground interactive={true} />
+            <NeuralNetworkBackground interactive={false} />
         </div>
     );
 };
@@ -1971,7 +1971,7 @@ export const Demo = () => (
         title: "Neural Network Background",
         category: "background",
         preview: () => <NeuralNetworkPreview />,
-        code: `import { NeuralNetworkBackground } from '@/components/ui/NeuralNetworkBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <NeuralNetworkBackground \n      nodeCount={120} \n      connectionDistance={150} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase">\n        Neural Core\n      </h1>\n    </div>\n  </div>\n);`,
+        code: `import { NeuralNetworkBackground } from '@/components/ui/NeuralNetworkBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <NeuralNetworkBackground \n      nodeCount={120} \n      connectionDistance={150} \n      interactive={false} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase">\n        Neural Core\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: "Create a futuristic AI-style neural network background made of nodes (dots) connected by animated lines. Dots should connect with thin animated lines when they are close to each other. Nodes near the cursor should move slightly and connections should dynamically form around the cursor. Use HTML5 Canvas for smooth 60fps performance."
     },
     {

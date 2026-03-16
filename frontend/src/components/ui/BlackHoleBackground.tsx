@@ -39,8 +39,9 @@ export const BlackHoleBackground: React.FC<BlackHoleBackgroundProps> = ({
         let height = window.innerHeight;
 
         const resize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
+            const rect = canvas.getBoundingClientRect();
+            width = rect.width;
+            height = rect.height;
             canvas.width = width * window.devicePixelRatio;
             canvas.height = height * window.devicePixelRatio;
             ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -126,7 +127,11 @@ export const BlackHoleBackground: React.FC<BlackHoleBackgroundProps> = ({
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-            targetMouse.current = { x: e.clientX, y: e.clientY };
+            const rect = canvas.getBoundingClientRect();
+            targetMouse.current = { 
+                x: e.clientX - rect.left, 
+                y: e.clientY - rect.top 
+            };
         };
 
         window.addEventListener('resize', resize);

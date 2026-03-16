@@ -47,8 +47,9 @@ export const MouseGravityBackground: React.FC<MouseGravityBackgroundProps> = ({
         let height = window.innerHeight;
 
         const resize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
+            const rect = canvas.getBoundingClientRect();
+            width = rect.width;
+            height = rect.height;
             canvas.width = width * window.devicePixelRatio;
             canvas.height = height * window.devicePixelRatio;
             ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
@@ -132,25 +133,33 @@ export const MouseGravityBackground: React.FC<MouseGravityBackgroundProps> = ({
         };
 
         const handleMouseMove = (e: MouseEvent) => {
-            mouse.current.x = e.clientX;
-            mouse.current.y = e.clientY;
-            mouse.current.active = true;
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
 
-            if (enableTrail && particles.current.length < particleCount + 200) {
-                // Spawn new particles
-                for (let i = 0; i < 2; i++) {
-                    particles.current.push({
-                        x: e.clientX,
-                        y: e.clientY,
-                        vx: (Math.random() - 0.5) * 2,
-                        vy: (Math.random() - 0.5) * 2,
-                        size: Math.random() * 3 + 1,
-                        color: Math.random() > 0.5 ? particleColor : accentColor,
-                        glowColor: '',
-                        life: 100,
-                        maxLife: 100
-                    });
+            mouse.current.x = x;
+            mouse.current.y = y;
+            
+            // Only set active and spawn if inside or close to bounds
+            if (x >= 0 && x <= width && y >= 0 && y <= height) {
+                mouse.current.active = true;
+                if (enableTrail && particles.current.length < particleCount + 200) {
+                    for (let i = 0; i < 2; i++) {
+                        particles.current.push({
+                            x,
+                            y,
+                            vx: (Math.random() - 0.5) * 2,
+                            vy: (Math.random() - 0.5) * 2,
+                            size: Math.random() * 3 + 1,
+                            color: Math.random() > 0.5 ? particleColor : accentColor,
+                            glowColor: '',
+                            life: 100,
+                            maxLife: 100
+                        });
+                    }
                 }
+            } else {
+                mouse.current.active = false;
             }
         };
 
@@ -160,7 +169,7 @@ export const MouseGravityBackground: React.FC<MouseGravityBackgroundProps> = ({
 
         window.addEventListener('resize', resize);
         window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseleave', handleMouseLeave);
+        canvas.addEventListener('mouseleave', handleMouseLeave);
 
         resize();
         draw();
@@ -168,7 +177,7 @@ export const MouseGravityBackground: React.FC<MouseGravityBackgroundProps> = ({
         return () => {
             window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('mouseleave', handleMouseLeave);
+            canvas.removeEventListener('mouseleave', handleMouseLeave);
             cancelAnimationFrame(rafId.current);
         };
     }, [particleCount, attractionRadius, attractionForce, particleColor, accentColor]);
