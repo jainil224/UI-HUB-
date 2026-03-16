@@ -214,3 +214,17 @@
   scrollbar-width: none;
   /* Firefox */
 }
+
+/* Rendering Optimizations */
+.sharp-rendering {
+  image-rendering: -webkit-optimize-contrast;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.gpu-accelerated {
+  transform: translate3d(0, 0, 0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
