@@ -191,12 +191,12 @@ const FavoritesPage = () => {
                                             delay: index * 0.05,
                                             ease: [0.23, 1, 0.32, 1]
                                         }}
-                                        className="group relative h-full"
+                                        className="group/card relative h-full"
                                     >
                                         {/* Card Outer Glow */}
-                                        <div className="absolute inset-0 bg-brand-green/0 group-hover:bg-brand-green/[0.03] blur-3xl transition-all duration-700 rounded-[3.5rem] -z-10" />
+                                        <div className="absolute inset-0 bg-brand-green/0 group-hover/card:bg-brand-green/[0.03] blur-3xl transition-all duration-700 rounded-[3.5rem] -z-10" />
                                         
-                                        <div className="gpu-accelerated relative h-full rounded-[3.5rem] p-6 flex flex-col border border-white/[0.08] group-hover:border-brand-green/30 overflow-hidden bg-[#050505] shadow-2xl transition-all duration-500">
+                                        <div className="gpu-accelerated relative h-full rounded-[3.5rem] p-6 flex flex-col border border-white/[0.08] group-hover/card:border-brand-green/30 overflow-hidden bg-[#050505] shadow-2xl transition-all duration-500">
                                             {/* Top Utility Bar */}
                                             <div className="flex justify-between items-center px-4 pb-4">
                                                 <div className="space-y-1.5">
@@ -204,7 +204,7 @@ const FavoritesPage = () => {
                                                         <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-terminal-green-blink" />
                                                         <span className="text-[9px] font-black text-brand-green uppercase tracking-[0.4em] opacity-60">Verified Asset</span>
                                                     </div>
-                                                    <h3 className="text-2xl font-black leading-none tracking-tighter text-white group-hover:text-brand-green transition-colors duration-300">{fav.componentName}</h3>
+                                                    <h3 className="text-2xl font-black leading-none tracking-tighter text-white group-hover/card:text-brand-green transition-colors duration-300">{fav.componentName}</h3>
                                                 </div>
                                                 <button
                                                     onClick={(e) => handleRemove(e, fav.componentId)}
@@ -276,27 +276,63 @@ const FavoritesPage = () => {
                                             </div>
 
                                             {/* Bottom Action Footer */}
-                                            <div className="p-4 pt-8 flex gap-3 mt-auto">
+                                            {/* Bottom Action Footer - Ultra-Premium Aesthetic */}
+                                            <div className="p-6 pt-10 flex gap-4 mt-auto">
                                                 <Link
                                                     to={`/library?id=${fav.componentId}&tab=preview`}
-                                                    className="group/btn relative flex-[3] py-5 rounded-[1.5rem] bg-brand-green text-black font-black uppercase tracking-[0.2em] text-[10px] shadow-[0_15px_35px_rgba(0,255,0,0.15)] hover:shadow-[0_0_50px_rgba(0,255,0,0.3)] transition-all flex items-center justify-center gap-3 hover:-translate-y-0.5 active:scale-95 overflow-hidden"
+                                                    className="group/btn relative flex-[3] py-4 rounded-2xl bg-[#080808] border border-white/[0.05] hover:border-transparent text-white/50 hover:text-white transition-all duration-500 flex items-center justify-center gap-3 hover:-translate-y-1.5 active:scale-[0.98] overflow-hidden shadow-2xl isolate"
                                                 >
-                                                    <span className="relative z-10 flex items-center gap-2">
-                                                        Launch <Zap size={14} fill="currentColor" />
+                                                    {/* Corner Nodes */}
+                                                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/20 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+                                                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/20 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+                                                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/20 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+                                                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/10 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
+
+                                                    {/* Animated Strokes */}
+                                                    <div className="absolute top-0 left-0 h-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.2s_infinite] w-0 group-hover/btn:w-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
+                                                    <div className="absolute top-0 left-0 w-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.25s_infinite] h-0 group-hover/btn:h-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
+                                                    <div className="absolute bottom-0 right-0 h-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.22s_infinite] w-0 group-hover/btn:w-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
+                                                    <div className="absolute bottom-0 right-0 w-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.27s_infinite] h-0 group-hover/btn:h-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
+
+                                                    {/* Dynamic Gradient Background */}
+                                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-green/20 via-transparent to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" />
+                                                    
+                                                    {/* Animated Border Glow */}
+                                                    <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 bg-brand-green/10 blur-xl" />
+
+                                                    <span className="relative z-10 flex items-center gap-2.5 text-[10px] font-black uppercase tracking-[0.35em] transition-all duration-500">
+                                                        <span className="relative inline-block">
+                                                            Launch
+                                                            {/* Glitch Layers */}
+                                                            <span className="absolute top-0 left-0 -z-10 text-[#00ff0a] opacity-0 group-hover/btn:opacity-70 group-hover/btn:animate-[glitch_0.3s_infinite] pointer-events-none translate-x-[1px]">Launch</span>
+                                                            <span className="absolute top-0 left-0 -z-10 text-[#ff3b4d] opacity-0 group-hover/btn:opacity-70 group-hover/btn:animate-[glitch_0.3s_infinite_reverse] pointer-events-none -translate-x-[1px]">Launch</span>
+                                                        </span>
+                                                        <Zap size={13} className="transition-all duration-500 group-hover/btn:scale-120 group-hover/btn:fill-brand-green group-hover/btn:text-brand-green animate-lightning-blink" />
                                                     </span>
-                                                    <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover/btn:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+
+                                                    {/* Subtle Laser Reveal */}
+                                                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-green/50 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
                                                 </Link>
+                                                
                                                 <Link
                                                     to={`/library?id=${fav.componentId}`}
-                                                    className="flex-1 py-5 rounded-[1.5rem] bg-white/[0.03] border border-white/10 text-white/50 font-black uppercase tracking-[0.15em] text-[10px] hover:bg-white/10 hover:text-white hover:border-white/20 transition-all flex items-center justify-center group/det hover:-translate-y-0.5"
+                                                    className="group/det relative flex-1 py-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-transparent text-white/20 hover:text-brand-green transition-all duration-500 flex items-center justify-center hover:-translate-y-1.5 active:scale-[0.98] backdrop-blur-sm overflow-hidden"
                                                 >
-                                                    <Eye size={14} className="group-hover/det:scale-110 transition-transform" />
+                                                    {/* Animated Strokes for small button */}
+                                                    <div className="absolute top-0 left-0 h-[1.5px] bg-brand-green z-30 pointer-events-none w-0 group-hover/det:w-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
+                                                    <div className="absolute top-0 left-0 w-[1.5px] bg-brand-green z-30 pointer-events-none h-0 group-hover/det:h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
+                                                    <div className="absolute bottom-0 right-0 h-[1.5px] bg-brand-green z-30 pointer-events-none w-0 group-hover/det:w-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
+                                                    <div className="absolute bottom-0 right-0 w-[1.5px] bg-brand-green z-30 pointer-events-none h-0 group-hover/det:h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
+                                                    
+                                                    <div className="absolute inset-0 bg-brand-green/[0.03] opacity-0 group-hover/det:opacity-100 transition-opacity" />
+                                                    <Eye size={18} className="relative z-10 transition-all duration-500 group-hover/det:scale-110 group-hover/det:rotate-3" />
                                                 </Link>
                                             </div>
 
+
                                             {/* Edge Accents (Testimonials style) */}
-                                            <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-white/0 group-hover:border-brand-green/30 transition-all duration-700 rounded-tr-[3.5rem]" />
-                                            <div className="absolute bottom-0 left-0 w-16 h-16 border-b border-l border-white/0 group-hover:border-brand-green/30 transition-all duration-700 rounded-bl-[3.5rem]" />
+                                            <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-tr-[3.5rem]" />
+                                            <div className="absolute bottom-0 left-0 w-16 h-16 border-b border-l border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-bl-[3.5rem]" />
                                         </div>
                                     </motion.div>
                                 ))}
@@ -312,13 +348,30 @@ const FavoritesPage = () => {
                     -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
                     color: transparent;
                 }
-                .group:hover .text-stroke-premium {
+                .group\/card:hover .text-stroke-premium {
                     -webkit-text-stroke: 1.5px rgba(0, 255, 0, 0.15);
                 }
                 .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 255, 0, 0.1); border-radius: 10px; }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 0, 0.3); }
+
+                @keyframes jitter {
+                    0% { transform: translate(0, 0); }
+                    25% { transform: translate(-0.5px, 0.5px); opacity: 0.8; }
+                    50% { transform: translate(0.5px, -0.5px); opacity: 1; }
+                    75% { transform: translate(-0.5px, -0.5px); opacity: 0.9; }
+                    100% { transform: translate(0.5px, 0.5px); opacity: 1; }
+                }
+
+                @keyframes glitch {
+                    0% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); }
+                    20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
+                    40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -2px); }
+                    60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 2px); }
+                    80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
+                    100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
+                }
             `}} />
         </main>
     );
