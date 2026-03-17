@@ -37,6 +37,12 @@ const LibraryPage = () => {
                     description: data.description,
                     category: 'custom', // Generic category for uploaded components
                     code: data.code,
+                    vibePrompt: "Community generated layout",
+                    preview: () => (
+                        <div className="text-4xl md:text-6xl font-display font-bold uppercase tracking-tight opacity-20 px-8 text-center animate-pulse">
+                            {data.componentName}
+                        </div>
+                    ),
                     uploader: data.uploaderName || 'Anonymous'
                 } as ComponentItem;
             });
@@ -70,6 +76,7 @@ const LibraryPage = () => {
         { name: "Buttons/hover effcats", items: allComponents.filter(item => item.category === 'button') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
+        { name: "3D Design", items: allComponents.filter(item => item.category === '3d') },
         { name: "Backgrounds", items: allComponents.filter(item => item.category === 'background') },
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },

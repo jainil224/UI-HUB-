@@ -12,6 +12,8 @@ import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
 import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
 import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
 import { HeartCursor } from '../components/ui/HeartCursor';
+import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
+
 
 import Logo from '../components/ui/Logo';
 
@@ -595,6 +597,24 @@ const MouseGravityPreview: React.FC = () => {
     );
 };
 
+const InteractiveWebGLScenePreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            color: '#fff',
+            fontFamily: 'Inter, sans-serif'
+        }}>
+            <InteractiveWebGLScene showDownloadLink={true} overlayOpacity={0.2} />
+        </div>
+    );
+};
+
 
 
 
@@ -760,7 +780,7 @@ const HeartCursorPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom";
     preview: () => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -1734,7 +1754,7 @@ export default MagneticCursor;
     {
         id: "robot-3d-background",
         title: "Robot 3D Background",
-        category: "background",
+        category: "3d",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
         code: `import { Robot3DBackground } from '@/components/ui/Robot3DBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <Robot3DBackground \n      overlayOpacity={0.4} \n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        ROBOTIC CORE\n      </h1>\n    </div>\n  </div>\n);\n\n// Video Resource: Robots_sliding_on_neon_platform_16a422a842.mp4
 // Download Link: /assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4`,
@@ -2006,6 +2026,13 @@ export const Demo = () => (
         code: `import { HeartCursor } from '@/components/ui/HeartCursor';\n\n// Wrap your content with the HeartCursor component.\n// It tracks the mouse smoothly and leaves trailing ripples.\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#0a0a0f] flex items-center justify-center">\n    <HeartCursor \n      size={24} \n      glowIntensity={0.8} \n      trailSpeed={0.05}\n    />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      Move your cursor to experience the love\n    </p>\n  </div>\n);`,
         vibePrompt: "Create a premium interactive mouse cursor animation with a purple heart theme. The cursor should be a glowing purple heart with a soft neon glow and subtle gradient. It should follow the mouse with smooth easing and leave a trailing aura/ripple effect using Gaussian blur and radial gradients. Implement hover effects where the heart grows and glows brighter over interactive elements."
     },
+    {
+        id: "interactive-webgl-scene",
+        title: "Interactive WebGL Scene",
+        category: "3d",
+        preview: () => <InteractiveWebGLScenePreview />,
+        code: `import { InteractiveWebGLScene } from '@/components/ui/InteractiveWebGLScene';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <InteractiveWebGLScene \n      overlayOpacity={0.4} \n      showDownloadLink={true}\n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        WEBGL EXPERIENCE\n      </h1>\n    </div>\n  </div>\n);`,
+        vibePrompt: "Create a premium background component featuring an interactive WebGL scene video. The system should include a high-quality video background with cinematic overlays, glassmorphism UI elements, and a integrated download system for 4K assets, all while maintaining a sleek, professional aesthetic."
+    },
 
 ];
-
