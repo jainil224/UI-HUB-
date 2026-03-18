@@ -13,6 +13,7 @@ import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
 import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
 import { HeartCursor } from '../components/ui/HeartCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
+import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 
 
 import Logo from '../components/ui/Logo';
@@ -596,7 +597,6 @@ const MouseGravityPreview: React.FC = () => {
         </div>
     );
 };
-
 const InteractiveWebGLScenePreview: React.FC = () => {
     return (
         <div style={{
@@ -611,6 +611,24 @@ const InteractiveWebGLScenePreview: React.FC = () => {
             fontFamily: 'Inter, sans-serif'
         }}>
             <InteractiveWebGLScene showDownloadLink={true} overlayOpacity={0.2} />
+        </div>
+    );
+};
+
+const Scroll3DAnimationPreview: React.FC = () => {
+    return (
+        <div 
+            className="overflow-y-auto custom-scrollbar"
+            style={{
+                position: 'relative',
+                width: '100%', 
+                height: '100%',
+                backgroundColor: '#000',
+                color: '#fff',
+                fontFamily: 'Inter, sans-serif'
+            }}
+        >
+            <Scroll3DAnimation />
         </div>
     );
 };
@@ -2033,6 +2051,14 @@ export const Demo = () => (
         preview: () => <InteractiveWebGLScenePreview />,
         code: `import { InteractiveWebGLScene } from '@/components/ui/InteractiveWebGLScene';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <InteractiveWebGLScene \n      overlayOpacity={0.4} \n      showDownloadLink={true}\n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        WEBGL EXPERIENCE\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: "Create a premium background component featuring an interactive WebGL scene video. The system should include a high-quality video background with cinematic overlays, glassmorphism UI elements, and a integrated download system for 4K assets, all while maintaining a sleek, professional aesthetic."
+    },
+    {
+        id: "3d-scroll-animation",
+        title: "3D Scroll Animation",
+        category: "3d",
+        preview: () => <Scroll3DAnimationPreview />,
+        code: `import Scroll3DAnimation from '@/components/ui/Scroll3DAnimation';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[800px] overflow-hidden rounded-3xl bg-white shadow-2xl border border-neutral-100">\n    <Scroll3DAnimation />\n  </div>\n);`,
+        vibePrompt: "Create a high-performance 3D scroll-based image sequence animation with premium text overlays and smooth canvas rendering."
     },
 
 ];

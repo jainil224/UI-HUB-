@@ -7,6 +7,7 @@ import LibraryPage from './pages/LibraryPage/LibraryPage';
 import FavoritesPage from './pages/Dashboard/FavoritesPage';
 import LoginPage from './pages/Auth/LoginPage';
 import SignupPage from './pages/Auth/SignupPage';
+import Scroll3DAnimationPage from './pages/Components/Scroll3DAnimationPage';
 
 // Wrapper: only shows Navbar + Footer on non-library pages
 const AppShell = () => {
@@ -24,9 +25,10 @@ const AppShell = () => {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
       </Routes>
 
-      {!isLibrary && !isAuth && <Footer />}
+      {!isLibrary && !isAuth && !location.pathname.startsWith('/demo') && <Footer />}
     </div>
   );
 };
