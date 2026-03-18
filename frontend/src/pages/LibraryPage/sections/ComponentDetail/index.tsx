@@ -4,7 +4,7 @@ import {
     ChevronLeft, RotateCcw, Eye, Code,
     Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
 import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
@@ -1026,16 +1026,21 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 {tab === 'preview' && (
                                     <div className="flex items-center gap-3">
                                         {item.id === '3d-scroll-animation' && (
-                                            <motion.button
-                                                initial={{ opacity: 0, x: 20 }}
-                                                animate={{ opacity: 1, x: 0 }}
-                                                exit={{ opacity: 0, x: 20 }}
-                                                onClick={() => window.open('/demo/3d-scroll-animation', '_blank')}
-                                                className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
+                                            <Link
+                                                to="/demo/3d-scroll-animation"
+                                                target="_blank"
+                                                className="no-underline"
                                             >
-                                                <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                                View Full Demo
-                                            </motion.button>
+                                                <motion.button
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: 20 }}
+                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
+                                                >
+                                                    <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                                    View Full Demo
+                                                </motion.button>
+                                            </Link>
                                         )}
                                         <motion.button
                                             initial={{ opacity: 0, scale: 0.9 }}

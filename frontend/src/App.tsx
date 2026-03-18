@@ -14,10 +14,11 @@ const AppShell = () => {
   const location = useLocation();
   const isLibrary = location.pathname.startsWith('/library');
   const isAuth = location.pathname === '/login' || location.pathname === '/signup';
+  const isDemo = location.pathname.startsWith('/demo');
 
   return (
     <div className="bg-brand-black min-h-screen text-white selection:bg-brand-green selection:text-black">
-      {!isAuth && <Navbar />}
+      {!isAuth && !isDemo && <Navbar />}
 
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -28,7 +29,7 @@ const AppShell = () => {
         <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
       </Routes>
 
-      {!isLibrary && !isAuth && !location.pathname.startsWith('/demo') && <Footer />}
+      {!isLibrary && !isAuth && !isDemo && <Footer />}
     </div>
   );
 };
