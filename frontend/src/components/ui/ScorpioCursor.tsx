@@ -488,7 +488,7 @@ export const ScorpioCursor: React.FC<ScorpioCursorProps> = ({
                 width: '100%',
                 height: '100%',
                 pointerEvents: 'none',
-                zIndex: 9999,
+                zIndex: containerRef ? 1 : 9999,
                 backgroundColor: backgroundColor,
             }}
         />

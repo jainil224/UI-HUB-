@@ -197,7 +197,7 @@ export const SpiderCursor: React.FC<SpiderCursorProps> = ({
                 width: '100%',
                 height: '100%',
                 pointerEvents: 'none',
-                zIndex: 9999,
+                zIndex: containerRef ? 1 : 9999,
             }}
         />
     );

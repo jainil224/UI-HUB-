@@ -14,6 +14,7 @@ import { MouseGravityBackground } from '../components/ui/MouseGravityBackground'
 import { HeartCursor } from '../components/ui/HeartCursor';
 import { ScorpioCursor } from '../components/ui/ScorpioCursor';
 import { SpiderCursor } from '../components/ui/SpiderCursor';
+import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 
@@ -843,7 +844,7 @@ const ScorpioCursorPreview: React.FC = () => {
                 top: 40,
                 display: 'flex',
                 gap: 30,
-                zIndex: 20,
+                zIndex: 50,
             }}>
                 {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
                     <button
@@ -927,7 +928,7 @@ const SpiderCursorPreview: React.FC = () => {
                 top: 40,
                 display: 'flex',
                 gap: 30,
-                zIndex: 20,
+                zIndex: 50,
             }}>
                 {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
                     <button
@@ -960,6 +961,106 @@ const SpiderCursorPreview: React.FC = () => {
 
             <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
                 {/* Branding text removed as per user request */}
+            </div>
+        </div>
+    );
+};
+
+// ── 3D Tubes Cursor scoped preview ────────────
+const ThreeDTubesCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isInside, setIsInside] = useState(false);
+
+    return (
+        <div
+            ref={containerRef}
+            onMouseEnter={() => setIsInside(true)}
+            onMouseLeave={() => setIsInside(false)}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: '#050508',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+            }}
+        >
+            {/* Deep Space Neon Background */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `
+                    radial-gradient(circle at 20% 30%, rgba(249, 103, 251, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(83, 188, 40, 0.08) 0%, transparent 50%),
+                    radial-gradient(circle at 50% 50%, rgba(105, 88, 213, 0.12) 0%, transparent 80%),
+                    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)
+                `,
+                backgroundSize: '100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px',
+                pointerEvents: 'none',
+            }} />
+
+            {/* Glassmorphic Navigation Buttons */}
+            <div style={{
+                position: 'absolute',
+                top: 40,
+                display: 'flex',
+                gap: 20,
+                zIndex: 50,
+            }}>
+                {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
+                    <button
+                        key={item}
+                        style={{
+                            padding: '8px 16px',
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.05)',
+                            borderRadius: '8px',
+                            color: 'rgba(255, 255, 255, 0.4)',
+                            fontSize: 10,
+                            fontWeight: 800,
+                            letterSpacing: '0.2em',
+                            transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                            cursor: 'pointer'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#fff';
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
+                            e.currentTarget.style.borderColor = 'rgba(105, 88, 213, 0.5)';
+                            e.currentTarget.style.boxShadow = '0 0 20px rgba(105, 88, 213, 0.2)';
+                            e.currentTarget.style.transform = 'translateY(-2px)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
+                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                            e.currentTarget.style.boxShadow = 'none';
+                            e.currentTarget.style.transform = 'translateY(0)';
+                        }}
+                    >
+                        {item}
+                    </button>
+                ))}
+            </div>
+
+            {isInside && <ThreeDTubesCursor containerRef={containerRef} />}
+
+            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
+               <div style={{
+                   fontSize: 8,
+                   fontWeight: 800,
+                   letterSpacing: '0.5em',
+                   color: 'rgba(255,255,255,0.15)',
+                   textTransform: 'uppercase',
+                   background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                   padding: '10px 40px',
+                   borderRadius: '100px'
+               }}>
+                   Dimensional Flux
+               </div>
             </div>
         </div>
     );
@@ -2310,6 +2411,41 @@ export const SpiderDemo = () => {
   );
 };`,
         vibePrompt: "Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated spider-like entities. The entities should follow the mouse with organic, noise-based 'wriggling' legs and smooth easing. Use HTML5 Canvas for high-performance 60fps rendering on a dark grid-themed background with immersive noise overlays. Implement support for local container tracking via refs for precise alignment in interactive cards."
+    },
+    {
+        id: "3d-tubes-cursor",
+        title: "3D Tubes Cursor",
+        category: "cursor",
+        preview: () => <ThreeDTubesCursorPreview />,
+        code: `import { useRef } from 'react';
+import { ThreeDTubesCursor } from '@/components/ui/ThreeDTubesCursor';
+
+export const TubesDemo = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  return (
+    <div 
+      ref={containerRef}
+      className="relative w-full h-[500px] overflow-hidden rounded-3xl bg-[#0a0a0f] border border-white/5 flex items-center justify-center cursor-none group"
+    >
+      {/* Atmosphere background */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(105,88,213,0.15)_0%,transparent_70%)]" />
+      
+      <ThreeDTubesCursor 
+        colors={["#f967fb", "#53bc28", "#6958d5"]}
+        lightIntensity={200}
+        containerRef={containerRef} 
+      />
+
+      <div className="relative z-10 text-center pointer-events-none">
+          <p className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-bold">
+            Interactive 3D Tubes
+          </p>
+      </div>
+    </div>
+  );
+};`,
+        vibePrompt: "Create a stunning 3D cursor effect featuring neon glowing tubes that follow the mouse with fluid, organic motion in 3D space. Use Three.js and WebGL for high-performance rendering. Implement dynamic color shifting and glowing emissive materials for a high-end tech/cyberpunk aesthetic. Support local container tracking via refs."
     },
 
 ];
