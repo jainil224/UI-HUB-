@@ -1101,7 +1101,7 @@ const ThreeDSliderPreview: React.FC = () => {
                     letterSpacing: '0.5em',
                     textTransform: 'uppercase'
                 }}>
-                    3D Experience
+                    3D UI HUB Component
                 </div>
             </div>
         </div>
@@ -2384,8 +2384,118 @@ export const Demo = () => (
         title: "3D Slider",
         category: "3d",
         preview: () => <ThreeDSliderPreview />,
-        code: `import { ThreeDSlider } from '@/components/ui/ThreeDSlider';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-[#0a0a0f] shadow-2xl">\n    <ThreeDSlider \n      autoPlay={true} \n      interval={5000} \n    />\n  </div>\n);`,
-        vibePrompt: "Create a premium 3D perspective slider where the active slide is full-screen while upcoming slides appear as smaller cards on the right. Implement custom infinite rotation logic in React and use CSS nth-child selectors for the perspective layout. Ensure text content (Title, Description) animates in with a blur-fade effect when the slide becomes active."
+        code: `import React, { useState, useCallback, useEffect } from 'react';
+
+interface Slide {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  accentColor: string;
+}
+
+interface ThreeDSliderProps {
+  slides?: Slide[];
+  autoPlay?: boolean;
+  interval?: number;
+  className?: string;
+}
+
+const DEFAULT_SLIDES: Slide[] = [
+  {
+    id: 1, title: "Wuthering Waves",
+    description: "Experience a story-rich open-world action RPG with a high degree of freedom.",
+    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24686.jpg",
+    accentColor: "#00f2ff"
+  },
+  {
+    id: 2, title: "Solo Leveling",
+    description: "A world where hunters with magical abilities must battle deadly monsters.",
+    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24719.jpg",
+    accentColor: "#a855f7"
+  },
+  {
+    id: 3, title: "Where Winds Meet",
+    description: "An epic open-world action-adventure RPG set in the twilight of the Ten Kingdoms.",
+    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24534.jpg",
+    accentColor: "#fbbf24"
+  },
+  {
+    id: 4, title: "Battlefield 2042",
+    description: "A first-person shooter that marks the return to the iconic all-out warfare of the franchise.",
+    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24204.jpg",
+    accentColor: "#f97316"
+  }
+];
+
+export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
+  slides = DEFAULT_SLIDES, autoPlay = false, interval = 5000, className = ''
+}) => {
+  const [activeSlides, setActiveSlides] = useState<Slide[]>(slides);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const nextSlide = useCallback(() => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setActiveSlides(prev => { const n = [...prev]; const f = n.shift(); if (f) n.push(f); return n; });
+    setTimeout(() => setIsTransitioning(false), 500);
+  }, [isTransitioning]);
+
+  const prevSlide = useCallback(() => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setActiveSlides(prev => { const n = [...prev]; const l = n.pop(); if (l) n.unshift(l); return n; });
+    setTimeout(() => setIsTransitioning(false), 500);
+  }, [isTransitioning]);
+
+  useEffect(() => {
+    if (!autoPlay) return;
+    const timer = setInterval(nextSlide, interval);
+    return () => clearInterval(timer);
+  }, [autoPlay, interval, nextSlide]);
+
+  return (
+    <div className={\\\`relative w-full h-full overflow-hidden bg-[#0a0a0f] \\\${className}\\\`}>
+      <style>{\\\`
+        .hero-track { position: relative; width: 100%; height: 100%; }
+        .slide-card { width: 200px; height: 300px; position: absolute; top: 50%; transform: translateY(-50%); border-radius: 20px; box-shadow: 0 30px 50px rgba(0,0,0,0.5); background-position: 50% 50%; background-size: cover; transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .slide-card:nth-child(1), .slide-card:nth-child(2) { top: 0; left: 0; transform: translateY(0); border-radius: 0; width: 100%; height: 100%; box-shadow: none; }
+        .slide-card:nth-child(3) { left: 50%; } .slide-card:nth-child(4) { left: calc(50% + 230px); } .slide-card:nth-child(5) { left: calc(50% + 460px); } .slide-card:nth-child(n+6) { left: calc(50% + 690px); opacity: 0; }
+        .slide-card:nth-child(2)::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 100%); z-index: 1; pointer-events: none; }
+        .slide-info { position: absolute; top: 50%; left: 10%; width: 500px; text-align: left; color: #fff; transform: translateY(-50%); display: none; z-index: 5; }
+        .slide-card:nth-child(2) .slide-info { display: block; }
+        .slide-title { font-size: 64px; text-transform: uppercase; font-weight: 900; opacity: 0; line-height: 1; filter: drop-shadow(0 0 20px var(--accent, #fff)); animation: slideUpFade 0.8s ease-out 0.2s forwards; }
+        .slide-desc { margin-top: 15px; margin-bottom: 30px; font-size: 16px; line-height: 1.6; opacity: 0; color: rgba(255,255,255,0.85); text-shadow: 0 2px 4px rgba(0,0,0,0.5); animation: slideUpFade 0.8s ease-out 0.4s forwards; }
+        .slide-info button { padding: 12px 30px; border: none; cursor: pointer; opacity: 0; border-radius: 50px; background: var(--accent, #fff); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); animation: slideUpFade 0.8s ease-out 0.6s forwards; }
+        @keyframes slideUpFade { from { opacity: 0; transform: translateY(40px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+        .slider-controls { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 20; }
+        .nav-btn { width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .nav-btn:hover { background: #fff; color: #000; transform: scale(1.1); }
+      \\\`}</style>
+      <div className="hero-track">
+        {activeSlides.map((slide, i) => (
+          <div key={\\\`\\\${slide.id}-\\\${i}\\\`} className="slide-card" style={{ backgroundImage: \\\`url(\\\${slide.image})\\\`, ['--accent' as any]: slide.accentColor }}>
+            <div className="slide-info">
+              <h2 className="slide-title">{slide.title}</h2>
+              <p className="slide-desc">{slide.description}</p>
+              <button>Explore Now</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="slider-controls">
+        <button className="nav-btn" onClick={prevSlide}><svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+        <button className="nav-btn" onClick={nextSlide}><svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>
+    </div>
+  );
+};
+
+// Usage:
+// <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-[#0a0a0f] shadow-2xl">
+//   <ThreeDSlider autoPlay={true} interval={5000} />
+// </div>`,
+        vibePrompt: "Create a premium 3D perspective image slider component in React. The slider should have these exact features:\n\n1. LAYOUT: The active slide should be full-screen as a background image, while upcoming slides appear as smaller cards (200x300px) stacked on the right side at 50% from the left, spaced 230px apart.\n\n2. PERSPECTIVE EFFECT: Use CSS nth-child selectors to position cards. The 1st and 2nd children should be full-screen (100% width/height), cards 3-5 should be visible as small preview cards on the right, and cards 6+ should be hidden.\n\n3. DARK GRADIENT OVERLAY: Apply a left-to-right dark gradient overlay (rgba(0,0,0,0.8) to transparent) on the active slide using ::before pseudo-element to ensure text legibility.\n\n4. ANIMATED TEXT: Show title (64px, uppercase, font-weight 900) and description on the active slide only. Animate them in with a blur-to-clear slide-up effect using @keyframes (opacity 0→1, translateY 40px→0, blur 10px→0) with staggered delays (0.2s, 0.4s, 0.6s).\n\n5. CHROMATIC ACCENT COLORS: Each slide should have a unique accent color (e.g., Cyan #00f2ff, Purple #a855f7, Gold #fbbf24). Use CSS custom properties (--accent) to apply the accent as a drop-shadow glow on the title and as the background color of the 'Explore Now' button.\n\n6. INFINITE ROTATION: Implement next/prev by shifting array elements (shift+push for next, pop+unshift for prev). Add autoPlay option with configurable interval.\n\n7. NAVIGATION: Circular glassmorphic prev/next buttons at the bottom center with backdrop-filter blur, white-on-hover effect, and scale animation.\n\n8. TRANSITIONS: All card movements should use cubic-bezier(0.23, 1, 0.32, 1) easing for premium feel. Include responsive breakpoints for tablet and mobile."
     },
 
     {

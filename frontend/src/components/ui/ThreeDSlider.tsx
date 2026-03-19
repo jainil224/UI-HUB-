@@ -5,6 +5,7 @@ interface Slide {
     title: string;
     description: string;
     image: string;
+    accentColor: string;
 }
 
 interface ThreeDSliderProps {
@@ -23,37 +24,43 @@ const DEFAULT_SLIDES: Slide[] = [
         id: 1,
         title: "Wuthering Waves",
         description: "Experience a story-rich open-world action RPG with a high degree of freedom.",
-        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24686.jpg"
+        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24686.jpg",
+        accentColor: "#00f2ff" // Cyan
     },
     {
         id: 2,
         title: "Solo Leveling",
         description: "A world where hunters, humans with magical abilities, must battle deadly monsters.",
-        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24719.jpg"
+        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24719.jpg",
+        accentColor: "#a855f7" // Purple
     },
     {
         id: 3,
         title: "Where Winds Meet",
         description: "An epic open-world action-adventure RPG set in the twilight of the Ten Kingdoms.",
-        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24534.jpg"
+        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24534.jpg",
+        accentColor: "#fbbf24" // Amber/Gold
     },
     {
         id: 4,
         title: "Battlefield 2042",
         description: "Battlefield™ 2042 is a first-person shooter that marks the return to the iconic all-out warfare of the franchise.",
-        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24204.jpg"
+        image: "https://4kwallpapers.com/images/walls/thumbs_3t/24204.jpg",
+        accentColor: "#f97316" // Orange
     },
     {
         id: 5,
         title: "Elden Ring",
         description: "Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring.",
-        image: "https://images.wallpapersden.com/image/download/elden-ring-game-2022_bWlsam6UmZqaraWkpJRmbmdlrWZnZ2U.jpg"
+        image: "https://images.wallpapersden.com/image/download/elden-ring-game-2022_bWlsam6UmZqaraWkpJRmbmdlrWZnZ2U.jpg",
+        accentColor: "#eab308" // Golden
     },
     {
         id: 6,
         title: "Black Myth: Wukong",
         description: "An action RPG rooted in Chinese mythology. The story is based on Journey to the West.",
-        image: "https://images.wallpapersden.com/image/download/black-myth-wukong-warrior_bmVpZ2uUmZqaraWkpJRmbmdlrWZnZ2U.jpg"
+        image: "https://images.wallpapersden.com/image/download/black-myth-wukong-warrior_bmVpZ2uUmZqaraWkpJRmbmdlrWZnZ2U.jpg",
+        accentColor: "#ef4444" // Crimson
     }
 ];
 
@@ -142,19 +149,34 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
                 .slide-card:nth-child(5) { left: calc(50% + 460px); opacity: 1; }
                 .slide-card:nth-child(n + 6) { left: calc(50% + 690px); opacity: 0; }
 
+                /* Overlay for legibility */
+                .slide-card:nth-child(2)::before {
+                    content: '';
+                    position: absolute;
+                    inset: 0;
+                    background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 100%);
+                    z-index: 1;
+                    pointer-events: none;
+                    animation: fadeIn 0.8s ease-out forwards;
+                }
+
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+
                 /* Text Content Animation */
                 .slide-info {
                     position: absolute;
                     top: 50%;
                     left: 10%;
-                    width: 400px;
+                    width: 500px;
                     text-align: left;
                     color: #fff;
                     transform: translateY(-50%);
                     font-family: 'Inter', sans-serif;
                     display: none;
                     z-index: 5;
-                    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
                 }
 
                 /* Only show info for the 2nd child (current active) */
@@ -163,28 +185,15 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
                 }
 
                 .slide-title {
-                    font-size: 56px;
+                    font-size: 64px;
                     text-transform: uppercase;
                     font-weight: 900;
                     opacity: 0;
                     letter-spacing: -0.02em;
+                    line-height: 1;
+                    color: #fff;
+                    filter: drop-shadow(0 0 20px var(--accent, #fff));
                     animation: slideUpFade 0.8s ease-out 0.2s 1 forwards;
-                }
-
-                /* Background Image Entrance Animation */
-                .hero-track .slide-card:nth-child(2) {
-                    animation: bgAnimate 1.2s ease-out 1 forwards;
-                }
-
-                @keyframes bgAnimate {
-                    from {
-                        filter: blur(20px) brightness(0.5);
-                        transform: scale(1.1);
-                    }
-                    to {
-                        filter: blur(0) brightness(1);
-                        transform: scale(1);
-                    }
                 }
 
                 .slide-desc {
@@ -193,7 +202,8 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
                     font-size: 16px;
                     line-height: 1.6;
                     opacity: 0;
-                    color: rgba(255,255,255,0.7);
+                    color: rgba(255,255,255,0.85);
+                    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
                     animation: slideUpFade 0.8s ease-out 0.4s 1 forwards;
                 }
 
@@ -203,13 +213,14 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
                     cursor: pointer;
                     opacity: 0;
                     border-radius: 50px;
-                    background: #fff;
+                    background: var(--accent, #fff);
                     color: #000;
-                    font-weight: 700;
+                    font-weight: 800;
                     text-transform: uppercase;
                     letter-spacing: 0.1em;
-                    font-size: 12px;
+                    font-size: 11px;
                     transition: all 0.3s ease;
+                    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
                     animation: slideUpFade 0.8s ease-out 0.6s 1 forwards;
                 }
 
@@ -285,7 +296,10 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
                     <div
                         key={`${slide.id}-${index}`}
                         className="slide-card"
-                        style={{ backgroundImage: `url(${slide.image})` }}
+                        style={{ 
+                            backgroundImage: `url(${slide.image})`,
+                            ['--accent' as any]: slide.accentColor 
+                        }}
                     >
                         <div className="slide-info">
                             <h2 className="slide-title">{slide.title}</h2>
