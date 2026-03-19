@@ -1010,9 +1010,14 @@ const ThreeDTubesCursorPreview: React.FC = () => {
                 gap: 20,
                 zIndex: 50,
             }}>
-                {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
+                {[
+                    { name: 'HOME', color: '#f967fb' },
+                    { name: 'ABOUT', color: '#53bc28' },
+                    { name: 'PROJECTS', color: '#6958d5' },
+                    { name: 'CONTACT', color: '#ff008a' }
+                ].map((item) => (
                     <button
-                        key={item}
+                        key={item.name}
                         style={{
                             padding: '8px 16px',
                             background: 'rgba(255, 255, 255, 0.03)',
@@ -1029,19 +1034,19 @@ const ThreeDTubesCursorPreview: React.FC = () => {
                         onMouseEnter={(e) => {
                             e.currentTarget.style.color = '#fff';
                             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                            e.currentTarget.style.borderColor = 'rgba(105, 88, 213, 0.5)';
-                            e.currentTarget.style.boxShadow = '0 0 20px rgba(105, 88, 213, 0.2)';
-                            e.currentTarget.style.transform = 'translateY(-2px)';
+                            e.currentTarget.style.borderColor = item.color;
+                            e.currentTarget.style.boxShadow = `0 0 25px ${item.color}66`;
+                            e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
                         }}
                         onMouseLeave={(e) => {
                             e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
                             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
                             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
                             e.currentTarget.style.boxShadow = 'none';
-                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
                         }}
                     >
-                        {item}
+                        {item.name}
                     </button>
                 ))}
             </div>
@@ -1049,18 +1054,18 @@ const ThreeDTubesCursorPreview: React.FC = () => {
             {isInside && <ThreeDTubesCursor containerRef={containerRef} />}
 
             <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
-               <div style={{
-                   fontSize: 8,
-                   fontWeight: 800,
-                   letterSpacing: '0.5em',
-                   color: 'rgba(255,255,255,0.15)',
-                   textTransform: 'uppercase',
-                   background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-                   padding: '10px 40px',
-                   borderRadius: '100px'
-               }}>
-                   Dimensional Flux
-               </div>
+                <div style={{
+                    fontSize: 8,
+                    fontWeight: 800,
+                    letterSpacing: '0.5em',
+                    color: 'rgba(255,255,255,0.15)',
+                    textTransform: 'uppercase',
+                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
+                    padding: '10px 40px',
+                    borderRadius: '100px'
+                }}>
+                    Dimensional Flux
+                </div>
             </div>
         </div>
     );
