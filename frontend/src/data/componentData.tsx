@@ -959,26 +959,7 @@ const SpiderCursorPreview: React.FC = () => {
             {isInside && <SpiderCursor color="#ffffff" containerRef={containerRef} />}
 
             <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
-                <h2 style={{
-                    fontSize: 48,
-                    fontWeight: 900,
-                    margin: 0,
-                    color: '#fff',
-                    letterSpacing: '-0.04em',
-                    textShadow: '0 0 30px rgba(255,255,255,0.1)'
-                }}>
-                    Spider
-                </h2>
-                <div style={{ 
-                    fontSize: 9, 
-                    fontWeight: 700, 
-                    letterSpacing: '0.4em', 
-                    color: 'rgba(255,255,255,0.2)', 
-                    textTransform: 'uppercase', 
-                    marginTop: 12 
-                }}>
-                    Silk & Shadow
-                </div>
+                {/* Branding text removed as per user request */}
             </div>
         </div>
     );
@@ -2275,7 +2256,7 @@ export const ScorpioDemo = () => {
       {/* Immersive background for the demo */}
       <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)]" />
       
-      {/* The Scorpio Component */}
+      {/* The Scorpio Component (with Click-to-Strike) */}
       <ScorpioCursor 
         color="#ffffff" 
         size={2.5} 
@@ -2283,7 +2264,9 @@ export const ScorpioDemo = () => {
       />
 
       <div className="relative z-10 text-center pointer-events-none">
-          {/* Custom branding or navigation goes here */}
+          <p className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-bold">
+            Click to Strike
+          </p>
       </div>
     </div>
   );
@@ -2309,23 +2292,24 @@ export const SpiderDemo = () => {
       {/* Grid background */}
       <div className="absolute inset-0 opacity-10 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
       
+      {/* The Spider Component (with Procedural Swarm) */}
+      <SpiderCursor 
+        color="#ffffff" 
+        containerRef={containerRef} 
+      />
+
       <SpiderCursor 
         color="#ffffff" 
         containerRef={containerRef} 
       />
 
       <div className="relative z-10 text-center pointer-events-none">
-          <h2 className="text-white text-4xl font-black tracking-tighter opacity-80">
-            SPIDER
-          </h2>
-          <p className="text-white/20 text-[10px] mt-2 tracking-[0.3em] uppercase font-bold">
-            Procedural Swarm
-          </p>
+          {/* Custom branding or navigation goes here */}
       </div>
     </div>
   );
 };`,
-        vibePrompt: "Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated spider-like entities. The entities should follow the mouse with organic, noise-based 'wriggling' legs and smooth easing. Use HTML5 Canvas for high-performance 60fps rendering on a dark grid-themed background. Implement support for local container tracking via refs."
+        vibePrompt: "Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated spider-like entities. The entities should follow the mouse with organic, noise-based 'wriggling' legs and smooth easing. Use HTML5 Canvas for high-performance 60fps rendering on a dark grid-themed background with immersive noise overlays. Implement support for local container tracking via refs for precise alignment in interactive cards."
     },
 
 ];
