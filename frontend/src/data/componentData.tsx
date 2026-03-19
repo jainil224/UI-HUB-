@@ -628,7 +628,7 @@ const Scroll3DAnimationPreview: React.FC = () => {
                 fontFamily: 'Inter, sans-serif'
             }}
         >
-            <Scroll3DAnimation />
+            <Scroll3DAnimation showDemoButton={true} />
         </div>
     );
 };

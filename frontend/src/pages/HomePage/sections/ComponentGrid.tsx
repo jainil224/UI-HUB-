@@ -17,6 +17,7 @@ const showcaseIds = [
     'lines-background',
     'isometric-grid-background',
     'target-cursor',
+    '3d-scroll-animation',
     'black-hole-background',
     'fall-beam-background',
     'mouse-gravity-background',

@@ -1,4 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
+import { motion } from 'motion/react';
+
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -6,9 +10,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 interface Scroll3DAnimationProps {
     className?: string;
+    showDemoButton?: boolean;
 }
 
-const Scroll3DAnimation: React.FC<Scroll3DAnimationProps> = ({ className = "" }) => {
+const Scroll3DAnimation: React.FC<Scroll3DAnimationProps> = ({ 
+    className = "",
+    showDemoButton = false 
+}) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [images, setImages] = useState<HTMLImageElement[]>([]);
@@ -196,6 +204,40 @@ const Scroll3DAnimation: React.FC<Scroll3DAnimationProps> = ({ className = "" })
                 className="relative z-20 w-full h-full object-cover transition-none"
                 style={{ willChange: 'transform' }}
             />
+
+            {/* View Full Demo Button Overlay - Only shown in Library Preview */}
+            {showDemoButton && (
+                <div className="absolute inset-0 z-[100] flex items-center justify-center pointer-events-none">
+                    <Link 
+                        to="/demo/3d-scroll-animation" 
+                        target="_blank"
+                        className="pointer-events-auto no-underline"
+                    >
+                        <motion.button
+                            whileHover={{ scale: 1.05, y: -5 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="group relative flex items-center gap-3 px-10 py-4 bg-black/40 hover:bg-black/60 backdrop-blur-2xl border border-white/10 hover:border-brand-green/50 rounded-full text-white transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(0,255,0,0.2)]"
+                        >
+                            {/* Animated Background Glow */}
+                            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-brand-green/0 via-brand-green/5 to-brand-green/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-xl" />
+                            
+                            <div className="relative flex items-center justify-center w-8 h-8 rounded-full bg-white/5 border border-white/10 group-hover:border-brand-green/30 group-hover:bg-brand-green/10 transition-all duration-500">
+                                <ExternalLink size={16} className="text-white/70 group-hover:text-brand-green group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-500" />
+                            </div>
+                            
+                            <div className="flex flex-col items-start">
+                                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-white/40 group-hover:text-brand-green/60 transition-colors duration-500 leading-none mb-1">Experience</span>
+                                <span className="text-sm font-black uppercase tracking-widest text-white group-hover:text-white transition-colors duration-500 leading-none">View Full Demo</span>
+                            </div>
+
+                            {/* Shimmer Effect */}
+                            <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]" />
+                            </div>
+                        </motion.button>
+                    </Link>
+                </div>
+            )}
 
             {/* Content Layers (Cyberfiction style) */}
             <div className="absolute inset-0 z-10 pointer-events-none">
