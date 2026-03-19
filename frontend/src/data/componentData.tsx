@@ -14,6 +14,8 @@ import { MouseGravityBackground } from '../components/ui/MouseGravityBackground'
 import { HeartCursor } from '../components/ui/HeartCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
+import { ScorpionCursor } from '../components/ui/ScorpionCursor';
+
 
 
 import Logo from '../components/ui/Logo';
@@ -789,6 +791,72 @@ const HeartCursorPreview: React.FC = () => {
         </div>
     );
 };
+
+// ── Scorpion Cursor scoped preview ────────────
+const ScorpionCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isInside, setIsInside] = useState(false);
+
+    return (
+        <div
+            ref={containerRef}
+            onMouseEnter={() => setIsInside(true)}
+            onMouseLeave={() => setIsInside(false)}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: '#020205',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 20
+            }}
+        >
+            {/* Ambient Background Glow */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 80%)',
+                pointerEvents: 'none',
+            }} />
+
+            {isInside && <ScorpionCursor color="#ffffff" containerRef={containerRef} />}
+
+            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase' }}>
+                    Skeletal Locomotion
+                </div>
+                <div style={{
+                    fontSize: 42, fontWeight: 900, letterSpacing: '-0.04em',
+                    color: '#fff',
+                    textShadow: '0 0 30px rgba(255,255,255,0.1)',
+                }}>
+                    Scorpion
+                </div>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.1)', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: 8 }}>
+                    Inverse Kinematics · Procedural Animation
+                </div>
+            </div>
+
+            <div style={{
+                marginTop: 40,
+                padding: '12px 24px',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                color: 'rgba(255,255,255,0.4)',
+                fontSize: 12,
+                fontWeight: 600,
+                letterSpacing: '0.05em',
+                zIndex: 10
+            }}>
+                HOVER TO AWAKEN
+            </div>
+        </div>
+    );
+};
+
 
 
 
@@ -2061,4 +2129,14 @@ export const Demo = () => (
         vibePrompt: "Create a high-performance 3D scroll-based image sequence animation with premium text overlays and smooth canvas rendering."
     },
 
+    {
+        id: "scorpion-cursor",
+        title: "Scorpion Cursor",
+        category: "cursor",
+        preview: () => <ScorpionCursorPreview />,
+        code: `import { ScorpionCursor } from '@/components/ui/ScorpionCursor';\n\n// Add to your layout or root component\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020205] flex items-center justify-center cursor-none">\n    <ScorpionCursor color="#ffffff" />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      The hunter follows your light\n    </p>\n  </div>\n);`,
+        vibePrompt: "Create a procedural procedural animation of a skeletal scorpion-like creature that follows the cursor using Inverse Kinematics. The animation should feel organic and slightly laggy, with legs stepping and a tail trailing. Use HTML5 Canvas for performance and a sleek white-on-black aesthetic."
+    },
+
 ];
+
