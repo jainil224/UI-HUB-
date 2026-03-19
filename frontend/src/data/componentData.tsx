@@ -12,9 +12,10 @@ import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
 import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
 import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
 import { HeartCursor } from '../components/ui/HeartCursor';
+import { ScorpioCursor } from '../components/ui/ScorpioCursor';
+import { SpiderCursor } from '../components/ui/SpiderCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
-import { ScorpioCursor } from '../components/ui/ScorpioCursor';
 
 
 
@@ -871,6 +872,114 @@ const ScorpioCursorPreview: React.FC = () => {
 
 
             {isInside && <ScorpioCursor color="#ffffff" containerRef={containerRef} />}
+        </div>
+    );
+};
+
+// ── Spider Cursor scoped preview ────────────
+const SpiderCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isInside, setIsInside] = useState(false);
+
+    return (
+        <div
+            ref={containerRef}
+            onMouseEnter={() => setIsInside(true)}
+            onMouseLeave={() => setIsInside(false)}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: '#040406',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+            }}
+        >
+            {/* Visual Web Background */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `
+                    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 80%),
+                    repeating-radial-gradient(circle at 50% 50%, transparent 0, transparent 40px, rgba(255, 255, 255, 0.02) 40px, rgba(255, 255, 255, 0.02) 41px),
+                    linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px)
+                `,
+                backgroundSize: '100% 100%, 100% 100%, 20px 20px, 20px 20px',
+                pointerEvents: 'none',
+            }} />
+
+            {/* Subtle Noise/Grain Overlay */}
+            <div style={{
+                position: 'absolute',
+                inset: 0,
+                opacity: 0.15,
+                pointerEvents: 'none',
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+                mixBlendMode: 'overlay'
+            }} />
+
+            {/* Navigation Demo Buttons */}
+            <div style={{
+                position: 'absolute',
+                top: 40,
+                display: 'flex',
+                gap: 30,
+                zIndex: 20,
+            }}>
+                {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
+                    <button
+                        key={item}
+                        style={{
+                            border: '1px solid transparent',
+                            color: 'rgba(255, 255, 255, 0.3)',
+                            fontSize: 11,
+                            fontWeight: 700,
+                            letterSpacing: '0.15em',
+                            transition: 'all 0.3s ease',
+                            background: 'transparent',
+                            cursor: 'pointer'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#fff';
+                            e.currentTarget.style.textShadow = '0 0 10px rgba(255,255,255,0.5)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.3)';
+                            e.currentTarget.style.textShadow = 'none';
+                        }}
+                    >
+                        {item}
+                    </button>
+                ))}
+            </div>
+
+            {isInside && <SpiderCursor color="#ffffff" containerRef={containerRef} />}
+
+            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
+                <h2 style={{
+                    fontSize: 48,
+                    fontWeight: 900,
+                    margin: 0,
+                    color: '#fff',
+                    letterSpacing: '-0.04em',
+                    textShadow: '0 0 30px rgba(255,255,255,0.1)'
+                }}>
+                    Spider
+                </h2>
+                <div style={{ 
+                    fontSize: 9, 
+                    fontWeight: 700, 
+                    letterSpacing: '0.4em', 
+                    color: 'rgba(255,255,255,0.2)', 
+                    textTransform: 'uppercase', 
+                    marginTop: 12 
+                }}>
+                    Silk & Shadow
+                </div>
+            </div>
         </div>
     );
 };
@@ -2180,6 +2289,43 @@ export const ScorpioDemo = () => {
   );
 };`,
         vibePrompt: "Create a premium, high-performance procedural animation of a skeletal scorpio that tracks the mouse with precision using Inverse Kinematics (IK). The creature should feature an aggressive 'strike' animation on mouse click, lunging toward the impact point with a visual pulse effect. Implement using HTML5 Canvas for 60fps performance and wrap it in a React component with support for local container tracking via refs. Use a sleek white-on-black tech-noir aesthetic."
+    },
+    {
+        id: "spider-cursor",
+        title: "Spider Cursor",
+        category: "cursor",
+        preview: () => <SpiderCursorPreview />,
+        code: `import { useRef } from 'react';
+import { SpiderCursor } from '@/components/ui/SpiderCursor';
+
+export const SpiderDemo = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  return (
+    <div 
+      ref={containerRef}
+      className="relative w-full h-[500px] overflow-hidden rounded-3xl bg-[#020205] border border-white/5 flex items-center justify-center cursor-none group"
+    >
+      {/* Grid background */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
+      
+      <SpiderCursor 
+        color="#ffffff" 
+        containerRef={containerRef} 
+      />
+
+      <div className="relative z-10 text-center pointer-events-none">
+          <h2 className="text-white text-4xl font-black tracking-tighter opacity-80">
+            SPIDER
+          </h2>
+          <p className="text-white/20 text-[10px] mt-2 tracking-[0.3em] uppercase font-bold">
+            Procedural Swarm
+          </p>
+      </div>
+    </div>
+  );
+};`,
+        vibePrompt: "Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated spider-like entities. The entities should follow the mouse with organic, noise-based 'wriggling' legs and smooth easing. Use HTML5 Canvas for high-performance 60fps rendering on a dark grid-themed background. Implement support for local container tracking via refs."
     },
 
 ];
