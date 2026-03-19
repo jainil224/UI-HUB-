@@ -14,7 +14,7 @@ import { MouseGravityBackground } from '../components/ui/MouseGravityBackground'
 import { HeartCursor } from '../components/ui/HeartCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
-import { ScorpionCursor } from '../components/ui/ScorpionCursor';
+import { ScorpioCursor } from '../components/ui/ScorpioCursor';
 
 
 
@@ -619,11 +619,11 @@ const InteractiveWebGLScenePreview: React.FC = () => {
 
 const Scroll3DAnimationPreview: React.FC = () => {
     return (
-        <div 
+        <div
             className="overflow-y-auto custom-scrollbar"
             style={{
                 position: 'relative',
-                width: '100%', 
+                width: '100%',
                 height: '100%',
                 backgroundColor: '#000',
                 color: '#fff',
@@ -792,8 +792,8 @@ const HeartCursorPreview: React.FC = () => {
     );
 };
 
-// ── Scorpion Cursor scoped preview ────────────
-const ScorpionCursorPreview: React.FC = () => {
+// ── Scorpio Cursor scoped preview ────────────
+const ScorpioCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isInside, setIsInside] = useState(false);
 
@@ -805,7 +805,7 @@ const ScorpionCursorPreview: React.FC = () => {
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '100%',
-                background: '#020205',
+                background: '#050508',
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
@@ -814,45 +814,63 @@ const ScorpionCursorPreview: React.FC = () => {
                 gap: 20
             }}
         >
-            {/* Ambient Background Glow */}
+            {/* Immersive Background */}
             <div style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 80%)',
+                backgroundImage: `
+                    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 70%),
+                    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
+                `,
+                backgroundSize: '100% 100%, 40px 40px, 40px 40px',
                 pointerEvents: 'none',
             }} />
 
-            {isInside && <ScorpionCursor color="#ffffff" containerRef={containerRef} />}
-
-            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase' }}>
-                    Skeletal Locomotion
-                </div>
-                <div style={{
-                    fontSize: 42, fontWeight: 900, letterSpacing: '-0.04em',
-                    color: '#fff',
-                    textShadow: '0 0 30px rgba(255,255,255,0.1)',
-                }}>
-                    Scorpion
-                </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.1)', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: 8 }}>
-                    Inverse Kinematics · Procedural Animation
-                </div>
-            </div>
-
+            {/* Subtle Noise/Grain Overlay */}
             <div style={{
-                marginTop: 40,
-                padding: '12px 24px',
-                border: '1px solid rgba(255,255,255,0.1)',
-                borderRadius: '8px',
-                color: 'rgba(255,255,255,0.4)',
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: '0.05em',
-                zIndex: 10
+                position: 'absolute',
+                inset: 0,
+                opacity: 0.1,
+                pointerEvents: 'none',
+                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            }} />
+
+            {/* Navigation Demo Buttons */}
+            <div style={{
+                position: 'absolute',
+                top: 40,
+                display: 'flex',
+                gap: 30,
+                zIndex: 20,
             }}>
-                HOVER TO AWAKEN
+                {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
+                    <button
+                        key={item}
+                        style={{
+                            border: '1px solid transparent',
+                            color: 'rgba(255, 255, 255, 0.4)',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.color = '#fff';
+                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                            e.currentTarget.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.05)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                            e.currentTarget.style.borderColor = 'transparent';
+                            e.currentTarget.style.boxShadow = 'none';
+                        }}
+                    >
+                        {item}
+                    </button>
+                ))}
             </div>
+
+
+            {isInside && <ScorpioCursor color="#ffffff" containerRef={containerRef} />}
         </div>
     );
 };
@@ -2130,12 +2148,38 @@ export const Demo = () => (
     },
 
     {
-        id: "scorpion-cursor",
-        title: "Scorpion Cursor",
+        id: "scorpio-cursor",
+        title: "Scorpio Cursor",
         category: "cursor",
-        preview: () => <ScorpionCursorPreview />,
-        code: `import { ScorpionCursor } from '@/components/ui/ScorpionCursor';\n\n// Add to your layout or root component\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020205] flex items-center justify-center cursor-none">\n    <ScorpionCursor color="#ffffff" />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      The hunter follows your light\n    </p>\n  </div>\n);`,
-        vibePrompt: "Create a procedural procedural animation of a skeletal scorpion-like creature that follows the cursor using Inverse Kinematics. The animation should feel organic and slightly laggy, with legs stepping and a tail trailing. Use HTML5 Canvas for performance and a sleek white-on-black aesthetic."
+        preview: () => <ScorpioCursorPreview />,
+        code: `import { useRef } from 'react';
+import { ScorpioCursor } from '@/components/ui/ScorpioCursor';
+
+export const ScorpioDemo = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  return (
+    <div 
+      ref={containerRef}
+      className="relative w-full h-[500px] overflow-hidden rounded-3xl bg-[#050508] border border-white/5 flex items-center justify-center cursor-none group"
+    >
+      {/* Immersive background for the demo */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)]" />
+      
+      {/* The Scorpio Component */}
+      <ScorpioCursor 
+        color="#ffffff" 
+        size={2.5} 
+        containerRef={containerRef} 
+      />
+
+      <div className="relative z-10 text-center pointer-events-none">
+          {/* Custom branding or navigation goes here */}
+      </div>
+    </div>
+  );
+};`,
+        vibePrompt: "Create a premium, high-performance procedural animation of a skeletal scorpio that tracks the mouse with precision using Inverse Kinematics (IK). The creature should feature an aggressive 'strike' animation on mouse click, lunging toward the impact point with a visual pulse effect. Implement using HTML5 Canvas for 60fps performance and wrap it in a React component with support for local container tracking via refs. Use a sleek white-on-black tech-noir aesthetic."
     },
 
 ];

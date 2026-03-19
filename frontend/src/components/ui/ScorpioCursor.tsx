@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useCallback } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-interface ScorpionCursorProps {
+interface ScorpioCursorProps {
     /** Color of the scorpion lines */
     color?: string;
     /** Scale factor for the scorpion size */
@@ -239,11 +239,14 @@ class Creature {
         this.systems = [];
     }
 
-    follow(x: number, y: number, ctx: CanvasRenderingContext2D) {
+    follow(x: number, y: number, ctx: CanvasRenderingContext2D, strikeActive: boolean, strikePos: { x: number, y: number }) {
         // Direct follow with smoothing (lerp)
-        const lerpFactor = 0.25;
-        const dX = x - this.x;
-        const dY = y - this.y;
+        let lerpFactor = strikeActive ? 0.6 : 0.25;
+        let targetX = strikeActive ? strikePos.x : x;
+        let targetY = strikeActive ? strikePos.y : y;
+
+        const dX = targetX - this.x;
+        const dY = targetY - this.y;
         
         this.x += dX * lerpFactor;
         this.y += dY * lerpFactor;
@@ -253,7 +256,7 @@ class Creature {
         // Rotation smoothing
         let dif = this.absAngle - angle;
         dif -= 2 * Math.PI * Math.floor(dif / (2 * Math.PI) + 1 / 2);
-        this.absAngle -= dif * 0.1;
+        this.absAngle -= dif * (strikeActive ? 0.3 : 0.1);
 
         this.absAngle -= 2 * Math.PI * Math.floor(this.absAngle / (2 * Math.PI) + 1 / 2);
         
@@ -262,7 +265,7 @@ class Creature {
             this.children[i].follow(true);
         }
         for (let i = 0; i < this.systems.length; i++) {
-            this.systems[i].update(x, y);
+            this.systems[i].update(targetX, targetY);
         }
         this.absAngle -= Math.PI;
         this.draw(ctx, true);
@@ -301,7 +304,7 @@ class Creature {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export const ScorpionCursor: React.FC<ScorpionCursorProps> = ({
+export const ScorpioCursor: React.FC<ScorpioCursorProps> = ({
     color = '#ffffff',
     size = 2.5,
     containerRef,
@@ -311,6 +314,8 @@ export const ScorpionCursor: React.FC<ScorpionCursorProps> = ({
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const mousePos = useRef({ x: 0, y: 0 });
+    const strikePos = useRef({ x: 0, y: 0 });
+    const strikeTime = useRef(0);
     const creatureRef = useRef<Creature | null>(null);
 
     // Track mouse
@@ -327,9 +332,26 @@ export const ScorpionCursor: React.FC<ScorpionCursorProps> = ({
             }
         };
 
+        const handleMouseDown = (e: MouseEvent) => {
+            if (containerRef?.current) {
+                const rect = containerRef.current.getBoundingClientRect();
+                strikePos.current = { 
+                    x: e.clientX - rect.left, 
+                    y: e.clientY - rect.top 
+                };
+            } else {
+                strikePos.current = { x: e.clientX, y: e.clientY };
+            }
+            strikeTime.current = performance.now();
+        };
+
         const target = containerRef?.current || window;
         target.addEventListener('mousemove', handleMouseMove as any);
-        return () => target.removeEventListener('mousemove', handleMouseMove as any);
+        target.addEventListener('mousedown', handleMouseDown as any);
+        return () => {
+            target.removeEventListener('mousemove', handleMouseMove as any);
+            target.removeEventListener('mousedown', handleMouseDown as any);
+        };
     }, [containerRef]);
 
     // Setup and Animation
@@ -362,7 +384,7 @@ export const ScorpionCursor: React.FC<ScorpionCursorProps> = ({
 
         // Initialize Scorpion
         const s = size;
-        const tail = 20;
+        const tailCount = 20;
         
         const critter = new Creature(
             canvas.width / 2,
@@ -405,12 +427,12 @@ export const ScorpionCursor: React.FC<ScorpionCursorProps> = ({
             }
         }
 
-        for (let i = 0; i < tail; i++) {
+        for (let i = 0; i < tailCount; i++) {
             spinal = new Segment(spinal, s * 4, 0, (Math.PI * 2) / 3, 1.1);
             for (let ii = -1; ii <= 1; ii += 2) {
                 let node: any = new Segment(spinal, s * 3, ii, 0.1, 2);
                 for (let iii = 0; iii < 3; iii++) {
-                    node = new Segment(node, s * 3 * (tail - i) / tail, -ii * 0.1, 0.1, 2);
+                    node = new Segment(node, s * 3 * (tailCount - i) / tailCount, -ii * 0.1, 0.1, 2);
                 }
             }
         }
@@ -422,10 +444,25 @@ export const ScorpionCursor: React.FC<ScorpionCursorProps> = ({
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.strokeStyle = color;
             ctx.lineWidth = 1.5;
+
+            const now = performance.now();
+            const strikeDuration = 250; // ms
+            const strikeActive = now - strikeTime.current < strikeDuration;
             
             if (creatureRef.current) {
-                // Snappier follow
-                creatureRef.current.follow(mousePos.current.x, mousePos.current.y, ctx);
+                creatureRef.current.follow(mousePos.current.x, mousePos.current.y, ctx, strikeActive, strikePos.current);
+            }
+
+            // Draw Impact Pulse
+            if (strikeActive) {
+                const progress = (now - strikeTime.current) / strikeDuration;
+                const radius = progress * 40;
+                const opacity = 1 - progress;
+                ctx.beginPath();
+                ctx.arc(strikePos.current.x, strikePos.current.y, radius, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(${parseInt(color.slice(1,3),16) || 255}, ${parseInt(color.slice(3,5),16) || 255}, ${parseInt(color.slice(5,7),16) || 255}, ${opacity})`;
+                ctx.lineWidth = 2 * (1 - progress);
+                ctx.stroke();
             }
             
             rafId = requestAnimationFrame(render);
@@ -458,4 +495,4 @@ export const ScorpionCursor: React.FC<ScorpionCursorProps> = ({
     );
 };
 
-export default ScorpionCursor;
+export default ScorpioCursor;
