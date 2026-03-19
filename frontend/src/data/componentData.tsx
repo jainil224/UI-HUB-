@@ -17,6 +17,7 @@ import { SpiderCursor } from '../components/ui/SpiderCursor';
 import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
+import { ThreeDSlider } from '../components/ui/ThreeDSlider';
 
 
 
@@ -1065,6 +1066,42 @@ const ThreeDTubesCursorPreview: React.FC = () => {
                     borderRadius: '100px'
                 }}>
                     Dimensional Flux
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ── 3D Slider scoped preview ────────────
+const ThreeDSliderPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            background: '#0a0a0f',
+            overflow: 'hidden',
+            borderRadius: '24px'
+        }}>
+            <ThreeDSlider autoPlay={true} interval={6000} />
+            
+            {/* Library Themed Overlay */}
+            <div style={{
+                position: 'absolute',
+                top: 30,
+                left: 30,
+                zIndex: 50,
+                pointerEvents: 'none'
+            }}>
+                <div style={{
+                    fontSize: 10,
+                    fontWeight: 900,
+                    color: 'rgba(255,255,255,0.2)',
+                    letterSpacing: '0.5em',
+                    textTransform: 'uppercase'
+                }}>
+                    3D Experience
                 </div>
             </div>
         </div>
@@ -2341,6 +2378,14 @@ export const Demo = () => (
         preview: () => <Scroll3DAnimationPreview />,
         code: `import Scroll3DAnimation from '@/components/ui/Scroll3DAnimation';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[800px] overflow-hidden rounded-3xl bg-white shadow-2xl border border-neutral-100">\n    <Scroll3DAnimation />\n  </div>\n);`,
         vibePrompt: "Create a high-performance 3D scroll-based image sequence animation with premium text overlays and smooth canvas rendering."
+    },
+    {
+        id: "3d-slider",
+        title: "3D Slider",
+        category: "3d",
+        preview: () => <ThreeDSliderPreview />,
+        code: `import { ThreeDSlider } from '@/components/ui/ThreeDSlider';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-[#0a0a0f] shadow-2xl">\n    <ThreeDSlider \n      autoPlay={true} \n      interval={5000} \n    />\n  </div>\n);`,
+        vibePrompt: "Create a premium 3D perspective slider where the active slide is full-screen while upcoming slides appear as smaller cards on the right. Implement custom infinite rotation logic in React and use CSS nth-child selectors for the perspective layout. Ensure text content (Title, Description) animates in with a blur-fade effect when the slide becomes active."
     },
 
     {
