@@ -1042,6 +1042,23 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 </motion.button>
                                             </Link>
                                         )}
+                                        {item.id === '3d-slider' && (
+                                            <Link
+                                                to="/demo/3d-slider"
+                                                target="_blank"
+                                                className="no-underline"
+                                            >
+                                                <motion.button
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: 20 }}
+                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
+                                                >
+                                                    <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                                    View Full Demo
+                                                </motion.button>
+                                            </Link>
+                                        )}
                                         <motion.button
                                             initial={{ opacity: 0, scale: 0.9 }}
                                             animate={{ opacity: 1, scale: 1 }}

@@ -318,39 +318,52 @@ export const ScorpioCursor: React.FC<ScorpioCursorProps> = ({
     const strikeTime = useRef(0);
     const creatureRef = useRef<Creature | null>(null);
 
-    // Track mouse
+    // Track mouse + touch
     useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
+        const getPos = (clientX: number, clientY: number) => {
             if (containerRef?.current) {
                 const rect = containerRef.current.getBoundingClientRect();
-                mousePos.current = { 
-                    x: e.clientX - rect.left, 
-                    y: e.clientY - rect.top 
-                };
-            } else {
-                mousePos.current = { x: e.clientX, y: e.clientY };
+                return { x: clientX - rect.left, y: clientY - rect.top };
             }
+            return { x: clientX, y: clientY };
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            mousePos.current = getPos(e.clientX, e.clientY);
         };
 
         const handleMouseDown = (e: MouseEvent) => {
-            if (containerRef?.current) {
-                const rect = containerRef.current.getBoundingClientRect();
-                strikePos.current = { 
-                    x: e.clientX - rect.left, 
-                    y: e.clientY - rect.top 
-                };
-            } else {
-                strikePos.current = { x: e.clientX, y: e.clientY };
-            }
+            strikePos.current = getPos(e.clientX, e.clientY);
             strikeTime.current = performance.now();
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                mousePos.current = getPos(t.clientX, t.clientY);
+            }
+        };
+
+        const handleTouchStart = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                const pos = getPos(t.clientX, t.clientY);
+                mousePos.current = pos;
+                strikePos.current = pos;
+                strikeTime.current = performance.now();
+            }
         };
 
         const target = containerRef?.current || window;
         target.addEventListener('mousemove', handleMouseMove as any);
         target.addEventListener('mousedown', handleMouseDown as any);
+        target.addEventListener('touchmove', handleTouchMove as any, { passive: true });
+        target.addEventListener('touchstart', handleTouchStart as any, { passive: true });
         return () => {
             target.removeEventListener('mousemove', handleMouseMove as any);
             target.removeEventListener('mousedown', handleMouseDown as any);
+            target.removeEventListener('touchmove', handleTouchMove as any);
+            target.removeEventListener('touchstart', handleTouchStart as any);
         };
     }, [containerRef]);
 

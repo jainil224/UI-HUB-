@@ -1,0 +1,26 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ChevronLeft } from 'lucide-react';
+import { ThreeDSlider } from '../../components/ui/ThreeDSlider';
+
+const ThreeDSliderPage: React.FC = () => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="relative w-full h-screen bg-[#0a0a0f] overflow-hidden">
+            {/* Back Button */}
+            <button
+                onClick={() => navigate('/library?id=3d-slider')}
+                className="fixed top-8 left-8 z-50 flex items-center gap-2 px-6 py-3 rounded-full bg-black/80 text-white hover:bg-black transition-all text-sm font-bold uppercase tracking-widest backdrop-blur-md border border-white/10 shadow-2xl group"
+            >
+                <ChevronLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+                Back to Library
+            </button>
+
+            {/* Full Screen 3D Slider */}
+            <ThreeDSlider autoPlay={true} interval={5000} />
+        </div>
+    );
+};
+
+export default ThreeDSliderPage;

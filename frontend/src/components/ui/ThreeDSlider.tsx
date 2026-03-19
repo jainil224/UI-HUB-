@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 
 interface Slide {
     id: number;
@@ -77,6 +77,7 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
 }) => {
     const [activeSlides, setActiveSlides] = useState<Slide[]>(slides);
     const [isTransitioning, setIsTransitioning] = useState(false);
+    const touchStartX = useRef(0);
 
     const nextSlide = useCallback(() => {
         if (isTransitioning) return;
@@ -108,8 +109,24 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
         return () => clearInterval(timer);
     }, [autoPlay, interval, nextSlide]);
 
+    // Touch swipe handlers
+    const handleTouchStart = useCallback((e: React.TouchEvent) => {
+        touchStartX.current = e.touches[0].clientX;
+    }, []);
+
+    const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+        const diff = touchStartX.current - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) nextSlide();
+            else prevSlide();
+        }
+    }, [nextSlide, prevSlide]);
+
     return (
-        <div className={`relative w-full h-full overflow-hidden bg-[#0a0a0f] ${className}`}>
+        <div className={`relative w-full h-full overflow-hidden bg-[#0a0a0f] ${className}`}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+        >
             <style>{`
                 .hero-track {
                     position: relative;
@@ -245,17 +262,17 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
                 /* Navigation Controls */
                 .slider-controls {
                     position: absolute;
-                    bottom: 50px;
+                    bottom: 30px;
                     left: 50%;
                     transform: translateX(-50%);
                     display: flex;
-                    gap: 20px;
+                    gap: 15px;
                     z-index: 20;
                 }
 
                 .nav-btn {
-                    width: 54px;
-                    height: 54px;
+                    width: 44px;
+                    height: 44px;
                     border-radius: 50%;
                     border: 1px solid rgba(255,255,255,0.2);
                     background: rgba(255,255,255,0.1);
@@ -266,12 +283,23 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
                     align-items: center;
                     justify-content: center;
                     transition: all 0.3s ease;
+                    -webkit-tap-highlight-color: transparent;
                 }
 
                 .nav-btn:hover {
                     background: #fff;
                     color: #000;
                     transform: scale(1.1);
+                }
+
+                .nav-btn:active {
+                    transform: scale(0.95);
+                    background: rgba(255,255,255,0.3);
+                }
+
+                @media screen and (min-width: 641px) {
+                    .slider-controls { bottom: 50px; gap: 20px; }
+                    .nav-btn { width: 54px; height: 54px; }
                 }
 
                 @media screen and (max-width: 1024px) {

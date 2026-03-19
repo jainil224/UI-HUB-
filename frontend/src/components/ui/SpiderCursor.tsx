@@ -25,23 +25,43 @@ export const SpiderCursor: React.FC<SpiderCursorProps> = ({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const mousePos = useRef({ x: 0, y: 0 });
 
-    // Track mouse
+    // Track mouse + touch
     useEffect(() => {
-        const handleMouseMove = (e: MouseEvent) => {
+        const getPos = (clientX: number, clientY: number) => {
             if (containerRef?.current) {
                 const rect = containerRef.current.getBoundingClientRect();
-                mousePos.current = {
-                    x: e.clientX - rect.left,
-                    y: e.clientY - rect.top
-                };
-            } else {
-                mousePos.current = { x: e.clientX, y: e.clientY };
+                return { x: clientX - rect.left, y: clientY - rect.top };
+            }
+            return { x: clientX, y: clientY };
+        };
+
+        const handleMouseMove = (e: MouseEvent) => {
+            mousePos.current = getPos(e.clientX, e.clientY);
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                mousePos.current = getPos(t.clientX, t.clientY);
+            }
+        };
+
+        const handleTouchStart = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                mousePos.current = getPos(t.clientX, t.clientY);
             }
         };
 
         const target = containerRef?.current || window;
         target.addEventListener('mousemove', handleMouseMove as any);
-        return () => target.removeEventListener('mousemove', handleMouseMove as any);
+        target.addEventListener('touchmove', handleTouchMove as any, { passive: true });
+        target.addEventListener('touchstart', handleTouchStart as any, { passive: true });
+        return () => {
+            target.removeEventListener('mousemove', handleMouseMove as any);
+            target.removeEventListener('touchmove', handleTouchMove as any);
+            target.removeEventListener('touchstart', handleTouchStart as any);
+        };
     }, [containerRef]);
 
     useEffect(() => {
