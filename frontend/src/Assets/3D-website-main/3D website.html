@@ -706,6 +706,93 @@ gsap.to("#page3",{
     scroller:`#main`
   }
 })
+
+// Text Animations
+gsap.from("#page>h3", {
+    scrollTrigger: {
+        trigger: "#page",
+        start: "top top",
+        end: "bottom center",
+        scroller: "#main",
+        scrub: true
+    },
+    opacity: 1,
+    y: 0,
+    duration: 1
+});
+
+gsap.to("#page>h3, #page>h4", {
+    scrollTrigger: {
+        trigger: "#page",
+        start: "20% top",
+        end: "50% top",
+        scroller: "#main",
+        scrub: true
+    },
+    opacity: 0,
+    y: -50,
+});
+
+gsap.from("#page1>#right-text", {
+    scrollTrigger: {
+        trigger: "#page1",
+        start: "top 80%",
+        end: "top 20%",
+        scroller: "#main",
+        scrub: true
+    },
+    x: 100,
+    opacity: 0,
+});
+
+gsap.from("#page1>#left-text", {
+    scrollTrigger: {
+        trigger: "#page1",
+        start: "top 80%",
+        end: "top 20%",
+        scroller: "#main",
+        scrub: true
+    },
+    x: -100,
+    opacity: 0,
+});
+
+gsap.from("#page2>#text1", {
+    scrollTrigger: {
+        trigger: "#page2",
+        start: "top 80%",
+        end: "top 20%",
+        scroller: "#main",
+        scrub: true
+    },
+    y: 100,
+    opacity: 0,
+});
+
+gsap.from("#page2>#text2", {
+    scrollTrigger: {
+        trigger: "#page2",
+        start: "top 80%",
+        end: "top 20%",
+        scroller: "#main",
+        scrub: true
+    },
+    y: 100,
+    opacity: 0,
+});
+
+gsap.from("#page3>#text3", {
+    scrollTrigger: {
+        trigger: "#page3",
+        start: "top 80%",
+        end: "top 20%",
+        scroller: "#main",
+        scrub: true
+    },
+    scale: 0.8,
+    opacity: 0,
+});
+
     </script>
 </body>
 </html>
