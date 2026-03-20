@@ -18,6 +18,8 @@ import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
+import { OdysseySpline } from '../components/ui/OdysseySpline';
+import { ThreeDBlockMovement } from '../components/ui/ThreeDBlockMovement';
 
 
 
@@ -1104,6 +1106,22 @@ const ThreeDSliderPreview: React.FC = () => {
                     3D UI HUB Component
                 </div>
             </div>
+        </div>
+    );
+};
+
+// ── Odyssey Spline scoped preview ────────────
+const OdysseySplinePreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            background: '#050508',
+            overflow: 'hidden',
+        }}>
+            <OdysseySpline />
         </div>
     );
 };
@@ -2607,6 +2625,41 @@ export const TubesDemo = () => {
 };`,
         vibePrompt: "Create a stunning 3D cursor effect featuring neon glowing tubes that follow the mouse with fluid, organic motion in 3D space. Use Three.js and WebGL for high-performance rendering. Implement dynamic color shifting and glowing emissive materials for a high-end tech/cyberpunk aesthetic. Support local container tracking via refs."
     },
+    {
+        id: "odyssey-spline",
+        title: "Odyssey 3D Animation",
+        category: "3d",
+        preview: () => <OdysseySplinePreview />,
+        code: `import { OdysseySpline } from '@/components/ui/OdysseySpline';
 
+export const OdysseyDemo = () => {
+  return (
+    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
+      <OdysseySpline />
+    </div>
+  );
+};`,
+        vibePrompt: "Create an immersive and premium 3D experience titled 'Odyssey' featuring high-fidelity textures, dynamic lighting, and interactive 3D elements that respond to mouse movement. Implement a custom React loader with animated rings and a pulsing core to ensure a smooth user experience while the scene initializes. Use a deep space/tech-noir color palette with accents of emerald green."
+    },
+    {
+        id: "3d-block-movement",
+        title: "3D block movement",
+        category: "3d",
+        preview: () => (
+            <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
+                <ThreeDBlockMovement />
+            </div>
+        ),
+        code: `import { ThreeDBlockMovement } from '@/components/ui/ThreeDBlockMovement';
+
+export const Demo = () => {
+  return (
+    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
+      <ThreeDBlockMovement />
+    </div>
+  );
+};`,
+        vibePrompt: "Create a mesmerizing 3D animation featuring abstract block movements with dynamic lighting and interactive 3D elements. Implement a custom premium loader with animated rings and a pulsing core to ensure a smooth transition while the high-fidelity Spline scene initializes. Use a deep tech-noir color palette with glowing emerald accents."
+    },
 ];
 

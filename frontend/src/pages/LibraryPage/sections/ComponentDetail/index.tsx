@@ -764,6 +764,20 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["framer-motion", "tailwindcss"],
             requirements: ["Randomized flicker timing loops", "Gaussian blur glow layers", "Linear light sweep geometry", "High-frequency opacity transitions"]
         }
+    },
+    "3d-block-movement": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes to apply to the container." },
+            { name: "onLoad", type: "() => void", default: "undefined", description: "Callback fired when the Spline scene has fully loaded." }
+        ],
+        vibeMeta: {
+            behavior: "Mesmerizing 3D block movements with dynamic lighting and interactive elements. Features a premium custom loader with animated rings and branding protection.",
+            states: { from: "pulsing premium loader", to: "interactive high-fidelity 3D scene" },
+            cssProperties: ["transform", "opacity", "filter", "z-index"],
+            description: "An elite 3D Spline animation with premium loading and branding removal.",
+            libraries: ["@splinetool/react-spline", "framer-motion"],
+            requirements: ["Spline scene integration", "Custom ring-based loader", "Branding object removal logic", "Smooth AnimatePresence transitions", "Safe property-access checks for Spline app instance"]
+        }
     }
 };
 
@@ -1045,6 +1059,23 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         {item.id === '3d-slider' && (
                                             <Link
                                                 to="/demo/3d-slider"
+                                                target="_blank"
+                                                className="no-underline"
+                                            >
+                                                <motion.button
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: 20 }}
+                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
+                                                >
+                                                    <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                                    View Full Demo
+                                                </motion.button>
+                                            </Link>
+                                        )}
+                                        {item.id === '3d-block-movement' && (
+                                            <Link
+                                                to="/demo/3d-block-movement"
                                                 target="_blank"
                                                 className="no-underline"
                                             >

@@ -709,6 +709,26 @@ ${componentHeader}
         </div>`);
     case "robot-3d-background":
       return `// Robot 3D Background Placeholder\n// Implementation involves Three.js and GLTF loading logic...`;
+    case "odyssey-spline":
+      return isTS ? `import React from 'react';
+import { OdysseySpline } from '@/components/ui/OdysseySpline';
+
+export const Component: React.FC = () => {
+  return (
+    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
+      <OdysseySpline />
+    </div>
+  );
+};` : `import React from 'react';
+import { OdysseySpline } from '@/components/ui/OdysseySpline';
+
+export const Component = () => {
+  return (
+    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
+      <OdysseySpline />
+    </div>
+  );
+};`;
     default:
       return reactOutput(`
         <div className="text-white text-4xl font-black opacity-20 uppercase">

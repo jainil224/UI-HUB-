@@ -9,6 +9,7 @@ import LoginPage from './pages/Auth/LoginPage';
 import SignupPage from './pages/Auth/SignupPage';
 import Scroll3DAnimationPage from './pages/Components/Scroll3DAnimationPage';
 import ThreeDSliderPage from './pages/Components/ThreeDSliderPage';
+import ThreeDBlockMovementPage from './pages/Components/ThreeDBlockMovementPage';
 
 // Wrapper: only shows Navbar + Footer on non-library pages
 const AppShell = () => {
@@ -29,6 +30,7 @@ const AppShell = () => {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
         <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
+        <Route path="/demo/3d-block-movement" element={<ThreeDBlockMovementPage />} />
       </Routes>
 
       {!isLibrary && !isAuth && !isDemo && <Footer />}
