@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-interface ScorpioCursorProps {
-    /** Color of the scorpion lines */
+interface LizardCursorProps {
+    /** Color of the lizard lines */
     color?: string;
-    /** Scale factor for the scorpion size */
+    /** Scale factor for the lizard size */
     size?: number;
     /** Optional ref to the container for local tracking */
     containerRef?: React.RefObject<HTMLElement>;
@@ -304,7 +304,7 @@ class Creature {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
-export const ScorpioCursor: React.FC<ScorpioCursorProps> = ({
+export const LizardCursor: React.FC<LizardCursorProps> = ({
     color = '#ffffff',
     size = 2.5,
     containerRef,
@@ -395,7 +395,7 @@ export const ScorpioCursor: React.FC<ScorpioCursorProps> = ({
             window.addEventListener('resize', resize);
         }
 
-        // Initialize Scorpion
+        // Initialize Lizard
         const s = size;
         const tailCount = 20;
         
@@ -508,4 +508,4 @@ export const ScorpioCursor: React.FC<ScorpioCursorProps> = ({
     );
 };
 
-export default ScorpioCursor;
+export default LizardCursor;

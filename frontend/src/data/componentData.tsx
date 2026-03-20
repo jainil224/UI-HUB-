@@ -12,8 +12,8 @@ import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
 import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
 import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
 import { HeartCursor } from '../components/ui/HeartCursor';
-import { ScorpioCursor } from '../components/ui/ScorpioCursor';
-import { SpiderCursor } from '../components/ui/SpiderCursor';
+import { LizardCursor } from '../components/ui/LizardCursor';
+import { VenomCursor } from '../components/ui/VenomCursor';
 import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
@@ -797,8 +797,8 @@ const HeartCursorPreview: React.FC = () => {
     );
 };
 
-// ── Scorpio Cursor scoped preview ────────────
-const ScorpioCursorPreview: React.FC = () => {
+// ── Lizard Cursor scoped preview ────────────
+const LizardCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isInside, setIsInside] = useState(false);
 
@@ -875,13 +875,13 @@ const ScorpioCursorPreview: React.FC = () => {
             </div>
 
 
-            {isInside && <ScorpioCursor color="#ffffff" containerRef={containerRef} />}
+            {isInside && <LizardCursor color="#ffffff" containerRef={containerRef} />}
         </div>
     );
 };
 
-// ── Spider Cursor scoped preview ────────────
-const SpiderCursorPreview: React.FC = () => {
+// ── Venom Cursor scoped preview ────────────
+const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isInside, setIsInside] = useState(false);
 
@@ -960,7 +960,7 @@ const SpiderCursorPreview: React.FC = () => {
                 ))}
             </div>
 
-            {isInside && <SpiderCursor color="#ffffff" containerRef={containerRef} />}
+            {isInside && <VenomCursor color="#ffffff" containerRef={containerRef} />}
 
             <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
                 {/* Branding text removed as per user request */}
@@ -2517,12 +2517,12 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
     },
 
     {
-        id: "scorpio-cursor",
-        title: "Scorpio Cursor",
+        id: "lizard-cursor",
+        title: "Lizard Cursor",
         category: "cursor",
-        preview: () => <ScorpioCursorPreview />,
+        preview: () => <LizardCursorPreview />,
         code: `import { useRef } from 'react';
-import { ScorpioCursor } from '@/components/ui/ScorpioCursor';
+import { LizardCursor } from '@/components/ui/LizardCursor';
 
 export const ScorpioDemo = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -2535,8 +2535,8 @@ export const ScorpioDemo = () => {
       {/* Immersive background for the demo */}
       <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)]" />
       
-      {/* The Scorpio Component (with Click-to-Strike) */}
-      <ScorpioCursor 
+      {/* The Lizard Component (with Click-to-Strike) */}
+      <LizardCursor 
         color="#ffffff" 
         size={2.5} 
         containerRef={containerRef} 
@@ -2550,15 +2550,15 @@ export const ScorpioDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: "Create a premium, high-performance procedural animation of a skeletal scorpio that tracks the mouse with precision using Inverse Kinematics (IK). The creature should feature an aggressive 'strike' animation on mouse click, lunging toward the impact point with a visual pulse effect. Implement using HTML5 Canvas for 60fps performance and wrap it in a React component with support for local container tracking via refs. Use a sleek white-on-black tech-noir aesthetic."
+        vibePrompt: "Create a premium, high-performance procedural animation of a skeletal lizard that tracks the mouse with precision using Inverse Kinematics (IK). The creature should feature an aggressive 'strike' animation on mouse click, lunging toward the impact point with a visual pulse effect. Implement using HTML5 Canvas for 60fps performance and wrap it in a React component with support for local container tracking via refs. Use a sleek white-on-black tech-noir aesthetic."
     },
     {
-        id: "spider-cursor",
-        title: "Spider Cursor",
+        id: "venom-cursor",
+        title: "Venom Cursor",
         category: "cursor",
-        preview: () => <SpiderCursorPreview />,
+        preview: () => <VenomCursorPreview />,
         code: `import { useRef } from 'react';
-import { SpiderCursor } from '@/components/ui/SpiderCursor';
+import { VenomCursor } from '@/components/ui/VenomCursor';
 
 export const SpiderDemo = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -2571,13 +2571,13 @@ export const SpiderDemo = () => {
       {/* Grid background */}
       <div className="absolute inset-0 opacity-10 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
       
-      {/* The Spider Component (with Procedural Swarm) */}
-      <SpiderCursor 
+      {/* The Venom Component (with Procedural Swarm) */}
+      <VenomCursor 
         color="#ffffff" 
         containerRef={containerRef} 
       />
 
-      <SpiderCursor 
+      <VenomCursor 
         color="#ffffff" 
         containerRef={containerRef} 
       />
@@ -2588,7 +2588,7 @@ export const SpiderDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: "Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated spider-like entities. The entities should follow the mouse with organic, noise-based 'wriggling' legs and smooth easing. Use HTML5 Canvas for high-performance 60fps rendering on a dark grid-themed background with immersive noise overlays. Implement support for local container tracking via refs for precise alignment in interactive cards."
+        vibePrompt: "Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated venom-like entities. The entities should follow the mouse with organic, noise-based 'wriggling' legs and smooth easing. Use HTML5 Canvas for high-performance 60fps rendering on a dark grid-themed background with immersive noise overlays. Implement support for local container tracking via refs for precise alignment in interactive cards."
     },
     {
         id: "3d-tubes-cursor",

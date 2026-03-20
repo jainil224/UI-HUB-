@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-interface SpiderCursorProps {
-    /** Color of the spider effect */
+interface VenomCursorProps {
+    /** Color of the venom effect */
     color?: string;
     /** Whether the component follow the mouse */
     interactive?: boolean;
@@ -12,11 +12,11 @@ interface SpiderCursorProps {
 }
 
 /**
- * Spider Cursor Animation
+ * Venom Cursor Animation
  * Ported from legacy JS/Canvas assets.
  * Features a point-based entity with procedural "wriggling" legs using sine-wave noise.
  */
-export const SpiderCursor: React.FC<SpiderCursorProps> = ({
+export const VenomCursor: React.FC<VenomCursorProps> = ({
     color = '#ffffff',
     interactive = true,
     containerRef,
@@ -180,7 +180,7 @@ export const SpiderCursor: React.FC<SpiderCursorProps> = ({
             };
         }
 
-        const spiderEntities = many(2, spawn);
+        const venomEntities = many(2, spawn);
 
         let rafId: number;
         const anim = (t: number) => {
@@ -191,7 +191,7 @@ export const SpiderCursor: React.FC<SpiderCursorProps> = ({
             
             t /= 1000;
             
-            spiderEntities.forEach(s => {
+            venomEntities.forEach(s => {
                 s.follow(mousePos.current.x, mousePos.current.y);
                 s.tick(t);
             });
@@ -223,4 +223,4 @@ export const SpiderCursor: React.FC<SpiderCursorProps> = ({
     );
 };
 
-export default SpiderCursor;
+export default VenomCursor;
