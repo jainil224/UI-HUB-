@@ -2333,7 +2333,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("orbit-button", "Orbit Button"),
         code: `import { OrbitButton } from "@/components/ui/OrbitButton";\n\nexport const Demo = () => (\n  <OrbitButton label="Orbit Button" color="cyan" />\n);`,
-        vibePrompt: LOVABLE_PROMPTS["orbit-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["orbit-button"]
     },
     {
         id: "galaxy-button",
@@ -2341,7 +2341,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("galaxy-button", "Galaxy Button"),
         code: `import { GalaxyButton } from "@/components/ui/GalaxyButton";\n\nexport const Demo = () => (\n  <GalaxyButton label="Galaxy Button" />\n);`,
-        vibePrompt: LOVABLE_PROMPTS["galaxy-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["galaxy-button"]
     },
     {
         id: "liquid-fill-button",
@@ -2349,7 +2349,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("liquid-fill-button", "Liquid Fill Button"),
         code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
-        vibePrompt: LOVABLE_PROMPTS["liquid-fill-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["liquid-fill-button"]
     },
     {
         id: "neon-flicker-button",
@@ -2357,7 +2357,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("neon-flicker-button", "Neon Flicker Button"),
         code: `import { NeonFlickerButton } from "@/components/ui/NeonFlickerButton";\n\nexport const Demo = () => (\n  <NeonFlickerButton label="Neon Flicker" color="red" />\n);`,
-        vibePrompt: LOVABLE_PROMPTS["neon-flicker-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["neon-flicker-button"]
     },
     {
         id: "aurora-cursor",
