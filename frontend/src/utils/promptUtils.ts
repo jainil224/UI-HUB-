@@ -1,3 +1,7 @@
+import { LOVABLE_PROMPTS } from '../data/lovablePrompts';
+import { ANTIGRAVITY_PROMPTS } from '../data/antigravityPrompts';
+import { CLAUDE_PROMPTS } from '../data/claudePrompts';
+
 export type AISystem = 'antigravity' | 'lovable' | 'cursor' | 'claude' | 'advance';
 
 export interface VibeMeta {
@@ -13,6 +17,7 @@ export interface VibeMeta {
 }
 
 interface PromptData {
+    id: string;
     animationName: string;
     language: 'js' | 'ts' | 'html';
     styling: 'tailwind' | 'css';
@@ -21,140 +26,26 @@ interface PromptData {
 }
 
 export const generateVibePrompt = (tool: AISystem, data: PromptData): string => {
-    const { animationName, language, styling, meta, code } = data;
+    const { id, animationName, language, styling, meta, code } = data;
     const langFull = language === 'ts' ? 'TypeScript (TSX)' : language === 'js' ? 'JavaScript (JSX)' : 'HTML/CSS';
     const styleFull = styling === 'tailwind' ? 'Tailwind CSS' : 'Vanilla CSS';
 
+    // ── Platform Overrides ──
+    if (tool === 'claude' && CLAUDE_PROMPTS[id]) {
+        return CLAUDE_PROMPTS[id];
+    }
+
+    if (tool === 'lovable' && LOVABLE_PROMPTS[id]) {
+        return LOVABLE_PROMPTS[id];
+    }
+
+    if (tool === 'antigravity' && ANTIGRAVITY_PROMPTS[id]) {
+        return ANTIGRAVITY_PROMPTS[id];
+    }
+
+    // Fallback for Claude if no override exists
     if (tool === 'claude') {
-        const divider = "────────────────────────────────────────";
-        return `
-╭──────────────────────────────────────────────╮
-             UI HUB • CLAUDE AI PROMPT
-╰──────────────────────────────────────────────╯
-
-PROJECT CONTEXT
-You are generating a premium UI component for a modern web application built with React and Next.js.
-
-Component Name
-${animationName || 'Component'}
-
-Component Type
-${meta.description || 'UI Component'}
-
-
-${divider}
-TECHNOLOGY STACK
-${divider}
-
-Language
-${langFull}
-
-Framework
-React / Next.js
-
-Rendering Engine
-${(meta.libraries || []).includes('three') ? 'Three.js' : (meta.libraries || []).includes('framer-motion') ? 'Framer Motion' : 'Vanilla CSS / SVG'}
-
-Supporting Libraries
-${(meta.libraries || ['clsx', 'tailwind-merge']).join('\n')}
-
-
-${divider}
-DEPENDENCY SETUP
-${divider}
-
-Install the following dependencies:
-
-npm install ${(meta.libraries || ['clsx', 'tailwind-merge']).join(' ')}
-
-
-${divider}
-UTILITY REQUIREMENT
-${divider}
-
-Create a helper utility if it does not already exist.
-
-File path:
-lib/utils.ts
-
-Code:
-
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-
-${divider}
-COMPONENT OBJECTIVE
-${divider}
-
-Build a reusable React component that renders a ${meta.description || 'premium UI effect'}.
-
-The animation must be powered by ${meta.libraries?.includes('three') ? 'Three.js' : 'Framer Motion'} and follow the specific performance guidelines.
-
-
-${divider}
-FEATURE SPECIFICATION
-${divider}
-
-The component must support:
-
-${(meta.requirements || ['Premium design architecture', 'Responsive rendering', 'Dark mode compatibility']).map(req => `• ${req}`).join('  \n')}
-
-
-${divider}
-PERFORMANCE CONSTRAINTS
-${divider}
-
-Ensure the component:
-
-• Maintains smooth 60fps rendering
-• Uses requestAnimationFrame
-• Properly disposes resources (if applicable)
-• Prevents memory leaks
-• Updates correctly on window resize
-
-
-${divider}
-EXPECTED RESULT
-${divider}
-
-Return one complete file:
-
-components/${animationName.replace(/\s+/g, '')}.tsx
-
-The code must be:
-
-• Production-ready
-• Fully typed with TypeScript
-• Cleanly structured
-• Optimized for performance
-
-
-${divider}
-SOURCE CODE REFERENCE
-${divider}
-
-${code || '// Source code reference not available for this component.'}
-
-
-${divider}
-RESPONSE RULES
-${divider}
-
-Return only the final working component code.
-
-Do not include explanations.
-
-Do not rename the component.
-
-Use the SOURCE CODE REFERENCE as the primary blueprint to ensure 100% accuracy.
-
-Follow modern React and TypeScript best practices.
-`.trim();
+        return code || '// Source code reference not available for this component.';
     }
 
     if (tool === 'advance') {
@@ -294,25 +185,7 @@ Return only the full working component code.
 ## FINAL OUTPUT
 - Return ONLY the TypeScript/React code block. No explanations.
 `,
-        lovable: `
-Implement a premium "${animationName}" component for a modern React application.
-
-### Context
-This component is part of the UI HUB library. It should follow a sophisticated design language.
-Behavior: ${meta.behavior}
-Transition: From "${meta.states.from}" to "${meta.states.to}"
-
-### Stack Required
-- React with TypeScript/JSX
-- Tailwind CSS
-- Framer Motion for high-quality animations
-
-### Instructions
-1. Make the component fully responsive and dark-mode primary.
-2. Use backdrop-blurs and glassmorphism where appropriate.
-3. Optimize for Vite and Shadcn/UI integration.
-4. Return the full source code ready for deployment.
-`,
+        lovable: '',
         cursor: `
 Generate high-fidelity React component: "${animationName}"
 Stack: ${langFull.replace(/ \(.*\)/, '')}, ${styleFull}, Framer Motion.

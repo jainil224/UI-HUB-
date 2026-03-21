@@ -14,6 +14,8 @@ import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
 
+
+
 interface ComponentConfig {
     props: { name: string; type: string; default: string; description: string }[];
     vibeMeta: VibeMeta;
@@ -778,6 +780,232 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["@splinetool/react-spline", "framer-motion"],
             requirements: ["Spline scene integration", "Custom ring-based loader", "Branding object removal logic", "Smooth AnimatePresence transitions", "Safe property-access checks for Spline app instance"]
         }
+    },
+    // ─── 3D Design (Remaining) ───
+    "robot-3d-background": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
+            { name: "overlayColor", type: "string", default: '"rgba(0,0,0,0.5)"', description: "Color of the darkening radial vignette overlay." },
+            { name: "overlayOpacity", type: "number", default: "0.4", description: "Opacity of the vignette overlay." },
+            { name: "showDownloadLink", type: "boolean", default: "false", description: "Shows a 4K download button with shimmer effect." }
+        ],
+        vibeMeta: {
+            behavior: "A cinematic 3D robotic background featuring AI cubes sliding on a neon platform above reflective water. Includes a 4K video source, cyberpunk vignette, and CRT scanline CRT effect.",
+            states: { from: "empty container with loader", to: "immersive 3D robotic core scene loop" },
+            cssProperties: ["object-cover", "radial-gradient", "repeating-linear-gradient", "backdrop-blur"],
+            description: "Cinematic 3D robot video background with professional overlays and high-fidelity assets.",
+            libraries: ["react", "tailwind-merge"],
+            requirements: ["HTML5 video (autoPlay, muted, loop)", "Programmatic Blob download logic", "Custom radial vignette with blur", "2px CRT scanline overlay", "UI HUB branding watermark"]
+        }
+    },
+    "interactive-webgl-scene": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
+            { name: "overlayColor", type: "string", default: '"rgba(0,0,0,0.5)"', description: "Color of the darkening overlay." },
+            { name: "overlayOpacity", type: "number", default: "0.4", description: "Opacity of the overlay." },
+            { name: "showDownloadLink", type: "boolean", default: "false", description: "Shows a download button for the video." }
+        ],
+        vibeMeta: {
+            behavior: "An immersive fullscreen WebGL scene (video-backed) featuring high-end 3D environments. Combines cinematic overlays, interactive scanlines, and a premium asset delivery system.",
+            states: { from: "static loading state", to: "interactive 3D WebGL environment" },
+            cssProperties: ["object-cover", "mix-blend-mode", "radial-gradient", "filter: drop-shadow"],
+            description: "Elite WebGL-based video background with professional cinematic post-processing.",
+            libraries: ["react", "clsx", "tailwind-merge"],
+            requirements: ["Cinematic video loop background", "Interactive scanline distortion overlay", "Indigo-themed radial vignette", "High-fidelity download button with glow", "Blob-based asset download system"]
+        }
+    },
+    "3d-scroll-animation": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the scroll container." },
+            { name: "showDemoButton", type: "boolean", default: "false", description: "Shows a 'View Full Demo' button overlay." }
+        ],
+        vibeMeta: {
+            behavior: "A scroll-linked 3D experience with 300 pre-rendered frames. Features GSAP-powered image sequence scrubbing, progressive text reveals, and high-performance Canvas rendering.",
+            states: { from: "loading screen with progress bar", to: "fully scrubbable 3D sequence with blur-in text" },
+            cssProperties: ["canvas", "background-size: cover", "filter: blur", "z-index"],
+            description: "Elite scroll-driven 3D character animation with professional GSAP scrubbing logic.",
+            libraries: ["gsap", "@gsap/react", "framer-motion"],
+            requirements: ["300-frame image sequence preloading", "Canvas-driven high-performance scrubbing", "GSAP ScrollTrigger master timeline", "Staggered blur-in/out text transitions", "Infinite horizontal hero marquee", "Premium percentage loader UI"]
+        }
+    },
+    "3d-slider": {
+        props: [
+            { name: "slides", type: "Slide[]", default: "default slides", description: "Array of slide objects with title, subtitle, image, and accentColor." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
+        ],
+        vibeMeta: {
+            behavior: "A high-end 3D cylindrical carousel where slides are arranged in 3D perspective space. Features smooth spring physics, floor reflections, and staggered text animations.",
+            states: { from: "flat stack of cards", to: "cylindrical 3D perspective carousel" },
+            cssProperties: ["perspective", "transform-style: preserve-3d", "rotateY", "translateZ", "box-shadow"],
+            description: "Premium 3D perspective slider with high-end spring physics and reflections.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["CSS 3D perspective architecture", "Cylindrical angle trigonometry", "Framer Motion spring transitions", "Glassmorphic UI controls", "Touch/swipe gesture support", "Active card floor reflection effect"]
+        }
+    },
+    "odyssey-spline": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
+            { name: "onLoad", type: "() => void", default: "undefined", description: "Callback fired when the Spline scene loads." }
+        ],
+        vibeMeta: {
+            behavior: "An immersive 3D animated scene powered by Spline with premium loading overlay featuring rotating concentric rings. Includes programmatic Spline branding removal and CSS watermark hiding.",
+            states: { from: "animated ring loader", to: "interactive 3D Odyssey scene" },
+            cssProperties: ["transform", "opacity", "filter", "z-index"],
+            description: "Elite Spline-powered 3D Odyssey animation with premium loader and branding removal.",
+            libraries: ["@splinetool/react-spline", "framer-motion"],
+            requirements: ["Spline scene loading integration", "AnimatePresence loader with rotating rings", "Programmatic findObjectByName branding removal", "CSS watermark hiding selectors", "Background color matching (#050508)"]
+        }
+    },
+    "3d-hero-globel": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
+            { name: "onLoad", type: "() => void", default: "undefined", description: "Callback fired when the Spline scene loads." }
+        ],
+        vibeMeta: {
+            behavior: "A massive interactive 3D globe with floating data points and luxury lighting, powered by Spline. Features custom premium loader and branding protection.",
+            states: { from: "premium ring loader animation", to: "interactive 3D HERO GLOBEL scene" },
+            cssProperties: ["transform", "opacity", "filter", "z-index"],
+            description: "Premium Spline-powered 3D HERO GLOBEL with loader and branding removal.",
+            libraries: ["@splinetool/react-spline", "framer-motion"],
+            requirements: ["Spline scene integration", "Concentric ring loader animation", "Branding object programmatic removal", "CSS watermark hiding", "Hover-reveal '3D Asset' badge"]
+        }
+    },
+    "3d-orbital-experience": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
+            { name: "onLoad", type: "() => void", default: "undefined", description: "Callback fired when the Spline scene loads." }
+        ],
+        vibeMeta: {
+            behavior: "Abstract 3D orbital rings animation powered by Spline that reacts to mouse movement. Features premium loader and branding protection.",
+            states: { from: "premium ring loader", to: "interactive 3D Orbital Experience" },
+            cssProperties: ["transform", "opacity", "filter", "z-index"],
+            description: "Premium Spline-powered 3D Orbital Experience.",
+            libraries: ["@splinetool/react-spline", "framer-motion"],
+            requirements: ["Spline scene loading", "AnimatePresence transitions", "Branding removal logic", "CSS watermark hiding", "Dark immersive theme"]
+        }
+    },
+    // ─── Cursor Effects ───
+    "target-cursor": {
+        props: [
+            { name: "color", type: "string", default: '"#22d3ee"', description: "Primary color of the cursor frame and corners." },
+            { name: "size", type: "number", default: "32", description: "Size of the cursor frame in pixels." },
+            { name: "sensitivity", type: "number", default: "0.15", description: "How quickly the cursor follows the mouse (0-1)." }
+        ],
+        vibeMeta: {
+            behavior: "A precision crosshair cursor with corner brackets that snaps to and parallax-scales with interactive elements. Rotates slowly when idle, expands on hover.",
+            states: { from: "idle spinning crosshair", to: "snapped expanded frame around target element" },
+            cssProperties: ["transform", "border", "position: fixed", "z-index"],
+            description: "Precision-focused custom cursor with element snap targeting.",
+            libraries: ["react"],
+            requirements: ["requestAnimationFrame position smoothing", "Interactive element snap detection (getBoundingClientRect)", "Corner bracket rotation animation", "Click scale feedback", "Default cursor hiding and restoration on unmount"]
+        }
+    },
+    "black-hole-cursor": {
+        props: [
+            { name: "particleCount", type: "number", default: "120", description: "Number of orbiting particles around the singularity." },
+            { name: "coreSize", type: "number", default: "12", description: "Radius of the black hole core in pixels." },
+            { name: "glowColor", type: "string", default: '"#6366f1"', description: "Color of the accretion disk glow." },
+            { name: "particleColor", type: "string", default: '"#a78bfa"', description: "Color of the orbiting particles." }
+        ],
+        vibeMeta: {
+            behavior: "A gravitational singularity cursor with particles orbiting and spiraling inward. On click, particles implode then explode outward. Multi-layered accretion disk glow rings.",
+            states: { from: "orbiting particles", to: "implode/explode on click" },
+            cssProperties: ["canvas", "radial-gradient", "shadowBlur"],
+            description: "Cinematic black hole cursor with particle physics and accretion disk.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D particle simulation", "Polar coordinate orbital physics", "Spiral inward gravity (distance *= 0.998)", "Click implode/explode effect", "Multi-layer radial gradient core rendering", "Trail effect via semi-transparent fillRect"]
+        }
+    },
+    "magnetic-cursor": {
+        props: [
+            { name: "dotSize", type: "number", default: "6", description: "Size of the inner cursor dot in pixels." },
+            { name: "haloSize", type: "number", default: "40", description: "Size of the outer halo circle in pixels." },
+            { name: "magneticRange", type: "number", default: "100", description: "Range in pixels for magnetic pull on data-magnetic elements." }
+        ],
+        vibeMeta: {
+            behavior: "A dual-layer cursor with a snappy dot (high stiffness spring) and a lagging hollow halo (low stiffness). Elements with data-magnetic attribute are pulled toward the cursor when in range.",
+            states: { from: "idle dot + halo", to: "magnetic pull on data-magnetic elements" },
+            cssProperties: ["transform", "position: fixed", "border-radius", "backdrop-filter"],
+            description: "Elegant magnetic cursor with dual-layer spring physics and element attraction.",
+            libraries: ["react"],
+            requirements: ["requestAnimationFrame spring physics loop", "Dual spring constants (dot vs halo)", "data-magnetic attribute element scanning", "Element transform application on proximity", "Default cursor hiding and cleanup on unmount"]
+        }
+    },
+    "aurora-cursor": {
+        props: [
+            { name: "size", type: "number", default: "150", description: "Size of the aurora blob in pixels." },
+            { name: "blur", type: "number", default: "40", description: "Blur filter amount in pixels." },
+            { name: "colors", type: "string[]", default: '["#06b6d4", "#8b5cf6", "#ec4899"]', description: "Aurora gradient colors for the morphing blob." }
+        ],
+        vibeMeta: {
+            behavior: "A large, morphing blob of colorful light that follows the mouse with spring physics. CSS animations drive background shifting, border-radius morphing, and opacity pulsing simultaneously. Scales down on interactive element hover.",
+            states: { from: "large diffused aurora blob", to: "compact focused blob on interactive hover" },
+            cssProperties: ["filter: blur", "border-radius", "background", "mix-blend-mode", "transform"],
+            description: "Fluid aurora light cursor with organic CSS morphing animations.",
+            libraries: ["react"],
+            requirements: ["Spring physics position following", "CSS @keyframes for background-position shift (8s)", "CSS @keyframes for border-radius morphing (20s)", "CSS @keyframes for opacity pulsing (4s)", "Interactive element hover detection with scale change"]
+        }
+    },
+    "heart-cursor": {
+        props: [
+            { name: "color", type: "string", default: '"#ff4d6a"', description: "Color of the heart cursor." },
+            { name: "size", type: "number", default: "24", description: "Size of the heart in pixels." },
+            { name: "rippleColor", type: "string", default: '"rgba(255,77,106,0.3)"', description: "Color of expanding ripple circles." },
+            { name: "trailInterval", type: "number", default: "100", description: "Milliseconds between ripple spawns." }
+        ],
+        vibeMeta: {
+            behavior: "An SVG heart cursor that pulses gently and leaves expanding circular ripples on a transparent canvas. On click, spawns a burst of mini hearts. Scales up on interactive element hover.",
+            states: { from: "pulsing heart with ripple trail", to: "burst of mini hearts on click" },
+            cssProperties: ["canvas", "svg", "transform: scale", "opacity"],
+            description: "Animated heart cursor with ripple trails and click burst effects.",
+            libraries: ["react"],
+            requirements: ["SVG heart path rendering", "Canvas ripple system (expanding circles with fade)", "Periodic ripple spawning every trailInterval ms", "Click burst effect (5 mini hearts with random velocities)", "requestAnimationFrame animation loop", "Hybrid SVG + Canvas approach"]
+        }
+    },
+    "lizard-cursor": {
+        props: [
+            { name: "segmentCount", type: "number", default: "25", description: "Number of body segments in the creature." },
+            { name: "color", type: "string", default: '"#22c55e"', description: "Primary color of the creature." },
+            { name: "legCount", type: "number", default: "4", description: "Number of leg pairs." }
+        ],
+        vibeMeta: {
+            behavior: "A segmented creature (lizard/centipede) that follows the mouse using Inverse Kinematics. Each segment trails the previous maintaining fixed distance. Legs step periodically with bezier arcs. Click triggers a quick strike lunge.",
+            states: { from: "idle following creature", to: "strike lunge on click" },
+            cssProperties: ["canvas"],
+            description: "IK-based segmented creature cursor with leg stepping and strike animation.",
+            libraries: ["react"],
+            requirements: ["Inverse Kinematics chain (atan2 + distance constraint)", "Leg stepping system with cubic bezier foot arcs", "Head easing toward mouse with configurable speed", "Tapering body segments (head larger, tail smaller)", "Click strike effect (increased easing speed)", "Canvas resize and cleanup handling"]
+        }
+    },
+    "venom-cursor": {
+        props: [
+            { name: "tentacleCount", type: "number", default: "8", description: "Number of tentacles trailing the cursor." },
+            { name: "color", type: "string", default: '"#1a1a2e"', description: "Primary tentacle color." },
+            { name: "length", type: "number", default: "200", description: "Maximum tentacle length in pixels." }
+        ],
+        vibeMeta: {
+            behavior: "Multiple dark, writhing tentacles that follow the mouse using IK joints with Perlin Noise for organic wriggling. Tentacles taper from thick base to sharp tip.",
+            states: { from: "idle wriggling tentacles", to: "accelerated tracking on fast mouse movement" },
+            cssProperties: ["canvas"],
+            description: "Dark organic tentacle cursor with Perlin Noise wriggling.",
+            libraries: ["react"],
+            requirements: ["Inline Perlin/Simplex noise function", "IK joint chain per tentacle (15-20 joints)", "Noise-based perpendicular offset for organic motion", "Quadratic bezier curve drawing for smooth tentacles", "Tapered line width (base to tip)", "Gradient color opacity (solid to transparent)"]
+        }
+    },
+    "3d-tubes-cursor": {
+        props: [
+            { name: "tubeColor1", type: "string", default: '"#00ffff"', description: "First tube color (cyan)." },
+            { name: "tubeColor2", type: "string", default: '"#ff00ff"', description: "Second tube color (magenta)." },
+            { name: "lightIntensity", type: "number", default: "1.5", description: "Point light intensity following the cursor." }
+        ],
+        vibeMeta: {
+            behavior: "A 3D scene where neon-glowing tubes form a trailing path in 3D space behind the mouse cursor. A PointLight follows the cursor, illuminating tubes dynamically. Tubes taper and fade at the tail.",
+            states: { from: "empty 3D scene", to: "glowing tube trail following cursor" },
+            cssProperties: ["canvas (WebGL)", "z-index", "pointer-events: none"],
+            description: "Three.js powered neon tube cursor trail in 3D perspective space.",
+            libraries: ["three"],
+            requirements: ["Three.js PerspectiveCamera + Scene + WebGLRenderer", "CatmullRomCurve3 from mouse position history", "TubeGeometry generation from curve", "PointLight following cursor position", "Dynamic script loading from CDN", "Canvas resize and Three.js disposal on unmount"]
+        }
     }
 };
 
@@ -948,12 +1176,14 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     };
 
     const fullVibePrompt = generateVibePrompt(aiSystem, {
+        id: item.id,
         animationName: item.title,
         language: lang,
         styling: styling,
         meta: componentConfig.vibeMeta,
         code: item.code
     });
+
 
     return (
         <motion.div

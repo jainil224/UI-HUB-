@@ -19,7 +19,10 @@ import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
 import { OdysseySpline } from '../components/ui/OdysseySpline';
+import { HeroGlobelSpline } from '../components/ui/HeroGlobelSpline';
+import { OrbitalExperienceSpline } from '../components/ui/OrbitalExperienceSpline';
 import { ThreeDBlockMovement } from '../components/ui/ThreeDBlockMovement';
+import { LOVABLE_PROMPTS } from './lovablePrompts';
 
 
 
@@ -1126,6 +1129,36 @@ const OdysseySplinePreview: React.FC = () => {
     );
 };
 
+const HeroGlobelSplinePreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            background: '#050508',
+            overflow: 'hidden',
+        }}>
+            <HeroGlobelSpline />
+        </div>
+    );
+};
+
+const OrbitalExperienceSplinePreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            background: '#050508',
+            overflow: 'hidden',
+        }}>
+            <OrbitalExperienceSpline />
+        </div>
+    );
+};
+
 
 
 
@@ -1896,7 +1929,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("blur-text", "Blur In Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const BlurText = ({ text = "BLUR IN TEXT" }) => (\n  <motion.h1\n    initial={{ opacity: 0, filter: "blur(10px)" }}\n    animate={{ opacity: 1, filter: "blur(0px)" }}\n    transition={{ duration: 0.8 }}\n  >\n    {text}\n  </motion.h1>\n);`,
-        vibePrompt: "Create a smooth animated blur text effect using CSS and React. Text should fade in with blur filter transition. Use modern dark UI style."
+        vibePrompt: LOVABLE_PROMPTS["blur-text"]
     },
     {
         id: "fade-text",
@@ -1904,7 +1937,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("fade-text", "Fade Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const FadeText = ({ text = "FADE TEXT" }) => (\n  <motion.div\n    initial={{ opacity: 0 }}\n    animate={{ opacity: 1 }}\n    transition={{ duration: 1.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: "Create a simple opacity fade animation for text transitions using Framer Motion and React."
+        vibePrompt: LOVABLE_PROMPTS["fade-text"]
     },
     {
         id: "dock-text",
@@ -1912,7 +1945,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("dock-text", "Dock Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const DockText = ({ text = "DOCK TEXT" }) => (\n  <motion.div\n    whileHover={{ scale: 1.5 }}\n    transition={{ type: "spring", duration: 0.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: "Create a fisheye scale effect on text characters based on hover/proximity using framer-motion in React."
+        vibePrompt: LOVABLE_PROMPTS["dock-text"]
     },
     {
         id: "font-weight",
@@ -1920,7 +1953,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("font-weight", "Font Weight Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const FontWeightText = ({ text = "VARIABLE WEIGHT" }) => (\n  <motion.div\n    animate={{ fontWeight: [400, 900, 400] }}\n    transition={{ duration: 1, repeat: Infinity }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: "Animate font-weight smoothly between 400 and 900 for text using framer motion and variable fonts."
+        vibePrompt: LOVABLE_PROMPTS["font-weight"]
     },
     {
         id: "noise",
@@ -1936,7 +1969,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("gradual-spacing", "Gradual Spacing"),
         code: `import { motion } from 'framer-motion';\n\nexport const GradualSpacing = ({ text = "GRADUAL SPACING" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ letterSpacing: "-0.5em", opacity: 0 }}\n        animate={{ letterSpacing: "normal", opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: "Increase letter-spacing gradually for each character in a staggered sequence."
+        vibePrompt: LOVABLE_PROMPTS["gradual-spacing"]
     },
     {
         id: "letter-pull-up",
@@ -1944,7 +1977,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("letter-pull-up", "Letter Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const LetterPullUp = ({ text = "LETTER PULL UP" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: "Characters slide up from below the baseline into their final position with a staggered offset."
+        vibePrompt: LOVABLE_PROMPTS["letter-pull-up"]
     },
     {
         id: "multi-direction-slide",
@@ -1952,7 +1985,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("multi-direction-slide", "Multi Direction Slide"),
         code: `import { motion } from 'framer-motion';\n\nexport const MultiDirectionSlide = ({ text = "MULTI DIRECTION" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: i % 2 === 0 ? -50 : 50, y: i % 2 !== 0 ? -50 : 50, opacity: 0 }}\n        animate={{ x: 0, y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: "Text elements slide into view from multiple directions (left, right, top, bottom) simultaneously."
+        vibePrompt: LOVABLE_PROMPTS["multi-direction-slide"]
     },
     {
         id: "scale-letter",
@@ -1960,7 +1993,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("scale-letter", "Scale Letter"),
         code: `import { motion } from 'framer-motion';\n\nexport const ScaleLetter = ({ text = "SCALE LETTER" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ scale: 0, opacity: 0 }}\n        animate={{ scale: 1, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: "Scale each character from zero to its natural size with a spring or ease-out effect."
+        vibePrompt: LOVABLE_PROMPTS["scale-letter"]
     },
     {
         id: "separate-away",
@@ -1968,7 +2001,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("separate-away", "Separate Away"),
         code: `import { motion } from 'framer-motion';\n\nexport const SeparateAway = ({ text = "SEPARATE AWAY" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: 0 }}\n        animate={{ x: i < text.length / 2 ? -15 : 15 }}\n        transition={{ duration: 0.5 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: "Characters move away from each other along the X-axis upon interaction or mount."
+        vibePrompt: LOVABLE_PROMPTS["separate-away"]
     },
     {
         id: "wavy-text",
@@ -1976,7 +2009,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("wavy-text", "Wavy Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const WavyText = ({ text = "WAVY TEXT" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        animate={{ y: [0, -8, 0] }}\n        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: "Continuous vertical wave motion applied to characters using a periodic sine function."
+        vibePrompt: LOVABLE_PROMPTS["wavy-text"]
     },
     {
         id: "word-pull-up",
@@ -1984,7 +2017,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("word-pull-up", "Word Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const WordPullUp = ({ text = "WORD PULL UP" }) => (\n  <div className="flex gap-2 overflow-hidden">\n    {text.split(' ').map((word, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.2 }}\n      >\n        {word}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: "Full words slide up from below the baseline with opacity fade-in."
+        vibePrompt: LOVABLE_PROMPTS["word-pull-up"]
     },
     {
         id: "liquid-glass",
@@ -2048,7 +2081,8 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.GridBackground opacity={0.5} maskRadius={40} /></div>,
         code: `import { GridBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden bg-black">\n    <GridBackground opacity={0.6} maskRadius={30} />\n  </div>\n);`,
-        vibePrompt: "Generate an animated grid background effect with a radial gradient mask."
+        vibePrompt: LOVABLE_PROMPTS["grid-background"]
+
     },
     {
         id: "hacker-background",
@@ -2056,7 +2090,8 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("hacker-background", "Hacker Background"),
         code: `// Implementation for Hacker Background\nexport const HackerBackground = () => (\n  <div className="w-full h-full bg-black text-green-500 font-mono flex items-center justify-center">\n    01010101 MATRIX 10101010\n  </div>\n);`,
-        vibePrompt: "Create a digital rain matrix hacker background effect using HTML Canvas and requestAnimationFrame in React."
+        vibePrompt: LOVABLE_PROMPTS["hacker-background"]
+
     },
     {
         id: "novatrix-background",
@@ -2064,7 +2099,8 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.NovatrixBackground title="NEBULA" /></div>,
         code: `import { NovatrixBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden">\n    <NovatrixBackground \n      title="UI HUB" \n      colorFrom="#1a1a2e" \n      colorTo="#16213e" \n      opacity={0.8} \n    />\n  </div>\n);`,
-        vibePrompt: "Create a deep space nebula animated background using WebGL or layered CSS gradients with slow rotation effect."
+        vibePrompt: LOVABLE_PROMPTS["novatrix-background"]
+
     },
     {
         id: "beam-grid-background",
@@ -2072,7 +2108,8 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("beam-grid-background", "Beam Grid Background"),
         code: `// ... Beam Grid Background code is quite large, see the repo ...\nimport BeamGridBackground from '@/components/ui/BeamGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px]">\n    <BeamGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n    />\n  </div>\n);`,
-        vibePrompt: "Create a premium Beam grid background that has dynamic light beams traversing a grid with glow."
+        vibePrompt: LOVABLE_PROMPTS["beam-grid-background"]
+
     },
     {
         id: "fall-beam-background",
@@ -2080,7 +2117,8 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("fall-beam-background", "Fall Beam Background"),
         code: `import FallBeamBackground from '@/components/ui/FallBeamBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <FallBeamBackground\n      className="bg-transparent"\n      lineCount={30}\n      beamColorClass="cyan-400"\n    />\n  </div>\n);`,
-        vibePrompt: "Create a premium Matrix-style glowing vertical falling beams animation."
+        vibePrompt: LOVABLE_PROMPTS["fall-beam-background"]
+
     },
     {
         id: "hell-background",
@@ -2088,7 +2126,8 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.HellBackground intensity={1.5} speed={0.8} /></div>,
         code: `import { HellBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <HellBackground color="#DE443B" intensity={1.5} speed={1.0} />\n  </div>\n);`,
-        vibePrompt: "Create a WebGL background effect that simulates a chaotic inferno or hellish environment using GLSL shaders."
+        vibePrompt: LOVABLE_PROMPTS["hell-background"]
+
     },
     {
         id: "interactive-grid-background",
@@ -2096,7 +2135,8 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("interactive-grid-background", "Interactive Grid Background"),
         code: `import InteractiveGridBackground from '@/components/ui/InteractiveGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <InteractiveGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n      effectColor="rgba(0,255,0,0.5)"\n      darkEffectColor="rgba(0,255,0,0.5)"\n    />\n  </div>\n);`,
-        vibePrompt: "Create a premium glowing interactive grid background with trailing effect when hovered or idle."
+        vibePrompt: LOVABLE_PROMPTS["interactive-grid-background"]
+
     },
     {
         id: "particles-background",
@@ -2104,7 +2144,8 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.ParticlesBackground speed={3} interactive={true} /></div>,
         code: `import { ParticlesBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <ParticlesBackground \n      colors={['#ff223e', '#5d1eb2', '#ff7300']} \n      size={3} \n      speed={2.5} \n      interactive={true} \n    />\n  </div>\n);`,
-        vibePrompt: "Create an interactive particles animation background with glowing particles that move dynamically."
+        vibePrompt: LOVABLE_PROMPTS["particles-background"]
+
     },
     {
         id: "robot-3d-background",
@@ -2113,7 +2154,34 @@ export default MagneticCursor;
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
         code: `import { Robot3DBackground } from '@/components/ui/Robot3DBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <Robot3DBackground \n      overlayOpacity={0.4} \n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        ROBOTIC CORE\n      </h1>\n    </div>\n  </div>\n);\n\n// Video Resource: Robots_sliding_on_neon_platform_16a422a842.mp4
 // Download Link: /assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4`,
-        vibePrompt: "Create a cinematic 3D robotic background featuring small white AI cubes sliding on a neon-green conveyor above glossy black reflective water. The scene should feel futuristic and premium, with smooth sliding animations and realistic water ripples. This high-end asset includes a downloadable 4K MP4 video (branded with 'UI HUB') for seamless hero section integration."
+        vibePrompt: `
+COMPONENT NAME: Robot3DBackground
+
+PROPS (with defaults):
+- overlayOpacity: number = 0.4 — opacity of the vignette overlay
+- showDownloadLink: boolean = false — shows a 4K download button
+- className: string = '' — additional CSS classes
+
+VISUAL REQUIREMENTS:
+1. Fullscreen cinematic video background (robots on neon platform).
+2. Cyberpunk radial vignette overlay for focus.
+3. CRT-style scanline effect using 2px repeating linear gradient.
+4. "UI HUB" branded watermark on the video.
+5. Shimmering download button with hover pulse.
+
+TECHNICAL IMPLEMENTATION:
+- HTML5 Video with autoPlay, loop, muted, playsInline.
+- Programmatic asset download using Fetch + Blob URL.
+- Responsive container with object-cover scaling.
+- Clean Tailwind CSS for overlays and UI elements.
+
+VIDEO DEMO:
+- https://antigravity-ui.s3.amazonaws.com/videos/Robots_sliding_on_neon_platform.mp4
+
+CRITICAL RULES:
+- Explicitly handle video loading errors.
+- Ensure the overlay doesn't block pointer events for child components.
+- Cleanup Blob URLs used for downloads.`
     },
     {
         id: "wave-background",
@@ -2121,7 +2189,8 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("wave-background", "Wave Background"),
         code: `import WaveBackground from '@/components/ui/WaveBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <WaveBackground />\n  </div>\n);`,
-        vibePrompt: "Create a WebGL wave background effect."
+        vibePrompt: LOVABLE_PROMPTS["wave-background"]
+
     },
     {
         id: "lines-background",
@@ -2129,7 +2198,8 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.LinesBackground title="LINES" pathColor="#9c40ff" /></div>,
         code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" pathColor="rgba(255,255,255,0.2)" opacity={0.5} />\n  </div>\n);`,
-        vibePrompt: "Create an animated background with SVG paths flowing smoothly behind text."
+        vibePrompt: LOVABLE_PROMPTS["lines-background"]
+
     },
     {
         id: "sparkles-background",
@@ -2137,7 +2207,8 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("sparkles-background", "Sparkles Background"),
         code: `import { SparklesBackground } from '@/components/ui/sparkles-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <SparklesBackground title="Sparkles background" />\n  </div>\n);`,
-        vibePrompt: "Create a beautiful twinkling sparkles background effect with high-performance WebGL particles."
+        vibePrompt: LOVABLE_PROMPTS["sparkles-background"]
+
     },
     {
         id: "isometric-grid-background",
@@ -2145,7 +2216,8 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.IsometricGridBackground title="ISOMETRIC" /></div>,
         code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground \n      title="Tailwind is Awesome" \n      boxProps={{\n        rowsCount: 50,\n        colsCount: 30,\n        customColors: ["#ffaa40", "#9c40ff"]\n      }}\n    />\n  </div>\n);`,
-        vibePrompt: "Create a mesmerizing, skewed isometric grid background that illuminates with random colors on hover."
+        vibePrompt: LOVABLE_PROMPTS["isometric-grid-background"]
+
     },
     {
         id: "corner-border-button",
@@ -2153,7 +2225,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("corner-border-button", "Corner Border Button"),
         code: `import { CornerBorderButton } from '@/components/ui/corner-border-button';\n\nexport const Demo = () => (\n  <CornerBorderButton baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">\n    BUTTON\n  </CornerBorderButton>\n);`,
-        vibePrompt: "Create a button with glowing corner accents that expand into a full border on hover."
+        vibePrompt: LOVABLE_PROMPTS["corner-border-button"]
     },
     {
         id: "shatter-button",
@@ -2161,7 +2233,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("shatter-button", "Shatter Button"),
         code: `import { ShatterButton } from '@/components/ui/shatter-button';\n\nexport const Demo = () => (\n  <ShatterButton shatterColor="#00ffff" shardCount={30}>\n    Click Now\n  </ShatterButton>\n);`,
-        vibePrompt: "Create a button that shatters into physics-based glass shards when clicked, using Framer Motion."
+        vibePrompt: LOVABLE_PROMPTS["shatter-button"]
     },
     {
         id: "border-beam",
@@ -2169,7 +2241,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("border-beam", "Border Beam"),
         code: `import { BorderBeam } from '@/components/ui/border-beam';\n\nexport const Demo = () => (\n  <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">\n    Border Beam\n    <BorderBeam size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />\n  </button>\n);`,
-        vibePrompt: "Create a button with an animated Border Beam effect around its perimeter using Framer Motion."
+        vibePrompt: LOVABLE_PROMPTS["border-beam"]
     },
     {
         id: "glow-button",
@@ -2239,7 +2311,7 @@ export const GlowButton = () => {
     </div>
   );
 };`,
-        vibePrompt: "A high-end 'Atomic Emerald' neon button featuring an interactive radial light surface that tracks cursors with precision. The design utilizes multi-layered volumetric glows, glassmorphism highlights, and background ambient particle orbs for a premium, futuristic aesthetic. 100% responsive and reactive."
+        vibePrompt: LOVABLE_PROMPTS["glow-button"]
     },
     {
         id: "marquee-hover-button",
@@ -2247,7 +2319,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("marquee-hover-button", "Marquee Hover Button"),
         code: `import { MarqueeHoverButton } from '@/components/ui/marquee-hover-button';\n\nexport const Demo = () => (\n  <MarqueeHoverButton label="Hover Me" />\n);`,
-        vibePrompt: "Create a button that swaps its text for an infinitely scrolling marquee animation smoothly on hover."
+        vibePrompt: LOVABLE_PROMPTS["marquee-hover-button"]
     },
     {
         id: "payment-transaction-button",
@@ -2255,7 +2327,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("payment-transaction-button", "Payment Transaction Button"),
         code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton \n    label="Send Payment" \n    accentColor="#38bdf8" \n    currencySymbol="€"\n  />\n);`,
-        vibePrompt: "Create a modern animated 'New Transaction Card' UI component with hover interactions where a credit card slides into a POS terminal."
+        vibePrompt: LOVABLE_PROMPTS["payment-transaction-button"]
     },
     {
         id: "magic-card-effect",
@@ -2263,7 +2335,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("magic-card-effect", "Magic Card Effect"),
         code: `import { MagicCard } from '@/components/ui/magic-card';\n\nexport const Demo = () => (\n  <MagicCard className="flex flex-col items-center justify-center cursor-pointer shadow-2xl" gradientColor="#262626">\n    <div className="p-12 flex flex-col items-center gap-4 text-center">\n      <p className="text-4xl font-display font-bold text-white tracking-tight">Magic Card</p>\n      <p className="text-white/50 text-sm font-medium">Hover to reveal the magic</p>\n    </div>\n  </MagicCard>\n);`,
-        vibePrompt: "Create a spotlight effect that follows your mouse cursor and highlights borders on hover using framer-motion."
+        vibePrompt: LOVABLE_PROMPTS["magic-card-effect"]
     },
     {
         id: "rainbow-button",
@@ -2271,7 +2343,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("rainbow-button", "Rainbow Button"),
         code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <RainbowButton>Rainbow Button</RainbowButton>\n);`,
-        vibePrompt: "Create an animated button with a continuous rainbow border effect and a subtle glow using CSS animations."
+        vibePrompt: LOVABLE_PROMPTS["rainbow-button"]
     },
     {
         id: "social-tooltip-buttons",
@@ -2279,7 +2351,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("social-tooltip-buttons", "Social Tooltip Hover Buttons"),
         code: `import { SocialTooltipButtons } from "@/components/animations/SocialTooltipButtons";\n\nexport const Demo = () => (\n  <SocialTooltipButtons />\n);`,
-        vibePrompt: "Create a list of social icons that reveal brand-colored tooltips with a smooth bounce animation on hover."
+        vibePrompt: LOVABLE_PROMPTS["social-tooltip-buttons"]
     },
     {
         id: "orbit-button",
@@ -2287,7 +2359,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("orbit-button", "Orbit Button"),
         code: `import { OrbitButton } from "@/components/ui/OrbitButton";\n\nexport const Demo = () => (\n  <OrbitButton label="Orbit Button" color="cyan" />\n);`,
-        vibePrompt: "Futuristic button with planetary particles orbiting around a neon core."
+        vibePrompt: LOVABLE_PROMPTS["orbit-button"]
     },
     {
         id: "galaxy-button",
@@ -2295,7 +2367,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("galaxy-button", "Galaxy Button"),
         code: `import { GalaxyButton } from "@/components/ui/GalaxyButton";\n\nexport const Demo = () => (\n  <GalaxyButton label="Galaxy Button" />\n);`,
-        vibePrompt: "Futuristic button with an animated cosmic background, moving star particles, and premium neon glows."
+        vibePrompt: LOVABLE_PROMPTS["galaxy-button"]
     },
     {
         id: "liquid-fill-button",
@@ -2303,7 +2375,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("liquid-fill-button", "Liquid Fill Button"),
         code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
-        vibePrompt: "Premium button with a smooth SVG liquid wave filling animation that appears on hover."
+        vibePrompt: LOVABLE_PROMPTS["liquid-fill-button"]
     },
     {
         id: "neon-flicker-button",
@@ -2311,7 +2383,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("neon-flicker-button", "Neon Flicker Button"),
         code: `import { NeonFlickerButton } from "@/components/ui/NeonFlickerButton";\n\nexport const Demo = () => (\n  <NeonFlickerButton label="Neon Flicker" color="red" />\n);`,
-        vibePrompt: "Cyberpunk-inspired button with a smooth, randomized neon flicker effect and intense glow transitions."
+        vibePrompt: LOVABLE_PROMPTS["neon-flicker-button"]
     },
     {
         id: "aurora-cursor",
@@ -2339,7 +2411,8 @@ export const Demo = () => (
         category: "background",
         preview: () => <SpaceBackgroundPreview />,
         code: `import { SpaceBackground } from '@/components/ui/SpaceBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <SpaceBackground \n      starCount={400} \n      nebulaCount={6} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">\n        COSMIC VOYAGE\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: "Create a premium immersive cosmic space background with animated starfields, multi-layer parallax depth, and soft glowing nebula clouds in purple, blue, and pink using HTML Canvas for 60fps performance."
+        vibePrompt: LOVABLE_PROMPTS["space-background"]
+
     },
     {
         id: "neural-network-background",
@@ -2347,7 +2420,8 @@ export const Demo = () => (
         category: "background",
         preview: () => <NeuralNetworkPreview />,
         code: `import { NeuralNetworkBackground } from '@/components/ui/NeuralNetworkBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <NeuralNetworkBackground \n      nodeCount={120} \n      connectionDistance={150} \n      interactive={false} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase">\n        Neural Core\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: "Create a futuristic AI-style neural network background made of nodes (dots) connected by animated lines. Dots should connect with thin animated lines when they are close to each other. Nodes near the cursor should move slightly and connections should dynamically form around the cursor. Use HTML5 Canvas for smooth 60fps performance."
+        vibePrompt: LOVABLE_PROMPTS["neural-network-background"]
+
     },
     {
         id: "black-hole-background",
@@ -2355,7 +2429,8 @@ export const Demo = () => (
         category: "background",
         preview: () => <BlackHolePreview />,
         code: `import { BlackHoleBackground } from '@/components/ui/BlackHoleBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <BlackHoleBackground \n      particleCount={600} \n      coreColor="rgba(79, 70, 229, 0.4)" \n      accentColor="#22d3ee" \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-black text-white tracking-widest uppercase opacity-80">\n        Gravitational Core\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: "Create a cosmic black hole vortex animation where particles spiral toward the center like a gravitational singularity. Use HTML5 Canvas to maintain 60fps performance and implement realistic radial acceleration and mouse-influenced bending."
+        vibePrompt: LOVABLE_PROMPTS["black-hole-background"]
+
     },
     {
         id: "warp-speed-background",
@@ -2363,7 +2438,8 @@ export const Demo = () => (
         category: "background",
         preview: () => <WarpSpeedPreview />,
         code: `import { WarpSpeedBackground } from '@/components/ui/WarpSpeedBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <WarpSpeedBackground \n      starCount={800} \n      speed={15} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-white tracking-[0.3em] uppercase italic opacity-70">\n        Light Speed\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: "Create a premium space warp-speed effect where stars stretch into long light streaks, simulating hyperspace travel at extreme speed with 3D depth and smooth Canvas motion-blur."
+        vibePrompt: LOVABLE_PROMPTS["warp-speed-background"]
+
     },
     {
         id: "mouse-gravity-background",
@@ -2371,7 +2447,8 @@ export const Demo = () => (
         category: "background",
         preview: () => <MouseGravityPreview />,
         code: `import { MouseGravityBackground } from '@/components/ui/MouseGravityBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <MouseGravityBackground \n      particleCount={150} \n      attractionForce={0.06} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400/50 tracking-widest uppercase pointer-events-none">\n        Gravity Field\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: "Create a premium interactive background where particles are attracted to the cursor like gravity. Use HTML5 Canvas for smooth 60fps performance and implement realistic momentum and damping physics."
+        vibePrompt: LOVABLE_PROMPTS["mouse-gravity-background"]
+
     },
     {
         id: "heart-cursor",
@@ -2387,7 +2464,34 @@ export const Demo = () => (
         category: "3d",
         preview: () => <InteractiveWebGLScenePreview />,
         code: `import { InteractiveWebGLScene } from '@/components/ui/InteractiveWebGLScene';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <InteractiveWebGLScene \n      overlayOpacity={0.4} \n      showDownloadLink={true}\n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        WEBGL EXPERIENCE\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: "Create a premium background component featuring an interactive WebGL scene video. The system should include a high-quality video background with cinematic overlays, glassmorphism UI elements, and a integrated download system for 4K assets, all while maintaining a sleek, professional aesthetic."
+        vibePrompt: `
+COMPONENT NAME: InteractiveWebGLScene
+
+PROPS (with defaults):
+- overlayOpacity: number = 0.4 — opacity of the vignette overlay
+- showDownloadLink: boolean = false — shows a 4K download button
+- className: string = '' — additional CSS classes
+
+VISUAL REQUIREMENTS:
+1. Immersive WebGL-based 3D scene (video-hosted).
+2. Dark cinematic vignette centered on the core subject.
+3. Interactive scanline overlay (CRT distortion feel).
+4. Signature Indigo accent color theme.
+5. High-fidelity download button with glow effect.
+
+TECHNICAL IMPLEMENTATION:
+- Three.js/WebGL context (or high-end video source).
+- Programmatic download using Blob technique.
+- Responsive layout with aspect-ratio preservation.
+- Tailwind CSS for premium UI overlays.
+
+VIDEO DEMO:
+- https://antigravity-ui.s3.amazonaws.com/videos/Interactive_WebGL_Scene.mp4
+
+CRITICAL RULES:
+- Seamless looping with no visual stutter.
+- Overlay must support backdrop-blur if requested.
+- Programmatic download must work across all modern browsers.`
     },
     {
         id: "3d-scroll-animation",
@@ -2395,7 +2499,35 @@ export const Demo = () => (
         category: "3d",
         preview: () => <Scroll3DAnimationPreview />,
         code: `import Scroll3DAnimation from '@/components/ui/Scroll3DAnimation';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[800px] overflow-hidden rounded-3xl bg-white shadow-2xl border border-neutral-100">\n    <Scroll3DAnimation />\n  </div>\n);`,
-        vibePrompt: "Create a high-performance 3D scroll-based image sequence animation with premium text overlays and smooth canvas rendering."
+        vibePrompt: `
+COMPONENT NAME: Scroll3DAnimation
+
+PROPS (with defaults):
+- showDemoButton: boolean = false — toggles the "View Full Demo" overlay
+- className: string = '' — additional CSS classes
+
+VISUAL REQUIREMENTS:
+1. Scroll-driven 3D image sequence (300 frames).
+2. Smooth frame-by-frame scrubbing on a Canvas.
+3. Progressive text reveals at specific scroll markers.
+4. Blur-in and blur-out text transitions.
+5. Infinite marquee text animation in the hero section.
+6. Premium progress bar loader with percentage count.
+
+TECHNICAL IMPLEMENTATION:
+- GSAP ScrollTrigger for scroll-linked scrubbing.
+- Canvas 2D context for efficient frame rendering.
+- Image preloading with progress tracking.
+- Framer Motion for text entrance/exit.
+- "View Full Demo" external link overlay.
+
+VIDEO DEMO:
+- https://antigravity-ui.s3.amazonaws.com/videos/3d_scroll_experience_demo.mp4
+
+CRITICAL RULES:
+- Performance: Ensure 60fps scrubbing by preloading all images.
+- Handle different aspect ratios (Canvas fit vs cover).
+- Properly cleanup GSAP instances on component unmount.`
     },
     {
         id: "3d-slider",
@@ -2513,7 +2645,34 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
 // <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-[#0a0a0f] shadow-2xl">
 //   <ThreeDSlider autoPlay={true} interval={5000} />
 // </div>`,
-        vibePrompt: "Create a premium 3D perspective image slider component in React. The slider should have these exact features:\n\n1. LAYOUT: The active slide should be full-screen as a background image, while upcoming slides appear as smaller cards (200x300px) stacked on the right side at 50% from the left, spaced 230px apart.\n\n2. PERSPECTIVE EFFECT: Use CSS nth-child selectors to position cards. The 1st and 2nd children should be full-screen (100% width/height), cards 3-5 should be visible as small preview cards on the right, and cards 6+ should be hidden.\n\n3. DARK GRADIENT OVERLAY: Apply a left-to-right dark gradient overlay (rgba(0,0,0,0.8) to transparent) on the active slide using ::before pseudo-element to ensure text legibility.\n\n4. ANIMATED TEXT: Show title (64px, uppercase, font-weight 900) and description on the active slide only. Animate them in with a blur-to-clear slide-up effect using @keyframes (opacity 0→1, translateY 40px→0, blur 10px→0) with staggered delays (0.2s, 0.4s, 0.6s).\n\n5. CHROMATIC ACCENT COLORS: Each slide should have a unique accent color (e.g., Cyan #00f2ff, Purple #a855f7, Gold #fbbf24). Use CSS custom properties (--accent) to apply the accent as a drop-shadow glow on the title and as the background color of the 'Explore Now' button.\n\n6. INFINITE ROTATION: Implement next/prev by shifting array elements (shift+push for next, pop+unshift for prev). Add autoPlay option with configurable interval.\n\n7. NAVIGATION: Circular glassmorphic prev/next buttons at the bottom center with backdrop-filter blur, white-on-hover effect, and scale animation.\n\n8. TRANSITIONS: All card movements should use cubic-bezier(0.23, 1, 0.32, 1) easing for premium feel. Include responsive breakpoints for tablet and mobile."
+        vibePrompt: `
+COMPONENT NAME: ThreeDSlider
+
+PROPS (with defaults):
+- slides: Slide[] — array of high-end image/text slide data
+- className: string = '' — additional CSS classes
+
+VISUAL REQUIREMENTS:
+1. 3D Cylindrical Perspective carousel.
+2. Cards arranged in space with rotateY and translateZ.
+3. Smooth spring-based card rotation.
+4. Active card "reflection" or floor glow.
+5. Staggered text animations for title and subtitle.
+6. Responsive touch/swipe gesture support.
+
+TECHNICAL IMPLEMENTATION:
+- CSS 3D Transforms (preserve-3d, perspective).
+- Framer Motion for spring physics and transitions.
+- Mathematical angle calculation for cylindrical form.
+- Direct DOM manipulation or Framer AnimatePresence.
+
+VIDEO DEMO:
+- https://antigravity-ui.s3.amazonaws.com/videos/3d_slider_demo.mp4
+
+CRITICAL RULES:
+- Maintain 3D perspective consistent with the "3D Experience" theme.
+- Ensure accessibility for keyboard navigation.
+- Responsive design: scale 3D depth for mobile screens.`
     },
 
     {
@@ -2660,6 +2819,22 @@ export const Demo = () => {
   );
 };`,
         vibePrompt: "Create a mesmerizing 3D animation featuring abstract block movements with dynamic lighting and interactive 3D elements. Implement a custom premium loader with animated rings and a pulsing core to ensure a smooth transition while the high-fidelity Spline scene initializes. Use a deep tech-noir color palette with glowing emerald accents."
+    },
+    {
+        id: "3d-hero-globel",
+        title: "3D HERO GLOBEL",
+        category: "3d",
+        preview: () => <HeroGlobelSplinePreview />,
+        code: `import { HeroGlobelSpline } from '@/components/ui/HeroGlobelSpline';\n\nexport const Demo = () => {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">\n      <HeroGlobelSpline />\n    </div>\n  );\n};`,
+        vibePrompt: "Create a premium 3D 'HERO GLOBEL' animation experience with high-fidelity textures, dynamic lighting, and interactive elements. Featuring a custom UI HUB loader and branding, this component provides a stunning centerpiece for modern web designs. Match the reference design 100% with smooth transitions and deep tech-noir aesthetics."
+    },
+    {
+        id: "3d-orbital-experience",
+        title: "3D Orbital Experience",
+        category: "3d",
+        preview: () => <OrbitalExperienceSplinePreview />,
+        code: `import { OrbitalExperienceSpline } from '@/components/ui/OrbitalExperienceSpline';\n\nexport const Demo = () => {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">\n      <OrbitalExperienceSpline />\n    </div>\n  );\n};`,
+        vibePrompt: "Create a premium 3D 'Orbital Experience' animation with high-fidelity textures, dynamic lighting, and interactive elements. Featuring a custom UI HUB loader and branding, this component provides a stunning centerpiece for modern web designs. Match the reference design 100% with smooth transitions and deep tech-noir aesthetics."
     },
 ];
 

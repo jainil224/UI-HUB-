@@ -1,0 +1,1146 @@
+export const LOVABLE_PROMPTS: Record<string, string> = {
+    // 1. Buttons & Hover Effects
+    "corner-border-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A sharp, high-contrast button featuring "Corner-First" border animations. It represents a clinical, military-grade interface where borders grow dynamically from the corners upon activation.
+
+## Tech
+- React + Tailwind CSS
+- CSS Transitions (Width/Height)
+- Absolute positioning for corner markers
+
+## Animation Details
+- **Border Growth**: Four independent <span> elements animate width or height from 0 to 100% on hover, with a staggered delay (100ms) for a sophisticated "drawing" effect.
+- **Corner Squares**: Fixed 1.5x1.5px squares at top-left and bottom-right maintain visual weight.
+- **Color Shift**: Instant background color transition with duration-400.
+
+## Performance
+- Pure CSS animations; zero frame drops.
+- Minimal DOM nodes (button + 6 spans).
+
+## Props
+- baseColor: string (default: "#0b1a2a")
+- hoverColor: string (default: "#ff3b4d")
+- borderColor: string (default: "#60daff")
+
+## Output
+Production-ready React component`,
+
+    "shatter-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A "Break-on-Click" physical simulation. Upon interaction, the button vanishes and explodes into dozens of sharp shards that fly outwards with randomized physics, before resetting.
+
+## Tech
+- React + Framer Motion
+- AnimatePresence for state-based mounting/unmounting
+- SVG clip-path for randomized geometric shards
+
+## Animation Details
+- **Explosion**: Shards are generated with randomized velocityX, velocityY, and rotation (-360 to 720 deg).
+- **Shockwave**: A circular ring expands from the center (scale: 0 to 1, opacity: 1 to 0) over 600ms.
+- **Button Collapse**: The button itself scales to 0 and fades out instantly upon click.
+
+## Performance
+- Hardware-accelerated transforms for particles.
+- Automatic cleanup of shard elements after 1000ms.
+
+## Props
+- shardCount: number (default: 20)
+- shatterColor: string (default: "#00ffff")
+- onClick: function
+
+## Output
+Production-ready React component`,
+
+    "border-beam": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A continuous, infinite energy loop. A glowing beam of light travels along the border of any container, highlighting the edges with a high-tech "scanning" aesthetic.
+
+## Tech
+- React + Framer Motion
+- CSS mask-image with linear-gradient for edge transparency
+- offset-path: rect() for path-following movement
+
+## Animation Details
+- **Infinite Loop**: The beam uses offsetDistance from 0% to 100% with repeat: Infinity and ease: "linear".
+- **Glow Intensity**: Box shadow applied to the moving beam to create a volumetric halo.
+- **Directional Control**: Support for reverse animation and initialOffset starting points.
+
+## Performance
+- Uses offset-path (modern CSS) for efficient geometric path following.
+- No JS-based coordinate calculations.
+
+## Props
+- size: number (default: 50)
+- duration: number (default: 6)
+- colorFrom/colorTo: string
+- borderThickness: number
+
+## Output
+Production-ready React component`,
+
+    "glow-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+An "Interactive Atmosphere" button. It features multiple layers of neon glow that react in real-time to the cursor position, creating a sense of depth and volumetric lighting.
+
+## Tech
+- React + Inline Styles
+- Multiple Radial Gradients
+- Tailwind blur-sm to blur-2xl for soft light diffusion
+
+## Animation Details
+- **Dynamic Tracking**: Mouse coordinates are mapped to % values and applied to radial-gradient centers.
+- **Neon Edge**: A thin 1px gradient border that increases in opacity on hover.
+- **Floating Orbs**: Independent background elements with animate-pulse for ambient lighting.
+
+## Performance
+- State-based coordinate updates optimized for React performance.
+- Gradients rendered via standard CSS.
+
+## Props
+- label: string
+- accentColor: string (default: emerald-500)
+
+## Output
+Production-ready React component`,
+
+    "marquee-hover-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+An "Infinite Communication" button. In its resting state, it shows a static label; on hover, it transforms into a continuous marquee that slides the text infinitely across the surface.
+
+## Tech
+- React + Framer Motion
+- Horizontal translation logic (x: [0, -100])
+- Duplicate string concatenation for seamless loops
+
+## Animation Details
+- **Cross-Fade**: Static label fades out while the marquee div fades in (opacity transition).
+- **Smooth Rolling**: Linear repeat: Infinity transition with a set duration (default 3s).
+- **Layout Persistence**: Invisible spacer ensures the button does not change width during transitions.
+
+## Performance
+- CSS-based horizontal translation is highly efficient.
+
+## Props
+- label: string (default: "Button")
+- duration: number
+
+## Output
+Production-ready React component`,
+
+    "payment-transaction-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A "Physical Transaction" micro-interaction. A literal credit card slides upward and inserts itself into a POS terminal slot upon hover, confirming the action with a currency symbol glow.
+
+## Tech
+- React + CSS-in-JS (Style literals)
+- CSS Pseudo-elements (::before, ::after) for card chips
+- Cubic-bezier easing for mechanical feel
+
+## Animation Details
+- **Card Slide**: Translates from center to translate(-50%, -120%) with a 90deg rotation.
+- **Slot Interaction**: Terminal slides up from bottom: -60px to bottom: 0px.
+- **Signal**: Currency symbol ($) scales up (0.5 to 1) inside the terminal display after a 500ms delay.
+
+## Performance
+- High-performance CSS transitions.
+
+## Props
+- label: string
+- accentColor: string
+- currencySymbol: string
+
+## Output
+Production-ready React component`,
+
+    "magic-card-effect": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A "Revealing Light" card/button interaction. A localized spotlight follows the cursor, illuminating hidden details and adding high-end polish to the border and background layers.
+
+## Tech
+- React + Framer Motion (useMotionValue, useMotionTemplate)
+- Radial gradients with padding-box and border-box clipping
+
+## Animation Details
+- **Spotlight**: mouseX and mouseY variables drive a radial-gradient center.
+- **Edge Illumination**: The border itself is a gradient that is "unmasked" by the spotlight position.
+- **Reset**: Upon mouse leave, the spotlight animates smoothly back to its hidden position outside the container.
+
+## Performance
+- Uses Motion values to avoid React re-renders on every mouse move.
+- Hardware-accelerated gradient positioning.
+
+## Props
+- gradientSize: number (default: 200)
+- gradientFrom/gradientTo: string
+
+## Output
+Production-ready React component`,
+
+    "rainbow-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+The "Ultra-Premium Spectrum" button. Features a high-velocity, infinitely cycling rainbow border with a diffused glowing shadow that follows the same color cycle.
+
+## Tech
+- Tailwind CSS custom keyframes (animate-rainbow)
+- background-clip: padding-box and border-box
+- HSL Multi-variable color system
+
+## Animation Details
+- **Spectrum Cycle**: The background-position shifts across a 5-color HSL gradient (linear-gradient 90deg).
+- **Aura Glow**: A before pseudo-element with blur-lg echoes the rainbow animation underneath the button.
+
+## Performance
+- Purely CSS-driven; zero JavaScript overhead during runtime.
+
+## Props
+- variant: "default"
+- size: "sm" | "default" | "lg"
+
+## Output
+Production-ready React component`,
+
+    "social-tooltip-buttons": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Playful Depth" social links. Buttons that physically expand and reveal a floating, arrowed tooltip with an exaggerated "ease-back" bounce effect upon hover.
+
+## Tech
+- React + CSS Transitions
+- cubic-bezier(0.68, -0.55, 0.265, 1.55) for "pop-out" bounce
+- Brand-specific color mapping
+
+## Animation Details
+- **Tooltip Rise**: Tooltip moves from top: 0 to a negative -55px offset while scaling up.
+- **Hover Scale**: The button itself scales to 1.1 while transitioning background from white to the brand-specific color.
+- **Layering**: Text/Icon shifts color and maintains z-index over the rising background layer.
+
+## Performance
+- CSS-only transitions for smooth 60fps interaction.
+
+## Props
+- socialIcons: Array of objects (name, color, icon)
+
+## Output
+Production-ready React component`,
+
+    "orbit-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A "Satellite System" interaction. Multiple particles orbit the center of the button at varying speeds and radii, creating a sense of planetary momentum that accelerates when hovered.
+
+## Tech
+- React + Framer Motion
+- Nested motion divs for orbital rotation
+- Multi-layer shadow/glow system
+
+## Animation Details
+- **Orbital Planes**: 5 independent particles rotating 360 degrees.
+- **Hover Acceleration**: Rotation duration is halved on hover for an "energy surge" effect.
+- **Interactivity**: Main button scales to 1.05 and active particles scale to 1.5 with increased brightness.
+
+## Performance
+- CSS-driven rotations for high-performance looping.
+
+## Props
+- color: "blue" | "purple" | "cyan"
+- label: string
+
+## Output
+Production-ready React component`,
+
+    "galaxy-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Deep Space" luxury button. Features a rotating conic gradient border (Aura), multiple floating star layers with parallax, and shifting nebulas for a high-end cosmic aesthetic.
+
+## Tech
+- React + Framer Motion
+- Conic gradients
+- Multi-layered star system
+
+## Animation Details
+- **Aura Rotation**: A conic gradient rotates 360 degrees on the border rim.
+- **Nebula Drift**: Background gradients shift and rotate slowly (15s-20s) to simulate clouds.
+- **Star Twinkle**: 3 layers of stars with randomized delay and scale pulsing.
+- **Light Sweep**: A diagonal shimmer zips across the surface every 1.5s on hover.
+
+## Performance
+- Hardware-accelerated transforms and opacity.
+
+## Props
+- label: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "liquid-fill-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Hydraulic Interaction" button. The button container acts as a vessel that fills with glowing liquid from the bottom up when hovered, complete with a realistic dual-wave surface.
+
+## Tech
+- React + Framer Motion
+- SVG paths with linear fill
+- Duel-wave physics simulation
+
+## Animation Details
+- **Liquid Rise**: A container background translates from y: 100% to y: 0% with spring damping.
+- **Surface Waves**: Two overlapping SVG wave paths translate horizontally at different speeds (2s and 3s) and in opposite directions to create organic depth.
+- **Label Color**: Text color swaps from neon to white as it is "submerged" in the liquid.
+
+## Performance
+- Optimized SVG path animations.
+
+## Props
+- liquidColor: string
+- label: string
+
+## Output
+Production-ready React component`,
+
+    "neon-flicker-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Distressed Cyberpunk" aesthetic. A high-intensity neon button that suffers from digital glitches, power surges, and erratic flickering, feeling like a raw piece of hardware.
+
+## Tech
+- React + Framer Motion
+- Multiple animation loops (randomized)
+- Scanline & Digital Grain overlays
+
+## Animation Details
+- **Random Flicker**: Opacity oscillates using a randomized repeatDelay array to simulate bad wiring.
+- **Power Blink**: Global "blackout" blink every 6 seconds.
+- **Interactive Surge**: On click, glow intensity and shadow blur increase by 300% for 600ms.
+- **Micro-Glitch**: Discrete colored blocks appear and disappear in the corners.
+
+## Performance
+- Complex multi-layered animations; use sparingly for high-impact interactions.
+
+## Props
+- color: "red" | "cyan" | "purple" | "blue" | "pink"
+- label: string
+
+## Output
+Production-ready React component`,
+
+    // 2. 3D & WebGL Experiences
+    "3d-orbital-experience": `Create a "3D Orbital Experience" with planetary rings or atomic structures that rotate and zoom on interaction.`,
+    "robot-3d-background": `Create a visually stunning Robot 3D Background with cinematic video, cyberpunk scanlines, and a branded watermark.`,
+    "interactive-webgl-scene": `Create an immersive Interactive WebGL Scene featuring a 3D subject, cinematic vignette, and CRT distortion overlays.`,
+    "3d-scroll-animation": `Create a 360-degree 3D Scroll Animation where a product or scene scrubs through frames based on user scroll position.`,
+    "3d-slider": `Create a 3D Cylindrical Perspective carousel with spring-based card rotation and floor reflection effects.`,
+
+    // 3. Backgrounds (17 High-Fidelity Prompts)
+    "grid-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A clean, modern geometric grid that feels structured yet atmospheric. It represents a digital canvas, providing a professional technical backdrop for sophisticated UI elements.
+
+## Tech
+- React + Tailwind CSS
+- CSS linear-gradient for grid lines
+- CSS mask-image with radial-gradient for soft edge vignetting
+
+## Animation Details
+- Static grid pattern
+- Optional: Smooth transitions on grid size or color changes using CSS transition
+
+## Performance
+- Ultra-lightweight; uses standard CSS background properties
+- No JS overhead for rendering
+
+## Props
+- gridSize: number (default: 24)
+- gridColor: string (default: "#80808012")
+- maskRadius: string/number (default: "50% 50% at 50% 50%")
+- opacity: number (default: 1)
+- label: string (optional)
+
+## Output
+Production-ready React component`,
+
+    "hacker-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+The classic "Matrix Rain" aesthetic, reimagined for modern web apps. It evokes a sense of deep-tech, terminal-style hacking, and digital flow, with characters cascading down a pitch-black void.
+
+## Tech
+- React + HTML5 Canvas (2D Context)
+- requestAnimationFrame for high-performance fluid motion
+- Custom character set (Alphanumeric + Special Characters)
+
+## Animation Details
+- Independent columns of characters falling at different speeds
+- Fading trail effect achieved by periodic semi-transparent clearing (ctx.fillStyle = 'rgba(0, 0, 0, 0.05)')
+- Randomized respawning of character "drops"
+
+## Performance
+- Canvas-based; handles hundreds of characters with minimal CPU impact
+- Component is responsive to its parent container size
+
+## Props
+- color: string (default: "#0F0")
+- fontSize: number (default: 15)
+- speed: number (default: 1)
+
+## Output
+Production-ready React component`,
+
+    "novatrix-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A deep, immersive cosmic nebula effect. Soft gradients and pulsing light create a sense of vast space and premium elegance, perfect for hero sections.
+
+## Tech
+- React + Tailwind CSS
+- Advanced CSS gradients (bg-gradient-to-br)
+- Custom CSS keyframe animations for rotation and pulsing
+
+## Animation Details
+- pulse: Slow breathing effect on the background gradient
+- spin-slow: A subtle, large radial-gradient glow that rotates slowly (20s duration) to create shifting light patterns
+- fade-in: Smooth entrance animation for the container
+
+## Performance
+- Pure CSS animations; extremely efficient and battery-friendly
+
+## Props
+- colorFrom: string (default: "#1e1b4b")
+- colorTo: string (default: "#581c87")
+- title: string (optional overlay)
+
+## Output
+Production-ready React component`,
+
+    "beam-grid-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A high-tech grid where energy beams travel along the axes. It feels alive and interactive, reacting to user presence with localized cell illumination.
+
+## Tech
+- React + HTML5 Canvas (2D Context)
+- Off-screen buffer canvas for pre-rendered static grid (optimization)
+- High-DPI (Retina) support using devicePixelRatio
+- Dark mode detection
+
+## Animation Details
+- Energy Beams: Randomized beams with glow effects traveling along grid lines
+- Interactive Highlight: Cursor-aware square cell illumination that snaps to the grid
+- Idle Mode: Beams continue moving with an optional speed multiplier when inactive
+
+## Performance
+- Optimized using a buffer canvas for the static grid to reduce draw calls per frame
+- Radial mask fade applied via CSS to soften the edges of the canvas
+
+## Props
+- gridSize: number (default: 40)
+- beamColor: string
+- beamSpeed: number
+- interactive: boolean (true/false)
+- glowIntensity: number
+
+## Output
+Production-ready React component`,
+
+    "fall-beam-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A futuristic "digital rain" of light beams. Vertical streaks of light with glowing heads fall through the screen with randomized timing, creating a vertical parallax effect.
+
+## Tech
+- React + Dynamic DOM nodes
+- CSS Variables for per-line randomization
+- CSS Keyframes for the falling motion
+
+## Animation Details
+- fall: Vertical movement from top to bottom with a tail-glow gradient
+- Randomized animation-duration (8s-18s) and animation-delay for a natural, non-synchronized look
+
+## Performance
+- Uses CSS animations instead of Canvas for better integration with standard DOM content/layouts
+
+## Props
+- lineCount: number (default: 20)
+- beamColor: string
+- displayText: string (optional centered hero text)
+- opacity: number
+
+## Output
+Production-ready React component`,
+
+    "hell-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+An organic, liquid-fire flow effect. It feels primal and intense, using complex shader math to simulate swirling heat or molten energy.
+
+## Tech
+- React + WebGL
+- Custom GLSL Shaders (Vertex & Fragment)
+- Uniform-based control for colors and time
+
+## Animation Details
+- Time-based flow: Complex coordinate transformations in the fragment shader create a self-looping organic pattern
+- Shifting colors based on custom RGB inputs
+
+## Performance
+- GPU-accelerated through WebGL; ensures 60FPS even with complex math across the entire viewport
+- Automatic canvas resizing to match container
+
+## Props
+- color: string (hex format)
+- backdropBlurAmount: string (Tailwind blur sizes)
+
+## Output
+Production-ready React component`,
+
+    "interactive-grid-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A highly responsive grid that follows the user's cursor with a glowing light box. It feels like the UI is physically reacting to the mouse, leaving a subtle trail of light.
+
+## Tech
+- React + HTML5 Canvas (2D)
+- Snapping logic to align highlights with the grid
+- Dark mode detection
+
+## Animation Details
+- Cursor Trail: A sequence of glowing grid cells that fade out over time
+- Idle Movement: Random grid cells illuminate and move to new targets when the mouse is stationary
+
+## Performance
+- Efficient Canvas clearing and redrawing with optimized alpha calculations for the trail
+
+## Props
+- gridSize: number (default: 50)
+- effectColor: string (rgba/hex)
+- trailLength: number
+- glowRadius: number
+
+## Output
+Production-ready React component`,
+
+    "particles-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A lightweight, classic floating particle system. It adds subtle energy and movement without being distracting, perfect for ambient backgrounds.
+
+## Tech
+- React + particles.js (external library)
+- SVG filters for particle glow effects
+- Retina support
+
+## Animation Details
+- Random Brownian movement of particles
+- Interactive "repulse" (push away) on hover and "push" (add) on click
+
+## Performance
+- Leverages the battle-tested performance of particles.js
+- Responsive particle counts for Mobile, Tablet, and Desktop
+
+## Props
+- colors: string array
+- speed: number
+- countDesktop: number
+- interactive: boolean
+
+## Output
+Production-ready React component`,
+
+    "wave-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A mesmerizing, fluid wave simulation that creates a relaxing yet high-tech atmosphere. It mimics light reflecting off surfaces or ethereal liquid flow.
+
+## Tech
+- React + WebGL + GLSL
+- Framer Motion useInView for smart lifecycle management
+- Uniform-based shader controls
+
+## Animation Details
+- Sinusoidal wave blending in the fragment shader using nested sin functions
+- Time-based offsets to simulate continuous liquid movement
+
+## Performance
+- Smart Pause: Animation automatically loops the render call only when the component is visible in the viewport using framer-motion's observer.
+
+## Props
+- speed: number
+- intensity: number
+- backdropBlurAmount: string
+
+## Output
+Production-ready React component`,
+
+    "lines-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+Elegant, floating organic lines (paths) that weave through the background. It creates a sophisticated, almost architectural feel, combined with premium typography.
+
+## Tech
+- React + Framer Motion (SVG animation)
+- SVG Bezier Curves
+- Staggered spring animations for text
+
+## Animation Details
+- Path Animation: Lines animate their pathLength from 0.3 to 1 and shift their pathOffset for a continuous flowing look
+- Text Entrance: Characters appear with a spring-loaded "y" translation and fade-in, staggered across words
+
+## Performance
+- Uses SVG motion.path which is hardware-accelerated for smooth 60FPS path drawing
+
+## Props
+- title: string (Hero text to animate)
+- pathColor: string
+- opacity: number
+
+## Output
+Production-ready React component`,
+
+    "sparkles-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A premium, star-dusted background that feels magical and clean. It uses tiny glowing specks of light to add texture and depth to the dark UI.
+
+## Tech
+- React + Framer Motion
+- External Particle Core (SparklesCore)
+- CSS mask-image with radial gradient for center-focusing
+
+## Animation Details
+- Fine-grained twinkling particles
+- Title entrance uses spring physics for individual characters with a custom text-glow effect
+
+## Performance
+- Efficient handling of high particle density with a soft radial mask to focus rendering complexity in the center
+
+## Props
+- particleColor: string
+- density: number
+- minSize/maxSize: number
+
+## Output
+Production-ready React component`,
+
+    "isometric-grid-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A 3D isometric perspective grid of interactive cubes. It gives the feeling of a tactile, digital surface that rewards exploration with pops of color.
+
+## Tech
+- React + Framer Motion
+- CSS 3D Transforms (skew, rotate, scale)
+- SVG markers for grid intersections
+
+## Animation Details
+- Isometric View: Established via global skew and rotation on the grid container
+- Box Hover: Immediate color change on hover with a slow fade-out back to the base state
+
+## Performance
+- Uses React.memo to prevent unnecessary re-renders of the large grid of boxes
+
+## Props
+- rowsCount/colsCount: number
+- customColors: string array (palette for hover effect)
+
+## Output
+Production-ready React component`,
+
+    "space-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A vast, immersive deep space simulation. It features layered starfields, shifting nebulas, and rare cosmic events like shooting stars and star shattering.
+
+## Tech
+- React + HTML5 Canvas (2D)
+- Multi-layer parallax logic
+- Custom fragment/particle physics
+
+## Animation Details
+- Layered Parallax: Mouse movements shift stars at different intensities based on their "layer"
+- Star Twinkling: Individual stars oscillate opacity at randomized speeds
+- Shatter Event: Rare "unstable" stars that explode into sharp geometric fragments with physics-based dispersion
+
+## Performance
+- Uses optimized Canvas draw calls; handles 400+ stars and nebulas with ease
+- Particle cleanup logic for fragments to prevent memory bloat
+
+## Props
+- starCount: number
+- nebulaCount: number
+- interactive: boolean
+
+## Output
+Production-ready React component`,
+
+    "neural-network-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A digital brain/connectivity network. Nodes float through space, building connections as they pass near each other, representing a living, thinking system.
+
+## Tech
+- React + HTML5 Canvas (2D)
+- Proximity-based line drawing logic
+- Kinetic physics with edge bouncing
+
+## Animation Details
+- Connection Lines: Dynamic line drawing between nodes within a specific connectionDistance
+- Magnetic Cursor: Mouse pushes nodes away while simultaneously drawing connection lines towards the cursor position
+- Pulse: Global node size oscillation for a "breathing" network effect
+
+## Performance
+- Distance checks optimized within the animation loop using a simple distance formula (sqrt(dx^2 + dy^2))
+
+## Props
+- nodeCount: number
+- connectionDistance: number
+- nodeColor/lineColor: string
+
+## Output
+Production-ready React component`,
+
+    "black-hole-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+An astronomical simulation of a gravitational singularity. Light and matter (particles) are pulled into a central dark core, accelerating as they cross the event horizon.
+
+## Tech
+- React + HTML5 Canvas (2D)
+- Radial gradient "Core" effects
+- Spiral/Gravity physics
+
+## Animation Details
+- Spiral Physics: Particles move along a decreasing radius with angular velocity
+- Core Shift: Mouse movement subtly tilts the orientation of the whole black hole
+- Gravitational Acceleration: Particles speed up as they get closer to the center before being recycled to the outer bounds
+
+## Performance
+- Efficient recycling of particles (respawn at edge) to maintain constant density
+
+## Props
+- particleCount: number
+- coreColor: string
+- accentColor: string
+
+## Output
+Production-ready React component`,
+
+    "warp-speed-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+The classic "hyperdrive" or warp speed visual. Lines of light stretch and zip past the viewer from a central vanishing point, creating an intense sense of forward velocity.
+
+## Tech
+- React + HTML5 Canvas (2D)
+- 3D Projection to 2D math (Z-axis movement)
+- High-Performance line stretching
+
+## Animation Details
+- Stretch Trails: Lines are drawn from the previous frame's 2D projection to the current one, creating trails proportionally long to their speed and proximity
+- Camera Tilt: Mouse movement shifts the vanishing point, simulating a cockpit steering through space
+
+## Performance
+- Fast Z-axis reset logic; handles 800+ stars smoothly at 60FPS
+
+## Props
+- starCount: number
+- speed: number
+- starColor: string
+
+## Output
+Production-ready React component`,
+
+    "mouse-gravity-background": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A playful physics playground where particles are magnetically attracted to the user's cursor. It creates an aura of energy that follows you throughout the page.
+
+## Tech
+- React + HTML5 Canvas (2D)
+- Velocity-based attraction physics (F = G * m1*m2 / r^2 logic)
+- Damping/Friction simulation
+
+## Animation Details
+- Attraction: Particles within a radius accelerate towards the mouse
+- Dynamic Spawning: Short-lived trail particles are continuously spawned at the mouse position while active
+- Drift: Particles maintain random ambient movement when not influenced by gravity
+
+## Performance
+- Dynamic particle pool management; automatically filters out-of-life particles
+
+## Props
+- particleCount: number
+- attractionRadius: number
+- attractionForce: number
+- enableTrail: boolean
+
+## Output
+Production-ready React component`,
+
+    // 4. Cursors & Interaction
+    "3d-tubes-cursor": `Create "3D Glowing Tubes" that connect the current mouse position to its previous coordinates, creating a light-painting effect.`,
+    "aurora-cursor": `Create a soft glowing gradient blob (purple, cyan, pink, indigo) that follows the mouse with spring physics, continuously morphing shape and shifting colors like northern lights.`,
+    "lizard-cursor": `Create a high-performance procedural animation of a skeletal lizard that tracks the mouse with precision using Inverse Kinematics (IK).`,
+    "venom-cursor": `Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated venom-like entities.`,
+    "heart-cursor": `Create a premium interactive mouse cursor animation with a purple heart theme and trailing aura/ripple effect.`,
+
+    // 5. Text Animations (11 High-Fidelity Prompts)
+    "blur-text": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A professional, cinematic text entrance. Content emerges from a deep blur into sharp focus, mimicking a camera lens adjusting to its subject.
+
+## Tech
+- React + Framer Motion
+- CSS Filter (blur)
+- Intersection Observer (whileInView)
+
+## Animation Details
+- **Focus Shift**: Initial state is \`filter: blur(10px)\` and \`opacity: 0\`.
+- **Entrance**: Animates to \`blur(0px)\` and \`opacity: 1\` over 800ms with a smooth \`easeOut\`.
+- **Trigger**: Activates when the element enters the viewport.
+
+## Performance
+- GPU-accelerated filter transitions.
+- Efficient scroll-triggering via Framer Motion's built-in observer.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "fade-text": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A clean, minimalist entrance. Text appears via a smooth opacity transition, ideal for subtle headers or ambient messaging.
+
+## Tech
+- React + Framer Motion
+- Opacity transitions
+
+## Animation Details
+- **Entrance**: Linear or ease-in-out opacity transition from 0 to 1.
+- **Duration**: Adjustable timing (default 1.5s) for varying emphasis.
+
+## Performance
+- Simple opacity animation; extremely lightweight.
+
+## Props
+- text: string
+- duration: number
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "dock-text": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A standard "Pop-In" header effect. Text scales up from a slightly smaller size while fading in, giving it a sense of physical arrival.
+
+## Tech
+- React + Framer Motion
+- Scale + Opacity transforms
+
+## Animation Details
+- **Arrival**: Scales from 0.8 to 1.0 simultaneously with opacity 0 to 1.
+- **Physics**: Uses standard ease for a predictable, clean arrival.
+
+## Performance
+- Lightweight scale/opacity transforms.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "font-weight": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A "Living Typography" effect. The text physically breathes, with its font-weight continuously oscillating between light and heavy weights, creating a rhythmic, organic feel.
+
+## Tech
+- React + Framer Motion
+- Variable Font support
+- State-driven weight interpolation
+
+## Animation Details
+- **Breathing Lifecycle**: Oscillates between weight 400 and 900 every 1 second.
+- **Smoothness**: Uses \`easeInOut\` transition to ensure the weight shift feels fluid, not stepped.
+
+## Performance
+- Efficient CSS variable font interpolation.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "gradual-spacing": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Expanding Intelligence." Text characters begin condensed and expand outward into their natural letter-spacing, suggesting a blossoming of information.
+
+## Tech
+- React + Framer Motion
+- Character-level splitting
+- Letter-spacing interpolation
+
+## Animation Details
+- **Staggered Expansion**: Each character starts at \`letter-spacing: 1em\` and \`opacity: 0\`.
+- **Timing**: animates to \`0.1em\` and \`opacity: 1\` with a 50ms stagger between letters.
+- **Duration**: 1.5s total duration per character for a deliberative feel.
+
+## Performance
+- Individual character motion.span elements; use for short/medium titles only.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "letter-pull-up": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A "Stage Entrance" for typography. Each character slides up from beneath a hidden baseline, appearing like a row of mechanical tiles being flipped into place.
+
+## Tech
+- React + Framer Motion
+- Overflow-hidden clipping
+- Y-axis translation
+
+## Animation Details
+- **Slide Up**: Translates from \`y: 100%\` to \`y: 0\`.
+- **Staggering**: Sequential 50ms delay between each character.
+- **Clipping**: High-precision \`overflow-hidden\` container ensures characters appear from thin air at the baseline.
+
+## Performance
+- Efficient Y-axis transforms.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "multi-direction-slide": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Chaotic Convergence." Characters fly in from seemingly random directions (Top-Left/Bottom-Left) along the horizontal plane, snapping perfectly into place to form the final word.
+
+## Tech
+- React + Framer Motion
+- Zig-zag coordinate seeding (modulo logic)
+
+## Animation Details
+- **Entropic Inbound**: Even indices start at \`y: -20, x: -50\`. Odd indices start at \`y: 20, x: -50\`.
+- **Target**: Converge on \`0, 0\` with opacity 1 over 800ms.
+- **Stagger**: 50ms per character for an organic ripple.
+
+## Performance
+- Moderate Complexity due to individual X/Y axis calculations.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "scale-letter": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Elastic Growth" text. Characters pop into existence with a bouncy, spring-based scale animation, making the headline feel playful and energetic.
+
+## Tech
+- React + Framer Motion
+- Custom Cubic Bezier for "Snap-Back" (0.34, 1.56, 0.64, 1)
+
+## Animation Details
+- **Spring Scale**: Scales from 0 to 1 with an overshoot (1.56 value in bezier) for a bouncy feel.
+- **Opacity Fade**: Fades in simultaneously over 500ms.
+
+## Performance
+- Standard scale/opacity transforms.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "separate-away": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Sliding Assembly." Characters march in from the left side of their final position, creating a "shunting" visual where the word builds itself from left-to-right.
+
+## Tech
+- React + Framer Motion
+- Negative X-axis offsets
+
+## Animation Details
+- **Linear Slide**: Character starts at \`x: -20\` with \`opacity: 0\`.
+- **Stagger**: Slow 80ms delay between letters for a deliberate "marching" cadence.
+- **Transition**: 800ms duration for a smooth, non-aggressive arrival.
+
+## Performance
+- Lightweight X-axis transforms.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "wavy-text": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+"Liquid Typography." A continuous, sine-wave oscillation that ripples through the text indefinitely, giving it a playful, underwater, or ethereal vibe.
+
+## Tech
+- React + Framer Motion
+- Keyframe-based loop animation
+
+## Animation Details
+- **Oscillation**: Keyframes move character \`y\` position from \`[0, -20, 0]\`.
+- **Infinite Loop**: \`repeat: Infinity\` with \`easeInOut\` for seamless periodicity.
+- **Stagger**: 100ms phase shift between characters creates the wave crest.
+
+## Performance
+- Continuous animation; monitor CPU usage if used on long blocks of text.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+
+    "word-pull-up": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A "Major Announcement" header. Instead of individual letters, full words slide up from the baseline in a rhythmic 1-2-3 sequence, perfect for bold slogans.
+
+## Tech
+- React + Framer Motion
+- Word-level splitting (split by " ")
+- Flexbox alignment with gap
+
+## Animation Details
+- **Block Motion**: Each word translates from \`y: 100%\` to \`y: 0\`.
+- **Heavy Stagger**: 200ms delay between words to emphasize each part of the message.
+- **Duration**: 800ms for a solid, meaningful entrance.
+
+## Performance
+- More efficient than character-level splitting for long sentences.
+
+## Props
+- text: string
+- className: string
+
+## Output
+Production-ready React component`,
+};

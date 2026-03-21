@@ -27,6 +27,7 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
     const haloVel = useRef({ x: 0, y: 0 });
     const rafId = useRef<number>(0);
     const isHover = useRef(false);
+    const isInside = useRef(false);
 
     // Magnetic elements registry
     const magnets = useRef<HTMLElement[]>([]);
@@ -34,6 +35,14 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
     const onMouseMove = useCallback((e: MouseEvent) => {
         if (containerRef?.current) {
             const rect = containerRef.current.getBoundingClientRect();
+            const inside = (
+                e.clientX >= rect.left &&
+                e.clientX <= rect.right &&
+                e.clientY >= rect.top &&
+                e.clientY <= rect.bottom
+            );
+            isInside.current = inside;
+
             mouse.current = {
                 x: e.clientX - rect.left,
                 y: e.clientY - rect.top,
@@ -41,6 +50,7 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
                 absY: e.clientY
             };
         } else {
+            isInside.current = true; // Global mode
             mouse.current = {
                 x: e.clientX,
                 y: e.clientY,
@@ -78,10 +88,12 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
         if (dotRef.current) {
             dotRef.current.style.transform =
                 `translate(${dot.current.x - half}px, ${dot.current.y - half}px) scale(${isHover.current ? 1.7 : 1})`;
+            dotRef.current.style.opacity = isInside.current ? '1' : '0';
         }
         if (haloRef.current) {
             haloRef.current.style.transform =
                 `translate(${halo.current.x - haloHalf}px, ${halo.current.y - haloHalf}px) scale(${isHover.current ? 1.4 : 1})`;
+            haloRef.current.style.opacity = isInside.current ? '1' : '0';
         }
 
         // ── Magnetic pull on nearby elements ───────────────────
@@ -191,10 +203,10 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
     return (
         <div className={className} style={{ position: pos, top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}>
             <style>{`
-                body { cursor: none !important; }
-                a, button, [role="button"] { cursor: none !important; }
-                .mc-dot  { transition: transform 0.08s linear, opacity 0.3s; }
-                .mc-halo { transition: transform 0.25s ease, opacity 0.3s; }
+                ${!containerRef ? 'body { cursor: none !important; }' : ''}
+                ${!containerRef ? 'a, button, [role="button"] { cursor: none !important; }' : ''}
+                .mc-dot  { transition: transform 0.08s linear, opacity 0.3s ease-out; }
+                .mc-halo { transition: transform 0.25s ease, opacity 0.3s ease-out; }
             `}</style>
 
             {/* Dot */}
