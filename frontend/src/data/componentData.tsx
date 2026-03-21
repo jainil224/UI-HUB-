@@ -23,6 +23,7 @@ import { HeroGlobelSpline } from '../components/ui/HeroGlobelSpline';
 import { OrbitalExperienceSpline } from '../components/ui/OrbitalExperienceSpline';
 import { ThreeDBlockMovement } from '../components/ui/ThreeDBlockMovement';
 import { LOVABLE_PROMPTS } from './lovablePrompts';
+import { ANTIGRAVITY_PROMPTS } from './antigravityPrompts';
 
 
 
@@ -2198,7 +2199,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("corner-border-button", "Corner Border Button"),
         code: `import { CornerBorderButton } from '@/components/ui/corner-border-button';\n\nexport const Demo = () => (\n  <CornerBorderButton baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">\n    BUTTON\n  </CornerBorderButton>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["corner-border-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["corner-border-button"]
     },
     {
         id: "shatter-button",
@@ -2206,7 +2207,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("shatter-button", "Shatter Button"),
         code: `import { ShatterButton } from '@/components/ui/shatter-button';\n\nexport const Demo = () => (\n  <ShatterButton shatterColor="#00ffff" shardCount={30}>\n    Click Now\n  </ShatterButton>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["shatter-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["shatter-button"]
     },
     {
         id: "border-beam",
@@ -2214,7 +2215,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("border-beam", "Border Beam"),
         code: `import { BorderBeam } from '@/components/ui/border-beam';\n\nexport const Demo = () => (\n  <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">\n    Border Beam\n    <BorderBeam size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />\n  </button>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["border-beam"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["border-beam"]
     },
     {
         id: "glow-button",
@@ -2284,7 +2285,7 @@ export const GlowButton = () => {
     </div>
   );
 };`,
-        vibePrompt: LOVABLE_PROMPTS["glow-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["glow-button"]
     },
     {
         id: "marquee-hover-button",
@@ -2292,7 +2293,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("marquee-hover-button", "Marquee Hover Button"),
         code: `import { MarqueeHoverButton } from '@/components/ui/marquee-hover-button';\n\nexport const Demo = () => (\n  <MarqueeHoverButton label="Hover Me" />\n);`,
-        vibePrompt: LOVABLE_PROMPTS["marquee-hover-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["marquee-hover-button"]
     },
     {
         id: "payment-transaction-button",
@@ -2300,7 +2301,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("payment-transaction-button", "Payment Transaction Button"),
         code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton \n    label="Send Payment" \n    accentColor="#38bdf8" \n    currencySymbol="€"\n  />\n);`,
-        vibePrompt: LOVABLE_PROMPTS["payment-transaction-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["payment-transaction-button"]
     },
     {
         id: "magic-card-effect",
@@ -2308,7 +2309,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("magic-card-effect", "Magic Card Effect"),
         code: `import { MagicCard } from '@/components/ui/magic-card';\n\nexport const Demo = () => (\n  <MagicCard className="flex flex-col items-center justify-center cursor-pointer shadow-2xl" gradientColor="#262626">\n    <div className="p-12 flex flex-col items-center gap-4 text-center">\n      <p className="text-4xl font-display font-bold text-white tracking-tight">Magic Card</p>\n      <p className="text-white/50 text-sm font-medium">Hover to reveal the magic</p>\n    </div>\n  </MagicCard>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["magic-card-effect"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["magic-card-effect"]
     },
     {
         id: "rainbow-button",
@@ -2316,7 +2317,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("rainbow-button", "Rainbow Button"),
         code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <RainbowButton>Rainbow Button</RainbowButton>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["rainbow-button"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["rainbow-button"]
     },
     {
         id: "social-tooltip-buttons",
@@ -2324,7 +2325,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("social-tooltip-buttons", "Social Tooltip Hover Buttons"),
         code: `import { SocialTooltipButtons } from "@/components/animations/SocialTooltipButtons";\n\nexport const Demo = () => (\n  <SocialTooltipButtons />\n);`,
-        vibePrompt: LOVABLE_PROMPTS["social-tooltip-buttons"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["social-tooltip-buttons"]
     },
     {
         id: "orbit-button",
