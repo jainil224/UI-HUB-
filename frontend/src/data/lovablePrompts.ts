@@ -361,11 +361,234 @@ Create a visually stunning component.
 Production-ready React component`,
 
     // 2. 3D & WebGL Experiences
-    "3d-orbital-experience": `Create a "3D Orbital Experience" with planetary rings or atomic structures that rotate and zoom on interaction.`,
-    "robot-3d-background": `Create a visually stunning Robot 3D Background with cinematic video, cyberpunk scanlines, and a branded watermark.`,
-    "interactive-webgl-scene": `Create an immersive Interactive WebGL Scene featuring a 3D subject, cinematic vignette, and CRT distortion overlays.`,
-    "3d-scroll-animation": `Create a 360-degree 3D Scroll Animation where a product or scene scrubs through frames based on user scroll position.`,
-    "3d-slider": `Create a 3D Cylindrical Perspective carousel with spring-based card rotation and floor reflection effects.`,
+    "3d-orbital-experience": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "3D Orbital Experience" component.
+
+## Concept
+A premium, perspective-shifting 3D scene focused on orbital mechanics and futuristic structures. It utilizes high-fidelity textures and deep tech-noir colors (Emerald/Indigo accents) to create a sense of scale and precision engineering.
+
+## Tech
+React, Spline Engine, Framer Motion Transitions.
+
+## Animation Details
+- **Orbital POV**: Integrated camera tracking that follows long-range mouse movements for a sweeping cinematic feel.
+- **Seamless Entry**: Scene fades in over 1000ms after the "Initializing" loader cycle completes.
+- **High-End UI**: Scoped CSS branding removal and custom-branded watermark at the top-left for elite presentation.
+- **Interactive Hints**: Glassmorphic badge with pulse-dot notification to guide user interaction.
+
+## Performance
+- Hardware-accelerated canvas context with Z-index optimization to prevent flickering.
+- Lightweight loader prevents layout shift during scene mounting.
+
+## Props
+- className: string
+- onLoad: () => void
+
+## Output
+Production-ready React component`,
+    "odyssey-spline": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "Odyssey 3D Animation" component.
+
+## Concept
+An elite, cinematic 3D environment titled 'Odyssey' that represents the pinnacle of space-tech discovery. It features vast scale, complex geometric textures, and dynamic depth that shifts in response to user exploration.
+
+## Tech
+React, Spline (@splinetool/react-spline), Framer Motion, Tailwind CSS.
+
+## Animation Details
+- **Interactive Scene**: A high-fidelity Spline scene that tracks mouse position for dynamic parallax and POV rotation.
+- **Premium Loader**: A custom React-based preloader featuring nested animated rings and a pulsing central core to bridge the Spline initialization time.
+- **Atmospheric Hints**: An auto-revealing "3D Odyssey Animation" badge that slides into view upon mouse entry.
+- **Branding Integration**: Custom UI HUB overlays with tracking-heavy typography that pulses with a tech-noir glow.
+
+## Performance
+- **Lifecycle Management**: Scoped opacity transitions to hide the scene during heavy asset loading.
+- **DOM Branding Removal**: Hardened CSS hacks and programmatic object hiding to ensure a 100% white-label premium experience.
+- **Responsive Viewport**: Automatic canvas scaling to maintain 3D scene integrity across all screen sizes.
+
+## Props
+- className: string
+- onLoad: function (Callback for Spline completion)
+
+## Output
+Production-ready React component`,
+    "3d-block-movement": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "3D Block Movement" component.
+
+## Concept
+A mesmerizing, abstract 3D environment focused on the rhythmic, synchronized movement of large geometric blocks. The aesthetic is "Brutalist Digital," featuring sharp lighting, deep shadows, and an aura of high-tech machinery.
+
+## Tech
+React, Spline Runtime, Framer Motion (Loader), Custom CSS Scoping.
+
+## Animation Details
+- **Procedural Motion**: Looping 3D block animations embedded in the Spline scene with hardware-accelerated vertex shifting.
+- **Gopher Loader**: A sophisticated multi-stage loader with rotating emerald rings and a shadow-glow pulse.
+- **Transition Logic**: Minimal \`duration: 0.8\` ease-out transitions for the overlay removal once \`onLoad\` triggers.
+- **Interaction hint**: A floating glassmorphic tooltip that slides up only after the scene is fully interactive.
+
+## Performance
+- GPU-reliant rendering optimized for modern browsers.
+- Fallback covering divs to prevent asset pop-in or branding flickers.
+
+## Props
+- className: string
+- onLoad: () => void
+
+## Output
+Production-ready React component`,
+    "3d-hero-globel": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "3D Hero Globel" component.
+
+## Concept
+A stunning, orbital-themed 3D masterpiece designed as a high-impact website centerpiece. It features a planetary or technological sphere (Globel) with complex surface detail and volumetric lighting that feels alive and interactive.
+
+## Tech
+React, Spline, Framer Motion, Tailwind Typography.
+
+## Animation Details
+- **Global Rotation**: Continuous 3D rotation with mouse-driven intensity multipliers.
+- **Signature Loader**: Multi-layered circular rings with staggered rotation (3s clockwise, 2s counter-clockwise) and a central emerald pulse.
+- **Branding Overlay**: Floating "UI HUB - Elite 3D Asset" badge with wide tracking and entrance-slide logic.
+- **Hint System**: Pulsing interaction point hint that appears at the bottom-center of the viewport.
+
+## Performance
+- Parallel loading logic using React's \`Suspense\`.
+- Programmatic branding suppression (\`findObjectByName\`) targeting Spline default nodes.
+
+## Props
+- className: string
+- onLoad: function
+
+## Output
+Production-ready React component`,
+    "robot-3d-background": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "Robot 3D Background" component.
+
+## Concept
+A cinematic, futuristic backdrop featuring high-fidelity 3D robots sliding across a neon-lit industrial platform. The atmosphere is dense and high-tech, enhanced by a cyberpunk radial vignette and retro scanline overlays that evoke a premium sci-fi cockpit or command center interface.
+
+## Tech
+React, HTML5 Video, Tailwind CSS, Lucide-style SVGs, Blob API (for 4K downloads).
+
+## Animation Details
+- **Cinematic Background**: Seamlessly looping 4K MP4 video with a subtle \`scale(1.1)\` and offset transform for immersive framing.
+- **Interactive UI**: A shimmering "Download 4K" button with a gradient stroke and a sweeping light-refraction animation (\`shimmer\` keyframes).
+- **CRT Atmosphere**: A multi-layered scanline effect using linear gradients to create horizontal and vertical pixel-grid distortion.
+- **Dynamic Vignette**: A programmatic radial gradient that darkens towards the edges, focusing visual attention on the central action.
+
+## Performance
+- Uses \`object-cover\` for responsive video scaling.
+- Optimized programmatic download using Fetch + Blob URL to prevent browser navigation.
+- Scanline and vignette effects are rendered as lightweight CSS overlays.
+
+## Props
+- className: string (Optional container styles)
+- overlayColor: string (Default: "rgba(0,0,0,0.5)")
+- overlayOpacity: number (Default: 0.4)
+- showDownloadLink: boolean (Default: false)
+
+## Output
+Production-ready React component`,
+    "interactive-webgl-scene": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "Interactive WebGL Scene" component.
+
+## Concept
+An immersive, high-end WebGL-inspired 3D environment that serves as a premium cinematic background. It features deep indigo tones, professional lighting, and a futuristic Command & Control aesthetic, perfected with CRT scanlines and a focus-driven radial vignette.
+
+## Tech
+React, HTML5 Video, Tailwind CSS, Blob API, Scoped CSS Keyframes.
+
+## Animation Details
+- **Scene Loop**: High-fidelity 4K video source rendered with \`autoPlay\`, \`loop\`, and \`muted\` attributes.
+- **Glassmorphism UI**: High-end download button with \`backdrop-blur-xl\` and indigo-tinted glowing borders.
+- **Digital Grain**: Scoped scanline overlay mimicking a high-resolution CRT monitor's phosphorus grid.
+- **Pulse Effects**: UI HUB branding elements with shadow-glow pulses and border-radius consistency.
+
+## Performance
+- Programmatic memory management for Blob URLs during 4K asset retrieval.
+- Hardware-accelerated video rendering via \`playsInline\`.
+- Zero-dependency logic for maximum portability.
+
+## Props
+- className: string
+- overlayColor: string (Indigo-favored dark transparency)
+- overlayOpacity: number
+- showDownloadLink: boolean
+
+## Output
+Production-ready React component`,
+    "3d-scroll-animation": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "3D Scroll Animation" component.
+
+## Concept
+An elite, scroll-linked 3D experience featuring a frame-by-frame scrubbing animation of a high-fidelity 3D character or object. The character seems to physically move through space as the user scrolls, with secondary typography layers revealing insights in a cinematic, blur-driven entrance pattern.
+
+## Tech
+React, GSAP (ScrollTrigger), HTML5 Canvas (2D Context), Framer Motion, Tailwind CSS.
+
+## Animation Details
+- **Scroll Scrubbing**: 300-frame image sequence preloaded into memory and scrubbed via GSAP's \`ScrollTrigger\` mapped to a Canvas 2D engine.
+- **Cinematic Reveals**: Text layers (\`Page 0\`, \`Page 1\`, etc.) utilize \`blur-in/blur-out\` transitions combined with \`y-axis\` translation, staggered across the scroll range.
+- **Interactive Marquee**: An infinite horizontal text marquee (\`animate-marquee\`) that fades out as the user enters the scrubbing phase.
+- **Progress Tracking**: A sleek, minimal loader with a percentage counter and a growing progress bar that tracks 3D asset initialization.
+
+## Performance
+- **Image Preloading**: Parallel preloading of 300 PNG frames with progress tracking to ensure 60fps scrubbing with no stutter.
+- **Canvas Rendering**: High-performance frame drawing using \`requestAnimationFrame\`-compatible logic and \`drawImage\` scaling optimization (cover-fit math).
+- **Memory Management**: Automatic cleanup of GSAP timelines and ScrollTrigger instances on unmount.
+
+## Props
+- className: string
+- showDemoButton: boolean (Toggles "View Full Demo" external link overlay)
+
+## Output
+Production-ready React component`,
+    "3d-slider": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "3D Slider" component.
+
+## Concept
+A premium perspective-driven gallery where the current active slide occupies the full background, while upcoming slides appear as smaller, depth-defying 3D cards that seem to follow a cylindrical or layered path. The transition is extremely smooth, moving from card-view to full-screen background seamlessly.
+
+## Tech
+React, CSS 3D Transforms (Perspective, TranslateZ), Tailwind CSS, Inter/Google Fonts.
+
+## Animation Details
+- **Perspective Track**: Upcoming cards utilize \`translateY(-50%)\` and graduated \`left\` offsets to create a physical depth effect.
+- **Active Transition**: The 2nd child in the slide array expands to \`100% width/height\` with \`0 radius\` to become the immersive background.
+- **Staggered Text**: Titles and descriptions use \`slideUpFade\` animations with \`filter: blur(10px)\` and gradual \`y\` translation (0.2s, 0.4s, 0.6s delays).
+- **Glow Accents**: Dynamic CSS variables (\`--accent\`) applied to text shadows and button backgrounds for slide-specific branding.
+- **Interaction**: Automatic interval-driven cycling plus high-sensitivity touch/swipe support for mobile devices.
+
+## Performance
+- **Hardware Acceleration**: Heavy use of \`translate3d\` and \`will-change\` to offload transitions to the GPU.
+- **DOM Efficiency**: Array rotation logic (\`shift\`/\`push\`) for circular navigation without over-mounting.
+- **Responsive Adaptive**: Cards automatically hide or scale down on mobile to preserve layout integrity.
+
+## Props
+- slides: Array<{id, title, description, image, accentColor}>
+- autoPlay: boolean
+- interval: number (ms)
+- className: string
+
+## Output
+Production-ready React component`,
 
     // 3. Backgrounds (17 High-Fidelity Prompts)
     "grid-background": `
@@ -848,11 +1071,232 @@ A playful physics playground where particles are magnetically attracted to the u
 Production-ready React component`,
 
     // 4. Cursors & Interaction
-    "3d-tubes-cursor": `Create "3D Glowing Tubes" that connect the current mouse position to its previous coordinates, creating a light-painting effect.`,
-    "aurora-cursor": `Create a soft glowing gradient blob (purple, cyan, pink, indigo) that follows the mouse with spring physics, continuously morphing shape and shifting colors like northern lights.`,
-    "lizard-cursor": `Create a high-performance procedural animation of a skeletal lizard that tracks the mouse with precision using Inverse Kinematics (IK).`,
-    "venom-cursor": `Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated venom-like entities.`,
-    "heart-cursor": `Create a premium interactive mouse cursor animation with a purple heart theme and trailing aura/ripple effect.`,
+    "target-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning tactical cursor.
+
+## Concept
+A high-tech tracking system. Reactive corners that "lock on" to interactive elements by physical snapping, combined with an idle scanning rotation and subtle parallax movement.
+
+## Tech
+- React + requestAnimationFrame
+- CSS 3D Transforms (translate, rotate)
+- mix-blend-mode: difference for high visibility
+
+## Animation Details
+- **Idle State**: Center dot pulses; corners rotate slowly (360° over 2s).
+- **Lock-on**: Corners snap to target element dimensions with cubic-bezier easing.
+- **Micro-Parallax**: Cursor positions itself at center + 15% mouse offset when locked, creating a 3D depth effect.
+- **Smoothing**: Position interpolation using \`current += (target - current) * 0.2\`.
+
+## Performance
+- Zero-dependency DOM-based animation; hardware accelerated transforms.
+
+## Props
+- targetSelector: string
+- spinDuration: number
+- hoverDuration: number
+- hideDefaultCursor: boolean
+- parallaxOn: boolean
+
+## Output
+Production-ready React component`,
+
+    "black-hole-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning cosmic cursor.
+
+## Concept
+An immersive astronomical singularity. It features a dense gravitational core that pulls star particles into a swirling accretion disk, set against deep space nebulas.
+
+## Tech
+- React + HTML5 Canvas (2D)
+- Multi-layered CSS animations
+- CSS filters (blur, brightness)
+
+## Animation Details
+- **Gravitational Pull**: Particles accelerate towards the cursor using radial distance math (F = (R-d)/R).
+- **Singularity Core**: Event horizon (singularity) with a multi-layered accretion disk (Golden Plasma, Cyan Inner Disk, Violet Flare).
+- **Accretion Disk**: 3 concurrent keyframe animations: \`bh-accretion-plasma\` (12s skew/rotate), \`bh-accretion-inner\` (5s rotate), \`bh-photon-ring\` (3s scale pulse).
+- **Spiral Physics**: Force-based tangential velocity creates a localized vortex.
+
+## Performance
+- Optimized canvas clearing; particle recycling system (respawn at edges).
+
+## Props
+- gravityRadius: number
+- containerRef: React.RefObject
+
+## Output
+Production-ready React component`,
+
+    "magnetic-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning interactive cursor.
+
+## Concept
+A dual-layer "energy field" cursor. It consists of a precise focal dot and a lagging protective halo that exerts a physical magnetic pull on specialized UI elements.
+
+## Tech
+- React + Velocity-based Spring Physics
+- Dynamic MutationObserver for element registration
+- CSS custom properties for hover states
+
+## Animation Details
+- **Async Lag**: Focal dot (high stiffness) and Halo (low stiffness) follow the mouse at different rates.
+- **Magnetic Influence**: Nearby elements marked with \`[data-magnetic]\` physically shift towards the cursor (38% attraction strength) with localized shadow expansion.
+- **Smoothing**: Velocity damping (0.72 for dot, 0.80 for halo) for liquid-smooth motion.
+
+## Performance
+- No React state used for physics loop (Refs only); 60FPS consistent.
+
+## Props
+- magnetRadius: number
+- cursorSize: number
+
+## Output
+Production-ready React component`,
+
+    "aurora-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning ambient cursor.
+
+## Concept
+A soft, morphing blob of light inspired by the Borealis. It continuously shifts shape, color, and intensity, flowing across the screen like ethereal plasma.
+
+## Tech
+- React + Spring Physics
+- Multiple overlapping radial-gradients
+- mix-blend-mode: screen
+
+## Animation Details
+- **Morphing Physics**: \`aurora-morph\` keyframes shift border-radius between 8 complex states (0% to 100%).
+- **Color Drift**: \`aurora-shift\` oscillates background-position across a 5-color cyan/purple/indigo/pink/indigo palette.
+- **Pulse**: Intensity oscillates (55% to 75% opacity) to simulate atmospheric flickering.
+- **Interactive Scale**: Scales to 1.35x when hovering interactive elements.
+
+## Performance
+- Pure CSS keyframe animations for visuals combined with JS-spring for tracking.
+
+## Props
+- size: number
+- stiffness: number
+- damping: number
+
+## Output
+Production-ready React component`,
+
+    "heart-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning playful cursor.
+
+## Concept
+A romantic, neon-infused cursor. A glowing purple heart that leaves a trail of expanding, soft-blur ripples in its wake.
+
+## Tech
+- React + HTML5 Canvas 2D (Ripples)
+- SVG Filters (Drop Shadow)
+- CSS Animations
+
+## Animation Details
+- **Pulse Animation**: \`heart-pulse\` keyframes oscillate scale and drop-shadow intensity (8px to 15px blur).
+- **Canvas Ripples**: Periodic spawning (100ms) of radial gradient circles that expand and fade simultaneously.
+- **Motion Easing**: 0.15 easing on position for a soft, "floaty" tracking feel.
+
+## Performance
+- Efficient ripple cleanup logic; canvas-driven trail ensures no DOM bloat.
+
+## Props
+- size: number
+- glowIntensity: number
+- trailSpeed: number
+
+## Output
+Production-ready React component`,
+
+    "lizard-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning procedural cursor.
+
+## Concept
+A high-performance biological simulation. A skeletal lizard entity that navigates the screen using organic Inverse Kinematics (IK), reacting to surface impacts.
+
+## Tech
+- React + HTML5 Canvas 2D
+- Procedural Inverse Kinematics (IK)
+- Segmented physics classes
+
+## Animation Details
+- **Biological Motion**: Multi-segmented spinal column with hierarchical child segments (Legs, Feet, Tail).
+- **Leg System**: Independent step logic for 4 limbs; legs lift and plant based on body reach and forwardness.
+- **Reaction**: Global "Strike" effect on mouse down; head lunges forward with high lerp factor (0.6).
+- **Impact Logic**: Animated ripple pulse at the click coordinate.
+
+## Performance
+- Class-based procedural logic optimized for high segment counts.
+
+## Props
+- color: string
+- size: number
+- interactive: boolean
+
+## Output
+Production-ready React component`,
+
+    "venom-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning visceral cursor.
+
+## Concept
+A dark, symbiotic lifeform. A swarm of procedurally animated entities that "wriggle" through the interface using organic noise-based motion.
+
+## Tech
+- React + HTML5 Canvas 2D
+- Sine-wave Noise Generation
+- Procedural Walking Algorithms
+
+## Animation Details
+- **Symbiotic Movement**: Multiple spawned entities following a "walk radius" with randomized velocity seeds.
+- **Wriggle Logic**: Sine-wave based noise (\`sin(0.3 * x + 1.4 * t + ...)\`) applied to line segments for organic flickering.
+- **Interaction**: Swarm clusters tightly around mouse but maintains internal chaos.
+
+## Performance
+- Math-heavy but lightweight drawing (simple lines and ellipses); 60FPS.
+
+## Props
+- color: string
+- interactive: boolean
+
+## Output
+Production-ready React component`,
+
+    "3d-tubes-cursor": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning 3D cursor.
+
+## Concept
+A high-energy neon trail. Multiple 3D tubes of light that "paint" the screen in three-dimensional space, responding to the camera's perspective.
+
+## Tech
+- React + Three.js
+- Custom Geometry (TubeBufferGeometry)
+- Dynamic Lighting System
+
+## Animation Details
+- **3D Trailing**: Tubes connect historical mouse coordinates in 3D space with smooth bezier curves.
+- **Neon Glow**: Dynamic point lights with high intensity (200) follow the tube leading edges.
+- **Depth Interaction**: Trailing segments fade out in both opacity and thickness over time.
+
+## Performance
+- WebGL accelerated; dynamic geometry disposal to prevent memory leaks.
+
+## Props
+- colors: string[]
+- lightColors: string[]
+- lightIntensity: number
+
+## Output
+Production-ready React component`,
 
     // 5. Text Animations (11 High-Fidelity Prompts)
     "blur-text": `

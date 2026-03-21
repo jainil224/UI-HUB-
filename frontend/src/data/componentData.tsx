@@ -1431,7 +1431,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
 };
 
 export default TargetCursor;`,
-        vibePrompt: "A high-precision targeting cursor that snaps to elements with animated corner brackets and smooth parallax tracking."
+        vibePrompt: LOVABLE_PROMPTS["target-cursor"]
     },
     {
         id: "black-hole-cursor",
@@ -1750,7 +1750,7 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
 
 export default BlackHoleCursor;
 `,
-        vibePrompt: "Create a stunning black hole gravity cursor effect using Canvas particles that spiral into a central dark core."
+        vibePrompt: LOVABLE_PROMPTS["black-hole-cursor"]
     },
     {
         id: "magnetic-cursor",
@@ -1921,7 +1921,7 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
 
 export default MagneticCursor;
 `,
-        vibePrompt: "Build a futuristic magnetic cursor interaction where the cursor is a glowing dot with a halo, and it attracts nearby UI elements (buttons, cards) using distance-based spring physics. When hovering an element, the cursor enlarges and the element snaps towards the cursor center."
+        vibePrompt: LOVABLE_PROMPTS["magnetic-cursor"]
     },
     {
         id: "blur-text",
@@ -2154,34 +2154,7 @@ export default MagneticCursor;
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
         code: `import { Robot3DBackground } from '@/components/ui/Robot3DBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <Robot3DBackground \n      overlayOpacity={0.4} \n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        ROBOTIC CORE\n      </h1>\n    </div>\n  </div>\n);\n\n// Video Resource: Robots_sliding_on_neon_platform_16a422a842.mp4
 // Download Link: /assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4`,
-        vibePrompt: `
-COMPONENT NAME: Robot3DBackground
-
-PROPS (with defaults):
-- overlayOpacity: number = 0.4 — opacity of the vignette overlay
-- showDownloadLink: boolean = false — shows a 4K download button
-- className: string = '' — additional CSS classes
-
-VISUAL REQUIREMENTS:
-1. Fullscreen cinematic video background (robots on neon platform).
-2. Cyberpunk radial vignette overlay for focus.
-3. CRT-style scanline effect using 2px repeating linear gradient.
-4. "UI HUB" branded watermark on the video.
-5. Shimmering download button with hover pulse.
-
-TECHNICAL IMPLEMENTATION:
-- HTML5 Video with autoPlay, loop, muted, playsInline.
-- Programmatic asset download using Fetch + Blob URL.
-- Responsive container with object-cover scaling.
-- Clean Tailwind CSS for overlays and UI elements.
-
-VIDEO DEMO:
-- https://antigravity-ui.s3.amazonaws.com/videos/Robots_sliding_on_neon_platform.mp4
-
-CRITICAL RULES:
-- Explicitly handle video loading errors.
-- Ensure the overlay doesn't block pointer events for child components.
-- Cleanup Blob URLs used for downloads.`
+        vibePrompt: LOVABLE_PROMPTS["robot-3d-background"]
     },
     {
         id: "wave-background",
@@ -2403,7 +2376,7 @@ export const Demo = () => (
     </p>
   </div>
 );`,
-        vibePrompt: "Create a premium aurora borealis cursor effect — a soft glowing gradient blob (purple, cyan, pink, indigo) that follows the mouse with spring physics, continuously morphing shape and shifting colors like northern lights. Use CSS blur + mix-blend-mode:screen on a dark background. Lightweight, no external dependencies."
+        vibePrompt: LOVABLE_PROMPTS["aurora-cursor"]
     },
     {
         id: "space-background",
@@ -2456,7 +2429,7 @@ export const Demo = () => (
         category: "cursor",
         preview: () => <HeartCursorPreview />,
         code: `import { HeartCursor } from '@/components/ui/HeartCursor';\n\n// Wrap your content with the HeartCursor component.\n// It tracks the mouse smoothly and leaves trailing ripples.\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#0a0a0f] flex items-center justify-center">\n    <HeartCursor \n      size={24} \n      glowIntensity={0.8} \n      trailSpeed={0.05}\n    />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      Move your cursor to experience the love\n    </p>\n  </div>\n);`,
-        vibePrompt: "Create a premium interactive mouse cursor animation with a purple heart theme. The cursor should be a glowing purple heart with a soft neon glow and subtle gradient. It should follow the mouse with smooth easing and leave a trailing aura/ripple effect using Gaussian blur and radial gradients. Implement hover effects where the heart grows and glows brighter over interactive elements."
+        vibePrompt: LOVABLE_PROMPTS["heart-cursor"]
     },
     {
         id: "interactive-webgl-scene",
@@ -2464,34 +2437,7 @@ export const Demo = () => (
         category: "3d",
         preview: () => <InteractiveWebGLScenePreview />,
         code: `import { InteractiveWebGLScene } from '@/components/ui/InteractiveWebGLScene';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <InteractiveWebGLScene \n      overlayOpacity={0.4} \n      showDownloadLink={true}\n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        WEBGL EXPERIENCE\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: `
-COMPONENT NAME: InteractiveWebGLScene
-
-PROPS (with defaults):
-- overlayOpacity: number = 0.4 — opacity of the vignette overlay
-- showDownloadLink: boolean = false — shows a 4K download button
-- className: string = '' — additional CSS classes
-
-VISUAL REQUIREMENTS:
-1. Immersive WebGL-based 3D scene (video-hosted).
-2. Dark cinematic vignette centered on the core subject.
-3. Interactive scanline overlay (CRT distortion feel).
-4. Signature Indigo accent color theme.
-5. High-fidelity download button with glow effect.
-
-TECHNICAL IMPLEMENTATION:
-- Three.js/WebGL context (or high-end video source).
-- Programmatic download using Blob technique.
-- Responsive layout with aspect-ratio preservation.
-- Tailwind CSS for premium UI overlays.
-
-VIDEO DEMO:
-- https://antigravity-ui.s3.amazonaws.com/videos/Interactive_WebGL_Scene.mp4
-
-CRITICAL RULES:
-- Seamless looping with no visual stutter.
-- Overlay must support backdrop-blur if requested.
-- Programmatic download must work across all modern browsers.`
+        vibePrompt: LOVABLE_PROMPTS["interactive-webgl-scene"]
     },
     {
         id: "3d-scroll-animation",
@@ -2499,35 +2445,7 @@ CRITICAL RULES:
         category: "3d",
         preview: () => <Scroll3DAnimationPreview />,
         code: `import Scroll3DAnimation from '@/components/ui/Scroll3DAnimation';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[800px] overflow-hidden rounded-3xl bg-white shadow-2xl border border-neutral-100">\n    <Scroll3DAnimation />\n  </div>\n);`,
-        vibePrompt: `
-COMPONENT NAME: Scroll3DAnimation
-
-PROPS (with defaults):
-- showDemoButton: boolean = false — toggles the "View Full Demo" overlay
-- className: string = '' — additional CSS classes
-
-VISUAL REQUIREMENTS:
-1. Scroll-driven 3D image sequence (300 frames).
-2. Smooth frame-by-frame scrubbing on a Canvas.
-3. Progressive text reveals at specific scroll markers.
-4. Blur-in and blur-out text transitions.
-5. Infinite marquee text animation in the hero section.
-6. Premium progress bar loader with percentage count.
-
-TECHNICAL IMPLEMENTATION:
-- GSAP ScrollTrigger for scroll-linked scrubbing.
-- Canvas 2D context for efficient frame rendering.
-- Image preloading with progress tracking.
-- Framer Motion for text entrance/exit.
-- "View Full Demo" external link overlay.
-
-VIDEO DEMO:
-- https://antigravity-ui.s3.amazonaws.com/videos/3d_scroll_experience_demo.mp4
-
-CRITICAL RULES:
-- Performance: Ensure 60fps scrubbing by preloading all images.
-- Handle different aspect ratios (Canvas fit vs cover).
-- Properly cleanup GSAP instances on component unmount.`
+        vibePrompt: LOVABLE_PROMPTS["3d-scroll-animation"]
     },
     {
         id: "3d-slider",
@@ -2645,34 +2563,7 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
 // <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-[#0a0a0f] shadow-2xl">
 //   <ThreeDSlider autoPlay={true} interval={5000} />
 // </div>`,
-        vibePrompt: `
-COMPONENT NAME: ThreeDSlider
-
-PROPS (with defaults):
-- slides: Slide[] — array of high-end image/text slide data
-- className: string = '' — additional CSS classes
-
-VISUAL REQUIREMENTS:
-1. 3D Cylindrical Perspective carousel.
-2. Cards arranged in space with rotateY and translateZ.
-3. Smooth spring-based card rotation.
-4. Active card "reflection" or floor glow.
-5. Staggered text animations for title and subtitle.
-6. Responsive touch/swipe gesture support.
-
-TECHNICAL IMPLEMENTATION:
-- CSS 3D Transforms (preserve-3d, perspective).
-- Framer Motion for spring physics and transitions.
-- Mathematical angle calculation for cylindrical form.
-- Direct DOM manipulation or Framer AnimatePresence.
-
-VIDEO DEMO:
-- https://antigravity-ui.s3.amazonaws.com/videos/3d_slider_demo.mp4
-
-CRITICAL RULES:
-- Maintain 3D perspective consistent with the "3D Experience" theme.
-- Ensure accessibility for keyboard navigation.
-- Responsive design: scale 3D depth for mobile screens.`
+        vibePrompt: LOVABLE_PROMPTS["3d-slider"]
     },
 
     {
@@ -2709,7 +2600,7 @@ export const ScorpioDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: "Create a premium, high-performance procedural animation of a skeletal lizard that tracks the mouse with precision using Inverse Kinematics (IK). The creature should feature an aggressive 'strike' animation on mouse click, lunging toward the impact point with a visual pulse effect. Implement using HTML5 Canvas for 60fps performance and wrap it in a React component with support for local container tracking via refs. Use a sleek white-on-black tech-noir aesthetic."
+        vibePrompt: LOVABLE_PROMPTS["lizard-cursor"]
     },
     {
         id: "venom-cursor",
@@ -2747,7 +2638,7 @@ export const SpiderDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: "Create a premium interactive mouse cursor animation featuring a swarm of procedurally animated venom-like entities. The entities should follow the mouse with organic, noise-based 'wriggling' legs and smooth easing. Use HTML5 Canvas for high-performance 60fps rendering on a dark grid-themed background with immersive noise overlays. Implement support for local container tracking via refs for precise alignment in interactive cards."
+        vibePrompt: LOVABLE_PROMPTS["venom-cursor"]
     },
     {
         id: "3d-tubes-cursor",
@@ -2782,7 +2673,7 @@ export const TubesDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: "Create a stunning 3D cursor effect featuring neon glowing tubes that follow the mouse with fluid, organic motion in 3D space. Use Three.js and WebGL for high-performance rendering. Implement dynamic color shifting and glowing emissive materials for a high-end tech/cyberpunk aesthetic. Support local container tracking via refs."
+        vibePrompt: LOVABLE_PROMPTS["3d-tubes-cursor"]
     },
     {
         id: "odyssey-spline",
@@ -2798,7 +2689,7 @@ export const OdysseyDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: "Create an immersive and premium 3D experience titled 'Odyssey' featuring high-fidelity textures, dynamic lighting, and interactive 3D elements that respond to mouse movement. Implement a custom React loader with animated rings and a pulsing core to ensure a smooth user experience while the scene initializes. Use a deep space/tech-noir color palette with accents of emerald green."
+        vibePrompt: LOVABLE_PROMPTS["odyssey-spline"]
     },
     {
         id: "3d-block-movement",
@@ -2818,7 +2709,7 @@ export const Demo = () => {
     </div>
   );
 };`,
-        vibePrompt: "Create a mesmerizing 3D animation featuring abstract block movements with dynamic lighting and interactive 3D elements. Implement a custom premium loader with animated rings and a pulsing core to ensure a smooth transition while the high-fidelity Spline scene initializes. Use a deep tech-noir color palette with glowing emerald accents."
+        vibePrompt: LOVABLE_PROMPTS["3d-block-movement"]
     },
     {
         id: "3d-hero-globel",
@@ -2826,7 +2717,7 @@ export const Demo = () => {
         category: "3d",
         preview: () => <HeroGlobelSplinePreview />,
         code: `import { HeroGlobelSpline } from '@/components/ui/HeroGlobelSpline';\n\nexport const Demo = () => {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">\n      <HeroGlobelSpline />\n    </div>\n  );\n};`,
-        vibePrompt: "Create a premium 3D 'HERO GLOBEL' animation experience with high-fidelity textures, dynamic lighting, and interactive elements. Featuring a custom UI HUB loader and branding, this component provides a stunning centerpiece for modern web designs. Match the reference design 100% with smooth transitions and deep tech-noir aesthetics."
+        vibePrompt: LOVABLE_PROMPTS["3d-hero-globel"]
     },
     {
         id: "3d-orbital-experience",
@@ -2834,7 +2725,7 @@ export const Demo = () => {
         category: "3d",
         preview: () => <OrbitalExperienceSplinePreview />,
         code: `import { OrbitalExperienceSpline } from '@/components/ui/OrbitalExperienceSpline';\n\nexport const Demo = () => {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">\n      <OrbitalExperienceSpline />\n    </div>\n  );\n};`,
-        vibePrompt: "Create a premium 3D 'Orbital Experience' animation with high-fidelity textures, dynamic lighting, and interactive elements. Featuring a custom UI HUB loader and branding, this component provides a stunning centerpiece for modern web designs. Match the reference design 100% with smooth transitions and deep tech-noir aesthetics."
+        vibePrompt: LOVABLE_PROMPTS["3d-orbital-experience"]
     },
 ];
 
