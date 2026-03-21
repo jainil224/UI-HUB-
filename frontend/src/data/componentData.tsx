@@ -1432,7 +1432,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
 };
 
 export default TargetCursor;`,
-        vibePrompt: LOVABLE_PROMPTS["target-cursor"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["target-cursor"]
     },
     {
         id: "black-hole-cursor",
@@ -1751,7 +1751,7 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
 
 export default BlackHoleCursor;
 `,
-        vibePrompt: LOVABLE_PROMPTS["black-hole-cursor"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["black-hole-cursor"]
     },
     {
         id: "magnetic-cursor",
@@ -1922,7 +1922,7 @@ export const MagneticCursor: React.FC<MagneticCursorProps> = ({
 
 export default MagneticCursor;
 `,
-        vibePrompt: LOVABLE_PROMPTS["magnetic-cursor"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["magnetic-cursor"]
     },
     {
         id: "blur-text",
@@ -2018,7 +2018,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("word-pull-up", "Word Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const WordPullUp = ({ text = "WORD PULL UP" }) => (\n  <div className="flex gap-2 overflow-hidden">\n    {text.split(' ').map((word, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.2 }}\n      >\n        {word}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["word-pull-up"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["word-pull-up"]
     },
     {
         id: "liquid-glass",
@@ -2082,7 +2082,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.GridBackground opacity={0.5} maskRadius={40} /></div>,
         code: `import { GridBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden bg-black">\n    <GridBackground opacity={0.6} maskRadius={30} />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["grid-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["grid-background"]
 
     },
     {
@@ -2091,7 +2091,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("hacker-background", "Hacker Background"),
         code: `// Implementation for Hacker Background\nexport const HackerBackground = () => (\n  <div className="w-full h-full bg-black text-green-500 font-mono flex items-center justify-center">\n    01010101 MATRIX 10101010\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["hacker-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["hacker-background"]
 
     },
     {
@@ -2100,7 +2100,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.NovatrixBackground title="NEBULA" /></div>,
         code: `import { NovatrixBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden">\n    <NovatrixBackground \n      title="UI HUB" \n      colorFrom="#1a1a2e" \n      colorTo="#16213e" \n      opacity={0.8} \n    />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["novatrix-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["novatrix-background"]
 
     },
     {
@@ -2109,7 +2109,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("beam-grid-background", "Beam Grid Background"),
         code: `// ... Beam Grid Background code is quite large, see the repo ...\nimport BeamGridBackground from '@/components/ui/BeamGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px]">\n    <BeamGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n    />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["beam-grid-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["beam-grid-background"]
 
     },
     {
@@ -2118,7 +2118,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("fall-beam-background", "Fall Beam Background"),
         code: `import FallBeamBackground from '@/components/ui/FallBeamBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <FallBeamBackground\n      className="bg-transparent"\n      lineCount={30}\n      beamColorClass="cyan-400"\n    />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["fall-beam-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["fall-beam-background"]
 
     },
     {
@@ -2127,7 +2127,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.HellBackground intensity={1.5} speed={0.8} /></div>,
         code: `import { HellBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <HellBackground color="#DE443B" intensity={1.5} speed={1.0} />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["hell-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["hell-background"]
 
     },
     {
@@ -2136,7 +2136,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("interactive-grid-background", "Interactive Grid Background"),
         code: `import InteractiveGridBackground from '@/components/ui/InteractiveGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <InteractiveGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n      effectColor="rgba(0,255,0,0.5)"\n      darkEffectColor="rgba(0,255,0,0.5)"\n    />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["interactive-grid-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["interactive-grid-background"]
 
     },
     {
@@ -2145,7 +2145,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.ParticlesBackground speed={3} interactive={true} /></div>,
         code: `import { ParticlesBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <ParticlesBackground \n      colors={['#ff223e', '#5d1eb2', '#ff7300']} \n      size={3} \n      speed={2.5} \n      interactive={true} \n    />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["particles-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["particles-background"]
 
     },
     {
@@ -2163,7 +2163,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("wave-background", "Wave Background"),
         code: `import WaveBackground from '@/components/ui/WaveBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <WaveBackground />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["wave-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["wave-background"]
 
     },
     {
@@ -2172,7 +2172,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.LinesBackground title="LINES" pathColor="#9c40ff" /></div>,
         code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" pathColor="rgba(255,255,255,0.2)" opacity={0.5} />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["lines-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["lines-background"]
 
     },
     {
@@ -2181,7 +2181,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("sparkles-background", "Sparkles Background"),
         code: `import { SparklesBackground } from '@/components/ui/sparkles-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <SparklesBackground title="Sparkles background" />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["sparkles-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["sparkles-background"]
 
     },
     {
@@ -2190,7 +2190,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.IsometricGridBackground title="ISOMETRIC" /></div>,
         code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground \n      title="Tailwind is Awesome" \n      boxProps={{\n        rowsCount: 50,\n        colsCount: 30,\n        customColors: ["#ffaa40", "#9c40ff"]\n      }}\n    />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["isometric-grid-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["isometric-grid-background"]
 
     },
     {
@@ -2377,7 +2377,7 @@ export const Demo = () => (
     </p>
   </div>
 );`,
-        vibePrompt: LOVABLE_PROMPTS["aurora-cursor"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["aurora-cursor"]
     },
     {
         id: "space-background",
@@ -2385,7 +2385,7 @@ export const Demo = () => (
         category: "background",
         preview: () => <SpaceBackgroundPreview />,
         code: `import { SpaceBackground } from '@/components/ui/SpaceBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <SpaceBackground \n      starCount={400} \n      nebulaCount={6} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">\n        COSMIC VOYAGE\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["space-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["space-background"]
 
     },
     {
@@ -2394,7 +2394,7 @@ export const Demo = () => (
         category: "background",
         preview: () => <NeuralNetworkPreview />,
         code: `import { NeuralNetworkBackground } from '@/components/ui/NeuralNetworkBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <NeuralNetworkBackground \n      nodeCount={120} \n      connectionDistance={150} \n      interactive={false} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase">\n        Neural Core\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["neural-network-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["neural-network-background"]
 
     },
     {
@@ -2403,7 +2403,7 @@ export const Demo = () => (
         category: "background",
         preview: () => <BlackHolePreview />,
         code: `import { BlackHoleBackground } from '@/components/ui/BlackHoleBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <BlackHoleBackground \n      particleCount={600} \n      coreColor="rgba(79, 70, 229, 0.4)" \n      accentColor="#22d3ee" \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-black text-white tracking-widest uppercase opacity-80">\n        Gravitational Core\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["black-hole-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["black-hole-background"]
 
     },
     {
@@ -2412,7 +2412,7 @@ export const Demo = () => (
         category: "background",
         preview: () => <WarpSpeedPreview />,
         code: `import { WarpSpeedBackground } from '@/components/ui/WarpSpeedBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <WarpSpeedBackground \n      starCount={800} \n      speed={15} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-white tracking-[0.3em] uppercase italic opacity-70">\n        Light Speed\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["warp-speed-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["warp-speed-background"]
 
     },
     {
@@ -2421,7 +2421,7 @@ export const Demo = () => (
         category: "background",
         preview: () => <MouseGravityPreview />,
         code: `import { MouseGravityBackground } from '@/components/ui/MouseGravityBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <MouseGravityBackground \n      particleCount={150} \n      attractionForce={0.06} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400/50 tracking-widest uppercase pointer-events-none">\n        Gravity Field\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["mouse-gravity-background"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["mouse-gravity-background"]
 
     },
     {
@@ -2430,7 +2430,7 @@ export const Demo = () => (
         category: "cursor",
         preview: () => <HeartCursorPreview />,
         code: `import { HeartCursor } from '@/components/ui/HeartCursor';\n\n// Wrap your content with the HeartCursor component.\n// It tracks the mouse smoothly and leaves trailing ripples.\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#0a0a0f] flex items-center justify-center">\n    <HeartCursor \n      size={24} \n      glowIntensity={0.8} \n      trailSpeed={0.05}\n    />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      Move your cursor to experience the love\n    </p>\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["heart-cursor"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["heart-cursor"]
     },
     {
         id: "interactive-webgl-scene",
@@ -2601,7 +2601,7 @@ export const ScorpioDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: LOVABLE_PROMPTS["lizard-cursor"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["lizard-cursor"]
     },
     {
         id: "venom-cursor",
@@ -2639,7 +2639,7 @@ export const SpiderDemo = () => {
     </div>
   );
 };`,
-        vibePrompt: LOVABLE_PROMPTS["venom-cursor"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["venom-cursor"]
     },
     {
         id: "3d-tubes-cursor",
