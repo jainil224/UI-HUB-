@@ -2,65 +2,12 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Copy, Check, Sparkles, Cpu, Rocket, SquareTerminal } from 'lucide-react';
 import ViewSourceButton from '../../../components/ui/ViewSourceButton';
+import { ANTIGRAVITY_PROMPTS } from '../../../data/antigravityPrompts';
 
 const prompts = [
     {
-        id: 'cursor',
-        tool: 'Cursor',
-        icon: <SquareTerminal className="w-5 h-5 text-blue-500" />,
-        color: 'bg-blue-500/10 border-blue-500/30',
-        glow: 'shadow-[0_0_30px_-5px_rgba(59,130,246,0.2)]',
-        thought: 'Context is everything. Drop the UI HUB library into Cursor to build at the speed of thought.',
-        prompt: (
-            <>
-                You are an expert <span className="text-blue-400">UI engineer</span>. I need a premium landing page section using <span className="text-brand-green">Tailwind CSS</span> and <span className="text-purple-400">Framer Motion</span>. <br />
-                Use a <span className="text-white/80">dark, minimalist</span> aesthetic with glassmorphic effects (bg-black/40 backdrop-blur-xl). <br />
-                Add a <span className="text-brand-green">glowing neon border</span> around the main container and subtle hover animations on the buttons.
-            </>
-        ),
-        raw: `You are an expert UI engineer. I need a premium landing page section using Tailwind CSS and Framer Motion. 
-Use a dark, minimalist aesthetic with glassmorphic effects (bg-black/40 backdrop-blur-xl). 
-Add a glowing neon border around the main container and subtle hover animations on the buttons.`
-    },
-    {
-        id: 'cloud-ai',
-        tool: 'Cloud AI',
-        icon: <Sparkles className="w-5 h-5 text-white" />,
-        color: 'bg-white/10 border-white/20',
-        glow: 'shadow-[0_0_30px_-5px_rgba(255,255,255,0.1)]',
-        thought: 'Rapid prototyping. Generate fully cohesive layouts in seconds by setting the right visual boundaries.',
-        prompt: (
-            <>
-                Build a <span className="text-white/80 font-bold">highly polished</span>, interactive "Features" grid for a high-tech SaaS product. <br />
-                The background should be <span className="text-brand-green">deep black (#000000)</span>. Use <span className="text-blue-400">Lucide icons</span>. <br />
-                Each card should have a 1px border of <span className="text-white/50 text-[0.8em]">white/10</span> that brightens to <span className="text-white">white/30</span> on hover.
-            </>
-        ),
-        raw: `Build a highly polished, interactive "Features" grid for a high-tech SaaS product. 
-The background should be deep black (#000000). Use Lucide icons. 
-Each card should have a 1px border of white/10 that brightens to white/30 on hover.`
-    },
-    {
-        id: 'lovable',
-        tool: 'Lovable',
-        icon: <Cpu className="w-5 h-5 text-pink-500" />,
-        color: 'bg-pink-500/10 border-pink-500/30',
-        glow: 'shadow-[0_0_30px_-5px_rgba(236,72,153,0.2)]',
-        thought: 'Focus on the "why", let the AI handle the "how". Describe the emotion and physics of your UI.',
-        prompt: (
-            <>
-                Create a <span className="text-pink-400 font-bold">cinematic Hero section</span> with a dark theme. <br />
-                Include a large heading with a <span className="text-brand-green">linear-gradient text clip</span> (brand-green to cyan). <br />
-                Make the primary <span className="text-white/90 underline decoration-brand-green/30">CTA button</span> glow with a soft green shadow and lift slightly on hover.
-            </>
-        ),
-        raw: `Create a cinematic Hero section with a dark theme. 
-Include a large heading with a linear-gradient text clip (brand-green to cyan). 
-Make the primary Call-To-Action button glow with a soft green shadow and lift slightly (-translate-y-1) on hover.`
-    },
-    {
-        id: 'antigravity',
-        tool: 'Antigravity',
+        id: 'antigravity-bg',
+        tool: 'Antigravity BG',
         icon: <Rocket className="w-5 h-5 text-purple-500" />,
         color: 'bg-purple-500/10 border-purple-500/30',
         glow: 'shadow-[0_0_30px_-5px_rgba(168,85,247,0.2)]',
@@ -72,9 +19,7 @@ Make the primary Call-To-Action button glow with a soft green shadow and lift sl
                 Include an interactive <span className="text-white/60">mouse gravity effect</span> on the stars.
             </>
         ),
-        raw: `Build an animated background component utilizing Canvas and Three.js. 
-Ensure it hits 60fps and has a deep space aesthetic.
-Include an interactive mouse gravity effect on the stars.`
+        raw: ANTIGRAVITY_PROMPTS['mouse-gravity-background']
     }
 ];
 

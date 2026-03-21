@@ -2,10 +2,6 @@ export const ANTIGRAVITY_PROMPTS: Record<string, string> = {
     "corner-border-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -84,10 +80,6 @@ Create a component that features sharp, high-contrast "Corner-First" border anim
     "shatter-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -164,10 +156,6 @@ Create a button that vanishes and explodes into dozens of sharp shards upon clic
 `,
     "border-beam": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -248,10 +236,6 @@ Create a component where a glowing beam of light travels along the border of any
     "glow-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -328,10 +312,6 @@ Create a button with multiple layers of neon glow that react in real-time to cur
     "marquee-hover-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -406,10 +386,6 @@ Create a button that displays a static label by default, but transforms into an 
 `,
     "payment-transaction-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -490,10 +466,6 @@ Create a button where a credit card slides upward and inserts itself into a POS 
     "magic-card-effect": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -573,10 +545,6 @@ Create a card where a localized spotlight follows the cursor, dynamic illuminati
     "rainbow-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -652,10 +620,6 @@ Create a button with a high-velocity, infinitely cycling rainbow border and a di
     "social-tooltip-buttons": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -729,10 +693,6 @@ Create a set of social icons that physically expand, reveal 3D springing tooltip
 `,
     "orbit-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -809,10 +769,6 @@ Create a central neon button with multiple particles orbiting it at varying spee
 `,
     "galaxy-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -891,10 +847,6 @@ Create a multi-layered cosmic button featuring parallax rotating star fields, dr
     "liquid-fill-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -972,10 +924,6 @@ Create a vessel-like button that fills with glowing liquid using organic SVG wav
     "neon-flicker-button": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -1049,23 +997,8 @@ Create a high-intensity neon button that suffers from digital glitches, power su
 * Provide the complete, single-file code.
 
 `,
-    "word-pull-up": `
-# ROLE: Senior AI Coding Expert (Antigravity)
-# TASK: Create premium UI Component "Word Pull Up"
-
-## 4. IMPLEMENTATION STRATEGY
-- Step 1: Split string by space.
-- Step 2: Animate entire words upward from an overflow-hidden mask.
-
-## 7. FINAL OUTPUT
-- Provide the complete, single-file code.
-`,
     "grid-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -1150,10 +1083,6 @@ Create a mathematical, perfectly aligned grid background with a dynamic radial m
     "hacker-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -1234,10 +1163,6 @@ Create a high-performance Canvas-based Matrix rain effect with cascading digital
 `,
     "novatrix-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -1321,10 +1246,6 @@ Create an atmospheric, breathing background with slow-rotating nebulous glows an
 `,
     "beam-grid-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -1419,10 +1340,6 @@ Create a sophisticated interactive grid background where light beams travel alon
     "fall-beam-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -1508,10 +1425,6 @@ Create a vertical rain of glowing light beams that fall at varying speeds and in
     "hell-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -1594,10 +1507,6 @@ Create a high-intensity, visually complex fluid simulation using custom GLSL sha
 `,
     "interactive-grid-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -1689,10 +1598,6 @@ Create a grid background where cells light up and leave a glowing trail as the m
     "particles-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -1778,10 +1683,6 @@ Create a floating field of glowing particles with interactive repulse/push physi
     "wave-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -1865,10 +1766,6 @@ Create a hypnotic background of morphing, flowing waves using custom GLSL fragme
     "lines-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -1949,10 +1846,6 @@ Create a sophisticated background of multiple floating, animated SVG paths that 
 `,
     "sparkles-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -2038,10 +1931,6 @@ Create a dense, sparkling star field with concentrated center focus and an inter
     "isometric-grid-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -2122,10 +2011,6 @@ Create a 3D isometric grid of interactive boxes that change color on hover, mask
 `,
     "space-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -2209,10 +2094,6 @@ Create a vast, multi-layered cosmic background featuring twinkling star clusters
 `,
     "neural-network-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -2299,10 +2180,6 @@ Create a background showing a lively network of nodes and connecting lines, feat
     "black-hole-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -2385,10 +2262,6 @@ Create a visually stunning black hole simulation where thousands of particles sp
     "warp-speed-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -2470,11 +2343,6 @@ Create a classic sci-fi warp speed effect where stars fly towards the viewer fro
 `,
     "mouse-gravity-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
-
-
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
 
 ## SYSTEM (DO NOT IGNORE)
 
@@ -3378,10 +3246,6 @@ Generate the COMPLETE component now with full functionality and production-level
     "target-cursor": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 
-Prompt Version: UIHUB_ANTIGRAVITY_v1.0
-
----
-
 ## SYSTEM (DO NOT IGNORE)
 
 You are a senior frontend engineer and WebGL/animation expert.
@@ -3427,7 +3291,9 @@ Create a high-tech tactical cursor that snaps into interactive elements with pre
 
 ## FEATURES (STRICT – DO NOT SKIP)
 
-* **Corner Tracking**: Four corner brackets expand and contract upon identifying click targets.\n* **Smooth Lerp**: Mathematical dampening for locking animations.\n* **Aesthetic**: Indigo-600 glow with ultra-thin borders.
+* **Corner Tracking**: Four corner brackets expand and contract upon identifying click targets.
+* **Smooth Lerp**: Mathematical dampening for locking animations.
+* **Aesthetic**: Indigo-600 glow with ultra-thin borders.
 
 ---
 
@@ -3441,7 +3307,15 @@ Create a high-tech tactical cursor that snaps into interactive elements with pre
 
 ## PROPS API
 
-interface TargetCursorProps {\n    targetSelector?: string;\n    spinDuration?: number;\n    hoverDuration?: number;\n    hideDefaultCursor?: boolean;\n    parallaxOn?: boolean;\n    containerRef?: React.RefObject<HTMLElement>;\n    className?: string;\n}
+interface TargetCursorProps {
+    targetSelector?: string;
+    spinDuration?: number;
+    hoverDuration?: number;
+    hideDefaultCursor?: boolean;
+    parallaxOn?: boolean;
+    containerRef?: React.RefObject<HTMLElement>;
+    className?: string;
+}
 
 ---
 
@@ -3460,4 +3334,1433 @@ interface TargetCursorProps {\n    targetSelector?: string;\n    spinDuration?: 
 
 * Provide the complete, single-file code.
 `,
+    "blur-text": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Blur In" text reveal effect.
+
+---
+
+## COMPONENT INFO
+
+Name: BlurText
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a text animation where the entire text block blurs and fades in smoothly as it enters the viewport.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Blur Transition**: Animate filter: blur from 10px to 0px.
+* **Opacity Reveal**: Animate opacity from 0 to 1 simultaneously.
+* **Viewport Trigger**: The animation should trigger when the component enters the visible viewport (whileInView).
+* **Smoothing**: Use easeOut easing with an 800ms duration.
+
+---
+
+## PROPS (with defaults):
+- text: string = "BLUR IN TEXT" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display text-white tracking-tighter text-center" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Animation Parameters**: Set initial={{ filter: "blur(10px)", opacity: 0 }} and whileInView={{ filter: "blur(0px)", opacity: 1 }}.
+3. **Viewport Config**: Ensure viewport={{ once: true }} is considered if needed, though standard whileInView is the baseline.
+
+---
+
+## PERFORMANCE RULES
+
+* Use hardware-accelerated CSS filters where possible.
+* Avoid expensive layout shifts during the blur transition.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "fade-text": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a simple "Fade In" text effect.
+
+---
+
+## COMPONENT INFO
+
+Name: FadeText
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a clean, minimalist fade-in animation for a text block.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Opacity Fade**: Smoothly transition opacity from 0 to 1.
+* **Configurable Duration**: Allow the animation speed to be adjusted via props.
+* **Ease**: Use standard ease-in-out transition.
+
+---
+
+## PROPS (with defaults):
+- text: string = "FADE TEXT" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-bold text-white tracking-tighter" — styling override.
+- duration: number = 1.5 — animation time in seconds.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Timing**: Apply the duration prop to the transition configuration.
+
+---
+
+## PERFORMANCE RULES
+
+* Ensure opacity animations are handled on the compositor thread.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "dock-text": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Dock" scale-in effect.
+
+---
+
+## COMPONENT INFO
+
+Name: DockText
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a subtle "docked" animation effect where text scales up slightly from a smaller initial state while fading in.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Scale Animation**: Animate scale from 0.8 to 1.0.
+* **Opacity Sync**: Fade opacity from 0 to 1 in sync with scaling.
+* **Interactive Feel**: Use a snappy transition to simulate a landing/docking action.
+
+---
+
+## PROPS (with defaults):
+- text: string = "DOCK TEXT" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-bold text-white tracking-tighter" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Initial State**: Set initial={{ scale: 0.8, opacity: 0 }}.
+3. **Animate State**: Set animate={{ scale: 1, opacity: 1 }}.
+
+---
+
+## PERFORMANCE RULES
+
+* Use transform: scale to avoid triggering layout repaints.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "font-weight": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with dynamic "Font Weight" shifting.
+
+---
+
+## COMPONENT INFO
+
+Name: FontWeightText
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a text component that continuously cycles its font weight between light and bold states for a breathing effect.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Weight Oscillation**: Cycle fontWeight between 400 and 900.
+* **Smooth Interpolation**: Use an 1000ms easy-in-out transition between weights.
+* **State Management**: Use useEffect and setInterval to toggle the weight state.
+
+---
+
+## PROPS (with defaults):
+- text: string = "VARIABLE WEIGHT" — content to display.
+- className: string = "text-6xl md:text-8xl font-display text-white tracking-tighter" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Dynamic Styling**: Ensure both animate={{ fontWeight: weight }} and style={{ fontWeight: weight }} are used for compatibility with some fonts.
+3. **Lifecycle**: Properly clean up the interval on component unmount.
+
+---
+
+## PERFORMANCE RULES
+
+* Ensure the font being used supports variable weight or multiple weights.
+* Optimize transitions to avoid heavy main-thread work.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "gradual-spacing": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Gradual Spacing" reveal.
+
+---
+
+## COMPONENT INFO
+
+Name: GradualSpacing
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a text reveal where characters start with wide letter-spacing and gradually condense into their final position as they fade in.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Letter Spacing Transition**: Animate letterSpacing from 1em to 0.1em.
+* **Opacity Fade**: Animate opacity from 0 to 1 for each character.
+* **Staggered Launch**: Use individual motion spans with a 50ms incremental delay.
+* **Layout Integrity**: Ensure spaces are handled using non-breaking space ("\u00A0") to prevent collapses.
+
+---
+
+## PROPS (with defaults):
+- text: string = "GRADUAL SPACING" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display text-white tracking-tighter" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Animation Parameters**: Set initial={{ letterSpacing: "1em", opacity: 0 }} and animate={{ letterSpacing: "0.1em", opacity: 1 }}.
+3. **Container**: Use flex justify-center flex-wrap to keep text centered and responsive.
+
+---
+
+## PERFORMANCE RULES
+
+* Use hardware-accelerated transforms (filter/opacity) where possible.
+* Avoid layout thrashing by maintaining stable container dimensions.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "letter-pull-up": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Letter Pull Up" effect.
+
+---
+
+## COMPONENT INFO
+
+Name: LetterPullUp
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create an energetic entrance where each individual letter pulls up from an invisible baseline into its final resting position.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Masked Reveal**: Parent container must use overflow-hidden to mask letters as they rise.
+* **Vertical Slide**: Animate y coordinate from 100% to 0.
+* **Opacity Sync**: Fade opacity from 0 to 1 during the pull-up.
+* **Staggered Rhythm**: Apply a 50ms delay multiplier to the character index.
+
+---
+
+## PROPS (with defaults):
+- text: string = "LETTER PULL UP" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-bold text-white tracking-tighter" — styling override.
+- delayMultiplier: number = 0.05 — time in seconds between each letter.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Component Structure**: Split text into an array of characters and map each to a motion.span.
+3. **Clipping**: Ensure the letters start completely "under" the container mask.
+
+---
+
+## PERFORMANCE RULES
+
+* Use GPU-accelerated translateY for the vertical motion.
+* Avoid expensive box-shadows on individual letters during the slide.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "multi-direction-slide": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with "Multi-Direction" sliding letters.
+
+---
+
+## COMPONENT INFO
+
+Name: MultiDirectionSlide
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a complex, dynamic entrance where letters slide into place from alternating directions (top and bottom) while moving horizontally.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Alternating Entry**: Even indices slide from y: -100, odd indices slide from y: 100.
+* **Horizontal Slide**: All letters slide in from x: -50 to 0.
+* **Staggered Launch**: Add a sequential delay to each character for a wave effect.
+* **Spring Physics**: Use a slight bounce (stiffness: 100, damping: 12) for a polished feel.
+
+---
+
+## PROPS (with defaults):
+- text: string = "MULTI DIRECTION" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-bold text-white tracking-tighter" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Conditional Logic**: Calculate initial y based on index % 2.
+3. **Container**: Use overflow-hidden on the parent to clean up the entrance.
+
+---
+
+## PERFORMANCE RULES
+
+* Ensure all animations use CSS transforms to avoid layout repaints.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "scale-letter": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Scale Bounce" text effect.
+
+---
+
+## COMPONENT INFO
+
+Name: ScaleLetter
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Animate characters by scaling them from 0 to 1 with a high-energy spring bounce as they enter the viewport.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Spring Bounce**: Use a custom cubic-bezier or spring config to create an overshooting scale-up effect.
+* **Staggered Entrance**: Sequential reveal of letters with a 40ms delay.
+* **Opacity Fade**: Fade from 0 to 1 in sync with scaling.
+* **Hover Interaction**: Ensure letters respond slightly to mouse hover if possible.
+
+---
+
+## PROPS (with defaults):
+- text: string = "SCALE LETTER" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-bold text-white tracking-tighter" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Spring Config**: stiffness: 300, damping: 20, mass: 1.
+3. **Lifecycle**: Use whileInView with viewport={{ once: true }}.
+
+---
+
+## PERFORMANCE RULES
+
+* Use hardware-accelerated transforms (scale/opacity).
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "separate-away": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Separate Away" reveal.
+
+---
+
+## COMPONENT INFO
+
+Name: SeparateAway
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a lateral text reveal where letters slide out from a compressed central point or a horizontal offset to their final positions.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Horizontal Projection**: Animate x from -20px to 0px.
+* **Fluid Stagger**: Use a 80ms delay between consecutive characters.
+* **Opacity Reveal**: Smooth transition from 0 to 1 opacity.
+* **Precision Layout**: Ensure letter spacing remains consistent after completion.
+
+---
+
+## PROPS (with defaults):
+- text: string = "SEPARATE AWAY" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-bold text-white tracking-tighter" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Container**: Use flex justify-center to maintain visual balance.
+
+---
+
+## PERFORMANCE RULES
+
+* Use Will-Change: transform for smoother character projection.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "wavy-text": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with an "Infinite Wavy" loop.
+
+---
+
+## COMPONENT INFO
+
+Name: WavyText
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a persistent, undulating wave effect that flows through a text block, making it feel fluid and responsive.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Oscillating Motion**: Animate y through keyframes [0, -20, 0].
+* **Infinite Repeat**: Set repeat to Infinity with an easeInOut transition.
+* **Phase Propagation**: Delay each character index by index * 0.1s to create the fluid wave phase.
+* **Interactive Tilt**: Add a subtle hover state shift if possible.
+
+---
+
+## PROPS (with defaults):
+- text: string = "WAVY TEXT" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-bold text-white tracking-tighter" — styling override.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Animation Loop**: Use an array-based animate prop (animate={{ y: [0, -20, 0] }}).
+
+---
+
+## PERFORMANCE RULES
+
+* Use hardware-accelerated y-transforms.
+* Limit character count for complex continuous loops.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "word-pull-up": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Word Pull Up" reveal.
+
+---
+
+## COMPONENT INFO
+
+Name: WordPullUp
+Type: UI / Animation / Text
+
+---
+
+## GOAL
+
+Create a blocky, high-impact entrance where entire words pull up from beneath an invisible threshold.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion (motion/react)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Word Tokenization**: Split text by spaces and animate word-blocks.
+* **Masked Uplift**: Parent word-container must use overflow-hidden.
+* **Staggered Blocks**: Delay each word by 150ms.
+* **Vertical Velocity**: Animate y from 100% to 0 with a snappy ease.
+
+---
+
+## PROPS (with defaults):
+- text: string = "WORD PULL UP" — content to animate.
+- className: string = "text-6xl md:text-8xl font-display font-black text-white tracking-tighter" — styling override.
+- staggerTime: number = 0.15 — delay between words.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Library**: Use motion from motion/react.
+2. **Logic**: Use text.split(" ") and map over the resulting array.
+3. **Layout**: Maintain gap-x-4 or similar spacing between words.
+
+---
+
+## PERFORMANCE RULES
+
+* Animate using GPU-accelerated transforms.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "liquid-glass": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Liquid Glass" weather dashboard aesthetic.
+
+---
+
+## COMPONENT INFO
+
+Name: LiquidGlass
+Type: UI / Interaction / Glassmorphism
+
+---
+
+## GOAL
+
+Create a translucent, frosted glass dashboard interface with layered depth, subtle glows, and realistic weather iconography.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Lucide React
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Frosted Depth**: Use backdrop-blur-xl and semi-transparent white backgrounds (bg-white/5).
+* **Layered Shadows**: Apply multiple box-shadow layers for a realistic floating glass effect.
+* **Weather Data**: Display a horizontal hourly forecast with icons and temperatures.
+* **Layout**: A 2-column grid within the glass container for time, location, and daily forecasts.
+* **Iconography**: Use Cloud, Sun, CloudRain from Lucide.
+
+---
+
+## PROPS (with defaults):
+- backgroundImage: string = "url('https://images.unsplash.com/photo-1590867286251-8e26d9f255c0')" — dashboard background.
+- location: string = "Surat" — city display.
+- temp: string = "+18°C" — current temperature.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Glassmorphism**: Ensure border-white/10 and rounded-xl/3xl for a premium feel.
+2. **Layout Structure**: Use a main container with relative z-30 positioning.
+3. **Card Logic**: Wrap internal sections in custom LiquidGlassCard-style divs.
+
+---
+
+## PERFORMANCE RULES
+
+* Use backdrop-filter for blur efficiency.
+* Avoid heavy SVG re-renders by using Lucide components correctly.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "noise": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with an interactive "Noise Overlay".
+
+---
+
+## COMPONENT INFO
+
+Name: Noise
+Type: UI / Visual Effect
+
+---
+
+## GOAL
+
+Create a grain-textured overlay effect that reacts to user input, providing an organic, "analog" feel to digital layouts.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* SVG Filters
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **SVG Noise Generator**: Use feTurbulence and feColorMatrix within an SVG filter for realistic grain.
+* **Interactive Opacity**: Include a slider UI to adjust the intensity of the noise grain in real-time.
+* **Blend Mode**: Apply mix-blend-overlay to the noise layer for integration with underlying content.
+* **Grid Backdrop**: Include a subtle background grid for visual reference.
+
+---
+
+## PROPS (with defaults):
+- opacity: number = 0.05 — base noise visibility.
+- baseFrequency: string = "0.65" — grain density parameter.
+- numOctaves: string = "3" — grain complexity parameter.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **State Management**: Use useState for real-time opacity overrides.
+2. **SVG Pattern**: Embed a data URI SVG pattern into the background-image of the overlay layer.
+3. **UI Elements**: Ensure the slider is clean and positioned in the top-right corner.
+
+---
+
+## PERFORMANCE RULES
+
+* Use pointer-events-none on the noise layer to prevent interaction blockage.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "blur-vignette": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Blur Vignette" mask.
+
+---
+
+## COMPONENT INFO
+
+Name: BlurVignette
+Type: UI / Visual Effect / Image
+
+---
+
+## GOAL
+
+Apply a soft, blurred vignette effect to imagery, focusing attention on the center while elegantly blurring the periphery.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* CSS Mask-Image
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Progressive Blur**: The blur intensity should increase towards the edges of the image.
+* **Central Focus**: Keep the center of the image sharp and unaffected by the blur.
+* **Animated Reveal**: Use Framer Motion for a subtle entry zoom or pan.
+* **Border Radii**: Smoothly integrated rounded corners with appropriate overflow handling.
+
+---
+
+## PROPS (with defaults):
+- image: string = "" — URL of the target image.
+- blurAmount: string = "12px" — maximum blur intensity.
+- transitionLength: string = "100px" — distance of the blur fade.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Mask Logic**: Use mask-image: radial-gradient and backdrop-filter: blur() on a layered pseudo-element.
+2. **Container**: Ensure child content (images/text) is correctly clipped.
+
+---
+
+## PERFORMANCE RULES
+
+* Avoid multiple overlapping backdrop-filters if possible; optimize blur radii for mobile.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "liquid-gradient": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Liquid Gradient" loop.
+
+---
+
+## COMPONENT INFO
+
+Name: LiquidGradient
+Type: UI / Visual Effect / Background
+
+---
+
+## GOAL
+
+Animate smooth, organic color shifts using looping radial-gradients that simulate fluid motion.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Keyframe Color Cycle**: Transition background between multiple radial-gradient states.
+* **Infinite Flow**: Set duration: 10+, ease: "linear", and repeat: Infinity.
+* **Depth & Opacity**: Layer the gradient with a low opacity over a dark neutral background.
+* **Soft Borders**: Integrate within a rounded-3xl container with a subtle 1px border.
+
+---
+
+## PROPS (with defaults):
+- color: string = "#ff0080" — primary accent color.
+- opacity: number = 0.3 — transparency level.
+- duration: number = 10 — speed of the color cycle.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Factory**: Use motion.div to animate the background property.
+2. **Gradient Positions**: Alternate the radial-gradient center between [0% 0%], [100% 100%], and [0% 100%].
+
+---
+
+## PERFORMANCE RULES
+
+* Use hardware-accelerated CSS properties where available.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "spotlight-cards": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with "Spotlight Card" interactions.
+
+---
+
+## COMPONENT INFO
+
+Name: SpotlightCards
+Type: UI / Interaction / Card
+
+---
+
+## GOAL
+
+Create a set of feature cards with a synchronized "spotlight" glow that tracks the mouse cursor across all cards simultaneously.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion
+* Lucide React
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Synchronous Tracking**: A single mouse position must drive the spotlight radial-gradient on every card in the container.
+* **Glassmorphic Surface**: Base cards should be neutral-900 with subtle borders.
+* **Interactive Glow**: Hovering cards triggers a localized border illumination and internal volumetric glow.
+* **Horizontal Scroll**: Support responsive x-axis scrolling with snap points.
+
+---
+
+## PROPS (with defaults):
+- defaultCardColors: string[] = ['#10b981', '#6366f1', '#f59e0b'] — spotlight accents.
+- title: string = "Platform Features" — header.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Masking Technqiue**: Use mask-image: radial-gradient combined with absolute positioning for the glow layer.
+2. **Scroll Sync**: Ensure overlay glow layer scrolls in sync with the primary content layer.
+
+---
+
+## PERFORMANCE RULES
+
+* Throttle or optimize mouseMove events to maintain 60fps.
+* Use will-change: transform for the scrollable container.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "image-reveal": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with "Image Reveal on Hover".
+
+---
+
+## COMPONENT INFO
+
+Name: ImageReveal
+Type: UI / Interaction / Animation
+
+---
+
+## GOAL
+
+Create a list of text labels that reveal a floating, cursor-following image when hovered, with smooth spring-physics transitions.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Spring-Physics Tracking**: The hovering image must follow the cursor with distinct stiffness and damping for a "heavy" but responsive feel.
+* **Transition Effects**: Apply rotation, scale, and opacity shifts on image entry/exit.
+* **Interactive Highlight**: Change label text color and blend mode (mix-blend-difference) on hover.
+* **Mobile Handling**: Ensure the image remains visible or adapts gracefully on touch devices.
+
+---
+
+## PROPS (with defaults):
+- items: VisualItem[] — array of {key, url, label}.
+- hoverText: string = "REVEAL" — button text.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Values**: Use useMotionValue and useSpring for high-perf X/Y tracking.
+2. **Z-Index**: Ensure the floating image is on top of all other elements.
+
+---
+
+## PERFORMANCE RULES
+
+* Use img-decoding: async for large revealed assets.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "blocks": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with "Interactive Grid Blocks".
+
+---
+
+## COMPONENT INFO
+
+Name: Blocks
+Type: UI / Visualization / Grid
+
+---
+
+## GOAL
+
+Animate a grid of square blocks that respond to mouse interactions with staggered reveals and color shifts.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Staggered Entrance**: Animate each block from scale 0.8 to 1 with an incremental index delay.
+* **Hover Reactivity**: Individual blocks should transition their background color or opacity when hovered.
+* **Geometric Precision**: Perfectly aligned 4x4 or customizable grid dimensions.
+* **Minimalist Aesthetic**: Dark theme with sub-pixel white borders (border-white/5).
+
+---
+
+## PROPS (with defaults):
+- hoverColor: string = "hover:bg-violet-500/20" — Tailwind utility for active block.
+- gridSize: number = 16 — total block count.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Grid Layout**: Use grid-cols-4 or dynamic grid configurations.
+2. **Motion Lifecycle**: Standard initial/animate/transition workflow.
+
+---
+
+## PERFORMANCE RULES
+
+* Keep block count below 100 for continuous buttery animation.
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`,
+    "animated-beam": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with an "Animated Energy Beam".
+
+---
+
+## COMPONENT INFO
+
+Name: AnimatedBeam
+Type: UI / Visual Effect
+
+---
+
+## GOAL
+
+Simulate a high-speed energy beam traveling through a defined box, adding a "high-tech" look to cards or dashboards.
+
+---
+
+## TECH STACK
+
+* React (Next.js)
+* TypeScript (TSX)
+* Tailwind CSS
+* Framer Motion
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Kinetic Animation**: Animate a glowing horizontal line across the container.
+* **Infinite Flow**: Infinite loop using linear easing for constant velocity.
+* **Glowing Aesthetic**: Use gradient tails (transparent -> color -> transparent) to simulate the beam's trail.
+* **Rotation**: Orient the beam diagonally for extra dynamic feel.
+
+---
+
+## PROPS (with defaults):
+- color: string = "sky-400" — beam base tint.
+- duration: number = 2 — traversal speed.
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+
+1. **Motion Engine**: Use motion.div with animate={{ x: [-100, 300] }} or similar bounds.
+2. **Tailwind Mapping**: Ensure dynamic color classes (e.g., via-sky-400) are handled safely.
+
+---
+
+## PERFORMANCE RULES
+
+* Use hardware-accelerated transforms (x).
+
+## FINAL OUTPUT
+
+* Provide the complete, single-file code.
+`
 };

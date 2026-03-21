@@ -1930,7 +1930,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("blur-text", "Blur In Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const BlurText = ({ text = "BLUR IN TEXT" }) => (\n  <motion.h1\n    initial={{ opacity: 0, filter: "blur(10px)" }}\n    animate={{ opacity: 1, filter: "blur(0px)" }}\n    transition={{ duration: 0.8 }}\n  >\n    {text}\n  </motion.h1>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["blur-text"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["blur-text"]
     },
     {
         id: "fade-text",
@@ -1938,7 +1938,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("fade-text", "Fade Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const FadeText = ({ text = "FADE TEXT" }) => (\n  <motion.div\n    initial={{ opacity: 0 }}\n    animate={{ opacity: 1 }}\n    transition={{ duration: 1.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["fade-text"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["fade-text"]
     },
     {
         id: "dock-text",
@@ -1946,7 +1946,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("dock-text", "Dock Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const DockText = ({ text = "DOCK TEXT" }) => (\n  <motion.div\n    whileHover={{ scale: 1.5 }}\n    transition={{ type: "spring", duration: 0.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["dock-text"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["dock-text"]
     },
     {
         id: "font-weight",
@@ -1954,7 +1954,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("font-weight", "Font Weight Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const FontWeightText = ({ text = "VARIABLE WEIGHT" }) => (\n  <motion.div\n    animate={{ fontWeight: [400, 900, 400] }}\n    transition={{ duration: 1, repeat: Infinity }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["font-weight"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["font-weight"]
     },
     {
         id: "noise",
@@ -1962,7 +1962,7 @@ export default MagneticCursor;
         category: "effect",
         preview: () => <VisualEffects.Noise opacity={0.1} />,
         code: `import { Noise } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-64 overflow-hidden bg-black">\n    <h1 className="text-white text-4xl p-8">Noise Overlay</h1>\n    <Noise opacity={0.15} />\n  </div>\n);`,
-        vibePrompt: "Create a cinematic digital noise grain overlay effect using SVG turbulence and CSS mix-blend-mode."
+        vibePrompt: ANTIGRAVITY_PROMPTS["noise"]
     },
     {
         id: "gradual-spacing",
@@ -1970,7 +1970,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("gradual-spacing", "Gradual Spacing"),
         code: `import { motion } from 'framer-motion';\n\nexport const GradualSpacing = ({ text = "GRADUAL SPACING" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ letterSpacing: "-0.5em", opacity: 0 }}\n        animate={{ letterSpacing: "normal", opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["gradual-spacing"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["gradual-spacing"]
     },
     {
         id: "letter-pull-up",
@@ -1978,7 +1978,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("letter-pull-up", "Letter Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const LetterPullUp = ({ text = "LETTER PULL UP" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["letter-pull-up"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["letter-pull-up"]
     },
     {
         id: "multi-direction-slide",
@@ -1986,7 +1986,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("multi-direction-slide", "Multi Direction Slide"),
         code: `import { motion } from 'framer-motion';\n\nexport const MultiDirectionSlide = ({ text = "MULTI DIRECTION" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: i % 2 === 0 ? -50 : 50, y: i % 2 !== 0 ? -50 : 50, opacity: 0 }}\n        animate={{ x: 0, y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["multi-direction-slide"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["multi-direction-slide"]
     },
     {
         id: "scale-letter",
@@ -1994,7 +1994,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("scale-letter", "Scale Letter"),
         code: `import { motion } from 'framer-motion';\n\nexport const ScaleLetter = ({ text = "SCALE LETTER" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ scale: 0, opacity: 0 }}\n        animate={{ scale: 1, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["scale-letter"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["scale-letter"]
     },
     {
         id: "separate-away",
@@ -2002,7 +2002,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("separate-away", "Separate Away"),
         code: `import { motion } from 'framer-motion';\n\nexport const SeparateAway = ({ text = "SEPARATE AWAY" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: 0 }}\n        animate={{ x: i < text.length / 2 ? -15 : 15 }}\n        transition={{ duration: 0.5 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["separate-away"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["separate-away"]
     },
     {
         id: "wavy-text",
@@ -2010,7 +2010,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("wavy-text", "Wavy Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const WavyText = ({ text = "WAVY TEXT" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        animate={{ y: [0, -8, 0] }}\n        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["wavy-text"]
+        vibePrompt: ANTIGRAVITY_PROMPTS["wavy-text"]
     },
     {
         id: "word-pull-up",
@@ -2026,7 +2026,7 @@ export default MagneticCursor;
         category: "effect",
         preview: () => <VisualEffects.LiquidGlass location="LONDON" temp="18" />,
         code: `import { LiquidGlass } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[300px] flex items-center justify-center bg-neutral-900">\n    <LiquidGlass location="NEW YORK" temp="22" />\n  </div>\n);`,
-        vibePrompt: "Premium weather dashboard interface utilizing multiple layers of glassmorphism, backdrop-blur, and Lucide icons."
+        vibePrompt: ANTIGRAVITY_PROMPTS["liquid-glass"]
     },
     {
         id: "blur-vignette",
@@ -2034,7 +2034,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("blur-vignette", "Blur Vignette"),
         code: `export const BlurVignette = () => (\n  <div className="w-full h-full absolute inset-0 backdrop-blur-[10px] [mask-image:radial-gradient(ellipse_at_center,transparent_30%,black_100%)] pointer-events-none"></div>\n);`,
-        vibePrompt: "Radial mask that applies a heavy blur to the edges, focusing visual attention on the center."
+        vibePrompt: ANTIGRAVITY_PROMPTS["blur-vignette"]
     },
     {
         id: "liquid-gradient",
@@ -2042,7 +2042,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("liquid-gradient", "Liquid Gradient"),
         code: `export const LiquidGradient = () => (\n  <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,0,0.2),_transparent_50%)] animate-pulse"></div>\n);`,
-        vibePrompt: "Morphing radial gradients that shift smoothly to create a fluid, organic light effect."
+        vibePrompt: ANTIGRAVITY_PROMPTS["liquid-gradient"]
     },
     {
         id: "spotlight-cards",
@@ -2050,7 +2050,7 @@ export default MagneticCursor;
         category: "effect",
         preview: () => <VisualEffects.SpotlightCards title="Feature" description="Hover to reveal the hidden spotlight effect." />,
         code: `import { SpotlightCards } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <SpotlightCards \n    title="Service" \n    description="Innovative solutions for your modern business needs." \n  />\n);`,
-        vibePrompt: "Premium 3-card layout with individual color themes, Lucide icons, and a synchronized cursor-glow system with branding."
+        vibePrompt: ANTIGRAVITY_PROMPTS["spotlight-cards"]
     },
     {
         id: "image-reveal",
@@ -2058,7 +2058,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("image-reveal", "Image Reveal"),
         code: `import { motion } from 'framer-motion';\n\nexport const ImageReveal = () => (\n  <motion.div\n    whileHover={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}\n    initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" }}\n    className="w-full h-full bg-cover bg-center"\n    style={{ backgroundImage: "url('/placeholder.jpg')" }}\n  />\n);`,
-        vibePrompt: "Reveals content behind a mask using a sliding or clip-path transition on hover."
+        vibePrompt: ANTIGRAVITY_PROMPTS["image-reveal"]
     },
     {
         id: "blocks",
@@ -2066,7 +2066,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("blocks", "Blocks"),
         code: `import { motion } from 'framer-motion';\n\nexport const Blocks = () => (\n  <div className="grid grid-cols-4 grid-rows-4 gap-1 w-64 h-64">\n    {Array.from({ length: 16 }).map((_, i) => (\n      <motion.div key={i} className="bg-white/10 rounded-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }} />\n    ))}\n  </div>\n);`,
-        vibePrompt: "Staggered grid of blocks that fade or scale into view, responding to hover states."
+        vibePrompt: ANTIGRAVITY_PROMPTS["blocks"]
     },
     {
         id: "animated-beam",
@@ -2074,7 +2074,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("animated-beam", "Animated Beam"),
         code: `import { motion } from 'framer-motion';\n\nexport const AnimatedBeam = () => (\n  <motion.div\n    animate={{ x: [-100, 300] }}\n    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}\n    className="h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent w-32"\n  />\n);`,
-        vibePrompt: "High-speed linear light beam that sweeps across the container in a rhythmic loop."
+        vibePrompt: ANTIGRAVITY_PROMPTS["animated-beam"]
     },
     {
         id: "grid-background",
