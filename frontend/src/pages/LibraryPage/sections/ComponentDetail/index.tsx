@@ -2,13 +2,14 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink
+    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink, Download
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
 import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
 import { getComponentCode } from '../../../../utils/codeUtils';
+import { downloadComponentZip } from '../../../../utils/zipUtils';
 import { generateVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
 import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
@@ -1150,6 +1151,37 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         }
     };
 
+    const handleDownloadZip = async () => {
+        if (!item) return;
+
+        const reactCode = getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' });
+        const htmlCode = getComponentCode(item.id, { lang: 'html', styling: 'css' });
+        
+        let assets: { url: string; fileName: string }[] = [];
+
+        if (item.id === '3d-scroll-animation') {
+            for (let i = 1; i <= 300; i++) {
+                const frameNum = i.toString().padStart(4, '0');
+                assets.push({
+                    url: `/assets/3d-scroll-animation/male${frameNum}.png`,
+                    fileName: `assets/male${frameNum}.png`
+                });
+            }
+        } else if (item.id === '3d-slider') {
+            const sliderImages = [
+                "https://4kwallpapers.com/images/walls/thumbs_3t/24686.jpg",
+                "https://4kwallpapers.com/images/walls/thumbs_3t/24719.jpg",
+                "https://4kwallpapers.com/images/walls/thumbs_3t/24534.jpg",
+                "https://4kwallpapers.com/images/walls/thumbs_3t/24204.jpg"
+            ];
+            sliderImages.forEach((url, i) => {
+                assets.push({ url, fileName: `assets/slide${i + 1}.jpg` });
+            });
+        }
+
+        await downloadComponentZip(item.id, item.title, assets, reactCode, htmlCode);
+    };
+
     const handleCopy = (text: string, id: string) => {
         navigator.clipboard.writeText(text);
         setCopied(id);
@@ -1320,16 +1352,29 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 </motion.button>
                                             </Link>
                                         )}
-                                        <motion.button
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.9 }}
-                                            onClick={() => setResetKey(prev => prev + 1)}
-                                            className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green hover:bg-brand-green hover:text-black transition-all text-sm font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.15)] hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] shrink-0 group"
-                                        >
-                                            <RotateCcw key={resetKey} size={14} className={`${resetKey > 0 ? 'animate-spin-once' : ''} transition-transform group-hover:-rotate-90 md:w-4 md:h-4`} />
-                                            Replay
-                                        </motion.button>
+                                            <motion.button
+                                                initial={{ opacity: 0, scale: 0.9 }}
+                                                animate={{ opacity: 1, scale: 1 }}
+                                                exit={{ opacity: 0, scale: 0.9 }}
+                                                onClick={() => setResetKey(prev => prev + 1)}
+                                                className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-brand-green/10 border border-brand-green/30 text-brand-green hover:bg-brand-green hover:text-black transition-all text-sm font-bold uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.15)] hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] shrink-0 group"
+                                            >
+                                                <RotateCcw key={resetKey} size={14} className={`${resetKey > 0 ? 'animate-spin-once' : ''} transition-transform group-hover:-rotate-90 md:w-4 md:h-4`} />
+                                                Replay
+                                            </motion.button>
+                                            
+                                            {(item.id === '3d-scroll-animation' || item.id === '3d-slider') && (
+                                                <motion.button
+                                                    initial={{ opacity: 0, x: 20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: 20 }}
+                                                    onClick={handleDownloadZip}
+                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
+                                                >
+                                                    <Download size={14} className="group-hover:translate-y-0.5 transition-transform" />
+                                                    Download ZIP
+                                                </motion.button>
+                                            )}
                                     </div>
                                 )}
                             </AnimatePresence>

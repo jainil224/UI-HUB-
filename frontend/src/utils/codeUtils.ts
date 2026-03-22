@@ -417,6 +417,86 @@ export const Component = () => {
            // ... (Interactive grid logic with mouse tracking)
            `
         );
+      case "3d-scroll-animation":
+        return vanillaBoilerplateLocal(
+          `<div class="scroll-container"><canvas id="scroll-canvas"></canvas><div class="loading" id="loader">0%</div></div>`,
+          `.scroll-container { width: 100%; height: 500vh; background: #f1f1f1; position: relative; }
+           #scroll-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+           .loading { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: sans-serif; font-weight: 900; font-size: 2rem; color: #000; z-index: 100; }`,
+          `const canvas = document.getElementById('scroll-canvas');
+           const ctx = canvas.getContext('2d');
+           const loader = document.getElementById('loader');
+           const frameCount = 300;
+           const images = [];
+           let loadedCount = 0;
+
+           const loadImages = () => {
+             for (let i = 1; i <= frameCount; i++) {
+               const img = new Image();
+               img.src = './assets/male' + i.toString().padStart(4, '0') + '.png';
+               img.onload = () => {
+                 loadedCount++;
+                 loader.innerText = Math.floor((loadedCount / frameCount) * 100) + '%';
+                 if (loadedCount === frameCount) {
+                   loader.style.display = 'none';
+                   render(0);
+                 }
+               };
+               images.push(img);
+             }
+           };
+
+           const render = (index) => {
+             const img = images[index];
+             if (!img) return;
+             canvas.width = window.innerWidth;
+             canvas.height = window.innerHeight;
+             const hRatio = canvas.width / img.width;
+             const vRatio = canvas.height / img.height;
+             const ratio = Math.max(hRatio, vRatio);
+             const x = (canvas.width - img.width * ratio) / 2;
+             const y = (canvas.height - img.height * ratio) / 2;
+             ctx.drawImage(img, 0, 0, img.width, img.height, x, y, img.width * ratio, img.height * ratio);
+           };
+
+           window.addEventListener('scroll', () => {
+             const scrollFraction = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+             const frameIndex = Math.min(frameCount - 1, Math.floor(scrollFraction * frameCount));
+             requestAnimationFrame(() => render(frameIndex));
+           });
+
+           window.addEventListener('resize', () => {
+             const scrollFraction = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+             const frameIndex = Math.min(frameCount - 1, Math.floor(scrollFraction * frameCount));
+             render(frameIndex);
+           });
+
+           loadImages();`
+        );
+      case "3d-slider":
+        return vanillaBoilerplateLocal(
+          `<div class="slider-container"><div id="hero-track"></div><div class="controls"><button onclick="prev()">Prev</button><button onclick="next()">Next</button></div></div>`,
+          `.slider-container { width: 100%; height: 100vh; background: #0a0a0f; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+           .controls { position: absolute; bottom: 30px; display: flex; gap: 20px; z-index: 100; }
+           button { padding: 15px 30px; cursor: pointer; border-radius: 50px; border: 1px solid white; background: transparent; color: white; font-weight: 900; }
+           .slide { position: absolute; width: 200px; height: 300px; transition: 0.5s; background-size: cover; border-radius: 20px; top: 50%; transform: translateY(-50%); }
+           .slide:nth-child(1), .slide:nth-child(2) { top: 0; left: 0; width: 100%; height: 100%; border-radius: 0; transform: none; }
+           .slide:nth-child(3) { left: 50%; }
+           .slide:nth-child(4) { left: calc(50% + 220px); }`,
+          `const data = [
+             { img: './assets/slide1.jpg', title: 'Slide 1' },
+             { img: './assets/slide2.jpg', title: 'Slide 2' },
+             { img: './assets/slide3.jpg', title: 'Slide 3' },
+             { img: './assets/slide4.jpg', title: 'Slide 4' }
+           ];
+           const track = document.getElementById('hero-track');
+           const render = () => {
+             track.innerHTML = data.map(d => \`<div class="slide" style="background-image: url('\${d.img}')"></div>\`).join('');
+           };
+           window.next = () => { data.push(data.shift()); render(); };
+           window.prev = () => { data.unshift(data.pop()); render(); };
+           render();`
+        );
       default:
         return vanillaBoilerplateLocal(`<h1>Coming Soon</h1>`, ``, ``);
     }
@@ -707,6 +787,10 @@ ${componentHeader}
                 ))}
             </div>
         </div>`);
+    case "3d-scroll-animation":
+      return isTS ? `import React, { useEffect, useRef, useState, useCallback } from 'react';\nimport { gsap } from 'gsap';\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\n\ngsap.registerPlugin(ScrollTrigger);\n\nexport const Component: React.FC = () => {\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const [progress, setProgress] = useState(0);\n  const frameCount = 300;\n\n  useEffect(() => {\n    // Implementation logic here...\n  }, []);\n\n  return <div className="h-[500vh] bg-[#f1f1f1]"><canvas ref={canvasRef} className="fixed inset-0 w-full h-full object-cover" /></div>;\n};` : `// JS Version...`;
+    case "3d-slider":
+      return isTS ? `import React, { useState } from 'react';\nimport { motion } from 'framer-motion';\n\nexport const Component: React.FC = () => {\n  const [slides, setSlides] = useState([\n    { id: 1, img: './assets/slide1.jpg' },\n    { id: 2, img: './assets/slide2.jpg' },\n    { id: 3, img: './assets/slide3.jpg' },\n    { id: 4, img: './assets/slide4.jpg' }\n  ]);\n  const next = () => setSlides(prev => [...prev.slice(1), prev[0]]);\n  return <div className="h-screen bg-[#0a0a0f] relative overflow-hidden flex items-center justify-center" />;\n};` : `// JS Version...`;
     case "robot-3d-background":
       return `// Robot 3D Background Placeholder\n// Implementation involves Three.js and GLTF loading logic...`;
     case "odyssey-spline":

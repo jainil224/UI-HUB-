@@ -18,10 +18,7 @@ import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
-import { OdysseySpline } from '../components/ui/OdysseySpline';
-import { HeroGlobelSpline } from '../components/ui/HeroGlobelSpline';
-import { OrbitalExperienceSpline } from '../components/ui/OrbitalExperienceSpline';
-import { ThreeDBlockMovement } from '../components/ui/ThreeDBlockMovement';
+
 import { LOVABLE_PROMPTS } from './lovablePrompts';
 import { ANTIGRAVITY_PROMPTS } from './antigravityPrompts';
 
@@ -1114,51 +1111,8 @@ const ThreeDSliderPreview: React.FC = () => {
     );
 };
 
-// ── Odyssey Spline scoped preview ────────────
-const OdysseySplinePreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            minHeight: '100%',
-            background: '#050508',
-            overflow: 'hidden',
-        }}>
-            <OdysseySpline />
-        </div>
-    );
-};
 
-const HeroGlobelSplinePreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            minHeight: '100%',
-            background: '#050508',
-            overflow: 'hidden',
-        }}>
-            <HeroGlobelSpline />
-        </div>
-    );
-};
 
-const OrbitalExperienceSplinePreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            minHeight: '100%',
-            background: '#050508',
-            overflow: 'hidden',
-        }}>
-            <OrbitalExperienceSpline />
-        </div>
-    );
-};
 
 
 
@@ -2675,58 +2629,6 @@ export const TubesDemo = () => {
   );
 };`,
         vibePrompt: LOVABLE_PROMPTS["3d-tubes-cursor"]
-    },
-    {
-        id: "odyssey-spline",
-        title: "Odyssey 3D Animation",
-        category: "3d",
-        preview: () => <OdysseySplinePreview />,
-        code: `import { OdysseySpline } from '@/components/ui/OdysseySpline';
-
-export const OdysseyDemo = () => {
-  return (
-    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
-      <OdysseySpline />
-    </div>
-  );
-};`,
-        vibePrompt: LOVABLE_PROMPTS["odyssey-spline"]
-    },
-    {
-        id: "3d-block-movement",
-        title: "3D block movement",
-        category: "3d",
-        preview: () => (
-            <div className="w-full h-full rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
-                <ThreeDBlockMovement />
-            </div>
-        ),
-        code: `import { ThreeDBlockMovement } from '@/components/ui/ThreeDBlockMovement';
-
-export const Demo = () => {
-  return (
-    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">
-      <ThreeDBlockMovement />
-    </div>
-  );
-};`,
-        vibePrompt: LOVABLE_PROMPTS["3d-block-movement"]
-    },
-    {
-        id: "3d-hero-globel",
-        title: "3D HERO GLOBEL",
-        category: "3d",
-        preview: () => <HeroGlobelSplinePreview />,
-        code: `import { HeroGlobelSpline } from '@/components/ui/HeroGlobelSpline';\n\nexport const Demo = () => {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">\n      <HeroGlobelSpline />\n    </div>\n  );\n};`,
-        vibePrompt: LOVABLE_PROMPTS["3d-hero-globel"]
-    },
-    {
-        id: "3d-orbital-experience",
-        title: "3D Orbital Experience",
-        category: "3d",
-        preview: () => <OrbitalExperienceSplinePreview />,
-        code: `import { OrbitalExperienceSpline } from '@/components/ui/OrbitalExperienceSpline';\n\nexport const Demo = () => {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5 shadow-2xl">\n      <OrbitalExperienceSpline />\n    </div>\n  );\n};`,
-        vibePrompt: LOVABLE_PROMPTS["3d-orbital-experience"]
     },
 ];
 
