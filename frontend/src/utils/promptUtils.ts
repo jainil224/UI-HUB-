@@ -23,10 +23,31 @@ interface PromptData {
     styling: 'tailwind' | 'css';
     meta: VibeMeta;
     code?: string;
+    vanillaCode?: string;
 }
 
+const rawComponents: Record<string, string> = import.meta.glob(
+    ['../components/ui/**/*.tsx', '../components/animations/**/*.tsx'], 
+    { query: '?raw', import: 'default', eager: true }
+);
+
+const resolveTrueSourceCode = (codePlaceholder?: string): string => {
+    if (!codePlaceholder) return '';
+    
+    // Look for imports from @/components/... to find the true underlying source file
+    const match = codePlaceholder.match(/import\s+[\w{}*,\s]+\s+from\s+['"]@\/(components\/(?:ui|animations)\/[\w-]+)['"]/);
+    if (match) {
+        const filePath = `../${match[1]}.tsx`;
+        if (rawComponents[filePath]) {
+            return rawComponents[filePath];
+        }
+    }
+    
+    return codePlaceholder;
+};
+
 export const generateVibePrompt = (tool: AISystem, data: PromptData): string => {
-    const { id, animationName, language, styling, meta, code } = data;
+    const { id, animationName, language, styling, meta, code, vanillaCode } = data;
     const langFull = language === 'ts' ? 'TypeScript (TSX)' : language === 'js' ? 'JavaScript (JSX)' : 'HTML/CSS';
     const styleFull = styling === 'tailwind' ? 'Tailwind CSS' : 'Vanilla CSS';
 
@@ -51,112 +72,89 @@ export const generateVibePrompt = (tool: AISystem, data: PromptData): string => 
     if (tool === 'advance') {
         const libs = meta.libraries || ['framer-motion', 'clsx', 'tailwind-merge', 'lucide-react'];
         const requirements = meta.requirements || [
-            `${animationName} animation logic`,
-            `Smooth transitions (${meta.states.from} → ${meta.states.to})`,
-            'Responsive design',
-            'Dark mode compatibility',
-            'Clean TypeScript implementation'
+            `${animationName} core logic`,
+            `Fluid transitions (${meta.states.from} → ${meta.states.to})`,
+            'Responsive adaptations',
+            'High-fidelity aesthetic'
         ];
 
+        const resolvedCode = resolveTrueSourceCode(code);
+        const exactReactText = resolvedCode && resolvedCode.trim() ? `
+# 📜 EXACT SOURCE CODE (COPY-PASTE EXACTLY)
+
+REACT[
+\`\`\`tsx
+${resolvedCode}
+\`\`\`
+]
+
+TYPESCRIPT[
+// The TypeScript interfaces and types are integrated within the React code above.
+]
+
+TAILWIND CSS[
+/* Tailwind utility classes are applied directly via className attributes in the React code above. */
+]
+` : '';
+
         return `
-# ==========================================
-# UI HUB – ADVANCED AI PROMPT
-# ==========================================
+# ==============================================================================
+# 🧠 UI HUB: ADVANCED MASTER VIBE PROMPT (ELITE EDITION)
+# ==============================================================================
+# Role: Creative Technologist & Principal Frontend Architect
+# Project: ${animationName} (High Performance Replication)
+# ==============================================================================
 
-# Component: ${animationName.toLowerCase().replace(/\s+/g, '-')}
-# Language: ${langFull}
-# Source: https://ui-hub-design.vercel.app/
-# Description: ${meta.description || 'Premium, accessible, high-performance UI component.'}
-# Framework: React / Next.js
-# Libraries: ${libs.join(', ')}
+# 🚀 OVERVIEW
+You are an Elite Creative Technologist. Your singular goal is to provide the EXACT, 100% faithful replication of the provided Master Source Code.
+DO NOT alter the visual aesthetics, shapes, colors, or physics unless explicitly requested by the user.
+You must output the complete component using the exact code blocks provided below. Do not hallucinate new aesthetics or fall back to simple shapes (like dots instead of custom SVG paths).
 
-# ==========================================
-# AI INSTRUCTION
-# ==========================================
+# 🎨 VISUAL ANALYSIS & VIBE
+- **Animation Name**: ${animationName}
+- **Visual Aesthetic**: Premium, dark-themed, ultra-smooth interaction.
+- **Physics of Motion**: 
+    - From State: ${meta.states.from}
+    - To State: ${meta.states.to}
+    - Behavior: ${meta.behavior}
+- **Aesthetic Direction**: ${meta.description || 'Modern brutalism with liquid-smooth transitions.'}
 
-You are a Senior Frontend Engineer implementing a premium UI component for a modern website.
+# 🛠️ TECHNICAL STACK
+- **Core**: React 18+ (Next.js/Vite optimized)
+- **Language**: ${langFull}
+- **Styling**: ${styleFull} (High-precision layout)
+- **Animation**: ${libs[0]} (Mastering spring physics & keyframe orchestration)
+- **Utilities**: clsx, tailwind-merge (for dynamic class orchestration)
 
-Your task is to build an advanced ${animationName} using ${libs[0]} with optimized performance, accessibility, and smooth interaction.
+# 🏗️ ARCHITECTURAL REQUIREMENTS
+${requirements.map(req => `1. **${req}**: Implement with precision.`).join('\n')}
+${libs.includes('framer-motion') ? '2. **Spring Physics**: Use high-stiffness, low-damping springs for snappy responsiveness.' : ''}
+3. **Performance First**: Utilize useMemo and useCallback to minimize re-renders.
+4. **Clean Disposal**: Ensure all side effects and event listeners are properly cleaned up.
+${exactReactText}
+# 📝 TECHNICAL ANALYSIS & MASTER EXPLAINER
 
-The component must follow modern React and TypeScript best practices.
+1. **Architecture Breakdown**: 
+   Briefly explain the component's structure and why this implementation is superior (e.g., using "transform-gpu" for hardware acceleration).
 
-# ==========================================
-# INSTALL REQUIRED DEPENDENCIES
-# ==========================================
+2. **Animation Physics Analysis**: 
+   Analyze the ${libs[0]} logic. Explain the easing curves and how they contribute to the "Premium Vibe".
 
-npm install ${libs.join(' ')}
+3. **State Management Logic**: 
+   Explain the reactive flow and how user interaction triggers the visual transformation.
 
-# ==========================================
-# CREATE REQUIRED UTILITY
-# ==========================================
+4. **Performance Tuning**: 
+   Identify the critical path for performance and how we maintain 60fps.
 
-File: lib/utils.ts
+# ⚠️ CRITICAL RULES
+- Use 100% Type Safety.
+- No third-party assets (SVG/CSS only) unless provided in the code.
+- Perfect responsive scaling.
+- Focus on the "Micro-interactions" that make this Pro-tier.
 
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
-
-# ==========================================
-# COMPONENT REQUIREMENTS
-# ==========================================
-
-Component Name:
-${animationName.replace(/\s+/g, '')}.tsx
-
-Required Features:
-
-${requirements.map(req => `• ${req}`).join('\n')}
-• Smooth animation using requestAnimationFrame or Framer Motion
-• Dark mode compatibility
-• Responsive full-screen rendering (if applicable)
-
-# ==========================================
-# PERFORMANCE REQUIREMENTS
-# ==========================================
-
-• Maintain smooth 60fps animation
-• Properly dispose resources if using Canvas/WebGL
-• Handle responsive window resize
-• Avoid memory leaks
-• Optimize rendering performance
-
-# ==========================================
-# OUTPUT REQUIREMENT
-# ==========================================
-
-Return the complete working component:
-
-${animationName.replace(/\s+/g, '')}.tsx
-
-The code must be:
-
-• Production-ready  
-• Fully typed with TypeScript  
-• Clean and maintainable  
-• Optimized for performance  
-
-
-# ==========================================
-# SOURCE CODE REFERENCE
-# ==========================================
-
-${code || '// Source code reference not available for this component.'}
-
-
-# ==========================================
-# IMPORTANT
-# ==========================================
-
-Do not modify layout structure.
-
-Follow modern frontend best practices.
-
-Use the SOURCE CODE REFERENCE as the primary blueprint to ensure 100% accuracy.
-
-Return only the full working component code.
+# ==============================================================================
+# END OF ADVANCED MASTER PROMPT
+# ==============================================================================
 `.trim();
     }
 
@@ -208,3 +206,4 @@ Please provide the implementation now.
 
     return instructions[tool] || '';
 };
+

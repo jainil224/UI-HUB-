@@ -1207,13 +1207,16 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         vibeMeta: { behavior: item.vibePrompt, states: { from: "default", to: "animated" }, cssProperties: ["transition", "transform", "opacity"] }
     };
 
+    const vanillaCode = getComponentCode(item.id, { lang: 'html', styling: 'css' });
+
     const fullVibePrompt = generateVibePrompt(aiSystem, {
         id: item.id,
         animationName: item.title,
         language: lang,
         styling: styling,
         meta: componentConfig.vibeMeta,
-        code: item.code
+        code: item.code,
+        vanillaCode: vanillaCode
     });
 
 
@@ -1620,7 +1623,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                         tool === 'antigravity' ? 'NEON ENGINE' :
                                                             tool === 'lovable' ? 'ROBOTIC HUB' :
                                                                 tool === 'cursor' ? 'CYBER CORE' :
-                                                                    tool === 'claude' ? 'PHANTOM MODEL' : 'VOID SYSTEM'
+                                                                    tool === 'claude' ? 'PHANTOM MODEL' : 'ADVANCED SYSTEM'
                                                     ) : (
                                                         tool === 'antigravity' ? 'VIBE ENGINE' :
                                                             tool === 'lovable' ? 'PLATFORM HUB' :
@@ -1652,14 +1655,23 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 </div>
                                             </div>
 
-                                            <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${aiSystem === tool ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
-                                                {tool}
-                                            </h4>
+                                            <div className="flex items-center justify-between w-full">
+                                                <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${aiSystem === tool ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
+                                                    {tool === 'advance' ? 'Advance' : tool}
+                                                </h4>
+                                                {tool === 'advance' && (
+                                                    <span className="px-1.5 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
+                                                        PRO
+                                                    </span>
+                                                )}
+                                            </div>
                                         </div>
 
                                         <div className={`flex items-center gap-2 mt-4 transition-all duration-700 ${aiSystem === tool ? 'opacity-100' : 'opacity-0 translate-y-1'}`}>
                                             <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.6)]" />
-                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/90">Active</span>
+                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/90">
+                                                Active
+                                            </span>
                                         </div>
 
                                         {aiSystem === tool && (
@@ -1715,12 +1727,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 {/* Glow aura */}
                                                 <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0'}`} />
                                                 <button
+                                                    disabled={aiSystem === 'advance' && (!user || user.isAnonymous)}
                                                     onClick={() => {
                                                         navigator.clipboard.writeText(fullVibePrompt);
                                                         setCopied('vibe');
                                                         setTimeout(() => setCopied(null), 2000);
                                                     }}
-                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${copied === 'vibe'
+                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && (!user || user.isAnonymous)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                         ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_15px_rgba(0,255,0,0.4)]'
                                                         : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 active:bg-[#00FF00]/10'
                                                         }`}
@@ -1741,12 +1754,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             {/* Glow aura */}
                                             <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
                                             <button
+                                                disabled={aiSystem === 'advance' && (!user || user.isAnonymous)}
                                                 onClick={() => {
                                                     navigator.clipboard.writeText(fullVibePrompt);
                                                     setCopied('vibe');
                                                     setTimeout(() => setCopied(null), 2000);
                                                 }}
-                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${copied === 'vibe'
+                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && (!user || user.isAnonymous)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                     ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_20px_rgba(0,255,0,0.4)]'
                                                     : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5 hover:shadow-[0_0_12px_rgba(0,255,0,0.15)]'
                                                     }`}
@@ -1758,8 +1772,27 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     </div>
 
                                     {/* Terminal Content */}
-                                    <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20">
-                                        <pre className="font-mono whitespace-pre-wrap"><CodeHighlighter code={fullVibePrompt} /></pre>
+                                    <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
+                                        {aiSystem === 'advance' && (!user || user.isAnonymous) ? (
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
+                                                <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
+                                                    <Brain className="text-brand-green" size={28} />
+                                                </div>
+                                                <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">
+                                                    Pro Access Required
+                                                </h4>
+                                                <p className="text-white/50 max-w-sm mb-8 font-sans">
+                                                    Unlock the Advanced Master Vibe Prompt with complete source code, physics breakdowns, and elite structural analysis.
+                                                </p>
+                                                <Link to="/pricing">
+                                                    <button className="px-8 py-3 rounded-xl bg-brand-green text-black text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.3)] hover:shadow-[0_0_30px_rgba(0,255,0,0.5)] active:scale-[0.98] transition-all">
+                                                        Unlock for Pro
+                                                    </button>
+                                                </Link>
+                                            </div>
+                                        ) : (
+                                            <pre className="font-mono whitespace-pre-wrap"><CodeHighlighter code={fullVibePrompt} /></pre>
+                                        )}
                                     </div>
 
                                     {/* Bottom Status Bar */}
