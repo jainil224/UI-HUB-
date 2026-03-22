@@ -1123,9 +1123,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [styling, setStyling] = React.useState<'tailwind' | 'css'>('tailwind');
     const [aiSystem, setAiSystem] = React.useState<AISystem>('antigravity');
     const { user } = useAuth();
+    const isProUser = user && !user.isAnonymous && user.email === 'jainil11199@gmail.com';
+    const [usedFreeToken, setUsedFreeToken] = React.useState<boolean>(() => {
+        return localStorage.getItem('hasUsedAdvanceToken') === 'true';
+    });
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [showAuthModal, setShowAuthModal] = React.useState(false);
-
 
     React.useEffect(() => {
         if (!user) {
@@ -1727,19 +1730,31 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 {/* Glow aura */}
                                                 <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0'}`} />
                                                 <button
-                                                    disabled={aiSystem === 'advance' && (!user || user.isAnonymous)}
+                                                    disabled={aiSystem === 'advance' && !isProUser && usedFreeToken}
                                                     onClick={() => {
+                                                        if (!user || user.isAnonymous) {
+                                                            setShowAuthModal(true);
+                                                            return;
+                                                        }
                                                         navigator.clipboard.writeText(fullVibePrompt);
                                                         setCopied('vibe');
-                                                        setTimeout(() => setCopied(null), 2000);
+                                                        if (aiSystem === 'advance' && !isProUser && !usedFreeToken) {
+                                                            localStorage.setItem('hasUsedAdvanceToken', 'true');
+                                                            setTimeout(() => {
+                                                                setUsedFreeToken(true);
+                                                                setCopied(null);
+                                                            }, 2000);
+                                                        } else {
+                                                            setTimeout(() => setCopied(null), 2000);
+                                                        }
                                                     }}
-                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && (!user || user.isAnonymous)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && !isProUser && usedFreeToken) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                         ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_15px_rgba(0,255,0,0.4)]'
                                                         : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 active:bg-[#00FF00]/10'
                                                         }`}
                                                 >
                                                     {copied === 'vibe' ? <Check size={10} strokeWidth={2.5} /> : <Copy size={10} />}
-                                                    <span>{copied === 'vibe' ? 'Saved' : 'Copy'}</span>
+                                                    <span>{copied === 'vibe' ? 'Saved' : (aiSystem === 'advance' && !isProUser && !usedFreeToken ? 'Free Copy' : 'Copy')}</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -1754,26 +1769,38 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             {/* Glow aura */}
                                             <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
                                             <button
-                                                disabled={aiSystem === 'advance' && (!user || user.isAnonymous)}
+                                                disabled={aiSystem === 'advance' && !isProUser && usedFreeToken}
                                                 onClick={() => {
+                                                    if (!user || user.isAnonymous) {
+                                                        setShowAuthModal(true);
+                                                        return;
+                                                    }
                                                     navigator.clipboard.writeText(fullVibePrompt);
                                                     setCopied('vibe');
-                                                    setTimeout(() => setCopied(null), 2000);
+                                                    if (aiSystem === 'advance' && !isProUser && !usedFreeToken) {
+                                                        localStorage.setItem('hasUsedAdvanceToken', 'true');
+                                                        setTimeout(() => {
+                                                            setUsedFreeToken(true);
+                                                            setCopied(null);
+                                                        }, 2000);
+                                                    } else {
+                                                        setTimeout(() => setCopied(null), 2000);
+                                                    }
                                                 }}
-                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && (!user || user.isAnonymous)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && !isProUser && usedFreeToken) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                     ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_20px_rgba(0,255,0,0.4)]'
                                                     : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5 hover:shadow-[0_0_12px_rgba(0,255,0,0.15)]'
                                                     }`}
                                             >
                                                 {copied === 'vibe' ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}
-                                                <span>{copied === 'vibe' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
+                                                <span>{copied === 'vibe' ? 'Saved to Buffer' : (aiSystem === 'advance' && !isProUser && !usedFreeToken ? 'Copy Blueprint (1 Free Use)' : 'Copy Blueprint')}</span>
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* Terminal Content */}
                                     <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
-                                        {aiSystem === 'advance' && (!user || user.isAnonymous) ? (
+                                        {aiSystem === 'advance' && !isProUser && usedFreeToken ? (
                                             <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
                                                 <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
                                                     <Brain className="text-brand-green" size={28} />
@@ -1791,7 +1818,17 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 </Link>
                                             </div>
                                         ) : (
-                                            <pre className="font-mono whitespace-pre-wrap"><CodeHighlighter code={fullVibePrompt} /></pre>
+                                            <pre 
+                                                className={`font-mono whitespace-pre-wrap ${(!user || user.isAnonymous) ? 'select-none' : ''}`}
+                                                onCopy={(e) => {
+                                                    if (!user || user.isAnonymous) {
+                                                        e.preventDefault();
+                                                        setShowAuthModal(true);
+                                                    }
+                                                }}
+                                            >
+                                                <CodeHighlighter code={fullVibePrompt} />
+                                            </pre>
                                         )}
                                     </div>
 

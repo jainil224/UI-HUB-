@@ -159,10 +159,16 @@ const Navbar = () => {
                                 <span className="text-white text-[11px] font-black tracking-tight leading-tight truncate max-w-[80px]">
                                     {user.displayName?.split(' ')[0] || 'Developer'}
                                 </span>
-                                <span className="text-brand-green/80 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1">
-                                    <Sparkles size={6} className="text-brand-green animate-pulse" />
-                                    Pro Member
-                                </span>
+                                {user.email === 'jainil11199@gmail.com' ? (
+                                    <span className="text-brand-green/80 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1">
+                                        <Sparkles size={6} className="text-brand-green animate-pulse" />
+                                        Pro Member
+                                    </span>
+                                ) : (
+                                    <span className="text-white/40 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1">
+                                        Free Tier
+                                    </span>
+                                )}
                             </div>
 
                             {/* Logout Action */}
