@@ -103,6 +103,7 @@ const Navbar = () => {
                     {[
                         { to: '/', label: 'Home', active: !isLibrary && !['/favorites'].some(p => location.pathname === p) },
                         { to: '/library', label: 'Component Library', active: isLibrary },
+                        { to: '/pricing', label: 'Pricing', active: location.pathname === '/pricing' },
                         { to: '/favorites', label: 'Favorites', active: location.pathname === '/favorites' },
                     ].map(({ to, label, active }) => (
                         <Link
@@ -211,6 +212,7 @@ const Navbar = () => {
                             {[
                                 { to: '/', label: 'Home', active: !isLibrary && !['/favorites'].some(p => location.pathname === p) },
                                 { to: '/library', label: 'Component Library', active: isLibrary },
+                                { to: '/pricing', label: 'Pricing', active: location.pathname === '/pricing' },
                                 { to: '/favorites', label: 'Favorites', active: location.pathname === '/favorites' },
                             ].map(({ to, label, active }) => (
                                 <Link
