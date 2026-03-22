@@ -61,7 +61,20 @@ export const generateVibePrompt = (tool: AISystem, data: PromptData): string => 
     }
 
     if (tool === 'antigravity' && ANTIGRAVITY_PROMPTS[id]) {
-        return ANTIGRAVITY_PROMPTS[id];
+        let promptText = ANTIGRAVITY_PROMPTS[id];
+        const resolvedCode = resolveTrueSourceCode(code);
+        
+        if (resolvedCode && resolvedCode.trim()) {
+            const codeBlock = `\n\`\`\`tsx\n${resolvedCode}\n\`\`\`\n`;
+            if (promptText.includes('CODE[RECT]')) {
+                promptText = promptText.replace('CODE[RECT]', `CODE[REACT]\n${codeBlock}`);
+            } else if (promptText.includes('CODE[REACT]')) {
+                promptText = promptText.replace('CODE[REACT]', `CODE[REACT]\n${codeBlock}`);
+            } else {
+                promptText += `\n\nCODE[REACT]\n${codeBlock}`;
+            }
+        }
+        return promptText;
     }
 
     // Fallback for Claude if no override exists
