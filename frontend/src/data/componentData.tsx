@@ -1129,6 +1129,7 @@ export type ComponentItem = {
     vibePrompt: string;
     uploader?: string;
     imageUrl?: string;
+    isPremium?: boolean;
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -1978,6 +1979,7 @@ export default MagneticCursor;
         id: "liquid-glass",
         title: "Liquid Glass",
         category: "effect",
+        isPremium: true,
         preview: () => <VisualEffects.LiquidGlass location="LONDON" temp="18" />,
         code: `import { LiquidGlass } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[300px] flex items-center justify-center bg-neutral-900">\n    <LiquidGlass location="NEW YORK" temp="22" />\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["liquid-glass"]
@@ -2002,6 +2004,7 @@ export default MagneticCursor;
         id: "spotlight-cards",
         title: "Spotlight Cards",
         category: "effect",
+        isPremium: true,
         preview: () => <VisualEffects.SpotlightCards title="Feature" description="Hover to reveal the hidden spotlight effect." />,
         code: `import { SpotlightCards } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <SpotlightCards \n    title="Service" \n    description="Innovative solutions for your modern business needs." \n  />\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["spotlight-cards"]
@@ -2079,6 +2082,7 @@ export default MagneticCursor;
         id: "hell-background",
         title: "Hell Background",
         category: "background",
+        isPremium: true,
         preview: () => <div className="w-full h-full relative"><VisualEffects.HellBackground intensity={1.5} speed={0.8} /></div>,
         code: `import { HellBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <HellBackground color="#DE443B" intensity={1.5} speed={1.0} />\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["hell-background"]
@@ -2088,6 +2092,7 @@ export default MagneticCursor;
         id: "interactive-grid-background",
         title: "Interactive Grid Background",
         category: "background",
+        isPremium: true,
         preview: renderComponent("interactive-grid-background", "Interactive Grid Background"),
         code: `import InteractiveGridBackground from '@/components/ui/InteractiveGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <InteractiveGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n      effectColor="rgba(0,255,0,0.5)"\n      darkEffectColor="rgba(0,255,0,0.5)"\n    />\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["interactive-grid-background"]
@@ -2106,6 +2111,7 @@ export default MagneticCursor;
         id: "robot-3d-background",
         title: "Robot 3D Background",
         category: "3d",
+        isPremium: true,
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
         code: `import { Robot3DBackground } from '@/components/ui/Robot3DBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <Robot3DBackground \n      overlayOpacity={0.4} \n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        ROBOTIC CORE\n      </h1>\n    </div>\n  </div>\n);\n\n// Video Resource: Robots_sliding_on_neon_platform_16a422a842.mp4
 // Download Link: /assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4`,
@@ -2142,6 +2148,7 @@ export default MagneticCursor;
         id: "isometric-grid-background",
         title: "Isometric Grid Background",
         category: "background",
+        isPremium: true,
         preview: () => <div className="w-full h-full relative"><VisualEffects.IsometricGridBackground title="ISOMETRIC" /></div>,
         code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground \n      title="Tailwind is Awesome" \n      boxProps={{\n        rowsCount: 50,\n        colsCount: 30,\n        customColors: ["#ffaa40", "#9c40ff"]\n      }}\n    />\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["isometric-grid-background"]
@@ -2355,6 +2362,7 @@ export const Demo = () => (
         id: "black-hole-background",
         title: "Black Hole Background",
         category: "background",
+        isPremium: true,
         preview: () => <BlackHolePreview />,
         code: `import { BlackHoleBackground } from '@/components/ui/BlackHoleBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <BlackHoleBackground \n      particleCount={600} \n      coreColor="rgba(79, 70, 229, 0.4)" \n      accentColor="#22d3ee" \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-black text-white tracking-widest uppercase opacity-80">\n        Gravitational Core\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["black-hole-background"]
@@ -2373,6 +2381,7 @@ export const Demo = () => (
         id: "mouse-gravity-background",
         title: "Mouse Gravity Background",
         category: "background",
+        isPremium: true,
         preview: () => <MouseGravityPreview />,
         code: `import { MouseGravityBackground } from '@/components/ui/MouseGravityBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <MouseGravityBackground \n      particleCount={150} \n      attractionForce={0.06} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400/50 tracking-widest uppercase pointer-events-none">\n        Gravity Field\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["mouse-gravity-background"]
@@ -2390,6 +2399,7 @@ export const Demo = () => (
         id: "interactive-webgl-scene",
         title: "Interactive WebGL Scene",
         category: "3d",
+        isPremium: true,
         preview: () => <InteractiveWebGLScenePreview />,
         code: `import { InteractiveWebGLScene } from '@/components/ui/InteractiveWebGLScene';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <InteractiveWebGLScene \n      overlayOpacity={0.4} \n      showDownloadLink={true}\n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        WEBGL EXPERIENCE\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: LOVABLE_PROMPTS["interactive-webgl-scene"]
@@ -2398,6 +2408,7 @@ export const Demo = () => (
         id: "3d-scroll-animation",
         title: "3D Scroll Animation",
         category: "3d",
+        isPremium: true,
         preview: () => <Scroll3DAnimationPreview />,
         code: `import Scroll3DAnimation from '@/components/ui/Scroll3DAnimation';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[800px] overflow-hidden rounded-3xl bg-white shadow-2xl border border-neutral-100">\n    <Scroll3DAnimation />\n  </div>\n);`,
         vibePrompt: LOVABLE_PROMPTS["3d-scroll-animation"]
@@ -2406,6 +2417,7 @@ export const Demo = () => (
         id: "3d-slider",
         title: "3D Slider",
         category: "3d",
+        isPremium: true,
         preview: () => <ThreeDSliderPreview />,
         code: `import React, { useState, useCallback, useEffect } from 'react';
 
@@ -2525,6 +2537,7 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
         id: "lizard-cursor",
         title: "Lizard Cursor",
         category: "cursor",
+        isPremium: true,
         preview: () => <LizardCursorPreview />,
         code: `import { useRef } from 'react';
 import { LizardCursor } from '@/components/ui/LizardCursor';
@@ -2599,6 +2612,7 @@ export const SpiderDemo = () => {
         id: "3d-tubes-cursor",
         title: "3D Tubes Cursor",
         category: "cursor",
+        isPremium: true,
         preview: () => <ThreeDTubesCursorPreview />,
         code: `import { useRef } from 'react';
 import { ThreeDTubesCursor } from '@/components/ui/ThreeDTubesCursor';

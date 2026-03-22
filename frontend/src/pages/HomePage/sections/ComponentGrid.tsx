@@ -170,6 +170,13 @@ const ComponentGrid = () => {
                             {isActive && (
                                 <div className="absolute inset-0 rounded-3xl ring-1 ring-brand-green/20 shadow-[0_0_30px_-5px_var(--color-brand-green,rgba(255,255,26,0.1))] pointer-events-none z-40 transition-all duration-500 opacity-50" />
                             )}
+
+                            {/* PRO Badge */}
+                            {comp!.isPremium && (
+                                <div className="absolute top-4 right-4 z-40 px-2 py-1 rounded-md bg-brand-green text-black text-[7px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(0,255,0,0.4)] border border-white/10">
+                                    PRO
+                                </div>
+                            )}
                         </motion.div>
                     );
                 })}

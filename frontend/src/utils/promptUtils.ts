@@ -171,6 +171,36 @@ ${exactReactText}
 `.trim();
     }
 
+    // ── Cursor Prompt Redesign (Analytical & Copy-Paste Ready) ──
+    const cursorPrompt = `
+# ROLE: Senior UI Engineer & Creative Technologist
+# TASK: Replicate UI Component "${animationName}" with 100% Fidelity
+
+## PHASE 1: DEEP COMPONENT ANALYSIS
+- **Logical Behavior**: ${meta.behavior}
+- **Motion Dynamics**: Transitioning from [${meta.states.from}] to [${meta.states.to}].
+- **Visual Identity**: High-fidelity, premium aesthetics using ${styleFull}.
+
+## PHASE 2: ARCHITECTURAL DESIGN
+- **State Strategy**: Use modern React hooks (useState, useEffect, useMemo) for optimal reactivity.
+- **Animation Orchestration**: Leverage ${meta.libraries?.includes('framer-motion') ? 'Framer Motion variants and spring physics' : 'CSS-in-JS and hardware-accelerated transforms'}.
+- **Performance**: Minimize re-renders; ensure 60fps interaction.
+
+## PHASE 3: PRODUCTION IMPLEMENTATION
+- **Requirement**: Provide a single-file, 100% ready-to-use React component.
+- **Dependencies**: React 18+, lucide-react, clsx, tailwind-merge.
+- **Standard**: Clean, modular, and type-safe ${langFull.replace(/ \(.*\)/, '')}.
+
+${code ? `
+### [REFERENCE SOURCE CODE]
+\`\`\`tsx
+${resolveTrueSourceCode(code)}
+\`\`\`
+` : ''}
+
+Please analyze the above specifications and provide the complete implementation now.
+`.trim();
+
     const instructions = {
         antigravity: `
 # ROLE: Senior AI Coding Expert (Antigravity)
@@ -196,24 +226,31 @@ ${exactReactText}
 ## FINAL OUTPUT
 - Return ONLY the TypeScript/React code block. No explanations.
 `,
-        lovable: '',
-        cursor: `
-Generate high-fidelity React component: "${animationName}"
-Stack: ${langFull.replace(/ \(.*\)/, '')}, ${styleFull}, Framer Motion.
+        lovable: `
+# ROLE: Senior AI Coding Expert (Lovable)
+# TASK: Create premium UI Component "${animationName}"
 
-Meta Specifications:
-- Animation Path: ${meta.states.from} -> ${meta.states.to}
-- Interactive Logic: ${meta.behavior}
-- Key Properties: ${meta.cssProperties.join(', ')}
+## VISUAL SPECS
+- Behavior: ${meta.behavior}
+- Dynamics: ${meta.states.from} → ${meta.states.to}
+- Aesthetics: High-end, clean, modern tech style.
 
-Coding Guidelines:
-- Clean, modular code using modern ${langFull.replace(/ \(.*\)/, '')} patterns.
-- Self-contained implementation (no external assets).
-- Use Lucide-React for any necessary iconography.
-- Focus on smooth 60fps transitions and performance.
+## TECH SPECS
+- Framework: React (Next.js/Vite optimized)
+- Core: ${langFull.replace(/ \(.*\)/, '')}, ${styleFull}
+- Main Animation: Framer Motion (use variants and spring transitions)
+- Dependencies: lucide-react (icons), clsx, tailwind-merge
 
-Please provide the implementation now.
+## CODE QUALITY RULES
+1. Provide a single-file, production-ready component.
+2. Use smooth, high-fidelity animations.
+3. Ensure dark mode is the primary theme (#000 background).
+4. Accessibility: Proper ARIA roles and keyboard support.
+
+## FINAL OUTPUT
+- Return the complete implementation.
 `,
+        cursor: cursorPrompt,
         advance: '' // Handled above
     };
 

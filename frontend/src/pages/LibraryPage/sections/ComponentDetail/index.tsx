@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink, Download
+    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink, Download, Lock
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
@@ -1110,6 +1110,21 @@ const CustomSelect = ({
 
 import { ComponentItem } from '../../../../data/componentData';
 
+const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: string }) => (
+    <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md rounded-[inherit] border border-brand-green/20 p-8 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,159,0.2)]">
+            <Lock className="w-8 h-8 text-brand-green" />
+        </div>
+        <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-2">Premium Feature</h3>
+        <p className="text-white/50 text-sm max-w-xs mb-8">{message}</p>
+        <Link to="/pricing">
+            <button className="px-8 py-3 rounded-xl bg-brand-green text-black text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(0,255,159,0.4)] hover:scale-105 transition-all active:scale-[0.98]">
+                Upgrade to Pro
+            </button>
+        </Link>
+    </div>
+);
+
 const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => void }) => {
     const navigate = useNavigate();
     const [tab, setTab] = React.useState<'preview' | 'code' | 'vibe'>('preview');
@@ -1130,12 +1145,16 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [showAuthModal, setShowAuthModal] = React.useState(false);
 
+    const [favoritesCount, setFavoritesCount] = React.useState(0);
+
     React.useEffect(() => {
         if (!user) {
             setIsFavorited(false);
+            setFavoritesCount(0);
             return;
         }
         const unsubscribe = getUserFavorites(user.uid, (favorites) => {
+            setFavoritesCount(favorites.length);
             const found = favorites.find(f => f.componentId === item.id);
             setIsFavorited(!!found);
         });
@@ -1150,11 +1169,21 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         if (isFavorited) {
             await removeFromFavorites(user.uid, item.id);
         } else {
+            if (!isProUser && favoritesCount >= 5) {
+                alert("Vault Limit Reached: Free members can save up to 5 components. Upgrade to Pro for unlimited storage in your vault!");
+                navigate('/pricing');
+                return;
+            }
             await saveToFavorites(user.uid, item);
         }
     };
 
     const handleDownloadZip = async () => {
+        if (!isProUser) {
+            alert("Pro Feature: ZIP downloads are reserved for our Pro members. Upgrade your plan to download the full asset package.");
+            navigate('/pricing');
+            return;
+        }
         if (!item) return;
 
         const reactCode = getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' });
@@ -1559,16 +1588,22 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 />
                             </div>
 
-                            <div className="rounded-[2.5rem] overflow-hidden border border-white/10 relative bg-[#09090b] shadow-2xl">
-                                <button
-                                    onClick={() => handleCopy(getComponentCode(item.id, { lang, styling }), 'source')}
-                                    className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'source' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
-                                >
-                                    {copied === 'source' ? <Check size={18} /> : <Copy size={18} />}
-                                </button>
-                                <div className="p-6 md:p-8 text-xs leading-relaxed max-h-[600px] overflow-auto custom-scrollbar">
-                                    <pre className="font-sans"><code><CodeHighlighter code={getComponentCode(item.id, { lang, styling })} /></code></pre>
-                                </div>
+                            <div className="rounded-[2.5rem] overflow-hidden border border-white/10 relative bg-[#09090b] shadow-2xl min-h-[400px]">
+                                {item.isPremium && !isProUser ? (
+                                    <PremiumGate message="This premium component requires a Pro subscription to view and copy the source code." />
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => handleCopy(getComponentCode(item.id, { lang, styling }), 'source')}
+                                            className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'source' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                                        >
+                                            {copied === 'source' ? <Check size={18} /> : <Copy size={18} />}
+                                        </button>
+                                        <div className="p-6 md:p-8 text-xs leading-relaxed max-h-[600px] overflow-auto custom-scrollbar">
+                                            <pre className="font-sans"><code><CodeHighlighter code={getComponentCode(item.id, { lang, styling })} /></code></pre>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </section>
                     </motion.div>
@@ -1584,7 +1619,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <section className="space-y-6 md:space-y-10">
                             <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
-                                {(['antigravity', 'lovable', 'cursor', 'claude', 'advance'] as const).map(tool => (
+                                {(['advance', 'antigravity', 'lovable', 'cursor', 'claude'] as const).map(tool => (
                                     <button
                                         key={tool}
                                         onClick={() => setAiSystem(tool)}
@@ -1730,7 +1765,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 {/* Glow aura */}
                                                 <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0'}`} />
                                                 <button
-                                                    disabled={aiSystem === 'advance' && !isProUser && usedFreeToken}
+                                                    disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))}
                                                     onClick={() => {
                                                         if (!user || user.isAnonymous) {
                                                             setShowAuthModal(true);
@@ -1738,23 +1773,15 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                         }
                                                         navigator.clipboard.writeText(fullVibePrompt);
                                                         setCopied('vibe');
-                                                        if (aiSystem === 'advance' && !isProUser && !usedFreeToken) {
-                                                            localStorage.setItem('hasUsedAdvanceToken', 'true');
-                                                            setTimeout(() => {
-                                                                setUsedFreeToken(true);
-                                                                setCopied(null);
-                                                            }, 2000);
-                                                        } else {
-                                                            setTimeout(() => setCopied(null), 2000);
-                                                        }
+                                                        setTimeout(() => setCopied(null), 2000);
                                                     }}
-                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && !isProUser && usedFreeToken) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                         ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_15px_rgba(0,255,0,0.4)]'
                                                         : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 active:bg-[#00FF00]/10'
                                                         }`}
                                                 >
                                                     {copied === 'vibe' ? <Check size={10} strokeWidth={2.5} /> : <Copy size={10} />}
-                                                    <span>{copied === 'vibe' ? 'Saved' : (aiSystem === 'advance' && !isProUser && !usedFreeToken ? 'Free Copy' : 'Copy')}</span>
+                                                    <span>{copied === 'vibe' ? 'Saved' : 'Copy'}</span>
                                                 </button>
                                             </div>
                                         </div>
@@ -1769,7 +1796,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             {/* Glow aura */}
                                             <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
                                             <button
-                                                disabled={aiSystem === 'advance' && !isProUser && usedFreeToken}
+                                                disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))}
                                                 onClick={() => {
                                                     if (!user || user.isAnonymous) {
                                                         setShowAuthModal(true);
@@ -1777,43 +1804,38 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     }
                                                     navigator.clipboard.writeText(fullVibePrompt);
                                                     setCopied('vibe');
-                                                    if (aiSystem === 'advance' && !isProUser && !usedFreeToken) {
-                                                        localStorage.setItem('hasUsedAdvanceToken', 'true');
-                                                        setTimeout(() => {
-                                                            setUsedFreeToken(true);
-                                                            setCopied(null);
-                                                        }, 2000);
-                                                    } else {
-                                                        setTimeout(() => setCopied(null), 2000);
-                                                    }
+                                                    setTimeout(() => setCopied(null), 2000);
                                                 }}
-                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${(aiSystem === 'advance' && !isProUser && usedFreeToken) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                     ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_20px_rgba(0,255,0,0.4)]'
                                                     : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5 hover:shadow-[0_0_12px_rgba(0,255,0,0.15)]'
                                                     }`}
                                             >
                                                 {copied === 'vibe' ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}
-                                                <span>{copied === 'vibe' ? 'Saved to Buffer' : (aiSystem === 'advance' && !isProUser && !usedFreeToken ? 'Copy Blueprint (1 Free Use)' : 'Copy Blueprint')}</span>
+                                                <span>{copied === 'vibe' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* Terminal Content */}
                                     <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
-                                        {aiSystem === 'advance' && !isProUser && usedFreeToken ? (
+                                        {(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) ? (
                                             <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
                                                 <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
-                                                    <Brain className="text-brand-green" size={28} />
+                                                    <Lock className="text-brand-green" size={28} />
                                                 </div>
                                                 <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">
                                                     Pro Access Required
                                                 </h4>
                                                 <p className="text-white/50 max-w-sm mb-8 font-sans">
-                                                    Unlock the Advanced Master Vibe Prompt with complete source code, physics breakdowns, and elite structural analysis.
+                                                    {item.isPremium 
+                                                        ? "The specialized AI prompts for this premium component are available only to Pro members."
+                                                        : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} prompts require a Pro subscription. Free members can use Lovable and Cursor prompts.`
+                                                    }
                                                 </p>
                                                 <Link to="/pricing">
                                                     <button className="px-8 py-3 rounded-xl bg-brand-green text-black text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.3)] hover:shadow-[0_0_30px_rgba(0,255,0,0.5)] active:scale-[0.98] transition-all">
-                                                        Unlock for Pro
+                                                        Upgrade for Pro Access
                                                     </button>
                                                 </Link>
                                             </div>

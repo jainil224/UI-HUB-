@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronRight, Home } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronRight, Home, Lock } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { db } from '../../lib/firebase';
@@ -35,7 +35,7 @@ const LibraryPage = () => {
                     id: doc.id,
                     title: data.componentName,
                     description: data.description,
-                    category: 'custom', // Generic category for uploaded components
+                    category: 'custom',
                     code: data.code,
                     vibePrompt: "Community generated layout",
                     preview: () => (
@@ -51,7 +51,6 @@ const LibraryPage = () => {
         return unsubscribe;
     }, []);
 
-    // Sync activeComponent if it changes in the background or URL changes
     useEffect(() => {
         const found = allComponents.find(c => c.id === idFromUrl);
         if (found) {
@@ -59,7 +58,6 @@ const LibraryPage = () => {
         }
     }, [idFromUrl, firebaseComponents]);
 
-    // Automatically sync URL with default component if no ID is present
     useEffect(() => {
         if (!idFromUrl && allComponents.length > 0) {
             navigate(`/library?id=${defaultComponent.id}`, { replace: true });
@@ -73,7 +71,7 @@ const LibraryPage = () => {
     };
 
     const categories: Category[] = [
-        { name: "Buttons/hover effcats", items: allComponents.filter(item => item.category === 'button') },
+        { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
         { name: "3D Design", items: allComponents.filter(item => item.category === '3d') },
@@ -87,14 +85,16 @@ const LibraryPage = () => {
 
             {/* ── Mobile top nav bar ── */}
             <div className="md:hidden flex items-center justify-between px-4 py-3 bg-white/5 border-b border-white/5 shrink-0 z-30">
-                {/* Left: Home link + current component */}
                 <div className="flex items-center gap-3 min-w-0">
                     <Link to="/" className="shrink-0 p-1.5 rounded-lg bg-white/5 text-white/40 hover:text-white transition-colors">
                         <Home size={14} />
                     </Link>
                     <div className="flex flex-col min-w-0">
                         <span className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Viewing</span>
-                        <span className="text-sm font-bold text-brand-green truncate">{activeComponent.title}</span>
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-sm font-bold text-brand-green truncate">{activeComponent.title}</span>
+                            {activeComponent.isPremium && <Lock size={9} className="text-amber-400 shrink-0" />}
+                        </div>
                     </div>
                 </div>
                 <button
@@ -151,7 +151,12 @@ const LibraryPage = () => {
                                                 : 'bg-white/5 text-white/60 active:bg-white/10'
                                                 }`}
                                         >
-                                            <span className="text-sm">{item.title}</span>
+                                            <div className="flex items-center gap-2 min-w-0">
+                                                <span className="text-sm truncate">{item.title}</span>
+                                                {item.isPremium && activeComponent.id !== item.id && (
+                                                    <Lock size={9} className="text-amber-400 shrink-0" />
+                                                )}
+                                            </div>
                                             <ChevronRight size={14} className={activeComponent.id === item.id ? '' : 'opacity-20'} />
                                         </li>
                                     ))}
@@ -164,7 +169,6 @@ const LibraryPage = () => {
 
             {/* ── Desktop sidebar ── */}
             <aside data-lenis-prevent className="hidden md:block w-64 shrink-0 border-r border-white/5 h-full overflow-y-auto p-6 pt-8">
-                {/* Home link in desktop sidebar */}
                 <Link to="/" className="flex items-center gap-2 text-white/40 hover:text-brand-green text-xs font-bold uppercase tracking-widest mb-8 transition-colors">
                     <Home size={14} />
                     Home
@@ -177,10 +181,16 @@ const LibraryPage = () => {
                                 <li
                                     key={item.id}
                                     onClick={() => handleComponentSelect(item)}
-                                    className={`cursor-pointer text-sm transition-colors hover:text-brand-green ${activeComponent.id === item.id ? 'text-brand-green font-bold' : 'text-white/60'
+                                    className={`cursor-pointer text-sm transition-colors hover:text-brand-green flex items-center gap-2 ${activeComponent.id === item.id ? 'text-brand-green font-bold' : 'text-white/60'
                                         }`}
                                 >
-                                    {item.title}
+                                    <span className="truncate flex-1">{item.title}</span>
+                                    {item.isPremium && (
+                                        <Lock
+                                            size={9}
+                                            className={`shrink-0 ${activeComponent.id === item.id ? 'text-amber-400' : 'text-amber-500/40'}`}
+                                        />
+                                    )}
                                 </li>
                             ))}
                         </ul>
