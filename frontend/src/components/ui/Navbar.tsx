@@ -85,10 +85,28 @@ const Navbar = () => {
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-0">
             {/* Floating pill navbar */}
-            <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-2.5 rounded-2xl bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-[0_4px_40px_rgba(0,0,0,0.5)]">
+            <div className="relative overflow-hidden max-w-7xl mx-auto flex items-center justify-between px-4 py-2.5 rounded-2xl bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
+                {/* Glossy Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] to-transparent pointer-events-none" />
+
+                {/* Animated Liquid Glow */}
+                <motion.div
+                    animate={{
+                        x: [-20, 20],
+                        y: [-10, 10],
+                        scale: [1, 1.1, 1],
+                    }}
+                    transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut"
+                    }}
+                    className="absolute -top-1/2 -left-1/4 w-full h-[200%] bg-brand-green/10 blur-[100px] rounded-full pointer-events-none opacity-40"
+                />
 
                 {/* ── Logo ── */}
-                <Link to="/" className="flex items-center gap-2.5 group shrink-0">
+                <Link to="/" className="relative z-10 flex items-center gap-2.5 group shrink-0">
                     <div className="relative">
                         <div className="absolute inset-0 bg-brand-green/40 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         <Logo />
@@ -99,9 +117,9 @@ const Navbar = () => {
                 </Link>
 
                 {/* ── Desktop nav links (pill switcher) ── */}
-                <div className="hidden md:flex items-center gap-0.5 bg-white/[0.05] border border-white/10 rounded-full px-1.5 py-1">
+                <div className="relative z-10 hidden md:flex items-center gap-0.5 bg-white/[0.05] border border-white/10 rounded-full px-1.5 py-1">
                     {[
-                        { to: '/', label: 'Home', active: !isLibrary && !['/favorites'].some(p => location.pathname === p) },
+                        { to: '/', label: 'Home', active: location.pathname === '/' },
                         { to: '/library', label: 'Component Library', active: isLibrary },
                         { to: '/pricing', label: 'Pricing', active: location.pathname === '/pricing' },
                         { to: '/favorites', label: 'Favorites', active: location.pathname === '/favorites' },
@@ -124,7 +142,7 @@ const Navbar = () => {
                 </div>
 
                 {/* ── Right Actions ── */}
-                <div className="flex items-center gap-2.5">
+                <div className="relative z-10 flex items-center gap-2.5">
                     {/* GitHub */}
                     <a
                         href="https://github.com/jainil224"
@@ -216,7 +234,7 @@ const Navbar = () => {
                     >
                         <div className="flex flex-col gap-1.5">
                             {[
-                                { to: '/', label: 'Home', active: !isLibrary && !['/favorites'].some(p => location.pathname === p) },
+                                { to: '/', label: 'Home', active: location.pathname === '/' },
                                 { to: '/library', label: 'Component Library', active: isLibrary },
                                 { to: '/pricing', label: 'Pricing', active: location.pathname === '/pricing' },
                                 { to: '/favorites', label: 'Favorites', active: location.pathname === '/favorites' },
