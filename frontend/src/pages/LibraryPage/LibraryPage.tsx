@@ -4,6 +4,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Menu as MenuIcon, X, ChevronRight, Home, Lock } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
+import { useAuth } from '../../context/AuthContext';
 import { db } from '../../lib/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 
@@ -13,6 +14,8 @@ interface Category {
 }
 
 const LibraryPage = () => {
+    const { user } = useAuth();
+    const isPro = user && !user.isAnonymous;
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
@@ -93,7 +96,7 @@ const LibraryPage = () => {
                         <span className="text-[9px] text-white/40 uppercase tracking-widest font-bold">Viewing</span>
                         <div className="flex items-center gap-1.5">
                             <span className="text-sm font-bold text-brand-green truncate">{activeComponent.title}</span>
-                            {activeComponent.isPremium && <Lock size={9} className="text-amber-400 shrink-0" />}
+                            {activeComponent.isPremium && !isPro && <Lock size={9} className="text-amber-400 shrink-0" />}
                         </div>
                     </div>
                 </div>
@@ -153,7 +156,7 @@ const LibraryPage = () => {
                                         >
                                             <div className="flex items-center gap-2 min-w-0">
                                                 <span className="text-sm truncate">{item.title}</span>
-                                                {item.isPremium && activeComponent.id !== item.id && (
+                                                {item.isPremium && !isPro && activeComponent.id !== item.id && (
                                                     <Lock size={9} className="text-amber-400 shrink-0" />
                                                 )}
                                             </div>
@@ -185,7 +188,7 @@ const LibraryPage = () => {
                                         }`}
                                 >
                                     <span className="truncate flex-1">{item.title}</span>
-                                    {item.isPremium && (
+                                    {item.isPremium && !isPro && (
                                         <Lock
                                             size={9}
                                             className={`shrink-0 ${activeComponent.id === item.id ? 'text-amber-400' : 'text-amber-500/40'}`}

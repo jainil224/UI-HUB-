@@ -1619,7 +1619,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <section className="space-y-6 md:space-y-10">
                             <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
-                                {(['advance', 'antigravity', 'lovable', 'cursor', 'claude'] as const).map(tool => (
+                                {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
                                     <button
                                         key={tool}
                                         onClick={() => setAiSystem(tool)}

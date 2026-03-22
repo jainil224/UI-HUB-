@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { componentList } from '../../../data/componentData';
 import { ArrowUpRight, Sparkles, MonitorPlay, MousePointer2, Component as ComponentIcon } from 'lucide-react';
 import ViewSourceButton from '../../../components/ui/ViewSourceButton';
+import { useAuth } from '../../../context/AuthContext';
 
 const getCategoryIcon = (category?: string, id?: string) => {
     const className = "text-white/40 group-hover:text-white/90 transition-colors duration-500 group-hover:scale-110";
@@ -31,6 +32,8 @@ const showcaseIds = [
 import { motion } from 'framer-motion';
 
 const ComponentGrid = () => {
+    const { user } = useAuth();
+    const isPro = user && !user.isAnonymous;
     const navigate = useNavigate();
     const [activeId, setActiveId] = useState<string | null>(null);
     const [isButtonHovered, setIsButtonHovered] = useState(false);
@@ -172,7 +175,7 @@ const ComponentGrid = () => {
                             )}
 
                             {/* PRO Badge */}
-                            {comp!.isPremium && (
+                            {comp!.isPremium && !isPro && (
                                 <div className="absolute top-4 right-4 z-40 px-2 py-1 rounded-md bg-brand-green text-black text-[7px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(0,255,0,0.4)] border border-white/10">
                                     PRO
                                 </div>

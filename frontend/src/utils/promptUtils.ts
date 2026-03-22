@@ -47,51 +47,172 @@ const resolveTrueSourceCode = (codePlaceholder?: string): string => {
 };
 
 export const generateVibePrompt = (tool: AISystem, data: PromptData): string => {
-    const { id, animationName, language, styling, meta, code, vanillaCode } = data;
+    const { id, animationName, language, styling, meta, code } = data;
     const langFull = language === 'ts' ? 'TypeScript (TSX)' : language === 'js' ? 'JavaScript (JSX)' : 'HTML/CSS';
     const styleFull = styling === 'tailwind' ? 'Tailwind CSS' : 'Vanilla CSS';
+    const resolvedCode = resolveTrueSourceCode(code);
 
-    // ── Platform Overrides ──
-    if (tool === 'claude' && CLAUDE_PROMPTS[id]) {
-        return CLAUDE_PROMPTS[id];
-    }
-
-    if (tool === 'lovable' && LOVABLE_PROMPTS[id]) {
-        return LOVABLE_PROMPTS[id];
-    }
-
-    if (tool === 'antigravity' && ANTIGRAVITY_PROMPTS[id]) {
-        let promptText = ANTIGRAVITY_PROMPTS[id];
-        const resolvedCode = resolveTrueSourceCode(code);
-        
-        if (resolvedCode && resolvedCode.trim()) {
-            const codeBlock = `\n\`\`\`tsx\n${resolvedCode}\n\`\`\`\n`;
-            if (promptText.includes('CODE[RECT]')) {
-                promptText = promptText.replace('CODE[RECT]', `CODE[REACT]\n${codeBlock}`);
-            } else if (promptText.includes('CODE[REACT]')) {
-                promptText = promptText.replace('CODE[REACT]', `CODE[REACT]\n${codeBlock}`);
-            } else {
-                promptText += `\n\nCODE[REACT]\n${codeBlock}`;
-            }
-        }
-        return promptText;
-    }
-
-    // Fallback for Claude if no override exists
+    // ── Claude Master Reconstruction Logic ──
     if (tool === 'claude') {
-        return code || '// Source code reference not available for this component.';
+        const baseOverride = CLAUDE_PROMPTS[id] || '';
+        const extractedInfo = baseOverride.match(/## Component Info\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+        const extractedTech = baseOverride.match(/## Tech Stack\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+        const extractedReqs = baseOverride.match(/## Requirements\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+        const extractedProps = baseOverride.match(/## Props\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+        const extractedPerf = baseOverride.match(/## Performance\s+([\s\S]*?)$|## Performance\s+([\s\S]*?)\s+---/)?.[1] || baseOverride.match(/## Performance\s+([\s\S]*?)$/)?.[1];
+
+        const finalInfo = extractedInfo || `Name: ${animationName}\nType: ${meta.behavior.split(' ')[0]} / Interactive Component`;
+        const finalTech = extractedTech || `* React 18+\n* TypeScript (TSX)\n* Tailwind CSS\n* Framer Motion (Main)\n* lucide-react (icons)\n* clsx / tailwind-merge (cn utility)`;
+        const finalReqs = extractedReqs || (meta.requirements || ['Dynamic physics/animation loop', 'Interactive mouse interaction', 'High-fidelity aesthetics']).map(req => `* ${req}`).join('\n');
+        const finalProps = extractedProps || `* children: React.ReactNode — wrapper content.\n* className: string — layout context.`;
+        const finalPerf = (extractedPerf || `* GPU-accelerated transforms.\n* Minimal re-renders.\n* Efficient cleanup.`).trim();
+
+        return `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer.
+
+## Task
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+${finalInfo}
+
+---
+
+## Tech Stack
+${finalTech}
+
+---
+
+## Requirements
+${finalReqs}
+
+---
+
+## CODE REFERENCE
+### Architecture & Motion Analysis
+1. **Behavioral Logic**: ${meta.behavior}
+2. **Motion Sequence**: [${meta.states.from}] → [${meta.states.to}] over precise easing curves.
+3. **Interactive Dynamics**: Real-time response to user interaction (hover/click) using hardware-accelerated transforms.
+
+### Master Source Code (Fidelity: 100%)
+${resolvedCode ? `
+\`\`\`tsx
+${resolvedCode}
+\`\`\`
+` : '// Source code available upon request.'}
+
+---
+
+## Props
+${finalProps}
+
+---
+
+## Performance
+${finalPerf}
+`.trim();
     }
 
+    // ── Antigravity Master Reconstruction Logic ──
+    if (tool === 'antigravity') {
+        const baseOverride = ANTIGRAVITY_PROMPTS[id] || '';
+        const extractedGoal = baseOverride.match(/## GOAL\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+        const extractedFeatures = baseOverride.match(/## FEATURES \(STRICT – DO NOT SKIP\)\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+        const extractedProps = baseOverride.match(/## PROPS \(with defaults\):\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+        const extractedRequirements = baseOverride.match(/## IMPLEMENTATION REQUIREMENTS\s+([\s\S]*?)\s+---/)?.[1]?.trim();
+
+        const finalGoal = extractedGoal || meta.description || meta.behavior;
+        const finalFeatures = extractedFeatures || (meta.requirements || ['Dynamic physics loop', 'Interactive influence', 'Aesthetic precision']).map(req => `* **${req}**: Implement with precision.`).join('\n');
+        const finalProps = extractedProps || `- className: string = '' — layout context.\n- interactive: boolean = true — responds to mouse.`;
+
+        return `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+- You are a senior frontend engineer and WebGL/animation expert.
+- Your task is to generate a **fully working, production-ready React component**.
+- Return ONLY code. One single complete file. Do NOT explain.
+- Follow structure exactly.
+
+---
+
+## TASK
+Build a high-performance React component with "${animationName}" logic.
+
+---
+
+## COMPONENT INFO
+- Name: ${animationName}
+- Type: ${meta.behavior.split(' ')[0]} / High-Fidelity Interaction
+
+---
+
+## GOAL
+${finalGoal}
+- Dynamics: [${meta.states.from}] → [${meta.states.to}]
+- Behavior: ${meta.behavior}
+
+---
+
+## TECH STACK
+- React 18+ (Next.js/Vite optimized)
+- TypeScript (TSX)
+- Styling: ${styleFull}
+- Main Animation: ${meta.libraries?.join(', ') || 'Framer Motion (Main)'}
+- Utilities: lucide-react (icons), clsx, tailwind-merge
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+${finalFeatures}
+
+---
+
+## CODE[REACT]
+${resolvedCode ? `
+\`\`\`tsx
+${resolvedCode}
+\`\`\`
+` : '```tsx\n// Source code reference requested.\n```'}
+
+---
+
+## PROPS (with defaults):
+${finalProps}
+
+---
+
+## IMPLEMENTATION REQUIREMENTS
+${extractedRequirements || `1. Physics Loop: Hardware-accelerated.\n2. Optimization: Sustain 60fps.\n3. Cleanup: Proper disposal.`}
+
+---
+
+## PERFORMANCE RULES
+* Keep the complexity balanced (60fps on mobile/desktop).
+* Zero external assets; rely on local logic.
+
+---
+
+## FINAL OUTPUT
+* Provide the complete, single-file code block under the CODE[REACT] tag.
+`.trim();
+    }
+
+    // ── Advance Master Prompt Logic ──
     if (tool === 'advance') {
         const libs = meta.libraries || ['framer-motion', 'clsx', 'tailwind-merge', 'lucide-react'];
-        const requirements = meta.requirements || [
-            `${animationName} core logic`,
-            `Fluid transitions (${meta.states.from} → ${meta.states.to})`,
-            'Responsive adaptations',
-            'High-fidelity aesthetic'
-        ];
-
-        const resolvedCode = resolveTrueSourceCode(code);
+        const requirements = meta.requirements || [`${animationName} core logic`, `Fluid transitions`, 'High-fidelity aesthetic'];
         const exactReactText = resolvedCode && resolvedCode.trim() ? `
 # 📜 EXACT SOURCE CODE (COPY-PASTE EXACTLY)
 
@@ -99,14 +220,6 @@ REACT[
 \`\`\`tsx
 ${resolvedCode}
 \`\`\`
-]
-
-TYPESCRIPT[
-// The TypeScript interfaces and types are integrated within the React code above.
-]
-
-TAILWIND CSS[
-/* Tailwind utility classes are applied directly via className attributes in the React code above. */
 ]
 ` : '';
 
@@ -119,60 +232,37 @@ TAILWIND CSS[
 # ==============================================================================
 
 # 🚀 OVERVIEW
-You are an Elite Creative Technologist. Your singular goal is to provide the EXACT, 100% faithful replication of the provided Master Source Code.
-DO NOT alter the visual aesthetics, shapes, colors, or physics unless explicitly requested by the user.
-You must output the complete component using the exact code blocks provided below. Do not hallucinate new aesthetics or fall back to simple shapes (like dots instead of custom SVG paths).
+You are an Elite Creative Technologist. Your goal is to provide a 100% faithful replication.
 
 # 🎨 VISUAL ANALYSIS & VIBE
 - **Animation Name**: ${animationName}
-- **Visual Aesthetic**: Premium, dark-themed, ultra-smooth interaction.
-- **Physics of Motion**: 
-    - From State: ${meta.states.from}
-    - To State: ${meta.states.to}
-    - Behavior: ${meta.behavior}
-- **Aesthetic Direction**: ${meta.description || 'Modern brutalism with liquid-smooth transitions.'}
+- **Behavior**: ${meta.behavior}
+- **Dynamics**: [${meta.states.from}] → [${meta.states.to}]
 
 # 🛠️ TECHNICAL STACK
-- **Core**: React 18+ (Next.js/Vite optimized)
-- **Language**: ${langFull}
-- **Styling**: ${styleFull} (High-precision layout)
-- **Animation**: ${libs[0]} (Mastering spring physics & keyframe orchestration)
-- **Utilities**: clsx, tailwind-merge (for dynamic class orchestration)
+- **Core**: React 18+
+- **Styling**: ${styleFull}
+- **Animation**: ${libs[0]}
 
 # 🏗️ ARCHITECTURAL REQUIREMENTS
-${requirements.map(req => `1. **${req}**: Implement with precision.`).join('\n')}
-${libs.includes('framer-motion') ? '2. **Spring Physics**: Use high-stiffness, low-damping springs for snappy responsiveness.' : ''}
-3. **Performance First**: Utilize useMemo and useCallback to minimize re-renders.
-4. **Clean Disposal**: Ensure all side effects and event listeners are properly cleaned up.
+${requirements.map((req, i) => `${i + 1}. **${req}**: Implement with precision.`).join('\n')}
 ${exactReactText}
-# 📝 TECHNICAL ANALYSIS & MASTER EXPLAINER
 
-1. **Architecture Breakdown**: 
-   Briefly explain the component's structure and why this implementation is superior (e.g., using "transform-gpu" for hardware acceleration).
-
-2. **Animation Physics Analysis**: 
-   Analyze the ${libs[0]} logic. Explain the easing curves and how they contribute to the "Premium Vibe".
-
-3. **State Management Logic**: 
-   Explain the reactive flow and how user interaction triggers the visual transformation.
-
-4. **Performance Tuning**: 
-   Identify the critical path for performance and how we maintain 60fps.
+# 📝 TECHNICAL ANALYSIS
+1. Architecture Breakdown: Structure analysis.
+2. Animation Physics: Easing and vibe.
+3. State Management: Reactive flow.
+4. Performance: Maintain 60fps.
 
 # ⚠️ CRITICAL RULES
 - Use 100% Type Safety.
-- No third-party assets (SVG/CSS only) unless provided in the code.
-- Perfect responsive scaling.
-- Focus on the "Micro-interactions" that make this Pro-tier.
-
-# ==============================================================================
-# END OF ADVANCED MASTER PROMPT
-# ==============================================================================
+- Focus on micro-interactions.
 `.trim();
     }
 
-    // ── Cursor Prompt Redesign (Analytical & Copy-Paste Ready) ──
-    const cursorPrompt = `
+    // ── Cursor Master Prompt Logic ──
+    if (tool === 'cursor') {
+        return `
 # ROLE: Senior UI Engineer & Creative Technologist
 # TASK: Replicate UI Component "${animationName}" with 100% Fidelity
 
@@ -182,8 +272,8 @@ ${exactReactText}
 - **Visual Identity**: High-fidelity, premium aesthetics using ${styleFull}.
 
 ## PHASE 2: ARCHITECTURAL DESIGN
-- **State Strategy**: Use modern React hooks (useState, useEffect, useMemo) for optimal reactivity.
-- **Animation Orchestration**: Leverage ${meta.libraries?.includes('framer-motion') ? 'Framer Motion variants and spring physics' : 'CSS-in-JS and hardware-accelerated transforms'}.
+- **State Strategy**: Use modern React hooks for optimal reactivity.
+- **Animation Orchestration**: Leverage hardware-accelerated transforms.
 - **Performance**: Minimize re-renders; ensure 60fps interaction.
 
 ## PHASE 3: PRODUCTION IMPLEMENTATION
@@ -191,69 +281,27 @@ ${exactReactText}
 - **Dependencies**: React 18+, lucide-react, clsx, tailwind-merge.
 - **Standard**: Clean, modular, and type-safe ${langFull.replace(/ \(.*\)/, '')}.
 
-${code ? `
-### [REFERENCE SOURCE CODE]
-\`\`\`tsx
-${resolveTrueSourceCode(code)}
-\`\`\`
-` : ''}
+## PHASE 4: CODING GUIDELINES
+- **Clean Code**: Use intuitive variable naming and follows modern best practices.
+- **Accessibility**: Include proper ARIA roles and labels.
+- **Dark Mode**: Optimize for deep-black (#000) backgrounds.
+- **Responsiveness**: Ensure adaptation to screen sizes.
 
 Please analyze the above specifications and provide the complete implementation now.
 `.trim();
+    }
 
-    const instructions = {
-        antigravity: `
-# ROLE: Senior AI Coding Expert (Antigravity)
-# TASK: Create premium UI Component "${animationName}"
-
-## VISUAL SPECS
-- Behavior: ${meta.behavior}
-- Dynamics: ${meta.states.from} → ${meta.states.to}
-- Aesthetics: High-end, clean, brutalist-tech style.
-
-## TECH SPECS
-- Framework: React (Next.js/Vite optimized)
-- Core: ${langFull.replace(/ \(.*\)/, '')}, ${styleFull}
-- Main Animation: Framer Motion (use variants and spring transitions)
-- Dependencies: lucide-react (icons), clsx, tailwind-merge
-
-## CODE QUALITY RULES
-1. Provide a single-file, production-ready component.
-2. Use absolute precision in cubic-bezier values.
-3. Ensure dark mode is the primary theme (#000 background).
-4. Accessibility: Proper ARIA roles and keyboard support.
-
-## FINAL OUTPUT
-- Return ONLY the TypeScript/React code block. No explanations.
-`,
-        lovable: `
+    // ── Lovable Master Prompt Logic ──
+    if (tool === 'lovable') {
+        return LOVABLE_PROMPTS[id] || `
 # ROLE: Senior AI Coding Expert (Lovable)
 # TASK: Create premium UI Component "${animationName}"
+# SPECS: ${meta.behavior} | ${styleFull} | ${langFull}
+# RULES: Return ONLY code. Single file. High fidelity.
+`.trim();
+    }
 
-## VISUAL SPECS
-- Behavior: ${meta.behavior}
-- Dynamics: ${meta.states.from} → ${meta.states.to}
-- Aesthetics: High-end, clean, modern tech style.
-
-## TECH SPECS
-- Framework: React (Next.js/Vite optimized)
-- Core: ${langFull.replace(/ \(.*\)/, '')}, ${styleFull}
-- Main Animation: Framer Motion (use variants and spring transitions)
-- Dependencies: lucide-react (icons), clsx, tailwind-merge
-
-## CODE QUALITY RULES
-1. Provide a single-file, production-ready component.
-2. Use smooth, high-fidelity animations.
-3. Ensure dark mode is the primary theme (#000 background).
-4. Accessibility: Proper ARIA roles and keyboard support.
-
-## FINAL OUTPUT
-- Return the complete implementation.
-`,
-        cursor: cursorPrompt,
-        advance: '' // Handled above
-    };
-
-    return instructions[tool] || '';
+    return '';
 };
+
 
