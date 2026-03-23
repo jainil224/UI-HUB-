@@ -26,10 +26,10 @@ export default defineConfig(({mode}) => {
           splitStringsChunkLength: 5,
           unicodeEscapeSequence: true,
           identifierNamesGenerator: 'hexadecimal',
-          selfDefending: true,
-          debugProtection: true, // Prevents using developer tools
-          debugProtectionInterval: 2000,
-          disableConsoleOutput: false, // Keep consoles for now
+          selfDefending: false, // Disable to prevent breaking dev logic
+          debugProtection: false, // Disable to prevent breaking dev logic
+          debugProtectionInterval: 0,
+          disableConsoleOutput: false,
         }
       })
     ],

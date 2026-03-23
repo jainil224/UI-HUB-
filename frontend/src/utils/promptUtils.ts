@@ -23,7 +23,9 @@ export const fetchVibePrompt = async (componentId: string, system: AISystem, tok
             headers['Authorization'] = `Bearer ${token}`;
         }
         
-        const response = await fetch(`http://localhost:5000/api/v1/components/${componentId}/prompt/${system}`, {
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        
+        const response = await fetch(`${apiBaseUrl}/api/v1/components/${componentId}/prompt/${system}`, {
             headers
         });
         
@@ -45,7 +47,9 @@ export const fetchVibePrompt = async (componentId: string, system: AISystem, tok
  */
 export const fetchComponentSource = async (componentId: string, token: string): Promise<string> => {
     try {
-        const response = await fetch(`http://localhost:5000/api/v1/components/${componentId}/source`, {
+        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        
+        const response = await fetch(`${apiBaseUrl}/api/v1/components/${componentId}/source`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
