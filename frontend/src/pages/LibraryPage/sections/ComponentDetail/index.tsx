@@ -1125,18 +1125,141 @@ const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: stri
     </div>
 );
 
+const ToolCard = React.memo(({ 
+    tool, 
+    isActive, 
+    onClick, 
+    itemId 
+}: { 
+    tool: AISystem; 
+    isActive: boolean; 
+    onClick: (t: AISystem) => void;
+    itemId: string;
+}) => {
+    return (
+        <button
+            onClick={() => onClick(tool)}
+            className={`p-5 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border transition-all text-left relative overflow-hidden group min-h-[130px] md:min-h-[160px] flex flex-col justify-between ${isActive ? 'bg-[#050505] border-brand-green/50 shadow-[0_0_40px_rgba(0,255,0,0.1)] ring-1 ring-brand-green/30' : 'bg-white/[0.02] backdrop-blur-xl border-white/5 hover:border-white/10 hover:scale-[1.01] duration-500'}`}
+        >
+            {/* Scanline/Texture Overlay */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+
+            {/* Animated Border for Active Tool */}
+            {isActive && (
+                <div className="absolute inset-0 z-20 pointer-events-none rounded-[inherit] overflow-hidden">
+                    <div className="absolute inset-0 border border-brand-green/60 rounded-[inherit]" />
+                    <motion.div
+                        className="absolute inset-0 bg-brand-green/10 blur-xl rounded-[inherit]"
+                        animate={{
+                            opacity: [0.2, 0.5, 0.2],
+                        }}
+                        transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                        }}
+                    />
+                </div>
+            )}
+
+            {/* Shine Effect */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
+                <div className="absolute inset-x-[-150%] top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
+            </div>
+
+            <div className="relative z-10 w-full flex flex-col gap-6">
+                <div className="flex items-center justify-between">
+                    <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${isActive ? 'text-brand-green' : 'text-white/20'}`}>
+                        {itemId === 'robot-3d-background' ? (
+                            tool === 'antigravity' ? 'NEON ENGINE' :
+                                tool === 'lovable' ? 'ROBOTIC HUB' :
+                                    tool === 'cursor' ? 'CYBER CORE' :
+                                        tool === 'claude' ? 'PHANTOM MODEL' : 'ADVANCED SYSTEM'
+                        ) : (
+                            tool === 'antigravity' ? 'VIBE ENGINE' :
+                                tool === 'lovable' ? 'PLATFORM HUB' :
+                                    tool === 'cursor' ? 'SMART LDE' :
+                                        tool === 'claude' ? 'INTELLIGENT MODEL' : 'ADVANCED SYSTEM'
+                        )}
+                    </p>
+                    <div className={`transition-all duration-700 ease-out ${isActive ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
+                        {tool === 'antigravity' ? (
+                            <Zap size={20} className="md:w-6 md:h-6" />
+                        ) : tool === 'lovable' ? (
+                            <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                            </svg>
+                        ) : tool === 'cursor' ? (
+                            <div className="relative w-5 h-5 md:w-6 md:h-6">
+                                <div className="absolute inset-0 border-2 border-current rounded-sm flex items-center justify-center">
+                                    <div className="w-1.5 h-1.5 border-r border-b border-current" />
+                                </div>
+                                <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#0A0A0A] flex items-center justify-center">
+                                    <div className="text-[10px] font-bold">+</div>
+                                </div>
+                            </div>
+                        ) : tool === 'claude' ? (
+                            <Cpu size={20} className="md:w-6 md:h-6" />
+                        ) : (
+                            <Brain size={20} className="md:w-6 md:h-6" />
+                        )}
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-between w-full">
+                    <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${isActive ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
+                        {tool === 'advance' ? 'Advance' : tool}
+                    </h4>
+                    {tool === 'advance' && (
+                        <span className="px-1.5 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
+                            PRO
+                        </span>
+                    )}
+                </div>
+            </div>
+
+            <div className={`flex items-center gap-2 mt-4 transition-all duration-700 ${isActive ? 'opacity-100' : 'opacity-0 translate-y-1'}`}>
+                <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.6)]" />
+                <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/90">
+                    Active
+                </span>
+            </div>
+
+            {isActive && (
+                <motion.div
+                    layoutId="active-tool-glow"
+                    className="absolute inset-0 bg-gradient-to-br from-brand-green/[0.08] via-transparent to-transparent pointer-events-none"
+                />
+            )}
+        </button>
+    );
+});
+
 const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => void }) => {
     const navigate = useNavigate();
     const [tab, setTab] = React.useState<'preview' | 'code' | 'vibe'>('preview');
     const [copied, setCopied] = React.useState<string | null>(null);
     const [resetKey, setResetKey] = React.useState(0);
+    const [isPending, startTransition] = React.useTransition();
 
     // Dynamic states
     const [installMethod, setInstallMethod] = React.useState<'cli' | 'manual'>('cli');
     const [pkgManager, setPkgManager] = React.useState<'npm' | 'pnpm' | 'yarn' | 'bun'>('npm');
     const [lang, setLang] = React.useState<'js' | 'ts' | 'html'>('ts');
     const [styling, setStyling] = React.useState<'tailwind' | 'css'>('tailwind');
-    const [aiSystem, setAiSystem] = React.useState<AISystem>('antigravity');
+    const [activeTool, setActiveTool] = React.useState<AISystem>('antigravity');
+    const [aiSystem, setAiSystemState] = React.useState<AISystem>('antigravity');
+
+    const setAiSystem = React.useCallback((system: AISystem) => {
+        // Instant update for UI cards
+        setActiveTool(system);
+        
+        // Deferred update for heavy prompt rendering
+        startTransition(() => {
+            setAiSystemState(system);
+        });
+    }, []);
+
     const { user, isPro: isProUser } = useAuth();
     const [advanceTrialsUsed, setAdvanceTrialsUsed] = React.useState<number>(() => {
         const used = localStorage.getItem('advanceTrialsUsed');
@@ -1220,28 +1343,28 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         setTimeout(() => setCopied(null), 2000);
     };
 
-    const getInstallCommand = (mgr: string, method: string) => {
-        if (method === 'cli') return `npx ui-hub add ${item.id}`;
+    const installCommand = React.useMemo(() => {
+        if (installMethod === 'cli') return `npx ui-hub add ${item.id}`;
         const cmd: Record<string, string> = {
-            npm: 'npm install gsap @gsap/react framer-motion',
-            pnpm: 'pnpm add gsap @gsap/react framer-motion',
-            yarn: 'yarn add gsap @gsap/react framer-motion',
-            bun: 'bun add gsap @gsap/react framer-motion'
+            npm: "npm install framer-motion clsx tailwind-merge lucide-react",
+            yarn: "yarn add framer-motion clsx tailwind-merge lucide-react",
+            pnpm: "pnpm add framer-motion clsx tailwind-merge lucide-react",
+            bun: "bun add framer-motion clsx tailwind-merge lucide-react"
         };
-        return cmd[mgr];
-    };
+        return cmd[pkgManager];
+    }, [installMethod, item.id, pkgManager]);
 
-    const usageCode = `// Usage for ${item.title}
-<${item.title.replace(/\s+/g, '')} />`;
-
-    const componentConfig = COMPONENT_CONFIG[item.id] || {
+    const componentConfig = React.useMemo(() => COMPONENT_CONFIG[item.id] || {
         props: [],
         vibeMeta: { behavior: item.vibePrompt, states: { from: "default", to: "animated" }, cssProperties: ["transition", "transform", "opacity"] }
-    };
+    }, [item.id, item.vibePrompt]);
 
-    const vanillaCode = getComponentCode(item.id, { lang: 'html', styling: 'css' });
+    const vanillaCode = React.useMemo(() => getComponentCode(item.id, { lang: 'html', styling: 'css' }), [item.id]);
 
-    const fullVibePrompt = generateVibePrompt(aiSystem, {
+    const usageCode = React.useMemo(() => `// Usage for ${item.title}
+<${item.title.replace(/\s+/g, '')} />`, [item.title]);
+
+    const fullVibePrompt = React.useMemo(() => generateVibePrompt(aiSystem, {
         id: item.id,
         animationName: item.title,
         language: lang,
@@ -1249,7 +1372,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         meta: componentConfig.vibeMeta,
         code: item.code,
         vanillaCode: vanillaCode
-    });
+    }), [aiSystem, item.id, item.title, lang, styling, componentConfig.vibeMeta, item.code, vanillaCode]);
+
+    const deferredVibePrompt = React.useDeferredValue(fullVibePrompt);
 
 
     return (
@@ -1535,9 +1660,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     )}
                                 </AnimatePresence>
                                 <div className="p-8 flex items-center justify-between">
-                                    <code className="text-brand-green font-mono text-sm">{getInstallCommand(pkgManager, installMethod)}</code>
+                                    <code className="text-brand-green font-mono text-sm">{installCommand}</code>
                                     <button
-                                        onClick={() => handleCopy(getInstallCommand(pkgManager, installMethod), 'install')}
+                                        onClick={() => handleCopy(installCommand, 'install')}
                                         className={`flex items-center gap-2 p-3 rounded-xl transition-all ${copied === 'install' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
                                     >
                                         {copied === 'install' ? <Check size={18} /> : <Copy size={18} />}
@@ -1620,105 +1745,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
                                 {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
-                                    <button
+                                    <ToolCard
                                         key={tool}
-                                        onClick={() => setAiSystem(tool)}
-                                        className={`p-5 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border transition-all text-left relative overflow-hidden group min-h-[130px] md:min-h-[160px] flex flex-col justify-between ${aiSystem === tool ? 'bg-[#050505] border-brand-green/50 shadow-[0_0_40px_rgba(0,255,0,0.1)] ring-1 ring-brand-green/30' : 'bg-white/[0.02] backdrop-blur-xl border-white/5 hover:border-white/10 hover:scale-[1.01] duration-500'}`}
-                                    >
-                                        {/* Scanline/Texture Overlay */}
-                                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
-
-                                        {/* Animated Border for Active Tool */}
-                                        {aiSystem === tool && (
-                                            <motion.div
-                                                layoutId="active-border"
-                                                className="absolute inset-0 border border-brand-green/60 z-20 pointer-events-none rounded-[inherit]"
-                                                initial={{ opacity: 0 }}
-                                                animate={{
-                                                    opacity: [0.7, 1, 0.7],
-                                                    boxShadow: [
-                                                        "0 0 15px rgba(0,255,0,0.1), inset 0 0 10px rgba(0,255,0,0.1)",
-                                                        "0 0 35px rgba(0,255,0,0.3), inset 0 0 20px rgba(0,255,0,0.2)",
-                                                        "0 0 15px rgba(0,255,0,0.1), inset 0 0 10px rgba(0,255,0,0.1)"
-                                                    ]
-                                                }}
-                                                transition={{
-                                                    opacity: { duration: 3, repeat: Infinity, ease: "easeInOut" },
-                                                    boxShadow: { duration: 3, repeat: Infinity, ease: "easeInOut" }
-                                                }}
-                                            />
-                                        )}
-
-                                        {/* Shine Effect */}
-                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
-                                            <div className="absolute inset-x-[-150%] top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
-                                        </div>
-
-                                        <div className="relative z-10 w-full flex flex-col gap-6">
-                                            <div className="flex items-center justify-between">
-                                                <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${aiSystem === tool ? 'text-brand-green' : 'text-white/20'}`}>
-                                                    {item.id === 'robot-3d-background' ? (
-                                                        tool === 'antigravity' ? 'NEON ENGINE' :
-                                                            tool === 'lovable' ? 'ROBOTIC HUB' :
-                                                                tool === 'cursor' ? 'CYBER CORE' :
-                                                                    tool === 'claude' ? 'PHANTOM MODEL' : 'ADVANCED SYSTEM'
-                                                    ) : (
-                                                        tool === 'antigravity' ? 'VIBE ENGINE' :
-                                                            tool === 'lovable' ? 'PLATFORM HUB' :
-                                                                tool === 'cursor' ? 'SMART LDE' :
-                                                                    tool === 'claude' ? 'INTELLIGENT MODEL' : 'ADVANCED SYSTEM'
-                                                    )}
-                                                </p>
-                                                <div className={`transition-all duration-700 ease-out ${aiSystem === tool ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
-                                                    {tool === 'antigravity' ? (
-                                                        <Zap size={20} className="md:w-6 md:h-6" />
-                                                    ) : tool === 'lovable' ? (
-                                                        <svg className="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="currentColor">
-                                                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                                                        </svg>
-                                                    ) : tool === 'cursor' ? (
-                                                        <div className="relative w-5 h-5 md:w-6 md:h-6">
-                                                            <div className="absolute inset-0 border-2 border-current rounded-sm flex items-center justify-center">
-                                                                <div className="w-1.5 h-1.5 border-r border-b border-current" />
-                                                            </div>
-                                                            <div className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-[#0A0A0A] flex items-center justify-center">
-                                                                <div className="text-[10px] font-bold">+</div>
-                                                            </div>
-                                                        </div>
-                                                    ) : tool === 'claude' ? (
-                                                        <Cpu size={20} className="md:w-6 md:h-6" />
-                                                    ) : (
-                                                        <Brain size={20} className="md:w-6 md:h-6" />
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            <div className="flex items-center justify-between w-full">
-                                                <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${aiSystem === tool ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
-                                                    {tool === 'advance' ? 'Advance' : tool}
-                                                </h4>
-                                                {tool === 'advance' && (
-                                                    <span className="px-1.5 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
-                                                        PRO
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </div>
-
-                                        <div className={`flex items-center gap-2 mt-4 transition-all duration-700 ${aiSystem === tool ? 'opacity-100' : 'opacity-0 translate-y-1'}`}>
-                                            <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.6)]" />
-                                            <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/90">
-                                                Active
-                                            </span>
-                                        </div>
-
-                                        {aiSystem === tool && (
-                                            <motion.div
-                                                layoutId="active-tool-glow"
-                                                className="absolute inset-0 bg-gradient-to-br from-brand-green/[0.08] via-transparent to-transparent pointer-events-none"
-                                            />
-                                        )}
-                                    </button>
+                                        tool={tool}
+                                        isActive={activeTool === tool}
+                                        onClick={setAiSystem}
+                                        itemId={item.id}
+                                    />
                                 ))}
                             </div>
                         </section>
@@ -1727,86 +1760,45 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <section className="space-y-6 md:space-y-8">
                             <div className="flex items-end justify-between px-2">
                                 <div className="space-y-1">
-                                    <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white">Vibe Prompt</h3>
-                                    <p className="text-[10px] uppercase tracking-[0.3em] text-brand-green/50 font-black">AI Generation Blueprint</p>
+                                    <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white line-clamp-1">Master Blueprint</h3>
+                                    <div className="flex items-center gap-2">
+                                        <div className={`w-1 h-1 rounded-full ${isPending ? 'bg-amber-400 animate-pulse' : 'bg-brand-green/50'}`} />
+                                        <p className={`text-[10px] uppercase tracking-[0.3em] font-black transition-colors ${isPending ? 'text-amber-400' : 'text-brand-green/30'}`}>
+                                            {isPending ? 'RECALIBRATING...' : 'AI GENERATION BLUEPRINT'}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
                             <div className="relative group/terminal">
-                                {/* Terminal Container */}
-                                <div className="glass rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/10 relative bg-[#050505]/80 backdrop-blur-3xl shadow-2xl">
+                                <div className={`glass rounded-[2rem] md:rounded-[3rem] overflow-hidden border transition-all duration-500 relative bg-[#050505]/80 backdrop-blur-3xl shadow-2xl ${isPending ? 'border-amber-400/20 shadow-amber-400/5 opacity-80' : 'border-white/10 hover:border-white/20'}`}>
                                     {/* Scanline/Texture Overlay */}
                                     <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay z-10" />
 
                                     {/* Terminal Header / Toolbar */}
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5 bg-white/[0.02] relative z-20 gap-3 sm:gap-0">
-
                                         <div className="flex items-center justify-between w-full sm:w-auto">
                                             <div className="flex items-center gap-3 sm:gap-4">
-                                                {/* OS Dots */}
                                                 <div className="flex gap-1.5">
                                                     <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] shadow-[0_0_8px_rgba(255,95,86,0.3)]" />
                                                     <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] shadow-[0_0_8px_rgba(255,189,46,0.3)]" />
                                                     <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F] shadow-[0_0_8px_rgba(39,201,63,0.3)]" />
                                                 </div>
                                                 <div className="h-4 w-px bg-white/10 mx-1 sm:mx-2" />
-                                                {/* System Path/Label — hide verbose path on mobile */}
-                                                <div className="hidden sm:flex items-center gap-2">
-                                                    <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{activeTool}</span>
                                                     <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">//</span>
-                                                    <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">engine_output.log</span>
+                                                    <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">MASTER_{activeTool === 'advance' ? 'PRO' : activeTool.toUpperCase()}_v1.0.tsx</span>
                                                 </div>
-                                                {/* On mobile: just show the AI system name */}
-                                                <span className="sm:hidden text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
-                                            </div>
-
-                                            {/* Mobile Copy Button */}
-                                            <div className="relative group/copybtn sm:hidden">
-                                                {/* Glow aura */}
-                                                <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0'}`} />
-                                                <button
-                                                    disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)}
-                                                    onClick={() => {
-                                                        if (!user) {
-                                                            setShowAuthModal(true);
-                                                            return;
-                                                        }
-                                                        navigator.clipboard.writeText(fullVibePrompt);
-                                                        setCopied('vibe');
-                                                        
-                                                        // Trial logic
-                                                        if (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) {
-                                                            const newUsed = advanceTrialsUsed + 1;
-                                                            setAdvanceTrialsUsed(newUsed);
-                                                            localStorage.setItem('advanceTrialsUsed', newUsed.toString());
-                                                        }
-
-                                                        setTimeout(() => setCopied(null), 2000);
-                                                    }}
-                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
-                                                        ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_15px_rgba(0,255,0,0.4)]'
-                                                        : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 active:bg-[#00FF00]/10'
-                                                        }`}
-                                                >
-                                                    {copied === 'vibe' ? <Check size={10} strokeWidth={2.5} /> : <Copy size={10} />}
-                                                    <span>{copied === 'vibe' ? 'Saved' : 'Copy'}</span>
-                                                    {!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed < 2 && (
-                                                        <span className="ml-1 px-1 py-0.5 rounded-sm bg-brand-green/20 text-brand-green text-[6px] font-bold">
-                                                            {2 - advanceTrialsUsed}T
-                                                        </span>
-                                                    )}
-                                                </button>
                                             </div>
                                         </div>
 
-                                        {/* Center Label - Made with love - properly flows on mobile, absolute center on desktop */}
                                         <div className="flex justify-center sm:absolute sm:left-1/2 sm:-translate-x-1/2 items-center gap-1 pointer-events-none">
                                             <span className="text-[8px] font-black uppercase tracking-[0.15em] sm:tracking-widest animate-terminal-purple-blink-delay whitespace-nowrap text-white/50 sm:text-white">Made with ❤️ by Jainil Patel</span>
                                         </div>
 
-                                        {/* Desktop Copy Button */}
-                                        <div className="relative group/copybtn hidden sm:block">
-                                            {/* Glow aura */}
+                                        {/* Copy Button */}
+                                        <div className="relative group/copybtn">
                                             <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
                                             <button
                                                 disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)}
@@ -1817,23 +1809,21 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     }
                                                     navigator.clipboard.writeText(fullVibePrompt);
                                                     setCopied('vibe');
-                                                    
-                                                    // Trial logic
                                                     if (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) {
                                                         const newUsed = advanceTrialsUsed + 1;
                                                         setAdvanceTrialsUsed(newUsed);
                                                         localStorage.setItem('advanceTrialsUsed', newUsed.toString());
                                                     }
-
                                                     setTimeout(() => setCopied(null), 2000);
                                                 }}
-                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                                className={`relative flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                     ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_20px_rgba(0,255,0,0.4)]'
-                                                    : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5 hover:shadow-[0_0_12px_rgba(0,255,0,0.15)]'
+                                                    : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5'
                                                     }`}
                                             >
                                                 {copied === 'vibe' ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}
-                                                <span>{copied === 'vibe' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
+                                                <span className="hidden sm:inline">{copied === 'vibe' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
+                                                <span className="sm:hidden">{copied === 'vibe' ? 'Saved' : 'Copy'}</span>
                                                 {!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed < 2 && (
                                                     <span className="ml-1 px-1 py-0.5 rounded-sm bg-brand-green/20 text-brand-green text-[7px] font-bold">
                                                         {2 - advanceTrialsUsed} Trial LEFT
@@ -1850,25 +1840,21 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
                                                     <Lock className="text-brand-green" size={28} />
                                                 </div>
-                                                <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">
-                                                    Pro Access Required
-                                                </h4>
+                                                <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Pro Access Required</h4>
                                                 <p className="text-white/50 max-w-sm mb-8 font-sans">
-                                                    {item.isPremium 
+                                                    {item.isPremium
                                                         ? "The specialized AI prompts for this premium component are available only to Pro members."
-                                                        : advanceTrialsUsed >= 2 
+                                                        : advanceTrialsUsed >= 2
                                                             ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} trial has ended. Upgrade to Pro for unlimited elite prompts.`
                                                             : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} prompts require a Pro subscription. Free members can use Lovable and Cursor prompts.`
                                                     }
                                                 </p>
                                                 <Link to="/pricing">
-                                                    <button className="px-8 py-3 rounded-xl bg-brand-green text-black text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.3)] hover:shadow-[0_0_30px_rgba(0,255,0,0.5)] active:scale-[0.98] transition-all">
-                                                        Upgrade for Pro Access
-                                                    </button>
+                                                    <button className="px-8 py-3 rounded-xl bg-brand-green text-black text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.3)] hover:shadow-[0_0_30px_rgba(0,255,0,0.5)] active:scale-[0.98] transition-all">Upgrade for Pro Access</button>
                                                 </Link>
                                             </div>
                                         ) : (
-                                            <pre 
+                                            <pre
                                                 className={`font-mono whitespace-pre-wrap ${(!user) ? 'select-none' : ''}`}
                                                 onCopy={(e) => {
                                                     if (!user) {
@@ -1877,31 +1863,24 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     }
                                                 }}
                                             >
-                                                <CodeHighlighter code={fullVibePrompt} />
+                                                <CodeHighlighter code={deferredVibePrompt} />
                                             </pre>
                                         )}
                                     </div>
 
                                     {/* Bottom Status Bar */}
                                     <div className="px-6 py-3 border-t border-white/5 bg-white/[0.01] flex items-center justify-between relative z-20">
-                                        {/* Left */}
                                         <div className="flex items-center gap-2">
-                                            <div className="w-1 h-1 rounded-full bg-brand-green animate-pulse" />
-                                            <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold">Terminal Active</span>
+                                            <div className={`w-1 h-1 rounded-full ${isPending ? 'bg-amber-400 animate-pulse' : 'bg-brand-green animate-pulse'}`} />
+                                            <span className="text-[8px] uppercase tracking-widest text-white/20 font-bold">{isPending ? 'Processing...' : 'Terminal Active'}</span>
                                         </div>
-
-                                        {/* Center - UI HUB */}
                                         <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5">
                                             <img src="/logo.png" alt="UI HUB" className="w-3 h-3 object-contain opacity-40" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                                             <span className="text-[8px] uppercase tracking-widest font-bold animate-terminal-green-blink">UI HUB</span>
                                         </div>
-
-                                        {/* Right */}
-                                        <span className="text-[8px] uppercase tracking-widest text-white/10 font-bold">UTF-8 // LN: {fullVibePrompt.split('\n').length}</span>
+                                        <span className="text-[8px] uppercase tracking-widest text-white/10 font-bold whitespace-nowrap">UTF-8 // LN: {deferredVibePrompt.split('\n').length}</span>
                                     </div>
                                 </div>
-
-                                {/* Decorative Background Glow */}
                                 <div className="absolute -inset-4 bg-brand-green/5 blur-3xl rounded-[4rem] group-hover/terminal:bg-brand-green/10 transition-colors duration-1000 -z-10" />
                             </div>
                         </section>
