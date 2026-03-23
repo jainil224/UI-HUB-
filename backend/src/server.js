@@ -4,8 +4,11 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import componentRoutes from './routes/componentRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import configRoutes from './routes/configRoutes.js';
 
 dotenv.config();
+console.log('Environment variables loaded from .env');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,6 +19,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api/v1/components', componentRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/config', configRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running' });

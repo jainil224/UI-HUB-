@@ -1,4 +1,4 @@
-import { auth } from './firebaseAdmin.js';
+import { auth } from '../utils/firebaseAdmin.js';
 
 export const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;

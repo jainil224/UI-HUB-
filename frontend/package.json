@@ -48,10 +48,12 @@
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
+    "javascript-obfuscator": "^5.4.1",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
+    "vite-plugin-javascript-obfuscator": "^3.1.0",
     "vite-plugin-mkcert": "^1.17.10"
   }
 }

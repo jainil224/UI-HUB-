@@ -1,21 +1,31 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { getStorage } from "firebase/storage";
-import { getAnalytics } from "firebase/analytics";
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getFirestore, Firestore } from "firebase/firestore";
+import { getAuth, Auth } from "firebase/auth";
+import { getStorage, FirebaseStorage } from "firebase/storage";
+import { getAnalytics, Analytics } from "firebase/analytics";
 
-const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "dummy_api_key",
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "dummy_auth_domain",
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "dummy_project_id",
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "dummy_bucket",
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "1234567890",
-    appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:1234567890:web:12345abcdef",
-    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-1234567890"
+let app: FirebaseApp;
+export let auth: Auth;
+export let db: Firestore;
+export let storage: FirebaseStorage;
+export let analytics: Analytics;
+
+/**
+ * Initializes Firebase with a provided configuration.
+ * @param config {object}
+ */
+export const initFirebase = (config: any) => {
+    if (app) return; // Already initialized
+    
+    app = initializeApp(config);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    storage = getStorage(app);
+    
+    if (typeof window !== 'undefined') {
+        analytics = getAnalytics(app);
+    }
 };
 
-const app = initializeApp(firebaseConfig);
-export const analytics = getAnalytics(app);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
-export const storage = getStorage(app);
+// For backward compatibility while we refactor main.tsx
+// It will be initialized correctly in main.tsx before rest of app runs

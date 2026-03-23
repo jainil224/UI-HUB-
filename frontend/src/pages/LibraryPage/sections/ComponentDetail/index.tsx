@@ -1272,33 +1272,45 @@ const VibeSystemSection = React.memo(({
         });
     }, []);
 
-    React.useEffect(() => {
-        const loadPrompt = async () => {
-            if (!user) {
-                setFetchedPrompt('');
-                return;
-            }
+    const loadPrompt = React.useCallback(async () => {
+        // Allow public viewing for lovable and cursor
+        const isPublicSystem = ['lovable', 'cursor'].includes(aiSystem);
+        
+        if (!user && !isPublicSystem) {
+            setFetchedPrompt('');
+            return;
+        }
 
-            // Only fetch if it's a premium system or if we want to move everything to backend
-            // For security, moving everything to backend is better
-            setIsLoadingPrompt(true);
-            try {
-                const token = await user.getIdToken();
-                const prompt = await fetchVibePrompt(item.id, aiSystem, token);
-                setFetchedPrompt(prompt);
-            } catch (error) {
-                console.error('Failed to load prompt from backend:', error);
-                // Fallback to local if needed, but ideally we want backend to be the source
-                setFetchedPrompt('Failed to load blueprint from secure terminal.');
-            } finally {
-                setIsLoadingPrompt(false);
-            }
-        };
-
-        loadPrompt();
+        setIsLoadingPrompt(true);
+        try {
+            const token = user ? await user.getIdToken() : undefined;
+            const prompt = await fetchVibePrompt(item.id, aiSystem, token);
+            setFetchedPrompt(prompt);
+        } catch (error) {
+            console.error('Failed to load prompt from backend:', error);
+            setFetchedPrompt('Failed to load blueprint from secure terminal.');
+        } finally {
+            setIsLoadingPrompt(false);
+        }
     }, [aiSystem, item.id, user]);
 
+    React.useEffect(() => {
+        loadPrompt();
+    }, [loadPrompt]);
+
     const deferredVibePrompt = React.useDeferredValue(fetchedPrompt);
+
+    // Copy to clipboard with authentication check
+    const handleCopyBlueprint = async () => {
+        if (!user || user.isAnonymous) {
+            setShowAuthModal(true);
+            return;
+        }
+        
+        await navigator.clipboard.writeText(deferredVibePrompt);
+        setCopied('blueprint');
+        setTimeout(() => setCopied(null), 2000);
+    };
 
     return (
         <motion.div
@@ -1354,9 +1366,9 @@ const VibeSystemSection = React.memo(({
                                     </div>
                                     <div className="h-4 w-px bg-white/10 mx-1 sm:mx-2" />
                                     <div className="flex items-center gap-2">
-                                        <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{activeTool}</span>
+                                        <span className="text-[9px] font-black text-brand-green uppercase tracking-widest">{aiSystem}</span>
                                         <span className="text-[9px] font-black text-white/20 uppercase tracking-widest">//</span>
-                                        <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">MASTER_{activeTool === 'advance' ? 'PRO' : activeTool.toUpperCase()}_v1.0.tsx</span>
+                                        <span className="text-[9px] font-black text-white/40 uppercase tracking-widest">MASTER_{aiSystem === 'advance' ? 'PRO' : aiSystem.toUpperCase()}_v1.0.tsx</span>
                                     </div>
                                 </div>
                             </div>
@@ -1367,33 +1379,19 @@ const VibeSystemSection = React.memo(({
 
                             {/* Copy Button */}
                             <div className="relative group/copybtn">
-                                <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
+                                <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'blueprint' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
                                 <button
-                                    disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)}
-                                    onClick={() => {
-                                        if (!user) {
-                                            setShowAuthModal(true);
-                                            return;
-                                        }
-                                        if (isLoadingPrompt) return;
-                                        navigator.clipboard.writeText(fetchedPrompt);
-                                        setCopied('vibe');
-                                        if (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) {
-                                            const newUsed = advanceTrialsUsed + 1;
-                                            setAdvanceTrialsUsed(newUsed);
-                                            localStorage.setItem('advanceTrialsUsed', newUsed.toString());
-                                        }
-                                        setTimeout(() => setCopied(null), 2000);
-                                    }}
-                                    className={`relative flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                    disabled={isLoadingPrompt}
+                                    onClick={handleCopyBlueprint}
+                                    className={`relative flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${copied === 'blueprint'
                                         ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_20px_rgba(0,255,0,0.4)]'
                                         : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5'
                                         }`}
                                 >
-                                    {copied === 'vibe' ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}
-                                    <span className="hidden sm:inline">{copied === 'vibe' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
-                                    <span className="sm:hidden">{copied === 'vibe' ? 'Saved' : 'Copy'}</span>
-                                    {!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed < 2 && (
+                                    {copied === 'blueprint' ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}
+                                    <span className="hidden sm:inline">{copied === 'blueprint' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
+                                    <span className="sm:hidden">{copied === 'blueprint' ? 'Saved' : 'Copy'}</span>
+                                    {!isProUser && ['antigravity', 'claude', 'advance'].includes(aiSystem) && advanceTrialsUsed < 2 && (
                                         <span className="ml-1 px-1 py-0.5 rounded-sm bg-brand-green/20 text-brand-green text-[7px] font-bold">
                                             {2 - advanceTrialsUsed} Trial LEFT
                                         </span>
@@ -1404,7 +1402,23 @@ const VibeSystemSection = React.memo(({
 
                         {/* Terminal Content */}
                         <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
-                            {(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2) ? (
+                            {(!user || user.isAnonymous) && !['lovable', 'cursor'].includes(aiSystem) ? (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
+                                    <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
+                                        <Lock className="text-brand-green" size={28} />
+                                    </div>
+                                    <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Authentication Required</h4>
+                                    <p className="text-white/50 max-w-sm mb-8 font-sans">
+                                        Please log in to your account to establish a secure link and access the UI HUB generation blueprints.
+                                    </p>
+                                    <button 
+                                        onClick={() => setShowAuthModal(true)}
+                                        className="px-8 py-3 rounded-xl bg-brand-green text-black text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(0,255,0,0.3)] hover:shadow-[0_0_30px_rgba(0,255,0,0.5)] active:scale-[0.98] transition-all"
+                                    >
+                                        Log In to Access
+                                    </button>
+                                </div>
+                            ) : (item.isPremium && !isProUser) || (!isProUser && ['antigravity', 'claude', 'advance'].includes(aiSystem) && advanceTrialsUsed >= 2) ? (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
                                     <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
                                         <Lock className="text-brand-green" size={28} />
@@ -1741,9 +1755,17 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     animate={{ opacity: 1, x: 0 }}
                                                     exit={{ opacity: 0, x: 20 }}
                                                     onClick={handleDownloadZip}
-                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
+                                                    className={`flex items-center justify-center gap-2 px-8 py-3 rounded-full border transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group ${
+                                                        !isProUser 
+                                                        ? 'bg-amber-500/10 border-amber-500/20 text-amber-500/70 hover:bg-amber-500/20 hover:border-amber-500/40' 
+                                                        : 'bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20'
+                                                    }`}
                                                 >
-                                                    <Download size={14} className="group-hover:translate-y-0.5 transition-transform" />
+                                                    {!isProUser ? (
+                                                        <Lock size={14} className="group-hover:scale-110 transition-transform" />
+                                                    ) : (
+                                                        <Download size={14} className="group-hover:translate-y-0.5 transition-transform" />
+                                                    )}
                                                     Download ZIP
                                                 </motion.button>
                                             )}

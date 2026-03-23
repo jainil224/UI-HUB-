@@ -8,7 +8,22 @@ const router = express.Router();
  * Endpoint to get the AI prompt for a component.
  * Protected by Firebase ID Token.
  */
-router.get('/:id/prompt/:system', verifyToken, async (req, res) => {
+// Middleware to optionally verify token for public systems
+const optionalVerifyToken = (req, res, next) => {
+  const { system } = req.params;
+  if (['lovable', 'cursor'].includes(system)) {
+    // For public systems, try to verify but continue even if it fails or is missing
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return next(); // Continue without user
+    }
+    return verifyToken(req, res, next);
+  }
+  // For other systems, enforce token
+  return verifyToken(req, res, next);
+};
+
+router.get('/:id/prompt/:system', optionalVerifyToken, async (req, res) => {
   const { id, system } = req.params;
   
   try {

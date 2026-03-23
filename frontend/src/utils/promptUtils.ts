@@ -16,12 +16,15 @@ export interface VibeMeta {
  * Fetches the specific Vibe Prompt for a component from the backend.
  * This is the secure replacement for generateVibePrompt.
  */
-export const fetchVibePrompt = async (componentId: string, system: AISystem, token: string): Promise<string> => {
+export const fetchVibePrompt = async (componentId: string, system: AISystem, token ?: string): Promise<string> => {
     try {
-        const response = await fetch(`http://localhost:5000/api/components/${componentId}/prompt/${system}`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+        const headers: Record<string, string> = {};
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const response = await fetch(`http://localhost:5000/api/v1/components/${componentId}/prompt/${system}`, {
+            headers
         });
         
         if (!response.ok) {
@@ -42,7 +45,7 @@ export const fetchVibePrompt = async (componentId: string, system: AISystem, tok
  */
 export const fetchComponentSource = async (componentId: string, token: string): Promise<string> => {
     try {
-        const response = await fetch(`http://localhost:5000/api/components/${componentId}/source`, {
+        const response = await fetch(`http://localhost:5000/api/v1/components/${componentId}/source`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }

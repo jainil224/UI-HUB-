@@ -14,13 +14,36 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
+    const [isPro, setIsPro] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    const isPro = user?.email === 'jainil11199@gmail.com';
-
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setUser(user);
+            
+            if (user) {
+                try {
+                    const idToken = await user.getIdToken();
+                    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/v1/users/status`, {
+                        headers: {
+                            'Authorization': `Bearer ${idToken}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        setIsPro(data.isPro);
+                    } else {
+                        setIsPro(false);
+                    }
+                } catch (error) {
+                    console.error('Error fetching pro status:', error);
+                    setIsPro(false);
+                }
+            } else {
+                setIsPro(false);
+            }
+            
             setLoading(false);
         });
 

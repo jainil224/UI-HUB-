@@ -6,6 +6,14 @@ import { Link } from 'react-router-dom';
 const PricingPage = () => {
     const [isYearly, setIsYearly] = useState(false);
 
+    // Dynamic Localization Logic
+    const isIndia = Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Kolkata' || 
+                   Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Calcutta';
+    
+    const currency = isIndia ? '₹' : '$';
+    const quarterlyPrice = isIndia ? 499 : 5.99;
+    const yearlyPrice = isIndia ? 1590 : 19; // ~20% discount on 4 quarters
+
     const freeFeatures = [
         { text: '50+ Essential UI Components', included: true },
         { text: 'React & HTML Production Code', included: true },
@@ -34,8 +42,6 @@ const PricingPage = () => {
         { text: 'Cinema-Grade 3D Experiences', included: true },
         { text: 'Infinite Personal Project Vault', included: true },
     ];
-
-    const yearlyPrice = Math.round(19 * 12 * 0.8);
 
     return (
         <div className="min-h-screen pt-28 pb-24 px-4 relative overflow-hidden">
@@ -132,7 +138,7 @@ const PricingPage = () => {
 
                         {/* Price */}
                         <div className="flex items-baseline gap-1 mb-8 relative z-10">
-                            <span className="text-4xl font-black text-white">$</span>
+                            <span className="text-4xl font-black text-white">{currency}</span>
                             <span className="text-7xl font-black text-white tracking-tighter leading-none group-hover:scale-110 transition-transform origin-left">0</span>
                             <span className="text-white/30 text-sm font-bold ml-1 lowercase">forever</span>
                         </div>
@@ -228,20 +234,20 @@ const PricingPage = () => {
 
                         {/* Price */}
                         <div className="flex items-baseline gap-1 mb-8 relative z-10">
-                            <span className="text-4xl font-black text-brand-green">$</span>
+                            <span className="text-4xl font-black text-brand-green">{currency}</span>
                             <motion.span
                                 key={isYearly ? 'yearly' : 'monthly'}
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 className="text-7xl font-black text-white tracking-tighter leading-none group-hover/premium:text-brand-green transition-colors"
                             >
-                                {isYearly ? Math.round(yearlyPrice / 12) : 19}
+                                {isYearly ? Math.round(yearlyPrice / 4) : quarterlyPrice}
                             </motion.span>
                             <div className="ml-1">
-                                <div className="text-white/40 text-sm font-bold lowercase">/month</div>
+                                <div className="text-white/40 text-sm font-bold lowercase">/3 months</div>
                                 {isYearly && (
                                     <div className="text-brand-green/70 text-[10px] font-black uppercase tracking-wider">
-                                        ${yearlyPrice}/yr
+                                        {currency}{yearlyPrice}/yr
                                     </div>
                                 )}
                             </div>
