@@ -10,7 +10,7 @@ import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
 import { getComponentCode } from '../../../../utils/codeUtils';
 import { downloadComponentZip } from '../../../../utils/zipUtils';
-import { generateVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
+import { fetchVibePrompt, fetchComponentSource, AISystem, VibeMeta } from '../../../../utils/promptUtils';
 import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
@@ -1262,6 +1262,8 @@ const VibeSystemSection = React.memo(({
     const [aiSystem, setAiSystemState] = React.useState<AISystem>('antigravity');
     const [isPending, startTransition] = React.useTransition();
     const [copied, setCopied] = React.useState<string | null>(null);
+    const [fetchedPrompt, setFetchedPrompt] = React.useState<string>('');
+    const [isLoadingPrompt, setIsLoadingPrompt] = React.useState(false);
 
     const setAiSystem = React.useCallback((system: AISystem) => {
         setActiveTool(system);
@@ -1270,17 +1272,33 @@ const VibeSystemSection = React.memo(({
         });
     }, []);
 
-    const fullVibePrompt = React.useMemo(() => generateVibePrompt(aiSystem, {
-        id: item.id,
-        animationName: item.title,
-        language: lang,
-        styling: styling,
-        meta: componentConfig.vibeMeta,
-        code: item.code,
-        vanillaCode: vanillaCode
-    }), [aiSystem, item.id, item.title, lang, styling, componentConfig.vibeMeta, item.code, vanillaCode]);
+    React.useEffect(() => {
+        const loadPrompt = async () => {
+            if (!user) {
+                setFetchedPrompt('');
+                return;
+            }
 
-    const deferredVibePrompt = React.useDeferredValue(fullVibePrompt);
+            // Only fetch if it's a premium system or if we want to move everything to backend
+            // For security, moving everything to backend is better
+            setIsLoadingPrompt(true);
+            try {
+                const token = await user.getIdToken();
+                const prompt = await fetchVibePrompt(item.id, aiSystem, token);
+                setFetchedPrompt(prompt);
+            } catch (error) {
+                console.error('Failed to load prompt from backend:', error);
+                // Fallback to local if needed, but ideally we want backend to be the source
+                setFetchedPrompt('Failed to load blueprint from secure terminal.');
+            } finally {
+                setIsLoadingPrompt(false);
+            }
+        };
+
+        loadPrompt();
+    }, [aiSystem, item.id, user]);
+
+    const deferredVibePrompt = React.useDeferredValue(fetchedPrompt);
 
     return (
         <motion.div
@@ -1357,7 +1375,8 @@ const VibeSystemSection = React.memo(({
                                             setShowAuthModal(true);
                                             return;
                                         }
-                                        navigator.clipboard.writeText(fullVibePrompt);
+                                        if (isLoadingPrompt) return;
+                                        navigator.clipboard.writeText(fetchedPrompt);
                                         setCopied('vibe');
                                         if (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) {
                                             const newUsed = advanceTrialsUsed + 1;
@@ -1413,7 +1432,14 @@ const VibeSystemSection = React.memo(({
                                         }
                                     }}
                                 >
-                                    <CodeHighlighter code={deferredVibePrompt} />
+                                    {isLoadingPrompt ? (
+                                        <div className="flex flex-col items-center justify-center h-full py-20 text-brand-green/40">
+                                            <div className="w-8 h-8 rounded-full border-2 border-brand-green/20 border-t-brand-green animate-spin mb-4" />
+                                            <p className="text-[10px] uppercase tracking-[0.2em] font-black animate-pulse">Establishing Secure Link...</p>
+                                        </div>
+                                    ) : (
+                                        <CodeHighlighter code={deferredVibePrompt} />
+                                    )}
                                 </pre>
                             )}
                         </div>
@@ -1445,6 +1471,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [resetKey, setResetKey] = React.useState(0);
 
     // Dynamic states
+    const [fetchedSource, setFetchedSource] = React.useState<string>('');
+    const [isLoadingSource, setIsLoadingSource] = React.useState(false);
     const [installMethod, setInstallMethod] = React.useState<'cli' | 'manual'>('cli');
     const [pkgManager, setPkgManager] = React.useState<'npm' | 'pnpm' | 'yarn' | 'bun'>('npm');
     const [lang, setLang] = React.useState<'js' | 'ts' | 'html'>('ts');
@@ -1489,6 +1517,25 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             await saveToFavorites(user.uid, item);
         }
     };
+    React.useEffect(() => {
+        const loadSource = async () => {
+            if (tab !== 'code' || !user || (item.isPremium && !isProUser)) return;
+            
+            setIsLoadingSource(true);
+            try {
+                const token = await user.getIdToken();
+                const source = await fetchComponentSource(item.id, token);
+                setFetchedSource(source);
+            } catch (error) {
+                console.error('Failed to load source from backend:', error);
+                setFetchedSource('// Failed to load source code from secure vault.');
+            } finally {
+                setIsLoadingSource(false);
+            }
+        };
+
+        loadSource();
+    }, [tab, item.id, user, isProUser]);
 
     const handleDownloadZip = async () => {
         if (!isProUser) {
@@ -1895,13 +1942,20 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 ) : (
                                     <>
                                         <button
-                                            onClick={() => handleCopy(getComponentCode(item.id, { lang, styling }), 'source')}
+                                            onClick={() => handleCopy(fetchedSource || getComponentCode(item.id, { lang, styling }), 'source')}
                                             className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'source' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
                                         >
                                             {copied === 'source' ? <Check size={18} /> : <Copy size={18} />}
                                         </button>
                                         <div className="p-6 md:p-8 text-xs leading-relaxed max-h-[600px] overflow-auto custom-scrollbar">
-                                            <pre className="font-sans"><code><CodeHighlighter code={getComponentCode(item.id, { lang, styling })} /></code></pre>
+                                            {isLoadingSource ? (
+                                                <div className="flex flex-col items-center justify-center py-20 text-white/20">
+                                                    <div className="w-6 h-6 border-2 border-white/10 border-t-white/40 rounded-full animate-spin mb-4" />
+                                                    <p className="text-[10px] uppercase tracking-widest font-bold">Decrypting Source...</p>
+                                                </div>
+                                            ) : (
+                                                <pre className="font-sans"><code><CodeHighlighter code={fetchedSource || getComponentCode(item.id, { lang, styling })} /></code></pre>
+                                            )}
                                         </div>
                                     </>
                                 )}

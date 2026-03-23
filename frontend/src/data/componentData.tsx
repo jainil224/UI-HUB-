@@ -1,3 +1,5 @@
+import { LOVABLE_PROMPTS } from './lovablePrompts';
+import { ANTIGRAVITY_PROMPTS } from './antigravityPrompts';
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import * as Animations from '../components/animations/TextAnimations';
 import * as VisualEffects from '../components/animations/VisualEffects';
@@ -19,8 +21,7 @@ import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
 
-import { LOVABLE_PROMPTS } from './lovablePrompts';
-import { ANTIGRAVITY_PROMPTS } from './antigravityPrompts';
+
 
 
 
@@ -1387,505 +1388,32 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
 };
 
 export default TargetCursor;`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["target-cursor"]
+        vibePrompt: ""
     },
     {
         id: "black-hole-cursor",
         title: "Black Hole Cursor",
         category: "cursor",
+        isPremium: true,
         preview: () => <BlackHoleCursorPreview />,
-        code: `import React, { useEffect, useRef } from 'react';
-
-interface BlackHoleCursorProps {
-    /** Distance at which particles feel the gravitational pull */
-    gravityRadius?: number;
-    className?: string;
-    /** Track mouse relative to this container if provided */
-    containerRef?: React.RefObject<HTMLElement>;
-}
-
-export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
-    gravityRadius = 250,
-    className = '',
-    containerRef,
-}) => {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
-    const coreRef = useRef<HTMLDivElement>(null);
-    const mouse = useRef({ x: -999, y: -999, isActive: false, isHover: false });
-    const smoothMouse = useRef({ x: -999, y: -999 });
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        let particles: any[] = [];
-        let animationFrameId: number;
-        let width = 0;
-        let height = 0;
-
-        // Premium deep space cosmic colors
-        const colors = [
-            'rgba(139, 92, 246, 0.9)', // Violet
-            'rgba(67, 56, 202, 0.9)',  // Indigo
-            'rgba(6, 182, 212, 0.9)',  // Cyan
-            'rgba(192, 132, 252, 0.9)', // Light Purple
-            'rgba(255, 255, 255, 0.8)'  // White star
-        ];
-
-        const initParticles = () => {
-            particles = [];
-            const numParticles = Math.floor((width * height) / 11000);
-            for (let i = 0; i < numParticles; i++) {
-                particles.push(createParticle(true));
-            }
-        };
-
-        const createParticle = (randomizePosition = false) => {
-            let x, y;
-            if (randomizePosition) {
-                x = Math.random() * width;
-                y = Math.random() * height;
-            } else {
-                // Spawn continuously at the edges
-                const edge = Math.floor(Math.random() * 4);
-                if (edge === 0) { x = Math.random() * width; y = -20; }
-                else if (edge === 1) { x = width + 20; y = Math.random() * height; }
-                else if (edge === 2) { x = Math.random() * width; y = height + 20; }
-                else { x = -20; y = Math.random() * height; }
-            }
-            return {
-                x,
-                y,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                size: Math.random() * 1.5 + 0.5,
-                color: colors[Math.floor(Math.random() * colors.length)]
-            };
-        };
-
-        const resize = () => {
-            const container = containerRef?.current || window;
-            width = container === window ? window.innerWidth : (container as HTMLElement).getBoundingClientRect().width;
-            height = container === window ? window.innerHeight : (container as HTMLElement).getBoundingClientRect().height;
-            canvas.width = width;
-            canvas.height = height;
-            initParticles();
-        };
-
-        // Delay initial resize slightly to ensure container is fully rendered
-        setTimeout(resize, 0);
-        window.addEventListener('resize', resize);
-
-        const render = () => {
-            ctx.clearRect(0, 0, width, height);
-
-            // Smooth interpolation for the cursor core itself
-            smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.12;
-            smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.12;
-
-            if (coreRef.current) {
-                if (mouse.current.isActive) {
-                    coreRef.current.style.transform = \`translate(\${smoothMouse.current.x}px, \${smoothMouse.current.y}px) scale(\${mouse.current.isHover ? 1.3 : 1})\`;
-                    coreRef.current.style.opacity = '1';
-                    if (mouse.current.isHover) {
-                        coreRef.current.style.filter = 'brightness(1.5)';
-                    } else {
-                        coreRef.current.style.filter = 'brightness(1)';
-                    }
-                } else {
-                    coreRef.current.style.opacity = '0';
-                }
-            }
-
-            const currentGravityRadius = mouse.current.isHover ? gravityRadius * 1.5 : gravityRadius;
-
-            // Update & draw particles
-            for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
-
-                if (mouse.current.isActive) {
-                    const dx = smoothMouse.current.x - p.x;
-                    const dy = smoothMouse.current.y - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < currentGravityRadius) {
-                        const force = (currentGravityRadius - dist) / currentGravityRadius;
-                        const angle = Math.atan2(dy, dx);
-
-                        // Vector mathematics for spiraling inward:
-                        // Pull directly towards center
-                        const pull = force * (mouse.current.isHover ? 1.5 : 1.0);
-                        // Tangential velocity creates the spiral
-                        const spiral = force * 2.5;
-
-                        p.vx += Math.cos(angle) * pull - Math.sin(angle) * spiral;
-                        p.vy += Math.sin(angle) * pull + Math.cos(angle) * spiral;
-
-                        // Add friction inside the gravity well so they actually fall in
-                        p.vx *= 0.94;
-                        p.vy *= 0.94;
-
-                        // Visual warp effect when caught in gravity well
-                        ctx.shadowBlur = force * 15;
-                        ctx.shadowColor = p.color;
-
-                        // If sucked into event horizon, recycle particle
-                        if (dist < 15) {
-                            particles[i] = createParticle(false);
-                            continue;
-                        }
-                    } else {
-                        // mild friction / drift out in deep space
-                        ctx.shadowBlur = 0;
-                        p.vx += (Math.random() - 0.5) * 0.05;
-                        p.vy += (Math.random() - 0.5) * 0.05;
-                        p.vx *= 0.99;
-                        p.vy *= 0.99;
-                    }
-                } else {
-                    ctx.shadowBlur = 0;
-                    p.vx += (Math.random() - 0.5) * 0.02;
-                    p.vy += (Math.random() - 0.5) * 0.02;
-                    p.vx *= 0.99;
-                    p.vy *= 0.99;
-                }
-
-                p.x += p.vx;
-                p.y += p.vy;
-
-                // Fade particles naturally as they approach the absolute center (Event Horizon)
-                let alpha = 1;
-                if (mouse.current.isActive) {
-                    const dx = smoothMouse.current.x - p.x;
-                    const dy = smoothMouse.current.y - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 40) {
-                        alpha = Math.max(0, (dist - 15) / 25);
-                    }
-                }
-
-                ctx.globalAlpha = alpha;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
-                ctx.fill();
-
-                // Recycle if out of bounds
-                if (p.x < -100 || p.x > width + 100 || p.y < -100 || p.y > height + 100) {
-                    particles[i] = createParticle(false);
-                }
-            }
-
-            ctx.globalAlpha = 1;
-
-            animationFrameId = requestAnimationFrame(render);
-        };
-
-        render();
-
-        const onMouseMove = (e: MouseEvent) => {
-            mouse.current.isActive = true;
-            if (containerRef?.current) {
-                const rect = containerRef.current.getBoundingClientRect();
-                mouse.current.x = e.clientX - rect.left;
-                mouse.current.y = e.clientY - rect.top;
-            } else {
-                mouse.current.x = e.clientX;
-                mouse.current.y = e.clientY;
-            }
-        };
-
-        const onMouseLeave = () => {
-            mouse.current.isActive = false;
-        };
-
-        // Detect hover over interactive elements (buttons, links)
-        const onMouseOverElement = (e: MouseEvent) => {
-            const target = e.target as HTMLElement;
-            if (target.tagName.toLowerCase() === 'button' || target.tagName.toLowerCase() === 'a' || target.closest('button, a, [data-magnetic]')) {
-                mouse.current.isHover = true;
-            }
-        };
-
-        const onMouseOutElement = (e: MouseEvent) => {
-            const related = e.relatedTarget as HTMLElement;
-            if (!related || (!related.tagName || (related.tagName.toLowerCase() !== 'button' && related.tagName.toLowerCase() !== 'a' && !related.closest('button, a, [data-magnetic]')))) {
-                mouse.current.isHover = false;
-            }
-        };
-
-        const container = containerRef?.current || window;
-        container.addEventListener('mousemove', onMouseMove as any, { passive: true });
-        container.addEventListener('mouseleave', onMouseLeave as any, { passive: true });
-        container.addEventListener('mouseover', onMouseOverElement as any, { passive: true });
-        container.addEventListener('mouseout', onMouseOutElement as any, { passive: true });
-
-        return () => {
-            window.removeEventListener('resize', resize);
-            container.removeEventListener('mousemove', onMouseMove as any);
-            container.removeEventListener('mouseleave', onMouseLeave as any);
-            container.removeEventListener('mouseover', onMouseOverElement as any);
-            container.removeEventListener('mouseout', onMouseOutElement as any);
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, [containerRef, gravityRadius]);
-
-    const pos = containerRef ? 'absolute' : 'fixed';
-
-    return (
-        <div className={className} style={{ position: pos, top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999, overflow: 'hidden' }}>
-            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', pointerEvents: 'none' }} />
-
-            {/* Black Hole Core DOM Element */}
-            <div
-                ref={coreRef}
-                style={{
-                    position: 'absolute',
-                    top: 0, left: 0,
-                    width: 0, height: 0,
-                    opacity: 0,
-                    transition: 'opacity 0.5s ease, transform 0.1s linear, filter 0.3s ease',
-                    pointerEvents: 'none',
-                }}
-            >
-                {/* Center Pitch Black */}
-                <div style={{
-                    position: 'absolute',
-                    top: -16, left: -16,
-                    width: 32, height: 32,
-                    backgroundColor: '#000',
-                    borderRadius: '50%',
-                    boxShadow: '0 0 20px 10px rgba(0,0,0,0.9), 0 0 40px 15px rgba(67, 56, 202, 0.4)',
-                    zIndex: 2,
-                }} />
-
-                {/* Primary Accretion Disk (Spinning) */}
-                <div className="bh-spin-fast" style={{
-                    position: 'absolute',
-                    top: -45, left: -45,
-                    width: 90, height: 90,
-                    borderRadius: '50%',
-                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(139,92,246,0.3) 20%, rgba(6,182,212,0.9) 50%, rgba(139,92,246,0.3) 80%, transparent 100%)',
-                    filter: 'blur(6px)',
-                    zIndex: 1,
-                }} />
-
-                {/* Secondary Accretion Disk (Reverse Spin for distortion effect) */}
-                <div className="bh-spin-slow-reverse" style={{
-                    position: 'absolute',
-                    top: -60, left: -60,
-                    width: 120, height: 120,
-                    borderRadius: '50%',
-                    background: 'conic-gradient(from 180deg, transparent 0%, rgba(76,29,149,0.2) 20%, rgba(26,10,60,0.4) 50%, transparent 80%)',
-                    filter: 'blur(10px)',
-                    zIndex: 0,
-                }} />
-            </div>
-
-            <style>{\`
-                @keyframes bh-spin-fast {
-                    100% { transform: rotate(360deg) scaleY(0.7); }
-                }
-                @keyframes bh-spin-slow-reverse {
-                    100% { transform: rotate(-360deg) scaleY(0.8); }
-                }
-                .bh-spin-fast {
-                    animation: bh-spin-fast 2s linear infinite;
-                transform: scaleY(0.7); 
-                }
-                .bh-spin-slow-reverse {
-                    animation: bh-spin-slow-reverse 4s linear infinite;
-                transform: scaleY(0.8);
-                }
-            \`}</style>
-        </div>
-    );
-};
-
-export default BlackHoleCursor;
-`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["black-hole-cursor"]
+        code: "",
+        vibePrompt: ""
     },
     {
         id: "magnetic-cursor",
         title: "Magnetic Cursor",
         category: "cursor",
         preview: () => <MagneticCursorPreview />,
-        code: `import React, { useEffect, useRef, useCallback } from 'react';
-
-interface MagneticCursorProps {
-    magnetRadius?: number;
-    cursorSize?: number;
-    className?: string;
-    /** If provided, tracks mouse relative to this container and uses absolute positioning */
-    containerRef?: React.RefObject<HTMLElement>;
-}
-
-export const MagneticCursor: React.FC<MagneticCursorProps> = ({
-    magnetRadius = 120,
-    cursorSize = 20,
-    className = '',
-    containerRef,
-}) => {
-    const dotRef  = useRef<HTMLDivElement>(null);
-    const haloRef = useRef<HTMLDivElement>(null);
-
-    // Spring state (no React state to avoid re-renders)
-    const mouse   = useRef({ x: -999, y: -999 });
-    const dot     = useRef({ x: -999, y: -999 });
-    const dotVel  = useRef({ x: 0, y: 0 });
-    const halo    = useRef({ x: -999, y: -999 });
-    const haloVel = useRef({ x: 0, y: 0 });
-    const rafId   = useRef<number>(0);
-    const isHover = useRef(false);
-
-    // Magnetic elements registry
-    const magnets = useRef<HTMLElement[]>([]);
-
-    const onMouseMove = useCallback((e: MouseEvent) => {
-        if (containerRef?.current) {
-            const rect = containerRef.current.getBoundingClientRect();
-            mouse.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-        } else {
-            mouse.current = { x: e.clientX, y: e.clientY };
-        }
-    }, [containerRef]);
-
-    const animate = useCallback(() => {
-        const mx = mouse.current.x;
-        const my = mouse.current.y;
-
-        // ── Dot (fast spring) ──────────────────────────────────
-        dotVel.current.x  += (mx - dot.current.x) * 0.22;
-        dotVel.current.y  += (my - dot.current.y) * 0.22;
-        dotVel.current.x  *= 0.72;
-        dotVel.current.y  *= 0.72;
-        dot.current.x     += dotVel.current.x;
-        dot.current.y     += dotVel.current.y;
-
-        // ── Halo (slow spring) ─────────────────────────────────
-        haloVel.current.x += (mx - halo.current.x) * 0.09;
-        haloVel.current.y += (my - halo.current.y) * 0.09;
-        haloVel.current.x *= 0.80;
-        haloVel.current.y *= 0.80;
-        halo.current.x    += haloVel.current.x;
-        halo.current.y    += haloVel.current.y;
-
-        const half = cursorSize / 2;
-        const haloHalf = isHover.current ? 36 : 28;
-
-        if (dotRef.current) {
-            dotRef.current.style.transform = \`translate(\${dot.current.x - half}px, \${dot.current.y - half}px) scale(\${isHover.current ? 1.7 : 1})\`;
-        }
-        if (haloRef.current) {
-            haloRef.current.style.transform = \`translate(\${halo.current.x - haloHalf}px, \${halo.current.y - haloHalf}px) scale(\${isHover.current ? 1.4 : 1})\`;
-        }
-
-        // ── Magnetic pull on nearby elements ───────────────────
-        magnets.current.forEach(el => {
-            const rect   = el.getBoundingClientRect();
-            const cx     = rect.left + rect.width  / 2;
-            const cy     = rect.top  + rect.height / 2;
-            const dx     = mx - cx;
-            const dy     = my - cy;
-            const dist   = Math.sqrt(dx * dx + dy * dy);
-
-            if (dist < magnetRadius) {
-                const strength = (1 - dist / magnetRadius);
-                const tx = dx * strength * 0.38;
-                const ty = dy * strength * 0.38;
-                el.style.transform  = \`translate(\${tx}px, \${ty}px) scale(\${1 + strength * 0.04})\`;
-                el.style.boxShadow  = \`0 0 \${20 + strength * 30}px rgba(139,92,246,\${0.2 + strength * 0.4})\`;
-            } else {
-                el.style.transform = 'translate(0,0) scale(1)';
-                el.style.boxShadow = '';
-            }
-        });
-
-        rafId.current = requestAnimationFrame(animate);
-    }, [cursorSize, magnetRadius]);
-
-    const onOver = useCallback((e: MouseEvent) => {
-        const target = e.target as HTMLElement;
-        if (target.closest('[data-magnetic]')) isHover.current = true;
-    }, []);
-
-    const onOut = useCallback((e: MouseEvent) => {
-        const related = e.relatedTarget as HTMLElement | null;
-        if (!related?.closest('[data-magnetic]')) isHover.current = false;
-    }, []);
-
-    useEffect(() => {
-        window.addEventListener('mousemove', onMouseMove, { passive: true });
-        window.addEventListener('mouseover',  onOver,     { passive: true });
-        window.addEventListener('mouseout',   onOut,      { passive: true });
-        rafId.current = requestAnimationFrame(animate);
-        return () => {
-            window.removeEventListener('mousemove', onMouseMove);
-            window.removeEventListener('mouseover',  onOver);
-            window.removeEventListener('mouseout',   onOut);
-            cancelAnimationFrame(rafId.current);
-        };
-    }, [onMouseMove, onOver, onOut, animate]);
-
-    // Public imperative handle: register/unregister magnetic elements
-    const registerMagnet = useCallback((el: HTMLElement | null) => {
-        if (!el) return;
-        el.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.4s ease';
-        el.setAttribute('data-magnetic', '');
-        if (!magnets.current.includes(el)) magnets.current.push(el);
-        return () => {
-            magnets.current = magnets.current.filter(m => m !== el);
-            el.style.transform = '';
-        };
-    }, []);
-
-    (MagneticCursor as any)._register = registerMagnet;
-
-    const pos = containerRef ? 'absolute' : 'fixed';
-
-    return (
-        <div className={className} style={{ position: pos, top: 0, left: 0, pointerEvents: 'none', zIndex: 9999 }}>
-            <style>{\`
-                .mc-dot  { transition: transform 0.08s linear, opacity 0.3s; }
-                .mc-halo { transition: transform 0.25s ease, opacity 0.3s; }
-            \`}</style>
-            {/* Dot */}
-            <div ref={dotRef} className="mc-dot" style={{
-                position: pos, top: 0, left: 0,
-                width: cursorSize, height: cursorSize,
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(200,150,255,1) 0%, rgba(99,102,241,0.8) 60%, transparent 100%)',
-                filter: 'blur(1px)',
-                willChange: 'transform',
-            }} />
-            {/* Halo */}
-            <div ref={haloRef} className="mc-halo" style={{
-                position: pos, top: 0, left: 0,
-                width: 56, height: 56,
-                borderRadius: '50%',
-                border: '1.5px solid rgba(139,92,246,0.5)',
-                background: 'radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%)',
-                filter: 'blur(0.5px)',
-                willChange: 'transform',
-            }} />
-        </div>
-    );
-};
-
-export default MagneticCursor;
-`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["magnetic-cursor"]
+        code: "",
+        vibePrompt: ""
     },
     {
         id: "blur-text",
         title: "Blur In Text",
         category: "text",
         preview: renderComponent("blur-text", "Blur In Text"),
-        code: `import { motion } from 'framer-motion';\n\nexport const BlurText = ({ text = "BLUR IN TEXT" }) => (\n  <motion.h1\n    initial={{ opacity: 0, filter: "blur(10px)" }}\n    animate={{ opacity: 1, filter: "blur(0px)" }}\n    transition={{ duration: 0.8 }}\n  >\n    {text}\n  </motion.h1>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["blur-text"]
+        code: ``,
+        vibePrompt: ""
     },
     {
         id: "fade-text",
@@ -1893,7 +1421,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("fade-text", "Fade Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const FadeText = ({ text = "FADE TEXT" }) => (\n  <motion.div\n    initial={{ opacity: 0 }}\n    animate={{ opacity: 1 }}\n    transition={{ duration: 1.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["fade-text"]
+        vibePrompt: ""
     },
     {
         id: "dock-text",
@@ -1901,7 +1429,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("dock-text", "Dock Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const DockText = ({ text = "DOCK TEXT" }) => (\n  <motion.div\n    whileHover={{ scale: 1.5 }}\n    transition={{ type: "spring", duration: 0.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["dock-text"]
+        vibePrompt: ""
     },
     {
         id: "font-weight",
@@ -1909,7 +1437,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("font-weight", "Font Weight Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const FontWeightText = ({ text = "VARIABLE WEIGHT" }) => (\n  <motion.div\n    animate={{ fontWeight: [400, 900, 400] }}\n    transition={{ duration: 1, repeat: Infinity }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["font-weight"]
+        vibePrompt: ""
     },
     {
         id: "noise",
@@ -1917,7 +1445,7 @@ export default MagneticCursor;
         category: "effect",
         preview: () => <VisualEffects.Noise opacity={0.1} />,
         code: `import { Noise } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-64 overflow-hidden bg-black">\n    <h1 className="text-white text-4xl p-8">Noise Overlay</h1>\n    <Noise opacity={0.15} />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["noise"]
+        vibePrompt: ""
     },
     {
         id: "gradual-spacing",
@@ -1925,7 +1453,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("gradual-spacing", "Gradual Spacing"),
         code: `import { motion } from 'framer-motion';\n\nexport const GradualSpacing = ({ text = "GRADUAL SPACING" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ letterSpacing: "-0.5em", opacity: 0 }}\n        animate={{ letterSpacing: "normal", opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["gradual-spacing"]
+        vibePrompt: ""
     },
     {
         id: "letter-pull-up",
@@ -1933,7 +1461,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("letter-pull-up", "Letter Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const LetterPullUp = ({ text = "LETTER PULL UP" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["letter-pull-up"]
+        vibePrompt: ""
     },
     {
         id: "multi-direction-slide",
@@ -1941,7 +1469,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("multi-direction-slide", "Multi Direction Slide"),
         code: `import { motion } from 'framer-motion';\n\nexport const MultiDirectionSlide = ({ text = "MULTI DIRECTION" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: i % 2 === 0 ? -50 : 50, y: i % 2 !== 0 ? -50 : 50, opacity: 0 }}\n        animate={{ x: 0, y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["multi-direction-slide"]
+        vibePrompt: ""
     },
     {
         id: "scale-letter",
@@ -1949,7 +1477,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("scale-letter", "Scale Letter"),
         code: `import { motion } from 'framer-motion';\n\nexport const ScaleLetter = ({ text = "SCALE LETTER" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ scale: 0, opacity: 0 }}\n        animate={{ scale: 1, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["scale-letter"]
+        vibePrompt: ""
     },
     {
         id: "separate-away",
@@ -1957,7 +1485,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("separate-away", "Separate Away"),
         code: `import { motion } from 'framer-motion';\n\nexport const SeparateAway = ({ text = "SEPARATE AWAY" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: 0 }}\n        animate={{ x: i < text.length / 2 ? -15 : 15 }}\n        transition={{ duration: 0.5 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["separate-away"]
+        vibePrompt: ""
     },
     {
         id: "wavy-text",
@@ -1965,7 +1493,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("wavy-text", "Wavy Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const WavyText = ({ text = "WAVY TEXT" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        animate={{ y: [0, -8, 0] }}\n        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["wavy-text"]
+        vibePrompt: ""
     },
     {
         id: "word-pull-up",
@@ -1973,7 +1501,7 @@ export default MagneticCursor;
         category: "text",
         preview: renderComponent("word-pull-up", "Word Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const WordPullUp = ({ text = "WORD PULL UP" }) => (\n  <div className="flex gap-2 overflow-hidden">\n    {text.split(' ').map((word, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.2 }}\n      >\n        {word}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["word-pull-up"]
+        vibePrompt: ""
     },
     {
         id: "liquid-glass",
@@ -1981,7 +1509,7 @@ export default MagneticCursor;
         category: "effect",
         preview: () => <VisualEffects.LiquidGlass location="LONDON" temp="18" />,
         code: `import { LiquidGlass } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[300px] flex items-center justify-center bg-neutral-900">\n    <LiquidGlass location="NEW YORK" temp="22" />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["liquid-glass"]
+        vibePrompt: ""
     },
     {
         id: "blur-vignette",
@@ -1989,7 +1517,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("blur-vignette", "Blur Vignette"),
         code: `export const BlurVignette = () => (\n  <div className="w-full h-full absolute inset-0 backdrop-blur-[10px] [mask-image:radial-gradient(ellipse_at_center,transparent_30%,black_100%)] pointer-events-none"></div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["blur-vignette"]
+        vibePrompt: ""
     },
     {
         id: "liquid-gradient",
@@ -1997,7 +1525,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("liquid-gradient", "Liquid Gradient"),
         code: `export const LiquidGradient = () => (\n  <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,0,0.2),_transparent_50%)] animate-pulse"></div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["liquid-gradient"]
+        vibePrompt: ""
     },
     {
         id: "spotlight-cards",
@@ -2005,16 +1533,16 @@ export default MagneticCursor;
         category: "effect",
         isPremium: true,
         preview: () => <VisualEffects.SpotlightCards title="Feature" description="Hover to reveal the hidden spotlight effect." />,
-        code: `import { SpotlightCards } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <SpotlightCards \n    title="Service" \n    description="Innovative solutions for your modern business needs." \n  />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["spotlight-cards"]
+        code: "",
+        vibePrompt: ""
     },
     {
         id: "image-reveal",
         title: "Image Reveal",
         category: "effect",
         preview: renderComponent("image-reveal", "Image Reveal"),
-        code: `import { motion } from 'framer-motion';\n\nexport const ImageReveal = () => (\n  <motion.div\n    whileHover={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}\n    initial={{ clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)" }}\n    className="w-full h-full bg-cover bg-center"\n    style={{ backgroundImage: "url('/placeholder.jpg')" }}\n  />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["image-reveal"]
+        code: ``,
+        vibePrompt: ""
     },
     {
         id: "blocks",
@@ -2022,7 +1550,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("blocks", "Blocks"),
         code: `import { motion } from 'framer-motion';\n\nexport const Blocks = () => (\n  <div className="grid grid-cols-4 grid-rows-4 gap-1 w-64 h-64">\n    {Array.from({ length: 16 }).map((_, i) => (\n      <motion.div key={i} className="bg-white/10 rounded-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }} />\n    ))}\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["blocks"]
+        vibePrompt: ""
     },
     {
         id: "animated-beam",
@@ -2030,7 +1558,7 @@ export default MagneticCursor;
         category: "effect",
         preview: renderComponent("animated-beam", "Animated Beam"),
         code: `import { motion } from 'framer-motion';\n\nexport const AnimatedBeam = () => (\n  <motion.div\n    animate={{ x: [-100, 300] }}\n    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}\n    className="h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent w-32"\n  />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["animated-beam"]
+        vibePrompt: ""
     },
     {
         id: "grid-background",
@@ -2038,7 +1566,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.GridBackground opacity={0.5} maskRadius={40} /></div>,
         code: `import { GridBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden bg-black">\n    <GridBackground opacity={0.6} maskRadius={30} />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["grid-background"]
+        vibePrompt: ""
 
     },
     {
@@ -2047,7 +1575,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("hacker-background", "Hacker Background"),
         code: `// Implementation for Hacker Background\nexport const HackerBackground = () => (\n  <div className="w-full h-full bg-black text-green-500 font-mono flex items-center justify-center">\n    01010101 MATRIX 10101010\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["hacker-background"]
+        vibePrompt: ""
 
     },
     {
@@ -2056,7 +1584,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.NovatrixBackground title="NEBULA" /></div>,
         code: `import { NovatrixBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden">\n    <NovatrixBackground \n      title="UI HUB" \n      colorFrom="#1a1a2e" \n      colorTo="#16213e" \n      opacity={0.8} \n    />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["novatrix-background"]
+        vibePrompt: ""
 
     },
     {
@@ -2065,7 +1593,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("beam-grid-background", "Beam Grid Background"),
         code: `// ... Beam Grid Background code is quite large, see the repo ...\nimport BeamGridBackground from '@/components/ui/BeamGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px]">\n    <BeamGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n    />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["beam-grid-background"]
+        vibePrompt: ""
 
     },
     {
@@ -2074,7 +1602,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("fall-beam-background", "Fall Beam Background"),
         code: `import FallBeamBackground from '@/components/ui/FallBeamBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <FallBeamBackground\n      className="bg-transparent"\n      lineCount={30}\n      beamColorClass="cyan-400"\n    />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["fall-beam-background"]
+        vibePrompt: ""
 
     },
     {
@@ -2083,8 +1611,8 @@ export default MagneticCursor;
         category: "background",
         isPremium: true,
         preview: () => <div className="w-full h-full relative"><VisualEffects.HellBackground intensity={1.5} speed={0.8} /></div>,
-        code: `import { HellBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <HellBackground color="#DE443B" intensity={1.5} speed={1.0} />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["hell-background"]
+        code: "",
+        vibePrompt: ""
 
     },
     {
@@ -2093,8 +1621,8 @@ export default MagneticCursor;
         category: "background",
         isPremium: true,
         preview: renderComponent("interactive-grid-background", "Interactive Grid Background"),
-        code: `import InteractiveGridBackground from '@/components/ui/InteractiveGridBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <InteractiveGridBackground\n      className="bg-black"\n      gridColor="rgba(255,255,255,0.05)"\n      darkGridColor="rgba(255,255,255,0.05)"\n      effectColor="rgba(0,255,0,0.5)"\n      darkEffectColor="rgba(0,255,0,0.5)"\n    />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["interactive-grid-background"]
+        code: "",
+        vibePrompt: ""
 
     },
     {
@@ -2102,8 +1630,8 @@ export default MagneticCursor;
         title: "Particles Background",
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.ParticlesBackground speed={3} interactive={true} /></div>,
-        code: `import { ParticlesBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <ParticlesBackground \n      colors={['#ff223e', '#5d1eb2', '#ff7300']} \n      size={3} \n      speed={2.5} \n      interactive={true} \n    />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["particles-background"]
+        code: ``,
+        vibePrompt: ""
 
     },
     {
@@ -2112,17 +1640,16 @@ export default MagneticCursor;
         category: "3d",
         isPremium: true,
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
-        code: `import { Robot3DBackground } from '@/components/ui/Robot3DBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <Robot3DBackground \n      overlayOpacity={0.4} \n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        ROBOTIC CORE\n      </h1>\n    </div>\n  </div>\n);\n\n// Video Resource: Robots_sliding_on_neon_platform_16a422a842.mp4
-// Download Link: /assets/videos/Robots_sliding_on_neon_platform_16a422a842.mp4`,
-        vibePrompt: LOVABLE_PROMPTS["robot-3d-background"]
+        code: "",
+        vibePrompt: ""
     },
     {
         id: "wave-background",
         title: "Wave Background",
         category: "background",
         preview: renderComponent("wave-background", "Wave Background"),
-        code: `import WaveBackground from '@/components/ui/WaveBackground';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <WaveBackground />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["wave-background"]
+        code: ``,
+        vibePrompt: ""
 
     },
     {
@@ -2131,7 +1658,7 @@ export default MagneticCursor;
         category: "background",
         preview: () => <div className="w-full h-full relative"><VisualEffects.LinesBackground title="LINES" pathColor="#9c40ff" /></div>,
         code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" pathColor="rgba(255,255,255,0.2)" opacity={0.5} />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["lines-background"]
+        vibePrompt: ""
 
     },
     {
@@ -2140,7 +1667,7 @@ export default MagneticCursor;
         category: "background",
         preview: renderComponent("sparkles-background", "Sparkles Background"),
         code: `import { SparklesBackground } from '@/components/ui/sparkles-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <SparklesBackground title="Sparkles background" />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["sparkles-background"]
+        vibePrompt: ""
 
     },
     {
@@ -2149,8 +1676,8 @@ export default MagneticCursor;
         category: "background",
         isPremium: true,
         preview: () => <div className="w-full h-full relative"><VisualEffects.IsometricGridBackground title="ISOMETRIC" /></div>,
-        code: `import { IsometricGridBackground } from '@/components/ui/isometric-grid-background';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <IsometricGridBackground \n      title="Tailwind is Awesome" \n      boxProps={{\n        rowsCount: 50,\n        colsCount: 30,\n        customColors: ["#ffaa40", "#9c40ff"]\n      }}\n    />\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["isometric-grid-background"]
+        code: "",
+        vibePrompt: ""
 
     },
     {
@@ -2158,8 +1685,8 @@ export default MagneticCursor;
         title: "Corner Border",
         category: "button",
         preview: renderComponent("corner-border-button", "Corner Border Button"),
-        code: `import { CornerBorderButton } from '@/components/ui/corner-border-button';\n\nexport const Demo = () => (\n  <CornerBorderButton baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">\n    BUTTON\n  </CornerBorderButton>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["corner-border-button"]
+        code: ``,
+        vibePrompt: ""
     },
     {
         id: "shatter-button",
@@ -2167,7 +1694,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("shatter-button", "Shatter Button"),
         code: `import { ShatterButton } from '@/components/ui/shatter-button';\n\nexport const Demo = () => (\n  <ShatterButton shatterColor="#00ffff" shardCount={30}>\n    Click Now\n  </ShatterButton>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["shatter-button"]
+        vibePrompt: ""
     },
     {
         id: "border-beam",
@@ -2175,7 +1702,7 @@ export default MagneticCursor;
         category: "button",
         preview: renderComponent("border-beam", "Border Beam"),
         code: `import { BorderBeam } from '@/components/ui/border-beam';\n\nexport const Demo = () => (\n  <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">\n    Border Beam\n    <BorderBeam size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />\n  </button>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["border-beam"]
+        vibePrompt: ""
     },
     {
         id: "glow-button",
@@ -2245,7 +1772,7 @@ export const GlowButton = () => {
     </div>
   );
 };`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["glow-button"]
+        vibePrompt: ""
     },
     {
         id: "marquee-hover-button",
@@ -2253,7 +1780,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("marquee-hover-button", "Marquee Hover Button"),
         code: `import { MarqueeHoverButton } from '@/components/ui/marquee-hover-button';\n\nexport const Demo = () => (\n  <MarqueeHoverButton label="Hover Me" />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["marquee-hover-button"]
+        vibePrompt: ""
     },
     {
         id: "payment-transaction-button",
@@ -2261,7 +1788,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("payment-transaction-button", "Payment Transaction Button"),
         code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton \n    label="Send Payment" \n    accentColor="#38bdf8" \n    currencySymbol="€"\n  />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["payment-transaction-button"]
+        vibePrompt: ""
     },
     {
         id: "magic-card-effect",
@@ -2269,7 +1796,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("magic-card-effect", "Magic Card Effect"),
         code: `import { MagicCard } from '@/components/ui/magic-card';\n\nexport const Demo = () => (\n  <MagicCard className="flex flex-col items-center justify-center cursor-pointer shadow-2xl" gradientColor="#262626">\n    <div className="p-12 flex flex-col items-center gap-4 text-center">\n      <p className="text-4xl font-display font-bold text-white tracking-tight">Magic Card</p>\n      <p className="text-white/50 text-sm font-medium">Hover to reveal the magic</p>\n    </div>\n  </MagicCard>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["magic-card-effect"]
+        vibePrompt: ""
     },
     {
         id: "rainbow-button",
@@ -2277,7 +1804,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("rainbow-button", "Rainbow Button"),
         code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <RainbowButton>Rainbow Button</RainbowButton>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["rainbow-button"]
+        vibePrompt: ""
     },
     {
         id: "social-tooltip-buttons",
@@ -2285,7 +1812,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("social-tooltip-buttons", "Social Tooltip Hover Buttons"),
         code: `import { SocialTooltipButtons } from "@/components/animations/SocialTooltipButtons";\n\nexport const Demo = () => (\n  <SocialTooltipButtons />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["social-tooltip-buttons"]
+        vibePrompt: ""
     },
     {
         id: "orbit-button",
@@ -2293,7 +1820,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("orbit-button", "Orbit Button"),
         code: `import { OrbitButton } from "@/components/ui/OrbitButton";\n\nexport const Demo = () => (\n  <OrbitButton label="Orbit Button" color="cyan" />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["orbit-button"]
+        vibePrompt: ""
     },
     {
         id: "galaxy-button",
@@ -2301,7 +1828,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("galaxy-button", "Galaxy Button"),
         code: `import { GalaxyButton } from "@/components/ui/GalaxyButton";\n\nexport const Demo = () => (\n  <GalaxyButton label="Galaxy Button" />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["galaxy-button"]
+        vibePrompt: ""
     },
     {
         id: "liquid-fill-button",
@@ -2309,7 +1836,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("liquid-fill-button", "Liquid Fill Button"),
         code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["liquid-fill-button"]
+        vibePrompt: ""
     },
     {
         id: "neon-flicker-button",
@@ -2317,7 +1844,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("neon-flicker-button", "Neon Flicker Button"),
         code: `import { NeonFlickerButton } from "@/components/ui/NeonFlickerButton";\n\nexport const Demo = () => (\n  <NeonFlickerButton label="Neon Flicker" color="red" />\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["neon-flicker-button"]
+        vibePrompt: ""
     },
     {
         id: "aurora-cursor",
@@ -2337,7 +1864,7 @@ export const Demo = () => (
     </p>
   </div>
 );`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["aurora-cursor"]
+        vibePrompt: ""
     },
     {
         id: "space-background",
@@ -2345,8 +1872,8 @@ export const Demo = () => (
         category: "background",
         isPremium: true,
         preview: () => <SpaceBackgroundPreview />,
-        code: `import { SpaceBackground } from '@/components/ui/SpaceBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <SpaceBackground \n      starCount={400} \n      nebulaCount={6} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">\n        COSMIC VOYAGE\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["space-background"]
+        code: "",
+        vibePrompt: ""
 
     },
     {
@@ -2354,8 +1881,8 @@ export const Demo = () => (
         title: "Neural Network Background",
         category: "background",
         preview: () => <NeuralNetworkPreview />,
-        code: `import { NeuralNetworkBackground } from '@/components/ui/NeuralNetworkBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <NeuralNetworkBackground \n      nodeCount={120} \n      connectionDistance={150} \n      interactive={false} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400 tracking-widest uppercase">\n        Neural Core\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["neural-network-background"]
+        code: ``,
+        vibePrompt: ""
 
     },
     {
@@ -2364,8 +1891,8 @@ export const Demo = () => (
         category: "background",
         isPremium: true,
         preview: () => <BlackHolePreview />,
-        code: `import { BlackHoleBackground } from '@/components/ui/BlackHoleBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <BlackHoleBackground \n      particleCount={600} \n      coreColor="rgba(79, 70, 229, 0.4)" \n      accentColor="#22d3ee" \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-black text-white tracking-widest uppercase opacity-80">\n        Gravitational Core\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["black-hole-background"]
+        code: "",
+        vibePrompt: ""
 
     },
     {
@@ -2373,8 +1900,8 @@ export const Demo = () => (
         title: "Warp Speed Background",
         category: "background",
         preview: () => <WarpSpeedPreview />,
-        code: `import { WarpSpeedBackground } from '@/components/ui/WarpSpeedBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <WarpSpeedBackground \n      starCount={800} \n      speed={15} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-white tracking-[0.3em] uppercase italic opacity-70">\n        Light Speed\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["warp-speed-background"]
+        code: ``,
+        vibePrompt: ""
 
     },
     {
@@ -2383,8 +1910,8 @@ export const Demo = () => (
         category: "background",
         isPremium: true,
         preview: () => <MouseGravityPreview />,
-        code: `import { MouseGravityBackground } from '@/components/ui/MouseGravityBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <MouseGravityBackground \n      particleCount={150} \n      attractionForce={0.06} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-4xl font-bold text-cyan-400/50 tracking-widest uppercase pointer-events-none">\n        Gravity Field\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["mouse-gravity-background"]
+        code: "",
+        vibePrompt: ""
 
     },
     {
@@ -2392,8 +1919,8 @@ export const Demo = () => (
         title: "Heart Cursor 💜",
         category: "cursor",
         preview: () => <HeartCursorPreview />,
-        code: `import { HeartCursor } from '@/components/ui/HeartCursor';\n\n// Wrap your content with the HeartCursor component.\n// It tracks the mouse smoothly and leaves trailing ripples.\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#0a0a0f] flex items-center justify-center">\n    <HeartCursor \n      size={24} \n      glowIntensity={0.8} \n      trailSpeed={0.05}\n    />\n    <p className="text-white/20 text-sm tracking-widest uppercase font-bold">\n      Move your cursor to experience the love\n    </p>\n  </div>\n);`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["heart-cursor"]
+        code: ``,
+        vibePrompt: ""
     },
     {
         id: "interactive-webgl-scene",
@@ -2401,8 +1928,8 @@ export const Demo = () => (
         category: "3d",
         isPremium: true,
         preview: () => <InteractiveWebGLScenePreview />,
-        code: `import { InteractiveWebGLScene } from '@/components/ui/InteractiveWebGLScene';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-black shadow-2xl">\n    <InteractiveWebGLScene \n      overlayOpacity={0.4} \n      showDownloadLink={true}\n    />\n    <div className="relative z-20 flex h-full items-center justify-center p-12 text-center">\n      <h1 className="text-7xl font-extrabold text-white tracking-tight drop-shadow-2xl">\n        WEBGL EXPERIENCE\n      </h1>\n    </div>\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["interactive-webgl-scene"]
+        code: "",
+        vibePrompt: ""
     },
     {
         id: "3d-scroll-animation",
@@ -2410,8 +1937,8 @@ export const Demo = () => (
         category: "3d",
         isPremium: true,
         preview: () => <Scroll3DAnimationPreview />,
-        code: `import Scroll3DAnimation from '@/components/ui/Scroll3DAnimation';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[800px] overflow-hidden rounded-3xl bg-white shadow-2xl border border-neutral-100">\n    <Scroll3DAnimation />\n  </div>\n);`,
-        vibePrompt: LOVABLE_PROMPTS["3d-scroll-animation"]
+        code: "",
+        vibePrompt: ""
     },
     {
         id: "3d-slider",
@@ -2419,118 +1946,8 @@ export const Demo = () => (
         category: "3d",
         isPremium: true,
         preview: () => <ThreeDSliderPreview />,
-        code: `import React, { useState, useCallback, useEffect } from 'react';
-
-interface Slide {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  accentColor: string;
-}
-
-interface ThreeDSliderProps {
-  slides?: Slide[];
-  autoPlay?: boolean;
-  interval?: number;
-  className?: string;
-}
-
-const DEFAULT_SLIDES: Slide[] = [
-  {
-    id: 1, title: "Wuthering Waves",
-    description: "Experience a story-rich open-world action RPG with a high degree of freedom.",
-    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24686.jpg",
-    accentColor: "#00f2ff"
-  },
-  {
-    id: 2, title: "Solo Leveling",
-    description: "A world where hunters with magical abilities must battle deadly monsters.",
-    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24719.jpg",
-    accentColor: "#a855f7"
-  },
-  {
-    id: 3, title: "Where Winds Meet",
-    description: "An epic open-world action-adventure RPG set in the twilight of the Ten Kingdoms.",
-    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24534.jpg",
-    accentColor: "#fbbf24"
-  },
-  {
-    id: 4, title: "Battlefield 2042",
-    description: "A first-person shooter that marks the return to the iconic all-out warfare of the franchise.",
-    image: "https://4kwallpapers.com/images/walls/thumbs_3t/24204.jpg",
-    accentColor: "#f97316"
-  }
-];
-
-export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
-  slides = DEFAULT_SLIDES, autoPlay = false, interval = 5000, className = ''
-}) => {
-  const [activeSlides, setActiveSlides] = useState<Slide[]>(slides);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  const nextSlide = useCallback(() => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setActiveSlides(prev => { const n = [...prev]; const f = n.shift(); if (f) n.push(f); return n; });
-    setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning]);
-
-  const prevSlide = useCallback(() => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setActiveSlides(prev => { const n = [...prev]; const l = n.pop(); if (l) n.unshift(l); return n; });
-    setTimeout(() => setIsTransitioning(false), 500);
-  }, [isTransitioning]);
-
-  useEffect(() => {
-    if (!autoPlay) return;
-    const timer = setInterval(nextSlide, interval);
-    return () => clearInterval(timer);
-  }, [autoPlay, interval, nextSlide]);
-
-  return (
-    <div className={\\\`relative w-full h-full overflow-hidden bg-[#0a0a0f] \\\${className}\\\`}>
-      <style>{\\\`
-        .hero-track { position: relative; width: 100%; height: 100%; }
-        .slide-card { width: 200px; height: 300px; position: absolute; top: 50%; transform: translateY(-50%); border-radius: 20px; box-shadow: 0 30px 50px rgba(0,0,0,0.5); background-position: 50% 50%; background-size: cover; transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        .slide-card:nth-child(1), .slide-card:nth-child(2) { top: 0; left: 0; transform: translateY(0); border-radius: 0; width: 100%; height: 100%; box-shadow: none; }
-        .slide-card:nth-child(3) { left: 50%; } .slide-card:nth-child(4) { left: calc(50% + 230px); } .slide-card:nth-child(5) { left: calc(50% + 460px); } .slide-card:nth-child(n+6) { left: calc(50% + 690px); opacity: 0; }
-        .slide-card:nth-child(2)::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 100%); z-index: 1; pointer-events: none; }
-        .slide-info { position: absolute; top: 50%; left: 10%; width: 500px; text-align: left; color: #fff; transform: translateY(-50%); display: none; z-index: 5; }
-        .slide-card:nth-child(2) .slide-info { display: block; }
-        .slide-title { font-size: 64px; text-transform: uppercase; font-weight: 900; opacity: 0; line-height: 1; filter: drop-shadow(0 0 20px var(--accent, #fff)); animation: slideUpFade 0.8s ease-out 0.2s forwards; }
-        .slide-desc { margin-top: 15px; margin-bottom: 30px; font-size: 16px; line-height: 1.6; opacity: 0; color: rgba(255,255,255,0.85); text-shadow: 0 2px 4px rgba(0,0,0,0.5); animation: slideUpFade 0.8s ease-out 0.4s forwards; }
-        .slide-info button { padding: 12px 30px; border: none; cursor: pointer; opacity: 0; border-radius: 50px; background: var(--accent, #fff); color: #000; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; font-size: 11px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); animation: slideUpFade 0.8s ease-out 0.6s forwards; }
-        @keyframes slideUpFade { from { opacity: 0; transform: translateY(40px); filter: blur(10px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
-        .slider-controls { position: absolute; bottom: 50px; left: 50%; transform: translateX(-50%); display: flex; gap: 20px; z-index: 20; }
-        .nav-btn { width: 54px; height: 54px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
-        .nav-btn:hover { background: #fff; color: #000; transform: scale(1.1); }
-      \\\`}</style>
-      <div className="hero-track">
-        {activeSlides.map((slide, i) => (
-          <div key={\\\`\\\${slide.id}-\\\${i}\\\`} className="slide-card" style={{ backgroundImage: \\\`url(\\\${slide.image})\\\`, ['--accent' as any]: slide.accentColor }}>
-            <div className="slide-info">
-              <h2 className="slide-title">{slide.title}</h2>
-              <p className="slide-desc">{slide.description}</p>
-              <button>Explore Now</button>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="slider-controls">
-        <button className="nav-btn" onClick={prevSlide}><svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6"/></svg></button>
-        <button className="nav-btn" onClick={nextSlide}><svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="9 18 15 12 9 6"/></svg></button>
-      </div>
-    </div>
-  );
-};
-
-// Usage:
-// <div className="relative w-full h-[600px] overflow-hidden rounded-3xl bg-[#0a0a0f] shadow-2xl">
-//   <ThreeDSlider autoPlay={true} interval={5000} />
-// </div>`,
-        vibePrompt: LOVABLE_PROMPTS["3d-slider"]
+        code: ``,
+        vibePrompt: ""
     },
 
     {
@@ -2539,74 +1956,16 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
         category: "cursor",
         isPremium: true,
         preview: () => <LizardCursorPreview />,
-        code: `import { useRef } from 'react';
-import { LizardCursor } from '@/components/ui/LizardCursor';
-
-export const ScorpioDemo = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  return (
-    <div 
-      ref={containerRef}
-      className="relative w-full h-[500px] overflow-hidden rounded-3xl bg-[#050508] border border-white/5 flex items-center justify-center cursor-none group"
-    >
-      {/* Immersive background for the demo */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1)_0%,transparent_70%)]" />
-      
-      {/* The Lizard Component (with Click-to-Strike) */}
-      <LizardCursor 
-        color="#ffffff" 
-        size={2.5} 
-        containerRef={containerRef} 
-      />
-
-      <div className="relative z-10 text-center pointer-events-none">
-          <p className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-bold">
-            Click to Strike
-          </p>
-      </div>
-    </div>
-  );
-};`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["lizard-cursor"]
+        code: "",
+        vibePrompt: ""
     },
     {
         id: "venom-cursor",
         title: "Venom Cursor",
         category: "cursor",
         preview: () => <VenomCursorPreview />,
-        code: `import { useRef } from 'react';
-import { VenomCursor } from '@/components/ui/VenomCursor';
-
-export const SpiderDemo = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  return (
-    <div 
-      ref={containerRef}
-      className="relative w-full h-[500px] overflow-hidden rounded-3xl bg-[#020205] border border-white/5 flex items-center justify-center cursor-none group"
-    >
-      {/* Grid background */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:30px_30px]" />
-      
-      {/* The Venom Component (with Procedural Swarm) */}
-      <VenomCursor 
-        color="#ffffff" 
-        containerRef={containerRef} 
-      />
-
-      <VenomCursor 
-        color="#ffffff" 
-        containerRef={containerRef} 
-      />
-
-      <div className="relative z-10 text-center pointer-events-none">
-          {/* Custom branding or navigation goes here */}
-      </div>
-    </div>
-  );
-};`,
-        vibePrompt: ANTIGRAVITY_PROMPTS["venom-cursor"]
+        code: ``,
+        vibePrompt: ""
     },
     {
         id: "3d-tubes-cursor",
@@ -2614,35 +1973,8 @@ export const SpiderDemo = () => {
         category: "cursor",
         isPremium: true,
         preview: () => <ThreeDTubesCursorPreview />,
-        code: `import { useRef } from 'react';
-import { ThreeDTubesCursor } from '@/components/ui/ThreeDTubesCursor';
-
-export const TubesDemo = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  return (
-    <div 
-      ref={containerRef}
-      className="relative w-full h-[500px] overflow-hidden rounded-3xl bg-[#0a0a0f] border border-white/5 flex items-center justify-center cursor-none group"
-    >
-      {/* Atmosphere background */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,rgba(105,88,213,0.15)_0%,transparent_70%)]" />
-      
-      <ThreeDTubesCursor 
-        colors={["#f967fb", "#53bc28", "#6958d5"]}
-        lightIntensity={200}
-        containerRef={containerRef} 
-      />
-
-      <div className="relative z-10 text-center pointer-events-none">
-          <p className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-bold">
-            Interactive 3D Tubes
-          </p>
-      </div>
-    </div>
-  );
-};`,
-        vibePrompt: LOVABLE_PROMPTS["3d-tubes-cursor"]
+        code: "",
+        vibePrompt: ""
     },
 ];
 
