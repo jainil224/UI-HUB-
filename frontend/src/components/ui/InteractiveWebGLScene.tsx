@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useAuth } from "../../context/AuthContext";
 
 interface InteractiveWebGLSceneProps {
     className?: string;
@@ -15,11 +16,14 @@ export const InteractiveWebGLScene: React.FC<InteractiveWebGLSceneProps> = ({
     overlayOpacity = 0.4,
     showDownloadLink = false,
 }) => {
+    const { isPro } = useAuth();
     const videoSrc = `${import.meta.env.BASE_URL}assets/videos/Interactive%20WebGL%20Scene.mp4`;
 
 
     const handleDownload = async (e: React.MouseEvent) => {
         e.preventDefault();
+        if (!isPro) return;
+
         try {
             const response = await fetch(videoSrc);
             const blob = await response.blob();
@@ -60,24 +64,34 @@ export const InteractiveWebGLScene: React.FC<InteractiveWebGLSceneProps> = ({
                 <div className="absolute top-6 right-8 z-[100] pointer-events-auto">
                     <button
                         onClick={handleDownload}
-                        className="group relative flex items-center gap-2.5 px-6 py-2.5 bg-black/40 hover:bg-black/60 backdrop-blur-xl border border-indigo-500/20 hover:border-indigo-500/50 rounded-full text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(0,0,0,0.3)] hover:shadow-[0_0_30px_rgba(99,102,241,0.2)]"
+                        className={`group relative flex items-center gap-2.5 px-6 py-2.5 bg-black/40 hover:bg-black/60 backdrop-blur-xl border ${isPro ? 'border-indigo-500/20 hover:border-indigo-500/50' : 'border-amber-500/20 opacity-80 cursor-not-allowed'} rounded-full text-white transition-all duration-300 ${isPro ? 'hover:scale-105 active:scale-95' : ''} shadow-[0_0_20px_rgba(0,0,0,0.3)] ${isPro ? 'hover:shadow-[0_0_30px_rgba(99,102,241,0.2)]' : ''}`}
                     >
                         <div className="absolute inset-0 rounded-full overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_2s_infinite]" />
                         </div>
 
                         <div className="relative flex items-center justify-center">
-                            <div className="absolute inset-0 bg-indigo-500/50 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
-                            <svg className="relative w-5 h-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
+                            <div className={`absolute inset-0 ${isPro ? 'bg-indigo-500/50' : 'bg-amber-500/50'} blur-md opacity-0 group-hover:opacity-100 transition-opacity`} />
+                            {isPro ? (
+                                <svg className="relative w-5 h-5 text-indigo-400 drop-shadow-[0_0_8px_rgba(99,102,241,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                            ) : (
+                                <svg className="relative w-5 h-5 text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                </svg>
+                            )}
                         </div>
 
-                        <span className="relative text-sm font-bold tracking-tight bg-clip-text text-white group-hover:text-indigo-400 transition-colors">
-                            Download <span className="text-indigo-400">4K</span> Scene
+                        <span className="relative text-sm font-bold tracking-tight bg-clip-text text-white">
+                            {isPro ? (
+                                <>Download <span className="text-indigo-400">4K</span> Scene</>
+                            ) : (
+                                <>Pro <span className="text-amber-500">Upgrade</span> required</>
+                            )}
                         </span>
 
-                        <div className="absolute -inset-[1px] rounded-full border border-indigo-500/0 group-hover:border-indigo-500/30 transition-colors pointer-events-none" />
+                        <div className={`absolute -inset-[1px] rounded-full border ${isPro ? 'border-indigo-500/0 group-hover:border-indigo-500/30' : 'border-amber-500/30'} transition-colors pointer-events-none`} />
                     </button>
 
                     <style dangerouslySetInnerHTML={{

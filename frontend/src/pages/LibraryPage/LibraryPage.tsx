@@ -14,8 +14,7 @@ interface Category {
 }
 
 const LibraryPage = () => {
-    const { user } = useAuth();
-    const isPro = user && !user.isAnonymous;
+    const { user, isPro } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
@@ -191,7 +190,7 @@ const LibraryPage = () => {
                                     {item.isPremium && !isPro && (
                                         <Lock
                                             size={9}
-                                            className={`shrink-0 ${activeComponent.id === item.id ? 'text-amber-400' : 'text-amber-500/40'}`}
+                                            className={`shrink-0 ${activeComponent.id === item.id ? 'text-amber-400' : 'text-amber-400 opacity-60'}`}
                                         />
                                     )}
                                 </li>

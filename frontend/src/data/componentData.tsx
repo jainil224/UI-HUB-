@@ -1979,7 +1979,6 @@ export default MagneticCursor;
         id: "liquid-glass",
         title: "Liquid Glass",
         category: "effect",
-        isPremium: true,
         preview: () => <VisualEffects.LiquidGlass location="LONDON" temp="18" />,
         code: `import { LiquidGlass } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[300px] flex items-center justify-center bg-neutral-900">\n    <LiquidGlass location="NEW YORK" temp="22" />\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["liquid-glass"]
@@ -2344,6 +2343,7 @@ export const Demo = () => (
         id: "space-background",
         title: "Space Background",
         category: "background",
+        isPremium: true,
         preview: () => <SpaceBackgroundPreview />,
         code: `import { SpaceBackground } from '@/components/ui/SpaceBackground';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[500px] overflow-hidden rounded-xl bg-[#020617]">\n    <SpaceBackground \n      starCount={400} \n      nebulaCount={6} \n      interactive={true} \n    />\n    <div className="relative z-10 flex h-full items-center justify-center">\n      <h1 className="text-5xl font-black text-white tracking-tighter drop-shadow-2xl">\n        COSMIC VOYAGE\n      </h1>\n    </div>\n  </div>\n);`,
         vibePrompt: ANTIGRAVITY_PROMPTS["space-background"]

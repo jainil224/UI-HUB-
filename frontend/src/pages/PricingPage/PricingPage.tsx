@@ -11,6 +11,7 @@ const PricingPage = () => {
         { text: 'React & HTML Production Code', included: true },
         { text: 'Starter Vault (Max 5 Favorites)', included: true },
         { text: 'Core Animation Design Suite', included: true },
+        { text: '2 Free Trials for Advance Vibe Prompts', included: true },
         { text: 'Access to Lovable & Cursor Prompts', included: true },
     ];
 

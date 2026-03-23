@@ -1137,10 +1137,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [lang, setLang] = React.useState<'js' | 'ts' | 'html'>('ts');
     const [styling, setStyling] = React.useState<'tailwind' | 'css'>('tailwind');
     const [aiSystem, setAiSystem] = React.useState<AISystem>('antigravity');
-    const { user } = useAuth();
-    const isProUser = user && !user.isAnonymous && user.email === 'jainil11199@gmail.com';
-    const [usedFreeToken, setUsedFreeToken] = React.useState<boolean>(() => {
-        return localStorage.getItem('hasUsedAdvanceToken') === 'true';
+    const { user, isPro: isProUser } = useAuth();
+    const [advanceTrialsUsed, setAdvanceTrialsUsed] = React.useState<number>(() => {
+        const used = localStorage.getItem('advanceTrialsUsed');
+        return used ? parseInt(used, 10) : 0;
     });
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [showAuthModal, setShowAuthModal] = React.useState(false);
@@ -1765,23 +1765,36 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 {/* Glow aura */}
                                                 <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0'}`} />
                                                 <button
-                                                    disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))}
+                                                    disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)}
                                                     onClick={() => {
-                                                        if (!user || user.isAnonymous) {
+                                                        if (!user) {
                                                             setShowAuthModal(true);
                                                             return;
                                                         }
                                                         navigator.clipboard.writeText(fullVibePrompt);
                                                         setCopied('vibe');
+                                                        
+                                                        // Trial logic
+                                                        if (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) {
+                                                            const newUsed = advanceTrialsUsed + 1;
+                                                            setAdvanceTrialsUsed(newUsed);
+                                                            localStorage.setItem('advanceTrialsUsed', newUsed.toString());
+                                                        }
+
                                                         setTimeout(() => setCopied(null), 2000);
                                                     }}
-                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                                    className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[8px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                         ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_15px_rgba(0,255,0,0.4)]'
                                                         : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 active:bg-[#00FF00]/10'
                                                         }`}
                                                 >
                                                     {copied === 'vibe' ? <Check size={10} strokeWidth={2.5} /> : <Copy size={10} />}
                                                     <span>{copied === 'vibe' ? 'Saved' : 'Copy'}</span>
+                                                    {!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed < 2 && (
+                                                        <span className="ml-1 px-1 py-0.5 rounded-sm bg-brand-green/20 text-brand-green text-[6px] font-bold">
+                                                            {2 - advanceTrialsUsed}T
+                                                        </span>
+                                                    )}
                                                 </button>
                                             </div>
                                         </div>
@@ -1796,30 +1809,43 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             {/* Glow aura */}
                                             <div className={`absolute -inset-[1px] rounded-lg blur-sm transition-all duration-300 ${copied === 'vibe' ? 'bg-[#00FF00]/60' : 'bg-[#00FF00]/0 group-hover/copybtn:bg-[#00FF00]/20'}`} />
                                             <button
-                                                disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))}
+                                                disabled={(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)}
                                                 onClick={() => {
-                                                    if (!user || user.isAnonymous) {
+                                                    if (!user) {
                                                         setShowAuthModal(true);
                                                         return;
                                                     }
                                                     navigator.clipboard.writeText(fullVibePrompt);
                                                     setCopied('vibe');
+                                                    
+                                                    // Trial logic
+                                                    if (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) {
+                                                        const newUsed = advanceTrialsUsed + 1;
+                                                        setAdvanceTrialsUsed(newUsed);
+                                                        localStorage.setItem('advanceTrialsUsed', newUsed.toString());
+                                                    }
+
                                                     setTimeout(() => setCopied(null), 2000);
                                                 }}
-                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance'))) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
+                                                className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all duration-200 ${((item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2)) ? 'opacity-50 cursor-not-allowed bg-black/40 border border-white/10 text-white/30' : copied === 'vibe'
                                                     ? 'bg-[#00FF00] text-black border border-[#00FF00] shadow-[0_0_20px_rgba(0,255,0,0.4)]'
                                                     : 'bg-black/60 border border-[#00FF00]/30 text-[#00FF00]/70 hover:text-[#00FF00] hover:border-[#00FF00]/70 hover:bg-[#00FF00]/5 hover:shadow-[0_0_12px_rgba(0,255,0,0.15)]'
                                                     }`}
                                             >
                                                 {copied === 'vibe' ? <Check size={11} strokeWidth={3} /> : <Copy size={11} />}
                                                 <span>{copied === 'vibe' ? 'Saved to Buffer' : 'Copy Blueprint'}</span>
+                                                {!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed < 2 && (
+                                                    <span className="ml-1 px-1 py-0.5 rounded-sm bg-brand-green/20 text-brand-green text-[7px] font-bold">
+                                                        {2 - advanceTrialsUsed} Trial LEFT
+                                                    </span>
+                                                )}
                                             </button>
                                         </div>
                                     </div>
 
                                     {/* Terminal Content */}
                                     <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
-                                        {(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance')) ? (
+                                        {(item.isPremium && !isProUser) || (!isProUser && (aiSystem === 'antigravity' || aiSystem === 'claude' || aiSystem === 'advance') && advanceTrialsUsed >= 2) ? (
                                             <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
                                                 <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
                                                     <Lock className="text-brand-green" size={28} />
@@ -1830,7 +1856,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 <p className="text-white/50 max-w-sm mb-8 font-sans">
                                                     {item.isPremium 
                                                         ? "The specialized AI prompts for this premium component are available only to Pro members."
-                                                        : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} prompts require a Pro subscription. Free members can use Lovable and Cursor prompts.`
+                                                        : advanceTrialsUsed >= 2 
+                                                            ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} trial has ended. Upgrade to Pro for unlimited elite prompts.`
+                                                            : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} prompts require a Pro subscription. Free members can use Lovable and Cursor prompts.`
                                                     }
                                                 </p>
                                                 <Link to="/pricing">
@@ -1841,9 +1869,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             </div>
                                         ) : (
                                             <pre 
-                                                className={`font-mono whitespace-pre-wrap ${(!user || user.isAnonymous) ? 'select-none' : ''}`}
+                                                className={`font-mono whitespace-pre-wrap ${(!user) ? 'select-none' : ''}`}
                                                 onCopy={(e) => {
-                                                    if (!user || user.isAnonymous) {
+                                                    if (!user) {
                                                         e.preventDefault();
                                                         setShowAuthModal(true);
                                                     }

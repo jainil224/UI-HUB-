@@ -32,8 +32,7 @@ const showcaseIds = [
 import { motion } from 'framer-motion';
 
 const ComponentGrid = () => {
-    const { user } = useAuth();
-    const isPro = user && !user.isAnonymous;
+    const { user, isPro } = useAuth();
     const navigate = useNavigate();
     const [activeId, setActiveId] = useState<string | null>(null);
     const [isButtonHovered, setIsButtonHovered] = useState(false);

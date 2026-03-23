@@ -76,7 +76,7 @@ const MagneticButton = ({ children, className }: { children: React.ReactNode, cl
 };
 
 const Navbar = () => {
-    const { user } = useAuth();
+    const { user, isPro } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
 
@@ -156,7 +156,7 @@ const Navbar = () => {
                     <GitHubStarButton className="hidden md:flex" />
 
                     {/* Get Started / User Menu */}
-                    {user && !user.isAnonymous ? (
+                    {user ? (
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
@@ -177,7 +177,7 @@ const Navbar = () => {
                                 <span className="text-white text-[11px] font-black tracking-tight leading-tight truncate max-w-[80px]">
                                     {user.displayName?.split(' ')[0] || 'Developer'}
                                 </span>
-                                {user.email === 'jainil11199@gmail.com' ? (
+                                {isPro ? (
                                     <span className="text-brand-green/80 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1">
                                         <Sparkles size={6} className="text-brand-green animate-pulse" />
                                         Pro Member
@@ -254,7 +254,7 @@ const Navbar = () => {
                         </div>
                         <div className="flex flex-wrap gap-2.5 pt-3 border-t border-white/[0.07]">
                             <GitHubStarButton className="flex-1 justify-center" />
-                            {user && !user.isAnonymous ? (
+                            {user ? (
                                 <button
                                     onClick={() => {
                                         signOut(auth);
