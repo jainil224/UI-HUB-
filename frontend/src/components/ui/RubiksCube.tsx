@@ -216,6 +216,7 @@ export const RubiksCube: React.FC = () => {
     const handleMouseMove = useCallback((e: MouseEvent | TouchEvent) => {
         const rot = rotationRef.current;
         if (!rot.dragging) return;
+        if (e instanceof TouchEvent) e.preventDefault();
         const clientX = 'touches' in e ? e.touches[0].clientX : (e as MouseEvent).clientX;
         const clientY = 'touches' in e ? e.touches[0].clientY : (e as MouseEvent).clientY;
         rot.lastDx = (clientX - rot.lx2) * 0.45;
@@ -237,7 +238,7 @@ export const RubiksCube: React.FC = () => {
     useEffect(() => {
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
-        window.addEventListener('touchmove', handleMouseMove);
+        window.addEventListener('touchmove', handleMouseMove, { passive: false });
         window.addEventListener('touchend', handleMouseUp);
         return () => {
             window.removeEventListener('mousemove', handleMouseMove);
@@ -282,7 +283,7 @@ export const RubiksCube: React.FC = () => {
                 </div>
 
                 {/* Right Side: Cube Viewport */}
-                <div className="relative flex items-center justify-center min-w-[300px]">
+                <div className="relative flex items-center justify-center">
                     <div className={styles.cubeAura}></div>
                     <div 
                         className={styles.cubeViewport}

@@ -11,12 +11,26 @@
   background: radial-gradient(circle at 70% 50%, rgba(255, 88, 0, 0.05) 0%, transparent 70%);
 }
 
+@media (max-width: 968px) {
+  .cubeWrapper {
+    padding: 20px;
+  }
+}
+
 .layoutContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 40px;
   width: 100%;
+}
+
+@media (max-width: 968px) {
+  .layoutContainer {
+    flex-direction: column-reverse;
+    text-align: center;
+    gap: 32px;
+  }
 }
 
 .textContent {
@@ -26,6 +40,27 @@
   flex-direction: column;
   gap: 12px;
   animation: fadeIn 1s ease-out;
+}
+
+@media (max-width: 968px) {
+  .textContent {
+    align-items: center;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .description {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
 }
 
 @keyframes fadeIn {
@@ -83,6 +118,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .cubeViewport {
+    transform: scale(0.75);
+  }
 }
 
 .cubeScene {
@@ -150,6 +191,24 @@
   align-items: flex-start;
   margin-top: 20px;
   width: 100%;
+}
+
+@media (max-width: 968px) {
+  .cubeUi {
+    align-items: center;
+  }
+  
+  .cubeBtns {
+    justify-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .cbtn {
+    flex: 1;
+    min-width: 120px;
+    max-width: 160px;
+  }
 }
 
 .cubeStatus {
