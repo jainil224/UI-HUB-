@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { getApiBaseUrl } from '../utils/apiConfig';
 
 interface AuthContextType {
     user: User | null;
@@ -24,7 +25,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (user) {
                 try {
                     const idToken = await user.getIdToken();
-                    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/v1/users/status`, {
+                    const response = await fetch(`${getApiBaseUrl()}/api/v1/users/status`, {
                         headers: {
                             'Authorization': `Bearer ${idToken}`
                         }

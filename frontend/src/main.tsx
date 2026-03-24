@@ -3,10 +3,11 @@ import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 import { initFirebase } from './lib/firebase';
+import { getApiBaseUrl } from './utils/apiConfig';
 
 const renderApp = async () => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/api/v1/config/firebase`);
+    const response = await fetch(`${getApiBaseUrl()}/api/v1/config/firebase`);
     const config = await response.json();
     initFirebase(config);
   } catch (error) {

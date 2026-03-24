@@ -9,8 +9,9 @@ export interface VibeMeta {
     cssProperties: string[];
     description?: string;
     libraries?: string[];
-    requirements?: string[];
 }
+
+import { getApiBaseUrl } from './apiConfig';
 
 /**
  * Fetches the specific Vibe Prompt for a component from the backend.
@@ -23,7 +24,7 @@ export const fetchVibePrompt = async (componentId: string, system: AISystem, tok
             headers['Authorization'] = `Bearer ${token}`;
         }
         
-        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const apiBaseUrl = getApiBaseUrl();
         
         const response = await fetch(`${apiBaseUrl}/api/v1/components/${componentId}/prompt/${system}`, {
             headers
@@ -47,7 +48,7 @@ export const fetchVibePrompt = async (componentId: string, system: AISystem, tok
  */
 export const fetchComponentSource = async (componentId: string, token: string): Promise<string> => {
     try {
-        const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+        const apiBaseUrl = getApiBaseUrl();
         
         const response = await fetch(`${apiBaseUrl}/api/v1/components/${componentId}/source`, {
             headers: {

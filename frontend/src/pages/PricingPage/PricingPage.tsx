@@ -11,8 +11,8 @@ const PricingPage = () => {
                    Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Calcutta';
     
     const currency = isIndia ? '₹' : '$';
-    const quarterlyPrice = isIndia ? 499 : 5.99;
-    const yearlyPrice = isIndia ? 1590 : 19; // ~20% discount on 4 quarters
+    const quarterlyPrice = isIndia ? 299 : 2.99;
+    const yearlyPrice = isIndia ? 949 : 9.99; // ~20% discount on 4 quarters
 
     const freeFeatures = [
         { text: '50+ Essential UI Components', included: true },

@@ -100,17 +100,11 @@ export const generateVibePrompt = async (componentId, system) => {
   let masterPrompt = '';
   const sourceCode = await resolveSourceCode(componentId);
 
-  if (system === 'antigravity' || system === 'advance') {
-    const isAdvance = system === 'advance';
+  if (system === 'antigravity') {
     const basePrompt = ANTIGRAVITY_PROMPTS[componentId] || '';
-    const header = isAdvance ? '# UI HUB • ADVANCED ELITE PROMPT' : '# UI HUB • ANTIGRAVITY MASTER PROMPT';
-    const rulesTitle = isAdvance ? '## 3. ELITE GENERATION RULES' : '## 3. MASTER PERFORMANCE RULES';
-    const performanceRules = isAdvance 
-      ? `- **Production-Ready**: The component must be 100% working and ready for immediate use.
-- **Pixel Perfection**: Match the visual intent exactly as described in the objectives below.
-- **Performance**: Optimize for 60fps with GPU-accelerated transforms and zero layout shift.
-- **Modern Standards**: Use professional TypeScript, Accessibility (ARIA), and clean Tailwind CSS.`
-      : `- **Smooth 60fps**: Use requestAnimationFrame and optimized calculations.
+    const header = '# UI HUB • ANTIGRAVITY MASTER PROMPT';
+    const rulesTitle = '## 3. MASTER PERFORMANCE RULES';
+    const performanceRules = `- **Smooth 60fps**: Use requestAnimationFrame and optimized calculations.
 - **Resource Cleanup**: Properly clean up all listeners and observers on unmount.
 - **Device Precision**: Handle window resize and high-DPI screens correctly.
 - **Strict Logic**: Do not simplify or bypass complex physics or animation solvers.`;
@@ -138,6 +132,45 @@ ${basePrompt.replace(/# UI HUB • (ANTIGRAVITY|ADVANCED) (MASTER|ELITE) PROMPT/
 
 ## 5. FINAL INSTRUCTION
 Ensure the final output is a SINGLE, complete file without any explanations or markdown outside the code block.
+`;
+  } else if (system === 'advance') {
+    const basePrompt = ANTIGRAVITY_PROMPTS[componentId] || '';
+    
+    masterPrompt = `# UI HUB • ADVANCED ELITE COMPONENT ARCHITECT
+
+## PHASE 1: COMPONENT DECONSTRUCTION & LOGIC AUDIT
+Perform a recursive analysis of the provided reference source code below. You MUST identify:
+- **Mathematical Foundations**: Core algorithms, physics solvers, or geometric computations.
+- **State Architecture**: Internal reactive dependencies and complex lifecycle hooks.
+- **Performance Geometry**: GPU-accelerated transform patterns and rendering optimizations.
+- **Style DNA**: Precise Tailwind utility patterns and CSS-in-JS logic.
+
+## PHASE 2: TECHNICAL STACK & DEPENDENCY ENFORCEMENT
+The output MUST adhere to these industrial standards:
+- **Language**: Strict TypeScript (Define all Interfaces and Types).
+- **Core**: React 18+ (Functional Components with hooks).
+- **Styling**: Tailwind CSS (Utility-first, responsive-ready).
+- **Icons**: Lucide React.
+- **Motion**: Framer Motion / Three.js / Canvas API (Mirror the reference's engine).
+
+## PHASE 3: GROUND TRUTH BLUEPRINT (SOURCE CODE)
+Use this exact code as the absolute authority for logic and structure:
+
+\`\`\`tsx
+${sourceCode || '// Source code not available, please use component objectives.'}
+\`\`\`
+
+## PHASE 4: REALITY & COMPLETENESS MANDATE
+- **100% Real Component**: NO pseudo-code. NO placeholders. NO "rest of code here" comments.
+- **Production-Ready**: The file must be ready to be dropped into a production environment and work immediately.
+- **Full Parity**: Match every feature, prop, and animation frame of the original.
+- **Responsive & Accessible**: Implement mobile-first responsiveness and ARIA best practices.
+
+## PHASE 5: COMPONENT SPECIFICATIONS
+${basePrompt.replace(/# UI HUB • (ANTIGRAVITY|ADVANCED) (MASTER|ELITE) PROMPT/, '').trim()}
+
+## PHASE 6: FINAL EXECUTION COMMAND
+Return ONLY the complete, single-file TSX code within a markdown block. NO preamble. NO post-commentary.
 `;
   } else if (system === 'claude') {
     const basePrompt = CLAUDE_PROMPTS[componentId] || '';

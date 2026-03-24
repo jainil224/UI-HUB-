@@ -20,6 +20,7 @@ import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
+import { SolarFlux } from '../components/ui/SolarFlux';
 
 
 
@@ -1121,6 +1122,19 @@ const ThreeDSliderPreview: React.FC = () => {
 
 
 
+
+const SolarFluxPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+        }}>
+            <SolarFlux />
+        </div>
+    );
+};
+
 export type ComponentItem = {
     id: string;
     title: string;
@@ -1154,6 +1168,31 @@ const renderComponent = (id: string, _name: string): (() => React.ReactNode) => 
 
 // Assuming these prompts apply as they were defined in VibeMeta
 export const componentList: ComponentItem[] = [
+    {
+        id: "solar-flux",
+        title: "Solar Flux",
+        category: "3d",
+        isPremium: true,
+        preview: () => <SolarFluxPreview />,
+        code: `import React from "react";
+import UnicornScene from "unicornstudio-react";
+
+export const SolarFlux = () => {
+  return (
+    <UnicornScene
+      projectId="Ggvd3bzTckuOoHts2anc"
+      width="100%"
+      height="1440px"
+      scale={1}
+      dpi={1.5}
+      sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@2.1.5/dist/unicornStudio.umd.js"
+    />
+  );
+};
+
+export default SolarFlux;`,
+        vibePrompt: "A premium 3D animation scene featuring dynamic, solar-inspired energy flow with fluid physics."
+    },
     {
         id: "target-cursor",
         title: "Target Cursor",
