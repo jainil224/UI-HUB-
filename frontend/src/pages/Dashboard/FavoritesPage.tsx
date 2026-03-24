@@ -14,7 +14,6 @@ const FavoritesPage = () => {
     const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [copiedId, setCopiedId] = useState<string | null>(null);
-    const [activeTab, setActiveTab] = useState<{ [key: string]: 'preview' | 'code' }>({});
 
     // Combine local and firebase components for lookup
     const allAvailableComponents = useMemo(() => [...componentList, ...firebaseComponents], [firebaseComponents]);
@@ -70,11 +69,11 @@ const FavoritesPage = () => {
         e.preventDefault();
         e.stopPropagation();
         if (!user) return;
-        
+
         // Optimistic UI update: remove item from local state immediately
         // This ensures the exit animation starts the exact moment the user clicks
         setFavoriteMetadata(prev => prev.filter(fav => fav.componentId !== componentId));
-        
+
         // Trigger server delete in background
         removeFromFavorites(user.uid, componentId).catch(error => {
             console.error("Error removing from favorites:", error);
@@ -90,9 +89,7 @@ const FavoritesPage = () => {
         setTimeout(() => setCopiedId(null), 2000);
     };
 
-    const toggleTab = (id: string, tab: 'preview' | 'code') => {
-        setActiveTab(prev => ({ ...prev, [id]: tab }));
-    };
+
 
     if (!user) {
         return (
@@ -136,7 +133,7 @@ const FavoritesPage = () => {
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, type: 'spring', damping: 20 }}
-                            className="text-7xl md:text-9xl lg:text-[10rem] font-seekuw font-extrabold tracking-tighter leading-[0.8] uppercase flex flex-col sm:flex-row sm:items-baseline gap-2"
+                            className="text-7xl md:text-9xl lg:text-[10rem] font-seekuw font-extrabold tracking-tighter leading-[0.8] uppercase flex flex-col sm:flex-row sm:items-baseline gap-2 animate-white-blink animate-flicker"
                         >
                             <span className="text-vault-gradient">MY</span>
                             <span className="text-vault-stroke">VAULT</span>
@@ -197,19 +194,19 @@ const FavoritesPage = () => {
                                         layout
                                         initial={{ opacity: 0, y: 30, scale: 0.95 }}
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{ 
-                                            opacity: 0, 
+                                        exit={{
+                                            opacity: 0,
                                             scale: 0.85,
                                             rotate: -4,
                                             filter: 'blur(15px)',
                                             transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] }
                                         }}
-                                        transition={{ 
-                                            layout: { 
-                                                duration: 0.4, 
-                                                ease: [0.23, 1, 0.32, 1] 
+                                        transition={{
+                                            layout: {
+                                                duration: 0.4,
+                                                ease: [0.23, 1, 0.32, 1]
                                             },
-                                            duration: 0.5, 
+                                            duration: 0.5,
                                             delay: index * 0.03,
                                             ease: [0.23, 1, 0.32, 1]
                                         }}
@@ -217,7 +214,7 @@ const FavoritesPage = () => {
                                     >
                                         {/* Card Outer Glow */}
                                         <div className="absolute inset-0 bg-brand-green/0 group-hover/card:bg-brand-green/[0.05] group-hover/card:shadow-[0_0_40px_rgba(0,255,10,0.07)] blur-3xl transition-all duration-700 rounded-[3.5rem] -z-10" />
-                                        
+
                                         <div className="gpu-accelerated relative h-full rounded-[3.5rem] p-6 flex flex-col border border-white/[0.08] group-hover/card:border-brand-green/40 overflow-hidden bg-[#050505] shadow-[0_40px_100px_rgba(0,0,0,0.6)] group-hover/card:shadow-[0_0_30px_rgba(0,255,10,0.1)] transition-all duration-500">
                                             {/* Top Utility Bar */}
                                             <div className="flex justify-between items-center px-4 pb-4">
@@ -229,8 +226,8 @@ const FavoritesPage = () => {
                                                     <h3 className="text-2xl font-black leading-none tracking-tighter text-white group-hover/card:text-brand-green transition-colors duration-300 drop-shadow-[0_0_10px_rgba(0,255,10,0)] group-hover/card:drop-shadow-[0_0_15px_rgba(0,255,10,0.3)]">{fav.componentName}</h3>
                                                 </div>
                                                 <motion.button
-                                                    whileHover={{ 
-                                                        scale: 1.25, 
+                                                    whileHover={{
+                                                        scale: 1.25,
                                                         boxShadow: "0 0 15px rgba(239, 68, 68, 0.3)",
                                                         backgroundColor: "rgba(239, 68, 68, 0.1)"
                                                     }}
@@ -243,64 +240,21 @@ const FavoritesPage = () => {
                                                 </motion.button>
                                             </div>
 
-                                            {/* Preview/Source Container */}
+                                            {/* Preview Container */}
                                             <div className="mt-4 relative rounded-[2.5rem] overflow-hidden border border-white/[0.05] bg-black/40 h-[380px] group/container">
-                                                {/* Tab Switcher Overlay */}
-                                                <div className="absolute top-4 left-1/2 -translate-x-1/2 z-30 flex p-1 bg-black/80 backdrop-blur-xl rounded-xl border border-white/10 shadow-2xl">
-                                                    <button
-                                                        onClick={() => toggleTab(fav.id, 'preview')}
-                                                        className={`flex items-center gap-2 px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${activeTab[fav.id] !== 'code' ? 'bg-brand-green text-black' : 'text-white/40 hover:text-white'}`}
-                                                    >
-                                                        Preview
-                                                    </button>
-                                                    <button
-                                                        onClick={() => toggleTab(fav.id, 'code')}
-                                                        className={`flex items-center gap-2 px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300 ${activeTab[fav.id] === 'code' ? 'bg-brand-green text-black' : 'text-white/40 hover:text-white'}`}
-                                                    >
-                                                        Source
-                                                    </button>
-                                                </div>
-
                                                 <div className="h-full relative">
-                                                    <AnimatePresence mode="wait">
-                                                        {activeTab[fav.id] === 'code' ? (
-                                                            <motion.div
-                                                                key="code"
-                                                                initial={{ opacity: 0, y: 10 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0, y: -10 }}
-                                                                className="h-full font-mono text-[10px] leading-relaxed p-8 pt-16 overflow-auto custom-scrollbar text-brand-green/60"
-                                                            >
-                                                                <pre className="select-all">{fav.componentCode}</pre>
-                                                                <button
-                                                                    onClick={(e) => handleCopy(e, fav.componentCode, fav.id)}
-                                                                    className="absolute bottom-6 right-6 z-40 px-5 py-3 rounded-xl bg-brand-green text-black font-black text-[9px] uppercase tracking-widest shadow-2xl active:scale-95 transition-all flex items-center gap-2"
-                                                                >
-                                                                    {copiedId === fav.id ? <Check size={14} /> : <Copy size={14} />}
-                                                                    {copiedId === fav.id ? 'Copied' : 'Copy Code'}
-                                                                </button>
-                                                            </motion.div>
-                                                        ) : (
-                                                            <motion.div
-                                                                key="preview"
-                                                                initial={{ opacity: 0 }}
-                                                                animate={{ opacity: 1 }}
-                                                                exit={{ opacity: 0 }}
-                                                                className="h-full p-4 flex items-center justify-center bg-[#030303] sharp-rendering"
-                                                            >
-                                                                <div className="w-full h-full flex items-center justify-center transform scale-[0.8] origin-center">
-                                                                    {fav.fullComponent?.preview ? (
-                                                                        fav.fullComponent.preview()
-                                                                    ) : (
-                                                                        <div className="flex flex-col items-center gap-4 text-white/10 uppercase tracking-[0.3em] font-black text-[8px]">
-                                                                            <Box size={32} />
-                                                                            No Preview Available
-                                                                        </div>
-                                                                    )}
+                                                    <div className="h-full p-4 flex items-center justify-center bg-[#030303] sharp-rendering">
+                                                        <div className="w-full h-full flex items-center justify-center transform scale-[0.8] origin-center">
+                                                            {fav.fullComponent?.preview ? (
+                                                                fav.fullComponent.preview()
+                                                            ) : (
+                                                                <div className="flex flex-col items-center gap-4 text-white/10 uppercase tracking-[0.3em] font-black text-[8px]">
+                                                                    <Box size={32} />
+                                                                    No Preview Available
                                                                 </div>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
+                                                            )}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -325,7 +279,7 @@ const FavoritesPage = () => {
 
                                                     {/* Dynamic Gradient Background */}
                                                     <div className="absolute inset-0 bg-gradient-to-br from-brand-green/20 via-transparent to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" />
-                                                    
+
                                                     {/* Animated Border Glow */}
                                                     <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 bg-brand-green/10 blur-xl" />
 
@@ -342,7 +296,7 @@ const FavoritesPage = () => {
                                                     {/* Subtle Laser Reveal */}
                                                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-green/50 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
                                                 </Link>
-                                                
+
                                                 <Link
                                                     to={`/library?id=${fav.componentId}`}
                                                     className="group/det relative flex-1 py-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-transparent text-white/20 hover:text-brand-green transition-all duration-500 flex items-center justify-center hover:-translate-y-1.5 active:scale-[0.98] backdrop-blur-sm overflow-hidden"
@@ -352,7 +306,7 @@ const FavoritesPage = () => {
                                                     <div className="absolute top-0 left-0 w-[1.5px] bg-brand-green z-30 pointer-events-none h-0 group-hover/det:h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
                                                     <div className="absolute bottom-0 right-0 h-[1.5px] bg-brand-green z-30 pointer-events-none w-0 group-hover/det:w-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
                                                     <div className="absolute bottom-0 right-0 w-[1.5px] bg-brand-green z-30 pointer-events-none h-0 group-hover/det:h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
-                                                    
+
                                                     <div className="absolute inset-0 bg-brand-green/[0.03] opacity-0 group-hover/det:opacity-100 transition-opacity" />
                                                     <Eye size={18} className="relative z-10 transition-all duration-500 group-hover/det:scale-110 group-hover/det:rotate-3" />
                                                 </Link>
