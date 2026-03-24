@@ -1258,8 +1258,10 @@ const VibeSystemSection = React.memo(({
     vanillaCode: string;
     setShowAuthModal: (v: boolean) => void;
 }) => {
-    const [activeTool, setActiveTool] = React.useState<AISystem>('antigravity');
-    const [aiSystem, setAiSystemState] = React.useState<AISystem>('antigravity');
+    // Normal users default to 'lovable', Pro users default to 'antigravity'
+    const defaultSystem: AISystem = isProUser ? 'antigravity' : 'lovable';
+    const [activeTool, setActiveTool] = React.useState<AISystem>(defaultSystem);
+    const [aiSystem, setAiSystemState] = React.useState<AISystem>(defaultSystem);
     const [isPending, startTransition] = React.useTransition();
     const [copied, setCopied] = React.useState<string | null>(null);
     const [fetchedPrompt, setFetchedPrompt] = React.useState<string>('');
@@ -1323,8 +1325,11 @@ const VibeSystemSection = React.memo(({
             {/* Tool Selector */}
             <section className="space-y-6 md:space-y-10">
                 <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
-                    {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
+                <div className={`grid grid-cols-1 sm:grid-cols-2 ${isProUser ? 'lg:grid-cols-5' : 'lg:grid-cols-2'} gap-4 md:gap-6 lg:px-4`}>
+                    {(isProUser 
+                        ? ['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const
+                        : ['lovable', 'cursor'] as const
+                    ).map(tool => (
                         <ToolCard
                             key={tool}
                             tool={tool}
