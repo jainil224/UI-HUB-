@@ -6,11 +6,14 @@ export const getApiBaseUrl = () => {
         return configuredUrl;
     }
 
-    // In local development, infer the IP from the current window location.
-    // This allows mobile devices to connect to backend on the same Wi-Fi network IP.
     if (typeof window !== 'undefined') {
         const hostname = window.location.hostname;
-        if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+        
+        // On production deployments (Vercel, custom domains), don't try port 5000
+        // Only use the hostname:5000 trick for actual local network IPs
+        const isLocalNetworkIP = /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(hostname);
+        
+        if (isLocalNetworkIP) {
             return `${window.location.protocol}//${hostname}:5000`;
         }
     }

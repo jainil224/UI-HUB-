@@ -19,7 +19,14 @@ const FALLBACK_FIREBASE_CONFIG = {
 
 const renderApp = async () => {
   try {
-    const response = await fetch(`${getApiBaseUrl()}/api/v1/config/firebase`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+    
+    const response = await fetch(`${getApiBaseUrl()}/api/v1/config/firebase`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const config = await response.json();
     initFirebase(config);

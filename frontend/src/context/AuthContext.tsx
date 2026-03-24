@@ -19,6 +19,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Guard: if Firebase auth isn't initialized yet, stop loading to prevent blank screen
+        if (!auth) {
+            console.warn('Firebase auth not initialized, rendering app without auth');
+            setLoading(false);
+            return;
+        }
+        
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setUser(user);
             
