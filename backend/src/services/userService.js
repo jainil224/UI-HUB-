@@ -5,8 +5,16 @@
 
 const PRO_EMAILS = [
     'jainil11199@gmail.com',
-    'jainil111199@gmail.com' // Supporting both variants found in codebase/request
+    'jainil111199@gmail.com'
 ];
+
+/**
+ * Promo access with expiration dates.
+ * Format: { email: expiryDateString (YYYY-MM-DD) }
+ */
+const PROMO_USERS = {
+    'jainil11199@gmail.com': '2027-03-24', // 1-year free pro granted on 2026-03-24
+};
 
 /**
  * Checks if a user has Pro status based on their email.
@@ -14,14 +22,17 @@ const PRO_EMAILS = [
  * @returns {Promise<boolean>}
  */
 export const checkProStatus = async (email) => {
-    // Development bypass: If you want to unlock Pro for everyone in local dev
-    if (process.env.NODE_ENV === 'development' || process.env.UNLOCK_PRO_ALL === 'true') {
-        return true;
-    }
-
     if (!email) return false;
     
-    // In a real app, this would query a database (MongoDB/PostgreSQL/Firebase DB)
-    // For now, we maintain the existing logic but keep it SECURED on the backend.
-    return PRO_EMAILS.includes(email.toLowerCase());
+    // Check promo users with expiry
+    const userEmail = email.toLowerCase();
+    if (PROMO_USERS[userEmail]) {
+        const expiryDate = new Date(PROMO_USERS[userEmail]);
+        if (expiryDate > new Date()) {
+            return true;
+        }
+    }
+
+    // Fallback to legacy pro email list (indefinite)
+    return PRO_EMAILS.includes(userEmail);
 };

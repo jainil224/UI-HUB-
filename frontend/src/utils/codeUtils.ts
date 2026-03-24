@@ -813,6 +813,8 @@ export const Component = () => {
     </div>
   );
 };`;
+    case "3d-rubiks-cube":
+      return isTS ? `import React, { useEffect, useRef, useState, useCallback } from 'react';\nimport styles from './RubiksCube.module.css';\n\nexport const Component: React.FC = () => {\n  // High-fidelity 3D Rubiks Cube implementation\n  // Features: DOMMatrix math, layer rotation, scramble/solve logic, 3D inertia\n  return <RubiksCube />;\n};` : `// JS Version...`;
     default:
       return reactOutput(`
         <div className="text-white text-4xl font-black opacity-20 uppercase">

@@ -1479,4 +1479,32 @@ A "Major Announcement" header. Instead of individual letters, full words slide u
 
 ## Output
 Production-ready React component`,
+
+    "3d-rubiks-cube": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning "3D Rubiks Cube" component.
+
+## Concept
+A fully interactive, high-fidelity 3D Rubiks Cube simulation. It features smooth inertia-based rotation, a sophisticated scramble algorithm, and an automated solver that retraces the user's moves. The aesthetic is "Elite Lab" with a dark aura, glassmorphism UI controls, and high-quality cubie textures.
+
+## Tech
+- React + CSS 3D Transforms (matrix3d)
+- Tailwind CSS
+- DOMMatrix API for precise 3D math
+
+## Animation Details
+- **3D Inertia**: The cube follows mouse/touch drag with velocity-based momentum and a "snap-to-grid" rotation logic.
+- **Layer Rotation**: Smooth transition-based layer turns using a pivot proxy for complex 3D assembly.
+- **Solve Logic**: A recursive history-reversal solver with staggered move timings.
+- **Visual Polish**: Glossy overlays on cubie faces, a rotating background aura, and a cyberpunk terminal status display.
+
+## Performance
+- Uses Ref-based DOM manipulation for the cube scene to ensure 60fps interaction.
+- Leverages DOMMatrix for mathematically accurate 3D transformations without heavy external libraries.
+
+## Props
+- className: string
+
+## Output
+Production-ready React component`,
 };

@@ -20,7 +20,7 @@ import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
 import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
-import { SolarFlux } from '../components/ui/SolarFlux';
+import { RubiksCube } from '../components/ui/RubiksCube';
 
 
 
@@ -162,6 +162,24 @@ const MagneticCursorPreview: React.FC = () => {
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', letterSpacing: '0.15em', textTransform: 'uppercase', zIndex: 10 }}>
                 Hover buttons to snap · Magnetic Physics
             </div>
+        </div>
+    );
+};
+
+// ── Rubiks Cube scoped preview ────────────
+const RubiksCubePreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#08080f',
+            backgroundImage: 'radial-gradient(ellipse at 50% 50%, rgba(255, 88, 0, 0.05) 0%, transparent 80%)'
+        }}>
+            <RubiksCube />
         </div>
     );
 };
@@ -1123,17 +1141,7 @@ const ThreeDSliderPreview: React.FC = () => {
 
 
 
-const SolarFluxPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-        }}>
-            <SolarFlux />
-        </div>
-    );
-};
+
 
 export type ComponentItem = {
     id: string;
@@ -1168,31 +1176,7 @@ const renderComponent = (id: string, _name: string): (() => React.ReactNode) => 
 
 // Assuming these prompts apply as they were defined in VibeMeta
 export const componentList: ComponentItem[] = [
-    {
-        id: "solar-flux",
-        title: "Solar Flux",
-        category: "3d",
-        isPremium: true,
-        preview: () => <SolarFluxPreview />,
-        code: `import React from "react";
-import UnicornScene from "unicornstudio-react";
 
-export const SolarFlux = () => {
-  return (
-    <UnicornScene
-      projectId="Ggvd3bzTckuOoHts2anc"
-      width="100%"
-      height="1440px"
-      scale={1}
-      dpi={1.5}
-      sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@2.1.5/dist/unicornStudio.umd.js"
-    />
-  );
-};
-
-export default SolarFlux;`,
-        vibePrompt: "A premium 3D animation scene featuring dynamic, solar-inspired energy flow with fluid physics."
-    },
     {
         id: "target-cursor",
         title: "Target Cursor",
@@ -1987,6 +1971,16 @@ export const Demo = () => (
         preview: () => <ThreeDSliderPreview />,
         code: ``,
         vibePrompt: ""
+    },
+    {
+        id: "3d-rubiks-cube",
+        title: "3D Rubiks Cube",
+        category: "3d",
+        isPremium: true,
+        preview: () => <RubiksCubePreview />,
+        code: `import { RubiksCube } from '@/components/ui/RubiksCube';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] flex items-center justify-center bg-[#08080f]">\n    <RubiksCube />\n  </div>\n);`,
+        vibePrompt: "Interactive 3D Rubiks Cube with scramble and solve logic.",
+        downloadUrl: "/assets/3d-rubiks-cube/Rubiks-Cube-UI-HUB-bundle.zip"
     },
 
     {

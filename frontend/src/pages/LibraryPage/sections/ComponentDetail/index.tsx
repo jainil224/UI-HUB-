@@ -843,6 +843,19 @@ const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["CSS 3D perspective architecture", "Cylindrical angle trigonometry", "Framer Motion spring transitions", "Glassmorphic UI controls", "Touch/swipe gesture support", "Active card floor reflection effect"]
         }
     },
+    "3d-rubiks-cube": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." }
+        ],
+        vibeMeta: {
+            behavior: "Interactive 3D Rubik's Cube with inertia-based rotation, layer-specific logic, and automated solver.",
+            states: { from: "solved state", to: "scrambled or animating layers" },
+            cssProperties: ["transform", "matrix3d", "perspective", "preserve-3d"],
+            description: "High-fidelity interactive 3D puzzle with complex matrix-based logic.",
+            libraries: ["react", "tailwind-merge"],
+            requirements: ["27-cubie 3D coordinate system", "DOMMatrix rotation management", "Layer-specific slice grouping", "Inertia and friction physics", "Safe history-based reversal for solving"]
+        }
+    },
     "odyssey-spline": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
@@ -1299,7 +1312,9 @@ const VibeSystemSection = React.memo(({
         const isPublicSystem = ['lovable', 'cursor'].includes(aiSystem);
         
         if (!user && !isPublicSystem) {
-            setFetchedPrompt('');
+            // We don't clear the prompt here anymore. 
+            // The UI overlay handles the "Authentication Required" state.
+            // Keeping the existing prompt avoids flickering during account switches.
             return;
         }
 
@@ -1354,7 +1369,7 @@ const VibeSystemSection = React.memo(({
                             isActive={activeTool === tool}
                             onClick={setAiSystem}
                             itemId={item.id}
-                            isLocked={!isProUser && PRO_ONLY_TOOLS.includes(tool)}
+                            isLocked={!isProUser && (item.isPremium ? !['lovable', 'cursor'].includes(tool) : PRO_ONLY_TOOLS.includes(tool))}
                         />
                     ))}
                 </div>
@@ -1442,7 +1457,7 @@ const VibeSystemSection = React.memo(({
                                         Log In to Access
                                     </button>
                                 </div>
-                            ) : (item.isPremium && !isProUser) || (!isProUser && ['antigravity', 'claude', 'advance'].includes(aiSystem) && advanceTrialsUsed >= 2) ? (
+                            ) : (!isProUser && (item.isPremium ? !['lovable', 'cursor'].includes(aiSystem) : (PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2))) ? (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
                                     <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
                                         <Lock className="text-brand-green" size={28} />
@@ -1582,6 +1597,17 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             return;
         }
         if (!item) return;
+        
+        // Specialized handling for Rubiks Cube to include pre-packaged original images
+        if (item.id === '3d-rubiks-cube') {
+            const link = document.createElement('a');
+            link.href = '/assets/3d-rubiks-cube/Rubiks-Cube-UI-HUB-bundle.zip';
+            link.download = '3D-Rubiks-Cube-UI-HUB.zip';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return;
+        }
 
         const reactCode = getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' });
         const htmlCode = getComponentCode(item.id, { lang: 'html', styling: 'css' });
@@ -1773,7 +1799,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 </motion.button>
                                             </Link>
                                         )}
-                                            {(item.id === '3d-scroll-animation' || item.id === '3d-slider') && (
+                                            {(item.id === '3d-scroll-animation' || item.id === '3d-slider' || item.id === '3d-rubiks-cube') && (
                                                 <motion.button
                                                     initial={{ opacity: 0, x: 20 }}
                                                     animate={{ opacity: 1, x: 0 }}

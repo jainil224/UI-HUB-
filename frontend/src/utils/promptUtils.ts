@@ -9,6 +9,7 @@ export interface VibeMeta {
     cssProperties: string[];
     description?: string;
     libraries?: string[];
+    requirements?: string[];
 }
 
 import { getApiBaseUrl } from './apiConfig';

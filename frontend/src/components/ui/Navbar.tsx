@@ -160,30 +160,58 @@ const Navbar = () => {
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="flex items-center gap-1.5 p-1 pr-1.5 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule"
+                            className={`relative flex items-center gap-1.5 p-1 pr-1.5 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
+                                isPro ? 'shadow-[0_0_20px_rgba(0,255,159,0.15)] border-brand-green/30' : ''
+                            }`}
                         >
+                            {/* Background Effects */}
+                            {isPro ? (
+                                <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                                        className="absolute inset-[-150%] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_150deg,#00ff9f_210deg,transparent_250deg,transparent_360deg)] opacity-40 blur-md"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-brand-green/10 via-transparent to-brand-green/5 opacity-50" />
+                                </div>
+                            ) : (
+                                <div className="absolute inset-0 -z-10 bg-white/[0.01] blur-xl opacity-30 pointer-events-none group-hover/capsule:bg-brand-green/5 transition-colors" />
+                            )}
+
                             {/* Avatar */}
-                            <div className="relative flex items-center justify-center w-8 h-8 rounded-[11px] bg-gradient-to-br from-brand-green/20 to-brand-green/5 border border-brand-green/20 overflow-hidden shadow-[0_0_15px_rgba(0,255,159,0.1)]">
+                            <div className={`relative flex items-center justify-center w-8 h-8 rounded-[11px] overflow-hidden shadow-[0_0_15px_rgba(0,255,159,0.1)] transition-transform duration-300 group-hover/capsule:scale-105 ${
+                                isPro 
+                                ? 'bg-gradient-to-br from-brand-green/40 to-brand-green/10 border-2 border-brand-green/50 shadow-[0_0_20px_rgba(0,255,159,0.3)]' 
+                                : 'bg-gradient-to-br from-brand-green/20 to-brand-green/5 border border-brand-green/20'
+                            }`}>
                                 {user.photoURL ? (
                                     <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
                                 ) : (
                                     <UserIcon size={14} className="text-brand-green" />
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-tr from-brand-green/20 via-transparent to-transparent opacity-50" />
+                                
+                                {isPro && (
+                                    <motion.div 
+                                        animate={{ x: ['-200%', '200%'] }}
+                                        transition={{ duration: 2.5, repeat: Infinity, ease: 'linear' }}
+                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 pointer-events-none"
+                                    />
+                                )}
                             </div>
 
                             {/* User Info */}
                             <div className="flex flex-col pr-2 pl-1">
-                                <span className="text-white text-[11px] font-black tracking-tight leading-tight truncate max-w-[80px]">
+                                <span className={`text-white text-[11px] font-black tracking-tight leading-tight truncate max-w-[80px] ${isPro ? 'text-brand-green brightness-125' : ''}`}>
                                     {user.displayName?.split(' ')[0] || 'Developer'}
                                 </span>
                                 {isPro ? (
-                                    <span className="text-brand-green/80 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1">
+                                    <span className="text-brand-green/80 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1 group-hover/capsule:text-brand-green transition-colors">
                                         <Sparkles size={6} className="text-brand-green animate-pulse" />
                                         Pro Member
                                     </span>
                                 ) : (
-                                    <span className="text-white/40 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1">
+                                    <span className="text-white/40 font-display text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-1 group-hover/capsule:text-white/60 transition-colors">
                                         Free Tier
                                     </span>
                                 )}
@@ -192,7 +220,7 @@ const Navbar = () => {
                             {/* Logout Action */}
                             <button
                                 onClick={() => signOut(auth)}
-                                className="flex items-center justify-center w-7 h-7 rounded-[10px] bg-white/[0.06] border border-white/5 text-white/40 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-300"
+                                className="relative z-10 flex items-center justify-center w-7 h-7 rounded-[10px] bg-white/[0.06] border border-white/5 text-white/40 hover:text-red-400 hover:bg-red-500/10 hover:border-red-500/20 transition-all duration-300"
                                 title="Sign Out"
                             >
                                 <LogOut size={13} />

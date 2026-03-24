@@ -61,6 +61,7 @@ const mapping = {
     'border-beam': 'ui/border-beam.tsx',
     'grid-background': 'ui/background-boxes.tsx', // Example guess
     'sparkles-background': 'ui/sparkles-background.tsx',
+    '3d-rubiks-cube': 'ui/RubiksCube.tsx',
   };
 
   const relativePath = mapping[componentId];
