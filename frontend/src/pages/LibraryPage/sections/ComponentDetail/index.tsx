@@ -1299,6 +1299,7 @@ const VibeSystemSection = React.memo(({
     const [copied, setCopied] = React.useState<string | null>(null);
     const [fetchedPrompt, setFetchedPrompt] = React.useState<string>('');
     const [isLoadingPrompt, setIsLoadingPrompt] = React.useState(false);
+    const [prevProStatus, setPrevProStatus] = React.useState(isProUser);
 
     const setAiSystem = React.useCallback((system: AISystem) => {
         setActiveTool(system);
@@ -1306,6 +1307,17 @@ const VibeSystemSection = React.memo(({
             setAiSystemState(system);
         });
     }, []);
+
+    // Sync state when Pro status changes (e.g. after login fetch finishes)
+    React.useEffect(() => {
+        if (isProUser && !prevProStatus) {
+            console.log(`[VibeSystem] Pro status detected, upgrading default tool to Antigravity`);
+            setAiSystem('antigravity');
+        } else if (!isProUser && prevProStatus) {
+            setAiSystem('lovable');
+        }
+        setPrevProStatus(isProUser);
+    }, [isProUser, prevProStatus, setAiSystem]);
 
     const loadPrompt = React.useCallback(async () => {
         // Allow public viewing for lovable and cursor

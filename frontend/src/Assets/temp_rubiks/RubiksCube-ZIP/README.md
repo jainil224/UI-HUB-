@@ -1,53 +1,51 @@
-# 🧩 Rubik's Cube Developer Portfolio
+# 🧩 3D Rubiks Engine Showcase
 
-A modern interactive developer portfolio inspired by the logic and elegance of a Rubik's Cube.
+A high-performance, interactive 3D Rubik's Cube simulation built for the **UI HUB** ecosystem. Features physics-based rotation, move history tracking, and automated solving logic.
 
-The website features a fully interactive **3D Rubik’s Cube**, smooth animations, dynamic UI elements, and a clean responsive layout to showcase skills and projects.
+## 🚀 Live Demo
+**[View Live Application](https://3d-rubiks-cube-ui-hub.vercel.app/)**
 
 ---
 
-## ✨ Features
+## ✨ Engineering Features
 
-• Interactive **3D Rubik's Cube** built from 27 cubies  
-• Drag to rotate the cube  
-• Scramble and Solve functionality  
-• Smooth animations and modern UI  
-• Animated skill cards  
-• Interactive project showcase  
-• Custom cursor and progress indicator  
-• Responsive single-page layout  
-• Clean and minimal design
+- **High-Fidelity 3D Rendering**: Built natively with CSS 3D transforms and `DOMMatrix` for zero-overhead performance.
+- **Physics-Informed Rotation**: Handles inertia and snap-to-grid rotation logic.
+- **Automated Solver**: Tracks movement history to perform algorithmic reversions and automated solves.
+- **Glassmorphic UI**: Premium, modern interface with real-time status feedback.
+- **Fully Responsive**: Optimized for mobile touch-gestures and desktop interaction.
 
 ---
 
 ## 🛠 Tech Stack
 
-- **HTML5**
-- **CSS3**
-- **JavaScript**
-- **Three.js style 3D cube rendering**
-- Canvas animations
+- **Core**: Vanilla JavaScript (ES6+), HTML5, CSS3
+- **Graphics**: CSS 3D transforms (`matrix3d`)
+- **UI Logic**: Pure DOM manipulation (No heavy frameworks required for the engine)
+- **Source**: React/TypeScript source included in the `react/` directory
 
 ---
 
-## 📂 Sections
+## 📂 Repository Contents
 
-The portfolio includes the following sections:
-
-- **Hero** – Introduction and interactive cube  
-- **About** – Developer background and statistics  
-- **Skills** – Technology stack visualization  
-- **Projects** – Featured work showcase  
-- **Contact** – Contact form
+- `index.html` – The main standalone showcase page.
+- `react/` – Source code for the React component implementation.
+- `assets/` – Optimized image assets for social sharing and favicons.
 
 ---
 
-## 🎮 Cube Controls
+## 🎮 How to Interact
 
 | Action | Result |
 |------|------|
-| Drag | Rotate the cube |
-| Scramble button | Random cube state |
-| Solve button | Automatically solve cube |
+| **Drag / Touch Drag** | Pivot and rotate the 3D scene in real-time |
+| **Scramble Button** | Executes a randomized move sequence |
+| **Solve Button** | Algorithmic re-calculation to restore the solved state |
 
 ---
+
+## 🌐 Powered by UI HUB
+This component is part of the [UI HUB](https://ui-hub-design.vercel.app/) library, a collection of premium UI components for modern web developers.
+
+---
+© 2026 UI HUB

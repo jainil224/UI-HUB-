@@ -27,25 +27,29 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            setLoading(true); // Ensure we are in loading state when auth changes
             setUser(user);
             
             if (user) {
                 try {
-                    const idToken = await user.getIdToken();
+                    // Force refresh token to ensure we get the latest claims/status
+                    const idToken = await user.getIdToken(true);
                     const response = await fetch(`${getApiBaseUrl()}/api/v1/users/status`, {
                         headers: {
-                            'Authorization': `Bearer ${idToken}`
+                            'Authorization': `Bearer ${idToken}`,
+                            'Cache-Control': 'no-cache'
                         }
                     });
                     
                     if (response.ok) {
                         const data = await response.json();
                         setIsPro(data.isPro);
+                        console.log(`[Auth] User ${user.email} Pro status: ${data.isPro}`);
                     } else {
                         setIsPro(false);
                     }
                 } catch (error) {
-                    console.error('Error fetching pro status:', error);
+                    console.error('[Auth] Error fetching pro status:', error);
                     setIsPro(false);
                 }
             } else {

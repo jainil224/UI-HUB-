@@ -22,17 +22,29 @@ const PROMO_USERS = {
  * @returns {Promise<boolean>}
  */
 export const checkProStatus = async (email) => {
-    if (!email) return false;
+    if (!email) {
+        console.warn('[UserStatus] checkProStatus called with null/undefined email');
+        return false;
+    }
     
-    // Check promo users with expiry
     const userEmail = email.toLowerCase();
+    console.log(`[UserStatus] Checking Pro status for: ${userEmail}`);
+
+    // Check promo users with expiry
     if (PROMO_USERS[userEmail]) {
         const expiryDate = new Date(PROMO_USERS[userEmail]);
         if (expiryDate > new Date()) {
+            console.log(`[UserStatus] ${userEmail} verified via PROMO (expires: ${PROMO_USERS[userEmail]})`);
             return true;
         }
+        console.warn(`[UserStatus] ${userEmail} PROMO EXPIRED on ${PROMO_USERS[userEmail]}`);
     }
 
     // Fallback to legacy pro email list (indefinite)
-    return PRO_EMAILS.includes(userEmail);
+    const isLegacyPro = PRO_EMAILS.some(e => e.toLowerCase() === userEmail);
+    if (isLegacyPro) {
+        console.log(`[UserStatus] ${userEmail} verified via LEGACY WHITELIST`);
+    }
+
+    return isLegacyPro;
 };
