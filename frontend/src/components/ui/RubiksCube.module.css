@@ -6,14 +6,22 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
   padding: 40px;
   background: radial-gradient(circle at 70% 50%, rgba(255, 88, 0, 0.05) 0%, transparent 70%);
 }
 
 @media (max-width: 968px) {
   .cubeWrapper {
-    padding: 20px;
+    padding: 24px;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cubeWrapper {
+    padding: 12px;
+    gap: 8px;
   }
 }
 
@@ -29,7 +37,13 @@
   .layoutContainer {
     flex-direction: column-reverse;
     text-align: center;
-    gap: 32px;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .layoutContainer {
+    gap: 10px;
   }
 }
 
@@ -54,12 +68,20 @@
 
   .description {
     max-width: 100%;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
   .title {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
+  }
+  .description {
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+  .textContent {
+    gap: 8px;
   }
 }
 
@@ -98,31 +120,41 @@
 
 .cubeAura {
   position: absolute;
-  inset: -100px;
-  background: radial-gradient(circle at 50% 50%, rgba(255, 88, 0, .15) 0%, rgba(196, 30, 58, .1) 40%, transparent 70%);
-  animation: aura 4s ease-in-out infinite;
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(255, 88, 0, 0.15) 0%, transparent 70%);
+  filter: blur(40px);
   pointer-events: none;
-  border-radius: 50%;
+  animation: pulseAura 4s ease-in-out infinite;
 }
 
-@keyframes aura {
-  0%, 100% { transform: scale(1); opacity: .8; }
-  50% { transform: scale(1.1); opacity: 1; }
+@media (max-width: 480px) {
+  .cubeAura {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@keyframes pulseAura {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
 }
 
 .cubeViewport {
   width: 240px;
   height: 240px;
-  perspective: 960px;
+  perspective: 1200px;
   perspective-origin: 50% 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 
 @media (max-width: 480px) {
   .cubeViewport {
-    transform: scale(0.75);
+    transform: scale(0.65);
+    margin: -20px auto; /* Pull up slightly if needed, or push down with positive margin */
   }
 }
 
@@ -133,6 +165,7 @@
   transform: rotateX(-22deg) rotateY(45deg);
   cursor: grab;
   will-change: transform;
+  transition: transform 0.05s ease-out;
 }
 
 .cubeScene:active {

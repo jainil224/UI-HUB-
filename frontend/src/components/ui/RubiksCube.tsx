@@ -254,7 +254,7 @@ export const RubiksCube: React.FC = () => {
                 {/* Left Side: Text Content */}
                 <div className={styles.textContent}>
                     <span className={styles.subtitle}>Interactive Piece</span>
-                    <h2 className={styles.title}>3D RUBIKS<br/>CUBE</h2>
+                    <h2 className={styles.title}>3D RUBIKS CUBE</h2>
                     <p className={styles.description}>
                         A premium virtual implementation of the iconic puzzle. 
                         Features 3D inertia, custom scramble logic, and an automated solver.
