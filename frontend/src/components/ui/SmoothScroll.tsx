@@ -12,6 +12,11 @@ interface SmoothScrollProps {
 
 const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
     useEffect(() => {
+        // Disable smooth scroll on mobile devices for better performance and native feel
+        if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            return;
+        }
+
         const lenis = new Lenis({
             duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -26,17 +31,17 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
         // Integrate with ScrollTrigger
         lenis.on('scroll', ScrollTrigger.update);
 
-        gsap.ticker.add((time) => {
+        const raf = (time: number) => {
             lenis.raf(time * 1000);
-        });
+        };
+
+        gsap.ticker.add(raf);
 
         gsap.ticker.lagSmoothing(0);
 
         return () => {
             lenis.destroy();
-            gsap.ticker.remove((time) => {
-                lenis.raf(time * 1000);
-            });
+            gsap.ticker.remove(raf);
         };
     }, []);
 
