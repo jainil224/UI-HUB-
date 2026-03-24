@@ -1306,11 +1306,12 @@ const VibeSystemSection = React.memo(({
         setIsLoadingPrompt(true);
         try {
             const token = user ? await user.getIdToken() : undefined;
+            console.log(`[VibeSystem] Fetching prompt for ${item.id} (${aiSystem})...`);
             const prompt = await fetchVibePrompt(item.id, aiSystem, token);
             setFetchedPrompt(prompt);
         } catch (error) {
-            console.error('Failed to load prompt from backend:', error);
-            setFetchedPrompt('Failed to load blueprint from secure terminal.');
+            console.error('[VibeSystem] Failed to load prompt:', error);
+            setFetchedPrompt('Failed to load blueprint from secure terminal. Check console for details.');
         } finally {
             setIsLoadingPrompt(false);
         }

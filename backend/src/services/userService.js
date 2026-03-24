@@ -14,6 +14,11 @@ const PRO_EMAILS = [
  * @returns {Promise<boolean>}
  */
 export const checkProStatus = async (email) => {
+    // Development bypass: If you want to unlock Pro for everyone in local dev
+    if (process.env.NODE_ENV === 'development' || process.env.UNLOCK_PRO_ALL === 'true') {
+        return true;
+    }
+
     if (!email) return false;
     
     // In a real app, this would query a database (MongoDB/PostgreSQL/Firebase DB)

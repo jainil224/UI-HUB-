@@ -86,13 +86,16 @@ const mapping = {
 
   for (const p of possiblePaths) {
     try {
+      // Use case-insensitive search or normalize path for better compatibility
       const fullPath = path.join(FRONTEND_COMPONENTS_PATH, p);
+      await fs.access(fullPath); // Check if exists first
       return await fs.readFile(fullPath, 'utf-8');
     } catch (e) {
       // Ignore and try next
     }
   }
   
+  console.warn(`[promptService] Could not resolve source code for component: ${componentId}`);
   return null;
 };
 
@@ -253,7 +256,10 @@ Return ONLY the complete TSX file. NO explanation. NO preamble.
     }
   }
   
-  if (!masterPrompt) return `Prompt not found for this component (${componentId}) / system (${system}).`;
+  if (!masterPrompt) {
+    console.error(`[promptService] No prompt template found for component: ${componentId}, system: ${system}`);
+    return `Prompt not found for this component (${componentId}) / system (${system}).`;
+  }
 
   return masterPrompt;
 };
