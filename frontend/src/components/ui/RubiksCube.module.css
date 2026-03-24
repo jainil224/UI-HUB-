@@ -21,9 +21,16 @@
 @media (max-width: 968px) {
   .cubeWrapper {
     min-height: auto;
-    padding: 60px 20px;
+    padding: 30px 15px;
     justify-content: flex-start;
-    gap: 30px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cubeWrapper {
+    padding: 15px 10px;
+    gap: 8px;
   }
 }
 
@@ -69,29 +76,34 @@
   .textContent {
     align-items: center;
     text-align: center;
+    gap: 12px;
   }
   
   .title {
-    font-size: 3rem;
+    font-size: 2.4rem;
   }
 
   .description {
     max-width: 100%;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 }
 
 @media (max-width: 480px) {
   .title {
-    font-size: 1.8rem;
-    letter-spacing: -1px;
+    font-size: 1.4rem;
+    letter-spacing: -0.5px;
   }
   .description {
-    font-size: 0.8rem;
-    line-height: 1.4;
+    font-size: 0.75rem;
+    line-height: 1.3;
   }
   .textContent {
-    gap: 10px;
+    gap: 6px;
+  }
+  .subtitle {
+    font-size: 0.6rem;
+    letter-spacing: 3px;
   }
 }
 
@@ -157,9 +169,10 @@
   .footer {
     position: static;
     transform: none;
-    margin-top: 40px;
+    margin-top: 24px;
     padding-bottom: 20px;
     opacity: 0.6;
+    font-size: 0.6rem;
   }
 }
 
@@ -220,8 +233,8 @@
   .cubeViewport {
     width: 320px;
     height: 320px;
-    transform: scale(0.6);
-    margin: -40px auto;
+    transform: scale(0.45);
+    margin: -60px auto -50px;
   }
 }
 
@@ -295,13 +308,19 @@
   .cubeUi {
     align-items: center;
     margin-top: 10px;
+    gap: 16px;
+  }
+
+  .statusBadge {
+    padding: 6px 12px;
+    font-size: 0.7rem;
   }
 
   .cubeBtns {
     justify-content: center;
     width: 100%;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 8px;
   }
 
   .cbtn {
