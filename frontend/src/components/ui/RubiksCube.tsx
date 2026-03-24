@@ -253,32 +253,33 @@ export const RubiksCube: React.FC = () => {
             <div className={styles.layoutContainer}>
                 {/* Left Side: Text Content */}
                 <div className={styles.textContent}>
-                    <span className={styles.subtitle}>Interactive Piece</span>
-                    <h2 className={styles.title}>3D RUBIKS CUBE</h2>
+                    <span className={styles.subtitle}>Interactive 3D Piece</span>
+                    <h2 className={styles.title}>3D RUBIKS ENGINE</h2>
                     <p className={styles.description}>
-                        A premium virtual implementation of the iconic puzzle. 
-                        Features 3D inertia, custom scramble logic, and an automated solver.
+                        A high-performance UI component platform built with modern web technologies. Features ready-to-use designs, advanced animations, and seamless copy-paste integration for faster development.
                     </p>
                     
                     <div className={styles.cubeUi}>
-                        <div className={styles.cubeStatus}>{status}</div>
+                        <div className={styles.statusBadge}>
+                           <div className={styles.statusDot}></div>
+                           {status === 'Initialized ✓' ? 'System Initialized' : status}
+                        </div>
                         <div className={styles.cubeBtns}>
                             <button 
-                                className={styles.cbtn} 
+                                className={`${styles.cbtn} ${styles.cbtnMain}`} 
                                 onClick={() => scramble(14, 200)}
                                 disabled={busy || historyRef.current.length > 0}
                             >
-                                Scramble
+                                Scramble Cube
                             </button>
                             <button 
-                                className={`${styles.cbtn} ${styles.cbtnSolve}`} 
+                                className={`${styles.cbtn} ${styles.cbtnSec}`} 
                                 onClick={() => solve(380)}
                                 disabled={busy || historyRef.current.length === 0}
                             >
-                                Solve
+                                Auto Solve
                             </button>
                         </div>
-                        <div className={styles.cubeHint}>Drag the cube to rotate • buttons to play</div>
                     </div>
                 </div>
 
@@ -293,6 +294,10 @@ export const RubiksCube: React.FC = () => {
                         <div id="cubeScene" ref={sceneRef} className={styles.cubeScene}></div>
                     </div>
                 </div>
+            </div>
+
+            <div className={styles.footer}>
+                MADE WITH <span>❤️</span> BY UI HUB
             </div>
         </div>
     );
