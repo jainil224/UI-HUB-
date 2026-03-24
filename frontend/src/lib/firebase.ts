@@ -23,7 +23,15 @@ export const initFirebase = (config: any) => {
     storage = getStorage(app);
     
     if (typeof window !== 'undefined') {
-        analytics = getAnalytics(app);
+        // Skip Analytics on mobile to avoid Android's "wants to access other apps" popup
+        const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (!isMobile) {
+            try {
+                analytics = getAnalytics(app);
+            } catch (e) {
+                console.warn('Analytics initialization failed:', e);
+            }
+        }
     }
 };
 

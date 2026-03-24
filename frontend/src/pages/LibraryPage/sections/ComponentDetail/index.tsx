@@ -1125,27 +1125,43 @@ const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: stri
     </div>
 );
 
+const PRO_ONLY_TOOLS: AISystem[] = ['advance', 'antigravity', 'claude'];
+
 const ToolCard = React.memo(({ 
     tool, 
     isActive, 
     onClick, 
-    itemId 
+    itemId,
+    isLocked 
 }: { 
     tool: AISystem; 
     isActive: boolean; 
     onClick: (t: AISystem) => void;
     itemId: string;
+    isLocked?: boolean;
 }) => {
     return (
         <button
-            onClick={() => onClick(tool)}
-            className={`p-5 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border transition-all text-left relative overflow-hidden group min-h-[130px] md:min-h-[160px] flex flex-col justify-between ${isActive ? 'bg-[#050505] border-brand-green/50 shadow-[0_0_40px_rgba(0,255,0,0.1)] ring-1 ring-brand-green/30' : 'bg-white/[0.02] backdrop-blur-xl border-white/5 hover:border-white/10 hover:scale-[1.01] duration-500'}`}
+            onClick={() => !isLocked && onClick(tool)}
+            className={`p-5 md:p-6 rounded-[2rem] md:rounded-[2.5rem] border transition-all text-left relative overflow-hidden group min-h-[130px] md:min-h-[160px] flex flex-col justify-between ${isLocked ? 'opacity-50 cursor-not-allowed bg-white/[0.01] border-white/5' : isActive ? 'bg-[#050505] border-brand-green/50 shadow-[0_0_40px_rgba(0,255,0,0.1)] ring-1 ring-brand-green/30' : 'bg-white/[0.02] backdrop-blur-xl border-white/5 hover:border-white/10 hover:scale-[1.01] duration-500'}`}
         >
+            {/* Lock Overlay for non-Pro users */}
+            {isLocked && (
+                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/60 backdrop-blur-sm">
+                    <div className="flex flex-col items-center gap-2">
+                        <Lock size={20} className="text-brand-green/70" />
+                        <span className="px-2 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
+                            PRO
+                        </span>
+                    </div>
+                </div>
+            )}
+
             {/* Scanline/Texture Overlay */}
             <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
 
             {/* Animated Border for Active Tool */}
-            {isActive && (
+            {isActive && !isLocked && (
                 <div className="absolute inset-0 z-20 pointer-events-none rounded-[inherit] overflow-hidden">
                     <div className="absolute inset-0 border border-brand-green/60 rounded-[inherit]" />
                     <motion.div
@@ -1163,13 +1179,15 @@ const ToolCard = React.memo(({
             )}
 
             {/* Shine Effect */}
-            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
-                <div className="absolute inset-x-[-150%] top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
-            </div>
+            {!isLocked && (
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none">
+                    <div className="absolute inset-x-[-150%] top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shine" />
+                </div>
+            )}
 
             <div className="relative z-10 w-full flex flex-col gap-6">
                 <div className="flex items-center justify-between">
-                    <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${isActive ? 'text-brand-green' : 'text-white/20'}`}>
+                    <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${isLocked ? 'text-white/10' : isActive ? 'text-brand-green' : 'text-white/20'}`}>
                         {itemId === 'robot-3d-background' ? (
                             tool === 'antigravity' ? 'NEON ENGINE' :
                                 tool === 'lovable' ? 'ROBOTIC HUB' :
@@ -1182,7 +1200,7 @@ const ToolCard = React.memo(({
                                         tool === 'claude' ? 'INTELLIGENT MODEL' : 'ADVANCED SYSTEM'
                         )}
                     </p>
-                    <div className={`transition-all duration-700 ease-out ${isActive ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
+                    <div className={`transition-all duration-700 ease-out ${isLocked ? 'text-white/5' : isActive ? 'text-brand-green scale-110' : 'text-white/10 group-hover:text-white/30'}`}>
                         {tool === 'antigravity' ? (
                             <Zap size={20} className="md:w-6 md:h-6" />
                         ) : tool === 'lovable' ? (
@@ -1207,10 +1225,10 @@ const ToolCard = React.memo(({
                 </div>
 
                 <div className="flex items-center justify-between w-full">
-                    <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${isActive ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
+                    <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${isLocked ? 'text-white/20' : isActive ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
                         {tool === 'advance' ? 'Advance' : tool}
                     </h4>
-                    {tool === 'advance' && (
+                    {PRO_ONLY_TOOLS.includes(tool) && (
                         <span className="px-1.5 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
                             PRO
                         </span>
@@ -1218,14 +1236,16 @@ const ToolCard = React.memo(({
                 </div>
             </div>
 
-            <div className={`flex items-center gap-2 mt-4 transition-all duration-700 ${isActive ? 'opacity-100' : 'opacity-0 translate-y-1'}`}>
-                <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.6)]" />
-                <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/90">
-                    Active
-                </span>
-            </div>
+            {!isLocked && (
+                <div className={`flex items-center gap-2 mt-4 transition-all duration-700 ${isActive ? 'opacity-100' : 'opacity-0 translate-y-1'}`}>
+                    <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shadow-[0_0_10px_rgba(0,255,0,0.6)]" />
+                    <span className="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/90">
+                        Active
+                    </span>
+                </div>
+            )}
 
-            {isActive && (
+            {isActive && !isLocked && (
                 <motion.div
                     layoutId="active-tool-glow"
                     className="absolute inset-0 bg-gradient-to-br from-brand-green/[0.08] via-transparent to-transparent pointer-events-none"
@@ -1325,17 +1345,15 @@ const VibeSystemSection = React.memo(({
             {/* Tool Selector */}
             <section className="space-y-6 md:space-y-10">
                 <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
-                <div className={`grid grid-cols-1 sm:grid-cols-2 ${isProUser ? 'lg:grid-cols-5' : 'lg:grid-cols-2'} gap-4 md:gap-6 lg:px-4`}>
-                    {(isProUser 
-                        ? ['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const
-                        : ['lovable', 'cursor'] as const
-                    ).map(tool => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
+                    {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
                         <ToolCard
                             key={tool}
                             tool={tool}
                             isActive={activeTool === tool}
                             onClick={setAiSystem}
                             itemId={item.id}
+                            isLocked={!isProUser && PRO_ONLY_TOOLS.includes(tool)}
                         />
                     ))}
                 </div>

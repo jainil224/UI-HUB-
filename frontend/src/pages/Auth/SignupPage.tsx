@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { Sparkles, Mail, Lock, User, AlertCircle, Loader2, Zap, Github, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
@@ -18,14 +18,33 @@ const SignupPage = () => {
     const [socialLoading, setSocialLoading] = useState<string | null>(null);
     const navigate = useNavigate();
 
+    // Detect mobile to avoid the "wants to access other apps" popup
+    const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    // Handle redirect result when returning from social sign-in on mobile
+    useEffect(() => {
+        if (!auth) return;
+        getRedirectResult(auth).then((result) => {
+            if (result?.user) navigate('/');
+        }).catch((err) => {
+            if (err.code !== 'auth/redirect-cancelled-by-user') {
+                setError(formatAuthError(err.message) || 'Sign-up failed after redirect.');
+            }
+        });
+    }, []);
+
     const handleSocialSignIn = async (providerType: 'google' | 'github') => {
         setError('');
         setSocialLoading(providerType);
         const provider = providerType === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
 
         try {
-            await signInWithPopup(auth, provider);
-            navigate('/');
+            if (isMobile) {
+                await signInWithRedirect(auth, provider);
+            } else {
+                await signInWithPopup(auth, provider);
+                navigate('/');
+            }
         } catch (err: any) {
             console.error(err);
             setError(formatAuthError(err.message) || `Failed to sign up with ${providerType}.`);

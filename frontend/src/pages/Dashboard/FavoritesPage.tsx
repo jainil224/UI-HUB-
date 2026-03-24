@@ -127,26 +127,28 @@ const FavoritesPage = () => {
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-brand-green/10 border border-brand-green/20 text-brand-green text-[10px] font-black uppercase tracking-[0.3em]"
+                            className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-[0.4em] shadow-2xl backdrop-blur-md"
                         >
-                            <Sparkles size={14} />
+                            <Sparkles size={14} className="opacity-40" />
                             <span>System.Secure_Vault</span>
                         </motion.div>
                         <motion.h1
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.1, type: 'spring', damping: 20 }}
-                            className="text-6xl md:text-8xl lg:text-9xl font-display font-black tracking-tighter leading-[0.85]"
+                            className="text-7xl md:text-9xl lg:text-[10rem] font-seekuw font-extrabold tracking-tighter leading-[0.8] uppercase flex flex-col sm:flex-row sm:items-baseline gap-2"
                         >
-                            MY <span className="text-brand-green text-stroke-premium">VAULT</span>
+                            <span className="text-vault-gradient">MY</span>
+                            <span className="text-vault-stroke">VAULT</span>
                         </motion.h1>
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.3 }}
-                            className="text-white/40 text-lg md:text-xl font-medium max-w-xl leading-relaxed"
+                            className="text-white/40 text-lg md:text-2xl font-medium max-w-2xl leading-relaxed"
                         >
-                            Deterministic high-performance components. Optimized for <span className="text-white/80">60fps</span> production environments.
+                            Deterministic high-performance components. <br />
+                            Optimized for <span className="text-white/80 font-black">60fps</span> production environments.
                         </motion.p>
                     </div>
 
@@ -157,11 +159,11 @@ const FavoritesPage = () => {
                     >
                         <Link
                             to="/library"
-                            className="group relative flex items-center gap-4 px-10 py-5 rounded-[2.5rem] bg-white/[0.03] border border-white/10 text-white/70 hover:text-brand-green hover:border-brand-green/40 transition-all overflow-hidden shadow-2xl backdrop-blur-xl"
+                            className="group relative flex items-center gap-4 px-10 py-5 rounded-[2.5rem] bg-white/[0.03] border border-white/10 text-white/90 hover:text-[#39FF14] hover:border-[#39FF14]/40 transition-all overflow-hidden shadow-2xl backdrop-blur-xl"
                         >
                             <Library size={20} className="relative z-10 transition-transform group-hover:rotate-12" />
                             <span className="relative z-10 text-xs font-black uppercase tracking-[0.2em]">Open Catalog</span>
-                            <div className="absolute inset-0 bg-brand-green/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            <div className="absolute inset-0 bg-[#39FF14]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </Link>
                     </motion.div>
                 </header>
@@ -371,17 +373,11 @@ const FavoritesPage = () => {
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .text-stroke-premium {
-                    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.08);
-                    color: transparent;
-                }
-                .group\/card:hover .text-stroke-premium {
-                    -webkit-text-stroke: 1.5px rgba(0, 255, 0, 0.15);
-                }
+
                 .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
                 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0, 255, 0, 0.1); border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 0, 0.3); }
+                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(57, 255, 20, 0.1); border-radius: 10px; }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(57, 255, 20, 0.3); }
 
                 @keyframes jitter {
                     0% { transform: translate(0, 0); }

@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Anton&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Anton&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+@import url('https://fonts.cdnfonts.com/css/seekuw');
 @import "tailwindcss";
 
 :root {
@@ -13,8 +14,15 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Orbitron", sans-serif;
   --font-heading: "Space+Grotesk", sans-serif;
+  --font-seekuw: "Seekuw", sans-serif;
   --color-brand-green: #00FF00;
   --color-brand-black: #000000;
+  
+  /* User defined Neon Palette */
+  --color-neon-bright: #7CFF00;
+  --color-neon-mid: #39FF14;
+  --color-neon-deep: #0B5D00;
+  --color-neon-glow: #003300;
 }
 
 @keyframes rainbow {
@@ -49,6 +57,19 @@
 .text-stroke {
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.2);
   color: transparent;
+}
+
+.text-vault-gradient {
+  background: linear-gradient(to bottom, #FFFFFF 0%, #A0A0A0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-vault-stroke {
+  -webkit-text-stroke: 1.5px #FFFFFF;
+  color: transparent;
+  opacity: 0.8;
 }
 
 @keyframes spin-once {
@@ -120,14 +141,14 @@
   95%,
   100% {
     opacity: 1;
-    color: #00FF00;
-    text-shadow: 0 0 8px #00FF00, 0 0 16px rgba(0, 255, 0, 0.5), 0 0 30px rgba(0, 255, 0, 0.2);
+    color: #39FF14;
+    text-shadow: 0 0 8px #39FF14, 0 0 16px rgba(57, 255, 20, 0.5), 0 0 30px rgba(57, 255, 20, 0.2);
   }
 
   87%,
   92% {
     opacity: 0.3;
-    color: rgba(0, 255, 0, 0.3);
+    color: rgba(57, 255, 20, 0.3);
     text-shadow: none;
   }
 }
@@ -224,6 +245,21 @@
 @keyframes shimmer {
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
+}
+
+@keyframes white-blink {
+  0%, 85%, 90%, 95%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  87%, 92% {
+    opacity: 0.6;
+    filter: brightness(0.7);
+  }
+}
+
+.animate-white-blink {
+  animation: white-blink 4s infinite;
 }
 
 .gpu-accelerated {
