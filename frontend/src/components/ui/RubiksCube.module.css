@@ -3,13 +3,13 @@
   z-index: 2;
   width: 100%;
   height: 100%;
-  min-height: 540px;
+  min-height: 500px;
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px;
+  padding: 20px;
   box-sizing: border-box;
   background: #08080f;
   background-image: 
@@ -21,23 +21,25 @@
 @media (max-width: 968px) {
   .cubeWrapper {
     min-height: auto;
-    padding: 30px 15px;
-    justify-content: flex-start;
+    padding: 24px 16px;
+    justify-content: center;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .cubeWrapper {
+    padding: 12px 8px;
     gap: 12px;
   }
 }
 
 @media (max-width: 480px) {
   .cubeWrapper {
-    padding: 15px 10px;
-    gap: 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .cubeWrapper {
-    padding: 12px;
-    gap: 8px;
+    padding: 20px 12px;
+    gap: 16px;
+    min-height: auto;
+    justify-content: flex-start;
   }
 }
 
@@ -59,7 +61,7 @@
 
 @media (max-width: 480px) {
   .layoutContainer {
-    gap: 10px;
+    gap: 32px;
   }
 }
 
@@ -91,19 +93,19 @@
 
 @media (max-width: 480px) {
   .title {
-    font-size: 1.4rem;
-    letter-spacing: -0.5px;
+    font-size: 1.8rem;
+    letter-spacing: -1px;
+    line-height: 1;
+    text-align: center;
+    margin-bottom: 8px;
   }
-  .description {
-    font-size: 0.75rem;
-    line-height: 1.3;
+  .description, .subtitle, .statusBadge {
+    display: none !important;
   }
   .textContent {
-    gap: 6px;
-  }
-  .subtitle {
-    font-size: 0.6rem;
-    letter-spacing: 3px;
+    gap: 8px;
+    padding: 0;
+    align-items: center;
   }
 }
 
@@ -231,10 +233,10 @@
 
 @media (max-width: 480px) {
   .cubeViewport {
-    width: 320px;
-    height: 320px;
-    transform: scale(0.45);
-    margin: -60px auto -50px;
+    width: 280px;
+    height: 280px;
+    transform: scale(0.65);
+    margin: -40px auto;
   }
 }
 

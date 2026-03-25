@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
@@ -52,12 +52,15 @@ const SignupPage = () => {
             // For localhost/development, popups are generally better and more reliable
             // even when emulating mobile view in devtools.
             const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            const isLocalIP = /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(window.location.hostname);
             
-            if (isMobile && !isLocalhost) {
+            // For localhost and local network testing, popups are generally better and more reliable
+            // even when emulating mobile view in devtools or using a physical phone on the LAN.
+            if (isMobile && !isLocalhost && !isLocalIP) {
                 console.log(`[Auth] Initiating redirect flow for ${providerType} on mobile`);
                 await signInWithRedirect(auth, provider);
             } else {
-                console.log(`[Auth] Initiating popup flow for ${providerType}`);
+                console.log(`[Auth] Initiating popup flow for ${providerType} (Local/Network prioritized)`);
                 const result = await signInWithPopup(auth, provider);
                 if (result.user) {
                     navigate('/');

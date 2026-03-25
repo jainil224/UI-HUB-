@@ -231,6 +231,13 @@ Replicate the exact aesthetic and interaction feel described in the following co
 - Ensure all Tailwind classes align with the premium design intent.
 - Maintain strict functional parity with the described objectives.
 
+>> REFERENCE SOURCE CODE
+Use this exact code as your blueprint for logic, props, and structure:
+
+\`\`\`tsx
+${sourceCode || '// Source code not available, please use component objectives.'}
+\`\`\`
+
 >> REPLICATION MANDATE
 ${basePrompt.replace(/# UI HUB • LOVABLE PROMPT/, '').trim()}
 
@@ -248,6 +255,13 @@ Engineer a high-performance React component by meticulously implementing the und
 - Use professional Tailwind CSS patterns for layout and styling.
 - Ensure 100% functional parity with the technical specifications.
 - Optimize all hooks and effects for maximum rendering efficiency.
+
+[ REFERENCE SOURCE CODE ]
+Use this exact code as your blueprint for logic, props, and structure:
+
+\`\`\`tsx
+${sourceCode || '// Source code not available, please use component objectives.'}
+\`\`\`
 
 [ FINAL IMPLEMENTATION RULES ]
 ${basePrompt.replace(/# UI HUB • (ANTIGRAVITY|CLAUDE) MASTER PROMPT/, '').trim()}

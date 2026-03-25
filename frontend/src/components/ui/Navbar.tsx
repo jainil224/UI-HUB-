@@ -293,10 +293,12 @@ const Navbar = () => {
                                     <LogOut size={13} /> Sign Out
                                 </button>
                             ) : (
-                                <Link to="/login" className="flex-1" onClick={() => setIsOpen(false)}>
-                                    <button className="w-full flex items-center justify-center gap-1.5 bg-brand-green text-black px-4 py-2.5 rounded-xl text-sm font-bold">
-                                        <Sparkles size={13} /> Sign In
-                                    </button>
+                                <Link 
+                                    to="/login" 
+                                    className="flex-1 flex items-center justify-center gap-1.5 bg-brand-green text-black px-4 py-2.5 rounded-xl text-sm font-bold active:scale-[0.98] transition-all shadow-[0_4_12px_rgba(0,255,0,0.2)]"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    <Sparkles size={13} /> Sign In
                                 </Link>
                             )}
                         </div>

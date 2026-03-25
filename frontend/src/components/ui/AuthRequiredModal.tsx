@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { X, LogIn, UserPlus, Sparkles, Heart, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 

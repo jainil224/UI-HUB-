@@ -1320,8 +1320,8 @@ const VibeSystemSection = React.memo(({
     }, [isProUser, prevProStatus, setAiSystem]);
 
     const loadPrompt = React.useCallback(async () => {
-        // Allow public viewing for lovable and cursor
-        const isPublicSystem = ['lovable', 'cursor'].includes(aiSystem);
+        // Allow public viewing for lovable and cursor ONLY on non-premium components
+        const isPublicSystem = !item.isPremium && ['lovable', 'cursor'].includes(aiSystem);
         
         if (!user && !isPublicSystem) {
             // We don't clear the prompt here anymore. 
@@ -1381,7 +1381,7 @@ const VibeSystemSection = React.memo(({
                             isActive={activeTool === tool}
                             onClick={setAiSystem}
                             itemId={item.id}
-                            isLocked={!isProUser && (item.isPremium ? !['lovable', 'cursor'].includes(tool) : PRO_ONLY_TOOLS.includes(tool))}
+                            isLocked={!isProUser && (item.isPremium ? true : PRO_ONLY_TOOLS.includes(tool))}
                         />
                     ))}
                 </div>
@@ -1469,7 +1469,7 @@ const VibeSystemSection = React.memo(({
                                         Log In to Access
                                     </button>
                                 </div>
-                            ) : (!isProUser && (item.isPremium ? !['lovable', 'cursor'].includes(aiSystem) : (PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2))) ? (
+                            ) : (!isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2))) ? (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#050505] z-30">
                                     <div className="w-16 h-16 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,0,0.15)]">
                                         <Lock className="text-brand-green" size={28} />
