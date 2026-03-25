@@ -24,14 +24,24 @@ const SignupPage = () => {
     // Handle redirect result when returning from social sign-in on mobile
     useEffect(() => {
         if (!auth) return;
-        getRedirectResult(auth).then((result) => {
-            if (result?.user) navigate('/');
-        }).catch((err) => {
-            if (err.code !== 'auth/redirect-cancelled-by-user') {
-                setError(formatAuthError(err.message) || 'Sign-up failed after redirect.');
+        
+        const handleRedirect = async () => {
+            try {
+                const result = await getRedirectResult(auth);
+                if (result?.user) {
+                    console.log('[Auth] Redirect sign-up successful:', result.user.email);
+                    navigate('/');
+                }
+            } catch (err: any) {
+                console.error('[Auth] Redirect result error:', err);
+                if (err.code !== 'auth/redirect-cancelled-by-user') {
+                    setError(formatAuthError(err.message) || 'Sign-up failed after redirect.');
+                }
             }
-        });
-    }, []);
+        };
+
+        handleRedirect();
+    }, [navigate]);
 
     const handleSocialSignIn = async (providerType: 'google' | 'github') => {
         setError('');
@@ -39,14 +49,22 @@ const SignupPage = () => {
         const provider = providerType === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
 
         try {
-            if (isMobile) {
+            // For localhost/development, popups are generally better and more reliable
+            // even when emulating mobile view in devtools.
+            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+            
+            if (isMobile && !isLocalhost) {
+                console.log(`[Auth] Initiating redirect flow for ${providerType} on mobile`);
                 await signInWithRedirect(auth, provider);
             } else {
-                await signInWithPopup(auth, provider);
-                navigate('/');
+                console.log(`[Auth] Initiating popup flow for ${providerType}`);
+                const result = await signInWithPopup(auth, provider);
+                if (result.user) {
+                    navigate('/');
+                }
             }
         } catch (err: any) {
-            console.error(err);
+            console.error(`[Auth] ${providerType} sign-up failed:`, err);
             setError(formatAuthError(err.message) || `Failed to sign up with ${providerType}.`);
         } finally {
             setSocialLoading(null);
