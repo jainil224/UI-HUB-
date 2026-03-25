@@ -19,21 +19,21 @@ const resolveSourceCode = async (componentId) => {
   // Mapping logic similar to what was in frontend componentData or promptUtils
   // For now, we'll try to find it in ui/ or animations/
   const searchDirs = ['ui', 'animations', 'animations/VisualEffects'];
-  
+
   // Convert kebab-case ID to PascalCase for the filename if needed
   // But many components are in directories with their ID or similar
   // Let's look at some examples from componentData.tsx
   // Robot 3D Background -> '@/components/ui/Robot3DBackground'
   // corners-border-button -> '@/components/animations/VisualEffects' (SpotlightCards?)
-  
+
   // This mapping needs to be accurate. 
   // For simplicity, let's assume a few common patterns or just hardcode some for now.
-const mapping = {
+  const mapping = {
     'robot-3d-background': 'ui/Robot3DBackground.tsx',
     'interactive-webgl-scene': 'ui/InteractiveWebGLScene.tsx',
     '3d-scroll-animation': 'ui/Scroll3DAnimation.tsx',
     '3d-slider': 'ui/ThreeDSlider.tsx',
-    'spotlight-cards': 'animations/VisualEffects/index.tsx', 
+    'spotlight-cards': 'animations/VisualEffects/index.tsx',
     'hell-background': 'ui/HellBackground.tsx',
     'interactive-grid-background': 'ui/InteractiveGridBackground.tsx',
     'isometric-grid-background': 'ui/isometric-grid-background.tsx',
@@ -95,7 +95,7 @@ const mapping = {
       // Ignore and try next
     }
   }
-  
+
   console.warn(`[promptService] Could not resolve source code for component: ${componentId}`);
   return null;
 };
@@ -139,7 +139,7 @@ Ensure the final output is a SINGLE, complete file without any explanations or m
 `;
   } else if (system === 'advance') {
     const basePrompt = ANTIGRAVITY_PROMPTS[componentId] || '';
-    
+
     masterPrompt = `# UI HUB • ADVANCED ELITE COMPONENT ARCHITECT
 
 ## PHASE 1: COMPONENT DECONSTRUCTION & LOGIC AUDIT
@@ -270,7 +270,7 @@ Return ONLY the complete TSX file. NO explanation. NO preamble.
 `;
     }
   }
-  
+
   if (!masterPrompt) {
     console.error(`[promptService] No prompt template found for component: ${componentId}, system: ${system}`);
     return `Prompt not found for this component (${componentId}) / system (${system}).`;
