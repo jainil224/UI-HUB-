@@ -37,6 +37,7 @@ export const ThreeDTubesCursor: React.FC<ThreeDTubesCursorProps> = ({
         const init = async () => {
             try {
                 // Dynamically import the legacy library from CDN as referenced in the Assets folder
+                // @ts-ignore - TypeScript cannot resolve URL imports at compile time
                 const TubesModule = await import(/* @keep-external */ "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js");
                 const TubesCursor = TubesModule.default;
 
