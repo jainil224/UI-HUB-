@@ -12,8 +12,9 @@ interface TargetCursorProps {
     /** Enable subtle parallax movement when hovering elements */
     parallaxOn?: boolean;
     /** Container to track mouse within (optional) */
-    containerRef?: React.RefObject<HTMLElement>;
+    containerRef?: React.RefObject<HTMLElement | null>;
     className?: string;
+    color?: string;
 }
 
 export const TargetCursor: React.FC<TargetCursorProps> = ({
@@ -24,6 +25,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
     parallaxOn = true,
     containerRef,
     className = '',
+    color = '#6366f1',
 }) => {
     const cursorRef = useRef<HTMLDivElement>(null);
     const [isLocked, setIsLocked] = useState(false);
@@ -148,7 +150,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
         position: 'absolute',
         width: '8px',
         height: '8px',
-        borderColor: '#6366f1',
+        borderColor: color,
         borderStyle: 'solid',
         transition: `all ${hoverDuration}s cubic-bezier(0.23, 1, 0.32, 1)`,
         pointerEvents: 'none',
@@ -205,7 +207,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
                     left: '50%',
                     width: '4px',
                     height: '4px',
-                    background: '#6366f1',
+                    background: color,
                     borderRadius: '50%',
                     transform: 'translate(-50%, -50%)',
                     opacity: isLocked ? 0 : 1,

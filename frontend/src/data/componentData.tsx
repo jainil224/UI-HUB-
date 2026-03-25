@@ -21,6 +21,20 @@ import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
 import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
 import { RubiksCube } from '../components/ui/RubiksCube';
+import BlackBox from '../components/ui/BlackBox';
+
+// ── Black Box scoped preview ────────────
+const BlackBoxPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '900px',
+            background: '#000',
+        }}>
+            <BlackBox />
+        </div>
+    );
+};
 
 
 
@@ -1146,13 +1160,14 @@ const ThreeDSliderPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "portfolios";
     preview: () => React.ReactNode;
     code: string;
     vibePrompt: string;
     uploader?: string;
     imageUrl?: string;
     isPremium?: boolean;
+    downloadUrl?: string;
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2008,6 +2023,15 @@ export const Demo = () => (
         preview: () => <ThreeDTubesCursorPreview />,
         code: "",
         vibePrompt: ""
+    },
+    {
+        id: "black-box",
+        title: "Black Box",
+        category: "portfolios",
+        isPremium: true,
+        preview: () => <BlackBoxPreview />,
+        code: `import BlackBox from '@/components/ui/BlackBox';\n\nexport default function Demo() {\n  return <BlackBox />;\n}`,
+        vibePrompt: "A high-performance cyberpunk glitch-style dashboard portfolio with terminal simulation, animated charts, and system instability effects."
     },
 ];
 

@@ -74,6 +74,7 @@ const LibraryPage = () => {
         { name: "3D Design", items: allComponents.filter(item => item.category === '3d') },
         { name: "Backgrounds", items: allComponents.filter(item => item.category === 'background') },
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
+        { name: "Portfolios", items: allComponents.filter(item => item.category === 'portfolios') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ].filter(cat => cat.items.length > 0);
 

@@ -163,5 +163,152 @@ export const RubiksCube: React.FC = () => {
 };
 export default RubiksCube;
 \`\`\`
-\n## Performance\n* GPU-accelerated transforms (matrix3d).\n* Minimal re-renders through Ref-based management.`,
+
+## Performance
+* GPU-accelerated transforms (matrix3d).
+* Minimal re-renders through Ref-based management.
+` ,
+    'black-box': `# UI HUB • ANTIGRAVITY MASTER PROMPT
+1. COMPONENT ANALYSIS (MANDATORY FIRST STEP)
+
+Before writing any code, you MUST analyze the provided reference source code.
+
+Identify core layout system (grid, sections, responsive structure).
+Understand animation systems (glitch effects, hover states, terminal typing effect, RGB split, noise overlays).
+Analyze state management (useState, useEffect, dynamic logs, glitch mode toggle).
+Identify reusable components (RawBox, GlitchButton, DataStream, GlobalStyles).
+Study chart system (recharts usage, dual-line glitch effect).
+Understand UI philosophy: broken system / hacker / glitch aesthetic.
+2. REFERENCE SOURCE CODE
+
+Recreate this UI component with perfect accuracy. Keep all animations, transitions, and interactions identical to the original design.
+
+[ SOURCE CODE INJECTED LOCALLY ]
+
+3. MASTER PERFORMANCE RULES
+Smooth 60fps: Optimize animations (CSS + minimal JS re-renders).
+Efficient State Updates: Avoid unnecessary re-renders in terminal + chart.
+Cleanup: Clear intervals, animations, and listeners.
+Responsive Precision: Maintain layout integrity across all breakpoints.
+No Simplification: Keep ALL glitch effects, overlays, and UI complexity intact.
+4. COMPONENT OBJECTIVES & SPECIFICATIONS
+SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and advanced UI/animation specialist.
+
+Your task is to generate a fully working, production-ready React component.
+
+STRICT RULES:
+
+Return ONLY code
+Return ONE complete file
+Do NOT explain anything
+Do NOT simplify logic
+Do NOT remove features
+Maintain exact UI + behavior
+TASK
+
+Rebuild a high-performance glitch-style dashboard UI with full animation fidelity. The UI MUST be expansive and highly visible (use generous heights for terminal and chart sections). Ensure all text is easily readable (avoid excessively small font sizes).
+
+COMPONENT INFO
+
+Name: BlackBox
+Type: Advanced UI / Dashboard / Experimental Interface
+
+GOAL
+
+Create a cyberpunk / hacker-style professional portfolio for UI HUB with:
+
+Scroll-reveal animations (blur + slide)
+Personalized terminal biography
+Project showcase table
+Skill growth charts
+Interactive core-stack grid
+Vibe-driven glitch aesthetic
+
+The UI must feel like:
+
+⚠️ “A high-performance personal interface for a Cyber Architect”
+
+TECH STACK
+React (Next.js)
+TypeScript (TSX)
+Tailwind CSS
+Recharts (for graph)
+Lucide Icons
+CSS animations (primary)
+Minimal JS animations (only where required)
+FEATURES (STRICT – DO NOT SKIP)
+🔹 CORE SYSTEM
+Full-screen dark UI with noise overlay
+Toggleable glitch mode (invert + contrast)
+🔹 TERMINAL SYSTEM
+Typing animation using useEffect
+Sequential logs (delayed injection)
+Blinking cursor
+🔹 HEADER (BROKEN NAV)
+Glitch logo text (ERROR_404)
+Signal indicator
+Lock/Unlock toggle button
+Avatar with grayscale hover effect
+🔹 GLITCH CLOCK
+RGB split animated time text
+Fake time display (23:59:99)
+Rotating refresh icon
+🔹 BUTTON SYSTEM
+Glitch hover buttons (REBOOT / PURGE)
+Text swap on hover (ERROR_CLICK)
+🔹 CHART SYSTEM
+Dual line chart:
+Primary line (stable)
+Ghost line (glitch/noise)
+Tooltip styled in hacker theme
+Fake warning overlay
+🔹 STATS GRID
+4 stat cards (MEMORY, THREATS, etc.)
+Icons + glitch hover values
+Color-coded states
+🔹 PROJECT TABLE
+File-system style list
+Status badges (CORRUPT / STABLE / UNSTABLE)
+Hover invert effect
+🔹 TRAFFIC HEATMAP
+Randomized bar heights
+Hover tooltips with random values
+Animated feel of instability
+🔹 BACKGROUND SYSTEM
+DataStream scrolling hex logs
+Noise overlay using SVG turbulence
+🔹 DEBUG PANEL
+Floating bottom-right panel
+Fake debug actions
+CRITICAL RULES (ZERO-FAILURE)
+DO NOT REMOVE ANY FEATURE
+Animations must match exactly
+Glitch aesthetic must remain aggressive
+UI must feel alive and unstable
+All hover + interaction states required
+Maintain exact structure (grid + sections)
+PROPS (if needed)
+glitchMode: boolean (internal state)
+terminal logs: dynamic array
+chart data: generated (CHAOS_DATA)
+project list: static (PROJECTS)
+FINAL OUTPUT
+Provide the complete, single-file code
+Must include:
+All components
+Styles
+Data
+Animations
+5. FINAL INSTRUCTION
+
+Ensure the final output is a SINGLE complete file with:
+
+No explanations
+No markdown outside code
+No missing features
+
+and make it like it looking like a portfolio 
+`
 };
