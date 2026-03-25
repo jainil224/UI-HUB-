@@ -790,7 +790,7 @@ A premium, star-dusted background that feels magical and clean. It uses tiny glo
 ## Props
 - particleColor: string
 - density: number
-- minSize/maxSize: number
+- minSize/maxSize: number   
 
 ## Output
 Production-ready React component`,

@@ -11,5 +11,10 @@
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "frontend/src/components/**"
+    }
+  }
 }

@@ -48,10 +48,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     if (response.ok) {
                         const data = await response.json();
                         setIsPro(data.isPro);
-                        console.log(`[Auth] Fetched Pro status: ${data.isPro}`);
+                        console.log(`[Auth] Pro status: ${data.isPro} for ${user.email}`);
                     } else {
                         const errorText = await response.text();
-                        console.error(`[Auth] Status fetch failed with ${response.status}:`, errorText);
+                        console.error(`[Auth] Status check (v1) failed with ${response.status}:`, errorText);
                         setIsPro(false);
                     }
                 } catch (error) {

@@ -26,21 +26,24 @@ export const fetchVibePrompt = async (componentId: string, system: AISystem, tok
         }
         
         const apiBaseUrl = getApiBaseUrl();
+        const fullUrl = `${apiBaseUrl}/api/v1/components/${componentId}/prompt/${system}`;
         
-        const response = await fetch(`${apiBaseUrl}/api/v1/components/${componentId}/prompt/${system}`, {
+        console.log(`[Blueprint] Fetching from: ${fullUrl}`);
+        
+        const response = await fetch(fullUrl, {
             headers
         });
         
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`[API] Fetch failed for ${componentId} (${system}). Status: ${response.status} ${response.statusText}, Body:`, errorText);
-            throw new Error(`Failed to fetch prompt: ${response.status} ${response.statusText}`);
+            console.error(`[Blueprint] ERROR ${response.status} for ${componentId}:`, errorText);
+            throw new Error(`Failed to load blueprint (Status: ${response.status})`);
         }
         
         const data = await response.json();
         return data.prompt;
     } catch (error) {
-        console.error('Error fetching vibe prompt:', error);
+        console.error('[Blueprint] Critical catch:', error);
         throw error;
     }
 };

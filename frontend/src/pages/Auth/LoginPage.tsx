@@ -23,14 +23,17 @@ const LoginPage = () => {
         if (!auth) return;
         
         const handleRedirect = async () => {
+            console.log('[Auth] Checking for redirect result...');
             try {
                 const result = await getRedirectResult(auth);
                 if (result?.user) {
-                    console.log('[Auth] Redirect sign-in successful:', result.user.email);
+                    console.log('[Auth] Redirect sign-in success:', result.user.email);
                     navigate('/');
+                } else {
+                    console.log('[Auth] No redirect result found (normal page load)');
                 }
             } catch (err: any) {
-                console.error('[Auth] Redirect result error:', err);
+                console.error('[Auth] Redirect error:', err);
                 if (err.code !== 'auth/redirect-cancelled-by-user') {
                     setError(formatAuthError(err.message) || 'Sign-in failed after redirect.');
                 }
