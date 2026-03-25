@@ -56,6 +56,10 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running' });
 });
 
+app.get('/', (req, res) => {
+  res.send('<h1>UI-Hub Backend is Live</h1><p>The API is running successfully. <a href="/api/health">Check Health</a></p>');
+});
+
 // Basic error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
