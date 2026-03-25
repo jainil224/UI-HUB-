@@ -32,8 +32,9 @@ export const fetchVibePrompt = async (componentId: string, system: AISystem, tok
         });
         
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Failed to fetch prompt');
+            const errorText = await response.text();
+            console.error(`[API] Fetch failed for ${componentId} (${system}). Status: ${response.status} ${response.statusText}, Body:`, errorText);
+            throw new Error(`Failed to fetch prompt: ${response.status} ${response.statusText}`);
         }
         
         const data = await response.json();

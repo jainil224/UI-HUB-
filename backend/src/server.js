@@ -18,9 +18,15 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/v1/components', componentRoutes);
-app.use('/api/v1/users', userRoutes);
-app.use('/api/v1/config', configRoutes);
+const router = express.Router();
+router.use('/v1/components', componentRoutes);
+router.use('/v1/users', userRoutes);
+router.use('/v1/config', configRoutes);
+
+// Mount under multiple prefixes for robustness (Vercel vs Local)
+app.use('/api', router);
+app.use('/', router);
+
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Backend is running' });
