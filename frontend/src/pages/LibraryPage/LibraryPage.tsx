@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronRight, Home, Lock } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronRight, ChevronDown, Home, Lock } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
@@ -27,6 +27,7 @@ const LibraryPage = () => {
     const defaultComponent = allComponents.find(c => c.id === idFromUrl) || allComponents.find(c => c.id === 'corner-border-button') || allComponents[0];
     const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
     useEffect(() => {
         const q = query(collection(db, 'components'), orderBy('createdAt', 'desc'));
@@ -66,12 +67,6 @@ const LibraryPage = () => {
         }
     }, [idFromUrl, navigate, defaultComponent.id, allComponents.length]);
 
-    const handleComponentSelect = (item: ComponentItem) => {
-        setActiveComponent(item);
-        setIsMobileMenuOpen(false);
-        navigate(`/library?id=${item.id}`, { replace: true });
-    };
-
     const categories: Category[] = [
         { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
@@ -81,6 +76,35 @@ const LibraryPage = () => {
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ].filter(cat => cat.items.length > 0);
+
+    // Initial expansion: expand the active component's category
+    useEffect(() => {
+        if (activeComponent) {
+            const activeCat = categories.find(cat => cat.items.some(item => item.id === activeComponent.id));
+            if (activeCat) {
+                setExpandedCategories(prev => {
+                    if (!prev.includes(activeCat.name)) {
+                        return [...prev, activeCat.name];
+                    }
+                    return prev;
+                });
+            }
+        }
+    }, [activeComponent.id]);
+
+    const toggleCategory = (name: string) => {
+        setExpandedCategories(prev => 
+            prev.includes(name) 
+                ? prev.filter(c => c !== name) 
+                : [...prev, name]
+        );
+    };
+
+    const handleComponentSelect = (item: ComponentItem) => {
+        setActiveComponent(item);
+        setIsMobileMenuOpen(false);
+        navigate(`/library?id=${item.id}`, { replace: true });
+    };
 
     return (
         <div className="h-dvh bg-brand-black text-white flex flex-col md:flex-row overflow-hidden relative pt-[73px]">
@@ -137,34 +161,60 @@ const LibraryPage = () => {
                             </button>
                         </div>
 
-                        {categories.map((cat, idx) => (
-                            <div key={idx} className="mb-8">
-                                <h4 className="text-brand-green text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-2">
-                                    <div className="w-1.5 h-1.5 bg-brand-green rounded-full" />
-                                    {cat.name}
-                                </h4>
-                                <ul className="space-y-1.5">
-                                    {cat.items.map((item) => (
-                                        <li
-                                            key={item.id}
-                                            onClick={() => handleComponentSelect(item)}
-                                            className={`p-3 rounded-xl flex items-center justify-between transition-all ${activeComponent.id === item.id
-                                                ? 'bg-brand-green text-black font-bold'
-                                                : 'bg-white/5 text-white/60 active:bg-white/10'
-                                                }`}
+                        {categories.map((cat, idx) => {
+                            const isExpanded = expandedCategories.includes(cat.name);
+                            return (
+                                <div key={idx} className="mb-6">
+                                    <button
+                                        onClick={() => toggleCategory(cat.name)}
+                                        className="w-full h-12 flex items-center justify-between mb-2 group"
+                                    >
+                                        <h4 className="text-brand-green text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 group-hover:opacity-80 transition-opacity">
+                                            <div className="w-1.5 h-1.5 bg-brand-green rounded-full" />
+                                            {cat.name}
+                                        </h4>
+                                        <motion.div
+                                            animate={{ rotate: isExpanded ? 0 : -90 }}
+                                            transition={{ duration: 0.2 }}
+                                            className="text-white/20 group-hover:text-brand-green transition-colors"
                                         >
-                                            <div className="flex items-center gap-2 min-w-0">
-                                                <span className="text-sm truncate">{item.title}</span>
-                                                {item.isPremium && !isPro && activeComponent.id !== item.id && (
-                                                    <Lock size={9} className="text-amber-400 shrink-0" />
-                                                )}
-                                            </div>
-                                            <ChevronRight size={14} className={activeComponent.id === item.id ? '' : 'opacity-20'} />
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
+                                            <ChevronDown size={14} />
+                                        </motion.div>
+                                    </button>
+                                    
+                                    <AnimatePresence initial={false}>
+                                        {isExpanded && (
+                                            <motion.ul
+                                                initial={{ height: 0, opacity: 0 }}
+                                                animate={{ height: 'auto', opacity: 1 }}
+                                                exit={{ height: 0, opacity: 0 }}
+                                                transition={{ duration: 0.25, ease: 'easeInOut' }}
+                                                className="space-y-1.5 overflow-hidden"
+                                            >
+                                                {cat.items.map((item) => (
+                                                    <li
+                                                        key={item.id}
+                                                        onClick={() => handleComponentSelect(item)}
+                                                        className={`p-3 rounded-xl flex items-center justify-between transition-all ${activeComponent.id === item.id
+                                                            ? 'bg-brand-green text-black font-bold'
+                                                            : 'bg-white/5 text-white/60 active:bg-white/10'
+                                                            }`}
+                                                    >
+                                                        <div className="flex items-center gap-2 min-w-0">
+                                                            <span className="text-sm truncate">{item.title}</span>
+                                                            {item.isPremium && !isPro && activeComponent.id !== item.id && (
+                                                                <Lock size={9} className="text-amber-400 shrink-0" />
+                                                            )}
+                                                        </div>
+                                                        <ChevronRight size={14} className={activeComponent.id === item.id ? '' : 'opacity-20'} />
+                                                    </li>
+                                                ))}
+                                            </motion.ul>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            );
+                        })}
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -175,29 +225,59 @@ const LibraryPage = () => {
                     <Home size={14} />
                     Home
                 </Link>
-                {categories.map((cat, idx) => (
-                    <div key={idx} className="mb-10">
-                        <h4 className="text-white/40 text-[10px] font-bold uppercase tracking-widest mb-4">{cat.name}</h4>
-                        <ul className="space-y-4">
-                            {cat.items.map((item) => (
-                                <li
-                                    key={item.id}
-                                    onClick={() => handleComponentSelect(item)}
-                                    className={`cursor-pointer text-sm transition-colors hover:text-brand-green flex items-center gap-2 ${activeComponent.id === item.id ? 'text-brand-green font-bold' : 'text-white/60'
-                                        }`}
+                {categories.map((cat, idx) => {
+                    const isExpanded = expandedCategories.includes(cat.name);
+                    return (
+                        <div key={idx} className="mb-6">
+                            <button
+                                onClick={() => toggleCategory(cat.name)}
+                                className="w-full flex items-center justify-between mb-4 group text-left"
+                            >
+                                <h4 className={`text-[10px] font-bold uppercase tracking-widest transition-colors ${
+                                    isExpanded ? 'text-brand-green' : 'text-white/40 group-hover:text-white/80'
+                                }`}>
+                                    {cat.name}
+                                </h4>
+                                <motion.div
+                                    animate={{ rotate: isExpanded ? 0 : -90 }}
+                                    transition={{ duration: 0.2 }}
+                                    className={`transition-colors ${isExpanded ? 'text-brand-green' : 'text-white/20'}`}
                                 >
-                                    <span className="truncate flex-1">{item.title}</span>
-                                    {item.isPremium && !isPro && (
-                                        <Lock
-                                            size={9}
-                                            className={`shrink-0 ${activeComponent.id === item.id ? 'text-amber-400' : 'text-amber-400 opacity-60'}`}
-                                        />
-                                    )}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                ))}
+                                    <ChevronDown size={12} />
+                                </motion.div>
+                            </button>
+                            
+                            <AnimatePresence initial={false}>
+                                {isExpanded && (
+                                    <motion.ul
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: 'auto', opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.2, ease: 'easeOut' }}
+                                        className="space-y-4 overflow-hidden"
+                                    >
+                                        {cat.items.map((item) => (
+                                            <li
+                                                key={item.id}
+                                                onClick={() => handleComponentSelect(item)}
+                                                className={`cursor-pointer text-sm transition-colors hover:text-brand-green flex items-center gap-2 ${activeComponent.id === item.id ? 'text-brand-green font-bold' : 'text-white/60'
+                                                    }`}
+                                            >
+                                                <span className="truncate flex-1">{item.title}</span>
+                                                {item.isPremium && !isPro && (
+                                                    <Lock
+                                                        size={9}
+                                                        className={`shrink-0 ${activeComponent.id === item.id ? 'text-amber-400' : 'text-amber-400 opacity-60'}`}
+                                                    />
+                                                )}
+                                            </li>
+                                        ))}
+                                    </motion.ul>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    );
+                })}
             </aside>
 
             <main data-lenis-prevent className="flex-1 min-h-0 overflow-y-auto p-4 pt-5 md:p-12 md:pt-12">
