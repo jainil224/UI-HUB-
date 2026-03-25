@@ -32,8 +32,15 @@ app.use((err, req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Local:   http://localhost:${PORT}`);
-  console.log(`Network: http://0.0.0.0:${PORT}`);
-});
+// Export the app for Vercel
+export default app;
+
+// Only listen if running directly (not via Vercel serverless)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Local:   http://localhost:${PORT}`);
+    console.log(`Network: http://0.0.0.0:${PORT}`);
+  });
+}
+
