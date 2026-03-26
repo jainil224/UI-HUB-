@@ -247,7 +247,7 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
                 <div className="flex items-center gap-8">
                     <div className="flex flex-col">
                         <span className="text-[10px] text-zinc-500 font-mono tracking-[0.5em] animate-pulse">SYSTEM_STATUS: ACTIVE</span>
-                        <h2 className="text-xl font-glitch text-white tracking-widest cursor-wait hover:scale-110 transition-transform cursor-target">UI HUB</h2>
+                        <h2 className="text-lg md:text-xl font-glitch text-white tracking-widest cursor-wait hover:scale-110 transition-transform cursor-target">UI HUB</h2>
                     </div>
                 </div>
 
@@ -265,7 +265,7 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
                 </div>
             </header>
 
-            <main className="pt-32 pb-12 px-4 md:px-12 max-w-[1800px] mx-auto space-y-32">
+            <main className="pt-32 pb-12 px-4 sm:px-8 md:px-12 max-w-[1800px] mx-auto space-y-20 md:space-y-32">
                 {/* HERO SECTION */}
                 <motion.div 
                     initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
@@ -316,7 +316,7 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
                 >
                     <div className="col-span-1 md:col-span-8">
                         <RawBox title="CREATION_MOMENTUM" glitch>
-                            <div className="h-[550px] w-full relative">
+                            <div className="h-[300px] md:h-[550px] w-full relative">
                                 <div className="absolute top-10 left-10 p-2 bg-green-500/10 border border-green-500 text-green-500 text-[10px] z-10 animate-pulse">
                                     ✓ PERFORMANCE_HEALTH: OPTIMAL
                                 </div>
@@ -356,7 +356,7 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
                     </div>
 
                     <div className="col-span-1 md:col-span-4">
-                        <div className="grid grid-cols-2 gap-4 h-full">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
                             {stats.map((stat, i) => (
                                 <div key={i} className="group relative bg-[#0a0a0a] border border-zinc-800 p-6 flex flex-col justify-center hover:border-zinc-400 transition-colors duration-500 overflow-hidden cursor-target">
                                     <div className="absolute top-0 right-0 p-2 opacity-10 group-hover:opacity-30 transition-opacity">

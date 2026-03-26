@@ -25,7 +25,7 @@ const DemoPage: React.FC = () => {
     }
 
     return (
-        <div className="relative min-h-screen bg-brand-black">
+        <div className="relative h-screen bg-brand-black overflow-hidden">
             {/* Back Button */}
             <button
                 onClick={() => navigate(`/library?id=${id}`)}
@@ -36,10 +36,8 @@ const DemoPage: React.FC = () => {
             </button>
 
             {/* Component Rendering */}
-            <div className="w-full h-screen overflow-auto">
-                <div className="min-h-full w-full">
-                    {componentItem.preview()}
-                </div>
+            <div className="w-full h-full relative z-0">
+                {componentItem.preview()}
             </div>
 
             {/* Styles for full-screen render if needed */}

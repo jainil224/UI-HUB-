@@ -124,7 +124,7 @@ const TEAM = [
 
 // --- SUB-COMPONENTS ---
 
-const BrutalCard = ({ children, className, noPadding = false, style = {}, onMouseEnter, onMouseLeave }: { children: React.ReactNode, className?: string, noPadding?: boolean, style?: any, onMouseEnter?: () => void, onMouseLeave?: () => void }) => (
+const BrutalCard: React.FC<{ children: React.ReactNode, className?: string, noPadding?: boolean, style?: React.CSSProperties, onMouseEnter?: () => void, onMouseLeave?: () => void }> = ({ children, className, noPadding = false, style = {}, onMouseEnter, onMouseLeave }) => (
     <div 
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
@@ -138,7 +138,7 @@ const BrutalCard = ({ children, className, noPadding = false, style = {}, onMous
     </div>
 );
 
-const BrutalButton = ({ children, onClick, active = false, className, color = "white" }: { children: React.ReactNode, onClick?: () => void, active?: boolean, className?: string, color?: string }) => (
+const BrutalButton: React.FC<{ children: React.ReactNode, onClick?: () => void, active?: boolean, className?: string, color?: string }> = ({ children, onClick, active = false, className, color = "white" }) => (
     <button 
         onClick={onClick}
         data-cursor="hover"
@@ -247,7 +247,7 @@ const AboutView = () => (
             <div className="lg:col-span-4">
                 <BrutalCard noPadding className="aspect-square overflow-hidden group border-[4px]">
                     <img 
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80" 
+                        src="/profile.jpg" 
                         alt="Profile" 
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 hover:scale-105"
                     />
@@ -259,7 +259,7 @@ const AboutView = () => (
                 </div>
             </div>
             <div className="lg:col-span-8 flex flex-col gap-6">
-                <h2 className="text-6xl md:text-8xl font-black uppercase leading-[0.8] tracking-tighter mb-4">
+                <h2 className="text-5xl md:text-8xl font-black uppercase leading-[0.8] tracking-tighter mb-4">
                     Crafting <span className="bg-[#FEF08A] px-2 border-[4px] border-black shadow-[6px_6px_0px_black]">Digital</span> Instability.
                 </h2>
                 <BrutalCard className="bg-white">
@@ -302,7 +302,7 @@ const AboutView = () => (
 
 const SkillsView = () => (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <h2 className="text-5xl md:text-8xl font-black uppercase outline-text text-white leading-none mb-12">Technological_Prowess</h2>
+        <h2 className="text-4xl sm:text-5xl md:text-8xl font-black uppercase outline-text text-white leading-none mb-12">Technological_Prowess</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {SKILLS.map((skill, i) => (
                 <BrutalCard key={i} className="flex flex-col gap-6" style={{ backgroundColor: skill.color }}>
@@ -355,7 +355,7 @@ const ProjectsView = () => (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
             <div>
-                <h2 className="text-5xl md:text-8xl font-black uppercase outline-text text-white leading-none">Selected_Works</h2>
+                <h2 className="text-4xl sm:text-5xl md:text-8xl font-black uppercase outline-text text-white leading-none">Selected_Works</h2>
                 <p className="font-black text-xl uppercase mt-4 text-[#F472B6] tracking-widest italic">// EXHIBIT_DEK_D</p>
             </div>
             <div className="flex gap-4">
@@ -403,7 +403,7 @@ const ContactView = () => (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div className="lg:col-span-12">
-                <h2 className="text-6xl md:text-9xl font-black uppercase text-center mb-16 outline-text text-white tracking-[0.2em] leading-none">Initialize_Comm</h2>
+                <h2 className="text-4xl sm:text-6xl md:text-9xl font-black uppercase text-center mb-16 outline-text text-white tracking-[0.05em] sm:tracking-[0.2em] leading-none">Initialize_Comm</h2>
             </div>
             <div className="lg:col-span-7">
                 <BrutalCard className="bg-white border-[4px] shadow-[8px_8px_0px_black]">
@@ -488,7 +488,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
     return (
         <div 
             ref={containerRef}
-            className="h-full w-full bg-[#F3F4F6] text-black font-sans selection:bg-black selection:text-[#B8FF9F] overflow-hidden relative"
+            className="flex flex-col h-screen w-full bg-[#F3F4F6] text-black font-sans selection:bg-black selection:text-[#B8FF9F] overflow-hidden relative"
         >
 
             <style jsx global>{`
@@ -504,7 +504,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
             
             <Marquee />
 
-            <div className="flex flex-1 overflow-hidden">
+            <div className="flex flex-1 min-h-0 overflow-hidden relative pb-20 md:pb-0">
                 {/* SIDEBAR */}
                 <motion.aside 
                     initial={false}
@@ -550,14 +550,14 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
 
                     <div className="p-6 border-t-[4px] border-black overflow-hidden group cursor-pointer bg-white" onClick={() => setActiveTab("About")}>
                         <div className={cn("flex items-center gap-5 p-3 transition-all border-[3px] border-black", isSidebarOpen ? "bg-[#F3F4F6] shadow-[4px_4px_0px_black]" : "bg-white border-none items-center justify-center p-0")}>
-                            <div className="w-12 h-12 bg-black border-[3px] border-black grayscale group-hover:grayscale-0 overflow-hidden shrink-0 transition-all group-hover:rotate-6 shadow-[3px_3px_0px_#B8FF9F]"><img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&q=80" alt="user" className="w-full h-full object-cover" /></div>
+                            <div className="w-12 h-12 bg-black border-[3px] border-black grayscale group-hover:grayscale-0 overflow-hidden shrink-0 transition-all group-hover:rotate-6 shadow-[3px_3px_0px_#B8FF9F]"><img src="/profile.jpg" alt="user" className="w-full h-full object-cover" /></div>
                             {isSidebarOpen && <div className="overflow-hidden"><p className="font-black text-sm uppercase truncate mb-0.5">Jainil_Dev</p><p className="text-[10px] font-black opacity-40 uppercase tracking-widest">Architect_Unit_01</p></div>}
                         </div>
                     </div>
                 </motion.aside>
 
                 {/* MAIN CONTENT AREA */}
-                <main className="flex-1 flex flex-col overflow-hidden relative">
+                <main className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
                     <header className="h-24 bg-white border-b-[4px] border-black flex items-center justify-between px-6 md:px-12 z-10 shrink-0 shadow-[0px_8px_0px_rgba(0,0,0,0.02)]">
                         <div className="flex items-center gap-6">
                             <div className="flex flex-col">
@@ -587,7 +587,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
                         </div>
                     </header>
 
-                    <div className="flex-1 overflow-y-auto p-6 md:p-12 custom-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5 scroll-smooth">
+                    <div className="flex-1 overflow-y-auto p-6 md:p-12 custom-scrollbar bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-opacity-5" data-lenis-prevent>
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={activeTab}
@@ -618,6 +618,23 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
                     </footer>
                 </main>
             </div>
+            {/* BOTTOM NAV (Mobile Only) */}
+            <div className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t-[3px] border-black p-2 flex justify-around items-center z-[100] shadow-[0_-4px_0px_0px_rgba(0,0,0,1)]">
+                {navItems.map((item) => (
+                    <button
+                        key={item.id}
+                        onClick={() => setActiveTab(item.id as any)}
+                        className={cn(
+                            "flex flex-col items-center gap-1 p-2 rounded-none transition-all",
+                            activeTab === item.id ? "bg-black text-white" : "text-black"
+                        )}
+                    >
+                        <item.icon className="w-5 h-5" />
+                        <span className="text-[10px] font-bold uppercase">{item.id}</span>
+                    </button>
+                ))}
+            </div>
+
             {/* VIEW FULL DEMO OVERLAY - Only shown in Library Preview */}
             <AnimatePresence>
                 {showDemoButton && (
