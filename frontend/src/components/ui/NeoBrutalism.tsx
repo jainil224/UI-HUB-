@@ -171,10 +171,19 @@ const Marquee = () => (
 
 // --- VIEWS ---
 
-const DashboardView = () => (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <BrutalCard className="bg-[#FEF08A]">
+const DashboardView = ({ time }: { time: Date }) => {
+    const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    return (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <BrutalCard className="bg-[#A5F3FC] flex flex-col items-center justify-center min-h-[160px]">
+                    <span className="text-[10px] font-black uppercase opacity-40 tracking-[0.2em] mb-2">SYSTEM_CLOCK_SYNC</span>
+                    <div className="bg-white border-[3px] border-black p-4 w-full flex items-center justify-center shadow-[4px_4px_0px_black]">
+                        <span className="text-4xl md:text-5xl font-black text-red-500 tracking-tighter">{timeString}</span>
+                    </div>
+                </BrutalCard>
+                <BrutalCard className="bg-[#FEF08A]">
                 <div className="flex justify-between items-start mb-4">
                     <div className="p-2 border-[2px] border-black bg-white"><TrendingUp className="w-5 h-5" /></div>
                     <span className="text-[10px] font-black uppercase bg-black text-white px-2 py-0.5">+12%</span>
@@ -239,7 +248,8 @@ const DashboardView = () => (
             </BrutalCard>
         </div>
     </div>
-);
+    );
+};
 
 const AboutView = () => (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -475,6 +485,14 @@ const ContactView = () => (
 export default function NeoBrutalism({ showDemoButton = false }: { showDemoButton?: boolean }) {
     const [activeTab, setActiveTab] = useState<"Dashboard" | "About" | "Skills" | "Projects" | "Contact">("Dashboard");
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [currentTime, setCurrentTime] = useState(new Date());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentTime(new Date());
+        }, 1000);
+        return () => clearInterval(timer);
+    }, []);
     const containerRef = useRef<HTMLDivElement>(null);
 
     const navItems = [
@@ -596,7 +614,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
                                 exit={{ opacity: 0, scale: 0.98, y: -30 }}
                                 transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                             >
-                                {activeTab === "Dashboard" && <DashboardView />}
+                                {activeTab === "Dashboard" && <DashboardView time={currentTime} />}
                                 {activeTab === "About" && <AboutView />}
                                 {activeTab === "Skills" && <SkillsView />}
                                 {activeTab === "Projects" && <ProjectsView />}
