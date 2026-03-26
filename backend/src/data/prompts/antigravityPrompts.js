@@ -73,8 +73,7 @@ Create a component that features sharp, high-contrast "Corner-First" border anim
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "shatter-button": `
@@ -150,8 +149,7 @@ Create a button that vanishes and explodes into dozens of sharp shards upon clic
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "border-beam": `
@@ -229,8 +227,7 @@ Create a component where a glowing beam of light travels along the border of any
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "glow-button": `
@@ -305,8 +302,7 @@ Create a button with multiple layers of neon glow that react in real-time to cur
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "marquee-hover-button": `
@@ -380,8 +376,7 @@ Create a button that displays a static label by default, but transforms into an 
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "payment-transaction-button": `
@@ -459,8 +454,7 @@ Create a button where a credit card slides upward and inserts itself into a POS 
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "magic-card-effect": `
@@ -538,8 +532,7 @@ Create a card where a localized spotlight follows the cursor, dynamic illuminati
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "rainbow-button": `
@@ -613,8 +606,7 @@ Create a button with a high-velocity, infinitely cycling rainbow border and a di
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "social-tooltip-buttons": `
@@ -687,8 +679,7 @@ Create a set of social icons that physically expand, reveal 3D springing tooltip
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "orbit-button": `
@@ -763,8 +754,7 @@ Create a central neon button with multiple particles orbiting it at varying spee
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "galaxy-button": `
@@ -840,8 +830,7 @@ Create a multi-layered cosmic button featuring parallax rotating star fields, dr
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "liquid-fill-button": `
@@ -917,8 +906,7 @@ Create a vessel-like button that fills with glowing liquid using organic SVG wav
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "neon-flicker-button": `
@@ -993,8 +981,7 @@ Create a high-intensity neon button that suffers from digital glitches, power su
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
     "grid-background": `
@@ -1077,8 +1064,7 @@ Create a mathematical, perfectly aligned grid background with a dynamic radial m
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "hacker-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1158,8 +1144,7 @@ Create a high-performance Canvas-based Matrix rain effect with cascading digital
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "novatrix-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1241,8 +1226,7 @@ Create an atmospheric, breathing background with slow-rotating nebulous glows an
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "beam-grid-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1334,8 +1318,7 @@ Create a sophisticated interactive grid background where light beams travel alon
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "fall-beam-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1419,8 +1402,7 @@ Create a vertical rain of glowing light beams that fall at varying speeds and in
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "hell-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1502,8 +1484,7 @@ Create a high-intensity, visually complex fluid simulation using custom GLSL sha
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "interactive-grid-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1592,8 +1573,7 @@ Create a grid background where cells light up and leave a glowing trail as the m
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "particles-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1677,8 +1657,7 @@ Create a floating field of glowing particles with interactive repulse/push physi
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "wave-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1760,8 +1739,7 @@ Create a hypnotic background of morphing, flowing waves using custom GLSL fragme
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "lines-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1841,8 +1819,7 @@ Create a sophisticated background of multiple floating, animated SVG paths that 
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "sparkles-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -1925,8 +1902,7 @@ Create a dense, sparkling star field with concentrated center focus and an inter
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "isometric-grid-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -2006,8 +1982,7 @@ Create a 3D isometric grid of interactive boxes that change color on hover, mask
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "space-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -2089,8 +2064,7 @@ Create a vast, multi-layered cosmic background featuring twinkling star clusters
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "neural-network-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -2174,8 +2148,7 @@ Create a background showing a lively network of nodes and connecting lines, feat
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "black-hole-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -2256,8 +2229,7 @@ Create a visually stunning black hole simulation where thousands of particles sp
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "warp-speed-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -2338,8 +2310,7 @@ Create a classic sci-fi warp speed effect where stars fly towards the viewer fro
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "mouse-gravity-background": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -2423,8 +2394,7 @@ Create a lively field of particles that are magnetically attracted to the user's
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "black-hole-cursor": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3331,8 +3301,7 @@ interface TargetCursorProps {
 ---
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "blur-text": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3407,8 +3376,7 @@ Create a text animation where the entire text block blurs and fades in smoothly 
 * Avoid expensive layout shifts during the blur transition.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "fade-text": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3481,8 +3449,7 @@ Create a clean, minimalist fade-in animation for a text block.
 * Ensure opacity animations are handled on the compositor thread.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "dock-text": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3555,8 +3522,7 @@ Create a subtle "docked" animation effect where text scales up slightly from a s
 * Use transform: scale to avoid triggering layout repaints.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "font-weight": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3630,8 +3596,7 @@ Create a text component that continuously cycles its font weight between light a
 * Optimize transitions to avoid heavy main-thread work.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "gradual-spacing": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3706,8 +3671,7 @@ Create a text reveal where characters start with wide letter-spacing and gradual
 * Avoid layout thrashing by maintaining stable container dimensions.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "letter-pull-up": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3783,8 +3747,7 @@ Create an energetic entrance where each individual letter pulls up from an invis
 * Avoid expensive box-shadows on individual letters during the slide.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "multi-direction-slide": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3858,8 +3821,7 @@ Create a complex, dynamic entrance where letters slide into place from alternati
 * Ensure all animations use CSS transforms to avoid layout repaints.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "scale-letter": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -3933,8 +3895,7 @@ Animate characters by scaling them from 0 to 1 with a high-energy spring bounce 
 * Use hardware-accelerated transforms (scale/opacity).
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "separate-away": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4007,8 +3968,7 @@ Create a lateral text reveal where letters slide out from a compressed central p
 * Use Will-Change: transform for smoother character projection.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "wavy-text": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4082,8 +4042,7 @@ Create a persistent, undulating wave effect that flows through a text block, mak
 * Limit character count for complex continuous loops.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "word-pull-up": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4158,8 +4117,7 @@ Create a blocky, high-impact entrance where entire words pull up from beneath an
 * Animate using GPU-accelerated transforms.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "liquid-glass": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4236,8 +4194,7 @@ Create a translucent, frosted glass dashboard interface with layered depth, subt
 * Avoid heavy SVG re-renders by using Lucide components correctly.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "noise": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4312,8 +4269,7 @@ Create a grain-textured overlay effect that reacts to user input, providing an o
 * Use pointer-events-none on the noise layer to prevent interaction blockage.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "blur-vignette": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4387,8 +4343,7 @@ Apply a soft, blurred vignette effect to imagery, focusing attention on the cent
 * Avoid multiple overlapping backdrop-filters if possible; optimize blur radii for mobile.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "liquid-gradient": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4462,8 +4417,7 @@ Animate smooth, organic color shifts using looping radial-gradients that simulat
 * Use hardware-accelerated CSS properties where available.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "spotlight-cards": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4538,8 +4492,7 @@ Create a set of feature cards with a synchronized "spotlight" glow that tracks t
 * Use will-change: transform for the scrollable container.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "image-reveal": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4612,8 +4565,7 @@ Create a list of text labels that reveal a floating, cursor-following image when
 * Use img-decoding: async for large revealed assets.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "blocks": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4686,8 +4638,7 @@ Animate a grid of square blocks that respond to mouse interactions with staggere
 * Keep block count below 100 for continuous buttery animation.
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "animated-beam": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
@@ -4760,8 +4711,7 @@ Simulate a high-speed energy beam traveling through a defined box, adding a "hig
 * Use hardware-accelerated transforms (x).
 
 ## FINAL OUTPUT
-
-* Provide the complete, single-file code.
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
     "3d-rubiks-cube": `
 # UI HUB • ANTIGRAVITY / ADVANCE MASTER PROMPT

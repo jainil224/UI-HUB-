@@ -1760,9 +1760,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             <AnimatePresence mode="wait">
                                 {tab === 'preview' && (
                                     <div className="flex items-center gap-3">
-                                        {item.id === '3d-scroll-animation' && (
+                                        {(item.category === 'portfolios' || item.id.startsWith('3d-')) && (
                                             <Link
-                                                to="/demo/3d-scroll-animation"
+                                                to={item.id === '3d-scroll-animation' ? '/demo/3d-scroll-animation' : 
+                                                    item.id === '3d-slider' ? '/demo/3d-slider' : 
+                                                    `/demo/${item.id}`}
                                                 target="_blank"
                                                 className="no-underline"
                                             >
@@ -1770,44 +1772,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     initial={{ opacity: 0, x: 20 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     exit={{ opacity: 0, x: 20 }}
-                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
+                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-[#09090b] text-white border border-white/20 hover:bg-white/5 hover:border-white/30 transition-all text-[10px] md:text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
                                                 >
-                                                    <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                                    View Full Demo
-                                                </motion.button>
-                                            </Link>
-                                        )}
-                                        {item.id === '3d-slider' && (
-                                            <Link
-                                                to="/demo/3d-slider"
-                                                target="_blank"
-                                                className="no-underline"
-                                            >
-                                                <motion.button
-                                                    initial={{ opacity: 0, x: 20 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    exit={{ opacity: 0, x: 20 }}
-                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
-                                                >
-                                                    <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                                    View Full Demo
-                                                </motion.button>
-                                            </Link>
-                                        )}
-                                        {item.id === '3d-block-movement' && (
-                                            <Link
-                                                to="/demo/3d-block-movement"
-                                                target="_blank"
-                                                className="no-underline"
-                                            >
-                                                <motion.button
-                                                    initial={{ opacity: 0, x: 20 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    exit={{ opacity: 0, x: 20 }}
-                                                    className="flex items-center justify-center gap-2 px-8 py-3 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20 transition-all text-sm font-bold uppercase tracking-widest shadow-2xl shrink-0 group"
-                                                >
-                                                    <ExternalLink size={14} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                                    View Full Demo
+                                                    <ExternalLink size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                                                    VIEW FULL DEMO
                                                 </motion.button>
                                             </Link>
                                         )}
@@ -1899,12 +1867,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
                         )}
 
-                        <div className={`min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center bg-black/20 border border-white/5 ${item.category === 'portfolios' ? 'overflow-y-auto h-[600px] md:h-[800px]' : ''}`}>
+                        <div className={`min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center bg-black/20 border border-white/5`}>
                             <div
                                 className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' ? 'h-full' : 'px-2 md:px-8'}`}
                             >
                                 <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
-                                    {item.preview()}
+                                    {item.preview({ showDemoButton: true })}
                                 </div>
                             </div>
                         </div>

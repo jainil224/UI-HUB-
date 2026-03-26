@@ -12,6 +12,8 @@ import ThreeDSliderPage from './pages/Components/ThreeDSliderPage';
 import PricingPage from './pages/PricingPage/PricingPage';
 
 
+import DemoPage from './pages/Components/DemoPage';
+
 // Wrapper: only shows Navbar + Footer on non-library pages
 const AppShell = () => {
   const location = useLocation();
@@ -29,6 +31,7 @@ const AppShell = () => {
         <Route path="/favorites" element={<FavoritesPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/demo/:id" element={<DemoPage />} />
         <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
         <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
         <Route path="/pricing" element={<PricingPage />} />

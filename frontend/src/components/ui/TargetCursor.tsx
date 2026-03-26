@@ -18,14 +18,14 @@ interface TargetCursorProps {
 }
 
 export const TargetCursor: React.FC<TargetCursorProps> = ({
-    targetSelector = '.cursor-target',
-    spinDuration = 2000,
-    hoverDuration = 0.2, // seconds
-    hideDefaultCursor = true,
+    targetSelector = '[data-target="true"], .cursor-target',
+    spinDuration = 10,
+    hoverDuration = 0.3,
+    hideDefaultCursor = false,
     parallaxOn = true,
     containerRef,
     className = '',
-    color = '#6366f1',
+    color = '#4f46e5',
 }) => {
     const cursorRef = useRef<HTMLDivElement>(null);
     const [isLocked, setIsLocked] = useState(false);
@@ -85,12 +85,12 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
 
         let targetX = mouse.current.x;
         let targetY = mouse.current.y;
-        let targetRotate = (Date.now() / spinDuration) * 360;
+        let targetRotate = (Date.now() / (spinDuration * 1000)) * 360;
         let width = 24;
         let height = 24;
 
         if (targetElement.current && targetRect.current) {
-            const rect = targetRect.current;
+            const rect = targetElement.current.getBoundingClientRect(); // Live tracking
             const containerRect = containerRef?.current?.getBoundingClientRect();
 
             let centerX, centerY;
@@ -171,6 +171,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
                 mixBlendMode: 'difference',
                 transition: 'opacity 0.2s ease, visibility 0.2s ease',
                 visibility: 'hidden',
+                willChange: 'transform',
             }}
         >
             <style>{`
@@ -178,17 +179,17 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
                 ${containerSelector} { cursor: none !important; }
                 ${containerSelector} button, 
                 ${containerSelector} a, 
-                ${containerSelector} .cursor-target { cursor: none !important; }
+                ${containerSelector} .cursor-target,
+                ${containerSelector} [data-target="true"] { cursor: none !important; }
                 ` : ''}
                 
                 .cursor-inner {
                     position: relative;
-                    transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1), 
-                                height 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+                    transition: width ${hoverDuration}s cubic-bezier(0.23, 1, 0.32, 1), 
+                                height ${hoverDuration}s cubic-bezier(0.23, 1, 0.32, 1);
                     will-change: width, height, transform;
                 }
             `}</style>
-
 
             <div className="cursor-inner" style={{ width: 24, height: 24, transform: 'translate(-50%, -50%)' }}>
                 {/* Top Left */}
@@ -211,7 +212,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
                     borderRadius: '50%',
                     transform: 'translate(-50%, -50%)',
                     opacity: isLocked ? 0 : 1,
-                    transition: 'opacity 0.2s ease',
+                    transition: `opacity ${hoverDuration}s ease`,
                 }} />
             </div>
         </div>

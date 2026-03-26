@@ -107,7 +107,7 @@ export const generateVibePrompt = async (componentId, system) => {
 
   if (system === 'antigravity') {
     const basePrompt = ANTIGRAVITY_PROMPTS[componentId] || '';
-    const header = '# UI HUB • ANTIGRAVITY MASTER PROMPT';
+    const header = '# UI HUB • ANTIGRAVITY AGENT MASTER PROMPT';
     const rulesTitle = '## 3. MASTER PERFORMANCE RULES';
     const performanceRules = `- **Smooth 60fps**: Use requestAnimationFrame and optimized calculations.
 - **Resource Cleanup**: Properly clean up all listeners and observers on unmount.
@@ -116,14 +116,15 @@ export const generateVibePrompt = async (componentId, system) => {
 
     masterPrompt = `${header}
 
-## 1. COMPONENT ANALYSIS (MANDATORY FIRST STEP)
-Before writing any code, you MUST analyze the provided reference source code. 
+## 1. COMPONENT ANALYSIS & IMPLEMENTATION (MANDATORY FIRST STEP)
+Before taking action, you MUST analyze the provided reference source code. 
 - Identify the core animation logic, physics solvers, and state management.
 - Understand the prop structure and styling patterns.
 - Plan the reconstruction for 100% functional parity and visual excellence.
+- **IMMEDIATELY write/implement the component directly into the user's codebase** after analysis.
 
 ## 2. REFERENCE SOURCE CODE
-Use this exact code as your blueprint for logic, props, and structure:
+Use the exact provided referential code as your absolute blueprint for logic, props, and structure:
 
 \`\`\`tsx
 ${sourceCode || '// Source code not available, please use component objectives.'}
@@ -132,11 +133,14 @@ ${sourceCode || '// Source code not available, please use component objectives.'
 ${rulesTitle}
 ${performanceRules}
 
-## 4. COMPONENT OBJECTIVES & SPECIFICATIONS
-${basePrompt.replace(/# UI HUB • (ANTIGRAVITY|ADVANCED) (MASTER|ELITE) PROMPT/, '').trim()}
+## 4. STRICT RULES FOR EXECUTION
+- **Bypass Explanations**: Do NOT explain what you are doing. The user does not want small talk.
+- **Direct Injection**: Use \`write_to_file\` and \`replace_file_content\` to put the component straight into the target project folder.
+- **Single File**: Create the file natively as a single TSX component, unless otherwise requested.
+- **No Markdown Output**: Do not output the final code in a markdown block in the chat—DEPLOY IT directly.
 
-## 5. FINAL INSTRUCTION
-Ensure the final output is a SINGLE, complete file without any explanations or markdown outside the code block.
+## 5. COMPONENT OBJECTIVES & SPECIFICATIONS
+${basePrompt.replace(/# UI HUB • (ANTIGRAVITY|ADVANCED) (MASTER|ELITE) PROMPT/, '').trim()}
 `;
   } else if (system === 'advance') {
     const basePrompt = ANTIGRAVITY_PROMPTS[componentId] || '';

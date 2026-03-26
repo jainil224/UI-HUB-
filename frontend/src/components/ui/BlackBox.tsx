@@ -17,7 +17,9 @@ import {
     Lock,
     Unlock,
     RefreshCcw,
+    ExternalLink
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cn } from "@/src/lib/utils";
 
 // --- MOCK DATA ---
@@ -178,7 +180,7 @@ export function DataStream() {
 
 // --- MAIN PORTFOLIO COMPONENT ---
 
-export default function BlackBox() {
+export default function BlackBox({ showDemoButton = false }: { showDemoButton?: boolean }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [glitchMode, setGlitchMode] = useState(false);
     const [time, setTime] = useState("00:00:00");
@@ -235,7 +237,6 @@ export default function BlackBox() {
         >
             <GlobalStyles />
             <DataStream />
-            <TargetCursor containerRef={containerRef} color="#00FF00" />
 
             {/* SCANLINE EFFECT */}
             <div className="fixed inset-0 pointer-events-none z-50 opacity-10 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
@@ -468,6 +469,40 @@ export default function BlackBox() {
                     <p className="text-[8px] text-zinc-700 tracking-widest uppercase">© 2026 UI_HUB • ALL_RIGHTS_RESERVED</p>
                 </div>
             </footer>
+
+            {/* VIEW FULL DEMO OVERLAY - Only shown in Library Preview */}
+            <AnimatePresence>
+                {showDemoButton && (
+                    <motion.div 
+                        initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
+                        animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
+                        exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
+                        className="absolute inset-0 z-[100] flex items-center justify-center bg-black/40 pointer-events-none"
+                    >
+                        <Link 
+                            to="/demo/black-box" 
+                            target="_blank"
+                            className="pointer-events-auto no-underline"
+                        >
+                            <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                            >
+                                <GlitchButton 
+                                    className="!px-12 !py-6 text-xl gap-4 flex items-center bg-black border-2 border-brand-green/50 text-brand-green font-mono-tech shadow-[0_0_30px_rgba(0,255,0,0.2)]"
+                                    glitch={true}
+                                >
+                                    <ExternalLink size={24} className="animate-pulse" />
+                                    VIEW FULL DEMO
+                                </GlitchButton>
+                            </motion.div>
+                        </Link>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Target Cursor Component */}
+            <TargetCursor containerRef={containerRef} />
         </div>
     );
 }

@@ -22,6 +22,20 @@ import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
 import { ThreeDSlider } from '../components/ui/ThreeDSlider';
 import { RubiksCube } from '../components/ui/RubiksCube';
 import BlackBox from '../components/ui/BlackBox';
+import NeoBrutalism from '../components/ui/NeoBrutalism';
+
+// ── Neo Brutalism scoped preview ────────────
+const NeoBrutalismPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '900px',
+            background: '#E5E7EB',
+        }}>
+            <NeoBrutalism />
+        </div>
+    );
+};
 
 // ── Black Box scoped preview ────────────
 const BlackBoxPreview: React.FC = () => {
@@ -2032,6 +2046,15 @@ export const Demo = () => (
         preview: () => <BlackBoxPreview />,
         code: `import BlackBox from '@/components/ui/BlackBox';\n\nexport default function Demo() {\n  return <BlackBox />;\n}`,
         vibePrompt: "A high-performance cyberpunk glitch-style dashboard portfolio with terminal simulation, animated charts, and system instability effects."
+    },
+    {
+        id: "neo-brutalism-os",
+        title: "Neo Brutalism",
+        category: "portfolios",
+        isPremium: true,
+        preview: () => <NeoBrutalismPreview />,
+        code: `import NeoBrutalism from '@/components/ui/NeoBrutalism';\n\nexport default function Demo() {\n  return <NeoBrutalism />;\n}`,
+        vibePrompt: "A bold, Neo-Brutalism inspired Dashboard OS with high-contrast UI, interactive charts, and a custom sidebar navigation. Built with Framer Motion and Recharts for a premium interactive experience."
     },
 ];
 
