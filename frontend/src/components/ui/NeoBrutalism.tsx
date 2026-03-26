@@ -172,15 +172,17 @@ const Marquee = () => (
 // --- VIEWS ---
 
 const DashboardView = ({ time }: { time: Date }) => {
-    const timeString = time.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const timeString = time.toLocaleTimeString('en-IN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const dateString = time.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <BrutalCard className="bg-[#A5F3FC] flex flex-col items-center justify-center min-h-[160px]">
-                    <span className="text-[10px] font-black uppercase opacity-40 tracking-[0.2em] mb-2">SYSTEM_CLOCK_SYNC</span>
-                    <div className="bg-white border-[3px] border-black p-4 w-full flex items-center justify-center shadow-[4px_4px_0px_black]">
-                        <span className="text-4xl md:text-5xl font-black text-red-500 tracking-tighter">{timeString}</span>
+                    <span className="text-[10px] font-black uppercase opacity-40 tracking-[0.2em] mb-2 text-center">SYSTEM_CLOCK_SYNC // IST_ZONE</span>
+                    <div className="bg-white border-[3px] border-black p-4 w-full flex flex-col items-center justify-center shadow-[4px_4px_0px_black]">
+                        <span className="text-4xl md:text-5xl font-black text-red-500 tracking-tighter leading-none mb-1">{timeString}</span>
+                        <span className="text-[10px] font-black opacity-60 tracking-[0.3em]">{dateString}</span>
                     </div>
                 </BrutalCard>
                 <BrutalCard className="bg-[#FEF08A]">
