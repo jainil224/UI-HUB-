@@ -658,12 +658,12 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
 
             {/* VIEW FULL DEMO OVERLAY - Only shown in Library Preview */}
             <AnimatePresence>
-                {showDemoButton && !window.location.pathname.includes('/demo/') && (
+                {showDemoButton && (
                     <motion.div 
                         initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
                         animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
                         exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-                        className="absolute inset-0 z-[110] flex items-center justify-center bg-black/5 pointer-events-none"
+                        className="absolute inset-0 z-[100] flex items-center justify-center bg-black/5 pointer-events-none"
                     >
                         <Link 
                             to="/demo/neo-brutalism-os" 

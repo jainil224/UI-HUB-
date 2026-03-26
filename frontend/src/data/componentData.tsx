@@ -32,7 +32,7 @@ const NeoBrutalismPreview: React.FC = () => {
             width: '100%', height: '100%', minHeight: '900px',
             background: '#E5E7EB',
         }}>
-            <NeoBrutalism showDemoButton={true} />
+            <NeoBrutalism />
         </div>
     );
 };
@@ -45,7 +45,7 @@ const BlackBoxPreview: React.FC = () => {
             width: '100%', height: '100%', minHeight: '900px',
             background: '#000',
         }}>
-            <BlackBox showDemoButton={true} />
+            <BlackBox />
         </div>
     );
 };
