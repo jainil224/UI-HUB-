@@ -136,8 +136,14 @@ const ComponentGrid = () => {
                                             pointerEvents: 'auto',
                                         }}
                                     >
-                                        <div className="w-full h-full flex items-center justify-center transform scale-[0.8] md:scale-[0.85] origin-center">
-                                            {comp!.preview()}
+                                        <div className="w-full h-full flex items-center justify-center transform scale-[0.8] md:scale-[0.85] origin-center relative">
+                                            <React.Suspense fallback={
+                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                    <div className="w-6 h-6 border-2 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
+                                                </div>
+                                            }>
+                                                {comp!.preview()}
+                                            </React.Suspense>
                                         </div>
                                     </div>
                                 ) : (

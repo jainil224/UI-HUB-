@@ -532,7 +532,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
                     transition={{ type: "spring", stiffness: 400, damping: 40 }}
                     className="bg-white border-r-[4px] border-black flex flex-col z-20 relative overflow-hidden shrink-0 shadow-[8px_0px_0px_rgba(0,0,0,0.05)]"
                 >
-                    <div className="p-6 border-b-[4px] border-black h-24 flex items-center justify-between overflow-hidden bg-white">
+                    <div className={cn("p-6 border-b-[4px] border-black h-24 flex items-center overflow-hidden bg-white", isSidebarOpen ? "justify-between" : "justify-center p-3")}>
                         <AnimatePresence>
                             {isSidebarOpen && (
                                 <motion.div 
@@ -555,7 +555,8 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id as any)}
                                 className={cn(
-                                    "w-full h-16 flex items-center gap-5 px-5 border-[4px] border-black transition-all group relative overflow-hidden",
+                                    "w-full h-16 flex items-center border-[4px] border-black transition-all group relative",
+                                    isSidebarOpen ? "px-5 gap-5" : "justify-center px-0",
                                     activeTab === item.id 
                                         ? "bg-black text-white shadow-none translate-x-[2px] translate-y-[2px]" 
                                         : "bg-white hover:bg-[#FEF08A] shadow-[6px_6px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
@@ -568,7 +569,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
                         ))}
                     </nav>
 
-                    <div className="p-6 border-t-[4px] border-black overflow-hidden group cursor-pointer bg-white" onClick={() => setActiveTab("About")}>
+                    <div className={cn("p-6 border-t-[4px] border-black overflow-hidden group cursor-pointer bg-white transition-all", !isSidebarOpen && "p-3")} onClick={() => setActiveTab("About")}>
                         <div className={cn("flex items-center gap-5 p-3 transition-all border-[3px] border-black", isSidebarOpen ? "bg-[#F3F4F6] shadow-[4px_4px_0px_black]" : "bg-white border-none items-center justify-center p-0")}>
                             <div className="w-12 h-12 bg-black border-[3px] border-black grayscale group-hover:grayscale-0 overflow-hidden shrink-0 transition-all group-hover:rotate-6 shadow-[3px_3px_0px_#B8FF9F]"><img src="/profile.jpg" alt="user" className="w-full h-full object-cover" /></div>
                             {isSidebarOpen && <div className="overflow-hidden"><p className="font-black text-sm uppercase truncate mb-0.5">Jainil_Dev</p><p className="text-[10px] font-black opacity-40 uppercase tracking-widest">Architect_Unit_01</p></div>}
@@ -657,12 +658,12 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
 
             {/* VIEW FULL DEMO OVERLAY - Only shown in Library Preview */}
             <AnimatePresence>
-                {showDemoButton && (
+                {showDemoButton && !window.location.pathname.includes('/demo/') && (
                     <motion.div 
                         initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
                         animate={{ opacity: 1, backdropFilter: "blur(4px)" }}
                         exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-                        className="absolute inset-0 z-[100] flex items-center justify-center bg-black/5 pointer-events-none"
+                        className="absolute inset-0 z-[110] flex items-center justify-center bg-black/5 pointer-events-none"
                     >
                         <Link 
                             to="/demo/neo-brutalism-os" 

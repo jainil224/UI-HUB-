@@ -6,23 +6,23 @@ import * as VisualEffects from '../components/animations/VisualEffects';
 import { AuroraCursor } from '../components/ui/AuroraCursor';
 import { MagneticCursor } from '../components/ui/MagneticCursor';
 import { MagneticBackground } from '../components/ui/MagneticBackground';
-import BlackHoleCursor from '../components/ui/BlackHoleCursor';
-import { TargetCursor } from '../components/ui/TargetCursor';
-import { SpaceBackground } from '../components/ui/SpaceBackground';
-import { NeuralNetworkBackground } from '../components/ui/NeuralNetworkBackground';
-import { BlackHoleBackground } from '../components/ui/BlackHoleBackground';
-import { WarpSpeedBackground } from '../components/ui/WarpSpeedBackground';
-import { MouseGravityBackground } from '../components/ui/MouseGravityBackground';
-import { HeartCursor } from '../components/ui/HeartCursor';
-import { LizardCursor } from '../components/ui/LizardCursor';
-import { VenomCursor } from '../components/ui/VenomCursor';
-import { ThreeDTubesCursor } from '../components/ui/ThreeDTubesCursor';
-import { InteractiveWebGLScene } from '../components/ui/InteractiveWebGLScene';
-import Scroll3DAnimation from '../components/ui/Scroll3DAnimation';
-import { ThreeDSlider } from '../components/ui/ThreeDSlider';
-import { RubiksCube } from '../components/ui/RubiksCube';
-import BlackBox from '../components/ui/BlackBox';
-import NeoBrutalism from '../components/ui/NeoBrutalism';
+const BlackHoleCursor = React.lazy(() => import('../components/ui/BlackHoleCursor'));
+const TargetCursor = React.lazy(() => import('../components/ui/TargetCursor').then(m => ({ default: m.TargetCursor })));
+const SpaceBackground = React.lazy(() => import('../components/ui/SpaceBackground').then(m => ({ default: m.SpaceBackground })));
+const NeuralNetworkBackground = React.lazy(() => import('../components/ui/NeuralNetworkBackground').then(m => ({ default: m.NeuralNetworkBackground })));
+const BlackHoleBackground = React.lazy(() => import('../components/ui/BlackHoleBackground').then(m => ({ default: m.BlackHoleBackground })));
+const WarpSpeedBackground = React.lazy(() => import('../components/ui/WarpSpeedBackground').then(m => ({ default: m.WarpSpeedBackground })));
+const MouseGravityBackground = React.lazy(() => import('../components/ui/MouseGravityBackground').then(m => ({ default: m.MouseGravityBackground })));
+const InteractiveWebGLScene = React.lazy(() => import('../components/ui/InteractiveWebGLScene').then(m => ({ default: m.InteractiveWebGLScene })));
+const Scroll3DAnimation = React.lazy(() => import('../components/ui/Scroll3DAnimation'));
+const ThreeDSlider = React.lazy(() => import('../components/ui/ThreeDSlider').then(m => ({ default: m.ThreeDSlider })));
+const RubiksCube = React.lazy(() => import('../components/ui/RubiksCube').then(m => ({ default: m.RubiksCube })));
+const BlackBox = React.lazy(() => import('../components/ui/BlackBox'));
+const NeoBrutalism = React.lazy(() => import('../components/ui/NeoBrutalism'));
+const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then(m => ({ default: m.HeartCursor })));
+const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
+const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
+const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
 
 // ── Neo Brutalism scoped preview ────────────
 const NeoBrutalismPreview: React.FC = () => {
@@ -32,7 +32,7 @@ const NeoBrutalismPreview: React.FC = () => {
             width: '100%', height: '100%', minHeight: '900px',
             background: '#E5E7EB',
         }}>
-            <NeoBrutalism />
+            <NeoBrutalism showDemoButton={true} />
         </div>
     );
 };
@@ -45,7 +45,7 @@ const BlackBoxPreview: React.FC = () => {
             width: '100%', height: '100%', minHeight: '900px',
             background: '#000',
         }}>
-            <BlackBox />
+            <BlackBox showDemoButton={true} />
         </div>
     );
 };
