@@ -357,5 +357,84 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["three"],
             requirements: ["Three.js PerspectiveCamera + Scene + WebGLRenderer", "CatmullRomCurve3 from mouse position history", "TubeGeometry generation from curve", "PointLight following cursor position", "Dynamic script loading from CDN", "Canvas resize and Three.js disposal on unmount"]
         }
+    },
+    "robot-3d-background": {
+        props: [
+            { name: "showDownloadLink", type: "boolean", default: "true", description: "Shows a download button for the asset." }
+        ],
+        vibeMeta: {
+            behavior: "A futuristic 3D robot background with cinematic lighting and interactive overlays. Features a premium video-backed environment with professional post-processing.",
+            states: { from: "static loading", to: "interactive 3D robot environment" },
+            cssProperties: ["object-cover", "radial-gradient", "filter: drop-shadow"],
+            description: "Elite 3D robot background with professional cinematic post-processing and interactive UI elements.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Cinematic video loop background", "Interactive scanline distortion overlay", "High-fidelity download button with glow", "Responsive layout with backdrop-blur"]
+        }
+    },
+    "particles-background": {
+        props: [
+            { name: "speed", type: "number", default: "3", description: "Movement speed of the particles." },
+            { name: "interactive", type: "boolean", default: "true", description: "Enable mouse interaction." }
+        ],
+        vibeMeta: {
+            behavior: "A dynamic particle field that responds to mouse movement. Features high-performance Canvas rendering and smooth motion physics.",
+            states: { from: "static particles", to: "interactive particle field" },
+            cssProperties: ["canvas", "background: transparent"],
+            description: "High-performance interactive particle background.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D rendering", "Particle physics system", "Mouse interaction logic"]
+        }
+    },
+    "wave-background": {
+        props: [],
+        vibeMeta: {
+            behavior: "A rhythmic, flowing wave animation that creates a sense of fluid motion. Uses SVG paths with animated offsets.",
+            states: { from: "static curve", to: "flowing wave animation" },
+            cssProperties: ["svg", "fill", "animation"],
+            description: "Smooth SVG-based wave animation background.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["SVG path animation", "CSS transitions for fluid movement"]
+        }
+    },
+    "lines-background": {
+        props: [
+            { name: "title", type: "string", default: '"LINES"', description: "Text to display in the background." },
+            { name: "pathColor", type: "string", default: '"#9c40ff"', description: "Color of the animated lines." }
+        ],
+        vibeMeta: {
+            behavior: "Abstract animated lines that create a dynamic, tech-inspired background. Features customizable text and line colors.",
+            states: { from: "empty background", to: "animated line field" },
+            cssProperties: ["canvas", "z-index: -1"],
+            description: "Tech-inspired animated lines background.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D rendering", "Text rendering with shadow", "Animated path generation"]
+        }
+    },
+    "sparkles-background": {
+        props: [
+            { name: "title", type: "string", default: '"Sparkles background"', description: "Text to display over sparkles." }
+        ],
+        vibeMeta: {
+            behavior: "A magical glittering field of sparkles that adds a premium feel to sections. Features a shimmering effect with variable particle sizes.",
+            states: { from: "dark background", to: "glittering sparkle field" },
+            cssProperties: ["canvas", "mix-blend-mode: screen"],
+            description: "High-end shimmering sparkle field background.",
+            libraries: ["react"],
+            requirements: ["Particle system with shimmering logic", "Text overlay integration"]
+        }
+    },
+    "isometric-grid-background": {
+        props: [
+            { name: "title", type: "string", default: '"ISOMETRIC"', description: "Text to display in the grid." }
+        ],
+        vibeMeta: {
+            behavior: "A 3D isometric grid with perspective depth and interactive lighting. Perfect for modern, structured layouts.",
+            states: { from: "flat grid", to: "3D isometric environment" },
+            cssProperties: ["perspective", "transform-style: preserve-3d"],
+            description: "Modern 3D isometric grid background.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["CSS 3D perspective", "Grid generation logic", "Text perspective transformation"]
+        }
     }
 };
+

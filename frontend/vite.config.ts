@@ -14,7 +14,7 @@ export default defineConfig(({mode}) => {
     plugins: [
       react(), 
       tailwindcss(),
-      mode === 'production' && obfuscator({
+      /* mode === 'production' && obfuscator({
         options: {
           compact: true,
           controlFlowFlattening: true,
@@ -31,7 +31,7 @@ export default defineConfig(({mode}) => {
           debugProtectionInterval: 0,
           disableConsoleOutput: false,
         }
-      })
+      }) */
     ].filter(Boolean),
 
     define: {

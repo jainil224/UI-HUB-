@@ -24,6 +24,8 @@ const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').th
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
 export const GalaxyAnimation = React.lazy(() => import('../components/ui/GalaxyAnimation').then(m => ({ default: m.default })));
+/* const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem')); */
+
 
 // ── Lazy Loaded Internal Collections ───────────
 const Animations = React.lazy(() => import('../components/animations/TextAnimations'));
@@ -242,6 +244,26 @@ const GalaxyAnimationPreview: React.FC<any> = (props) => {
         </div>
     );
 };
+
+// ── Solar System scoped preview ────────────
+/*
+const SolarSystemPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '600px',
+            background: '#000',
+            borderRadius: '24px',
+            overflow: 'hidden'
+        }}>
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/10 font-bold animate-pulse uppercase tracking-widest">LODING SOLAR SYSTEM...</div>}>
+                <SolarSystem />
+            </Suspense>
+        </div>
+    );
+};
+*/
+
 
 // ── Black Hole Cursor scoped preview ────────────
 const BlackHoleCursorPreview: React.FC = () => {
@@ -1739,7 +1761,7 @@ export default TargetCursor;`,
     {
         id: "robot-3d-background",
         title: "Robot 3D Background",
-        category: "3d",
+        category: "background",
         isPremium: true,
         preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
         code: "",
