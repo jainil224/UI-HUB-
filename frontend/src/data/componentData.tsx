@@ -1238,7 +1238,7 @@ export type ComponentItem = {
 };
 
 // Helper to render lazy text/effect components
-const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawName: string }> = ({ type, name, rawName }) => {
+const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawName: string, componentProps?: any }> = ({ type, name, rawName, componentProps = {} }) => {
     const [Comp, setComp] = useState<any>(null);
 
     useEffect(() => {
@@ -1257,19 +1257,26 @@ const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawNa
         load();
     }, [type, name, rawName]);
 
-    if (!Comp) return <div className="animate-pulse opacity-10">LODING...</div>;
-    return React.createElement(Comp);
+    if (!Comp) return <div className="animate-pulse opacity-10 flex items-center justify-center w-full h-full font-bold uppercase tracking-widest text-[10px]">LODING...</div>;
+    return <Comp {...componentProps} />;
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
-const renderComponent = (id: string, _name: string): (() => React.ReactNode) => {
+const renderComponent = (id: string, _name: string, props: any = {}): (() => React.ReactNode) => {
     return () => {
         const rawName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
-        const CompName = id.endsWith('-text') ? rawName : `${rawName}Text`;
+        // If it's a text category, it might need 'Text' suffix if it's not already in the ID
+        const isText = id.includes('text') || id.includes('cinematic') || id.includes('separate') || id.includes('wavy');
+        const CompName = isText ? (id.endsWith('-text') ? rawName : `${rawName}Text`) : rawName;
 
         return (
-            <Suspense fallback={<div className="animate-pulse opacity-10 font-bold uppercase tracking-widest">LODING...</div>}>
-                <LazyRenderer type={id.includes('text') ? 'animation' : 'effect'} name={CompName} rawName={rawName} />
+            <Suspense fallback={<div className="animate-pulse opacity-10 font-bold uppercase tracking-widest flex items-center justify-center w-full h-full text-[10px]">LODING...</div>}>
+                <LazyRenderer 
+                    type={isText ? 'animation' : 'effect'} 
+                    name={CompName} 
+                    rawName={rawName} 
+                    componentProps={props}
+                />
             </Suspense>
         );
     };
@@ -1688,7 +1695,7 @@ export default TargetCursor;`,
         id: "grid-background",
         title: "Grid Background",
         category: "background",
-        preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.GridBackground opacity={0.5} maskRadius={40} /></div>,
+        preview: renderComponent("grid-background", "Grid Background", { opacity: 0.5, maskRadius: 40 }),
         code: `import { GridBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden bg-black">\n    <GridBackground opacity={0.6} maskRadius={30} />\n  </div>\n);`,
         vibePrompt: ""
 
@@ -1706,7 +1713,7 @@ export default TargetCursor;`,
         id: "novatrix-background",
         title: "Novatrix Background",
         category: "background",
-        preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.NovatrixBackground title="NEBULA" /></div>,
+        preview: renderComponent("novatrix-background", "Novatrix Background", { title: "NEBULA" }),
         code: `import { NovatrixBackground } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-[400px] overflow-hidden">\n    <NovatrixBackground \n      title="UI HUB" \n      colorFrom="#1a1a2e" \n      colorTo="#16213e" \n      opacity={0.8} \n    />\n  </div>\n);`,
         vibePrompt: ""
 
@@ -1734,7 +1741,7 @@ export default TargetCursor;`,
         title: "Hell Background",
         category: "background",
         isPremium: true,
-        preview: () => <div className="w-full h-full relative"><VisualEffects.HellBackground intensity={1.5} speed={0.8} /></div>,
+        preview: renderComponent("hell-background", "Hell Background", { intensity: 1.5, speed: 0.8 }),
         code: "",
         vibePrompt: ""
 
@@ -1753,7 +1760,7 @@ export default TargetCursor;`,
         id: "particles-background",
         title: "Particles Background",
         category: "background",
-        preview: () => <div className="w-full h-full relative"><VisualEffects.ParticlesBackground speed={3} interactive={true} /></div>,
+        preview: renderComponent("particles-background", "Particles Background", { speed: 3, interactive: true }),
         code: ``,
         vibePrompt: ""
 
@@ -1763,7 +1770,7 @@ export default TargetCursor;`,
         title: "Robot 3D Background",
         category: "background",
         isPremium: true,
-        preview: () => <div className="w-full h-full relative overflow-hidden"><VisualEffects.Robot3DBackground showDownloadLink={true} /></div>,
+        preview: renderComponent("robot-3d-background", "Robot 3D Background", { showDownloadLink: true }),
         code: "",
         vibePrompt: ""
     },
@@ -1780,7 +1787,7 @@ export default TargetCursor;`,
         id: "lines-background",
         title: "Lines Background",
         category: "background",
-        preview: () => <div className="w-full h-full relative"><VisualEffects.LinesBackground title="LINES" pathColor="#9c40ff" /></div>,
+        preview: renderComponent("lines-background", "Lines Background", { title: "LINES", pathColor: "#9c40ff" }),
         code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" pathColor="rgba(255,255,255,0.2)" opacity={0.5} />\n  </div>\n);`,
         vibePrompt: ""
 
@@ -1799,7 +1806,7 @@ export default TargetCursor;`,
         title: "Isometric Grid Background",
         category: "background",
         isPremium: true,
-        preview: () => <div className="w-full h-full relative"><VisualEffects.IsometricGridBackground title="ISOMETRIC" /></div>,
+        preview: renderComponent("isometric-grid-background", "Isometric Grid Background", { title: "ISOMETRIC" }),
         code: "",
         vibePrompt: ""
 

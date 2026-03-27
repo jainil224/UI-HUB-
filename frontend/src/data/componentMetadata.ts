@@ -435,6 +435,52 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react", "framer-motion"],
             requirements: ["CSS 3D perspective", "Grid generation logic", "Text perspective transformation"]
         }
+    },
+    "grid-background": {
+        props: [
+            { name: "gridSize", type: "number", default: "24", description: "Size of each grid cell in pixels." },
+            { name: "gridColor", type: "string", default: '"#80808012"', description: "Color of the grid lines." },
+            { name: "label", type: "string", default: '"GRID ALIVE"', description: "Text to display in the background." },
+            { name: "opacity", type: "number", default: "1", description: "Overall opacity of the background." }
+        ],
+        vibeMeta: {
+            behavior: "A clean, modern grid background with an optional text overlay. Uses CSS gradients for high performance.",
+            states: { from: "empty space", to: "structured grid" },
+            cssProperties: ["background-image: linear-gradient", "mask-image: radial-gradient"],
+            description: "High-performance CSS grid background with radial masking.",
+            libraries: ["react"],
+            requirements: ["CSS linear-gradient for grid lines", "Radial gradient masking for focus", "Text overlay support"]
+        }
+    },
+    "novatrix-background": {
+        props: [
+            { name: "title", type: "string", default: '"NEBULA"', description: "Title text to display." },
+            { name: "colorFrom", type: "string", default: '"#1a1a2e"', description: "Starting color of the nebula gradient." },
+            { name: "colorTo", type: "string", default: '"#16213e"', description: "Ending color of the nebula gradient." },
+            { name: "opacity", type: "number", default: "0.8", description: "Overall opacity of the effect." }
+        ],
+        vibeMeta: {
+            behavior: "A stunning nebula-like background with flowing colors and deep atmospheric depth. Perfect for high-end landing pages.",
+            states: { from: "solid background", to: "ethereal nebula field" },
+            cssProperties: ["radial-gradient", "blur", "animate-pulse"],
+            description: "Ethereal nebula background with organic flowing gradients.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Multi-stop radial gradients", "Animated opacity oscillations", "Backdrop-blur for glassmorphism"]
+        }
+    },
+    "hell-background": {
+        props: [
+            { name: "intensity", type: "number", default: "1.5", description: "Brightness of the hellish glow." },
+            { name: "speed", type: "number", default: "0.8", description: "Speed of the fire/lava movement." }
+        ],
+        vibeMeta: {
+            behavior: "An aggressive, high-contrast background with fire and lava-like animations. Features intense glows and rapid motion.",
+            states: { from: "darkness", to: "hellish inferno" },
+            cssProperties: ["filter: drop-shadow", "mix-blend-mode: screen", "canvas"],
+            description: "Intense high-contrast fire/lava background effect.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Canvas-based noise generation", "Intense color-dodge blends", "Animated distortion filters"]
+        }
     }
 };
 
