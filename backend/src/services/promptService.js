@@ -226,52 +226,45 @@ Deliver a **100% working, production-ready React component**.
 `;
   } else if (system === 'lovable') {
     const basePrompt = LOVABLE_PROMPTS[componentId] || '';
-    masterPrompt = `# UI HUB • LOVABLE VISUAL RECONSTRUCTION
+    masterPrompt = `# UI HUB • LOVABLE 100% READY-TO-USE PROMPT
 
->> INTERFACE DYNAMICS
-Replicate the exact aesthetic and interaction feel described in the following concept. Focus on smooth transitions, precise spacing, and visual high-fidelity.
+You are an expert AI frontend developer. I want you to create an EXACT, pristine replica of the following React component. 
 
->> COMPONENT ARCHITECTURE
-- Follow the React component structure defined in the specifications.
-- Ensure all Tailwind classes align with the premium design intent.
-- Maintain strict functional parity with the described objectives.
-
->> REFERENCE SOURCE CODE
-Use this exact code as your blueprint for logic, props, and structure:
+Here is the EXACT source code of the component. You must use this code as your absolute source of truth. Do not invent new logic, do not change the core architecture, and do not use placeholders.
 
 \`\`\`tsx
 ${sourceCode || '// Source code not available, please use component objectives.'}
 \`\`\`
 
->> REPLICATION MANDATE
+Here are the specific requirements and specifications for this component:
 ${basePrompt.replace(/# UI HUB • LOVABLE PROMPT/, '').trim()}
 
-Deliver a **100% working, single-file React component**. NO markdown outside the code block.
+### INSTRUCTIONS FOR AI:
+1. Analyze the provided source code carefully.
+2. Generate the exact same output, preserving all animations, Tailwind classes, Framer Motion logic, and React hooks structure.
+3. Ensure the component is 100% production-ready, functional, and requires no further editing.
+4. Output the complete, single-file React component code within a single markdown code block. Do not add conversational filler.
 `;
   } else if (system === 'cursor') {
     const basePrompt = CLAUDE_PROMPTS[componentId] || ANTIGRAVITY_PROMPTS[componentId] || '';
     if (basePrompt) {
-      masterPrompt = `### UI HUB • CURSOR LOGIC MASTER
+      masterPrompt = `You are an elite AI coding assistant. Your task is to generate the code for this exact component. Do NOT summarize. Do NOT omit anything. Do NOT use comments like "// rest of code". Simply write the full exact code I provide below.
 
-[ LOGIC & STATE FLOW ]
-Engineer a high-performance React component by meticulously implementing the underlying logic and state transitions described below.
-
-[ DESIGN SYSTEM ALIGNMENT ]
-- Use professional Tailwind CSS patterns for layout and styling.
-- Ensure 100% functional parity with the technical specifications.
-- Optimize all hooks and effects for maximum rendering efficiency.
-
-[ REFERENCE SOURCE CODE ]
-Use this exact code as your blueprint for logic, props, and structure:
+### 1. THE EXACT 100% WORKING COMPONENT CODE
+You must output this exact code in its entirety. It is already 100% working. Do not change the logic, structure, or classes.
 
 \`\`\`tsx
-${sourceCode || '// Source code not available, please use component objectives.'}
+${sourceCode || '// Source code not available.'}
 \`\`\`
 
-[ FINAL IMPLEMENTATION RULES ]
-${basePrompt.replace(/# UI HUB • (ANTIGRAVITY|CLAUDE) MASTER PROMPT/, '').trim()}
+### 2. COMPONENT SPECIFICATIONS
+${basePrompt.replace(/# UI HUB • (ANTIGRAVITY|CLAUDE|LOVABLE) MASTER PROMPT/, '').trim()}
 
-Return ONLY the complete TSX file. NO explanation. NO preamble.
+### 3. STRICT GENERATION RULES
+- Output the fully functional, complete React component as a single file.
+- Absolutely NO placeholders.
+- Absolutely NO conversational text.
+- ONLY output the markdown code block containing the TSX code.
 `;
     }
   }

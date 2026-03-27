@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../../../../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
@@ -30,11 +31,11 @@ const preloadComponent = (id: string) => {
 };
 
 
-const PropsTable = ({ props }: { props: PropDefinition[] }) => (
+const PropsTable = ({ props, theme }: { props: PropDefinition[]; theme: string }) => (
     <div className="w-full overflow-x-auto">
         <table className="w-full text-left border-collapse">
             <thead>
-                <tr className="border-b border-white/5 text-[10px] uppercase tracking-[0.2em] text-white/40">
+                <tr className={`border-b text-[10px] uppercase tracking-[0.2em] ${theme === 'dark' ? 'border-white/5 text-white/40' : 'border-black/10 text-black/40'}`}>
                     <th className="py-6 px-4 font-bold">Prop</th>
                     <th className="py-6 px-4 font-bold">Type</th>
                     <th className="py-6 px-4 font-bold">Default</th>
@@ -43,17 +44,17 @@ const PropsTable = ({ props }: { props: PropDefinition[] }) => (
             </thead>
             <tbody className="text-sm">
                 {props.map((p, i) => (
-                    <tr key={i} className="border-b border-white/5 group hover:bg-white/[0.02] transition-colors">
+                    <tr key={i} className={`border-b group transition-colors ${theme === 'dark' ? 'border-white/5 hover:bg-white/[0.02]' : 'border-black/5 hover:bg-black/[0.02]'}`}>
                         <td className="py-6 px-4 font-mono">
-                            <span className="px-2 py-1 rounded-md bg-white/5 text-brand-green border border-white/10">{p.name}</span>
+                            <span className={`px-2 py-1 rounded-md border ${theme === 'dark' ? 'bg-white/5 border-white/10 text-brand-green' : 'bg-[#00AEEF]/10 border-[#00AEEF]/20 text-[#00AEEF]'}`}>{p.name}</span>
                         </td>
                         <td className="py-6 px-4 font-mono">
-                            <span className="px-2 py-1 rounded-md bg-white/5 text-blue-400 border border-white/10">{p.type}</span>
+                            <span className={`px-2 py-1 rounded-md border ${theme === 'dark' ? 'bg-white/5 border-white/10 text-blue-400' : 'bg-black/5 border-black/10 text-blue-600'}`}>{p.type}</span>
                         </td>
-                        <td className="py-6 px-4 font-mono text-white/60">
-                            <span className="px-2 py-1 rounded-md bg-white/5 text-white/40 border border-white/10">{p.default}</span>
+                        <td className={`py-6 px-4 font-mono ${theme === 'dark' ? 'text-white/60' : 'text-black/60'}`}>
+                            <span className={`px-2 py-1 rounded-md border ${theme === 'dark' ? 'bg-white/5 border-white/10 text-white/40' : 'bg-black/5 border-black/10 text-black/40'}`}>{p.default}</span>
                         </td>
-                        <td className="py-6 px-4 text-white/60 leading-relaxed">{p.description}</td>
+                        <td className={`py-6 px-4 leading-relaxed ${theme === 'dark' ? 'text-white/60' : 'text-black/60'}`}>{p.description}</td>
                     </tr>
                 ))}
             </tbody>
@@ -378,7 +379,7 @@ const VibeSystemSection = React.memo(({
         >
             {/* Tool Selector */}
             <section className="space-y-6 md:space-y-10">
-                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-white/90 px-2 lg:px-4">Select AI Tool</h3>
+                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-[var(--text-primary)] px-2 lg:px-4">Select AI Tool</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
                     {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
                         <ToolCard
@@ -397,7 +398,7 @@ const VibeSystemSection = React.memo(({
             <section className="space-y-6 md:space-y-8">
                 <div className="flex items-end justify-between px-2">
                     <div className="space-y-1">
-                        <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white line-clamp-1">Master Blueprint</h3>
+                        <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-[var(--text-primary)] line-clamp-1">Master Blueprint</h3>
                         <div className="flex items-center gap-2">
                             <div className={`w-1 h-1 rounded-full ${isPending ? 'bg-amber-400 animate-pulse' : 'bg-brand-green/50'}`} />
                             <p className={`text-[10px] uppercase tracking-[0.3em] font-black transition-colors ${isPending ? 'text-amber-400' : 'text-brand-green/30'}`}>
@@ -408,7 +409,7 @@ const VibeSystemSection = React.memo(({
                 </div>
 
                 <div className="relative group/terminal">
-                    <div className={`glass rounded-[2rem] md:rounded-[3rem] overflow-hidden border transition-all duration-500 relative bg-[#050505]/80 backdrop-blur-3xl shadow-2xl ${isPending ? 'border-amber-400/20 shadow-amber-400/5 opacity-80' : 'border-white/10 hover:border-white/20'}`}>
+                    <div className={`rounded-[2rem] md:rounded-[3rem] overflow-hidden border transition-all duration-500 relative ${isPending ? 'border-amber-400/20 shadow-[0_0_40px_rgba(255,189,46,0.06)] opacity-80' : 'border-[rgba(0,255,150,0.2)] hover:border-[rgba(0,255,150,0.35)] shadow-[0_0_40px_rgba(0,255,150,0.08)] hover:shadow-[0_0_60px_rgba(0,255,150,0.15)]'}`} style={{ background: 'rgba(10,10,10,0.6)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
                         {/* Scanline/Texture Overlay */}
                         <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay z-10" />
 
@@ -430,9 +431,7 @@ const VibeSystemSection = React.memo(({
                                 </div>
                             </div>
 
-                            <div className="flex justify-center sm:absolute sm:left-1/2 sm:-translate-x-1/2 items-center gap-1 pointer-events-none">
-                                <span className="text-[8px] font-black uppercase tracking-[0.15em] sm:tracking-widest animate-terminal-purple-blink-delay whitespace-nowrap text-white/50 sm:text-white">Made with ❤️ by Jainil Patel</span>
-                            </div>
+                            <div className="flex justify-center sm:absolute sm:left-1/2 sm:-translate-x-1/2 items-center gap-1 pointer-events-none" />
 
                             {/* Copy Button */}
                             <div className="relative group/copybtn">
@@ -537,6 +536,7 @@ const VibeSystemSection = React.memo(({
 
 const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => void }) => {
     const navigate = useNavigate();
+    const { theme } = useTheme();
     const [tab, setTab] = React.useState<'preview' | 'code' | 'vibe'>('preview');
     const [copied, setCopied] = React.useState<string | null>(null);
     const [resetKey, setResetKey] = React.useState(0);
@@ -694,7 +694,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             <div className="flex items-center justify-between mb-2">
                 <button
                     onClick={onBack}
-                    className="flex items-center gap-2 text-white/40 hover:text-brand-green transition-colors text-sm font-bold uppercase tracking-widest"
+                    className={`flex items-center gap-2 transition-colors text-sm font-bold uppercase tracking-widest ${theme === 'dark' ? 'text-white/40 hover:text-brand-green' : 'text-[#00AEEF]/60 hover:text-[#00AEEF]'}`}
                 >
                     <ChevronLeft size={16} />
                     Back to Library
@@ -703,7 +703,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
             <div className="flex flex-col">
                 <div className="flex items-center justify-between gap-4 mb-5 md:mb-8">
-                    <h2 className="text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-display uppercase tracking-tighter text-white leading-none">
+                    <h2 className={`text-2xl sm:text-4xl md:text-7xl lg:text-8xl font-display uppercase tracking-tighter leading-none ${theme === 'dark' ? 'text-white' : 'text-[#00AEEF]'}`} style={theme === 'light' ? { textShadow: '0 0 30px rgba(0,174,239,0.3), 0 0 60px rgba(0,174,239,0.15)' } : undefined}>
                         {item.title}
                     </h2>
                     <div className="flex items-center gap-4">
@@ -717,7 +717,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 whileTap={{ scale: 0.9 }}
                                 className={`relative z-10 p-5 rounded-full border-2 transition-all duration-300 ${isFavorited
                                     ? 'bg-red-500/10 border-red-500/50 text-red-500 shadow-[0_0_40px_rgba(239,68,68,0.4)]'
-                                    : 'bg-white/5 border-white/20 text-white/40 hover:text-white hover:border-white/40 hover:bg-white/10 shadow-2xl'
+                                    : theme === 'dark' ? 'bg-white/5 border-white/20 text-white/40 hover:text-white hover:border-white/40 hover:bg-white/10 shadow-2xl' : 'bg-[#00AEEF]/5 border-[#00AEEF]/20 text-[#00AEEF]/40 hover:text-[#00AEEF] hover:border-[#00AEEF]/40 hover:bg-[#00AEEF]/10 shadow-2xl'
                                     }`}
                             >
                                 <motion.div
@@ -742,14 +742,14 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             <div className="flex flex-wrap gap-2 md:gap-4">
                                 <button
                                     onClick={() => setTab('preview')}
-                                    className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                                    className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'preview' ? (theme === 'dark' ? 'bg-white/10 text-white border border-white/20' : 'bg-[#00AEEF]/15 text-[#00AEEF] border border-[#00AEEF]/30 shadow-[0_0_15px_rgba(0,174,239,0.15)]') : (theme === 'dark' ? 'text-white/40 hover:text-white' : 'text-[#00AEEF]/40 hover:text-[#00AEEF]')}`}
                                 >
                                     <Eye size={13} className="md:w-4 md:h-4" />
                                     Preview
                                 </button>
                                 <button
                                     onClick={() => setTab('code')}
-                                    className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? 'bg-white/10 text-white border border-white/20' : 'text-white/40 hover:text-white'}`}
+                                    className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-8 py-2.5 md:py-3 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all ${tab === 'code' ? (theme === 'dark' ? 'bg-white/10 text-white border border-white/20' : 'bg-[#00AEEF]/15 text-[#00AEEF] border border-[#00AEEF]/30 shadow-[0_0_15px_rgba(0,174,239,0.15)]') : (theme === 'dark' ? 'text-white/40 hover:text-white' : 'text-[#00AEEF]/40 hover:text-[#00AEEF]')}`}
                                 >
                                     <Code size={13} className="md:w-4 md:h-4" />
                                     Code
@@ -842,45 +842,52 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 </div>
                                 <div>
                                     <p className="text-[10px] uppercase tracking-widest text-brand-green font-bold">Verified Asset</p>
-                                    <p className="text-[11px] font-bold text-white/40 leading-tight">UI Hub Curated</p>
+                                    <p className={`text-[11px] font-bold leading-tight ${theme === 'dark' ? 'text-white/40' : 'text-black/40'}`}>UI Hub Curated</p>
                                 </div>
                             </div>
 
-                            <div className="w-px h-8 bg-white/5" />
+                            <div className={`w-px h-8 ${theme === 'dark' ? 'bg-white/5' : 'bg-black/10'}`} />
 
                             <div className="flex items-center gap-3">
                                 <div>
-                                    <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold mb-1">Build Stack</p>
+                                    <p className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${theme === 'dark' ? 'text-white/30' : 'text-black/30'}`}>Build Stack</p>
                                     <div className="flex items-center gap-1.5">
-                                        <span className="px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/10 text-[10px] font-bold text-white/60">React 18</span>
-                                        <span className="px-2 py-0.5 rounded-md bg-white/[0.03] border border-white/10 text-[10px] font-bold text-white/60">Tailwind CSS</span>
+                                        <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${theme === 'dark' ? 'bg-white/[0.03] border-white/10 text-white/60' : 'bg-black/[0.03] border-black/10 text-black/60'}`}>React 18</span>
+                                        <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold ${theme === 'dark' ? 'bg-white/[0.03] border-white/10 text-white/60' : 'bg-black/[0.03] border-black/10 text-black/60'}`}>Tailwind CSS</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="w-px h-8 bg-white/5" />
+                            <div className={`w-px h-8 ${theme === 'dark' ? 'bg-white/5' : 'bg-black/10'}`} />
 
                             <div className="flex flex-col">
-                                <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold mb-1">Category</p>
-                                <span className="text-[11px] font-bold text-brand-green uppercase tracking-wider">{item.category}</span>
+                                <p className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${theme === 'dark' ? 'text-white/30' : 'text-black/30'}`}>Category</p>
+                                <span className={`text-[11px] font-bold uppercase tracking-wider ${theme === 'dark' ? 'text-brand-green' : 'text-[#00AEEF]'}`}>{item.category}</span>
                             </div>
                         </div>
 
                         {item.imageUrl && (
                             <div className="mb-12">
-                                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white px-2 mb-6">Preview Image</h3>
-                                <div className="aspect-video w-full glass rounded-[2rem] md:rounded-[3rem] overflow-hidden border border-white/5 bg-black/40">
+                                <h3 className={`text-2xl md:text-3xl font-display uppercase tracking-tight px-2 mb-6 ${theme === 'dark' ? 'text-white' : 'text-[#00AEEF]'}`} style={theme === 'light' ? { textShadow: '0 0 20px rgba(0,174,239,0.2)' } : undefined}>Preview Image</h3>
+                                <div className={`aspect-video w-full glass rounded-[2rem] md:rounded-[3rem] overflow-hidden border ${theme === 'dark' ? 'border-white/5 bg-black/40' : 'border-black/5 bg-white/40'}`}>
                                     <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
                                 </div>
                             </div>
                         )}
 
-                        <div className={`min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center bg-black/20 border border-white/5`}>
+                        <div className={`min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'}`}>
                             <div
                                 className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' ? 'h-full' : 'px-2 md:px-8'}`}
                             >
                                 <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
-                                    {item.preview({ showDemoButton: true })}
+                                    <React.Suspense fallback={
+                                        <div className="flex flex-col items-center justify-center p-12 text-white/20">
+                                            <div className="w-8 h-8 rounded-full border-2 border-white/5 border-t-brand-green animate-spin mb-4" />
+                                            <p className="text-[10px] uppercase tracking-widest font-bold animate-pulse">Initializing Preview...</p>
+                                        </div>
+                                    }>
+                                        {item.preview({ showDemoButton: true })}
+                                    </React.Suspense>
                                 </div>
                             </div>
                         </div>
@@ -888,9 +895,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         {/* Props Table */}
                         {componentConfig.props.length > 0 && (
                             <section className="space-y-6 md:space-y-8">
-                                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white px-2">Props</h3>
-                                <div className="rounded-[1.5rem] md:rounded-[2rem] border border-white/10 overflow-hidden bg-[#09090b] p-2 md:p-4 shadow-2xl">
-                                    <PropsTable props={componentConfig.props} />
+                                <h3 className={`text-2xl md:text-3xl font-display uppercase tracking-tight px-2 ${theme === 'dark' ? 'text-white' : 'text-[#00AEEF]'}`} style={theme === 'light' ? { textShadow: '0 0 20px rgba(0,174,239,0.2)' } : undefined}>Props</h3>
+                                <div className={`rounded-[1.5rem] md:rounded-[2rem] border overflow-hidden p-2 md:p-4 shadow-2xl ${theme === 'dark' ? 'border-white/10 bg-[#09090b]' : 'border-black/10 bg-white'}`}>
+                                    <PropsTable props={componentConfig.props} theme={theme} />
                                 </div>
                             </section>
                         )}
@@ -905,19 +912,19 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     >
                         {/* Install Section */}
                         <section>
-                            <h3 className="text-2xl md:text-3xl font-display uppercase tracking-tight text-white mb-6 md:mb-8">Install</h3>
-                            <div className="inline-flex glass p-1.5 rounded-full mb-6 md:mb-8 border border-white/5 bg-black/20">
+                            <h3 className={`text-2xl md:text-3xl font-display uppercase tracking-tight mb-6 md:mb-8 ${theme === 'dark' ? 'text-white' : 'text-[#00AEEF]'}`} style={theme === 'light' ? { textShadow: '0 0 20px rgba(0,174,239,0.2)' } : undefined}>Install</h3>
+                            <div className={`inline-flex glass p-1.5 rounded-full mb-6 md:mb-8 border ${theme === 'dark' ? 'border-white/5 bg-black/20' : 'border-black/5 bg-white/50'}`}>
                                 <button
                                     onClick={() => setInstallMethod('cli')}
-                                    className={`px-6 md:px-8 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all border ${installMethod === 'cli' ? 'bg-[#09090b] text-white border-white/20 shadow-lg' : 'bg-transparent text-white/40 border-transparent hover:text-white'}`}
+                                    className={`px-6 md:px-8 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all border ${installMethod === 'cli' ? (theme === 'dark' ? 'bg-[#09090b] text-white border-white/20 shadow-lg' : 'bg-white text-[#00AEEF] border-[#00AEEF]/30 shadow-[0_0_12px_rgba(0,174,239,0.15)]') : (theme === 'dark' ? 'bg-transparent text-white/40 border-transparent hover:text-white' : 'bg-transparent text-[#00AEEF]/40 border-transparent hover:text-[#00AEEF]')}`}
                                 >CLI</button>
                                 <button
                                     onClick={() => setInstallMethod('manual')}
-                                    className={`px-6 md:px-8 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all border ${installMethod === 'manual' ? 'bg-[#09090b] text-white border-white/20 shadow-lg' : 'bg-transparent text-white/40 border-transparent hover:text-white'}`}
+                                    className={`px-6 md:px-8 py-2 md:py-2.5 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest transition-all border ${installMethod === 'manual' ? (theme === 'dark' ? 'bg-[#09090b] text-white border-white/20 shadow-lg' : 'bg-white text-[#00AEEF] border-[#00AEEF]/30 shadow-[0_0_12px_rgba(0,174,239,0.15)]') : (theme === 'dark' ? 'bg-transparent text-white/40 border-transparent hover:text-white' : 'bg-transparent text-[#00AEEF]/40 border-transparent hover:text-[#00AEEF]')}`}
                                 >Manual</button>
                             </div>
 
-                            <div className="rounded-2xl md:rounded-3xl overflow-hidden border border-white/10 bg-[#09090b] shadow-2xl">
+                            <div className={`rounded-2xl md:rounded-3xl overflow-hidden border shadow-2xl ${theme === 'dark' ? 'border-white/10 bg-[#09090b]' : 'border-black/10 bg-white'}`}>
                                 <AnimatePresence mode="wait">
                                     {installMethod === 'manual' && (
                                         <motion.div
@@ -931,7 +938,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 <button
                                                     key={m}
                                                     onClick={() => setPkgManager(m)}
-                                                    className={`px-8 py-4 text-xs font-bold uppercase tracking-widest relative ${pkgManager === m ? 'text-white' : 'text-white/40 hover:text-white'}`}
+                                                    className={`px-8 py-4 text-xs font-bold uppercase tracking-widest relative ${pkgManager === m ? (theme === 'dark' ? 'text-white' : 'text-[#00AEEF]') : (theme === 'dark' ? 'text-white/40 hover:text-white' : 'text-[#00AEEF]/40 hover:text-[#00AEEF]')}`}
                                                 >
                                                     {m}
                                                     {pkgManager === m && (
@@ -946,7 +953,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     <code className="text-brand-green font-mono text-sm">{installCommand}</code>
                                     <button
                                         onClick={() => handleCopy(installCommand, 'install')}
-                                        className={`flex items-center gap-2 p-3 rounded-xl transition-all ${copied === 'install' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                                        className={`flex items-center gap-2 p-3 rounded-xl transition-all ${copied === 'install' ? 'bg-brand-green/20 text-brand-green' : (theme === 'dark' ? 'text-white/40 hover:text-white hover:bg-white/5' : 'text-[#00AEEF]/40 hover:text-[#00AEEF] hover:bg-[#00AEEF]/5')}`}
                                     >
                                         {copied === 'install' ? <Check size={18} /> : <Copy size={18} />}
                                     </button>
@@ -956,11 +963,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                         {/* Usage Section */}
                         <section>
-                            <h3 className="text-3xl font-display uppercase tracking-tight text-white mb-2">Usage <span className="text-sm font-sans tracking-normal text-white/30 lowercase">(with your settings)</span></h3>
-                            <div className="rounded-3xl overflow-hidden border border-white/10 relative bg-[#09090b] shadow-2xl">
+                            <h3 className={`text-3xl font-display uppercase tracking-tight mb-2 ${theme === 'dark' ? 'text-white' : 'text-[#00AEEF]'}`} style={theme === 'light' ? { textShadow: '0 0 20px rgba(0,174,239,0.2)' } : undefined}>Usage <span className={`text-sm font-sans tracking-normal lowercase ${theme === 'dark' ? 'text-white/30' : 'text-[#00AEEF]/40'}`}>(with your settings)</span></h3>
+                            <div className={`rounded-3xl overflow-hidden border relative shadow-2xl ${theme === 'dark' ? 'border-white/10 bg-[#09090b]' : 'border-black/10 bg-white'}`}>
                                 <button
                                     onClick={() => handleCopy(usageCode, 'usage')}
-                                    className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'usage' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                                    className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'usage' ? 'bg-brand-green/20 text-brand-green' : (theme === 'dark' ? 'text-white/40 hover:text-white hover:bg-white/5' : 'text-[#00AEEF]/40 hover:text-[#00AEEF] hover:bg-[#00AEEF]/5')}`}
                                 >
                                     {copied === 'usage' ? <Check size={18} /> : <Copy size={18} />}
                                 </button>
@@ -972,7 +979,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                         {/* Code Section */}
                         <section>
-                            <h3 className="text-3xl font-display uppercase tracking-tight text-white mb-8">Code</h3>
+                            <h3 className={`text-3xl font-display uppercase tracking-tight mb-8 ${theme === 'dark' ? 'text-white' : 'text-[#00AEEF]'}`} style={theme === 'light' ? { textShadow: '0 0 20px rgba(0,174,239,0.2)' } : undefined}>Code</h3>
                             <div className="flex flex-wrap gap-4 mb-8">
                                 <CustomSelect
                                     label="Language"
@@ -996,14 +1003,14 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 />
                             </div>
 
-                            <div className="rounded-[2.5rem] overflow-hidden border border-white/10 relative bg-[#09090b] shadow-2xl min-h-[400px]">
+                            <div className={`rounded-[2.5rem] overflow-hidden border relative shadow-2xl min-h-[400px] ${theme === 'dark' ? 'border-white/10 bg-[#09090b]' : 'border-black/10 bg-white'}`}>
                                 {item.isPremium && !isProUser ? (
                                     <PremiumGate message="This premium component requires a Pro subscription to view and copy the source code." />
                                 ) : (
                                     <>
                                         <button
                                             onClick={() => handleCopy(fetchedSource || getComponentCode(item.id, { lang, styling }), 'source')}
-                                            className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'source' ? 'bg-brand-green/20 text-brand-green' : 'text-white/40 hover:text-white hover:bg-white/5'}`}
+                                            className={`absolute top-6 right-6 p-3 rounded-lg transition-all z-10 ${copied === 'source' ? 'bg-brand-green/20 text-brand-green' : (theme === 'dark' ? 'text-white/40 hover:text-white hover:bg-white/5' : 'text-[#00AEEF]/40 hover:text-[#00AEEF] hover:bg-[#00AEEF]/5')}`}
                                         >
                                             {copied === 'source' ? <Check size={18} /> : <Copy size={18} />}
                                         </button>

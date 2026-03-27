@@ -31,39 +31,6 @@ export const GalaxyAnimation = React.lazy(() => import('../components/ui/GalaxyA
 const Animations = React.lazy(() => import('../components/animations/TextAnimations'));
 const VisualEffects = React.lazy(() => import('../components/animations/VisualEffects'));
 
-// ── Neo Brutalism scoped preview ────────────
-const NeoBrutalismPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '900px',
-            background: '#E5E7EB',
-        }}>
-            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-black/20 font-bold">LODING NEO BRUTALISM...</div>}>
-                <NeoBrutalism />
-            </Suspense>
-        </div>
-    );
-};
-
-// ── Black Box scoped preview ────────────
-const BlackBoxPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '900px',
-            background: '#000',
-        }}>
-            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/10 font-bold">LODING BLACK BOX...</div>}>
-                <BlackBox />
-            </Suspense>
-        </div>
-    );
-};
-
-
-
-
 
 import Logo from '../components/ui/Logo';
 
@@ -205,64 +172,6 @@ const MagneticCursorPreview: React.FC = () => {
     );
 };
 
-// ── Rubiks Cube scoped preview ────────────
-const RubiksCubePreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#08080f',
-            backgroundImage: 'radial-gradient(ellipse at 50% 50%, rgba(255, 88, 0, 0.05) 0%, transparent 80%)'
-        }}>
-            <React.Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm text-brand-green font-black uppercase tracking-widest animate-pulse">LODING...</div>}>
-                <RubiksCube />
-            </React.Suspense>
-        </div>
-    );
-};
-
-// ── Galaxy Animation scoped preview ────────────
-const GalaxyAnimationPreview: React.FC<any> = (props) => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: '#020408',
-            borderRadius: '24px'
-        }}>
-            <React.Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm text-brand-green font-black uppercase tracking-widest animate-pulse">LODING...</div>}>
-                <GalaxyAnimation {...props} />
-            </React.Suspense>
-        </div>
-    );
-};
-
-// ── Solar System scoped preview ────────────
-/*
-const SolarSystemPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '600px',
-            background: '#000',
-            borderRadius: '24px',
-            overflow: 'hidden'
-        }}>
-            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/10 font-bold animate-pulse uppercase tracking-widest">LODING SOLAR SYSTEM...</div>}>
-                <SolarSystem />
-            </Suspense>
-        </div>
-    );
-};
-*/
 
 
 // ── Black Hole Cursor scoped preview ────────────
@@ -552,195 +461,7 @@ const AuroraCursorPreview: React.FC = () => {
     );
 };
 
-// ── Target Cursor scoped preview ────────────
-const TargetCursorPreview: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
 
-    return (
-        <div
-            ref={containerRef}
-            className="target-cursor-area"
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: '#0a0a0c',
-                overflow: 'hidden',
-                isolation: 'isolate',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 24,
-                color: '#fff',
-                fontFamily: 'Inter, sans-serif'
-            }}
-        >
-            <TargetCursor containerRef={containerRef} targetSelector=".cursor-target" />
-
-            <div style={{ textAlign: 'center', zIndex: 1, pointerEvents: 'none' }}>
-                <h2 style={{ fontSize: '2rem', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: '8px' }}>
-                    Targeting System
-                </h2>
-                <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    Hover to lock
-                </p>
-            </div>
-
-            <div style={{ display: 'flex', gap: '12px', zIndex: 10 }}>
-                {['HUB', 'COMPONENTS', 'READY'].map((text, i) => (
-                    <button
-                        key={i}
-                        className="cursor-target"
-                        style={{
-                            padding: '12px 18px',
-                            background: 'transparent',
-                            border: '1px solid rgba(255,255,255,0.1)',
-                            color: '#fff',
-                            fontSize: '0.75rem',
-                            fontWeight: 700,
-                            letterSpacing: '0.1em',
-                            transition: 'all 0.3s ease',
-                            borderRadius: '4px',
-                            cursor: 'none'
-                        }}
-                    >
-                        {text}
-                    </button>
-                ))}
-            </div>
-
-            <style>{`.cursor-target:hover { border-color: #6366f1; background: rgba(99, 102, 241, 0.05); }`}</style>
-        </div>
-    );
-};
-
-// ── Space Background scoped preview ────────────
-const SpaceBackgroundPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            color: '#fff',
-            fontFamily: 'Inter, sans-serif'
-        }}>
-            <SpaceBackground interactive={true} />
-        </div>
-    );
-};
-
-const NeuralNetworkPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            color: '#fff',
-            fontFamily: 'Inter, sans-serif'
-        }}>
-            <NeuralNetworkBackground interactive={false} />
-        </div>
-    );
-};
-
-const BlackHolePreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            color: '#fff',
-            fontFamily: 'Inter, sans-serif'
-        }}>
-            <BlackHoleBackground />
-        </div>
-    );
-};
-
-// ── Warp Speed Background scoped preview ────────────
-const WarpSpeedPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            color: '#fff',
-            fontFamily: 'Inter, sans-serif'
-        }}>
-            <WarpSpeedBackground />
-        </div>
-    );
-};
-
-// ── Mouse Gravity Background scoped preview ────────────
-const MouseGravityPreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            color: '#fff',
-            fontFamily: 'Inter, sans-serif'
-        }}>
-            <MouseGravityBackground />
-        </div>
-    );
-};
-const InteractiveWebGLScenePreview: React.FC = () => {
-    return (
-        <div style={{
-            position: 'relative',
-            width: '100%', height: '100%', minHeight: '100%',
-            overflow: 'hidden',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexDirection: 'column',
-            color: '#fff',
-            fontFamily: 'Inter, sans-serif'
-        }}>
-            <InteractiveWebGLScene showDownloadLink={true} overlayOpacity={0.2} />
-        </div>
-    );
-};
-
-const Scroll3DAnimationPreview: React.FC = () => {
-    return (
-        <div
-            className="overflow-y-auto custom-scrollbar"
-            style={{
-                position: 'relative',
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#000',
-                color: '#fff',
-                fontFamily: 'Inter, sans-serif'
-            }}
-        >
-            <Scroll3DAnimation showDemoButton={true} />
-        </div>
-    );
-};
 
 
 
@@ -1261,23 +982,52 @@ const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawNa
     return <Comp {...componentProps} />;
 };
 
+// Map of UI components for direct lazy loading
+const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
+    'aurora-cursor': AuroraCursor,
+    'magnetic-cursor': MagneticCursor,
+    'magnetic-background': MagneticBackground,
+    'black-hole-cursor': BlackHoleCursor,
+    'target-cursor': TargetCursor,
+    'space-background': SpaceBackground,
+    'neural-network-background': NeuralNetworkBackground,
+    'black-hole-background': BlackHoleBackground,
+    'warp-speed-background': WarpSpeedBackground,
+    'mouse-gravity-background': MouseGravityBackground,
+    'interactive-webgl-scene': InteractiveWebGLScene,
+    '3d-scroll-animation': Scroll3DAnimation,
+    '3d-slider': ThreeDSlider,
+    '3d-rubiks-cube': RubiksCube,
+    'black-box': BlackBox,
+    'neo-brutalism-os': NeoBrutalism,
+    'heart-cursor': HeartCursor,
+    'lizard-cursor': LizardCursor,
+    'venom-cursor': VenomCursor,
+    '3d-tubes-cursor': ThreeDTubesCursor,
+    '3d-galaxy-animation': GalaxyAnimation,
+};
+
 // Lazy component resolver - returns a factory function to avoid eager initialization
 const renderComponent = (id: string, _name: string, props: any = {}): (() => React.ReactNode) => {
     return () => {
+        // First check if it's in our UI components map
+        const UIComp = UI_COMPONENTS[id];
+        if (UIComp) {
+            return <UIComp {...props} />;
+        }
+
         const rawName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
         // If it's a text category, it might need 'Text' suffix if it's not already in the ID
         const isText = id.includes('text') || id.includes('cinematic') || id.includes('separate') || id.includes('wavy');
         const CompName = isText ? (id.endsWith('-text') ? rawName : `${rawName}Text`) : rawName;
 
         return (
-            <Suspense fallback={<div className="animate-pulse opacity-10 font-bold uppercase tracking-widest flex items-center justify-center w-full h-full text-[10px]">LODING...</div>}>
-                <LazyRenderer 
-                    type={isText ? 'animation' : 'effect'} 
-                    name={CompName} 
-                    rawName={rawName} 
-                    componentProps={props}
-                />
-            </Suspense>
+            <LazyRenderer 
+                type={isText ? 'animation' : 'effect'} 
+                name={CompName} 
+                rawName={rawName} 
+                componentProps={props}
+            />
         );
     };
 };
@@ -1289,7 +1039,7 @@ export const componentList: ComponentItem[] = [
         id: "target-cursor",
         title: "Target Cursor",
         category: "cursor",
-        preview: () => <TargetCursorPreview />,
+        preview: renderComponent("target-cursor", "TargetCursor"),
         code: `import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 interface TargetCursorProps {
@@ -2002,7 +1752,7 @@ export const Demo = () => (
         title: "Space Background",
         category: "background",
         isPremium: true,
-        preview: () => <SpaceBackgroundPreview />,
+        preview: renderComponent("space-background", "SpaceBackground", { interactive: true }),
         code: "",
         vibePrompt: ""
 
@@ -2011,7 +1761,7 @@ export const Demo = () => (
         id: "neural-network-background",
         title: "Neural Network Background",
         category: "background",
-        preview: () => <NeuralNetworkPreview />,
+        preview: renderComponent("neural-network-background", "NeuralNetworkBackground"),
         code: ``,
         vibePrompt: ""
 
@@ -2021,7 +1771,7 @@ export const Demo = () => (
         title: "Black Hole Background",
         category: "background",
         isPremium: true,
-        preview: () => <BlackHolePreview />,
+        preview: renderComponent("black-hole-background", "BlackHoleBackground"),
         code: "",
         vibePrompt: ""
 
@@ -2030,7 +1780,7 @@ export const Demo = () => (
         id: "warp-speed-background",
         title: "Warp Speed Background",
         category: "background",
-        preview: () => <WarpSpeedPreview />,
+        preview: renderComponent("warp-speed-background", "WarpSpeedBackground"),
         code: ``,
         vibePrompt: ""
 
@@ -2040,7 +1790,7 @@ export const Demo = () => (
         title: "Mouse Gravity Background",
         category: "background",
         isPremium: true,
-        preview: () => <MouseGravityPreview />,
+        preview: renderComponent("mouse-gravity-background", "MouseGravityBackground"),
         code: "",
         vibePrompt: ""
 
@@ -2049,7 +1799,7 @@ export const Demo = () => (
         id: "heart-cursor",
         title: "Heart Cursor 💜",
         category: "cursor",
-        preview: () => <HeartCursorPreview />,
+        preview: renderComponent("heart-cursor", "HeartCursor"),
         code: ``,
         vibePrompt: ""
     },
@@ -2058,7 +1808,7 @@ export const Demo = () => (
         title: "Interactive WebGL Scene",
         category: "3d",
         isPremium: true,
-        preview: () => <InteractiveWebGLScenePreview />,
+        preview: renderComponent("interactive-webgl-scene", "InteractiveWebGLScene", { showDownloadLink: true, overlayOpacity: 0.2 }),
         code: "",
         vibePrompt: ""
     },
@@ -2067,7 +1817,7 @@ export const Demo = () => (
         title: "3D Scroll Animation",
         category: "3d",
         isPremium: true,
-        preview: () => <Scroll3DAnimationPreview />,
+        preview: renderComponent("3d-scroll-animation", "Scroll3DAnimation", { showDemoButton: true }),
         code: "",
         vibePrompt: ""
     },
@@ -2076,7 +1826,7 @@ export const Demo = () => (
         title: "3D Slider",
         category: "3d",
         isPremium: true,
-        preview: () => <ThreeDSliderPreview />,
+        preview: renderComponent("3d-slider", "ThreeDSlider"),
         code: ``,
         vibePrompt: ""
     },
@@ -2085,7 +1835,7 @@ export const Demo = () => (
         title: "3D Rubiks Cube",
         category: "3d",
         isPremium: true,
-        preview: () => <RubiksCubePreview />,
+        preview: renderComponent("3d-rubiks-cube", "RubiksCube"),
         code: `import { RubiksCube } from '@/components/ui/RubiksCube';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] flex items-center justify-center bg-[#08080f]">\n    <RubiksCube />\n  </div>\n);`,
         vibePrompt: "Interactive 3D Rubiks Cube with scramble and solve logic.",
         downloadUrl: "/assets/3d-rubiks-cube/Rubiks-Cube-UI-HUB-bundle.zip"
@@ -2095,7 +1845,7 @@ export const Demo = () => (
         title: "Interactive 3D Galaxy",
         category: "3d",
         isPremium: true,
-        preview: () => <GalaxyAnimationPreview />,
+        preview: renderComponent("3d-galaxy-animation", "GalaxyAnimation"),
         code: `import { GalaxyAnimation } from '@/components/ui/GalaxyAnimation';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GalaxyAnimation />\n  </div>\n);`,
         vibePrompt: "A stunning interactive 3D galaxy with multiple themes, orbital physics, and post-processing bloom effects."
     },
@@ -2105,7 +1855,7 @@ export const Demo = () => (
         title: "Lizard Cursor",
         category: "cursor",
         isPremium: true,
-        preview: () => <LizardCursorPreview />,
+        preview: renderComponent("lizard-cursor", "LizardCursor"),
         code: "",
         vibePrompt: ""
     },
@@ -2113,7 +1863,7 @@ export const Demo = () => (
         id: "venom-cursor",
         title: "Venom Cursor",
         category: "cursor",
-        preview: () => <VenomCursorPreview />,
+        preview: renderComponent("venom-cursor", "VenomCursor"),
         code: ``,
         vibePrompt: ""
     },
@@ -2122,7 +1872,7 @@ export const Demo = () => (
         title: "3D Tubes Cursor",
         category: "cursor",
         isPremium: true,
-        preview: () => <ThreeDTubesCursorPreview />,
+        preview: renderComponent("3d-tubes-cursor", "ThreeDTubesCursor"),
         code: "",
         vibePrompt: ""
     },
@@ -2131,7 +1881,7 @@ export const Demo = () => (
         title: "Black Box",
         category: "portfolios",
         isPremium: true,
-        preview: () => <BlackBoxPreview />,
+        preview: renderComponent("black-box", "BlackBox"),
         code: `import BlackBox from '@/components/ui/BlackBox';\n\nexport default function Demo() {\n  return <BlackBox />;\n}`,
         vibePrompt: "A high-performance cyberpunk glitch-style dashboard portfolio with terminal simulation, animated charts, and system instability effects."
     },
@@ -2140,7 +1890,7 @@ export const Demo = () => (
         title: "Neo Brutalism",
         category: "portfolios",
         isPremium: true,
-        preview: () => <NeoBrutalismPreview />,
+        preview: renderComponent("neo-brutalism-os", "NeoBrutalism"),
         code: `import NeoBrutalism from '@/components/ui/NeoBrutalism';\n\nexport default function Demo() {\n  return <NeoBrutalism />;\n}`,
         vibePrompt: "A bold, Neo-Brutalism inspired Dashboard OS with high-contrast UI, interactive charts, and a custom sidebar navigation. Built with Framer Motion and Recharts for a premium interactive experience."
     },

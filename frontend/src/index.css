@@ -8,6 +8,23 @@
   --color-3: 210 100% 63%;
   --color-4: 195 100% 63%;
   --color-5: 90 100% 63%;
+
+  /* Default (Dark) Theme Variables */
+  --bg-primary: #000000;
+  --bg-secondary: #050505;
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.6);
+  --border-primary: rgba(255, 255, 255, 0.06);
+  --brand-color: #00FF00;
+}
+
+:root.light {
+  --bg-primary: #CFE6F7;   /* soft light highlight */
+  --bg-secondary: #FFFFFF;   /* color-shade-5 */
+  --text-primary: #00AEEF;   /* bright blue brand */
+  --text-secondary: #2C5C85; /* deep steel blue */
+  --border-primary: rgba(44, 92, 133, 0.1);
+  --brand-color: #5FA3D6;    /* main brand blue */
 }
 
 @theme {

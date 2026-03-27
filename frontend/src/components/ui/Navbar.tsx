@@ -1,7 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
-import { Github, Menu, X, Sparkles, LogOut, User as UserIcon } from 'lucide-react';
+import { Github, Menu, X, Sparkles, LogOut, User as UserIcon, Sun, Moon } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 import Logo from './Logo';
 import GitHubStarButton from './GitHubStarButton';
 import { useAuth } from '../../context/AuthContext';
@@ -76,6 +77,7 @@ const MagneticButton = ({ children, className }: { children: React.ReactNode, cl
 };
 
 const Navbar = () => {
+    const { theme, toggleTheme } = useTheme();
     const { user, isPro } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
@@ -108,16 +110,20 @@ const Navbar = () => {
                 {/* ── Logo ── */}
                 <Link to="/" className="relative z-10 flex items-center gap-2.5 group shrink-0">
                     <div className="relative">
-                        <div className="absolute inset-0 bg-brand-green/40 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className={`absolute inset-0 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${theme === 'dark' ? 'bg-brand-green/40' : 'bg-[#5FA3D6]/40'}`} />
                         <Logo />
                     </div>
-                    <span className="font-heading font-black text-lg tracking-tight text-white group-hover:text-brand-green transition-colors duration-300">
+                    <span className={`font-heading font-black text-lg tracking-tight transition-colors duration-300 ${
+                        theme === 'dark' ? 'text-white group-hover:text-brand-green' : 'text-[#0A0F14] group-hover:text-[#2C5C85]'
+                    }`}>
                         UI HUB
                     </span>
                 </Link>
 
                 {/* ── Desktop nav links (pill switcher) ── */}
-                <div className="relative z-10 hidden md:flex items-center gap-0.5 bg-white/[0.05] border border-white/10 rounded-full px-1.5 py-1">
+                <div className={`relative z-10 hidden md:flex items-center gap-0.5 border rounded-full px-1.5 py-1 ${
+                    theme === 'dark' ? 'bg-white/[0.05] border-white/10' : 'bg-black/[0.05] border-black/10'
+                }`}>
                     {[
                         { to: '/', label: 'Home', active: location.pathname === '/' },
                         { to: '/library', label: 'Component Library', active: isLibrary },
@@ -127,12 +133,16 @@ const Navbar = () => {
                         <Link
                             key={to}
                             to={to}
-                            className={`relative px-4 py-1.5 rounded-full text-sm font-semibold transition-colors duration-200 ${active ? 'text-black' : 'text-white/50 hover:text-white'}`}
+                            className={`relative px-4 py-1.5 rounded-full text-sm font-semibold transition-colors duration-200 ${
+                                active 
+                                ? 'text-black' 
+                                : theme === 'dark' ? 'text-white/50 hover:text-white' : 'text-black/50 hover:text-black'
+                            }`}
                         >
                             {active && (
                                 <motion.div
                                     layoutId="nav-active-pill"
-                                    className="absolute inset-0 rounded-full bg-brand-green shadow-[0_0_18px_rgba(0,255,0,0.5)]"
+                                    className={`absolute inset-0 rounded-full shadow-[0_0_18px_rgba(0,255,0,0.5)] ${theme === 'dark' ? 'bg-brand-green' : 'bg-[#5FA3D6]'}`}
                                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                                 />
                             )}
@@ -143,14 +153,31 @@ const Navbar = () => {
 
                 {/* ── Right Actions ── */}
                 <div className="relative z-10 flex items-center gap-2.5">
+                    {/* Theme Toggle */}
+                    <button
+                        onClick={toggleTheme}
+                        className={`hidden sm:flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-300 group ${
+                            theme === 'dark' 
+                            ? 'bg-white/[0.06] border-white/10 hover:bg-white/10 hover:border-brand-green/40' 
+                            : 'bg-black/[0.06] border-black/10 hover:bg-black/10 hover:border-[#5FA3D6]/40'
+                        }`}
+                        title="Toggle Theme"
+                    >
+                        {theme === 'dark' ? <Sun size={16} className="text-white/50 group-hover:text-white" /> : <Moon size={16} className="text-black/50 group-hover:text-black" />}
+                    </button>
+
                     {/* GitHub */}
                     <a
                         href="https://github.com/jainil224"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hidden sm:flex items-center justify-center w-9 h-9 rounded-xl bg-white/[0.06] border border-white/10 hover:bg-white/10 hover:border-brand-green/40 hover:shadow-[0_0_12px_rgba(0,255,0,0.2)] transition-all duration-300 group"
+                        className={`hidden sm:flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-300 group ${
+                            theme === 'dark' 
+                            ? 'bg-white/[0.06] border-white/10 hover:bg-white/10 hover:border-brand-green/40' 
+                            : 'bg-black/[0.06] border-black/10 hover:bg-black/10 hover:border-[#5FA3D6]/40'
+                        }`}
                     >
-                        <Github size={16} className="text-white/50 group-hover:text-white transition-colors" />
+                        <Github size={16} className={`${theme === 'dark' ? 'text-white/50' : 'text-black/50'} group-hover:text-white transition-colors`} />
                     </a>
 
                     <GitHubStarButton className="hidden md:flex" />
