@@ -20,26 +20,28 @@ const AppShell = () => {
   const isDemo = location.pathname.startsWith('/demo');
 
   return (
-    <div className="bg-brand-black min-h-screen text-white selection:bg-brand-green selection:text-black">
+    <div className="bg-brand-black min-h-screen text-white selection:bg-brand-green selection:text-black flex flex-col">
       {!isAuth && !isDemo && <Navbar />}
 
-      <React.Suspense fallback={
-        <div className="min-h-screen flex items-center justify-center bg-brand-black">
-          <div className="w-8 h-8 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
-        </div>
-      }>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/library" element={<LibraryPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/demo/:id" element={<DemoPage />} />
-          <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
-          <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
-        </Routes>
-      </React.Suspense>
+      <main className="flex-1 flex flex-col">
+        <React.Suspense fallback={
+          <div className="flex-1 flex items-center justify-center bg-brand-black">
+            <div className="w-8 h-8 border-4 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
+          </div>
+        }>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/library" element={<LibraryPage />} />
+            <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/demo/:id" element={<DemoPage />} />
+            <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
+            <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
+            <Route path="/pricing" element={<PricingPage />} />
+          </Routes>
+        </React.Suspense>
+      </main>
 
       {!isLibrary && !isAuth && !isDemo && <Footer />}
     </div>

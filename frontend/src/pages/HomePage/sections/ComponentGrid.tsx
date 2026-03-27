@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { componentList } from '../../../data/componentData';
 import { ArrowUpRight, Sparkles, MonitorPlay, MousePointer2, Component as ComponentIcon } from 'lucide-react';
@@ -35,7 +35,19 @@ const ComponentGrid = () => {
     const { user, isPro } = useAuth();
     const navigate = useNavigate();
     const [activeId, setActiveId] = useState<string | null>(null);
-    const [isButtonHovered, setIsButtonHovered] = useState(false);
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleMouseEnter = (id: string) => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        timeoutRef.current = setTimeout(() => {
+            setActiveId(id);
+        }, 150); // 150ms debounce
+    };
+
+    const handleMouseLeave = () => {
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        setActiveId(null);
+    };
 
     const featuredComponents = showcaseIds
         .map(id => componentList.find(c => c.id === id))
@@ -68,6 +80,8 @@ const ComponentGrid = () => {
             transition: { duration: 0.6, ease: "easeOut" }
         }
     };
+
+    const [isButtonHovered, setIsButtonHovered] = useState(false);
 
     return (
         <section id="explore" className="relative py-20 md:py-32 px-4 sm:px-6 max-w-[1400px] mx-auto w-full">
@@ -113,8 +127,8 @@ const ComponentGrid = () => {
                             key={comp!.id}
                             variants={cardVariants}
                             onClick={() => handleCardInteract(comp!.id)}
-                            onMouseEnter={() => setActiveId(comp!.id)}
-                            onMouseLeave={() => setActiveId(null)}
+                            onMouseEnter={() => handleMouseEnter(comp!.id)}
+                            onMouseLeave={handleMouseLeave}
                             className="group relative h-[240px] sm:h-[260px] md:h-[280px] lg:h-[300px] bg-[#030303] rounded-3xl overflow-hidden flex items-center justify-center cursor-pointer select-none transition-all duration-500 hover:-translate-y-2 isolate"
                             style={{
                                 WebkitMaskImage: '-webkit-radial-gradient(white, black)'

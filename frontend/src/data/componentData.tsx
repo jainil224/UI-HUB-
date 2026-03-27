@@ -1,11 +1,11 @@
 import { LOVABLE_PROMPTS } from './lovablePrompts';
 import { ANTIGRAVITY_PROMPTS } from './antigravityPrompts';
-import React, { useRef, useCallback, useState, useEffect } from 'react';
-import * as Animations from '../components/animations/TextAnimations';
-import * as VisualEffects from '../components/animations/VisualEffects';
-import { AuroraCursor } from '../components/ui/AuroraCursor';
-import { MagneticCursor } from '../components/ui/MagneticCursor';
-import { MagneticBackground } from '../components/ui/MagneticBackground';
+import React, { useRef, useCallback, useState, useEffect, Suspense } from 'react';
+
+// ── Lazy Loaded UI Components ──────────────────
+const AuroraCursor = React.lazy(() => import('../components/ui/AuroraCursor').then(m => ({ default: m.AuroraCursor })));
+const MagneticCursor = React.lazy(() => import('../components/ui/MagneticCursor').then(m => ({ default: m.MagneticCursor })));
+const MagneticBackground = React.lazy(() => import('../components/ui/MagneticBackground').then(m => ({ default: m.MagneticBackground })));
 const BlackHoleCursor = React.lazy(() => import('../components/ui/BlackHoleCursor'));
 const TargetCursor = React.lazy(() => import('../components/ui/TargetCursor').then(m => ({ default: m.TargetCursor })));
 const SpaceBackground = React.lazy(() => import('../components/ui/SpaceBackground').then(m => ({ default: m.SpaceBackground })));
@@ -16,13 +16,18 @@ const MouseGravityBackground = React.lazy(() => import('../components/ui/MouseGr
 const InteractiveWebGLScene = React.lazy(() => import('../components/ui/InteractiveWebGLScene').then(m => ({ default: m.InteractiveWebGLScene })));
 const Scroll3DAnimation = React.lazy(() => import('../components/ui/Scroll3DAnimation'));
 const ThreeDSlider = React.lazy(() => import('../components/ui/ThreeDSlider').then(m => ({ default: m.ThreeDSlider })));
-const RubiksCube = React.lazy(() => import('../components/ui/RubiksCube').then(m => ({ default: m.RubiksCube })));
+export const RubiksCube = React.lazy(() => import('../components/ui/RubiksCube').then(m => ({ default: m.default })));
 const BlackBox = React.lazy(() => import('../components/ui/BlackBox'));
 const NeoBrutalism = React.lazy(() => import('../components/ui/NeoBrutalism'));
 const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then(m => ({ default: m.HeartCursor })));
 const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
+export const GalaxyAnimation = React.lazy(() => import('../components/ui/GalaxyAnimation').then(m => ({ default: m.default })));
+
+// ── Lazy Loaded Internal Collections ───────────
+const Animations = React.lazy(() => import('../components/animations/TextAnimations'));
+const VisualEffects = React.lazy(() => import('../components/animations/VisualEffects'));
 
 // ── Neo Brutalism scoped preview ────────────
 const NeoBrutalismPreview: React.FC = () => {
@@ -32,7 +37,9 @@ const NeoBrutalismPreview: React.FC = () => {
             width: '100%', height: '100%', minHeight: '900px',
             background: '#E5E7EB',
         }}>
-            <NeoBrutalism />
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-black/20 font-bold">LODING NEO BRUTALISM...</div>}>
+                <NeoBrutalism />
+            </Suspense>
         </div>
     );
 };
@@ -45,7 +52,9 @@ const BlackBoxPreview: React.FC = () => {
             width: '100%', height: '100%', minHeight: '900px',
             background: '#000',
         }}>
-            <BlackBox />
+            <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-white/10 font-bold">LODING BLACK BOX...</div>}>
+                <BlackBox />
+            </Suspense>
         </div>
     );
 };
@@ -207,7 +216,29 @@ const RubiksCubePreview: React.FC = () => {
             background: '#08080f',
             backgroundImage: 'radial-gradient(ellipse at 50% 50%, rgba(255, 88, 0, 0.05) 0%, transparent 80%)'
         }}>
-            <RubiksCube />
+            <React.Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm text-brand-green font-black uppercase tracking-widest animate-pulse">LODING...</div>}>
+                <RubiksCube />
+            </React.Suspense>
+        </div>
+    );
+};
+
+// ── Galaxy Animation scoped preview ────────────
+const GalaxyAnimationPreview: React.FC<any> = (props) => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%', height: '100%', minHeight: '100%',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: '#020408',
+            borderRadius: '24px'
+        }}>
+            <React.Suspense fallback={<div className="w-full h-full flex items-center justify-center bg-black/50 backdrop-blur-sm text-brand-green font-black uppercase tracking-widest animate-pulse">LODING...</div>}>
+                <GalaxyAnimation {...props} />
+            </React.Suspense>
         </div>
     );
 };
@@ -1175,7 +1206,7 @@ export type ComponentItem = {
     id: string;
     title: string;
     category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "portfolios";
-    preview: () => React.ReactNode;
+    preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
     uploader?: string;
@@ -1184,21 +1215,40 @@ export type ComponentItem = {
     downloadUrl?: string;
 };
 
+// Helper to render lazy text/effect components
+const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawName: string }> = ({ type, name, rawName }) => {
+    const [Comp, setComp] = useState<any>(null);
+
+    useEffect(() => {
+        const load = async () => {
+            try {
+                const module = type === 'animation' 
+                    ? await import('../components/animations/TextAnimations')
+                    : await import('../components/animations/VisualEffects');
+                
+                const component = module[name] || module[rawName];
+                setComp(() => component);
+            } catch (err) {
+                console.error(`Failed to load ${type} ${name}:`, err);
+            }
+        };
+        load();
+    }, [type, name, rawName]);
+
+    if (!Comp) return <div className="animate-pulse opacity-10">LODING...</div>;
+    return React.createElement(Comp);
+};
+
 // Lazy component resolver - returns a factory function to avoid eager initialization
 const renderComponent = (id: string, _name: string): (() => React.ReactNode) => {
     return () => {
         const rawName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
         const CompName = id.endsWith('-text') ? rawName : `${rawName}Text`;
 
-        const Comp = (Animations as any)[CompName] ||
-            (VisualEffects as any)[rawName] ||
-            (Animations as any)[rawName] ||
-            (VisualEffects as any)[CompName];
-
-        return Comp ? React.createElement(Comp) : (
-            <div className="text-6xl md:text-9xl font-display font-bold uppercase tracking-normal opacity-20">
-                PREVIEW
-            </div>
+        return (
+            <Suspense fallback={<div className="animate-pulse opacity-10 font-bold uppercase tracking-widest">LODING...</div>}>
+                <LazyRenderer type={id.includes('text') ? 'animation' : 'effect'} name={CompName} rawName={rawName} />
+            </Suspense>
         );
     };
 };
@@ -2010,6 +2060,15 @@ export const Demo = () => (
         code: `import { RubiksCube } from '@/components/ui/RubiksCube';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] flex items-center justify-center bg-[#08080f]">\n    <RubiksCube />\n  </div>\n);`,
         vibePrompt: "Interactive 3D Rubiks Cube with scramble and solve logic.",
         downloadUrl: "/assets/3d-rubiks-cube/Rubiks-Cube-UI-HUB-bundle.zip"
+    },
+    {
+        id: "3d-galaxy-animation",
+        title: "Interactive 3D Galaxy",
+        category: "3d",
+        isPremium: true,
+        preview: () => <GalaxyAnimationPreview />,
+        code: `import { GalaxyAnimation } from '@/components/ui/GalaxyAnimation';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GalaxyAnimation />\n  </div>\n);`,
+        vibePrompt: "A stunning interactive 3D galaxy with multiple themes, orbital physics, and post-processing bloom effects."
     },
 
     {
