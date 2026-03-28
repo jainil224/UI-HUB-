@@ -271,7 +271,7 @@ const TargetCursorPreview: React.FC = () => {
                         <div style={{ fontSize: 10, color: '#444', letterSpacing: '0.2em' }}>SYSTEM_STATUS</div>
                         <div className="cursor-target" style={{ fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '0.1em' }}>UI_HUB // TARGETING_v4</div>
                     </div>
-                    <div style={{ textAlign: 'right', fontSize: 10, color: '#6366f1' }}>
+                    <div style={{ textAlign: 'right', fontSize: 10, color: '#fff' }}>
                         CPU: {stats.cpu}% <br />
                         MEM: {stats.mem}%
                     </div>
@@ -294,11 +294,11 @@ const TargetCursorPreview: React.FC = () => {
                                     transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
                                 }}
                             >
-                                <div style={{ transition: 'all 0.4s' }} className="group-hover/node:text-[#6366f1] group-hover/node:drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]">NODE_0{i}</div>
+                                <div style={{ transition: 'all 0.4s' }} className="group-hover/node:text-white group-hover/node:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]">NODE_0{i}</div>
                                 <style>{`
                                     .group\\/node:hover {
-                                        border-color: #6366f1 !important;
-                                        box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+                                        border-color: #ffffff !important;
+                                        box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
                                         background: #0d0d12 !important;
                                     }
                                 `}</style>
@@ -312,19 +312,19 @@ const TargetCursorPreview: React.FC = () => {
                         <button 
                             className="cursor-target" 
                             style={{ 
-                                width: '100%', padding: '12px', background: '#6366f1', color: '#fff', fontSize: 11, fontWeight: 'bold', border: 'none', letterSpacing: '0.1em',
+                                width: '100%', padding: '12px', background: '#ffffff', color: '#000', fontSize: 11, fontWeight: 'bold', border: 'none', letterSpacing: '0.1em',
                                 transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
-                                boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)'
+                                boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)'
                             }}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.transform = 'scale(1.02)';
-                                e.currentTarget.style.boxShadow = '0 0 25px rgba(99, 102, 241, 0.5)';
-                                e.currentTarget.style.background = '#4f46e5';
+                                e.currentTarget.style.boxShadow = '0 0 25px rgba(255, 255, 255, 0.5)';
+                                e.currentTarget.style.background = '#f0f0f0';
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.transform = 'scale(1)';
-                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.2)';
-                                e.currentTarget.style.background = '#6366f1';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(255, 255, 255, 0.2)';
+                                e.currentTarget.style.background = '#ffffff';
                             }}
                         >
                             INITIALIZE_SCAN
@@ -338,10 +338,10 @@ const TargetCursorPreview: React.FC = () => {
                                 transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)'
                             }}
                             onMouseEnter={(e) => {
-                                e.currentTarget.style.borderColor = '#6366f1';
+                                e.currentTarget.style.borderColor = '#ffffff';
                                 e.currentTarget.style.color = '#fff';
-                                e.currentTarget.style.boxShadow = '0 0 15px rgba(99, 102, 241, 0.2)';
-                                e.currentTarget.style.background = 'rgba(99, 102, 241, 0.05)';
+                                e.currentTarget.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.2)';
+                                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
                             }}
                             onMouseLeave={(e) => {
                                 e.currentTarget.style.borderColor = '#333';
@@ -360,6 +360,7 @@ const TargetCursorPreview: React.FC = () => {
         </div>
     );
 };
+
 
 
 // ── Black Hole Cursor scoped preview ────────────
@@ -820,73 +821,136 @@ const LizardCursorPreview: React.FC = () => {
             onMouseLeave={() => setIsInside(false)}
             style={{
                 position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
+                width: '100%', height: '100%', minHeight: '400px',
                 background: '#050508',
                 overflow: 'hidden',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                gap: 20
+                cursor: isInside ? 'none' : 'default',
             }}
         >
-            {/* Immersive Background */}
+            {/* Immersive Lab Background */}
             <div style={{
                 position: 'absolute',
                 inset: 0,
                 backgroundImage: `
-                    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 70%),
-                    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
+                    radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.05) 0%, transparent 70%),
+                    linear-gradient(rgba(34, 197, 94, 0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(34, 197, 94, 0.02) 1px, transparent 1px)
                 `,
                 backgroundSize: '100% 100%, 40px 40px, 40px 40px',
                 pointerEvents: 'none',
             }} />
 
-            {/* Subtle Noise/Grain Overlay */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                opacity: 0.1,
-                pointerEvents: 'none',
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
-            }} />
+            {/* Content Layer */}
+            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', width: '90%', maxWidth: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
+                
+                {/* Header Section */}
+                <div style={{ borderBottom: '1px solid rgba(34, 197, 94, 0.1)', paddingBottom: 24, width: '100%' }}>
+                    <div style={{ 
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 12,
+                        fontSize: 10, color: '#22c55e', letterSpacing: '0.5em', fontWeight: 'bold' 
+                    }}>
+                        <div style={{ width: 8, height: 8, background: '#22c55e', borderRadius: '50%', boxShadow: '0 0 10px #22c55e' }} />
+                        UI_HUB // ADAPTIVE_BIOME
+                    </div>
+                    <h2 className="interactive" style={{ fontSize: 32, fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', margin: 0 }}>
+                        WE BUILD NEXT-GEN UI EXPERIENCES
+                    </h2>
+                    <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.4)', marginTop: 12, maxWidth: '500px', marginInline: 'auto', lineHeight: 1.6, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+                        Designing Next-Gen UI Systems That Make Brands Unforgettable.
+                    </p>
+                </div>
 
-            {/* Navigation Demo Buttons */}
-            <div style={{
-                position: 'absolute',
-                top: 40,
-                display: 'flex',
-                gap: 30,
-                zIndex: 50,
-            }}>
-                {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
-                    <button
-                        key={item}
-                        style={{
-                            border: '1px solid transparent',
-                            color: 'rgba(255, 255, 255, 0.4)',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#fff';
-                            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                            e.currentTarget.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.05)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
-                            e.currentTarget.style.backgroundColor = 'transparent';
-                            e.currentTarget.style.borderColor = 'transparent';
-                            e.currentTarget.style.boxShadow = 'none';
-                        }}
-                    >
-                        {item}
-                    </button>
-                ))}
+                {/* Interactive Grid */}
+                <div style={{ display: 'flex', gap: 16, width: '100%' }}>
+                    {[1, 2, 3].map(i => (
+                        <MagneticElement key={i} strength={15} className="flex-1">
+                            <div 
+                                className="interactive"
+                                style={{ 
+                                    height: 120, 
+                                    background: 'rgba(255, 255, 255, 0.02)', 
+                                    border: '1px solid rgba(34, 197, 94, 0.1)',
+                                    borderRadius: '20px',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: 12,
+                                    transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+                                    cursor: 'none',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+                                    e.currentTarget.style.background = 'rgba(34, 197, 94, 0.05)';
+                                    e.currentTarget.style.boxShadow = '0 0 30px rgba(34, 197, 94, 0.15)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.borderColor = 'rgba(34, 197, 94, 0.1)';
+                                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                                    e.currentTarget.style.boxShadow = 'none';
+                                }}
+                            >
+                                <div style={{ fontSize: 24 }}>{i === 1 ? '🦎' : i === 2 ? '🧬' : '🔬'}</div>
+                                <div style={{ fontSize: 9, color: '#22c55e', fontWeight: 'bold', letterSpacing: '0.2em' }}>NODE_0{i}</div>
+                            </div>
+                        </MagneticElement>
+                    ))}
+                </div>
+
+                {/* Primary & Secondary CTAs */}
+                <div style={{ display: 'flex', gap: 16, width: '100%' }}>
+                    <MagneticElement className="flex-1" strength={25}>
+                        <button 
+                            className="interactive" 
+                            style={{ 
+                                width: '100%', padding: '16px', background: '#fff', 
+                                color: '#000', fontSize: 12, fontWeight: '900', border: 'none', letterSpacing: '0.2em',
+                                borderRadius: '12px', transition: 'all 0.3s ease', cursor: 'none',
+                                boxShadow: '0 8px 32px rgba(255,255,255,0.1)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 12px 48px rgba(255,255,255,0.25)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 8px 32px rgba(255,255,255,0.1)';
+                            }}
+                        >
+                            INITIALIZE_BIOME
+                        </button>
+                    </MagneticElement>
+
+                    <MagneticElement className="flex-1" strength={25}>
+                        <button 
+                            className="interactive" 
+                            style={{ 
+                                width: '100%', padding: '16px', background: 'rgba(34, 197, 94, 0.03)', 
+                                color: '#fff', fontSize: 12, fontWeight: '900', border: '1px solid rgba(34, 197, 94, 0.2)', 
+                                letterSpacing: '0.2em', borderRadius: '12px', transition: 'all 0.3s ease', cursor: 'none',
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(34, 197, 94, 0.08)';
+                                e.currentTarget.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+                                e.currentTarget.style.boxShadow = '0 0 20px rgba(34, 197, 94, 0.1)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(34, 197, 94, 0.03)';
+                                e.currentTarget.style.borderColor = 'rgba(34, 197, 94, 0.2)';
+                                e.currentTarget.style.boxShadow = 'none';
+                            }}
+                        >
+                            RESET_BIOME
+                        </button>
+                    </MagneticElement>
+                </div>
             </div>
 
-
-            {isInside && <LizardCursor color="#ffffff" containerRef={containerRef} />}
+            {isInside && <LizardCursor color="#22c55e" containerRef={containerRef} />}
         </div>
     );
 };
@@ -1229,236 +1293,8 @@ export const componentList: ComponentItem[] = [
         title: "Target Cursor",
         category: "cursor",
         preview: () => <TargetCursorPreview />,
-        code: `import React, { useEffect, useRef, useState, useCallback } from 'react';
-
-interface TargetCursorProps {
-    /** CSS selector for elements the cursor should snap to */
-    targetSelector?: string;
-    /** Duration of the spinning animation in idle state */
-    spinDuration?: number;
-    /** Transition duration for snapping/hover effects */
-    hoverDuration?: number;
-    /** Whether to hide the default browser cursor */
-    hideDefaultCursor?: boolean;
-    /** Enable subtle parallax movement when hovering elements */
-    parallaxOn?: boolean;
-    /** Container to track mouse within (optional) */
-    containerRef?: React.RefObject<HTMLElement>;
-    className?: string;
-}
-
-export const TargetCursor: React.FC<TargetCursorProps> = ({
-    targetSelector = '.cursor-target',
-    spinDuration = 2000,
-    hoverDuration = 0.2, // seconds
-    hideDefaultCursor = true,
-    parallaxOn = true,
-    containerRef,
-    className = '',
-}) => {
-    const cursorRef = useRef<HTMLDivElement>(null);
-    const [isLocked, setIsLocked] = useState(false);
-    
-    // Internal state for tracking without triggering re-renders
-    const mouse = useRef({ x: -100, y: -100, absX: -100, absY: -100 });
-    const cursor = useRef({ x: -100, y: -100, scale: 1, rotate: 0, opacity: 1 });
-    const isVisible = useRef(false);
-    const targetElement = useRef<HTMLElement | null>(null);
-    const targetRect = useRef<DOMRect | null>(null);
-    const rafId = useRef<number>(0);
-
-    const updateMouse = useCallback((e: MouseEvent) => {
-        let inside = true;
-        
-        if (containerRef?.current) {
-            const rect = containerRef.current.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            inside = (
-                e.clientX >= rect.left && 
-                e.clientX <= rect.right && 
-                e.clientY >= rect.top && 
-                e.clientY <= rect.bottom
-            );
-            
-            mouse.current = { x, y, absX: e.clientX, absY: e.clientY };
-        } else {
-            mouse.current = {
-                x: e.clientX,
-                y: e.clientY,
-                absX: e.clientX,
-                absY: e.clientY,
-            };
-        }
-
-        isVisible.current = inside;
-
-        // Check for target elements
-        const elementUnderMouse = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement;
-        const target = elementUnderMouse?.closest(targetSelector) as HTMLElement;
-        
-        if (target && inside) {
-            targetElement.current = target;
-            targetRect.current = target.getBoundingClientRect();
-            if (!isLocked) setIsLocked(true);
-        } else {
-            targetElement.current = null;
-            targetRect.current = null;
-            if (isLocked) setIsLocked(false);
-        }
-    }, [containerRef, targetSelector, isLocked]);
-
-    const animate = useCallback(() => {
-        if (!cursorRef.current) return;
-
-        let targetX = mouse.current.x;
-        let targetY = mouse.current.y;
-        let targetRotate = (Date.now() / spinDuration) * 360;
-        let width = 24;
-        let height = 24;
-
-        if (targetElement.current && targetRect.current) {
-            const rect = targetRect.current;
-            const containerRect = containerRef?.current?.getBoundingClientRect();
-            
-            let centerX, centerY;
-            let scaleFactor = 1;
-
-            if (containerRect) {
-                // If scaled via CSS transform, the bounding rect is physically smaller
-                // than the offset dimensions. We calculate the scale ratio to adjust.
-                if (containerRef.current) {
-                    scaleFactor = containerRect.width / containerRef.current.offsetWidth;
-                }
-
-                // Calculate center relative to the scaled container
-                centerX = (rect.left - containerRect.left) / scaleFactor + (rect.width / scaleFactor) / 2;
-                centerY = (rect.top - containerRect.top) / scaleFactor + (rect.height / scaleFactor) / 2;
-            } else {
-                centerX = rect.left + rect.width / 2;
-                centerY = rect.top + rect.height / 2;
-            }
-
-            if (parallaxOn) {
-                // Mouse coordinates are already relative to container when containerRef exists
-                const mouseDx = (mouse.current.x / scaleFactor) - centerX;
-                const mouseDy = (mouse.current.y / scaleFactor) - centerY;
-                targetX = centerX + mouseDx * 0.15;
-                targetY = centerY + mouseDy * 0.15;
-            } else {
-                targetX = centerX;
-                targetY = centerY;
-            }
-            
-            // Reduced padding and divided by scale to draw the brackets at the true unscaled DOM sizing
-            width = (rect.width / scaleFactor) + 8;
-            height = (rect.height / scaleFactor) + 8;
-            targetRotate = 0;
-        }
-
-        // Smoothly interpolate cursor position
-        cursor.current.x += (targetX - cursor.current.x) * 0.2;
-        cursor.current.y += (targetY - cursor.current.y) * 0.2;
-
-        const el = cursorRef.current;
-        el.style.transform = \`translate(\${cursor.current.x}px, \${cursor.current.y}px)\`;
-        el.style.opacity = isVisible.current ? '1' : '0';
-        el.style.visibility = isVisible.current ? 'visible' : 'hidden';
-        
-        const inner = el.querySelector('.cursor-inner') as HTMLElement;
-        if (inner) {
-            inner.style.width = \`\${width}px\`;
-            inner.style.height = \`\${height}px\`;
-            inner.style.transform = \`translate(-50%, -50%) rotate(\${targetRotate}deg)\`;
-        }
-
-        rafId.current = requestAnimationFrame(animate);
-    }, [spinDuration, parallaxOn, containerRef]);
-
-    useEffect(() => {
-        window.addEventListener('mousemove', updateMouse, { passive: true });
-        rafId.current = requestAnimationFrame(animate);
-
-        return () => {
-            window.removeEventListener('mousemove', updateMouse);
-            cancelAnimationFrame(rafId.current);
-        };
-    }, [updateMouse, animate]);
-
-    const cornerStyle: React.CSSProperties = {
-        position: 'absolute',
-        width: '8px',
-        height: '8px',
-        borderColor: '#6366f1',
-        borderStyle: 'solid',
-        transition: \`all \${hoverDuration}s cubic-bezier(0.23, 1, 0.32, 1)\`,
-        pointerEvents: 'none',
-    };
-
-    const containerSelector = containerRef ? '.target-cursor-area' : 'body';
-
-    return (
-        <div 
-            ref={cursorRef}
-            className={\`target-cursor \${className}\`}
-            style={{
-                position: containerRef ? 'absolute' : 'fixed',
-                top: 0,
-                left: 0,
-                pointerEvents: 'none',
-                zIndex: 9999,
-                mixBlendMode: 'difference',
-                transition: 'opacity 0.2s ease, visibility 0.2s ease',
-                visibility: 'hidden',
-            }}
-        >
-            <style>{\`
-                \${hideDefaultCursor ? \`
-                \${containerSelector} { cursor: none !important; }
-                \${containerSelector} button, 
-                \${containerSelector} a, 
-                \${containerSelector} .cursor-target { cursor: none !important; }
-                \` : ''}
-                
-                .cursor-inner {
-                    position: relative;
-                    transition: width 0.3s cubic-bezier(0.23, 1, 0.32, 1), 
-                                height 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-                    will-change: width, height, transform;
-                }
-            \`}</style>
-            
-            <div className="cursor-inner" style={{ width: 24, height: 24, transform: 'translate(-50%, -50%)' }}>
-                {/* Top Left */}
-                <div style={{ ...cornerStyle, top: 0, left: 0, borderWidth: '2px 0 0 2px' }} />
-                {/* Top Right */}
-                <div style={{ ...cornerStyle, top: 0, right: 0, borderWidth: '2px 2px 0 0' }} />
-                {/* Bottom Left */}
-                <div style={{ ...cornerStyle, bottom: 0, left: 0, borderWidth: '0 0 2px 2px' }} />
-                {/* Bottom Right */}
-                <div style={{ ...cornerStyle, bottom: 0, right: 0, borderWidth: '0 2px 2px 0' }} />
-                
-                {/* Center Dot (Visible when not locked) */}
-                <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    width: '4px',
-                    height: '4px',
-                    background: '#6366f1',
-                    borderRadius: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    opacity: isLocked ? 0 : 1,
-                    transition: 'opacity 0.2s ease',
-                }} />
-            </div>
-        </div>
-    );
-};
-
-export default TargetCursor;`,
-        vibePrompt: "Create a precision 'TargetCursor' React component with Framer Motion that implements a 'snap-to-target' behavior using the 'cursor-target' CSS selector. Use a technical bracket-style aesthetic with an animated spinning center dot. Ensure the cursor supports parallax effects when hovering targets and includes a glassmorphic/difference blend mode for high visibility on 'UI HUB' branding elements. Supports responsiveness and specific container-based tracking."
+        code: "",
+        vibePrompt: "Create a precision 'TargetCursor' React component with Framer Motion that implements a 'snap-to-target' behavior using the 'cursor-target' CSS selector. Use a technical white bracket-style aesthetic with an animated spinning center dot. Ensure the cursor supports parallax effects when hovering targets and includes a glassmorphic/difference blend mode for high visibility on 'UI HUB' branding elements. Supports responsiveness and specific container-based tracking."
     },
     {
         id: "black-hole-cursor",
@@ -1988,7 +1824,7 @@ export const Demo = () => (
         id: "heart-cursor",
         title: "Heart Cursor 💜",
         category: "cursor",
-        preview: renderComponent("heart-cursor", "HeartCursor"),
+        preview: () => <HeartCursorPreview />,
         code: ``,
         vibePrompt: ""
     },
@@ -2053,16 +1889,16 @@ export const Demo = () => (
         title: "Lizard Cursor",
         category: "cursor",
         isPremium: true,
-        preview: renderComponent("lizard-cursor", "LizardCursor"),
+        preview: () => <LizardCursorPreview />,
         code: "",
-        vibePrompt: ""
+        vibePrompt: "Create a precision 'LizardCursor' React component..."
     },
     {
         id: "venom-cursor",
         title: "Venom Cursor",
         category: "cursor",
-        preview: renderComponent("venom-cursor", "VenomCursor"),
-        code: ``,
+        preview: () => <VenomCursorPreview />,
+        code: "",
         vibePrompt: ""
     },
     {
@@ -2070,7 +1906,7 @@ export const Demo = () => (
         title: "3D Tubes Cursor",
         category: "cursor",
         isPremium: true,
-        preview: renderComponent("3d-tubes-cursor", "ThreeDTubesCursor"),
+        preview: () => <ThreeDTubesCursorPreview />,
         code: "",
         vibePrompt: ""
     },
