@@ -173,6 +173,193 @@ const MagneticCursorPreview: React.FC = () => {
     );
 };
 
+const MagneticElement: React.FC<{ children: React.ReactNode, className?: string, strength?: number }> = ({ children, className, strength = 15 }) => {
+    const ref = useRef<HTMLDivElement>(null);
+    const x = React.useRef(0);
+    const y = React.useRef(0);
+    const [style, setStyle] = useState({ x: 0, y: 0 });
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!ref.current) return;
+        const rect = ref.current.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = (e.clientX - centerX) / strength;
+        const dy = (e.clientY - centerY) / strength;
+        setStyle({ x: dx, y: dy });
+    };
+
+    const handleMouseLeave = () => {
+        setStyle({ x: 0, y: 0 });
+    };
+
+    return (
+        <div
+            ref={ref}
+            className={className}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            style={{
+                transform: `translate(${style.x}px, ${style.y}px)`,
+                transition: 'transform 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
+                willChange: 'transform'
+            }}
+        >
+            {children}
+        </div>
+    );
+};
+
+// ── Target Cursor scoped preview ─────────────────
+const TargetCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [stats, setStats] = useState({ cpu: 42, mem: 68 });
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setStats({
+                cpu: Math.floor(Math.random() * 20) + 30,
+                mem: Math.floor(Math.random() * 10) + 60
+            });
+        }, 2000);
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div
+            ref={containerRef}
+            className="target-cursor-area group"
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '400px',
+                background: '#050505',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden',
+                cursor: 'none',
+                fontFamily: "'Share Tech Mono', monospace",
+            }}
+        >
+            {/* Background Grid */}
+            <div style={{
+                position: 'absolute', inset: 0,
+                backgroundImage: 'radial-gradient(#111 1px, transparent 1px)',
+                backgroundSize: '24px 24px',
+                opacity: 0.5
+            }} />
+
+            {/* Scanline */}
+            <div style={{
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '2px',
+                background: 'rgba(79, 70, 229, 0.1)',
+                boxShadow: '0 0 10px rgba(79, 70, 229, 0.5)',
+                animation: 'scanline-anim 4s linear infinite',
+                pointerEvents: 'none',
+                zIndex: 5
+            }} />
+            <style>{`
+                @keyframes scanline-anim {
+                    0% { transform: translateY(-400px); }
+                    100% { transform: translateY(400px); }
+                }
+            `}</style>
+
+            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', gap: 24, width: '80%' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid #1a1a1a', paddingBottom: 12 }}>
+                    <div>
+                        <div style={{ fontSize: 10, color: '#444', letterSpacing: '0.2em' }}>SYSTEM_STATUS</div>
+                        <div className="cursor-target" style={{ fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '0.1em' }}>UI_HUB // TARGETING_v4</div>
+                    </div>
+                    <div style={{ textAlign: 'right', fontSize: 10, color: '#6366f1' }}>
+                        CPU: {stats.cpu}% <br />
+                        MEM: {stats.mem}%
+                    </div>
+                </div>
+
+                <div style={{ gridTemplateColumns: 'repeat(3, 1fr)', display: 'grid', gap: 16 }}>
+                    {[1, 2, 3].map(i => (
+                        <MagneticElement key={i} strength={10}>
+                            <div 
+                                className="cursor-target group/node"
+                                style={{ 
+                                    height: 100, 
+                                    background: '#0a0a0a', 
+                                    border: '1px solid #1a1a1a',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: 10,
+                                    color: '#333',
+                                    transition: 'all 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
+                                }}
+                            >
+                                <div style={{ transition: 'all 0.4s' }} className="group-hover/node:text-[#6366f1] group-hover/node:drop-shadow-[0_0_8px_rgba(99,102,241,0.6)]">NODE_0{i}</div>
+                                <style>{`
+                                    .group\\/node:hover {
+                                        border-color: #6366f1 !important;
+                                        box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+                                        background: #0d0d12 !important;
+                                    }
+                                `}</style>
+                            </div>
+                        </MagneticElement>
+                    ))}
+                </div>
+
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <MagneticElement className="flex-1" strength={20}>
+                        <button 
+                            className="cursor-target" 
+                            style={{ 
+                                width: '100%', padding: '12px', background: '#6366f1', color: '#fff', fontSize: 11, fontWeight: 'bold', border: 'none', letterSpacing: '0.1em',
+                                transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
+                                boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.transform = 'scale(1.02)';
+                                e.currentTarget.style.boxShadow = '0 0 25px rgba(99, 102, 241, 0.5)';
+                                e.currentTarget.style.background = '#4f46e5';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.transform = 'scale(1)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.2)';
+                                e.currentTarget.style.background = '#6366f1';
+                            }}
+                        >
+                            INITIALIZE_SCAN
+                        </button>
+                    </MagneticElement>
+                    <MagneticElement className="flex-1" strength={20}>
+                        <button 
+                            className="cursor-target" 
+                            style={{ 
+                                width: '100%', padding: '12px', background: 'transparent', border: '1px solid #333', color: '#666', fontSize: 11, fontWeight: 'bold', letterSpacing: '0.1em',
+                                transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.borderColor = '#6366f1';
+                                e.currentTarget.style.color = '#fff';
+                                e.currentTarget.style.boxShadow = '0 0 15px rgba(99, 102, 241, 0.2)';
+                                e.currentTarget.style.background = 'rgba(99, 102, 241, 0.05)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.borderColor = '#333';
+                                e.currentTarget.style.color = '#666';
+                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.background = 'transparent';
+                            }}
+                        >
+                            REBOOT
+                        </button>
+                    </MagneticElement>
+                </div>
+            </div>
+
+            <TargetCursor containerRef={containerRef} hideDefaultCursor={true} />
+        </div>
+    );
+};
 
 
 // ── Black Hole Cursor scoped preview ────────────
@@ -1041,7 +1228,7 @@ export const componentList: ComponentItem[] = [
         id: "target-cursor",
         title: "Target Cursor",
         category: "cursor",
-        preview: renderComponent("target-cursor", "TargetCursor"),
+        preview: () => <TargetCursorPreview />,
         code: `import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 interface TargetCursorProps {
@@ -1271,7 +1458,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
 };
 
 export default TargetCursor;`,
-        vibePrompt: ""
+        vibePrompt: "Create a precision 'TargetCursor' React component with Framer Motion that implements a 'snap-to-target' behavior using the 'cursor-target' CSS selector. Use a technical bracket-style aesthetic with an animated spinning center dot. Ensure the cursor supports parallax effects when hovering targets and includes a glassmorphic/difference blend mode for high visibility on 'UI HUB' branding elements. Supports responsiveness and specific container-based tracking."
     },
     {
         id: "black-hole-cursor",
@@ -1894,7 +2081,7 @@ export const Demo = () => (
         isPremium: true,
         preview: renderComponent("black-box", "BlackBox"),
         code: `import BlackBox from '@/components/ui/BlackBox';\n\nexport default function Demo() {\n  return <BlackBox />;\n}`,
-        vibePrompt: "A high-performance cyberpunk glitch-style dashboard portfolio with terminal simulation, animated charts, and system instability effects."
+        vibePrompt: "Create a high-performance cyberpunk glitch-style dashboard portfolio ('BlackBox') using React, Tailwind CSS, 'motion/react', 'recharts', and 'lucide-react'. Implement a 'Share Tech Mono' and 'Rubik Glitch' font aesthetic. The header should feature 'UI HUB' branding and the subtitle 'Next-Gen UI Experiences'. Include a terminal simulation logs array with 'ESTABLISHING NEXT-GEN UI SYSTEMS...'. The hero section must feature the title 'WE BUILD NEXT-GEN UI EXPERIENCES' and the description 'Designing Next-Gen UI Systems That Make Brands Unforgettable'. Buttons should be labeled 'GET STARTED' and 'EXPLORE WORK'. Include animated line charts, system stats cards with icons, and a custom 'TargetCursor' that snaps to elements with the 'cursor-target' class."
     },
     {
         id: "neo-brutalism-os",

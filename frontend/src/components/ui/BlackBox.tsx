@@ -212,7 +212,7 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
         const logs = [
             "--- INITIALIZING PERSONAL_INTERFACE_v4.0.1 ---",
             "LOCATING SYSTEM: UI HUB",
-            "ESTABLISHING SECURE_VIBE_CONNECTION...",
+            "ESTABLISHING NEXT-GEN UI SYSTEMS...",
             "CREDENTIALS: FULL_STACK_ENGINEER // UI_SPECIALIST",
             "LOADING_BIOGRAPHY...",
             "SYSTEM_READY."
@@ -259,7 +259,7 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
                         </div>
                         <div className="hidden sm:block">
                             <h1 className="text-sm font-black tracking-[0.2em] text-white">UI HUB</h1>
-                            <p className="text-[10px] text-zinc-500 font-mono tracking-widest mt-0.5 uppercase">Interface Architect</p>
+                            <p className="text-[10px] text-zinc-500 font-mono tracking-widest mt-0.5 uppercase">Next-Gen UI Experiences</p>
                         </div>
                     </div>
                 </div>
@@ -301,7 +301,7 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
                             <GlitchButton className="flex-1" onClick={() => setGlitchMode(!glitchMode)}>
                                 {glitchMode ? "RESTORE" : "GLITCH"}
                             </GlitchButton>
-                            <GlitchButton className="flex-1 border-red-500 text-red-500 hover:bg-red-500 hover:text-black">INITIALIZE</GlitchButton>
+                            <GlitchButton className="flex-1 border-red-500 text-red-500 hover:bg-red-500 hover:text-black">GET STARTED</GlitchButton>
                         </div>
                     </div>
                 </motion.div>
@@ -445,13 +445,13 @@ export default function BlackBox({ showDemoButton = false }: { showDemoButton?: 
                     <div className="col-span-1 md:col-span-8">
                         <RawBox title="PORTFOLIO_ENGINE_STATUS">
                             <div className="p-12 flex flex-col items-center justify-center text-center">
-                                <div className="text-3xl font-black text-white mb-6 tracking-[0.25em]">AVAILABLE_FOR_DEPLOYMENT</div>
+                                <div className="text-3xl font-black text-white mb-6 tracking-[0.25em]">WE BUILD NEXT-GEN UI EXPERIENCES</div>
                                 <p className="text-zinc-500 font-mono text-xs max-w-xl leading-relaxed uppercase tracking-widest opacity-70">
-                                    Current primary focus: Building the world's most advanced library of high-fidelity interfaces. 
+                                    Designing Next-Gen UI Systems That Make Brands Unforgettable. 
                                     UI HUB is the home for elite structural components.
                                 </p>
                                 <div className="mt-8 flex gap-4">
-                                    <div className="px-4 py-2 border border-zinc-800 text-[10px] font-bold tracking-widest text-zinc-500 cursor-target">GITHUB: UI-HUB-PROJECT</div>
+                                    <div className="px-4 py-2 border border-zinc-800 text-[10px] font-bold tracking-widest text-zinc-500 cursor-target">EXPLORE WORK</div>
                                     <div className="px-4 py-2 border border-zinc-800 text-[10px] font-bold tracking-widest text-zinc-500 cursor-target">SYSTEM: ACTIVE</div>
                                 </div>
                             </div>

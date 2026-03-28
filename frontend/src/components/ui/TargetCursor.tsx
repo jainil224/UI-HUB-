@@ -25,7 +25,7 @@ export const TargetCursor: React.FC<TargetCursorProps> = ({
     parallaxOn = true,
     containerRef,
     className = '',
-    color = '#4f46e5',
+    color = '#ffffff',
 }) => {
     const cursorRef = useRef<HTMLDivElement>(null);
     const [isLocked, setIsLocked] = useState(false);
