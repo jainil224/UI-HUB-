@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
-import { Github, Menu, X, Sparkles, LogOut, User as UserIcon, Sun, Moon } from 'lucide-react';
+import { Github, Menu, X, Sparkles, LogOut, User as UserIcon } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import Logo from './Logo';
 import GitHubStarButton from './GitHubStarButton';
@@ -156,18 +156,7 @@ const Navbar = () => {
 
                 {/* ── Right Actions ── */}
                 <div className="relative z-10 flex items-center gap-2.5">
-                    {/* Theme Toggle */}
-                    <button
-                        onClick={toggleTheme}
-                        className={`hidden sm:flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-300 group ${
-                            theme === 'dark' 
-                            ? 'bg-white/[0.06] border-white/10 hover:bg-white/10 hover:border-brand-green/40' 
-                            : 'bg-black/[0.06] border-black/10 hover:bg-black/10 hover:border-[#5FA3D6]/40'
-                        }`}
-                        title="Toggle Theme"
-                    >
-                        {theme === 'dark' ? <Sun size={16} className="text-white/50 group-hover:text-white" /> : <Moon size={16} className="text-black/50 group-hover:text-black" />}
-                    </button>
+
 
                     {/* GitHub */}
                     <a

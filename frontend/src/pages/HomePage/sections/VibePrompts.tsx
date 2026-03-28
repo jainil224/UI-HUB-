@@ -4,7 +4,6 @@ import {
     Copy, Check, Sparkles, Rocket, Zap, Brain,
     Code2, ArrowRight, Terminal, Star, TrendingUp, Users, Cpu, Atom
 } from 'lucide-react';
-import ViewSourceButton from '../../../components/ui/ViewSourceButton';
 import { ANTIGRAVITY_PROMPTS } from '../../../data/antigravityPrompts';
 import { LOVABLE_PROMPTS } from '../../../data/lovablePrompts';
 import { CLAUDE_PROMPTS } from '../../../data/claudePrompts';
@@ -117,7 +116,7 @@ const LiveCounter = ({ value }: { value: number }) => {
 };
 
 // ─── Scrolling ticker ──────────────────────────────────────────────────────────
-const TickerItem = ({ text, highlight }: { text: string; highlight?: string }) => (
+const TickerItem: React.FC<{ text: string; highlight?: string }> = ({ text, highlight }) => (
     <span className="flex items-center gap-3 px-6 text-white/30 text-[11px] font-bold uppercase tracking-widest shrink-0">
         <span className="w-1.5 h-1.5 rounded-full bg-brand-green/60 shrink-0" />
         {text}
@@ -193,8 +192,6 @@ const VibePrompts = () => {
                     The new paradigm of UI engineering is <span className="text-white/80 font-bold">curation</span>, not just creation.
                     Copy these tested AI prompts to generate high-end components instantly using your favorite copilot.
                 </p>
-
-                <ViewSourceButton />
             </motion.div>
 
             {/* ── Live Stats Row ──────────────────────────────────────────── */}
@@ -205,7 +202,7 @@ const VibePrompts = () => {
                 className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"
             >
                 {[
-                    { icon: Terminal, label: 'Prompts Available', value: 24, suffix: '+', color: 'text-brand-green' },
+                    { icon: Terminal, label: 'Prompts Available', value: 330, suffix: '+', color: 'text-brand-green' },
                     { icon: Users, label: 'Developers Used', value: 12800, suffix: '+', color: 'text-purple-400' },
                     { icon: TrendingUp, label: 'Avg Copy Rate', value: 94, suffix: '%', color: 'text-cyan-400' },
                     { icon: Cpu, label: 'AI Models Supported', value: 5, suffix: '', color: 'text-pink-400' },

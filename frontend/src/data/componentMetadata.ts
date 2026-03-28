@@ -494,6 +494,254 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["@splinetool/react-spline", "lucide-react"],
             requirements: ["Spline scene integration", "Glassmorphic mobile-friendly navigation"]
         }
+    },
+
+    // ── Button Components ────────────────────────────────────────────────────────
+
+    "corner-border-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Click Me"', description: "Button label or content rendered inside the button." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes to extend the button's style." },
+            { name: "cornerSize", type: "number", default: "8", description: "Size of the animated corner brackets in pixels." },
+            { name: "cornerColor", type: "string", default: '"#00ff9f"', description: "Color of the corner border brackets." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler fired when the button is pressed." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disables the button and applies reduced opacity styling." }
+        ],
+        vibeMeta: {
+            behavior: "A button with animated corner brackets that expand outward on hover, creating a targeting / crosshair framing effect.",
+            states: { from: "collapsed corner brackets", to: "expanded corner frame on hover" },
+            cssProperties: ["border", "transform", "transition", "opacity"],
+            description: "Precision-styled button with animated corner brackets.",
+            libraries: ["framer-motion"],
+            requirements: ["Four absolute-positioned corner elements", "CSS transform expand on hover", "Configurable corner color and size"]
+        }
+    },
+
+    "shatter-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Shatter"', description: "Button text or inner content." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "shardCount", type: "number", default: "12", description: "Number of glass shards that fly out on click." },
+            { name: "shardColor", type: "string", default: '"#ffffff"', description: "Color of the exploding shards." },
+            { name: "duration", type: "number", default: "600", description: "Duration of the shatter animation in milliseconds." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Callback fired after the shatter animation completes." }
+        ],
+        vibeMeta: {
+            behavior: "On click, the button surface shatters into animated polygon fragments that fly outward before the button reforms. Provides a high-impact click confirmation.",
+            states: { from: "intact button", to: "exploded shards, then reformed" },
+            cssProperties: ["clip-path", "transform", "opacity", "transition"],
+            description: "Glass-shatter effect button with polygon fragment explosion.",
+            libraries: ["framer-motion"],
+            requirements: ["Polygon clip-path fragment generation", "Randomized trajectory per shard", "AnimatePresence for mount/unmount", "Button re-render after animation"]
+        }
+    },
+
+    "border-beam": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
+            { name: "size", type: "number", default: "300", description: "Size of the glowing beam in pixels." },
+            { name: "duration", type: "number", default: "15", description: "Seconds for one full orbit of the beam." },
+            { name: "anchor", type: "number", default: "90", description: "Starting angle of the beam on the border (0–360 degrees)." },
+            { name: "borderWidth", type: "number", default: "1.5", description: "Width of the border in pixels." },
+            { name: "colorFrom", type: "string", default: '"#ffaa40"', description: "Start color of the beam gradient." },
+            { name: "colorTo", type: "string", default: '"#9c40ff"', description: "End color of the beam gradient." },
+            { name: "delay", type: "number", default: "0", description: "Delay in seconds before the beam animation starts." }
+        ],
+        vibeMeta: {
+            behavior: "A glowing light beam that orbits continuously around the border of any container element. Uses a conic gradient mask to create a traveling spotlight effect.",
+            states: { from: "static border", to: "continuously orbiting glow beam" },
+            cssProperties: ["background: conic-gradient", "mask", "border-radius", "animation"],
+            description: "Magical orbiting border glow beam for any container.",
+            libraries: ["framer-motion"],
+            requirements: ["CSS conic-gradient for beam shape", "Continuous rotation animation", "Configurable speed, anchor, and colors", "Responsive border-radius inheritance"]
+        }
+    },
+
+    "glow-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Glow"', description: "Button content." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "glowColor", type: "string", default: '"#00ff9f"', description: "Color of the glow halo effect." },
+            { name: "glowSize", type: "number", default: "40", description: "Spread radius of the glow in pixels." },
+            { name: "glowOpacity", type: "number", default: "0.6", description: "Opacity of the glow (0–1)." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disables the button and suppresses glow." }
+        ],
+        vibeMeta: {
+            behavior: "A button with a radial glow that intensifies on hover. The glow tracks the mouse within the button for a liquid-light feel.",
+            states: { from: "subtle ambient glow", to: "intense mouse-tracked radial glow" },
+            cssProperties: ["box-shadow", "radial-gradient", "transition", "filter"],
+            description: "Premium glow-on-hover button with mouse-tracking light.",
+            libraries: ["framer-motion"],
+            requirements: ["Mouse position tracking relative to button", "Radial gradient that follows cursor", "Configurable glow color and radius", "Smooth opacity transition"]
+        }
+    },
+
+    "marquee-hover-button": {
+        props: [
+            { name: "label", type: "string", default: '"Hover Me"', description: "The text shown at rest." },
+            { name: "marqueeText", type: "string", default: '"★ Marquee Text ★"', description: "The scrolling text revealed on hover." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "speed", type: "number", default: "20", description: "Marquee scroll speed in pixels per second." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." }
+        ],
+        vibeMeta: {
+            behavior: "At rest the button shows a static label. On hover, the label slides up and a continuously scrolling marquee of text slides in from below.",
+            states: { from: "static label", to: "scrolling marquee text on hover" },
+            cssProperties: ["overflow: hidden", "transform: translateY", "animation: marquee"],
+            description: "Hover-reveal marquee text button.",
+            libraries: ["framer-motion"],
+            requirements: ["Overflow hidden container", "Framer Motion y-axis translate on hover", "Looping CSS marquee animation", "Configurable speed and text"]
+        }
+    },
+
+    "payment-transaction-button": {
+        props: [
+            { name: "amount", type: "string | number", default: '"$99.00"', description: "The payment amount to display on the button." },
+            { name: "currency", type: "string", default: '"USD"', description: "Currency code shown alongside the amount." },
+            { name: "onSuccess", type: "() => void", default: "undefined", description: "Callback fired when the simulated payment succeeds." },
+            { name: "onError", type: "() => void", default: "undefined", description: "Callback fired when the simulated payment fails." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "loadingDuration", type: "number", default: "2000", description: "Milliseconds the loading spinner shows before resolving." }
+        ],
+        vibeMeta: {
+            behavior: "A multi-phase button that transitions through idle, loading (spinner), success (checkmark), and error states. Each phase has dedicated micro-animations.",
+            states: { from: "idle payment button", to: "loading → success / error state" },
+            cssProperties: ["transform", "opacity", "border", "transition"],
+            description: "Multi-state animated payment button with success/error feedback.",
+            libraries: ["framer-motion"],
+            requirements: ["State machine: idle → loading → success/error", "Spinner animation during loading", "AnimatePresence for icon transitions", "Color shift per state (neutral → green / red)"]
+        }
+    },
+
+    "magic-card-effect": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the card container." },
+            { name: "gradientSize", type: "number", default: "200", description: "Size of the radial gradient spotlight in pixels." },
+            { name: "gradientColor", type: "string", default: '"#262626"', description: "Color of the mouse-tracked gradient spotlight." },
+            { name: "gradientOpacity", type: "number", default: "0.8", description: "Opacity of the spotlight gradient (0–1)." },
+            { name: "children", type: "React.ReactNode", default: "undefined", description: "Content rendered inside the card." }
+        ],
+        vibeMeta: {
+            behavior: "A card with a radial gradient spotlight that follows the mouse cursor. Creates a premium 'magic' lighting effect that reveals depth beneath the card surface.",
+            states: { from: "flat card", to: "mouse-tracked radial light reveal" },
+            cssProperties: ["background: radial-gradient", "mask", "transition"],
+            description: "Mouse-tracking spotlight card with premium depth effect.",
+            libraries: ["framer-motion"],
+            requirements: ["onMouseMove event with rect-relative coordinates", "CSS radial-gradient positioned at mouse", "Configurable gradient size and color", "Smooth transition on mouse leave"]
+        }
+    },
+
+    "rainbow-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Rainbow"', description: "Button label or inner content." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "speed", type: "number", default: "3", description: "Seconds for one full rotation of the rainbow gradient." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disables button and pauses rainbow animation." }
+        ],
+        vibeMeta: {
+            behavior: "A button with a continuously rotating conic-gradient halo border that cycles through all hues of the rainbow. On hover, the halo intensifies.",
+            states: { from: "slow rainbow rotation", to: "faster / brighter on hover" },
+            cssProperties: ["background: conic-gradient", "animation: spin", "border-radius", "filter"],
+            description: "Continuously rotating full-spectrum rainbow border button.",
+            libraries: ["framer-motion"],
+            requirements: ["CSS conic-gradient rainbow halo", "Rotation keyframe animation", "Pseudo-element or wrapper technique for inner background", "Hover speed/brightness increase"]
+        }
+    },
+
+    "social-tooltip-buttons": {
+        props: [
+            { name: "buttons", type: "SocialButton[]", default: "default socials", description: "Array of {icon, label, color, href} objects for each social link." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
+            { name: "tooltipPosition", type: '"top" | "bottom"', default: '"top"', description: "Direction the tooltip appears relative to the button." },
+            { name: "size", type: "number", default: "44", description: "Size of each icon button in pixels." }
+        ],
+        vibeMeta: {
+            behavior: "A row of social icon buttons. On hover, a branded color tooltip fades in above/below with the platform name. Each button has a unique background color on hover.",
+            states: { from: "neutral icons", to: "branded colored hover + tooltip reveal" },
+            cssProperties: ["transform: translateY", "opacity", "background-color", "border-radius"],
+            description: "Social icon row with branded hover color and animated tooltip labels.",
+            libraries: ["framer-motion", "lucide-react"],
+            requirements: ["tooltip AnimatePresence fade/slide", "Per-button branding color", "Configurable tooltip position", "Link wrapper support (href)"]
+        }
+    },
+
+    "orbit-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Orbit"', description: "Button label." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "orbitColor", type: "string", default: '"#00ff9f"', description: "Color of the orbiting particle beam." },
+            { name: "orbitSize", type: "number", default: "6", description: "Size of the orbiting particle dot in pixels." },
+            { name: "speed", type: "number", default: "2", description: "Seconds for one full orbit cycle." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." }
+        ],
+        vibeMeta: {
+            behavior: "A button with a glowing particle that orbits its border in a continuous loop. On hover, the orbit speed doubles and a secondary particle appears.",
+            states: { from: "single slow orbit", to: "dual fast orbit on hover" },
+            cssProperties: ["transform: rotate", "border-radius", "box-shadow", "animation"],
+            description: "Button with a glowing satellite particle orbiting its border.",
+            libraries: ["framer-motion"],
+            requirements: ["Absolute positioned particle on border path", "CSS/Framer rotation animation", "Hover-triggered speed and count change", "Configurable orbit color and dot size"]
+        }
+    },
+
+    "galaxy-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Galaxy"', description: "Button label." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "starCount", type: "number", default: "80", description: "Number of star particles rendered on the button surface." },
+            { name: "nebulaColor", type: "string", default: '"#6366f1"', description: "Primary nebula glow color inside the button." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." }
+        ],
+        vibeMeta: {
+            behavior: "A button whose surface is filled with a miniature starfield and nebula glow that drifts slowly. On hover, stars increase brightness and the nebula pulses.",
+            states: { from: "dim drifting starfield", to: "brightened pulsing galaxy on hover" },
+            cssProperties: ["canvas", "background: radial-gradient", "opacity", "filter"],
+            description: "Button with an embedded living galaxy particle effect.",
+            libraries: ["framer-motion"],
+            requirements: ["Canvas or DOM particle system inside button", "Star drift physics (slow floaty movement)", "Nebula radial gradient on hover", "Click ripple from center"]
+        }
+    },
+
+    "liquid-fill-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Fill"', description: "Button label." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "fillColor", type: "string", default: '"#00ff9f"', description: "Color of the liquid fill that rises on hover." },
+            { name: "textColor", type: "string", default: '"#000000"', description: "Text color after fill covers the button." },
+            { name: "waveHeight", type: "number", default: "8", description: "Amplitude of the wave in pixels." },
+            { name: "fillSpeed", type: "number", default: "0.5", description: "Duration of the fill animation in seconds." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." }
+        ],
+        vibeMeta: {
+            behavior: "On hover, a liquid wave rises from the bottom of the button until it fully covers the background. A wavy SVG path sits at the waterline for an organic fill effect.",
+            states: { from: "transparent / outlined button", to: "fully filled with liquid wave on hover" },
+            cssProperties: ["clip-path", "transform: translateY", "SVG path", "transition"],
+            description: "Liquid wave fill button with organic SVG waterline animation.",
+            libraries: ["framer-motion"],
+            requirements: ["SVG sinusoidal wave path at fill boundary", "Y-axis translate for fill rise", "Color transition for text when covered", "Configurable wave height and fill speed"]
+        }
+    },
+
+    "neon-flicker-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"NEON"', description: "Button label." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
+            { name: "neonColor", type: "string", default: '"#ff00ff"', description: "Primary neon glow color." },
+            { name: "flickerSpeed", type: "number", default: "0.15", description: "Duration of each flicker step in seconds." },
+            { name: "flickerOnHover", type: "boolean", default: "true", description: "Trigger flicker only on hover instead of continuously." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." }
+        ],
+        vibeMeta: {
+            behavior: "A neon sign-styled button that mimics a real fluorescent tube with random flicker pulses. The text glows and the border briefly drops opacity to simulate electrical instability.",
+            states: { from: "steady neon glow", to: "irregular flicker pulses" },
+            cssProperties: ["text-shadow", "box-shadow", "opacity", "animation: flicker"],
+            description: "Neon sign button with realistic electrical flicker simulation.",
+            libraries: ["framer-motion"],
+            requirements: ["CSS/JS randomized opacity keyframes for flicker", "Multi-layered text-shadow for neon glow depth", "Configurable flicker speed and color", "Hover-only or continuous flicker mode"]
+        }
     }
 };
+
 

@@ -254,11 +254,11 @@ const PricingPage = () => {
                                         <>
                                             <div className="h-px bg-white/[0.06] !my-5" />
                                             {plan.notIncluded.map((feature, i) => (
-                                                <div key={i} className="flex items-start gap-3 opacity-40">
-                                                    <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
-                                                        <X size={11} className="text-red-400" />
+                                                <div key={i} className="flex items-start gap-3 group/not-included">
+                                                    <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/40 flex items-center justify-center shrink-0 mt-0.5 transition-all group-hover/not-included:bg-red-500/20">
+                                                        <X size={11} className="text-red-500" />
                                                     </div>
-                                                    <span className="text-white/50 text-sm leading-snug italic">{feature}</span>
+                                                    <span className="text-white/60 text-sm leading-snug">{feature}</span>
                                                 </div>
                                             ))}
                                         </>
