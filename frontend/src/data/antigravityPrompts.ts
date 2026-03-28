@@ -1,4 +1,73 @@
 export const ANTIGRAVITY_PROMPTS: Record<string, string> = {
+    "3d-landing-page": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance 3D Landing Page component.
+
+---
+
+## COMPONENT INFO
+
+Name: ThreeDLandingPage
+Type: UI / 3D / Landing Page
+
+---
+
+## GOAL
+
+Create a "ThreeDLandingPage" React component utilizing Tailwind CSS, 'lucide-react', '@splinetool/react-spline', and 'motion/react'. Build a responsive container (h-[600px] rounded-3xl) that tracks mouse movement to apply a smooth 3D tilt effect (rotateX, rotateY) to the content. Use 'Gruppo' and 'Sen' fonts imported via CSS. Ensure an exact, high-fidelity reproduction with fully functional, mouse-reactive React code.
+
+---
+
+## TECH STACK
+
+* React
+* TypeScript (TSX)
+* Tailwind CSS
+* Lucide React
+* @splinetool/react-spline
+* motion/react (framer-motion)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **3D Integration**: Use Spline for complex 3D scenes.
+* **3D Mouse Tilt**: MouseMove logic on the container that calculates x/y offsets to drive rotateX and rotateY via useSpring.
+* **Glassmorphism**: Advanced CSS back-drop filter effects.
+* **Responsive Rendering**: Conditional rendering between 3D scene and GIF based on screen size.
+* **Interactive UI**: Fully functional navigation and mobile menu.
+
+---
+
+## CRITICAL RULES (ZERO-FAILURE)
+
+1. **Precision**: The glassmorphic cards must have perfect semi-transparent borders.
+2. **Typography**: Fonts must be imported correctly using CSS inside the component.
+3. **Performance**: Spline scene must load and render smoothly; GIF fallback is required for mobile.
+
+---
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
     'mouse-gravity-background': `# UI HUB • ANTIGRAVITY AGENT MASTER PROMPT
 
 ## 1. COMPONENT ANALYSIS & IMPLEMENTATION (MANDATORY FIRST STEP)

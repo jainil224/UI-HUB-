@@ -481,6 +481,19 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react", "framer-motion"],
             requirements: ["Canvas-based noise generation", "Intense color-dodge blends", "Animated distortion filters"]
         }
+    },
+    "3d-landing-page": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
+        ],
+        vibeMeta: {
+            behavior: "An immersive 3D web experience combining WEB3, motion, and interactive design. Scalable interactive globe with glassmorphic UI.",
+            states: { from: "flat landing page", to: "3D interactive globe experience" },
+            cssProperties: ["glass-effect", "backdrop-filter"],
+            description: "Immersive 3D Web Experience with Glassmorphism.",
+            libraries: ["@splinetool/react-spline", "lucide-react"],
+            requirements: ["Spline scene integration", "Glassmorphic mobile-friendly navigation"]
+        }
     }
 };
 

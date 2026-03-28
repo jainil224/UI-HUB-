@@ -63,6 +63,7 @@ const resolveSourceCode = async (componentId) => {
     'grid-background': 'ui/background-boxes.tsx', // Example guess
     'sparkles-background': 'ui/sparkles-background.tsx',
     '3d-rubiks-cube': 'ui/RubiksCube.tsx',
+    '3d-landing-page': 'ui/ThreeDLandingPage.tsx',
   };
 
   const relativePath = mapping[componentId];

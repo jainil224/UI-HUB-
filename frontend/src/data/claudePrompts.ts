@@ -1,4 +1,59 @@
 export const CLAUDE_PROMPTS: Record<string, string> = {
+    "3d-landing-page": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: ThreeDLandingPage
+Type: Interactive 3D Responsive Landing Page
+
+---
+
+## Tech Stack
+
+* React
+* TypeScript
+* Tailwind CSS
+* Lucide React
+* @splinetool/react-spline
+* motion/react (framer-motion)
+
+---
+
+## Requirements
+
+* Responsive container with h-[600px] and rounded-3xl.
+* Conditional rendering: Desktop shows <Spline /> scene, Mobile (< 768px) shows fallback GIF.
+* Multi-layer glassmorphic UI overlay with backdrop-filter: blur(7px).
+* Interactive sticky/absolute Navbar (Branding: "UI HUB") and Hero section with cards (Title: "We Build Next-Gen UI Experiences", Description: "Designing Next-Gen UI Systems That Make Brands Unforgettable", Buttons: "Explore Work", "Get Started").
+* Mouse-driven 3D tilt interaction (rotateX, rotateY) implemented with useMotionValue and useSpring for smooth parity with reference logic.
+* Precise font imports (Gruppo, Sen) via CSS within the component.
+
+---
+
+## Performance
+
+* High-fidelity 3D loading via @splinetool/react-spline.
+* Optimally handled mobile fallbacks.
+* Smooth CSS transitions for hovering elements and mobile navigation.
+`,
     'corner-border-button': `# UI HUB • CLAUDE PROMPT
 
 ## Role
