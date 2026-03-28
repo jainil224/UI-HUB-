@@ -1559,8 +1559,11 @@ export const componentList: ComponentItem[] = [
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
+        
+        // Account for CSS scaling (essential for library previews)
         const scaleX = containerRef.current.offsetWidth / rect.width;
         const scaleY = containerRef.current.offsetHeight / rect.height;
+        
         setMousePos({
             x: (e.clientX - rect.left) * scaleX,
             y: (e.clientY - rect.top) * scaleY
@@ -1572,17 +1575,19 @@ export const componentList: ComponentItem[] = [
             <div ref={containerRef} onMouseMove={handleMouseMove} className="w-full max-w-5xl relative group">
                 <div ref={scrollRef} onScroll={handleScroll} className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory">
                     {cards.map((card, i) => (
-                        <div key={i} className="relative flex-shrink-0 w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden group/card">
-                            {/* Card Content... */}
+                        <div key={i} className="relative flex-shrink-0 w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden group/card shadow-xl transition-all duration-400 ease-out">
+                            {/* Card content with text-white/70 for base state */}
                         </div>
                     ))}
                 </div>
-                {/* Spotlight Overlay Layer... */}
-                <div className="absolute inset-0 pointer-events-none z-10" style={{
+                {/* Spotlight Overlay Layer - Reveals full brightness content */}
+                <div className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-500" style={{
                     opacity: isHovered ? 1 : 0,
-                    WebkitMaskImage: \`radial-gradient(30rem circle at \${mousePos.x}px \${mousePos.y}px, black 0%, transparent 65%)\`
+                    WebkitMaskImage: \`radial-gradient(circle 35rem at \${mousePos.x}px \${mousePos.y}px, black 0%, transparent 70%)\`
                 }}>
-                    {/* Glass Overlay of Cards... */}
+                    <div ref={overlayScrollRef} className="flex gap-6 p-6 overflow-x-hidden w-full h-full">
+                        {/* High-intensity "glow" versions of cards... */}
+                    </div>
                 </div>
             </div>
         </div>

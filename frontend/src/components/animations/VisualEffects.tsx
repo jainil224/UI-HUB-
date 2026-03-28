@@ -520,8 +520,8 @@ export const SpotlightCards = ({
                     className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
                     style={{
                         opacity: isHovered ? 1 : 0,
-                        WebkitMaskImage: `radial-gradient(30rem circle at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 65%)`,
-                        maskImage: `radial-gradient(30rem circle at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 65%)`,
+                        WebkitMaskImage: `radial-gradient(circle 35rem at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 70%)`,
+                        maskImage: `radial-gradient(circle 35rem at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 70%)`,
                     }}
                 >
                     <div
