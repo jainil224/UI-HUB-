@@ -27,14 +27,56 @@
   <meta property="twitter:image" content="/src/Assets/logo.png" />
 
   <link rel="icon" type="image/png" href="/src/Assets/logo.png" />
+  
+  <!-- Preconnect to font domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.cdnfonts.com">
+
+  <!-- Non-blocking Google Fonts loading -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Anton&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Anton&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Anton&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap">
+  </noscript>
+
   <meta name="google-site-verification" content="tkm0BtRLStIjUsrA7KIr1uc27qtaHuaWKH9K2NizIuY" />
+  
+  <style>
+    /* Critical CSS Spinner for immediate feedback */
+    #initial-loader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(0, 255, 0, 0.1);
+      border-top: 3px solid #00FF00;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    .loader-text {
+      color: #00FF00;
+      margin-top: 15px;
+      font-family: sans-serif;
+      letter-spacing: 0.1em;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-QS3XBQBLW8"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-QS3XBQBLW8');
   </script>
 
@@ -42,8 +84,23 @@
 </head>
 
 <body>
+  <div id="initial-loader">
+    <div class="spinner"></div>
+    <div class="loader-text">UI HUB — LOADING VIBES</div>
+  </div>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
+  <script>
+    window.addEventListener('load', function() {
+      var loader = document.getElementById('initial-loader');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(function() {
+          loader.style.display = 'none';
+        }, 500);
+      }
+    });
+  </script>
 </body>
 
 </html>

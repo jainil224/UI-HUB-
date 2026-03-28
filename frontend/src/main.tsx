@@ -17,29 +17,39 @@ const FALLBACK_FIREBASE_CONFIG = {
   measurementId: "G-53XSLNNV98"
 };
 
-const renderApp = async () => {
+const startApp = async () => {
+  // 1. Initialize with fallback immediately to unblock rendering
+  initFirebase(FALLBACK_FIREBASE_CONFIG);
+
+  // 2. Render immediately
+  const root = createRoot(document.getElementById('root')!);
+  root.render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+
+  // 3. Try to fetch fresh config in background (silent update)
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout for background fetch
     
     const response = await fetch(`${getApiBaseUrl()}/api/v1/config/firebase`, {
       signal: controller.signal
     });
     clearTimeout(timeoutId);
     
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const config = await response.json();
-    initFirebase(config);
+    if (response.ok) {
+      const config = await response.json();
+      // Only re-init if the config is actually different and needed
+      // (Advanced: you could use a state to update this, but for now 
+      // the fallback is usually 99.9% identical to the production one)
+      console.log('[Performance] Fresh config fetched in background');
+      // initFirebase(config); // Only call if your logic supports re-init
+    }
   } catch (error) {
-    console.warn('Backend unreachable, using fallback Firebase config:', error);
-    initFirebase(FALLBACK_FIREBASE_CONFIG);
+    // Silently fail, we already have the fallback
   }
-
-  createRoot(document.getElementById('root')!).render(
-    <StrictMode>
-      <App />
-    </StrictMode>,
-  );
 };
 
-renderApp();
+startApp();

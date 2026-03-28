@@ -70,7 +70,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <AuthContext.Provider value={{ user, isPro, loading }}>
-            {!loading && children}
+            {/* Always render children immediately to unblock app mount */}
+            {children}
+            
+            {/* Minimal overlay to show if auth is still resolving on initial load, only on protected or user-dependent pages if necessary. For now, we prefer speed. */}
         </AuthContext.Provider>
     );
 };

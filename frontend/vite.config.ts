@@ -52,7 +52,19 @@ export default defineConfig(({mode}) => {
       sourcemap: false, // Prevents hackers from seeing original source code in production
       minify: 'esbuild',
       reportCompressedSize: false,
-      chunkSizeWarningLimit: 1000,
+      chunkSizeWarningLimit: 1200,
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            // Split heavy vendor libraries into separate chunks for better caching and faster initial load
+            'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-three': ['three', '@splinetool/react-spline', '@splinetool/runtime'],
+            'vendor-ui': ['framer-motion', 'lucide-react', 'gsap', 'lenis', 'motion'],
+            'vendor-utils': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage', 'firebase/analytics'],
+            'vendor-charts': ['recharts'],
+          }
+        }
+      }
     },
   };
 });
