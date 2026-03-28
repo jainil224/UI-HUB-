@@ -22,25 +22,36 @@ const LoginPage = () => {
     useEffect(() => {
         if (!auth) return;
         
+        let isMounted = true;
         const handleRedirect = async () => {
             console.log('[Auth] Checking for redirect result...');
             try {
+                // getRedirectResult will resolve with null if no redirect happened
                 const result = await getRedirectResult(auth);
+                if (!isMounted) return;
+
                 if (result?.user) {
                     console.log('[Auth] Redirect sign-in success:', result.user.email);
-                    navigate('/');
+                    // Force a small delay to allow AuthContext to sync if needed
+                    setTimeout(() => {
+                        if (isMounted) navigate('/');
+                    }, 500);
                 } else {
                     console.log('[Auth] No redirect result found (normal page load)');
                 }
             } catch (err: any) {
-                console.error('[Auth] Redirect error:', err);
-                if (err.code !== 'auth/redirect-cancelled-by-user') {
-                    setError(formatAuthError(err.message) || 'Sign-in failed after redirect.');
+                if (!isMounted) return;
+                console.error('[Auth] Redirect error details:', err.code, err.message);
+                
+                // Don't show error if user just cancelled or if it's a "no result" case
+                if (err.code !== 'auth/redirect-cancelled-by-user' && err.code !== 'auth/no-auth-event') {
+                    setError(formatAuthError(err.message) || 'Sign-in failed after redirect. Please try again.');
                 }
             }
         };
 
         handleRedirect();
+        return () => { isMounted = false; };
     }, [navigate]);
 
     const handleSocialSignIn = async (providerType: 'google' | 'github') => {

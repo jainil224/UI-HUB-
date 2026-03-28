@@ -8,9 +8,13 @@ export const getApiBaseUrl = () => {
             console.log(`[API Config] Using configured Production API: ${configuredUrl}`);
             return configuredUrl;
         }
-        // Fallback to same-origin for unified deployment
-        console.log(`[API Config] Production detected, using same-origin for API`);
-        return ''; 
+        
+        // Fallback to current origin (useful if API is on the same domain or proxied)
+        if (typeof window !== 'undefined') {
+            console.log(`[API Config] Prod, no VITE_API_URL, using: ${window.location.origin}`);
+            return window.location.origin;
+        }
+        return '';
     }
 
     // Local development handling

@@ -5,6 +5,10 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/__/auth/:path*",
+      "destination": "https://ui-hub-3fe3d.firebaseapp.com/__/auth/:path*"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
