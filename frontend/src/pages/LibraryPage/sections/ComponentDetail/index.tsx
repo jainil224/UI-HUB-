@@ -298,8 +298,8 @@ const VibeSystemSection = React.memo(({
     vanillaCode: string;
     setShowAuthModal: (v: boolean) => void;
 }) => {
-    // Normal users default to 'lovable', Pro users default to 'antigravity'
-    const defaultSystem: AISystem = isProUser ? 'antigravity' : 'lovable';
+    // Normal users default to 'lovable', Pro users default to 'advance'
+    const defaultSystem: AISystem = isProUser ? 'advance' : 'lovable';
     const [activeTool, setActiveTool] = React.useState<AISystem>(defaultSystem);
     const [aiSystem, setAiSystemState] = React.useState<AISystem>(defaultSystem);
     const [isPending, startTransition] = React.useTransition();
@@ -318,8 +318,8 @@ const VibeSystemSection = React.memo(({
     // Sync state when Pro status changes (e.g. after login fetch finishes)
     React.useEffect(() => {
         if (isProUser && !prevProStatus) {
-            console.log(`[VibeSystem] Pro status detected, upgrading default tool to Antigravity`);
-            setAiSystem('antigravity');
+            console.log(`[VibeSystem] Pro status detected, upgrading default tool to Advance`);
+            setAiSystem('advance');
         } else if (!isProUser && prevProStatus) {
             setAiSystem('lovable');
         }

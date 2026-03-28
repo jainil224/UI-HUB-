@@ -9,7 +9,7 @@ interface StatItemProps {
     formatValue?: (val: number) => string;
 }
 
-const StatItem = ({ label, value, suffix, index, formatValue }: StatItemProps) => {
+const StatItem: React.FC<StatItemProps> = ({ label, value, suffix, index, formatValue }) => {
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true, margin: "-50px" });
 
@@ -91,25 +91,25 @@ const StatItem = ({ label, value, suffix, index, formatValue }: StatItemProps) =
 const statsData = [
     {
         label: "Total Components",
-        value: 85,
+        value: 66,
         suffix: "+",
     },
     {
-        label: "Weekly Downloads",
-        value: 24000,
-        suffix: "",
+        label: "AI Accuracy Rate",
+        value: 99,
+        suffix: "%",
+    },
+    {
+        label: "Projects Built",
+        value: 1000,
+        suffix: "+",
         formatValue: (val: number) => {
-            if (val >= 1000) return `${(val / 1000).toFixed(val % 1000 === 0 ? 0 : 1)}K`;
+            if (val >= 1000) return `${(val / 1000).toFixed(0)}K`;
             return val.toString();
         }
     },
     {
-        label: "Projects Built",
-        value: 500,
-        suffix: "+",
-    },
-    {
-        label: "Rendering Performance",
+        label: "Faster Development",
         value: 10,
         suffix: "x",
     },
