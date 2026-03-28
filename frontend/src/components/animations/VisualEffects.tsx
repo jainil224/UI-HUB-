@@ -344,9 +344,14 @@ export const SpotlightCards = ({
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
+        
+        // Account for CSS scaling (e.g., in the library preview)
+        const scaleX = containerRef.current.offsetWidth / rect.width;
+        const scaleY = containerRef.current.offsetHeight / rect.height;
+        
         setMousePos({
-            x: e.clientX - rect.left,
-            y: e.clientY - rect.top
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
         });
     };
 
@@ -488,10 +493,10 @@ export const SpotlightCards = ({
                                     <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
                                 </div>
 
-                                <h3 className="text-3xl font-display font-black mb-3 text-white tracking-tight">
+                                <h3 className="text-3xl font-display font-black mb-3 text-white/70 tracking-tight transition-colors group-hover/card:text-white/90">
                                     {card.title}
                                 </h3>
-                                <p className="text-sm text-white/50 leading-relaxed mb-6 font-medium">
+                                <p className="text-sm text-white/30 leading-relaxed mb-6 font-medium transition-colors group-hover/card:text-white/40">
                                     {card.text}
                                 </p>
 
@@ -515,8 +520,8 @@ export const SpotlightCards = ({
                     className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
                     style={{
                         opacity: isHovered ? 1 : 0,
-                        WebkitMaskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
-                        maskImage: `radial-gradient(25rem 25rem at ${mousePos.x}px ${mousePos.y}px, black 1%, transparent 50%)`,
+                        WebkitMaskImage: `radial-gradient(30rem circle at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 65%)`,
+                        maskImage: `radial-gradient(30rem circle at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 65%)`,
                     }}
                 >
                     <div

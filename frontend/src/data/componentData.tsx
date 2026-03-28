@@ -29,8 +29,7 @@ const ThreeDLandingPage = React.lazy(() => import('../components/ui/ThreeDLandin
 
 
 // ── Lazy Loaded Internal Collections ───────────
-const Animations = React.lazy(() => import('../components/animations/TextAnimations'));
-const VisualEffects = React.lazy(() => import('../components/animations/VisualEffects'));
+// These are handled by LazyRenderer via renderComponent
 
 
 import Logo from '../components/ui/Logo';
@@ -1349,9 +1348,53 @@ export const componentList: ComponentItem[] = [
         id: "noise",
         title: "Noise Background",
         category: "effect",
-        preview: () => <VisualEffects.Noise opacity={0.1} />,
+        preview: renderComponent("noise", "Noise", { opacity: 0.1 }),
         code: `import { Noise } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="relative w-full h-64 overflow-hidden bg-black">\n    <h1 className="text-white text-4xl p-8">Noise Overlay</h1>\n    <Noise opacity={0.15} />\n  </div>\n);`,
-        vibePrompt: ""
+        vibePrompt: `export const Noise = ({
+    opacity = 0.05,
+    baseFrequency = "0.65",
+    numOctaves = "3",
+    className = ""
+}: NoiseProps) => {
+    const [noiseOpacity, setNoiseOpacity] = useState(opacity);
+
+    return (
+        <div className={cn('relative border border-white/10 rounded-xl w-full max-w-2xl overflow-hidden bg-neutral-950', className)}>
+            <div className='absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10'>
+                <label htmlFor='opacity-slider' className='text-[10px] font-bold uppercase tracking-wider text-white/60'>
+                    Noise:
+                </label>
+                <input
+                    id='opacity-slider'
+                    type='range'
+                    min='0'
+                    max='0.2'
+                    step='0.01'
+                    value={noiseOpacity}
+                    onChange={(e) => setNoiseOpacity(parseFloat(e.target.value))}
+                    className="w-20 accent-cyan-400"
+                />
+                <span className='text-[10px] font-mono text-cyan-400 w-8'>{noiseOpacity.toFixed(2)}</span>
+            </div>
+
+            <div
+                className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay"
+                style={{
+                    opacity: noiseOpacity,
+                    backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='\${baseFrequency}' numOctaves='\${numOctaves}' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\`
+                }}
+            ></div>
+
+            <div className='h-[300px] flex flex-col items-center justify-center text-white relative z-0'>
+                <div className='absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]'></div>
+                <h1 className='text-3xl font-display font-bold text-center tracking-tight leading-tight uppercase'>
+                    Noise Overlay<br />
+                    <span className="text-cyan-400">Effect</span>
+                </h1>
+            </div>
+        </div>
+    );
+};`
     },
     {
         id: "gradual-spacing",
@@ -1413,9 +1456,32 @@ export const componentList: ComponentItem[] = [
         id: "liquid-glass",
         title: "Liquid Glass",
         category: "effect",
-        preview: () => <VisualEffects.LiquidGlass location="LONDON" temp="18" />,
+        preview: renderComponent("liquid-glass", "Liquid Glass", { location: "SURAT", temp: "18" }),
         code: `import { LiquidGlass } from '@/components/animations/VisualEffects';\n\nexport const Demo = () => (\n  <div className="w-full h-[300px] flex items-center justify-center bg-neutral-900">\n    <LiquidGlass location="NEW YORK" temp="22" />\n  </div>\n);`,
-        vibePrompt: ""
+        vibePrompt: `export const LiquidGlass = ({
+    backgroundImage = "url('https://images.unsplash.com/photo-1590867286251-8e26d9f255c0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+    location = "Surat",
+    temp = "+18°C",
+    className = ""
+}: LiquidGlassProps) => {
+    return (
+        <div
+            className={cn('p-4 relative z-30 w-full max-w-2xl gap-8 py-8 rounded-xl overflow-hidden', className)}
+            style={{
+                background: \`\${backgroundImage} center / cover no-repeat\`,
+            }}
+        >
+            <div className='grid w-full grid-cols-2 gap-4 mx-auto'>
+                <LiquidGlassCard className='col-span-2 p-6 text-white bg-white/5'>
+                    <div className='flex justify-between relative z-30 text-sm font-medium'>
+                        {/* Weather Forecast content... */}
+                    </div>
+                </LiquidGlassCard>
+                {/* Current Weather & Time Cards... */}
+            </div>
+        </div>
+    );
+};`
     },
     {
         id: "blur-vignette",
@@ -1423,7 +1489,26 @@ export const componentList: ComponentItem[] = [
         category: "effect",
         preview: renderComponent("blur-vignette", "Blur Vignette"),
         code: `export const BlurVignette = () => (\n  <div className="w-full h-full absolute inset-0 backdrop-blur-[10px] [mask-image:radial-gradient(ellipse_at_center,transparent_30%,black_100%)] pointer-events-none"></div>\n);`,
-        vibePrompt: ""
+        vibePrompt: `export const BlurVignetteEffect = ({
+    blur = "12px",
+    radius = "16px",
+    image1 = 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1000&auto=format&fit=crop',
+    image2 = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop',
+    title1 = "Cosmos",
+    title2 = "Abstract",
+    className = ""
+}: BlurVignetteEffectProps) => {
+    return (
+        <div className={cn('w-full max-w-2xl mx-auto flex gap-4 justify-center p-4 bg-neutral-900/50 rounded-2xl border border-white/5', className)}>
+            <BlurVignette radius={radius} blur={blur} className="flex-1 aspect-square">
+                <img src={image1} className='w-full h-full object-cover' />
+                <BlurVignetteArticle classname='absolute inset-x-2 bottom-2 p-4 border border-white/10 rounded-xl bg-black/20 backdrop-blur-md text-white'>
+                    <h3 className='text-lg font-bold'>{title1}</h3>
+                </BlurVignetteArticle>
+            </BlurVignette>
+        </div>
+    );
+};`
     },
     {
         id: "liquid-gradient",
@@ -1431,16 +1516,78 @@ export const componentList: ComponentItem[] = [
         category: "effect",
         preview: renderComponent("liquid-gradient", "Liquid Gradient"),
         code: `export const LiquidGradient = () => (\n  <div className="w-full h-full bg-[radial-gradient(circle_at_50%_50%,_rgba(0,255,0,0.2),_transparent_50%)] animate-pulse"></div>\n);`,
-        vibePrompt: ""
+        vibePrompt: `export const LiquidGradient = ({
+    color = "#ff0080",
+    opacity = 0.3,
+    duration = 10,
+    className = ""
+}: LiquidGradientProps) => (
+    <div className={cn("w-64 h-64 rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950", className)}>
+        <motion.div
+            animate={{
+                background: [
+                    \`radial-gradient(at 0% 0%, \${color} 0px, transparent 50%)\`,
+                    \`radial-gradient(at 100% 100%, \${color} 0px, transparent 50%)\`,
+                    \`radial-gradient(at 0% 100%, \${color} 0px, transparent 50%)\`,
+                    \`radial-gradient(at 0% 0%, \${color} 0px, transparent 50%)\`,
+                ]
+            }}
+            transition={{ duration, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0"
+            style={{ opacity }}
+        />
+        <div className="flex items-center justify-center h-full relative z-10 text-white/50 font-display text-xl font-bold uppercase pointer-events-none">
+            LIQUID GRADIENT
+        </div>
+    </div>
+);`
     },
     {
         id: "spotlight-cards",
         title: "Spotlight Cards",
         category: "effect",
         isPremium: true,
-        preview: () => <VisualEffects.SpotlightCards title="Feature" description="Hover to reveal the hidden spotlight effect." />,
+        preview: renderComponent("spotlight-cards", "Spotlight Cards", { title: "Feature", description: "Hover to reveal the hidden spotlight effect." }),
         code: "",
-        vibePrompt: ""
+        vibePrompt: `export const SpotlightCards = ({
+    className = "",
+    defaultCardColors = ['#10b981', '#6366f1', '#f59e0b'],
+    title = "Platform Features",
+    description = "Discover the power of our high-performance component library."
+}: SpotlightCardsProps) => {
+    // ... logic for mouse tracking and scroll sync ...
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        const scaleX = containerRef.current.offsetWidth / rect.width;
+        const scaleY = containerRef.current.offsetHeight / rect.height;
+        setMousePos({
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
+        });
+    };
+
+    return (
+        <div className="flex flex-col items-center w-full relative z-30">
+            <div ref={containerRef} onMouseMove={handleMouseMove} className="w-full max-w-5xl relative group">
+                <div ref={scrollRef} onScroll={handleScroll} className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory">
+                    {cards.map((card, i) => (
+                        <div key={i} className="relative flex-shrink-0 w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden group/card">
+                            {/* Card Content... */}
+                        </div>
+                    ))}
+                </div>
+                {/* Spotlight Overlay Layer... */}
+                <div className="absolute inset-0 pointer-events-none z-10" style={{
+                    opacity: isHovered ? 1 : 0,
+                    WebkitMaskImage: \`radial-gradient(30rem circle at \${mousePos.x}px \${mousePos.y}px, black 0%, transparent 65%)\`
+                }}>
+                    {/* Glass Overlay of Cards... */}
+                </div>
+            </div>
+        </div>
+    );
+};`
     },
     {
         id: "image-reveal",
@@ -1448,7 +1595,64 @@ export const componentList: ComponentItem[] = [
         category: "effect",
         preview: renderComponent("image-reveal", "Image Reveal"),
         code: ``,
-        vibePrompt: ""
+        vibePrompt: `export const ImageReveal = ({
+    items = visualData,
+    hoverText = "REVEAL",
+    className = ""
+}: ImageRevealProps & { hoverText?: string }) => {
+    const [focusedItem, setFocusedItem] = useState<VisualItem | null>(null);
+    const [isLargeScreen, setIsLargeScreen] = useState(true);
+
+    const cursorX = useMotionValue(0);
+    const cursorY = useSpring(cursorX, { stiffness: 300, damping: 40 });
+    const smoothX = useSpring(cursorX, { stiffness: 300, damping: 40 });
+    const smoothY = useSpring(cursorY, { stiffness: 300, damping: 40 });
+
+    useEffect(() => {
+        const updateScreen = () => {
+            setIsLargeScreen(window.innerWidth >= 768);
+        };
+        updateScreen();
+        window.addEventListener("resize", updateScreen);
+        return () => window.removeEventListener("resize", updateScreen);
+    }, []);
+
+    const onMouseTrack = (e: React.MouseEvent) => {
+        cursorX.set(e.clientX);
+        cursorY.set(e.clientY);
+    };
+
+    return (
+        <div
+            className={cn("relative mx-auto w-full max-w-2xl bg-neutral-950 rounded-xl border border-white/10 overflow-hidden", className)}
+            onMouseMove={onMouseTrack}
+            onMouseLeave={() => setFocusedItem(null)}
+        >
+            {items.map((item) => (
+                <div
+                    key={item.key}
+                    className="p-6 cursor-pointer relative sm:flex items-center justify-between border-b border-white/5 last:border-0"
+                    onMouseEnter={() => setFocusedItem(item)}
+                >
+                    <h2 className="font-display uppercase md:text-5xl sm:text-2xl text-xl font-bold text-white/60 hover:text-white transition-colors">
+                        {item.label}
+                    </h2>
+                    <ArrowIcon className="w-8 h-8 text-white/20" />
+                </div>
+            ))}
+
+            {isLargeScreen && focusedItem && (
+                <motion.img
+                    src={focusedItem.url}
+                    className="fixed z-30 object-cover w-[300px] h-[400px] rounded-2xl pointer-events-none shadow-2xl"
+                    style={{ left: smoothX, top: smoothY, x: "-50%", y: "-50%" }}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                />
+            )}
+        </div>
+    );
+};`
     },
     {
         id: "blocks",
@@ -1456,7 +1660,23 @@ export const componentList: ComponentItem[] = [
         category: "effect",
         preview: renderComponent("blocks", "Blocks"),
         code: `import { motion } from 'framer-motion';\n\nexport const Blocks = () => (\n  <div className="grid grid-cols-4 grid-rows-4 gap-1 w-64 h-64">\n    {Array.from({ length: 16 }).map((_, i) => (\n      <motion.div key={i} className="bg-white/10 rounded-sm" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.05 }} />\n    ))}\n  </div>\n);`,
-        vibePrompt: ""
+        vibePrompt: `export const Blocks = ({
+    className = "",
+    hoverColor = "hover:bg-violet-500/20",
+    gridSize = 16
+}: BlocksProps) => (
+    <div className={cn("w-64 h-64 rounded-3xl border border-white/10 overflow-hidden grid grid-cols-4 grid-rows-4 bg-neutral-950", className)}>
+        {Array.from({ length: gridSize }).map((_, i) => (
+            <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: i * 0.05, duration: 0.5 }}
+                className={cn("border-[0.5px] border-white/5 bg-white/5 transition-colors", hoverColor)}
+            />
+        ))}
+    </div>
+);`
     },
     {
         id: "animated-beam",
@@ -1464,7 +1684,21 @@ export const componentList: ComponentItem[] = [
         category: "effect",
         preview: renderComponent("animated-beam", "Animated Beam"),
         code: `import { motion } from 'framer-motion';\n\nexport const AnimatedBeam = () => (\n  <motion.div\n    animate={{ x: [-100, 300] }}\n    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}\n    className="h-1 bg-gradient-to-r from-transparent via-green-500 to-transparent w-32"\n  />\n);`,
-        vibePrompt: ""
+        vibePrompt: `export const AnimatedBeam = ({
+    color = "sky-400",
+    duration = 2,
+    className = ""
+}: AnimatedBeamProps) => (
+    <div className={cn("w-64 h-64 rounded-3xl bg-neutral-900 border border-white/10 relative overflow-hidden flex items-center justify-center", className)}>
+        <motion.div
+            animate={{ x: [-100, 300] }}
+            transition={{ duration, repeat: Infinity, ease: "linear" }}
+            className={cn("absolute h-[2px] w-24 bg-gradient-to-r from-transparent to-transparent", \`via-\${color}\`)}
+            style={{ transform: 'rotate(-45deg)' }}
+        />
+        <div className={cn("font-display text-2xl font-bold uppercase", \`text-\${color}\`)}>BEAM</div>
+    </div>
+);`
     },
     {
         id: "grid-background",
