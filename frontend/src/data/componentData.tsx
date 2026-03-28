@@ -1555,15 +1555,17 @@ export const componentList: ComponentItem[] = [
     title = "Platform Features",
     description = "Discover the power of our high-performance component library."
 }: SpotlightCardsProps) => {
-    // ... logic for mouse tracking and scroll sync ...
+    const containerRef = useRef<HTMLDivElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [isHovered, setIsHovered] = useState(false);
+    const [cardColors, setCardColors] = useState(defaultCardColors);
+
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
-        
-        // Account for CSS scaling (essential for library previews)
         const scaleX = containerRef.current.offsetWidth / rect.width;
         const scaleY = containerRef.current.offsetHeight / rect.height;
-        
         setMousePos({
             x: (e.clientX - rect.left) * scaleX,
             y: (e.clientY - rect.top) * scaleY
@@ -1571,25 +1573,75 @@ export const componentList: ComponentItem[] = [
     };
 
     return (
-        <div className="flex flex-col items-center w-full relative z-30">
-            <div ref={containerRef} onMouseMove={handleMouseMove} className="w-full max-w-5xl relative group">
-                <div ref={scrollRef} onScroll={handleScroll} className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory">
+        <div className="flex flex-col items-center w-full relative group">
+            <div ref={containerRef} onMouseMove={handleMouseMove} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)} className="w-full max-w-5xl relative">
+                <div ref={scrollRef} className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden scroll-smooth">
                     {cards.map((card, i) => (
-                        <div key={i} className="relative flex-shrink-0 w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden group/card shadow-xl transition-all duration-400 ease-out">
-                            {/* Card content with text-white/70 for base state */}
-                        </div>
+                        <CardItem key={i} card={card} globalMousePos={mousePos} isParentHovered={isHovered} />
                     ))}
                 </div>
-                {/* Spotlight Overlay Layer - Reveals full brightness content */}
-                <div className="absolute inset-0 pointer-events-none z-10 transition-opacity duration-500" style={{
-                    opacity: isHovered ? 1 : 0,
-                    WebkitMaskImage: \`radial-gradient(circle 35rem at \${mousePos.x}px \${mousePos.y}px, black 0%, transparent 70%)\`
-                }}>
-                    <div ref={overlayScrollRef} className="flex gap-6 p-6 overflow-x-hidden w-full h-full">
-                        {/* High-intensity "glow" versions of cards... */}
-                    </div>
-                </div>
             </div>
+        </div>
+    );
+};
+
+const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, globalMousePos: { x: number, y: number }, isParentHovered: boolean }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [localMousePos, setLocalMousePos] = useState({ x: -1000, y: -1000 });
+
+    useEffect(() => {
+        if (cardRef.current) {
+            const cardRect = cardRef.current.getBoundingClientRect();
+            const containerRect = cardRef.current.closest('.group')?.getBoundingClientRect();
+            if (containerRect) {
+                setLocalMousePos({
+                    x: globalMousePos.x - (cardRect.left - containerRect.left),
+                    y: globalMousePos.y - (cardRect.top - containerRect.top)
+                });
+            }
+        }
+    }, [globalMousePos]);
+
+    const CardInner = ({ highlighted = false }: { highlighted?: boolean }) => (
+        <div className={cn("relative z-20 flex flex-col h-full", highlighted ? "pointer-events-none" : "")}>
+            <div className="flex justify-between items-start mb-6">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
+                    <card.icon size={24} style={{ color: card.accent }} />
+                </div>
+                <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
+            </div>
+            <h3 className={cn("text-3xl font-display font-black mb-3 tracking-tight transition-colors", highlighted ? "text-white" : "text-white/30")}>
+                {card.title}
+            </h3>
+            <p className={cn("text-sm leading-relaxed mb-6 font-medium transition-colors", highlighted ? "text-white/90" : "text-white/20")}>
+                {card.text}
+            </p>
+            <ul className="mt-auto space-y-3">
+                {card.bullets.map((bullet: string, idx: number) => (
+                    <li key={idx} className="flex items-center gap-3 text-xs font-medium">
+                        <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
+                            <div className={cn("w-1.5 h-1.5 rounded-full", highlighted ? "bg-white/80" : "bg-white/10")} />
+                        </div>
+                        <span className={highlighted ? "text-white/80" : "text-white/20"}>{bullet}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+
+    return (
+        <div ref={cardRef} className="relative flex-shrink-0 w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden group/card shadow-xl transition-all duration-400">
+            <CardInner />
+            <div className="absolute inset-0 transition-opacity duration-500 z-10" style={{
+                opacity: isParentHovered ? 1 : 0,
+                WebkitMaskImage: \`radial-gradient(circle 35rem at \${localMousePos.x}px \${localMousePos.y}px, black 0%, transparent 70%)\`,
+                maskImage: \`radial-gradient(circle 35rem at \${localMousePos.x}px \${localMousePos.y}px, black 0%, transparent 70%)\`,
+                backgroundColor: \`\${card.accent}10\`,
+                border: \`1px solid \${card.accent}\`,
+            }}>
+                <CardInner highlighted />
+            </div>
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover:opacity-80 transition-opacity pointer-events-none" style={{ background: \`radial-gradient(ellipse at bottom, \${card.hex} 0%, transparent 60%)\` }} />
         </div>
     );
 };`

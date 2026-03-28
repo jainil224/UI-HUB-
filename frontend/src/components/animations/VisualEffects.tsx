@@ -333,19 +333,17 @@ export const SpotlightCards = ({
 }: SpotlightCardsProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
-    const overlayScrollRef = useRef<HTMLDivElement>(null);
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const [isHovered, setIsHovered] = useState(false);
 
     // Playground State
     const [cardColors, setCardColors] = useState(defaultCardColors);
 
-
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!containerRef.current) return;
         const rect = containerRef.current.getBoundingClientRect();
         
-        // Account for CSS scaling (e.g., in the library preview)
+        // Account for CSS scaling (essential for library previews)
         const scaleX = containerRef.current.offsetWidth / rect.width;
         const scaleY = containerRef.current.offsetHeight / rect.height;
         
@@ -353,12 +351,6 @@ export const SpotlightCards = ({
             x: (e.clientX - rect.left) * scaleX,
             y: (e.clientY - rect.top) * scaleY
         });
-    };
-
-    const handleScroll = () => {
-        if (scrollRef.current && overlayScrollRef.current) {
-            overlayScrollRef.current.scrollLeft = scrollRef.current.scrollLeft;
-        }
     };
 
     const scrollLeft = () => {
@@ -374,30 +366,27 @@ export const SpotlightCards = ({
             title: "Performance",
             text: "Lightning-fast components built for modern web applications.",
             icon: Zap,
-            hex: cardColors[0] + "66", // 40% opacity
-            border: cardColors[0] + "cc", // 80% opacity
+            hex: cardColors[0] + "66",
             accent: cardColors[0],
-            bg: cardColors[0] + "1a", // 10% opacity
+            bg: cardColors[0] + "1a",
             bullets: ["Optimized rendering", "Minimal bundle size"]
         },
         {
             title: "Design",
             text: "Beautiful, accessible components with smooth animations.",
             icon: Sparkles,
-            hex: cardColors[1] + "66", // 40% opacity
-            border: cardColors[1] + "cc", // 80% opacity
+            hex: cardColors[1] + "66",
             accent: cardColors[1],
-            bg: cardColors[1] + "1a", // 10% opacity
+            bg: cardColors[1] + "1a",
             bullets: ["Elegant animations", "Accessibility first"]
         },
         {
             title: "Premium",
             text: "Enterprise-grade components with advanced features.",
             icon: Crown,
-            hex: cardColors[2] + "66", // 40% opacity
-            border: cardColors[2] + "cc", // 80% opacity
+            hex: cardColors[2] + "66",
             accent: cardColors[2],
-            bg: cardColors[2] + "1a", // 10% opacity
+            bg: cardColors[2] + "1a",
             bullets: ["Enterprise support", "Advanced features"]
         },
     ];
@@ -421,7 +410,7 @@ export const SpotlightCards = ({
                                             newColors[i] = e.target.value;
                                             setCardColors(newColors);
                                         }}
-                                        className="w-12 h-12 rounded cursor-pointer bg-transparent border-0 p-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:border-none [&::-webkit-color-swatch]:rounded-lg"
+                                        className="w-12 h-12 rounded cursor-pointer bg-transparent border-0 p-0"
                                     />
                                     <input
                                         type="text"
@@ -431,7 +420,7 @@ export const SpotlightCards = ({
                                             newColors[i] = e.target.value;
                                             setCardColors(newColors);
                                         }}
-                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white w-full font-mono focus:outline-none focus:border-white/30 focus:bg-white/10 transition-colors"
+                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white w-full font-mono focus:outline-none"
                                     />
                                 </div>
                             </div>
@@ -448,128 +437,107 @@ export const SpotlightCards = ({
                 className="w-full max-w-5xl relative group"
             >
                 {/* Arrows */}
-                <button
-                    onClick={scrollLeft}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 md:-translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white hover:bg-neutral-800 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-xl"
-                >
+                <button onClick={scrollLeft} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <ChevronLeft size={24} />
                 </button>
-                <button
-                    onClick={scrollRight}
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 md:-translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white hover:bg-neutral-800 transition-colors backdrop-blur-md opacity-0 group-hover:opacity-100 shadow-xl"
-                >
+                <button onClick={scrollRight} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
                     <ChevronRight size={24} />
                 </button>
 
                 <div
                     ref={scrollRef}
-                    onScroll={handleScroll}
                     className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden scroll-smooth"
                 >
                     {cards.map((card, i) => (
-                        <div
-                            key={i}
-                            className="relative flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden backdrop-blur-sm transition-all duration-400 ease-out group/card"
-                        >
-                            {/* Minimal Bottom Glow */}
-                            <div
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover/card:opacity-80 transition-opacity duration-500 pointer-events-none"
-                                style={{
-                                    background: `radial-gradient(ellipse at bottom, ${card.hex} 0%, transparent 60%)`
-                                }}
-                            />
-                            <div
-                                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] opacity-50 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none"
-                                style={{
-                                    background: `linear-gradient(to right, transparent, ${card.accent}, transparent)`
-                                }}
-                            />
-
-                            <div className="relative z-20 flex flex-col h-full">
-                                <div className="flex justify-between items-start mb-6">
-                                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
-                                        <card.icon size={24} style={{ color: card.accent }} />
-                                    </div>
-                                    <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
-                                </div>
-
-                                <h3 className="text-3xl font-display font-black mb-3 text-white/70 tracking-tight transition-colors group-hover/card:text-white/90">
-                                    {card.title}
-                                </h3>
-                                <p className="text-sm text-white/30 leading-relaxed mb-6 font-medium transition-colors group-hover/card:text-white/40">
-                                    {card.text}
-                                </p>
-
-                                <ul className="mt-auto space-y-3">
-                                    {card.bullets.map((bullet, idx) => (
-                                        <li key={idx} className="flex items-center gap-3 text-xs text-white/40 font-medium">
-                                            <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-                                            </div>
-                                            {bullet}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </div>
+                        <CardItem 
+                            key={i} 
+                            card={card} 
+                            globalMousePos={mousePos} 
+                            isParentHovered={isHovered}
+                        />
                     ))}
                 </div>
-
-                {/* Global Overlay for Perfectly Synchronized Border Glow & Illumination */}
-                <div
-                    className="absolute inset-0 pointer-events-none transition-opacity duration-500 z-10"
-                    style={{
-                        opacity: isHovered ? 1 : 0,
-                        WebkitMaskImage: `radial-gradient(circle 35rem at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 70%)`,
-                        maskImage: `radial-gradient(circle 35rem at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 70%)`,
-                    }}
-                >
-                    <div
-                        ref={overlayScrollRef}
-                        className="flex gap-6 p-6 overflow-x-hidden w-full h-full"
-                    >
-                        {cards.map((card, i) => (
-                            <div
-                                key={`glow-${i}`}
-                                className={`flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] relative transition-all duration-400 ease-out`}
-                                style={{
-                                    border: `1px solid ${card.accent}`,
-                                    backgroundColor: `${card.accent}15`,
-                                    boxShadow: `0 0 0 1px inset ${card.accent}`,
-                                }}
-                            >
-                                <div className="relative z-20 flex flex-col h-full pointer-events-none">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
-                                            <card.icon size={24} style={{ color: card.accent }} />
-                                        </div>
-                                        <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
-                                    </div>
-
-                                    <h3 className="text-3xl font-display font-black mb-3 text-white tracking-tight">
-                                        {card.title}
-                                    </h3>
-                                    <p className="text-sm text-white/50 leading-relaxed mb-6 font-medium">
-                                        {card.text}
-                                    </p>
-
-                                    <ul className="mt-auto space-y-3">
-                                        {card.bullets.map((bullet, idx) => (
-                                            <li key={idx} className="flex items-center gap-3 text-xs text-white/40 font-medium">
-                                                <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
-                                                    <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
-                                                </div>
-                                                {bullet}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
             </div>
-        </div >
+        </div>
+    );
+};
+
+// Internal Helper Card Component for 100% Alignment Consistency
+const CardItem: React.FC<{ 
+    card: any; 
+    globalMousePos: { x: number; y: number }; 
+    isParentHovered: boolean;
+}> = ({ card, globalMousePos, isParentHovered }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [localMousePos, setLocalMousePos] = useState({ x: -1000, y: -1000 });
+
+    useEffect(() => {
+        if (!cardRef.current) return;
+        const updateLocalPos = () => {
+            if (!cardRef.current) return;
+            const cardRect = cardRef.current.getBoundingClientRect();
+            const containerRect = cardRef.current.closest('.group')?.getBoundingClientRect();
+            if (containerRect) {
+                setLocalMousePos({
+                    x: globalMousePos.x - (cardRect.left - containerRect.left),
+                    y: globalMousePos.y - (cardRect.top - containerRect.top)
+                });
+            }
+        };
+        updateLocalPos();
+    }, [globalMousePos]);
+
+    const CardInner = ({ highlighted = false }: { highlighted?: boolean }) => (
+        <div className={cn("relative z-20 flex flex-col h-full", highlighted ? "pointer-events-none" : "")}>
+            <div className="flex justify-between items-start mb-6">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
+                    <card.icon size={24} style={{ color: card.accent }} />
+                </div>
+                <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
+            </div>
+
+            <h3 className={cn("text-3xl font-display font-black mb-3 tracking-tight transition-colors", 
+                highlighted ? "text-white" : "text-white/30 group-hover/card:text-white/40")}>
+                {card.title}
+            </h3>
+            <p className={cn("text-sm leading-relaxed mb-6 font-medium transition-colors", 
+                highlighted ? "text-white/90" : "text-white/20 group-hover/card:text-white/30")}>
+                {card.text}
+            </p>
+
+            <ul className="mt-auto space-y-3">
+                {card.bullets.map((bullet: string, idx: number) => (
+                    <li key={idx} className="flex items-center gap-3 text-xs font-medium">
+                        <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
+                            <div className={cn("w-1.5 h-1.5 rounded-full", highlighted ? "bg-white/80" : "bg-white/10")} />
+                        </div>
+                        <span className={highlighted ? "text-white/80" : "text-white/20"}>{bullet}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+
+    return (
+        <div ref={cardRef} className="relative flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden group/card shadow-xl transition-all duration-400 ease-out">
+            <CardInner />
+            <div 
+                className="absolute inset-0 transition-opacity duration-500 z-10"
+                style={{
+                    opacity: isParentHovered ? 1 : 0,
+                    WebkitMaskImage: `radial-gradient(circle 35rem at ${localMousePos.x}px ${localMousePos.y}px, black 0%, transparent 70%)`,
+                    maskImage: `radial-gradient(circle 35rem at ${localMousePos.x}px ${localMousePos.y}px, black 0%, transparent 70%)`,
+                    backgroundColor: `${card.accent}10`,
+                    padding: '2rem',
+                    border: `1px solid ${card.accent}`,
+                    borderRadius: '2.5rem',
+                }}
+            >
+                <CardInner highlighted />
+            </div>
+            {/* Ambient Base Glow */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover/card:opacity-80 transition-opacity pointer-events-none" style={{ background: `radial-gradient(ellipse at bottom, ${card.hex} 0%, transparent 60%)` }} />
+        </div>
     );
 };
 
