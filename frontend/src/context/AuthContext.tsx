@@ -6,16 +6,18 @@ import { getApiBaseUrl } from '../utils/apiConfig';
 interface AuthContextType {
     user: User | null;
     isPro: boolean;
+    isElite: boolean;
     loading: boolean;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, isPro: false, loading: true });
+const AuthContext = createContext<AuthContextType>({ user: null, isPro: false, isElite: false, loading: true });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isPro, setIsPro] = useState(false);
+    const [isElite, setIsElite] = useState(false);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -48,7 +50,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     if (response.ok) {
                         const data = await response.json();
                         setIsPro(data.isPro);
-                        console.log(`[Auth] Pro status: ${data.isPro} for ${user.email}`);
+                        // isElite is a higher tier — check for explicit field or fall back to isPro for legacy
+                        setIsElite(data.isElite ?? false);
+                        console.log(`[Auth] Pro status: ${data.isPro}, Elite status: ${data.isElite} for ${user.email}`);
                     } else {
                         const errorText = await response.text();
                         console.error(`[Auth] Status check (v1) failed with ${response.status}:`, errorText);
@@ -57,9 +61,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 } catch (error) {
                     console.error('[Auth] Error fetching pro status:', error);
                     setIsPro(false);
+                    setIsElite(false);
                 }
             } else {
                 setIsPro(false);
+                setIsElite(false);
             }
             
             setLoading(false);
@@ -69,7 +75,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, isPro, loading }}>
+        <AuthContext.Provider value={{ user, isPro, isElite, loading }}>
             {/* Always render children immediately to unblock app mount */}
             {children}
             

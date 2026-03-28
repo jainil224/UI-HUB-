@@ -5,6 +5,7 @@ import { Github, Menu, X, Sparkles, LogOut, User as UserIcon, Sun, Moon } from '
 import { useTheme } from '../../context/ThemeContext';
 import Logo from './Logo';
 import GitHubStarButton from './GitHubStarButton';
+import PlanBadge, { PlanTier } from './PlanBadge';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
@@ -78,11 +79,13 @@ const MagneticButton = ({ children, className }: { children: React.ReactNode, cl
 
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
-    const { user, isPro } = useAuth();
+    const { user, isPro, isElite } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
-
     const isLibrary = location.pathname.startsWith('/library');
+
+    // Determine plan tier for badge
+    const planTier: PlanTier = isElite ? 'elite' : isPro ? 'pro' : 'free';
 
     return (
         <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-0">
@@ -188,11 +191,24 @@ const Navbar = () => {
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
                             className={`relative flex items-center gap-1 md:gap-1.5 p-1 pr-1.5 md:pr-2 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
-                                isPro ? 'shadow-[0_0_20px_rgba(0,255,159,0.2)] border-brand-green/40' : ''
+                                isElite
+                                    ? 'border-blue-500/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]'
+                                    : isPro
+                                    ? 'border-brand-green/40 shadow-[0_0_20px_rgba(0,255,159,0.2)]'
+                                    : ''
                             }`}
                         >
                             {/* Background Effects */}
-                            {isPro ? (
+                            {isElite ? (
+                                <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ duration: 4, repeat: Infinity, ease: 'linear' }}
+                                        className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_0deg,transparent_100deg,#3b82f6_180deg,transparent_260deg,transparent_360deg)] opacity-70 blur-lg"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 via-transparent to-blue-500/10 opacity-70" />
+                                </div>
+                            ) : isPro ? (
                                 <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
                                     <motion.div
                                         animate={{ rotate: 360 }}
@@ -205,43 +221,45 @@ const Navbar = () => {
                                 <div className="absolute inset-0 -z-10 bg-white/[0.01] blur-xl opacity-30 pointer-events-none group-hover/capsule:bg-brand-green/5 transition-colors" />
                             )}
 
-                            {/* Avatar */}
-                            <div className={`relative flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[11px] overflow-hidden shadow-[0_0_15px_rgba(0,255,159,0.1)] transition-transform duration-300 group-hover/capsule:scale-105 ${
-                                isPro 
-                                ? 'bg-gradient-to-br from-brand-green/40 to-brand-green/10 border-2 border-brand-green/50 shadow-[0_0_20px_rgba(0,255,159,0.4)]' 
-                                : 'bg-gradient-to-br from-brand-green/20 to-brand-green/5 border border-brand-green/20'
+                            {/* Avatar with tier ring */}
+                            <div className={`relative flex items-center justify-center w-7 h-7 md:w-8 md:h-8 rounded-[11px] overflow-hidden transition-transform duration-300 group-hover/capsule:scale-105 ${
+                                isElite
+                                    ? 'border-2 border-blue-500/70 shadow-[0_0_16px_rgba(59,130,246,0.5)]'
+                                    : isPro
+                                    ? 'border-2 border-brand-green/50 shadow-[0_0_16px_rgba(0,255,159,0.4)]'
+                                    : 'border border-white/10'
+                            } ${
+                                isElite
+                                    ? 'bg-gradient-to-br from-blue-500/30 to-blue-900/20'
+                                    : isPro
+                                    ? 'bg-gradient-to-br from-brand-green/40 to-brand-green/10'
+                                    : 'bg-gradient-to-br from-white/10 to-white/5'
                             }`}>
                                 {user.photoURL ? (
                                     <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
                                 ) : (
-                                    <UserIcon size={12} className="text-brand-green md:w-3.5 md:h-3.5" />
+                                    <UserIcon size={12} className={`md:w-3.5 md:h-3.5 ${
+                                        isElite ? 'text-blue-400' : isPro ? 'text-brand-green' : 'text-white/50'
+                                    }`} />
                                 )}
-                                <div className="absolute inset-0 bg-gradient-to-tr from-brand-green/30 via-transparent to-transparent opacity-60" />
-                                
-                                {isPro && (
-                                    <motion.div 
+                                {/* Shimmer for Pro/Elite */}
+                                {(isPro || isElite) && (
+                                    <motion.div
                                         animate={{ x: ['-200%', '200%'] }}
                                         transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12 pointer-events-none"
+                                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -skew-x-12 pointer-events-none"
                                     />
                                 )}
                             </div>
 
-                            {/* User Info */}
+                            {/* User Info + Badge */}
                             <div className="flex flex-col pr-1 md:pr-2 pl-0.5 md:pl-1">
-                                <span className={`text-white text-[10px] md:text-[11px] font-black tracking-tight leading-tight truncate max-w-[60px] md:max-w-[80px] ${isPro ? 'text-brand-green' : ''}`}>
+                                <span className={`text-[10px] md:text-[11px] font-black tracking-tight leading-tight truncate max-w-[60px] md:max-w-[80px] ${
+                                    isElite ? 'text-blue-400' : isPro ? 'text-brand-green' : 'text-white'
+                                }`}>
                                     {user.displayName?.split(' ')[0] || 'Member'}
                                 </span>
-                                {isPro ? (
-                                    <span className="text-brand-green font-display text-[6px] md:text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-0.5 md:gap-1">
-                                        <Sparkles size={5} className="text-brand-green animate-pulse" />
-                                        PRO
-                                    </span>
-                                ) : (
-                                    <span className="text-white/30 font-display text-[6px] md:text-[7px] uppercase tracking-[0.2em] leading-tight flex items-center gap-0.5 md:gap-1">
-                                        FREE
-                                    </span>
-                                )}
+                                <PlanBadge tier={planTier} size="sm" showIcon animated />
                             </div>
 
                             {/* Logout Action */}
