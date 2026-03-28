@@ -18,8 +18,10 @@ const SignupPage = () => {
     const [socialLoading, setSocialLoading] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    // Detect mobile to avoid the "wants to access other apps" popup
-    const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // Improved mobile detection to include touch points and viewport width
+    const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                    (navigator.maxTouchPoints > 0) || 
+                    (window.innerWidth < 768);
 
     // Handle redirect result when returning from social sign-in on mobile
     useEffect(() => {
@@ -61,18 +63,13 @@ const SignupPage = () => {
         const provider = providerType === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
 
         try {
-            // For localhost/development, popups are generally better and more reliable
-            // even when emulating mobile view in devtools.
-            const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-            const isLocalIP = /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(window.location.hostname);
-            
-            // For localhost and local network testing, popups are generally better and more reliable
-            // even when emulating mobile view in devtools or using a physical phone on the LAN.
-            if (isMobile && !isLocalhost && !isLocalIP) {
+            // Use redirect flow for mobile devices as popups are consistently blocked
+            // on physical mobile browsers (especially Safari on iPhone).
+            if (isMobile) {
                 console.log(`[Auth] Initiating redirect flow for ${providerType} on mobile`);
                 await signInWithRedirect(auth, provider);
             } else {
-                console.log(`[Auth] Initiating popup flow for ${providerType} (Local/Network prioritized)`);
+                console.log(`[Auth] Initiating popup flow for ${providerType}`);
                 const result = await signInWithPopup(auth, provider);
                 if (result.user) {
                     navigate('/');
@@ -125,7 +122,7 @@ const SignupPage = () => {
     };
 
     return (
-        <main className="min-h-screen pt-32 pb-20 px-4 flex items-center justify-center relative overflow-hidden bg-[#020202]">
+        <main className="min-h-screen pt-20 md:pt-32 pb-10 md:pb-20 px-4 flex items-center justify-center relative overflow-hidden bg-[#020202]">
             <Link
                 to="/"
                 className="absolute top-8 left-8 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10 transition-all group"
@@ -153,7 +150,7 @@ const SignupPage = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1, type: 'spring', damping: 20 }}
-                        className="text-5xl md:text-6xl font-display font-black mb-4 tracking-tighter leading-tight"
+                        className="text-4xl md:text-6xl font-display font-black mb-4 tracking-tighter leading-tight"
                     >
                         CREATE <span className="text-brand-green text-glow">UI HUB</span> ACCOUNT
                     </motion.h1>
@@ -161,7 +158,7 @@ const SignupPage = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ delay: 0.2 }}
-                        className="text-white/40 font-medium text-lg leading-relaxed max-w-md mx-auto"
+                        className="text-white/40 font-medium text-base md:text-lg leading-relaxed max-w-sm md:max-w-md mx-auto"
                     >
                         Secure your spot in the most advanced UI component library.
                     </motion.p>
@@ -171,9 +168,9 @@ const SignupPage = () => {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3 }}
-                    className="glass rounded-[3rem] p-4 border border-white/5 bg-[#080808]/60 backdrop-blur-3xl shadow-[0_30px_80px_rgba(0,0,0,0.4)]"
+                    className="glass rounded-[2rem] md:rounded-[3rem] p-2 md:p-4 border border-white/5 bg-[#080808]/60 backdrop-blur-3xl shadow-[0_30px_80px_rgba(0,0,0,0.4)]"
                 >
-                    <div className="p-8">
+                    <div className="p-6 md:p-8">
                         {/* Social Buttons Container */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
                             <motion.button
