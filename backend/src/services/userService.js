@@ -3,6 +3,10 @@
  * Handles server-side user logic and Pro status verification.
  */
 
+const ELITE_EMAILS = [
+    'jainil11199@gmail.com',
+];
+
 const PRO_EMAILS = [
     'jainil11199@gmail.com',
     'jainil111199@gmail.com'
@@ -17,6 +21,17 @@ const PROMO_USERS = {
 };
 
 /**
+ * Checks if a user has Elite status based on their email.
+ * @param {string} email 
+ * @returns {Promise<boolean>}
+ */
+export const checkEliteStatus = async (email) => {
+    if (!email) return false;
+    const userEmail = email.toLowerCase();
+    return ELITE_EMAILS.some(e => e.toLowerCase() === userEmail);
+};
+
+/**
  * Checks if a user has Pro status based on their email.
  * @param {string} email 
  * @returns {Promise<boolean>}
@@ -28,6 +43,12 @@ export const checkProStatus = async (email) => {
     }
     
     const userEmail = email.toLowerCase();
+    
+    // Elite users are automatically Pro
+    if (await checkEliteStatus(userEmail)) {
+        return true;
+    }
+
     console.log(`[UserStatus] Checking Pro status for: ${userEmail}`);
 
     // Check promo users with expiry
