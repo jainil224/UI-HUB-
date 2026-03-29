@@ -38,21 +38,19 @@ const SignupPage = () => {
         const provider = providerType === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
 
         try {
-            // Use redirect flow for mobile devices as popups are consistently blocked
-            // on physical mobile browsers (especially Safari on iPhone).
-            if (isMobile) {
-                console.log(`[Auth] Initiating redirect flow for ${providerType} on mobile`);
-                await signInWithRedirect(auth, provider);
-            } else {
-                console.log(`[Auth] Initiating popup flow for ${providerType}`);
-                const result = await signInWithPopup(auth, provider);
-                if (result.user) {
-                    navigate('/');
-                }
+            console.log(`[Auth] Initiating popup flow for ${providerType}`);
+            const result = await signInWithPopup(auth, provider);
+            if (result.user) {
+                navigate('/');
             }
         } catch (err: any) {
             console.error(`[Auth] ${providerType} sign-up failed:`, err);
-            setError(formatAuthError(err.message) || `Failed to sign up with ${providerType}.`);
+            // If the popup is blocked, we inform the user to allow popups for authentication.
+            if (err.code === 'auth/popup-blocked') {
+                setError('Sign-up popup was blocked by your browser. Please allow popups for this site and try again.');
+            } else {
+                setError(formatAuthError(err.message) || `Failed to sign up with ${providerType}.`);
+            }
         } finally {
             setSocialLoading(null);
         }
