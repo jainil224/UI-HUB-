@@ -208,20 +208,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Spline scene loading integration", "AnimatePresence loader with rotating rings", "Programmatic findObjectByName branding removal", "CSS watermark hiding selectors", "Background color matching (#050508)"]
         }
     },
-    "3d-hero-globel": {
-        props: [
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
-            { name: "onLoad", type: "() => void", default: "undefined", description: "Callback fired when the Spline scene loads." }
-        ],
-        vibeMeta: {
-            behavior: "A massive interactive 3D globe with floating data points and luxury lighting, powered by Spline. Features custom premium loader and branding protection.",
-            states: { from: "premium ring loader animation", to: "interactive 3D HERO GLOBEL scene" },
-            cssProperties: ["transform", "opacity", "filter", "z-index"],
-            description: "Premium Spline-powered 3D HERO GLOBEL with loader and branding removal.",
-            libraries: ["@splinetool/react-spline", "framer-motion"],
-            requirements: ["Spline scene integration", "Concentric ring loader animation", "Branding object programmatic removal", "CSS watermark hiding", "Hover-reveal '3D Asset' badge"]
-        }
-    },
     "3d-orbital-experience": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
@@ -480,19 +466,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             description: "Intense high-contrast fire/lava background effect.",
             libraries: ["react", "framer-motion"],
             requirements: ["Canvas-based noise generation", "Intense color-dodge blends", "Animated distortion filters"]
-        }
-    },
-    "3d-landing-page": {
-        props: [
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
-        ],
-        vibeMeta: {
-            behavior: "An immersive 3D web experience combining WEB3, motion, and interactive design. Scalable interactive globe with glassmorphic UI.",
-            states: { from: "flat landing page", to: "3D interactive globe experience" },
-            cssProperties: ["glass-effect", "backdrop-filter"],
-            description: "Immersive 3D Web Experience with Glassmorphism.",
-            libraries: ["@splinetool/react-spline", "lucide-react"],
-            requirements: ["Spline scene integration", "Glassmorphic mobile-friendly navigation"]
         }
     },
 

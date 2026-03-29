@@ -1,6 +1,6 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { getFirestore, Firestore } from "firebase/firestore";
-import { getAuth, Auth } from "firebase/auth";
+import { getAuth, Auth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 import { getAnalytics, Analytics } from "firebase/analytics";
 
@@ -19,6 +19,14 @@ export const initFirebase = (config: any) => {
     
     app = initializeApp(config);
     auth = getAuth(app);
+    
+    // Set local persistence to ensure user session survives redirects and browser reloads
+    if (typeof window !== 'undefined') {
+        setPersistence(auth, browserLocalPersistence).catch(err => {
+            console.error('[Auth] Failed to set persistence:', err);
+        });
+    }
+
     db = getFirestore(app);
     storage = getStorage(app);
     

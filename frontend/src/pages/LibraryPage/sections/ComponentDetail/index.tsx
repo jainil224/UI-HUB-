@@ -178,7 +178,7 @@ const ToolCard = React.memo(({
             )}
 
             {/* Scanline/Texture Overlay */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay" />
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('/noise.svg')] mix-blend-overlay" />
 
             {/* Animated Border for Active Tool */}
             {isActive && !isLocked && (
@@ -411,7 +411,7 @@ const VibeSystemSection = React.memo(({
                 <div className="relative group/terminal">
                     <div className={`rounded-[2rem] md:rounded-[3rem] overflow-hidden border transition-all duration-500 relative ${isPending ? 'border-amber-400/20 shadow-[0_0_40px_rgba(255,189,46,0.06)] opacity-80' : 'border-[rgba(0,255,150,0.2)] hover:border-[rgba(0,255,150,0.35)] shadow-[0_0_40px_rgba(0,255,150,0.08)] hover:shadow-[0_0_60px_rgba(0,255,150,0.15)]'}`} style={{ background: 'rgba(10,10,10,0.6)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)' }}>
                         {/* Scanline/Texture Overlay */}
-                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay z-10" />
+                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('/noise.svg')] mix-blend-overlay z-10" />
 
                         {/* Terminal Header / Toolbar */}
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-white/5 bg-white/[0.02] relative z-20 gap-3 sm:gap-0">

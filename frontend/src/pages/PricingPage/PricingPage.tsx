@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Check, X, Zap, Crown, ArrowRight, Star, Sparkles, Download, Code2, Shield, Heart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import PlanBadge from '../../components/ui/PlanBadge';
 
 const PricingPage = () => {
-    const isIndia =
-        Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Kolkata' ||
-        Intl.DateTimeFormat().resolvedOptions().timeZone === 'Asia/Calcutta';
+    const [currencyMode, setCurrencyMode] = useState<'INR' | 'USD'>('USD');
 
-    const currency = isIndia ? '₹' : '$';
-    const proPrice = isIndia ? '199' : '4.99';
-    const elitePrice = isIndia ? '299' : '7.99';
+    // Detect if user is in India on initial load
+    useEffect(() => {
+        const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (timeZone === 'Asia/Kolkata' || timeZone === 'Asia/Calcutta') {
+            setCurrencyMode('INR');
+        }
+    }, []);
+
+    const currency = currencyMode === 'INR' ? '₹' : '$';
+    const proPrice = currencyMode === 'INR' ? '99' : '4.99';
+    const elitePrice = currencyMode === 'INR' ? '199' : '7.99';
 
     const plans = [
         {
@@ -133,9 +139,27 @@ const PricingPage = () => {
                         </span>
                     </h1>
 
-                    <p className="max-w-xl mx-auto text-white/50 text-base md:text-lg font-light leading-relaxed tracking-wide">
+                    <p className="max-w-xl mx-auto text-white/50 text-base md:text-lg font-light leading-relaxed tracking-wide mb-12">
                         Start free with 50+ components. Upgrade whenever you need elite power.
                     </p>
+
+                    {/* Currency Toggle */}
+                    <div className="flex justify-center mb-8">
+                        <div className="bg-white/[0.03] border border-white/10 p-1 rounded-2xl flex items-center shadow-2xl backdrop-blur-xl">
+                            <button
+                                onClick={() => setCurrencyMode('INR')}
+                                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${currencyMode === 'INR' ? 'bg-brand-green text-black shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'text-white/40 hover:text-white'}`}
+                            >
+                                ₹ INR
+                            </button>
+                            <button
+                                onClick={() => setCurrencyMode('USD')}
+                                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${currencyMode === 'USD' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-white/40 hover:text-white'}`}
+                            >
+                                $ USD
+                            </button>
+                        </div>
+                    </div>
                 </motion.div>
 
                 {/* ── Pricing Cards ── */}

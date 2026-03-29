@@ -24,7 +24,6 @@ const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').th
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
 export const GalaxyAnimation = React.lazy(() => import('../components/ui/GalaxyAnimation').then(m => ({ default: m.default })));
-const ThreeDLandingPage = React.lazy(() => import('../components/ui/ThreeDLandingPage').then(m => ({ default: m.ThreeDLandingPage })));
 /* const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem')); */
 
 
@@ -1256,7 +1255,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'venom-cursor': VenomCursor,
     '3d-tubes-cursor': ThreeDTubesCursor,
     '3d-galaxy-animation': GalaxyAnimation,
-    '3d-landing-page': ThreeDLandingPage,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2067,7 +2065,6 @@ export const Demo = () => (
         id: "space-background",
         title: "Space Background",
         category: "background",
-        isPremium: true,
         preview: renderComponent("space-background", "SpaceBackground", { interactive: true }),
         code: "",
         vibePrompt: ""
@@ -2165,15 +2162,6 @@ export const Demo = () => (
         code: `import { GalaxyAnimation } from '@/components/ui/GalaxyAnimation';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GalaxyAnimation />\n  </div>\n);`,
         vibePrompt: "A stunning interactive 3D galaxy with multiple themes, orbital physics, and post-processing bloom effects."
     },
-    {
-        id: "3d-landing-page",
-        title: "3D Landing Page",
-        category: "3d",
-        isPremium: true,
-        preview: renderComponent("3d-landing-page", "ThreeDLandingPage"),
-        code: `import { ThreeDLandingPage } from '@/components/ui/ThreeDLandingPage';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <ThreeDLandingPage />\n  </div>\n);`,
-        vibePrompt: "Create a 'ThreeDLandingPage' React component utilizing Tailwind CSS, 'lucide-react', '@splinetool/react-spline', and 'motion/react'. Build a responsive container (h-[600px] rounded-3xl) that tracks mouse movement to apply a smooth 3D tilt effect (rotateX, rotateY) to the content. The desktop view renders <Spline scene='https://prod.spline.design/WNmhHpS4PLU16Rji/scene.splinecode' /> inside a motion.div with spring-loaded rotations for a premium feel. Use a fallback <img src='/assets/3d-landing-animation.gif' /> on mobile. Overlay a glassmorphic Navbar (branding 'UI HUB') and a mobile hamburger menu. At the bottom, implement a hero overlay with glassmorphic cards. The main title is 'We Build Next-Gen UI Experiences'. The second description is 'Designing Next-Gen UI Systems That Make Brands Unforgettable' and the buttons are 'Explore Work' and 'Get Started'. Use 'Gruppo' and 'Sen' fonts imported via CSS. Ensure an exact, high-fidelity reproduction with fully functional, mouse-reactive React code."
-    },
 
     {
         id: "lizard-cursor",
@@ -2196,7 +2184,6 @@ export const Demo = () => (
         id: "3d-tubes-cursor",
         title: "3D Tubes Cursor",
         category: "cursor",
-        isPremium: true,
         preview: () => <ThreeDTubesCursorPreview />,
         code: "",
         vibePrompt: ""

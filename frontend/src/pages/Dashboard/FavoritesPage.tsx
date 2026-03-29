@@ -114,7 +114,7 @@ const FavoritesPage = () => {
             <div className="fixed inset-0 pointer-events-none -z-10">
                 <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-brand-green/[0.07] blur-[120px] rounded-full animate-pulse" />
                 <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-500/[0.05] blur-[120px] rounded-full" />
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.25] mix-blend-overlay" />
+                <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.25] mix-blend-overlay" />
                 <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-black to-brand-black opacity-80" />
             </div>
 

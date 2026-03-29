@@ -281,7 +281,7 @@ const ComponentGrid = () => {
                     </motion.div>
 
                     {/* Glitch Overlay Effect */}
-                    <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-[0.05] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] bg-repeat" />
+                    <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-[0.05] pointer-events-none bg-[url('/noise.svg')] bg-repeat" />
 
                     {/* Laser Reveal Shimmer */}
                     <motion.div
