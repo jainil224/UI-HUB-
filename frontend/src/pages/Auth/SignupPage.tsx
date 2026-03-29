@@ -23,38 +23,13 @@ const SignupPage = () => {
                     (navigator.maxTouchPoints > 0) || 
                     (window.innerWidth < 768);
 
-    // Handle redirect result when returning from social sign-in on mobile
+    // The AuthProvider handles Google/GitHub redirect results globally.
+    // If the user is already authenticated (or becomes authenticated via the redirect result),
+    // this effect will automatically navigate them to the home page.
     useEffect(() => {
-        if (!auth) return;
-        
-        let isMounted = true;
-        const handleRedirect = async () => {
-            console.log('[Auth] Checking for redirect result...');
-            try {
-                // getRedirectResult will resolve with null if no redirect happened
-                const result = await getRedirectResult(auth);
-                if (!isMounted) return;
-
-                if (result?.user) {
-                    console.log('[Auth] Redirect sign-up successful:', result.user.email);
-                    // Force a small delay to allow AuthContext to sync if needed
-                    setTimeout(() => {
-                        if (isMounted) navigate('/');
-                    }, 500);
-                }
-            } catch (err: any) {
-                if (!isMounted) return;
-                console.error('[Auth] Redirect error details:', err.code, err.message);
-                
-                // Don't show error if user just cancelled or if it's a "no result" case
-                if (err.code !== 'auth/redirect-cancelled-by-user' && err.code !== 'auth/no-auth-event') {
-                    setError(formatAuthError(err.message) || 'Sign-up failed after redirect. Please try again.');
-                }
-            }
-        };
-
-        handleRedirect();
-        return () => { isMounted = false; };
+        if (auth?.currentUser) {
+            navigate('/');
+        }
     }, [navigate]);
 
     const handleSocialSignIn = async (providerType: 'google' | 'github') => {

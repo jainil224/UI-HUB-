@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged, User, getRedirectResult } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { getApiBaseUrl } from '../utils/apiConfig';
 
@@ -21,13 +21,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Guard: if Firebase auth isn't initialized yet, stop loading to prevent blank screen
-        if (!auth) {
-            console.warn('Firebase auth not initialized, rendering app without auth');
-            setLoading(false);
-            return;
-        }
-        
+        // 2. Handle Google/GitHub redirect results (crucial for mobile)
+        const checkRedirect = async () => {
+            try {
+                const result = await getRedirectResult(auth);
+                if (result?.user) {
+                    console.log(`[Auth] Redirect result found: ${result.user.email}`);
+                    setUser(result.user);
+                }
+            } catch (error: any) {
+                console.error('[Auth] Error getting redirect result:', error);
+            }
+        };
+
+        checkRedirect();
+
+        // 3. Main auth state observer
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             setLoading(true);
             setUser(user);
