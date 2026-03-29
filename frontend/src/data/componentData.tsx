@@ -24,6 +24,7 @@ const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').th
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
 export const GalaxyAnimation = React.lazy(() => import('../components/ui/GalaxyAnimation').then(m => ({ default: m.default })));
+const Robot3DBackground = React.lazy(() => import('../components/ui/Robot3DBackground').then(m => ({ default: m.Robot3DBackground })));
 /* const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem')); */
 
 
@@ -1255,6 +1256,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'venom-cursor': VenomCursor,
     '3d-tubes-cursor': ThreeDTubesCursor,
     '3d-galaxy-animation': GalaxyAnimation,
+    'robot-3d-background': Robot3DBackground,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -1830,15 +1832,6 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
 
     },
     {
-        id: "robot-3d-background",
-        title: "Robot 3D Background",
-        category: "background",
-        isPremium: true,
-        preview: renderComponent("robot-3d-background", "Robot 3D Background", { showDownloadLink: true }),
-        code: "",
-        vibePrompt: ""
-    },
-    {
         id: "wave-background",
         title: "Wave Background",
         category: "background",
@@ -2161,6 +2154,15 @@ export const Demo = () => (
         preview: renderComponent("3d-galaxy-animation", "GalaxyAnimation"),
         code: `import { GalaxyAnimation } from '@/components/ui/GalaxyAnimation';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GalaxyAnimation />\n  </div>\n);`,
         vibePrompt: "A stunning interactive 3D galaxy with multiple themes, orbital physics, and post-processing bloom effects."
+    },
+    {
+        id: "robot-3d-background",
+        title: "Robot 3D Background",
+        category: "3d",
+        isPremium: true,
+        preview: renderComponent("robot-3d-background", "Robot 3D Background", { showDownloadLink: true }),
+        code: "",
+        vibePrompt: ""
     },
 
     {
