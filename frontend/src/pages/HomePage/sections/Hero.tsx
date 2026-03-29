@@ -48,7 +48,7 @@ const Hero = () => {
                     className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 border border-brand-green/20 text-[10px] font-bold uppercase tracking-[0.2em] mb-10 backdrop-blur-md"
                 >
                     <span className="w-2 h-2 rounded-full bg-brand-green md:animate-pulse shadow-[0_0_8px_#00FF00]" />
-                    <span className="text-brand-green/90">v2.0 is now live</span>
+                    <span className="text-brand-green/90">UI HUB 2.0 is now live</span>
                 </motion.div>
 
 
