@@ -25,6 +25,10 @@ const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then
 const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
 export const GalaxyAnimation = React.lazy(() => import('../components/ui/GalaxyAnimation').then(m => ({ default: m.default })));
 const Robot3DBackground = React.lazy(() => import('../components/ui/Robot3DBackground').then(m => ({ default: m.Robot3DBackground })));
+const HoodieBot = React.lazy(() => import('../components/ui/HoodieBot'));
+const Smilo = React.lazy(() => import('../components/ui/Smilo'));
+const Tripy = React.lazy(() => import('../components/ui/Tripy'));
+const Aiva = React.lazy(() => import('../components/ui/Aiva'));
 /* const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem')); */
 
 
@@ -1199,7 +1203,7 @@ const ThreeDSliderPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "portfolios";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "portfolios" | "3d-chatbot";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -1257,6 +1261,10 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     '3d-tubes-cursor': ThreeDTubesCursor,
     '3d-galaxy-animation': GalaxyAnimation,
     'robot-3d-background': Robot3DBackground,
+    'hoodiebot': HoodieBot,
+    'smilo': Smilo,
+    'tripy': Tripy,
+    'aiva': Aiva,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2207,6 +2215,42 @@ export const Demo = () => (
         preview: renderComponent("neo-brutalism-os", "NeoBrutalism"),
         code: `import NeoBrutalism from '@/components/ui/NeoBrutalism';\n\nexport default function Demo() {\n  return <NeoBrutalism />;\n}`,
         vibePrompt: "A bold, Neo-Brutalism inspired Dashboard OS with high-contrast UI, interactive charts, and a custom sidebar navigation. Built with Framer Motion and Recharts for a premium interactive experience."
+    },
+    {
+        id: "hoodiebot",
+        title: "HoodieBot",
+        category: "3d-chatbot",
+        isPremium: false,
+        preview: renderComponent("hoodiebot", "HoodieBot"),
+        code: `import HoodieBot from '@/components/ui/HoodieBot';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px]">\n      <HoodieBot />\n    </div>\n  );\n}`,
+        vibePrompt: "A 3D CSS-animated hoodie robot character inspired by designer toy aesthetics. Features floating animation, glowing red eyes, wave interaction, eye-blink, body tilt, 3D mouse parallax, scan-line face effect, and a click-to-wave mechanic. Built with pure React + CSS animations — no Three.js needed."
+    },
+    {
+        id: "smilo",
+        title: "Smilo",
+        category: "3d-chatbot",
+        isPremium: false,
+        preview: renderComponent("smilo", "Smilo"),
+        code: `import Smilo from '@/components/ui/Smilo';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px]">\n      <Smilo />\n    </div>\n  );\n}`,
+        vibePrompt: "A cute 3D CSS-animated robot with a retro pixel-art face display, round silver head, ear vent panels, glowing antenna, blue body with green accent rings, and claw hands. Features idle thinking mode with spinning gear bubble, Web Audio API sound effects on click, particle burst, soundwave bars, and greeting messages. Built with pure React + CSS animations."
+    },
+    {
+        id: "tripy",
+        title: "Tripy",
+        category: "3d-chatbot",
+        isPremium: false,
+        preview: renderComponent("tripy", "Tripy"),
+        code: `import Tripy from '@/components/ui/Tripy';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px]">\n      <Tripy />\n    </div>\n  );\n}`,
+        vibePrompt: "A 3D travel suitcase chatbot with a red hard-shell body, vertical ridges, telescopic handle that extends on click, CSS arch eyes and curved smile on a black face panel, spinning wheels, and a yellow speech bubble in thinking mode. Built with Framer Motion for mouse-reactive 3-axis head tilt. Plays a playful G-major xylophone jingle with boing accent on click."
+    },
+    {
+        id: "aiva",
+        title: "Aiva",
+        category: "3d-chatbot",
+        isPremium: false,
+        preview: renderComponent("aiva", "Aiva"),
+        code: `import Aiva from '@/components/ui/Aiva';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px]">\n      <Aiva />\n    </div>\n  );\n}`,
+        vibePrompt: "A premium floating humanoid AI assistant robot with a pearl-white round head, glowing cyan eyes, and a gentle smile. Features a holographic chest screen with animated data bars and a blinking cursor. The upper body is fully articulated with shoulder pads, silver arms, and a sleek waist base. Built with Framer Motion for 3-axis mouse-reactive head rotation, idle floating, and wave animations. Plays warm C-major 7th harmonic chord sound effects on click."
     },
 ];
 

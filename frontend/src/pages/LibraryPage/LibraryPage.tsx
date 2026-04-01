@@ -23,6 +23,7 @@ const CATEGORY_META: Record<string, { icon: string; color: string; glow: string;
     "Cursor Effects":         { icon: "⊕",  color: "text-brand-green", glow: "shadow-[0_0_12px_rgba(0,255,159,0.5)]",   bg: "bg-brand-green/10", border: "border-brand-green/20" },
     "Portfolios":             { icon: "▣",  color: "text-blue-400",    glow: "shadow-[0_0_12px_rgba(96,165,250,0.5)]",  bg: "bg-blue-400/10",    border: "border-blue-400/20" },
     "Community Uploads":      { icon: "✿",  color: "text-rose-400",    glow: "shadow-[0_0_12px_rgba(251,113,133,0.5)]", bg: "bg-rose-400/10",    border: "border-rose-400/20" },
+    "3D CHATBOT":             { icon: "🤖", color: "text-lime-400",    glow: "shadow-[0_0_12px_rgba(163,230,53,0.5)]", bg: "bg-lime-400/10",    border: "border-lime-400/20" },
 };
 const DEFAULT_META = { icon: "◆", color: "text-white/50", glow: "", bg: "bg-white/5", border: "border-white/10" };
 
@@ -89,8 +90,9 @@ const LibraryPage = () => {
         { name: "Backgrounds", items: allComponents.filter(item => item.category === 'background') },
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
         { name: "Portfolios", items: allComponents.filter(item => item.category === 'portfolios') },
+        { name: "3D CHATBOT", items: allComponents.filter(item => item.category === '3d-chatbot') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
-    ].filter(cat => cat.items.length > 0);
+    ].filter(cat => cat.items.length > 0 || cat.name === "3D CHATBOT");
 
     // Initial expansion: expand the active component's category
     useEffect(() => {

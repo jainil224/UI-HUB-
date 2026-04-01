@@ -895,11 +895,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
                         )}
 
-                        <div className={`min-h-[220px] sm:min-h-[280px] md:min-h-0 aspect-[4/3] md:aspect-video w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'}`}>
+                        <div className={`min-h-[320px] sm:min-h-[280px] md:min-h-0 ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'}`}>
                             <div
-                                className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' ? 'h-full' : 'px-2 md:px-8'}`}
+                                className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' ? 'h-full' : 'px-2 md:px-8'}`}
                             >
-                                <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
+                                <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
                                     <React.Suspense fallback={
                                         <div className="flex flex-col items-center justify-center p-12 text-white/20">
                                             <div className="w-8 h-8 rounded-full border-2 border-white/5 border-t-brand-green animate-spin mb-4" />
