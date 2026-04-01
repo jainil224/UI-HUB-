@@ -1,45 +1,53 @@
 /* Glitch Effect Core Animations */
+:root {
+    --logo-color: #00ff22;
+    --logo-glow: rgba(0, 255, 34, 0.6);
+}
 
 .glitch-layer-1 {
     transform: translate(-2px, 0);
-    filter: drop-shadow(0 0 8px #00ff22) hue-rotate(45deg);
+    filter: drop-shadow(0 0 8px var(--logo-color)) hue-rotate(45deg);
     animation: glitch-anim-1 2s infinite linear alternate-reverse;
 }
 
 .glitch-layer-2 {
     transform: translate(2px, 0);
-    filter: drop-shadow(0 0 12px #00ff22) hue-rotate(-45deg);
+    filter: drop-shadow(0 0 12px var(--logo-color)) hue-rotate(-45deg);
     animation: glitch-anim-2 3s infinite linear alternate-reverse;
 }
 
 .glitch-layer-3 {
-    filter: drop-shadow(0 0 5px rgba(0, 255, 34, 0.5));
+    filter: drop-shadow(0 0 5px var(--logo-color)80);
     animation: glitch-anim-main 5s infinite step-end;
 }
 
 .logo-text-glow {
-    text-shadow: 0 0 10px rgba(0, 255, 34, 0.6), 0 0 20px rgba(0, 255, 34, 0.2);
+    color: var(--logo-color);
+    text-shadow: 0 0 10px var(--logo-glow), 0 0 20px rgba(0, 255, 34, 0.2);
 }
 
 .text-glitch-1 {
-    color: #4ade80;
+    color: var(--logo-color);
     z-index: -1;
-    filter: drop-shadow(0 0 8px #00ff22);
+    filter: drop-shadow(0 0 8px var(--logo-color));
+    opacity: 0.7;
     animation: glitch-anim-1 2s infinite linear alternate-reverse;
 }
 
 .text-glitch-2 {
-    color: #22c55e;
+    color: var(--logo-color);
     z-index: -2;
-    filter: drop-shadow(0 0 12px #00ff22);
+    filter: drop-shadow(0 0 12px var(--logo-color));
+    opacity: 0.5;
     animation: glitch-anim-2 3s infinite linear alternate-reverse;
 }
 
 .text-glitch-3 {
-    color: #00ff22;
-    filter: drop-shadow(0 0 15px rgba(0, 255, 34, 0.8));
+    color: var(--logo-color);
+    filter: drop-shadow(0 0 15px var(--logo-color));
     animation: glitch-anim-text-main 4s infinite step-end;
 }
+
 
 @keyframes glitch-anim-1 {
     0% {

@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Logo from './Logo';
+
 
 /* ─── Web Audio API – Robotic sound synthesizer ─── */
 const playRobotSound = (type: 'click' | 'wave' | 'think') => {
@@ -360,6 +362,15 @@ const HoodieBot: React.FC = () => {
             display: 'flex', flexDirection: 'column',
             scrollBehavior: 'smooth'
         }}>
+
+            <div style={{
+                position: 'absolute',
+                top: isMobile ? 12 : 24,
+                right: isMobile ? 12 : 24,
+                zIndex: 100
+            }}>
+                <Logo className="w-6 h-6" showText={true} color="#ff4444" />
+            </div>
 
             {/* ── All keyframe animations ── */}
             <style>{`

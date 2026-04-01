@@ -5,12 +5,33 @@ import './Logo.css';
 interface LogoProps {
     className?: string;
     showText?: boolean;
+    color?: string;
 }
 
-const Logo: React.FC<LogoProps> = ({ className = "w-8 h-8", showText = false }) => {
+const Logo: React.FC<LogoProps> = ({ className = "w-8 h-8", showText = false, color }) => {
+    // Utility to get glow version of hex color
+    const getGlowColor = (hex?: string) => {
+        if (!hex) return 'rgba(0, 255, 34, 0.6)';
+        if (!hex.startsWith('#')) return hex;
+        const r = parseInt(hex.slice(1, 3), 16);
+        const g = parseInt(hex.slice(3, 5), 16);
+        const b = parseInt(hex.slice(5, 7), 16);
+        return `rgba(${r}, ${g}, ${b}, 0.6)`;
+    };
+
+    const logoStyle = color ? {
+        '--logo-color': color,
+        '--logo-glow': getGlowColor(color)
+    } as React.CSSProperties : {};
+
     return (
-        <div className={`flex items-center gap-2 cursor-pointer group/logo ${className}`}>
-            <div className="relative w-full h-full overflow-hidden">
+        <div 
+            className="flex items-center gap-2 cursor-pointer group/logo w-fit"
+            style={logoStyle}
+            onClick={() => window.location.href = '/'}
+        >
+
+            <div className={`relative overflow-hidden shrink-0 ${className}`}>
                 <img
                     src={logo}
                     alt="UI HUB Logo"
@@ -40,7 +61,7 @@ const Logo: React.FC<LogoProps> = ({ className = "w-8 h-8", showText = false }) 
                 <div className="relative">
                     <span className="font-heading font-bold text-xl tracking-tighter relative z-10 
                                      text-[#00ff22] logo-text-glow
-                                     group-hover/logo:opacity-0 transition-opacity duration-100">
+                                     group-hover/logo:opacity-0 transition-opacity duration-100 whitespace-nowrap uppercase">
                         UI HUB
                     </span>
                     {/* Glitch Layers for Text */}

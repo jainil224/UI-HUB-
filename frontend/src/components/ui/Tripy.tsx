@@ -1,6 +1,8 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { motion, useSpring, useMotionValue } from 'framer-motion';
+import Logo from './Logo';
 import './Tripy.css';
+
 
 /* ══════════════════════════════════════════════════════ */
 /*          SOUND — Playful Xylophone + Boing             */
@@ -337,7 +339,17 @@ const Tripy: React.FC = () => {
             }}
 
         >
+            <div style={{
+                position: 'absolute',
+                top: isMobile ? 12 : 24,
+                right: isMobile ? 12 : 24,
+                zIndex: 100
+            }}>
+                <Logo className="w-6 h-6" showText={true} color="#fbbf24" />
+            </div>
+
             <style>{`
+
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@700;900&display=swap');
                 @keyframes tp-orb  { 0%,100%{transform:translate(0,0);opacity:.08} 50%{transform:translate(14px,-10px);opacity:.16} }
                 @keyframes tp-grid { 0%{background-position:0 0} 100%{background-position:48px 48px} }
