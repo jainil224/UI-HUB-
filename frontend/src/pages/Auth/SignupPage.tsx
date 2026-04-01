@@ -41,9 +41,9 @@ const SignupPage = () => {
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
-                // Send welcome email via backend API
+                // Sync user with backend and trigger welcome email
                 try {
-                    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/send-welcome-email`, {
+                    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/sync`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -52,7 +52,7 @@ const SignupPage = () => {
                         })
                     });
                 } catch (emailErr) {
-                    console.error('[Auth] Failed to trigger welcome email:', emailErr);
+                    console.error('[Auth] Failed to sync user/trigger welcome email:', emailErr);
                 }
 
                 // Trigger welcome toast (New user flag)
@@ -96,9 +96,9 @@ const SignupPage = () => {
                 displayName: name
             });
 
-            // Send welcome email via backend API
+            // Sync user with backend and trigger welcome email
             try {
-                await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/send-welcome-email`, {
+                await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/sync`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -107,7 +107,7 @@ const SignupPage = () => {
                     })
                 });
             } catch (emailErr) {
-                console.error('[Auth] Failed to trigger welcome email:', emailErr);
+                console.error('[Auth] Failed to sync user/trigger welcome email:', emailErr);
             }
 
             // Trigger welcome toast (New user flag)

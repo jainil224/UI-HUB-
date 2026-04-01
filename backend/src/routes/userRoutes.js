@@ -7,11 +7,11 @@ import { sendWelcomeEmail } from '../utils/sendEmail.js';
 const router = express.Router();
 
 /**
- * @route POST /api/v1/users/send-welcome-email
- * @desc Manually send a welcome email to a new user
- * @access Public (or Private)
+ * @route POST /api/v1/users/sync
+ * @desc Sync user status and trigger welcome email if new
+ * @access Public (with email/name) - Ideally should be Private with verifyToken
  */
-router.post('/send-welcome-email', async (req, res) => {
+router.post('/sync', async (req, res) => {
     try {
         const { email, name } = req.body;
 
@@ -23,28 +23,63 @@ router.post('/send-welcome-email', async (req, res) => {
         const userRef = admin.firestore().collection('users').doc(userEmail);
         const userDoc = await userRef.get();
 
-        // 1. Check if we've already sent a welcome email to this user
-        if (userDoc.exists && userDoc.data().welcomeEmailSent) {
-            console.log(`[Auth] Welcome email already sent to ${userEmail}. Skipping.`);
-            return res.json({ message: 'Welcome email already sent previously', skipped: true });
+        let welcomeEmailSent = false;
+        if (userDoc.exists) {
+            welcomeEmailSent = userDoc.data().welcomeEmailSent || false;
         }
 
-        // 2. Send the email
-        const result = await sendWelcomeEmail(email, name);
-
-        if (result.success) {
-            // 3. Mark as sent in Firestore so we don't send it again
-            await userRef.set({ 
-                welcomeEmailSent: true,
-                lastWelcomeEmailAt: admin.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
-
-            res.json({ message: 'Welcome email sent successfully', messageId: result.messageId });
+        // Only send if not already sent
+        if (!welcomeEmailSent) {
+            console.log(`[Auth] New user or first time sync for ${userEmail}. Sending welcome email.`);
+            const result = await sendWelcomeEmail(email, name);
+            
+            if (result.success) {
+                await userRef.set({ 
+                    welcomeEmailSent: true,
+                    lastSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    displayName: name || userDoc.data()?.displayName || ''
+                }, { merge: true });
+                welcomeEmailSent = true;
+            } else {
+                console.error(`[Auth] Failed to send welcome email to ${userEmail}:`, result.error);
+                // We still want to return success for the sync itself to not block the UI
+            }
         } else {
-            res.status(500).json({ error: 'Failed to send welcome email', details: result.error });
+            // Just update last synced
+            await userRef.set({ 
+                lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        }
+
+        res.json({ 
+            success: true, 
+            welcomeEmailSent,
+            message: 'User sync completed'
+        });
+    } catch (error) {
+        console.error('Error in user sync route:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/send-welcome-email
+ * @desc Manually send a welcome email to a new user
+ * @deprecated Use /sync instead
+ */
+router.post('/send-welcome-email', async (req, res) => {
+    try {
+        const { email, name } = req.body;
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+        const result = await sendWelcomeEmail(email, name);
+        if (result.success) {
+            res.json({ message: 'Welcome email sent successfully' });
+        } else {
+            res.status(500).json({ error: 'Failed to send welcome email' });
         }
     } catch (error) {
-        console.error('Error in send-welcome-email route:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
