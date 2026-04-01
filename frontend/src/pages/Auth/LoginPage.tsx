@@ -38,6 +38,22 @@ const LoginPage = () => {
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
+                // Send welcome email via backend API (only if it's likely a new signup via social)
+                // Note: The backend or frontend could check if the user is truly new, 
+                // but since the trigger is manual here, we'll try to send it.
+                try {
+                    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/send-welcome-email`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: result.user.email,
+                            name: result.user.displayName || 'UI Challenger'
+                        })
+                    });
+                } catch (emailErr) {
+                    console.error('[Auth] Failed to trigger welcome email:', emailErr);
+                }
+
                 // Trigger welcome toast for the next page load
                 sessionStorage.setItem('ui-hub-show-welcome', 'true');
                 navigate('/');

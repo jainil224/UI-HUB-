@@ -41,6 +41,20 @@ const SignupPage = () => {
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
+                // Send welcome email via backend API
+                try {
+                    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/send-welcome-email`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: result.user.email,
+                            name: result.user.displayName || 'UI Challenger'
+                        })
+                    });
+                } catch (emailErr) {
+                    console.error('[Auth] Failed to trigger welcome email:', emailErr);
+                }
+
                 // Trigger welcome toast (New user flag)
                 sessionStorage.setItem('ui-hub-show-welcome', 'true');
                 sessionStorage.setItem('ui-hub-is-new-user', 'true');
@@ -81,6 +95,21 @@ const SignupPage = () => {
             await updateProfile(userCredential.user, {
                 displayName: name
             });
+
+            // Send welcome email via backend API
+            try {
+                await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/send-welcome-email`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        name: name
+                    })
+                });
+            } catch (emailErr) {
+                console.error('[Auth] Failed to trigger welcome email:', emailErr);
+            }
+
             // Trigger welcome toast (New user flag)
             sessionStorage.setItem('ui-hub-show-welcome', 'true');
             sessionStorage.setItem('ui-hub-is-new-user', 'true');
