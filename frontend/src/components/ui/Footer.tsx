@@ -109,14 +109,14 @@ const Footer = () => (
                 <p className="text-white/20 text-xs font-mono tracking-wider">
                     © 2026 UI HUB — Built for vibe coders.
                 </p>
-                <div className="flex items-center gap-1.5 text-white/15 text-[11px] font-mono">
-                    <Zap size={11} className="text-brand-green/60" />
-                    <span>Made with passion by</span>
+                <div className="flex items-center gap-1.5 text-white/40 text-[10px] font-black tracking-[0.2em]">
+                    <Zap size={10} className="text-brand-green" fill="currentColor" />
+                    <span className="uppercase">Made with love by</span>
                     <a
                         href="https://github.com/jainil224"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-white/35 hover:text-brand-green transition-colors duration-200"
+                        className="text-white/70 hover:text-brand-green transition-colors duration-200"
                     >
                         Jainil Patel
                     </a>

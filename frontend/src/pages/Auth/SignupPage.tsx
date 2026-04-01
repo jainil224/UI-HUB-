@@ -41,6 +41,9 @@ const SignupPage = () => {
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
+                // Trigger welcome toast (New user flag)
+                sessionStorage.setItem('ui-hub-show-welcome', 'true');
+                sessionStorage.setItem('ui-hub-is-new-user', 'true');
                 navigate('/');
             }
         } catch (err: any) {
@@ -78,6 +81,9 @@ const SignupPage = () => {
             await updateProfile(userCredential.user, {
                 displayName: name
             });
+            // Trigger welcome toast (New user flag)
+            sessionStorage.setItem('ui-hub-show-welcome', 'true');
+            sessionStorage.setItem('ui-hub-is-new-user', 'true');
             navigate('/');
         } catch (err: any) {
             console.error(err);

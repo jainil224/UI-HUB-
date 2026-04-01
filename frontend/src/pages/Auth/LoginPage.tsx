@@ -38,6 +38,8 @@ const LoginPage = () => {
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
+                // Trigger welcome toast for the next page load
+                sessionStorage.setItem('ui-hub-show-welcome', 'true');
                 navigate('/');
             }
         } catch (err: any) {
@@ -60,6 +62,8 @@ const LoginPage = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
+            // Trigger welcome toast for the next page load
+            sessionStorage.setItem('ui-hub-show-welcome', 'true');
             navigate('/');
         } catch (err: any) {
             console.error(err);

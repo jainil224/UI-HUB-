@@ -7,6 +7,7 @@ import {
 import { ANTIGRAVITY_PROMPTS } from '../../../data/antigravityPrompts';
 import { LOVABLE_PROMPTS } from '../../../data/lovablePrompts';
 import { CLAUDE_PROMPTS } from '../../../data/claudePrompts';
+import Toast from '../../../components/ui/Toast';
 
 // ─── Prompt data ───────────────────────────────────────────────────────────────
 const prompts = [
@@ -140,10 +141,14 @@ const tickerItems = [
 const VibePrompts = () => {
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<string | null>(null);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const handleCopy = (id: string, text: string) => {
         navigator.clipboard.writeText(text);
         setCopiedId(id);
+        setToastMessage(`PROMPT COPIED`);
+        setShowToast(true);
         setTimeout(() => setCopiedId(null), 2000);
     };
 
@@ -385,6 +390,13 @@ const VibePrompts = () => {
                     </a>
                 </div>
             </motion.div>
+
+            {/* Holographic Toast Notification */}
+            <Toast 
+                isVisible={showToast} 
+                message={toastMessage} 
+                onClose={() => setShowToast(false)} 
+            />
         </section>
     );
 };

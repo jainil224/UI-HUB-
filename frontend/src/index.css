@@ -17,12 +17,17 @@
 }
 
 :root.light {
-  --bg-primary: #CFE6F7;   /* soft light highlight */
-  --bg-secondary: #FFFFFF;   /* color-shade-5 */
-  --text-primary: #00AEEF;   /* bright blue brand */
-  --text-secondary: #2C5C85; /* deep steel blue */
+  --bg-primary: #CFE6F7;
+  /* soft light highlight */
+  --bg-secondary: #FFFFFF;
+  /* color-shade-5 */
+  --text-primary: #00AEEF;
+  /* bright blue brand */
+  --text-secondary: #2C5C85;
+  /* deep steel blue */
   --border-primary: rgba(44, 92, 133, 0.1);
-  --brand-color: #5FA3D6;    /* main brand blue */
+  --brand-color: #5FA3D6;
+  /* main brand blue */
 }
 
 @theme {
@@ -32,7 +37,7 @@
   --font-seekuw: "Seekuw", sans-serif;
   --color-brand-green: #00FF00;
   --color-brand-black: #000000;
-  
+
   /* User defined Neon Palette */
   --color-neon-bright: #7CFF00;
   --color-neon-mid: #39FF14;
@@ -257,17 +262,37 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 @keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes flicker {
-  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+
+  0%,
+  19.999%,
+  22%,
+  62.999%,
+  64%,
+  64.999%,
+  70%,
+  100% {
     opacity: 1;
     filter: brightness(1);
   }
-  20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+
+  20%,
+  21.999%,
+  63%,
+  63.999%,
+  65%,
+  69.999% {
     opacity: 0.8;
     filter: brightness(0.8);
   }
@@ -278,11 +303,18 @@
 }
 
 @keyframes white-blink {
-  0%, 85%, 90%, 95%, 100% {
+
+  0%,
+  85%,
+  90%,
+  95%,
+  100% {
     opacity: 1;
     filter: brightness(1);
   }
-  87%, 92% {
+
+  87%,
+  92% {
     opacity: 0.6;
     filter: brightness(0.7);
   }

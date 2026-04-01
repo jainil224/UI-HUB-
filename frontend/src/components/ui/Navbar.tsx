@@ -9,6 +9,7 @@ import PlanBadge, { PlanTier } from './PlanBadge';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
+import Toast from './Toast';
 
 const MagneticButton = ({ children, className }: { children: React.ReactNode, className?: string }) => {
     const ref = useRef<HTMLButtonElement>(null);
@@ -79,10 +80,42 @@ const MagneticButton = ({ children, className }: { children: React.ReactNode, cl
 
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
-    const { user, isPro, isElite } = useAuth();
+    const { user, isPro, isElite, loading } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const isLibrary = location.pathname.startsWith('/library');
+
+    // Welcome Toast Logic
+    const [showToast, setShowToast] = useState(false);
+    const [toastMsg, setToastMsg] = useState('');
+    const prevUserRef = useRef<any>(undefined);
+
+    React.useEffect(() => {
+        // 1. Show Welcome Toast IF we are logged in AND the auth pages set the welcome flag
+        const shouldWelcome = sessionStorage.getItem('ui-hub-show-welcome');
+        const isNewUser = sessionStorage.getItem('ui-hub-is-new-user');
+
+        if (user && shouldWelcome === 'true') {
+            if (isNewUser === 'true') {
+                setToastMsg('WELCOME TO UI HUB');
+            } else {
+                setToastMsg(`WELCOME BACK, ${user.displayName?.split(' ')[0].toUpperCase() || 'AGENT'}`);
+            }
+            setShowToast(true);
+            
+            // Cleanup all flags
+            sessionStorage.removeItem('ui-hub-show-welcome');
+            sessionStorage.removeItem('ui-hub-is-new-user');
+        }
+
+        // 2. Show Logout Toast when transitioning from user -> null
+        if (prevUserRef.current && !user) {
+            setToastMsg('LOGGED OUT');
+            setShowToast(true);
+        }
+
+        prevUserRef.current = user;
+    }, [user, loading]);
 
     // Determine plan tier for badge
     const planTier: PlanTier = isElite ? 'elite' : isPro ? 'pro' : 'free';
@@ -339,6 +372,13 @@ const Navbar = () => {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Global Welcome/Logout Toast */}
+            <Toast 
+                isVisible={showToast} 
+                message={toastMsg} 
+                onClose={() => setShowToast(false)} 
+            />
         </nav>
     );
 };

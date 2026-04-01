@@ -16,6 +16,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
 import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMetadata';
+import Toast from '../../../../components/ui/Toast';
 
 const preloadComponent = (id: string) => {
     if (id === '3d-galaxy-animation') {
@@ -308,6 +309,10 @@ const VibeSystemSection = React.memo(({
     const [isLoadingPrompt, setIsLoadingPrompt] = React.useState(false);
     const [prevProStatus, setPrevProStatus] = React.useState(isProUser);
 
+    // Toast state
+    const [showToast, setShowToast] = React.useState(false);
+    const [toastMessage, setToastMessage] = React.useState('');
+
     const setAiSystem = React.useCallback((system: AISystem) => {
         setActiveTool(system);
         startTransition(() => {
@@ -366,6 +371,8 @@ const VibeSystemSection = React.memo(({
         
         await navigator.clipboard.writeText(deferredVibePrompt);
         setCopied('blueprint');
+        setToastMessage(`PROMPT COPIED`);
+        setShowToast(true);
         setTimeout(() => setCopied(null), 2000);
     };
 
@@ -530,6 +537,13 @@ const VibeSystemSection = React.memo(({
                     <div className="absolute -inset-4 bg-brand-green/5 blur-3xl rounded-[4rem] group-hover/terminal:bg-brand-green/10 transition-colors duration-1000 -z-10" />
                 </div>
             </section>
+            
+            {/* Holographic Toast Notification */}
+            <Toast 
+                isVisible={showToast} 
+                message={toastMessage} 
+                onClose={() => setShowToast(false)} 
+            />
         </motion.div>
     );
 });
@@ -557,6 +571,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [showAuthModal, setShowAuthModal] = React.useState(false);
     const [favoritesCount, setFavoritesCount] = React.useState(0);
+
+    // Toast state for code copy
+    const [showToast, setShowToast] = React.useState(false);
+    const [toastMessage, setToastMessage] = React.useState('');
 
     React.useEffect(() => {
         if (!user) {
@@ -658,6 +676,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const handleCopy = (text: string, id: string) => {
         navigator.clipboard.writeText(text);
         setCopied(id);
+        setToastMessage(`CODE COPIED`);
+        setShowToast(true);
         setTimeout(() => setCopied(null), 2000);
     };
 
@@ -1050,6 +1070,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 onClose={() => setShowAuthModal(false)}
                 title="Save to Vault"
                 description="Sign in to your account to save this elite component to your personal collection."
+            />
+            {/* Holographic Toast Notification */}
+            <Toast 
+                isVisible={showToast} 
+                message={toastMessage} 
+                onClose={() => setShowToast(false)} 
             />
         </motion.div>
     );
