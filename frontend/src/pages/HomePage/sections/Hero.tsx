@@ -100,7 +100,7 @@ const Hero = () => {
                     transition={{ delay: 0.6 }}
                     className="max-w-xl mx-auto text-white/50 text-base md:text-lg mb-14 font-light leading-relaxed tracking-wide px-6"
                 >
-                    A curated collection of minimal, high-performance UI components built for modern web experiences. Simple, bold, and effective.
+                    A curated collection of 100+ premium UI components, AI-powered prompts, and cinematic 3D experiences — ready to ship into any modern web project.
                 </motion.p>
 
                 <motion.div

@@ -90,8 +90,8 @@ const StatItem: React.FC<StatItemProps> = ({ label, value, suffix, index, format
 
 const statsData = [
     {
-        label: "Total Components",
-        value: 66,
+        label: "Premium Components",
+        value: 100,
         suffix: "+",
     },
     {
@@ -100,8 +100,8 @@ const statsData = [
         suffix: "%",
     },
     {
-        label: "Projects Built",
-        value: 1000,
+        label: "Projects Shipped",
+        value: 5000,
         suffix: "+",
         formatValue: (val: number) => {
             if (val >= 1000) return `${(val / 1000).toFixed(0)}K`;

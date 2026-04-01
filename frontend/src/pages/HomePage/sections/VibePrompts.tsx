@@ -21,7 +21,7 @@ const prompts = [
         glow: '0_0_40px_-5px_rgba(249,115,22,0.25)',
         tag: 'Advanced',
         tagColor: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
-        thought: 'Precision-engineered prompts for the Advance model. Full-stack 3D apps with zero configuration drift.',
+        thought: 'Precision-engineered universal prompts designed by UI HUB. Works with any AI tool — ChatGPT, Claude, Gemini, Cursor, or Copilot.',
         prompt: (
             <>
                 Build a <span className="text-orange-400">3D Landing Page</span> with <span className="text-brand-green">Spline integration</span> and mouse tilt effects.<br />
