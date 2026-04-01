@@ -19,7 +19,6 @@ const Hero = () => {
                 <video
                     autoPlay
                     muted
-                    defaultMuted
                     loop
                     playsInline
                     preload="metadata"

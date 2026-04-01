@@ -32,7 +32,8 @@ const CHAOS_DATA = Array.from({ length: 20 }, (_, i) => ({
 // --- CSS INJECTION (THE GLITCH ENGINE) ---
 export function GlobalStyles() {
     return (
-        <style jsx global>{`
+        <style dangerouslySetInnerHTML={{
+            __html: `
     @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rubik+Glitch&display=swap');
 
     :root {
@@ -117,7 +118,7 @@ export function GlobalStyles() {
       0% { transform: translateY(0); }
       100% { transform: translateY(-50%); }
     }
-  `}</style>
+  `}} />
     );
 }
 

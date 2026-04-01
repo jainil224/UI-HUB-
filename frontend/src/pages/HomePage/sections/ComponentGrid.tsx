@@ -29,7 +29,7 @@ const showcaseIds = [
     'black-hole-cursor'
 ];
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 const ComponentGrid = () => {
     const { user, isPro } = useAuth();
@@ -62,7 +62,7 @@ const ComponentGrid = () => {
         }
     };
 
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -72,7 +72,7 @@ const ComponentGrid = () => {
         }
     };
 
-    const cardVariants = {
+    const cardVariants: Variants = {
         hidden: { opacity: 0, y: 30 },
         visible: {
             opacity: 1,

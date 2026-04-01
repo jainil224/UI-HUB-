@@ -48,7 +48,6 @@ export const InteractiveWebGLScene: React.FC<InteractiveWebGLSceneProps> = ({
                 autoPlay
                 loop
                 muted
-                defaultMuted
                 playsInline
                 className="absolute top-1/2 left-1/2 min-w-full min-h-full object-cover"
                 style={{
@@ -56,7 +55,6 @@ export const InteractiveWebGLScene: React.FC<InteractiveWebGLSceneProps> = ({
                 }}
             >
                 <source src={videoSrc} type="video/mp4" />
-                Your browser does not support the video tag.
             </video>
 
             {/* Download Link Overlay */}

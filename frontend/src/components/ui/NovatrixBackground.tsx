@@ -43,7 +43,8 @@ export const NovatrixBackground = ({
                 {title}
             </h2>
 
-            <style jsx>{`
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 @keyframes spin-slow {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
@@ -51,7 +52,7 @@ export const NovatrixBackground = ({
                 .animate-spin-slow {
                     animation: spin-slow 20s linear infinite;
                 }
-            `}</style>
+            `}} />
         </div>
     );
 };

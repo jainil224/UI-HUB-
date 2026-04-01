@@ -511,7 +511,8 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
             className="flex flex-col h-screen w-full bg-[#F3F4F6] text-black font-sans selection:bg-black selection:text-[#B8FF9F] overflow-hidden relative"
         >
 
-            <style jsx global>{`
+            <style dangerouslySetInnerHTML={{
+                __html: `
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
                 body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
                 .outline-text { -webkit-text-stroke: 2px black; color: white; }
@@ -520,7 +521,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
                 .custom-scrollbar::-webkit-scrollbar-track { background: white; border-left: 4px solid black; }
                 .custom-scrollbar::-webkit-scrollbar-thumb { background: black; border: 3px solid white; }
                 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #FEF08A; }
-            `}</style>
+            `}} />
             
             <Marquee />
 

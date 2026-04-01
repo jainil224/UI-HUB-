@@ -1,10 +1,10 @@
 "use client"
 
 import * as React from "react";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 import { cn } from "../../lib/utils";
 
-export type MarqueeHoverButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+export type MarqueeHoverButtonProps = HTMLMotionProps<"button"> & {
     label?: string;
 };
 
