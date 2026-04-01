@@ -12,14 +12,14 @@ import { CLAUDE_PROMPTS } from '../../../data/claudePrompts';
 const prompts = [
     {
         id: 'advance-3d',
-        tool: 'Advance AI',
-        toolShort: 'Advance',
+        tool: 'Advanced AI',
+        toolShort: 'Advanced',
         icon: <Atom className="w-5 h-5 text-orange-400" />,
         color: 'border-orange-500/30',
         iconBg: 'bg-orange-500/10',
         accentColor: '#f97316',
         glow: '0_0_40px_-5px_rgba(249,115,22,0.25)',
-        tag: 'Advance',
+        tag: 'Advanced',
         tagColor: 'text-orange-400 bg-orange-400/10 border-orange-400/20',
         thought: 'Precision-engineered prompts for the Advance model. Full-stack 3D apps with zero configuration drift.',
         prompt: (
@@ -118,7 +118,7 @@ const LiveCounter = ({ value }: { value: number }) => {
 // ─── Scrolling ticker ──────────────────────────────────────────────────────────
 const TickerItem: React.FC<{ text: string; highlight?: string }> = ({ text, highlight }) => (
     <span className="flex items-center gap-3 px-6 text-white/30 text-[11px] font-bold uppercase tracking-widest shrink-0">
-        <span className="w-1.5 h-1.5 rounded-full bg-brand-green/60 shrink-0" />
+        <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shrink-0" />
         {text}
         {highlight && <span className="text-brand-green">{highlight}</span>}
     </span>
@@ -132,6 +132,8 @@ const tickerItems = [
     { text: '60fps Animations', highlight: '→ Guaranteed' },
     { text: 'WebGL + Three.js', highlight: '→ Supported' },
     { text: 'Claude + Antigravity', highlight: '→ Elite Models' },
+    { text: 'Advanced Prompt', highlight: '→ Any AI Tool' },
+    { text: 'Lovable + Cursor', highlight: '→ Free Prompts' },
 ];
 
 // ─── Main component ────────────────────────────────────────────────────────────
@@ -156,10 +158,10 @@ const VibePrompts = () => {
             <div className="relative overflow-hidden mb-20 -mx-6">
                 <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
                 <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-                <div className="flex border-y border-white/[0.04] py-3 overflow-hidden">
+                <div className="flex border-y border-white/[0.08] py-3.5 overflow-hidden">
                     <motion.div
                         animate={{ x: ['0%', '-50%'] }}
-                        transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+                        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
                         className="flex shrink-0"
                     >
                         {[...tickerItems, ...tickerItems].map((item, i) => (
@@ -360,7 +362,7 @@ const VibePrompts = () => {
                         Unlock <span className="text-brand-green">50+ Elite Prompts</span>
                     </h3>
                     <p className="text-white/40 text-sm max-w-md">
-                        Pro and Elite members get access to the full Vibe Coding Matrix — Claude, Antigravity, Lovable, Cursor and more.
+                        Pro and Elite members get access to the full Vibe Coding Matrix — Claude, Antigravity, Lovable, Cursor, and <span className="text-white/70 font-semibold">Advanced</span> (works with any AI tool).
                     </p>
                 </div>
 

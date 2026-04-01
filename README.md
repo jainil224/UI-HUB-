@@ -80,7 +80,7 @@ Most component libraries give you grey buttons and plain cards. UI HUB provides:
 | Feature | Description |
 |:---|:---|
 | 🎯 **100+ Premium Components** | Backgrounds, cursors, buttons, cards, 3D scenes, text animations, visual effects, and portfolios |
-| 🤖 **AI Code Generation** | Powered by Antigravity AI, Claude, and Lovable — generates full implementation prompts per component |
+| 🤖 **AI Code Generation** | Powered by Antigravity AI, Claude, Lovable, Cursor, and **Advanced** (UI HUB's universal prompt — works with any AI tool) |
 | 👁️ **Live Interactive Previews** | Hover any card to instantly see it running — real WebGL, real animations |
 | 🌌 **3D Experiences** | Scroll-driven 3D animations, galaxy simulations, Rubik's Cubes, Solar Systems, Robot mascots |
 | 🖱️ **Cursor FX Library** | 8+ bespoke cursors: Aurora, Magnetic, Black Hole, Target, Heart, Venom, Lizard, 3D Tubes |
@@ -384,7 +384,7 @@ const { user, isPro, isElite, loading } = useAuth();
 
 ### Pricing — Auto Currency Detection
 The Pricing Page automatically detects the user's timezone:
-- **India (Asia/Kolkata)** → prices shown in `₹ INR` (₹99 / ₹199)
+- **India (Asia/Kolkata)** → prices shown in `₹ INR` (₹99 / ₹399)
 - **Everywhere else** → prices shown in `$ USD` ($4.99 / $7.99)
 - Users can manually toggle between INR/USD
 
@@ -392,17 +392,17 @@ The Pricing Page automatically detects the user's timezone:
 
 ## 🤖 AI Integration
 
-UI HUB includes a **3-model AI system** that generates contextual code prompts for every component in the library:
+UI HUB includes a **multi-system AI prompt engine** that generates expertly crafted, component-specific prompts for every item in the library. Each prompt is tailored to the chosen AI system — from free public tools to the Elite-tier **Advanced** prompt, which is designed by UI HUB to work universally across *any* AI tool:
 
 ### Available AI Systems
 
-| System | Model | Access Level |
+| System | Description | Access Level |
 |:---|:---|:---|
-| **Lovable** | Lovable AI | Free (public) |
-| **Cursor** | Cursor AI | Free (public) |
-| **Antigravity** | Custom Antigravity model | Pro required |
-| **Claude** | Anthropic Claude | Pro required |
-| **Advanced** | Gemini / GPT-4 | Elite required |
+| **Lovable** | Prompt crafted for the Lovable AI platform | Free (public) |
+| **Cursor** | Prompt crafted for Cursor AI editor | Free (public) |
+| **Antigravity** | Deep-detail prompt for the custom Antigravity AI model | Pro required |
+| **Claude** | Structured prompt optimised for Anthropic Claude | Pro required |
+| **Advanced** | 🌟 **UI HUB–designed universal prompt** — engineered by UI HUB to work seamlessly with **any AI tool**: ChatGPT, Claude, Gemini, Cursor, Copilot, Lovable, Grok, and more | Elite required |
 
 ### How AI Prompts Work
 
@@ -427,8 +427,8 @@ export const ANTIGRAVITY_PROMPTS = {
 Instead of reverse-engineering components yourself, just:
 1. Open any component in the Library
 2. Click the **AI prompt** button
-3. Choose your AI system (Lovable, Cursor, Claude, etc.)
-4. The prompt tells the AI exactly how to recreate this component in your project
+3. Choose your AI system (Lovable, Cursor, Claude, or **Advanced** for any tool)
+4. The prompt tells the AI exactly how to recreate this component in your project — no reverse-engineering needed
 
 ---
 

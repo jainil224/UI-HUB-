@@ -17,7 +17,7 @@ const PricingPage = () => {
 
     const currency = currencyMode === 'INR' ? '₹' : '$';
     const proPrice = currencyMode === 'INR' ? '99' : '4.99';
-    const elitePrice = currencyMode === 'INR' ? '199' : '7.99';
+    const elitePrice = currencyMode === 'INR' ? '399' : '7.99';
 
     const plans = [
         {
