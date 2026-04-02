@@ -145,7 +145,7 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
     `;
 
     const mailOptions = {
-      from: `"UI HUB" <${process.env.BREVO_SMTP_USER}>`,
+      from: `"UI HUB" <uihub.design@gmail.com>`,
       to: email,
       subject: 'Welcome to UI HUB 🚀',
       html: htmlContent,
