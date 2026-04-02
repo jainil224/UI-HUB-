@@ -115,7 +115,7 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
     <body>
       <div class="container">
         <div class="header">
-          <a href="https://ui-hub.vercel.app" class="logo">UI <span>HUB</span></a>
+          <a href="https://ui-hub-design.vercel.app" class="logo">UI <span>HUB</span></a>
           <p style="color: #666; font-size: 14px; margin-top: 10px;">The Home of Vibe Coding & Premium UI</p>
         </div>
         <div class="content">
@@ -127,7 +127,7 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
             Explore our library of 3D chatbots, sleek animations, and production-ready components that are ready to be dropped into your next project.
           </p>
           <div style="text-align: center; margin-top: 40px;">
-            <a href="https://ui-hub.vercel.app/library" class="cta-button">Explore Library</a>
+            <a href="https://ui-hub-design.vercel.app/library" class="cta-button">Explore Library</a>
           </div>
         </div>
         <div class="footer">

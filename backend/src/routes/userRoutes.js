@@ -20,12 +20,18 @@ router.post('/sync', async (req, res) => {
         }
 
         const userEmail = email.toLowerCase();
-        const userRef = admin.firestore().collection('users').doc(userEmail);
-        const userDoc = await userRef.get();
-
         let welcomeEmailSent = false;
-        if (userDoc.exists) {
-            welcomeEmailSent = userDoc.data().welcomeEmailSent || false;
+        let userRef = null;
+
+        try {
+            userRef = admin.firestore().collection('users').doc(userEmail);
+            const userDoc = await userRef.get();
+            if (userDoc.exists) {
+                welcomeEmailSent = userDoc.data().welcomeEmailSent || false;
+            }
+        } catch (dbError) {
+            console.warn('[Firestore] Warning: Could not access Firestore (likely missing credentials locally). Assuming email has not been sent.');
+            // welcomeEmailSent remains false
         }
 
         // Only send if not already sent
@@ -34,21 +40,33 @@ router.post('/sync', async (req, res) => {
             const result = await sendWelcomeEmail(email, name);
             
             if (result.success) {
-                await userRef.set({ 
-                    welcomeEmailSent: true,
-                    lastSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
-                    displayName: name || userDoc.data()?.displayName || ''
-                }, { merge: true });
                 welcomeEmailSent = true;
+                if (userRef) {
+                    try {
+                        await userRef.set({ 
+                            welcomeEmailSent: true,
+                            lastSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
+                            displayName: name || ''
+                        }, { merge: true });
+                    } catch (e) {
+                         console.warn('[Firestore] Could not update Firestore status.');
+                    }
+                }
             } else {
                 console.error(`[Auth] Failed to send welcome email to ${userEmail}:`, result.error);
                 // We still want to return success for the sync itself to not block the UI
             }
         } else {
             // Just update last synced
-            await userRef.set({ 
-                lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
+            if (userRef) {
+                try {
+                    await userRef.set({ 
+                        lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+                    }, { merge: true });
+                } catch (e) {
+                     console.warn('[Firestore] Could not update Firestore lastSyncedAt.');
+                }
+            }
         }
 
         res.json({ 
