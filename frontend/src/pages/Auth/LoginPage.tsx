@@ -117,10 +117,22 @@ const LoginPage = () => {
                 <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 px-8 py-10 md:px-14 lg:px-20">
                     <div className="min-h-full flex flex-col py-12 lg:py-20">
                         {/* Header Top - Shrink Proof */}
-                        <div className="flex justify-between items-center w-full mb-12 lg:mb-16 shrink-0">
-                            <Link to="/" className="hover:opacity-80 transition-opacity">
-                                <Logo showText={true} />
-                            </Link>
+                        <div className="flex justify-between items-center w-full mb-12 lg:mb-16 shrink-0 relative z-10">
+                            <div className="flex items-center gap-6">
+                                <Link to="/" className="hover:opacity-80 transition-opacity">
+                                    <Logo showText={true} />
+                                </Link>
+                                <div className="h-4 w-px bg-white/10 hidden sm:block" />
+                                <Link to="/" className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/40 hover:text-[#00FF88] transition-colors uppercase tracking-[0.2em]">
+                                    <motion.div
+                                        animate={{ x: [0, -4, 0] }}
+                                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                        <ArrowRight className="w-3 h-3 rotate-180" />
+                                    </motion.div>
+                                    Back to Home
+                                </Link>
+                            </div>
                             <Link to="/signup" className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-[10px] font-bold text-white/70 hover:text-black hover:bg-[#00FF88] hover:border-[#00FF88] transition-all uppercase tracking-wider">
                                 Create Account
                             </Link>
