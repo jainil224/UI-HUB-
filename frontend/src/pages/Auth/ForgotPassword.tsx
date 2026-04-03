@@ -10,6 +10,7 @@ import Logo from '../../components/ui/Logo';
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const [videoLoaded, setVideoLoaded] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -198,17 +199,30 @@ const ForgotPassword = () => {
                 ======================================================== */}
             <div className="hidden lg:flex lg:w-[60%] h-full relative overflow-hidden ring-1 ring-white/10 shrink-0">
                 <div className="w-full h-full relative group">
-                    <video 
+                    {/* Instant Poster Background */}
+                    <div 
+                        className="absolute inset-0 w-full h-full bg-cover bg-center z-0"
+                        style={{ backgroundImage: 'url("/assets/images/black hol.png")' }}
+                    />
+
+                    {/* Fading Video Layer */}
+                    <motion.video 
                         autoPlay 
                         loop 
                         muted 
                         playsInline
-                        className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-1000 group-hover:scale-105"
-                        src="/assets/videos/Black_hole_over_202604031858.mp4"
-                    />
+                        onLoadedData={() => setVideoLoaded(true)}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: videoLoaded ? 1 : 0 }}
+                        transition={{ duration: 1.5 }}
+                        className="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-[3000ms] group-hover:scale-105"
+                    >
+                        <source src="/assets/videos/black.mp4" type="video/mp4" />
+                        <source src="/assets/videos/Black_hole_over_202604031858.mp4" type="video/mp4" />
+                    </motion.video>
 
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/60 z-0 mix-blend-multiply" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#00FF88]/20 via-transparent to-transparent z-0 mix-blend-overlay" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/60 z-20 mix-blend-multiply" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#00FF88]/20 via-transparent to-transparent z-20 mix-blend-overlay" />
 
                     <motion.div 
                         initial={{ opacity: 0, y: 30 }}
