@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleA
 import { auth } from '../../lib/firebase';
 import { Sparkles, Mail, Lock, User, AlertCircle, Loader2, Zap, Github, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
+import { useAuth } from '../../context/AuthContext';
 
 const SignupPage = () => {
     const [name, setName] = useState('');
@@ -17,6 +18,7 @@ const SignupPage = () => {
     const [loading, setLoading] = useState(false);
     const [socialLoading, setSocialLoading] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { user } = useAuth();
 
 
 
@@ -24,10 +26,10 @@ const SignupPage = () => {
     // If the user is already authenticated (or becomes authenticated via the redirect result),
     // this effect will automatically navigate them to the home page.
     useEffect(() => {
-        if (auth?.currentUser) {
+        if (user) {
             navigate('/');
         }
-    }, [navigate]);
+    }, [user, navigate]);
 
     const handleSocialSignIn = async (providerType: 'google' | 'github') => {
         setError('');
@@ -38,23 +40,8 @@ const SignupPage = () => {
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
-                // Sync user with backend and trigger welcome email
-                try {
-                    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/sync`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: result.user.email,
-                            name: result.user.displayName || 'UI Challenger'
-                        })
-                    });
-                } catch (emailErr) {
-                    console.error('[Auth] Failed to sync user/trigger welcome email:', emailErr);
-                }
-
-                // Trigger welcome toast (New user flag)
-                sessionStorage.setItem('ui-hub-show-welcome', 'true');
-                sessionStorage.setItem('ui-hub-is-new-user', 'true');
+                // Synchronization logic is now centralized in AuthContext.tsx
+                // via onAuthStateChanged, ensuring it works even if popups hang.
                 navigate('/');
             }
         } catch (err: any) {
@@ -93,23 +80,7 @@ const SignupPage = () => {
                 displayName: name
             });
 
-            // Sync user with backend and trigger welcome email
-            try {
-                await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/sync`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: email,
-                        name: name
-                    })
-                });
-            } catch (emailErr) {
-                console.error('[Auth] Failed to sync user/trigger welcome email:', emailErr);
-            }
-
-            // Trigger welcome toast (New user flag)
-            sessionStorage.setItem('ui-hub-show-welcome', 'true');
-            sessionStorage.setItem('ui-hub-is-new-user', 'true');
+            // The sync logic and welcome toast are now centralized in AuthContext.tsx
             navigate('/');
         } catch (err: any) {
             console.error(err);

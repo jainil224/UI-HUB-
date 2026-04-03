@@ -12,6 +12,17 @@
       "destination": "/index.html"
     }
   ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin-allow-popups"
+        }
+      ]
+    }
+  ],
   "functions": {
     "api/index.js": {
       "includeFiles": "frontend/src/components/**"

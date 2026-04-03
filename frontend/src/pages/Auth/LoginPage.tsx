@@ -5,6 +5,7 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, Github
 import { auth } from '../../lib/firebase';
 import { Sparkles, Mail, Lock, AlertCircle, Loader2, Zap, Github, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ const LoginPage = () => {
     const [loading, setLoading] = useState(false);
     const [socialLoading, setSocialLoading] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { user } = useAuth();
 
 
 
@@ -21,10 +23,10 @@ const LoginPage = () => {
     // If the user is already authenticated (or becomes authenticated via the redirect result),
     // this effect will automatically navigate them to the home page.
     useEffect(() => {
-        if (auth?.currentUser) {
+        if (user) {
             navigate('/');
         }
-    }, [navigate]);
+    }, [user, navigate]);
 
     const handleSocialSignIn = async (providerType: 'google' | 'github') => {
         setError('');
@@ -35,24 +37,8 @@ const LoginPage = () => {
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
-                // Send welcome email via backend API (only if it's likely a new signup via social)
-                // Note: The backend or frontend could check if the user is truly new, 
-                // but since the trigger is manual here, we'll try to send it.
-                try {
-                    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/v1/users/send-welcome-email`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: result.user.email,
-                            name: result.user.displayName || 'UI Challenger'
-                        })
-                    });
-                } catch (emailErr) {
-                    console.error('[Auth] Failed to trigger welcome email:', emailErr);
-                }
-
-                // Trigger welcome toast for the next page load
-                sessionStorage.setItem('ui-hub-show-welcome', 'true');
+                // The sync logic and welcome toast are now handled by AuthContext.ts 
+                // via onAuthStateChanged, which is more reliable.
                 navigate('/');
             }
         } catch (err: any) {
