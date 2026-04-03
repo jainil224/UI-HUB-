@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { Github, Menu, X, Sparkles, LogOut, User as UserIcon } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import Logo from './Logo';
-import GitHubStarButton from './GitHubStarButton';
 import PlanBadge, { PlanTier } from './PlanBadge';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
@@ -191,21 +190,6 @@ const Navbar = () => {
                 <div className="relative z-10 flex items-center gap-2.5">
 
 
-                    {/* GitHub */}
-                    <a
-                        href="https://github.com/jainil224"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`hidden sm:flex items-center justify-center w-9 h-9 rounded-xl border transition-all duration-300 group ${
-                            theme === 'dark' 
-                            ? 'bg-white/[0.06] border-white/10 hover:bg-white/10 hover:border-brand-green/40' 
-                            : 'bg-black/[0.06] border-black/10 hover:bg-black/10 hover:border-[#5FA3D6]/40'
-                        }`}
-                    >
-                        <Github size={16} className={`${theme === 'dark' ? 'text-white/50' : 'text-black/50'} group-hover:text-white transition-colors`} />
-                    </a>
-
-                    <GitHubStarButton className="hidden md:flex" />
 
                     {/* Get Started / User Menu */}
                     {user ? (
@@ -399,7 +383,6 @@ const Navbar = () => {
                             ))}
                         </div>
                         <div className="flex flex-wrap gap-2.5 pt-3 border-t border-white/[0.07]">
-                            <GitHubStarButton className="flex-1 justify-center" />
                             {user ? (
                                 <button
                                     onClick={() => {

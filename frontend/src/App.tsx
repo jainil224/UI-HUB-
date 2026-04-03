@@ -13,6 +13,7 @@ const Scroll3DAnimationPage = React.lazy(() => import('./pages/Components/Scroll
 const ThreeDSliderPage = React.lazy(() => import('./pages/Components/ThreeDSliderPage'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
+import ScrollToTop from './components/ui/ScrollToTop';
 
 // Wrapper: only shows Navbar + Footer on non-library pages
 const AppShell = () => {
@@ -56,6 +57,7 @@ const AppShell = () => {
       </main>
 
       {!isLibrary && !isAuth && !isDemo && <Footer />}
+      <ScrollToTop />
     </div>
   );
 };

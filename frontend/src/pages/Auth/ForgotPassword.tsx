@@ -1,326 +1,260 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
-import {
-    Mail,
-    AlertCircle,
-    Loader2,
-    ChevronLeft,
-    ShieldCheck,
-    ArrowRight,
-    CheckCircle2,
-    KeyRound,
-} from 'lucide-react';
+import { Mail, ArrowRight, Loader2, AlertCircle, Sparkles } from 'lucide-react';
+import { formatAuthError } from '../../utils/authUtils';
+import Logo from '../../components/ui/Logo';
 
-// ─── Email format validator ───────────────────────────────────────────────────
-const isValidEmail = (email: string): boolean =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-// ─── Component ────────────────────────────────────────────────────────────────
-const ForgotPassword: React.FC = () => {
+const ForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
 
-    // ── Generic message — never reveals if the email exists (security best-practice)
-    const GENERIC_SUCCESS =
-        'If this email is registered, a reset link has been sent. Please check your inbox.';
+    // Handle global body scroll lock for this page
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleResetPassword = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
         setError('');
 
-        // ── Client-side validation
-        if (!email.trim()) {
-            setError('Please enter your email address.');
-            return;
-        }
-        if (!isValidEmail(email)) {
-            setError('Please enter a valid email address.');
-            return;
-        }
-
-        setLoading(true);
         try {
-            await sendPasswordResetEmail(auth, email.trim());
+            await sendPasswordResetEmail(auth, email);
             setSuccess(true);
-            setEmail(''); // clear input after success
         } catch (err: any) {
-            // ── Do NOT expose whether the email exists.
-            // Show generic success message even on error to prevent email enumeration.
-            console.error('[ForgotPassword] Firebase error:', err.code, err.message);
-            setSuccess(true);
-            setEmail('');
+            setError(formatAuthError(err.message) || 'Failed to send reset link. Please try again.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <main className="min-h-screen pt-20 md:pt-32 pb-10 md:pb-20 px-4 flex items-center justify-center relative overflow-hidden bg-[#020202]">
-            {/* ── Back to Login ──────────────────────────────────────────── */}
-            <Link
-                to="/login"
-                className="absolute top-8 left-8 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-white hover:bg-white/10 transition-all group"
-            >
-                <ChevronLeft size={16} className="transition-transform group-hover:-translate-x-1" />
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Back to Login</span>
-            </Link>
+        <main className="h-[100dvh] w-full flex flex-col lg:flex-row bg-[#050505] text-white font-sans overflow-hidden relative">
+            
+            {/* ========================================================
+                LEFT SIDE: Auth Form (40% Width) - INDEPENDENT SCROLL
+                ======================================================== */}
+            <div className="w-full lg:w-[40%] h-full relative z-10 bg-gradient-to-b from-[#0A0A0A] to-[#050505] flex flex-col overflow-hidden">
+                
+                {/* Scroll Edge Fade Masks */}
+                <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent z-20 pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent z-20 pointer-events-none" />
 
-            {/* ── Ambient background glows ───────────────────────────────── */}
-            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-brand-green/10 blur-[150px] rounded-full animate-pulse" />
-            <div
-                className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/5 blur-[150px] rounded-full animate-pulse"
-                style={{ animationDelay: '2s' }}
-            />
-            <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-20 mix-blend-overlay" />
+                {/* Background Accent */}
+                <div className="fixed top-0 left-0 w-[400px] h-[400px] bg-[#00FF88]/5 blur-[120px] rounded-full pointer-events-none z-0" />
+                
+                {/* Internal Scrollable Container */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 px-8 py-10 md:px-14 lg:px-20">
+                    <div className="min-h-full flex flex-col py-12 lg:py-20">
+                        {/* Header Top - Shrink Proof */}
+                        <div className="flex justify-between items-center w-full mb-12 lg:mb-16 shrink-0">
+                            <Link to="/" className="hover:opacity-80 transition-opacity">
+                                <Logo showText={true} />
+                            </Link>
+                            <Link to="/login" className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-[10px] font-bold text-white/70 hover:text-black hover:bg-[#00FF88] hover:border-[#00FF88] transition-all uppercase tracking-wider">
+                                Remembered it? Log In
+                            </Link>
+                        </div>
 
-            {/* ── Card ───────────────────────────────────────────────────── */}
-            <div className="w-full max-w-lg relative z-10">
-                {/* Header */}
-                <div className="text-center mb-12">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full bg-brand-green/10 border border-brand-green/20 text-brand-green text-[10px] font-black uppercase tracking-[0.3em] mb-6"
-                    >
-                        <ShieldCheck size={14} />
-                        <span>Secure Recovery</span>
-                    </motion.div>
-
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1, type: 'spring', damping: 20 }}
-                        className="text-4xl md:text-6xl font-display font-black mb-4 tracking-tighter leading-tight"
-                    >
-                        RESET YOUR{' '}
-                        <span className="text-brand-green text-glow">PASSWORD</span>
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.2 }}
-                        className="text-white/40 font-medium text-base md:text-lg leading-relaxed max-w-sm md:max-w-md mx-auto"
-                    >
-                        Enter the email linked to your account and we'll send a secure reset
-                        link straight to your inbox.
-                    </motion.p>
-                </div>
-
-                {/* Glass Card */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="glass rounded-[2rem] md:rounded-[3rem] p-2 md:p-4 border border-white/5 bg-[#080808]/60 backdrop-blur-3xl shadow-[0_30px_80px_rgba(0,0,0,0.4)]"
-                >
-                    <div className="p-6 md:p-8">
-                        <AnimatePresence mode="wait">
-                            {success ? (
-                                /* ── Success State ─────────────────────────────── */
-                                <motion.div
-                                    key="success"
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    exit={{ opacity: 0, scale: 0.95 }}
-                                    className="flex flex-col items-center text-center py-8 gap-6"
-                                >
-                                    {/* Animated checkmark ring */}
+                        {/* Main Content Area - Center or Scroll */}
+                        <div className="flex-1 flex flex-col justify-center w-full max-w-[480px] mx-auto">
+                            <AnimatePresence mode="wait">
+                                {success ? (
                                     <motion.div
-                                        initial={{ scale: 0 }}
-                                        animate={{ scale: 1 }}
-                                        transition={{ type: 'spring', damping: 15, stiffness: 200 }}
-                                        className="relative w-24 h-24 flex items-center justify-center"
-                                    >
-                                        <div className="absolute inset-0 rounded-full bg-brand-green/10 border border-brand-green/30 animate-ping" />
-                                        <div className="relative w-20 h-20 rounded-full bg-brand-green/10 border border-brand-green/30 flex items-center justify-center">
-                                            <CheckCircle2 size={40} className="text-brand-green" />
-                                        </div>
-                                    </motion.div>
-
-                                    <div className="space-y-2">
-                                        <h2 className="text-2xl font-display font-black text-white tracking-tight">
-                                            Check Your Inbox
-                                        </h2>
-                                        <p className="text-white/50 text-sm leading-relaxed max-w-[280px]">
-                                            {GENERIC_SUCCESS}
-                                        </p>
-                                    </div>
-
-                                    {/* Tips */}
-                                    <div className="w-full p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-left space-y-2">
-                                        {[
-                                            'Check your spam / junk folder',
-                                            'The link expires after 1 hour',
-                                            'Request a new link if needed',
-                                        ].map((tip) => (
-                                            <div key={tip} className="flex items-center gap-2 text-white/30 text-xs font-medium">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-brand-green/60 shrink-0" />
-                                                {tip}
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {/* Actions */}
-                                    <div className="w-full flex flex-col sm:flex-row gap-3 pt-2">
-                                        <button
-                                            onClick={() => setSuccess(false)}
-                                            className="flex-1 py-4 rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] text-white/50 hover:text-white font-black text-[10px] uppercase tracking-widest transition-all"
-                                        >
-                                            Send Again
-                                        </button>
-                                        <Link
-                                            to="/login"
-                                            className="group flex-1 flex items-center justify-center gap-2 py-4 rounded-2xl bg-brand-green text-black font-black text-[10px] uppercase tracking-widest hover:shadow-[0_0_40px_rgba(0,255,0,0.3)] hover:scale-[1.01] active:scale-[0.98] transition-all"
-                                        >
-                                            Back to Login
-                                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                                        </Link>
-                                    </div>
-                                </motion.div>
-                            ) : (
-                                /* ── Form State ──────────────────────────────── */
-                                <motion.form
-                                    key="form"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    onSubmit={handleSubmit}
-                                    className="space-y-6"
-                                >
-                                    {/* Icon Badge */}
-                                    <motion.div
-                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        key="success"
+                                        initial={{ opacity: 0, scale: 0.95 }}
                                         animate={{ opacity: 1, scale: 1 }}
-                                        transition={{ delay: 0.35 }}
-                                        className="flex justify-center mb-2"
+                                        className="text-center space-y-8"
                                     >
-                                        <div className="w-16 h-16 rounded-2xl bg-brand-green/10 border border-brand-green/20 flex items-center justify-center">
-                                            <KeyRound size={28} className="text-brand-green" />
+                                        <div className="relative inline-block">
+                                            <div className="absolute inset-0 bg-[#00FF88]/20 blur-2xl rounded-full" />
+                                            <div className="relative bg-[#00FF88] w-24 h-24 rounded-full flex items-center justify-center mx-auto shadow-[0_0_40px_rgba(0,255,136,0.5)]">
+                                                <Mail size={40} className="text-black" />
+                                            </div>
                                         </div>
-                                    </motion.div>
 
-                                    {/* Error alert */}
-                                    <AnimatePresence>
-                                        {error && (
-                                            <motion.div
-                                                initial={{ opacity: 0, height: 0 }}
-                                                animate={{ opacity: 1, height: 'auto' }}
-                                                exit={{ opacity: 0, height: 0 }}
-                                                className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium flex items-start gap-3"
+                                        <div className="space-y-4">
+                                            <h2 className="text-4xl font-black text-white tracking-tight">
+                                                Check Your Inbox
+                                            </h2>
+                                            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                                                <p className="text-white/60 text-lg leading-relaxed">
+                                                    We've sent a recovery link to:
+                                                    <br />
+                                                    <span className="text-[#00FF88] font-bold break-all">{email}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            {/* Guidance Box for Spam */}
+                                            <div className="bg-[#00FF88]/5 border border-[#00FF88]/20 rounded-2xl p-6 text-left relative overflow-hidden group">
+                                                <div className="absolute top-0 left-0 w-1 h-full bg-[#00FF88]/40" />
+                                                <p className="text-[#00FF88] text-sm font-bold flex items-center gap-2 mb-2">
+                                                    <AlertCircle size={16} />
+                                                    USER GUIDANCE
+                                                </p>
+                                                <p className="text-white/70 text-sm leading-relaxed">
+                                                    Didn't receive the email? Make sure to check your <span className="text-white font-bold underline decoration-[#00FF88]/40">SPAM</span> folder. Sometimes these automated keys get filtered!
+                                                </p>
+                                            </div>
+
+                                            <button
+                                                onClick={() => setSuccess(false)}
+                                                className="w-full py-4 text-white/40 hover:text-[#00FF88] transition-colors text-sm font-bold uppercase tracking-widest"
                                             >
-                                                <AlertCircle size={16} className="shrink-0 mt-0.5" />
-                                                <span>{error}</span>
-                                            </motion.div>
-                                        )}
-                                    </AnimatePresence>
-
-                                    {/* Email field */}
-                                    <motion.div
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: 0.5 }}
-                                        className="space-y-3"
-                                    >
-                                        <label
-                                            htmlFor="forgot-email"
-                                            className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 ml-1"
-                                        >
-                                            Registered Email Address
-                                        </label>
-                                        <div className="relative group">
-                                            <Mail
-                                                className="absolute left-5 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-brand-green transition-colors"
-                                                size={20}
-                                            />
-                                            <input
-                                                id="forgot-email"
-                                                type="email"
-                                                value={email}
-                                                onChange={(e) => {
-                                                    setEmail(e.target.value);
-                                                    if (error) setError('');
-                                                }}
-                                                placeholder="johndoe@example.com"
-                                                autoComplete="email"
-                                                disabled={loading}
-                                                className="w-full bg-[#0a0a0a] border border-white/5 rounded-2xl py-5 pl-14 pr-6 text-white text-sm placeholder:text-white/10 focus:outline-none focus:border-brand-green/30 focus:bg-[#0c0c0c] focus:ring-1 focus:ring-brand-green/20 transition-all shadow-inner disabled:opacity-50"
-                                            />
-                                            <div className="absolute inset-0 rounded-2xl border border-brand-green/0 group-focus-within:border-brand-green/20 pointer-events-none transition-all" />
+                                                Back to Request Access
+                                            </button>
                                         </div>
                                     </motion.div>
-
-                                    {/* Submit button */}
-                                    <motion.button
+                                ) : (
+                                    <motion.div
+                                        key="form"
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: 0.6 }}
-                                        type="submit"
-                                        disabled={loading}
-                                        className="group relative w-full bg-brand-green text-black font-black py-5 rounded-2xl shadow-[0_15px_40px_rgba(0,255,0,0.2)] hover:shadow-[0_0_50px_rgba(0,255,0,0.4)] hover:scale-[1.01] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-3 mt-4 uppercase tracking-widest text-xs overflow-hidden"
+                                        exit={{ opacity: 0, y: -20 }}
+                                        transition={{ duration: 0.5 }}
                                     >
-                                        {/* Shimmer sweep */}
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-                                        {loading ? (
-                                            <>
-                                                <Loader2 size={18} className="animate-spin" />
-                                                <span>Sending Reset Link…</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <span>Send Reset Link</span>
-                                                <ArrowRight
-                                                    size={16}
-                                                    className="group-hover:translate-x-1 transition-transform"
-                                                />
-                                            </>
-                                        )}
-                                    </motion.button>
+                                        <div className="mb-12">
+                                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#00FF88]/10 border border-[#00FF88]/20 text-[#00FF88] text-[10px] font-black uppercase tracking-widest mb-6">
+                                                <Sparkles size={10} /> Password Recovery
+                                            </div>
+                                            <h1 className="text-5xl lg:text-6xl font-black mb-4 tracking-tighter">
+                                                RESET <span className="text-[#00FF88] drop-shadow-[0_0_20px_rgba(0,255,136,0.5)]">ACCESS</span>
+                                            </h1>
+                                            <p className="text-white/40 text-base font-medium">
+                                                Enter your email and we'll transmit a secure recovery uplink.
+                                            </p>
+                                        </div>
 
-                                    {/* Footer links */}
-                                    <div className="pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-3 text-center">
-                                        <p className="text-white/30 text-[10px] font-black uppercase tracking-[0.2em]">
-                                            Remember your password?
-                                        </p>
-                                        <Link
-                                            to="/login"
-                                            className="inline-flex items-center gap-2 text-brand-green hover:text-white transition-colors group px-5 py-2.5 rounded-xl bg-brand-green/5 border border-brand-green/10 hover:bg-brand-green/10"
-                                        >
-                                            <span className="text-[10px] font-black uppercase tracking-widest">
-                                                Back to Login
-                                            </span>
-                                            <ArrowRight
-                                                size={12}
-                                                className="group-hover:translate-x-1 transition-transform"
-                                            />
-                                        </Link>
-                                    </div>
-                                </motion.form>
-                            )}
-                        </AnimatePresence>
+                                        <form onSubmit={handleResetPassword} className="space-y-6">
+                                            <AnimatePresence>
+                                                {error && (
+                                                    <motion.div
+                                                        initial={{ opacity: 0, height: 0 }}
+                                                        animate={{ opacity: 1, height: 'auto' }}
+                                                        className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-3"
+                                                    >
+                                                        <AlertCircle size={18} />
+                                                        {error}
+                                                    </motion.div>
+                                                )}
+                                            </AnimatePresence>
+
+                                            <div className="space-y-2">
+                                                <label className="text-[11px] font-bold uppercase tracking-wider text-white/40 ml-1">Registered Email Address</label>
+                                                <div className="relative group">
+                                                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-[#00FF88] transition-colors z-10 pointer-events-none" size={18} />
+                                                    <input
+                                                        type="email"
+                                                        disabled={loading}
+                                                        required
+                                                        value={email}
+                                                        onChange={(e) => setEmail(e.target.value)}
+                                                        placeholder="hello@ui-hub.com"
+                                                        className="w-full bg-white/[0.03] border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-base text-white placeholder:text-white/20 focus:outline-none focus:border-[#00FF88]/50 focus:bg-white/[0.05] focus:ring-1 focus:ring-[#00FF88]/20 transition-all shadow-[inset_0_1px_2px_rgba(255,255,255,0.02)] backdrop-blur-sm relative z-0 disabled:opacity-50"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <motion.button
+                                                whileHover={{ scale: 1.01 }}
+                                                whileTap={{ scale: 0.99 }}
+                                                type="submit"
+                                                disabled={loading}
+                                                className="group relative w-full bg-[#00FF88] text-black font-black py-5 rounded-2xl shadow-[0_10px_30px_rgba(0,255,136,0.3)] hover:shadow-[0_15px_40px_rgba(0,255,136,0.4)] transition-all disabled:opacity-50 uppercase tracking-widest text-sm flex items-center justify-center gap-3 overflow-hidden"
+                                            >
+                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
+                                                {loading ? <Loader2 className="animate-spin" /> : (
+                                                    <>Request Recovery <ArrowRight size={18} /></>
+                                                )}
+                                            </motion.button>
+                                        </form>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* Footer */}
+                        <div className="w-full mt-auto pt-12 text-center lg:text-left shrink-0">
+                            <p className="text-[10px] text-white/20 uppercase tracking-widest">
+                                &copy; 2026 UI HUB. All rights reserved.
+                            </p>
+                        </div>
                     </div>
-                </motion.div>
+                </div>
+            </div>
 
-                {/* Security note */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                    className="text-center text-white/15 text-[10px] font-medium mt-6 tracking-wide"
-                >
-                    🔒 Secured by Firebase Authentication — UI HUB never stores your password.
-                </motion.p>
+            {/* ========================================================
+                RIGHT SIDE: Cinematic Video Overlay (60% Width) - LOCKED
+                ======================================================== */}
+            <div className="hidden lg:flex lg:w-[60%] h-full relative overflow-hidden ring-1 ring-white/10 shrink-0">
+                <div className="w-full h-full relative group">
+                    <video 
+                        autoPlay 
+                        loop 
+                        muted 
+                        playsInline
+                        className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-1000 group-hover:scale-105"
+                        src="/assets/videos/Black_hole_over_202604031858.mp4"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/60 z-0 mix-blend-multiply" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#00FF88]/20 via-transparent to-transparent z-0 mix-blend-overlay" />
+
+                    <motion.div 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4, duration: 0.8, ease: "easeOut" }}
+                        className="absolute bottom-12 left-12 z-10 max-w-lg"
+                    >
+                        <div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-3xl p-8 shadow-[0_20px_60px_rgba(0,0,0,0.6)] relative overflow-hidden">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                            
+                            <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
+                                Access Locked — Recovery Required
+                            </h2>
+                            <p className="text-white/80 text-sm leading-snug mb-4 font-medium">
+                                Lost your credentials? No problem.<br/>
+                                Our secure recovery uplink will bypass the lock and get you back into the UI HUB ecosystem instantly.
+                            </p>
+                            
+                            <div className="space-y-2 mb-6 text-sm text-white/60">
+                                <p>Encrypted recovery links</p>
+                                <p>One-tap account bypass</p>
+                                <p>Priority security support</p>
+                            </div>
+                            
+                            <p className="text-[#00FF88] text-sm font-bold mb-6">
+                                Request recovery to unlock your access.
+                            </p>
+                        </div>
+                    </motion.div>
+                </div>
             </div>
 
             <style dangerouslySetInnerHTML={{
                 __html: `
-                .text-glow {
-                    text-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+                .custom-scrollbar::-webkit-scrollbar {
+                    width: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: transparent;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: rgba(255,255,255,0.2);
                 }
             `}} />
         </main>
