@@ -256,6 +256,21 @@ const LoginPage = () => {
                                 </div>
                             </motion.div>
 
+                            {/* Forgot Password link */}
+                            <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.68 }}
+                                className="flex justify-end"
+                            >
+                                <Link
+                                    to="/forgot-password"
+                                    className="text-[10px] font-black uppercase tracking-[0.15em] text-white/30 hover:text-brand-green transition-colors duration-200"
+                                >
+                                    Forgot Password?
+                                </Link>
+                            </motion.div>
+
                             <motion.button
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}

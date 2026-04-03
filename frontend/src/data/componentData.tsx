@@ -29,6 +29,7 @@ const HoodieBot = React.lazy(() => import('../components/ui/HoodieBot'));
 const Smilo = React.lazy(() => import('../components/ui/Smilo'));
 const Tripy = React.lazy(() => import('../components/ui/Tripy'));
 const Aiva = React.lazy(() => import('../components/ui/Aiva'));
+const LaptopBot = React.lazy(() => import('../components/ui/LaptopBot'));
 /* const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem')); */
 
 
@@ -1265,6 +1266,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'smilo': Smilo,
     'tripy': Tripy,
     'aiva': Aiva,
+    'laptopbot': LaptopBot,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2252,5 +2254,14 @@ export const Demo = () => (
         code: `import Aiva from '@/components/ui/Aiva';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px]">\n      <Aiva />\n    </div>\n  );\n}`,
         vibePrompt: "A premium floating humanoid AI assistant robot with a pearl-white round head, glowing cyan eyes, and a gentle smile. Features a holographic chest screen with animated data bars and a blinking cursor. The upper body is fully articulated with shoulder pads, silver arms, and a sleek waist base. Built with Framer Motion for 3-axis mouse-reactive head rotation, idle floating, and wave animations. Plays warm C-major 7th harmonic chord sound effects on click."
     },
+    {
+        id: "laptopbot",
+        title: "Laptop",
+        category: "3d-chatbot",
+        isPremium: false,
+        preview: renderComponent("laptopbot", "LaptopBot"),
+        code: `import LaptopBot from '@/components/ui/LaptopBot';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px]">\n      <LaptopBot />\n    </div>\n  );\n}`,
+        vibePrompt: "A cute, futuristic AI chatbot interface designed as an animated 3D laptop robot. Features a glossy dark gray laptop body with neon cyan accents, wheels/treads, and a screen that displays an animated pixel face whose eyes track the mouse via Framer Motion. Includes synth beep sound effects, floating idle animation, and a glassmorphism chat bubble."
+    }
 ];
 

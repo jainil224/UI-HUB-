@@ -1,0 +1,342 @@
+/* ====================================================
+   LAPTOP BOT  –  Framer Motion robot, 3D Laptop design
+   ==================================================== */
+
+.lb-root {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  overflow: visible;
+  filter:
+    drop-shadow(0 0 25px rgba(34, 211, 238, 0.2))
+    drop-shadow(0 30px 25px rgba(0, 0, 0, 0.6));
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+/* ── SCREEN / HEAD ─────────────────────────────────────── */
+.lb-screen-wrap {
+  position: relative;
+  width: 140px;
+  height: 100px;
+  background: radial-gradient(
+    circle at 50% 0%,
+    #2a3b4c 0%,
+    #17202a 50%,
+    #0b1016 100%
+  );
+  border-radius: 12px;
+  border: 2px solid #3b4d61;
+  box-shadow:
+    inset 0 4px 6px rgba(255, 255, 255, 0.1),
+    0 8px 30px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(34, 211, 238, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  transform-style: preserve-3d;
+}
+
+/* Screen Glass 
+===================== */
+.lb-glass {
+  position: absolute;
+  inset: 4px;
+  background: #000000;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  box-shadow: inset 0 0 20px rgba(34, 211, 238, 0.05);
+}
+
+.lb-shine {
+  position: absolute;
+  top: -10px;
+  left: -20px;
+  width: 150%;
+  height: 40px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 100%
+  );
+  transform: rotate(-10deg);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Face Elements
+===================== */
+.lb-face {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  z-index: 5;
+}
+
+.lb-eyes {
+  display: flex;
+  gap: 24px;
+  margin-top: 10px;
+}
+
+.lb-eye {
+  width: 16px;
+  height: 16px;
+  background: #22d3ee;
+  border-radius: 50%;
+  box-shadow: 
+    0 0 10px #22d3ee, 
+    0 0 20px rgba(34, 211, 238, 0.6),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.lb-eye::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 5px;
+  height: 5px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #ffffff;
+}
+
+.lb-mouth {
+  width: 20px;
+  height: 10px;
+  border-bottom: 3px solid #22d3ee;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -2px rgba(34, 211, 238, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* Neon Accent Lines */
+.lb-neon-line {
+  position: absolute;
+  background: #22d3ee;
+  box-shadow: 0 0 8px #22d3ee, 0 0 15px rgba(34, 211, 238, 0.5);
+}
+.lb-neon-left {
+  top: 20%;
+  left: 6px;
+  width: 2px;
+  height: 60%;
+  opacity: 0.8;
+}
+.lb-neon-right {
+  top: 20%;
+  right: 6px;
+  width: 2px;
+  height: 60%;
+  opacity: 0.8;
+}
+
+/* ── HINGE ─────────────────────────────────────── */
+.lb-hinge {
+  width: 80px;
+  height: 12px;
+  background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+  border-radius: 6px;
+  margin-top: -6px;
+  z-index: 2;
+  border: 1px solid #374151;
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.1),
+    0 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+/* ── BASE / KEYBOARD ───────────────────────────── */
+.lb-base {
+  width: 160px;
+  height: 80px;
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 4px 4px 10px 10px;
+  border: 1px solid #334155;
+  border-top: none;
+  box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.4), 0 15px 30px rgba(0, 0, 0, 0.6);
+  position: relative;
+  z-index: 1;
+  margin-top: -5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px;
+  gap: 6px;
+  transform-origin: top center;
+  transform: perspective(300px) rotateX(45deg);
+}
+
+.lb-keyboard {
+  width: 140px;
+  height: 44px;
+  background: #000;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.05);
+  margin-bottom: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* RGB Animated Background Underneath Keys */
+.lb-keyboard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8a2be2, #ff00ff, #ff0000
+  );
+  background-size: 200% 100%;
+  animation: lb-rgb-wave 4s linear infinite;
+  opacity: 0.4;
+  transition: opacity 0.2s ease, animation-duration 0.2s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.lb-keyboard.active::before {
+  opacity: 1 !important;
+  animation-duration: 0.5s !important; /* Waves fast on click! */
+}
+
+@keyframes lb-rgb-wave {
+  0% { background-position: 200% 0; }
+  100% { background-position: 0 0; }
+}
+
+.lb-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 2px;
+  width: 100%;
+  flex: 1; /* Fill height */
+  z-index: 1; /* Above RGB */
+}
+
+.lb-key {
+  height: 100%;
+  background: rgba(15, 23, 42, 0.9); /* Slightly transparent to let RGB seep through */
+  border-radius: 1px;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.2),
+    0 1px 2px rgba(0,0,0,0.6);
+  position: relative;
+  transition: all 0.1s;
+}
+
+.lb-keyboard.active .lb-key {
+  background: rgba(15, 23, 42, 0.5); /* Becomes more transparent on click for bright flash! */
+  transform: translateY(1px);
+  box-shadow: inset 0 0 2px rgba(0,0,0,0.8);
+}
+
+.lb-touchpad {
+  width: 44px;
+  height: 10px;
+  background: linear-gradient(180deg, #1e293b, #0f172a);
+  border-radius: 2px;
+  border: 0.5px solid #334155;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.6);
+}
+
+/* ── TRACKS / WHEELS ───────────────────────────── */
+.lb-wheels-wrap {
+  display: flex;
+  justify-content: space-between;
+  width: 104px;
+  margin-top: -26px; /* Tuck wheels higher due to tilted base */
+  position: relative;
+  z-index: 0;
+}
+
+.lb-wheel {
+  width: 20px;
+  height: 12px;
+  background: #111827;
+  border-radius: 4px;
+  border: 2px solid #334155;
+  box-shadow: 
+    0 5px 10px rgba(0,0,0,0.8),
+    inset 0 0 5px rgba(34, 211, 238, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.lb-wheel-tread {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 4px,
+    #334155 4px,
+    #334155 6px
+  );
+  animation: lb-tread 2s linear infinite;
+}
+
+@keyframes lb-tread {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-10px); }
+}
+
+/* ── SHADOW ────────────────────────────────────── */
+.lb-shadow {
+  width: 120px;
+  height: 15px;
+  background: radial-gradient(ellipse, rgba(34, 211, 238, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  margin-top: 8px;
+  animation: lb-shadow-pulse 3.5s ease-in-out infinite;
+}
+
+@keyframes lb-shadow-pulse {
+  0%, 100% { opacity: 0.5; transform: scaleX(1); }
+  50%       { opacity: 0.85; transform: scaleX(0.85); }
+}
+
+/* ── CHAT BUBBLE ───────────────────────────────── */
+.lb-chat-bubble {
+  padding: 10px 16px;
+  border-radius: 16px 16px 16px 4px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  backdrop-filter: blur(12px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 
+    0 10px 25px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(34, 211, 238, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lb-type-dot {
+  width: 5px;
+  height: 5px;
+  background: #22d3ee;
+  border-radius: 50%;
+  box-shadow: 0 0 5px #22d3ee;
+}

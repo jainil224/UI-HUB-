@@ -8,6 +8,7 @@ const LibraryPage = React.lazy(() => import('./pages/LibraryPage/LibraryPage'));
 const FavoritesPage = React.lazy(() => import('./pages/Dashboard/FavoritesPage'));
 const LoginPage = React.lazy(() => import('./pages/Auth/LoginPage'));
 const SignupPage = React.lazy(() => import('./pages/Auth/SignupPage'));
+const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
 const Scroll3DAnimationPage = React.lazy(() => import('./pages/Components/Scroll3DAnimationPage'));
 const ThreeDSliderPage = React.lazy(() => import('./pages/Components/ThreeDSliderPage'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
@@ -18,7 +19,7 @@ const AppShell = () => {
   const { theme } = useTheme();
   const location = useLocation();
   const isLibrary = location.pathname.startsWith('/library');
-  const isAuth = location.pathname === '/login' || location.pathname === '/signup';
+  const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
   const isDemo = location.pathname.startsWith('/demo');
 
   return (
@@ -45,6 +46,7 @@ const AppShell = () => {
             <Route path="/favorites" element={<FavoritesPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
             <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
