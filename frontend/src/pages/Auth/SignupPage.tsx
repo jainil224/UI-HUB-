@@ -19,12 +19,19 @@ const SignupPage = () => {
     const [loading, setLoading] = useState(false);
     const [socialLoading, setSocialLoading] = useState<string | null>(null);
     const [videoLoaded, setVideoLoaded] = useState(false);
+    const videoRef = React.useRef<HTMLVideoElement>(null);
     const navigate = useNavigate();
     const { user } = useAuth();
 
     // Handle global body scroll lock for this page
     useEffect(() => {
         document.body.style.overflow = 'hidden';
+
+        // Immediate check if video is already ready (cached)
+        if (videoRef.current && videoRef.current.readyState >= 3) {
+            setVideoLoaded(true);
+        }
+
         return () => {
             document.body.style.overflow = 'unset';
         };
@@ -374,14 +381,15 @@ const SignupPage = () => {
 
                     {/* Fading Video Layer */}
                     <motion.video 
+                        ref={videoRef}
                         autoPlay 
                         loop 
                         muted 
                         playsInline
-                        onLoadedData={() => setVideoLoaded(true)}
+                        onPlaying={() => setVideoLoaded(true)}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: videoLoaded ? 1 : 0 }}
-                        transition={{ duration: 1.5 }}
+                        transition={{ duration: 1 }}
                         className="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-[3000ms] group-hover:scale-105"
                     >
                         <source src="/assets/videos/black.mp4" type="video/mp4" />
