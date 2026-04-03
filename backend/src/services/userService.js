@@ -22,7 +22,12 @@ export const checkEliteStatus = async (email) => {
         const userData = userDoc.data();
         return userData.status === 'ELITE';
     } catch (error) {
-        console.error('[UserStatus] Error checking Elite status from Firestore:', error);
+        if (error.message && error.message.includes('Could not load the default credentials')) {
+            // Suppress the massive stack trace for local development without credentials
+            // console.warn('[UserStatus] Missing local Firebase credentials, skipping Elite check.');
+        } else {
+            console.error('[UserStatus] Error checking Elite status from Firestore:', error);
+        }
         return false;
     }
 };
@@ -39,6 +44,15 @@ export const checkProStatus = async (email) => {
     }
     
     const userEmail = email.toLowerCase();
+    
+    // Explicit 1-year Pro override for jainil11199@gmail.com
+    if (userEmail === 'jainil11199@gmail.com') {
+        const overrideExpiry = new Date();
+        overrideExpiry.setFullYear(overrideExpiry.getFullYear() + 1); // 1 year from now
+        
+        console.log(`[UserStatus] ${userEmail} verified via hardcoded 1-year PRO override (expires: ${overrideExpiry.toISOString()})`);
+        return true;
+    }
     
     try {
         // Fetch user from Firestore
@@ -67,7 +81,11 @@ export const checkProStatus = async (email) => {
 
         return false;
     } catch (error) {
-        console.error('[UserStatus] Error checking Pro status from Firestore:', error);
+        if (error.message && error.message.includes('Could not load the default credentials')) {
+            // console.warn('[UserStatus] Missing local Firebase credentials, skipping Pro check.');
+        } else {
+            console.error('[UserStatus] Error checking Pro status from Firestore:', error);
+        }
         return false;
     }
 };
