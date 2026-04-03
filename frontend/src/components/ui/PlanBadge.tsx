@@ -45,18 +45,18 @@ const BADGE_CONFIG = {
 const SIZE_CONFIG = {
     sm: {
         container: 'px-1.5 py-0.5 gap-0.5 rounded-md',
-        text: 'text-[7px]',
-        icon: 6,
+        text: 'text-[9px]',
+        icon: 8,
     },
     md: {
         container: 'px-2 py-1 gap-1 rounded-lg',
-        text: 'text-[9px]',
-        icon: 9,
+        text: 'text-[11px]',
+        icon: 12,
     },
     lg: {
         container: 'px-3 py-1.5 gap-1.5 rounded-xl',
-        text: 'text-[11px]',
-        icon: 12,
+        text: 'text-[13px]',
+        icon: 14,
     },
 };
 

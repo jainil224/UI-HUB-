@@ -212,7 +212,7 @@ const Navbar = () => {
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className={`relative flex items-center gap-1 md:gap-1.5 p-1 pr-1.5 md:pr-2 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
+                            className={`relative hidden md:flex items-center gap-1 md:gap-1.5 p-1 pr-1.5 md:pr-2 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
                                 isElite
                                     ? 'border-blue-500/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]'
                                     : isPro
@@ -329,7 +329,10 @@ const Navbar = () => {
                     >
                         {/* ── User Profile (Mobile) ── */}
                         {user && (
-                            <div className={`p-4 rounded-xl border border-white/5 bg-white/[0.02] relative overflow-hidden transition-all duration-500 mb-2 ${
+                            <Link 
+                                to="/favorites" 
+                                onClick={() => setIsOpen(false)}
+                                className={`block p-4 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] relative overflow-hidden transition-all duration-500 mb-2 group/mobile-profile ${
                                 isElite ? 'border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]' : 
                                 isPro ? 'border-brand-green/20 shadow-[0_0_20px_rgba(0,255,0,0.1)]' : ''
                             }`}>
@@ -340,7 +343,7 @@ const Navbar = () => {
                                     <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-brand-green/10 via-transparent to-brand-green/5 opacity-50" />
                                 ) : null}
 
-                                <div className="flex items-center gap-4 relative z-10">
+                                <div className="flex items-center gap-4 relative z-10 w-full">
                                     {/* Avatar */}
                                     <div className={`shrink-0 w-12 h-12 rounded-xl overflow-hidden border ${
                                         isElite ? 'border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 
@@ -356,19 +359,23 @@ const Navbar = () => {
                                     </div>
                                     
                                     {/* Name & Plan info */}
-                                    <div className="flex flex-col gap-0.5 min-w-0">
+                                    <div className="flex flex-col gap-0.5 min-w-0 flex-1">
                                         <span className={`text-sm font-black tracking-tight truncate ${
                                             isElite ? 'text-blue-400' : isPro ? 'text-brand-green' : 'text-white'
                                         }`}>
                                             {user.displayName || 'Authorized Member'}
                                         </span>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[10px] text-white/40 font-medium">{user.email}</span>
-                                            <PlanBadge tier={planTier} size="sm" showIcon animated />
+                                            <span className="text-[10px] text-white/40 font-medium truncate">{user.email}</span>
+                                            <PlanBadge tier={planTier} size="sm" showIcon animated className="shrink-0" />
                                         </div>
                                     </div>
+                                    
+                                    <div className="shrink-0 pl-1 text-[9px] font-bold text-white/30 group-hover/mobile-profile:text-white/70 uppercase tracking-wider flex items-center justify-center transition-colors">
+                                        Profile
+                                    </div>
                                 </div>
-                            </div>
+                            </Link>
                         )}
 
                         <div className="flex flex-col gap-1.5">
