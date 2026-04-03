@@ -368,7 +368,6 @@ const LoginPage = () => {
                         className="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-[3000ms] group-hover:scale-105"
                     >
                         <source src="/assets/videos/black.mp4" type="video/mp4" />
-                        <source src="/assets/videos/Black_hole_over_202604031858.mp4" type="video/mp4" />
                     </motion.video>
 
                     <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-black/60 z-20 mix-blend-multiply" />
