@@ -223,6 +223,12 @@ const RobotFigure: React.FC<{
                                         transition: 'all 0.15s ease, background 0.3s, box-shadow 0.3s',
                                     }} />
                                 ))}
+                                {/* Added cute smile */}
+                                <div style={{ position: 'absolute', bottom: s(6), left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: s(3) }}>
+                                    <div style={{ width: s(2.5), height: s(2.5), borderRadius: '50%', background: eyeColor, boxShadow: eyeGlow, opacity: 0.8 }} />
+                                    <div style={{ width: s(2.5), height: s(2.5), borderRadius: '50%', background: eyeColor, boxShadow: eyeGlow, opacity: 0.8, marginTop: s(1.5) }} />
+                                    <div style={{ width: s(2.5), height: s(2.5), borderRadius: '50%', background: eyeColor, boxShadow: eyeGlow, opacity: 0.8 }} />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -487,10 +493,6 @@ const HoodieBot: React.FC = () => {
             }}>
 
 
-                {/* Decorative corner brackets around bot area */}
-                <div style={{ position: 'absolute', top: -16, right: -16, width: 20, height: 20, borderTop: '2px solid rgba(255,68,68,0.55)', borderRight: '2px solid rgba(255,68,68,0.55)', animation: 'hb-bracket-flash 2.5s ease-in-out infinite', borderRadius: '0 4px 0 0' }} />
-                <div style={{ position: 'absolute', bottom: -16, left: -16, width: 20, height: 20, borderBottom: '2px solid rgba(255,68,68,0.55)', borderLeft: '2px solid rgba(255,68,68,0.55)', animation: 'hb-bracket-flash 2.5s ease-in-out infinite 1.2s', borderRadius: '0 0 0 4px' }} />
-                <div style={{ position: 'absolute', top: -16, left: -16, width: 20, height: 20, borderTop: '2px solid rgba(96,165,250,0.35)', borderLeft: '2px solid rgba(96,165,250,0.35)', animation: 'hb-bracket-flash 3s ease-in-out infinite 0.6s', borderRadius: '4px 0 0 0' }} />
 
                 {/* Thinking bubble — visible by default */}
                 {isThinking && !showMsg && (

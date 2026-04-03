@@ -167,17 +167,21 @@ const AivaFigure: React.FC<{
                         />
                     </motion.div>
 
-                    {/* Smile */}
+                    {/* Cute, reactive smile */}
                     <motion.div
                         className="av-smile"
                         animate={{
                             boxShadow: [
                                 `0 2px 5px ${eyeCol}55`,
-                                `0 2px 10px ${eyeCol}aa`,
+                                `0 2px 14px ${eyeCol}`,
                                 `0 2px 5px ${eyeCol}55`,
                             ]
                         }}
-                        style={{ borderColor: eyeCol, transition: 'border-color 0.3s' }}
+                        style={{ 
+                            borderColor: eyeCol, 
+                            transition: 'border-color 0.3s, transform 0.3s',
+                            transform: (mood === 'excited' || mood === 'happy') ? 'scale(1.2)' : 'scale(1)',
+                        }}
                         transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
                     />
                 </div>
@@ -494,10 +498,6 @@ const Aiva: React.FC = () => {
                 }}
             >
 
-                {/* Corner brackets */}
-                {[{ t: true, r: true }, { b: true, l: true }].map((pos, i) => (
-                    <div key={i} style={{ position: 'absolute', [pos.t ? 'top' : 'bottom']: '-18px', [pos.r ? 'right' : 'left']: '-18px', width: 20, height: 20, [pos.t ? 'borderTop' : 'borderBottom']: `1.5px solid ${acc}88`, [pos.r ? 'borderRight' : 'borderLeft']: `1.5px solid ${acc}88`, animation: 'av-bkt 2.5s ease-in-out infinite', animationDelay: `${i * 1.2}s`, transition: 'border-color 0.35s' }} />
-                ))}
 
                 {/* Thinking bubble — always on by default */}
                 {isThinking && !showMsg && (

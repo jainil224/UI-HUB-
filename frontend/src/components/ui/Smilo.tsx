@@ -167,14 +167,31 @@ const SmiloRobot: React.FC<{
                             />
                         </motion.div>
 
-                        {/* Pixel smile */}
-                        <div className="sm-smile">
-                            <div className="sm-smile-row">
-                                <span /><span className="px" /><span className="px" /><span />
-                            </div>
-                            <div className="sm-smile-row">
-                                <span className="px" /><span /><span /><span className="px" />
-                            </div>
+                        {/* Pixel smile — dynamic based on mood */}
+                        <div className="sm-smile" style={{ transition: 'transform 0.3s' }}>
+                            {mood === 'thinking' ? (
+                                <div className="sm-smile-row">
+                                    <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                    <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                    <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                    <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="sm-smile-row">
+                                        <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                        <span style={{ width: 4, height: 4 }} />
+                                        <span style={{ width: 4, height: 4 }} />
+                                        <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                    </div>
+                                    <div className="sm-smile-row" style={{ marginTop: -2 }}>
+                                        <span style={{ width: 4, height: 4 }} />
+                                        <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                        <span className="px" style={{ width: 4, height: 4, background: eyeColor, boxShadow: `0 0 4px ${eyeColor}` }} />
+                                        <span style={{ width: 4, height: 4 }} />
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -492,10 +509,6 @@ const Smilo: React.FC = () => {
                 }}
             >
 
-                {/* Corner brackets */}
-                {[{t:true,r:true},{b:true,l:true}].map((pos,i) => (
-                    <div key={i} style={{position:'absolute',[pos.t?'top':'bottom']:'-18px',[pos.r?'right':'left']:'-18px',width:20,height:20,[pos.t?'borderTop':'borderBottom']:`1.5px solid ${acc}88`,[pos.r?'borderRight':'borderLeft']:`1.5px solid ${acc}88`,animation:`sm-bracket 2.5s ease-in-out infinite`,animationDelay:`${i*1.2}s`,transition:'border-color 0.35s'}} />
-                ))}
 
                 {/* Thinking bubble — always on by default */}
                 {isThinking && !showMsg && (
