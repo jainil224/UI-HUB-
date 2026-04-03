@@ -327,6 +327,50 @@ const Navbar = () => {
                         transition={{ duration: 0.18, ease: 'easeOut' }}
                         className="mt-2 max-w-7xl mx-auto rounded-2xl bg-[#080808]/95 backdrop-blur-xl border border-white/10 p-4 flex flex-col gap-4 md:hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)]"
                     >
+                        {/* ── User Profile (Mobile) ── */}
+                        {user && (
+                            <div className={`p-4 rounded-xl border border-white/5 bg-white/[0.02] relative overflow-hidden transition-all duration-500 mb-2 ${
+                                isElite ? 'border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]' : 
+                                isPro ? 'border-brand-green/20 shadow-[0_0_20px_rgba(0,255,0,0.1)]' : ''
+                            }`}>
+                                {/* Animated Glow backgrounds */}
+                                {isElite ? (
+                                    <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-blue-500/10 via-transparent to-blue-500/5 opacity-50" />
+                                ) : isPro ? (
+                                    <div className="absolute inset-0 -z-10 bg-gradient-to-tr from-brand-green/10 via-transparent to-brand-green/5 opacity-50" />
+                                ) : null}
+
+                                <div className="flex items-center gap-4 relative z-10">
+                                    {/* Avatar */}
+                                    <div className={`shrink-0 w-12 h-12 rounded-xl overflow-hidden border ${
+                                        isElite ? 'border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)]' : 
+                                        isPro ? 'border-brand-green/40 shadow-[0_0_15px_rgba(0,255,0,0.2)]' : 'border-white/10'
+                                    }`}>
+                                        {user.photoURL ? (
+                                            <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center bg-white/[0.05]">
+                                                <UserIcon size={20} className="text-white/30" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    
+                                    {/* Name & Plan info */}
+                                    <div className="flex flex-col gap-0.5 min-w-0">
+                                        <span className={`text-sm font-black tracking-tight truncate ${
+                                            isElite ? 'text-blue-400' : isPro ? 'text-brand-green' : 'text-white'
+                                        }`}>
+                                            {user.displayName || 'Authorized Member'}
+                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <span className="text-[10px] text-white/40 font-medium">{user.email}</span>
+                                            <PlanBadge tier={planTier} size="sm" showIcon animated />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
                         <div className="flex flex-col gap-1.5">
                             {[
                                 { to: '/', label: 'Home', active: location.pathname === '/' },
