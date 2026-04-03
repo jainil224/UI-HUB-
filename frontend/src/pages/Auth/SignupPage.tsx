@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
-import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
+import { createUserWithEmailAndPassword, updateProfile, signInWithPopup, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 import { Sparkles, Mail, Lock, User, AlertCircle, Loader2, Zap, Github, ArrowRight, ChevronLeft, Eye, EyeOff } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
@@ -18,10 +18,7 @@ const SignupPage = () => {
     const [socialLoading, setSocialLoading] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    // Improved mobile detection to include touch points and viewport width
-    const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                    (navigator.maxTouchPoints > 0) || 
-                    (window.innerWidth < 768);
+
 
     // The AuthProvider handles Google/GitHub redirect results globally.
     // If the user is already authenticated (or becomes authenticated via the redirect result),
@@ -38,12 +35,6 @@ const SignupPage = () => {
         const provider = providerType === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
 
         try {
-            if (isMobile) {
-                console.log(`[Auth] Initiating redirect flow for ${providerType}`);
-                await signInWithRedirect(auth, provider);
-                return;
-            }
-
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
