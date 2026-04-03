@@ -28,6 +28,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 if (result?.user) {
                     console.log(`[Auth] Redirect result found: ${result.user.email}`);
                     setUser(result.user);
+                    try {
+                        const apiBaseUrl = getApiBaseUrl();
+                        await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                email: result.user.email,
+                                name: result.user.displayName || 'UI Challenger'
+                            })
+                        });
+                        sessionStorage.setItem('ui-hub-show-welcome', 'true');
+                    } catch (emailErr) {
+                        console.error('[Auth] Failed to sync user on redirect:', emailErr);
+                    }
                 }
             } catch (error: any) {
                 console.error('[Auth] Error getting redirect result:', error);

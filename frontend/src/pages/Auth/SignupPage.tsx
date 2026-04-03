@@ -38,6 +38,12 @@ const SignupPage = () => {
         const provider = providerType === 'google' ? new GoogleAuthProvider() : new GithubAuthProvider();
 
         try {
+            if (isMobile) {
+                console.log(`[Auth] Initiating redirect flow for ${providerType}`);
+                await signInWithRedirect(auth, provider);
+                return;
+            }
+
             console.log(`[Auth] Initiating popup flow for ${providerType}`);
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
