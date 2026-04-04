@@ -75,6 +75,7 @@ const PlanBadge = ({
         <span
             className={`inline-flex items-center font-display font-black uppercase tracking-[0.2em] transition-all
                 ${config.containerClass}
+                ${config.textClass}
                 ${config.glowClass}
                 ${sizeConfig.container}
                 ${sizeConfig.text}
@@ -99,6 +100,7 @@ const PlanBadge = ({
                 transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                 className={`inline-flex items-center font-display font-black uppercase tracking-[0.2em]
                     ${config.containerClass}
+                    ${config.textClass}
                     ${config.glowClass}
                     ${sizeConfig.container}
                     ${sizeConfig.text}
@@ -119,6 +121,7 @@ const PlanBadge = ({
             transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
             className={`inline-flex items-center font-display font-black uppercase tracking-[0.2em]
                 ${config.containerClass}
+                ${config.textClass}
                 ${config.glowClass}
                 ${sizeConfig.container}
                 ${sizeConfig.text}
