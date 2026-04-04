@@ -25,7 +25,7 @@
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": "frontend/src/components/**"
+      "includeFiles": "backend/**"
     }
   }
 }

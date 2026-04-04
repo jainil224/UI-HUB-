@@ -112,15 +112,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         const data = await response.json();
                         setIsPro(data.isPro);
                         setIsElite(data.isElite ?? false);
-                        console.log(`[Auth] Status match: isPro=${data.isPro}, isElite=${data.isElite} for ${user.email}`);
+                        console.log(`[Auth] Status Match: Pro=${data.isPro || false}, Elite=${data.isElite || false}`);
                     } else {
                         const errorText = await response.text();
-                        console.error(`[Auth] Status check failed with status ${response.status}:`, errorText);
+                        console.error(`[Auth] Failed: ${response.status} - Status endpoint returned error:`, errorText);
                         setIsPro(false);
                         setIsElite(false);
                     }
                 } catch (error) {
-                    console.error('[Auth] Critical error fetching pro status:', error);
+                    console.error('[Auth] Connection Failure: Could not reach status endpoint. Check VITE_API_URL and CORS.', error);
                     setIsPro(false);
                     setIsElite(false);
                 } finally {

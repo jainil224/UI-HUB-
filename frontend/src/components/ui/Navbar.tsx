@@ -196,7 +196,7 @@ const Navbar = () => {
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className={`relative flex items-center gap-1 md:gap-1.5 p-1 pr-1.5 md:pr-2 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
+                            className={`relative flex items-center gap-1 md:gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
                                 isElite
                                     ? 'border-blue-500/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]'
                                     : isPro
@@ -204,10 +204,10 @@ const Navbar = () => {
                                     : ''
                             }`}
                         >
-                            {/* Desktop Click-to-Profile Overlay */}
+                            {/* Desktop Click-to-Profile Overlay (excludes logout area) */}
                             <Link 
                                 to="/favorites" 
-                                className="absolute inset-0 z-0 bg-transparent group-hover/capsule:bg-white/[0.02] transition-colors"
+                                className="absolute inset-y-0 left-0 right-10 z-0 bg-transparent group-hover/capsule:bg-white/[0.02] transition-colors"
                                 title="View Profile"
                             />
 
