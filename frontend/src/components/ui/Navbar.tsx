@@ -196,7 +196,7 @@ const Navbar = () => {
                         <motion.div
                             initial={{ opacity: 0, x: 20 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className={`relative hidden md:flex items-center gap-1 md:gap-1.5 p-1 pr-1.5 md:pr-2 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
+                            className={`relative flex items-center gap-1 md:gap-1.5 p-1 pr-1.5 md:pr-2 rounded-2xl bg-white/[0.03] border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.2)] hover:bg-white/[0.05] transition-all duration-300 group/capsule overflow-hidden ${
                                 isElite
                                     ? 'border-blue-500/40 shadow-[0_0_20px_rgba(59,130,246,0.2)]'
                                     : isPro
@@ -204,6 +204,13 @@ const Navbar = () => {
                                     : ''
                             }`}
                         >
+                            {/* Desktop Click-to-Profile Overlay */}
+                            <Link 
+                                to="/favorites" 
+                                className="absolute inset-0 z-0 bg-transparent group-hover/capsule:bg-white/[0.02] transition-colors"
+                                title="View Profile"
+                            />
+
                             {/* Background Effects */}
                             {isElite ? (
                                 <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
@@ -259,13 +266,17 @@ const Navbar = () => {
                             </div>
 
                             {/* User Info + Badge */}
-                            <div className="flex flex-col pr-1 md:pr-2 pl-0.5 md:pl-1">
-                                <span className={`text-[10px] md:text-[11px] font-black tracking-tight leading-tight truncate max-w-[60px] md:max-w-[80px] ${
+                            <div className="relative z-10 flex flex-col pr-1 md:pr-2 pl-0.5 md:pl-1 pointer-events-none">
+                                <span className={`text-[10px] md:text-[11px] font-black tracking-tight leading-tight truncate max-w-[50px] sm:max-w-[60px] md:max-w-[80px] ${
                                     isElite ? 'text-blue-400' : isPro ? 'text-brand-green' : 'text-white'
                                 }`}>
                                     {user.displayName?.split(' ')[0] || 'Member'}
                                 </span>
-                                <PlanBadge tier={planTier} size="sm" showIcon animated />
+                                {loading ? (
+                                    <div className="w-8 h-2.5 mt-1 bg-white/10 rounded-sm animate-pulse" />
+                                ) : (
+                                    <PlanBadge tier={planTier} size="sm" showIcon animated />
+                                )}
                             </div>
 
                             {/* Logout Action */}
@@ -344,15 +355,19 @@ const Navbar = () => {
                                     
                                     {/* Name & Plan info */}
                                     <div className="flex flex-col gap-0.5 min-w-0 flex-1">
-                                        <span className={`text-sm font-black tracking-tight truncate ${
-                                            isElite ? 'text-blue-400' : isPro ? 'text-brand-green' : 'text-white'
-                                        }`}>
-                                            {user.displayName || 'Authorized Member'}
-                                        </span>
                                         <div className="flex items-center gap-2">
-                                            <span className="text-[10px] text-white/40 font-medium truncate">{user.email}</span>
-                                            <PlanBadge tier={planTier} size="sm" showIcon animated className="shrink-0" />
+                                            <span className={`text-sm font-black tracking-tight truncate ${
+                                                isElite ? 'text-blue-400' : isPro ? 'text-brand-green' : 'text-white'
+                                            }`}>
+                                                {user.displayName || 'Authorized Member'}
+                                            </span>
+                                            {loading ? (
+                                                <div className="w-8 h-3 bg-white/10 rounded-sm animate-pulse shrink-0" />
+                                            ) : (
+                                                <PlanBadge tier={planTier} size="sm" showIcon animated className="shrink-0" />
+                                            )}
                                         </div>
+                                        <span className="text-[10px] text-white/40 font-medium break-all">{user.email}</span>
                                     </div>
                                     
                                     <div className="shrink-0 pl-1 text-[9px] font-bold text-white/30 group-hover/mobile-profile:text-white/70 uppercase tracking-wider flex items-center justify-center transition-colors">

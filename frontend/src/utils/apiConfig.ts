@@ -11,8 +11,9 @@ export const getApiBaseUrl = () => {
         
         // Fallback to current origin (useful if API is on the same domain or proxied)
         if (typeof window !== 'undefined') {
-            console.log(`[API Config] Prod, no VITE_API_URL, using: ${window.location.origin}`);
-            return window.location.origin;
+            const origin = window.location.origin;
+            console.warn(`[API Config] Production: No VITE_API_URL provided. Falling back to origin: ${origin}. This may fail if the backend is hosted separately.`);
+            return origin;
         }
         return '';
     }

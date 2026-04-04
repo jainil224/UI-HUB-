@@ -98,7 +98,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 try {
                     const idToken = await user.getIdToken(true);
                     const apiBaseUrl = getApiBaseUrl();
-                    // ... existing status check logic ...
                     
                     console.log(`[Auth] Fetching Pro status from ${apiBaseUrl}/api/v1/users/status`);
                     
@@ -112,25 +111,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     if (response.ok) {
                         const data = await response.json();
                         setIsPro(data.isPro);
-                        // isElite is a higher tier — check for explicit field or fall back to isPro for legacy
                         setIsElite(data.isElite ?? false);
-                        console.log(`[Auth] Pro status: ${data.isPro}, Elite status: ${data.isElite} for ${user.email}`);
+                        console.log(`[Auth] Status match: isPro=${data.isPro}, isElite=${data.isElite} for ${user.email}`);
                     } else {
                         const errorText = await response.text();
-                        console.error(`[Auth] Status check (v1) failed with ${response.status}:`, errorText);
+                        console.error(`[Auth] Status check failed with status ${response.status}:`, errorText);
                         setIsPro(false);
+                        setIsElite(false);
                     }
                 } catch (error) {
-                    console.error('[Auth] Error fetching pro status:', error);
+                    console.error('[Auth] Critical error fetching pro status:', error);
                     setIsPro(false);
                     setIsElite(false);
+                } finally {
+                    setLoading(false);
                 }
             } else {
                 setIsPro(false);
                 setIsElite(false);
+                setLoading(false);
             }
-            
-            setLoading(false);
         });
 
         return unsubscribe;
