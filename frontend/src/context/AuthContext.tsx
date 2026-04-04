@@ -16,8 +16,8 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    const [isPro, setIsPro] = useState(false);
-    const [isElite, setIsElite] = useState(false);
+    const [isPro, setIsPro] = useState(() => localStorage.getItem('ui-hub-pro') === 'true');
+    const [isElite, setIsElite] = useState(() => localStorage.getItem('ui-hub-elite') === 'true');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -96,7 +96,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 }
 
                 try {
-                    const idToken = await user.getIdToken(true);
+                    // Do not force refresh to keep execution snappy (use cached token)
+                    const idToken = await user.getIdToken();
                     const apiBaseUrl = getApiBaseUrl();
                     
                     console.log(`[Auth] Fetching Pro status from ${apiBaseUrl}/api/v1/users/status`);
@@ -112,17 +113,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         const data = await response.json();
                         setIsPro(data.isPro);
                         setIsElite(data.isElite ?? false);
+                        localStorage.setItem('ui-hub-pro', String(data.isPro || false));
+                        localStorage.setItem('ui-hub-elite', String(data.isElite || false));
                         console.log(`[Auth] Status Match: Pro=${data.isPro || false}, Elite=${data.isElite || false}`);
                     } else {
                         const errorText = await response.text();
                         console.error(`[Auth] Failed: ${response.status} - Status endpoint returned error:`, errorText);
                         setIsPro(false);
                         setIsElite(false);
+                        localStorage.setItem('ui-hub-pro', 'false');
+                        localStorage.setItem('ui-hub-elite', 'false');
                     }
                 } catch (error) {
                     console.error('[Auth] Connection Failure: Could not reach status endpoint. Check VITE_API_URL and CORS.', error);
-                    setIsPro(false);
-                    setIsElite(false);
+                    // Don't wipe storage on network failure, preserve offline optimism
+                    setIsPro(localStorage.getItem('ui-hub-pro') === 'true');
+                    setIsElite(localStorage.getItem('ui-hub-elite') === 'true');
                 } finally {
                     setLoading(false);
                 }

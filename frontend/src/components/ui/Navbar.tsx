@@ -272,11 +272,7 @@ const Navbar = () => {
                                 }`}>
                                     {user.displayName?.split(' ')[0] || 'Member'}
                                 </span>
-                                {loading ? (
-                                    <div className="w-8 h-2.5 mt-1 bg-white/10 rounded-sm animate-pulse" />
-                                ) : (
-                                    <PlanBadge tier={planTier} size="sm" showIcon animated />
-                                )}
+                                <PlanBadge tier={planTier} size="sm" showIcon animated />
                             </div>
 
                             {/* Logout Action */}
@@ -361,11 +357,7 @@ const Navbar = () => {
                                             }`}>
                                                 {user.displayName || 'Authorized Member'}
                                             </span>
-                                            {loading ? (
-                                                <div className="w-8 h-3 bg-white/10 rounded-sm animate-pulse shrink-0" />
-                                            ) : (
-                                                <PlanBadge tier={planTier} size="sm" showIcon animated className="shrink-0" />
-                                            )}
+                                            <PlanBadge tier={planTier} size="sm" showIcon animated className="shrink-0" />
                                         </div>
                                         <span className="text-[10px] text-white/40 font-medium break-all">{user.email}</span>
                                     </div>
