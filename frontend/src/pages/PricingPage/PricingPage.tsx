@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Check, X, Zap, Crown, ArrowRight, Star, Sparkles, Download, Code2, Shield, Heart } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PlanBadge from '../../components/ui/PlanBadge';
+import { useAuth } from '../../context/AuthContext';
+import { loadRazorpayScript } from '../../utils/razorpayUtils';
+import CheckoutOverlay from '../../components/ui/CheckoutOverlay';
+import { getApiBaseUrl } from '../../utils/apiConfig';
 
 const PricingPage = () => {
+    const navigate = useNavigate();
+    const { user } = useAuth();
     const [currencyMode, setCurrencyMode] = useState<'INR' | 'USD'>('USD');
+    const [checkoutStatus, setCheckoutStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [checkoutMessage, setCheckoutMessage] = useState('');
 
     // Detect if user is in India on initial load
     useEffect(() => {
@@ -14,6 +22,94 @@ const PricingPage = () => {
             setCurrencyMode('INR');
         }
     }, []);
+
+    const handleCheckout = async (plan: any) => {
+        if (!user) {
+            // Need to be logged in
+            navigate('/login');
+            return;
+        }
+
+        setCheckoutStatus('loading');
+        setCheckoutMessage('Initializing secure checkout...');
+
+        const res = await loadRazorpayScript();
+        if (!res) {
+            setCheckoutStatus('error');
+            setCheckoutMessage('Razorpay setup failed. Please check your connection.');
+            return;
+        }
+
+        try {
+            const createOrderRes = await fetch(`${getApiBaseUrl()}/api/v1/payment/create-order`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: plan.price, currency: currencyMode })
+            });
+            const orderData = await createOrderRes.json();
+            if (!orderData.success) {
+                throw new Error(orderData.error || 'Order creation failed');
+            }
+
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'dummy_test_key',
+                amount: orderData.amount,
+                currency: orderData.currency,
+                name: 'UI HUB',
+                description: `${plan.title} Subscription`,
+                order_id: orderData.order_id,
+                handler: async function (response: any) {
+                    setCheckoutStatus('loading');
+                    setCheckoutMessage('Verifying payment securely...');
+                    try {
+                        const verifyRes = await fetch(`${getApiBaseUrl()}/api/v1/payment/verify-payment`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                user_email: user.email,
+                                tier: plan.badgeTier,
+                                amount: plan.price
+                            })
+                        });
+                        const verifyData = await verifyRes.json();
+                        if (verifyData.success) {
+                            setCheckoutStatus('success');
+                            setCheckoutMessage(`Welcome to ${plan.title}! Your account is upgraded.`);
+                        } else {
+                            throw new Error(verifyData.error || 'Verification failed');
+                        }
+                    } catch (err: any) {
+                        setCheckoutStatus('error');
+                        setCheckoutMessage(err.message || 'Payment verification failed');
+                    }
+                },
+                prefill: {
+                    name: user?.displayName || '',
+                    email: user?.email || '',
+                },
+                theme: {
+                    color: plan.accentColor === 'green' ? '#00FF1A' : '#3B82F6',
+                },
+                modal: {
+                    ondismiss: function() {
+                        if (checkoutStatus === 'loading') {
+                             setCheckoutStatus('idle');
+                        }
+                    }
+                }
+            };
+
+            const paymentObject = new (window as any).Razorpay(options);
+            paymentObject.open();
+
+        } catch (err: any) {
+            setCheckoutStatus('error');
+            setCheckoutMessage(err.message || 'Failed to initialize checkout.');
+        }
+    };
 
     const currency = currencyMode === 'INR' ? '₹' : '$';
     const proPrice = currencyMode === 'INR' ? '99' : '4.99';
@@ -102,6 +198,17 @@ const PricingPage = () => {
 
     return (
         <div className="min-h-screen pt-28 pb-24 px-6 relative overflow-hidden">
+            <CheckoutOverlay 
+                isOpen={checkoutStatus !== 'idle'} 
+                status={checkoutStatus} 
+                message={checkoutMessage} 
+                onClose={() => {
+                    setCheckoutStatus('idle');
+                    if (checkoutStatus === 'success') {
+                        navigate('/library');
+                    }
+                }} 
+            />
             {/* Background — matches site pattern */}
             <div className="absolute inset-0 -z-10 pointer-events-none">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-brand-green/5 blur-[160px] rounded-full" />
@@ -290,8 +397,28 @@ const PricingPage = () => {
                                 </div>
 
                                 {/* CTA Button — matches site button style */}
-                                <Link to={plan.ctaLink}>
+                                {plan.tier === 'Basic' ? (
+                                    <Link to={plan.ctaLink}>
+                                        <button
+                                            className={`w-full py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 relative overflow-hidden group/btn active:scale-95 ${
+                                                isGreen
+                                                    ? 'bg-brand-green text-black hover:scale-105 green-glow'
+                                                    : isBlue
+                                                    ? 'bg-blue-500 text-white hover:scale-105 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.5)]'
+                                                    : 'bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20'
+                                            }`}
+                                        >
+                                            <span className="relative z-10 flex items-center justify-center gap-2">
+                                                {plan.cta}
+                                                <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                                            </span>
+                                            {/* Shimmer — matches Hero button shimmer */}
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                                        </button>
+                                    </Link>
+                                ) : (
                                     <button
+                                        onClick={() => handleCheckout(plan)}
                                         className={`w-full py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 relative overflow-hidden group/btn active:scale-95 ${
                                             isGreen
                                                 ? 'bg-brand-green text-black hover:scale-105 green-glow'
@@ -304,10 +431,9 @@ const PricingPage = () => {
                                             {plan.cta}
                                             <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
                                         </span>
-                                        {/* Shimmer — matches Hero button shimmer */}
                                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
                                     </button>
-                                </Link>
+                                )}
 
                                 {/* Ambient glow on hover */}
                                 <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none ${

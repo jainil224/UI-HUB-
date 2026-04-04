@@ -6,6 +6,7 @@ import { dirname, join } from 'path';
 import componentRoutes from './routes/componentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import configRoutes from './routes/configRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 
 dotenv.config();
 console.log('Environment variables loaded from .env');
@@ -48,6 +49,7 @@ const router = express.Router();
 router.use('/v1/components', componentRoutes);
 router.use('/v1/users', userRoutes);
 router.use('/v1/config', configRoutes);
+router.use('/v1/payment', paymentRoutes);
 
 // Health check endpoint (at the very top levels)
 const healthCheck = (req, res) => {
