@@ -40,38 +40,51 @@ const PricingPage = () => {
         }
 
         try {
+            // 1. Resolve API URL
             const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
             
-            // Fetch Razorpay Key from backend to avoid 'dummy_test_key' issue in production
+            // 2. Fetch Razorpay Key ID from backend at runtime
+            // This prevents "Key Invalid" 401 errors caused by missing Vercel env vars
             let razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
             try {
                 const configRes = await fetch(`${apiUrl}/api/v1/config/razorpay-key`);
-                const configData = await configRes.json();
-                if (configData.keyId && configData.keyId !== 'dummy_test_key') {
-                    razorpayKey = configData.keyId;
+                if (configRes.ok) {
+                    const configData = await configRes.json();
+                    if (configData.keyId && !configData.keyId.includes('dummy')) {
+                        razorpayKey = configData.keyId;
+                    }
                 }
             } catch (configErr) {
-                console.warn('[Checkout] Failed to fetch Razorpay Key from backend, using env fallback:', configErr);
+                console.warn('[Checkout] Background Key fetch failed:', configErr);
             }
 
-            if (!razorpayKey || razorpayKey === 'dummy_test_key') {
-                console.error('[Checkout] Razorpay Key ID is missing or invalid.');
-                // We keep going as a last resort but this is likely why it fails 401
+            // 3. Strict Guardrail: Stop if we still have a dummy key or no key
+            // This PREVENTS the Razorpay library from showing its own "Oops" generic browser alert
+            if (!razorpayKey || razorpayKey.includes('dummy')) {
+                setCheckoutStatus('error');
+                setCheckoutMessage('Configuration Error: Razorpay Key ID is missing. Please ensure your backend is deployed and VITE_API_URL is set in Vercel.');
+                return;
             }
 
+            // 4. Create Order
             const createOrderRes = await fetch(`${apiUrl}/api/v1/payment/create-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: plan.price, currency: currencyMode })
             });
             
+            if (!createOrderRes.ok) {
+                const errorData = await createOrderRes.json().catch(() => ({}));
+                throw new Error(errorData.error || `Server responded with ${createOrderRes.status}`);
+            }
+
             const orderData = await createOrderRes.json();
             if (!orderData.success) {
                 throw new Error(orderData.error || 'Order creation failed');
             }
 
             const options = {
-                key: razorpayKey || 'dummy_test_key',
+                key: razorpayKey,
                 amount: orderData.amount,
                 currency: orderData.currency,
                 name: 'UI HUB',
