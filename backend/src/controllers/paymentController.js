@@ -23,7 +23,7 @@ export const createOrder = async (req, res) => {
     const { amount, currency = 'USD' } = req.body;
 
     if (!amount) {
-      return res.status(400).json({ error: 'Amount is required' });
+      return res.status(400).json({ success: false, error: 'Amount is required' });
     }
 
     const options = {
@@ -36,7 +36,7 @@ export const createOrder = async (req, res) => {
     const order = await instance.orders.create(options);
 
     if (!order) {
-      return res.status(500).json({ error: 'Failed to create Razorpay Order' });
+      return res.status(500).json({ success: false, error: 'Failed to create Razorpay Order' });
     }
 
     res.json({
@@ -46,8 +46,8 @@ export const createOrder = async (req, res) => {
         currency: order.currency
     });
   } catch (error) {
-    console.error('Error creating order:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error creating order:', error.message);
+    res.status(500).json({ success: false, error: error.message || 'Internal Server Error' });
   }
 };
 
@@ -67,7 +67,7 @@ export const verifyPayment = async (req, res) => {
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !user_email) {
       console.error('[VerifyPayment] Missing parameters:', { razorpay_order_id, razorpay_payment_id, razorpay_signature: !!razorpay_signature, user_email });
-      return res.status(400).json({ error: 'Missing required parameters for verification' });
+      return res.status(400).json({ success: false, error: 'Missing required parameters for verification' });
     }
 
     const secret = process.env.RAZORPAY_KEY_SECRET || 'dummy_key_secret';
@@ -82,7 +82,7 @@ export const verifyPayment = async (req, res) => {
 
     if (!isValid) {
       console.error(`[VerifyPayment] CRITICAL: Signature mismatch! Order: ${razorpay_order_id}, Payment: ${razorpay_payment_id}. Secret matched: ${secret !== 'dummy_key_secret'}`);
-      return res.status(400).json({ error: 'Invalid payment signature. Payment rejected.' });
+      return res.status(400).json({ success: false, error: 'Invalid payment signature. Payment rejected.' });
     }
 
     // 2. Save payment in Firebase
@@ -98,16 +98,17 @@ export const verifyPayment = async (req, res) => {
             signature: razorpay_signature
         });
     } catch (fbErr) {
-        console.error('[VerifyPayment] Firebase Save Payment Record error:', fbErr.message, fbErr.stack);
-        return res.status(500).json({ error: `Payment verified but failed to save record: ${fbErr.message}` });
+        console.error('[VerifyPayment] Firebase Save Payment Record error:', fbErr.message);
+        return res.status(500).json({ success: false, error: `Payment verified but failed to save record: ${fbErr.message}` });
     }
 
     // 3. Update User Sub in Firebase
     try {
+        // Expected fields usually isPro/isElite on update logic
         await updateUserTier(user_email, tier);
     } catch (tierErr) {
-        console.error('[VerifyPayment] Firebase Update User Tier error:', tierErr.message, tierErr.stack);
-        return res.status(500).json({ error: `Payment verified but failed to upgrade user plan: ${tierErr.message}` });
+        console.error('[VerifyPayment] Firebase Update User Tier error:', tierErr.message);
+        return res.status(500).json({ success: false, error: `Payment verified but failed to upgrade user plan: ${tierErr.message}` });
     }
 
     // 4. Send Email Receipt
@@ -121,18 +122,19 @@ export const verifyPayment = async (req, res) => {
             user_email: user_email
         });
     } catch (emailErr) {
-        console.error('[VerifyPayment] Brevo Email Receipt error:', emailErr.message, emailErr.stack);
+        console.error('[VerifyPayment] Brevo Email Receipt error:', emailErr.message);
         // We do not fail the overall transaction if the email receipt merely fails to send.
     }
 
     // 5. Respond success
     res.json({
         success: true,
+        tier: tier,
         message: 'Payment verified successfully.'
     });
 
   } catch (error) {
-    console.error('[VerifyPayment] Unhandled fatal error:', error.message, error.stack);
-    res.status(500).json({ error: `Internal Server Error: ${error.message}` });
+    console.error('[VerifyPayment] Unhandled fatal error:', error.message);
+    res.status(500).json({ success: false, error: `Internal Server Error: ${error.message}` });
   }
 };

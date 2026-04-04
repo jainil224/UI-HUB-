@@ -40,7 +40,9 @@ app.use(cors({
       return callback(null, true); // Fallback to allow (temporary for debugging if needed) or use strict
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 

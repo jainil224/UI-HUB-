@@ -25,7 +25,6 @@ const PricingPage = () => {
 
     const handleCheckout = async (plan: any) => {
         if (!user) {
-            // Need to be logged in
             navigate('/login');
             return;
         }
@@ -41,11 +40,13 @@ const PricingPage = () => {
         }
 
         try {
-            const createOrderRes = await fetch(`${getApiBaseUrl()}/api/v1/payment/create-order`, {
+            const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
+            const createOrderRes = await fetch(`${apiUrl}/api/v1/payment/create-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ amount: plan.price, currency: currencyMode })
             });
+            
             const orderData = await createOrderRes.json();
             if (!orderData.success) {
                 throw new Error(orderData.error || 'Order creation failed');
@@ -62,7 +63,7 @@ const PricingPage = () => {
                     setCheckoutStatus('loading');
                     setCheckoutMessage('Verifying payment securely...');
                     try {
-                        const verifyRes = await fetch(`${getApiBaseUrl()}/api/v1/payment/verify-payment`, {
+                        const verifyRes = await fetch(`${apiUrl}/api/v1/payment/verify-payment`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
@@ -74,6 +75,7 @@ const PricingPage = () => {
                                 amount: plan.price
                             })
                         });
+                        
                         const verifyData = await verifyRes.json();
                         if (verifyData.success) {
                             setCheckoutStatus('success');
@@ -83,6 +85,7 @@ const PricingPage = () => {
                         }
                     } catch (err: any) {
                         setCheckoutStatus('error');
+                        // Display backend error rather than generic text
                         setCheckoutMessage(err.message || 'Payment verification failed');
                     }
                 },
@@ -104,11 +107,12 @@ const PricingPage = () => {
 
             const paymentObject = new (window as any).Razorpay(options);
             
-            // Catch native Razorpay validation/payment errors instead of showing browser alerts
+            // Intercept native Razorpay failure events to update React state instead of browser alerts
             paymentObject.on('payment.failed', function (response: any) {
                 console.error('[Razorpay Checkout Error]', response.error);
                 setCheckoutStatus('error');
-                setCheckoutMessage(`Payment Error: ${response.error.description || 'Unknown Error'} (Code: ${response.error.code || 'N/A'})`);
+                // Extract precise Razorpay API error rather than generic 'Payment Failed'
+                setCheckoutMessage(`Payment Failed: ${response.error.description || 'Transaction declined'} (Code: ${response.error.code || 'N/A'})`);
             });
 
             paymentObject.open();
@@ -116,11 +120,13 @@ const PricingPage = () => {
         } catch (err: any) {
             console.error('[Checkout API Error]', err);
             setCheckoutStatus('error');
-            // 'Failed to fetch' usually means the Render server is either cold-starting or CORS failed
-            const msg = (err.message === 'Failed to fetch') 
-                ? 'Server is unreachable or waking up. Please try again in 30 seconds.' 
-                : (err.message || 'Failed to initialize checkout.');
-            setCheckoutMessage(msg);
+            
+            // Handle Render free tier cold start appropriately
+            if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+                setCheckoutMessage('Server is waking up from sleep. Please try again in 30 seconds.');
+            } else {
+                setCheckoutMessage(err.message || 'Failed to initialize checkout.');
+            }
         }
     };
 
