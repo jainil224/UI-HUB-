@@ -103,11 +103,24 @@ const PricingPage = () => {
             };
 
             const paymentObject = new (window as any).Razorpay(options);
+            
+            // Catch native Razorpay validation/payment errors instead of showing browser alerts
+            paymentObject.on('payment.failed', function (response: any) {
+                console.error('[Razorpay Checkout Error]', response.error);
+                setCheckoutStatus('error');
+                setCheckoutMessage(`Payment Error: ${response.error.description || 'Unknown Error'} (Code: ${response.error.code || 'N/A'})`);
+            });
+
             paymentObject.open();
 
         } catch (err: any) {
+            console.error('[Checkout API Error]', err);
             setCheckoutStatus('error');
-            setCheckoutMessage(err.message || 'Failed to initialize checkout.');
+            // 'Failed to fetch' usually means the Render server is either cold-starting or CORS failed
+            const msg = (err.message === 'Failed to fetch') 
+                ? 'Server is unreachable or waking up. Please try again in 30 seconds.' 
+                : (err.message || 'Failed to initialize checkout.');
+            setCheckoutMessage(msg);
         }
     };
 

@@ -15,9 +15,17 @@ export const verifyRazorpaySignature = (order_id, payment_id, signature, secret)
       .update(`${order_id}|${payment_id}`)
       .digest('hex');
 
-    return generated_signature === signature;
+    const expectedBuffer = Buffer.from(generated_signature, 'hex');
+    const receivedBuffer = Buffer.from(signature, 'hex');
+
+    if (expectedBuffer.length !== receivedBuffer.length) {
+      console.error('[SignatureVerification] Buffer length mismatch.');
+      return false;
+    }
+
+    return crypto.timingSafeEqual(expectedBuffer, receivedBuffer);
   } catch (error) {
-    console.error('Signature verification error:', error);
+    console.error('[SignatureVerification] Error:', error.message);
     return false;
   }
 };

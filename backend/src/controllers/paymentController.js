@@ -66,6 +66,7 @@ export const verifyPayment = async (req, res) => {
     } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !user_email) {
+      console.error('[VerifyPayment] Missing parameters:', { razorpay_order_id, razorpay_payment_id, razorpay_signature: !!razorpay_signature, user_email });
       return res.status(400).json({ error: 'Missing required parameters for verification' });
     }
 
@@ -80,33 +81,49 @@ export const verifyPayment = async (req, res) => {
     );
 
     if (!isValid) {
+      console.error(`[VerifyPayment] CRITICAL: Signature mismatch! Order: ${razorpay_order_id}, Payment: ${razorpay_payment_id}. Secret matched: ${secret !== 'dummy_key_secret'}`);
       return res.status(400).json({ error: 'Invalid payment signature. Payment rejected.' });
     }
 
     // 2. Save payment in Firebase
-    await savePaymentRecord({
-        payment_id: razorpay_payment_id,
-        order_id: razorpay_order_id,
-        email: user_email,
-        amount: amount,
-        currency: req.body.currency || 'USD',
-        status: 'SUCCESS',
-        tier: tier,
-        signature: razorpay_signature
-    });
+    try {
+        await savePaymentRecord({
+            payment_id: razorpay_payment_id,
+            order_id: razorpay_order_id,
+            email: user_email,
+            amount: amount,
+            currency: req.body.currency || 'USD',
+            status: 'SUCCESS',
+            tier: tier,
+            signature: razorpay_signature
+        });
+    } catch (fbErr) {
+        console.error('[VerifyPayment] Firebase Save Payment Record error:', fbErr.message, fbErr.stack);
+        return res.status(500).json({ error: `Payment verified but failed to save record: ${fbErr.message}` });
+    }
 
     // 3. Update User Sub in Firebase
-    await updateUserTier(user_email, tier);
+    try {
+        await updateUserTier(user_email, tier);
+    } catch (tierErr) {
+        console.error('[VerifyPayment] Firebase Update User Tier error:', tierErr.message, tierErr.stack);
+        return res.status(500).json({ error: `Payment verified but failed to upgrade user plan: ${tierErr.message}` });
+    }
 
     // 4. Send Email Receipt
-    const dateStr = new Date().toLocaleString('en-US', { timeZoneName: 'short' });
-    await sendPaymentReceipt({
-        payment_id: razorpay_payment_id,
-        order_id: razorpay_order_id,
-        amount: amount,
-        date: dateStr,
-        user_email: user_email
-    });
+    try {
+        const dateStr = new Date().toLocaleString('en-US', { timeZoneName: 'short' });
+        await sendPaymentReceipt({
+            payment_id: razorpay_payment_id,
+            order_id: razorpay_order_id,
+            amount: amount,
+            date: dateStr,
+            user_email: user_email
+        });
+    } catch (emailErr) {
+        console.error('[VerifyPayment] Brevo Email Receipt error:', emailErr.message, emailErr.stack);
+        // We do not fail the overall transaction if the email receipt merely fails to send.
+    }
 
     // 5. Respond success
     res.json({
@@ -115,7 +132,7 @@ export const verifyPayment = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error verifying payment:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error('[VerifyPayment] Unhandled fatal error:', error.message, error.stack);
+    res.status(500).json({ error: `Internal Server Error: ${error.message}` });
   }
 };
