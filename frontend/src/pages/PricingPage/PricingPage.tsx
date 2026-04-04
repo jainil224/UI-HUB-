@@ -41,6 +41,24 @@ const PricingPage = () => {
 
         try {
             const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
+            
+            // Fetch Razorpay Key from backend to avoid 'dummy_test_key' issue in production
+            let razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
+            try {
+                const configRes = await fetch(`${apiUrl}/api/v1/config/razorpay-key`);
+                const configData = await configRes.json();
+                if (configData.keyId && configData.keyId !== 'dummy_test_key') {
+                    razorpayKey = configData.keyId;
+                }
+            } catch (configErr) {
+                console.warn('[Checkout] Failed to fetch Razorpay Key from backend, using env fallback:', configErr);
+            }
+
+            if (!razorpayKey || razorpayKey === 'dummy_test_key') {
+                console.error('[Checkout] Razorpay Key ID is missing or invalid.');
+                // We keep going as a last resort but this is likely why it fails 401
+            }
+
             const createOrderRes = await fetch(`${apiUrl}/api/v1/payment/create-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -53,7 +71,7 @@ const PricingPage = () => {
             }
 
             const options = {
-                key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'dummy_test_key',
+                key: razorpayKey || 'dummy_test_key',
                 amount: orderData.amount,
                 currency: orderData.currency,
                 name: 'UI HUB',

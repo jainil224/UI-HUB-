@@ -1,5 +1,5 @@
 import express from 'express';
-import { getFirebaseConfig } from '../services/configService.js';
+import { getFirebaseConfig, getRazorpayKey } from '../services/configService.js';
 
 const router = express.Router();
 
@@ -14,6 +14,21 @@ router.get('/firebase', (req, res) => {
         res.json(config);
     } catch (error) {
         console.error('Error in config route:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * @route GET /api/v1/config/razorpay-key
+ * @desc Get public Razorpay Key ID
+ * @access Public
+ */
+router.get('/razorpay-key', (req, res) => {
+    try {
+        const config = getRazorpayKey();
+        res.json(config);
+    } catch (error) {
+        console.error('Error in config route (razorpay):', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });

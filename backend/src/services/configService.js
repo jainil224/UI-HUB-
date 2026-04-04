@@ -20,3 +20,12 @@ export const getFirebaseConfig = () => {
         measurementId: process.env.VITE_FIREBASE_MEASUREMENT_ID || process.env.FIREBASE_MEASUREMENT_ID
     };
 };
+/**
+ * Returns the public Razorpay Key ID.
+ * @returns {object}
+ */
+export const getRazorpayKey = () => {
+    return {
+        keyId: process.env.RAZORPAY_KEY_ID || 'dummy_test_key'
+    };
+};
