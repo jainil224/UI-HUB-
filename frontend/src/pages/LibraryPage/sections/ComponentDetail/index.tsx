@@ -202,8 +202,7 @@ const ToolCard = React.memo(({
         >
             {/* Lock Overlay for non-Pro users */}
             {isLocked && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/40 backdrop-blur-[2px] transition-all duration-500 overflow-hidden group-hover:bg-black/50">
-                    <div className="absolute inset-0 bg-brand-green/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/40 backdrop-blur-[2px] transition-all duration-500 overflow-hidden">
                     <div className="flex flex-col items-center gap-3 relative z-10 scale-90 md:scale-100 translate-y-2">
                         <div className="relative">
                             <motion.div 
@@ -223,7 +222,7 @@ const ToolCard = React.memo(({
                             </div>
                         </div>
                         <div className="flex flex-col items-center gap-1">
-                            <span className="px-3 py-1 rounded-full bg-brand-green text-black text-[8px] font-black uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(0,255,159,0.4)] group-hover:scale-110 transition-transform duration-500">
+                            <span className="px-3 py-1 rounded-full bg-brand-green text-black text-[8px] font-black uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(0,255,159,0.4)] transition-transform duration-500">
                                 PRO
                             </span>
                         </div>
