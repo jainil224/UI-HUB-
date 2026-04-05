@@ -53,6 +53,7 @@ router.get('/backfill-jainil', async (req, res) => {
 
 router.post('/sync', async (req, res) => {
     try {
+        console.log('[Auth] Incoming sync request body:', JSON.stringify(req.body));
         const { email, name } = req.body;
 
         if (!email) {
@@ -61,51 +62,59 @@ router.post('/sync', async (req, res) => {
 
         const userEmail = email.toLowerCase();
         let welcomeEmailSent = false;
-        let userRef = null;
+        let userData = null;
+        let userRef = admin.firestore().collection('users').doc(userEmail);
 
         try {
-            userRef = admin.firestore().collection('users').doc(userEmail);
             const userDoc = await userRef.get();
             if (userDoc.exists) {
-                welcomeEmailSent = userDoc.data().welcomeEmailSent || false;
+                userData = userDoc.data();
+                welcomeEmailSent = userData.welcomeEmailSent || false;
+            } else {
+                // Initial creation if it doesn't exist at all
+                console.log(`[Auth] Creating new Firestore document for ${userEmail}`);
+                await userRef.set({
+                    email: userEmail,
+                    displayName: name || 'UI Challenger',
+                    planTier: 'free',
+                    status: 'FREE',
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    welcomeEmailSent: false,
+                    lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+                });
             }
         } catch (dbError) {
-            console.warn('[Firestore] Warning: Could not access Firestore (likely missing credentials locally). Assuming email has not been sent.');
-            // welcomeEmailSent remains false
+            console.error('[Firestore] Error accessing/creating user document:', dbError.message);
+            // Continue attempt to send email if we have enough info
         }
 
         // Only send if not already sent
         if (!welcomeEmailSent) {
-            console.log(`[Auth] New user or first time sync for ${userEmail}. Sending welcome email.`);
+            console.log(`[Auth] Triggering welcome email for ${userEmail}.`);
             const result = await sendWelcomeEmail(email, name);
             
             if (result.success) {
                 welcomeEmailSent = true;
-                if (userRef) {
-                    try {
-                        await userRef.set({ 
-                            welcomeEmailSent: true,
-                            lastSyncedAt: admin.firestore.FieldValue.serverTimestamp(),
-                            displayName: name || ''
-                        }, { merge: true });
-                    } catch (e) {
-                         console.warn('[Firestore] Could not update Firestore status.');
-                    }
+                try {
+                    await userRef.update({ 
+                        welcomeEmailSent: true,
+                        lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+                    });
+                } catch (e) {
+                     console.warn('[Firestore] Could not update welcome email status.');
                 }
             } else {
                 console.error(`[Auth] Failed to send welcome email to ${userEmail}:`, result.error);
-                // We still want to return success for the sync itself to not block the UI
             }
         } else {
             // Just update last synced
-            if (userRef) {
-                try {
-                    await userRef.set({ 
-                        lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                } catch (e) {
-                     console.warn('[Firestore] Could not update Firestore lastSyncedAt.');
-                }
+            try {
+                await userRef.update({ 
+                    lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
+                });
+            } catch (e) {
+                 console.warn('[Firestore] Could not update lastSyncedAt.');
             }
         }
 

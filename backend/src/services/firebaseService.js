@@ -35,13 +35,16 @@ export const fulfillPayment = async ({ paymentId, orderId, tier, email, amount, 
   // 2. Update user tier
   try {
       const userDocRef = db.collection('users').doc(email.toLowerCase());
+      const newStatus = (tier || 'pro').toUpperCase();
+      
       await userDocRef.set({
           email: email.toLowerCase(),
-          planTier: tier,
+          planTier: tier || 'pro',
+          status: newStatus,
           updatedAt: admin.firestore.FieldValue.serverTimestamp()
       }, { merge: true });
       
-      console.log(`[FirebaseService] User ${email} upgraded to ${tier}`);
+      console.log(`[FirebaseService] User ${email} upgraded to ${newStatus}`);
   } catch(err) {
       console.error('[FirebaseService] Error updating user tier:', err);
       throw err;

@@ -7,6 +7,7 @@ import { Mail, Lock, AlertCircle, Loader2, Github, ArrowRight, Eye, EyeOff, Spar
 import { formatAuthError } from '../../utils/authUtils';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/ui/Logo';
+import { getApiBaseUrl } from '../../utils/apiConfig';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -50,6 +51,22 @@ const LoginPage = () => {
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
                 console.log(`[Auth] ${providerType} sign-in successful:`, result.user.email);
+                
+                // Explicitly sync with backend
+                try {
+                    const apiBaseUrl = getApiBaseUrl();
+                    await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            email: result.user.email, 
+                            name: result.user.displayName || 'UI Challenger' 
+                        })
+                    });
+                } catch (syncErr) {
+                    console.warn('[Login] Social sync failed, AuthContext will retry:', syncErr);
+                }
+
                 navigate('/');
             }
         } catch (err: any) {

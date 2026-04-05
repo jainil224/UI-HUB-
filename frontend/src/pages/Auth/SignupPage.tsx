@@ -7,6 +7,7 @@ import { Mail, Lock, AlertCircle, Loader2, Github, ArrowRight, Eye, EyeOff, User
 import { formatAuthError } from '../../utils/authUtils';
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/ui/Logo';
+import { getApiBaseUrl } from '../../utils/apiConfig';
 
 const SignupPage = () => {
     const [name, setName] = useState('');
@@ -50,6 +51,23 @@ const SignupPage = () => {
             const result = await signInWithPopup(auth, provider);
             if (result.user) {
                 console.log(`[Auth] ${providerType} sign-up successful:`, result.user.email);
+                
+                // Explicitly sync with backend
+                try {
+                    const apiBaseUrl = getApiBaseUrl();
+                    await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            email: result.user.email, 
+                            name: result.user.displayName || 'UI Challenger' 
+                        })
+                    });
+                    console.log('[Signup] Social sync triggered successfully.');
+                } catch (syncErr) {
+                    console.warn('[Signup] Social sync failed, AuthContext will retry:', syncErr);
+                }
+
                 navigate('/');
             }
         } catch (err: any) {
@@ -91,6 +109,20 @@ const SignupPage = () => {
             await updateProfile(userCredential.user, {
                 displayName: name
             });
+
+            // Explicitly sync with backend to ensure Firestore document creation
+            try {
+                const apiBaseUrl = getApiBaseUrl();
+                await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, name: name })
+                });
+                console.log('[Signup] User sync triggered successfully.');
+            } catch (syncErr) {
+                console.warn('[Signup] Post-signup sync failed, AuthContext will retry:', syncErr);
+            }
+
             navigate('/');
         } catch (err: any) {
             setError(formatAuthError(err.message) || 'Failed to create account. Please try again.');
