@@ -1,6 +1,6 @@
 import admin from '../utils/firebaseAdmin.js';
 
-const db = admin.firestore();
+const getDb = () => admin.firestore();
 const USERS_COLLECTION = 'users';
 
 /**
@@ -16,6 +16,7 @@ const USERS_COLLECTION = 'users';
 export const checkEliteStatus = async (email) => {
     if (!email) return false;
     try {
+        const db = getDb();
         const userDoc = await db.collection(USERS_COLLECTION).doc(email.toLowerCase()).get();
         if (!userDoc.exists) return false;
         
@@ -55,6 +56,7 @@ export const checkProStatus = async (email) => {
     }
     
     try {
+        const db = getDb();
         // Fetch user from Firestore
         const userDoc = await db.collection(USERS_COLLECTION).doc(userEmail).get();
         
