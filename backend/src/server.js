@@ -30,7 +30,14 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "https://checkout.razorpay.com"],
       frameSrc: ["https://api.razorpay.com"],
-      connectSrc: ["'self'", "https://api.razorpay.com"],
+      connectSrc: [
+        "'self'", 
+        "http://localhost:*", 
+        "https://ui-hub-design.vercel.app", 
+        "https://ui-hub-design-git-main-jainil224s-projects.vercel.app", 
+        "https://ui-hub-design-jainil224s-projects.vercel.app", 
+        "https://api.razorpay.com"
+      ],
       imgSrc: ["'self'", "data:", "https:"],
       styleSrc: ["'self'", "'unsafe-inline'"],
     },

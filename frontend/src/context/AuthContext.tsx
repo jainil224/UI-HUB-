@@ -58,41 +58,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (user) {
                 console.log(`[Auth] User detected: ${user.email}. Fetching status...`);
                 
-                // 4. Synchronize user with backend (if not already done in this session)
-                const hasSynced = sessionStorage.getItem(`ui-hub-synced-${user.uid}`);
-                if (!hasSynced) {
-                    try {
-                        const apiBaseUrl = getApiBaseUrl();
-                        console.log(`[Auth] New session/login detected. Syncing ${user.email}...`);
-                        
-                        await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                email: user.email,
-                                name: user.displayName || 'UI Challenger'
-                            })
-                        });
-                        
+                // 4. Synchronize user with backend
+                // Previously gated by sessionStorage, now always attempted to ensure Firestore document exists
+                try {
+                    const apiBaseUrl = getApiBaseUrl();
+                    console.log(`[Auth] Attempting sync for ${user.email} to ${apiBaseUrl}/api/v1/users/sync...`);
+                    
+                    const syncResponse = await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: user.email,
+                            name: user.displayName || 'UI Challenger'
+                        })
+                    });
+                    
+                    if (syncResponse.ok) {
+                        console.log(`[Auth] Sync successful for ${user.email}`);
                         sessionStorage.setItem(`ui-hub-synced-${user.uid}`, 'true');
-                        
-                        // Check if this is a first-time registration (creationTime == lastSignInTime)
-                        // Note: Firebase metadata times are strings, so we convert to Date for comparison
-                        const creationTime = new Date(user.metadata.creationTime || 0).getTime();
-                        const lastSignInTime = new Date(user.metadata.lastSignInTime || 0).getTime();
-                        
-                        // Allow for a small 2-second margin of error
-                        const isNewUser = Math.abs(creationTime - lastSignInTime) < 2000;
-                        
-                        if (isNewUser) {
-                            sessionStorage.setItem('ui-hub-is-new-user', 'true');
-                        }
-                        
-                        // Also show welcome toast for the first time
-                        sessionStorage.setItem('ui-hub-show-welcome', 'true');
-                    } catch (syncErr) {
-                        console.error('[Auth] Failed to sync user on auth state change:', syncErr);
+                    } else {
+                        const errorMsg = await syncResponse.text();
+                        console.warn(`[Auth] Sync API returned error: ${syncResponse.status} - ${errorMsg}`);
                     }
+                    
+                    // First-time registration flags
+                    const creationTime = new Date(user.metadata.creationTime || 0).getTime();
+                    const lastSignInTime = new Date(user.metadata.lastSignInTime || 0).getTime();
+                    const isNewUser = Math.abs(creationTime - lastSignInTime) < 5000; // 5s window
+                    
+                    if (isNewUser && !sessionStorage.getItem('ui-hub-show-welcome')) {
+                        sessionStorage.setItem('ui-hub-is-new-user', 'true');
+                        sessionStorage.setItem('ui-hub-show-welcome', 'true');
+                    }
+                } catch (syncErr) {
+                    console.error('[Auth] Failed to reach sync endpoint:', syncErr);
                 }
 
                 try {
