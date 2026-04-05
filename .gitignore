@@ -1,7 +1,9 @@
-# Node.js
+# Dependencies
 node_modules/
+**/node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
 
 # Environment variables
 .env
@@ -29,6 +31,14 @@ dist-ssr/
 build/
 backend/tmp/
 
+# Temp
+tmp/
+files.txt
+*.py
+prompt.md
+.firebaserc
+firebase.json
+
 # OS generated files
 .DS_Store
 .DS_Store?
@@ -37,9 +47,3 @@ backend/tmp/
 .Trashes
 ehthumbs.db
 Thumbs.db
-node_modules
-node_modules
-node_modules
-node_modules
-node_modules
-node_modules
