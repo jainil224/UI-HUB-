@@ -270,3 +270,19 @@
   z-index: 15;
   pointer-events: none;
 }
+
+.cards-beam-container .cards-beam-branding {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 100;
+  opacity: 0.6;
+  transform: scale(0.8);
+  pointer-events: auto;
+  transition: opacity 0.3s ease;
+}
+
+.cards-beam-container .cards-beam-branding:hover {
+  opacity: 1;
+}
+

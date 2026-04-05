@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import './CardsBeam.css';
+import Logo from './Logo';
 
 const codeChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789(){}[]<>;:,._-+=!@#$%^&*|\\/\"'`~?";
 
@@ -486,6 +487,10 @@ export const CardsBeam = () => {
             <canvas id="particleCanvas" ref={particleCanvasRef}></canvas>
             <canvas id="scannerCanvas" ref={scannerCanvasRef}></canvas>
             <div className="scanner" style={{ display: 'block' }}></div>
+            
+            <div className="cards-beam-branding">
+                <Logo showText={true} className="w-6 h-6" />
+            </div>
         </div>
     );
 };
