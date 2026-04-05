@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-// pdfService imported lazily to prevent Vercel crashes on Chromium at boot
+// PDF Service removed entirely to fix Vercel crash
 import { PLANS } from '../config/plans.js';
 
 const transporter = nodemailer.createTransport({
@@ -36,8 +36,7 @@ export async function sendInvoiceEmail({ email, displayName, planId, paymentId, 
     purchaseDate:  purchaseDate || new Date(),
   };
 
-  const { generateInvoicePDF } = await import('./pdfService.js');
-  const pdfBuffer = await generateInvoicePDF(params);
+  // PDF Generation disabled due to Vercel Serverless size limitations
 
   await transporter.sendMail({
     from: `"UI HUB Support" <${process.env.SMTP_FROM || 'support@ui-hub.com'}>`,
@@ -60,13 +59,7 @@ export async function sendInvoiceEmail({ email, displayName, planId, paymentId, 
         <p style="font-size: 12px; color: #9CA3AF;">UI-HUB · support@ui-hub.com</p>
       </div>
     `,
-    attachments: [
-      {
-        filename: `UI-HUB-Invoice-${invoiceNumber}.pdf`,
-        content: pdfBuffer,
-        contentType: 'application/pdf',
-      },
-    ],
+      // No attachments for now due to Chromium dependencies causing Vercel crashes
   });
 
   console.log(`[EMAIL] Invoice sent to ${email} — ${invoiceNumber}`);
