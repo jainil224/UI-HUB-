@@ -23,16 +23,10 @@ const LoginPage = () => {
 
     // Handle global body scroll lock for this page
     useEffect(() => {
-        document.body.style.overflow = 'hidden';
-        
         // Immediate check if video is already ready (cached)
         if (videoRef.current && videoRef.current.readyState >= 3) {
             setVideoLoaded(true);
         }
-
-        return () => {
-            document.body.style.overflow = 'unset';
-        };
     }, []);
 
     // Redirect if already logged in
@@ -113,8 +107,11 @@ const LoginPage = () => {
                 {/* Background Accent */}
                 <div className="fixed top-0 left-0 w-[400px] h-[400px] bg-[#00FF88]/5 blur-[120px] rounded-full pointer-events-none z-0" />
                 
-                {/* Internal Scrollable Container */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar relative z-10 px-8 py-10 md:px-14 lg:px-20">
+                {/* Internal Scrollable Container - Independent scroll with Lenis prevention */}
+                <div 
+                    className="flex-1 overflow-y-auto custom-scrollbar relative z-10 px-8 py-10 md:px-14 lg:px-20"
+                    data-lenis-prevent
+                >
                     <div className="min-h-full flex flex-col py-12 lg:py-20">
                         {/* Header Top - Shrink Proof */}
                         <div className="flex justify-between items-center w-full mb-12 lg:mb-16 shrink-0 relative z-10">

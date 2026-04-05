@@ -12,6 +12,8 @@ package-lock.json
 .env.test.local
 .env.production.local
 !.env.example
+backend/service-account.json
+
 
 # Vercel
 .vercel
