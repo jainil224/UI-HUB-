@@ -1,8 +1,9 @@
 import admin from '../utils/firebaseAdmin.js';
 
-const db = admin.firestore();
+const getDb = () => admin.firestore();
 
 export const fulfillPayment = async ({ paymentId, orderId, tier, email, amount, currency, signature }) => {
+  const db = getDb();
   // Idempotency guard — check if paymentId already exists
   const paymentRef = db.collection('payments').doc(paymentId);
   const existing = await paymentRef.get();
@@ -33,18 +34,14 @@ export const fulfillPayment = async ({ paymentId, orderId, tier, email, amount, 
 
   // 2. Update user tier
   try {
-      const usersRef = db.collection('users');
-      const snapshot = await usersRef.where('email', '==', email).limit(1).get();
-      if(!snapshot.empty) {
-          const userDoc = snapshot.docs[0];
-          await userDoc.ref.update({
-              planTier: tier,
-              updatedAt: admin.firestore.FieldValue.serverTimestamp()
-          });
-          console.log(`[FirebaseService] User ${email} upgraded to ${tier}`);
-      } else {
-          console.log(`[FirebaseService] User with email ${email} not found. Cannot update tier.`);
-      }
+      const userDocRef = db.collection('users').doc(email.toLowerCase());
+      await userDocRef.set({
+          email: email.toLowerCase(),
+          planTier: tier,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+      
+      console.log(`[FirebaseService] User ${email} upgraded to ${tier}`);
   } catch(err) {
       console.error('[FirebaseService] Error updating user tier:', err);
       throw err;

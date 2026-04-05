@@ -107,31 +107,42 @@ export const verifyPayment = async (req, res) => {
         if (result.alreadyProcessed) {
             return res.status(200).json({ success: true, tier: tier, message: 'Payment already applied.' });
         }
-    } catch (fbErr) {
-        console.error('[VerifyPayment] Firebase Save error:', fbErr.message);
-        return res.status(500).json({ success: false, error: `Payment verified but failed to save record: ${fbErr.message}` });
-    }
-
-    // 3. Send Email Receipt
-    try {
-        await sendInvoiceEmail({
+        
+        // 3. Send Email Receipt (non-blocking)
+        sendInvoiceEmail({
             email: user_email,
             displayName: req.user?.name || '',
             planId: planId || tier,
             paymentId: razorpay_payment_id,
             orderId: razorpay_order_id,
             purchaseDate: new Date()
+        }).catch(emailErr => {
+            console.error('[VerifyPayment] Email Receipt error:', emailErr.message);
         });
-    } catch (emailErr) {
-        console.error('[VerifyPayment] Email Receipt error:', emailErr.message);
-    }
 
-    // 4. Respond success
-    res.json({
-        success: true,
-        tier: tier,
-        message: 'Payment verified successfully.'
-    });
+        // 4. Respond success
+        return res.json({
+            success: true,
+            tier: tier,
+            message: 'Payment verified successfully.'
+        });
+
+    } catch (fbErr) {
+        console.error('[VerifyPayment] FULFILLMENT FAILED:', {
+            paymentId: razorpay_payment_id,
+            orderId: razorpay_order_id,
+            email: user_email,
+            tier,
+            error: fbErr.message
+        });
+        
+        return res.status(500).json({ 
+            success: false, 
+            paymentCaptured: true,
+            paymentId: razorpay_payment_id,
+            error: 'Your payment was successful, but we encountered an issue activating your plan. Please contact support with your payment ID and we will resolve this immediately.'
+        });
+    }
 
   } catch (error) {
     console.error('[VerifyPayment] Unhandled fatal error:', error.message);

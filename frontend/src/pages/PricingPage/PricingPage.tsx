@@ -112,6 +112,9 @@ const PricingPage = () => {
                         if (verifyData.success) {
                             setCheckoutStatus('success');
                             setCheckoutMessage(`Welcome to ${plan.title}! Your account is upgraded.`);
+                        } else if (verifyData.paymentCaptured) {
+                            setCheckoutStatus('error'); 
+                            setCheckoutMessage(verifyData.error || 'Payment received but plan activation is pending. Please contact support.');
                         } else {
                             throw new Error(verifyData.error || 'Verification failed');
                         }

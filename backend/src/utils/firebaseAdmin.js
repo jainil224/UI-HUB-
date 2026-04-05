@@ -9,41 +9,44 @@ if (!projectId) {
   console.error('[FirebaseAdmin] CRITICAL: VITE_FIREBASE_PROJECT_ID is not defined in environment variables!');
 }
 
-if (!admin.apps.length) {
-  try {
-    // Prefer an inline JSON service account (base64 or raw) passed as an env var.
-    // This is the standard pattern for Render/Railway/Heroku deployments where
-    // you cannot upload a credentials file directly.
-    const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+function initializeFirebaseAdmin() {
+  if (admin.apps.length > 0) {
+    return admin.app();
+  }
 
-    let credential;
-    if (serviceAccountJson) {
-      let parsed;
-      try {
-        // Support both raw JSON string and base64-encoded JSON
-        parsed = JSON.parse(
-          serviceAccountJson.startsWith('{')
-            ? serviceAccountJson
-            : Buffer.from(serviceAccountJson, 'base64').toString('utf8')
-        );
-      } catch (parseErr) {
-        console.error('[FirebaseAdmin] Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:', parseErr.message);
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  if (!raw) {
+    console.error('[FirebaseAdmin] FIREBASE_SERVICE_ACCOUNT_JSON is not set.');
+  }
+
+  let serviceAccount;
+  if (raw) {
+    try {
+      const cleanRaw = raw.trim();
+      serviceAccount = JSON.parse(
+        cleanRaw.startsWith('{') ? cleanRaw : Buffer.from(cleanRaw, 'base64').toString('utf8')
+      );
+      if (serviceAccount.private_key) {
+        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
       }
-      if (parsed) {
-        credential = admin.credential.cert(parsed);
-        console.log('[FirebaseAdmin] Using service account credential from FIREBASE_SERVICE_ACCOUNT_JSON env var.');
-      }
+    } catch (parseErr) {
+      console.error('[FirebaseAdmin] Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:', parseErr.message);
     }
+  }
 
-    admin.initializeApp({
-      projectId,
-      ...(credential ? { credential } : {}),
-    });
-    console.log(`[FirebaseAdmin] Initialized for project: ${projectId} (credential: ${credential ? 'service-account' : 'application-default'})`);
+  try {
+    const initPayload = {
+      ...(projectId && { projectId }),
+      ...(serviceAccount && { credential: admin.credential.cert(serviceAccount) }),
+    };
+    admin.initializeApp(initPayload);
+    console.log(`[FirebaseAdmin] Initialized for project: ${projectId} (credential: ${serviceAccount ? 'service-account' : 'application-default'})`);
   } catch (error) {
     console.error('[FirebaseAdmin] Initialization error:', error);
   }
 }
+
+initializeFirebaseAdmin();
 
 export const auth = admin.auth();
 export default admin;
