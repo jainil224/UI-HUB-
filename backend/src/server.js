@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import helmet from 'helmet';
 import componentRoutes from './routes/componentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import configRoutes from './routes/configRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import { globalLimiter } from './middleware/rateLimiters.js';
 
 dotenv.config();
 console.log('Environment variables loaded from .env');
@@ -23,6 +23,22 @@ const allowedOrigins = [
   'https://ui-hub-design-jainil224s-projects.vercel.app'
 ];
 
+// 1. Helmet (security headers)
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://checkout.razorpay.com"],
+      frameSrc: ["https://api.razorpay.com"],
+      connectSrc: ["'self'", "https://api.razorpay.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false, // Razorpay iframe requires this
+}));
+
+// 2. CORS
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl)
@@ -37,16 +53,23 @@ app.use(cors({
       return callback(null, true);
     } else {
       console.warn(`[CORS] Blocked origin: ${origin}`);
-      return callback(null, true); // Fallback to allow (temporary for debugging if needed) or use strict
+      return callback(null, true);
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(express.json());
 
-// Routes
+// 3. Body parsers (with size limits)
+app.use('/api/v1/payment/webhook', express.raw({ type: 'application/json' }));
+app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+
+// 4. Global Limiter
+app.use(globalLimiter);
+
+// 5. Routes
 const router = express.Router();
 router.use('/v1/components', componentRoutes);
 router.use('/v1/users', userRoutes);
@@ -91,4 +114,3 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     console.log(`Network: http://0.0.0.0:${PORT}`);
   });
 }
-

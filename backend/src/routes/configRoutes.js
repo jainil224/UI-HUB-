@@ -1,14 +1,10 @@
 import express from 'express';
 import { getFirebaseConfig, getRazorpayKey } from '../services/configService.js';
+import { configLimiter } from '../middleware/rateLimiters.js';
 
 const router = express.Router();
 
-/**
- * @route GET /api/v1/config/firebase
- * @desc Get public Firebase configuration
- * @access Public (as these are intended for client-side use)
- */
-router.get('/firebase', (req, res) => {
+router.get('/firebase', configLimiter, (req, res) => {
     try {
         const config = getFirebaseConfig();
         res.json(config);
@@ -18,12 +14,7 @@ router.get('/firebase', (req, res) => {
     }
 });
 
-/**
- * @route GET /api/v1/config/razorpay-key
- * @desc Get public Razorpay Key ID
- * @access Public
- */
-router.get('/razorpay-key', (req, res) => {
+router.get('/razorpay-key', configLimiter, (req, res) => {
     try {
         const config = getRazorpayKey();
         res.json(config);

@@ -70,7 +70,7 @@ const PricingPage = () => {
             const createOrderRes = await fetch(`${apiUrl}/api/v1/payment/create-order`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: plan.price, currency: currencyMode })
+                body: JSON.stringify({ amount: plan.price, currency: currencyMode, planId: plan.badgeTier })
             });
             
             if (!createOrderRes.ok) {
@@ -103,7 +103,8 @@ const PricingPage = () => {
                                 razorpay_signature: response.razorpay_signature,
                                 user_email: user.email,
                                 tier: plan.badgeTier,
-                                amount: plan.price
+                                amount: plan.price,
+                                planId: plan.badgeTier
                             })
                         });
                         

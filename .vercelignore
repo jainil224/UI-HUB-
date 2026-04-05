@@ -1,0 +1,14 @@
+.git
+.vscode
+.idea
+*.md
+tmp/
+functions/
+.firebaserc
+firebase.json
+files.txt
+*.py
+frontend/node_modules
+backend/node_modules
+backend/error.log
+backend/scripts/

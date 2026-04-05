@@ -1,215 +1,73 @@
 import nodemailer from 'nodemailer';
+import { generateInvoicePDF } from './pdfService.js';
+import { PLANS } from '../config/plans.js';
 
-const createTransporter = () => {
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
-    port: parseInt(process.env.SMTP_PORT) || 587,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-};
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+  port: parseInt(process.env.SMTP_PORT) || 587,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+});
 
-const buildPaymentReceiptHtml = (paymentDetails) => {
-  const { payment_id, order_id, amount, date, user_email } = paymentDetails;
-  
-  // Format amount to fixed 2 decimal places
-  const formattedAmount = Number(amount).toFixed(2);
-  
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Payment Receipt - UI HUB</title>
-      <style>
-        body {
-          margin: 0;
-          padding: 0;
-          background-color: #0d0d0d;
-          color: #ffffff;
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-          -webkit-font-smoothing: antialiased;
-        }
-        .container {
-          max-width: 600px;
-          margin: 40px auto;
-          background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 24px;
-          padding: 40px;
-          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-          backdrop-filter: blur(10px);
-        }
-        .header {
-          text-align: center;
-          margin-bottom: 30px;
-        }
-        .logo {
-          font-size: 28px;
-          font-weight: 900;
-          letter-spacing: 2px;
-          background: linear-gradient(135deg, #00FF1A, #008A0E);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          margin-bottom: 10px;
-        }
-        .title {
-          font-size: 20px;
-          color: #e0e0e0;
-          font-weight: 600;
-          margin: 0;
-        }
-        .amount-container {
-          text-align: center;
-          margin: 30px 0;
-          padding: 20px;
-          background: rgba(0, 255, 26, 0.05);
-          border-radius: 16px;
-          border: 1px solid rgba(0, 255, 26, 0.1);
-        }
-        .amount {
-          font-size: 42px;
-          font-weight: 800;
-          color: #00FF1A;
-          margin: 0;
-        }
-        .amount-label {
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 12px;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          margin-top: 5px;
-        }
-        .details {
-          margin-top: 30px;
-          background: rgba(255, 255, 255, 0.02);
-          border-radius: 12px;
-          padding: 25px;
-        }
-        .detail-row {
-          display: flex;
-          justify-content: space-between;
-          margin-bottom: 15px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-          padding-bottom: 15px;
-        }
-        .detail-row:last-child {
-          margin-bottom: 0;
-          border-bottom: none;
-          padding-bottom: 0;
-        }
-        .detail-label {
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 14px;
-        }
-        .detail-value {
-          color: #ffffff;
-          font-weight: 500;
-          font-size: 14px;
-          text-align: right;
-        }
-        .status {
-          display: inline-block;
-          padding: 4px 12px;
-          background: rgba(0, 255, 26, 0.15);
-          color: #00FF1A;
-          border-radius: 20px;
-          font-size: 12px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-        }
-        .footer {
-          margin-top: 40px;
-          text-align: center;
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.4);
-        }
-        .message {
-          text-align: center;
-          color: rgba(255, 255, 255, 0.8);
-          line-height: 1.6;
-          margin: 30px 0;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <div class="logo">UI HUB</div>
-          <h1 class="title">Payment Receipt</h1>
-        </div>
-        
-        <div class="message">
-          Hi there,<br/>
-          Thank you for upgrading to Premium. Your payment was successful and your account has been upgraded.
+/**
+ * Sends a branded invoice email with PDF attachment after successful payment.
+ */
+export async function sendInvoiceEmail({ email, displayName, planId, paymentId, orderId, purchaseDate }) {
+  const plan = PLANS[planId];
+  if (!plan) throw new Error(`Unknown planId: ${planId}`);
+
+  // Generate a deterministic invoice number from payment ID
+  const invoiceNumber = `UIHUB-${new Date(purchaseDate).getFullYear()}-${paymentId.slice(-8).toUpperCase()}`;
+
+  const params = {
+    customerName:  displayName || '',
+    email,
+    planName:      plan.name,
+    planDuration:  plan.duration,
+    billingCycle:  plan.billingCycle,
+    price:         plan.price || 0, // Fallback if dynamically setting
+    currency:      plan.currency || 'USD',
+    features:      plan.features,
+    paymentId,
+    orderId,
+    invoiceNumber,
+    purchaseDate:  purchaseDate || new Date(),
+  };
+
+  const pdfBuffer = await generateInvoicePDF(params);
+
+  await transporter.sendMail({
+    from: `"UI HUB Support" <${process.env.SMTP_FROM || 'support@ui-hub.com'}>`,
+    to: email,
+    subject: `Your UI-HUB ${plan.name} Invoice — ${invoiceNumber}`,
+    html: `
+      <div style="font-family: 'DM Sans', sans-serif; max-width: 520px; margin: 0 auto; padding: 32px 24px; color: #0F0F0F;">
+        <h1 style="font-size: 22px; font-weight: 700; margin-bottom: 8px;">Welcome to UI-HUB ${plan.name}! 🎉</h1>
+        <p style="color: #6B7280; margin-bottom: 24px;">Your payment was successful. Your plan is now active.</p>
+
+        <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+          <p><strong>Plan:</strong> ${plan.name}</p>
+          <p><strong>Duration:</strong> ${plan.duration}</p>
+          <p><strong>Payment ID:</strong> <code style="font-family: monospace; background: #E5E7EB; padding: 2px 6px; border-radius: 4px;">${paymentId}</code></p>
         </div>
 
-        <div class="amount-container">
-          <h2 class="amount">${formattedAmount}</h2>
-          <div class="amount-label">Amount Paid</div>
-        </div>
+        <p style="color: #6B7280; font-size: 13px;">Your detailed invoice is attached as a PDF. Keep it for your records.</p>
 
-        <div class="details">
-          <div class="detail-row">
-            <span class="detail-label">Status</span>
-            <span class="detail-value"><span class="status">SUCCESS</span></span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Date & Time</span>
-            <span class="detail-value">${date}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Transaction ID</span>
-            <span class="detail-value">${payment_id}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Order ID</span>
-            <span class="detail-value">${order_id}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Email</span>
-            <span class="detail-value">${user_email}</span>
-          </div>
-        </div>
-
-        <div class="footer">
-          &copy; ${new Date().getFullYear()} UI HUB. All rights reserved.<br/>
-          This is an automated message, please do not reply.
-        </div>
+        <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 24px 0;" />
+        <p style="font-size: 12px; color: #9CA3AF;">UI-HUB · support@ui-hub.com</p>
       </div>
-    </body>
-    </html>
-  `;
-};
+    `,
+    attachments: [
+      {
+        filename: `UI-HUB-Invoice-${invoiceNumber}.pdf`,
+        content: pdfBuffer,
+        contentType: 'application/pdf',
+      },
+    ],
+  });
 
-export const sendPaymentReceipt = async (paymentDetails) => {
-  try {
-    const transporter = createTransporter();
-    
-    // Check if SMTP configuration is valid
-    if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-      console.warn('SMTP credentials missing. Mocking email receipt.');
-      console.log('Mock email Receipt content:', paymentDetails);
-      return true;
-    }
-
-    const mailOptions = {
-      from: '"UI HUB Support" <support@ui-hub.com>',
-      to: paymentDetails.user_email,
-      subject: 'Payment Receipt - UI HUB Premium',
-      html: buildPaymentReceiptHtml(paymentDetails)
-    };
-
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Payment receipt sent: %s', info.messageId);
-    return true;
-  } catch (error) {
-    console.error('Error sending payment receipt email:', error);
-    // Don't throw, we don't want to fail the entire payment verified hook just because email failed.
-    return false;
-  }
-};
+  console.log(`[EMAIL] Invoice sent to ${email} — ${invoiceNumber}`);
+  return invoiceNumber;
+}

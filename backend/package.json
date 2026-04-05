@@ -9,11 +9,19 @@
     "dev": "node --watch src/server.js"
   },
   "dependencies": {
+    "@sparticuz/chromium": "^143.0.4",
+    "@upstash/redis": "^1.37.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.3.2",
+    "express-validator": "^7.3.2",
     "firebase-admin": "^13.7.0",
+    "helmet": "^8.1.0",
+    "ioredis": "^5.10.1",
     "nodemailer": "^6.9.13",
+    "puppeteer-core": "^24.40.0",
+    "rate-limit-redis": "^4.3.1",
     "razorpay": "^2.9.6",
     "resend": "^6.9.4"
   }
