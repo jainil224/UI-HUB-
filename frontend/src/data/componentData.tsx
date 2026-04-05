@@ -30,6 +30,7 @@ const Smilo = React.lazy(() => import('../components/ui/Smilo'));
 const Tripy = React.lazy(() => import('../components/ui/Tripy'));
 const Aiva = React.lazy(() => import('../components/ui/Aiva'));
 const LaptopBot = React.lazy(() => import('../components/ui/LaptopBot'));
+const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam').then(m => ({ default: m.CardsBeam })));
 /* const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem')); */
 
 
@@ -1267,6 +1268,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'tripy': Tripy,
     'aiva': Aiva,
     'laptopbot': LaptopBot,
+    'cards-beam': CardsBeam,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2005,6 +2007,14 @@ export const Demo = () => (
         preview: renderComponent("robot-3d-background", "Robot 3D Background", { showDownloadLink: true }),
         code: "",
         vibePrompt: ""
+    },
+    {
+        id: "cards-beam",
+        title: "Cards Beam",
+        category: "3d",
+        preview: renderComponent("cards-beam", "Cards Beam"),
+        code: `import { CardsBeam } from '@/components/ui/CardsBeam';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <CardsBeam />\n  </div>\n);`,
+        vibePrompt: "A futuristic 3D credit card scanning animation with particle systems, ASCII beam effects, and interactive dragging. Features THREE.js particle background and dual-canvas coordinate-synced clipping."
     },
 
     {
