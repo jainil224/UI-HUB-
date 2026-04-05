@@ -2012,6 +2012,7 @@ export const Demo = () => (
         id: "cards-beam",
         title: "Cards Beam",
         category: "3d",
+        isPremium: true,
         preview: renderComponent("cards-beam", "Cards Beam"),
         code: `import { CardsBeam } from '@/components/ui/CardsBeam';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <CardsBeam />\n  </div>\n);`,
         vibePrompt: "A futuristic 3D credit card scanning animation with particle systems, ASCII beam effects, and interactive dragging. Features THREE.js particle background and dual-canvas coordinate-synced clipping."
