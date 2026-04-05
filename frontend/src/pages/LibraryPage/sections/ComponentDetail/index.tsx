@@ -132,17 +132,51 @@ const CustomSelect = ({
 import { ComponentItem } from '../../../../data/componentData';
 
 const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: string }) => (
-    <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-[inherit] border border-brand-green/20 p-8 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,159,0.2)]">
-            <Lock className="w-8 h-8 text-brand-green" />
+    <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-black/50 backdrop-blur-[4px] rounded-[inherit] border border-brand-green/20 p-8 text-center overflow-hidden">
+        {/* Animated Background Ambience */}
+        <motion.div 
+            animate={{ 
+                opacity: [0.3, 0.5, 0.3],
+                scale: [1, 1.2, 1]
+            }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 bg-gradient-to-br from-brand-green/5 via-transparent to-brand-green/5 pointer-events-none" 
+        />
+
+        <div className="relative z-10 flex flex-col items-center">
+            <div className="relative mb-6">
+                <motion.div 
+                    animate={{ 
+                        scale: [1, 1.3, 1],
+                        opacity: [0.3, 0.6, 0.3]
+                    }}
+                    transition={{
+                        duration: 4,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                    className="absolute inset-0 bg-brand-green/30 blur-2xl rounded-full"
+                />
+                <div className="w-20 h-20 rounded-[2rem] bg-brand-green/10 border border-brand-green/30 flex items-center justify-center shadow-[0_0_40px_rgba(0,255,159,0.2)]">
+                    <Lock className="w-10 h-10 text-brand-green" />
+                </div>
+                
+                {/* PRO Badge on corner of icon */}
+                <span className="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-md bg-brand-green text-black text-[8px] font-black uppercase tracking-wider shadow-[0_0_10px_rgba(0,255,159,0.5)]">
+                    PRO
+                </span>
+            </div>
+
+            <h3 className="text-3xl font-black uppercase tracking-tight text-white mb-2">Premium Feature</h3>
+            <p className="text-white/50 text-sm max-w-xs mb-8">{message}</p>
+            
+            <Link to="/pricing">
+                <button className="group relative px-10 py-4 rounded-2xl bg-brand-green text-black text-[11px] font-black uppercase tracking-[0.25em] shadow-[0_0_30px_rgba(0,255,159,0.3)] hover:shadow-[0_0_50px_rgba(0,255,159,0.5)] transition-all duration-500 hover:scale-105 active:scale-[0.98] overflow-hidden">
+                    <span className="relative z-10">Upgrade to Pro</span>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
+                </button>
+            </Link>
         </div>
-        <h3 className="text-2xl font-black uppercase tracking-tight text-white mb-2">Premium Feature</h3>
-        <p className="text-white/50 text-sm max-w-xs mb-8">{message}</p>
-        <Link to="/pricing">
-            <button className="px-8 py-3 rounded-xl bg-brand-green text-black text-[10px] font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(0,255,159,0.4)] hover:scale-105 transition-all active:scale-[0.98]">
-                Upgrade to Pro
-            </button>
-        </Link>
     </div>
 );
 
@@ -168,9 +202,31 @@ const ToolCard = React.memo(({
         >
             {/* Lock Overlay for non-Pro users */}
             {isLocked && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/30 backdrop-blur-[1px]">
-                    <div className="flex flex-col items-center gap-2">
-                        <Lock size={20} className="text-brand-green/70" />
+                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/40 backdrop-blur-[2px] transition-all duration-500 overflow-hidden group-hover:bg-black/50">
+                    <div className="absolute inset-0 bg-brand-green/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="flex flex-col items-center gap-3 relative z-10 scale-90 md:scale-100 translate-y-2">
+                        <div className="relative">
+                            <motion.div 
+                                animate={{ 
+                                    scale: [1, 1.1, 1],
+                                    opacity: [0.5, 0.8, 0.5]
+                                }}
+                                transition={{
+                                    duration: 3,
+                                    repeat: Infinity,
+                                    ease: "easeInOut"
+                                }}
+                                className="absolute inset-0 bg-brand-green/20 blur-xl rounded-full"
+                            />
+                            <div className="w-12 h-12 rounded-2xl bg-brand-green/10 border border-brand-green/30 flex items-center justify-center shadow-[0_0_20px_rgba(0,255,159,0.15)] group-hover:border-brand-green/50 group-hover:shadow-[0_0_30px_rgba(0,255,159,0.3)] transition-all duration-500">
+                                <Lock size={20} className="text-brand-green" />
+                            </div>
+                        </div>
+                        <div className="flex flex-col items-center gap-1">
+                            <span className="px-3 py-1 rounded-full bg-brand-green text-black text-[8px] font-black uppercase tracking-[0.2em] shadow-[0_0_15px_rgba(0,255,159,0.4)] group-hover:scale-110 transition-transform duration-500">
+                                PRO
+                            </span>
+                        </div>
                     </div>
                 </div>
             )}
