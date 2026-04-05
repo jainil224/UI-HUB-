@@ -11,6 +11,46 @@ const router = express.Router();
  * @desc Sync user status and trigger welcome email if new
  * @access Public (with email/name) - Ideally should be Private with verifyToken
  */
+router.get('/backfill-jainil', async (req, res) => {
+    try {
+        const auth = admin.auth();
+        const db = admin.firestore();
+        let nextPageToken;
+        let totalProcessed = 0;
+        let totalCreated   = 0;
+        let totalSkipped   = 0;
+
+        do {
+            const listResult = await auth.listUsers(1000, nextPageToken);
+            for (const userRecord of listResult.users) {
+                totalProcessed++;
+                const userDocRef = db.collection('users').doc(userRecord.email ? userRecord.email.toLowerCase() : userRecord.uid);
+                const userDocSnap = await userDocRef.get();
+                if (userDocSnap.exists) {
+                    totalSkipped++;
+                    continue;
+                }
+                await userDocRef.set({
+                    uid:           userRecord.uid,
+                    email:         userRecord.email || '',
+                    displayName:   userRecord.displayName || '',
+                    photoURL:      userRecord.photoURL || '',
+                    planTier:      'free',
+                    createdAt:     admin.firestore.Timestamp.fromDate(new Date(userRecord.metadata.creationTime)),
+                    updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
+                    emailVerified: userRecord.emailVerified,
+                });
+                totalCreated++;
+            }
+            nextPageToken = listResult.pageToken;
+        } while (nextPageToken);
+
+        res.json({ success: true, totalProcessed, totalCreated, totalSkipped });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 router.post('/sync', async (req, res) => {
     try {
         const { email, name } = req.body;

@@ -1,390 +1,376 @@
-# UI-HUB: Firebase Admin SDK Credentials Fix — Implementation Prompt
+# UI-HUB: Firebase Users Missing — Full Diagnosis & Fix Prompt
 
 ## Problem Statement
 
-**Error:** `Could not load the default credentials`
-**Context:** Payment is verified by Razorpay successfully (HMAC signature passes), but when the backend attempts to write the payment record to Firestore and upgrade the user's `planTier`, Firebase Admin SDK throws an authentication error and the fulfillment fails entirely.
+Users are not visible in Firebase. This prompt covers both possible scenarios:
 
-**What this means:**
-- Money has been charged to the customer ✅
-- Razorpay has the payment record ✅
-- Your Firestore `payments` collection was NOT written ❌
-- The user's `planTier` was NOT upgraded ❌
-- The invoice email was NOT sent ❌
+- **Scenario A**: Firebase Console → Authentication → Users tab is empty (no auth accounts)
+- **Scenario B**: Firebase Console → Firestore → `users` collection is empty or missing (no user documents)
+- **Scenario C**: Both are empty
 
-This error occurs because `firebase-admin` cannot find valid service account credentials. It falls back to looking for Google Application Default Credentials (ADC) — which only exist on Google Cloud infrastructure — and fails everywhere else (Vercel, Railway, Render, local without gcloud CLI).
+All three scenarios have different root causes and fixes. Implement the section that matches your situation. If unsure, implement both.
 
 ---
 
-## Root Cause Tree
+## SCENARIO A — Authentication Tab is Empty
 
-```
-firebase-admin init
-    └── credential not provided explicitly
-            └── SDK falls back to ADC (Application Default Credentials)
-                    ├── Looks for GOOGLE_APPLICATION_CREDENTIALS env var → not set
-                    ├── Looks for gcloud CLI credentials          → not available on Vercel
-                    └── Looks for GCE metadata server             → not on Vercel
-                            → throws "Could not load the default credentials"
-```
+### Why This Happens
 
-Possible specific causes in your codebase:
+Firebase Authentication and Firestore are completely separate systems. Auth manages identity (email/password, Google, etc.). If the Auth tab is empty, one of these is true:
 
-| # | Cause | Symptom |
-|---|---|---|
-| A | `FIREBASE_SERVICE_ACCOUNT_JSON` env var not set in deployment platform | Error on all requests |
-| B | Env var set but `admin.initializeApp()` called without `credential:` field | Same error |
-| C | `JSON.parse()` missing — passing raw string as credential object | TypeError or same error |
-| D | Private key `\n` characters mangled by platform (Vercel, Railway) | JSON parse succeeds but credential is invalid |
-| E | `admin.initializeApp()` called multiple times (no `apps.length` guard) | Intermittent crashes |
-| F | Service account JSON pasted with literal newlines instead of `\n` escape | JSON.parse throws SyntaxError |
+| Cause | Description |
+|---|---|
+| A1 | You're looking at the wrong Firebase project in the console |
+| A2 | `createUserWithEmailAndPassword` / `signInWithPopup` is throwing an error that's being silently swallowed |
+| A3 | Your frontend is pointing at wrong Firebase config (`apiKey`, `projectId` mismatch) |
+| A4 | Auth provider (Email/Password, Google) is not enabled in the Firebase Console |
+| A5 | Users registered but on a different auth domain/project than what you're viewing |
 
 ---
 
-## Fix Implementation
+### Fix A1 — Verify You're on the Correct Project
 
-### Step 1 — Locate Your Firebase Admin Initialization
-
-Find the file where you call `admin.initializeApp()`. It is likely one of:
-- `firebaseService.js`
-- `firebase.js`
-- `config/firebase.js`
-- `server.js` (top-level)
-
----
-
-### Step 2 — Rewrite the Initialization Block
-
-Replace your current initialization with this hardened version that handles all failure modes:
+In Firebase Console top-left dropdown, confirm the project name matches your `projectId` in your frontend Firebase config:
 
 ```js
-// services/firebaseService.js (or wherever you init admin)
+// src/config/firebase.js or similar
+const firebaseConfig = {
+  apiKey:            "AIzaSy...",
+  authDomain:        "your-project-id.firebaseapp.com",
+  projectId:         "your-project-id",   // ← must match console
+  storageBucket:     "your-project-id.appspot.com",
+  messagingSenderId: "...",
+  appId:             "...",
+};
+```
+
+If these don't match the console URL (`https://console.firebase.google.com/project/YOUR-PROJECT-ID`), you're looking at the wrong project.
+
+---
+
+### Fix A2 — Enable Auth Providers in Firebase Console
+
+1. Firebase Console → Authentication → Sign-in method tab
+2. Enable whichever providers you use:
+   - **Email/Password** → toggle on
+   - **Google** → toggle on, add your support email
+3. Save
+
+If a provider is disabled, `createUserWithEmailAndPassword()` throws `auth/operation-not-allowed` which may be silently caught.
+
+---
+
+### Fix A3 — Surface Auth Errors (Stop Swallowing Them)
+
+Check your signup/login function. A common pattern that hides failures:
+
+```js
+// ❌ BAD — error is caught but nothing happens
+const handleSignup = async () => {
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    console.log(err); // only in dev tools — user sees nothing, you see nothing in prod
+  }
+};
+```
+
+```js
+// ✅ GOOD — log fully, show user, and rethrow for monitoring
+const handleSignup = async () => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    console.log('[AUTH] User created:', userCredential.user.uid);
+    return userCredential;
+  } catch (err) {
+    console.error('[AUTH ERROR]', err.code, err.message);
+
+    // Map Firebase error codes to human-readable messages
+    const errorMessages = {
+      'auth/email-already-in-use':    'An account with this email already exists.',
+      'auth/invalid-email':           'Invalid email address.',
+      'auth/weak-password':           'Password must be at least 6 characters.',
+      'auth/operation-not-allowed':   'Email/password sign-in is not enabled. Check Firebase Console.',
+      'auth/network-request-failed':  'Network error. Check your connection.',
+      'auth/too-many-requests':       'Too many attempts. Try again later.',
+    };
+
+    const message = errorMessages[err.code] || `Unexpected error: ${err.message}`;
+    setError(message); // show in UI
+    throw err;         // rethrow so callers know it failed
+  }
+};
+```
+
+---
+
+### Fix A4 — Verify Firebase Config is Loading Correctly
+
+Add a one-time debug log to confirm your app is using the right config:
+
+```js
+// Temporarily add to your firebase.js init file
+import { initializeApp, getApps } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+
+const firebaseConfig = { /* your config */ };
+
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+export const auth = getAuth(app);
+
+// TEMPORARY — remove after confirming
+console.log('[Firebase] Initialized project:', firebaseConfig.projectId);
+console.log('[Firebase] Auth domain:', firebaseConfig.authDomain);
+```
+
+Check browser console when app loads. The `projectId` must match your Firebase Console URL.
+
+---
+
+## SCENARIO B — Firestore `users` Collection is Empty
+
+### Why This Happens
+
+**Firebase Authentication does NOT automatically create a Firestore document when a user signs up.** Auth only stores the identity (UID, email, display name). Creating a document in the `users` collection is your responsibility and must be done explicitly in your code.
+
+This is the most common mistake when coming from other BaaS platforms.
+
+---
+
+### Fix B1 — Create Firestore User Document on Signup
+
+Update your signup handler to write to Firestore immediately after creating the auth user:
+
+```js
+// auth/signup.js or wherever you handle registration
+
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
+
+export async function signUpUser({ email, password, displayName }) {
+  // Step 1: Create Auth account
+  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const user = userCredential.user;
+
+  // Step 2: Update Auth profile with display name
+  await updateProfile(user, { displayName });
+
+  // Step 3: Create Firestore user document
+  // Use setDoc with the UID as document ID — this links Auth and Firestore
+  await setDoc(doc(db, 'users', user.uid), {
+    uid:          user.uid,
+    email:        user.email,
+    displayName:  displayName || '',
+    photoURL:     user.photoURL || '',
+    planTier:     'free',             // default plan
+    createdAt:    serverTimestamp(),
+    updatedAt:    serverTimestamp(),
+    emailVerified: user.emailVerified,
+  });
+
+  console.log('[SIGNUP] User document created in Firestore:', user.uid);
+  return user;
+}
+```
+
+---
+
+### Fix B2 — Create Document on Google/OAuth Sign-In
+
+For OAuth providers (Google, GitHub, etc.), users can sign in without going through your signup form. Handle this with `getDoc` to check if the document already exists before creating it:
+
+```js
+// auth/socialLogin.js
+
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../config/firebase';
+
+export async function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  const userCredential = await signInWithPopup(auth, provider);
+  const user = userCredential.user;
+
+  // Check if Firestore document already exists (returning user)
+  const userDocRef = doc(db, 'users', user.uid);
+  const userDocSnap = await getDoc(userDocRef);
+
+  if (!userDocSnap.exists()) {
+    // First-time Google sign-in — create the document
+    await setDoc(userDocRef, {
+      uid:           user.uid,
+      email:         user.email,
+      displayName:   user.displayName || '',
+      photoURL:      user.photoURL || '',
+      planTier:      'free',
+      createdAt:     serverTimestamp(),
+      updatedAt:     serverTimestamp(),
+      emailVerified: user.emailVerified,
+      provider:      'google',
+    });
+    console.log('[GOOGLE AUTH] New user document created:', user.uid);
+  } else {
+    // Returning user — optionally sync latest profile info from Google
+    await setDoc(userDocRef, {
+      displayName:   user.displayName || '',
+      photoURL:      user.photoURL || '',
+      emailVerified: user.emailVerified,
+      updatedAt:     serverTimestamp(),
+    }, { merge: true }); // merge: true prevents overwriting planTier or other fields
+    console.log('[GOOGLE AUTH] Returning user:', user.uid);
+  }
+
+  return user;
+}
+```
+
+---
+
+### Fix B3 — Backfill Existing Auth Users Who Have No Firestore Document
+
+If you already have users in Firebase Auth but no corresponding Firestore documents, run this one-time backfill script from your backend (requires Admin SDK):
+
+```js
+// scripts/backfillUsers.js
+// Run with: node scripts/backfillUsers.js
+// WARNING: Run once only. Check Firestore before running.
 
 import admin from 'firebase-admin';
+import '../services/firebaseService.js'; // triggers admin init
 
-function initializeFirebaseAdmin() {
-  // Guard: prevent re-initialization across hot reloads or multiple imports
-  if (admin.apps.length > 0) {
-    return admin.app();
-  }
+const db   = admin.firestore();
+const auth = admin.auth();
 
-  const raw = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+async function backfillUsers() {
+  let nextPageToken;
+  let totalProcessed = 0;
+  let totalCreated   = 0;
+  let totalSkipped   = 0;
 
-  if (!raw) {
-    throw new Error(
-      '[Firebase] FIREBASE_SERVICE_ACCOUNT_JSON is not set. ' +
-      'Add it to your .env file locally and to your deployment platform environment variables.'
-    );
-  }
+  console.log('[BACKFILL] Starting user backfill...');
 
-  let serviceAccount;
+  do {
+    // List users in batches of 1000 (Firebase max per page)
+    const listResult = await auth.listUsers(1000, nextPageToken);
 
-  try {
-    // Fix for platforms that mangle \n in private_key (Vercel, Railway, etc.)
-    // The private key field contains literal \n sequences that get double-escaped
-    const cleaned = raw.replace(/\\n/g, '\n');
-    serviceAccount = JSON.parse(cleaned);
-  } catch (err) {
-    throw new Error(
-      `[Firebase] Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON: ${err.message}. ` +
-      'Ensure the value is valid JSON. If pasting into Vercel, use the Base64 method below.'
-    );
-  }
+    for (const userRecord of listResult.users) {
+      totalProcessed++;
 
-  // Validate required fields before attempting init
-  const requiredFields = ['project_id', 'client_email', 'private_key'];
-  for (const field of requiredFields) {
-    if (!serviceAccount[field]) {
-      throw new Error(`[Firebase] Service account JSON is missing required field: "${field}"`);
+      const userDocRef = db.collection('users').doc(userRecord.uid);
+      const userDocSnap = await userDocRef.get();
+
+      if (userDocSnap.exists) {
+        console.log(`[SKIP] ${userRecord.email} — document already exists`);
+        totalSkipped++;
+        continue;
+      }
+
+      // Create missing Firestore document
+      await userDocRef.set({
+        uid:           userRecord.uid,
+        email:         userRecord.email || '',
+        displayName:   userRecord.displayName || '',
+        photoURL:      userRecord.photoURL || '',
+        planTier:      'free',
+        createdAt:     admin.firestore.Timestamp.fromDate(
+                         new Date(userRecord.metadata.creationTime)
+                       ),
+        updatedAt:     admin.firestore.FieldValue.serverTimestamp(),
+        emailVerified: userRecord.emailVerified,
+        note:          'Backfilled from Auth — review planTier manually if user had paid plan',
+      });
+
+      console.log(`[CREATED] ${userRecord.email} (${userRecord.uid})`);
+      totalCreated++;
     }
-  }
 
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    // Optional: explicitly set project ID as a second safety net
-    projectId: serviceAccount.project_id,
-  });
+    nextPageToken = listResult.pageToken;
+  } while (nextPageToken);
 
-  console.log(`[Firebase] Admin SDK initialized for project: ${serviceAccount.project_id}`);
-  return admin.app();
-}
-
-// Initialize once at module load
-initializeFirebaseAdmin();
-
-// Export the db and auth instances for use in controllers/services
-export const db   = admin.firestore();
-export const auth = admin.auth();
-export default admin;
-```
-
----
-
-### Step 3 — Set the Environment Variable Correctly
-
-#### Option A: Raw JSON (simpler, works for most platforms)
-
-1. Open Firebase Console → Project Settings → Service Accounts
-2. Click **"Generate new private key"** → downloads a `.json` file
-3. Open the file, copy the entire contents
-4. In your deployment platform (Vercel / Railway / Render), create env var:
-   - **Key:** `FIREBASE_SERVICE_ACCOUNT_JSON`
-   - **Value:** paste the entire JSON as-is (one line or multi-line depending on platform)
-
-**For Vercel specifically** — Vercel's UI collapses multiline values but preserves `\n` as literal `\n` inside strings, which the `replace(/\\n/g, '\n')` in Step 2 handles.
-
-#### Option B: Base64 Encoded (most reliable — recommended for Vercel)
-
-**On your machine, encode the JSON:**
-```bash
-# macOS / Linux
-base64 -i path/to/serviceAccountKey.json | tr -d '\n'
-
-# Windows PowerShell
-[Convert]::ToBase64String([IO.File]::ReadAllBytes("path\to\serviceAccountKey.json"))
-```
-
-**Set the env var:**
-- **Key:** `FIREBASE_SERVICE_ACCOUNT_JSON_BASE64`
-- **Value:** the base64 string output
-
-**Update your init code to decode it:**
-```js
-function getServiceAccount() {
-  // Try Base64 first (most reliable), fall back to raw JSON
-  const base64 = process.env.FIREBASE_SERVICE_ACCOUNT_JSON_BASE64;
-  const raw    = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
-
-  if (base64) {
-    try {
-      return JSON.parse(Buffer.from(base64, 'base64').toString('utf8'));
-    } catch (err) {
-      throw new Error(`[Firebase] Failed to decode Base64 service account: ${err.message}`);
-    }
-  }
-
-  if (raw) {
-    try {
-      return JSON.parse(raw.replace(/\\n/g, '\n'));
-    } catch (err) {
-      throw new Error(`[Firebase] Failed to parse JSON service account: ${err.message}`);
-    }
-  }
-
-  throw new Error('[Firebase] No service account credentials found in environment.');
-}
-```
-
----
-
-### Step 4 — Local `.env` Setup
-
-In your local `.env` file:
-
-```env
-# Option A — Raw JSON (must be on ONE line, no line breaks)
-FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"your-project-id","private_key_id":"abc123","private_key":"-----BEGIN PRIVATE KEY-----\nMIIEvAIBAD...\n-----END PRIVATE KEY-----\n","client_email":"firebase-adminsdk-xxxx@your-project.iam.gserviceaccount.com","client_id":"...","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"..."}
-
-# Option B — Base64 (preferred, no formatting concerns)
-FIREBASE_SERVICE_ACCOUNT_JSON_BASE64=eyJ0eXBlIjoic2VydmljZV9hY2NvdW50...
-```
-
-**Never commit either of these to Git.** Ensure `.env` is in `.gitignore`.
-
----
-
-### Step 5 — Verify the Fix Locally Before Deploying
-
-Add a one-time health check route to confirm credentials load correctly:
-
-```js
-// In server.js — REMOVE THIS after confirming it works
-app.get('/api/v1/health/firebase', async (req, res) => {
-  try {
-    // Attempt a lightweight Firestore read to confirm connectivity
-    await db.collection('_healthcheck').limit(1).get();
-    res.json({ status: 'ok', message: 'Firebase Admin SDK connected successfully.' });
-  } catch (err) {
-    res.status(500).json({ status: 'error', message: err.message });
-  }
-});
-```
-
-Hit `GET /api/v1/health/firebase` after starting your server. If it returns `status: ok`, credentials are working. Delete this route before deploying to production.
-
----
-
-### Step 6 — Recover the Affected Payment (Your Pro Access)
-
-Since your payment succeeded in Razorpay but fulfillment failed, manually fix your account:
-
-#### Option A: Firebase Console (quickest)
-
-1. Go to Firebase Console → Firestore
-2. Navigate to `users` collection → find your document (by UID or email)
-3. Edit the `planTier` field → set value to `"pro"`
-4. Manually add a document to `payments` collection:
-
-```json
-{
-  "userId":    "your_firebase_uid",
-  "email":     "your@email.com",
-  "paymentId": "pay_xxxxxxxxxx",
-  "orderId":   "order_xxxxxxxxxx",
-  "tier":      "pro",
-  "planId":    "monthly",
-  "amount":    999,
-  "currency":  "INR",
-  "status":    "captured",
-  "createdAt": "2024-01-01T00:00:00.000Z",
-  "note":      "Manual recovery — fulfillment failed due to missing Firebase credentials"
-}
-```
-
-#### Option B: Recovery Script (run once locally, after fixing credentials)
-
-```js
-// scripts/recoverPayment.js — run with: node scripts/recoverPayment.js
-import '../services/firebaseService.js'; // triggers init
-import { db } from '../services/firebaseService.js';
-
-const RECOVERY = {
-  userId:    'PASTE_YOUR_FIREBASE_UID',
-  email:     'your@email.com',
-  paymentId: 'pay_PASTE_FROM_RAZORPAY_DASHBOARD',
-  orderId:   'order_PASTE_FROM_RAZORPAY_DASHBOARD',
-  tier:      'pro',
-  planId:    'monthly',
-  amount:    999,
-  currency:  'INR',
-};
-
-async function recover() {
-  // Write payment record
-  await db.collection('payments').add({
-    ...RECOVERY,
-    status:    'captured',
-    createdAt: new Date(),
-    note:      'Manual recovery',
-  });
-
-  // Upgrade user tier
-  await db.collection('users').doc(RECOVERY.userId).update({
-    planTier:       RECOVERY.tier,
-    planActivatedAt: new Date(),
-  });
-
-  console.log('Recovery complete. User upgraded to:', RECOVERY.tier);
+  console.log('─'.repeat(50));
+  console.log(`[BACKFILL COMPLETE]`);
+  console.log(`  Total Auth users processed : ${totalProcessed}`);
+  console.log(`  Firestore documents created: ${totalCreated}`);
+  console.log(`  Already existed (skipped)  : ${totalSkipped}`);
   process.exit(0);
 }
 
-recover().catch(err => {
-  console.error('Recovery failed:', err);
+backfillUsers().catch(err => {
+  console.error('[BACKFILL ERROR]', err);
   process.exit(1);
 });
 ```
 
 ---
 
-### Step 7 — Prevent Silent Failures in the Future
+### Fix B4 — Firestore Security Rules Blocking Reads
 
-Update your `verifyPayment` controller to distinguish between payment verification failure and fulfillment failure. Never return a generic "Payment Failed" when Razorpay already captured the money:
+Even if the documents exist, you won't see them in the Firebase Console if rules prevent all reads. Check your Firestore rules — they should allow authenticated reads of own document:
 
-```js
-export async function verifyPayment(req, res) {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature, email, tier, planId } = req.body;
+**Correct rules:**
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
 
-  // Step 1: Verify signature
-  let signatureValid = false;
-  try {
-    signatureValid = verifyRazorpaySignature(razorpay_order_id, razorpay_payment_id, razorpay_signature);
-  } catch (err) {
-    console.error('[PAYMENT] Signature verification threw:', err);
-    return res.status(400).json({ success: false, error: 'Payment verification failed.' });
-  }
-
-  if (!signatureValid) {
-    return res.status(400).json({ success: false, error: 'Invalid payment signature.' });
-  }
-
-  // Step 2: Fulfillment — handle separately so a DB error doesn't look like a payment failure
-  try {
-    const result = await fulfillPayment({
-      userId:    req.user.uid,
-      email,
-      tier,
-      planId,
-      paymentId: razorpay_payment_id,
-      orderId:   razorpay_order_id,
-    });
-
-    if (result.alreadyProcessed) {
-      return res.status(200).json({ success: true, message: 'Plan already active.' });
+    match /users/{userId} {
+      // User can read and write only their own document
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
 
-    // Send invoice email (non-blocking — don't fail the response if email fails)
-    sendInvoiceEmail({ ... }).catch(err =>
-      console.error('[EMAIL] Invoice send failed (non-fatal):', err)
-    );
+    match /payments/{paymentId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.userId;
+      allow write: if false; // admin SDK only
+    }
 
-    return res.status(200).json({ success: true, tier });
-
-  } catch (err) {
-    // ⚠️ CRITICAL: Payment was captured but fulfillment failed
-    // Log with full context so you can recover manually
-    console.error('[FULFILLMENT FAILED]', {
-      paymentId: razorpay_payment_id,
-      orderId:   razorpay_order_id,
-      userId:    req.user.uid,
-      email,
-      tier,
-      error:     err.message,
-      stack:     err.stack,
-    });
-
-    // Tell the user payment went through but something went wrong on our end
-    // DO NOT say "Payment Failed" — the payment succeeded
-    return res.status(500).json({
-      success: false,
-      paymentCaptured: true,
-      error: 'Your payment was successful, but we encountered an issue activating your plan. ' +
-             'Please contact support@uihub.io with your payment ID and we will resolve this immediately.',
-      paymentId: razorpay_payment_id,
-    });
+    match /{document=**} {
+      allow read, write: if false;
+    }
   }
 }
 ```
 
-**Update your frontend** to handle the `paymentCaptured: true` flag and show a different message:
-
-```tsx
-// In your payment result handler
-if (!data.success && data.paymentCaptured) {
-  // Show a support message, not a generic "Payment Failed"
-  showModal({
-    type: 'warning',
-    title: 'Payment Received — Activation Pending',
-    message: `Your payment was successful (ID: ${data.paymentId}), but plan activation hit a snag on our end. 
-              We've logged this and will activate your account within 24 hours. 
-              Contact support@uihub.io if you don't hear back.`,
-  });
-} else if (!data.success) {
-  showModal({ type: 'error', title: 'Payment Failed', message: data.error });
-}
-```
+> **Note:** Firebase Console reads bypass security rules when you're logged in as an owner/editor. So if the console shows empty, it's not a rules issue — the documents genuinely don't exist.
 
 ---
 
-## Deployment Checklist
+## SCENARIO C — Both Auth and Firestore Are Empty
 
-Before redeploying, verify every item:
+This almost always means one of:
 
-- [ ] `FIREBASE_SERVICE_ACCOUNT_JSON` (or `_BASE64` variant) set in Vercel/Railway environment variables
-- [ ] `admin.initializeApp()` explicitly passes `credential: admin.credential.cert(serviceAccount)`
-- [ ] `JSON.parse()` wraps the env var string
-- [ ] `replace(/\\n/g, '\n')` applied before parsing (or Base64 method used)
-- [ ] `admin.apps.length` guard prevents double initialization
-- [ ] `/api/v1/health/firebase` endpoint confirms connection before going live
-- [ ] Health check route removed after confirmation
-- [ ] Affected payment manually recovered in Firestore (Step 6)
-- [ ] Frontend distinguishes `paymentCaptured: true` from a real payment failure
+1. **Wrong project** — your frontend is writing to `project-dev` but you're viewing `project-prod` in console (or vice versa)
+2. **Firebase config object is wrong** — double check every field in your `firebaseConfig`
+3. **App is using emulators** — if `connectAuthEmulator()` or `connectFirestoreEmulator()` is called in dev, all data goes to your local emulator, not the real Firebase
+
+**Check for emulator connections in your firebase.js:**
+
+```js
+// ⚠️ If these lines exist and are not wrapped in a dev-only condition, 
+// all your data is going to localhost emulators, not real Firebase
+
+if (process.env.NODE_ENV === 'development') {  // ← must be gated like this
+  connectAuthEmulator(auth, 'http://localhost:9099');
+  connectFirestoreEmulator(db, 'localhost', 8080);
+}
+
+// ❌ BAD — ungated emulator connections send ALL data to local emulator
+connectAuthEmulator(auth, 'http://localhost:9099');
+connectFirestoreEmulator(db, 'localhost', 8080);
+```
+
+If emulators are running and ungated, disable them or gate behind `NODE_ENV === 'development'` and redeploy.
+
+---
+
+## Post-Fix: Confirm Users Appear
+
+After applying fixes, run through this checklist:
+
+- [ ] Register a new test user in your app
+- [ ] Check Firebase Console → Authentication → Users tab — should appear within seconds
+- [ ] Check Firebase Console → Firestore → `users` collection — document with matching UID should exist
+- [ ] Confirm document has `planTier: "free"` and correct `email`, `displayName`
+- [ ] Sign in with Google (if supported) — confirm document is created on first login, not duplicated on second
+- [ ] Backfill script run for existing auth users with missing Firestore docs
+- [ ] Affected paying user's `planTier` manually set to `"pro"` in Firestore (from previous payment failure)
