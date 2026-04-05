@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { generateInvoicePDF } from './pdfService.js';
+// pdfService imported lazily to prevent Vercel crashes on Chromium at boot
 import { PLANS } from '../config/plans.js';
 
 const transporter = nodemailer.createTransport({
@@ -36,6 +36,7 @@ export async function sendInvoiceEmail({ email, displayName, planId, paymentId, 
     purchaseDate:  purchaseDate || new Date(),
   };
 
+  const { generateInvoicePDF } = await import('./pdfService.js');
   const pdfBuffer = await generateInvoicePDF(params);
 
   await transporter.sendMail({
