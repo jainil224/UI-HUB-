@@ -34,19 +34,27 @@ function initializeFirebaseAdmin() {
     }
   }
 
+  if (!serviceAccount || !serviceAccount.project_id) {
+    console.error('[FirebaseAdmin] Failed to extract project_id. Vercel env variable is likely malformed or missing!');
+    serviceAccount = null; // Do not throw synchronously
+  }
+
   try {
     const initPayload = {
       ...(projectId && { projectId }),
       ...(serviceAccount && { credential: admin.credential.cert(serviceAccount) }),
     };
-    admin.initializeApp(initPayload);
-    console.log(`[FirebaseAdmin] Initialized for project: ${projectId} (credential: ${serviceAccount ? 'service-account' : 'application-default'})`);
+    if (serviceAccount) {
+      admin.initializeApp(initPayload);
+      console.log('[FirebaseAdmin] Initialized successfully with project:', serviceAccount.project_id);
+    } else {
+      console.error('[FirebaseAdmin] Bypassed initialization because credentials are invalid.');
+    }
   } catch (error) {
     console.error('[FirebaseAdmin] Initialization error:', error);
   }
 }
 
 initializeFirebaseAdmin();
-
-export const auth = admin.auth();
+// Removed top-level export const auth = admin.auth(); to prevent boot crash
 export default admin;
