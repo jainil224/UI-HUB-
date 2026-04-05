@@ -132,7 +132,7 @@ const CustomSelect = ({
 import { ComponentItem } from '../../../../data/componentData';
 
 const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: string }) => (
-    <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-black/80 backdrop-blur-md rounded-[inherit] border border-brand-green/20 p-8 text-center">
+    <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-[inherit] border border-brand-green/20 p-8 text-center">
         <div className="w-16 h-16 rounded-2xl bg-brand-green/10 border border-brand-green/30 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(0,255,159,0.2)]">
             <Lock className="w-8 h-8 text-brand-green" />
         </div>
@@ -168,7 +168,7 @@ const ToolCard = React.memo(({
         >
             {/* Lock Overlay for non-Pro users */}
             {isLocked && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/60 backdrop-blur-sm">
+                <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/30 backdrop-blur-[1px]">
                     <div className="flex flex-col items-center gap-2">
                         <Lock size={20} className="text-brand-green/70" />
                         <span className="px-2 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
@@ -208,7 +208,7 @@ const ToolCard = React.memo(({
 
             <div className="relative z-10 w-full flex flex-col gap-6">
                 <div className="flex items-center justify-between">
-                    <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${isLocked ? 'text-white/10' : isActive ? 'text-brand-green' : 'text-white/20'}`}>
+                    <p className={`text-[8px] md:text-[9px] uppercase tracking-[0.25em] font-black transition-colors duration-500 ${isLocked ? 'text-white/30' : isActive ? 'text-brand-green' : 'text-white/20'}`}>
                         {itemId === 'robot-3d-background' ? (
                             tool === 'antigravity' ? 'NEON ENGINE' :
                                 tool === 'lovable' ? 'ROBOTIC HUB' :
@@ -246,7 +246,7 @@ const ToolCard = React.memo(({
                 </div>
 
                 <div className="flex items-center justify-between w-full">
-                    <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${isLocked ? 'text-white/20' : isActive ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
+                    <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${isLocked ? 'text-white/40' : isActive ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
                         {tool === 'advance' ? 'Advance' : tool}
                     </h4>
                     {PRO_ONLY_TOOLS.includes(tool) && (
