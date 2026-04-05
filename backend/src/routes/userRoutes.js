@@ -6,6 +6,10 @@ import { sendWelcomeEmail } from '../utils/sendEmail.js';
 
 const router = express.Router();
 
+router.get('/check', (req, res) => {
+    res.json({ success: true, message: 'User API reachable' });
+});
+
 /**
  * @route POST /api/v1/users/sync
  * @desc Sync user status and trigger welcome email if new

@@ -7,6 +7,7 @@ import userRoutes from './routes/userRoutes.js';
 import configRoutes from './routes/configRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import { globalLimiter } from './middleware/rateLimiters.js';
+import { startUserSyncWorker } from './services/syncService.js';
 
 dotenv.config();
 console.log('Environment variables loaded from .env');
@@ -113,8 +114,9 @@ app.use((err, req, res, next) => {
 // Export the app for Vercel
 export default app;
 
-// Only listen if running directly (not via Vercel serverless)
+// Start background user synchronization worker
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  startUserSyncWorker();
   app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Local:   http://localhost:${PORT}`);
