@@ -171,9 +171,6 @@ const ToolCard = React.memo(({
                 <div className="absolute inset-0 z-30 flex items-center justify-center rounded-[inherit] bg-black/30 backdrop-blur-[1px]">
                     <div className="flex flex-col items-center gap-2">
                         <Lock size={20} className="text-brand-green/70" />
-                        <span className="px-2 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
-                            PRO
-                        </span>
                     </div>
                 </div>
             )}
@@ -249,11 +246,6 @@ const ToolCard = React.memo(({
                     <h4 className={`text-lg md:text-xl lg:text-2xl font-display uppercase tracking-[-0.05em] transition-all duration-500 leading-none whitespace-nowrap ${isLocked ? 'text-white/40' : isActive ? 'text-white' : 'text-white/40 group-hover:text-white/60'}`}>
                         {tool === 'advance' ? 'Advance' : tool}
                     </h4>
-                    {PRO_ONLY_TOOLS.includes(tool) && (
-                        <span className="px-1.5 py-0.5 rounded-md bg-brand-green/20 border border-brand-green/30 text-brand-green text-[7px] font-black uppercase tracking-widest shadow-[0_0_10px_rgba(0,255,0,0.1)]">
-                            PRO
-                        </span>
-                    )}
                 </div>
             </div>
 
