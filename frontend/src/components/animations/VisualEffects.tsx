@@ -162,160 +162,11 @@ export const LiquidGlass = ({
     );
 };
 
-// 2. Noise
-export interface NoiseProps {
-    opacity?: number;
-    baseFrequency?: string;
-    numOctaves?: string;
-    className?: string;
-}
 
-export const Noise = ({
-    opacity = 0.05,
-    baseFrequency = "0.65",
-    numOctaves = "3",
-    className = ""
-}: NoiseProps) => {
-    const [noiseOpacity, setNoiseOpacity] = useState(opacity);
 
-    return (
-        <div className={cn('relative border border-white/10 rounded-xl w-full max-w-2xl overflow-hidden bg-neutral-950', className)}>
-            <div className='absolute top-4 right-4 z-20 flex items-center gap-2 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10'>
-                <label htmlFor='opacity-slider' className='text-[10px] font-bold uppercase tracking-wider text-white/60'>
-                    Noise:
-                </label>
-                <input
-                    id='opacity-slider'
-                    type='range'
-                    min='0'
-                    max='0.2'
-                    step='0.01'
-                    value={noiseOpacity}
-                    onChange={(e) => setNoiseOpacity(parseFloat(e.target.value))}
-                    className="w-20 accent-cyan-400"
-                />
-                <span className='text-[10px] font-mono text-cyan-400 w-8'>{noiseOpacity.toFixed(2)}</span>
-            </div>
 
-            <div
-                className="absolute inset-0 z-10 pointer-events-none mix-blend-overlay"
-                style={{
-                    opacity: noiseOpacity,
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='${baseFrequency}' numOctaves='${numOctaves}' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-                }}
-            ></div>
 
-            <div className='h-[300px] flex flex-col items-center justify-center text-white relative z-0'>
-                <div className='absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]'></div>
-                <h1 className='text-3xl font-display font-bold text-center tracking-tight leading-tight uppercase'>
-                    Noise Overlay<br />
-                    <span className="text-cyan-400">Effect</span>
-                </h1>
-            </div>
-        </div>
-    );
-};
 
-// 3. Blur Vignette
-import { BlurVignette, BlurVignetteArticle } from '../ui/blur-vignette';
-
-export interface BlurVignetteEffectProps {
-    blur?: string;
-    radius?: string;
-    image1?: string;
-    image2?: string;
-    title1?: string;
-    title2?: string;
-    className?: string;
-}
-
-export const BlurVignetteEffect = ({
-    blur = "12px",
-    radius = "16px",
-    image1 = 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?q=80&w=1000&auto=format&fit=crop',
-    image2 = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop',
-    title1 = "Cosmos",
-    title2 = "Abstract",
-    className = ""
-}: BlurVignetteEffectProps) => {
-    return (
-        <div className={cn('w-full max-w-2xl mx-auto flex gap-4 justify-center p-4 bg-neutral-900/50 rounded-2xl border border-white/5', className)}>
-            <BlurVignette
-                radius={radius}
-                inset='0px'
-                transitionLength='100px'
-                blur={blur}
-                className="flex-1 aspect-square"
-            >
-                <img
-                    src={image1}
-                    alt='abstract'
-                    className='w-full h-full object-cover'
-                />
-                <BlurVignetteArticle classname='absolute inset-x-2 bottom-2 p-4 border border-white/10 rounded-xl bg-black/20 backdrop-blur-md text-white'>
-                    <h3 className='text-lg font-bold'>{title1}</h3>
-                    <p className='text-xs text-white/60 line-clamp-2'>
-                        Deep space explorations and mesmerizing cosmic patterns.
-                    </p>
-                </BlurVignetteArticle>
-            </BlurVignette>
-
-            <BlurVignette
-                radius={radius}
-                inset='0px'
-                transitionLength='100px'
-                blur={blur}
-                className="flex-1 aspect-square hidden sm:block"
-            >
-                <img
-                    src={image2}
-                    alt='abstract'
-                    className='w-full h-full object-cover'
-                />
-                <BlurVignetteArticle classname='absolute inset-x-2 bottom-2 p-4 border border-white/10 rounded-xl bg-black/20 backdrop-blur-md text-white'>
-                    <h3 className='text-lg font-bold'>{title2}</h3>
-                    <p className='text-xs text-white/60 line-clamp-2'>
-                        Elegant abstract shapes and minimalist visual storytelling.
-                    </p>
-                </BlurVignetteArticle>
-            </BlurVignette>
-        </div>
-    );
-};
-
-// 4. Liquid Gradient
-export interface LiquidGradientProps {
-    color?: string;
-    opacity?: number;
-    duration?: number;
-    className?: string;
-}
-
-export const LiquidGradient = ({
-    color = "#ff0080",
-    opacity = 0.3,
-    duration = 10,
-    className = ""
-}: LiquidGradientProps) => (
-    <div className={cn("w-64 h-64 rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950", className)}>
-        <motion.div
-            animate={{
-                background: [
-                    `radial-gradient(at 0% 0%, ${color} 0px, transparent 50%)`,
-                    `radial-gradient(at 100% 100%, ${color} 0px, transparent 50%)`,
-                    `radial-gradient(at 0% 100%, ${color} 0px, transparent 50%)`,
-                    `radial-gradient(at 0% 0%, ${color} 0px, transparent 50%)`,
-                ]
-            }}
-            transition={{ duration, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-0"
-            style={{ opacity }}
-        />
-        <div className="flex items-center justify-center h-full relative z-10 text-white/50 font-display text-xl font-bold uppercase pointer-events-none">
-            LIQUID GRADIENT
-        </div>
-    </div>
-);
 
 // 5. Spotlight Cards
 export interface SpotlightCardsProps {
@@ -674,55 +525,9 @@ export const ImageReveal = ({
     );
 };
 
-// 7. Blocks
-export interface BlocksProps {
-    className?: string;
-    hoverColor?: string;
-    gridSize?: number;
-}
 
-export const Blocks = ({
-    className = "",
-    hoverColor = "hover:bg-violet-500/20",
-    gridSize = 16
-}: BlocksProps) => (
-    <div className={cn("w-64 h-64 rounded-3xl border border-white/10 overflow-hidden grid grid-cols-4 grid-rows-4 bg-neutral-950", className)}>
-        {Array.from({ length: gridSize }).map((_, i) => (
-            <motion.div
-                key={i}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: i * 0.05, duration: 0.5 }}
-                className={cn("border-[0.5px] border-white/5 bg-white/5 transition-colors", hoverColor)}
-            />
-        ))}
-    </div>
-);
 
-// 8. Animated Beam
-export interface AnimatedBeamProps {
-    color?: string;
-    duration?: number;
-    className?: string;
-}
 
-export const AnimatedBeam = ({
-    color = "sky-400",
-    duration = 2,
-    className = ""
-}: AnimatedBeamProps) => (
-    <div className={cn("w-64 h-64 rounded-3xl bg-neutral-900 border border-white/10 relative overflow-hidden flex items-center justify-center", className)}>
-        <motion.div
-            animate={{
-                x: [-100, 300],
-            }}
-            transition={{ duration, repeat: Infinity, ease: "linear" }}
-            className={cn("absolute h-[2px] w-24 bg-gradient-to-r from-transparent to-transparent", `via-${color}`)}
-            style={{ transform: 'rotate(-45deg)' }}
-        />
-        <div className={cn("font-display text-2xl font-bold uppercase", `text-${color}`)}>BEAM</div>
-    </div>
-);
 
 // 10. Hacker Background (Matrix Rain)
 export interface HackerBackgroundProps {
@@ -795,46 +600,10 @@ export const HackerBackground = ({
     );
 };
 
-// 11. Grid Background
-export interface GridBackgroundProps {
-    gridSize?: number;
-    gridColor?: string;
-    className?: string;
-    label?: string;
-    maskRadius?: number | string;
-    opacity?: number;
-}
 
-export const GridBackground = ({
-    gridSize = 24,
-    gridColor = "#80808012",
-    className = "",
-    label = "GRID ALIVE",
-    maskRadius = "50% 50% at 50% 50%",
-    opacity = 1
-}: GridBackgroundProps) => {
-    const maskStyle = typeof maskRadius === 'number'
-        ? `radial-gradient(ellipse ${maskRadius}% ${maskRadius}% at 50% 50%, #000 70%, transparent 100%)`
-        : `radial-gradient(${maskRadius}, #000 70%, transparent 100%)`;
-
-    return (
-        <div className={cn("w-full h-full absolute inset-0 z-0", className)} style={{ opacity }}>
-            <div
-                className="absolute inset-0 bg-black"
-                style={{
-                    backgroundImage: `linear-gradient(to right, ${gridColor} 1px, transparent 1px), linear-gradient(to bottom, ${gridColor} 1px, transparent 1px)`,
-                    backgroundSize: `${gridSize}px ${gridSize}px`,
-                    maskImage: maskStyle,
-                    WebkitMaskImage: maskStyle,
-                }}
-            />
-            <div className="text-white/40 font-display text-2xl font-bold uppercase tracking-widest">{label}</div>
-        </div>
-    );
-};
 
 export { default as BeamGridBackground } from '../ui/BeamGridBackground';
-export { default as NovatrixBackground } from '../ui/NovatrixBackground';
+
 export { default as FallBeamBackground } from '../ui/FallBeamBackground';
 export { default as HellBackground } from '../ui/HellBackground';
 export { default as InteractiveGridBackground } from '../ui/InteractiveGridBackground';
