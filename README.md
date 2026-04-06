@@ -73,7 +73,7 @@ Most component libraries give you grey buttons and plain cards. UI HUB provides:
 - 🤖 **AI vibe prompts** that let you describe your vision and get code instantly
 - 💾 **One-click ZIP export** (Pro) so you never waste time copy-pasting
 
------
+----
 
 ## ✨ Key Features
 
