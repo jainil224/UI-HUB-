@@ -11,14 +11,24 @@ dotenv.config();
  */
 export const sendWelcomeEmail = async (email, name = 'there') => {
   try {
+    // Validate required SMTP credentials
+    const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
+    const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+    const smtpFrom = process.env.SMTP_FROM || smtpUser; // Use sender email as from
+
+    if (!smtpUser || !smtpPass) {
+      console.error('[EmailService] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set! Cannot send welcome email.');
+      return { success: false, error: 'SMTP credentials not configured' };
+    }
+
     // Configure Brevo SMTP transporter
     const transporter = nodemailer.createTransport({
-      host: 'smtp-relay.brevo.com',
-      port: 587,
+      host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+      port: parseInt(process.env.SMTP_PORT) || 587,
       secure: false, // true for 465, false for other ports
       auth: {
-        user: process.env.BREVO_SMTP_USER,
-        pass: process.env.BREVO_SMTP_PASS,
+        user: smtpUser,
+        pass: smtpPass,
       },
     });
 
@@ -145,17 +155,23 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
     `;
 
     const mailOptions = {
-      from: '"UI HUB" <uihub.design@gmail.com>',
+      // CRITICAL: 'from' must be the Brevo-verified sender email (same as BREVO_SMTP_USER)
+      // Using a Gmail address here will cause SMTP authentication failure with Brevo!
+      from: `"UI HUB" <${smtpFrom}>`,
       to: email,
       subject: 'Welcome to UI HUB 🚀',
       html: htmlContent,
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log('[EmailService] Welcome email sent successfully:', info.messageId);
+    console.log(`[EmailService] ✅ Welcome email sent to ${email}:`, info.messageId);
     return { success: true, messageId: info.messageId };
   } catch (error) {
-    console.error('[EmailService] Error sending welcome email:', error);
+    // Log detailed SMTP error to make debugging easier
+    console.error('[EmailService] ❌ Error sending welcome email to', email);
+    console.error('[EmailService] SMTP Error Code:', error.code);
+    console.error('[EmailService] SMTP Error Message:', error.message);
+    if (error.response) console.error('[EmailService] SMTP Server Response:', error.response);
     // Do not throw error to avoid blocking user signup flow
     return { success: false, error: error.message };
   }
