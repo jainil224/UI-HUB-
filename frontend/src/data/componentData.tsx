@@ -1738,8 +1738,8 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "lines-background",
         title: "Lines Background",
         category: "background",
-        preview: renderComponent("lines-background", "Lines Background", { title: "LINES", pathColor: "#9c40ff" }),
-        code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="UI HUB" pathColor="rgba(255,255,255,0.2)" opacity={0.5} />\n  </div>\n);`,
+        preview: renderComponent("lines-background", "Lines Background", { title: "LINES", pathColor: "#ffffff" }),
+        code: `import { BackgroundPaths } from '@/components/ui/background-paths';\n\nexport const Demo = () => (\n  <div className="w-full h-[400px] relative bg-neutral-950 overflow-hidden">\n    <BackgroundPaths title="LINES" pathColor="#ffffff" opacity={0.5} />\n  </div>\n);`,
         vibePrompt: ""
 
     },

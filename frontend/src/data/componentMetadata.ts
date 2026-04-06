@@ -385,7 +385,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
     "lines-background": {
         props: [
             { name: "title", type: "string", default: '"LINES"', description: "Text to display in the background." },
-            { name: "pathColor", type: "string", default: '"#9c40ff"', description: "Color of the animated lines." }
+            { name: "pathColor", type: "string", default: '"#ffffff"', description: "Color of the animated lines." }
         ],
         vibeMeta: {
             behavior: "Abstract animated lines that create a dynamic, tech-inspired background. Features customizable text and line colors.",
