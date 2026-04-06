@@ -31,19 +31,25 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         let width = 0;
         let height = 0;
 
-        // Cinematic Deep Space Colors (Star temperatures)
+        // Realistic stellar spectral colors (O/B/A/F/G/K/M classes + nebula dust)
         const colors = [
-            'rgba(255, 255, 255, 0.9)', // White star
-            'rgba(165, 243, 252, 0.9)', // Blue-White
-            'rgba(192, 132, 252, 0.7)', // Violet-White
-            'rgba(255, 230, 200, 0.8)', // Warm-White
-            'rgba(255, 255, 255, 0.2)'  // Distant stardust
+            'rgba(255, 255, 255, 1.0)',   // A-class: Pure white
+            'rgba(200, 225, 255, 0.95)',  // B-class: Blue-white
+            'rgba(165, 210, 255, 0.90)',  // O-class: Hot blue
+            'rgba(192, 132, 252, 0.80)',  // Violet: young hot star
+            'rgba(255, 240, 210, 0.85)',  // F-class: Warm white
+            'rgba(255, 210, 140, 0.75)',  // K-class: Orange giant
+            'rgba(255, 170, 90,  0.65)',  // Giant orange
+            'rgba(255, 120, 80,  0.55)',  // M-class: Red dwarf
+            'rgba(180, 210, 255, 0.50)',  // Distant blue cluster
+            'rgba(255, 255, 255, 0.25)',  // Far stardust
+            'rgba(200, 180, 255, 0.20)',  // Purple nebula haze
         ];
 
         const initParticles = () => {
             particles = [];
-            // Cinematic Galactic Density
-            const numParticles = Math.floor((width * height) / 2000);
+            // Dense galactic star field — 3× more stars than before
+            const numParticles = Math.floor((width * height) / 600);
             for (let i = 0; i < numParticles; i++) {
                 particles.push(createParticle(true));
             }
@@ -52,11 +58,18 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         const createParticle = (randomizePosition = false) => {
             let x, y;
             if (randomizePosition) {
-                // Focus density towards the center for a galactic core look
-                if (Math.random() < 0.4) {
-                    x = width / 2 + (Math.random() - 0.5) * width * 0.4;
-                    y = height / 2 + (Math.random() - 0.5) * height * 0.4;
+                // Layered density: galactic core cluster + mid band + scattered field
+                const r = Math.random();
+                if (r < 0.25) {
+                    // Dense galactic core — tightly packed centre
+                    x = width / 2 + (Math.random() - 0.5) * width * 0.25;
+                    y = height / 2 + (Math.random() - 0.5) * height * 0.25;
+                } else if (r < 0.55) {
+                    // Mid galactic band — slight horizontal spread
+                    x = width / 2 + (Math.random() - 0.5) * width * 0.7;
+                    y = height / 2 + (Math.random() - 0.5) * height * 0.35;
                 } else {
+                    // Scattered outer field
                     x = Math.random() * width;
                     y = Math.random() * height;
                 }
@@ -68,16 +81,21 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                 else { x = -10; y = Math.random() * height; }
             }
             const magnitude = Math.random();
+            // Size tiers: rare giants (4px) → mediums → fine dust
+            const size = magnitude < 0.008 ? Math.random() * 2.5 + 2.5   // rare bright giant
+                       : magnitude < 0.06  ? Math.random() * 1.5 + 1.2   // medium bright
+                       : magnitude < 0.25  ? Math.random() * 0.9 + 0.5   // small
+                       : Math.random() * 0.5 + 0.1;                       // fine dust
             return {
-                x,
-                y,
-                vx: (Math.random() - 0.5) * 0.25,
-                vy: (Math.random() - 0.3) * 0.25,
-                // Cinematic variety: very tiny dust vs occasional bright stars
-                size: magnitude < 0.02 ? Math.random() * 3 + 1 : magnitude < 0.2 ? Math.random() * 1.5 + 0.5 : Math.random() * 0.8 + 0.1,
+                x, y,
+                vx: (Math.random() - 0.5) * 0.20,
+                vy: (Math.random() - 0.5) * 0.20,
+                size,
                 color: colors[Math.floor(Math.random() * colors.length)],
-                twinkle: Math.random() * 0.04 + 0.005,
-                phase: Math.random() * Math.PI * 2
+                twinkle: Math.random() * 0.05 + 0.008,
+                phase: Math.random() * Math.PI * 2,
+                // Bright stars get a glow halo
+                glow: size > 2.0,
             };
         };
 
@@ -156,7 +174,7 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                 p.x += p.vx;
                 p.y += p.vy;
 
-                let baseAlpha = 0.4 + Math.sin(time * p.twinkle + p.phase) * 0.35;
+                let baseAlpha = 0.55 + Math.sin(time * p.twinkle + p.phase) * 0.40;
                 let alpha = baseAlpha;
 
                 if (mouse.current.isActive) {
@@ -168,6 +186,21 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                     }
                 }
 
+                ctx.globalAlpha = Math.max(0, alpha);
+
+                // Draw glow halo for bright stars
+                if (p.glow && alpha > 0.1) {
+                    const glowSize = p.size * 4;
+                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowSize);
+                    gradient.addColorStop(0, p.color.replace(/[\d.]+\)$/, `${(alpha * 0.6).toFixed(2)})`) );
+                    gradient.addColorStop(1, p.color.replace(/[\d.]+\)$/, '0)'));
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, glowSize, 0, Math.PI * 2);
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                }
+
+                // Draw the star core
                 ctx.globalAlpha = Math.max(0, alpha);
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
@@ -234,39 +267,145 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
     const pos = containerRef ? 'absolute' : 'fixed';
 
     return (
-        <div className={className} style={{ position: pos, top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999, overflow: 'hidden', background: '#000' }}>
-            {/* --- Deep Space Nebula Layers --- */}
-            {/* Broad Ambient Nebula */}
+        <div className={className} style={{ position: pos, top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 9999, overflow: 'hidden', background: '#01010a' }}>
+
+            {/* ── DEEP SPACE BASE GRADIENT ── */}
             <div style={{
+                position: 'absolute', inset: 0,
+                background: [
+                    'radial-gradient(ellipse at 50% 50%, #0c0820 0%, #01010a 65%)',
+                    'radial-gradient(ellipse at 20% 30%, #130d2e 0%, transparent 55%)',
+                    'radial-gradient(ellipse at 80% 70%, #0a0618 0%, transparent 55%)',
+                ].join(','),
+                zIndex: -5,
+            }} />
+
+            {/* ── NEBULA 1: Violet gas cloud (upper-left) ── */}
+            <div className="bh-bg-nebula1" style={{
                 position: 'absolute',
-                inset: 0,
-                background: 'radial-gradient(circle at 30% 40%, rgba(67, 56, 202, 0.08) 0%, transparent 60%), radial-gradient(circle at 70% 60%, rgba(139, 92, 246, 0.05) 0%, transparent 60%)',
+                top: '-10%', left: '-5%',
+                width: '55%', height: '65%',
+                background: 'radial-gradient(ellipse at 60% 50%, rgba(120,60,220,0.45) 0%, rgba(80,30,160,0.25) 40%, transparent 70%)',
+                filter: 'blur(55px)',
+                zIndex: -4,
+            }} />
+
+            {/* ── NEBULA 2: Cyan/teal cloud (upper-right) ── */}
+            <div className="bh-bg-nebula2" style={{
+                position: 'absolute',
+                top: '-15%', right: '-10%',
+                width: '50%', height: '60%',
+                background: 'radial-gradient(ellipse at 40% 60%, rgba(0,200,220,0.30) 0%, rgba(0,130,180,0.15) 45%, transparent 70%)',
+                filter: 'blur(65px)',
+                zIndex: -4,
+            }} />
+
+            {/* ── NEBULA 3: Deep crimson/magenta cloud (lower-left) ── */}
+            <div className="bh-bg-nebula3" style={{
+                position: 'absolute',
+                bottom: '-10%', left: '-5%',
+                width: '48%', height: '55%',
+                background: 'radial-gradient(ellipse at 55% 40%, rgba(180,30,120,0.35) 0%, rgba(120,20,80,0.18) 45%, transparent 70%)',
+                filter: 'blur(60px)',
+                zIndex: -4,
+            }} />
+
+            {/* ── NEBULA 4: Electric blue cloud (lower-right) ── */}
+            <div className="bh-bg-nebula4" style={{
+                position: 'absolute',
+                bottom: '-15%', right: '-8%',
+                width: '52%', height: '58%',
+                background: 'radial-gradient(ellipse at 45% 45%, rgba(40,80,255,0.28) 0%, rgba(20,50,200,0.14) 45%, transparent 70%)',
+                filter: 'blur(70px)',
+                zIndex: -4,
+            }} />
+
+            {/* ── NEBULA 5: Warm amber core glow (centre) ── */}
+            <div className="bh-bg-nebula5" style={{
+                position: 'absolute',
+                top: '20%', left: '25%',
+                width: '50%', height: '50%',
+                background: 'radial-gradient(ellipse at 50% 50%, rgba(180,90,20,0.18) 0%, rgba(120,50,10,0.10) 45%, transparent 75%)',
+                filter: 'blur(80px)',
                 zIndex: -3,
             }} />
 
-            {/* Cosmic Cloud 1 */}
-            <div style={{
+            {/* ── GALACTIC DUST LANE (diagonal sweep) ── */}
+            <div className="bh-bg-dustlane" style={{
                 position: 'absolute',
-                top: '10%', left: '20%',
-                width: '60%', height: '60%',
-                background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.04) 0%, transparent 70%)',
-                filter: 'blur(60px)',
-                zIndex: -2,
-                transform: 'rotate(-15deg)',
+                top: '30%', left: '-10%',
+                width: '120%', height: '28%',
+                background: 'linear-gradient(135deg, transparent 0%, rgba(80,40,140,0.12) 20%, rgba(100,60,160,0.22) 45%, rgba(40,80,140,0.14) 70%, transparent 100%)',
+                filter: 'blur(30px)',
+                transform: 'rotate(-8deg)',
+                zIndex: -3,
             }} />
 
-            {/* Cosmic Cloud 2 */}
-            <div style={{
+            {/* ── GRAVITATIONAL LENSING PULSE (centre halo) ── */}
+            <div className="bh-bg-gravity-pulse" style={{
                 position: 'absolute',
-                bottom: '10%', right: '15%',
-                width: '50%', height: '50%',
-                background: 'radial-gradient(ellipse at center, rgba(139, 92, 246, 0.03) 0%, transparent 70%)',
-                filter: 'blur(50px)',
+                top: '50%', left: '50%',
+                width: '260px', height: '260px',
+                marginTop: '-130px', marginLeft: '-130px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(100,50,200,0.22) 0%, rgba(60,20,120,0.12) 45%, transparent 75%)',
+                filter: 'blur(20px)',
                 zIndex: -2,
-                transform: 'rotate(20deg)',
             }} />
 
-            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', pointerEvents: 'none', position: 'absolute', inset: 0, zIndex: -1 }} />
+            {/* ── DARK VIGNETTE (edge darkening) ── */}
+            <div style={{
+                position: 'absolute', inset: 0,
+                background: 'radial-gradient(ellipse at 50% 50%, transparent 35%, rgba(1,1,10,0.55) 70%, rgba(0,0,5,0.85) 100%)',
+                zIndex: -1,
+                pointerEvents: 'none',
+            }} />
+
+            <style>{`
+                @keyframes bh-bg-nebula1-drift {
+                    0%,100% { transform: translate(0,0) scale(1); }
+                    33%     { transform: translate(3%,2%) scale(1.04); }
+                    66%     { transform: translate(-2%,3%) scale(0.97); }
+                }
+                @keyframes bh-bg-nebula2-drift {
+                    0%,100% { transform: translate(0,0) scale(1); }
+                    33%     { transform: translate(-3%,-2%) scale(1.03); }
+                    66%     { transform: translate(2%,-3%) scale(0.98); }
+                }
+                @keyframes bh-bg-nebula3-drift {
+                    0%,100% { transform: translate(0,0) scale(1); }
+                    50%     { transform: translate(2%,-2%) scale(1.05); }
+                }
+                @keyframes bh-bg-nebula4-drift {
+                    0%,100% { transform: translate(0,0) scale(1); }
+                    50%     { transform: translate(-2%,2%) scale(1.04); }
+                }
+                @keyframes bh-bg-nebula5-breathe {
+                    0%,100% { opacity: 0.7; transform: scale(1); }
+                    50%     { opacity: 1.0; transform: scale(1.08); }
+                }
+                @keyframes bh-bg-gravity-pulse {
+                    0%,100% { transform: translate(-50%,-50%) scale(1);   opacity: 0.7; }
+                    50%     { transform: translate(-50%,-50%) scale(1.35); opacity: 1.0; }
+                }
+                @keyframes bh-bg-dustlane-shimmer {
+                    0%,100% { opacity: 0.8; }
+                    50%     { opacity: 1.2; }
+                }
+                .bh-bg-nebula1 { animation: bh-bg-nebula1-drift 20s ease-in-out infinite; }
+                .bh-bg-nebula2 { animation: bh-bg-nebula2-drift 25s ease-in-out infinite; }
+                .bh-bg-nebula3 { animation: bh-bg-nebula3-drift 18s ease-in-out infinite; }
+                .bh-bg-nebula4 { animation: bh-bg-nebula4-drift 22s ease-in-out infinite; }
+                .bh-bg-nebula5 { animation: bh-bg-nebula5-breathe 8s ease-in-out infinite; }
+                .bh-bg-gravity-pulse {
+                    position: absolute;
+                    top: 50%; left: 50%;
+                    animation: bh-bg-gravity-pulse 6s ease-in-out infinite;
+                }
+                .bh-bg-dustlane { animation: bh-bg-dustlane-shimmer 15s ease-in-out infinite; }
+            `}</style>
+
+            <canvas ref={canvasRef} style={{ display: 'block', width: '100%', height: '100%', pointerEvents: 'none', position: 'absolute', inset: 0, zIndex: 0 }} />
 
             {/* Content Layer (Home, About etc) */}
             <div style={{ position: 'relative', zIndex: 10, width: '100%', height: '100%', pointerEvents: 'auto' }}>
@@ -284,121 +423,179 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                     pointerEvents: 'none',
                 }}
             >
-                {/* Lensing Glow Layer 1 - Deep blue ambient */}
-                <div style={{
-                    position: 'absolute',
-                    top: -100, left: -100,
-                    width: 200, height: 200,
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(67,56,202,0.12) 0%, rgba(67,56,202,0.03) 50%, transparent 80%)',
-                    filter: 'blur(25px)',
-                    zIndex: -2,
-                }} />
+                {/* ── Realistic Black Hole SVG ── */}
+                <svg
+                    className="bh-svg-root"
+                    width="180" height="180"
+                    viewBox="-90 -90 180 180"
+                    style={{ position: 'absolute', top: -90, left: -90, overflow: 'visible', zIndex: 10 }}
+                >
+                    <defs>
+                        {/* Outer soft gravitational glow */}
+                        <radialGradient id="bhGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%"   stopColor="#7c3aed" stopOpacity="0.0" />
+                            <stop offset="55%"  stopColor="#4338ca" stopOpacity="0.08" />
+                            <stop offset="80%"  stopColor="#1e1b4b" stopOpacity="0.18" />
+                            <stop offset="100%" stopColor="#000"    stopOpacity="0.0" />
+                        </radialGradient>
 
-                {/* Lensing Glow Layer 2 - Violet flare */}
-                <div className="bh-flare" style={{
-                    position: 'absolute',
-                    top: -70, left: -70,
-                    width: 140, height: 28,
-                    borderRadius: '50%',
-                    background: 'linear-gradient(90deg, transparent, rgba(139,92,246,0.15), transparent)',
-                    filter: 'blur(15px)',
-                    zIndex: -1,
-                }} />
+                        {/* Accretion disk outer halo – warm orange/amber */}
+                        <radialGradient id="diskOuter" cx="50%" cy="50%" r="50%" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%"   stopColor="#ff6600" stopOpacity="0.0" />
+                            <stop offset="40%"  stopColor="#ff8800" stopOpacity="0.55" />
+                            <stop offset="70%"  stopColor="#ffaa00" stopOpacity="0.35" />
+                            <stop offset="100%" stopColor="#ff4400" stopOpacity="0.0" />
+                        </radialGradient>
 
-                {/* Multi-layered Accretion Disk - Golden Plasma */}
-                <div className="bh-accretion-plasma" style={{
-                    position: 'absolute',
-                    top: -45, left: -45,
-                    width: 90, height: 90,
-                    borderRadius: '50%',
-                    background: 'conic-gradient(from 0deg, transparent 0%, rgba(255,170,0,0.5) 15%, rgba(255,102,0,0.8) 35%, rgba(255,170,0,0.5) 55%, transparent 100%)',
-                    filter: 'blur(8px)',
-                    zIndex: 0,
-                }} />
+                        {/* Disk inner hot streak – white-orange */}
+                        <linearGradient id="diskHot" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%"   stopColor="#fff" stopOpacity="0.0" />
+                            <stop offset="20%"  stopColor="#ffe0a0" stopOpacity="0.7" />
+                            <stop offset="50%"  stopColor="#fffaf0" stopOpacity="1.0" />
+                            <stop offset="80%"  stopColor="#ffcc44" stopOpacity="0.7" />
+                            <stop offset="100%" stopColor="#fff" stopOpacity="0.0" />
+                        </linearGradient>
 
-                {/* Hot Inner Disk - Cyan/White */}
-                <div className="bh-accretion-inner" style={{
-                    position: 'absolute',
-                    top: -30, left: -30,
-                    width: 60, height: 60,
-                    borderRadius: '50%',
-                    background: 'conic-gradient(from 90deg, transparent 0%, rgba(165,243,252,0.6) 25%, rgba(255,255,255,0.9) 50%, rgba(139,92,246,0.6) 75%, transparent 100%)',
-                    filter: 'blur(3px)',
-                    zIndex: 1,
-                }} />
+                        {/* Photon ring glow */}
+                        <radialGradient id="photonRing" cx="50%" cy="50%" r="50%">
+                            <stop offset="70%"  stopColor="#fff"    stopOpacity="0.0" />
+                            <stop offset="85%"  stopColor="#a5f3fc" stopOpacity="0.9" />
+                            <stop offset="92%"  stopColor="#ffffff" stopOpacity="1.0" />
+                            <stop offset="100%" stopColor="#a5f3fc" stopOpacity="0.0" />
+                        </radialGradient>
 
-                {/* Photon Sphere High Intensity Ring */}
-                <div className="bh-photon-ring" style={{
-                    position: 'absolute',
-                    top: -15, left: -15,
-                    width: 30, height: 30,
-                    borderRadius: '50%',
-                    border: '1.2px solid rgba(255,255,255,0.9)',
-                    boxShadow: '0 0 12px 2px rgba(165,243,252,1), inset 0 0 6px rgba(6,182,212,0.8)',
-                    zIndex: 4,
-                }} />
+                        {/* Shadow lensing mask - cuts out behind the event horizon */}
+                        <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%"   stopColor="#000" stopOpacity="1" />
+                            <stop offset="100%" stopColor="#000" stopOpacity="0" />
+                        </radialGradient>
 
-                {/* Event Horizon - Singularity Core */}
-                <div style={{
-                    position: 'absolute',
-                    top: -13, left: -13,
-                    width: 25, height: 25,
-                    backgroundColor: '#000',
-                    borderRadius: '50%',
-                    boxShadow: '0 0 6px 2px rgba(139,92,246,0.9), 0 0 25px 10px rgba(0,0,0,1)',
-                    zIndex: 5,
-                }} />
+                        {/* Jet gradient */}
+                        <linearGradient id="jetTop" x1="0%" y1="100%" x2="0%" y2="0%">
+                            <stop offset="0%"   stopColor="#60a5fa" stopOpacity="0.8" />
+                            <stop offset="60%"  stopColor="#818cf8" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.0" />
+                        </linearGradient>
+                        <linearGradient id="jetBot" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%"   stopColor="#60a5fa" stopOpacity="0.8" />
+                            <stop offset="60%"  stopColor="#818cf8" stopOpacity="0.3" />
+                            <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.0" />
+                        </linearGradient>
 
-                {/* Lensing Distortion Highlights */}
-                <div className="bh-distort" style={{
-                    position: 'absolute',
-                    top: -60, left: -60,
-                    width: 120, height: 120,
-                    borderRadius: '50%',
-                    border: '1px solid rgba(255,255,255,0.1)',
-                    background: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 40%)',
-                    filter: 'blur(4px)',
-                    zIndex: 2,
-                }} />
+                        {/* Filter: outer ambient glow render */}
+                        <filter id="glowBlur" x="-50%" y="-50%" width="200%" height="200%">
+                            <feGaussianBlur stdDeviation="8" result="blur" />
+                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                        </filter>
+                        <filter id="diskBlur">
+                            <feGaussianBlur stdDeviation="2.5" />
+                        </filter>
+                        <filter id="diskBlurOuter">
+                            <feGaussianBlur stdDeviation="6" />
+                        </filter>
+                        <filter id="jetBlur">
+                            <feGaussianBlur stdDeviation="3" />
+                        </filter>
+                        <filter id="photonBlur">
+                            <feGaussianBlur stdDeviation="1.2" />
+                        </filter>
+                    </defs>
+
+                    {/* ── 1. Wide ambient gravitational glow ── */}
+                    <circle cx="0" cy="0" r="75" fill="url(#bhGlow)" />
+
+                    {/* ── 2. Relativistic jet TOP (blue) ── */}
+                    <g filter="url(#jetBlur)" className="bh-jet-top">
+                        <ellipse cx="0" cy="-20" rx="5" ry="55" fill="url(#jetTop)" opacity="0.7" />
+                        <ellipse cx="0" cy="-20" rx="2" ry="50"  fill="url(#jetTop)" opacity="0.9" />
+                    </g>
+
+                    {/* ── 3. Relativistic jet BOTTOM (blue) ── */}
+                    <g filter="url(#jetBlur)" className="bh-jet-bot">
+                        <ellipse cx="0" cy="20" rx="5" ry="55" fill="url(#jetBot)" opacity="0.7" />
+                        <ellipse cx="0" cy="20" rx="2" ry="50"  fill="url(#jetBot)" opacity="0.9" />
+                    </g>
+
+                    {/* ── 4. Outer accretion disk band (tilted ellipse) ── */}
+                    <g className="bh-disk-outer" filter="url(#diskBlurOuter)">
+                        <ellipse cx="0" cy="0" rx="58" ry="14" fill="url(#diskOuter)" opacity="0.85" />
+                    </g>
+
+                    {/* ── 5. Mid accretion band ── */}
+                    <g className="bh-disk-mid" filter="url(#diskBlur)">
+                        <ellipse cx="0" cy="0" rx="44" ry="9" fill="none"
+                            stroke="#ff7700" strokeWidth="5" strokeOpacity="0.6" />
+                        <ellipse cx="0" cy="0" rx="38" ry="7" fill="none"
+                            stroke="#ffaa00" strokeWidth="3" strokeOpacity="0.5" />
+                    </g>
+
+                    {/* ── 6. Hot inner disk streak (brightest, near event horizon) ── */}
+                    <g className="bh-disk-hot">
+                        <ellipse cx="0" cy="0" rx="28" ry="5.5" fill="none"
+                            stroke="url(#diskHot)" strokeWidth="4" strokeOpacity="0.95" />
+                        <ellipse cx="0" cy="0" rx="22" ry="4" fill="none"
+                            stroke="#fffaf0" strokeWidth="2" strokeOpacity="0.8" />
+                    </g>
+
+                    {/* ── 7. Gravitational lensing arcs (thin bright arcs) ── */}
+                    <g className="bh-lensing" opacity="0.55">
+                        {/* Top arc (lensed image of the far disk) */}
+                        <path d="M -32,-18 Q 0,-32 32,-18" fill="none"
+                            stroke="#ffcc66" strokeWidth="2" strokeLinecap="round" />
+                        {/* Bottom arc */}
+                        <path d="M -32,18 Q 0,32 32,18" fill="none"
+                            stroke="#ffcc66" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+                    </g>
+
+                    {/* ── 8. Photon ring (bright ring just outside shadow) ── */}
+                    <g filter="url(#photonBlur)" className="bh-photon">
+                        <circle cx="0" cy="0" r="18" fill="none"
+                            stroke="#a5f3fc" strokeWidth="2.2" strokeOpacity="0.95" />
+                        <circle cx="0" cy="0" r="18" fill="none"
+                            stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.7" />
+                    </g>
+
+                    {/* ── 9. Schwarzschild shadow (true event horizon) ── */}
+                    {/* The black hole shadow is ~2.6× the Schwarzschild radius → r=16 ≈ photon sphere */}
+                    <circle cx="0" cy="0" r="15.5"
+                        fill="#000"
+                        style={{ filter: 'drop-shadow(0 0 6px #7c3aed)' }} />
+
+                    {/* Subtle inner lensing highlight on the rim (bright crescent from disk behind) */}
+                    <path d="M -10,-12 Q 0,-17 10,-12" fill="none"
+                        stroke="#ffe0a0" strokeWidth="1.2" strokeOpacity="0.4" strokeLinecap="round" />
+                </svg>
             </div>
 
             <style>{`
-                @keyframes bh-accretion-plasma {
-                    0% { transform: rotate(0deg) scaleY(0.4) scaleX(1.3) skewX(10deg); filter: blur(10px) brightness(1.2); }
-                    50% { transform: rotate(180deg) scaleY(0.35) scaleX(1.4) skewX(15deg); filter: blur(12px) brightness(1.4); }
-                    100% { transform: rotate(360deg) scaleY(0.4) scaleX(1.3) skewX(10deg); filter: blur(10px) brightness(1.2); }
+                @keyframes bh-disk-outer-rot {
+                    from { transform: rotate(0deg); }
+                    to   { transform: rotate(360deg); }
                 }
-                @keyframes bh-accretion-inner {
-                    0% { transform: rotate(90deg) scaleY(0.5) scaleX(1.2); }
-                    100% { transform: rotate(450deg) scaleY(0.5) scaleX(1.2); }
+                @keyframes bh-disk-hot-rot {
+                    from { transform: rotate(0deg); }
+                    to   { transform: rotate(-360deg); }
                 }
-                @keyframes bh-flare {
-                    0%, 100% { opacity: 0.3; transform: scaleY(0.6) rotate(-5deg); }
-                    50% { opacity: 0.6; transform: scaleY(0.8) rotate(5deg); }
+                @keyframes bh-photon-pulse {
+                    0%,100% { opacity: 0.85; }
+                    50%     { opacity: 1.0; }
                 }
-                @keyframes bh-photon-ring {
-                    0%, 100% { transform: scale(1); border-color: rgba(255,255,255,0.8); }
-                    50% { transform: scale(1.04); border-color: rgba(165,243,252,1); }
+                @keyframes bh-jet-flicker {
+                    0%,100% { opacity: 0.65; transform: scaleX(1); }
+                    30%     { opacity: 0.9;  transform: scaleX(1.15); }
+                    60%     { opacity: 0.7;  transform: scaleX(0.9); }
                 }
-                @keyframes bh-distort-rot {
-                    100% { transform: rotate(-360deg); }
+                @keyframes bh-lensing-shimmer {
+                    0%,100% { opacity: 0.45; }
+                    50%     { opacity: 0.75; }
                 }
-                .bh-accretion-plasma {
-                    animation: bh-accretion-plasma 12s linear infinite;
-                }
-                .bh-accretion-inner {
-                    animation: bh-accretion-inner 5s linear infinite;
-                }
-                .bh-flare {
-                    animation: bh-flare 10s ease-in-out infinite;
-                }
-                .bh-photon-ring {
-                    animation: bh-photon-ring 3s ease-in-out infinite;
-                }
-                .bh-distort {
-                    animation: bh-distort-rot 20s linear infinite;
-                }
+                .bh-disk-outer { animation: bh-disk-outer-rot 18s linear infinite; transform-origin: 0 0; }
+                .bh-disk-mid   { animation: bh-disk-outer-rot 12s linear infinite; transform-origin: 0 0; }
+                .bh-disk-hot   { animation: bh-disk-hot-rot 5s linear infinite; transform-origin: 0 0; }
+                .bh-photon     { animation: bh-photon-pulse 2.5s ease-in-out infinite; }
+                .bh-jet-top    { animation: bh-jet-flicker 3.5s ease-in-out infinite; }
+                .bh-jet-bot    { animation: bh-jet-flicker 4.0s ease-in-out infinite 0.5s; }
+                .bh-lensing    { animation: bh-lensing-shimmer 4s ease-in-out infinite; }
             `}</style>
         </div>
     );

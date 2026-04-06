@@ -27,9 +27,9 @@ const LoadingDots = () => {
     );
 };
 
-// Spinning ring loader
+// Spinning ring loader — responsive size (small on mobile, larger on sm+)
 const SpinnerRing = () => (
-    <div className="relative w-24 h-24 flex items-center justify-center">
+    <div className="relative w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center">
         {/* Outer glow */}
         <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-xl animate-pulse" />
 
@@ -72,7 +72,8 @@ const SpinnerRing = () => (
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             className="relative z-10"
         >
-            <Lock size={26} className="text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+            <Lock size={18} className="sm:hidden text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+            <Lock size={26} className="hidden sm:block text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
         </motion.div>
     </div>
 );
@@ -184,9 +185,9 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                             </motion.button>
                         )}
 
-                        <div className="relative z-10 p-10 flex flex-col items-center text-center">
-                            {/* Branding Logo */}
-                            <div className="mb-10 scale-110">
+                        <div className="relative z-10 p-6 sm:p-10 flex flex-col items-center text-center">
+                            {/* Branding Logo — smaller margin on mobile */}
+                            <div className="mb-5 sm:mb-10">
                                 <Logo showText={true} className="w-10 h-10" />
                             </div>
 
@@ -200,13 +201,13 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                         exit={{ opacity: 0, y: -10 }}
                                         className="flex flex-col items-center w-full"
                                     >
-                                        <div className="mb-7">
+                                        <div className="mb-4 sm:mb-7">
                                             <SpinnerRing />
                                         </div>
 
                                         {/* Label pill */}
                                         <div
-                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full mb-5 text-[10px] font-bold uppercase tracking-[0.2em]"
+                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full mb-3 sm:mb-5 text-[10px] font-bold uppercase tracking-[0.2em]"
                                             style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)', color: '#60A5FA' }}
                                         >
                                             <ShieldCheck size={10} />
@@ -214,19 +215,19 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                         </div>
 
                                         <h3
-                                            className="text-2xl font-black tracking-tight mb-2"
+                                            className="text-lg sm:text-2xl font-black tracking-tight mb-1 sm:mb-2"
                                             style={{ fontFamily: 'inherit', color: '#fff' }}
                                         >
                                             Initializing Checkout
                                         </h3>
 
-                                        <p className="text-sm mb-8" style={{ color: 'rgba(255,255,255,0.45)' }}>
+                                        <p className="text-xs sm:text-sm mb-4 sm:mb-8" style={{ color: 'rgba(255,255,255,0.45)' }}>
                                             {message || 'Initializing secure checkout'}
                                             <LoadingDots />
                                         </p>
 
-                                        {/* Progress steps */}
-                                        <div className="w-full space-y-2.5">
+                                        {/* Progress steps — compact on mobile */}
+                                        <div className="w-full space-y-1.5 sm:space-y-2.5">
                                             {[
                                                 { label: 'Securing connection', done: true },
                                                 { label: 'Loading payment gateway', done: true },
@@ -237,7 +238,7 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                                     initial={{ opacity: 0, x: -10 }}
                                                     animate={{ opacity: 1, x: 0 }}
                                                     transition={{ delay: i * 0.15 }}
-                                                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl"
+                                                    className="flex items-center gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl"
                                                     style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
                                                 >
                                                     {step.done ? (
@@ -252,7 +253,7 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                                             style={{ background: 'rgba(59,130,246,0.3)', border: '1px solid rgba(59,130,246,0.5)' }}
                                                         />
                                                     )}
-                                                    <span className="text-xs" style={{ color: step.done ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.35)' }}>
+                                                    <span className="text-[11px] sm:text-xs" style={{ color: step.done ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.35)' }}>
                                                         {step.label}
                                                     </span>
                                                     {step.done && (
@@ -263,9 +264,9 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                         </div>
 
                                         {/* Secured by */}
-                                        <div className="mt-6 flex items-center gap-2 text-[10px]" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                                        <div className="mt-4 sm:mt-6 flex items-center gap-2 text-[10px]" style={{ color: 'rgba(255,255,255,0.2)' }}>
                                             <Lock size={10} />
-                                            256-bit SSL encrypted · Secured by Razorpay
+                                            256-bit SSL · Secured by Razorpay
                                         </div>
                                     </motion.div>
                                 )}
