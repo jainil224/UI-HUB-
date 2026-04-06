@@ -14,7 +14,15 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
     // Validate required SMTP credentials
     const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
     const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
-    const smtpFrom = process.env.SMTP_FROM || smtpUser; // Use sender email as from
+    
+    // CRITICAL: smtpFrom MUST be the Brevo SMTP user address (a6dced001@smtp-brevo.com)
+    // Using a Gmail or unverified address will cause Brevo to REJECT the email with auth errors!
+    let smtpFrom = process.env.SMTP_FROM || smtpUser;
+    if (smtpFrom && smtpFrom.includes('@gmail.com')) {
+      console.warn('[EmailService] ⚠️  WARNING: SMTP_FROM is set to a Gmail address! Brevo will reject this.');
+      console.warn('[EmailService] ⚠️  Forcing smtpFrom to use SMTP_USER instead:', smtpUser);
+      smtpFrom = smtpUser; // Override with Brevo login to prevent rejection
+    }
 
     if (!smtpUser || !smtpPass) {
       console.error('[EmailService] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set! Cannot send welcome email.');
