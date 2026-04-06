@@ -7,7 +7,60 @@ import { sendWelcomeEmail } from '../utils/sendEmail.js';
 const router = express.Router();
 
 router.get('/check', (req, res) => {
-    res.json({ success: true, message: 'User API reachable' });
+    const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
+    const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+    res.json({ 
+        success: true, 
+        message: 'User API reachable',
+        smtp: {
+            configured: !!(smtpUser && smtpPass),
+            user: smtpUser ? `${smtpUser.slice(0, 4)}****` : 'NOT SET',
+            host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
+            from: process.env.SMTP_FROM || smtpUser || 'NOT SET'
+        }
+    });
+});
+
+/**
+ * @route POST /api/v1/users/email-test
+ * @desc Test SMTP email delivery — send a test welcome email
+ * @access Public (for deployment verification only)
+ * @body { email: string, name?: string, secret?: string }
+ */
+router.post('/email-test', async (req, res) => {
+    try {
+        const { email, name, secret } = req.body;
+
+        // Basic protection: require a known secret to prevent abuse
+        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
+        if (secret !== testSecret) {
+            return res.status(403).json({ error: 'Forbidden: invalid test secret' });
+        }
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        console.log(`[EmailTest] Sending test welcome email to: ${email}`);
+        const result = await sendWelcomeEmail(email, name || 'Test User');
+
+        if (result.success) {
+            res.json({ 
+                success: true, 
+                message: `Test email sent successfully to ${email}`,
+                messageId: result.messageId 
+            });
+        } else {
+            res.status(500).json({ 
+                success: false, 
+                error: result.error,
+                hint: 'Check BREVO_SMTP_USER, BREVO_SMTP_PASS and SMTP_FROM env vars on Render'
+            });
+        }
+    } catch (error) {
+        console.error('[EmailTest] Unexpected error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 /**

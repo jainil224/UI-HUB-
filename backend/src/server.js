@@ -12,6 +12,19 @@ import { startUserSyncWorker } from './services/syncService.js';
 dotenv.config();
 console.log('Environment variables loaded from .env');
 
+// ── SMTP Boot Check ─────────────────────────────────────────────────────────
+// Immediately log email config so Render logs show if email will work.
+const _smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
+const _smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+const _smtpFrom = process.env.SMTP_FROM || _smtpUser;
+if (_smtpUser && _smtpPass) {
+  console.log(`[SMTP] ✅ Email configured — user: ${_smtpUser.slice(0, 6)}**** | from: ${_smtpFrom}`);
+} else {
+  console.error('[SMTP] ❌ EMAIL NOT CONFIGURED — BREVO_SMTP_USER or BREVO_SMTP_PASS is missing!');
+  console.error('[SMTP] ❌ New user welcome emails will NOT be sent until these are set on Render.');
+}
+// ────────────────────────────────────────────────────────────────────────────
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
