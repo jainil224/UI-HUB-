@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
 import { Check, X, Zap, Crown, ArrowRight, Star, Sparkles, Download, Code2, Shield, Heart } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,6 +14,8 @@ const PricingPage = () => {
     const [currencyMode, setCurrencyMode] = useState<'INR' | 'USD'>('USD');
     const [checkoutStatus, setCheckoutStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [checkoutMessage, setCheckoutMessage] = useState('');
+    // Ref to avoid stale closure inside Razorpay ondismiss callback
+    const checkoutStatusRef = useRef(checkoutStatus);
 
     // Detect if user is in India on initial load
     useEffect(() => {
@@ -23,18 +25,24 @@ const PricingPage = () => {
         }
     }, []);
 
+    // Keep ref in sync with state
+    const setStatus = (s: 'idle' | 'loading' | 'success' | 'error') => {
+        checkoutStatusRef.current = s;
+        setCheckoutStatus(s);
+    };
+
     const handleCheckout = async (plan: any) => {
         if (!user) {
             navigate('/login');
             return;
         }
 
-        setCheckoutStatus('loading');
+        setStatus('loading');
         setCheckoutMessage('Initializing secure checkout...');
 
         const res = await loadRazorpayScript();
         if (!res) {
-            setCheckoutStatus('error');
+            setStatus('error');
             setCheckoutMessage('Razorpay setup failed. Please check your connection.');
             return;
         }
@@ -61,7 +69,7 @@ const PricingPage = () => {
             // 3. Strict Guardrail: Stop if we still have a dummy key or no key
             // This PREVENTS the Razorpay library from showing its own "Oops" generic browser alert
             if (!razorpayKey || razorpayKey.includes('dummy')) {
-                setCheckoutStatus('error');
+                setStatus('error');
                 setCheckoutMessage('Configuration Error: Razorpay Key ID is missing. Please ensure your backend is deployed and VITE_API_URL is set in Vercel.');
                 return;
             }
@@ -91,7 +99,7 @@ const PricingPage = () => {
                 description: `${plan.title} Subscription`,
                 order_id: orderData.order_id,
                 handler: async function (response: any) {
-                    setCheckoutStatus('loading');
+                    setStatus('loading');
                     setCheckoutMessage('Verifying payment securely...');
                     try {
                         const verifyRes = await fetch(`${apiUrl}/api/v1/payment/verify-payment`, {
@@ -110,16 +118,16 @@ const PricingPage = () => {
                         
                         const verifyData = await verifyRes.json();
                         if (verifyData.success) {
-                            setCheckoutStatus('success');
+                            setStatus('success');
                             setCheckoutMessage(`Welcome to ${plan.title}! Your account is upgraded.`);
                         } else if (verifyData.paymentCaptured) {
-                            setCheckoutStatus('error'); 
+                            setStatus('error'); 
                             setCheckoutMessage(verifyData.error || 'Payment received but plan activation is pending. Please contact support.');
                         } else {
                             throw new Error(verifyData.error || 'Verification failed');
                         }
                     } catch (err: any) {
-                        setCheckoutStatus('error');
+                        setStatus('error');
                         // Display backend error rather than generic text
                         setCheckoutMessage(err.message || 'Payment verification failed');
                     }
@@ -133,8 +141,12 @@ const PricingPage = () => {
                 },
                 modal: {
                     ondismiss: function() {
-                        if (checkoutStatus === 'loading') {
-                             setCheckoutStatus('idle');
+                        // Always close the overlay and go home when user exits payment
+                        // Use ref to get the *current* status (avoids stale closure)
+                        const currentStatus = checkoutStatusRef.current;
+                        if (currentStatus === 'loading' || currentStatus === 'idle') {
+                            setStatus('idle');
+                            navigate('/');
                         }
                     }
                 }
@@ -145,7 +157,7 @@ const PricingPage = () => {
             // Intercept native Razorpay failure events to update React state instead of browser alerts
             paymentObject.on('payment.failed', function (response: any) {
                 console.error('[Razorpay Checkout Error]', response.error);
-                setCheckoutStatus('error');
+                setStatus('error');
                 // Extract precise Razorpay API error rather than generic 'Payment Failed'
                 setCheckoutMessage(`Payment Failed: ${response.error.description || 'Transaction declined'} (Code: ${response.error.code || 'N/A'})`);
             });
@@ -154,7 +166,7 @@ const PricingPage = () => {
 
         } catch (err: any) {
             console.error('[Checkout API Error]', err);
-            setCheckoutStatus('error');
+            setStatus('error');
             
             // Handle Render free tier cold start appropriately
             if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
