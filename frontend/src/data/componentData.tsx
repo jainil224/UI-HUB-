@@ -660,9 +660,23 @@ const AuroraCursorPreview: React.FC = () => {
 
 
 
-// ── Heart Cursor scoped preview (Lovable Style) ────────────
+// ── Heart Cursor scoped preview ────────────
 const HeartCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
+
+    // Stable floating hearts (deterministic positions)
+    const floatingHearts = [
+        { top: '10%',  left: '8%',   size: 28, opacity: 0.18, dur: 6,   delay: 0   },
+        { top: '25%',  left: '88%',  size: 18, opacity: 0.14, dur: 8,   delay: 1.2 },
+        { top: '60%',  left: '5%',   size: 22, opacity: 0.12, dur: 7,   delay: 0.5 },
+        { top: '75%',  left: '92%',  size: 30, opacity: 0.16, dur: 9,   delay: 2   },
+        { top: '45%',  left: '82%',  size: 14, opacity: 0.10, dur: 6.5, delay: 3   },
+        { top: '15%',  left: '55%',  size: 12, opacity: 0.08, dur: 7.5, delay: 1.8 },
+        { top: '80%',  left: '30%',  size: 20, opacity: 0.12, dur: 8.5, delay: 0.8 },
+        { top: '88%',  left: '65%',  size: 16, opacity: 0.09, dur: 6,   delay: 2.5 },
+        { top: '35%',  left: '15%',  size: 10, opacity: 0.07, dur: 9,   delay: 4   },
+        { top: '5%',   left: '72%',  size: 24, opacity: 0.13, dur: 7,   delay: 3.5 },
+    ];
 
     return (
         <div
@@ -670,146 +684,182 @@ const HeartCursorPreview: React.FC = () => {
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '100%',
-                background: '#000',
                 overflow: 'hidden',
                 cursor: 'none',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'column',
+                // Deep romantic space: violet → rose → deep pink
+                background: 'radial-gradient(ellipse at 50% 0%,   #2d0a3e 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, #4a0a2a 0%, transparent 55%), radial-gradient(ellipse at 80% 90%, #1a0030 0%, transparent 55%), #0a0010',
             }}
         >
-            {/* Lovable-style Background Gradients */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                zIndex: 0,
-                pointerEvents: 'none',
-            }}>
-                {/* Blue blobs (sides) */}
+            {/* ── Rich background gradient layers ── */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+                {/* Top violet bloom */}
                 <div style={{
-                    position: 'absolute',
-                    top: '20%',
-                    left: '-10%',
-                    width: '50%',
-                    height: '60%',
-                    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 70%)',
-                    filter: 'blur(80px)',
-                }} />
-                <div style={{
-                    position: 'absolute',
-                    top: '20%',
-                    right: '-10%',
-                    width: '50%',
-                    height: '60%',
-                    background: 'radial-gradient(circle, rgba(59, 130, 246, 0.45) 0%, transparent 70%)',
-                    filter: 'blur(80px)',
-                }} />
-
-                {/* Pink Bottom Area */}
-                <div style={{
-                    position: 'absolute',
-                    bottom: '-10%',
-                    left: '0',
-                    width: '100%',
-                    height: '70%',
-                    background: 'radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.5) 0%, transparent 75%)',
+                    position: 'absolute', top: '-20%', left: '50%', transform: 'translateX(-50%)',
+                    width: '80%', height: '60%',
+                    background: 'radial-gradient(ellipse, rgba(180,40,220,0.30) 0%, transparent 70%)',
                     filter: 'blur(60px)',
                 }} />
-
-                {/* Vignette to keep top dark */}
+                {/* Left rose glow */}
                 <div style={{
-                    position: 'absolute',
-                    inset: 0,
-                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, transparent 40%, transparent 70%, rgba(236, 72, 153, 0.1) 100%)',
+                    position: 'absolute', top: '20%', left: '-15%',
+                    width: '55%', height: '70%',
+                    background: 'radial-gradient(ellipse, rgba(236,72,153,0.35) 0%, transparent 70%)',
+                    filter: 'blur(70px)',
+                }} />
+                {/* Right deep pink */}
+                <div style={{
+                    position: 'absolute', top: '10%', right: '-15%',
+                    width: '55%', height: '70%',
+                    background: 'radial-gradient(ellipse, rgba(219,39,119,0.28) 0%, transparent 70%)',
+                    filter: 'blur(75px)',
+                }} />
+                {/* Bottom crimson pool */}
+                <div style={{
+                    position: 'absolute', bottom: '-20%', left: '50%', transform: 'translateX(-50%)',
+                    width: '90%', height: '60%',
+                    background: 'radial-gradient(ellipse, rgba(159,18,57,0.40) 0%, transparent 65%)',
+                    filter: 'blur(60px)',
+                }} />
+                {/* Soft vignette */}
+                <div style={{
+                    position: 'absolute', inset: 0,
+                    background: 'radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(5,0,12,0.60) 100%)',
                 }} />
             </div>
 
-            <HeartCursor containerRef={containerRef} size={28} />
-
-            {/* Lovable Content Mockup */}
-            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', width: '100%', maxWidth: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
-                {/* Branding Badge */}
-                <div
-                    className="interactive"
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 12,
-                        marginBottom: -8,
-                        cursor: 'none'
-                    }}
-                >
-                    <Logo className="w-9 h-9" />
-                    <span style={{
-                        fontSize: 20,
-                        fontWeight: 800,
-                        color: '#fff',
-                        letterSpacing: '0.05em',
-                        textTransform: 'uppercase'
-                    }}>UI HUB</span>
-                </div>
-
-                <h2
-                    className="interactive"
-                    style={{
-                        fontSize: 32,
-                        fontWeight: 600,
-                        color: '#fff',
-                        letterSpacing: '-0.02em',
-                        cursor: 'none'
-                    }}
-                >
-                    Ready to build, Hello?
-                </h2>
-
-                <div
-                    className="interactive"
-                    style={{
-                        width: '90%',
-                        background: 'rgba(28, 28, 28, 0.95)',
-                        borderRadius: 24,
-                        padding: '16px 20px',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 12,
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                        backdropFilter: 'blur(10px)',
-                        cursor: 'none'
-                    }}
-                >
-                    <div style={{ textAlign: 'left', color: 'rgba(255,255,255,0.4)', fontSize: 13, fontWeight: 500 }}>
-                        Search UI components, animations, and backgrounds.
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <div className="interactive" style={{ width: 24, height: 24, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.6)', cursor: 'none' }}>
-                            <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                        </div>
-                        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-                            {/* Branding Icons */}
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                <div style={{ width: 20, height: 20, background: '#10b981', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 900, color: '#fff' }}>H</div>
-                                <div style={{ width: 22, height: 22, background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 900, color: '#fff' }}>U</div>
-                            </div>
-                            <span style={{ fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.05em' }}>Plan</span>
-                            <div className="interactive" style={{ color: 'rgba(255,255,255,0.5)', cursor: 'none' }}>
-                                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" /><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" /></svg>
-                            </div>
-                            <div className="interactive" style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.2)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', cursor: 'none' }}>
-                                <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            {/* ── Floating ambient hearts ── */}
             <style>{`
-                .interactive:hover {
-                    filter: brightness(1.3);
-                    transform: scale(1.05);
+                @keyframes hcp-float {
+                    0%,100% { transform: translateY(0px) rotate(-10deg) scale(1); }
+                    33%     { transform: translateY(-14px) rotate(5deg) scale(1.06); }
+                    66%     { transform: translateY(-6px) rotate(-5deg) scale(0.96); }
+                }
+                @keyframes hcp-pulse-ring {
+                    0%,100% { transform: scale(1);    opacity: 0.5; }
+                    50%     { transform: scale(1.12);  opacity: 0.9; }
+                }
+                @keyframes hcp-shimmer {
+                    0%   { background-position: -200% center; }
+                    100% { background-position:  200% center; }
+                }
+                .hcp-card-btn:hover {
+                    transform: scale(1.04);
+                    box-shadow: 0 0 30px rgba(236,72,153,0.6), 0 12px 40px rgba(0,0,0,0.5);
+                }
+                .hcp-pill:hover {
+                    background: rgba(255,255,255,0.12) !important;
+                    border-color: rgba(236,72,153,0.5) !important;
+                    transform: translateY(-2px);
                 }
             `}</style>
+
+            {floatingHearts.map((h, i) => (
+                <div key={i} style={{
+                    position: 'absolute',
+                    top: h.top, left: h.left,
+                    opacity: h.opacity,
+                    animation: `hcp-float ${h.dur}s ease-in-out infinite`,
+                    animationDelay: `${h.delay}s`,
+                    zIndex: 1,
+                    pointerEvents: 'none',
+                }}>
+                    <svg width={h.size} height={h.size} viewBox="0 0 24 24" fill="#ec4899">
+                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                    </svg>
+                </div>
+            ))}
+
+            <HeartCursor containerRef={containerRef} size={30} />
+
+            {/* ── Hero Card ── */}
+            <div style={{
+                position: 'relative', zIndex: 10,
+                width: '88%', maxWidth: '420px',
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: 28,
+                padding: '36px 32px 28px',
+                backdropFilter: 'blur(24px)',
+                boxShadow: '0 0 60px rgba(236,72,153,0.18), 0 30px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.1)',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 20,
+                textAlign: 'center',
+            }}>
+                {/* Top gradient bar */}
+                <div style={{
+                    position: 'absolute', top: 0, left: '15%', right: '15%', height: '2px',
+                    background: 'linear-gradient(90deg, transparent, #f472b6, #e879f9, #f472b6, transparent)',
+                    borderRadius: 2,
+                }} />
+
+                {/* Badge */}
+                <div style={{
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    background: 'rgba(236,72,153,0.12)',
+                    border: '1px solid rgba(236,72,153,0.30)',
+                    borderRadius: 999, padding: '5px 14px',
+                }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#f472b6">
+                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                    </svg>
+                    <span style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+                        Heart Cursor
+                    </span>
+                </div>
+
+                {/* Heading */}
+                <div>
+                    <div style={{
+                        fontSize: 30, fontWeight: 900, letterSpacing: '-0.03em', lineHeight: 1.15,
+                        background: 'linear-gradient(135deg, #ffffff 0%, #fce7f3 40%, #f9a8d4 70%, #ec4899 100%)',
+                        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+                        filter: 'drop-shadow(0 0 20px rgba(236,72,153,0.4))',
+                    }}>
+                        Built with love,<br />designed to delight
+                    </div>
+                    <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.45)', marginTop: 10, lineHeight: 1.6 }}>
+                        Move your cursor · Watch the magic ✨
+                    </div>
+                </div>
+
+                {/* Feature pills */}
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {['Trail Effect', 'Smooth Physics', 'Customizable'].map((label, i) => (
+                        <div key={i} className="hcp-pill" style={{
+                            fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.65)',
+                            background: 'rgba(255,255,255,0.06)',
+                            border: '1px solid rgba(255,255,255,0.12)',
+                            borderRadius: 999, padding: '5px 13px',
+                            transition: 'all 0.25s ease',
+                            cursor: 'none',
+                        }}>
+                            {label}
+                        </div>
+                    ))}
+                </div>
+
+                {/* CTA button with shimmer */}
+                <button className="hcp-card-btn" style={{
+                    width: '100%', padding: '13px 0',
+                    background: 'linear-gradient(135deg, #be185d 0%, #ec4899 50%, #db2777 100%)',
+                    backgroundSize: '200% auto',
+                    border: 'none', borderRadius: 14,
+                    fontSize: 13, fontWeight: 800,
+                    color: '#fff', letterSpacing: '0.08em', textTransform: 'uppercase',
+                    cursor: 'none',
+                    transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+                    boxShadow: '0 0 20px rgba(236,72,153,0.4), 0 8px 30px rgba(0,0,0,0.4)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                    </svg>
+                    Explore Components
+                </button>
+            </div>
         </div>
     );
 };

@@ -30,26 +30,47 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         let animationFrameId: number;
         let width = 0;
         let height = 0;
+        // Pre-rendered glow sprites keyed by hex color — created ONCE at init, reused every frame
+        const glowSprites: Map<string, HTMLCanvasElement> = new Map();
 
-        // Realistic stellar spectral colors (O/B/A/F/G/K/M classes + nebula dust)
-        const colors = [
-            'rgba(255, 255, 255, 1.0)',   // A-class: Pure white
-            'rgba(200, 225, 255, 0.95)',  // B-class: Blue-white
-            'rgba(165, 210, 255, 0.90)',  // O-class: Hot blue
-            'rgba(192, 132, 252, 0.80)',  // Violet: young hot star
-            'rgba(255, 240, 210, 0.85)',  // F-class: Warm white
-            'rgba(255, 210, 140, 0.75)',  // K-class: Orange giant
-            'rgba(255, 170, 90,  0.65)',  // Giant orange
-            'rgba(255, 120, 80,  0.55)',  // M-class: Red dwarf
-            'rgba(180, 210, 255, 0.50)',  // Distant blue cluster
-            'rgba(255, 255, 255, 0.25)',  // Far stardust
-            'rgba(200, 180, 255, 0.20)',  // Purple nebula haze
+        // Compact hex palette for sprite keys (avoids rgba string overhead)
+        const palette = [
+            '#ffffff', // A-class white
+            '#c8e1ff', // B-class blue-white
+            '#a5d2ff', // O-class hot blue
+            '#c084fc', // Violet young star
+            '#fff0d2', // F-class warm white
+            '#ffd28c', // K-class orange giant
+            '#ffaa5a', // Giant orange
+            '#ff7850', // M-class red dwarf
+            '#b4d2ff', // Distant blue cluster
+            '#aaaaaa', // Far stardust
         ];
+
+        // Build an offscreen glow sprite for a given hex color (done ONCE per color at init)
+        const buildGlowSprite = (hex: string, radius: number): HTMLCanvasElement => {
+            const size = radius * 2;
+            const oc = document.createElement('canvas');
+            oc.width = size; oc.height = size;
+            const octx = oc.getContext('2d')!;
+            const grad = octx.createRadialGradient(radius, radius, 0, radius, radius, radius);
+            grad.addColorStop(0, hex + 'aa');
+            grad.addColorStop(0.4, hex + '44');
+            grad.addColorStop(1, hex + '00');
+            octx.fillStyle = grad;
+            octx.fillRect(0, 0, size, size);
+            return oc;
+        };
 
         const initParticles = () => {
             particles = [];
-            // Dense galactic star field — 3× more stars than before
-            const numParticles = Math.floor((width * height) / 600);
+            glowSprites.clear();
+            // Build glow sprites once per palette color
+            palette.forEach(hex => {
+                glowSprites.set(hex, buildGlowSprite(hex, 14));
+            });
+            // Sweet spot: enough stars to show gravity, not so many to slow down
+            const numParticles = Math.floor((width * height) / 1100);
             for (let i = 0; i < numParticles; i++) {
                 particles.push(createParticle(true));
             }
@@ -58,18 +79,14 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         const createParticle = (randomizePosition = false) => {
             let x, y;
             if (randomizePosition) {
-                // Layered density: galactic core cluster + mid band + scattered field
                 const r = Math.random();
                 if (r < 0.25) {
-                    // Dense galactic core — tightly packed centre
                     x = width / 2 + (Math.random() - 0.5) * width * 0.25;
                     y = height / 2 + (Math.random() - 0.5) * height * 0.25;
                 } else if (r < 0.55) {
-                    // Mid galactic band — slight horizontal spread
                     x = width / 2 + (Math.random() - 0.5) * width * 0.7;
                     y = height / 2 + (Math.random() - 0.5) * height * 0.35;
                 } else {
-                    // Scattered outer field
                     x = Math.random() * width;
                     y = Math.random() * height;
                 }
@@ -81,21 +98,23 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                 else { x = -10; y = Math.random() * height; }
             }
             const magnitude = Math.random();
-            // Size tiers: rare giants (4px) → mediums → fine dust
-            const size = magnitude < 0.008 ? Math.random() * 2.5 + 2.5   // rare bright giant
-                       : magnitude < 0.06  ? Math.random() * 1.5 + 1.2   // medium bright
-                       : magnitude < 0.25  ? Math.random() * 0.9 + 0.5   // small
-                       : Math.random() * 0.5 + 0.1;                       // fine dust
+            const size = magnitude < 0.008 ? Math.random() * 2.0 + 2.2
+                       : magnitude < 0.06  ? Math.random() * 1.2 + 1.0
+                       : magnitude < 0.25  ? Math.random() * 0.8 + 0.4
+                       : Math.random() * 0.4 + 0.1;
+            const colorHex = palette[Math.floor(Math.random() * palette.length)];
             return {
                 x, y,
-                vx: (Math.random() - 0.5) * 0.20,
-                vy: (Math.random() - 0.5) * 0.20,
+                vx: (Math.random() - 0.5) * 0.18,
+                vy: (Math.random() - 0.5) * 0.18,
+                // Deterministic drift offset — replaces Math.random() in hot loop
+                driftX: (Math.random() - 0.5) * 0.04,
+                driftY: (Math.random() - 0.5) * 0.04,
                 size,
-                color: colors[Math.floor(Math.random() * colors.length)],
-                twinkle: Math.random() * 0.05 + 0.008,
+                colorHex,
+                twinkle: Math.random() * 0.04 + 0.006,
                 phase: Math.random() * Math.PI * 2,
-                // Bright stars get a glow halo
-                glow: size > 2.0,
+                glow: size > 1.8,
             };
         };
 
@@ -114,105 +133,93 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         const render = (time: number) => {
             ctx.clearRect(0, 0, width, height);
 
-            smoothMouse.current.x += (mouse.current.x - smoothMouse.current.x) * 0.12;
-            smoothMouse.current.y += (mouse.current.y - smoothMouse.current.y) * 0.12;
+            // Cache refs into locals — avoids repeated .current dereferences in hot loop
+            const smx = smoothMouse.current.x;
+            const smy = smoothMouse.current.y;
+            const isActive = mouse.current.isActive;
+            const isHover  = mouse.current.isHover;
+
+            smoothMouse.current.x += (mouse.current.x - smx) * 0.12;
+            smoothMouse.current.y += (mouse.current.y - smy) * 0.12;
 
             if (coreRef.current) {
-                if (mouse.current.isActive) {
-                    coreRef.current.style.transform = `translate(${smoothMouse.current.x}px, ${smoothMouse.current.y}px) scale(${mouse.current.isHover ? 1.4 : 1})`;
+                if (isActive) {
+                    coreRef.current.style.transform = `translate(${smx}px, ${smy}px) scale(${isHover ? 1.4 : 1})`;
                     coreRef.current.style.opacity = '1';
-                    coreRef.current.style.filter = mouse.current.isHover ? 'brightness(1.5)' : 'brightness(1)';
+                    coreRef.current.style.filter = isHover ? 'brightness(1.5)' : 'brightness(1)';
                 } else {
                     coreRef.current.style.opacity = '0';
                 }
             }
 
-            const currentGravityRadius = mouse.current.isHover ? gravityRadius * 1.6 : gravityRadius;
+            const currentGravityRadius = isHover ? gravityRadius * 1.6 : gravityRadius;
+            const gravR2 = currentGravityRadius * currentGravityRadius;
+            const pullStrength = isHover ? 1.8 : 1.2;
+
+            // Disable shadowBlur for the whole frame — we use pre-baked glow sprites instead
+            ctx.shadowBlur = 0;
 
             for (let i = 0; i < particles.length; i++) {
-                let p = particles[i];
+                const p = particles[i];
+                const dx = smx - p.x;
+                const dy = smy - p.y;
+                const dist2 = dx * dx + dy * dy;
 
-                if (mouse.current.isActive) {
-                    const dx = smoothMouse.current.x - p.x;
-                    const dy = smoothMouse.current.y - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-
-                    if (dist < currentGravityRadius) {
-                        const force = (currentGravityRadius - dist) / currentGravityRadius;
-                        const angle = Math.atan2(dy, dx);
-                        const pull = force * (mouse.current.isHover ? 1.8 : 1.2);
-                        const spiral = force * 3.2;
-
-                        p.vx += Math.cos(angle) * pull - Math.sin(angle) * spiral;
-                        p.vy += Math.sin(angle) * pull + Math.cos(angle) * spiral;
-
-                        p.vx *= 0.92;
-                        p.vy *= 0.92;
-
-                        ctx.shadowBlur = force * 15;
-                        ctx.shadowColor = p.color;
-
-                        if (dist < 15) {
-                            particles[i] = createParticle(false);
-                            continue;
-                        }
-                    } else {
-                        ctx.shadowBlur = 0;
-                        p.vx += (Math.random() - 0.5) * 0.05;
-                        p.vy += (Math.random() - 0.5) * 0.05;
-                        p.vx *= 0.99;
-                        p.vy *= 0.99;
+                if (isActive && dist2 < gravR2) {
+                    const dist = Math.sqrt(dist2); // sqrt only when inside radius
+                    if (dist < 15) {
+                        particles[i] = createParticle(false);
+                        continue;
                     }
+                    const force = (currentGravityRadius - dist) / currentGravityRadius;
+                    const angle = Math.atan2(dy, dx);
+                    const sinA = Math.sin(angle);
+                    const cosA = Math.cos(angle);
+                    const spiral = force * 3.0;
+                    p.vx = (p.vx + cosA * force * pullStrength - sinA * spiral) * 0.92;
+                    p.vy = (p.vy + sinA * force * pullStrength + cosA * spiral) * 0.92;
                 } else {
-                    ctx.shadowBlur = 0;
-                    p.vx += (Math.random() - 0.5) * 0.02;
-                    p.vy += (Math.random() - 0.5) * 0.02;
-                    p.vx *= 0.99;
-                    p.vy *= 0.99;
+                    // Deterministic micro-drift — no Math.random() in hot loop
+                    p.vx = (p.vx + p.driftX) * 0.99;
+                    p.vy = (p.vy + p.driftY) * 0.99;
                 }
 
                 p.x += p.vx;
                 p.y += p.vy;
 
-                let baseAlpha = 0.55 + Math.sin(time * p.twinkle + p.phase) * 0.40;
-                let alpha = baseAlpha;
+                // Recycle out-of-bounds particles
+                if (p.x < -100 || p.x > width + 100 || p.y < -100 || p.y > height + 100) {
+                    particles[i] = createParticle(false);
+                    continue;
+                }
 
-                if (mouse.current.isActive) {
-                    const dx = smoothMouse.current.x - p.x;
-                    const dy = smoothMouse.current.y - p.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 40) {
-                        alpha *= Math.max(0, (dist - 15) / 25);
+                const baseAlpha = 0.55 + Math.sin(time * p.twinkle + p.phase) * 0.38;
+                // Fade out near the event horizon
+                const alpha = dist2 < 1600 // 40px² 
+                    ? baseAlpha * Math.max(0, (Math.sqrt(dist2) - 15) / 25)
+                    : baseAlpha;
+
+                if (alpha <= 0) continue;
+
+                // ── Draw glow halo using pre-baked sprite (no gradient creation per frame) ──
+                if (p.glow) {
+                    const sprite = glowSprites.get(p.colorHex);
+                    if (sprite) {
+                        ctx.globalAlpha = alpha * 0.55;
+                        ctx.drawImage(sprite, p.x - 14, p.y - 14);
                     }
                 }
 
-                ctx.globalAlpha = Math.max(0, alpha);
-
-                // Draw glow halo for bright stars
-                if (p.glow && alpha > 0.1) {
-                    const glowSize = p.size * 4;
-                    const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, glowSize);
-                    gradient.addColorStop(0, p.color.replace(/[\d.]+\)$/, `${(alpha * 0.6).toFixed(2)})`) );
-                    gradient.addColorStop(1, p.color.replace(/[\d.]+\)$/, '0)'));
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, glowSize, 0, Math.PI * 2);
-                    ctx.fillStyle = gradient;
-                    ctx.fill();
-                }
-
-                // Draw the star core
-                ctx.globalAlpha = Math.max(0, alpha);
+                // ── Draw star core ──
+                ctx.globalAlpha = alpha;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = p.color;
+                ctx.fillStyle = p.colorHex;
                 ctx.fill();
-
-                if (p.x < -100 || p.x > width + 100 || p.y < -100 || p.y > height + 100) {
-                    particles[i] = createParticle(false);
-                }
             }
 
             ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
             animationFrameId = requestAnimationFrame(render);
         };
 
