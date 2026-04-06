@@ -75,9 +75,13 @@ const PricingPage = () => {
             }
 
             // 4. Create Order
+            const idToken = await user.getIdToken();
             const createOrderRes = await fetch(`${apiUrl}/api/v1/payment/create-order`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`,
+                },
                 body: JSON.stringify({ amount: plan.price, currency: currencyMode, planId: plan.badgeTier })
             });
             
@@ -104,7 +108,10 @@ const PricingPage = () => {
                     try {
                         const verifyRes = await fetch(`${apiUrl}/api/v1/payment/verify-payment`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${idToken}`,
+                            },
                             body: JSON.stringify({
                                 razorpay_order_id: response.razorpay_order_id,
                                 razorpay_payment_id: response.razorpay_payment_id,

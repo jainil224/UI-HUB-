@@ -145,7 +145,7 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
     `;
 
     const mailOptions = {
-      from: `"UI HUB" <uihub.design@gmail.com>`,
+      from: '"UI HUB" <uihub.design@gmail.com>',
       to: email,
       subject: 'Welcome to UI HUB 🚀',
       html: htmlContent,

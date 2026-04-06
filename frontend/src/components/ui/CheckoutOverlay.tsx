@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, X, AlertCircle, ShieldCheck, Zap, Lock } from 'lucide-react';
+import Logo from './Logo';
 
 interface CheckoutOverlayProps {
     isOpen: boolean;
@@ -9,7 +10,8 @@ interface CheckoutOverlayProps {
     onClose?: () => void;
 }
 
-// Animated dots for the loading text
+// ... rest of the helper components ...
+
 const LoadingDots = () => {
     return (
         <span className="inline-flex gap-1 ml-1">
@@ -183,6 +185,10 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                         )}
 
                         <div className="relative z-10 p-10 flex flex-col items-center text-center">
+                            {/* Branding Logo */}
+                            <div className="mb-10 scale-110">
+                                <Logo showText={true} className="w-10 h-10" />
+                            </div>
 
                             {/* ── LOADING STATE ── */}
                             <AnimatePresence mode="wait">
