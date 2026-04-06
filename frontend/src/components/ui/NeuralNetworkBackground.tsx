@@ -13,7 +13,7 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
     className = '',
     nodeCount = 90,
     connectionDistance = 160,
-    interactive = true,
+    interactive = false,
 }) => {
     const canvasRef   = useRef<HTMLCanvasElement>(null);
     const wrapRef     = useRef<HTMLDivElement>(null);
@@ -32,10 +32,10 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
 
         // ── Spectral palette ──────────────────────────────────────────
         const PALETTES = [
-            { node: '#22d3ee', glow: '#06b6d4', line: [6, 182, 212]   }, // cyan
-            { node: '#a78bfa', glow: '#7c3aed', line: [139, 92, 246]  }, // violet
-            { node: '#34d399', glow: '#059669', line: [52, 211, 153]  }, // emerald
-            { node: '#f472b6', glow: '#db2777', line: [244, 114, 182] }, // pink (rare)
+            { node: '#22d3ee', glow: '#06b6d4', line: [6, 182, 212] as [number, number, number]   }, // cyan
+            { node: '#a78bfa', glow: '#7c3aed', line: [139, 92, 246] as [number, number, number]  }, // violet
+            { node: '#34d399', glow: '#059669', line: [52, 211, 153] as [number, number, number]  }, // emerald
+            { node: '#f472b6', glow: '#db2777', line: [244, 114, 182] as [number, number, number] }, // pink (rare)
         ];
 
         // ── Node type ─────────────────────────────────────────────────
@@ -309,7 +309,7 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
         <div
             ref={wrapRef}
             className={`relative w-full h-full overflow-hidden ${className}`}
-            style={{ background: 'linear-gradient(135deg, #020617 0%, #0a0a1a 40%, #050a18 70%, #020617 100%)' }}
+            style={{ background: 'linear-gradient(135deg, #020617 0%, #0a0a1a 40%, #050a18 70%, #020617 100%)', cursor: 'default' }}
         >
             {/* Ambient nebula glow layers */}
             <div style={{
