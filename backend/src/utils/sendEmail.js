@@ -23,17 +23,17 @@ function getTransporter() {
       host,
       port,
       secure,
+      pool: true, // Reuse connections for efficiency
       auth: { 
         user, 
         pass 
       },
-      // Hardening for Render/Vercel networking
+      // Extreme hardening for Render
       connectionTimeout: 20000, 
       greetingTimeout: 20000,
-      socketTimeout: 40000,
-      dnsTimeout: 10000,
+      socketTimeout: 45000,
       tls: {
-        rejectUnauthorized: false, // Prevents handshake hangs on cert issues
+        rejectUnauthorized: false,
         minVersion: 'TLSv1.2'
       },
       logger: true,
