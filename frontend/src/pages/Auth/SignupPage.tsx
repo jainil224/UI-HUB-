@@ -52,21 +52,7 @@ const SignupPage = () => {
             if (result.user) {
                 console.log(`[Auth] ${providerType} sign-up successful:`, result.user.email);
                 
-                // Explicitly sync with backend
-                try {
-                    const apiBaseUrl = getApiBaseUrl();
-                    await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            email: result.user.email, 
-                            name: result.user.displayName || 'UI Challenger' 
-                        })
-                    });
-                    console.log('[Signup] Social sync triggered successfully.');
-                } catch (syncErr) {
-                    console.warn('[Signup] Social sync failed, AuthContext will retry:', syncErr);
-                }
+                // AuthContext will handle the sync seamlessly.
 
                 navigate('/');
             }
@@ -110,18 +96,7 @@ const SignupPage = () => {
                 displayName: name
             });
 
-            // Explicitly sync with backend to ensure Firestore document creation
-            try {
-                const apiBaseUrl = getApiBaseUrl();
-                await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email, name: name })
-                });
-                console.log('[Signup] User sync triggered successfully.');
-            } catch (syncErr) {
-                console.warn('[Signup] Post-signup sync failed, AuthContext will retry:', syncErr);
-            }
+            // AuthContext will handle the sync seamlessly upon successful sign up.
 
             navigate('/');
         } catch (err: any) {

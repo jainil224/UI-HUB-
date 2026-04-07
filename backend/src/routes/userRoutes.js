@@ -108,81 +108,75 @@ router.get('/backfill-jainil', async (req, res) => {
     }
 });
 
-router.post('/sync', async (req, res) => {
+router.post('/sync', verifyToken, async (req, res) => {
     try {
         console.log('[Auth] Incoming sync request body:', JSON.stringify(req.body));
         const { email, name } = req.body;
 
-        if (!email) {
-            return res.status(400).json({ error: 'Email is required' });
+        // Use UID from the verified token — NOT email
+        const uid = req.user?.uid;
+
+        if (!uid) {
+            return res.status(400).json({ success: false, error: 'UID missing from token.' });
         }
 
-        const userEmail = email.toLowerCase();
-        let welcomeEmailSent = false;
-        let userData = null;
-        let userRef = admin.firestore().collection('users').doc(userEmail);
+        if (!email) {
+            return res.status(400).json({ success: false, error: 'Email is required' });
+        }
 
-        try {
-            const userDoc = await userRef.get();
-            if (userDoc.exists) {
-                userData = userDoc.data();
-                welcomeEmailSent = userData.welcomeEmailSent || false;
-            } else {
-                // Initial creation if it doesn't exist at all
-                console.log(`[Auth] Creating new Firestore document for ${userEmail}`);
-                await userRef.set({
-                    email: userEmail,
-                    displayName: name || 'UI Challenger',
-                    planTier: 'free',
-                    status: 'FREE',
-                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                    welcomeEmailSent: false,
-                    lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-                });
-            }
-        } catch (dbError) {
-            console.error('[Firestore] Error accessing/creating user document:', dbError.message);
-            // Continue attempt to send email if we have enough info
+        const userDocRef = admin.firestore().collection('users').doc(uid);
+        const userDocSnap = await userDocRef.get();
+
+        let welcomeEmailSent = false;
+
+        if (!userDocSnap.exists) {
+            // Brand new user — create the document matching Auth flow
+            console.log(`[SYNC] Creating new Firestore document for ${uid} (${email})`);
+            await userDocRef.set({
+                uid,
+                email,
+                displayName: name || 'UI Challenger',
+                planTier: 'free',
+                welcomeEmailSent: false,
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
+        } else {
+            const userData = userDocSnap.data();
+            welcomeEmailSent = userData.welcomeEmailSent ?? false;
+
+            // Sync latest email/name in case they changed (Google profile update etc.)
+            await userDocRef.update({
+                email,
+                displayName: name || userData.displayName || 'UI Challenger',
+                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+            });
         }
 
         // Only send if not already sent
         if (!welcomeEmailSent) {
-            console.log(`[Auth] Triggering welcome email for ${userEmail}.`);
+            console.log(`[Auth] Triggering welcome email for ${uid} (${email}).`);
             const result = await sendWelcomeEmail(email, name);
             
-            console.log(`[Auth] Email send result for ${userEmail}:`, result);
+            console.log(`[Auth] Email send result for ${uid}:`, result);
             
             if (result.success) {
-                welcomeEmailSent = true;
                 try {
-                    console.log(`[Firestore] Updating welcomeEmailSent to true for ${userEmail}`);
-                    await userRef.update({ 
-                        welcomeEmailSent: true,
-                        lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-                    });
-                    console.log(`[Firestore] Successfully updated welcomeEmailSent flag for ${userEmail}`);
+                    await userDocRef.update({ welcomeEmailSent: true });
+                    console.log(`[Firestore] Successfully updated welcomeEmailSent flag for ${uid}`);
                 } catch (e) {
                      console.warn('[Firestore] Could not update welcome email status. Flag may remain false:', e.message);
                 }
             } else {
-                console.error(`[Auth] Failed to send welcome email to ${userEmail}:`, result.error);
-                console.warn(`[Auth] welcomeEmailSent flag for ${userEmail} will NOT be set to true to prevent permanent lockout.`);
+                console.error(`[Auth] Failed to send welcome email to ${uid}:`, result.error);
+                console.warn(`[Auth] welcomeEmailSent flag for ${uid} will NOT be set to true to prevent permanent lockout.`);
             }
         } else {
-            // Just update last synced
-            try {
-                await userRef.update({ 
-                    lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (e) {
-                 console.warn('[Firestore] Could not update lastSyncedAt.');
-            }
+            console.log(`[SYNC] Welcome email already sent for: ${uid} — skipping`);
         }
 
         res.json({ 
             success: true, 
-            welcomeEmailSent,
             message: 'User sync completed'
         });
     } catch (error) {
@@ -234,6 +228,49 @@ router.get('/status', verifyToken, async (req, res) => {
         console.error('Error in user status route:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
+});
+
+/**
+ * @route POST /api/v1/users/diagnose
+ * @desc Diagnose email/firestore configuration without creating a fake account
+ */
+router.post('/diagnose', async (req, res) => {
+    const { secret, email, name } = req.body;
+    
+    if (secret !== process.env.EMAIL_TEST_SECRET) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+    
+    const report = {
+        env: {
+            BREVO_SMTP_USER: process.env.BREVO_SMTP_USER 
+                                ? `${process.env.BREVO_SMTP_USER.slice(0, 6)}****`
+                                : '❌ NOT SET',
+            BREVO_SMTP_PASS: process.env.BREVO_SMTP_PASS ? '✅ Set' : '❌ NOT SET',
+            SMTP_HOST: process.env.SMTP_HOST || '❌ NOT SET',
+            SMTP_PORT: process.env.SMTP_PORT || '❌ NOT SET',
+        },
+        firestore: null,
+        emailSend: null
+    };
+
+    try {
+        await admin.firestore().collection('_diag').limit(1).get();
+        report.firestore = '✅ Connected';
+    } catch (err) {
+        report.firestore = `❌ ${err.message}`;
+    }
+
+    if (email) {
+        const emailResult = await sendWelcomeEmail(email, name || 'Test User');
+        report.emailSend = emailResult.success
+            ? `✅ Sent — messageId: ${emailResult.messageId}`
+            : `❌ Failed — ${emailResult.error}`;
+    } else {
+        report.emailSend = '⏭️ Skipped (no email provided)';
+    }
+
+    res.json(report);
 });
 
 /**

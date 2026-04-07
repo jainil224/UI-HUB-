@@ -52,20 +52,7 @@ const LoginPage = () => {
             if (result.user) {
                 console.log(`[Auth] ${providerType} sign-in successful:`, result.user.email);
                 
-                // Explicitly sync with backend
-                try {
-                    const apiBaseUrl = getApiBaseUrl();
-                    await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ 
-                            email: result.user.email, 
-                            name: result.user.displayName || 'UI Challenger' 
-                        })
-                    });
-                } catch (syncErr) {
-                    console.warn('[Login] Social sync failed, AuthContext will retry:', syncErr);
-                }
+                // AuthContext will handle the sync seamlessly.
 
                 navigate('/');
             }

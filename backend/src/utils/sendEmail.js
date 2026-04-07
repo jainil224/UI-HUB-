@@ -1,214 +1,165 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-
 dotenv.config();
 
-// STARTUP VALIDATION (Step 4)
-const INIT_SMTP_USER = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
-const INIT_SMTP_PASS = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
-const INIT_SMTP_HOST = process.env.SMTP_HOST || 'smtp-relay.brevo.com';
+// Validate credentials at module load time (works on serverless too)
+function getTransporter() {
+  const user   = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
+  const pass   = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+  const host   = process.env.SMTP_HOST   || 'smtp-relay.brevo.com';
+  const port   = parseInt(process.env.SMTP_PORT || '587');
+  const secure = process.env.SMTP_SECURE === 'true';
 
-if (!INIT_SMTP_USER || !INIT_SMTP_PASS) {
-  throw new Error(`[EmailService] CRITICAL ERROR: BREVO_SMTP_USER or BREVO_SMTP_PASS is not configured. Email service will fail. Please check your environment variables.`);
-}
-if (!INIT_SMTP_HOST) {
-  throw new Error(`[EmailService] CRITICAL ERROR: SMTP_HOST is not configured. Email service will fail. Please check your environment variables.`);
+  if (!user || !pass) {
+    throw new Error(
+      '[EMAIL] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set in environment variables. ' +
+      'Email sending is disabled.'
+    );
+  }
+
+  return {
+    transporter: nodemailer.createTransport({
+      host,
+      port,
+      secure,
+      auth: { user, pass },
+    }),
+    fromAddress: user, // From must match SMTP user to avoid DMARC rejection
+  };
 }
 
 /**
- * Reusable email utility for sending welcome emails via Brevo SMTP.
- * 
- * @param {string} email - The user's registered email address.
- * @param {string} name - The user's name (optional).
+ * Sends the UI-HUB branded welcome email.
+ * Returns { success: true, messageId } or { success: false, error: string }
+ * Never throws — always returns a result object so callers can handle gracefully.
  */
-export const sendWelcomeEmail = async (email, name = 'there') => {
+export async function sendWelcomeEmail(email, name) {
+  let transporter, fromAddress;
+
   try {
-    // Validate required SMTP credentials
-    const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
-    const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
-    
-    console.log('[EmailService] STARTING SEND - Environment Values:');
-    console.log(' - BREVO/SMTP_USER:', smtpUser ? `${smtpUser.slice(0,4)}******` : 'NOT SET');
-    console.log(' - SMTP_HOST:', process.env.SMTP_HOST || 'smtp-relay.brevo.com');
-
-    // CRITICAL: smtpFrom MUST be the Brevo SMTP user address (a6dced001@smtp-brevo.com)
-    // Using a Gmail or unverified address will cause Brevo to REJECT the email with auth errors!
-    let smtpFrom = process.env.SMTP_FROM || smtpUser;
-    if (smtpFrom && smtpFrom.includes('@gmail.com')) {
-      console.warn('[EmailService] ⚠️  WARNING: SMTP_FROM is set to a Gmail address! Brevo will reject this.');
-      console.warn('[EmailService] ⚠️  Forcing smtpFrom to use SMTP_USER instead:', smtpUser);
-      smtpFrom = smtpUser; // Override with Brevo login to prevent rejection
-    }
-    console.log(' - FINAL SMTP_FROM:', smtpFrom);
-
-    if (!smtpUser || !smtpPass) {
-      console.error('[EmailService] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set! Cannot send welcome email.');
-      return { success: false, error: 'SMTP credentials not configured' };
-    }
-
-    // Configure Brevo SMTP transporter
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
-      port: parseInt(process.env.SMTP_PORT) || 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: smtpUser,
-        pass: smtpPass,
-      },
-    });
-
-    console.log(`[EmailService] Verifying transporter connection...`);
-    try {
-      await transporter.verify();
-      console.log('[EmailService] 🟢 Transporter verified successfully.');
-    } catch (verifyError) {
-      console.error('[EmailService] 🔴 Transporter verification failed:', verifyError.message);
-      return { success: false, error: 'SMTP connection verification failed', details: verifyError.message };
-    }
-
-    const userName = name || email.split('@')[0];
-
-    // Modern, Premium HTML Email Template
-    const htmlContent = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Welcome to UI HUB</title>
-      <style>
-        body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          background-color: #050505;
-          margin: 0;
-          padding: 0;
-          color: #ffffff;
-        }
-        .container {
-          max-width: 600px;
-          margin: 20px auto;
-          background: #0f0f0f;
-          border: 1px solid #1a1a1a;
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .header {
-          padding: 40px 20px;
-          text-align: center;
-          background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
-          border-bottom: 1px solid #222;
-        }
-        .logo {
-          font-size: 28px;
-          font-weight: 800;
-          letter-spacing: -1px;
-          color: #fff;
-          text-decoration: none;
-          display: inline-block;
-          margin-bottom: 10px;
-        }
-        .logo span {
-          background: linear-gradient(to right, #00d2ff, #3a7bd5);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-        .content {
-          padding: 40px;
-          line-height: 1.6;
-        }
-        .welcome-text {
-          font-size: 24px;
-          font-weight: 700;
-          margin-bottom: 20px;
-          color: #fff;
-        }
-        .body-text {
-          font-size: 16px;
-          color: #a0a0a0;
-          margin-bottom: 30px;
-        }
-        .cta-button {
-          display: inline-block;
-          padding: 14px 32px;
-          background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
-          color: #ffffff;
-          text-decoration: none;
-          font-weight: 600;
-          border-radius: 8px;
-          transition: transform 0.2s ease;
-        }
-        .footer {
-          padding: 30px;
-          text-align: center;
-          font-size: 12px;
-          color: #555;
-          background: #0a0a0a;
-          border-top: 1px solid #1a1a1a;
-        }
-        .social-links {
-          margin-top: 20px;
-        }
-        .social-links a {
-          color: #444;
-          text-decoration: none;
-          margin: 0 10px;
-        }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <a href="https://ui-hub-design.vercel.app" class="logo">UI <span>HUB</span></a>
-          <p style="color: #666; font-size: 14px; margin-top: 10px;">The Home of Vibe Coding & Premium UI</p>
-        </div>
-        <div class="content">
-          <h1 class="welcome-text">Welcome to the future, ${userName}! 🚀</h1>
-          <p class="body-text">
-            We're thrilled to have you at <strong>UI HUB</strong>. You've just gained access to a curated collection of premium, modern UI components designed to make your web applications stand out.
-          </p>
-          <p class="body-text">
-            Explore our library of 3D chatbots, sleek animations, and production-ready components that are ready to be dropped into your next project.
-          </p>
-          <div style="text-align: center; margin-top: 40px;">
-            <a href="https://ui-hub-design.vercel.app/library" class="cta-button">Explore Library</a>
-          </div>
-        </div>
-        <div class="footer">
-          <p>&copy; 2026 UI HUB. All rights reserved.</p>
-          <p>You received this email because you signed up for UI HUB.</p>
-          <div class="social-links">
-            <a href="#">Twitter</a>
-            <a href="#">GitHub</a>
-            <a href="#">Discord</a>
-          </div>
-        </div>
-      </div>
-    </body>
-    </html>
-    `;
-
-    const mailOptions = {
-      // CRITICAL: 'from' must be the Brevo-verified sender email (same as BREVO_SMTP_USER)
-      // Using a Gmail address here will cause SMTP authentication failure with Brevo!
-      from: `"UI HUB" <${smtpFrom}>`,
-      to: email,
-      subject: 'Welcome to UI HUB 🚀',
-      html: htmlContent,
-    };
-
-    console.log(`[EmailService] Attempting to send email to ${email}...`);
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`[EmailService] ✅ Welcome email sent to ${email}:`, info.messageId);
-    return { success: true, messageId: info.messageId };
-  } catch (error) {
-    // Log detailed SMTP error to make debugging easier
-    console.error('[EmailService] ❌ Error sending welcome email to', email);
-    console.error('[EmailService] SMTP Error Code:', error.code);
-    console.error('[EmailService] SMTP Error Response:', error.response);
-    console.error('[EmailService] SMTP Error ResponseCode:', error.responseCode);
-    console.error('[EmailService] SMTP Error Message:', error.message);
-    // Do not throw error to avoid blocking user signup flow
-    return { success: false, error: error.message };
+    ({ transporter, fromAddress } = getTransporter());
+  } catch (err) {
+    console.error('[EMAIL] Transporter init failed:', err.message);
+    return { success: false, error: err.message };
   }
-};
+
+  // Verify SMTP connection before sending (catches bad credentials early)
+  try {
+    await transporter.verify();
+  } catch (err) {
+    console.error('[EMAIL] SMTP connection verification failed:', err.message);
+    return { success: false, error: `SMTP connection failed: ${err.message}` };
+  }
+
+  const displayName = name || 'there';
+
+  const mailOptions = {
+    from:    `"UI-HUB" <${fromAddress}>`,
+    to:      email,
+    subject: 'Welcome to UI-HUB — Your components are ready 🎨',
+    html:    buildWelcomeEmailHTML(displayName),
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[EMAIL] Welcome email sent to ${email} — messageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[EMAIL] Failed to send to ${email}:`, err.message);
+    return { success: false, error: err.message };
+  }
+}
+
+function buildWelcomeEmailHTML(name) {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to UI-HUB</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap');
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0F0F0F; font-family: 'DM Sans', sans-serif; }
+  </style>
+</head>
+<body>
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0F0F0F; padding: 40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#1A1A1A; border-radius:16px; overflow:hidden; border: 1px solid #2A2A2A;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #7C6AF7 0%, #F472B6 100%); padding: 32px 40px; text-align: center;">
+              <div style="font-family:'Space Mono',monospace; font-size:28px; font-weight:700; color:#fff; letter-spacing:-1px;">
+                UI<span style="color:#0F0F0F;">-</span>HUB
+              </div>
+              <div style="color:rgba(255,255,255,0.8); font-size:13px; margin-top:6px; letter-spacing:1px; text-transform:uppercase;">
+                Component Library
+              </div>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="padding: 40px 40px 32px;">
+              <h1 style="font-size:24px; font-weight:700; color:#fff; margin-bottom:12px;">
+                Welcome, ${name}! 👋
+              </h1>
+              <p style="color:#9CA3AF; font-size:15px; line-height:1.7; margin-bottom:24px;">
+                Your UI-HUB account is ready. You now have access to our growing library of 
+                beautifully crafted React components — copy, paste, ship.
+              </p>
+
+              <!-- Feature list -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+                ${[
+                  ['🎨', 'Copy-ready Components', 'Production-grade UI blocks'],
+                  ['⚡', 'Instant Preview', 'See exactly what you get'],
+                  ['🔧', 'Fully Customizable', 'Tailwind-based, tweak anything'],
+                ].map(([icon, title, desc]) => `
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #2A2A2A;">
+                    <span style="font-size:18px;">${icon}</span>
+                    <span style="color:#fff; font-weight:600; font-size:14px; margin-left:10px;">${title}</span>
+                    <span style="color:#6B7280; font-size:13px; margin-left:8px;">— ${desc}</span>
+                  </td>
+                </tr>`).join('')}
+              </table>
+
+              <!-- CTA -->
+              <div style="text-align:center; margin-bottom:32px;">
+                <a href="${process.env.FRONTEND_URL || 'https://uihub.io'}"
+                   style="display:inline-block; background: linear-gradient(135deg, #7C6AF7, #F472B6);
+                          color:#fff; text-decoration:none; font-weight:700; font-size:15px;
+                          padding:14px 36px; border-radius:8px; letter-spacing:0.3px;">
+                  Explore Components →
+                </a>
+              </div>
+
+              <p style="color:#4B5563; font-size:13px; text-align:center; line-height:1.6;">
+                Questions? Reply to this email or reach us at
+                <a href="mailto:support@uihub.io" style="color:#7C6AF7;">support@uihub.io</a>
+              </p>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding: 20px 40px; border-top: 1px solid #2A2A2A; text-align:center;">
+              <p style="color:#374151; font-size:12px;">
+                © ${new Date().getFullYear()} UI-HUB · You're receiving this because you signed up at uihub.io
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
+  `;
+}

@@ -2,6 +2,9 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User, getRedirectResult } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { getApiBaseUrl } from '../utils/apiConfig';
+import { syncUserWithBackend } from '../utils/syncUser';
+
+let syncedThisSession = false;
 
 interface AuthContextType {
     user: User | null;
@@ -21,27 +24,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // 2. Handle Google/GitHub redirect results (crucial for mobile)
         const checkRedirect = async () => {
             try {
                 const result = await getRedirectResult(auth);
                 if (result?.user) {
                     console.log(`[Auth] Redirect result found: ${result.user.email}`);
                     setUser(result.user);
-                    try {
-                        const apiBaseUrl = getApiBaseUrl();
-                        await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                email: result.user.email,
-                                name: result.user.displayName || 'UI Challenger'
-                            })
-                        });
-                        sessionStorage.setItem('ui-hub-show-welcome', 'true');
-                    } catch (emailErr) {
-                        console.error('[Auth] Failed to sync user on redirect:', emailErr);
+                    if (!syncedThisSession) {
+                        syncedThisSession = true;
+                        await syncUserWithBackend(result.user);
                     }
+                    sessionStorage.setItem('ui-hub-show-welcome', 'true');
                 }
             } catch (error: any) {
                 console.error('[Auth] Error getting redirect result:', error);
@@ -58,29 +51,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (user) {
                 console.log(`[Auth] User detected: ${user.email}. Fetching status...`);
                 
-                // 4. Synchronize user with backend
-                // Previously gated by sessionStorage, now always attempted to ensure Firestore document exists
+                // 4. Synchronize user with backend exactly once per session
+                if (!syncedThisSession) {
+                    syncedThisSession = true;
+                    await syncUserWithBackend(user);
+                }
+
                 try {
-                    const apiBaseUrl = getApiBaseUrl();
-                    console.log(`[Auth] Attempting sync for ${user.email} to ${apiBaseUrl}/api/v1/users/sync...`);
-                    
-                    const syncResponse = await fetch(`${apiBaseUrl}/api/v1/users/sync`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            email: user.email,
-                            name: user.displayName || 'UI Challenger'
-                        })
-                    });
-                    
-                    if (syncResponse.ok) {
-                        console.log(`[Auth] Sync successful for ${user.email}`);
-                        sessionStorage.setItem(`ui-hub-synced-${user.uid}`, 'true');
-                    } else {
-                        const errorMsg = await syncResponse.text();
-                        console.warn(`[Auth] Sync API returned error: ${syncResponse.status} - ${errorMsg}`);
-                    }
-                    
                     // First-time registration flags
                     const creationTime = new Date(user.metadata.creationTime || 0).getTime();
                     const lastSignInTime = new Date(user.metadata.lastSignInTime || 0).getTime();
@@ -91,7 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         sessionStorage.setItem('ui-hub-show-welcome', 'true');
                     }
                 } catch (syncErr) {
-                    console.error('[Auth] Failed to reach sync endpoint:', syncErr);
+                    console.error('[Auth] Local storage config fail:', syncErr);
                 }
 
                 try {
@@ -132,6 +109,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     setLoading(false);
                 }
             } else {
+                syncedThisSession = false; // reset when user signs out
                 setIsPro(false);
                 setIsElite(false);
                 setLoading(false);
