@@ -23,6 +23,16 @@ function getTransporter() {
       port,
       secure,
       auth: { user, pass },
+      // Hardening for Render networking
+      connectionTimeout: 15000, 
+      greetingTimeout: 15000,
+      socketTimeout: 30000,
+      tls: {
+        rejectUnauthorized: false,
+        minVersion: 'TLSv1.2'
+      },
+      logger: true,
+      debug: true,
     }),
     fromAddress: user, // From must match SMTP user to avoid DMARC rejection
   };
