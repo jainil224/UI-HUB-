@@ -28,6 +28,9 @@ if (_smtpUser && _smtpPass) {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Enable 'trust proxy' for Render/Vercel (fixes rate-limiter warnings)
+app.set('trust proxy', 1);
+
 // Update CORS to allow both localhost and production frontend
 const allowedOrigins = [
   'http://localhost:5173',

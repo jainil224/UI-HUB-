@@ -8,12 +8,13 @@ function getTransporter() {
   const pass   = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
   const host   = process.env.SMTP_HOST   || 'smtp-relay.brevo.com';
   const port   = parseInt(process.env.SMTP_PORT || '587');
-  const secure = process.env.SMTP_SECURE === 'true';
+  
+  // Port 465 is SMTPS (direct SSL), Port 587/2525 is STARTTLS
+  const secure = port === 465 || process.env.SMTP_SECURE === 'true';
 
   if (!user || !pass) {
     throw new Error(
-      '[EMAIL] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set in environment variables. ' +
-      'Email sending is disabled.'
+      '[EMAIL] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set in environment variables.'
     );
   }
 
@@ -22,26 +23,28 @@ function getTransporter() {
       host,
       port,
       secure,
-      auth: { user, pass },
-      // Hardening for Render networking
-      connectionTimeout: 15000, 
-      greetingTimeout: 15000,
-      socketTimeout: 30000,
+      auth: { 
+        user, 
+        pass 
+      },
+      // Hardening for Render/Vercel networking
+      connectionTimeout: 20000, 
+      greetingTimeout: 20000,
+      socketTimeout: 40000,
+      dnsTimeout: 10000,
       tls: {
-        rejectUnauthorized: false,
+        rejectUnauthorized: false, // Prevents handshake hangs on cert issues
         minVersion: 'TLSv1.2'
       },
       logger: true,
       debug: true,
     }),
-    fromAddress: user, // From must match SMTP user to avoid DMARC rejection
+    fromAddress: user,
   };
 }
 
 /**
  * Sends the UI-HUB branded welcome email.
- * Returns { success: true, messageId } or { success: false, error: string }
- * Never throws — always returns a result object so callers can handle gracefully.
  */
 export async function sendWelcomeEmail(email, name) {
   let transporter, fromAddress;
@@ -53,11 +56,12 @@ export async function sendWelcomeEmail(email, name) {
     return { success: false, error: err.message };
   }
 
-  // Verify SMTP connection before sending (catches bad credentials early)
   try {
+    console.log(`[EMAIL] Verifying connection to ${transporter.options.host}:${transporter.options.port}...`);
     await transporter.verify();
+    console.log('[EMAIL] ✅ SMTP Connection Verified');
   } catch (err) {
-    console.error('[EMAIL] SMTP connection verification failed:', err.message);
+    console.error('[EMAIL] ❌ SMTP connection verification failed:', err.message);
     return { success: false, error: `SMTP connection failed: ${err.message}` };
   }
 
@@ -66,16 +70,17 @@ export async function sendWelcomeEmail(email, name) {
   const mailOptions = {
     from:    `"UI-HUB" <${fromAddress}>`,
     to:      email,
+    replyTo: 'uihub.design@gmail.com', // Match the successful old emails
     subject: 'Welcome to UI-HUB — Your components are ready 🎨',
     html:    buildWelcomeEmailHTML(displayName),
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log(`[EMAIL] Welcome email sent to ${email} — messageId: ${info.messageId}`);
+    console.log(`[EMAIL] ✅ Welcome email sent to ${email} — messageId: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`[EMAIL] Failed to send to ${email}:`, err.message);
+    console.error(`[EMAIL] ❌ Failed to send to ${email}:`, err.message);
     return { success: false, error: err.message };
   }
 }
@@ -123,25 +128,9 @@ function buildWelcomeEmailHTML(name) {
                 beautifully crafted React components — copy, paste, ship.
               </p>
 
-              <!-- Feature list -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
-                ${[
-                  ['🎨', 'Copy-ready Components', 'Production-grade UI blocks'],
-                  ['⚡', 'Instant Preview', 'See exactly what you get'],
-                  ['🔧', 'Fully Customizable', 'Tailwind-based, tweak anything'],
-                ].map(([icon, title, desc]) => `
-                <tr>
-                  <td style="padding: 10px 0; border-bottom: 1px solid #2A2A2A;">
-                    <span style="font-size:18px;">${icon}</span>
-                    <span style="color:#fff; font-weight:600; font-size:14px; margin-left:10px;">${title}</span>
-                    <span style="color:#6B7280; font-size:13px; margin-left:8px;">— ${desc}</span>
-                  </td>
-                </tr>`).join('')}
-              </table>
-
               <!-- CTA -->
               <div style="text-align:center; margin-bottom:32px;">
-                <a href="${process.env.FRONTEND_URL || 'https://uihub.io'}"
+                <a href="${process.env.FRONTEND_URL || 'https://uihub-design.vercel.app'}"
                    style="display:inline-block; background: linear-gradient(135deg, #7C6AF7, #F472B6);
                           color:#fff; text-decoration:none; font-weight:700; font-size:15px;
                           padding:14px 36px; border-radius:8px; letter-spacing:0.3px;">
@@ -151,7 +140,7 @@ function buildWelcomeEmailHTML(name) {
 
               <p style="color:#4B5563; font-size:13px; text-align:center; line-height:1.6;">
                 Questions? Reply to this email or reach us at
-                <a href="mailto:support@uihub.io" style="color:#7C6AF7;">support@uihub.io</a>
+                <a href="mailto:uihub.design@gmail.com" style="color:#7C6AF7;">uihub.design@gmail.com</a>
               </p>
             </td>
           </tr>
@@ -160,7 +149,7 @@ function buildWelcomeEmailHTML(name) {
           <tr>
             <td style="padding: 20px 40px; border-top: 1px solid #2A2A2A; text-align:center;">
               <p style="color:#374151; font-size:12px;">
-                © ${new Date().getFullYear()} UI-HUB · You're receiving this because you signed up at uihub.io
+                © ${new Date().getFullYear()} UI-HUB · You're receiving this because you signed up at uihub.design
               </p>
             </td>
           </tr>
