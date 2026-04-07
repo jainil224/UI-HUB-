@@ -2,8 +2,15 @@ import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// Validate credentials at module load time (works on serverless too)
+let cachedTransporter = null;
+let cachedFromAddress = null;
+
+// Validate credentials and return a singleton transporter
 function getTransporter() {
+  if (cachedTransporter) {
+    return { transporter: cachedTransporter, fromAddress: cachedFromAddress };
+  }
+
   const user   = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
   const pass   = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
   const host   = process.env.SMTP_HOST   || 'smtp-relay.brevo.com';
@@ -18,29 +25,31 @@ function getTransporter() {
     );
   }
 
-  return {
-    transporter: nodemailer.createTransport({
-      host,
-      port,
-      secure,
-      pool: true, // Reuse connections for efficiency
-      auth: { 
-        user, 
-        pass 
-      },
-      // Extreme hardening for Render
-      connectionTimeout: 20000, 
-      greetingTimeout: 20000,
-      socketTimeout: 45000,
-      tls: {
-        rejectUnauthorized: false,
-        minVersion: 'TLSv1.2'
-      },
-      logger: true,
-      debug: true,
-    }),
-    fromAddress: user,
-  };
+  cachedFromAddress = process.env.SMTP_FROM || user;
+  cachedTransporter = nodemailer.createTransport({
+    host,
+    port,
+    secure,
+    pool: true, // Reuse connections for efficiency
+    maxConnections: 5,
+    maxMessages: 100,
+    auth: { 
+      user, 
+      pass 
+    },
+    // Extreme hardening for Render
+    connectionTimeout: 10000, 
+    greetingTimeout: 10000,
+    socketTimeout: 30000,
+    tls: {
+      rejectUnauthorized: false,
+      minVersion: 'TLSv1.2'
+    },
+    logger: false, // Turn off verbose logs in production unless debugging
+    debug: false,
+  });
+
+  return { transporter: cachedTransporter, fromAddress: cachedFromAddress };
 }
 
 /**
@@ -54,15 +63,6 @@ export async function sendWelcomeEmail(email, name) {
   } catch (err) {
     console.error('[EMAIL] Transporter init failed:', err.message);
     return { success: false, error: err.message };
-  }
-
-  try {
-    console.log(`[EMAIL] Verifying connection to ${transporter.options.host}:${transporter.options.port}...`);
-    await transporter.verify();
-    console.log('[EMAIL] ✅ SMTP Connection Verified');
-  } catch (err) {
-    console.error('[EMAIL] ❌ SMTP connection verification failed:', err.message);
-    return { success: false, error: `SMTP connection failed: ${err.message}` };
   }
 
   const displayName = name || 'there';
