@@ -3,6 +3,18 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// STARTUP VALIDATION (Step 4)
+const INIT_SMTP_USER = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
+const INIT_SMTP_PASS = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+const INIT_SMTP_HOST = process.env.SMTP_HOST || 'smtp-relay.brevo.com';
+
+if (!INIT_SMTP_USER || !INIT_SMTP_PASS) {
+  throw new Error(`[EmailService] CRITICAL ERROR: BREVO_SMTP_USER or BREVO_SMTP_PASS is not configured. Email service will fail. Please check your environment variables.`);
+}
+if (!INIT_SMTP_HOST) {
+  throw new Error(`[EmailService] CRITICAL ERROR: SMTP_HOST is not configured. Email service will fail. Please check your environment variables.`);
+}
+
 /**
  * Reusable email utility for sending welcome emails via Brevo SMTP.
  * 
@@ -15,6 +27,10 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
     const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
     const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
     
+    console.log('[EmailService] STARTING SEND - Environment Values:');
+    console.log(' - BREVO/SMTP_USER:', smtpUser ? `${smtpUser.slice(0,4)}******` : 'NOT SET');
+    console.log(' - SMTP_HOST:', process.env.SMTP_HOST || 'smtp-relay.brevo.com');
+
     // CRITICAL: smtpFrom MUST be the Brevo SMTP user address (a6dced001@smtp-brevo.com)
     // Using a Gmail or unverified address will cause Brevo to REJECT the email with auth errors!
     let smtpFrom = process.env.SMTP_FROM || smtpUser;
@@ -23,6 +39,7 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
       console.warn('[EmailService] ⚠️  Forcing smtpFrom to use SMTP_USER instead:', smtpUser);
       smtpFrom = smtpUser; // Override with Brevo login to prevent rejection
     }
+    console.log(' - FINAL SMTP_FROM:', smtpFrom);
 
     if (!smtpUser || !smtpPass) {
       console.error('[EmailService] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set! Cannot send welcome email.');
@@ -39,6 +56,15 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
         pass: smtpPass,
       },
     });
+
+    console.log(`[EmailService] Verifying transporter connection...`);
+    try {
+      await transporter.verify();
+      console.log('[EmailService] 🟢 Transporter verified successfully.');
+    } catch (verifyError) {
+      console.error('[EmailService] 🔴 Transporter verification failed:', verifyError.message);
+      return { success: false, error: 'SMTP connection verification failed', details: verifyError.message };
+    }
 
     const userName = name || email.split('@')[0];
 
@@ -171,6 +197,7 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
       html: htmlContent,
     };
 
+    console.log(`[EmailService] Attempting to send email to ${email}...`);
     const info = await transporter.sendMail(mailOptions);
     console.log(`[EmailService] ✅ Welcome email sent to ${email}:`, info.messageId);
     return { success: true, messageId: info.messageId };
@@ -178,8 +205,9 @@ export const sendWelcomeEmail = async (email, name = 'there') => {
     // Log detailed SMTP error to make debugging easier
     console.error('[EmailService] ❌ Error sending welcome email to', email);
     console.error('[EmailService] SMTP Error Code:', error.code);
+    console.error('[EmailService] SMTP Error Response:', error.response);
+    console.error('[EmailService] SMTP Error ResponseCode:', error.responseCode);
     console.error('[EmailService] SMTP Error Message:', error.message);
-    if (error.response) console.error('[EmailService] SMTP Server Response:', error.response);
     // Do not throw error to avoid blocking user signup flow
     return { success: false, error: error.message };
   }

@@ -151,18 +151,23 @@ router.post('/sync', async (req, res) => {
             console.log(`[Auth] Triggering welcome email for ${userEmail}.`);
             const result = await sendWelcomeEmail(email, name);
             
+            console.log(`[Auth] Email send result for ${userEmail}:`, result);
+            
             if (result.success) {
                 welcomeEmailSent = true;
                 try {
+                    console.log(`[Firestore] Updating welcomeEmailSent to true for ${userEmail}`);
                     await userRef.update({ 
                         welcomeEmailSent: true,
                         lastSyncedAt: admin.firestore.FieldValue.serverTimestamp()
                     });
+                    console.log(`[Firestore] Successfully updated welcomeEmailSent flag for ${userEmail}`);
                 } catch (e) {
-                     console.warn('[Firestore] Could not update welcome email status.');
+                     console.warn('[Firestore] Could not update welcome email status. Flag may remain false:', e.message);
                 }
             } else {
                 console.error(`[Auth] Failed to send welcome email to ${userEmail}:`, result.error);
+                console.warn(`[Auth] welcomeEmailSent flag for ${userEmail} will NOT be set to true to prevent permanent lockout.`);
             }
         } else {
             // Just update last synced
@@ -228,6 +233,59 @@ router.get('/status', verifyToken, async (req, res) => {
     } catch (error) {
         console.error('Error in user status route:', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/reset-welcome-flags
+ * @desc Reset welcomeEmailSent to false for users matching a cutoff timestamp (Admin only)
+ */
+router.post('/reset-welcome-flags', async (req, res) => {
+    try {
+        const { secret, cutoffTimestamp } = req.body;
+        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
+        if (secret !== testSecret) {
+            return res.status(403).json({ error: 'Forbidden: invalid test secret' });
+        }
+
+        if (!cutoffTimestamp) {
+            return res.status(400).json({ error: 'cutoffTimestamp (ISO string or ms timestamp) is required' });
+        }
+
+        const cutoffDate = new Date(cutoffTimestamp);
+        console.log(`[Admin] Resetting welcomeEmailSent flags stuck at true before ${cutoffDate.toISOString()}`);
+
+        const db = admin.firestore();
+        const usersRef = db.collection('users');
+        const snapshot = await usersRef.where('welcomeEmailSent', '==', true).get();
+
+        let updatedCount = 0;
+        let skippedCount = 0;
+        const batch = db.batch();
+
+        snapshot.forEach((doc) => {
+            const data = doc.data();
+            // Check if document was created before the cutoff
+            const createdAt = data.createdAt ? data.createdAt.toDate() : null;
+            if (createdAt && createdAt < cutoffDate) {
+                batch.update(doc.ref, { welcomeEmailSent: false });
+                updatedCount++;
+            } else {
+                skippedCount++;
+            }
+        });
+
+        if (updatedCount > 0) {
+            await batch.commit();
+        }
+
+        res.json({ 
+            success: true, 
+            message: `Successfully reset flags for ${updatedCount} users. Skipped ${skippedCount} users.`
+        });
+    } catch (error) {
+        console.error('[Admin] Error resetting flags:', error.message);
+        res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 });
 
