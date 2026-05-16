@@ -32,6 +32,7 @@ const Aiva = React.lazy(() => import('../components/ui/Aiva'));
 const LaptopBot = React.lazy(() => import('../components/ui/LaptopBot'));
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam').then(m => ({ default: m.CardsBeam })));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
+const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 
 
 // ── Lazy Loaded Internal Collections ───────────
@@ -1320,6 +1321,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'laptopbot': LaptopBot,
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
+    '3d-hero': ToonhubHero,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2076,6 +2078,15 @@ export const Demo = () => (
         preview: renderComponent("solar-system", "SolarSystem"),
         code: `import { SolarSystem } from '@/components/ui/SolarSystem';\n\nexport const Demo = () => (\n  <div className="w-full h-[800px] rounded-3xl overflow-hidden bg-black">\n    <SolarSystem />\n  </div>\n);`,
         vibePrompt: "A cinematic solar system planet picker with orbital navigation, smooth transitions, and keyframe animations for planet details."
+    },
+    {
+        id: "3d-hero",
+        title: "3D Hero",
+        category: "3d",
+        isPremium: false,
+        preview: renderComponent("3d-hero", "ToonhubHero"),
+        code: `import ToonhubHero from '@/components/ui/ToonhubHero';\n\nexport default function Demo() {\n  return <ToonhubHero />;\n}`,
+        vibePrompt: "A single full-viewport hero section featuring a character-figurine carousel called 'TOONHUB'."
     },
 
     {
