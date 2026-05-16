@@ -20,10 +20,7 @@ import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMeta
 import Toast from '../../../../components/ui/Toast';
 
 const preloadComponent = (id: string) => {
-    if (id === '3d-galaxy-animation') {
-        // Trigger the dynamic import used by React.lazy
-        import('../../../../components/ui/GalaxyAnimation');
-    } else if (id === '3d-rubiks-cube') {
+    if (id === '3d-rubiks-cube') {
         import('../../../../components/ui/RubiksCube');
     } else if (id === '3d-scroll-animation') {
         import('../../../Components/Scroll3DAnimationPage');

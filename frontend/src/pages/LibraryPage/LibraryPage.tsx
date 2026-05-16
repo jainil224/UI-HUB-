@@ -89,14 +89,14 @@ const LibraryPage = () => {
     }, [idFromUrl, navigate, defaultComponent.id, allComponents.length]);
 
     const baseCategories: Category[] = [
-        { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
-        { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
-        { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
         { name: "3D Design", items: allComponents.filter(item => item.category === '3d') },
         { name: "Backgrounds", items: allComponents.filter(item => item.category === 'background') },
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
-        { name: "Portfolios", items: allComponents.filter(item => item.category === 'portfolios') },
+        { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
         { name: "3D CHATBOT", items: allComponents.filter(item => item.category === '3d-chatbot') },
+        { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
+        { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
+        { name: "Portfolios", items: allComponents.filter(item => item.category === 'portfolios') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ];
 

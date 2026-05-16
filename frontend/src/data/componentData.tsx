@@ -23,7 +23,6 @@ const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then
 const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
-export const GalaxyAnimation = React.lazy(() => import('../components/ui/GalaxyAnimation').then(m => ({ default: m.default })));
 const Robot3DBackground = React.lazy(() => import('../components/ui/Robot3DBackground').then(m => ({ default: m.Robot3DBackground })));
 const HoodieBot = React.lazy(() => import('../components/ui/HoodieBot'));
 const Smilo = React.lazy(() => import('../components/ui/Smilo'));
@@ -1313,7 +1312,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'lizard-cursor': LizardCursor,
     'venom-cursor': VenomCursor,
     '3d-tubes-cursor': ThreeDTubesCursor,
-    '3d-galaxy-animation': GalaxyAnimation,
     'robot-3d-background': Robot3DBackground,
     'hoodiebot': HoodieBot,
     'smilo': Smilo,
@@ -2044,15 +2042,6 @@ export const Demo = () => (
         code: `import { RubiksCube } from '@/components/ui/RubiksCube';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] flex items-center justify-center bg-[#08080f]">\n    <RubiksCube />\n  </div>\n);`,
         vibePrompt: "Interactive 3D Rubiks Cube with scramble and solve logic.",
         downloadUrl: "/assets/3d-rubiks-cube/Rubiks-Cube-UI-HUB-bundle.zip"
-    },
-    {
-        id: "3d-galaxy-animation",
-        title: "Interactive 3D Galaxy",
-        category: "3d",
-        isPremium: true,
-        preview: renderComponent("3d-galaxy-animation", "GalaxyAnimation"),
-        code: `import { GalaxyAnimation } from '@/components/ui/GalaxyAnimation';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GalaxyAnimation />\n  </div>\n);`,
-        vibePrompt: "A stunning interactive 3D galaxy with multiple themes, orbital physics, and post-processing bloom effects."
     },
     {
         id: "robot-3d-background",
