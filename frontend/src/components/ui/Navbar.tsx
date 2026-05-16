@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'motion/react';
-import { Link, useLocation } from 'react-router-dom';
-import { Github, Menu, X, Sparkles, LogOut, User as UserIcon } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Github, Menu, X, Sparkles, LogOut, User as UserIcon, Search } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import Logo from './Logo';
 import PlanBadge, { PlanTier } from './PlanBadge';
@@ -82,7 +82,16 @@ const Navbar = () => {
     const { user, isPro, isElite, loading } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
     const isLibrary = location.pathname.startsWith('/library');
+    const [globalSearch, setGlobalSearch] = useState('');
+    
+    const handleSearchSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (globalSearch.trim()) {
+            navigate(`/library?q=${encodeURIComponent(globalSearch.trim())}`);
+        }
+    };
 
     // Welcome Toast Logic
     const [showToast, setShowToast] = useState(false);
@@ -188,6 +197,23 @@ const Navbar = () => {
 
                 {/* ── Right Actions ── */}
                 <div className="relative z-10 flex items-center gap-2.5">
+                    {/* Global Search */}
+                    <form onSubmit={handleSearchSubmit} className="hidden lg:flex relative mr-2">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search size={14} className={theme === 'dark' ? 'text-white/40' : 'text-black/40'} />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search components..."
+                            value={globalSearch}
+                            onChange={(e) => setGlobalSearch(e.target.value)}
+                            className={`w-48 xl:w-64 border rounded-full py-1.5 pl-9 pr-4 text-sm focus:outline-none transition-all ${
+                                theme === 'dark' 
+                                ? 'bg-white/[0.03] border-white/[0.08] text-white placeholder-white/30 focus:border-brand-green/40 focus:bg-white/[0.05]' 
+                                : 'bg-black/[0.03] border-black/[0.08] text-black placeholder-black/30 focus:border-[#5FA3D6]/40 focus:bg-black/[0.05]'
+                            }`}
+                        />
+                    </form>
 
 
 

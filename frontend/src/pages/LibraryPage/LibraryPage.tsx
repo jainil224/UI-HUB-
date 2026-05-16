@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronRight, ChevronDown, Home, Lock, Zap, Sparkles, ArrowRight } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronRight, ChevronDown, Home, Lock, Zap, Sparkles, ArrowRight, Search } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
@@ -34,6 +34,7 @@ const LibraryPage = () => {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const idFromUrl = queryParams.get('id');
+    const qFromUrl = queryParams.get('q') || '';
 
     const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
 
@@ -43,6 +44,11 @@ const LibraryPage = () => {
     const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+    const [searchQuery, setSearchQuery] = useState(qFromUrl);
+
+    useEffect(() => {
+        setSearchQuery(qFromUrl);
+    }, [qFromUrl]);
 
     useEffect(() => {
         const q = query(collection(db, 'components'), orderBy('createdAt', 'desc'));
@@ -82,7 +88,7 @@ const LibraryPage = () => {
         }
     }, [idFromUrl, navigate, defaultComponent.id, allComponents.length]);
 
-    const categories: Category[] = [
+    const baseCategories: Category[] = [
         { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
@@ -92,12 +98,28 @@ const LibraryPage = () => {
         { name: "Portfolios", items: allComponents.filter(item => item.category === 'portfolios') },
         { name: "3D CHATBOT", items: allComponents.filter(item => item.category === '3d-chatbot') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
-    ].filter(cat => cat.items.length > 0 || cat.name === "3D CHATBOT");
+    ];
+
+    const categories = baseCategories
+        .map(cat => {
+            const isCatMatch = cat.name.toLowerCase().includes(searchQuery.toLowerCase());
+            return {
+                ...cat,
+                items: cat.items.filter(item =>
+                    searchQuery === '' ||
+                    isCatMatch ||
+                    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (item.category && item.category.toLowerCase().includes(searchQuery.toLowerCase()))
+                )
+            };
+        })
+        .filter(cat => cat.items.length > 0 || (searchQuery === '' && cat.name === "3D CHATBOT"));
 
     // Initial expansion: expand the active component's category
     useEffect(() => {
         if (activeComponent) {
-            const activeCat = categories.find(cat => cat.items.some(item => item.id === activeComponent.id));
+            const activeCat = baseCategories.find(cat => cat.items.some(item => item.id === activeComponent.id));
             if (activeCat) {
                 setExpandedCategories(prev => {
                     if (!prev.includes(activeCat.name)) {
@@ -107,7 +129,41 @@ const LibraryPage = () => {
                 });
             }
         }
-    }, [activeComponent.id]);
+    }, [activeComponent.id, allComponents.length]);
+
+    // Expand categories when searching
+    useEffect(() => {
+        if (searchQuery.trim() !== '') {
+            // Re-derive matches to avoid dependency loop with `categories`
+            const matchedCategories = baseCategories
+                .map(cat => {
+                    const isCatMatch = cat.name.toLowerCase().includes(searchQuery.toLowerCase());
+                    return {
+                        ...cat,
+                        items: cat.items.filter(item =>
+                            isCatMatch ||
+                            item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                            (item.category && item.category.toLowerCase().includes(searchQuery.toLowerCase()))
+                        )
+                    };
+                })
+                .filter(cat => cat.items.length > 0);
+
+            const matchingCatNames = matchedCategories.map(cat => cat.name);
+            setExpandedCategories(prev => Array.from(new Set([...prev, ...matchingCatNames])));
+
+            const allMatched = matchedCategories.flatMap(cat => cat.items);
+            if (allMatched.length > 0) {
+                const isCurrentMatched = allMatched.some(item => item.id === activeComponent.id);
+                if (!isCurrentMatched) {
+                    const firstMatch = allMatched[0];
+                    setActiveComponent(firstMatch);
+                    navigate(`/library?id=${firstMatch.id}&q=${encodeURIComponent(searchQuery)}`, { replace: true });
+                }
+            }
+        }
+    }, [searchQuery, allComponents.length, activeComponent.id, navigate]);
 
     const toggleCategory = (name: string) => {
         setExpandedCategories(prev =>
@@ -239,6 +295,20 @@ const LibraryPage = () => {
                                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/60">{totalComponents} Components Available</span>
                             </div>
 
+                            {/* Mobile Search Bar */}
+                            <div className="relative mb-6">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Search size={14} className="text-white/40" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search components..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-brand-green/40 focus:bg-white/[0.05] transition-all"
+                                />
+                            </div>
+
                             {categories.map((cat, idx) => {
                                 const isExpanded = expandedCategories.includes(cat.name);
                                 const meta = CATEGORY_META[cat.name] || DEFAULT_META;
@@ -347,13 +417,27 @@ const LibraryPage = () => {
                         </div>
 
                         {/* Stats card */}
-                        <div className="relative overflow-hidden rounded-xl border border-brand-green/15 bg-gradient-to-br from-brand-green/[0.06] to-transparent px-4 py-3">
+                        <div className="relative overflow-hidden rounded-xl border border-brand-green/15 bg-gradient-to-br from-brand-green/[0.06] to-transparent px-4 py-3 mb-4">
                             <div className="absolute -right-4 -top-4 w-20 h-20 bg-brand-green/10 rounded-full blur-2xl" />
                             <p className="text-[8px] text-white/30 uppercase tracking-[0.2em] font-black mb-0.5">Total Available</p>
                             <div className="flex items-end gap-2">
                                 <span className="text-3xl font-black text-brand-green leading-none tabular-nums">{totalComponents}</span>
                                 <span className="text-[10px] text-white/40 font-bold mb-1">components</span>
                             </div>
+                        </div>
+
+                        {/* Search Bar */}
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <Search size={14} className="text-white/40" />
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Search components..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder-white/30 focus:outline-none focus:border-brand-green/40 focus:bg-white/[0.05] transition-all"
+                            />
                         </div>
                     </div>
 
