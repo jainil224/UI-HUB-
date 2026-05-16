@@ -33,6 +33,7 @@ const LaptopBot = React.lazy(() => import('../components/ui/LaptopBot'));
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam').then(m => ({ default: m.CardsBeam })));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
 const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
+const ParticlesBackground = React.lazy(() => import('../components/ui/ParticlesBackground'));
 
 
 // ── Lazy Loaded Internal Collections ───────────
@@ -1322,6 +1323,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
     '3d-hero': ToonhubHero,
+    'particles-background': ParticlesBackground,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
