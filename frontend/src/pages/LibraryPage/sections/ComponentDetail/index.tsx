@@ -969,13 +969,15 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             ref={previewRef}
                             className={`min-h-[320px] sm:min-h-[280px] md:min-h-0 ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'} ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black' : ''}`}
                         >
-                            <button
-                                onClick={toggleFullscreen}
-                                className={`absolute top-6 right-6 p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-all z-50 group ${isFullscreen ? 'opacity-40 hover:opacity-100' : ''}`}
-                                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                            >
-                                {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
-                            </button>
+                            {(item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot') && (
+                                <button
+                                    onClick={toggleFullscreen}
+                                    className={`absolute top-6 right-6 p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-all z-50 group ${isFullscreen ? 'opacity-40 hover:opacity-100' : ''}`}
+                                    title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                                >
+                                    {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                                </button>
+                            )}
                             <div
                                 className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' ? 'h-full' : 'px-2 md:px-8'}`}
                             >

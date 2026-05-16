@@ -231,8 +231,8 @@ export const SolarSystem: React.FC = () => {
             </div>
 
             {/* Navigation Guide */}
-            <div className="absolute top-6 right-6 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-widest pointer-events-none animate-pulse">
-                <span>Navigate</span>
+            <div className="absolute top-8 left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-sm border border-white/10 text-white/60 text-[10px] md:text-xs font-bold uppercase tracking-widest pointer-events-none animate-pulse">
+                <span>Click planets or</span>
                 <span className="flex items-center gap-1">
                     <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/20">←</span>
                     <span className="px-1.5 py-0.5 rounded bg-white/10 border border-white/20">→</span>
