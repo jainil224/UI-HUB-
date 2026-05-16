@@ -40,6 +40,19 @@ export default function ToonhubHero() {
     }, 650);
   }, [isAnimating]);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        navigate('prev');
+      } else if (e.key === 'ArrowRight') {
+        navigate('next');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate]);
+
   const getRole = (index: number) => {
     if (index === activeIndex) return 'center';
     if (index === (activeIndex + 3) % 4) return 'left';
