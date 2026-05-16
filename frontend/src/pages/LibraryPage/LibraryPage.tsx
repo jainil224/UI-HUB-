@@ -295,19 +295,6 @@ const LibraryPage = () => {
                                 <span className="text-[9px] font-black uppercase tracking-[0.2em] text-brand-green/60">{totalComponents} Components Available</span>
                             </div>
 
-                            {/* Mobile Search Bar */}
-                            <div className="relative mb-6">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Search size={14} className="text-white/40" />
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="Search components..."
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl py-3 pl-10 pr-4 text-sm text-white placeholder-white/30 focus:outline-none focus:border-brand-green/40 focus:bg-white/[0.05] transition-all"
-                                />
-                            </div>
 
                             {categories.map((cat, idx) => {
                                 const isExpanded = expandedCategories.includes(cat.name);
@@ -426,19 +413,6 @@ const LibraryPage = () => {
                             </div>
                         </div>
 
-                        {/* Search Bar */}
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Search size={14} className="text-white/40" />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Search components..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl py-2.5 pl-9 pr-4 text-xs text-white placeholder-white/30 focus:outline-none focus:border-brand-green/40 focus:bg-white/[0.05] transition-all"
-                            />
-                        </div>
                     </div>
 
                     {/* Sidebar scrollable nav */}
