@@ -109,6 +109,20 @@ export const ThreeDSlider: React.FC<ThreeDSliderProps> = ({
         return () => clearInterval(timer);
     }, [autoPlay, interval, nextSlide]);
 
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowRight') {
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [nextSlide, prevSlide]);
+
     // Touch swipe handlers
     const handleTouchStart = useCallback((e: React.TouchEvent) => {
         touchStartX.current = e.touches[0].clientX;

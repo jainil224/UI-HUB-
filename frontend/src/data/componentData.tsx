@@ -22,7 +22,7 @@ const NeoBrutalism = React.lazy(() => import('../components/ui/NeoBrutalism'));
 const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then(m => ({ default: m.HeartCursor })));
 const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
-const ThreeDTubesCursor = React.lazy(() => import('../components/ui/ThreeDTubesCursor').then(m => ({ default: m.ThreeDTubesCursor })));
+
 const Robot3DBackground = React.lazy(() => import('../components/ui/Robot3DBackground').then(m => ({ default: m.Robot3DBackground })));
 const HoodieBot = React.lazy(() => import('../components/ui/HoodieBot'));
 const Smilo = React.lazy(() => import('../components/ui/Smilo'));
@@ -1101,109 +1101,6 @@ const VenomCursorPreview: React.FC = () => {
 };
 
 // ── 3D Tubes Cursor scoped preview ────────────
-const ThreeDTubesCursorPreview: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [isInside, setIsInside] = useState(false);
-
-    return (
-        <div
-            ref={containerRef}
-            onMouseEnter={() => setIsInside(true)}
-            onMouseLeave={() => setIsInside(false)}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: '#050508',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-            }}
-        >
-            {/* Deep Space Neon Background */}
-            <div style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: `
-                    radial-gradient(circle at 20% 30%, rgba(249, 103, 251, 0.08) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 70%, rgba(83, 188, 40, 0.08) 0%, transparent 50%),
-                    radial-gradient(circle at 50% 50%, rgba(105, 88, 213, 0.12) 0%, transparent 80%),
-                    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)
-                `,
-                backgroundSize: '100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px',
-                pointerEvents: 'none',
-            }} />
-
-            {/* Glassmorphic Navigation Buttons */}
-            <div style={{
-                position: 'absolute',
-                top: 40,
-                display: 'flex',
-                gap: 20,
-                zIndex: 50,
-            }}>
-                {[
-                    { name: 'HOME', color: '#f967fb' },
-                    { name: 'ABOUT', color: '#53bc28' },
-                    { name: 'PROJECTS', color: '#6958d5' },
-                    { name: 'CONTACT', color: '#ff008a' }
-                ].map((item) => (
-                    <button
-                        key={item.name}
-                        style={{
-                            padding: '8px 16px',
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            backdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(255, 255, 255, 0.05)',
-                            borderRadius: '8px',
-                            color: 'rgba(255, 255, 255, 0.4)',
-                            fontSize: 10,
-                            fontWeight: 800,
-                            letterSpacing: '0.2em',
-                            transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                            cursor: 'pointer'
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.color = '#fff';
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
-                            e.currentTarget.style.borderColor = item.color;
-                            e.currentTarget.style.boxShadow = `0 0 25px ${item.color}66`;
-                            e.currentTarget.style.transform = 'translateY(-4px) scale(1.05)';
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)';
-                            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.03)';
-                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-                            e.currentTarget.style.boxShadow = 'none';
-                            e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                        }}
-                    >
-                        {item.name}
-                    </button>
-                ))}
-            </div>
-
-            {isInside && <ThreeDTubesCursor containerRef={containerRef} />}
-
-            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
-                <div style={{
-                    fontSize: 8,
-                    fontWeight: 800,
-                    letterSpacing: '0.5em',
-                    color: 'rgba(255,255,255,0.15)',
-                    textTransform: 'uppercase',
-                    background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent)',
-                    padding: '10px 40px',
-                    borderRadius: '100px'
-                }}>
-                    Dimensional Flux
-                </div>
-            </div>
-        </div>
-    );
-};
 
 // ── 3D Slider scoped preview ────────────
 const ThreeDSliderPreview: React.FC = () => {
@@ -1311,7 +1208,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'heart-cursor': HeartCursor,
     'lizard-cursor': LizardCursor,
     'venom-cursor': VenomCursor,
-    '3d-tubes-cursor': ThreeDTubesCursor,
+
     'robot-3d-background': Robot3DBackground,
     'hoodiebot': HoodieBot,
     'smilo': Smilo,
@@ -2068,15 +1965,6 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
 **Behavior summary:** clicking arrows rotates roles; background color, image positions, scales, blurs, and opacities all crossfade simultaneously over 650ms with \`cubic-bezier(0.4,0,0.2,1)\`. The character images sit at the bottom of the screen overlapping the giant "3D SHAPE" text behind them.`
     },
     {
-        id: "interactive-webgl-scene",
-        title: "Interactive WebGL Scene",
-        category: "3d",
-        isPremium: true,
-        preview: renderComponent("interactive-webgl-scene", "InteractiveWebGLScene", { showDownloadLink: true, overlayOpacity: 0.2 }),
-        code: "",
-        vibePrompt: ""
-    },
-    {
         id: "3d-scroll-animation",
         title: "3D Scroll Animation",
         category: "3d",
@@ -2131,6 +2019,15 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
         code: `import { SolarSystem } from '@/components/ui/SolarSystem';\n\nexport const Demo = () => (\n  <div className="w-full h-[800px] rounded-3xl overflow-hidden bg-black">\n    <SolarSystem />\n  </div>\n);`,
         vibePrompt: "Create a cinematic 'SolarSystem' planet picker with SVG path-based orbital navigation. The UI features a large central planet visualization with smooth CSS transitions, dynamic character-by-character title animations, and real-time updating technical stats (Tilt, Gravity, Hours). Includes keyboard arrow navigation and responsive mobile scaling."
     },
+    {
+        id: "interactive-webgl-scene",
+        title: "Interactive WebGL Scene",
+        category: "3d",
+        isPremium: true,
+        preview: renderComponent("interactive-webgl-scene", "InteractiveWebGLScene", { showDownloadLink: true, overlayOpacity: 0.2 }),
+        code: "",
+        vibePrompt: ""
+    },
 
     {
         id: "lizard-cursor",
@@ -2149,14 +2046,7 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
         code: "",
         vibePrompt: ""
     },
-    {
-        id: "3d-tubes-cursor",
-        title: "3D Tubes Cursor",
-        category: "cursor",
-        preview: () => <ThreeDTubesCursorPreview />,
-        code: "",
-        vibePrompt: ""
-    },
+
     {
         id: "black-box",
         title: "Black Box",
