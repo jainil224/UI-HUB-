@@ -215,8 +215,11 @@ router.post('/send-welcome-email', async (req, res) => {
 router.get('/status', verifyToken, async (req, res) => {
     try {
         const email = req.user.email;
+        console.log(`[StatusAPI] Checking status for: ${email}`);
         const isElite = await checkEliteStatus(email);
         const isPro = isElite || await checkProStatus(email);
+        
+        console.log(`[StatusAPI] Result for ${email}: Elite=${isElite}, Pro=${isPro}`);
         
         res.json({
             isPro,

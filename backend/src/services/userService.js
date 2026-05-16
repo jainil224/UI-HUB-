@@ -15,9 +15,19 @@ const USERS_COLLECTION = 'users';
  */
 export const checkEliteStatus = async (email) => {
     if (!email) return false;
+    const userEmail = email.trim().toLowerCase();
+    console.log(`[UserStatus] checkEliteStatus for: "${userEmail}"`);
+    
+    // Explicit Elite override for admin/test accounts
+    if (userEmail === 'jainil11199@gmail.com' || userEmail === 'jainil224@gmail.com' || userEmail === 'jainilpatel2224@gmail.com') {
+        console.log(`[UserStatus] MATCH FOUND for ${userEmail} via hardcoded ELITE override`);
+        return true;
+    }
+    console.log(`[UserStatus] No hardcoded match for ${userEmail}`);
+
     try {
         const db = getDb();
-        const userDoc = await db.collection(USERS_COLLECTION).doc(email.toLowerCase()).get();
+        const userDoc = await db.collection(USERS_COLLECTION).doc(userEmail).get();
         if (!userDoc.exists) return false;
         
         const userData = userDoc.data();
@@ -44,16 +54,18 @@ export const checkProStatus = async (email) => {
         return false;
     }
     
-    const userEmail = email.toLowerCase();
+    const userEmail = email.trim().toLowerCase();
+    console.log(`[UserStatus] checkProStatus for: "${userEmail}"`);
     
-    // Explicit 1-year Pro override for jainil11199@gmail.com
-    if (userEmail === 'jainil11199@gmail.com') {
+    // Explicit Pro override for admin/test accounts
+    if (userEmail === 'jainil11199@gmail.com' || userEmail === 'jainil224@gmail.com' || userEmail === 'jainilpatel2224@gmail.com') {
         const overrideExpiry = new Date();
         overrideExpiry.setFullYear(overrideExpiry.getFullYear() + 1); // 1 year from now
         
-        console.log(`[UserStatus] ${userEmail} verified via hardcoded 1-year PRO override (expires: ${overrideExpiry.toISOString()})`);
+        console.log(`[UserStatus] MATCH FOUND for ${userEmail} via hardcoded 1-year PRO override`);
         return true;
     }
+    console.log(`[UserStatus] No hardcoded Pro match for ${userEmail}`);
     
     try {
         const db = getDb();

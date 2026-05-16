@@ -87,6 +87,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     
                     if (response.ok) {
                         const data = await response.json();
+                        console.log('[Auth] API Status Response:', data);
                         setIsPro(data.isPro);
                         setIsElite(data.isElite ?? false);
                         localStorage.setItem('ui-hub-pro', String(data.isPro || false));
