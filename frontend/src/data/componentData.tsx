@@ -31,7 +31,7 @@ const Tripy = React.lazy(() => import('../components/ui/Tripy'));
 const Aiva = React.lazy(() => import('../components/ui/Aiva'));
 const LaptopBot = React.lazy(() => import('../components/ui/LaptopBot'));
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam').then(m => ({ default: m.CardsBeam })));
-/* const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem')); */
+const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
 
 
 // ── Lazy Loaded Internal Collections ───────────
@@ -1285,7 +1285,7 @@ const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawNa
         load();
     }, [type, name, rawName]);
 
-    if (!Comp) return <div className="animate-pulse opacity-10 flex items-center justify-center w-full h-full font-bold uppercase tracking-widest text-[10px]">LODING...</div>;
+    if (!Comp) return <div className="animate-pulse opacity-10 flex items-center justify-center w-full h-full font-bold uppercase tracking-widest text-[10px]">LOADING...</div>;
     return <Comp {...componentProps} />;
 };
 
@@ -1319,6 +1319,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'aiva': Aiva,
     'laptopbot': LaptopBot,
     'cards-beam': CardsBeam,
+    'solar-system': SolarSystem,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2066,6 +2067,15 @@ export const Demo = () => (
         preview: renderComponent("cards-beam", "Cards Beam"),
         code: `import { CardsBeam } from '@/components/ui/CardsBeam';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <CardsBeam />\n  </div>\n);`,
         vibePrompt: "A futuristic 3D credit card scanning animation with particle systems, ASCII beam effects, and interactive dragging. Features THREE.js particle background and dual-canvas coordinate-synced clipping."
+    },
+    {
+        id: "solar-system",
+        title: "Solar System",
+        category: "3d",
+        isPremium: true,
+        preview: renderComponent("solar-system", "SolarSystem"),
+        code: `import { SolarSystem } from '@/components/ui/SolarSystem';\n\nexport const Demo = () => (\n  <div className="w-full h-[800px] rounded-3xl overflow-hidden bg-black">\n    <SolarSystem />\n  </div>\n);`,
+        vibePrompt: "A cinematic solar system planet picker with orbital navigation, smooth transitions, and keyframe animations for planet details."
     },
 
     {

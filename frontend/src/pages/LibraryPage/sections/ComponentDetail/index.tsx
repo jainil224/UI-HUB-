@@ -3,7 +3,8 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink, Download, Lock
+    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink, Download, Lock,
+    Maximize2, Minimize2
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
@@ -601,6 +602,28 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [tab, setTab] = React.useState<'preview' | 'code' | 'vibe'>('preview');
     const [copied, setCopied] = React.useState<string | null>(null);
     const [resetKey, setResetKey] = React.useState(0);
+    const [isFullscreen, setIsFullscreen] = React.useState(false);
+    const previewRef = React.useRef<HTMLDivElement>(null);
+
+    const toggleFullscreen = () => {
+        if (!previewRef.current) return;
+
+        if (!document.fullscreenElement) {
+            previewRef.current.requestFullscreen().catch(err => {
+                console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    };
+
+    React.useEffect(() => {
+        const handleFullscreenChange = () => {
+            setIsFullscreen(!!document.fullscreenElement);
+        };
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    }, []);
 
     // Dynamic states
     const [fetchedSource, setFetchedSource] = React.useState<string>('');
@@ -833,7 +856,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             <AnimatePresence mode="wait">
                                 {tab === 'preview' && (
                                     <div className="flex items-center gap-3">
-                                        {(item.category === 'portfolios' || item.id.startsWith('3d-')) && (
+                                        {(item.category === 'portfolios' || item.category === '3d' || item.category === '3d-chatbot' || item.id.startsWith('3d-')) && (
                                             <Link
                                                 to={item.id === '3d-scroll-animation' ? '/demo/3d-scroll-animation' : 
                                                     item.id === '3d-slider' ? '/demo/3d-slider' : 
@@ -942,7 +965,17 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
                         )}
 
-                        <div className={`min-h-[320px] sm:min-h-[280px] md:min-h-0 ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'}`}>
+                        <div 
+                            ref={previewRef}
+                            className={`min-h-[320px] sm:min-h-[280px] md:min-h-0 ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'} ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black' : ''}`}
+                        >
+                            <button
+                                onClick={toggleFullscreen}
+                                className={`absolute top-6 right-6 p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-all z-50 group ${isFullscreen ? 'opacity-40 hover:opacity-100' : ''}`}
+                                title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                            >
+                                {isFullscreen ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                            </button>
                             <div
                                 className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' ? 'h-full' : 'px-2 md:px-8'}`}
                             >
