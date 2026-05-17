@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { ANTIGRAVITY_PROMPTS } from '../data/prompts/antigravityPrompts.js';
 import { CLAUDE_PROMPTS } from '../data/prompts/claudePrompts.js';
 import { LOVABLE_PROMPTS } from '../data/prompts/lovablePrompts.js';
+import { EMBEDDED_SOURCE_CODE } from '../data/sourceCodeData.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,18 +17,12 @@ const FRONTEND_COMPONENTS_PATH = path.resolve(__dirname, '../../../frontend/src/
  * Maps component IDs to their file paths in the frontend.
  */
 const resolveSourceCode = async (componentId) => {
-  // Mapping logic similar to what was in frontend componentData or promptUtils
-  // For now, we'll try to find it in ui/ or animations/
-  const searchDirs = ['ui', 'animations', 'animations/VisualEffects'];
+  // 1. Check embedded source code first (production-safe, no filesystem needed)
+  if (EMBEDDED_SOURCE_CODE[componentId]) {
+    return EMBEDDED_SOURCE_CODE[componentId];
+  }
 
-  // Convert kebab-case ID to PascalCase for the filename if needed
-  // But many components are in directories with their ID or similar
-  // Let's look at some examples from componentData.tsx
-  // Robot 3D Background -> '@/components/ui/Robot3DBackground'
-  // corners-border-button -> '@/components/animations/VisualEffects' (SpotlightCards?)
-
-  // This mapping needs to be accurate. 
-  // For simplicity, let's assume a few common patterns or just hardcode some for now.
+  // 2. Fallback: try to read from the frontend filesystem (works in local dev only)
   const mapping = {
     '3d-hero': 'ui/ToonhubHero.tsx',
     'robot-3d-background': 'ui/Robot3DBackground.tsx',
