@@ -29,6 +29,7 @@ const resolveSourceCode = async (componentId) => {
   // This mapping needs to be accurate. 
   // For simplicity, let's assume a few common patterns or just hardcode some for now.
   const mapping = {
+    '3d-hero': 'ui/ToonhubHero.tsx',
     'robot-3d-background': 'ui/Robot3DBackground.tsx',
     'interactive-webgl-scene': 'ui/InteractiveWebGLScene.tsx',
     '3d-scroll-animation': 'ui/Scroll3DAnimation.tsx',
@@ -60,7 +61,7 @@ const resolveSourceCode = async (componentId) => {
     'payment-transaction-button': 'ui/payment-transaction-button.tsx',
     'magic-card-effect': 'ui/magic-card.tsx',
     'border-beam': 'ui/border-beam.tsx',
-    'grid-background': 'ui/background-boxes.tsx', // Example guess
+    'grid-background': 'ui/background-boxes.tsx',
     'sparkles-background': 'ui/sparkles-background.tsx',
     '3d-rubiks-cube': 'ui/RubiksCube.tsx',
     '3d-landing-page': 'ui/ThreeDLandingPage.tsx',
