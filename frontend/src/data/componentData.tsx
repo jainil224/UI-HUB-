@@ -871,6 +871,8 @@ const HeartCursorPreview: React.FC = () => {
 const LizardCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isInside, setIsInside] = useState(false);
+    // Eagerly pre-load lazy chunk so canvas is ready before first hover
+    useEffect(() => { import('../components/ui/LizardCursor'); }, []);
 
     return (
         <div
@@ -1008,7 +1010,10 @@ const LizardCursorPreview: React.FC = () => {
                 </div>
             </div>
 
-            {isInside && <LizardCursor color="#22c55e" containerRef={containerRef} />}
+            {/* Always mounted: opacity toggle = instant animation, no lazy-load delay on hover */}
+            <div style={{ opacity: isInside ? 1 : 0, position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <Suspense fallback={null}><LizardCursor color="#22c55e" containerRef={containerRef} /></Suspense>
+            </div>
         </div>
     );
 };
@@ -1017,6 +1022,8 @@ const LizardCursorPreview: React.FC = () => {
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isInside, setIsInside] = useState(false);
+    // Eagerly pre-load lazy chunk so canvas is ready before first hover
+    useEffect(() => { import('../components/ui/VenomCursor'); }, []);
 
     return (
         <div
@@ -1093,7 +1100,10 @@ const VenomCursorPreview: React.FC = () => {
                 ))}
             </div>
 
-            {isInside && <VenomCursor color="#ffffff" containerRef={containerRef} />}
+            {/* Always mounted: opacity toggle = instant animation, no lazy-load delay on hover */}
+            <div style={{ opacity: isInside ? 1 : 0, position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <Suspense fallback={null}><VenomCursor color="#ffffff" containerRef={containerRef} /></Suspense>
+            </div>
 
             <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
                 {/* Branding text removed as per user request */}
