@@ -40,7 +40,7 @@ const LibraryPage = () => {
 
     const allComponents = [...componentList, ...firebaseComponents];
 
-    const defaultComponent = allComponents.find(c => c.id === idFromUrl) || allComponents.find(c => c.id === 'interactive-webgl-scene') || allComponents[0];
+    const defaultComponent = allComponents.find(c => c.id === idFromUrl) || allComponents.find(c => c.id === '3d-hero') || allComponents[0];
     const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
