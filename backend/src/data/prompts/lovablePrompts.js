@@ -1575,4 +1575,25 @@ A fully interactive, high-fidelity 3D Rubiks Cube simulation. It features smooth
 
 ## Output
 Production-ready React component`,
+
+  "hoodiebot": `# UI HUB • LOVABLE PROMPT
+
+Create a premium "HoodieBot" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "smilo": `# UI HUB • LOVABLE PROMPT
+
+Create a premium "Smilo" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "tripy": `# UI HUB • LOVABLE PROMPT
+
+Create a premium "Tripy" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "aiva": `# UI HUB • LOVABLE PROMPT
+
+Create a premium "Aiva" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "laptopbot": `# UI HUB • LOVABLE PROMPT
+
+Create a premium "LaptopBot" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
 };

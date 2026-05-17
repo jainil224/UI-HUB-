@@ -4852,7 +4852,6 @@ const FC = {
     right: { bg: '#C41E3A', cls: styles.fcRed }, left: { bg: '#FF5800', cls: styles.fcOrange },
     top: { bg: '#FFFFFF', cls: styles.fcWhite }, bottom: { bg: '#FFD500', cls: styles.fcYellow },
     inner: { bg: '#1a1a1a', cls: styles.fcInner },
-};
 const FACE_DEFS = [
     { key: 'front', t: 'translateZ(33px)' }, { key: 'back', t: 'rotateY(180deg) translateZ(33px)' },
     { key: 'right', t: 'rotateY(90deg) translateZ(33px)' }, { key: 'left', t: 'rotateY(-90deg) translateZ(33px)' },
@@ -5005,4 +5004,26 @@ export const RubiksCube: React.FC = () => {
 export default RubiksCube;
 \`\`\`
 \n## Performance\n* GPU-accelerated transforms (matrix3d).\n* Minimal re-renders through Ref-based management.`
+};
+
+  "hoodiebot": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Create a premium "HoodieBot" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "smilo": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Create a premium "Smilo" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "tripy": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Create a premium "Tripy" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "aiva": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Create a premium "Aiva" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
+  "laptopbot": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Create a premium "LaptopBot" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
+
 };
