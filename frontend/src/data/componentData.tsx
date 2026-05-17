@@ -33,6 +33,8 @@ const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam').then(m =
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
 const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 const ParticlesBackground = React.lazy(() => import('../components/ui/ParticlesBackground'));
+const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
+
 
 
 // ── Lazy Loaded Internal Collections ───────────
@@ -1219,6 +1221,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'solar-system': SolarSystem,
     '3d-hero': ToonhubHero,
     'particles-background': ParticlesBackground,
+    'fourier-flow': FourierFlow,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2109,6 +2112,14 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
         preview: renderComponent("laptopbot", "LaptopBot"),
         code: `import LaptopBot from '@/components/ui/LaptopBot';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px]">\n      <LaptopBot />\n    </div>\n  );\n}`,
         vibePrompt: "A cute, futuristic AI chatbot interface designed as an animated 3D laptop robot. Features a glossy dark gray laptop body with neon cyan accents, wheels/treads, and a screen that displays an animated pixel face whose eyes track the mouse via Framer Motion. Includes synth beep sound effects, floating idle animation, and a glassmorphism chat bubble."
+    },
+    {
+        id: "fourier-flow",
+        title: "Fourier Flow",
+        category: "effect",
+        preview: renderComponent("fourier-flow", "FourierFlow"),
+        code: `import FourierFlow from '@/components/ui/FourierFlow';\n\nexport const Demo = () => (\n  <div className="w-full h-[500px] flex items-center justify-center bg-[#050505] rounded-3xl overflow-hidden">\n    <FourierFlow />\n  </div>\n);`,
+        vibePrompt: "Create a mathematical 'FourierFlow' loading curve visualizer in React + TSX. Implement mathematical $x(t)$ and $y(t)$ coordinates mapping using harmonic cosines and sines with a dynamic breathing variable $m = 1.0 + 0.16s$ pulsing along with requestAnimationFrame. Design visual presets including Neon Emerald, Vaporwave Cyan/Pink, Solar Gold, and Cosmic Indigo. Include toggles for real-time slider customizability, formula visualization, background grid showing, speed multiplication, and trail particle counts."
     }
 ];
 

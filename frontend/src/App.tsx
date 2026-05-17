@@ -14,6 +14,8 @@ const ThreeDSliderPage = React.lazy(() => import('./pages/Components/ThreeDSlide
 const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 import ScrollToTop from './components/ui/ScrollToTop';
+import FourierFlow from './components/ui/FourierFlow';
+
 
 // Wrapper: only shows Navbar + Footer on non-library pages
 const AppShell = () => {
@@ -34,11 +36,7 @@ const AppShell = () => {
       <main className="flex-1 flex flex-col">
         <React.Suspense fallback={
           <div className={`flex-1 flex items-center justify-center ${theme === 'dark' ? 'bg-brand-black' : 'bg-[#CFE6F7]'}`}>
-            <div className={`w-8 h-8 border-4 rounded-full animate-spin ${
-              theme === 'dark' 
-                ? 'border-brand-green/20 border-t-brand-green' 
-                : 'border-[#5FA3D6]/20 border-t-[#5FA3D6]'
-            }`} />
+            <FourierFlow size="sm" mode="loader" defaultTheme={theme === 'dark' ? 'emerald' : 'solar'} />
           </div>
         }>
           <Routes>

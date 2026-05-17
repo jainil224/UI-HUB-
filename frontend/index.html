@@ -43,32 +43,46 @@
   <meta name="google-site-verification" content="tkm0BtRLStIjUsrA7KIr1uc27qtaHuaWKH9K2NizIuY" />
   
   <style>
-    /* Critical CSS Spinner for immediate feedback */
+    /* Premium Fourier Flow Math Loader Styling */
     #initial-loader {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: #000;
+      background: #000000;
+      background-image: radial-gradient(circle at 50% 50%, rgba(0, 255, 0, 0.08) 0%, transparent 70%),
+                        radial-gradient(circle at 50% 50%, #000000 0%, #000000 100%);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       z-index: 9999;
       transition: opacity 0.5s ease;
+      font-family: Inter, system-ui, sans-serif;
     }
-    .spinner {
-      width: 40px; height: 40px;
-      border: 3px solid rgba(0, 255, 0, 0.1);
-      border-top: 3px solid #00FF00;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+    .loader-frame {
+      width: min(50vw, 50vh, 220px);
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .loader-frame svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
     }
     .loader-text {
       color: #00FF00;
-      margin-top: 15px;
-      font-family: sans-serif;
-      letter-spacing: 0.1em;
-      font-size: 10px;
-      font-weight: bold;
+      margin-top: 24px;
+      font-family: Inter, system-ui, sans-serif;
+      letter-spacing: 0.35em;
+      font-size: 11px;
+      font-weight: 900;
       text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      animation: pulse-text 2s ease-in-out infinite;
     }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes pulse-text {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
   </style>
 
   <!-- Google tag (gtag.js) -->
@@ -85,21 +99,120 @@
 
 <body>
   <div id="initial-loader">
-    <div class="spinner"></div>
+    <div class="loader-frame">
+      <svg viewBox="0 0 100 100" fill="none" aria-hidden="true">
+        <defs>
+          <filter id="loader-glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="2.4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <g id="loader-group">
+          <!-- Main Morphing Fourier Path -->
+          <path id="loader-path" stroke="#00FF00" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.22" filter="url(#loader-glow)"></path>
+        </g>
+      </svg>
+    </div>
     <div class="loader-text">UI HUB — LOADING VIBES</div>
   </div>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
   <script>
-    window.addEventListener('load', function() {
-      var loader = document.getElementById('initial-loader');
-      if (loader) {
-        loader.style.opacity = '0';
-        setTimeout(function() {
-          loader.style.display = 'none';
-        }, 500);
+    (function() {
+      var group = document.getElementById('loader-group');
+      var path = document.getElementById('loader-path');
+      if (!group || !path) return;
+
+      var particleCount = 32;
+      var trailSpan = 0.46;
+      var durationMs = 8400;
+      var pulseDurationMs = 6800;
+
+      var config = {
+        fourierX1: 17,
+        fourierX3: 7.5,
+        fourierX5: 3.2,
+        fourierY1: 15,
+        fourierY2: 8.2,
+        fourierY4: 4.2,
+        fourierMixBase: 1,
+        fourierMixPulse: 0.16
+      };
+
+      var circles = [];
+      var SVG_NS = 'http://www.w3.org/2000/svg';
+      for (var i = 0; i < particleCount; i++) {
+        var circle = document.createElementNS(SVG_NS, 'circle');
+        circle.setAttribute('fill', '#39FF14');
+        circle.setAttribute('filter', 'url(#loader-glow)');
+        group.appendChild(circle);
+        circles.push(circle);
       }
-    });
+
+      function getPoint(progress, detailScale) {
+        var t = progress * Math.PI * 2;
+        var mix = config.fourierMixBase + detailScale * config.fourierMixPulse;
+        var x = config.fourierX1 * Math.cos(t) + config.fourierX3 * Math.cos(3 * t + 0.6 * mix) + config.fourierX5 * Math.sin(5 * t - 0.4);
+        var y = config.fourierY1 * Math.sin(t) + config.fourierY2 * Math.sin(2 * t + 0.25) - config.fourierY4 * Math.cos(4 * t - 0.5 * mix);
+        return { x: 50 + x, y: 50 + y };
+      }
+
+      function buildPath(detailScale) {
+        var steps = 180;
+        var d = [];
+        for (var i = 0; i <= steps; i++) {
+          var pt = getPoint(i / steps, detailScale);
+          d.push((i === 0 ? 'M' : 'L') + ' ' + pt.x.toFixed(2) + ' ' + pt.y.toFixed(2));
+        }
+        return d.join(' ');
+      }
+
+      var startedAt = performance.now();
+      var animFrameId;
+
+      function render(now) {
+        var time = now - startedAt;
+        var progress = (time % durationMs) / durationMs;
+        
+        var pulseProgress = (time % pulseDurationMs) / pulseDurationMs;
+        var pulseAngle = pulseProgress * Math.PI * 2;
+        var detailScale = 0.52 + ((Math.sin(pulseAngle + 0.55) + 1) / 2) * 0.48;
+
+        path.setAttribute('d', buildPath(detailScale));
+
+        for (var i = 0; i < particleCount; i++) {
+          var tailOffset = i / (particleCount - 1);
+          var pProgress = ((progress - tailOffset * trailSpan) % 1 + 1) % 1;
+          var pt = getPoint(pProgress, detailScale);
+          var fade = Math.pow(1 - tailOffset, 0.56);
+          var radius = 0.8 + fade * 2.5;
+          var opacity = 0.05 + fade * 0.95;
+
+          var circle = circles[i];
+          circle.setAttribute('cx', pt.x.toFixed(2));
+          circle.setAttribute('cy', pt.y.toFixed(2));
+          circle.setAttribute('r', radius.toFixed(2));
+          circle.setAttribute('opacity', opacity.toFixed(3));
+        }
+
+        animFrameId = requestAnimationFrame(render);
+      }
+      animFrameId = requestAnimationFrame(render);
+
+      window.addEventListener('load', function() {
+        var loader = document.getElementById('initial-loader');
+        if (loader) {
+          loader.style.opacity = '0';
+          setTimeout(function() {
+            loader.style.display = 'none';
+            cancelAnimationFrame(animFrameId);
+          }, 500);
+        }
+      });
+    })();
   </script>
 </body>
 
