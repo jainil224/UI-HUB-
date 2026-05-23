@@ -124,55 +124,86 @@ router.post('/sync', verifyToken, async (req, res) => {
             return res.status(400).json({ success: false, error: 'Email is required' });
         }
 
-        const userDocRef = admin.firestore().collection('users').doc(uid);
-        const userDocSnap = await userDocRef.get();
+        const db = admin.firestore();
+        const userDocRef = db.collection('users').doc(uid);
 
-        let welcomeEmailSent = false;
+        // FIX 5: Use a Firestore transaction to atomically claim the email send slot.
+        // This prevents duplicate welcome emails caused by concurrent /sync calls
+        // (common with React Strict Mode double-mount or rapid re-authentication).
+        //
+        // The 'sending' string acts as a mutex:
+        //   - false / missing → this request claims it by writing 'sending'
+        //   - 'sending'       → another request already claimed it, skip
+        //   - true            → already sent successfully, skip
+        let shouldSendEmail = false;
+        let resolvedEmail = email;
+        let resolvedName = name || 'UI Challenger';
 
-        if (!userDocSnap.exists) {
-            // Brand new user — create the document matching Auth flow
-            console.log(`[SYNC] Creating new Firestore document for ${uid} (${email})`);
-            await userDocRef.set({
-                uid,
-                email,
-                displayName: name || 'UI Challenger',
-                planTier: 'free',
-                welcomeEmailSent: false,
-                createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            });
-        } else {
-            const userData = userDocSnap.data();
-            welcomeEmailSent = userData.welcomeEmailSent ?? false;
+        await db.runTransaction(async (transaction) => {
+            const userDoc = await transaction.get(userDocRef);
 
-            // Sync latest email/name in case they changed (Google profile update etc.)
-            await userDocRef.update({
-                email,
-                displayName: name || userData.displayName || 'UI Challenger',
-                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            });
-        }
-
-        // Only send if not already sent
-        if (!welcomeEmailSent) {
-            console.log(`[Auth] Triggering welcome email for ${uid} (${email}).`);
-            const result = await sendWelcomeEmail(email, name);
-            
-            console.log(`[Auth] Email send result for ${uid}:`, result);
-            
-            if (result.success) {
-                try {
-                    await userDocRef.update({ welcomeEmailSent: true });
-                    console.log(`[Firestore] Successfully updated welcomeEmailSent flag for ${uid}`);
-                } catch (e) {
-                     console.warn('[Firestore] Could not update welcome email status. Flag may remain false:', e.message);
-                }
+            if (!userDoc.exists) {
+                // Brand new user — create document and claim the email slot atomically
+                console.log(`[SYNC] Creating new Firestore document for ${uid} (${email})`);
+                transaction.set(userDocRef, {
+                    uid,
+                    email,
+                    displayName: resolvedName,
+                    planTier: 'free',
+                    welcomeEmailSent: 'sending', // mutex — claimed by this request
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
+                shouldSendEmail = true;
             } else {
-                console.error(`[Auth] Failed to send welcome email to ${uid}:`, result.error);
-                console.warn(`[Auth] welcomeEmailSent flag for ${uid} will NOT be set to true to prevent permanent lockout.`);
+                const userData = userDoc.data();
+                const flag = userData.welcomeEmailSent;
+
+                // Sync latest email/name regardless
+                resolvedEmail = email;
+                resolvedName  = name || userData.displayName || 'UI Challenger';
+
+                transaction.update(userDocRef, {
+                    email,
+                    displayName: resolvedName,
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
+
+                // Only claim the slot if flag is strictly false/missing
+                // 'sending' means another concurrent request already claimed it
+                // true means it was already sent successfully
+                if (flag !== true && flag !== 'sending') {
+                    transaction.update(userDocRef, { welcomeEmailSent: 'sending' });
+                    shouldSendEmail = true;
+                } else {
+                    console.log(`[SYNC] Welcome email already sent or in-progress for: ${uid} — skipping (flag=${flag})`);
+                }
             }
-        } else {
-            console.log(`[SYNC] Welcome email already sent for: ${uid} — skipping`);
+        });
+
+        // Outside the transaction — only the one request that won the mutex will reach here
+        if (shouldSendEmail) {
+            console.log(`[Auth] Triggering welcome email for ${uid} (${resolvedEmail}).`);
+            const result = await sendWelcomeEmail(resolvedEmail, resolvedName);
+
+            console.log(`[Auth] Email send result for ${uid}:`, result);
+
+            // FIX 5: Set final flag based on actual send result
+            // On failure → reset to false so the next /sync can retry
+            // On success → set to true permanently
+            try {
+                await userDocRef.update({
+                    welcomeEmailSent: result.success ? true : false,
+                });
+                if (result.success) {
+                    console.log(`[Firestore] ✅ welcomeEmailSent set to true for ${uid}`);
+                } else {
+                    console.error(`[Auth] ❌ Failed to send welcome email to ${uid}:`, result.error);
+                    console.warn(`[Auth] welcomeEmailSent reset to false for ${uid} — will retry on next sync.`);
+                }
+            } catch (e) {
+                console.warn('[Firestore] Could not update welcomeEmailSent flag:', e.message);
+            }
         }
 
         res.json({ 
@@ -328,5 +359,6 @@ router.post('/reset-welcome-flags', async (req, res) => {
         res.status(500).json({ error: 'Internal server error', details: error.message });
     }
 });
+
 
 export default router;

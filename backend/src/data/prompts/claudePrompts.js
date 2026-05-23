@@ -2659,8 +2659,6 @@ export default RubiksCube;
 * GPU-accelerated transforms (matrix3d).
 * Minimal re-renders through Ref-based matrix management.
 * Optimized event listeners with cleanup on unmount.`,
-};
-
 
   "hoodiebot": `# UI HUB • CLAUDE ADVANCED PROMPT
 

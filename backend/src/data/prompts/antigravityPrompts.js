@@ -5003,8 +5003,7 @@ export const RubiksCube: React.FC = () => {
 };
 export default RubiksCube;
 \`\`\`
-\n## Performance\n* GPU-accelerated transforms (matrix3d).\n* Minimal re-renders through Ref-based management.`
-};
+\n## Performance\n* GPU-accelerated transforms (matrix3d).\n* Minimal re-renders through Ref-based management.`,
 
   "hoodiebot": `# UI HUB • ANTIGRAVITY MASTER PROMPT
 

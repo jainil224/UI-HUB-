@@ -24,6 +24,7 @@ export const fulfillPayment = async ({ paymentId, orderId, tier, email, amount, 
       status: 'SUCCESS',
       tier: tier || 'pro',
       signature: signature,
+      invoiceEmailSent: false,
       timestamp: admin.firestore.FieldValue.serverTimestamp(),
     });
     console.log(`[FirebaseService] Payment stored for order: ${orderId}`);

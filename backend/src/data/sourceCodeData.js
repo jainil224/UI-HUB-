@@ -119,8 +119,6 @@ export default function ToonhubHero() {
   );
 }`,
 
-};
-
   'hacker-background': `import React, { useEffect, useRef } from 'react';
 import { cn } from '../../lib/utils';
 

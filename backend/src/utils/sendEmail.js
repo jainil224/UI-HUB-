@@ -5,7 +5,7 @@ dotenv.config();
 let cachedTransporter = null;
 let cachedFromAddress = null;
 
-// Validate credentials and return a singleton transporter
+// FIX 2 + FIX 4: startup credential log and hardened TLS (no rejectUnauthorized: false)
 function getTransporter() {
   if (cachedTransporter) {
     return { transporter: cachedTransporter, fromAddress: cachedFromAddress };
@@ -15,37 +15,39 @@ function getTransporter() {
   const pass   = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
   const host   = process.env.SMTP_HOST   || 'smtp-relay.brevo.com';
   const port   = parseInt(process.env.SMTP_PORT || '587');
-  
+
   // Port 465 is SMTPS (direct SSL), Port 587/2525 is STARTTLS
   const secure = port === 465 || process.env.SMTP_SECURE === 'true';
 
+  // Startup validation — surfaces misconfiguration in Render logs immediately
+  console.log('[EmailService] SMTP User loaded:', !!(user));
   if (!user || !pass) {
     throw new Error(
-      '[EMAIL] BREVO_SMTP_USER or BREVO_SMTP_PASS is not set in environment variables.'
+      '[EmailService] BREVO_SMTP_USER (or SMTP_USER) / BREVO_SMTP_PASS (or SMTP_PASS) is not set in environment variables.'
     );
   }
 
+  // SMTP_FROM must be a Brevo-verified sender domain — never a Gmail address
   cachedFromAddress = process.env.SMTP_FROM || user;
+
   cachedTransporter = nodemailer.createTransport({
     host,
     port,
     secure,
-    pool: true, // Reuse connections for efficiency
+    pool: true,       // Reuse connections for efficiency
     maxConnections: 5,
     maxMessages: 100,
-    auth: { 
-      user, 
-      pass 
-    },
-    // Extreme hardening for Render
-    connectionTimeout: 10000, 
+    auth: { user, pass },
+    // FIX 4: Removed rejectUnauthorized: false — security vulnerability
+    // Use servername hint instead so Brevo's cert is correctly validated
+    connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 30000,
     tls: {
-      rejectUnauthorized: false,
-      minVersion: 'TLSv1.2'
+      minVersion: 'TLSv1.2',
+      servername: 'smtp-relay.brevo.com',
     },
-    logger: false, // Turn off verbose logs in production unless debugging
+    logger: false,
     debug: false,
   });
 
@@ -54,6 +56,7 @@ function getTransporter() {
 
 /**
  * Sends the UI-HUB branded welcome email.
+ * Idempotency is guarded by the Firestore `welcomeEmailSent` flag in userRoutes.js.
  */
 export async function sendWelcomeEmail(email, name) {
   let transporter, fromAddress;
@@ -61,7 +64,7 @@ export async function sendWelcomeEmail(email, name) {
   try {
     ({ transporter, fromAddress } = getTransporter());
   } catch (err) {
-    console.error('[EMAIL] Transporter init failed:', err.message);
+    console.error('[EmailService] Transporter init failed:', err.message);
     return { success: false, error: err.message };
   }
 
@@ -70,17 +73,22 @@ export async function sendWelcomeEmail(email, name) {
   const mailOptions = {
     from:    `"UI-HUB" <${fromAddress}>`,
     to:      email,
-    replyTo: 'uihub.design@gmail.com', // Match the successful old emails
+    replyTo: 'uihub.design@gmail.com',
     subject: 'Welcome to UI-HUB — Your components are ready 🎨',
     html:    buildWelcomeEmailHTML(displayName),
   };
 
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log(`[EMAIL] ✅ Welcome email sent to ${email} — messageId: ${info.messageId}`);
+    console.log(`[EmailService] ✅ Welcome email sent to ${email} — messageId: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`[EMAIL] ❌ Failed to send to ${email}:`, err.message);
+    console.error(`[EmailService] ❌ Failed to send to ${email}:`, {
+      message:      err.message,
+      code:         err.code,
+      response:     err.response,
+      responseCode: err.responseCode,
+    });
     return { success: false, error: err.message };
   }
 }
@@ -130,7 +138,7 @@ function buildWelcomeEmailHTML(name) {
 
               <!-- CTA -->
               <div style="text-align:center; margin-bottom:32px;">
-                <a href="${process.env.FRONTEND_URL || 'https://uihub-design.vercel.app'}"
+                <a href="${process.env.FRONTEND_URL || 'https://uihub.design'}"
                    style="display:inline-block; background: linear-gradient(135deg, #7C6AF7, #F472B6);
                           color:#fff; text-decoration:none; font-weight:700; font-size:15px;
                           padding:14px 36px; border-radius:8px; letter-spacing:0.3px;">

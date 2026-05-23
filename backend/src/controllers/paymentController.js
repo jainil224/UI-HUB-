@@ -1,7 +1,10 @@
 import Razorpay from 'razorpay';
 import { verifyRazorpaySignature } from '../utils/verifySignature.js';
 import { fulfillPayment } from '../services/firebaseService.js';
-import { sendInvoiceEmail } from '../services/emailService.js';
+// FIX 3: sendInvoiceEmail is REMOVED from this file entirely.
+// The webhook handler (webhookController.js) is the single source of truth
+// for sending invoice emails. This prevents duplicate emails when both
+// the /verify route and Razorpay's payment.captured webhook fire.
 
 // Initialize Razorpay
 const getRazorpayInstance = () => {
@@ -57,7 +60,10 @@ export const createOrder = async (req, res) => {
 };
 
 /**
- * Verifies Razorpay payment signature and updates database
+ * Verifies Razorpay payment signature and updates database.
+ * NOTE: Invoice email is NOT sent here — it is sent exclusively by the
+ * webhookController.js when the payment.captured event arrives from Razorpay.
+ * This avoids duplicate invoice emails.
  */
 export const verifyPayment = async (req, res) => {
   try {
@@ -91,7 +97,7 @@ export const verifyPayment = async (req, res) => {
       return res.status(400).json({ success: false, error: 'Invalid payment signature. Payment rejected.' });
     }
 
-    // 2. Fulfill Payment
+    // 2. Fulfill Payment (update Firestore, activate plan)
     try {
         const result = await fulfillPayment({
             paymentId: razorpay_payment_id,
@@ -107,24 +113,13 @@ export const verifyPayment = async (req, res) => {
         if (result.alreadyProcessed) {
             return res.status(200).json({ success: true, tier: tier, message: 'Payment already applied.' });
         }
-        
-        // 3. Send Email Receipt (non-blocking)
-        sendInvoiceEmail({
-            email: user_email,
-            displayName: req.user?.name || '',
-            planId: planId || tier,
-            paymentId: razorpay_payment_id,
-            orderId: razorpay_order_id,
-            purchaseDate: new Date()
-        }).catch(emailErr => {
-            console.error('[VerifyPayment] Email Receipt error:', emailErr.message);
-        });
 
-        // 4. Respond success
+        // 3. Respond success — invoice email will be sent by the webhook handler
+        console.log(`[VerifyPayment] Payment fulfilled for ${user_email}, paymentId: ${razorpay_payment_id}. Invoice email delegated to webhook.`);
         return res.json({
             success: true,
             tier: tier,
-            message: 'Payment verified successfully.'
+            message: 'Payment verified successfully. Your invoice will be emailed shortly.'
         });
 
     } catch (fbErr) {

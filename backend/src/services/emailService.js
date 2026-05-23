@@ -2,26 +2,36 @@ import nodemailer from 'nodemailer';
 // PDF Service removed entirely to fix Vercel crash
 import { PLANS } from '../config/plans.js';
 
+// FIX 2: Startup credential check — must appear in Render logs on boot
+const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
+const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+console.log('[EmailService] SMTP User loaded:', !!(smtpUser));
+if (!smtpUser || !smtpPass) {
+  console.error('[EmailService] ⚠️  BREVO_SMTP_USER or BREVO_SMTP_PASS is NOT set — invoice emails will fail!');
+}
+
+// FIX 2: Use BREVO_ prefixed vars with fallback to generic SMTP_ vars
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
-  port: parseInt(process.env.SMTP_PORT) || 587,
-  secure: parseInt(process.env.SMTP_PORT) === 465,
+  port: parseInt(process.env.SMTP_PORT || '587', 10),
+  secure: parseInt(process.env.SMTP_PORT || '587') === 465,
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user: process.env.BREVO_SMTP_USER || process.env.SMTP_USER,
+    pass: process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS,
   },
   // Hardening for Render
   connectionTimeout: 10000,
   greetingTimeout: 10000,
   socketTimeout: 30000,
   tls: {
-    rejectUnauthorized: false,
-    minVersion: 'TLSv1.2'
+    minVersion: 'TLSv1.2',
+    servername: 'smtp-relay.brevo.com', // FIX 4: removed rejectUnauthorized: false
   }
 });
 
 /**
- * Sends a branded invoice email with PDF attachment after successful payment.
+ * Sends a branded invoice email after successful payment.
+ * PDF attachment is disabled due to Vercel serverless size limits.
  */
 export async function sendInvoiceEmail({ email, displayName, planId, paymentId, orderId, purchaseDate }) {
   const plan = PLANS[planId];
@@ -36,7 +46,7 @@ export async function sendInvoiceEmail({ email, displayName, planId, paymentId, 
     planName:      plan.name,
     planDuration:  plan.duration,
     billingCycle:  plan.billingCycle,
-    price:         plan.price || 0, // Fallback if dynamically setting
+    price:         plan.price || 0,
     currency:      plan.currency || 'USD',
     features:      plan.features,
     paymentId,
@@ -45,10 +55,11 @@ export async function sendInvoiceEmail({ email, displayName, planId, paymentId, 
     purchaseDate:  purchaseDate || new Date(),
   };
 
-  // PDF Generation disabled due to Vercel Serverless size limitations
+  // FIX 2: Use BREVO_ prefixed vars for the from address
+  const fromAddress = process.env.SMTP_FROM || process.env.BREVO_SMTP_USER || process.env.SMTP_USER || 'support@uihub.design';
 
-  await transporter.sendMail({
-    from: `"UI HUB Support" <${process.env.SMTP_FROM || 'support@ui-hub.com'}>`,
+  const info = await transporter.sendMail({
+    from: `"UI HUB Support" <${fromAddress}>`,
     to: email,
     subject: `Your UI-HUB ${plan.name} Invoice — ${invoiceNumber}`,
     html: `
@@ -57,20 +68,25 @@ export async function sendInvoiceEmail({ email, displayName, planId, paymentId, 
         <p style="color: #6B7280; margin-bottom: 24px;">Your payment was successful. Your plan is now active.</p>
 
         <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+          <p><strong>Invoice No:</strong> <code style="font-family: monospace; background: #E5E7EB; padding: 2px 6px; border-radius: 4px;">${invoiceNumber}</code></p>
           <p><strong>Plan:</strong> ${plan.name}</p>
           <p><strong>Duration:</strong> ${plan.duration}</p>
+          <p><strong>Amount:</strong> ${params.currency} ${params.price}</p>
           <p><strong>Payment ID:</strong> <code style="font-family: monospace; background: #E5E7EB; padding: 2px 6px; border-radius: 4px;">${paymentId}</code></p>
+          <p><strong>Order ID:</strong> <code style="font-family: monospace; background: #E5E7EB; padding: 2px 6px; border-radius: 4px;">${orderId}</code></p>
+          <p><strong>Date:</strong> ${new Date(purchaseDate).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </div>
 
-        <p style="color: #6B7280; font-size: 13px;">Your detailed invoice is attached as a PDF. Keep it for your records.</p>
+        <!-- FIX 1: Replaced the lying "PDF is attached" sentence with honest copy -->
+        <p style="color: #6B7280; font-size: 13px;">Your invoice summary is shown above. Please save this email for your records.<br/>A downloadable PDF invoice will be available in your dashboard.</p>
 
         <hr style="border: none; border-top: 1px solid #E5E7EB; margin: 24px 0;" />
-        <p style="font-size: 12px; color: #9CA3AF;">UI-HUB · support@ui-hub.com</p>
+        <p style="font-size: 12px; color: #9CA3AF;">UI-HUB · support@uihub.design</p>
       </div>
     `,
-      // No attachments for now due to Chromium dependencies causing Vercel crashes
+    // No attachments — PDF generation disabled due to Vercel/Chromium constraints
   });
 
-  console.log(`[EMAIL] Invoice sent to ${email} — ${invoiceNumber}`);
-  return invoiceNumber;
+  console.log(`[EmailService] ✅ Invoice sent to ${email} — ${invoiceNumber} | messageId: ${info.messageId}`);
+  return { success: true, invoiceNumber, messageId: info.messageId };
 }
