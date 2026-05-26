@@ -222,6 +222,39 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Spline scene loading", "AnimatePresence transitions", "Branding removal logic", "CSS watermark hiding", "Dark immersive theme"]
         }
     },
+    "star-cursor": {
+        props: [
+            { name: "starSize", type: "number", default: "28", description: "Size of the main star cursor in pixels." },
+            { name: "stiffness", type: "number", default: "0.12", description: "Spring stiffness for cursor following (0–1). Lower = more lag, higher = snappier." },
+            { name: "damping", type: "number", default: "0.80", description: "Spring damping coefficient for inertia." },
+            { name: "containerRef", type: "React.RefObject<HTMLElement>", default: "undefined", description: "If provided, scopes the cursor to this container element only." },
+            { name: "hideDefaultCursor", type: "boolean", default: "true", description: "Hides the browser's default system cursor." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS class on the canvas wrapper." }
+        ],
+        vibeMeta: {
+            behavior: "An ultra-premium cosmic star cursor rendered on a Canvas 2D layer. Features an 8-point glowing white star with long light rays, a pulsing bloom aura, and a particle system that spawns shooting-star trails on movement and a 24-particle radial burst on click. Expands and intensifies on hovering interactive elements.",
+            states: { from: "idle pulsing star", to: "expanded hover glow + click cosmic burst" },
+            cssProperties: ["canvas", "mix-blend-mode: screen", "position: fixed", "pointer-events: none", "shadowBlur", "radial-gradient"],
+            description: "Cinematic space star cursor with spring physics, particle trails, hover glow expansion, and click burst effects.",
+            libraries: ["react"],
+            requirements: [
+                "Canvas 2D rendering with requestAnimationFrame loop",
+                "Spring physics position smoothing (stiffness + damping)",
+                "8-point star drawn with drawStar helper (alternating outer/inner radius)",
+                "Long directional light rays via roundRect + linear gradients",
+                "Diagonal rays at 45° offset",
+                "Multi-layer radial gradient glow (outer halo + center core)",
+                "Math.sin pulse animation for ambient glow breathing",
+                "Particle system: trail particles on movement, 4-point mini-stars + glowing dots",
+                "24-particle radial click burst with randomized velocities and lifetimes",
+                "Click flash decay ring animation",
+                "Hover scale spring animation (targetStarScale 1.35x on interactive elements)",
+                "ResizeObserver for canvas sizing",
+                "Scoped container mode via containerRef",
+                "Default cursor hiding via injected <style> tag"
+            ]
+        }
+    },
     "target-cursor": {
         props: [
             { name: "color", type: "string", default: '"#22d3ee"', description: "Primary color of the cursor frame and corners." },

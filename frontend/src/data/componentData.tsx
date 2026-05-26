@@ -22,6 +22,7 @@ const NeoBrutalism = React.lazy(() => import('../components/ui/NeoBrutalism'));
 const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then(m => ({ default: m.HeartCursor })));
 const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
+const StarCursor = React.lazy(() => import('../components/ui/StarCursor').then(m => ({ default: m.StarCursor })));
 
 const Robot3DBackground = React.lazy(() => import('../components/ui/Robot3DBackground').then(m => ({ default: m.Robot3DBackground })));
 const HoodieBot = React.lazy(() => import('../components/ui/HoodieBot'));
@@ -1018,6 +1019,104 @@ const LizardCursorPreview: React.FC = () => {
     );
 };
 
+// ── Star Cursor scoped preview ────────────
+const StarCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [isInside, setIsInside] = useState(false);
+    useEffect(() => { import('../components/ui/StarCursor'); }, []);
+
+    return (
+        <div
+            ref={containerRef}
+            onMouseEnter={() => setIsInside(true)}
+            onMouseLeave={() => setIsInside(false)}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                // Dark navy — matches the reference screenshot exactly
+                background: 'linear-gradient(160deg, #0a0e1a 0%, #07101e 40%, #050c18 70%, #030810 100%)',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 24,
+            }}
+        >
+            {/* Subtle star-field dots */}
+            <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                backgroundImage: `
+                    radial-gradient(circle, rgba(200,230,255,0.9) 1px, transparent 1px),
+                    radial-gradient(circle, rgba(150,200,255,0.5) 1px, transparent 1px),
+                    radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)
+                `,
+                backgroundSize: '130px 130px, 210px 210px, 85px 85px',
+                backgroundPosition: '10px 20px, 65px 70px, 35px 95px',
+            }} />
+            {/* Very faint cyan nebula hint */}
+            <div style={{
+                position: 'absolute', inset: 0, pointerEvents: 'none',
+                background: `
+                    radial-gradient(ellipse at 20% 70%, rgba(0,100,180,0.10) 0%, transparent 50%),
+                    radial-gradient(ellipse at 75% 25%, rgba(0,80,160,0.08) 0%, transparent 50%)
+                `,
+            }} />
+
+            {/* Interactive demo elements */}
+            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
+                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(0,220,240,0.45)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
+                    ✦ STAR CURSOR ✦
+                </div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {['EXPLORE', 'NEBULA', 'COSMOS'].map((label) => (
+                        <button key={label} style={{
+                            padding: '9px 18px',
+                            background: 'rgba(0,200,230,0.05)',
+                            border: '1px solid rgba(0,200,230,0.18)',
+                            borderRadius: 8,
+                            color: 'rgba(100,220,240,0.70)',
+                            fontSize: 9, fontWeight: 800,
+                            letterSpacing: '0.22em',
+                            cursor: 'none',
+                            transition: 'all 0.3s ease',
+                        }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(0,200,230,0.12)';
+                                e.currentTarget.style.borderColor = 'rgba(0,230,255,0.45)';
+                                e.currentTarget.style.boxShadow = '0 0 18px rgba(0,200,240,0.18), 0 0 40px rgba(0,180,220,0.08)';
+                                e.currentTarget.style.color = 'rgba(160,240,255,0.95)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(0,200,230,0.05)';
+                                e.currentTarget.style.borderColor = 'rgba(0,200,230,0.18)';
+                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.color = 'rgba(100,220,240,0.70)';
+                            }}
+                        >{label}</button>
+                    ))}
+                </div>
+                <div style={{
+                    padding: '12px 24px',
+                    background: 'rgba(0,180,220,0.05)',
+                    border: '1px solid rgba(0,180,220,0.12)',
+                    borderRadius: 10,
+                    color: 'rgba(80,200,225,0.40)',
+                    fontSize: 8, fontWeight: 700,
+                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
+                }}>MOVE CURSOR · CLICK TO BURST · HOVER TO GLOW</div>
+            </div>
+
+            {/* Star cursor — opacity-gated for performance */}
+            <div style={{ opacity: isInside ? 1 : 0, position: 'absolute', inset: 0, pointerEvents: 'none', transition: 'opacity 0.3s ease' }}>
+                <Suspense fallback={null}>
+                    <StarCursor containerRef={containerRef} hideDefaultCursor={true} />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1220,6 +1319,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'heart-cursor': HeartCursor,
     'lizard-cursor': LizardCursor,
     'venom-cursor': VenomCursor,
+    'star-cursor': StarCursor,
 
     'robot-3d-background': Robot3DBackground,
     'hoodiebot': HoodieBot,
@@ -2060,6 +2160,51 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
         vibePrompt: ""
     },
 
+    {
+        id: "star-cursor",
+        title: "Star Cursor ⭐",
+        category: "cursor",
+        preview: () => <StarCursorPreview />,
+        code: `import { StarCursor } from '@/components/ui/StarCursor';
+
+// Drop <StarCursor /> anywhere in your app (e.g. App.tsx or a layout root).
+// It attaches globally to the window and replaces the default cursor.
+export const Demo = () => (
+  <div className="relative w-full h-[500px] bg-black rounded-2xl overflow-hidden flex items-center justify-center">
+    <StarCursor starSize={28} />
+    <p className="text-white/30 text-sm tracking-widest uppercase font-bold">
+      Move your cursor · Click for cosmic burst
+    </p>
+  </div>
+);`,
+        vibePrompt: `Create an ultra premium futuristic SPACE STAR CUSTOM CURSOR React component called StarCursor.
+
+The cursor should look exactly like a glowing cosmic star with sharp light rays similar to a realistic shining star in space.
+
+CURSOR DESIGN:
+- Main cursor should be a bright white glowing star (8-point)
+- Long sharp light rays extending vertically, horizontally, and diagonally
+- Center should glow intensely with white and soft blue light
+- Add subtle galaxy colors like cyan, purple, and light blue around glow edges
+- Cursor must feel magical, cinematic, futuristic, and cosmic
+- High quality glassmorphism + bloom lighting effect using CSS shadowBlur and radial gradients
+- Soft particle sparkle around the cursor
+
+ANIMATION:
+- Cursor movement must be ultra smooth with spring physics (requestAnimationFrame)
+- When mouse moves, tiny star particles break away (trail effect)
+- Particles fade smoothly, some are 4-point mini stars, some are glowing dots
+- Cursor glow pulses slowly with Math.sin wave
+
+HOVER EFFECT:
+- On hovering buttons/links: cursor expands (scale 1.35x), glow intensifies
+
+CLICK EFFECT:
+- On click: radial cosmic burst (24 particles), click flash ring, strong glow flash
+
+TECH: React + TypeScript + Canvas 2D API + requestAnimationFrame + mix-blend-mode: screen
+Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultCursor, className`
+    },
     {
         id: "black-box",
         title: "Black Box",
