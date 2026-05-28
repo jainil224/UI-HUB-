@@ -35,6 +35,7 @@ const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
 const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 const ParticlesBackground = React.lazy(() => import('../components/ui/ParticlesBackground'));
 const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
+const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 
 
 
@@ -1264,10 +1265,11 @@ const ThreeDSliderPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "portfolios" | "3d-chatbot";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "portfolios" | "3d-chatbot" | "scroll";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
+    description?: string;
     uploader?: string;
     imageUrl?: string;
     isPremium?: boolean;
@@ -1332,6 +1334,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     '3d-hero': ToonhubHero,
     'particles-background': ParticlesBackground,
     'fourier-flow': FourierFlow,
+    'svg-page-transition': SVGPageTransition,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2275,6 +2278,14 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         preview: renderComponent("fourier-flow", "FourierFlow"),
         code: `import FourierFlow from '@/components/ui/FourierFlow';\n\nexport const Demo = () => (\n  <div className="w-full h-[500px] flex items-center justify-center bg-[#050505] rounded-3xl overflow-hidden">\n    <FourierFlow />\n  </div>\n);`,
         vibePrompt: "Create a mathematical 'FourierFlow' loading curve visualizer in React + TSX. Implement mathematical $x(t)$ and $y(t)$ coordinates mapping using harmonic cosines and sines with a dynamic breathing variable $m = 1.0 + 0.16s$ pulsing along with requestAnimationFrame. Design visual presets including Neon Emerald, Vaporwave Cyan/Pink, Solar Gold, and Cosmic Indigo. Include toggles for real-time slider customizability, formula visualization, background grid showing, speed multiplication, and trail particle counts."
+    },
+    {
+        id: "svg-page-transition",
+        title: "SVG Page Transition",
+        category: "scroll",
+        preview: renderComponent("svg-page-transition", "SVGPageTransition"),
+        code: `import { SVGPageTransition } from '@/components/ui/SVGPageTransition';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <SVGPageTransition />\n    </div>\n  );\n}`,
+        vibePrompt: "Create a fluid, high-performance SVG double-stroke vector page transition with HTML, CSS, and GSAP. Set up a technical background and three navbar buttons (Home, About, Contact) to simulate route changes. Stagger two wide, round-capped SVG paths across the viewport with custom timeline offsets, scaling, and stroke widths, and swap pages elegantly."
     }
 ];
 

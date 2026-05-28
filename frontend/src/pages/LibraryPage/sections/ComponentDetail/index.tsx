@@ -701,6 +701,17 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         }
         if (!item) return;
         
+        // Specialized handling for SVG Page Transition to download pre-packaged zip
+        if (item.id === 'svg-page-transition') {
+            const link = document.createElement('a');
+            link.href = '/assets/svg-page-transition/svg-stroke-page-transition.zip';
+            link.download = 'svg-stroke-page-transition.zip';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            return;
+        }
+
         // Specialized handling for Rubiks Cube to include pre-packaged original images
         if (item.id === '3d-rubiks-cube') {
             const link = document.createElement('a');
@@ -853,7 +864,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             <AnimatePresence mode="wait">
                                 {tab === 'preview' && (
                                     <div className="flex items-center gap-3">
-                                        {(item.category === 'portfolios' || item.category === '3d' || item.category === '3d-chatbot' || item.id.startsWith('3d-')) && (
+                                        {(item.category === 'portfolios' || item.category === '3d' || item.category === '3d-chatbot' || item.id.startsWith('3d-') || item.category === 'scroll') && (
                                             <Link
                                                 to={item.id === '3d-scroll-animation' ? '/demo/3d-scroll-animation' : 
                                                     item.id === '3d-slider' ? '/demo/3d-slider' : 
@@ -874,7 +885,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                                             </Link>
                                         )}
-                                            {(item.id === '3d-scroll-animation' || item.id === '3d-slider' || item.id === '3d-rubiks-cube') && (
+                                            {(item.id === '3d-scroll-animation' || item.id === '3d-slider' || item.id === '3d-rubiks-cube' || item.id === 'svg-page-transition') && (
                                                 <motion.button
                                                     initial={{ opacity: 0, x: 20 }}
                                                     animate={{ opacity: 1, x: 0 }}

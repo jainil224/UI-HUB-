@@ -24,6 +24,7 @@ const CATEGORY_META: Record<string, { icon: string; color: string; glow: string;
     "Portfolios":             { icon: "▣",  color: "text-blue-400",    glow: "shadow-[0_0_12px_rgba(96,165,250,0.5)]",  bg: "bg-blue-400/10",    border: "border-blue-400/20" },
     "Community Uploads":      { icon: "✿",  color: "text-rose-400",    glow: "shadow-[0_0_12px_rgba(251,113,133,0.5)]", bg: "bg-rose-400/10",    border: "border-rose-400/20" },
     "3D CHATBOT":             { icon: "🤖", color: "text-lime-400",    glow: "shadow-[0_0_12px_rgba(163,230,53,0.5)]", bg: "bg-lime-400/10",    border: "border-lime-400/20" },
+    "Scroll Animation":       { icon: "↕",  color: "text-indigo-400",  glow: "shadow-[0_0_12px_rgba(129,140,248,0.5)]", bg: "bg-indigo-400/10",  border: "border-indigo-400/20" },
 };
 const DEFAULT_META = { icon: "◆", color: "text-white/50", glow: "", bg: "bg-white/5", border: "border-white/10" };
 
@@ -96,6 +97,7 @@ const LibraryPage = () => {
         { name: "3D CHATBOT", items: allComponents.filter(item => item.category === '3d-chatbot') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
+        { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
         { name: "Portfolios", items: allComponents.filter(item => item.category === 'portfolios') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ];
@@ -114,7 +116,7 @@ const LibraryPage = () => {
                 )
             };
         })
-        .filter(cat => cat.items.length > 0 || (searchQuery === '' && cat.name === "3D CHATBOT"));
+        .filter(cat => cat.items.length > 0 || (searchQuery === '' && (cat.name === "3D CHATBOT" || cat.name === "Scroll Animation")));
 
     // Initial expansion: expand the active component's category
     useEffect(() => {
