@@ -124,7 +124,9 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
 
   return (
     <div
-      className={`relative w-full h-full min-h-[500px] bg-[#111] font-sans overflow-hidden ${className}`}
+      className={`relative w-full h-full min-h-[500px] bg-[#111] font-sans ${
+        showDemoButton ? "overflow-hidden" : ""
+      } ${className}`}
     >
       {/* Premium UI HUB Brand Badge */}
       <div className="absolute top-6 right-6 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10 select-none">
