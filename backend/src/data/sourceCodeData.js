@@ -10,6 +10,485 @@
 
 export const EMBEDDED_SOURCE_CODE = {
 
+  'section-scroll': `import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import { ExternalLink } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+
+gsap.registerPlugin(ScrollTrigger);
+
+interface SectionScrollProps {
+  className?: string;
+  showDemoButton?: boolean;
+}
+
+export const SectionScroll: React.FC<SectionScrollProps> = ({
+  className = "",
+  showDemoButton = false
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (!containerRef.current) return;
+
+    // Detect the nearest scroll container (for library preview vs standalone viewport)
+    const scroller = containerRef.current.closest('.overflow-y-auto, .overflow-auto') || window;
+    const panels = containerRef.current.querySelectorAll('.panel');
+
+    if (showDemoButton) {
+      // ── Preview Mode: Scroll-linked animation driven by main page scroll ──
+      gsap.set(panels, {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+      });
+
+      panels.forEach((panel, index) => {
+        if (index > 0) {
+          const innerContainer = panel.querySelector('.panel-container');
+          gsap.set(panel, { yPercent: 100, zIndex: index });
+          gsap.set(innerContainer, { rotate: 25, transformOrigin: "bottom left" });
+        } else {
+          gsap.set(panel, { zIndex: 0 });
+        }
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          scroller: scroller,
+          start: "top 85%",
+          end: "bottom 15%",
+          scrub: 1,
+          invalidateOnRefresh: true,
+        }
+      });
+
+      panels.forEach((panel, index) => {
+        if (index > 0) {
+          const innerContainer = panel.querySelector('.panel-container');
+          tl.to(panel, {
+            yPercent: 0,
+            ease: "none",
+          }, \`stage-\${index}\`)
+          .to(innerContainer, {
+            rotate: 0,
+            ease: "none",
+          }, \`stage-\${index}\`);
+          
+          tl.to({}, { duration: 0.2 }); // hold slightly
+        }
+      });
+
+      return () => {
+        tl.kill();
+        ScrollTrigger.getAll().forEach(st => st.kill());
+      };
+    } else {
+      // ── Full Scroll Mode: Original GSAP ScrollTrigger ──
+      panels.forEach((panel, index) => {
+        const innerContainer = panel.querySelector('.panel-container');
+
+        // 1. Entry Rotation Animation
+        gsap.fromTo(innerContainer,
+          {
+            rotate: 25,
+            transformOrigin: "bottom left"
+          },
+          {
+            rotate: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              scroller: scroller,
+              start: "top bottom",
+              end: "top center",
+              scrub: true,
+              invalidateOnRefresh: true,
+            }
+          }
+        );
+
+        // 2. Section Pinning (except for the last section)
+        if (index !== panels.length - 1) {
+          ScrollTrigger.create({
+            trigger: panel,
+            scroller: scroller,
+            start: "bottom bottom",
+            end: "bottom top",
+            pin: true,
+            pinSpacing: false,
+            invalidateOnRefresh: true,
+          });
+        }
+      });
+
+      return () => {
+        ScrollTrigger.getAll().forEach(st => st.kill());
+      };
+    }
+  }, { scope: containerRef });
+
+  return (
+    <div
+      className={\`relative w-full h-full min-h-[500px] bg-[#111] font-sans overflow-hidden \${className}\`}
+    >
+      {/* Premium UI HUB Brand Badge */}
+      <div className="absolute top-6 right-6 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10 select-none">
+        <img 
+          src="/logo.png" 
+          alt="UI HUB" 
+          className="w-3.5 h-3.5 object-contain" 
+          onError={(e) => { e.currentTarget.style.display = 'none'; }} 
+        />
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white leading-none">UI HUB</span>
+        <div className="w-1 h-1 rounded-full bg-brand-green animate-pulse" />
+      </div>
+
+      <div
+        ref={containerRef}
+        className={\`w-full h-full \${
+          showDemoButton 
+            ? "absolute inset-0 overflow-hidden" 
+            : "relative overflow-x-hidden"
+        }\`}
+      >
+        {/* Full Scroll Mode: Show all interactive panels */}
+        <main className={\`w-full \${showDemoButton ? 'h-full absolute inset-0' : 'relative'}\`}>
+          {/* Panel One */}
+          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+            <div className={\`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#d8d3c4] text-black transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+              <div className="flex-1 flex items-center">
+                <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
+                  Entry Point
+                </h1>
+              </div>
+              <div className="flex-1 flex items-center md:pl-12">
+                <div className="space-y-6">
+                  <span className="text-xs font-black uppercase tracking-[0.25em] text-black/30">01 // UI HUB ARCHITECTURE</span>
+                  <p className="text-lg md:text-2xl leading-relaxed max-w-xl font-medium opacity-80">
+                    This space introduces an initial idea without defining its outcome.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Panel Two */}
+          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+            <div className={\`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#1d1d1d] text-white transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+              <div className="flex-1 flex items-center justify-center py-8">
+                <div className="w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+                  <img
+                    src="/assets/section-scroll/img1.jpg"
+                    alt="Gesture"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                </div>
+              </div>
+              <div className="flex-1 flex flex-col justify-between py-12 md:pl-16">
+                <span className="text-xs font-black uppercase tracking-[0.25em] text-white/30">02 // UI HUB EXPRESSION</span>
+                <div className="space-y-6">
+                  <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
+                    Gesture
+                  </h1>
+                  <p className="text-lg md:text-xl leading-relaxed max-w-xl opacity-75">
+                    Form and expression intersect without explanation.
+                  </p>
+                </div>
+                <div className="h-4" />
+              </div>
+            </div>
+          </section>
+
+          {/* Panel Three */}
+          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+            <div className={\`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#8f7cff] text-black transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+              <div className="flex-1 flex flex-col justify-between py-12 md:pr-16 order-2 md:order-1">
+                <span className="text-xs font-black uppercase tracking-[0.25em] text-black/40">03 // UI HUB VARIATION</span>
+                <div className="space-y-6">
+                  <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
+                    Variation
+                  </h1>
+                  <p className="text-lg md:text-xl leading-relaxed max-w-xl opacity-80 font-medium">
+                    Repetition is avoided in favor of subtle change.
+                  </p>
+                </div>
+                <div className="h-4" />
+              </div>
+              <div className="flex-1 flex items-center justify-center py-8 order-1 md:order-2">
+                <div className="w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl">
+                  <img
+                    src="/assets/section-scroll/img2.jpg"
+                    alt="Variation"
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                  />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Panel Four */}
+          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+            <div className={\`panel-container p-8 md:p-16 flex flex-col items-center justify-center bg-[#f0c808] text-black text-center transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
+              <div className="w-full md:w-[45%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl mb-8">
+                <img
+                  src="/assets/section-scroll/img3.jpg"
+                  alt="The Stance"
+                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+              </div>
+              <div className="space-y-4 max-w-2xl">
+                <span className="text-xs font-black uppercase tracking-[0.25em] text-black/40 block mb-2">04 // UI HUB OUTCOME</span>
+                <h1 className="text-4xl sm:text-6xl md:text-8xl font-black uppercase leading-none tracking-tight">
+                  The Stance
+                </h1>
+                <p className="text-lg md:text-2xl leading-relaxed font-medium opacity-85">
+                  A clearer position begins to take shape.
+                </p>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+  );
+};
+`,
+
+  'svg-page-transition': `import React, { useRef, useState, useEffect } from 'react';
+import { gsap } from 'gsap';
+
+interface SVGPageTransitionProps {
+  containerRef?: React.RefObject<HTMLDivElement | null>;
+}
+
+export const SVGPageTransition: React.FC<SVGPageTransitionProps> = ({ containerRef }) => {
+  const localContainerRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState<'home' | 'about' | 'contact'>('home');
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  
+  const path1Ref = useRef<SVGPathElement>(null);
+  const path2Ref = useRef<SVGPathElement>(null);
+
+  const activeContainer = containerRef || localContainerRef;
+
+  // Initialize SVG stroke dasharray and dashoffset
+  useEffect(() => {
+    const p1 = path1Ref.current;
+    const p2 = path2Ref.current;
+
+    if (p1 && p2) {
+      const len1 = p1.getTotalLength();
+      const len2 = p2.getTotalLength();
+
+      // Setup initial styles
+      p1.style.strokeDasharray = \`\${len1}\`;
+      p1.style.strokeDashoffset = \`\${len1}\`;
+
+      p2.style.strokeDasharray = \`\${len2}\`;
+      p2.style.strokeDashoffset = \`\${len2}\`;
+    }
+  }, []);
+
+  const leave = () => {
+    return new Promise<void>((resolve) => {
+      const p1 = path1Ref.current;
+      const p2 = path2Ref.current;
+
+      if (!p1 || !p2) {
+        resolve();
+        return;
+      }
+
+      const tl = gsap.timeline({ onComplete: resolve });
+
+      // Animating paths drawing in
+      tl.to(p1, {
+        strokeDashoffset: 0,
+        attr: { "stroke-width": 700 },
+        duration: 0.85,
+        ease: "power2.inOut",
+      }, 0);
+
+      tl.to(p2, {
+        strokeDashoffset: 0,
+        attr: { "stroke-width": 700 },
+        duration: 0.85,
+        ease: "power2.inOut",
+      }, 0.08); // Slight stagger for depth
+    });
+  };
+
+  const enter = () => {
+    return new Promise<void>((resolve) => {
+      const p1 = path1Ref.current;
+      const p2 = path2Ref.current;
+
+      if (!p1 || !p2) {
+        resolve();
+        return;
+      }
+
+      const len1 = p1.getTotalLength();
+      const len2 = p2.getTotalLength();
+
+      const tl = gsap.timeline({ onComplete: resolve });
+
+      // Animating paths drawing out
+      tl.to(p1, {
+        strokeDashoffset: -len1,
+        attr: { "stroke-width": 200 },
+        duration: 0.85,
+        ease: "power2.inOut",
+        onComplete: () => {
+          gsap.set(p1, { strokeDashoffset: len1 });
+        }
+      }, 0);
+
+      tl.to(p2, {
+        strokeDashoffset: -len2,
+        attr: { "stroke-width": 200 },
+        duration: 0.85,
+        ease: "power2.inOut",
+        onComplete: () => {
+          gsap.set(p2, { strokeDashoffset: len2 });
+        }
+      }, 0.08);
+    });
+  };
+
+  const handleNavigation = async (page: 'home' | 'about' | 'contact') => {
+    if (isTransitioning || page === currentPage) return;
+    setIsTransitioning(true);
+
+    // Draw transition overlay
+    await leave();
+
+    // Switch page content
+    setCurrentPage(page);
+
+    // Wipe transition overlay away
+    await enter();
+
+    setIsTransitioning(false);
+  };
+
+  const getPageContent = () => {
+    switch (currentPage) {
+      case 'home':
+        return (
+          <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
+            <h1 className="text-6xl md:text-[9rem] font-black uppercase tracking-tight text-white select-none animate-pulse duration-[3000ms]">
+              HOME
+            </h1>
+            <p className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-[0.25em] max-w-md">
+              SVG WIPE-DRAW PAGE TRANSITION INTERACTIVE SHOWCASE
+            </p>
+          </div>
+        );
+      case 'about':
+        return (
+          <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
+            <h1 className="text-6xl md:text-[9rem] font-black uppercase tracking-tight text-indigo-400 select-none">
+              ABOUT
+            </h1>
+            <p className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-[0.25em] max-w-md">
+              POWERED BY HIGH-PERFORMANCE GSAP VECTOR MORPHING
+            </p>
+          </div>
+        );
+      case 'contact':
+        return (
+          <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
+            <h1 className="text-6xl md:text-[9rem] font-black uppercase tracking-tight text-cyan-400 select-none">
+              CONTACT
+            </h1>
+            <p className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-[0.25em] max-w-md">
+              CONNECT MULTIPLE WEB PAGES SEAMLESSLY
+            </p>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div
+      ref={localContainerRef}
+      className="relative w-full h-full min-h-[400px] overflow-hidden bg-[#040406]"
+      style={{
+        backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 80%), radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%)',
+        fontFamily: "'Outfit', 'Inter', sans-serif"
+      }}
+    >
+      {/* Pinned Mock Navbar */}
+      <nav className="absolute top-0 inset-x-0 h-16 flex items-center justify-between px-6 z-10 bg-black/10 backdrop-blur-md border-b border-white/[0.04]">
+        <div className="text-white font-black tracking-tight text-sm md:text-base">
+          UI<span className="text-indigo-400">HUB</span>
+        </div>
+        <ul className="flex gap-1 bg-white/[0.03] border border-white/[0.05] p-1 rounded-full">
+          {(['home', 'about', 'contact'] as const).map((page) => (
+            <li key={page}>
+              <button
+                onClick={() => handleNavigation(page)}
+                disabled={isTransitioning}
+                className={\`px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider transition-all duration-300 \${
+                  currentPage === page
+                    ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)]'
+                    : 'text-white/50 hover:text-white hover:bg-white/[0.03]'
+                }\`}
+              >
+                {page}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* Page Content Screen */}
+      <div className="w-full h-full pt-16">
+        {getPageContent()}
+      </div>
+
+      {/* SVG Transition Layer */}
+      <div 
+        className="absolute -inset-[30%] pointer-events-none z-50 flex items-center justify-center"
+      >
+        <svg
+          viewBox="0 0 2453 2535"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
+          className="w-full h-full"
+        >
+          <path
+            ref={path1Ref}
+            d="M227.549 1818.76C227.549 1818.76 406.016 2207.75 569.049 2130.26C843.431 1999.85 -264.104 1002.3 227.549 876.262C552.918 792.849 773.647 2456.11 1342.05 2130.26C1885.43 1818.76 14.9644 455.772 760.548 137.262C1342.05 -111.152 1663.5 2266.35 2209.55 1972.76C2755.6 1679.18 1536.63 384.467 1826.55 137.262C2013.5 -22.1463 2209.55 381.262 2209.55 381.262"
+            stroke="#16151f"
+            strokeWidth="200"
+            strokeLinecap="round"
+            shapeRendering="geometricPrecision"
+          />
+          <path
+            ref={path2Ref}
+            d="M1661.28 2255.51C1661.28 2255.51 2311.09 1960.37 2111.78 1817.01C1944.47 1696.67 718.456 2870.17 499.781 2255.51C308.969 1719.17 2457.51 1613.83 2111.78 963.512C1766.05 313.198 427.949 2195.17 132.281 1455.51C-155.219 736.292 2014.78 891.514 1708.78 252.012C1437.81 -314.29 369.471 909.169 132.281 566.512C18.1772 401.672 244.781 193.012 244.781 193.012"
+            stroke="#6366f1"
+            strokeWidth="200"
+            strokeLinecap="round"
+            shapeRendering="geometricPrecision"
+          />
+        </svg>
+      </div>
+    </div>
+  );
+};
+`,
+
   'liquid-glass': `import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '../../lib/utils';
 import { motion, useMotionValue, useSpring } from 'motion/react';
@@ -2941,490 +3420,874 @@ export const FourierFlow: React.FC<FourierFlowProps> = ({
 export default FourierFlow;
 `,
 
+  'glow-button': `import React, { useState, useEffect, useRef } from 'react';
+import { cn } from '../../lib/utils';
+import { motion, useMotionValue, useSpring } from 'motion/react';
+import { SocialTooltipButtons } from './SocialTooltipButtons';
+export { SocialTooltipButtons };
+import { LiquidGlassCard } from '../ui/LiquidGlassCard';
+import {
+    Cloud,
+    CloudSun,
+    CloudRain,
+    Sun,
+    MapPin,
+    CloudSunRain,
+    Zap,
+    Sparkles,
+    Crown,
+    ChevronLeft,
+    ChevronRight,
+    MoveUpRight as ArrowIcon
+} from 'lucide-react';
+import { PaymentTransactionButton as PaymentTransactionButtonUI } from '../ui/payment-transaction-button';
+import { MagicCard as MagicCardUI } from '../ui/magic-card';
+import { RainbowButton as RainbowButtonUI } from '../ui/rainbow-button';
+import { OrbitButton as OrbitButtonUI } from '../ui/OrbitButton';
+import { GalaxyButton as GalaxyButtonUI } from '../ui/GalaxyButton';
+import { LiquidFillButton as LiquidFillButtonUI } from '../ui/LiquidFillButton';
+import { NeonFlickerButton as NeonFlickerButtonUI } from '../ui/NeonFlickerButton';
+import { Robot3DBackground as Robot3DBackgroundUI } from '../ui/Robot3DBackground';
 
+export { OrbitButtonUI as OrbitButton };
+export { GalaxyButtonUI as GalaxyButton };
+export { LiquidFillButtonUI as LiquidFillButton };
+export { NeonFlickerButtonUI as NeonFlickerButton };
+export { Robot3DBackgroundUI as Robot3DBackground };
 
-  'section-scroll': `import React, { useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { ExternalLink } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
-
-gsap.registerPlugin(ScrollTrigger);
-
-interface SectionScrollProps {
-  className?: string;
-  showDemoButton?: boolean;
+// 1. Liquid-Glass (Weather Dashboard Example)
+export interface LiquidGlassProps {
+    backgroundImage?: string;
+    location?: string;
+    temp?: string;
+    className?: string;
 }
 
-export const SectionScroll: React.FC<SectionScrollProps> = ({
-  className = "",
-  showDemoButton = false
-}) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  useGSAP(() => {
-    if (!containerRef.current) return;
-
-    // Detect the nearest scroll container (for library preview vs standalone viewport)
-    const scroller = containerRef.current.closest('.overflow-y-auto, .overflow-auto') || window;
-    const panels = containerRef.current.querySelectorAll('.panel');
-
-    if (showDemoButton) {
-      // ── Preview Mode: Scroll-linked animation driven by main page scroll ──
-      gsap.set(panels, {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-      });
-
-      panels.forEach((panel, index) => {
-        if (index > 0) {
-          const innerContainer = panel.querySelector('.panel-container');
-          gsap.set(panel, { yPercent: 100, zIndex: index });
-          gsap.set(innerContainer, { rotate: 25, transformOrigin: "bottom left" });
-        } else {
-          gsap.set(panel, { zIndex: 0 });
-        }
-      });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          scroller: scroller,
-          start: "top 85%",
-          end: "bottom 15%",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        }
-      });
-
-      panels.forEach((panel, index) => {
-        if (index > 0) {
-          const innerContainer = panel.querySelector('.panel-container');
-          tl.to(panel, {
-            yPercent: 0,
-            ease: "none",
-          }, \`stage-\${index}\`)
-          .to(innerContainer, {
-            rotate: 0,
-            ease: "none",
-          }, \`stage-\${index}\`);
-          
-          tl.to({}, { duration: 0.2 }); // hold slightly
-        }
-      });
-
-      return () => {
-        tl.kill();
-        ScrollTrigger.getAll().forEach(st => st.kill());
-      };
-    } else {
-      // ── Full Scroll Mode: Original GSAP ScrollTrigger ──
-      panels.forEach((panel, index) => {
-        const innerContainer = panel.querySelector('.panel-container');
-
-        // 1. Entry Rotation Animation
-        gsap.fromTo(innerContainer,
-          {
-            rotate: 25,
-            transformOrigin: "bottom left"
-          },
-          {
-            rotate: 0,
-            ease: "none",
-            scrollTrigger: {
-              trigger: panel,
-              scroller: scroller,
-              start: "top bottom",
-              end: "top center",
-              scrub: true,
-              invalidateOnRefresh: true,
-            }
-          }
-        );
-
-        // 2. Section Pinning (except for the last section)
-        if (index !== panels.length - 1) {
-          ScrollTrigger.create({
-            trigger: panel,
-            scroller: scroller,
-            start: "bottom bottom",
-            end: "bottom top",
-            pin: true,
-            pinSpacing: false,
-            invalidateOnRefresh: true,
-          });
-        }
-      });
-
-      return () => {
-        ScrollTrigger.getAll().forEach(st => st.kill());
-      };
-    }
-  }, { scope: containerRef });
-
-  return (
-    <div
-      className={\`relative w-full h-full min-h-[500px] bg-[#111] font-sans overflow-hidden \${className}\`}
-    >
-      {/* Premium UI HUB Brand Badge */}
-      <div className="absolute top-6 right-6 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10 select-none">
-        <img 
-          src="/logo.png" 
-          alt="UI HUB" 
-          className="w-3.5 h-3.5 object-contain" 
-          onError={(e) => { e.currentTarget.style.display = 'none'; }} 
-        />
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white leading-none">UI HUB</span>
-        <div className="w-1 h-1 rounded-full bg-brand-green animate-pulse" />
-      </div>
-
-      <div
-        ref={containerRef}
-        className={\`w-full h-full \${
-          showDemoButton 
-            ? "absolute inset-0 overflow-hidden" 
-            : "relative overflow-x-hidden"
-        }\`}
-      >
-        {/* Full Scroll Mode: Show all interactive panels */}
-        <main className={\`w-full \${showDemoButton ? 'h-full absolute inset-0' : 'relative'}\`}>
-          {/* Panel One */}
-          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-            <div className={\`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#d8d3c4] text-black transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-              <div className="flex-1 flex items-center">
-                <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
-                  Entry Point
-                </h1>
-              </div>
-              <div className="flex-1 flex items-center md:pl-12">
-                <div className="space-y-6">
-                  <span className="text-xs font-black uppercase tracking-[0.25em] text-black/30">01 // UI HUB ARCHITECTURE</span>
-                  <p className="text-lg md:text-2xl leading-relaxed max-w-xl font-medium opacity-80">
-                    This space introduces an initial idea without defining its outcome.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Panel Two */}
-          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-            <div className={\`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#1d1d1d] text-white transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-              <div className="flex-1 flex items-center justify-center py-8">
-                <div className="w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
-                  <img
-                    src="/assets/section-scroll/img1.jpg"
-                    alt="Gesture"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                </div>
-              </div>
-              <div className="flex-1 flex flex-col justify-between py-12 md:pl-16">
-                <span className="text-xs font-black uppercase tracking-[0.25em] text-white/30">02 // UI HUB EXPRESSION</span>
-                <div className="space-y-6">
-                  <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
-                    Gesture
-                  </h1>
-                  <p className="text-lg md:text-xl leading-relaxed max-w-xl opacity-75">
-                    Form and expression intersect without explanation.
-                  </p>
-                </div>
-                <div className="h-4" />
-              </div>
-            </div>
-          </section>
-
-          {/* Panel Three */}
-          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-            <div className={\`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#8f7cff] text-black transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-              <div className="flex-1 flex flex-col justify-between py-12 md:pr-16 order-2 md:order-1">
-                <span className="text-xs font-black uppercase tracking-[0.25em] text-black/40">03 // UI HUB VARIATION</span>
-                <div className="space-y-6">
-                  <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
-                    Variation
-                  </h1>
-                  <p className="text-lg md:text-xl leading-relaxed max-w-xl opacity-80 font-medium">
-                    Repetition is avoided in favor of subtle change.
-                  </p>
-                </div>
-                <div className="h-4" />
-              </div>
-              <div className="flex-1 flex items-center justify-center py-8 order-1 md:order-2">
-                <div className="w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl">
-                  <img
-                    src="/assets/section-scroll/img2.jpg"
-                    alt="Variation"
-                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                  />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Panel Four */}
-          <section className={\`panel overflow-hidden relative w-full \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-            <div className={\`panel-container p-8 md:p-16 flex flex-col items-center justify-center bg-[#f0c808] text-black text-center transition-all will-change-transform \${showDemoButton ? 'h-full' : 'min-h-screen'}\`}>
-              <div className="w-full md:w-[45%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl mb-8">
-                <img
-                  src="/assets/section-scroll/img3.jpg"
-                  alt="The Stance"
-                  className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                />
-              </div>
-              <div className="space-y-4 max-w-2xl">
-                <span className="text-xs font-black uppercase tracking-[0.25em] text-black/40 block mb-2">04 // UI HUB OUTCOME</span>
-                <h1 className="text-4xl sm:text-6xl md:text-8xl font-black uppercase leading-none tracking-tight">
-                  The Stance
-                </h1>
-                <p className="text-lg md:text-2xl leading-relaxed font-medium opacity-85">
-                  A clearer position begins to take shape.
-                </p>
-              </div>
-            </div>
-          </section>
-        </main>
-      </div>
-    </div>
-  );
-};
-`,
-
-  'svg-page-transition': `import React, { useRef, useState, useEffect } from 'react';
-import { gsap } from 'gsap';
-
-interface SVGPageTransitionProps {
-  containerRef?: React.RefObject<HTMLDivElement | null>;
-}
-
-export const SVGPageTransition: React.FC<SVGPageTransitionProps> = ({ containerRef }) => {
-  const localContainerRef = useRef<HTMLDivElement>(null);
-  const [currentPage, setCurrentPage] = useState<'home' | 'about' | 'contact'>('home');
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  
-  const path1Ref = useRef<SVGPathElement>(null);
-  const path2Ref = useRef<SVGPathElement>(null);
-
-  const activeContainer = containerRef || localContainerRef;
-
-  // Initialize SVG stroke dasharray and dashoffset
-  useEffect(() => {
-    const p1 = path1Ref.current;
-    const p2 = path2Ref.current;
-
-    if (p1 && p2) {
-      const len1 = p1.getTotalLength();
-      const len2 = p2.getTotalLength();
-
-      // Setup initial styles
-      p1.style.strokeDasharray = \`\${len1}\`;
-      p1.style.strokeDashoffset = \`\${len1}\`;
-
-      p2.style.strokeDasharray = \`\${len2}\`;
-      p2.style.strokeDashoffset = \`\${len2}\`;
-    }
-  }, []);
-
-  const leave = () => {
-    return new Promise<void>((resolve) => {
-      const p1 = path1Ref.current;
-      const p2 = path2Ref.current;
-
-      if (!p1 || !p2) {
-        resolve();
-        return;
-      }
-
-      const tl = gsap.timeline({ onComplete: resolve });
-
-      // Animating paths drawing in
-      tl.to(p1, {
-        strokeDashoffset: 0,
-        attr: { "stroke-width": 700 },
-        duration: 0.85,
-        ease: "power2.inOut",
-      }, 0);
-
-      tl.to(p2, {
-        strokeDashoffset: 0,
-        attr: { "stroke-width": 700 },
-        duration: 0.85,
-        ease: "power2.inOut",
-      }, 0.08); // Slight stagger for depth
-    });
-  };
-
-  const enter = () => {
-    return new Promise<void>((resolve) => {
-      const p1 = path1Ref.current;
-      const p2 = path2Ref.current;
-
-      if (!p1 || !p2) {
-        resolve();
-        return;
-      }
-
-      const len1 = p1.getTotalLength();
-      const len2 = p2.getTotalLength();
-
-      const tl = gsap.timeline({ onComplete: resolve });
-
-      // Animating paths drawing out
-      tl.to(p1, {
-        strokeDashoffset: -len1,
-        attr: { "stroke-width": 200 },
-        duration: 0.85,
-        ease: "power2.inOut",
-        onComplete: () => {
-          gsap.set(p1, { strokeDashoffset: len1 });
-        }
-      }, 0);
-
-      tl.to(p2, {
-        strokeDashoffset: -len2,
-        attr: { "stroke-width": 200 },
-        duration: 0.85,
-        ease: "power2.inOut",
-        onComplete: () => {
-          gsap.set(p2, { strokeDashoffset: len2 });
-        }
-      }, 0.08);
-    });
-  };
-
-  const handleNavigation = async (page: 'home' | 'about' | 'contact') => {
-    if (isTransitioning || page === currentPage) return;
-    setIsTransitioning(true);
-
-    // Draw transition overlay
-    await leave();
-
-    // Switch page content
-    setCurrentPage(page);
-
-    // Wipe transition overlay away
-    await enter();
-
-    setIsTransitioning(false);
-  };
-
-  const getPageContent = () => {
-    switch (currentPage) {
-      case 'home':
-        return (
-          <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
-            <h1 className="text-6xl md:text-[9rem] font-black uppercase tracking-tight text-white select-none animate-pulse duration-[3000ms]">
-              HOME
-            </h1>
-            <p className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-[0.25em] max-w-md">
-              SVG WIPE-DRAW PAGE TRANSITION INTERACTIVE SHOWCASE
-            </p>
-          </div>
-        );
-      case 'about':
-        return (
-          <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
-            <h1 className="text-6xl md:text-[9rem] font-black uppercase tracking-tight text-indigo-400 select-none">
-              ABOUT
-            </h1>
-            <p className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-[0.25em] max-w-md">
-              POWERED BY HIGH-PERFORMANCE GSAP VECTOR MORPHING
-            </p>
-          </div>
-        );
-      case 'contact':
-        return (
-          <div className="flex flex-col items-center justify-center h-full gap-4 text-center px-6">
-            <h1 className="text-6xl md:text-[9rem] font-black uppercase tracking-tight text-cyan-400 select-none">
-              CONTACT
-            </h1>
-            <p className="text-white/40 text-xs md:text-sm font-semibold uppercase tracking-[0.25em] max-w-md">
-              CONNECT MULTIPLE WEB PAGES SEAMLESSLY
-            </p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div
-      ref={localContainerRef}
-      className="relative w-full h-full min-h-[400px] overflow-hidden bg-[#040406]"
-      style={{
-        backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 80%), radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%)',
-        fontFamily: "'Outfit', 'Inter', sans-serif"
-      }}
-    >
-      {/* Pinned Mock Navbar */}
-      <nav className="absolute top-0 inset-x-0 h-16 flex items-center justify-between px-6 z-10 bg-black/10 backdrop-blur-md border-b border-white/[0.04]">
-        <div className="text-white font-black tracking-tight text-sm md:text-base">
-          UI<span className="text-indigo-400">HUB</span>
-        </div>
-        <ul className="flex gap-1 bg-white/[0.03] border border-white/[0.05] p-1 rounded-full">
-          {(['home', 'about', 'contact'] as const).map((page) => (
-            <li key={page}>
-              <button
-                onClick={() => handleNavigation(page)}
-                disabled={isTransitioning}
-                className={\`px-4 py-1.5 rounded-full text-[10px] md:text-xs font-black uppercase tracking-wider transition-all duration-300 \${
-                  currentPage === page
-                    ? 'bg-indigo-500 text-white shadow-[0_0_15px_rgba(99,102,241,0.5)]'
-                    : 'text-white/50 hover:text-white hover:bg-white/[0.03]'
-                }\`}
-              >
-                {page}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      {/* Page Content Screen */}
-      <div className="w-full h-full pt-16">
-        {getPageContent()}
-      </div>
-
-      {/* SVG Transition Layer */}
-      <div 
-        className="absolute -inset-[30%] pointer-events-none z-50 flex items-center justify-center"
-      >
-        <svg
-          viewBox="0 0 2453 2535"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          className="w-full h-full"
+export const LiquidGlass = ({
+    backgroundImage = "url('https://images.unsplash.com/photo-1590867286251-8e26d9f255c0?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
+    location = "Surat",
+    temp = "+18°C",
+    className = ""
+}: LiquidGlassProps) => {
+    return (
+        <div
+            className={cn('p-4 relative z-30 w-full max-w-2xl gap-8 py-8 rounded-xl overflow-hidden', className)}
+            style={{
+                background: \`\${backgroundImage} center / cover no-repeat\`,
+            }}
         >
-          <path
-            ref={path1Ref}
-            d="M227.549 1818.76C227.549 1818.76 406.016 2207.75 569.049 2130.26C843.431 1999.85 -264.104 1002.3 227.549 876.262C552.918 792.849 773.647 2456.11 1342.05 2130.26C1885.43 1818.76 14.9644 455.772 760.548 137.262C1342.05 -111.152 1663.5 2266.35 2209.55 1972.76C2755.6 1679.18 1536.63 384.467 1826.55 137.262C2013.5 -22.1463 2209.55 381.262 2209.55 381.262"
-            stroke="#16151f"
-            strokeWidth="200"
-            strokeLinecap="round"
-            shapeRendering="geometricPrecision"
-          />
-          <path
-            ref={path2Ref}
-            d="M1661.28 2255.51C1661.28 2255.51 2311.09 1960.37 2111.78 1817.01C1944.47 1696.67 718.456 2870.17 499.781 2255.51C308.969 1719.17 2457.51 1613.83 2111.78 963.512C1766.05 313.198 427.949 2195.17 132.281 1455.51C-155.219 736.292 2014.78 891.514 1708.78 252.012C1437.81 -314.29 369.471 909.169 132.281 566.512C18.1772 401.672 244.781 193.012 244.781 193.012"
-            stroke="#6366f1"
-            strokeWidth="200"
-            strokeLinecap="round"
-            shapeRendering="geometricPrecision"
-          />
-        </svg>
-      </div>
+            <div className='grid w-full grid-cols-2 gap-4 mx-auto'>
+                {/* Hourly Forecast Card */}
+                <LiquidGlassCard
+                    shadowIntensity='xs'
+                    borderRadius='8px'
+                    glowIntensity='none'
+                    className='col-span-2 p-6 text-white bg-white/5'
+                >
+                    <div className='flex justify-between relative z-30 text-sm font-medium'>
+                        <div className='flex flex-col items-center gap-2'>
+                            <span>16:00</span>
+                            <Cloud className='h-6 w-6 fill-white' />
+                            <span>+18°</span>
+                        </div>
+                        <div className='flex flex-col items-center gap-2'>
+                            <span>17:00</span>
+                            <Cloud className='h-6 w-6 fill-white' />
+                            <span>+18°</span>
+                        </div>
+                        <div className='flex flex-col items-center gap-2'>
+                            <span>18:00</span>
+                            <CloudRain className='h-6 w-6' />
+                            <span>+16°</span>
+                        </div>
+                        <div className='flex flex-col items-center gap-2'>
+                            <span>19:00</span>
+                            <CloudRain className='h-6 w-6' />
+                            <span>+14°</span>
+                        </div>
+                        <div className='flex flex-col items-center gap-2'>
+                            <span>20:00</span>
+                            <CloudSun className='h-6 w-6 fill-white' />
+                            <span>+15°</span>
+                        </div>
+                        <div className='flex flex-col items-center gap-2'>
+                            <span>21:00</span>
+                            <CloudSunRain className='h-6 w-6' />
+                            <span>+14°</span>
+                        </div>
+                    </div>
+                </LiquidGlassCard>
+
+                {/* Current Weather Card */}
+                <LiquidGlassCard
+                    shadowIntensity='xs'
+                    borderRadius='8px'
+                    glowIntensity='none'
+                    className='rounded-3xl p-6 text-white bg-white/5 '
+                >
+                    <div className='relative z-30 flex flex-col items-start justify-center h-full w-full'>
+                        <div className='text-4xl font-semibold'>{temp}</div>
+                        <div className='text-sm opacity-70'>Cloudy {temp}/+5°</div>
+                    </div>
+                </LiquidGlassCard>
+
+                {/* Time and Location Card */}
+                <LiquidGlassCard
+                    shadowIntensity='xs'
+                    borderRadius='8px'
+                    glowIntensity='none'
+                    className='rounded-3xl p-6 text-white bg-white/5'
+                >
+                    <div className='relative z-30 flex flex-col items-start justify-center h-full w-full'>
+                        <div className='text-4xl font-semibold'>17:32</div>
+                        <div className='text-sm opacity-70'>Sun, Nov 19</div>
+                        <button className='mt-2 inline-flex items-center gap-1 rounded-full bg-black/20 backdrop-blur-xl px-2 py-0.5 text-xs font-medium'>
+                            <MapPin className='h-3 w-3' />
+                            {location}
+                        </button>
+                    </div>
+                </LiquidGlassCard>
+
+                {/* Daily Forecast Card */}
+                <LiquidGlassCard
+                    shadowIntensity='xs'
+                    borderRadius='8px'
+                    glowIntensity='none'
+                    className='col-span-2 rounded-3xl bg-white/5 p-6 text-white'
+                >
+                    <div className='relative z-30 flex flex-col gap-3 h-full w-full'>
+                        <div className='flex items-center justify-between text-sm'>
+                            <div className='flex items-center gap-2'>
+                                <Sun className='h-5 w-5 fill-white' />
+                                <span>Tue, 7 Sep</span>
+                            </div>
+                            <span className='font-medium'>+18°/+4°</span>
+                        </div>
+                        <div className='flex items-center justify-between text-sm'>
+                            <div className='flex items-center gap-2'>
+                                <Cloud className='h-5 w-5 fill-white' />
+                                <span>Wed, 8 Sep</span>
+                            </div>
+                            <span className='font-medium'>+20°/+6°</span>
+                        </div>
+                        <div className='flex items-center justify-between text-sm'>
+                            <div className='flex items-center gap-2'>
+                                <CloudRain className='h-5 w-5' />
+                                <span>Thu, 9 Sep</span>
+                            </div>
+                            <span className='font-medium'>+17°/+3°</span>
+                        </div>
+                    </div>
+                </LiquidGlassCard>
+            </div>
+        </div>
+    );
+};
+
+
+
+
+
+
+
+// 5. Spotlight Cards
+export interface SpotlightCardsProps {
+    className?: string;
+    defaultCardColors?: string[];
+    title?: string;
+    description?: string;
+}
+
+export const SpotlightCards = ({
+    className = "",
+    defaultCardColors = ['#10b981', '#6366f1', '#f59e0b'],
+    title = "Platform Features",
+    description = "Discover the power of our high-performance component library."
+}: SpotlightCardsProps) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [isHovered, setIsHovered] = useState(false);
+
+    // Playground State
+    const [cardColors, setCardColors] = useState(defaultCardColors);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+        if (!containerRef.current) return;
+        const rect = containerRef.current.getBoundingClientRect();
+        
+        // Account for CSS scaling (essential for library previews)
+        const scaleX = containerRef.current.offsetWidth / rect.width;
+        const scaleY = containerRef.current.offsetHeight / rect.height;
+        
+        setMousePos({
+            x: (e.clientX - rect.left) * scaleX,
+            y: (e.clientY - rect.top) * scaleY
+        });
+    };
+
+    const scrollLeft = () => {
+        scrollRef.current?.scrollBy({ left: -350, behavior: 'smooth' });
+    };
+
+    const scrollRight = () => {
+        scrollRef.current?.scrollBy({ left: 350, behavior: 'smooth' });
+    };
+
+    const cards = [
+        {
+            title: "Performance",
+            text: "Lightning-fast components built for modern web applications.",
+            icon: Zap,
+            hex: cardColors[0] + "66",
+            accent: cardColors[0],
+            bg: cardColors[0] + "1a",
+            bullets: ["Optimized rendering", "Minimal bundle size"]
+        },
+        {
+            title: "Design",
+            text: "Beautiful, accessible components with smooth animations.",
+            icon: Sparkles,
+            hex: cardColors[1] + "66",
+            accent: cardColors[1],
+            bg: cardColors[1] + "1a",
+            bullets: ["Elegant animations", "Accessibility first"]
+        },
+        {
+            title: "Premium",
+            text: "Enterprise-grade components with advanced features.",
+            icon: Crown,
+            hex: cardColors[2] + "66",
+            accent: cardColors[2],
+            bg: cardColors[2] + "1a",
+            bullets: ["Enterprise support", "Advanced features"]
+        },
+    ];
+
+    return (
+        <div className="flex flex-col items-center w-full relative z-30">
+            {/* Live Playground Controls */}
+            <div className="w-full max-w-5xl mb-8 p-8 rounded-[2rem] bg-neutral-900 border border-white/5 backdrop-blur-sm shadow-xl">
+                <div className="flex flex-col gap-6">
+                    <h3 className="text-2xl font-display font-bold text-white tracking-tight">Live Playground</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[1, 2, 3].map((num, i) => (
+                            <div key={num} className="space-y-3">
+                                <label className="text-xs font-bold uppercase tracking-wider text-white/50">Card {num} Glow Color</label>
+                                <div className="flex items-center gap-3">
+                                    <input
+                                        type="color"
+                                        value={cardColors[i]}
+                                        onChange={e => {
+                                            const newColors = [...cardColors];
+                                            newColors[i] = e.target.value;
+                                            setCardColors(newColors);
+                                        }}
+                                        className="w-12 h-12 rounded cursor-pointer bg-transparent border-0 p-0"
+                                    />
+                                    <input
+                                        type="text"
+                                        value={cardColors[i]}
+                                        onChange={e => {
+                                            const newColors = [...cardColors];
+                                            newColors[i] = e.target.value;
+                                            setCardColors(newColors);
+                                        }}
+                                        className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white w-full font-mono focus:outline-none"
+                                    />
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+
+            <div
+                ref={containerRef}
+                onMouseMove={handleMouseMove}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                className="w-full max-w-5xl relative group"
+            >
+                {/* Arrows */}
+                <button onClick={scrollLeft} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ChevronLeft size={24} />
+                </button>
+                <button onClick={scrollRight} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-8 z-30 p-3 bg-neutral-900/80 border border-white/10 rounded-full text-white/50 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                    <ChevronRight size={24} />
+                </button>
+
+                <div
+                    ref={scrollRef}
+                    className="flex gap-6 p-6 overflow-x-auto snap-x snap-mandatory [&::-webkit-scrollbar]:hidden scroll-smooth"
+                >
+                    {cards.map((card, i) => (
+                        <CardItem 
+                            key={i} 
+                            card={card} 
+                            globalMousePos={mousePos} 
+                            isParentHovered={isHovered}
+                        />
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Internal Helper Card Component for 100% Alignment Consistency
+const CardItem: React.FC<{ 
+    card: any; 
+    globalMousePos: { x: number; y: number }; 
+    isParentHovered: boolean;
+}> = ({ card, globalMousePos, isParentHovered }) => {
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [localMousePos, setLocalMousePos] = useState({ x: -1000, y: -1000 });
+
+    useEffect(() => {
+        if (!cardRef.current) return;
+        const updateLocalPos = () => {
+            if (!cardRef.current) return;
+            const cardRect = cardRef.current.getBoundingClientRect();
+            const containerRect = cardRef.current.closest('.group')?.getBoundingClientRect();
+            if (containerRect) {
+                setLocalMousePos({
+                    x: globalMousePos.x - (cardRect.left - containerRect.left),
+                    y: globalMousePos.y - (cardRect.top - containerRect.top)
+                });
+            }
+        };
+        updateLocalPos();
+    }, [globalMousePos]);
+
+    const CardInner = ({ highlighted = false }: { highlighted?: boolean }) => (
+        <div className={cn("relative z-20 flex flex-col h-full", highlighted ? "pointer-events-none" : "")}>
+            <div className="flex justify-between items-start mb-6">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/5" style={{ backgroundColor: card.bg }}>
+                    <card.icon size={24} style={{ color: card.accent }} />
+                </div>
+                <span className="text-xs font-black uppercase tracking-[0.2em] text-white/40">UILAYOUT</span>
+            </div>
+
+            <h3 className={cn("text-3xl font-display font-black mb-3 tracking-tight transition-colors", 
+                highlighted ? "text-white" : "text-white/30 group-hover/card:text-white/40")}>
+                {card.title}
+            </h3>
+            <p className={cn("text-sm leading-relaxed mb-6 font-medium transition-colors", 
+                highlighted ? "text-white/90" : "text-white/20 group-hover/card:text-white/30")}>
+                {card.text}
+            </p>
+
+            <ul className="mt-auto space-y-3">
+                {card.bullets.map((bullet: string, idx: number) => (
+                    <li key={idx} className="flex items-center gap-3 text-xs font-medium">
+                        <div className="w-4 h-4 rounded-full border border-white/10 flex items-center justify-center">
+                            <div className={cn("w-1.5 h-1.5 rounded-full", highlighted ? "bg-white/80" : "bg-white/10")} />
+                        </div>
+                        <span className={highlighted ? "text-white/80" : "text-white/20"}>{bullet}</span>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+
+    return (
+        <div ref={cardRef} className="relative flex-shrink-0 w-[calc(100vw-3rem)] sm:w-[350px] snap-center p-8 rounded-[2.5rem] bg-neutral-900 border border-white/5 overflow-hidden group/card shadow-xl transition-all duration-400 ease-out">
+            <CardInner />
+            <div 
+                className="absolute inset-0 transition-opacity duration-500 z-10"
+                style={{
+                    opacity: isParentHovered ? 1 : 0,
+                    WebkitMaskImage: \`radial-gradient(circle 35rem at \${localMousePos.x}px \${localMousePos.y}px, black 0%, transparent 70%)\`,
+                    maskImage: \`radial-gradient(circle 35rem at \${localMousePos.x}px \${localMousePos.y}px, black 0%, transparent 70%)\`,
+                    backgroundColor: \`\${card.accent}10\`,
+                    padding: '2rem',
+                    border: \`1px solid \${card.accent}\`,
+                    borderRadius: '2.5rem',
+                }}
+            >
+                <CardInner highlighted />
+            </div>
+            {/* Ambient Base Glow */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-1/2 opacity-30 group-hover/card:opacity-80 transition-opacity pointer-events-none" style={{ background: \`radial-gradient(ellipse at bottom, \${card.hex} 0%, transparent 60%)\` }} />
+        </div>
+    );
+};
+
+// 6. Image Reveal
+// 6. Image Reveal
+interface VisualItem {
+    key: number;
+    url: string;
+    label: string;
+}
+const visualData: VisualItem[] = [
+    {
+        key: 1,
+        url: "https://images.pexels.com/photos/9002742/pexels-photo-9002742.jpeg",
+        label: "Pinky Island",
+    },
+    {
+        key: 2,
+        url: "https://images.pexels.com/photos/31622979/pexels-photo-31622979.jpeg",
+        label: "Greedy Model",
+    },
+    {
+        key: 3,
+        url: "https://images.pexels.com/photos/12187128/pexels-photo-12187128.jpeg",
+        label: "Sigma Connect",
+    },
+    {
+        key: 4,
+        url: "https://images.pexels.com/photos/28168248/pexels-photo-28168248.jpeg",
+        label: "Futuristic Gamma",
+    },
+];
+
+export interface ImageRevealProps {
+    items?: VisualItem[];
+    className?: string;
+}
+
+export const ImageReveal = ({
+    items = visualData,
+    hoverText = "REVEAL",
+    className = ""
+}: ImageRevealProps & { hoverText?: string }) => {
+    const [focusedItem, setFocusedItem] = useState<VisualItem | null>(null);
+    const [isLargeScreen, setIsLargeScreen] = useState(true);
+
+    const cursorX = useMotionValue(0);
+    const cursorY = useSpring(cursorX, { stiffness: 300, damping: 40 });
+    const smoothX = useSpring(cursorX, { stiffness: 300, damping: 40 });
+    const smoothY = useSpring(cursorY, { stiffness: 300, damping: 40 });
+
+    useEffect(() => {
+        const updateScreen = () => {
+            setIsLargeScreen(window.innerWidth >= 768);
+        };
+        updateScreen();
+        window.addEventListener("resize", updateScreen);
+        return () => window.removeEventListener("resize", updateScreen);
+    }, []);
+
+    const onMouseTrack = (e: React.MouseEvent) => {
+        cursorX.set(e.clientX);
+        cursorY.set(e.clientY);
+    };
+
+    const onHoverActivate = (item: VisualItem) => {
+        setFocusedItem(item);
+    };
+
+    const onHoverDeactivate = () => {
+        setFocusedItem(null);
+    };
+
+    return (
+        <div
+            className={cn("relative mx-auto w-full max-w-2xl min-h-fit bg-neutral-950 rounded-xl border border-white/10 overflow-hidden", className)}
+            onMouseMove={onMouseTrack}
+            onMouseLeave={onHoverDeactivate}
+        >
+            {items.map((item) => (
+                <div
+                    key={item.key}
+                    className="p-6 cursor-pointer relative sm:flex items-center justify-between border-b border-white/5 last:border-0"
+                    onMouseEnter={() => onHoverActivate(item)}
+                >
+                    {!isLargeScreen && (
+                        <img
+                            src={item.url}
+                            className="sm:w-32 sm:h-20 w-full h-52 object-cover rounded-md mb-4"
+                            alt={item.label}
+                        />
+                    )}
+                    <h2
+                        className={\`font-display uppercase md:text-5xl sm:text-2xl text-xl font-bold sm:py-6 py-2 leading-[100%] relative transition-colors duration-300 \${focusedItem?.key === item.key
+                            ? "mix-blend-difference z-20 text-white"
+                            : "text-white/60"
+                            }\`}
+                    >
+                        {item.label}
+                    </h2>
+                    <button
+                        className={\`sm:block hidden p-4 rounded-full transition-all duration-300 ease-out border border-transparent \${focusedItem?.key === item.key
+                            ? "mix-blend-difference z-20 bg-white text-black border-white"
+                            : "text-white/20 border-white/10"
+                            }\`}
+                    >
+                        <ArrowIcon className="w-8 h-8" />
+                    </button>
+                    <div
+                        className={\`h-[2px] bg-white absolute bottom-0 left-0 transition-all duration-300 ease-linear \${focusedItem?.key === item.key ? "w-full" : "w-0"
+                            }\`}
+                    />
+                </div>
+            ))}
+
+            {isLargeScreen && focusedItem && (
+                <motion.img
+                    src={focusedItem.url}
+                    alt={focusedItem.label}
+                    className="fixed z-30 object-cover w-[300px] h-[400px] rounded-2xl pointer-events-none shadow-2xl bg-neutral-900 border border-white/10"
+                    style={{
+                        left: smoothX,
+                        top: smoothY,
+                        x: "-50%",
+                        y: "-50%",
+                    }}
+                    initial={{ opacity: 0, scale: 0.5, rotate: -10 }}
+                    animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                    exit={{ opacity: 0, scale: 0.5, rotate: 10 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+            )}
+        </div>
+    );
+};
+
+
+
+
+
+// 10. Hacker Background (Matrix Rain)
+export interface HackerBackgroundProps {
+    color?: string;
+    fontSize?: number;
+    className?: string;
+    speed?: number;
+}
+
+export const HackerBackground = ({
+    color = '#0F0',
+    fontSize = 15,
+    className = "",
+    speed = 1
+}: HackerBackgroundProps) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        let width = canvas.width = canvas.parentElement?.clientWidth || 400;
+        let height = canvas.height = canvas.parentElement?.clientHeight || 400;
+
+        const columns = Math.floor(width / 20);
+        const drops: number[] = new Array(columns).fill(1);
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\$+-*/=%\\"'#&_(),.;:?!\\\\|{ }<>[]^~";
+
+        let animationFrameId: number;
+
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.fillStyle = color;
+            ctx.font = \`\${fontSize}px monospace\`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * 20, drops[i] * 20);
+
+                if (drops[i] * 20 > height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i] += speed;
+            }
+            animationFrameId = requestAnimationFrame(draw);
+        };
+
+        const handleResize = () => {
+            width = canvas.width = canvas.parentElement?.clientWidth || 400;
+            height = canvas.height = canvas.parentElement?.clientHeight || 400;
+        };
+
+        window.addEventListener('resize', handleResize);
+        draw();
+
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return (
+        <div className={cn("w-full h-full bg-black relative overflow-hidden", className)}>
+            <canvas ref={canvasRef} className="absolute inset-0" />
+        </div>
+    );
+};
+
+
+
+export { default as BeamGridBackground } from '../ui/BeamGridBackground';
+
+export { default as FallBeamBackground } from '../ui/FallBeamBackground';
+export { default as HellBackground } from '../ui/HellBackground';
+export { default as InteractiveGridBackground } from '../ui/InteractiveGridBackground';
+export { default as ParticlesBackground } from '../ui/ParticlesBackground';
+export { default as WaveBackground } from '../ui/WaveBackground';
+export { default as LinesBackground } from '../ui/background-paths';
+export { default as SparklesBackground } from '../ui/sparkles-background';
+export { IsometricGridBackground } from '../ui/isometric-grid-background';
+
+// Button Previews
+import { BorderBeam as BorderBeamUI } from '../ui/border-beam';
+
+export const GlowButton = () => {
+    const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+        if (!buttonRef.current) return;
+        const rect = buttonRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        setMousePos({ x, y });
+    };
+
+    return (
+        <div className="flex items-center justify-center p-8 bg-neutral-950 rounded-[3rem] border border-white/5 w-full h-80 relative overflow-hidden group/container">
+            {/* Ambient Background Glow */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
+            
+            <button
+                ref={buttonRef}
+                onMouseMove={handleMouseMove}
+                className="relative px-10 py-4 rounded-2xl bg-neutral-900 border border-emerald-500/30 text-emerald-400 font-display font-black uppercase tracking-[0.2em] text-sm transition-all duration-500 hover:scale-105 hover:border-emerald-400 isolation-auto group"
+                style={{
+                    boxShadow: '0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(16,185,129,0.05)',
+                }}
+            >
+                {/* Interactive Surface Light */}
+                <div 
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+                    style={{
+                        background: \`radial-gradient(circle at \${mousePos.x}% \${mousePos.y}%, rgba(16,185,129,0.2) 0%, transparent 60%)\`,
+                    }}
+                />
+
+                {/* Primary Neon Glow (Edge) */}
+                <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 opacity-0 group-hover:opacity-40 transition-opacity duration-500 blur-sm pointer-events-none" />
+
+                {/* Volumetric Outer Glow */}
+                <div className="absolute -inset-4 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none blur-2xl"
+                    style={{
+                        background: \`radial-gradient(circle at \${mousePos.x}% \${mousePos.y}%, rgba(16,185,129,0.4) 0%, transparent 70%)\`,
+                    }}
+                />
+
+                <span className="relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:text-white transition-colors duration-300">
+                    Glow Button
+                </span>
+
+                {/* Subtle Inner Highlight */}
+                <div className="absolute inset-0 rounded-2xl border border-white/10 opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />
+            </button>
+
+            {/* Floating Particle Orbs for additional atmosphere */}
+            <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-emerald-500/10 blur-[80px] rounded-full animate-pulse pointer-events-none" />
+            <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-teal-500/10 blur-[100px] rounded-full animate-pulse pointer-events-none" style={{ animationDelay: '1s' }} />
+        </div>
+    );
+};
+
+export const BorderBeam = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">
+            Border Beam
+            <BorderBeamUI size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />
+        </button>
     </div>
-  );
+);
+
+import { ShatterButton as ShatterButtonUI } from '../ui/shatter-button';
+
+export const ShatterButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <ShatterButtonUI shatterColor="#00ffff" shardCount={30}>
+            Click Now
+        </ShatterButtonUI>
+    </div>
+);
+
+import { CornerBorderButton as CornerBorderButtonUI } from '../ui/corner-border-button';
+
+export const CornerBorderButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <CornerBorderButtonUI baseColor="#0b1a2a" hoverColor="#ff3b4d" borderColor="#60daff">
+            BUTTON
+        </CornerBorderButtonUI>
+    </div>
+);
+
+import { MarqueeHoverButton as MarqueeHoverButtonUI } from '../ui/marquee-hover-button';
+
+export const MarqueeHoverButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <MarqueeHoverButtonUI label="Hover Me" />
+    </div>
+);
+
+export const PaymentTransactionButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-full min-h-[300px]">
+        <PaymentTransactionButtonUI label="Send Payment" accentColor="#38bdf8" currencySymbol="€" />
+    </div>
+);
+
+export const MagicCardEffect = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-full min-h-[400px]">
+        <MagicCardUI
+            className="flex flex-col items-center justify-center cursor-pointer shadow-2xl bg-neutral-900/80 border-white/10"
+            gradientColor="rgba(255, 255, 255, 0.15)"
+            gradientFrom="#38bdf8"
+            gradientTo="#818cf8"
+            gradientSize={300}
+        >
+            <div className="p-16 flex flex-col items-center gap-6 text-center">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-500 flex items-center justify-center shadow-lg shadow-sky-500/20">
+                    <Sparkles className="text-white w-8 h-8" />
+                </div>
+                <div>
+                    <h3 className="text-4xl font-display font-bold text-white tracking-tight mb-2">Magic Card</h3>
+                    <p className="text-white/60 text-base font-medium">Move your mouse to reveal the glow</p>
+                </div>
+            </div>
+        </MagicCardUI>
+    </div>
+);
+
+export const RainbowButton = () => (
+    <div className="flex items-center justify-center p-8 bg-neutral-900 rounded-3xl border border-white/5 w-full h-64">
+        <RainbowButtonUI>Rainbow Button</RainbowButtonUI>
+    </div>
+);
+
+`,
+
+  'liquid-fill-button': `"use client";
+
+import React from "react";
+import { motion, useAnimation } from "motion/react";
+import { cn } from "../../lib/utils";
+
+interface LiquidFillButtonProps {
+    label?: string;
+    className?: string;
+    onClick?: () => void;
+    baseColor?: string;
+    liquidColor?: string;
+}
+
+export const LiquidFillButton = ({
+    label = "Liquid Fill",
+    className,
+    onClick,
+    baseColor = "#000000",
+    liquidColor = "#06b6d4", // cyan-500
+}: LiquidFillButtonProps) => {
+    return (
+        <div className="relative flex items-center justify-center p-20">
+            <motion.button
+                onClick={onClick}
+                whileHover="hover"
+                initial="initial"
+                className={cn(
+                    "relative px-10 py-4 rounded-2xl overflow-hidden border-2",
+                    "bg-transparent font-bold tracking-wider uppercase transition-all duration-500",
+                    "flex items-center justify-center min-w-[200px] group",
+                    className
+                )}
+                style={{ borderColor: liquidColor, color: liquidColor }}
+            >
+                {/* Liquid Background Container */}
+                <motion.div
+                    className="absolute inset-0 pointer-events-none z-0"
+                    variants={{
+                        initial: { y: "100%" },
+                        hover: { y: "0%" },
+                    }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 40,
+                        damping: 15,
+                    }}
+                >
+                    {/* Liquid Body */}
+                    <div
+                        className="absolute inset-x-0 bottom-0 top-2"
+                        style={{ backgroundColor: liquidColor }}
+                    />
+
+                    {/* SVG Wave */}
+                    <div className="absolute top-0 left-0 w-full h-12 -translate-y-full overflow-hidden">
+                        <motion.svg
+                            viewBox="0 0 1200 120"
+                            className="absolute bottom-0 left-0 w-[200%] h-full"
+                            style={{ fill: liquidColor }}
+                            animate={{
+                                x: ["0%", "-50%"],
+                            }}
+                            transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                ease: "linear",
+                            }}
+                        >
+                            <path d="M0,0 C150,0 200,100 300,100 C400,100 450,0 600,0 C750,0 800,100 900,100 C1000,100 1050,0 1200,0 V120 H0 Z" />
+                        </motion.svg>
+
+                        {/* Secondary Wave for better depth */}
+                        <motion.svg
+                            viewBox="0 0 1200 120"
+                            className="absolute bottom-0 left-0 w-[200%] h-full opacity-50"
+                            style={{ fill: liquidColor }}
+                            animate={{
+                                x: ["-50%", "0%"],
+                            }}
+                            transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: "linear",
+                            }}
+                        >
+                            <path d="M0,50 C150,50 200,120 300,120 C400,120 450,50 600,50 C750,50 800,120 900,120 C1000,120 1050,50 1200,50 V120 H0 Z" />
+                        </motion.svg>
+                    </div>
+                </motion.div>
+
+                {/* Label */}
+                <motion.span
+                    className="relative z-10 transition-colors duration-500"
+                    variants={{
+                        initial: { color: liquidColor },
+                        hover: { color: "#ffffff" },
+                    }}
+                >
+                    {label}
+                </motion.span>
+
+                {/* Subtle outer glow */}
+                <motion.div
+                    className="absolute inset-0 rounded-2xl opacity-0"
+                    style={{
+                        boxShadow: \`0 0 20px \${liquidColor}80\`,
+                    }}
+                    variants={{
+                        hover: { opacity: 1 }
+                    }}
+                />
+            </motion.button>
+        </div>
+    );
 };
 `,
 
-
-
-  '3d-hero': `import React, { useState, useEffect, useCallback } from 'react';
+'3d-hero': `import React, { useState, useEffect, useCallback } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const IMAGES = [

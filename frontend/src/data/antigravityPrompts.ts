@@ -798,6 +798,30 @@ Build a premium vertical panel scroll animation component in React + TypeScript 
 **Critical Rules**:
 - Ensure all ScrollTriggers are properly cleaned up on unmount using garbage collection.
 - Make all image wrappers have advanced overflow-hidden and subtle grayscale/scale hover transitions.
+`,
+    "svg-page-transition": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Build a fluid, high-performance SVG vector page transition component in React + TypeScript + Vite + GSAP.
+
+**Component Name**: SVGPageTransition
+**Category**: Scroll / Page Transition
+
+**Core Animations & Mechanics**:
+1. **SVG Double-Stroke Wipe Animation**:
+   - Stagger two wide, round-capped SVG paths across the viewport with custom timeline offsets, scaling, and stroke widths.
+   - Use high-performance GSAP strokeDashoffset animations to cleanly draw paths in during "leave" phase and draw paths out during "enter" phase.
+2. **Interactive Mock Navbar**:
+   - Provide three interactive navbar buttons (Home, About, Contact) to simulate seamless page changes.
+   - Control navigation state programmatically, ensuring all interactive elements are locked during transitions.
+3. **Advanced CSS and Backdrop Filtering**:
+   - Design deep visual details including radial background gradients, glassmorphism panel styles, and pulsing typography.
+
+**Tech Stack**:
+* React
+* TypeScript
+* GSAP
+* Tailwind CSS
 `
 };
 

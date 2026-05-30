@@ -576,7 +576,7 @@ const VibeSystemSection = React.memo(({
                                 <img src="/logo.png" alt="UI HUB" className="w-3 h-3 object-contain opacity-40" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                                 <span className="text-[8px] uppercase tracking-widest font-bold animate-terminal-green-blink">UI HUB</span>
                             </div>
-                            <span className="text-[8px] uppercase tracking-widest text-white/10 font-bold whitespace-nowrap">UTF-8 // LN: {deferredVibePrompt.split('\n').length}</span>
+                            <span className="text-[8px] uppercase tracking-widest text-white/10 font-bold whitespace-nowrap">UTF-8 // LN: {(deferredVibePrompt || '').split('\n').length}</span>
                         </div>
                     </div>
                     <div className="absolute -inset-4 bg-brand-green/5 blur-3xl rounded-[4rem] group-hover/terminal:bg-brand-green/10 transition-colors duration-1000 -z-10" />
