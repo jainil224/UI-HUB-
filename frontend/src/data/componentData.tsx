@@ -36,6 +36,7 @@ const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 const ParticlesBackground = React.lazy(() => import('../components/ui/ParticlesBackground'));
 const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
+const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 
 
 
@@ -1335,6 +1336,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'particles-background': ParticlesBackground,
     'fourier-flow': FourierFlow,
     'svg-page-transition': SVGPageTransition,
+    'section-scroll': SectionScroll,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2286,6 +2288,15 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         preview: renderComponent("svg-page-transition", "SVGPageTransition"),
         code: `import { SVGPageTransition } from '@/components/ui/SVGPageTransition';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <SVGPageTransition />\n    </div>\n  );\n}`,
         vibePrompt: "Create a fluid, high-performance SVG double-stroke vector page transition with HTML, CSS, and GSAP. Set up a technical background and three navbar buttons (Home, About, Contact) to simulate route changes. Stagger two wide, round-capped SVG paths across the viewport with custom timeline offsets, scaling, and stroke widths, and swap pages elegantly."
+    },
+    {
+        id: "section-scroll",
+        title: "Section scroll",
+        category: "scroll",
+        isPremium: true,
+        preview: renderComponent("section-scroll", "SectionScroll", { showDemoButton: true }),
+        code: `import { SectionScroll } from '@/components/ui/SectionScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <SectionScroll />\n    </div>\n  );\n}`,
+        vibePrompt: "Create a visually immersive, full-screen vertical panel scroll experience in React + TSX with GSAP and ScrollTrigger. Each panel has initially a 25-degree rotation from the bottom-left corner that smoothly transitions to 0 degrees as it scrolls into view, with all except the last panel pinned at the bottom of the viewport using non-spacing pinning triggers."
     }
 ];
 

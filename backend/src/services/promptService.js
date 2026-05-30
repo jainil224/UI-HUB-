@@ -29,6 +29,7 @@ const resolveSourceCode = async (componentId) => {
     'interactive-webgl-scene': 'ui/InteractiveWebGLScene.tsx',
     '3d-scroll-animation': 'ui/Scroll3DAnimation.tsx',
     '3d-slider': 'ui/ThreeDSlider.tsx',
+    'section-scroll': 'ui/SectionScroll.tsx',
     'spotlight-cards': 'animations/VisualEffects/index.tsx',
     'hell-background': 'ui/HellBackground.tsx',
     'interactive-grid-background': 'ui/InteractiveGridBackground.tsx',

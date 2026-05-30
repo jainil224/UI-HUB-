@@ -12,6 +12,7 @@ const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
 const Scroll3DAnimationPage = React.lazy(() => import('./pages/Components/Scroll3DAnimationPage'));
 const ThreeDSliderPage = React.lazy(() => import('./pages/Components/ThreeDSliderPage'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
+const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 import ScrollToTop from './components/ui/ScrollToTop';
 import FourierFlow from './components/ui/FourierFlow';
@@ -46,9 +47,10 @@ const AppShell = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
             <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
+            <Route path="/demo/section-scroll" element={<SectionScrollPage />} />
+            <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
           </Routes>
         </React.Suspense>

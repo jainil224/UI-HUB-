@@ -763,5 +763,31 @@ Animations
 5. FINAL INSTRUCTION
 
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
+    "section-scroll": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Build a premium vertical panel scroll animation component in React + TypeScript + Vite + Tailwind CSS, with high-performance GSAP and ScrollTrigger logic.
+
+**Component Name**: SectionScroll
+**Category**: Scroll Animation
+
+**Core Animations & Mechanics**:
+1. **Entry Rotation**: Each panel is initially rotated at 25 degrees (transform-origin: bottom left). As the user scrolls it into view, it rotates smoothly to 0 degrees using a scrubbed ScrollTrigger.
+2. **Viewport Pinning**: Each panel (except the last one) pins itself at the bottom of the viewport as the next panel slides up over it, using ScrollTrigger pinning with no-spacing.
+3. **Responsive Layouts**: Inside the panels, alternate between beautiful multi-column image+text structures, giant typography blocks, and centered grids. Ensure layouts scale gracefully on mobile viewports.
+4. **Demo Overlay**: In card previews, render a prominent 'View Full Demo' overlay with a link to allow full-screen scrolling.
+
+**Tech Stack**:
+* React
+* TypeScript
+* GSAP + ScrollTrigger
+* Framer Motion
+* Tailwind CSS
+
+**Critical Rules**:
+- Ensure all ScrollTriggers are properly cleaned up on unmount using garbage collection.
+- Make all image wrappers have advanced overflow-hidden and subtle grayscale/scale hover transitions.
 `
 };
+
