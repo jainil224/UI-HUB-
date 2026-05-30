@@ -975,7 +975,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                         <div 
                             ref={previewRef}
-                            className={`min-h-[320px] sm:min-h-[280px] md:min-h-0 ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'} ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black' : ''}`}
+                            className={`min-h-[320px] sm:min-h-[280px] ${(item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot') ? 'md:min-h-[550px]' : 'md:min-h-0'} ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'} ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black' : ''}`}
                         >
                             {(item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot') && (
                                 <button
