@@ -218,7 +218,7 @@ export const SolarSystem: React.FC = () => {
                                 {PLANETS.map((planet, i) => (
                                     <tspan 
                                         key={i}
-                                        ref={el => tspanRefs.current[i] = el}
+                                        ref={el => { tspanRefs.current[i] = el; }}
                                         onClick={() => handlePlanetClick(i)}
                                     >
                                         {planet.name}
