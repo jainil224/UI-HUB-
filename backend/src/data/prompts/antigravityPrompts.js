@@ -5025,4 +5025,39 @@ Create a premium "Aiva" 3D character component using React, TypeScript, and Tail
 
 Create a premium "LaptopBot" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
 
+  "section-scroll": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+Build a premium vertical panel scroll animation component in React + TypeScript + Vite + Tailwind CSS, with high-performance GSAP and ScrollTrigger logic.
+
+**Component Name**: SectionScroll
+**Category**: Scroll Animation
+
+**Core Animations & Mechanics**:
+1. **Dual Scroll Modes**:
+   - **Full Scroll Mode (showDemoButton = false)**: Panels are stacked vertically in a standard flow. Each panel (except the last one) pins itself at the bottom of the viewport as the next panel slides up over it using ScrollTrigger pinning with no-spacing. Entry rotation is handled individually per panel as it enters the viewport.
+   - **Library Preview Mode (showDemoButton = true)**: To prevent React-crashing DOM mutations in scaled/flex layout containers (which occur when using ScrollTrigger pin/spacers), panels are stacked absolutely within the relative container. An outer timeline is scrub-linked directly to the parent scroll container. Subsequent panels start off-screen at \`yPercent: 100\` and rotate at 25 degrees (\`transform-origin: bottom left\`), smoothly transitioning to \`yPercent: 0\` and \`rotate: 0\` as the container scrolls.
+2. **Preventing Height Collapse**:
+   - In preview mode (\`showDemoButton = true\`), the inner wrapper and the main panel container must stretch using absolute positioning (\`absolute inset-0 overflow-hidden\` and \`h-full absolute inset-0\`) to match the relative outer wrapper's height (\`min-h-[500px]\`), ensuring panels render at full scale.
+3. **UI HUB Premium Branding**:
+   - **Brand Badge**: A floating brand indicator is positioned in the top-right corner (\`absolute top-6 right-6 z-40\`) with backdrop blur, a neat border, the UI HUB logo icon (\`/logo.png\`), tracking-spaced uppercase brand title (\`UI HUB\`), and a pulsing green LED indicator (\`bg-brand-green animate-pulse\`).
+   - **Tracked Subheadings**: Every panel features a cohesive technical subheading tracking its progressive state:
+     - Panel 1: "01 // UI HUB ARCHITECTURE"
+     - Panel 2: "02 // UI HUB EXPRESSION"
+     - Panel 3: "03 // UI HUB VARIATION"
+     - Panel 4: "04 // UI HUB OUTCOME"
+4. **No Overlay Clutter**:
+   - Do NOT render a duplicate or overlapping "View Full Demo" center button overlay in preview mode. The preview must remain interactive and clear of obstruction.
+
+**Tech Stack**:
+* React
+* TypeScript
+* GSAP + ScrollTrigger
+* Framer Motion
+* Tailwind CSS
+
+**Critical Rules**:
+- Ensure all ScrollTriggers are properly cleaned up on unmount using garbage collection.
+- Make all image wrappers have advanced overflow-hidden and subtle grayscale/scale hover transitions.
+`
 };

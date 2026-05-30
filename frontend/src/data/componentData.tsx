@@ -2296,7 +2296,7 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         isPremium: true,
         preview: renderComponent("section-scroll", "SectionScroll", { showDemoButton: true }),
         code: `import { SectionScroll } from '@/components/ui/SectionScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <SectionScroll />\n    </div>\n  );\n}`,
-        vibePrompt: "Create a visually immersive, full-screen vertical panel scroll experience in React + TSX with GSAP and ScrollTrigger. Each panel has initially a 25-degree rotation from the bottom-left corner that smoothly transitions to 0 degrees as it scrolls into view, with all except the last panel pinned at the bottom of the viewport using non-spacing pinning triggers."
+        vibePrompt: "Create an immersive, full-screen vertical panel scroll experience in React + TSX with GSAP. It features a stable preview timeline linked to the main page scroll (preventing React-crashing pin-spacers), dynamic absolute panel stacking to avoid layout collapse, a premium floating UI HUB brand badge, and cohesive panel technical subheadings."
     }
 ];
 
