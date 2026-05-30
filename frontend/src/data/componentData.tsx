@@ -1350,7 +1350,11 @@ const renderComponent = (id: string, _name: string, props: any = {}): (() => Rea
 
         const rawName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
         // If it's a text category, it might need 'Text' suffix if it's not already in the ID
-        const isText = id.includes('text') || id.includes('cinematic') || id.includes('separate') || id.includes('wavy');
+        const isText = id.includes('text') || 
+                       id.includes('cinematic') || 
+                       id.includes('separate') || 
+                       id.includes('wavy') || 
+                       ['font-weight', 'gradual-spacing', 'letter-pull-up', 'multi-direction-slide', 'scale-letter', 'word-pull-up'].includes(id);
         const CompName = isText ? (id.endsWith('-text') ? rawName : `${rawName}Text`) : rawName;
 
         return (
