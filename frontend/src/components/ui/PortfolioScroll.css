@@ -1,0 +1,348 @@
+/* ========== MARQUEE - Pure CSS GPU Animation ========== */
+@keyframes marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.marquee-selected-works {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.marquee-selected-works__track {
+  display: flex;
+  white-space: nowrap;
+  align-items: center;
+  animation: marquee-scroll 25s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.marquee-selected-works__segment {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marquee-selected-works__text {
+  font-size: 13vw;
+  font-weight: 500;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: #fff;
+}
+
+.marquee-selected-works__dash {
+  font-size: 13vw;
+  font-weight: 300;
+  margin: 0 3vw;
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+@media (max-width: 1023px) {
+  .marquee-selected-works__track {
+    animation-duration: 10s;
+  }
+}
+
+/* ========== END MARQUEE ========== */
+
+/* ========== STAR BORDER STYLING ========== */
+.star-border-container {
+  display: inline-block;
+  position: relative;
+  border-radius: 60px;
+  overflow: hidden;
+  padding: 2.5px; /* Define thickness of the glowing border */
+}
+
+/* The "Star" Glow Container */
+.border-gradient-full {
+  position: absolute;
+  /* Make the glow much larger than the card to ensure corners are covered */
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  z-index: 0;
+  animation: star-rotate linear infinite;
+  /* Adjust blur for a softer or sharper 'star' trail */
+  filter: blur(8px);
+}
+
+.inner-content {
+  position: relative;
+  background: #000;
+  border-radius: 58px; /* Slightly less than container to fit inside */
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* 360-degree rotation to hit all sides */
+@keyframes star-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* ========== END STAR BORDER ========== */
+
+/* ScrollStack.css - Neo-Brutalist Starry Design */
+
+.portfolio-scroll-container {
+  background-color: #000;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.portfolio-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.portfolio-scroll-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.portfolio-scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 99px;
+}
+
+.scroll-stack-inner {
+  padding: 10vh 0 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* The wrapper that StarBorder creates */
+.scroll-stack-card {
+  width: 92%;
+  max-width: 1200px;
+  height: auto;
+  max-height: 78vh;
+  margin-bottom: 2rem;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 60px;
+  display: block;
+  position: relative;
+}
+
+/* Transfer original card styling to the inner container of StarBorder */
+.scroll-stack-card > .inner-content {
+  background-color: #000 !important;
+  border-radius: 60px !important;
+  padding: 2.5rem !important;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  text-align: left;
+}
+
+/* --- HEADER AREA --- */
+.card-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.id-brand-group {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.huge-number {
+  font-family: 'Inter', sans-serif;
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 0.8;
+  color: #fff;
+}
+
+.client-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: #fff;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  display: block;
+}
+
+.client-name {
+  font-size: 0.85rem;
+  color: #ffffff;
+  font-weight: 500;
+  opacity: 0.95;
+}
+
+/* --- STAR BUTTON STYLE --- */
+.live-btn-star {
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.live-btn-star:hover {
+  transform: scale(1.05);
+}
+
+.live-btn-star > .inner-content {
+  background: #000 !important;
+  border-radius: 100px !important;
+  padding: 0.8rem 2rem !important;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* --- CONTENT GRID (Image + Description) --- */
+.content-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 2rem;
+  height: min(350px, 40vh);
+  flex: 1;
+  align-items: stretch;
+}
+
+.main-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 40px;
+}
+
+.project-description {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem;
+}
+
+.project-description p {
+  font-size: 1.3rem;
+  line-height: 1.7;
+  color: #f8f8f8;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* --- RESPONSIVE STYLES --- */
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .project-description p {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-top-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .id-brand-group {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .huge-number {
+    font-size: 3rem;
+  }
+
+  .label {
+    font-size: 1rem;
+  }
+
+  .live-btn-star {
+    align-self: flex-start;
+  }
+
+  .content-grid {
+    grid-template-columns: 1fr;
+    height: auto;
+    gap: 1rem;
+  }
+
+  .main-image {
+    height: 200px;
+    border-radius: 24px;
+  }
+
+  .project-description {
+    padding: 0.5rem 0;
+  }
+
+  .project-description p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .scroll-stack-card {
+    border-radius: 30px;
+  }
+
+  .scroll-stack-card > .inner-content {
+    border-radius: 30px !important;
+    padding: 1.5rem !important;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .huge-number {
+    font-size: 2.5rem;
+  }
+
+  .label {
+    font-size: 0.9rem;
+  }
+
+  .client-name {
+    font-size: 0.75rem;
+  }
+
+  .live-btn-star > .inner-content {
+    padding: 0.6rem 1.5rem !important;
+    font-size: 0.7rem;
+  }
+
+  .main-image {
+    height: 180px;
+  }
+
+  .project-description p {
+    font-size: 0.85rem;
+  }
+
+  .scroll-stack-card > .inner-content {
+    padding: 1rem !important;
+  }
+}
