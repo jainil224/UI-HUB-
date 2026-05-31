@@ -1,16 +1,38 @@
 import React, { useRef } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { Github, ArrowRight } from 'lucide-react';
 import Logo from '../../../components/ui/Logo';
 import ViewSourceButton from '../../../components/ui/ViewSourceButton';
+import { useSkeleton } from '../../../context/SkeletonContext';
+import { HeroSkeleton } from '../../../components/ui/Skeleton';
 
 const Hero = () => {
+    const { isLoading } = useSkeleton();
+
     return (
-        <section
-            id="hero"
-            className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 py-20 overflow-hidden scanlines"
-        >
+        <AnimatePresence mode="wait">
+            {isLoading ? (
+                <motion.div
+                    key="hero-skeleton"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full"
+                >
+                    <HeroSkeleton />
+                </motion.div>
+            ) : (
+                <motion.section
+                    key="hero-real"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    id="hero"
+                    className="relative min-h-[100svh] flex flex-col items-center justify-center px-6 py-20 overflow-hidden scanlines"
+                >
             {/* Cinematic Overlays */}
             <div className="absolute inset-0 noise-overlay pointer-events-none z-20" />
 
@@ -122,7 +144,9 @@ const Hero = () => {
                 </motion.div>
             </motion.div>
 
-        </section>
+                </motion.section>
+            )}
+        </AnimatePresence>
     );
 };
 

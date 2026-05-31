@@ -330,3 +330,100 @@
   backface-visibility: hidden;
   perspective: 1000px;
 }
+
+/* Premium Cyberpunk Skeleton Loader Styles */
+.skeleton-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Light theme support */
+:root.light .skeleton-glass {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.skeleton-glass::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.03) 20%,
+    rgba(0, 255, 0, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: skeleton-shimmer 2.2s infinite cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root.light .skeleton-glass::after {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(0, 0, 0, 0.02) 20%,
+    rgba(95, 163, 214, 0.08) 50%,
+    rgba(0, 0, 0, 0.02) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+.skeleton-glow-green {
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  border-color: rgba(0, 255, 0, 0.25) !important;
+}
+
+:root.light .skeleton-glow-green {
+  box-shadow: 0 0 15px rgba(95, 163, 214, 0.15), inset 0 1px 1px rgba(0, 0, 0, 0.05);
+  border-color: rgba(95, 163, 214, 0.25) !important;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton-pulse {
+  animation: skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
+}
+
+/* Smooth Transition Utilities */
+.fade-transition-enter {
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}
+
+.fade-transition-enter-active {
+  opacity: 1;
+}
+
+.fade-transition-exit {
+  opacity: 1;
+  transition: opacity 400ms ease-in-out;
+}
+
+.fade-transition-exit-active {
+  opacity: 0;
+}

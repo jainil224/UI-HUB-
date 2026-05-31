@@ -29,10 +29,13 @@ const showcaseIds = [
     'black-hole-cursor'
 ];
 
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants, AnimatePresence } from 'framer-motion';
+import { useSkeleton } from '../../../context/SkeletonContext';
+import { ComponentGridSkeleton } from '../../../components/ui/Skeleton';
 
 const ComponentGrid = () => {
     const { user, isPro } = useAuth();
+    const { isLoading } = useSkeleton();
     const navigate = useNavigate();
     const [activeId, setActiveId] = useState<string | null>(null);
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -113,96 +116,112 @@ const ComponentGrid = () => {
             </motion.div>
 
             {/* Grid */}
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-50px" }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 relative z-10"
-            >
-                {featuredComponents.map((comp) => {
-                    const isActive = activeId === comp!.id;
-                    return (
-                        <motion.div
-                            key={comp!.id}
-                            variants={cardVariants}
-                            onClick={() => handleCardInteract(comp!.id)}
-                            onMouseEnter={() => handleMouseEnter(comp!.id)}
-                            onMouseLeave={handleMouseLeave}
-                            className="group relative h-[240px] sm:h-[260px] md:h-[280px] lg:h-[300px] bg-[#030303] rounded-3xl overflow-hidden flex items-center justify-center cursor-pointer select-none transition-all duration-500 hover:-translate-y-2 isolate"
-                            style={{
-                                WebkitMaskImage: '-webkit-radial-gradient(white, black)'
-                            }}
-                        >
-                            {/* Inner border and shadow */}
-                            <div className="absolute inset-0 rounded-3xl ring-1 ring-white/[0.03] group-hover:ring-white/[0.08] transition-all duration-500 z-30 pointer-events-none" />
+            <AnimatePresence mode="wait">
+                {isLoading ? (
+                    <motion.div
+                        key="grid-skeleton"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4 }}
+                        className="w-full relative z-10"
+                    >
+                        <ComponentGridSkeleton />
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="grid-real"
+                        variants={containerVariants}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, margin: "-50px" }}
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 relative z-10"
+                    >
+                        {featuredComponents.map((comp) => {
+                            const isActive = activeId === comp!.id;
+                            return (
+                                <motion.div
+                                    key={comp!.id}
+                                    variants={cardVariants}
+                                    onClick={() => handleCardInteract(comp!.id)}
+                                    onMouseEnter={() => handleMouseEnter(comp!.id)}
+                                    onMouseLeave={handleMouseLeave}
+                                    className="group relative h-[240px] sm:h-[260px] md:h-[280px] lg:h-[300px] bg-[#030303] rounded-3xl overflow-hidden flex items-center justify-center cursor-pointer select-none transition-all duration-500 hover:-translate-y-2 isolate"
+                                    style={{
+                                        WebkitMaskImage: '-webkit-radial-gradient(white, black)'
+                                    }}
+                                >
+                                    {/* Inner border and shadow */}
+                                    <div className="absolute inset-0 rounded-3xl ring-1 ring-white/[0.03] group-hover:ring-white/[0.08] transition-all duration-500 z-30 pointer-events-none" />
 
 
-                            {/* subtle gradient hover background */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
+                                    {/* subtle gradient hover background */}
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
 
-                            {/* Preview / Placeholder */}
-                            <div className="w-full h-full flex items-center justify-center absolute inset-0 z-20 overflow-hidden rounded-3xl">
-                                {isActive ? (
-                                    <div
-                                        className="absolute inset-0 w-full h-full animate-in fade-in duration-500 overflow-hidden"
-                                        style={{
-                                            pointerEvents: 'auto',
-                                        }}
-                                    >
-                                        <div className="w-full h-full flex items-center justify-center transform scale-[0.8] md:scale-[0.85] origin-center relative">
-                                            <React.Suspense fallback={
-                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                    <div className="w-6 h-6 border-2 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
+                                    {/* Preview / Placeholder */}
+                                    <div className="w-full h-full flex items-center justify-center absolute inset-0 z-20 overflow-hidden rounded-3xl">
+                                        {isActive ? (
+                                            <div
+                                                className="absolute inset-0 w-full h-full animate-in fade-in duration-500 overflow-hidden"
+                                                style={{
+                                                    pointerEvents: 'auto',
+                                                }}
+                                            >
+                                                <div className="w-full h-full flex items-center justify-center transform scale-[0.8] md:scale-[0.85] origin-center relative">
+                                                    <React.Suspense fallback={
+                                                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                                            <div className="w-6 h-6 border-2 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
+                                                        </div>
+                                                    }>
+                                                        {comp!.preview()}
+                                                    </React.Suspense>
                                                 </div>
-                                            }>
-                                                {comp!.preview()}
-                                            </React.Suspense>
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-col items-center gap-4 transition-all duration-500 group-hover:scale-105">
+                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-[14px] border border-white/[0.05] bg-[#050505] flex items-center justify-center group-hover:border-white/10 transition-all duration-500">
+                                                    {getCategoryIcon(comp?.category, comp?.id)}
+                                                </div>
+                                                <div className="flex flex-col items-center">
+                                                    <span className="text-[8px] md:text-[9px] uppercase tracking-[0.3em] font-bold text-white/20 group-hover:text-brand-green/60 transition-colors duration-500">
+                                                        <span className="md:hidden">TAP TO INTERACT</span>
+                                                        <span className="hidden md:inline">HOVER TO INTERACT</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Bottom bar: title + arrow */}
+                                    <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-5 pointer-events-none">
+                                        <span className="text-[10px] uppercase font-bold tracking-[0.15em] text-white/30 group-hover:text-white/70 transition-colors duration-500 truncate mr-3">
+                                            {comp!.title}
+                                        </span>
+                                        <div className="w-7 h-7 rounded-full border border-white/5 bg-[#030303] flex items-center justify-center group-hover:border-white/15 group-hover:bg-brand-green/10 transition-all duration-500">
+                                            <ArrowUpRight
+                                                size={12}
+                                                className="shrink-0 text-white/20 group-hover:text-brand-green transition-colors duration-500"
+                                            />
                                         </div>
                                     </div>
-                                ) : (
-                                    <div className="flex flex-col items-center gap-4 transition-all duration-500 group-hover:scale-105">
-                                        <div className="w-10 h-10 md:w-12 md:h-12 rounded-[14px] border border-white/[0.05] bg-[#050505] flex items-center justify-center group-hover:border-white/10 transition-all duration-500">
-                                            {getCategoryIcon(comp?.category, comp?.id)}
+
+                                    {/* Active border glow */}
+                                    {isActive && (
+                                        <div className="absolute inset-0 rounded-3xl ring-1 ring-brand-green/20 shadow-[0_0_30px_-5px_var(--color-brand-green,rgba(255,255,26,0.1))] pointer-events-none z-40 transition-all duration-500 opacity-50" />
+                                    )}
+
+                                    {/* PRO Badge */}
+                                    {comp!.isPremium && !isPro && (
+                                        <div className="absolute top-4 right-4 z-40 px-2 py-1 rounded-md bg-brand-green text-black text-[7px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(0,255,0,0.4)] border border-white/10">
+                                            PRO
                                         </div>
-                                        <div className="flex flex-col items-center">
-                                            <span className="text-[8px] md:text-[9px] uppercase tracking-[0.3em] font-bold text-white/20 group-hover:text-brand-green/60 transition-colors duration-500">
-                                                <span className="md:hidden">TAP TO INTERACT</span>
-                                                <span className="hidden md:inline">HOVER TO INTERACT</span>
-                                            </span>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Bottom bar: title + arrow */}
-                            <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-5 pointer-events-none">
-                                <span className="text-[10px] uppercase font-bold tracking-[0.15em] text-white/30 group-hover:text-white/70 transition-colors duration-500 truncate mr-3">
-                                    {comp!.title}
-                                </span>
-                                <div className="w-7 h-7 rounded-full border border-white/5 bg-[#030303] flex items-center justify-center group-hover:border-white/15 group-hover:bg-brand-green/10 transition-all duration-500">
-                                    <ArrowUpRight
-                                        size={12}
-                                        className="shrink-0 text-white/20 group-hover:text-brand-green transition-colors duration-500"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Active border glow */}
-                            {isActive && (
-                                <div className="absolute inset-0 rounded-3xl ring-1 ring-brand-green/20 shadow-[0_0_30px_-5px_var(--color-brand-green,rgba(255,255,26,0.1))] pointer-events-none z-40 transition-all duration-500 opacity-50" />
-                            )}
-
-                            {/* PRO Badge */}
-                            {comp!.isPremium && !isPro && (
-                                <div className="absolute top-4 right-4 z-40 px-2 py-1 rounded-md bg-brand-green text-black text-[7px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(0,255,0,0.4)] border border-white/10">
-                                    PRO
-                                </div>
-                            )}
-                        </motion.div>
-                    );
-                })}
-            </motion.div>
+                                    )}
+                                </motion.div>
+                            );
+                        })}
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Mobile / Global CTA */}
             <motion.div

@@ -9,6 +9,8 @@ import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
 import Toast from './Toast';
+import { useSkeleton } from '../../context/SkeletonContext';
+import { NavbarSkeleton } from './Skeleton';
 
 const MagneticButton = ({ children, className }: { children: React.ReactNode, className?: string }) => {
     const ref = useRef<HTMLButtonElement>(null);
@@ -80,6 +82,7 @@ const MagneticButton = ({ children, className }: { children: React.ReactNode, cl
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
     const { user, isPro, isElite, loading } = useAuth();
+    const { isLoading } = useSkeleton();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
     const navigate = useNavigate();
@@ -129,7 +132,26 @@ const Navbar = () => {
     const planTier: PlanTier = isElite ? 'elite' : isPro ? 'pro' : 'free';
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-0">
+        <AnimatePresence mode="wait">
+            {isLoading ? (
+                <motion.div
+                    key="navbar-skeleton"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="w-full"
+                >
+                    <NavbarSkeleton />
+                </motion.div>
+            ) : (
+                <motion.nav
+                    key="navbar-real"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 pb-0"
+                >
             {/* Floating pill navbar */}
             <div className="relative overflow-hidden max-w-7xl mx-auto flex items-center justify-between px-4 py-2.5 rounded-2xl bg-white/[0.02] backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.5)]">
                 {/* Glossy Overlay */}
@@ -446,7 +468,9 @@ const Navbar = () => {
                 message={toastMsg} 
                 onClose={() => setShowToast(false)} 
             />
-        </nav>
+                </motion.nav>
+            )}
+        </AnimatePresence>
     );
 };
 
