@@ -911,7 +911,7 @@ export default PortfolioScroll;
 }
 
 .marquee-selected-works__text {
-  font-size: 13vw;
+  font-size: clamp(2rem, 8vw, 6.5rem);
   font-weight: 500;
   line-height: 0.8;
   letter-spacing: -0.05em;
@@ -919,7 +919,7 @@ export default PortfolioScroll;
 }
 
 .marquee-selected-works__dash {
-  font-size: 13vw;
+  font-size: clamp(2rem, 8vw, 6.5rem);
   font-weight: 300;
   margin: 0 3vw;
   transform: translateY(-2px);
@@ -993,7 +993,7 @@ export default PortfolioScroll;
 }
 
 .scroll-stack-inner {
-  padding: 10vh 0 50vh;
+  padding: clamp(2rem, 6vh, 4rem) 0 clamp(10rem, 30vh, 20rem);
   display: flex;
   flex-direction: column;
   align-items: center;

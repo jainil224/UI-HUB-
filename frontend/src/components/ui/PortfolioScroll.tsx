@@ -439,7 +439,7 @@ export const PortfolioScroll: React.FC = () => {
       data-lenis-prevent
       className="portfolio-scroll-container w-full h-full overflow-y-auto scroll-smooth bg-black text-white font-sans relative"
     >
-      <div className="w-full h-[25vh] md:h-[25vh] lg:h-[70vh] border-b border-white/20 overflow-hidden flex items-center relative z-10 bg-black">
+      <div className="w-full h-[20vh] md:h-[25vh] lg:h-[35vh] max-h-[220px] border-b border-white/20 overflow-hidden flex items-center relative z-10 bg-black">
         <div className="marquee-selected-works">
           <div className="marquee-selected-works__track">
             {[0, 1, 2, 3].map((blockIndex) => (
