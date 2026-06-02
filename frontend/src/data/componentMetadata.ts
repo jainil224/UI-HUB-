@@ -594,6 +594,25 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "interactive-hover-button": {
+        props: [
+            { name: "text", type: "string", default: '"Button"', description: "Label text shown in the idle button." },
+            { name: "loadingText", type: "string", default: '"Processing..."', description: "Text shown during the loading state." },
+            { name: "successText", type: "string", default: '"Complete!"', description: "Text shown during the success state." },
+            { name: "variant", type: "'default' | 'neon' | 'dark' | 'sparkle'", default: "'default'", description: "Styling variant of the button (matches Explore Components, View Source, Sign In from user design)." },
+            { name: "icon", type: "React.ReactNode", default: "undefined", description: "Custom icon displayed next to the text on hover." },
+            { name: "classes", type: "string", default: "undefined", description: "Additional tailwind classes for custom positioning or sizing." }
+        ],
+        vibeMeta: {
+            behavior: "An interactive button featuring a dot-scaling hover animation. On hover, the background dot scales up to fill the container, while text shifts and fades to reveal centered text and an action icon with smooth transition springs.",
+            states: { from: "pill button with colored dot", to: "solid colored button with shifting text + sliding icon" },
+            cssProperties: ["transform", "opacity", "scale", "overflow: hidden", "transition-all"],
+            description: "High-performance interactive hover button with expandable dot background and sliding icon animations.",
+            libraries: ["framer-motion", "clsx", "tailwind-merge"],
+            requirements: ["Spring physics layout constraints", "AnimatePresence client transitions", "Overflow hidden button container", "Dynamic icon support"]
+        }
+    },
+
     "marquee-hover-button": {
         props: [
             { name: "label", type: "string", default: '"Hover Me"', description: "The text shown at rest." },

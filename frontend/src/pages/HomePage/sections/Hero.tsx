@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link } from 'react-router-dom';
-import { Github, ArrowRight } from 'lucide-react';
+import { Github } from 'lucide-react';
+import InteractiveHoverButton from '../../../components/ui/interactive-hover-button';
 import Logo from '../../../components/ui/Logo';
 import ViewSourceButton from '../../../components/ui/ViewSourceButton';
 import { useSkeleton } from '../../../context/SkeletonContext';
@@ -130,14 +131,12 @@ const Hero = () => {
                     transition={{ delay: 0.7 }}
                     className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-8 px-4"
                 >
-                    <Link to="/library" className="w-full sm:w-auto">
-                        <button className="w-full bg-brand-green text-black font-black px-12 py-5 rounded-full text-sm uppercase tracking-widest hover:scale-105 active:scale-95 transition-all green-glow group relative overflow-hidden">
-                            <span className="relative z-10 flex items-center justify-center gap-2">
-                                Explore Components
-                                <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-                            </span>
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full hover:animate-shimmer" />
-                        </button>
+                    <Link to="/library" className="w-full sm:w-auto flex justify-center">
+                        <InteractiveHoverButton 
+                            variant="neon"
+                            text="Explore Components"
+                            classes="w-full sm:w-auto min-w-56 py-5 px-12 text-sm uppercase tracking-widest font-black"
+                        />
                     </Link>
                     <ViewSourceButton className="w-full sm:w-auto" />
 

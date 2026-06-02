@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Github, Menu, X, Sparkles, LogOut, User as UserIcon, Search } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import Logo from './Logo';
+import InteractiveHoverButton from './interactive-hover-button';
 import PlanBadge, { PlanTier } from './PlanBadge';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
@@ -333,11 +334,13 @@ const Navbar = () => {
                             </button>
                         </motion.div>
                     ) : (
-                        <Link to="/login">
-                            <MagneticButton className="hidden sm:flex group">
-                                <Sparkles size={12} className="shrink-0 relative z-10" />
-                                <span className="relative z-10">Sign In</span>
-                            </MagneticButton>
+                        <Link to="/login" className="hidden sm:flex">
+                            <InteractiveHoverButton
+                                variant="sparkle"
+                                text="Sign In"
+                                classes="py-2.5 px-5 text-sm font-bold min-w-36"
+                                icon={<Sparkles size={12} />}
+                            />
                         </Link>
                     )}
 
@@ -451,10 +454,15 @@ const Navbar = () => {
                             ) : (
                                 <Link 
                                     to="/login" 
-                                    className="flex-1 flex items-center justify-center gap-1.5 bg-brand-green text-black px-4 py-2.5 rounded-xl text-sm font-bold active:scale-[0.98] transition-all shadow-[0_4_12px_rgba(0,255,0,0.2)]"
+                                    className="flex-1 flex justify-center"
                                     onClick={() => setIsOpen(false)}
                                 >
-                                    <Sparkles size={13} /> Sign In
+                                    <InteractiveHoverButton
+                                        variant="sparkle"
+                                        text="Sign In"
+                                        classes="w-full py-2.5 px-4 text-sm font-bold min-w-full"
+                                        icon={<Sparkles size={13} />}
+                                    />
                                 </Link>
                             )}
                         </div>

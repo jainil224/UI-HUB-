@@ -1953,6 +1953,45 @@ export const GlowButton = () => {
         vibePrompt: ""
     },
     {
+        id: "interactive-hover-button",
+        title: "Interactive Hover Button",
+        category: "button",
+        preview: renderComponent("interactive-hover-button", "Interactive Hover Button"),
+        code: `import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
+import { Github, Sparkles } from 'lucide-react';
+
+export const Demo = () => (
+  <div className="flex flex-col md:flex-row items-center gap-6">
+    {/* Explore Components style */}
+    <InteractiveHoverButton 
+      variant="neon"
+      text="Explore Components" 
+      loadingText="Loading..."
+      successText="Complete!"
+    />
+
+    {/* View Source style */}
+    <InteractiveHoverButton 
+      variant="dark"
+      text="View Source" 
+      loadingText="Fetching..."
+      successText="Fetched!"
+      icon={<Github className="h-4 w-4" />}
+    />
+
+    {/* Sign In style */}
+    <InteractiveHoverButton 
+      variant="sparkle"
+      text="Sign In" 
+      loadingText="Authenticating..."
+      successText="Signed In!"
+      icon={<Sparkles className="h-4 w-4" />}
+    />
+  </div>
+);`,
+        vibePrompt: ""
+    },
+    {
         id: "aurora-cursor",
         title: "Aurora Cursor",
         category: "cursor",
