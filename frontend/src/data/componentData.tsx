@@ -1958,7 +1958,7 @@ export const GlowButton = () => {
         category: "button",
         preview: renderComponent("interactive-hover-button", "Interactive Hover Button"),
         code: `import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
-import { Github, Sparkles } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 export const Demo = () => (
   <div className="flex flex-col md:flex-row items-center gap-6">
@@ -1977,15 +1977,6 @@ export const Demo = () => (
       loadingText="Fetching..."
       successText="Fetched!"
       icon={<Github className="h-4 w-4" />}
-    />
-
-    {/* Sign In style */}
-    <InteractiveHoverButton 
-      variant="sparkle"
-      text="Sign In" 
-      loadingText="Authenticating..."
-      successText="Signed In!"
-      icon={<Sparkles className="h-4 w-4" />}
     />
   </div>
 );`,

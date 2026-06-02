@@ -616,7 +616,7 @@ export { IsometricGridBackground } from '../ui/isometric-grid-background';
 // Button Previews
 import { BorderBeam as BorderBeamUI } from '../ui/border-beam';
 import InteractiveHoverButtonUI from '../ui/interactive-hover-button';
-import { Github, Sparkles as SparklesIcon } from 'lucide-react';
+import { Github } from 'lucide-react';
 
 export const GlowButton = () => {
     const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
@@ -773,18 +773,6 @@ export const InteractiveHoverButton = () => (
                     loadingText="Fetching..."
                     successText="Fetched!"
                     icon={<Github className="h-4 w-4" />}
-                />
-            </div>
-
-            {/* Sparkle variant (Sign In style from image) */}
-            <div className="flex flex-col items-center gap-2">
-                <span className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase">Sparkle Sign In</span>
-                <InteractiveHoverButtonUI 
-                    variant="sparkle"
-                    text="Sign In" 
-                    loadingText="Authenticating..."
-                    successText="Signed In!"
-                    icon={<SparklesIcon className="h-4 w-4" />}
                 />
             </div>
         </div>
