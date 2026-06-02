@@ -13,13 +13,18 @@ import { ArrowRight, Check } from 'lucide-react'
 import { AnimatePresence, HTMLMotionProps, motion } from 'framer-motion'
 import { cn } from '../../lib/utils'
 
-interface InteractiveHoverButtonProps extends HTMLMotionProps<'button'> {
+interface InteractiveHoverButtonProps {
   text?: string
   loadingText?: string
   successText?: string
   classes?: string
   variant?: 'default' | 'neon' | 'dark' | 'sparkle'
   icon?: React.ReactNode
+  href?: string
+  target?: string
+  rel?: string
+  onClick?: (e: React.MouseEvent<any>) => void
+  [key: string]: any
 }
 
 export default function InteractiveHoverButton({
@@ -35,7 +40,7 @@ export default function InteractiveHoverButton({
 
   const isIdle = status === 'idle'
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (e: React.MouseEvent<any>) => {
     if (status !== 'idle') return
 
     setStatus('loading')
@@ -81,9 +86,10 @@ export default function InteractiveHoverButton({
   }
 
   const currentStyles = variantStyles[variant] || variantStyles.default
+  const Component = (props.href ? motion.a : motion.button) as any
 
   return (
-    <motion.button
+    <Component
       className={cn(
         'group relative flex min-w-40 items-center justify-center overflow-hidden rounded-full p-2 px-6 font-semibold transition-all duration-300',
         status === 'loading' && 'px-2', // Circle shape when loading
@@ -155,6 +161,6 @@ export default function InteractiveHoverButton({
           </div>
         </motion.div>
       </AnimatePresence>
-    </motion.button>
+    </Component>
   )
 }
