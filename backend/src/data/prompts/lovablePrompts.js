@@ -1596,4 +1596,34 @@ Create a premium "Aiva" 3D character component using React, TypeScript, and Tail
 
 Create a premium "LaptopBot" 3D character component using React, TypeScript, and Tailwind CSS. Ensure it has interactive animations, sound effects, and floating UI elements exactly as shown in the reference code.`,
 
+  "interactive-hover-button": `# UI HUB • LOVABLE PROMPT
+Create a visually stunning "Interactive Hover Button" component.
+
+## Concept
+A beautiful, highly interactive button featuring custom hover and click micro-interactions. On hover, a circular background expands dynamically to cover the button, while the text translates and reveals an animated arrow. On click, the arrow transitions into a checkmark. It supports default, neon, and dark aesthetic variants.
+
+## Tech
+- React + Framer Motion (scale, translation, AnimatePresence)
+- Lucide React (ArrowRight, Check)
+- Tailwind CSS
+- clsx / tailwind-merge
+
+## Animation Details
+- **Background Expansion**: A small circle centered at the right side scales up (scale: 300) on hover to cover the whole background seamlessly.
+- **Icon Swap**: AnimatePresence handles the transition from ArrowRight to Check icon upon click, with a staggered fade-in/out.
+- **Text Slide**: The label text moves to the left/right slightly on hover to balance the layout as the icon slides in from the right.
+
+## Performance
+- Uses hardware-accelerated transforms for scale and translate.
+- Zero layout shifts.
+
+## Props
+- children: React.ReactNode
+- className: string
+- variant: 'default' | 'neon' | 'dark'
+- text: string
+
+## Output
+Production-ready React component
+`
 };

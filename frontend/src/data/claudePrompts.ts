@@ -2660,5 +2660,68 @@ export default RubiksCube;
 * GPU-accelerated transforms (matrix3d).
 * Minimal re-renders through Ref-based matrix management.
 * Optimized event listeners with cleanup on unmount.`,
+
+    'interactive-hover-button': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: InteractiveHoverButton
+Type: Interactive UI Button
+
+---
+
+## Tech Stack
+
+* React
+* TypeScript
+* Framer Motion
+* Tailwind CSS
+* Lucide React
+* clsx
+* tailwind-merge (cn utility)
+
+---
+
+## Requirements
+
+* An interactive button with a circular expansion animation that fills the button on hover.
+* Supports standard, neon, and dark style variants.
+* Text or children translates to the right on hover, revealing an arrow icon (or check icon if clicked) that slides in.
+* Customize hover scale expansion factor dynamically to prevent visual clipping.
+* Uses Framer Motion's AnimatePresence for smooth icon swapping states.
+
+---
+
+## Props
+
+* children: React.ReactNode — button content text
+* className: string — additional CSS overrides
+* variant: "default" | "neon" | "dark" = "default" — styling variants
+* text: string — optional label text (fallback for children)
+
+---
+
+## Performance
+
+* High-performance GPU-accelerated circle scale animations using Framer Motion.
+* Optimized state transitions for hover and click micro-interactions.
+`
 };
 

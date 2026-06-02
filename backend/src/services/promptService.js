@@ -61,6 +61,7 @@ const resolveSourceCode = async (componentId) => {
     'sparkles-background': 'ui/sparkles-background.tsx',
     '3d-rubiks-cube': 'ui/RubiksCube.tsx',
     '3d-landing-page': 'ui/ThreeDLandingPage.tsx',
+    'interactive-hover-button': 'ui/interactive-hover-button.tsx',
   };
 
   const relativePath = mapping[componentId];

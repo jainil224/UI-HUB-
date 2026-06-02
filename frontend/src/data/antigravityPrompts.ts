@@ -822,6 +822,84 @@ Build a fluid, high-performance SVG vector page transition component in React + 
 * TypeScript
 * GSAP
 * Tailwind CSS
+`,
+
+    "interactive-hover-button": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component with a "Circular Expansion" hover interaction.
+
+---
+
+## COMPONENT INFO
+
+Name: InteractiveHoverButton
+Type: UI / Interaction
+
+---
+
+## GOAL
+
+Create a button where hovering triggers a colored circle to scale up and fully cover the background, shifting text color and sliding in a dynamic status/arrow icon.
+
+---
+
+## TECH STACK
+
+* React
+* TypeScript (TSX)
+* Framer Motion
+* Tailwind CSS
+* Lucide React
+* clsx
+* tailwind-merge (cn utility)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Circular Expand Hover**: Colored background dot at the right side scales up on hover to fill the button background.
+* **Arrow / Status Shift**: Text pushes to the left/right and slides in an arrow icon. On click, the icon animates to a checkmark icon using AnimatePresence.
+* **Style Variants**: Supports "default" (indigo), "neon" (neon green shadow/border), and "dark" (slate) variants.
+* **Prop Customizability**: Control className, variant, and content.
+
+---
+
+## CRITICAL RULES (ZERO-FAILURE)
+
+1. **Clip Prevention**: Set the expansion circle's hover scale factor to be large enough (e.g. scale up to 300) to ensure it fully masks the button box.
+2. **Animation Easing**: Use custom transition timings (duration ~0.3s) for a snappy physical response.
+3. **TypeScript**: Fully type all props and states.
+
+---
+
+## PROPS (with defaults):
+- children: React.ReactNode — button text payload.
+- className: string = '' — layout custom classes.
+- variant: 'default' | 'neon' | 'dark' = 'default' — styling variant selector.
+- text: string = '' — optional fallback text content.
+
+---
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `
 };
 

@@ -66,4 +66,36 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
 6. **Bottom-right link "DISCOVER IT"** (\`absolute bottom-6 right-4 sm:bottom-20 sm:right-10\`, zIndex 60): \`<a>\` flex items-center, font Anton, \`fontSize: clamp(20px, 4vw, 56px)\`, weight 400, white, opacity 0.95→1 on hover (200ms), letterSpacing \`-0.02em\`, lineHeight 1, uppercase, no underline. Followed by \`ArrowRight\` (\`w-5 h-5 sm:w-8 sm:h-8\`, strokeWidth 2.25).
 
 **Behavior summary:** clicking arrows rotates roles; background color, image positions, scales, blurs, and opacities all crossfade simultaneously over 650ms with \`cubic-bezier(0.4,0,0.2,1)\`. The character images sit at the bottom of the screen overlapping the giant "3D SHAPE" text behind them.
-`,};
+`,
+
+    "interactive-hover-button": `# UI HUB • LOVABLE PROMPT
+Create a visually stunning "Interactive Hover Button" component.
+
+## Concept
+A beautiful, highly interactive button featuring custom hover and click micro-interactions. On hover, a circular background expands dynamically to cover the button, while the text translates and reveals an animated arrow. On click, the arrow transitions into a checkmark. It supports default, neon, and dark aesthetic variants.
+
+## Tech
+- React + Framer Motion (scale, translation, AnimatePresence)
+- Lucide React (ArrowRight, Check)
+- Tailwind CSS
+- clsx / tailwind-merge
+
+## Animation Details
+- **Background Expansion**: A small circle centered at the right side scales up (scale: 300) on hover to cover the whole background seamlessly.
+- **Icon Swap**: AnimatePresence handles the transition from ArrowRight to Check icon upon click, with a staggered fade-in/out.
+- **Text Slide**: The label text moves to the left/right slightly on hover to balance the layout as the icon slides in from the right.
+
+## Performance
+- Uses hardware-accelerated transforms for scale and translate.
+- Zero layout shifts.
+
+## Props
+- children: React.ReactNode
+- className: string
+- variant: 'default' | 'neon' | 'dark'
+- text: string
+
+## Output
+Production-ready React component
+`
+};
