@@ -1980,7 +1980,7 @@ export const Demo = () => (
     />
   </div>
 );`,
-        vibePrompt: ""
+        vibePrompt: "Create a highly-customizable 'InteractiveHoverButton' React component using Framer Motion and Tailwind CSS. The button features an expanding background-dot hover animation where a small circular dot scales up smoothly by 300x to fill the container. Text shifts, scales, and fades using spring physics to reveal centered text and an action icon. Support multiple premium style variants: a 'neon' variant (neon green background, black text/dot, black hover state with neon text/arrow icon) and a 'dark' variant (black background, thin white border, white text/dot, white hover state with black text/GitHub icon). The component dynamically supports rendering as either a standard button or a semantic anchor tag when an href is supplied, and includes proper micro-animations for async task states (idle, loading spinner, and success checkmark)."
     },
     {
         id: "aurora-cursor",
