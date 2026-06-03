@@ -185,17 +185,18 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
 }) => {
     const itemRef = useRef<HTMLDivElement>(null);
     const marqueeRef = useRef<HTMLDivElement>(null);
+    const marqueeInnerWrapRef = useRef<HTMLDivElement>(null);
     const marqueeInnerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const marqueeInner = marqueeInnerRef.current;
         if (!marqueeInner) return;
 
-        // Horizontally translate marquee content infinitely
+        // Horizontally translate marquee content infinitely using percentage
+        // This continues running without interruption, even on hover
         let ctx = gsap.context(() => {
-            const width = marqueeInner.scrollWidth / 2;
             gsap.to(marqueeInner, {
-                x: -width,
+                xPercent: -50,
                 duration: speed,
                 ease: 'none',
                 repeat: -1,
@@ -203,42 +204,43 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
         }, marqueeInner);
 
         return () => ctx.revert();
-    }, [speed, repeats]);
+    }, [speed]);
 
     const handleMouseEnter = (ev: React.MouseEvent) => {
         const el = itemRef.current;
         const marquee = marqueeRef.current;
-        const marqueeInner = marqueeInnerRef.current;
-        if (!el || !marquee || !marqueeInner) return;
+        const marqueeInnerWrap = marqueeInnerWrapRef.current;
+        if (!el || !marquee || !marqueeInnerWrap) return;
 
         const rect = el.getBoundingClientRect();
         const edge = ev.clientY - rect.top < rect.height / 2 ? 'top' : 'bottom';
 
         const animationDefaults = { duration: 0.5, ease: 'power3.out' };
 
-        gsap.killTweensOf([marquee, marqueeInner]);
+        // Kill only vertical transition tweens to keep horizontal scrolling unaffected
+        gsap.killTweensOf([marquee, marqueeInnerWrap]);
         gsap.set(marquee, { y: edge === 'top' ? '-101%' : '101%' });
-        gsap.set(marqueeInner, { y: edge === 'top' ? '101%' : '-101%' });
-        gsap.to([marquee, marqueeInner], { y: '0%', ...animationDefaults });
+        gsap.set(marqueeInnerWrap, { y: edge === 'top' ? '101%' : '-101%' });
+        gsap.to([marquee, marqueeInnerWrap], { y: '0%', ...animationDefaults });
     };
 
     const handleMouseLeave = (ev: React.MouseEvent) => {
         const el = itemRef.current;
         const marquee = marqueeRef.current;
-        const marqueeInner = marqueeInnerRef.current;
-        if (!el || !marquee || !marqueeInner) return;
+        const marqueeInnerWrap = marqueeInnerWrapRef.current;
+        if (!el || !marquee || !marqueeInnerWrap) return;
 
         const rect = el.getBoundingClientRect();
         const edge = ev.clientY - rect.top < rect.height / 2 ? 'top' : 'bottom';
 
         const animationDefaults = { duration: 0.5, ease: 'power3.out' };
 
-        gsap.killTweensOf([marquee, marqueeInner]);
+        gsap.killTweensOf([marquee, marqueeInnerWrap]);
         gsap.to(marquee, {
             y: edge === 'top' ? '-101%' : '101%',
             ...animationDefaults,
         });
-        gsap.to(marqueeInner, {
+        gsap.to(marqueeInnerWrap, {
             y: edge === 'top' ? '101%' : '-101%',
             ...animationDefaults,
         });
@@ -260,7 +262,7 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
                 className="marquee-overlay" 
                 style={{ backgroundColor: marqueeBgColor }}
             >
-                <div className="marquee__inner-wrap">
+                <div ref={marqueeInnerWrapRef} className="marquee__inner-wrap">
                     <div ref={marqueeInnerRef} className="marquee__inner">
                         {/* Render duplicates of marquee items to fill loop width */}
                         {Array.from({ length: repeats * 2 }).map((_, i) => (
