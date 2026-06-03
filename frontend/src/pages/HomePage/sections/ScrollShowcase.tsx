@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { useTheme } from '../../../context/ThemeContext';
+import { useSkeleton } from '../../../context/SkeletonContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,6 +25,16 @@ const WhatIDoSVG: React.FC<{ className?: string }> = ({ className = '' }) => (
 export const ScrollShowcase: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme: activeMode } = useTheme();
+  const { isLoading } = useSkeleton();
+
+  useEffect(() => {
+    if (!isLoading) {
+      const timer = setTimeout(() => {
+        ScrollTrigger.refresh();
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
 
   useGSAP(() => {
     // 1. Text Scroll reveal clip-path math
