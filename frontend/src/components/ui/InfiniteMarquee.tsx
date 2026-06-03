@@ -19,10 +19,10 @@ export interface InfiniteMarqueeProps {
 }
 
 const DEFAULT_ITEMS: MarqueeItem[] = [
-    { text: "Grow", link: "#", image: "https://picsum.photos/600/400?random=1" },
-    { text: "Learn", link: "#", image: "https://picsum.photos/600/400?random=2" },
-    { text: "Build", link: "#", image: "https://picsum.photos/600/400?random=3" },
-    { text: "Animmaster", link: "#", image: "https://picsum.photos/600/400?random=4" }
+    { text: "UI Hub", link: "#", image: "https://picsum.photos/600/400?random=1" },
+    { text: "UI Components", link: "#", image: "https://picsum.photos/600/400?random=2" },
+    { text: "Design Systems", link: "#", image: "https://picsum.photos/600/400?random=3" },
+    { text: "Web Animations", link: "#", image: "https://picsum.photos/600/400?random=4" }
 ];
 
 export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
