@@ -64,6 +64,7 @@ const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number
 };
 
 const Timeline = ({ progress }: { progress: number }) => {
+  const isMobile = useIsMobile();
   const { camera } = useThree();
   const isActive = usePortalStore((state) => state.activePortalId === 'work');
   const timeline = useMemo(() => WORK_TIMELINE, []);

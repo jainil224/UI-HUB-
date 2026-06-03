@@ -2,7 +2,7 @@ import { Image, useScroll } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect } from "react";
-import { isMobile } from "react-device-detect";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import * as THREE from "three";
 import { usePortalStore } from "@stores";
 import { Memory } from "../../models/Memory";
@@ -10,6 +10,7 @@ import UiHubProjectsCarousel from "../projects/UiHubProjectsCarousel";
 import { TouchPanControls } from "../projects/TouchPanControls";
 
 const UiHubProjects = () => {
+  const isMobile = useIsMobile();
   const { camera } = useThree();
   const isActive = usePortalStore((state) => state.activePortalId === "ui-hub");
   const data = useScroll();
