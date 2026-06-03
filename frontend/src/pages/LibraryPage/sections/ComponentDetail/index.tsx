@@ -26,6 +26,8 @@ const preloadComponent = (id: string) => {
         import('../../../Components/Scroll3DAnimationPage');
     } else if (id === '3d-slider') {
         import('../../../Components/ThreeDSliderPage');
+    } else if (id === 'cloud-scroll') {
+        import('../../../Components/CloudScrollPage');
     }
 };
 
@@ -746,6 +748,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             sliderImages.forEach((url, i) => {
                 assets.push({ url, fileName: `assets/slide${i + 1}.jpg` });
             });
+        } else if (item.id === 'cloud-scroll') {
+            assets.push(
+                { url: '/models/dalithe_persistence_of_memory.glb', fileName: 'models/dalithe_persistence_of_memory.glb' },
+                { url: '/models/wanderer_above_the_sea_of_fog.glb', fileName: 'models/wanderer_above_the_sea_of_fog.glb' },
+                { url: '/models/window.glb', fileName: 'models/window.glb' },
+                { url: '/soria-font.ttf', fileName: 'soria-font.ttf' }
+            );
         }
 
         await downloadComponentZip(item.id, item.title, assets, reactCode, htmlCode);
@@ -885,7 +894,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                                             </Link>
                                         )}
-                                            {(item.id === '3d-scroll-animation' || item.id === '3d-slider' || item.id === '3d-rubiks-cube' || item.id === 'svg-page-transition') && (
+                                            {(item.id === '3d-scroll-animation' || item.id === '3d-slider' || item.id === '3d-rubiks-cube' || item.id === 'svg-page-transition' || item.id === 'cloud-scroll') && (
                                                 <motion.button
                                                     initial={{ opacity: 0, x: 20 }}
                                                     animate={{ opacity: 1, x: 0 }}

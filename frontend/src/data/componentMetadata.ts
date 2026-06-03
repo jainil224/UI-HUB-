@@ -141,6 +141,17 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["300-frame image sequence preloading", "Canvas-driven high-performance scrubbing", "GSAP ScrollTrigger master timeline", "Staggered blur-in/out text transitions", "Infinite horizontal hero marquee", "Premium percentage loader UI"]
         }
     },
+    "cloud-scroll": {
+        props: [],
+        vibeMeta: {
+            behavior: "An immersive 3D cloud scrolling experience featuring floating clouds, interactive portals to work/education and side projects, integrated timeline and projects carousel, ambient music/theme switching, and smooth scroll animations.",
+            states: { from: "floating clouds", to: "3D portal experience on scroll" },
+            cssProperties: ["canvas", "background-size: cover", "filter: blur", "z-index"],
+            description: "Immersive 3D cloud scrolling experience featuring floating clouds, interactive portals, and projects carousel.",
+            libraries: ["three", "@react-three/fiber", "@react-three/drei", "gsap", "zustand", "react-device-detect"],
+            requirements: ["Three.js custom ShaderMaterial", "Portal navigation with MeshPortalMaterial", "Zustand state management", "Interactive R3F text layout", "GSAP camera movement animations", "Vercetti and Soria font styles"]
+        }
+    },
     "portfolio-scroll": {
         props: [],
         vibeMeta: {

@@ -787,6 +787,26 @@ ${componentHeader}
                 ))}
             </div>
         </div>`);
+    case "cloud-scroll":
+      return isTS ? `import React from 'react';
+import CloudScroll from '@/components/ui/CloudScroll/CloudScroll';
+
+export const Component: React.FC = () => {
+  return (
+    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">
+      <CloudScroll />
+    </div>
+  );
+};` : `import React from 'react';
+import CloudScroll from '@/components/ui/CloudScroll/CloudScroll';
+
+export const Component = () => {
+  return (
+    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">
+      <CloudScroll />
+    </div>
+  );
+};`;
     case "3d-scroll-animation":
       return isTS ? `import React, { useEffect, useRef, useState, useCallback } from 'react';\nimport { gsap } from 'gsap';\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\n\ngsap.registerPlugin(ScrollTrigger);\n\nexport const Component: React.FC = () => {\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const [progress, setProgress] = useState(0);\n  const frameCount = 300;\n\n  useEffect(() => {\n    // Implementation logic here...\n  }, []);\n\n  return <div className="h-[500vh] bg-[#f1f1f1]"><canvas ref={canvasRef} className="fixed inset-0 w-full h-full object-cover" /></div>;\n};` : `// JS Version...`;
     case "3d-slider":

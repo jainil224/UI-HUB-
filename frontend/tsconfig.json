@@ -18,9 +18,29 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@stores": [
+        "./src/components/ui/CloudScroll/stores"
+      ],
+      "@constants": [
+        "./src/components/ui/CloudScroll/constants"
+      ],
+      "@types": [
+        "./src/components/ui/CloudScroll/types"
+      ],
+      "@/app/stores": [
+        "./src/components/ui/CloudScroll/stores"
+      ],
+      "@/app/stores/*": [
+        "./src/components/ui/CloudScroll/stores/*"
       ]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public"
+  ]
 }

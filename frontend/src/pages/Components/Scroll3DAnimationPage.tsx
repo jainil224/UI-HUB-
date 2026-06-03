@@ -7,7 +7,7 @@ const Scroll3DAnimationPage: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="relative min-h-screen bg-[#f1f1f1]">
+        <div className="relative min-h-screen bg-[#f1f1f1]" data-lenis-prevent>
             {/* Back Button */}
             <button
                 onClick={() => navigate('/library?id=3d-scroll-animation')}

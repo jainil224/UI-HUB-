@@ -259,7 +259,7 @@ const AboutView = () => (
             <div className="lg:col-span-4">
                 <BrutalCard noPadding className="aspect-square overflow-hidden group border-[4px]">
                     <img 
-                        src="/profile.jpg" 
+                        src="/Jainil Patel.png" 
                         alt="Profile" 
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 hover:scale-105"
                     />
@@ -572,7 +572,7 @@ export default function NeoBrutalism({ showDemoButton = false }: { showDemoButto
 
                     <div className={cn("p-6 border-t-[4px] border-black overflow-hidden group cursor-pointer bg-white transition-all", !isSidebarOpen && "p-3")} onClick={() => setActiveTab("About")}>
                         <div className={cn("flex items-center gap-5 p-3 transition-all border-[3px] border-black", isSidebarOpen ? "bg-[#F3F4F6] shadow-[4px_4px_0px_black]" : "bg-white border-none items-center justify-center p-0")}>
-                            <div className="w-12 h-12 bg-black border-[3px] border-black grayscale group-hover:grayscale-0 overflow-hidden shrink-0 transition-all group-hover:rotate-6 shadow-[3px_3px_0px_#B8FF9F]"><img src="/profile.jpg" alt="user" className="w-full h-full object-cover" /></div>
+                            <div className="w-12 h-12 bg-black border-[3px] border-black grayscale group-hover:grayscale-0 overflow-hidden shrink-0 transition-all group-hover:rotate-6 shadow-[3px_3px_0px_#B8FF9F]"><img src="/Jainil Patel.png" alt="user" className="w-full h-full object-cover" /></div>
                             {isSidebarOpen && <div className="overflow-hidden"><p className="font-black text-sm uppercase truncate mb-0.5">Jainil_Dev</p><p className="text-[10px] font-black opacity-40 uppercase tracking-widest">Architect_Unit_01</p></div>}
                         </div>
                     </div>

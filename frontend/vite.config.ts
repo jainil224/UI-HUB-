@@ -39,6 +39,10 @@ export default defineConfig(({mode}) => {
     },
     resolve: {
       alias: {
+        '@/app/stores': path.resolve(__dirname, 'src/components/ui/CloudScroll/stores'),
+        '@stores': path.resolve(__dirname, 'src/components/ui/CloudScroll/stores'),
+        '@constants': path.resolve(__dirname, 'src/components/ui/CloudScroll/constants'),
+        '@types': path.resolve(__dirname, 'src/components/ui/CloudScroll/types'),
         '@': path.resolve(__dirname, '.'),
       },
     },

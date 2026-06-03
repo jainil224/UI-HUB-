@@ -38,6 +38,8 @@ const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const PortfolioScroll = React.lazy(() => import('../components/ui/PortfolioScroll').then(m => ({ default: m.PortfolioScroll })));
+const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
+
 
 
 
@@ -1339,6 +1341,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
     'portfolio-scroll': PortfolioScroll,
+    'cloud-scroll': CloudScroll,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2342,6 +2345,15 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         preview: renderComponent("portfolio-scroll", "PortfolioScroll", { showDemoButton: true }),
         code: `import { PortfolioScroll } from '@/components/ui/PortfolioScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-full min-h-[600px] bg-black rounded-3xl overflow-hidden border border-white/5">\n      <PortfolioScroll />\n    </div>\n  );\n}`,
         vibePrompt: "Create a premium, high-fidelity scroll-driven card stacking experience in React + TSX. Each card is wrapped in a dynamic conic-gradient StarBorder component and tracks scroll positions with absolute sub-pixel smooth translations. Includes a rotating desktop Kinetic Wheel arc and a mobile S-curve drawing ribbon displaying Analyze, Design, Build, Deliver flaring text overlays based on scroll progress."
+    },
+    {
+        id: "cloud-scroll",
+        title: "Cloud Scroll",
+        category: "scroll",
+        isPremium: true,
+        preview: renderComponent("cloud-scroll", "CloudScroll", { showDemoButton: true }),
+        code: `import CloudScroll from '@/components/ui/CloudScroll/CloudScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <CloudScroll />\n    </div>\n  );\n}`,
+        vibePrompt: "An immersive 3D cloud scrolling experience featuring floating clouds, interactive portals to work/education and side projects, integrated timeline and projects carousel, ambient music/theme switching, and smooth scroll animations."
     }
 ];
 

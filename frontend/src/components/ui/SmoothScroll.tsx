@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import 'lenis/dist/lenis.css';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -11,9 +12,16 @@ interface SmoothScrollProps {
 }
 
 const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
+    const location = useLocation();
+
     useEffect(() => {
         // Disable smooth scroll on mobile devices for better performance and native feel
         if (typeof window !== 'undefined' && window.innerWidth < 768) {
+            return;
+        }
+
+        // Disable smooth scroll on demo routes to prevent conflict with R3F ScrollControls
+        if (location.pathname.startsWith('/demo')) {
             return;
         }
 
@@ -43,7 +51,7 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
             lenis.destroy();
             gsap.ticker.remove(raf);
         };
-    }, []);
+    }, [location.pathname]);
 
     return <>{children}</>;
 };
