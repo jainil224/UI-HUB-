@@ -15,6 +15,7 @@ interface GridTileProps {
   children: React.ReactNode;
   color: string;
   position: THREE.Vector3;
+  redirectUrl?: string;
 }
 
 // TODO: Rename this
@@ -24,7 +25,7 @@ const GridTile = (props: GridTileProps) => {
   const gridRef = useRef<THREE.Group>(null);
   const hoverBoxRef = useRef<THREE.Mesh>(null);
   const portalRef = useRef(null);
-  const { title, textAlign, children, color, position, id } = props;
+  const { title, textAlign, children, color, position, id, redirectUrl } = props;
   const { camera } = useThree();
   const setActivePortal = usePortalStore((state) => state.setActivePortal);
   const isActive = usePortalStore((state) => state.activePortalId === id);
@@ -63,9 +64,15 @@ const GridTile = (props: GridTileProps) => {
     }
   };
 
-  const portalInto = (e: React.MouseEvent) => {
+  const portalInto = (e: any) => {
     if (isActive || activePortalId) return;
     e.stopPropagation();
+
+    if (redirectUrl) {
+      window.open(redirectUrl, '_blank');
+      return;
+    }
+
     setActivePortal(id);
     document.body.style.cursor = 'auto';
     const div = document.createElement('div');

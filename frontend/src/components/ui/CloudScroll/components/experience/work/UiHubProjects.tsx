@@ -1,5 +1,5 @@
 import { Image, useScroll } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree, ThreeEvent } from "@react-three/fiber";
 import gsap from "gsap";
 import { useEffect } from "react";
 import { useIsMobile } from "../../../hooks/useIsMobile";
@@ -36,6 +36,11 @@ const UiHubProjects = () => {
     }
   });
 
+  const handleImageClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+    window.open("https://ui-hub-design.vercel.app/", "_blank");
+  };
+
   return (
     <group>
       {isActive ? (
@@ -44,7 +49,19 @@ const UiHubProjects = () => {
           <UiHubProjectsCarousel />
         </>
       ) : (
-        <Image url="/UI HUB.png" scale={[4, 4]} />
+        <Image 
+          url="/UI HUB.png" 
+          scale={[4, 4]} 
+          onClick={handleImageClick}
+          onPointerOver={(e) => {
+            e.stopPropagation();
+            document.body.style.cursor = 'pointer';
+          }}
+          onPointerOut={(e) => {
+            e.stopPropagation();
+            document.body.style.cursor = 'auto';
+          }}
+        />
       )}
       { isActive && isMobile && <TouchPanControls /> }
     </group>
