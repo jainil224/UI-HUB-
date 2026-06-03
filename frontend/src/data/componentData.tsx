@@ -39,6 +39,7 @@ const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTrans
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const PortfolioScroll = React.lazy(() => import('../components/ui/PortfolioScroll').then(m => ({ default: m.PortfolioScroll })));
 const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
+const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
 
 
 
@@ -1342,6 +1343,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'section-scroll': SectionScroll,
     'portfolio-scroll': PortfolioScroll,
     'cloud-scroll': CloudScroll,
+    'infinite-marquee': InfiniteMarquee,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2354,6 +2356,15 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         preview: renderComponent("cloud-scroll", "CloudScroll", { showDemoButton: true }),
         code: `import CloudScroll from '@/components/ui/CloudScroll/CloudScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <CloudScroll />\n    </div>\n  );\n}`,
         vibePrompt: "An immersive 3D cloud scrolling experience featuring floating clouds, interactive portals to work/education and side projects, integrated timeline and projects carousel, ambient music/theme switching, and smooth scroll animations."
+    },
+    {
+        id: "infinite-marquee",
+        title: "Infinite Marquee",
+        category: "scroll",
+        isPremium: false,
+        preview: renderComponent("infinite-marquee", "InfiniteMarquee"),
+        code: `import { InfiniteMarquee } from '@/components/ui/InfiniteMarquee';\n\nexport default function Demo() {\n  const items = [\n    { text: "Grow", link: "#", image: "https://picsum.photos/600/400?random=1" },\n    { text: "Learn", link: "#", image: "https://picsum.photos/600/400?random=2" },\n    { text: "Build", link: "#", image: "https://picsum.photos/600/400?random=3" },\n    { text: "Animmaster", link: "#", image: "https://picsum.photos/600/400?random=4" }\n  ];\n\n  return (\n    <div className="w-full h-[500px] rounded-3xl overflow-hidden border border-white/5">\n      <InfiniteMarquee \n        items={items} \n        speed={15} \n        textColor="#ffffff"\n        bgColor="#060010"\n        marqueeTextColor="#060010"\n        marqueeBgColor="#ffffff"\n      />\n    </div>\n  );\n}`,
+        vibePrompt: "A premium infinite scrolling marquee menu component with direction-aware hover animation. Hovering an item slides in a custom marquee overlay (from the top or bottom based on cursor position) containing repeated scrolling texts and images."
     }
 ];
 
