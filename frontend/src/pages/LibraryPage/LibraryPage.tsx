@@ -90,13 +90,13 @@ const LibraryPage = () => {
 
     const baseCategories: Category[] = [
         { name: "3D Design", items: allComponents.filter(item => item.category === '3d') },
+        { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
         { name: "Backgrounds", items: allComponents.filter(item => item.category === 'background') },
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
         { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
         { name: "3D CHATBOT", items: allComponents.filter(item => item.category === '3d-chatbot') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
-        { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ];
 
