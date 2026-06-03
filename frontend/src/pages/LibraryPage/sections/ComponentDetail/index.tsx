@@ -873,7 +873,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             <AnimatePresence mode="wait">
                                 {tab === 'preview' && (
                                     <div className="flex items-center gap-3">
-                                        {(item.category === 'portfolios' || item.category === '3d' || item.category === '3d-chatbot' || item.id.startsWith('3d-') || item.category === 'scroll') && (
+                                        {(item.category === '3d' || item.category === '3d-chatbot' || item.id.startsWith('3d-') || item.category === 'scroll') && (
                                             <Link
                                                 to={item.id === '3d-scroll-animation' ? '/demo/3d-scroll-animation' : 
                                                     item.id === '3d-slider' ? '/demo/3d-slider' : 
@@ -984,9 +984,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                         <div 
                             ref={previewRef}
-                            className={`min-h-[320px] sm:min-h-[280px] ${(item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' || item.category === 'scroll') ? 'md:min-h-[550px]' : 'md:min-h-0'} ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'} ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black' : ''}`}
+                            className={`min-h-[320px] sm:min-h-[280px] ${(item.category === '3d' || item.category === '3d-chatbot' || item.category === 'scroll') ? 'md:min-h-[550px]' : 'md:min-h-0'} ${item.category === '3d-chatbot' ? 'aspect-square md:aspect-video' : 'aspect-[4/3] md:aspect-video'} w-full glass rounded-2xl md:rounded-[3rem] relative overflow-hidden flex items-center justify-center ${theme === 'dark' ? 'bg-black/20 border border-white/5' : 'bg-white/30 border border-black/5'} ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black' : ''}`}
                         >
-                            {(item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' || item.category === 'scroll') && (
+                            {(item.category === '3d' || item.category === '3d-chatbot' || item.category === 'scroll') && (
                                 <button
                                     onClick={toggleFullscreen}
                                     className={`absolute top-6 right-6 p-3 rounded-full bg-black/40 backdrop-blur-md border border-white/10 text-white/70 hover:text-white hover:bg-black/60 transition-all z-50 group ${isFullscreen ? 'opacity-40 hover:opacity-100' : ''}`}
@@ -996,9 +996,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 </button>
                             )}
                             <div
-                                className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' || item.category === 'scroll' ? 'h-full' : 'px-2 md:px-8'}`}
+                                className={`text-center w-full ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === '3d-chatbot' || item.category === 'scroll' ? 'h-full' : 'px-2 md:px-8'}`}
                             >
-                                <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === 'portfolios' || item.category === '3d-chatbot' || item.category === 'scroll' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
+                                <div className={`flex justify-center ${item.category === 'background' || item.category === 'cursor' || item.category === '3d' || item.category === '3d-chatbot' || item.category === 'scroll' ? 'h-full w-full' : 'scale-[0.65] sm:scale-75 md:scale-100'}`} key={resetKey}>
                                     <React.Suspense fallback={
                                         <div className="flex flex-col items-center justify-center p-12 text-white/20">
                                             <div className="w-8 h-8 rounded-full border-2 border-white/5 border-t-brand-green animate-spin mb-4" />

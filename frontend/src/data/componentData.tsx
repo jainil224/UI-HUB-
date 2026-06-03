@@ -17,8 +17,6 @@ const InteractiveWebGLScene = React.lazy(() => import('../components/ui/Interact
 const Scroll3DAnimation = React.lazy(() => import('../components/ui/Scroll3DAnimation'));
 const ThreeDSlider = React.lazy(() => import('../components/ui/ThreeDSlider').then(m => ({ default: m.ThreeDSlider })));
 export const RubiksCube = React.lazy(() => import('../components/ui/RubiksCube').then(m => ({ default: m.default })));
-const BlackBox = React.lazy(() => import('../components/ui/BlackBox'));
-const NeoBrutalism = React.lazy(() => import('../components/ui/NeoBrutalism'));
 const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then(m => ({ default: m.HeartCursor })));
 const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
@@ -1270,7 +1268,7 @@ const ThreeDSliderPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "portfolios" | "3d-chatbot" | "scroll";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "3d-chatbot" | "scroll";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -1321,8 +1319,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     '3d-scroll-animation': Scroll3DAnimation,
     '3d-slider': ThreeDSlider,
     '3d-rubiks-cube': RubiksCube,
-    'black-box': BlackBox,
-    'neo-brutalism-os': NeoBrutalism,
     'heart-cursor': HeartCursor,
     'lizard-cursor': LizardCursor,
     'venom-cursor': VenomCursor,
@@ -2066,7 +2062,7 @@ export const Demo = () => (
         id: "3d-hero",
         title: "3D Hero",
         category: "3d",
-        isPremium: false,
+        isPremium: true,
         preview: renderComponent("3d-hero", "ToonhubHero"),
         code: `import ToonhubHero from '@/components/ui/ToonhubHero';\n\nexport default function Demo() {\n  return <ToonhubHero />;\n}`,
         vibePrompt: `Build a single full-viewport hero section in React + TypeScript + Vite + Tailwind CSS, using \`lucide-react\` for icons. The component is a character-figurine carousel called "TOONHUB".
@@ -2250,24 +2246,6 @@ CLICK EFFECT:
 
 TECH: React + TypeScript + Canvas 2D API + requestAnimationFrame + mix-blend-mode: screen
 Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultCursor, className`
-    },
-    {
-        id: "black-box",
-        title: "Black Box",
-        category: "portfolios",
-        isPremium: true,
-        preview: renderComponent("black-box", "BlackBox"),
-        code: `import BlackBox from '@/components/ui/BlackBox';\n\nexport default function Demo() {\n  return <BlackBox />;\n}`,
-        vibePrompt: "Create a high-performance cyberpunk glitch-style dashboard portfolio ('BlackBox') using React, Tailwind CSS, 'motion/react', 'recharts', and 'lucide-react'. Implement a 'Share Tech Mono' and 'Rubik Glitch' font aesthetic. The header should feature 'UI HUB' branding and the subtitle 'Next-Gen UI Experiences'. Include a terminal simulation logs array with 'ESTABLISHING NEXT-GEN UI SYSTEMS...'. The hero section must feature the title 'WE BUILD NEXT-GEN UI EXPERIENCES' and the description 'Designing Next-Gen UI Systems That Make Brands Unforgettable'. Buttons should be labeled 'GET STARTED' and 'EXPLORE WORK'. Include animated line charts, system stats cards with icons, and a custom 'TargetCursor' that snaps to elements with the 'cursor-target' class."
-    },
-    {
-        id: "neo-brutalism-os",
-        title: "Neo Brutalism",
-        category: "portfolios",
-        isPremium: true,
-        preview: renderComponent("neo-brutalism-os", "NeoBrutalism"),
-        code: `import NeoBrutalism from '@/components/ui/NeoBrutalism';\n\nexport default function Demo() {\n  return <NeoBrutalism />;\n}`,
-        vibePrompt: "A bold, Neo-Brutalism inspired Dashboard OS with high-contrast UI, interactive charts, and a custom sidebar navigation. Built with Framer Motion and Recharts for a premium interactive experience."
     },
     {
         id: "hoodiebot",

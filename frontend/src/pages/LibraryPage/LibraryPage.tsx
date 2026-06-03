@@ -21,7 +21,6 @@ const CATEGORY_META: Record<string, { icon: string; color: string; glow: string;
     "3D Design":              { icon: "⬡",  color: "text-cyan-400",    glow: "shadow-[0_0_12px_rgba(34,211,238,0.5)]",  bg: "bg-cyan-400/10",    border: "border-cyan-400/20" },
     "Backgrounds":            { icon: "◉",  color: "text-orange-400",  glow: "shadow-[0_0_12px_rgba(251,146,60,0.5)]",  bg: "bg-orange-400/10",  border: "border-orange-400/20" },
     "Cursor Effects":         { icon: "⊕",  color: "text-brand-green", glow: "shadow-[0_0_12px_rgba(0,255,159,0.5)]",   bg: "bg-brand-green/10", border: "border-brand-green/20" },
-    "Portfolios":             { icon: "▣",  color: "text-blue-400",    glow: "shadow-[0_0_12px_rgba(96,165,250,0.5)]",  bg: "bg-blue-400/10",    border: "border-blue-400/20" },
     "Community Uploads":      { icon: "✿",  color: "text-rose-400",    glow: "shadow-[0_0_12px_rgba(251,113,133,0.5)]", bg: "bg-rose-400/10",    border: "border-rose-400/20" },
     "3D CHATBOT":             { icon: "🤖", color: "text-lime-400",    glow: "shadow-[0_0_12px_rgba(163,230,53,0.5)]", bg: "bg-lime-400/10",    border: "border-lime-400/20" },
     "Scroll Animation":       { icon: "↕",  color: "text-indigo-400",  glow: "shadow-[0_0_12px_rgba(129,140,248,0.5)]", bg: "bg-indigo-400/10",  border: "border-indigo-400/20" },
@@ -98,7 +97,6 @@ const LibraryPage = () => {
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
         { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
-        { name: "Portfolios", items: allComponents.filter(item => item.category === 'portfolios') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ];
 

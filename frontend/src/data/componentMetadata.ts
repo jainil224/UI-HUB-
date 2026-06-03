@@ -190,32 +190,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["27-cubie 3D coordinate system", "DOMMatrix rotation management", "Layer-specific slice grouping", "Inertia and friction physics", "Safe history-based reversal for solving"]
         }
     },
-    "black-box": {
-        props: [
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
-        ],
-        vibeMeta: {
-            behavior: "A high-performance cyberpunk dashboard featuring terminal emulators, glitch transitions, and real-time data visualizations.",
-            states: { from: "offline terminal", to: "active holographic dashboard" },
-            cssProperties: ["filter: blur(10px)", "mix-blend-mode: screen", "clip-path"],
-            description: "A high-performance cyberpunk glitch-style dashboard portfolio with terminal simulation, animated charts, and system instability effects.",
-            libraries: ["framer-motion", "recharts", "lucide-react"],
-            requirements: ["Custom terminal command parser", "Glitch post-processing effect", "Dynamic SVG grid background", "Responsive glassmorphism layout"]
-        }
-    },
-    "neo-brutalism-os": {
-        props: [
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes." }
-        ],
-        vibeMeta: {
-            behavior: "A bold OS-style interface with high-contrast shadows, thick borders, and vibrant primary colors. Features Draggable windows and grid-based layouts.",
-            states: { from: "static grid", to: "interactive OS environment" },
-            cssProperties: ["box-shadow: 8px 8px 0px #000", "border: 4px solid #000", "font-family: Public Sans"],
-            description: "A bold, Neo-Brutalism inspired Dashboard OS with high-contrast UI, interactive charts, and a custom sidebar navigation. Built with Framer Motion and Recharts for a premium interactive experience.",
-            libraries: ["framer-motion", "recharts", "clsx"],
-            requirements: ["Thick border 'Brutalist' design system", "Interactive windowing physics", "High-contrast color palette", "Grid-snapping layout engine"]
-        }
-    },
+
     "odyssey-spline": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
