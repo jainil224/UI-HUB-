@@ -86,6 +86,7 @@ const FooterLinkItem = ({ link }: { link: FooterLink }) => {
 }
 
 const Footer = () => {
+  const isMobile = useIsMobile();
   const groupRef = useRef<THREE.Group>(null);
   const data = useScroll();
 
