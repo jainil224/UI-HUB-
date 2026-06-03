@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { usePortalStore } from "@stores";
 import gsap from "gsap";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { isMobile } from "react-device-detect";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import * as THREE from "three";
 
 import { WORK_TIMELINE } from "@constants";
@@ -13,6 +13,7 @@ const reusableLeft = new THREE.Vector3(-0.3, 0, -0.1);
 const reusableRight = new THREE.Vector3(0.3, 0, -0.1);
 
 const TimelinePoint = ({ point, diff }: { point: WorkTimelinePoint, diff: number }) => {
+  const isMobile = useIsMobile();
   const getPoint = useMemo(() => {
     switch (point.position) {
       case 'left': return reusableLeft;

@@ -5,9 +5,10 @@ import { usePortalStore, useThemeStore } from "@stores";
 import gsap from "gsap";
 
 import { useEffect, useRef } from "react";
-import { isMobile } from "react-device-detect";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 const ThemeSwitcher = () => {
+  const isMobile = useIsMobile();
   const themeSwitcherRef = useRef<HTMLDivElement>(null);
   const { nextTheme, theme } = useThemeStore();
   const isActive = usePortalStore((state) => state.activePortalId);

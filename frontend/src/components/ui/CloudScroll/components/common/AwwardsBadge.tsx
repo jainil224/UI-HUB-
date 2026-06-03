@@ -5,9 +5,10 @@ import { useProgress } from '@react-three/drei';
 import { usePortalStore, useThemeStore } from '@stores';
 import gsap from 'gsap';
 import { useEffect, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 const AwwardsBadge = () => {
+  const isMobile = useIsMobile();
   const badgeRef = useRef<HTMLDivElement>(null);
   const fillRef = useRef<SVGGElement>(null);
   const isPortalActive = usePortalStore((state) => !!state.activePortalId);

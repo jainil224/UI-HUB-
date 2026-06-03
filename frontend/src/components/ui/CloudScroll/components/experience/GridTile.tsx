@@ -4,7 +4,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { usePortalStore } from '@stores';
 import gsap from "gsap";
 import { useEffect, useRef } from 'react';
-import { isMobile } from 'react-device-detect';
+import { useIsMobile } from "../../hooks/useIsMobile";
 import * as THREE from 'three';
 import { TriangleGeometry } from './Triangle';
 
@@ -19,6 +19,7 @@ interface GridTileProps {
 
 // TODO: Rename this
 const GridTile = (props: GridTileProps) => {
+  const isMobile = useIsMobile();
   const titleRef = useRef<THREE.Group>(null);
   const gridRef = useRef<THREE.Group>(null);
   const hoverBoxRef = useRef<THREE.Mesh>(null);

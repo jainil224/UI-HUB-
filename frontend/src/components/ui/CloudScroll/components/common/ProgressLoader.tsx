@@ -1,11 +1,12 @@
 
 import { useEffect, useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 /**
  * Partially AI Generated
  */
 const ProgressLoader = ({ progress }: { progress: number }) => {
+  const isMobile = useIsMobile();
   const strokeWidth = 3;
   const [windowSize, setWindowSize] = useState({
     width: window.innerWidth,

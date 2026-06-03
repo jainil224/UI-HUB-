@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
-import { isMobile } from "react-device-detect";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 import ProjectTile from "./ProjectTile";
 
 import { UI_HUB_PROJECTS } from "@constants";
 import { usePortalStore } from "@stores";
 
 const UiHubProjectsCarousel = () => {
+  const isMobile = useIsMobile();
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const isActive = usePortalStore((state) => state.activePortalId === "ui-hub");
   const activeId = isActive ? selectedId : null;
