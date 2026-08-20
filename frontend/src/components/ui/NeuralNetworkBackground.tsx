@@ -64,15 +64,17 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
 
         // ── Init ─────────────────────────────────────────────────────
         const init = () => {
+            const w = width || wrap.offsetWidth || wrap.clientWidth || window.innerWidth || 800;
+            const h = height || wrap.offsetHeight || wrap.clientHeight || window.innerHeight || 500;
             nodes = Array.from({ length: nodeCount }, (_, i) => {
                 const isHub = i < Math.floor(nodeCount * 0.12); // 12% are hubs
                 const pal   = PALETTES[Math.floor(Math.random() * (isHub ? 3 : PALETTES.length))];
                 return {
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * (isHub ? 0.25 : 0.45),
-                    vy: (Math.random() - 0.5) * (isHub ? 0.25 : 0.45),
-                    size: isHub ? Math.random() * 3 + 4 : Math.random() * 2 + 1,
+                    x: Math.random() * w,
+                    y: Math.random() * h,
+                    vx: (Math.random() - 0.5) * (isHub ? 0.35 : 0.6),
+                    vy: (Math.random() - 0.5) * (isHub ? 0.35 : 0.6),
+                    size: isHub ? Math.random() * 3 + 4 : Math.random() * 2 + 1.5,
                     palette: pal,
                     pulse: Math.random() * Math.PI * 2,
                     pulseSpeed: Math.random() * 0.03 + 0.015,
@@ -102,15 +104,18 @@ export const NeuralNetworkBackground: React.FC<NeuralNetworkBackgroundProps> = (
         // ── Resize ───────────────────────────────────────────────────
         const resize = () => {
             const rect = wrap.getBoundingClientRect();
-            width  = rect.width  || wrap.offsetWidth  || 400;
-            height = rect.height || wrap.offsetHeight || 300;
+            width  = rect.width  || wrap.offsetWidth  || wrap.clientWidth || window.innerWidth || 800;
+            height = rect.height || wrap.offsetHeight || wrap.clientHeight || window.innerHeight || 500;
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
             canvas.width  = width  * dpr;
             canvas.height = height * dpr;
             canvas.style.width  = `${width}px`;
             canvas.style.height = `${height}px`;
+            if (ctx.resetTransform) ctx.resetTransform();
             ctx.scale(dpr, dpr);
-            init();
+            if (nodes.length === 0 || nodes.every(n => n.x === 0)) {
+                init();
+            }
         };
 
         // ── Draw loop ────────────────────────────────────────────────

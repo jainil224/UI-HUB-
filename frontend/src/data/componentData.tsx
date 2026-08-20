@@ -39,6 +39,7 @@ const PortfolioScroll = React.lazy(() => import('../components/ui/PortfolioScrol
 const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
 const BuyMeCoffee = React.lazy(() => import('../components/ui/BuyMeCoffee'));
+const HackerBackground = React.lazy(() => import('../components/ui/HackerBackground'));
 const BeamGridBackground = React.lazy(() => import('../components/ui/BeamGridBackground'));
 const FallBeamBackground = React.lazy(() => import('../components/ui/FallBeamBackground'));
 const HellBackground = React.lazy(() => import('../components/ui/HellBackground'));
@@ -1364,6 +1365,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cloud-scroll': CloudScroll,
     'infinite-marquee': InfiniteMarquee,
     'buyme-acoffee': BuyMeCoffee,
+    'hacker-background': HackerBackground,
 
     'beam-grid-background': BeamGridBackground,
     'fall-beam-background': FallBeamBackground,

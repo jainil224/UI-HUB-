@@ -23,21 +23,21 @@ export interface InteractiveGridBackgroundProps
 }
 
 const InteractiveGridBackground: React.FC<InteractiveGridBackgroundProps> = ({
-    gridSize = 50,
-    gridColor = "rgba(255, 255, 255, 0.05)",
-    darkGridColor = "rgba(255, 255, 255, 0.05)",
-    effectColor = "rgba(0, 255, 0, 0.5)",
-    darkEffectColor = "rgba(0, 255, 0, 0.5)",
-    trailLength = 3,
+    gridSize = 45,
+    gridColor = "rgba(255, 255, 255, 0.12)",
+    darkGridColor = "rgba(255, 255, 255, 0.12)",
+    effectColor = "rgba(0, 255, 136, 0.85)",
+    darkEffectColor = "rgba(0, 255, 136, 0.85)",
+    trailLength = 4,
     width,
     height,
-    idleSpeed = 0.2,
+    idleSpeed = 0.3,
     glow = true,
-    glowRadius = 35, // Increased default
+    glowRadius = 40, // Increased default
     children,
-    showFade = true,
+    showFade = false,
     fadeIntensity = 20,
-    idleRandomCount = 5,
+    idleRandomCount = 6,
     className,
     ...props
 }) => {
