@@ -494,3 +494,6 @@ export const CardsBeam = () => {
         </div>
     );
 };
+
+export default CardsBeam;
+

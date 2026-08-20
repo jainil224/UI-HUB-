@@ -6,7 +6,7 @@ import React, { useRef, useCallback, useState, useEffect, Suspense } from 'react
 const AuroraCursor = React.lazy(() => import('../components/ui/AuroraCursor').then(m => ({ default: m.AuroraCursor })));
 const MagneticCursor = React.lazy(() => import('../components/ui/MagneticCursor').then(m => ({ default: m.MagneticCursor })));
 const MagneticBackground = React.lazy(() => import('../components/ui/MagneticBackground').then(m => ({ default: m.MagneticBackground })));
-const BlackHoleCursor = React.lazy(() => import('../components/ui/BlackHoleCursor'));
+const BlackHoleCursor = React.lazy(() => import('../components/ui/BlackHoleCursor').then(m => ({ default: m.BlackHoleCursor })));
 const TargetCursor = React.lazy(() => import('../components/ui/TargetCursor').then(m => ({ default: m.TargetCursor })));
 const SpaceBackground = React.lazy(() => import('../components/ui/SpaceBackground').then(m => ({ default: m.SpaceBackground })));
 const NeuralNetworkBackground = React.lazy(() => import('../components/ui/NeuralNetworkBackground').then(m => ({ default: m.NeuralNetworkBackground })));
@@ -15,8 +15,8 @@ const WarpSpeedBackground = React.lazy(() => import('../components/ui/WarpSpeedB
 const MouseGravityBackground = React.lazy(() => import('../components/ui/MouseGravityBackground').then(m => ({ default: m.MouseGravityBackground })));
 const InteractiveWebGLScene = React.lazy(() => import('../components/ui/InteractiveWebGLScene').then(m => ({ default: m.InteractiveWebGLScene })));
 const Scroll3DAnimation = React.lazy(() => import('../components/ui/Scroll3DAnimation'));
-const ThreeDSlider = React.lazy(() => import('../components/ui/ThreeDSlider').then(m => ({ default: m.ThreeDSlider })));
-export const RubiksCube = React.lazy(() => import('../components/ui/RubiksCube').then(m => ({ default: m.default })));
+const ThreeDSlider = React.lazy(() => import('../components/ui/ThreeDSlider'));
+export const RubiksCube = React.lazy(() => import('../components/ui/RubiksCube'));
 const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then(m => ({ default: m.HeartCursor })));
 const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
@@ -28,7 +28,7 @@ const Smilo = React.lazy(() => import('../components/ui/Smilo'));
 const Tripy = React.lazy(() => import('../components/ui/Tripy'));
 const Aiva = React.lazy(() => import('../components/ui/Aiva'));
 const LaptopBot = React.lazy(() => import('../components/ui/LaptopBot'));
-const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam').then(m => ({ default: m.CardsBeam })));
+const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
 const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 const ParticlesBackground = React.lazy(() => import('../components/ui/ParticlesBackground'));
@@ -57,6 +57,7 @@ const SparklesBackground = React.lazy(() => import('../components/ui/sparkles-ba
 const BackgroundBoxes = React.lazy(() => import('../components/ui/background-boxes').then(m => ({ default: m.BoxesCore })));
 const BackgroundPaths = React.lazy(() => import('../components/ui/background-paths').then(m => ({ default: m.BackgroundPaths })));
 const BorderBeam = React.lazy(() => import('../components/ui/border-beam').then(m => ({ default: m.BorderBeam })));
+const GlowButton = React.lazy(() => import('../components/ui/GlowButton'));
 const GalaxyButton = React.lazy(() => import('../components/ui/GalaxyButton').then(m => ({ default: m.GalaxyButton })));
 const LiquidFillButton = React.lazy(() => import('../components/ui/LiquidFillButton').then(m => ({ default: m.LiquidFillButton })));
 const NeonFlickerButton = React.lazy(() => import('../components/ui/NeonFlickerButton').then(m => ({ default: m.NeonFlickerButton })));
@@ -1384,6 +1385,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'grid-background': BackgroundBoxes,
     'lines-background': BackgroundPaths,
     'border-beam': BorderBeam,
+    'glow-button': GlowButton,
     'galaxy-button': GalaxyButton,
     'liquid-fill-button': LiquidFillButton,
     'neon-flicker-button': NeonFlickerButton,
@@ -1840,7 +1842,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "corner-border-button",
         title: "Corner Border",
         category: "button",
-        preview: renderComponent("corner-border-button", "Corner Border Button"),
+        preview: renderComponent("corner-border-button", "Corner Border Button", { children: "CORNER BORDER" }),
         code: ``,
         vibePrompt: ""
     },
@@ -1848,7 +1850,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "shatter-button",
         title: "Shatter Button",
         category: "button",
-        preview: renderComponent("shatter-button", "Shatter Button"),
+        preview: renderComponent("shatter-button", "Shatter Button", { children: "SHATTER BUTTON", shatterColor: "#00ffff", shardCount: 30 }),
         code: `import { ShatterButton } from '@/components/ui/shatter-button';\n\nexport const Demo = () => (\n  <ShatterButton shatterColor="#00ffff" shardCount={30}>\n    Click Now\n  </ShatterButton>\n);`,
         vibePrompt: ""
     },
@@ -1856,7 +1858,14 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "border-beam",
         title: "Border Beam",
         category: "button",
-        preview: renderComponent("border-beam", "Border Beam"),
+        preview: () => (
+            <div className="relative flex items-center justify-center p-8">
+                <div className="relative flex items-center justify-center px-10 py-5 rounded-2xl bg-neutral-950 border border-neutral-800 text-white font-bold tracking-widest uppercase overflow-hidden shadow-2xl">
+                    <span className="relative z-10 text-sm font-black tracking-[0.2em]">BORDER BEAM</span>
+                    <BorderBeam size={120} duration={6} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={16} borderThickness={2} />
+                </div>
+            </div>
+        ),
         code: `import { BorderBeam } from '@/components/ui/border-beam';\n\nexport const Demo = () => (\n  <button className="relative px-8 py-3 rounded-xl bg-black text-white font-bold tracking-widest uppercase overflow-hidden transition-all hover:bg-neutral-900">\n    Border Beam\n    <BorderBeam size={100} duration={8} delay={0} colorFrom="#ffaa40" colorTo="#9c40ff" beamBorderRadius={12} borderThickness={2} />\n  </button>\n);`,
         vibePrompt: ""
     },
@@ -1864,77 +1873,15 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "glow-button",
         title: "Glow Button",
         category: "button",
-        preview: renderComponent("glow-button", "Glow Button"),
-        code: `import React, { useState, useRef } from 'react';
-
-/**
- * GlowButton - A premium interactive button with multi-layered neon emerald glows
- * and a dynamic light surface that tracks the mouse cursor.
- */
-export const GlowButton = () => {
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!buttonRef.current) return;
-    const rect = buttonRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setMousePos({ x, y });
-  };
-
-  return (
-    <div className="flex items-center justify-center p-8 bg-neutral-950 rounded-[3rem] border border-white/5 w-full h-80 relative overflow-hidden group/container">
-      {/* Ambient Background Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.05),transparent_70%)] pointer-events-none" />
-      
-      <button
-        ref={buttonRef}
-        onMouseMove={handleMouseMove}
-        className="relative px-10 py-4 rounded-2xl bg-neutral-900 border border-emerald-500/30 text-emerald-400 font-display font-black uppercase tracking-[0.2em] text-sm transition-all duration-500 hover:scale-105 hover:border-emerald-400 isolation-auto group"
-        style={{
-          boxShadow: '0 0 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(16,185,129,0.05)',
-        }}
-      >
-        {/* Interactive Surface Light */}
-        <div 
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
-          style={{
-            background: \`radial-gradient(circle at \${mousePos.x}% \${mousePos.y}%, rgba(16,185,129,0.2) 0%, transparent 60%)\`,
-          }}
-        />
-
-        {/* Primary Neon Glow (Edge) */}
-        <div className="absolute -inset-[1px] rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-500 opacity-0 group-hover:opacity-40 transition-opacity duration-500 blur-sm pointer-events-none" />
-
-        {/* Volumetric Outer Glow */}
-        <div className="absolute -inset-4 opacity-0 group-hover:opacity-100 transition-all duration-700 pointer-events-none blur-2xl"
-          style={{
-            background: \`radial-gradient(circle at \${mousePos.x}% \${mousePos.y}%, rgba(16,185,129,0.4) 0%, transparent 70%)\`,
-          }}
-        />
-
-        <span className="relative z-10 drop-shadow-[0_0_8px_rgba(16,185,129,0.5)] group-hover:text-white transition-colors duration-300">
-          Glow Button
-        </span>
-
-        {/* Subtle Inner Highlight */}
-        <div className="absolute inset-0 rounded-2xl border border-white/10 opacity-50 group-hover:opacity-100 transition-opacity pointer-events-none" />
-      </button>
-
-      {/* Floating Particle Orbs for additional atmosphere */}
-      <div className="absolute top-1/4 left-1/4 w-32 h-32 bg-emerald-500/10 blur-[80px] rounded-full animate-pulse pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-teal-500/10 blur-[100px] rounded-full animate-pulse pointer-events-none" style={{ animationDelay: '1s' }} />
-    </div>
-  );
-};`,
+        preview: renderComponent("glow-button", "Glow Button", { children: "GLOW BUTTON" }),
+        code: ``,
         vibePrompt: ""
     },
     {
         id: "marquee-hover-button",
         title: "Marquee Hover",
         category: "button",
-        preview: renderComponent("marquee-hover-button", "Marquee Hover Button"),
+        preview: renderComponent("marquee-hover-button", "Marquee Hover Button", { label: "HOVER MARQUEE" }),
         code: `import { MarqueeHoverButton } from '@/components/ui/marquee-hover-button';\n\nexport const Demo = () => (\n  <MarqueeHoverButton label="Hover Me" />\n);`,
         vibePrompt: ""
     },
@@ -1942,7 +1889,7 @@ export const GlowButton = () => {
         id: "payment-transaction-button",
         title: "Payment Transaction",
         category: "button",
-        preview: renderComponent("payment-transaction-button", "Payment Transaction Button"),
+        preview: renderComponent("payment-transaction-button", "Payment Transaction Button", { label: "SEND PAYMENT", currencySymbol: "$" }),
         code: `import { PaymentTransactionButton } from '@/components/ui/payment-transaction-button';\n\nexport const Demo = () => (\n  <PaymentTransactionButton \n    label="Send Payment" \n    accentColor="#38bdf8" \n    currencySymbol="€"\n  />\n);`,
         vibePrompt: ""
     },
@@ -1950,7 +1897,16 @@ export const GlowButton = () => {
         id: "magic-card-effect",
         title: "Magic Card Effect",
         category: "button",
-        preview: renderComponent("magic-card-effect", "Magic Card Effect"),
+        preview: () => (
+            <div className="flex items-center justify-center p-6">
+                <MagicCard className="flex flex-col items-center justify-center cursor-pointer shadow-2xl p-8 rounded-3xl min-w-[280px] bg-neutral-950 border border-white/10" gradientColor="#3D5CFF">
+                    <div className="p-6 flex flex-col items-center gap-3 text-center">
+                        <span className="text-3xl font-display font-black text-white tracking-tight">MAGIC CARD</span>
+                        <p className="text-neutral-400 text-xs font-mono uppercase tracking-widest">Hover to reveal glow gradient</p>
+                    </div>
+                </MagicCard>
+            </div>
+        ),
         code: `import { MagicCard } from '@/components/ui/magic-card';\n\nexport const Demo = () => (\n  <MagicCard className="flex flex-col items-center justify-center cursor-pointer shadow-2xl" gradientColor="#262626">\n    <div className="p-12 flex flex-col items-center gap-4 text-center">\n      <p className="text-4xl font-display font-bold text-white tracking-tight">Magic Card</p>\n      <p className="text-white/50 text-sm font-medium">Hover to reveal the magic</p>\n    </div>\n  </MagicCard>\n);`,
         vibePrompt: ""
     },
@@ -1958,7 +1914,7 @@ export const GlowButton = () => {
         id: "rainbow-button",
         title: "Rainbow Button",
         category: "button",
-        preview: renderComponent("rainbow-button", "Rainbow Button"),
+        preview: renderComponent("rainbow-button", "Rainbow Button", { children: "RAINBOW BUTTON" }),
         code: `import { RainbowButton } from "@/components/ui/rainbow-button";\n\nexport const Demo = () => (\n  <RainbowButton>Rainbow Button</RainbowButton>\n);`,
         vibePrompt: ""
     },
@@ -1974,7 +1930,7 @@ export const GlowButton = () => {
         id: "orbit-button",
         title: "Orbit Button",
         category: "button",
-        preview: renderComponent("orbit-button", "Orbit Button"),
+        preview: renderComponent("orbit-button", "Orbit Button", { label: "ORBIT BUTTON", color: "cyan" }),
         code: `import { OrbitButton } from "@/components/ui/OrbitButton";\n\nexport const Demo = () => (\n  <OrbitButton label="Orbit Button" color="cyan" />\n);`,
         vibePrompt: ""
     },
@@ -1982,7 +1938,7 @@ export const GlowButton = () => {
         id: "galaxy-button",
         title: "Galaxy Button",
         category: "button",
-        preview: renderComponent("galaxy-button", "Galaxy Button"),
+        preview: renderComponent("galaxy-button", "Galaxy Button", { label: "GALAXY BUTTON" }),
         code: `import { GalaxyButton } from "@/components/ui/GalaxyButton";\n\nexport const Demo = () => (\n  <GalaxyButton label="Galaxy Button" />\n);`,
         vibePrompt: ""
     },
@@ -1990,7 +1946,7 @@ export const GlowButton = () => {
         id: "liquid-fill-button",
         title: "Liquid Fill Button",
         category: "button",
-        preview: renderComponent("liquid-fill-button", "Liquid Fill Button"),
+        preview: renderComponent("liquid-fill-button", "Liquid Fill Button", { label: "LIQUID FILL", liquidColor: "#06b6d4" }),
         code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
         vibePrompt: ""
     },
@@ -1998,7 +1954,7 @@ export const GlowButton = () => {
         id: "neon-flicker-button",
         title: "Neon Flicker Button",
         category: "button",
-        preview: renderComponent("neon-flicker-button", "Neon Flicker Button"),
+        preview: renderComponent("neon-flicker-button", "Neon Flicker Button", { label: "NEON FLICKER", color: "red" }),
         code: `import { NeonFlickerButton } from "@/components/ui/NeonFlickerButton";\n\nexport const Demo = () => (\n  <NeonFlickerButton label="Neon Flicker" color="red" />\n);`,
         vibePrompt: ""
     },

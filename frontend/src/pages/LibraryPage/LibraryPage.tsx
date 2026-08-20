@@ -173,7 +173,6 @@ const LibraryPage = () => {
                                                     }`}
                                                 >
                                                     <span>{item.title}</span>
-                                                    {isActive && <span className="text-[9px] font-mono bg-black/40 px-1.5 py-0.5 rounded border border-white/20">CURRENT</span>}
                                                 </button>
                                             );
                                         })}
@@ -253,12 +252,7 @@ const LibraryPage = () => {
                                                                 }`}
                                                             >
                                                                 <span className="truncate pr-2">{item.title}</span>
-                                                                {isActive ? (
-                                                                    <span className="shrink-0 flex items-center gap-1">
-                                                                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-                                                                        <span className="text-[8px] font-black bg-black/40 text-white px-1.5 py-0.2 rounded border border-white/20">VIEWING</span>
-                                                                    </span>
-                                                                ) : (
+                                                                {!isActive && (
                                                                     <span className="opacity-0 group-hover:opacity-100 text-brand-blue font-bold text-[10px] transition-opacity">→</span>
                                                                 )}
                                                             </button>
