@@ -541,11 +541,13 @@ export default ImageReveal;`,
 };
 
 const imageTrailCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/image-trail.tsx'), 'utf8');
+const perspectiveCarouselCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/perspective-carousel.tsx'), 'utf8');
 
 const fullDataset = {
   ...existingSource,
   ...TEXT_COMPONENTS,
   'image-trail': imageTrailCode,
+  'perspective-carousel': perspectiveCarouselCode,
 };
 
 // Write to backend

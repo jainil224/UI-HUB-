@@ -64,6 +64,8 @@ const NeonFlickerButton = React.lazy(() => import('../components/ui/NeonFlickerB
 const OrbitButton = React.lazy(() => import('../components/ui/OrbitButton').then(m => ({ default: m.OrbitButton })));
 const SocialTooltipButtons = React.lazy(() => import('../components/animations/SocialTooltipButtons').then(m => ({ default: m.SocialTooltipButtons })));
 const ImageTrail = React.lazy(() => import('../components/ui/image-trail').then(m => ({ default: m.ImageTrail })));
+const PerspectiveCarousel = React.lazy(() => import('../components/ui/perspective-carousel').then(m => ({ default: m.PerspectiveCarousel })));
+const DiagonalCarousel = React.lazy(() => import('../components/ui/diagonal-carousel').then(m => ({ default: m.DiagonalCarousel })));
 
 
 
@@ -1393,6 +1395,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'orbit-button': OrbitButton,
     'social-tooltip-buttons': SocialTooltipButtons,
     'image-trail': ImageTrail,
+    'perspective-carousel': PerspectiveCarousel,
+    'diagonal-carousel': DiagonalCarousel,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2411,6 +2415,83 @@ export function ImageTrailDemo() {
   );
 }`,
         vibePrompt: "Create a high-performance, fluid 'ImageTrail' React component with Framer Motion. As the user moves their cursor over the container, a trailing sequence of photographic cards is spawned at the cursor coordinates with random organic rotation. When moving beyond a threshold distance, items are smoothly scaled and faded into view using spring physics, and animated out with easeInOut after a set duration. Includes normalized images, customizable thresholds, duration, max items, rotation range, and overlay container styling."
+    },
+    {
+        id: "perspective-carousel",
+        title: "Perspective Carousel",
+        category: "image-interaction",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative">
+                <PerspectiveCarousel
+                    defaultActiveIndex={2}
+                    slideWidth={220}
+                    rotationStep={55}
+                    loop={true}
+                    className="w-full h-full min-h-[500px] bg-neutral-950 text-white flex items-center justify-center"
+                />
+            </div>
+        ),
+        code: `import { PerspectiveCarousel } from "@/components/ui/perspective-carousel";
+
+const items = [
+  { src: "https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=600&q=80", title: "Urban Exploration" },
+  { src: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&q=80", title: "Cyberpunk Night" },
+  { src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80", title: "Coastal Horizon" },
+  { src: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80", title: "Mount Fuji Peaks" },
+  { src: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&q=80", title: "Neon Architecture" }
+];
+
+export function PerspectiveCarouselDemo() {
+  return (
+    <PerspectiveCarousel
+      items={items}
+      defaultActiveIndex={2}
+      slideWidth={220}
+      className="h-[560px] bg-neutral-950 text-white"
+    />
+  );
+}`,
+        vibePrompt: "Create a 3D 'PerspectiveCarousel' React component using Framer Motion with realistic depth perspective (perspective: 1200px and preserve-3d). The carousel aligns cards along the x-axis and applies dynamic rotateY rotation ((currentIndex - index) * rotationStep), scaling, and progressive blur/opacity transitions to inactive cards. Features keyboard arrow navigation, loop wrapping, pagination dot indicator pills, and glassmorphic previous/next navigation buttons."
+    },
+    {
+        id: "diagonal-carousel",
+        title: "Diagonal Carousel",
+        category: "image-interaction",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative">
+                <DiagonalCarousel
+                    defaultActiveIndex={2}
+                    slideSize={240}
+                    rotationStep={24}
+                    verticalStep={90}
+                    loop={true}
+                    className="w-full h-full min-h-[500px] bg-neutral-950 text-white flex items-center justify-center"
+                />
+            </div>
+        ),
+        code: `import { DiagonalCarousel } from "@/components/ui/diagonal-carousel";
+
+const items = [
+  { src: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=600&q=80", title: "Renaissance Art" },
+  { src: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&q=80", title: "Abstract Expression" },
+  { src: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=600&q=80", title: "Neon Cybernetic" },
+  { src: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&q=80", title: "Fluid Iridescence" },
+  { src: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&q=80", title: "Futuristic Core" }
+];
+
+export function DiagonalCarouselDemo() {
+  return (
+    <DiagonalCarousel
+      items={items}
+      defaultActiveIndex={2}
+      slideSize={260}
+      className="h-[560px] bg-neutral-950 text-white"
+    />
+  );
+}`,
+        vibePrompt: "Create a fluid 'DiagonalCarousel' React component with Framer Motion that organizes photographic cards along a cascading diagonal staircase axis. As the user slides left or right, cards simultaneously translate horizontally, vertically (distance * verticalStep), and rotate dynamically (distance * rotationStep) with spring bounce physics. Features smooth active item scaling, title fade/blur, navigation controls, and pagination indicators."
     }
 ];
 
