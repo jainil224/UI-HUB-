@@ -1,29 +1,25 @@
 /* Glitch Effect Core Animations */
 :root {
-    --logo-color: #00ff22;
-    --logo-glow: rgba(0, 255, 34, 0.6);
+    --logo-color: #3D5CFF;
+    --logo-glow: rgba(61, 92, 255, 0.4);
 }
 
 .glitch-layer-1 {
     transform: translate(-2px, 0);
-    filter: drop-shadow(0 0 8px var(--logo-color)) hue-rotate(45deg);
     animation: glitch-anim-1 2s infinite linear alternate-reverse;
 }
 
 .glitch-layer-2 {
     transform: translate(2px, 0);
-    filter: drop-shadow(0 0 12px var(--logo-color)) hue-rotate(-45deg);
     animation: glitch-anim-2 3s infinite linear alternate-reverse;
 }
 
 .glitch-layer-3 {
-    filter: drop-shadow(0 0 5px var(--logo-color)80);
     animation: glitch-anim-main 5s infinite step-end;
 }
 
 .logo-text-glow {
     color: var(--logo-color);
-    text-shadow: 0 0 10px var(--logo-glow), 0 0 20px rgba(0, 255, 34, 0.2);
 }
 
 .text-glitch-1 {

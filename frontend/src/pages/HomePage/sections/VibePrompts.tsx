@@ -117,11 +117,11 @@ const LiveCounter = ({ value }: { value: number }) => {
 };
 
 // ─── Scrolling ticker ──────────────────────────────────────────────────────────
-const TickerItem: React.FC<{ text: string; highlight?: string }> = ({ text, highlight }) => (
-    <span className="flex items-center gap-3 px-6 text-white/30 text-[11px] font-bold uppercase tracking-widest shrink-0">
-        <span className="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse shrink-0" />
-        {text}
-        {highlight && <span className="text-brand-green">{highlight}</span>}
+const TickerItem: React.FC<{ text: string; highlight?: string; isAlt?: boolean }> = ({ text, highlight, isAlt }) => (
+    <span className="flex items-center gap-3 px-6 text-neutral-300 text-xs font-black uppercase tracking-wider shrink-0">
+        <span className={`w-2 h-2 rounded-full ${isAlt ? 'bg-brand-yellow' : 'bg-brand-blue'} shrink-0`} />
+        <span>{text}</span>
+        {highlight && <span className="text-brand-blue font-black">{highlight}</span>}
     </span>
 );
 
@@ -153,24 +153,18 @@ const VibePrompts = () => {
     };
 
     return (
-        <section id="prompts" className="py-32 px-4 sm:px-6 w-full max-w-[1400px] mx-auto z-10 relative isolate overflow-hidden">
-
-            {/* Ambient background glows */}
-            <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-gradient-to-r from-brand-green/8 via-purple-500/5 to-cyan-500/5 blur-[180px] rounded-full pointer-events-none -z-10" />
-            <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-pink-500/5 blur-[120px] rounded-full pointer-events-none -z-10" />
+        <section id="prompts" className="py-24 px-4 sm:px-6 w-full max-w-[1400px] mx-auto z-10 relative isolate bg-brand-bg border-t-4 border-black">
 
             {/* ── Scrolling Ticker ────────────────────────────────────────── */}
-            <div className="relative overflow-hidden mb-20 -mx-6">
-                <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none" />
-                <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-                <div className="flex border-y border-white/[0.08] py-3.5 overflow-hidden">
+            <div className="relative overflow-hidden mb-16 -mx-6 border-y-4 border-black bg-black py-4">
+                <div className="flex overflow-hidden">
                     <motion.div
                         animate={{ x: ['0%', '-50%'] }}
-                        transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+                        transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
                         className="flex shrink-0"
                     >
                         {[...tickerItems, ...tickerItems].map((item, i) => (
-                            <TickerItem key={i} text={item.text} highlight={item.highlight} />
+                            <TickerItem key={i} text={item.text} highlight={item.highlight} isAlt={i % 2 === 1} />
                         ))}
                     </motion.div>
                 </div>
@@ -181,22 +175,22 @@ const VibePrompts = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="flex flex-col items-center text-center mb-12"
+                className="flex flex-col items-center text-center mb-16"
             >
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand-green/30 bg-brand-green/10 mb-8">
-                    <Sparkles className="w-4 h-4 text-brand-green animate-pulse" />
-                    <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-brand-green">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 border-2 border-white bg-brand-surface text-white mb-6 rounded">
+                    <Sparkles className="w-4 h-4 text-brand-blue" />
+                    <span className="text-xs font-black uppercase tracking-widest text-white">
                         Vibe Coding Matrix
                     </span>
                 </div>
 
-                <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black tracking-tighter mb-8 leading-[1.05]">
-                    <span className="block text-white">Stop <span className="text-brand-green">writing </span>boilerplate.</span>
-                    <span className="block text-white/30 italic">Start <span className="text-brand-green">vibe </span>coding.</span>
+                <h2 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight mb-6 leading-tight">
+                    <span className="block text-white">Stop <span className="text-brand-blue">writing</span> boilerplate.</span>
+                    <span className="block text-neutral-400">Start <span className="text-brand-blue">vibe</span> coding.</span>
                 </h2>
 
-                <p className="max-w-3xl text-white/50 text-base md:text-xl leading-relaxed font-light mb-10">
-                    The new paradigm of UI engineering is <span className="text-white/80 font-bold">curation</span>, not just creation.
+                <p className="max-w-2xl text-neutral-400 text-base md:text-lg leading-relaxed font-medium mb-8">
+                    The new paradigm of UI engineering is <span className="text-white font-bold">curation</span>, not just creation.
                     Copy these tested AI prompts to generate high-end components instantly using your favorite copilot.
                 </p>
             </motion.div>
@@ -209,31 +203,27 @@ const VibePrompts = () => {
                 className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"
             >
                 {[
-                    { icon: Terminal, label: 'Prompts Available', value: 330, suffix: '+', color: 'text-brand-green' },
-                    { icon: Users, label: 'Developers Used', value: 12800, suffix: '+', color: 'text-purple-400' },
-                    { icon: TrendingUp, label: 'Avg Copy Rate', value: 94, suffix: '%', color: 'text-cyan-400' },
-                    { icon: Cpu, label: 'AI Models Supported', value: 5, suffix: '', color: 'text-pink-400' },
+                    { icon: Terminal, label: 'Prompts Available', value: 330, suffix: '+', shadow: 'brutal-shadow-blue' },
+                    { icon: Users, label: 'Developers Used', value: 12800, suffix: '+', shadow: 'brutal-shadow-red' },
+                    { icon: TrendingUp, label: 'Avg Copy Rate', value: 94, suffix: '%', shadow: 'brutal-shadow-yellow' },
+                    { icon: Cpu, label: 'AI Models Supported', value: 5, suffix: '', shadow: 'brutal-shadow-white' },
                 ].map((stat, i) => {
                     const Icon = stat.icon;
                     return (
-                        <motion.div
+                        <div
                             key={i}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: i * 0.08 }}
-                            className="glass p-5 rounded-2xl flex items-center gap-4 group hover:border-white/20 transition-all"
+                            className={`p-5 rounded-lg border-2 border-white bg-brand-surface flex items-center gap-4 ${stat.shadow}`}
                         >
-                            <div className={`w-10 h-10 rounded-xl ${stat.color.replace('text-', 'bg-').replace('4', '4/10')} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
-                                <Icon className={`w-5 h-5 ${stat.color}`} />
+                            <div className="w-10 h-10 rounded border-2 border-black bg-brand-blue flex items-center justify-center shrink-0">
+                                <Icon className="w-5 h-5 text-white" />
                             </div>
                             <div>
-                                <p className={`text-2xl font-display font-black ${stat.color}`}>
+                                <p className="text-2xl font-black text-white">
                                     <LiveCounter value={stat.value} />{stat.suffix}
                                 </p>
-                                <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest">{stat.label}</p>
+                                <p className="text-[10px] text-neutral-400 font-black uppercase tracking-wider">{stat.label}</p>
                             </div>
-                        </motion.div>
+                        </div>
                     );
                 })}
             </motion.div>
@@ -242,83 +232,68 @@ const VibePrompts = () => {
             <motion.div
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
-                viewport={{ once: true, margin: '-80px' }}
+                viewport={{ once: true }}
                 className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 relative z-10 mb-16"
             >
                 {prompts.map((item, idx) => (
-                    <motion.div
+                    <div
                         key={item.id}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5, delay: idx * 0.08 }}
-                        whileHover={{ y: -10 }}
-                        onHoverStart={() => setActiveTab(item.id)}
-                        onHoverEnd={() => setActiveTab(null)}
-                        className={`group relative flex flex-col p-7 rounded-3xl bg-black/50 backdrop-blur-xl border border-white/5 transition-all duration-500 hover:border-white/15 cursor-default`}
-                        style={{
-                            boxShadow: activeTab === item.id ? item.glow : 'none',
-                        }}
+                        className="group relative flex flex-col p-6 rounded-lg bg-brand-surface border-2 border-white brutal-shadow-black transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5"
                     >
-                        {/* Ambient inner glow on hover */}
-                        <div
-                            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
-                            style={{ background: `radial-gradient(ellipse at top left, ${item.accentColor}08 0%, transparent 60%)` }}
-                        />
-
                         {/* Header */}
-                        <div className="flex items-start justify-between gap-3 mb-6 relative z-10">
+                        <div className="flex items-start justify-between gap-3 mb-4 relative z-10">
                             <div className="flex items-center gap-3">
-                                <div className={`w-12 h-12 rounded-2xl ${item.iconBg} border ${item.color} flex items-center justify-center transition-all duration-500 group-hover:scale-110`}>
+                                <div className="w-10 h-10 rounded border-2 border-white bg-black flex items-center justify-center">
                                     {item.icon}
                                 </div>
                                 <div>
-                                    <h3 className="text-white text-base font-display font-black uppercase tracking-tight leading-none">
+                                    <h3 className="text-white text-sm font-black uppercase tracking-wider leading-none">
                                         {item.tool}
                                     </h3>
-                                    <div className={`inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-md text-[9px] font-black uppercase tracking-widest border ${item.tagColor}`}>
+                                    <div className="inline-flex items-center mt-1 px-1.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider bg-brand-surface-alt border border-white text-white">
                                         {item.tag}
                                     </div>
                                 </div>
                             </div>
                             {/* Uses count */}
                             <div className="flex items-center gap-1 shrink-0">
-                                <Star className="w-3 h-3 text-white/20" />
-                                <span className="text-[10px] text-white/20 font-bold">{item.uses}</span>
+                                <Star className="w-3 h-3 text-neutral-500" />
+                                <span className="text-[10px] text-neutral-400 font-bold">{item.uses}</span>
                             </div>
                         </div>
 
                         {/* Description */}
-                        <p className="text-white/45 font-light text-[13px] leading-relaxed mb-6 relative z-10 flex-shrink-0">
+                        <p className="text-neutral-400 text-xs leading-relaxed mb-4 flex-shrink-0 font-medium">
                             {item.thought}
                         </p>
 
-                        {/* Terminal Preview */}
-                        <div className="relative mt-auto pt-5 border-t border-white/[0.05] isolate z-10 flex-1 flex flex-col">
-                            <div className="flex items-center justify-between mb-4 px-1">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-red-500/60" />
-                                    <div className="w-2 h-2 rounded-full bg-yellow-500/60" />
-                                    <div className="w-2 h-2 rounded-full bg-green-500/60" />
-                                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-white/15 ml-2">system prompt</span>
+                        {/* Terminal Preview / Code Frame */}
+                        <div className="relative mt-auto pt-3 border-t-2 border-neutral-800 isolate z-10 flex-1 flex flex-col">
+                            {/* Top Bar with traffic light dots */}
+                            <div className="flex items-center justify-between mb-3 px-1">
+                                <div className="flex items-center gap-1.5">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-brand-red border border-black" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-brand-yellow border border-black" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-black" />
+                                    <span className="text-[9px] font-black uppercase tracking-widest text-neutral-400 ml-2">PROMPT</span>
                                 </div>
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleCopy(item.id, item.raw);
                                     }}
-                                    className="flex items-center gap-1.5 text-white/30 hover:text-white transition-all bg-white/[0.04] hover:bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/5 hover:border-white/15"
+                                    className="flex items-center gap-1 text-white bg-brand-blue hover:bg-brand-blue-dark border border-black px-2 py-1 rounded text-[9px] font-black uppercase tracking-wider transition-colors shadow-[1px_1px_0px_0px_#000]"
                                 >
                                     <AnimatePresence mode="wait" initial={false}>
                                         {copiedId === item.id ? (
-                                            <motion.span key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="flex items-center gap-1.5">
-                                                <Check className="w-3 h-3 text-brand-green" />
-                                                <span className="text-[9px] font-black text-brand-green uppercase tracking-wider">Copied!</span>
+                                            <motion.span key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="flex items-center gap-1">
+                                                <Check className="w-3 h-3" />
+                                                <span>COPIED</span>
                                             </motion.span>
                                         ) : (
-                                            <motion.span key="copy" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="flex items-center gap-1.5">
+                                            <motion.span key="copy" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="flex items-center gap-1">
                                                 <Copy className="w-3 h-3" />
-                                                <span className="text-[9px] font-black uppercase tracking-wider">Copy</span>
+                                                <span>COPY</span>
                                             </motion.span>
                                         )}
                                     </AnimatePresence>
@@ -326,70 +301,43 @@ const VibePrompts = () => {
                             </div>
 
                             {/* Code area */}
-                            <motion.div
-                                whileTap={{ scale: 0.98 }}
+                            <div
                                 onClick={() => handleCopy(item.id, item.raw)}
-                                className="relative p-5 rounded-2xl bg-[#050505] border border-white/[0.04] overflow-hidden group/code cursor-pointer transition-all hover:border-white/10 flex-1"
-                                style={{ borderColor: activeTab === item.id ? `${item.accentColor}20` : undefined }}
+                                className="relative p-3.5 rounded bg-black border-2 border-neutral-700 overflow-hidden cursor-pointer hover:border-white transition-colors flex-1"
                             >
-                                <p className="font-mono text-[11px] leading-relaxed text-white/25 group-hover/code:text-white/50 transition-colors duration-500">
+                                <p className="font-mono text-[11px] leading-relaxed text-neutral-300">
                                     {item.prompt}
                                 </p>
-                                {/* Scanline shimmer on hover */}
-                                <motion.div
-                                    animate={activeTab === item.id ? { y: ['0%', '100%'] } : { y: '0%' }}
-                                    transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-                                    className="absolute inset-x-0 h-8 bg-gradient-to-b from-transparent via-white/[0.02] to-transparent pointer-events-none"
-                                />
-                            </motion.div>
+                            </div>
                         </div>
-                    </motion.div>
+                    </div>
                 ))}
             </motion.div>
 
             {/* ── Bottom CTA Banner ───────────────────────────────────────── */}
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="relative overflow-hidden rounded-3xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8"
-            >
-                {/* Glow blob */}
-                <div className="absolute inset-0 bg-gradient-to-r from-brand-green/5 via-transparent to-purple-500/5 pointer-events-none" />
-                <div className="absolute -top-1/2 left-1/4 w-[400px] h-[400px] bg-brand-green/5 blur-[120px] rounded-full pointer-events-none" />
-
+            <div className="relative overflow-hidden rounded-lg border-2 border-white bg-brand-surface p-8 md:p-10 flex flex-col md:flex-row items-center justify-between gap-6 brutal-shadow-black">
                 <div className="relative z-10 text-center md:text-left">
-                    <div className="flex items-center gap-2 justify-center md:justify-start mb-3">
-                        <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse shadow-[0_0_8px_#00FF00]" />
-                        <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-brand-green/80">Upgrade for more prompts</span>
+                    <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
+                        <span className="w-2 h-2 rounded-full bg-brand-blue" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-brand-blue">Upgrade for more prompts</span>
                     </div>
-                    <h3 className="text-2xl md:text-3xl font-display font-black text-white uppercase tracking-tight mb-2">
-                        Unlock <span className="text-brand-green">50+ Elite Prompts</span>
+                    <h3 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tight mb-2">
+                        Unlock <span className="text-brand-blue">50+ Elite Prompts</span>
                     </h3>
-                    <p className="text-white/40 text-sm max-w-md">
-                        Pro and Elite members get access to the full Vibe Coding Matrix — Claude, Antigravity, Lovable, Cursor, and <span className="text-white/70 font-semibold">Advanced</span> (works with any AI tool).
+                    <p className="text-neutral-400 text-sm max-w-md font-medium">
+                        Pro and Elite members get access to the full Vibe Coding Matrix — Claude, Antigravity, Lovable, Cursor, and Advanced prompts.
                     </p>
                 </div>
 
                 <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 shrink-0">
-                    <div className="flex items-center gap-3">
-                        {['A', 'C', 'L', 'G'].map((letter, i) => (
-                            <div
-                                key={i}
-                                className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs font-black text-white/50"
-                                style={{ marginLeft: i > 0 ? '-8px' : 0, zIndex: 4 - i }}
-                            >
-                                {letter}
-                            </div>
-                        ))}
-                        <span className="text-white/30 text-xs font-bold ml-2">+46 more</span>
-                    </div>
-                    <a href="/pricing" className="flex items-center gap-2 bg-brand-green text-black px-8 py-4 rounded-full font-black uppercase tracking-widest text-xs green-glow hover:scale-105 hover:shadow-[0_0_40px_rgba(0,255,0,0.5)] transition-all group/cta">
-                        Get Pro Access
-                        <ArrowRight size={16} className="group-hover/cta:translate-x-1 transition-transform" />
+                    <a href="/pricing">
+                        <button className="brutal-btn-primary px-8 py-4 text-xs font-black tracking-widest flex items-center gap-2">
+                            <span>GET PRO ACCESS</span>
+                            <ArrowRight size={16} />
+                        </button>
                     </a>
                 </div>
-            </motion.div>
+            </div>
 
             {/* Holographic Toast Notification */}
             <Toast 

@@ -20,6 +20,23 @@ export interface ComponentConfig {
 }
 
 export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
+    "buyme-acoffee": {
+        props: [
+            { name: "classname", type: "string", default: "''", description: "Additional CSS class for the root container." },
+            { name: "iconClassName", type: "string", default: "''", description: "CSS class for styling the coffee icon." },
+            { name: "textSvgClassName", type: "string", default: "''", description: "CSS class for styling the SVG text element (if used)." },
+            { name: "initialCount", type: "number", default: "1", description: "Default number of coffees selected." },
+            { name: "onDonate", type: "(count: number) => void", default: "undefined", description: "Callback triggered when a user supports/clicks." }
+        ],
+        vibeMeta: {
+            behavior: "A playful and creative creator sponsorship component inspired by 'Buy Me a Coffee' with animated steam, tipping cup physics, and floating coin animations.",
+            states: { from: "default coffee cup", to: "steam pulsing and floating coins" },
+            cssProperties: ["framer-motion", "lucide-react", "tailwind-css"],
+            description: "A fun and creative sponsorship component inspired by 'Buy Me a Coffee' with a twist! Perfect for creators looking to attract sponsors and supporters.",
+            libraries: ["framer-motion", "lucide-react"],
+            requirements: ["Animated steam physics", "Tipping cup animation", "Selectable amount pills", "Persistent gifted coffee counter"]
+        }
+    },
     "3d-galaxy-animation": {
         props: [
             { name: "theme", type: "'Inferno' | 'Veridian' | 'Celestial'", default: "'Inferno'", description: "Color palette of the galaxy." },

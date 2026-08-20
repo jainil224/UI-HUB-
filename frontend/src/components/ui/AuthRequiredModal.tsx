@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, LogIn, UserPlus, Sparkles, Heart, Shield } from 'lucide-react';
+import { X, LogIn, UserPlus, Sparkles, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface AuthRequiredModalProps {
@@ -28,80 +28,73 @@ const AuthRequiredModal = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={onClose}
-                        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/85 backdrop-blur-sm"
                     />
 
                     {/* Modal Card */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                        initial={{ opacity: 0, scale: 0.95, y: 15 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 15 }}
                         className="relative w-full max-w-md overflow-hidden"
                     >
-                        <div className="glass rounded-[2.5rem] border border-white/10 bg-[#080808]/90 backdrop-blur-2xl shadow-[0_40px_100px_rgba(0,0,0,0.7)] p-8">
-                            {/* Decorative elements */}
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-green/10 blur-[50px] rounded-full -translate-y-1/2 translate-x-1/2" />
-                            <div className="absolute bottom-0 left-0 w-32 h-32 bg-purple-500/10 blur-[50px] rounded-full translate-y-1/2 -translate-x-1/2" />
-
+                        <div className="rounded-lg border-2 border-white bg-brand-surface brutal-shadow-black p-7 md:p-8 relative">
                             {/* Header */}
-                            <div className="relative z-10 flex justify-between items-start mb-8">
-                                <div className="p-3 rounded-2xl bg-brand-green/10 border border-brand-green/20">
-                                    <Shield className="text-brand-green" size={24} />
+                            <div className="relative z-10 flex justify-between items-start mb-6">
+                                <div className="w-12 h-12 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center shadow-[3px_3px_0px_0px_#000000]">
+                                    <Shield className="text-black" size={22} />
                                 </div>
                                 <button
                                     onClick={onClose}
-                                    className="p-2 rounded-xl hover:bg-white/5 text-white/40 hover:text-white transition-colors"
+                                    className="p-1.5 rounded border border-neutral-700 hover:border-white text-neutral-400 hover:text-white transition-colors bg-brand-bg"
                                 >
-                                    <X size={20} />
+                                    <X size={18} />
                                 </button>
                             </div>
 
                             {/* Content */}
-                            <div className="relative z-10 text-center sm:text-left">
-                                <motion.div
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.1 }}
-                                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-green/5 border border-brand-green/10 text-brand-green text-[10px] font-black uppercase tracking-[0.2em] mb-4"
-                                >
-                                    <Sparkles size={12} />
-                                    <span>Vault Security Protocol</span>
-                                </motion.div>
+                            <div className="relative z-10">
+                                <div className="inline-flex items-center gap-2 px-3 py-1 rounded border border-neutral-700 bg-brand-bg text-neutral-300 text-[10px] font-black uppercase tracking-widest mb-3">
+                                    <span className="w-2 h-2 rounded-full bg-brand-blue" />
+                                    <span>VAULT SECURITY</span>
+                                </div>
 
-                                <h2 className="text-3xl font-display font-black text-white mb-4 tracking-tight leading-tight uppercase">
+                                <h2 className="text-2xl font-black text-white mb-2 tracking-tight leading-tight uppercase font-heading">
                                     {title}
                                 </h2>
-                                <p className="text-white/40 font-medium text-sm leading-relaxed mb-8">
+                                <p className="text-neutral-400 font-medium text-xs leading-relaxed mb-6 font-sans">
                                     {description}
                                 </p>
 
                                 {/* Action Buttons */}
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={() => navigate('/login')}
-                                        className="flex items-center justify-center gap-2 bg-brand-green text-black font-black py-4 rounded-2xl text-xs uppercase tracking-widest hover:shadow-[0_0_30px_rgba(0,255,0,0.3)] transition-all"
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <button
+                                        onClick={() => {
+                                            onClose();
+                                            navigate('/login');
+                                        }}
+                                        className="brutal-btn-primary py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
                                     >
-                                        <LogIn size={18} />
-                                        Login
-                                    </motion.button>
-                                    <motion.button
-                                        whileHover={{ scale: 1.02, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={() => navigate('/signup')}
-                                        className="flex items-center justify-center gap-2 bg-transparent border border-white/10 text-white font-black py-4 rounded-2xl text-xs uppercase tracking-widest transition-all"
+                                        <LogIn size={15} />
+                                        <span>Log In</span>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            onClose();
+                                            navigate('/signup');
+                                        }}
+                                        className="brutal-btn-outline py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
                                     >
-                                        <UserPlus size={18} />
-                                        Sign Up
-                                    </motion.button>
+                                        <UserPlus size={15} />
+                                        <span>Sign Up</span>
+                                    </button>
                                 </div>
                             </div>
 
                             {/* Footer Note */}
-                            <div className="relative z-10 mt-8 pt-6 border-t border-white/5 flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/20">
-                                <Heart size={12} className="text-red-500/50" />
-                                <span>Curate your workspace</span>
+                            <div className="relative z-10 mt-6 pt-4 border-t border-neutral-800 flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-neutral-500">
+                                <span>UI-HUB NETWORK</span>
+                                <span>100% FREE ACCESS</span>
                             </div>
                         </div>
                     </motion.div>

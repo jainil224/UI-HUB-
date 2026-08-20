@@ -33,6 +33,13 @@ import { motion, Variants, AnimatePresence } from 'framer-motion';
 import { useSkeleton } from '../../../context/SkeletonContext';
 import { ComponentGridSkeleton } from '../../../components/ui/Skeleton';
 
+const shadowVariants = [
+    'brutal-shadow-blue',
+    'brutal-shadow-red',
+    'brutal-shadow-yellow',
+    'brutal-shadow-white',
+];
+
 const ComponentGrid = () => {
     const { user, isPro } = useAuth();
     const { isLoading } = useSkeleton();
@@ -44,7 +51,7 @@ const ComponentGrid = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
         timeoutRef.current = setTimeout(() => {
             setActiveId(id);
-        }, 150); // 150ms debounce
+        }, 150);
     };
 
     const handleMouseLeave = () => {
@@ -70,49 +77,44 @@ const ComponentGrid = () => {
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1
+                staggerChildren: 0.08
             }
         }
     };
 
     const cardVariants: Variants = {
-        hidden: { opacity: 0, y: 30 },
+        hidden: { opacity: 0, y: 20 },
         visible: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.6, ease: "easeOut" }
+            transition: { duration: 0.4, ease: "easeOut" }
         }
     };
 
-    const [isButtonHovered, setIsButtonHovered] = useState(false);
-
     return (
-        <section id="explore" className="relative py-20 md:py-32 px-4 sm:px-6 max-w-[1400px] mx-auto w-full">
-            {/* Subtle Top Glow */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[300px] md:w-[600px] h-[200px] md:h-[300px] bg-brand-green/10 blur-[100px] md:blur-[120px] rounded-full pointer-events-none opacity-50" />
-
-            {/* Header */}
+        <section id="explore" className="relative py-24 md:py-32 px-4 sm:px-6 max-w-[1400px] mx-auto w-full bg-brand-bg">
+            {/* Section Header */}
             <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8 }}
-                className="relative text-center mb-14 md:mb-20 px-2 flex flex-col items-center z-10"
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="relative text-left mb-16 flex flex-col items-start z-10 max-w-4xl"
             >
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#050505] border border-white/[0.05] mb-6 shadow-sm">
-                    <Sparkles className="w-3.5 h-3.5 text-brand-green" />
-                    <span className="text-[9px] md:text-[10px] font-bold tracking-[0.2em] text-white/60 uppercase">Component Showcase</span>
+                {/* Eyebrow Badge */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 border-2 border-white bg-brand-surface text-white rounded-md font-black text-xs uppercase tracking-widest brutal-shadow-black">
+                    <span className="w-2.5 h-2.5 rounded-full bg-brand-yellow border border-black" />
+                    <span>COMPONENT SHOWCASE</span>
                 </div>
 
-                <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-[5rem] font-display font-black uppercase tracking-widest mb-4 md:mb-6 text-transparent bg-clip-text bg-gradient-to-b from-white via-gray-300 to-gray-600 drop-shadow-sm" style={{ transform: 'scaleX(1.1)' }}>
-                    Explore Elements
-                </h2>
-
-                <p className="text-white/40 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed font-light mb-8">
-                    A collection of beautifully crafted, highly interactive components built to<br className="hidden md:block" /> elevate your next production-ready project.
-                </p>
-                <ViewSourceButton />
-
+                <div className="border-2 border-white p-6 md:p-8 rounded-lg bg-brand-surface brutal-shadow-blue w-full">
+                    <h2 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight mb-4 text-white leading-none">
+                        EXPLORE <span className="text-brand-blue">ELEMENTS</span>
+                    </h2>
+                    <p className="text-neutral-300 font-medium text-base md:text-lg max-w-2xl leading-relaxed">
+                        A curated collection of beautifully crafted, highly interactive components ready for your next production project.
+                    </p>
+                </div>
             </motion.div>
 
             {/* Grid */}
@@ -134,11 +136,13 @@ const ComponentGrid = () => {
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
-                        viewport={{ once: true, margin: "-50px" }}
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 relative z-10"
+                        viewport={{ once: true }}
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 relative z-10"
                     >
-                        {featuredComponents.map((comp) => {
+                        {featuredComponents.map((comp, index) => {
                             const isActive = activeId === comp!.id;
+                            const shadowClass = shadowVariants[index % shadowVariants.length];
+
                             return (
                                 <motion.div
                                     key={comp!.id}
@@ -146,31 +150,41 @@ const ComponentGrid = () => {
                                     onClick={() => handleCardInteract(comp!.id)}
                                     onMouseEnter={() => handleMouseEnter(comp!.id)}
                                     onMouseLeave={handleMouseLeave}
-                                    className="group relative h-[240px] sm:h-[260px] md:h-[280px] lg:h-[300px] bg-[#030303] rounded-3xl overflow-hidden flex items-center justify-center cursor-pointer select-none transition-all duration-500 hover:-translate-y-2 isolate"
-                                    style={{
-                                        WebkitMaskImage: '-webkit-radial-gradient(white, black)'
-                                    }}
+                                    className={`group relative h-[270px] sm:h-[290px] md:h-[310px] bg-brand-surface border-2 border-white rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer select-none transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 ${shadowClass}`}
                                 >
-                                    {/* Inner border and shadow */}
-                                    <div className="absolute inset-0 rounded-3xl ring-1 ring-white/[0.03] group-hover:ring-white/[0.08] transition-all duration-500 z-30 pointer-events-none" />
+                                    {/* Card Top Traffic Bar */}
+                                    <div className="relative z-30 flex items-center justify-between px-3.5 py-2.5 border-b-2 border-neutral-800 bg-[#0A0A0E]">
+                                        <div className="flex items-center gap-1.5">
+                                            <span className="w-2.5 h-2.5 rounded-full bg-brand-red border border-black" />
+                                            <span className="w-2.5 h-2.5 rounded-full bg-brand-yellow border border-black" />
+                                            <span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-black" />
+                                            <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-400 ml-1 truncate max-w-[120px]">
+                                                {comp?.category || 'UI'}
+                                            </span>
+                                        </div>
 
+                                        {/* PRO Badge */}
+                                        {comp!.isPremium && !isPro && (
+                                            <div className="px-2 py-0.5 rounded border border-black bg-brand-yellow text-black text-[9px] font-black uppercase tracking-wider shadow-[1px_1px_0px_0px_#000]">
+                                                PRO
+                                            </div>
+                                        )}
+                                    </div>
 
-                                    {/* subtle gradient hover background */}
-                                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
+                                    {/* Preview / Placeholder Area */}
+                                    <div className="w-full flex-1 flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-transparent to-black/40">
+                                        {/* Subtle Grid texture */}
+                                        <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
-                                    {/* Preview / Placeholder */}
-                                    <div className="w-full h-full flex items-center justify-center absolute inset-0 z-20 overflow-hidden rounded-3xl">
                                         {isActive ? (
                                             <div
-                                                className="absolute inset-0 w-full h-full animate-in fade-in duration-500 overflow-hidden"
-                                                style={{
-                                                    pointerEvents: 'auto',
-                                                }}
+                                                className="absolute inset-0 w-full h-full animate-in fade-in duration-300 overflow-hidden"
+                                                style={{ pointerEvents: 'auto' }}
                                             >
                                                 <div className="w-full h-full flex items-center justify-center transform scale-[0.8] md:scale-[0.85] origin-center relative">
                                                     <React.Suspense fallback={
                                                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                                            <div className="w-6 h-6 border-2 border-brand-green/20 border-t-brand-green rounded-full animate-spin" />
+                                                            <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
                                                         </div>
                                                     }>
                                                         {comp!.preview()}
@@ -178,44 +192,27 @@ const ComponentGrid = () => {
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div className="flex flex-col items-center gap-4 transition-all duration-500 group-hover:scale-105">
-                                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-[14px] border border-white/[0.05] bg-[#050505] flex items-center justify-center group-hover:border-white/10 transition-all duration-500">
+                                            <div className="flex flex-col items-center gap-3 transition-transform duration-150 group-hover:scale-105 z-10">
+                                                <div className="w-12 h-12 rounded-lg border-2 border-white bg-black flex items-center justify-center shadow-[3px_3px_0px_0px_#000] group-hover:border-brand-blue transition-colors">
                                                     {getCategoryIcon(comp?.category, comp?.id)}
                                                 </div>
-                                                <div className="flex flex-col items-center">
-                                                    <span className="text-[8px] md:text-[9px] uppercase tracking-[0.3em] font-bold text-white/20 group-hover:text-brand-green/60 transition-colors duration-500">
-                                                        <span className="md:hidden">TAP TO INTERACT</span>
-                                                        <span className="hidden md:inline">HOVER TO INTERACT</span>
-                                                    </span>
-                                                </div>
+                                                <span className="text-[10px] uppercase tracking-widest font-black text-neutral-300 bg-black/60 px-2.5 py-1 rounded border border-neutral-800">
+                                                    <span className="md:hidden">TAP TO INTERACT</span>
+                                                    <span className="hidden md:inline">HOVER TO INTERACT</span>
+                                                </span>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Bottom bar: title + arrow */}
-                                    <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between px-6 py-5 pointer-events-none">
-                                        <span className="text-[10px] uppercase font-bold tracking-[0.15em] text-white/30 group-hover:text-white/70 transition-colors duration-500 truncate mr-3">
+                                    <div className="relative z-30 flex items-center justify-between px-4 py-3 bg-[#0A0A0E] border-t-2 border-white">
+                                        <span className="text-xs uppercase font-black tracking-wider text-white truncate mr-2">
                                             {comp!.title}
                                         </span>
-                                        <div className="w-7 h-7 rounded-full border border-white/5 bg-[#030303] flex items-center justify-center group-hover:border-white/15 group-hover:bg-brand-green/10 transition-all duration-500">
-                                            <ArrowUpRight
-                                                size={12}
-                                                className="shrink-0 text-white/20 group-hover:text-brand-green transition-colors duration-500"
-                                            />
+                                        <div className="w-6 h-6 rounded border border-white bg-brand-surface flex items-center justify-center group-hover:bg-brand-blue group-hover:border-black transition-colors shrink-0 shadow-[1px_1px_0px_0px_#000]">
+                                            <ArrowUpRight size={14} className="text-white" />
                                         </div>
                                     </div>
-
-                                    {/* Active border glow */}
-                                    {isActive && (
-                                        <div className="absolute inset-0 rounded-3xl ring-1 ring-brand-green/20 shadow-[0_0_30px_-5px_var(--color-brand-green,rgba(255,255,26,0.1))] pointer-events-none z-40 transition-all duration-500 opacity-50" />
-                                    )}
-
-                                    {/* PRO Badge */}
-                                    {comp!.isPremium && !isPro && (
-                                        <div className="absolute top-4 right-4 z-40 px-2 py-1 rounded-md bg-brand-green text-black text-[7px] font-black uppercase tracking-widest shadow-[0_0_15px_rgba(0,255,0,0.4)] border border-white/10">
-                                            PRO
-                                        </div>
-                                    )}
                                 </motion.div>
                             );
                         })}
@@ -228,109 +225,15 @@ const ComponentGrid = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mt-16 md:mt-24 flex justify-center z-10 relative"
+                className="mt-16 flex justify-center z-10 relative"
             >
-                <motion.button
-                    onMouseEnter={() => setIsButtonHovered(true)}
-                    onMouseLeave={() => setIsButtonHovered(false)}
+                <button
                     onClick={() => navigate('/library')}
-                    whileHover={{ scale: 1.02, y: -4 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative flex items-center gap-8 px-14 py-6 bg-black text-white transition-all duration-500 cursor-pointer overflow-hidden isolate border border-white/[0.03]"
+                    className="brutal-btn-primary px-10 py-4 text-xs font-black tracking-widest flex items-center gap-3"
                 >
-                    {/* Corner Nodes - Static */}
-                    <div className="absolute top-0 left-0 w-3 h-3 border-t border-l border-white/20 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-                    <div className="absolute top-0 right-0 w-3 h-3 border-t border-r border-white/20 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-                    <div className="absolute bottom-0 left-0 w-3 h-3 border-b border-l border-white/20 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-                    <div className="absolute bottom-0 right-0 w-3 h-3 border-b border-r border-white/10 group-hover:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-
-                    {/* Animated Strokes - Simultaneous from corners */}
-
-                    {/* Top Edge (Left -> Right) */}
-                    <motion.div
-                        className="absolute top-0 left-0 h-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.2s_infinite]"
-                        initial={{ width: 0 }}
-                        animate={{ width: isButtonHovered ? "100%" : 0 }}
-                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-                    />
-
-                    {/* Left Edge (Top -> Bottom) */}
-                    <motion.div
-                        className="absolute top-0 left-0 w-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.25s_infinite]"
-                        initial={{ height: 0 }}
-                        animate={{ height: isButtonHovered ? "100%" : 0 }}
-                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-                    />
-
-                    {/* Bottom Edge (Right -> Left) */}
-                    <motion.div
-                        className="absolute bottom-0 right-0 h-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.22s_infinite]"
-                        initial={{ width: 0 }}
-                        animate={{ width: isButtonHovered ? "100%" : 0 }}
-                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-                    />
-
-                    {/* Right Edge (Bottom -> Top) */}
-                    <motion.div
-                        className="absolute bottom-0 right-0 w-[2.5px] bg-brand-green z-30 pointer-events-none shadow-[0_0_20px_rgba(0,255,10,0.6)] group-hover:animate-[jitter_0.27s_infinite]"
-                        initial={{ height: 0 }}
-                        animate={{ height: isButtonHovered ? "100%" : 0 }}
-                        transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-                    />
-
-                    <span className="relative z-10 text-white/40 group-hover:text-white text-[11px] md:text-[12px] font-black uppercase tracking-[0.4em] transition-all duration-500">
-                        <span className="relative inline-block">
-                            View All Components
-                            {/* Glitch Layers */}
-                            <span className="absolute top-0 left-0 -z-10 text-[#00ff0a] opacity-0 group-hover:opacity-70 group-hover:animate-[glitch_0.3s_infinite] pointer-events-none translate-x-[2px]">View All Components</span>
-                            <span className="absolute top-0 left-0 -z-10 text-[#ff3b4d] opacity-0 group-hover:opacity-70 group-hover:animate-[glitch_0.3s_infinite_reverse] pointer-events-none -translate-x-[2px]">View All Components</span>
-                        </span>
-                    </span>
-
-                    <motion.div
-                        animate={{
-                            rotate: isButtonHovered ? 45 : 0,
-                            x: isButtonHovered ? 4 : 0,
-                            y: isButtonHovered ? -4 : 0
-                        }}
-                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                        className="relative z-10"
-                    >
-                        <ArrowUpRight size={20} className="text-brand-green/50 group-hover:text-brand-green transition-all duration-500" />
-                    </motion.div>
-
-                    {/* Glitch Overlay Effect */}
-                    <div className="absolute inset-0 z-0 opacity-0 group-hover:opacity-[0.05] pointer-events-none bg-[url('/noise.svg')] bg-repeat" />
-
-                    {/* Laser Reveal Shimmer */}
-                    <motion.div
-                        initial={{ x: '-100%' }}
-                        animate={isButtonHovered ? { x: '100%' } : { x: '-100%' }}
-                        transition={{ duration: 0.7, ease: "easeInOut" }}
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.05] to-transparent pointer-events-none z-10"
-                    />
-
-                    {/* Background Ambience */}
-                    <div className="absolute inset-0 bg-brand-green/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                    <style>{`
-                        @keyframes glitch {
-                            0% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); }
-                            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
-                            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -2px); }
-                            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 2px); }
-                            80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
-                            100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
-                        }
-                        @keyframes jitter {
-                            0% { transform: translate(0, 0); }
-                            25% { transform: translate(-0.5px, 0.5px); opacity: 0.8; }
-                            50% { transform: translate(0.5px, -0.5px); opacity: 1; }
-                            75% { transform: translate(-0.5px, -0.5px); opacity: 0.9; }
-                            100% { transform: translate(0.5px, 0.5px); opacity: 1; }
-                        }
-                    `}</style>
-                </motion.button>
+                    <span>VIEW ALL COMPONENTS</span>
+                    <ArrowUpRight size={16} />
+                </button>
             </motion.div>
         </section>
     );

@@ -54,42 +54,38 @@ function getTransporter() {
   return { transporter: cachedTransporter, fromAddress: cachedFromAddress };
 }
 
+import { sendWelcomeEmail as sendWelcomeEmailViaBrevoApi } from '../services/brevoService.js';
+
 /**
- * Sends the UI-HUB branded welcome email.
+ * Sends the UI-HUB branded welcome email via Brevo HTTP API.
  * Idempotency is guarded by the Firestore `welcomeEmailSent` flag in userRoutes.js.
  */
 export async function sendWelcomeEmail(email, name) {
-  let transporter, fromAddress;
-
-  try {
-    ({ transporter, fromAddress } = getTransporter());
-  } catch (err) {
-    console.error('[EmailService] Transporter init failed:', err.message);
-    return { success: false, error: err.message };
+  // Primary method: Brevo HTTP Transactional Email API (api.brevo.com/v3/smtp/email)
+  const result = await sendWelcomeEmailViaBrevoApi(email, name);
+  if (result.success) {
+    return result;
   }
 
-  const displayName = name || 'there';
-
-  const mailOptions = {
-    from:    `"UI-HUB" <${fromAddress}>`,
-    to:      email,
-    replyTo: 'uihub.design@gmail.com',
-    subject: 'Welcome to UI-HUB — Your components are ready 🎨',
-    html:    buildWelcomeEmailHTML(displayName),
-  };
-
+  // Fallback to SMTP if API key is not configured or failed
+  console.warn('[EmailService] Brevo HTTP API send unfulfilled, attempting SMTP fallback...');
+  let transporter, fromAddress;
   try {
+    ({ transporter, fromAddress } = getTransporter());
+    const displayName = name || 'there';
+    const mailOptions = {
+      from:    `"UI-HUB" <${fromAddress}>`,
+      to:      email,
+      replyTo: 'uihub.design@gmail.com',
+      subject: 'Welcome to UI-HUB — Your components are ready 🎨',
+      html:    buildWelcomeEmailHTML(displayName),
+    };
     const info = await transporter.sendMail(mailOptions);
-    console.log(`[EmailService] ✅ Welcome email sent to ${email} — messageId: ${info.messageId}`);
+    console.log(`[EmailService] ✅ Welcome email sent to ${email} via SMTP fallback — messageId: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`[EmailService] ❌ Failed to send to ${email}:`, {
-      message:      err.message,
-      code:         err.code,
-      response:     err.response,
-      responseCode: err.responseCode,
-    });
-    return { success: false, error: err.message };
+    console.error(`[EmailService] ❌ SMTP fallback also failed:`, err.message);
+    return result; // return original API result/error
   }
 }
 

@@ -12,6 +12,11 @@ let isRunning = false;
 export const startUserSyncWorker = () => {
     if (isRunning) return;
     isRunning = true;
+
+    if (!admin.apps || admin.apps.length === 0) {
+        console.warn('[SyncWorker] Firebase Admin is not initialized (no service account credentials found). Background sync worker paused.');
+        return;
+    }
     
     console.log('[SyncWorker] User registration monitor started (15s interval)...');
     
@@ -23,6 +28,10 @@ export const startUserSyncWorker = () => {
 };
 
 const runSyncTask = async () => {
+    if (!admin.apps || admin.apps.length === 0) {
+        return;
+    }
+
     try {
         const auth = admin.auth();
         const db = admin.firestore();
@@ -62,8 +71,12 @@ const runSyncTask = async () => {
             console.log(`[SyncWorker] Automatically synced ${syncCount} new users to Firestore.`);
         }
     } catch (error) {
-        // Suppress credential errors to avoid log spam in dev
-        if (error.message && !error.message.includes('Could not load the default credentials')) {
+        // Suppress uninitialized / credential errors to avoid log spam
+        if (
+            error.message &&
+            !error.message.includes('Could not load the default credentials') &&
+            !error.message.includes('The default Firebase app does not exist')
+        ) {
             console.error('[SyncWorker] Error during auto-sync:', error.message);
         }
     }

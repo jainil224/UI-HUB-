@@ -35,7 +35,7 @@ const AppShell = () => {
         ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black' 
         : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
     }`}>
-      {!isAuth && !isDemo && <Navbar />}
+      {!isDemo && <Navbar />}
 
       <main className="flex-1 flex flex-col">
         <React.Suspense fallback={

@@ -16,46 +16,46 @@ const BADGE_CONFIG = {
     free: {
         label: 'FREE',
         icon: Code2,
-        containerClass: 'bg-white/[0.05] border border-white/10',
-        textClass: 'text-white/40',
-        iconClass: 'text-white/30',
+        containerClass: 'bg-brand-surface border-2 border-white/60 text-white',
+        textClass: 'text-white font-black',
+        iconClass: 'text-neutral-400',
         glowClass: '',
         description: 'Basic Member',
     },
     pro: {
         label: 'PRO',
         icon: Crown,
-        containerClass: 'bg-brand-green text-black border border-brand-green',
-        textClass: 'text-black',
+        containerClass: 'bg-brand-yellow text-black border-2 border-black',
+        textClass: 'text-black font-black',
         iconClass: 'text-black',
-        glowClass: 'shadow-[0_0_20px_rgba(0,255,0,0.5)]',
+        glowClass: '',
         description: 'Pro Member',
     },
     elite: {
         label: 'ELITE',
         icon: Gem,
-        containerClass: 'bg-blue-500 border border-blue-400',
-        textClass: 'text-white',
+        containerClass: 'bg-brand-blue text-white border-2 border-black',
+        textClass: 'text-white font-black',
         iconClass: 'text-white',
-        glowClass: 'shadow-[0_0_20px_rgba(59,130,246,0.6)]',
+        glowClass: '',
         description: 'Elite Member',
     },
 };
 
 const SIZE_CONFIG = {
     sm: {
-        container: 'px-1.5 py-0.5 gap-0.5 rounded-md',
+        container: 'px-2 py-0.5 gap-1 rounded',
         text: 'text-[9px]',
-        icon: 8,
+        icon: 10,
     },
     md: {
-        container: 'px-2 py-1 gap-1 rounded-lg',
-        text: 'text-[11px]',
+        container: 'px-2.5 py-1 gap-1 rounded',
+        text: 'text-[10px]',
         icon: 12,
     },
     lg: {
-        container: 'px-3 py-1.5 gap-1.5 rounded-xl',
-        text: 'text-[13px]',
+        container: 'px-3.5 py-1.5 gap-1.5 rounded',
+        text: 'text-xs',
         icon: 14,
     },
 };
@@ -64,16 +64,16 @@ const PlanBadge = ({
     tier,
     size = 'md',
     showIcon = true,
-    animated = true,
+    animated = false,
     className = '',
 }: PlanBadgeProps) => {
     const config = BADGE_CONFIG[tier];
     const sizeConfig = SIZE_CONFIG[size];
     const Icon = config.icon;
 
-    const badge = (
+    return (
         <span
-            className={`inline-flex items-center font-display font-black uppercase tracking-[0.2em] transition-all
+            className={`inline-flex items-center font-black uppercase tracking-wider
                 ${config.containerClass}
                 ${config.textClass}
                 ${config.glowClass}
@@ -89,49 +89,6 @@ const PlanBadge = ({
             )}
             {config.label}
         </span>
-    );
-
-    if (!animated || tier === 'free') return badge;
-
-    if (tier === 'elite') {
-        return (
-            <motion.span
-                animate={{ opacity: [1, 0.75, 1] }}
-                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-                className={`inline-flex items-center font-display font-black uppercase tracking-[0.2em]
-                    ${config.containerClass}
-                    ${config.textClass}
-                    ${config.glowClass}
-                    ${sizeConfig.container}
-                    ${sizeConfig.text}
-                    ${className}`}
-            >
-                {showIcon && (
-                    <Icon size={sizeConfig.icon} className={`${config.iconClass} shrink-0`} />
-                )}
-                {config.label}
-            </motion.span>
-        );
-    }
-
-    // PRO — subtle float
-    return (
-        <motion.span
-            animate={{ y: [0, -1, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-            className={`inline-flex items-center font-display font-black uppercase tracking-[0.2em]
-                ${config.containerClass}
-                ${config.textClass}
-                ${config.glowClass}
-                ${sizeConfig.container}
-                ${sizeConfig.text}
-                ${className}`}
-        >
-            {showIcon && (
-                <Icon size={sizeConfig.icon} className={`${config.iconClass} shrink-0`} />
-            )}
-            {config.label}
-        </motion.span>
     );
 };
 

@@ -270,7 +270,7 @@ const PricingPage = () => {
     ];
 
     return (
-        <div className="min-h-screen pt-28 pb-24 px-6 relative overflow-hidden">
+        <div className="min-h-screen pt-28 pb-24 px-6 relative bg-brand-bg text-white">
             <CheckoutOverlay 
                 isOpen={checkoutStatus !== 'idle'} 
                 status={checkoutStatus} 
@@ -282,59 +282,49 @@ const PricingPage = () => {
                     }
                 }} 
             />
-            {/* Background — matches site pattern */}
-            <div className="absolute inset-0 -z-10 pointer-events-none">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-brand-green/5 blur-[160px] rounded-full" />
-                <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-600/5 blur-[120px] rounded-full" />
-                <div
-                    className="absolute inset-0 opacity-[0.04]"
-                    style={{
-                        backgroundImage:
-                            'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
-                        backgroundSize: '60px 60px',
-                    }}
-                />
-            </div>
 
             <div className="max-w-7xl mx-auto">
-                {/* ── Section Header — same pattern as CardShowcase, Stats, etc. ── */}
+                {/* ── Section Header ── */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-20"
+                    className="text-center mb-16"
                 >
-                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-green/10 border border-brand-green/20 text-[10px] font-bold uppercase tracking-[0.2em] mb-8 backdrop-blur-md">
-                        <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse shadow-[0_0_8px_#00FF00]" />
-                        <span className="text-brand-green/90">Simple Pricing</span>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest mb-6">
+                        <span className="w-2 h-2 rounded-full bg-brand-blue" />
+                        <span className="text-white">SIMPLE PRICING</span>
                     </div>
 
-                    <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-black uppercase tracking-[0.05em] leading-[0.85] mb-6">
-                        <span className="text-white/40 block text-[0.5em] tracking-[0.25em] font-medium mb-2">Choose Your</span>
-                        <span
-                            className="bg-gradient-to-b from-[#00FF1A] via-[#00FF1A] to-[#008A0E] bg-clip-text text-transparent"
-                            style={{ textShadow: '0 0 60px rgba(0,255,26,0.3)' }}
-                        >
-                            Power Level
-                        </span>
+                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight leading-none mb-6">
+                        <span className="text-neutral-400 block text-lg sm:text-2xl tracking-widest font-bold mb-2">CHOOSE YOUR</span>
+                        <span className="text-brand-blue">POWER LEVEL</span>
                     </h1>
 
-                    <p className="max-w-xl mx-auto text-white/50 text-base md:text-lg font-light leading-relaxed tracking-wide mb-12">
+                    <p className="max-w-xl mx-auto text-neutral-400 text-sm md:text-base font-medium leading-relaxed tracking-wide mb-8">
                         Start free with 50+ components. Upgrade whenever you need elite power.
                     </p>
 
                     {/* Currency Toggle */}
                     <div className="flex justify-center mb-8">
-                        <div className="bg-white/[0.03] border border-white/10 p-1 rounded-2xl flex items-center shadow-2xl backdrop-blur-xl">
+                        <div className="bg-brand-surface border-2 border-white p-1 rounded-lg flex items-center brutal-shadow-black">
                             <button
                                 onClick={() => setCurrencyMode('INR')}
-                                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${currencyMode === 'INR' ? 'bg-brand-green text-black shadow-[0_0_20px_rgba(0,255,0,0.3)]' : 'text-white/40 hover:text-white'}`}
+                                className={`px-5 py-2 rounded text-xs font-black uppercase tracking-wider transition-all ${
+                                    currencyMode === 'INR'
+                                        ? 'bg-brand-blue text-white border-2 border-black'
+                                        : 'text-neutral-400 hover:text-white'
+                                }`}
                             >
                                 ₹ INR
                             </button>
                             <button
                                 onClick={() => setCurrencyMode('USD')}
-                                className={`px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${currencyMode === 'USD' ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-white/40 hover:text-white'}`}
+                                className={`px-5 py-2 rounded text-xs font-black uppercase tracking-wider transition-all ${
+                                    currencyMode === 'USD'
+                                        ? 'bg-brand-blue text-white border-2 border-black'
+                                        : 'text-neutral-400 hover:text-white'
+                                }`}
                             >
                                 $ USD
                             </button>
@@ -343,11 +333,9 @@ const PricingPage = () => {
                 </motion.div>
 
                 {/* ── Pricing Cards ── */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-20">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                     {plans.map((plan, idx) => {
                         const Icon = plan.icon;
-                        const isGreen = plan.accentColor === 'green';
-                        const isBlue = plan.accentColor === 'blue';
 
                         return (
                             <motion.div
@@ -355,179 +343,128 @@ const PricingPage = () => {
                                 initial={{ opacity: 0, y: 40 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                                whileHover={{ y: -10 }}
-                                className={`glass p-8 rounded-3xl relative overflow-hidden group flex flex-col ${
-                                    isGreen ? 'border-brand-green/30 shadow-[0_0_40px_rgba(0,255,0,0.08)]' : ''
-                                } ${isBlue ? 'border-blue-500/30 shadow-[0_0_40px_rgba(59,130,246,0.08)]' : ''}`}
+                                className={`p-8 rounded-lg relative overflow-hidden flex flex-col border-2 border-white bg-brand-surface ${
+                                    plan.popular
+                                        ? 'brutal-shadow-blue'
+                                        : plan.bestValue
+                                        ? 'brutal-shadow-yellow'
+                                        : 'brutal-shadow-black'
+                                }`}
                             >
                                 {/* Popular / Best Value Badge */}
                                 {plan.popular && (
-                                    <motion.div
-                                        className="absolute top-6 right-6 z-20"
-                                        animate={{ y: [0, -3, 0] }}
-                                        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                                    >
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-green text-black text-[9px] font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(0,255,0,0.5)]">
-                                            <Star className="w-3 h-3 fill-black" />
-                                            Most Popular
+                                    <div className="absolute top-4 right-4 z-20">
+                                        <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-brand-yellow text-black border-2 border-black text-[9px] font-black uppercase tracking-widest">
+                                            <Star className="w-3 h-3 fill-black text-black" />
+                                            MOST POPULAR
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 )}
                                 {plan.bestValue && (
-                                    <motion.div
-                                        className="absolute top-6 right-6 z-20"
-                                        animate={{ opacity: [1, 0.7, 1] }}
-                                        transition={{ duration: 2, repeat: Infinity }}
-                                    >
-                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-blue-500 text-white text-[9px] font-black uppercase tracking-[0.2em] shadow-[0_0_20px_rgba(59,130,246,0.5)]">
-                                            <Zap className="w-3 h-3 fill-white" />
-                                            Best Value
+                                    <div className="absolute top-4 right-4 z-20">
+                                        <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-brand-blue text-white border-2 border-black text-[9px] font-black uppercase tracking-widest">
+                                            <Zap className="w-3 h-3 fill-white text-white" />
+                                            BEST VALUE
                                         </div>
-                                    </motion.div>
+                                    </div>
                                 )}
 
                                 {/* Plan header */}
-                                <div className="mb-8">
+                                <div className="mb-6">
                                     <div className="flex items-center gap-3 mb-4">
-                                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all group-hover:scale-110 ${
-                                            isGreen ? 'bg-brand-green/10' : isBlue ? 'bg-blue-500/10' : 'bg-white/[0.05]'
-                                        }`}>
-                                            <Icon className={`w-6 h-6 ${isGreen ? 'text-brand-green' : isBlue ? 'text-blue-400' : 'text-white/50'}`} />
+                                        <div className="w-12 h-12 rounded border-2 border-white bg-brand-bg flex items-center justify-center text-white">
+                                            <Icon className="w-6 h-6" />
                                         </div>
                                         <div>
-                                            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/30">{plan.tier}</p>
-                                            <h2 className={`text-xl font-display font-black uppercase tracking-tight ${
-                                                isGreen ? 'text-brand-green' : isBlue ? 'text-blue-400' : 'text-white'
-                                            }`}>
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400">{plan.tier}</p>
+                                            <h2 className="text-xl font-black uppercase tracking-tight text-white">
                                                 {plan.title}
                                             </h2>
                                         </div>
                                     </div>
 
-                                    {/* Badge preview — shows the badge user earns */}
-                                    <div className="flex items-center gap-2 mb-5 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.06] w-fit">
-                                        <span className="text-[9px] font-bold uppercase tracking-widest text-white/25">Your Badge</span>
-                                        <span className="text-white/20 text-[9px]">→</span>
+                                    {/* Badge preview */}
+                                    <div className="flex items-center gap-2 mb-4 px-3 py-1.5 rounded border border-neutral-700 bg-brand-bg w-fit">
+                                        <span className="text-[9px] font-black uppercase tracking-widest text-neutral-400">YOUR BADGE</span>
+                                        <span className="text-neutral-500 text-[9px]">→</span>
                                         <PlanBadge tier={plan.badgeTier} size="sm" showIcon animated />
                                     </div>
 
-                                    <p className="text-white/50 text-sm pr-16 leading-relaxed">
+                                    <p className="text-neutral-400 text-xs pr-4 leading-relaxed font-medium">
                                         {plan.tagline}
                                     </p>
                                 </div>
 
                                 {/* Price */}
-                                <div className="flex items-baseline gap-1 mb-8">
-                                    <span className={`text-3xl font-display font-black ${isGreen ? 'text-brand-green' : isBlue ? 'text-blue-400' : 'text-white'}`}>
+                                <div className="flex items-baseline gap-1 mb-6">
+                                    <span className="text-2xl font-black text-brand-blue">
                                         {currency}
                                     </span>
-                                    <span className="text-7xl font-display font-black text-white tracking-tighter leading-none group-hover:scale-105 transition-transform origin-left">
+                                    <span className="text-6xl font-black text-white tracking-tight leading-none">
                                         {plan.price}
                                     </span>
-                                    <span className="bg-white/5 border border-white/10 text-white/40 text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-lg ml-2">
+                                    <span className="bg-brand-bg border border-neutral-700 text-neutral-400 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded ml-2">
                                         {plan.duration}
                                     </span>
                                 </div>
 
-                                <div className="h-px bg-white/[0.06] mb-6" />
+                                <div className="h-0.5 bg-neutral-800 mb-6" />
 
                                 {/* Features */}
-                                <div className="flex-1 space-y-3.5 mb-8">
+                                <div className="flex-1 space-y-3 mb-8">
                                     {plan.features.map((feature, i) => (
-                                        <motion.div
+                                        <div
                                             key={i}
-                                            whileHover={{ x: 4 }}
-                                            className="flex items-start gap-3 cursor-default"
+                                            className="flex items-start gap-2.5 cursor-default"
                                         >
-                                            <div className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 border transition-all group-hover:scale-110 ${
-                                                isGreen
-                                                    ? 'bg-brand-green/10 border-brand-green/30'
-                                                    : isBlue
-                                                    ? 'bg-blue-500/10 border-blue-500/30'
-                                                    : 'bg-white/5 border-white/10'
-                                            }`}>
-                                                <Check size={11} className={isGreen ? 'text-brand-green' : isBlue ? 'text-blue-400' : 'text-white/60'} />
+                                            <div className="w-4 h-4 rounded-full bg-brand-blue border border-black flex items-center justify-center shrink-0 mt-0.5 text-white">
+                                                <Check size={10} strokeWidth={3} />
                                             </div>
-                                            <span className="text-white/70 text-sm leading-snug hover:text-white transition-colors">
+                                            <span className="text-neutral-300 text-xs font-bold leading-snug">
                                                 {feature}
                                             </span>
-                                        </motion.div>
+                                        </div>
                                     ))}
 
                                     {plan.notIncluded.length > 0 && (
                                         <>
-                                            <div className="h-px bg-white/[0.06] !my-5" />
+                                            <div className="h-0.5 bg-neutral-800 !my-4" />
                                             {plan.notIncluded.map((feature, i) => (
-                                                <div key={i} className="flex items-start gap-3 group/not-included">
-                                                    <div className="w-5 h-5 rounded-full bg-red-500/10 border border-red-500/40 flex items-center justify-center shrink-0 mt-0.5 transition-all group-hover/not-included:bg-red-500/20">
-                                                        <X size={11} className="text-red-500" />
+                                                <div key={i} className="flex items-start gap-2.5">
+                                                    <div className="w-4 h-4 rounded-full bg-neutral-800 border border-neutral-600 flex items-center justify-center shrink-0 mt-0.5 text-neutral-500">
+                                                        <X size={10} strokeWidth={3} />
                                                     </div>
-                                                    <span className="text-white/60 text-sm leading-snug">{feature}</span>
+                                                    <span className="text-neutral-500 text-xs font-bold leading-snug">{feature}</span>
                                                 </div>
                                             ))}
                                         </>
                                     )}
                                 </div>
 
-                                {/* CTA Button — matches site button style */}
+                                {/* CTA Button */}
                                 {plan.tier === 'Basic' ? (
-                                    <Link to={plan.ctaLink}>
-                                        <button
-                                            className={`w-full py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 relative overflow-hidden group/btn active:scale-95 ${
-                                                isGreen
-                                                    ? 'bg-brand-green text-black hover:scale-105 green-glow'
-                                                    : isBlue
-                                                    ? 'bg-blue-500 text-white hover:scale-105 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.5)]'
-                                                    : 'bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20'
-                                            }`}
-                                        >
-                                            <span className="relative z-10 flex items-center justify-center gap-2">
-                                                {plan.cta}
-                                                <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                                            </span>
-                                            {/* Shimmer — matches Hero button shimmer */}
-                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                                    <Link to={plan.ctaLink} className="w-full">
+                                        <button className="brutal-btn-outline w-full py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 bg-brand-surface">
+                                            <span>{plan.cta}</span>
+                                            <ArrowRight size={14} />
                                         </button>
                                     </Link>
                                 ) : (
                                     <button
                                         onClick={() => handleCheckout(plan)}
-                                        className={`w-full py-4 rounded-full font-black uppercase tracking-widest text-xs transition-all duration-300 relative overflow-hidden group/btn active:scale-95 ${
-                                            isGreen
-                                                ? 'bg-brand-green text-black hover:scale-105 green-glow'
-                                                : isBlue
-                                                ? 'bg-blue-500 text-white hover:scale-105 shadow-[0_0_20px_rgba(59,130,246,0.3)] hover:shadow-[0_0_40px_rgba(59,130,246,0.5)]'
-                                                : 'bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20'
-                                        }`}
+                                        className="brutal-btn-primary w-full py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
                                     >
-                                        <span className="relative z-10 flex items-center justify-center gap-2">
-                                            {plan.cta}
-                                            <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
-                                        </span>
-                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700" />
+                                        <span>{plan.cta}</span>
+                                        <ArrowRight size={14} />
                                     </button>
                                 )}
-
-                                {/* Ambient glow on hover */}
-                                <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none ${
-                                    isGreen
-                                        ? 'shadow-[inset_0_0_60px_rgba(0,255,0,0.04)]'
-                                        : isBlue
-                                        ? 'shadow-[inset_0_0_60px_rgba(59,130,246,0.04)]'
-                                        : 'shadow-[inset_0_0_60px_rgba(255,255,255,0.02)]'
-                                }`} />
                             </motion.div>
                         );
                     })}
                 </div>
 
-                {/* ── Trust strip — matches Stats section style ── */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-4"
-                >
+                {/* ── Trust strip ── */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
                         { icon: Shield, title: 'Secure Payments', desc: 'Industry-standard encryption on every transaction.' },
                         { icon: Zap, title: 'Instant Access', desc: 'Unlock all premium components immediately after payment.' },
@@ -537,19 +474,19 @@ const PricingPage = () => {
                         return (
                             <div
                                 key={i}
-                                className="glass p-6 rounded-3xl flex items-start gap-4 hover:border-white/20 transition-all group"
+                                className="p-5 rounded-lg border-2 border-white bg-brand-surface flex items-start gap-4 brutal-shadow-black"
                             >
-                                <div className="w-10 h-10 rounded-xl bg-brand-green/10 border border-brand-green/20 flex items-center justify-center shrink-0 group-hover:bg-brand-green/20 transition-all">
-                                    <ItemIcon className="w-5 h-5 text-brand-green" />
+                                <div className="w-10 h-10 rounded border-2 border-white bg-brand-bg flex items-center justify-center shrink-0 text-brand-blue">
+                                    <ItemIcon className="w-5 h-5" />
                                 </div>
                                 <div>
-                                    <p className="text-sm font-bold text-white mb-1">{item.title}</p>
-                                    <p className="text-xs text-white/40 leading-relaxed">{item.desc}</p>
+                                    <p className="text-sm font-black uppercase tracking-wider text-white mb-1">{item.title}</p>
+                                    <p className="text-xs text-neutral-400 font-medium leading-relaxed">{item.desc}</p>
                                 </div>
                             </div>
                         );
                     })}
-                </motion.div>
+                </div>
             </div>
         </div>
     );

@@ -7,12 +7,21 @@ import { sendWelcomeEmail } from '../utils/sendEmail.js';
 const router = express.Router();
 
 router.get('/check', (req, res) => {
+    const brevoApiKey = process.env.BREVO_API_KEY;
+    const brevoSenderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || process.env.BREVO_SMTP_USER;
     const smtpUser = process.env.BREVO_SMTP_USER || process.env.SMTP_USER;
     const smtpPass = process.env.BREVO_SMTP_PASS || process.env.SMTP_PASS;
+
     res.json({ 
         success: true, 
         message: 'User API reachable',
-        smtp: {
+        brevoApi: {
+            configured: !!(brevoApiKey && brevoSenderEmail),
+            senderEmail: brevoSenderEmail || 'NOT SET',
+            senderName: process.env.BREVO_SENDER_NAME || 'UI-HUB',
+            apiKeyLoaded: !!brevoApiKey,
+        },
+        smtpFallback: {
             configured: !!(smtpUser && smtpPass),
             user: smtpUser ? `${smtpUser.slice(0, 4)}****` : 'NOT SET',
             host: process.env.SMTP_HOST || 'smtp-relay.brevo.com',
@@ -23,7 +32,7 @@ router.get('/check', (req, res) => {
 
 /**
  * @route POST /api/v1/users/email-test
- * @desc Test SMTP email delivery — send a test welcome email
+ * @desc Test Brevo email delivery — send a test welcome email
  * @access Public (for deployment verification only)
  * @body { email: string, name?: string, secret?: string }
  */
@@ -48,13 +57,14 @@ router.post('/email-test', async (req, res) => {
             res.json({ 
                 success: true, 
                 message: `Test email sent successfully to ${email}`,
-                messageId: result.messageId 
+                messageId: result.messageId,
+                data: result.data || null
             });
         } else {
             res.status(500).json({ 
                 success: false, 
                 error: result.error,
-                hint: 'Check BREVO_SMTP_USER, BREVO_SMTP_PASS and SMTP_FROM env vars on Render'
+                hint: 'Check BREVO_API_KEY, BREVO_SENDER_EMAIL and BREVO_SENDER_NAME env vars.'
             });
         }
     } catch (error) {

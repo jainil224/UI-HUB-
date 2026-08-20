@@ -7,27 +7,49 @@
   --color-4: 195 100% 63%;
   --color-5: 90 100% 63%;
 
-  /* Default (Dark) Theme Variables */
-  --bg-primary: #000000;
-  --bg-secondary: #050505;
-  --text-primary: #FFFFFF;
-  --text-secondary: rgba(255, 255, 255, 0.6);
-  --border-primary: rgba(255, 255, 255, 0.06);
-  --brand-color: #00FF00;
+  /* Neo-Brutalist UI Tokens (UI.md Spec) */
+  --color-bg: #0A0A0A;
+  --color-surface: #141414;
+  --color-surface-alt: #1C1C1C;
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  --color-blue: #3D5CFF;
+  --color-blue-dark: #2540D6;
+  --color-red: #FF3B30;
+  --color-yellow: #FFC700;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A3A3A3;
+  --color-text-muted: #6B6B6B;
+
+  /* Backward compatible variables mapped to brutalist palette */
+  --bg-primary: var(--color-bg);
+  --bg-secondary: var(--color-surface);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --border-primary: #262626;
+  --brand-color: var(--color-blue);
 }
 
 :root.light {
-  --bg-primary: #CFE6F7;
-  /* soft light highlight */
-  --bg-secondary: #FFFFFF;
-  /* color-shade-5 */
-  --text-primary: #00AEEF;
-  /* bright blue brand */
-  --text-secondary: #2C5C85;
-  /* deep steel blue */
-  --border-primary: rgba(44, 92, 133, 0.1);
-  --brand-color: #5FA3D6;
-  /* main brand blue */
+  --color-bg: #F5F5F7;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #EAEAEA;
+  --color-black: #000000;
+  --color-white: #FFFFFF;
+  --color-blue: #3D5CFF;
+  --color-blue-dark: #2540D6;
+  --color-red: #FF3B30;
+  --color-yellow: #FFC700;
+  --color-text-primary: #000000;
+  --color-text-secondary: #525252;
+  --color-text-muted: #8E8E93;
+
+  --bg-primary: var(--color-bg);
+  --bg-secondary: var(--color-surface);
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --border-primary: #D1D1D6;
+  --brand-color: var(--color-blue);
 }
 
 @theme {
@@ -35,43 +57,259 @@
   --font-display: "Orbitron", sans-serif;
   --font-heading: "Space+Grotesk", sans-serif;
   --font-seekuw: "Seekuw", sans-serif;
-  --color-brand-green: #00FF00;
+  
+  --color-brand-bg: #0A0A0A;
+  --color-brand-surface: #141414;
+  --color-brand-surface-alt: #1C1C1C;
+  --color-brand-blue: #3D5CFF;
+  --color-brand-blue-dark: #2540D6;
+  --color-brand-red: #FF3B30;
+  --color-brand-yellow: #FFC700;
   --color-brand-black: #000000;
-
-  /* User defined Neon Palette */
-  --color-neon-bright: #7CFF00;
-  --color-neon-mid: #39FF14;
-  --color-neon-deep: #0B5D00;
-  --color-neon-glow: #003300;
-}
-
-@keyframes rainbow {
-  0% {
-    background-position: 0%;
-  }
-
-  100% {
-    background-position: 200%;
-  }
-}
-
-.animate-rainbow {
-  animation: rainbow var(--speed, 2s) infinite linear;
 }
 
 @layer base {
   body {
-    @apply bg-brand-black text-white selection:bg-brand-green selection:text-white;
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-text-primary);
+    text-shadow: none;
+    letter-spacing: -0.02em;
   }
 }
 
-.glass {
-  @apply bg-white/[0.07] backdrop-blur-xl border border-white/10;
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+/* ========================================================
+   NEO-BRUTALIST DESIGN SYSTEM UTILITIES (UI.md)
+   ======================================================== */
+
+/* Standard Hard Shadows with Responsive Scaling */
+.brutal-shadow-blue {
+  box-shadow: 2px 2px 0px 0px var(--color-blue);
+}
+@media (min-width: 640px) {
+  .brutal-shadow-blue {
+    box-shadow: 4px 4px 0px 0px var(--color-blue);
+  }
 }
 
-.green-glow {
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+.brutal-shadow-white {
+  box-shadow: 2px 2px 0px 0px var(--color-white);
+}
+@media (min-width: 640px) {
+  .brutal-shadow-white {
+    box-shadow: 4px 4px 0px 0px var(--color-white);
+  }
+}
+
+.brutal-shadow-red {
+  box-shadow: 2px 2px 0px 0px var(--color-red);
+}
+@media (min-width: 640px) {
+  .brutal-shadow-red {
+    box-shadow: 4px 4px 0px 0px var(--color-red);
+  }
+}
+
+.brutal-shadow-yellow {
+  box-shadow: 2px 2px 0px 0px var(--color-yellow);
+}
+@media (min-width: 640px) {
+  .brutal-shadow-yellow {
+    box-shadow: 4px 4px 0px 0px var(--color-yellow);
+  }
+}
+
+.brutal-shadow-black {
+  box-shadow: 2px 2px 0px 0px var(--color-black);
+}
+@media (min-width: 640px) {
+  .brutal-shadow-black {
+    box-shadow: 4px 4px 0px 0px var(--color-black);
+  }
+}
+
+/* Neo-Brutalist Buttons */
+.brutal-btn-primary {
+  background-color: var(--color-blue);
+  color: #FFFFFF;
+  border: 2px solid var(--color-black);
+  box-shadow: 2px 2px 0px 0px var(--color-black);
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 8px;
+  transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+}
+@media (min-width: 640px) {
+  .brutal-btn-primary {
+    box-shadow: 4px 4px 0px 0px var(--color-black);
+  }
+}
+.brutal-btn-primary:hover {
+  background-color: var(--color-blue-dark);
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px var(--color-black);
+}
+@media (min-width: 640px) {
+  .brutal-btn-primary:hover {
+    box-shadow: 2px 2px 0px 0px var(--color-black);
+  }
+}
+.brutal-btn-primary:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--color-black);
+}
+
+.brutal-btn-outline {
+  background-color: transparent;
+  color: var(--color-white);
+  border: 2px solid var(--color-white);
+  box-shadow: 2px 2px 0px 0px var(--color-white);
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 8px;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+@media (min-width: 640px) {
+  .brutal-btn-outline {
+    box-shadow: 4px 4px 0px 0px var(--color-white);
+  }
+}
+.brutal-btn-outline:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px var(--color-white);
+}
+@media (min-width: 640px) {
+  .brutal-btn-outline:hover {
+    box-shadow: 2px 2px 0px 0px var(--color-white);
+  }
+}
+.brutal-btn-outline:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--color-white);
+}
+
+.brutal-btn-danger {
+  background-color: var(--color-red);
+  color: #FFFFFF;
+  border: 2px solid var(--color-black);
+  box-shadow: 2px 2px 0px 0px var(--color-black);
+  font-weight: 800;
+  text-transform: uppercase;
+  border-radius: 8px;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+@media (min-width: 640px) {
+  .brutal-btn-danger {
+    box-shadow: 4px 4px 0px 0px var(--color-black);
+  }
+}
+.brutal-btn-danger:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px 0px var(--color-black);
+}
+@media (min-width: 640px) {
+  .brutal-btn-danger:hover {
+    box-shadow: 2px 2px 0px 0px var(--color-black);
+  }
+}
+.brutal-btn-danger:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px 0px var(--color-black);
+}
+
+/* Disabled State: dashed border, no shadow */
+.brutal-btn-disabled {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border: 2px dashed #3A3A3A !important;
+  box-shadow: none !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none !important;
+}
+
+/* Neo-Brutalist Cards */
+.brutal-card {
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-white);
+  border-radius: 10px;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.brutal-card-hover:hover {
+  transform: translate(2px, 2px);
+}
+
+/* Neo-Brutalist Badges & Chips (with contrast rules) */
+.brutal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  border: 2px solid var(--color-white);
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.brutal-badge-blue {
+  background-color: var(--color-blue);
+  color: #FFFFFF;
+  border: 2px solid var(--color-black);
+  box-shadow: 2px 2px 0px 0px var(--color-black);
+}
+
+.brutal-badge-red {
+  background-color: var(--color-red);
+  color: #FFFFFF;
+  border: 2px solid var(--color-black);
+  box-shadow: 2px 2px 0px 0px var(--color-black);
+}
+
+/* Yellow Contrast Rule: Text on flat yellow must be black (#000000) */
+.brutal-badge-yellow {
+  background-color: var(--color-yellow);
+  color: #000000 !important;
+  border: 2px solid var(--color-black);
+  box-shadow: 2px 2px 0px 0px var(--color-black);
+  font-weight: 800;
+}
+
+/* Neo-Brutalist Inputs */
+.brutal-input {
+  background-color: var(--color-surface-alt);
+  border: 2px solid var(--color-white);
+  color: var(--color-text-primary);
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.brutal-input:focus {
+  border-color: var(--color-blue);
+  box-shadow: 3px 3px 0px 0px var(--color-blue);
+}
+
+/* Legacy Support Wrappers */
+.glass {
+  background-color: var(--color-surface);
+  border: 2px solid #262626;
+  border-radius: 10px;
+}
+.green-glow, .green-glow-medium, .green-glow-strong {
+  box-shadow: 4px 4px 0px 0px var(--color-blue) !important;
+}
+.green-border {
+  border: 2px solid var(--color-blue) !important;
+}
+.green-text-glow {
+  color: var(--color-blue) !important;
+  text-shadow: none !important;
 }
 
 .text-stroke {
@@ -107,14 +345,13 @@
 }
 
 @keyframes lightning-blink {
-
   0%,
   96%,
   98%,
   100% {
     opacity: 1;
-    color: var(--color-brand-green);
-    text-shadow: 0 0 10px var(--color-brand-green), 0 0 20px rgba(0, 255, 0, 0.4);
+    color: var(--color-blue);
+    text-shadow: none;
   }
 
   97%,
@@ -130,14 +367,13 @@
 }
 
 @keyframes lightning-blink-purple {
-
   0%,
   96%,
   98%,
   100% {
     opacity: 1;
-    color: #a855f7;
-    text-shadow: 0 0 10px #a855f7, 0 0 20px rgba(168, 85, 247, 0.4);
+    color: var(--color-blue);
+    text-shadow: none;
   }
 
   97%,
@@ -154,21 +390,20 @@
 }
 
 @keyframes terminal-green-blink {
-
   0%,
   85%,
   90%,
   95%,
   100% {
     opacity: 1;
-    color: #39FF14;
-    text-shadow: 0 0 8px #39FF14, 0 0 16px rgba(57, 255, 20, 0.5), 0 0 30px rgba(57, 255, 20, 0.2);
+    color: var(--color-blue);
+    text-shadow: none;
   }
 
   87%,
   92% {
     opacity: 0.3;
-    color: rgba(57, 255, 20, 0.3);
+    color: rgba(61, 92, 255, 0.3);
     text-shadow: none;
   }
 }
@@ -331,20 +566,19 @@
   perspective: 1000px;
 }
 
-/* Premium Cyberpunk Skeleton Loader Styles */
+/* Neo-Brutalist Skeleton Loader Styles */
 .skeleton-glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: var(--color-surface);
+  border: 2px solid #2B2B36;
   position: relative;
   overflow: hidden;
+  box-shadow: 2px 2px 0px #000000;
 }
 
 /* Light theme support */
 :root.light .skeleton-glass {
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  background: #E5E5E5;
+  border: 2px solid #1A1A1A;
 }
 
 .skeleton-glass::after {
@@ -355,42 +589,39 @@
   bottom: 0;
   left: 0;
   transform: translateX(-100%);
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.03) 20%,
-    rgba(0, 255, 0, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 80%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  animation: skeleton-shimmer 2.2s infinite cubic-bezier(0.25, 1, 0.5, 1);
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.04) 20%,
+      rgba(61, 92, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.04) 80%,
+      rgba(255, 255, 255, 0) 100%);
+  animation: skeleton-shimmer 1.8s infinite cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 :root.light .skeleton-glass::after {
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(0, 0, 0, 0.02) 20%,
-    rgba(95, 163, 214, 0.08) 50%,
-    rgba(0, 0, 0, 0.02) 80%,
-    rgba(255, 255, 255, 0) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(0, 0, 0, 0.03) 20%,
+      rgba(61, 92, 255, 0.15) 50%,
+      rgba(0, 0, 0, 0.03) 80%,
+      rgba(255, 255, 255, 0) 100%);
 }
 
-.skeleton-glow-green {
-  box-shadow: 0 0 15px rgba(0, 255, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.05);
-  border-color: rgba(0, 255, 0, 0.25) !important;
+.skeleton-glow-green, .skeleton-glow-blue {
+  border-color: var(--color-blue) !important;
+  box-shadow: 4px 4px 0px 0px #000000 !important;
 }
 
-:root.light .skeleton-glow-green {
-  box-shadow: 0 0 15px rgba(95, 163, 214, 0.15), inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  border-color: rgba(95, 163, 214, 0.25) !important;
+:root.light .skeleton-glow-green, :root.light .skeleton-glow-blue {
+  border-color: var(--color-blue) !important;
+  box-shadow: 4px 4px 0px 0px #000000 !important;
 }
 
 @keyframes skeleton-shimmer {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
@@ -401,9 +632,12 @@
 }
 
 @keyframes skeleton-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.65;
   }
@@ -450,7 +684,8 @@
   opacity: 1;
 }
 
-.close:before, .close:after {
+.close:before,
+.close:after {
   position: absolute;
   left: 2rem;
   content: ' ';

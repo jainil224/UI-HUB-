@@ -67,49 +67,49 @@ export default function ToonhubHero() {
     switch (role) {
       case 'center':
         return {
-          transform: `translateX(-50%) scale(${isMobile ? 1.25 : 1.68})`,
+          transform: `translateX(-50%) scale(${isMobile ? 1.05 : 1.15})`,
           filter: 'blur(0px)',
           opacity: 1,
           zIndex: 20,
           left: '50%',
-          height: isMobile ? '60%' : '92%',
-          bottom: isMobile ? '22%' : '0%',
+          height: isMobile ? '65%' : '80%',
+          bottom: isMobile ? '12%' : '4%',
           transition: baseTransition,
           willChange
         };
       case 'left':
         return {
-          transform: 'translateX(-50%) scale(1)',
+          transform: 'translateX(-50%) scale(0.85)',
           filter: 'blur(2px)',
-          opacity: 0.85,
+          opacity: 0.75,
           zIndex: 10,
-          left: isMobile ? '20%' : '30%',
-          height: isMobile ? '16%' : '28%',
-          bottom: isMobile ? '32%' : '12%',
+          left: isMobile ? '18%' : '24%',
+          height: isMobile ? '45%' : '55%',
+          bottom: isMobile ? '20%' : '10%',
           transition: baseTransition,
           willChange
         };
       case 'right':
         return {
-          transform: 'translateX(-50%) scale(1)',
+          transform: 'translateX(-50%) scale(0.85)',
           filter: 'blur(2px)',
-          opacity: 0.85,
+          opacity: 0.75,
           zIndex: 10,
-          left: isMobile ? '80%' : '70%',
-          height: isMobile ? '16%' : '28%',
-          bottom: isMobile ? '32%' : '12%',
+          left: isMobile ? '82%' : '76%',
+          height: isMobile ? '45%' : '55%',
+          bottom: isMobile ? '20%' : '10%',
           transition: baseTransition,
           willChange
         };
       case 'back':
         return {
-          transform: 'translateX(-50%) scale(1)',
+          transform: 'translateX(-50%) scale(0.7)',
           filter: 'blur(4px)',
-          opacity: 1,
+          opacity: 0.4,
           zIndex: 5,
           left: '50%',
-          height: isMobile ? '13%' : '22%',
-          bottom: isMobile ? '32%' : '12%',
+          height: isMobile ? '35%' : '45%',
+          bottom: isMobile ? '25%' : '15%',
           transition: baseTransition,
           willChange
         };
@@ -123,20 +123,21 @@ export default function ToonhubHero() {
 
   return (
     <div 
-      className="relative w-full overflow-hidden" 
+      className="relative w-full h-full min-h-[420px] sm:min-h-[480px] overflow-hidden select-none" 
       style={{ 
+        containerType: 'inline-size',
         backgroundColor: IMAGES[activeIndex].bg,
         transition: 'background-color 650ms cubic-bezier(0.4,0,0.2,1)',
         fontFamily: "'Inter', sans-serif"
       }}
     >
-      <div className="relative w-full overflow-hidden" style={{ height: '100vh' }}>
+      <div className="relative w-full h-full min-h-[420px] sm:min-h-[480px] overflow-hidden">
         
         {/* Grain overlay */}
         <div 
           className="absolute inset-0 pointer-events-none z-50"
           style={{
-            opacity: 0.4,
+            opacity: 0.3,
             backgroundImage: `url("${grainUri}")`,
             backgroundSize: '200px 200px',
             backgroundRepeat: 'repeat'
@@ -145,17 +146,17 @@ export default function ToonhubHero() {
 
         {/* Giant ghost text */}
         <div 
-          className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none z-[2]"
+          className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none z-[2] text-center"
           style={{
-            top: '18%',
-            fontFamily: "'Anton', sans-serif",
-            fontSize: 'clamp(90px, 28vw, 380px)',
+            top: '14%',
+            fontFamily: "'Impact', 'Anton', sans-serif",
+            fontSize: 'clamp(36px, 12cqi, 130px)',
             fontWeight: 900,
             color: 'white',
-            opacity: 1,
+            opacity: 0.95,
             lineHeight: 1,
             textTransform: 'uppercase',
-            letterSpacing: '-0.02em',
+            letterSpacing: '0.02em',
             whiteSpace: 'nowrap'
           }}
         >
@@ -163,7 +164,7 @@ export default function ToonhubHero() {
         </div>
 
         {/* Top-left brand label */}
-        <div className="absolute top-6 left-4 sm:left-8 z-[60] text-xs font-semibold uppercase text-white opacity-90" style={{ letterSpacing: '0.18em' }}>
+        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-[60] text-[10px] sm:text-xs font-bold uppercase text-white opacity-90 tracking-widest">
           TOONHUB
         </div>
 
@@ -193,46 +194,34 @@ export default function ToonhubHero() {
         </div>
 
         {/* Bottom-left text + nav buttons */}
-        <div className="absolute bottom-6 left-4 sm:bottom-20 sm:left-24 z-[60] max-w-[320px]">
-          <p className="font-bold uppercase tracking-widest mb-2 sm:mb-3 text-base sm:text-[22px] text-white opacity-95" style={{ letterSpacing: '0.02em' }}>
+        <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-[60] max-w-[260px]">
+          <p className="font-bold uppercase tracking-wider mb-1 text-xs sm:text-sm text-white opacity-95">
             TOONHUB FIGURINES
           </p>
-          <p className="hidden sm:block text-xs sm:text-sm text-white opacity-85 leading-[1.6] mb-4 sm:mb-5">
-            The artwork is stunning, shipped fully prepared. The finish is a vision, the 3D craft is flawless. Many thanks! Wishing you the win. Order now.
-          </p>
-          <div className="flex gap-4">
+          <div className="flex gap-2.5 mt-2">
             <button 
               onClick={() => navigate('prev')}
-              className="group flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-transparent border-2 border-white transition-all duration-150 hover:scale-[1.08] hover:bg-white/12"
+              className="group flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-transparent border-2 border-white transition-all duration-150 hover:scale-105 hover:bg-white/20 cursor-pointer"
             >
-              <ArrowLeft size={26} strokeWidth={2.25} className="text-white" />
+              <ArrowLeft size={16} strokeWidth={2.5} className="text-white" />
             </button>
             <button 
               onClick={() => navigate('next')}
-              className="group flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-transparent border-2 border-white transition-all duration-150 hover:scale-[1.08] hover:bg-white/12"
+              className="group flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-transparent border-2 border-white transition-all duration-150 hover:scale-105 hover:bg-white/20 cursor-pointer"
             >
-              <ArrowRight size={26} strokeWidth={2.25} className="text-white" />
+              <ArrowRight size={16} strokeWidth={2.5} className="text-white" />
             </button>
           </div>
         </div>
 
         {/* Bottom-right link */}
-        <div className="absolute bottom-6 right-4 sm:bottom-20 sm:right-10 z-[60]">
+        <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-[60]">
           <a 
             href="#" 
-            className="flex items-center gap-2 sm:gap-4 text-white opacity-95 hover:opacity-100 transition-opacity duration-200"
-            style={{
-              fontFamily: "'Anton', sans-serif",
-              fontSize: 'clamp(20px, 4vw, 56px)',
-              fontWeight: 400,
-              letterSpacing: '-0.02em',
-              lineHeight: 1,
-              textTransform: 'uppercase',
-              textDecoration: 'none'
-            }}
+            className="flex items-center gap-1.5 sm:gap-2 text-white opacity-95 hover:opacity-100 transition-opacity font-bold uppercase tracking-wider text-xs sm:text-sm font-heading"
           >
             DISCOVER IT
-            <ArrowRight className="w-5 h-5 sm:w-8 sm:h-8" strokeWidth={2.25} />
+            <ArrowRight size={14} strokeWidth={2.5} />
           </a>
         </div>
       </div>

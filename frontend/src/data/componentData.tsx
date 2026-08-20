@@ -38,6 +38,7 @@ const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').
 const PortfolioScroll = React.lazy(() => import('../components/ui/PortfolioScroll').then(m => ({ default: m.PortfolioScroll })));
 const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
+const BuyMeCoffee = React.lazy(() => import('../components/ui/BuyMeCoffee'));
 
 
 
@@ -1340,6 +1341,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'portfolio-scroll': PortfolioScroll,
     'cloud-scroll': CloudScroll,
     'infinite-marquee': InfiniteMarquee,
+    'buyme-acoffee': BuyMeCoffee,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2343,6 +2345,16 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         preview: renderComponent("infinite-marquee", "InfiniteMarquee"),
         code: `import { InfiniteMarquee } from '@/components/ui/InfiniteMarquee';\n\nexport default function Demo() {\n  const items = [\n    { text: "UI Hub", link: "#", image: "https://picsum.photos/600/400?random=1" },\n    { text: "UI Components", link: "#", image: "https://picsum.photos/600/400?random=2" },\n    { text: "Design Systems", link: "#", image: "https://picsum.photos/600/400?random=3" },\n    { text: "Web Animations", link: "#", image: "https://picsum.photos/600/400?random=4" }\n  ];\n\n  return (\n    <div className="w-full h-[500px] rounded-3xl overflow-hidden border border-white/5">\n      <InfiniteMarquee \n        items={items} \n        speed={15} \n        textColor="#ffffff"\n        bgColor="#060010"\n        marqueeTextColor="#060010"\n        marqueeBgColor="#ffffff"\n      />\n    </div>\n  );\n}`,
         vibePrompt: "A premium infinite scrolling marquee menu component with direction-aware hover animation. Hovering an item slides in a custom marquee overlay (from the top or bottom based on cursor position) containing repeated scrolling texts and images."
+    },
+    {
+        id: "buyme-acoffee",
+        title: "Buy Me Millions Coffee",
+        category: "button",
+        isPremium: false,
+        description: "A fun and creative sponsorship component inspired by 'Buy Me a Coffee' with a twist! Perfect for creators looking to attract sponsors and supporters with a playful approach. Easy to integrate and customize for your projects.",
+        preview: renderComponent("buyme-acoffee", "BuyMeCoffee"),
+        code: `import BuyMeCoffee from '@/components/ui/BuyMeCoffee';\n\nexport default function Demo() {\n  return (\n    <div className="flex flex-col items-center justify-center p-8 bg-brand-surface rounded-2xl border-2 border-white brutal-shadow-black">\n      <BuyMeCoffee \n        classname="w-full flex items-center justify-center"\n        iconClassName="text-black"\n        textSvgClassName="text-black/70"\n      />\n    </div>\n  );\n}`,
+        vibePrompt: "Build a creative sponsorship component inspired by 'Buy Me a Coffee' in React + TypeScript + Tailwind CSS with Framer Motion. Features animated rising coffee steam, tipping cup physics, click burst of floating coffee emojis, selectable coffee amount pills, and a supporter counter."
     }
 ];
 
