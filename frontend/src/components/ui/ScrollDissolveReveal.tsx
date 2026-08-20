@@ -248,8 +248,8 @@ interface SceneProps {
   staticProgress?: number;
 }
 
-const DEFAULT_FRONT = "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80";
-const DEFAULT_BACK = "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80";
+const DEFAULT_FRONT = "https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350123/Recreate_image_color_replacement__202607181004_nuwnho.jpg";
+const DEFAULT_BACK = "https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350122/ChatGPT_Image_Jul_18__2026__202607181004_lw9hel.jpg";
 
 const Scene = ({ imageFront = DEFAULT_FRONT, imageBack = DEFAULT_BACK, scrollYProgress, staticProgress }: SceneProps) => {
   const [texture1, texture2] = useTexture([imageFront, imageBack]);

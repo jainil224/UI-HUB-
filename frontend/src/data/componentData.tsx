@@ -2507,8 +2507,8 @@ export function DiagonalCarouselDemo() {
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative">
                 <ScrollDissolveReveal
-                    imageFront="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"
-                    imageBack="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80"
+                    imageFront="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350123/Recreate_image_color_replacement__202607181004_nuwnho.jpg"
+                    imageBack="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350122/ChatGPT_Image_Jul_18__2026__202607181004_lw9hel.jpg"
                     className="h-full min-h-[500px] w-full"
                 />
             </div>
@@ -2521,8 +2521,8 @@ import { ScrollDissolveReveal } from "@/components/ui/scroll-dissolve-reveal";
 export function ScrollDissolveRevealDemo() {
   return (
     <ScrollDissolveReveal
-      imageFront="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80"
-      imageBack="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80"
+      imageFront="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350123/Recreate_image_color_replacement__202607181004_nuwnho.jpg"
+      imageBack="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350122/ChatGPT_Image_Jul_18__2026__202607181004_lw9hel.jpg"
     />
   );
 }`,
