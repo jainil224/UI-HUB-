@@ -68,6 +68,7 @@ const PerspectiveCarousel = React.lazy(() => import('../components/ui/perspectiv
 const DiagonalCarousel = React.lazy(() => import('../components/ui/diagonal-carousel').then(m => ({ default: m.DiagonalCarousel })));
 const ScrollDissolveReveal = React.lazy(() => import('../components/ui/ScrollDissolveReveal').then(m => ({ default: m.ScrollDissolveReveal })));
 const TestimonialsCard = React.lazy(() => import('../components/ui/testimonials-card').then(m => ({ default: m.TestimonialsCard })));
+const ImageCollage = React.lazy(() => import('../components/ui/image-collage').then(m => ({ default: m.ImageCollage })));
 
 
 
@@ -1401,6 +1402,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'diagonal-carousel': DiagonalCarousel,
     'scroll-dissolve-reveal': ScrollDissolveReveal,
     'testimonials-card': TestimonialsCard,
+    'image-collage': ImageCollage,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2511,16 +2513,17 @@ export function DiagonalCarouselDemo() {
                 />
             </div>
         ),
-        code: `import { ScrollDissolveReveal } from "@/components/ui/ScrollDissolveReveal";
+        code: `// Install via shadcn CLI:
+// npx shadcn@latest add https://www.vengenceui.com/r/scroll-dissolve-reveal.json
 
-export function ScrollDissolveDemo() {
+import { ScrollDissolveReveal } from "@/components/ui/scroll-dissolve-reveal";
+
+export function ScrollDissolveRevealDemo() {
   return (
-    <div className="w-full">
-      <ScrollDissolveReveal
-        imageFront="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80"
-        imageBack="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80"
-      />
-    </div>
+    <ScrollDissolveReveal
+      imageFront="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80"
+      imageBack="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80"
+    />
   );
 }`,
         vibePrompt: "Create a cinematic 'ScrollDissolveReveal' component with React Three Fiber (@react-three/fiber), Three.js, and custom GLSL shaders (Sobel edge-detection filter, fractional Brownian motion FBM noise, and pixelated threshold dissolution). As the user scrolls (or scrubs the progress controller), the foreground image dissolves organically into an edge-glowing wireframe sparkle before resolving smoothly into the background image with adaptive aspect ratio correction."
@@ -2576,6 +2579,34 @@ export function TestimonialsCardDemo() {
   );
 }`,
         vibePrompt: "Create a 3D stacked 'TestimonialsCard' component using Framer Motion with realistic spatial Z-depth and rotation offsets. The active card flings outward with direction-aware physics before settling on top while background cards sit in a randomized rotated deck (rotateZ, scale, z-index). Features quote text crossfades, index counter, and responsive navigation arrow buttons."
+    },
+    {
+        id: "image-collage",
+        title: "Image Collage",
+        category: "image-interaction",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative flex items-center justify-center bg-neutral-950">
+                <ImageCollage
+                    className="w-full h-full min-h-[500px]"
+                />
+            </div>
+        ),
+        code: `import { ImageCollage } from "@/components/ui/image-collage";
+
+const IMAGES = [
+  { src: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?q=80&w=600&auto=format&fit=crop', x: -60, y: -25, rotate: -16, alt: 'Sneakers 01' },
+  { src: 'https://images.unsplash.com/photo-1620002130389-9db8a5e3782d?q=80&w=600&auto=format&fit=crop', x: -20, y: 20, rotate: -6, alt: 'Sneakers 02' },
+  { src: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=600&auto=format&fit=crop', x: 25, y: -18, rotate: 12, alt: 'Sneakers 03' },
+  { src: 'https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?q=80&w=600&auto=format&fit=crop', x: 65, y: 15, rotate: 22, alt: 'Sneakers 04' }
+];
+
+export function ImageCollageDemo() {
+  return (
+    <ImageCollage images={IMAGES} />
+  );
+}`,
+        vibePrompt: "Create an interactive 'ImageCollage' component in React + TypeScript with Framer Motion. Clicking anywhere dynamically toggles between a scattered artistic collage (using configured x, y, and rotate values with realistic drop shadows) and an organized linear showcase grid with spring physics (stiffness: 350, damping: 25)."
     }
 ];
 

@@ -545,6 +545,7 @@ const perspectiveCarouselCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'comp
 const diagonalCarouselCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/diagonal-carousel.tsx'), 'utf8');
 const scrollDissolveRevealCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/ScrollDissolveReveal.tsx'), 'utf8');
 const testimonialsCardCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/testimonials-card.tsx'), 'utf8');
+const imageCollageCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/image-collage.tsx'), 'utf8');
 
 const fullDataset = {
   ...existingSource,
@@ -554,6 +555,7 @@ const fullDataset = {
   'diagonal-carousel': diagonalCarouselCode,
   'scroll-dissolve-reveal': scrollDissolveRevealCode,
   'testimonials-card': testimonialsCardCode,
+  'image-collage': imageCollageCode,
 };
 
 // Write to backend
