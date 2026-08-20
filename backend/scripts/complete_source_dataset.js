@@ -542,12 +542,18 @@ export default ImageReveal;`,
 
 const imageTrailCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/image-trail.tsx'), 'utf8');
 const perspectiveCarouselCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/perspective-carousel.tsx'), 'utf8');
+const diagonalCarouselCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/diagonal-carousel.tsx'), 'utf8');
+const scrollDissolveRevealCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/ScrollDissolveReveal.tsx'), 'utf8');
+const testimonialsCardCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/testimonials-card.tsx'), 'utf8');
 
 const fullDataset = {
   ...existingSource,
   ...TEXT_COMPONENTS,
   'image-trail': imageTrailCode,
   'perspective-carousel': perspectiveCarouselCode,
+  'diagonal-carousel': diagonalCarouselCode,
+  'scroll-dissolve-reveal': scrollDissolveRevealCode,
+  'testimonials-card': testimonialsCardCode,
 };
 
 // Write to backend

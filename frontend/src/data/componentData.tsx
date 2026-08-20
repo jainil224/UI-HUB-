@@ -66,6 +66,8 @@ const SocialTooltipButtons = React.lazy(() => import('../components/animations/S
 const ImageTrail = React.lazy(() => import('../components/ui/image-trail').then(m => ({ default: m.ImageTrail })));
 const PerspectiveCarousel = React.lazy(() => import('../components/ui/perspective-carousel').then(m => ({ default: m.PerspectiveCarousel })));
 const DiagonalCarousel = React.lazy(() => import('../components/ui/diagonal-carousel').then(m => ({ default: m.DiagonalCarousel })));
+const ScrollDissolveReveal = React.lazy(() => import('../components/ui/ScrollDissolveReveal').then(m => ({ default: m.ScrollDissolveReveal })));
+const TestimonialsCard = React.lazy(() => import('../components/ui/testimonials-card').then(m => ({ default: m.TestimonialsCard })));
 
 
 
@@ -1397,6 +1399,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'image-trail': ImageTrail,
     'perspective-carousel': PerspectiveCarousel,
     'diagonal-carousel': DiagonalCarousel,
+    'scroll-dissolve-reveal': ScrollDissolveReveal,
+    'testimonials-card': TestimonialsCard,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2492,6 +2496,86 @@ export function DiagonalCarouselDemo() {
   );
 }`,
         vibePrompt: "Create a fluid 'DiagonalCarousel' React component with Framer Motion that organizes photographic cards along a cascading diagonal staircase axis. As the user slides left or right, cards simultaneously translate horizontally, vertically (distance * verticalStep), and rotate dynamically (distance * rotationStep) with spring bounce physics. Features smooth active item scaling, title fade/blur, navigation controls, and pagination indicators."
+    },
+    {
+        id: "scroll-dissolve-reveal",
+        title: "Scroll Dissolve Reveal",
+        category: "image-interaction",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative">
+                <ScrollDissolveReveal
+                    imageFront="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=1200&q=80"
+                    imageBack="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80"
+                    className="h-full min-h-[500px] w-full"
+                />
+            </div>
+        ),
+        code: `import { ScrollDissolveReveal } from "@/components/ui/ScrollDissolveReveal";
+
+export function ScrollDissolveDemo() {
+  return (
+    <div className="w-full">
+      <ScrollDissolveReveal
+        imageFront="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=1200&q=80"
+        imageBack="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&q=80"
+      />
+    </div>
+  );
+}`,
+        vibePrompt: "Create a cinematic 'ScrollDissolveReveal' component with React Three Fiber (@react-three/fiber), Three.js, and custom GLSL shaders (Sobel edge-detection filter, fractional Brownian motion FBM noise, and pixelated threshold dissolution). As the user scrolls (or scrubs the progress controller), the foreground image dissolves organically into an edge-glowing wireframe sparkle before resolving smoothly into the background image with adaptive aspect ratio correction."
+    },
+    {
+        id: "testimonials-card",
+        title: "Testimonials Card",
+        category: "image-interaction",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative flex items-center justify-center bg-neutral-950">
+                <TestimonialsCard
+                    width={560}
+                    showNavigation={true}
+                    showCounter={true}
+                    autoPlay={false}
+                    className="w-full"
+                />
+            </div>
+        ),
+        code: `import { TestimonialsCard } from "@/components/ui/testimonials-card";
+
+const testimonials = [
+  {
+    id: 1,
+    title: "Sarah Jenkins",
+    description: "The UI-HUB animation library accelerated our landing page rebuild by 300%. The depth of 3D shaders and motion physics is unmatched in modern web design.",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80"
+  },
+  {
+    id: 2,
+    title: "Alexander Wright",
+    description: "Every component is drop-in ready with zero friction. The Framer Motion physics and WebGL shaders make our design systems look like a $100k studio build.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80"
+  },
+  {
+    id: 3,
+    title: "Elena Rostova",
+    description: "The creative interactions, especially the carousels and spatial image cards, gave our agency's portfolio awards recognition within weeks.",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=600&q=80"
+  }
+];
+
+export function TestimonialsCardDemo() {
+  return (
+    <TestimonialsCard
+      items={testimonials}
+      width={560}
+      showNavigation={true}
+      showCounter={true}
+      autoPlay={false}
+    />
+  );
+}`,
+        vibePrompt: "Create a 3D stacked 'TestimonialsCard' component using Framer Motion with realistic spatial Z-depth and rotation offsets. The active card flings outward with direction-aware physics before settling on top while background cards sit in a randomized rotated deck (rotateZ, scale, z-index). Features quote text crossfades, index counter, and responsive navigation arrow buttons."
     }
 ];
 
