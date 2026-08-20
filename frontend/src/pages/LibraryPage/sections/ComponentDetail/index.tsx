@@ -960,7 +960,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
 
                             <div className="relative w-full flex-1 min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center overflow-hidden">
-                                <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' ? 'p-6 md:p-12' : ''}`} key={resetKey}>
+                                <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`} key={resetKey}>
                                     <React.Suspense fallback={
                                         <div className="flex flex-col items-center justify-center p-12 text-neutral-400">
                                             <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />

@@ -540,9 +540,12 @@ export const ImageReveal: React.FC = () => {
 export default ImageReveal;`,
 };
 
+const imageTrailCode = fs.readFileSync(path.resolve(FRONTEND_DIR, 'components/ui/image-trail.tsx'), 'utf8');
+
 const fullDataset = {
   ...existingSource,
   ...TEXT_COMPONENTS,
+  'image-trail': imageTrailCode,
 };
 
 // Write to backend

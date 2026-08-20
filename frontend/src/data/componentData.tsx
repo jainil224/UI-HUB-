@@ -63,6 +63,7 @@ const LiquidFillButton = React.lazy(() => import('../components/ui/LiquidFillBut
 const NeonFlickerButton = React.lazy(() => import('../components/ui/NeonFlickerButton').then(m => ({ default: m.NeonFlickerButton })));
 const OrbitButton = React.lazy(() => import('../components/ui/OrbitButton').then(m => ({ default: m.OrbitButton })));
 const SocialTooltipButtons = React.lazy(() => import('../components/animations/SocialTooltipButtons').then(m => ({ default: m.SocialTooltipButtons })));
+const ImageTrail = React.lazy(() => import('../components/ui/image-trail').then(m => ({ default: m.ImageTrail })));
 
 
 
@@ -1293,7 +1294,7 @@ const ThreeDSliderPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "3d-chatbot" | "scroll";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "3d-chatbot" | "scroll" | "image-interaction";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -1391,6 +1392,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'neon-flicker-button': NeonFlickerButton,
     'orbit-button': OrbitButton,
     'social-tooltip-buttons': SocialTooltipButtons,
+    'image-trail': ImageTrail,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -2358,6 +2360,57 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         preview: renderComponent("buyme-acoffee", "BuyMeCoffee"),
         code: `import BuyMeCoffee from '@/components/ui/BuyMeCoffee';\n\nexport default function Demo() {\n  return (\n    <div className="flex flex-col items-center justify-center p-8 bg-brand-surface rounded-2xl border-2 border-white brutal-shadow-black">\n      <BuyMeCoffee \n        classname="w-full flex items-center justify-center"\n        iconClassName="text-black"\n        textSvgClassName="text-black/70"\n      />\n    </div>\n  );\n}`,
         vibePrompt: "Build a creative sponsorship component inspired by 'Buy Me a Coffee' in React + TypeScript + Tailwind CSS with Framer Motion. Features animated rising coffee steam, tipping cup physics, click burst of floating coffee emojis, selectable coffee amount pills, and a supporter counter."
+    },
+    {
+        id: "image-trail",
+        title: "Image Trail",
+        category: "image-interaction",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[460px] rounded-3xl overflow-hidden border border-white/10 relative">
+                <ImageTrail
+                    threshold={70}
+                    minDelay={45}
+                    duration={1100}
+                    maxItems={9}
+                    rotationRange={34}
+                    imageClassName="w-32 rounded-lg md:w-40 shadow-2xl border border-white/20"
+                    className="w-full h-full min-h-[460px] flex flex-col items-center justify-center bg-neutral-950 text-white cursor-crosshair select-none"
+                >
+                    <div className="text-center pointer-events-none z-10 px-4">
+                        <span className="px-3 py-1 rounded-full bg-brand-blue/20 text-brand-blue border border-brand-blue/30 font-mono text-[10px] uppercase tracking-widest mb-3 inline-block">
+                            Move Cursor Around
+                        </span>
+                        <h2 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white uppercase drop-shadow-lg">
+                            IMAGE TRAIL
+                        </h2>
+                        <p className="text-xs uppercase tracking-[0.25em] font-mono text-neutral-400 mt-2 font-bold">
+                            Dynamic Physics Card Trail Effect
+                        </p>
+                    </div>
+                </ImageTrail>
+            </div>
+        ),
+        code: `import { ImageTrail } from "@/components/ui/image-trail";
+
+export function ImageTrailDemo() {
+  return (
+    <ImageTrail
+      threshold={74}
+      minDelay={45}
+      duration={1100}
+      maxItems={9}
+      rotationRange={34}
+      imageClassName="w-32 rounded-md md:w-40"
+      className="flex h-[500px] items-center justify-center bg-[#ececec]"
+    >
+      <h2 className="pointer-events-none text-5xl font-black">
+        Image trail effect
+      </h2>
+    </ImageTrail>
+  );
+}`,
+        vibePrompt: "Create a high-performance, fluid 'ImageTrail' React component with Framer Motion. As the user moves their cursor over the container, a trailing sequence of photographic cards is spawned at the cursor coordinates with random organic rotation. When moving beyond a threshold distance, items are smoothly scaled and faded into view using spring physics, and animated out with easeInOut after a set duration. Includes normalized images, customizable thresholds, duration, max items, rotation range, and overlay container styling."
     }
 ];
 
