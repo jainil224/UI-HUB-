@@ -39,6 +39,28 @@ const PortfolioScroll = React.lazy(() => import('../components/ui/PortfolioScrol
 const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
 const BuyMeCoffee = React.lazy(() => import('../components/ui/BuyMeCoffee'));
+const BeamGridBackground = React.lazy(() => import('../components/ui/BeamGridBackground'));
+const FallBeamBackground = React.lazy(() => import('../components/ui/FallBeamBackground'));
+const HellBackground = React.lazy(() => import('../components/ui/HellBackground'));
+const InteractiveGridBackground = React.lazy(() => import('../components/ui/InteractiveGridBackground'));
+const WaveBackground = React.lazy(() => import('../components/ui/WaveBackground'));
+const CornerBorderButton = React.lazy(() => import('../components/ui/corner-border-button').then(m => ({ default: m.CornerBorderButton })));
+const InteractiveHoverButton = React.lazy(() => import('../components/ui/interactive-hover-button'));
+const IsometricGridBackground = React.lazy(() => import('../components/ui/isometric-grid-background').then(m => ({ default: m.IsometricGridBackground })));
+const MagicCard = React.lazy(() => import('../components/ui/magic-card').then(m => ({ default: m.MagicCard })));
+const MarqueeHoverButton = React.lazy(() => import('../components/ui/marquee-hover-button').then(m => ({ default: m.MarqueeHoverButton })));
+const PaymentTransactionButton = React.lazy(() => import('../components/ui/payment-transaction-button').then(m => ({ default: m.PaymentTransactionButton })));
+const RainbowButton = React.lazy(() => import('../components/ui/rainbow-button').then(m => ({ default: m.RainbowButton })));
+const ShatterButton = React.lazy(() => import('../components/ui/shatter-button').then(m => ({ default: m.ShatterButton })));
+const SparklesBackground = React.lazy(() => import('../components/ui/sparkles-background').then(m => ({ default: m.SparklesBackground })));
+const BackgroundBoxes = React.lazy(() => import('../components/ui/background-boxes').then(m => ({ default: m.BoxesCore })));
+const BackgroundPaths = React.lazy(() => import('../components/ui/background-paths').then(m => ({ default: m.BackgroundPaths })));
+const BorderBeam = React.lazy(() => import('../components/ui/border-beam').then(m => ({ default: m.BorderBeam })));
+const GalaxyButton = React.lazy(() => import('../components/ui/GalaxyButton').then(m => ({ default: m.GalaxyButton })));
+const LiquidFillButton = React.lazy(() => import('../components/ui/LiquidFillButton').then(m => ({ default: m.LiquidFillButton })));
+const NeonFlickerButton = React.lazy(() => import('../components/ui/NeonFlickerButton').then(m => ({ default: m.NeonFlickerButton })));
+const OrbitButton = React.lazy(() => import('../components/ui/OrbitButton').then(m => ({ default: m.OrbitButton })));
+const SocialTooltipButtons = React.lazy(() => import('../components/animations/SocialTooltipButtons').then(m => ({ default: m.SocialTooltipButtons })));
 
 
 
@@ -1342,6 +1364,29 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cloud-scroll': CloudScroll,
     'infinite-marquee': InfiniteMarquee,
     'buyme-acoffee': BuyMeCoffee,
+
+    'beam-grid-background': BeamGridBackground,
+    'fall-beam-background': FallBeamBackground,
+    'hell-background': HellBackground,
+    'interactive-grid-background': InteractiveGridBackground,
+    'wave-background': WaveBackground,
+    'corner-border-button': CornerBorderButton,
+    'interactive-hover-button': InteractiveHoverButton,
+    'isometric-grid-background': IsometricGridBackground,
+    'magic-card-effect': MagicCard,
+    'marquee-hover-button': MarqueeHoverButton,
+    'payment-transaction-button': PaymentTransactionButton,
+    'rainbow-button': RainbowButton,
+    'shatter-button': ShatterButton,
+    'sparkles-background': SparklesBackground,
+    'grid-background': BackgroundBoxes,
+    'lines-background': BackgroundPaths,
+    'border-beam': BorderBeam,
+    'galaxy-button': GalaxyButton,
+    'liquid-fill-button': LiquidFillButton,
+    'neon-flicker-button': NeonFlickerButton,
+    'orbit-button': OrbitButton,
+    'social-tooltip-buttons': SocialTooltipButtons,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization

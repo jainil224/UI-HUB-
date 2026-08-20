@@ -112,7 +112,7 @@ const SignupPage = () => {
     };
 
     return (
-        <main className="min-h-screen w-full pt-16 flex flex-col lg:flex-row bg-[#EBEBEB] text-black font-sans overflow-x-hidden select-none">
+        <main className="min-h-screen w-full pt-16 flex flex-col lg:flex-row bg-[#EBEBEB] text-black font-sans overflow-x-hidden">
             
             {/* ========================================================
                 LEFT SIDE: Bauhaus Graphic Column (50% Width) - Crimson Red

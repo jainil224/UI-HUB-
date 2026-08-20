@@ -185,7 +185,7 @@ export const MouseGravityBackground: React.FC<MouseGravityBackgroundProps> = ({
     return (
         <canvas
             ref={canvasRef}
-            className={`absolute inset-0 w-full h-full -z-10 bg-[#020617] ${className}`}
+            className={`absolute inset-0 w-full h-full z-0 bg-[#020617] ${className}`}
         />
     );
 };

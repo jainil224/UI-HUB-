@@ -22,7 +22,7 @@ const statsData = [
 
 const Stats = () => {
     return (
-        <section className="w-full bg-[#3D5CFF] border-b-4 border-black relative select-none overflow-hidden">
+        <section className="w-full bg-[#3D5CFF] border-b-4 border-black relative overflow-hidden">
             <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                 {statsData.map((stat, idx) => (
                     <motion.div
@@ -45,13 +45,13 @@ const Stats = () => {
                     >
                         {/* Huge Neo-Brutalist Number */}
                         <div className="mb-2.5">
-                            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-heading tracking-tight text-white leading-none uppercase select-none drop-shadow-[2px_2px_0px_#000000]">
+                            <span className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-heading tracking-tight text-white leading-none uppercase drop-shadow-[2px_2px_0px_#000000]">
                                 {stat.value}
                             </span>
                         </div>
 
                         {/* Subtitle Caption */}
-                        <p className="text-[11px] sm:text-xs font-black uppercase tracking-widest text-white/90 max-w-[220px] leading-tight select-none font-mono">
+                        <p className="text-[11px] sm:text-xs font-black uppercase tracking-widest text-white/90 max-w-[220px] leading-tight font-mono">
                             {stat.label}
                         </p>
                     </motion.div>

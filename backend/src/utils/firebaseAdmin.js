@@ -63,7 +63,8 @@ function initializeFirebaseAdmin() {
       admin.initializeApp(initPayload);
       console.log('[FirebaseAdmin] Initialized successfully with project:', serviceAccount.project_id);
     } else {
-      console.error('[FirebaseAdmin] Bypassed initialization because credentials are invalid.');
+      admin.initializeApp({ projectId: projectId || 'ui-hub-dev' });
+      console.log('[FirebaseAdmin] Initialized in local dev mode with project ID:', projectId || 'ui-hub-dev');
     }
   } catch (error) {
     console.error('[FirebaseAdmin] Initialization error:', error);

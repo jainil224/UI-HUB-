@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+::selection {
+  background-color: #3D5CFF !important;
+  color: #FFFFFF !important;
+}
+
+::-moz-selection {
+  background-color: #3D5CFF !important;
+  color: #FFFFFF !important;
+}
+
 :root {
   --color-1: 0 100% 63%;
   --color-2: 270 100% 63%;

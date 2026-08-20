@@ -12,7 +12,7 @@ import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
 import { getComponentCode } from '../../../../utils/codeUtils';
 import { downloadComponentZip } from '../../../../utils/zipUtils';
-import { fetchVibePrompt, fetchComponentSource, AISystem, VibeMeta } from '../../../../utils/promptUtils';
+import { fetchVibePrompt, fetchComponentSource, getFallbackVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
 import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
@@ -160,6 +160,100 @@ const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: stri
 
 const PRO_ONLY_TOOLS: AISystem[] = ['advance', 'antigravity', 'claude'];
 
+interface ToolTheme {
+    name: string;
+    sublabel: string;
+    bgDefault: string;
+    bgHover: string;
+    bgActive: string;
+    borderDefault: string;
+    borderHover: string;
+    borderActive: string;
+    shadowActive: string;
+    shadowHover: string;
+    accentColor: string;
+    indicatorDot: string;
+    glowGradients: string;
+}
+
+const TOOL_THEMES: Record<AISystem, ToolTheme> = {
+    cursor: {
+        name: 'Cursor',
+        sublabel: 'SMART IDE',
+        bgDefault: 'bg-[#0D1117]',
+        bgHover: 'hover:bg-[#161B22]',
+        bgActive: 'bg-[#161B22]',
+        borderDefault: 'border-[#30363D]',
+        borderHover: 'hover:border-[#58A6FF]',
+        borderActive: 'border-[#58A6FF]',
+        shadowActive: 'shadow-[4px_4px_0px_0px_#58A6FF]',
+        shadowHover: 'hover:shadow-[4px_4px_0px_0px_#58A6FF]',
+        accentColor: 'text-[#58A6FF]',
+        indicatorDot: 'bg-[#58A6FF]',
+        glowGradients: 'from-[#58A6FF]/10 to-transparent'
+    },
+    lovable: {
+        name: 'Lovable',
+        sublabel: 'PLATFORM HUB',
+        bgDefault: 'bg-[#160E0E]',
+        bgHover: 'hover:bg-[#251515]',
+        bgActive: 'bg-[#251515]',
+        borderDefault: 'border-[#4A2624]',
+        borderHover: 'hover:border-[#FF5A5F]',
+        borderActive: 'border-[#FF5A5F]',
+        shadowActive: 'shadow-[4px_4px_0px_0px_#FF5A5F]',
+        shadowHover: 'hover:shadow-[4px_4px_0px_0px_#FF5A5F]',
+        accentColor: 'text-[#FF7E67]',
+        indicatorDot: 'bg-[#FF5A5F]',
+        glowGradients: 'from-[#FF5A5F]/10 to-transparent'
+    },
+    antigravity: {
+        name: 'Antigravity',
+        sublabel: 'VIBE ENGINE',
+        bgDefault: 'bg-[#121317]',
+        bgHover: 'hover:bg-[#1B1D24]',
+        bgActive: 'bg-[#1B1D24]',
+        borderDefault: 'border-neutral-700',
+        borderHover: 'hover:border-white',
+        borderActive: 'border-white',
+        shadowActive: 'shadow-[4px_4px_0px_0px_#FFFFFF]',
+        shadowHover: 'hover:shadow-[4px_4px_0px_0px_#FFFFFF]',
+        accentColor: 'text-white',
+        indicatorDot: 'bg-white',
+        glowGradients: 'from-white/10 to-transparent'
+    },
+    claude: {
+        name: 'Claude',
+        sublabel: 'INTELLIGENT MODEL',
+        bgDefault: 'bg-[#18110D]',
+        bgHover: 'hover:bg-[#261812]',
+        bgActive: 'bg-[#261812]',
+        borderDefault: 'border-[#42261C]',
+        borderHover: 'hover:border-[#C15F3C]',
+        borderActive: 'border-[#C15F3C]',
+        shadowActive: 'shadow-[4px_4px_0px_0px_#C15F3C]',
+        shadowHover: 'hover:shadow-[4px_4px_0px_0px_#C15F3C]',
+        accentColor: 'text-[#F4F3EE]',
+        indicatorDot: 'bg-[#C15F3C]',
+        glowGradients: 'from-[#C15F3C]/10 to-transparent'
+    },
+    advance: {
+        name: 'Advance',
+        sublabel: 'ADVANCED SYSTEM',
+        bgDefault: 'bg-[#0E1020]',
+        bgHover: 'hover:bg-[#141833]',
+        bgActive: 'bg-[#141833]',
+        borderDefault: 'border-[#1E2555]',
+        borderHover: 'hover:border-brand-blue',
+        borderActive: 'border-brand-blue',
+        shadowActive: 'shadow-[4px_4px_0px_0px_#3D5CFF]',
+        shadowHover: 'hover:shadow-[4px_4px_0px_0px_#3D5CFF]',
+        accentColor: 'text-brand-blue',
+        indicatorDot: 'bg-brand-blue',
+        glowGradients: 'from-[#3D5CFF]/10 to-transparent'
+    }
+};
+
 const ToolCard = React.memo(({
     tool,
     isActive,
@@ -173,17 +267,22 @@ const ToolCard = React.memo(({
     itemId: string;
     isLocked?: boolean;
 }) => {
+    const theme = TOOL_THEMES[tool];
+
     return (
         <button
             onClick={() => !isLocked && onClick(tool)}
-            className={`p-5 rounded-lg border-2 transition-all text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] ${
+            className={`p-5 rounded-lg border-2 transition-all duration-200 text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group ${
                 isLocked
                     ? 'bg-neutral-900 border-neutral-700 opacity-60 cursor-not-allowed'
                     : isActive
-                    ? 'bg-brand-surface border-brand-blue brutal-shadow-blue'
-                    : 'bg-brand-surface border-white/60 hover:border-white brutal-shadow-black hover:translate-x-0.5 hover:translate-y-0.5'
+                    ? `${theme.bgActive} ${theme.borderActive} ${theme.shadowActive} translate-x-0.5 translate-y-0.5`
+                    : `${theme.bgDefault} ${theme.borderDefault} ${theme.bgHover} ${theme.borderHover} ${theme.shadowHover} hover:translate-x-0.5 hover:translate-y-0.5`
             }`}
         >
+            {/* Ambient Background Gradient */}
+            <div className={`absolute -top-10 -right-10 w-24 h-24 rounded-full bg-gradient-to-br ${theme.glowGradients} blur-xl pointer-events-none transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+
             {/* Lock Badge for non-Pro users */}
             {isLocked && (
                 <div className="absolute top-2 right-2 z-30">
@@ -195,52 +294,49 @@ const ToolCard = React.memo(({
 
             <div className="relative z-10 w-full flex flex-col gap-4">
                 <div className="flex items-center justify-between">
-                    <p className={`text-[9px] uppercase tracking-widest font-black ${isLocked ? 'text-neutral-500' : isActive ? 'text-brand-blue' : 'text-neutral-400'}`}>
+                    <p className={`text-[9px] uppercase tracking-widest font-black transition-colors ${isLocked ? 'text-neutral-500' : isActive ? theme.accentColor : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
                         {itemId === 'robot-3d-background' ? (
                             tool === 'antigravity' ? 'NEON ENGINE' :
                                 tool === 'lovable' ? 'ROBOTIC HUB' :
                                     tool === 'cursor' ? 'CYBER CORE' :
                                         tool === 'claude' ? 'PHANTOM MODEL' : 'ADVANCED SYSTEM'
                         ) : (
-                            tool === 'antigravity' ? 'VIBE ENGINE' :
-                                tool === 'lovable' ? 'PLATFORM HUB' :
-                                    tool === 'cursor' ? 'SMART LDE' :
-                                        tool === 'claude' ? 'INTELLIGENT MODEL' : 'ADVANCED SYSTEM'
+                            theme.sublabel
                         )}
                     </p>
-                    <div className={`text-white ${isActive ? 'scale-110' : ''}`}>
+                    <div className={`transition-all duration-200 ${isActive ? `scale-110 ${theme.accentColor}` : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
                         {tool === 'antigravity' ? (
-                            <Zap size={20} />
+                            <Zap size={20} className={isActive ? 'text-white' : 'text-neutral-400 group-hover:text-white'} />
                         ) : tool === 'lovable' ? (
-                            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                            <svg className={`w-5 h-5 ${isActive ? 'text-[#FF7E67]' : 'text-neutral-400 group-hover:text-[#FF7E67]'}`} viewBox="0 0 24 24" fill="currentColor">
                                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
                             </svg>
                         ) : tool === 'cursor' ? (
-                            <div className="relative w-5 h-5">
+                            <div className={`relative w-5 h-5 ${isActive ? 'text-[#58A6FF]' : 'text-neutral-400 group-hover:text-[#58A6FF]'}`}>
                                 <div className="absolute inset-0 border-2 border-current rounded-sm flex items-center justify-center">
                                     <div className="w-1.5 h-1.5 border-r border-b border-current" />
                                 </div>
                             </div>
                         ) : tool === 'claude' ? (
-                            <Cpu size={20} />
+                            <Cpu size={20} className={isActive ? 'text-[#C15F3C]' : 'text-neutral-400 group-hover:text-[#C15F3C]'} />
                         ) : (
-                            <Brain size={20} />
+                            <Brain size={20} className={isActive ? 'text-brand-blue' : 'text-neutral-400 group-hover:text-brand-blue'} />
                         )}
                     </div>
                 </div>
 
                 <div className="flex items-center justify-between w-full">
-                    <h4 className={`text-lg font-black uppercase tracking-tight ${isLocked ? 'text-neutral-500' : 'text-white'}`}>
+                    <h4 className={`text-lg font-black uppercase tracking-tight transition-colors ${isLocked ? 'text-neutral-500' : isActive ? 'text-white' : 'text-white group-hover:text-white'}`}>
                         {tool === 'advance' ? 'Advance' : tool}
                     </h4>
                 </div>
             </div>
 
             {!isLocked && (
-                <div className={`flex items-center gap-1.5 mt-3 ${isActive ? 'opacity-100' : 'opacity-0'}`}>
-                    <div className="w-2 h-2 rounded-full bg-brand-blue" />
-                    <span className="text-[9px] font-black uppercase tracking-widest text-brand-blue">
-                        Active
+                <div className={`flex items-center gap-1.5 mt-3 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                    <div className={`w-2 h-2 rounded-full ${theme.indicatorDot}`} />
+                    <span className={`text-[9px] font-black uppercase tracking-widest ${theme.accentColor}`}>
+                        {isActive ? 'Active' : 'Select'}
                     </span>
                 </div>
             )}
@@ -277,7 +373,7 @@ const VibeSystemSection = React.memo(({
     const [aiSystem, setAiSystemState] = React.useState<AISystem>(defaultSystem);
     const [isPending, startTransition] = React.useTransition();
     const [copied, setCopied] = React.useState<string | null>(null);
-    const [fetchedPrompt, setFetchedPrompt] = React.useState<string>('');
+    const [fetchedPrompt, setFetchedPrompt] = React.useState<string>(() => getFallbackVibePrompt(item.id, defaultSystem, item));
     const [isLoadingPrompt, setIsLoadingPrompt] = React.useState(false);
     const [prevProStatus, setPrevProStatus] = React.useState(isProUser);
 
@@ -304,29 +400,19 @@ const VibeSystemSection = React.memo(({
     }, [isProUser, prevProStatus, setAiSystem]);
 
     const loadPrompt = React.useCallback(async () => {
-        // Allow public viewing for lovable and cursor ONLY on non-premium components
-        const isPublicSystem = !item.isPremium && ['lovable', 'cursor'].includes(aiSystem);
-
-        if (!user && !isPublicSystem) {
-            // We don't clear the prompt here anymore. 
-            // The UI overlay handles the "Authentication Required" state.
-            // Keeping the existing prompt avoids flickering during account switches.
-            return;
-        }
-
         setIsLoadingPrompt(true);
         try {
             const token = user ? await user.getIdToken() : undefined;
             console.log(`[VibeSystem] Fetching prompt for ${item.id} (${aiSystem})...`);
-            const prompt = await fetchVibePrompt(item.id, aiSystem, token);
-            setFetchedPrompt(prompt);
+            const prompt = await fetchVibePrompt(item.id, aiSystem, token, item);
+            setFetchedPrompt(prompt || getFallbackVibePrompt(item.id, aiSystem, item));
         } catch (error) {
-            console.error('[VibeSystem] Failed to load prompt:', error);
-            setFetchedPrompt('Failed to load blueprint from secure terminal. Check console for details.');
+            console.warn('[VibeSystem] Falling back to local blueprint for:', item.id);
+            setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item));
         } finally {
             setIsLoadingPrompt(false);
         }
-    }, [aiSystem, item.id, user]);
+    }, [aiSystem, item, user]);
 
     React.useEffect(() => {
         loadPrompt();
@@ -401,7 +487,7 @@ const VibeSystemSection = React.memo(({
                                     </div>
                                     <div className="h-4 w-px bg-neutral-700 mx-1 sm:mx-2" />
                                     <div className="flex items-center gap-2 font-mono">
-                                        <span className="text-[10px] font-black text-brand-blue uppercase tracking-wider">{aiSystem}</span>
+                                        <span className={`text-[10px] font-black uppercase tracking-wider ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>{aiSystem}</span>
                                         <span className="text-[10px] font-black text-neutral-500 uppercase">//</span>
                                         <span className="text-[10px] font-bold text-neutral-300 uppercase tracking-wider">MASTER_{aiSystem === 'advance' ? 'PRO' : aiSystem.toUpperCase()}_v1.0.tsx</span>
                                     </div>
@@ -461,13 +547,7 @@ const VibeSystemSection = React.memo(({
                                 </div>
                             ) : (
                                 <pre
-                                    className={`font-mono whitespace-pre-wrap ${(!user) ? 'select-none' : ''}`}
-                                    onCopy={(e) => {
-                                        if (!user) {
-                                            e.preventDefault();
-                                            setShowAuthModal(true);
-                                        }
-                                    }}
+                                    className="font-mono whitespace-pre-wrap select-text selection:bg-brand-blue selection:text-white"
                                 >
                                     {isLoadingPrompt ? (
                                         <div className="flex flex-col items-center justify-center h-full py-20 text-brand-blue">
@@ -484,11 +564,11 @@ const VibeSystemSection = React.memo(({
                         {/* Bottom Status Bar */}
                         <div className="px-6 py-3 border-t-2 border-neutral-800 bg-[#0A0A0E] flex items-center justify-between relative z-20">
                             <div className="flex items-center gap-2">
-                                <div className={`w-2 h-2 rounded-full ${isPending ? 'bg-amber-400 animate-pulse' : 'bg-brand-blue animate-pulse'}`} />
+                                <div className={`w-2 h-2 rounded-full ${isPending ? 'bg-amber-400 animate-pulse' : (TOOL_THEMES[aiSystem]?.indicatorDot || 'bg-brand-blue') + ' animate-pulse'}`} />
                                 <span className="text-[9px] uppercase tracking-widest text-neutral-400 font-bold">{isPending ? 'Processing...' : 'Terminal Active'}</span>
                             </div>
                             <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5">
-                                <span className="text-[9px] uppercase tracking-widest font-black text-brand-blue">UI HUB</span>
+                                <span className={`text-[9px] uppercase tracking-widest font-black ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>UI HUB</span>
                             </div>
                             <span className="text-[9px] uppercase tracking-widest text-neutral-500 font-mono whitespace-nowrap">UTF-8 // LN: {(deferredVibePrompt || '').split('\n').length}</span>
                         </div>

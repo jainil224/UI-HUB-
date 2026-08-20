@@ -43,7 +43,7 @@ const Hero = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4 }}
                     id="hero"
-                    className="relative min-h-[92vh] bg-[#0A0A0A] flex flex-col items-center justify-center px-6 pt-28 pb-20 overflow-hidden border-b-4 border-black select-none"
+                    className="relative min-h-[92vh] bg-[#0A0A0A] flex flex-col items-center justify-center px-6 pt-28 pb-20 overflow-hidden border-b-4 border-black"
                     style={{
                         backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.10) 1.2px, transparent 1.2px)',
                         backgroundSize: '28px 28px'

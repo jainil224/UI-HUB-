@@ -136,7 +136,7 @@ const LibraryPage = () => {
                 .main-scroll::-webkit-scrollbar-thumb { background: #262626; }
             `}</style>
 
-            <div className="h-dvh flex flex-col md:flex-row overflow-hidden relative pt-16 bg-brand-bg text-white select-none">
+            <div className="h-dvh flex flex-col md:flex-row overflow-hidden relative pt-16 bg-brand-bg text-white">
                 {/* ── Mobile top nav ── */}
                 <div className="md:hidden flex items-center justify-between px-4 py-3 border-b-2 border-white shrink-0 z-30 bg-brand-surface">
                     <span className="font-bold text-sm uppercase">UI HUB</span>
@@ -158,10 +158,26 @@ const LibraryPage = () => {
                             </div>
                             {categories.map((cat, idx) => (
                                 <div key={idx} className="mb-4">
-                                    <h4 className="text-xs font-black uppercase text-neutral-500 mb-2">{cat.name}</h4>
-                                    {cat.items.map(item => (
-                                        <button key={item.id} onClick={() => handleComponentSelect(item)} className="block py-1 text-xs">{item.title}</button>
-                                    ))}
+                                    <h4 className="text-xs font-black uppercase text-brand-blue mb-2 tracking-wider">{cat.name}</h4>
+                                    <div className="space-y-1 pl-2 border-l border-neutral-800">
+                                        {cat.items.map(item => {
+                                            const isActive = activeComponent?.id === item.id;
+                                            return (
+                                                <button 
+                                                    key={item.id} 
+                                                    onClick={() => handleComponentSelect(item)} 
+                                                    className={`w-full flex items-center justify-between text-left px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                                                        isActive 
+                                                            ? 'bg-brand-blue text-white border border-white' 
+                                                            : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
+                                                    }`}
+                                                >
+                                                    <span>{item.title}</span>
+                                                    {isActive && <span className="text-[9px] font-mono bg-black/40 px-1.5 py-0.5 rounded border border-white/20">CURRENT</span>}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             ))}
                         </motion.div>
@@ -169,7 +185,7 @@ const LibraryPage = () => {
                 </AnimatePresence>
 
                 {/* ── Left Column: Categories & Available Components ── */}
-                <aside className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 h-full border-r-4 border-black bg-brand-surface relative select-none">
+                <aside className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 h-full border-r-4 border-black bg-brand-surface relative">
                     <div className="shrink-0 px-5 pt-5 pb-4 border-b-2 border-neutral-800 space-y-3">
                         <Link to="/" className="flex items-center gap-2 text-neutral-400 hover:text-white">
                             <Home size={12} /> <span className="text-[10px] font-black uppercase tracking-widest">HOME</span>
@@ -199,23 +215,60 @@ const LibraryPage = () => {
                         <div className="pt-2">
                             <p className="text-[9px] uppercase tracking-widest text-neutral-500 font-black px-2 mb-2">COMPONENTS</p>
                             <div className="space-y-1.5">
-                                {categories.map((cat, idx) => (
-                                    <div key={idx}>
-                                        <button onClick={() => toggleCategory(cat.name)} className="w-full flex items-center justify-between px-3 py-2 rounded border border-transparent hover:border-neutral-800">
-                                            <span className="text-[10px] font-black uppercase">{cat.name}</span>
-                                            <ChevronDown size={11} />
-                                        </button>
-                                        {expandedCategories.includes(cat.name) && (
-                                            <div className="pl-3 py-1 border-l-2 border-neutral-800 ml-3">
-                                                {cat.items.map(item => (
-                                                    <button key={item.id} onClick={() => handleComponentSelect(item)} className="block text-left py-1.5 text-[11px] uppercase tracking-wider text-neutral-400 hover:text-white">
-                                                        {item.title}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
+                                {categories.map((cat, idx) => {
+                                    const hasActive = cat.items.some(item => item.id === activeComponent?.id);
+                                    const isExpanded = expandedCategories.includes(cat.name);
+                                    
+                                    return (
+                                        <div key={idx} className="rounded-lg transition-colors">
+                                            <button 
+                                                onClick={() => toggleCategory(cat.name)} 
+                                                className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border transition-all ${
+                                                    hasActive 
+                                                        ? 'bg-neutral-900/90 border-brand-blue/60 text-white shadow-sm' 
+                                                        : 'border-transparent text-neutral-300 hover:bg-neutral-900/60 hover:text-white hover:border-neutral-800'
+                                                }`}
+                                            >
+                                                <div className="flex items-center gap-2">
+                                                    {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />}
+                                                    <span className={`text-[10px] font-black uppercase tracking-wider ${hasActive ? 'text-brand-blue' : ''}`}>
+                                                        {cat.name}
+                                                    </span>
+                                                </div>
+                                                <ChevronDown size={11} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180 text-brand-blue' : 'text-neutral-500'}`} />
+                                            </button>
+                                            
+                                            {isExpanded && (
+                                                <div className="pl-2.5 py-1.5 border-l-2 border-neutral-800/80 ml-3.5 space-y-1 mt-1">
+                                                    {cat.items.map(item => {
+                                                        const isActive = activeComponent?.id === item.id;
+                                                        return (
+                                                            <button 
+                                                                key={item.id} 
+                                                                onClick={() => handleComponentSelect(item)} 
+                                                                className={`w-full flex items-center justify-between text-left px-2.5 py-1.5 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all duration-150 group ${
+                                                                    isActive 
+                                                                        ? 'bg-brand-blue text-white border-2 border-white shadow-[3px_3px_0px_0px_#000000] translate-x-1 z-10' 
+                                                                        : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70 hover:translate-x-1 hover:border-l-2 hover:border-brand-blue'
+                                                                }`}
+                                                            >
+                                                                <span className="truncate pr-2">{item.title}</span>
+                                                                {isActive ? (
+                                                                    <span className="shrink-0 flex items-center gap-1">
+                                                                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                                                                        <span className="text-[8px] font-black bg-black/40 text-white px-1.5 py-0.2 rounded border border-white/20">VIEWING</span>
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="opacity-0 group-hover:opacity-100 text-brand-blue font-bold text-[10px] transition-opacity">→</span>
+                                                                )}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     </nav>
@@ -233,7 +286,7 @@ const LibraryPage = () => {
                 </main>
 
                 {/* ── Right Column: Pro Card at Top + On This Page Stepper + Buy Me Coffee at Bottom ── */}
-                <aside className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 h-full border-l-4 border-black bg-brand-surface/60 p-5 sticky top-0 overflow-y-auto select-none gap-5">
+                <aside className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 h-full border-l-4 border-black bg-brand-surface/60 p-5 sticky top-0 overflow-y-auto gap-5">
                     {/* Pro Promotional Card at Top */}
                     <div className="w-full">
                         <div className="rounded-xl border-2 border-white bg-brand-surface p-4 text-white brutal-shadow-black relative overflow-hidden group">
@@ -270,7 +323,7 @@ const LibraryPage = () => {
                                     navigator.clipboard.writeText('UIHUB30');
                                     alert("Coupon code 'UIHUB30' copied to clipboard! 30% discount applied.");
                                 }}
-                                className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-neutral-950 border border-neutral-700 text-[10px] text-neutral-300 font-medium cursor-pointer hover:border-brand-blue hover:text-white transition-colors select-none"
+                                className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-neutral-950 border border-neutral-700 text-[10px] text-neutral-300 font-medium cursor-pointer hover:border-brand-blue hover:text-white transition-colors"
                                 title="Click to copy code UIHUB30"
                             >
                                 <span>⚡</span>
