@@ -373,61 +373,83 @@ export function ScrollDissolveReveal({
   progress: controlledProgress,
 }: ScrollDissolveRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [internalProgress, setInternalProgress] = useState(0.45);
+  const internalScrollRef = useRef<HTMLDivElement>(null);
+  const [internalProgress, setInternalProgress] = useState(0.5);
+  const [useScroller, setUseScroller] = useState(true);
   
+  const effectiveContainerRef = scrollContainerRef || (useScroller ? internalScrollRef : undefined);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
-    ...(scrollContainerRef && { container: scrollContainerRef })
+    ...(effectiveContainerRef && { container: effectiveContainerRef })
   });
 
   const isControlled = typeof controlledProgress === 'number';
 
   return (
     <div
-      ref={containerRef}
-      className={cn("relative w-full h-full min-h-[460px]", containerClassName)}
+      ref={internalScrollRef}
+      className={cn("relative w-full h-full min-h-[500px] max-h-[550px] overflow-y-auto overflow-x-hidden rounded-3xl bg-black select-none scrollbar-thin scrollbar-thumb-white/20", containerClassName)}
     >
-      <div className={cn("relative h-full min-h-[460px] w-full overflow-hidden rounded-2xl bg-black", className)}>
-        <Canvas>
-          <OrthographicCamera
-            makeDefault
-            manual
-            left={-1}
-            right={1}
-            top={1}
-            bottom={-1}
-            near={0.1}
-            far={10}
-            position={[0, 0, 1]}
-          />
-          <React.Suspense fallback={null}>
-            <Scene
-              imageFront={imageFront}
-              imageBack={imageBack}
-              scrollYProgress={isControlled ? undefined : scrollYProgress}
-              staticProgress={isControlled ? controlledProgress : internalProgress}
+      {/* 300% Height Scroll Track for realistic scroll interaction */}
+      <div ref={containerRef} className="relative w-full h-[300%]">
+        <div className={cn("sticky top-0 h-[500px] w-full overflow-hidden", className)}>
+          <Canvas>
+            <OrthographicCamera
+              makeDefault
+              manual
+              left={-1}
+              right={1}
+              top={1}
+              bottom={-1}
+              near={0.1}
+              far={10}
+              position={[0, 0, 1]}
             />
-          </React.Suspense>
-        </Canvas>
+            <React.Suspense fallback={null}>
+              <Scene
+                imageFront={imageFront}
+                imageBack={imageBack}
+                scrollYProgress={isControlled ? undefined : scrollYProgress}
+                staticProgress={isControlled ? controlledProgress : (useScroller ? undefined : internalProgress)}
+              />
+            </React.Suspense>
+          </Canvas>
 
-        {/* Interactive Scrub Controller Overlay for In-Library Preview */}
-        <div className="absolute bottom-4 inset-x-6 z-20 flex items-center justify-between gap-4 px-4 py-2.5 rounded-2xl bg-neutral-900/80 border border-white/10 backdrop-blur-md text-white shadow-2xl">
-          <span className="text-[10px] font-mono font-bold tracking-widest text-brand-blue uppercase whitespace-nowrap">
-            DISSOLVE SCRUBBER
-          </span>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={isControlled ? controlledProgress : internalProgress}
-            onChange={(e) => setInternalProgress(parseFloat(e.target.value))}
-            className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-brand-blue"
-          />
-          <span className="text-[10px] font-mono text-neutral-400 min-w-[32px] text-right font-bold">
-            {Math.round((isControlled ? controlledProgress : internalProgress) * 100)}%
-          </span>
+          {/* Floating Scroll HUD & Scrubber Controls */}
+          <div className="absolute top-4 left-4 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-neutral-900/80 border border-white/10 backdrop-blur-md text-white shadow-xl pointer-events-none">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[10px] font-mono font-bold tracking-widest text-neutral-300 uppercase">
+              SCROLL DOWN TO DISSOLVE
+            </span>
+          </div>
+
+          <div className="absolute bottom-4 inset-x-6 z-20 flex items-center justify-between gap-4 px-4 py-2.5 rounded-2xl bg-neutral-900/85 border border-white/15 backdrop-blur-md text-white shadow-2xl">
+            <button
+              type="button"
+              onClick={() => setUseScroller(!useScroller)}
+              className="text-[10px] font-mono font-bold tracking-widest text-brand-blue uppercase hover:underline cursor-pointer whitespace-nowrap"
+            >
+              {useScroller ? "⚡ SWITCH TO MANUAL SLIDER" : "📜 SWITCH TO SCROLL MODE"}
+            </button>
+
+            {!useScroller && (
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.01"
+                value={internalProgress}
+                onChange={(e) => setInternalProgress(parseFloat(e.target.value))}
+                className="w-full h-1.5 bg-white/20 rounded-lg appearance-none cursor-pointer accent-brand-blue"
+              />
+            )}
+
+            <div className="text-[10px] font-mono text-neutral-400 font-bold whitespace-nowrap">
+              {useScroller ? "SCROLL TRACK: 300vh" : `${Math.round(internalProgress * 100)}%`}
+            </div>
+          </div>
         </div>
       </div>
     </div>
