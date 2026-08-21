@@ -31,6 +31,29 @@ const PricingPage = () => {
         setCheckoutStatus(s);
     };
 
+    const handleStartFree = async () => {
+        if (!user) {
+            navigate('/signup');
+            return;
+        }
+
+        try {
+            const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
+            const idToken = await user.getIdToken();
+            fetch(`${apiUrl}/api/v1/users/activate-free`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`,
+                },
+            }).catch((err) => console.warn('[PricingPage] activate-free error:', err));
+        } catch (err) {
+            console.warn('[PricingPage] Error fetching ID token:', err);
+        }
+
+        navigate('/library');
+    };
+
     const handleCheckout = async (plan: any) => {
         if (!user) {
             navigate('/login');
@@ -407,12 +430,13 @@ const PricingPage = () => {
 
                                 {/* CTA Button */}
                                 {plan.tier === 'Basic' ? (
-                                    <Link to={plan.ctaLink} className="w-full">
-                                        <button className="brutal-btn-outline w-full py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 bg-brand-surface">
-                                            <span>{plan.cta}</span>
-                                            <ArrowRight size={14} />
-                                        </button>
-                                    </Link>
+                                    <button
+                                        onClick={handleStartFree}
+                                        className="brutal-btn-outline w-full py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 bg-brand-surface"
+                                    >
+                                        <span>{plan.cta}</span>
+                                        <ArrowRight size={14} />
+                                    </button>
                                 ) : (
                                     <button
                                         onClick={() => handleCheckout(plan)}
