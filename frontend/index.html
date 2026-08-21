@@ -49,79 +49,6 @@
       margin: 0;
       font-family: Inter, system-ui, sans-serif;
     }
-    .pre-skeleton {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-      background: #000000;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    .pre-nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 60px;
-      margin: 12px 16px 0;
-      background: rgba(255, 255, 255, 0.02);
-      backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 16px;
-      z-index: 50;
-    }
-    .pre-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .pre-box {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 12px;
-      position: relative;
-      overflow: hidden;
-    }
-    .pre-box::after {
-      content: "";
-      position: absolute;
-      top: 0; right: 0; bottom: 0; left: 0;
-      transform: translateX(-100%);
-      background: linear-gradient(
-        90deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.03) 20%,
-        rgba(0, 255, 0, 0.08) 50%,
-        rgba(255, 255, 255, 0.03) 80%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      animation: pre-shimmer 2.2s infinite cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    .pre-hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 24px;
-      text-align: center;
-      box-sizing: border-box;
-    }
-    .pre-glow {
-      box-shadow: 0 0 15px rgba(0, 255, 0, 0.15);
-      border-color: rgba(0, 255, 0, 0.25);
-    }
-    @keyframes pre-shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
-    }
-    @media (max-width: 640px) {
-      .sm-hide {
-        display: none !important;
-      }
-    }
   </style>
 
   <!-- Google tag (gtag.js) -->
@@ -137,27 +64,7 @@
 </head>
 
 <body>
-  <div id="root">
-    <div class="pre-skeleton">
-      <div class="pre-nav">
-        <div class="pre-logo">
-          <div class="pre-box" style="width: 32px; height: 32px; border-radius: 4px;"></div>
-          <div class="pre-box" style="width: 80px; height: 20px;"></div>
-        </div>
-        <div class="pre-box sm-hide pre-glow" style="width: 96px; height: 36px; border-radius: 9999px;"></div>
-      </div>
-      <div class="pre-hero">
-        <div class="pre-box" style="width: 240px; height: 32px; border-radius: 9999px; margin-bottom: 40px;"></div>
-        <div class="pre-box" style="width: 140px; height: 36px; margin-bottom: 16px;"></div>
-        <div class="pre-box pre-glow" style="width: min(80vw, 480px); height: 96px; border-radius: 16px; margin-bottom: 16px;"></div>
-        <div class="pre-box" style="width: min(60vw, 300px); height: 48px; border-radius: 12px; margin-bottom: 56px;"></div>
-        <div style="display: flex; gap: 24px; width: 100%; max-width: 400px; justify-content: center; flex-wrap: wrap;">
-          <div class="pre-box pre-glow" style="width: 180px; height: 56px; border-radius: 9999px;"></div>
-          <div class="pre-box" style="width: 140px; height: 56px; border-radius: 9999px;"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 

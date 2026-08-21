@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { Check, X, Zap, Crown, ArrowRight, Star, Sparkles, Download, Code2, Shield, Heart } from 'lucide-react';
+import { Check, X, Zap, Crown, ArrowRight, Star, Download, Code2, Shield } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import PlanBadge from '../../components/ui/PlanBadge';
 import { useAuth } from '../../context/AuthContext';
@@ -186,7 +186,6 @@ const PricingPage = () => {
 
     const currency = currencyMode === 'INR' ? '₹' : '$';
     const proPrice = currencyMode === 'INR' ? '99' : '4.99';
-    const elitePrice = currencyMode === 'INR' ? '399' : '7.99';
 
     const plans = [
         {
@@ -240,31 +239,6 @@ const PricingPage = () => {
             cta: 'Get Pro Access',
             ctaLink: '/library',
             popular: true,
-            bestValue: false,
-        },
-        {
-            tier: 'Elite',
-            title: 'BEST CHOICE',
-            tagline: 'Cinema-Grade Mastery & Unlimited Power',
-            price: elitePrice,
-            duration: '/ year',
-            icon: Heart,
-            accentColor: 'blue',
-            features: [
-                'Everything in Pro, plus',
-                'Full Premium Collection Access',
-                'Cinema-Grade 3D Experiences',
-                'Unlimited Project Vault',
-                'Priority AI Processing',
-                'Early Access to New Features',
-                'Exclusive Creator Assets',
-                'Download all components ZIP file',
-            ],
-            notIncluded: [],
-            badgeTier: 'elite' as const,
-            cta: 'Get Elite Access',
-            ctaLink: '/library',
-            popular: false,
             bestValue: true,
         },
     ];
@@ -302,7 +276,7 @@ const PricingPage = () => {
                     </h1>
 
                     <p className="max-w-xl mx-auto text-neutral-400 text-sm md:text-base font-medium leading-relaxed tracking-wide mb-8">
-                        Start free with 50+ components. Upgrade whenever you need elite power.
+                        Start free with 50+ components. Upgrade whenever you need pro power.
                     </p>
 
                     {/* Currency Toggle */}
@@ -333,7 +307,7 @@ const PricingPage = () => {
                 </motion.div>
 
                 {/* ── Pricing Cards ── */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 mb-16">
                     {plans.map((plan, idx) => {
                         const Icon = plan.icon;
 
@@ -346,8 +320,6 @@ const PricingPage = () => {
                                 className={`p-8 rounded-lg relative overflow-hidden flex flex-col border-2 border-white bg-brand-surface ${
                                     plan.popular
                                         ? 'brutal-shadow-blue'
-                                        : plan.bestValue
-                                        ? 'brutal-shadow-yellow'
                                         : 'brutal-shadow-black'
                                 }`}
                             >
@@ -357,14 +329,6 @@ const PricingPage = () => {
                                         <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-brand-yellow text-black border-2 border-black text-[9px] font-black uppercase tracking-widest">
                                             <Star className="w-3 h-3 fill-black text-black" />
                                             MOST POPULAR
-                                        </div>
-                                    </div>
-                                )}
-                                {plan.bestValue && (
-                                    <div className="absolute top-4 right-4 z-20">
-                                        <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-brand-blue text-white border-2 border-black text-[9px] font-black uppercase tracking-widest">
-                                            <Zap className="w-3 h-3 fill-white text-white" />
-                                            BEST VALUE
                                         </div>
                                     </div>
                                 )}

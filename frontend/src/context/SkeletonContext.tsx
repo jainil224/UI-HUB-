@@ -9,22 +9,13 @@ interface SkeletonContextType {
 const SkeletonContext = createContext<SkeletonContextType | undefined>(undefined);
 
 export const SkeletonProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const triggerLoading = useCallback((duration: number = 1500) => {
+  const triggerLoading = useCallback((duration: number = 800) => {
     setIsLoading(true);
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, duration);
-  }, []);
-
-  useEffect(() => {
-    // Automatically trigger on mount
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-
-    return () => clearTimeout(timer);
   }, []);
 
   return (
