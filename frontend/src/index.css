@@ -10,6 +10,22 @@
   color: #FFFFFF !important;
 }
 
+/* ── Hero Typography Spec (Matching Reference Image) ── */
+.serif-italic {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-weight: 600;
+  letter-spacing: -0.08em;
+}
+
+.hero-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.07em;
+  line-height: 1.03;
+  font-size: clamp(48px, 7.5vw, 90px);
+}
+
 :root {
   --color-1: 0 100% 63%;
   --color-2: 270 100% 63%;

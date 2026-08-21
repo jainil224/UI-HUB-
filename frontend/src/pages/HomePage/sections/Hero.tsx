@@ -55,7 +55,7 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.7, x: -30 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="absolute top-28 sm:top-32 left-4 sm:left-10 md:left-16 w-20 h-20 md:w-28 md:h-28 rounded-full bg-[#E52520] border-4 border-black shadow-[4px_4px_0px_0px_#000000] pointer-events-none z-0"
+                        className="absolute top-28 sm:top-32 left-4 sm:left-10 md:left-16 w-28 h-28 md:w-40 md:h-40 rounded-full bg-[#E52520] border-4 border-black shadow-[6px_6px_0px_0px_#000000] pointer-events-none z-0"
                     />
 
                     {/* Bottom-Right Tilted Yellow Bauhaus Card */}
@@ -63,7 +63,7 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.7, rotate: 0 }}
                         animate={{ opacity: 1, scale: 1, rotate: 12 }}
                         transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                        className="absolute bottom-28 sm:bottom-36 right-4 sm:right-10 md:right-16 w-20 h-20 md:w-28 md:h-28 bg-[#FFC700] border-4 border-black shadow-[6px_6px_0px_0px_#000000] pointer-events-none z-0 rotate-12"
+                        className="absolute bottom-28 sm:bottom-36 right-4 sm:right-10 md:right-16 w-28 h-28 md:w-40 md:h-40 bg-[#FFC700] border-4 border-black shadow-[8px_8px_0px_0px_#000000] pointer-events-none z-0 rotate-12"
                     />
 
                     {/* Bottom-Left Electric Blue Floating Pill */}
@@ -92,21 +92,30 @@ const Hero = () => {
                             <span className="px-1.5 py-0.2 rounded bg-black text-white text-[9px] font-mono ml-1">PRO</span>
                         </motion.div>
 
-                        {/* Main Typography Headline */}
+                        {/* Main Typography Headline (Exact Image Font Arrangement) */}
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.1 }}
-                            className="mb-6"
+                            className="mb-6 w-full max-w-[1000px] mx-auto text-center"
                         >
-                            <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase tracking-tight leading-[0.92] font-heading">
-                                <span className="text-white block drop-shadow-md">CRAFT THE</span>
-                                <span className="text-[#1F4BFF] block my-1 relative inline-block">
-                                    FUTURE
-                                    {/* Subtle decorative underline bar */}
-                                    <span className="absolute left-0 bottom-1 w-full h-3 md:h-4 bg-[#FFC700] -z-10 -rotate-1 opacity-90" />
+                            <h1 className="hero-title text-[clamp(48px,7.5vw,90px)] text-center text-white leading-[1.04] mb-6 max-w-[1000px] mx-auto">
+                                <span className="block drop-shadow-md whitespace-nowrap">
+                                    <span className="text-white font-semibold">
+                                        Craft the{' '}
+                                    </span>
+                                    <span className="serif-italic text-[#3D5CFF] drop-shadow-[0_0_30px_rgba(61,92,255,0.45)]">
+                                        Future,
+                                    </span>
                                 </span>
-                                <span className="text-white block drop-shadow-md">OF UI</span>
+                                <span className="block mt-2 sm:mt-4 drop-shadow-md whitespace-nowrap">
+                                    <span className="text-white font-semibold">
+                                        of{' '}
+                                    </span>
+                                    <span className="serif-italic text-[#3D5CFF] drop-shadow-[0_0_30px_rgba(61,92,255,0.45)]">
+                                        UI
+                                    </span>
+                                </span>
                             </h1>
                         </motion.div>
 

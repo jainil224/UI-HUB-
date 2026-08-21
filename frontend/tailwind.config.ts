@@ -45,6 +45,7 @@ const config: Config = {
             fontFamily: {
                 display: ['Orbitron', 'sans-serif'],
                 heading: ['Space+Grotesk', 'sans-serif'],
+                serif: ['"Source Serif 4"', 'Georgia', 'serif'],
             },
             backgroundColor: {
                 'black-rgb': 'rgb(10, 10, 10)',
