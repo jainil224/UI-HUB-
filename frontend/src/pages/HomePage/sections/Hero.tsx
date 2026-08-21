@@ -55,22 +55,16 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.7, x: -30 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="absolute top-16 left-4 sm:left-10 md:left-16 w-20 h-20 md:w-28 md:h-28 rounded-full bg-[#E52520] border-4 border-black shadow-[4px_4px_0px_0px_#000000] flex items-center justify-center pointer-events-none z-0"
-                    >
-                        <div className="w-5 h-5 rounded-full bg-white/20 border border-white/40" />
-                    </motion.div>
+                        className="absolute top-28 sm:top-32 left-4 sm:left-10 md:left-16 w-20 h-20 md:w-28 md:h-28 rounded-full bg-[#E52520] border-4 border-black shadow-[4px_4px_0px_0px_#000000] pointer-events-none z-0"
+                    />
 
-                    {/* Top-Right Tilted Yellow Bauhaus Card */}
+                    {/* Bottom-Right Tilted Yellow Bauhaus Card */}
                     <motion.div 
                         initial={{ opacity: 0, scale: 0.7, rotate: 0 }}
                         animate={{ opacity: 1, scale: 1, rotate: 12 }}
                         transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                        className="absolute top-20 right-4 sm:right-10 md:right-16 w-24 h-24 md:w-32 md:h-32 bg-[#FFC700] border-4 border-black shadow-[6px_6px_0px_0px_#000000] flex flex-col items-center justify-center p-2 pointer-events-none z-0 rotate-12"
-                    >
-                        <span className="text-[10px] font-black uppercase tracking-widest text-black">VAULT</span>
-                        <span className="text-xl md:text-2xl font-black text-black leading-none">100+</span>
-                        <span className="text-[8px] font-bold uppercase text-black/70">COMPONENTS</span>
-                    </motion.div>
+                        className="absolute bottom-28 sm:bottom-36 right-4 sm:right-10 md:right-16 w-20 h-20 md:w-28 md:h-28 bg-[#FFC700] border-4 border-black shadow-[6px_6px_0px_0px_#000000] pointer-events-none z-0 rotate-12"
+                    />
 
                     {/* Bottom-Left Electric Blue Floating Pill */}
                     <motion.div 
