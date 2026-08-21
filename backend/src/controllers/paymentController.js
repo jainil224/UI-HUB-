@@ -1,10 +1,6 @@
 import Razorpay from 'razorpay';
 import { verifyRazorpaySignature } from '../utils/verifySignature.js';
-import { fulfillPayment } from '../services/firebaseService.js';
-// FIX 3: sendInvoiceEmail is REMOVED from this file entirely.
-// The webhook handler (webhookController.js) is the single source of truth
-// for sending invoice emails. This prevents duplicate emails when both
-// the /verify route and Razorpay's payment.captured webhook fire.
+import { fulfillPayment, dispatchProSubscriptionReceipt } from '../services/firebaseService.js';
 
 // Initialize Razorpay
 const getRazorpayInstance = () => {
@@ -30,7 +26,7 @@ export const createOrder = async (req, res) => {
     }
 
     const options = {
-      amount: Math.round(Number(amount) * 100), // amount in the smallest currency unit
+      amount: Math.round(Number(amount) * 100), // amount in smallest currency unit (paise/cents)
       currency,
       receipt: `receipt_order_${Date.now()}`,
       notes: {
@@ -60,10 +56,8 @@ export const createOrder = async (req, res) => {
 };
 
 /**
- * Verifies Razorpay payment signature and updates database.
- * NOTE: Invoice email is NOT sent here — it is sent exclusively by the
- * webhookController.js when the payment.captured event arrives from Razorpay.
- * This avoids duplicate invoice emails.
+ * Verifies Razorpay payment signature, updates database, generates PDF receipt,
+ * and sends the PRO subscription email with attached PDF receipt.
  */
 export const verifyPayment = async (req, res) => {
   try {
@@ -99,6 +93,7 @@ export const verifyPayment = async (req, res) => {
 
     // 2. Fulfill Payment (update Firestore, activate plan)
     try {
+        const displayName = req.user?.displayName || req.user?.name || '';
         const result = await fulfillPayment({
             paymentId: razorpay_payment_id,
             orderId: razorpay_order_id,
@@ -106,7 +101,21 @@ export const verifyPayment = async (req, res) => {
             amount: amount,
             currency: currency,
             tier: tier,
-            signature: razorpay_signature
+            signature: razorpay_signature,
+            displayName,
+        });
+
+        // 3. Dispatch PRO Subscription Email with attached PDF Receipt (idempotent)
+        dispatchProSubscriptionReceipt({
+            paymentId: razorpay_payment_id,
+            orderId: razorpay_order_id,
+            email: user_email,
+            displayName,
+            amount,
+            currency,
+            duration: '6 Months',
+        }).catch((emailErr) => {
+            console.error('[VerifyPayment] Background PRO email/receipt error:', emailErr);
         });
 
         // Replay Attack Handled via idempotency
@@ -114,12 +123,11 @@ export const verifyPayment = async (req, res) => {
             return res.status(200).json({ success: true, tier: tier, message: 'Payment already applied.' });
         }
 
-        // 3. Respond success — invoice email will be sent by the webhook handler
-        console.log(`[VerifyPayment] Payment fulfilled for ${user_email}, paymentId: ${razorpay_payment_id}. Invoice email delegated to webhook.`);
+        console.log(`[VerifyPayment] Payment verified & fulfilled for ${user_email}, paymentId: ${razorpay_payment_id}`);
         return res.json({
             success: true,
             tier: tier,
-            message: 'Payment verified successfully. Your invoice will be emailed shortly.'
+            message: 'Payment verified successfully. Welcome to PRO ACCESS! Your payment receipt has been sent to your email.'
         });
 
     } catch (fbErr) {

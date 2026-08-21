@@ -1,11 +1,20 @@
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import {
+    sendWelcomeEmail as sendWelcomeEmailViaBrevoApi,
+    sendFreeSubscriptionEmail as sendFreeSubscriptionEmailViaBrevoApi,
+    sendProSubscriptionEmail as sendProSubscriptionEmailViaBrevoApi,
+    buildWelcomeEmailHtml,
+    buildFreeSubscriptionEmailHtml,
+    buildProSubscriptionEmailHtml,
+} from '../services/brevoService.js';
+import { generatePaymentReceiptPdf } from '../services/receiptService.js';
+
 dotenv.config();
 
 let cachedTransporter = null;
 let cachedFromAddress = null;
 
-// FIX 2 + FIX 4: startup credential log and hardened TLS (no rejectUnauthorized: false)
 function getTransporter() {
   if (cachedTransporter) {
     return { transporter: cachedTransporter, fromAddress: cachedFromAddress };
@@ -16,30 +25,24 @@ function getTransporter() {
   const host   = process.env.SMTP_HOST   || 'smtp-relay.brevo.com';
   const port   = parseInt(process.env.SMTP_PORT || '587');
 
-  // Port 465 is SMTPS (direct SSL), Port 587/2525 is STARTTLS
   const secure = port === 465 || process.env.SMTP_SECURE === 'true';
 
-  // Startup validation — surfaces misconfiguration in Render logs immediately
-  console.log('[EmailService] SMTP User loaded:', !!(user));
   if (!user || !pass) {
     throw new Error(
       '[EmailService] BREVO_SMTP_USER (or SMTP_USER) / BREVO_SMTP_PASS (or SMTP_PASS) is not set in environment variables.'
     );
   }
 
-  // SMTP_FROM must be a Brevo-verified sender domain — never a Gmail address
   cachedFromAddress = process.env.SMTP_FROM || user;
 
   cachedTransporter = nodemailer.createTransport({
     host,
     port,
     secure,
-    pool: true,       // Reuse connections for efficiency
+    pool: true,
     maxConnections: 5,
     maxMessages: 100,
     auth: { user, pass },
-    // FIX 4: Removed rejectUnauthorized: false — security vulnerability
-    // Use servername hint instead so Brevo's cert is correctly validated
     connectionTimeout: 10000,
     greetingTimeout: 10000,
     socketTimeout: 30000,
@@ -54,115 +57,165 @@ function getTransporter() {
   return { transporter: cachedTransporter, fromAddress: cachedFromAddress };
 }
 
-import { sendWelcomeEmail as sendWelcomeEmailViaBrevoApi } from '../services/brevoService.js';
-
 /**
- * Sends the UI-HUB branded welcome email via Brevo HTTP API.
+ * Sends the UI-HUB branded welcome email via Brevo HTTP API with SMTP fallback.
  * Idempotency is guarded by the Firestore `welcomeEmailSent` flag in userRoutes.js.
  */
 export async function sendWelcomeEmail(email, name) {
-  // Primary method: Brevo HTTP Transactional Email API (api.brevo.com/v3/smtp/email)
+  // 1. Primary method: Brevo HTTP Transactional Email API
   const result = await sendWelcomeEmailViaBrevoApi(email, name);
   if (result.success) {
     return result;
   }
 
-  // Fallback to SMTP if API key is not configured or failed
-  console.warn('[EmailService] Brevo HTTP API send unfulfilled, attempting SMTP fallback...');
-  let transporter, fromAddress;
+  // 2. Fallback to SMTP if Brevo API is not configured or failed
+  console.warn('[EmailService] Brevo HTTP API welcome send unfulfilled, attempting SMTP fallback...');
   try {
-    ({ transporter, fromAddress } = getTransporter());
+    const { transporter, fromAddress } = getTransporter();
     const displayName = name || 'there';
     const mailOptions = {
       from:    `"UI-HUB" <${fromAddress}>`,
       to:      email,
       replyTo: 'uihub.design@gmail.com',
       subject: 'Welcome to UI-HUB — Your components are ready 🎨',
-      html:    buildWelcomeEmailHTML(displayName),
+      html:    buildWelcomeEmailHtml(displayName),
     };
     const info = await transporter.sendMail(mailOptions);
     console.log(`[EmailService] ✅ Welcome email sent to ${email} via SMTP fallback — messageId: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
     console.error(`[EmailService] ❌ SMTP fallback also failed:`, err.message);
-    return result; // return original API result/error
+    return result;
   }
 }
 
-function buildWelcomeEmailHTML(name) {
-  return `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Welcome to UI-HUB</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0F0F0F; font-family: 'DM Sans', sans-serif; }
-  </style>
-</head>
-<body>
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0F0F0F; padding: 40px 16px;">
-    <tr>
-      <td align="center">
-        <table width="560" cellpadding="0" cellspacing="0" style="background:#1A1A1A; border-radius:16px; overflow:hidden; border: 1px solid #2A2A2A;">
+/**
+ * Sends the UI-HUB FREE subscription confirmation email via Brevo HTTP API with SMTP fallback.
+ * NO payment receipt is attached to free emails.
+ * Idempotency is guarded by the Firestore `freeSubscriptionEmailSent` flag.
+ */
+export async function sendFreeSubscriptionEmail({ email, name, activatedAt = new Date() }) {
+  // 1. Primary method: Brevo HTTP API
+  const result = await sendFreeSubscriptionEmailViaBrevoApi({ email, name, activatedAt });
+  if (result.success) {
+    return result;
+  }
 
-          <!-- Header -->
-          <tr>
-            <td style="background: linear-gradient(135deg, #7C6AF7 0%, #F472B6 100%); padding: 32px 40px; text-align: center;">
-              <div style="font-family:'Space Mono',monospace; font-size:28px; font-weight:700; color:#fff; letter-spacing:-1px;">
-                UI<span style="color:#0F0F0F;">-</span>HUB
-              </div>
-              <div style="color:rgba(255,255,255,0.8); font-size:13px; margin-top:6px; letter-spacing:1px; text-transform:uppercase;">
-                Component Library
-              </div>
-            </td>
-          </tr>
-
-          <!-- Body -->
-          <tr>
-            <td style="padding: 40px 40px 32px;">
-              <h1 style="font-size:24px; font-weight:700; color:#fff; margin-bottom:12px;">
-                Welcome, ${name}! 👋
-              </h1>
-              <p style="color:#9CA3AF; font-size:15px; line-height:1.7; margin-bottom:24px;">
-                Your UI-HUB account is ready. You now have access to our growing library of 
-                beautifully crafted React components — copy, paste, ship.
-              </p>
-
-              <!-- CTA -->
-              <div style="text-align:center; margin-bottom:32px;">
-                <a href="${process.env.FRONTEND_URL || 'https://uihub.design'}"
-                   style="display:inline-block; background: linear-gradient(135deg, #7C6AF7, #F472B6);
-                          color:#fff; text-decoration:none; font-weight:700; font-size:15px;
-                          padding:14px 36px; border-radius:8px; letter-spacing:0.3px;">
-                  Explore Components →
-                </a>
-              </div>
-
-              <p style="color:#4B5563; font-size:13px; text-align:center; line-height:1.6;">
-                Questions? Reply to this email or reach us at
-                <a href="mailto:uihub.design@gmail.com" style="color:#7C6AF7;">uihub.design@gmail.com</a>
-              </p>
-            </td>
-          </tr>
-
-          <!-- Footer -->
-          <tr>
-            <td style="padding: 20px 40px; border-top: 1px solid #2A2A2A; text-align:center;">
-              <p style="color:#374151; font-size:12px;">
-                © ${new Date().getFullYear()} UI-HUB · You're receiving this because you signed up at uihub.design
-              </p>
-            </td>
-          </tr>
-
-        </table>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
-  `;
+  // 2. Fallback to SMTP
+  console.warn('[EmailService] Brevo HTTP API free subscription send unfulfilled, attempting SMTP fallback...');
+  try {
+    const { transporter, fromAddress } = getTransporter();
+    const mailOptions = {
+      from:    `"UI-HUB" <${fromAddress}>`,
+      to:      email,
+      replyTo: 'uihub.design@gmail.com',
+      subject: 'Your FREE UI-HUB Subscription is Active 🎨',
+      html:    buildFreeSubscriptionEmailHtml({ name, email, activatedAt }),
+    };
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[EmailService] ✅ FREE subscription email sent to ${email} via SMTP fallback — messageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[EmailService] ❌ SMTP fallback for FREE subscription failed:`, err.message);
+    return result;
+  }
 }
+
+/**
+ * Sends the UI-HUB PRO subscription confirmation email with attached PDF receipt.
+ * Verified payment only.
+ * Idempotency is guarded by the Firestore `proSubscriptionEmailSent` / `invoiceEmailSent` flag.
+ */
+export async function sendProSubscriptionEmail({
+  email,
+  name,
+  amount,
+  currency = 'USD',
+  paymentId,
+  orderId,
+  purchaseDate = new Date(),
+  duration = '6 Months',
+}) {
+  const receiptNumber = `UIHUB-${new Date(purchaseDate).getFullYear()}-${(paymentId || '').slice(-8).toUpperCase() || 'RECEIPT'}`;
+  
+  // 1. Generate the PDF payment receipt Buffer
+  let pdfBuffer = null;
+  try {
+    pdfBuffer = await generatePaymentReceiptPdf({
+      receiptNumber,
+      userName: name,
+      userEmail: email,
+      planName: 'PRO ACCESS',
+      duration,
+      amount,
+      currency,
+      paymentId,
+      orderId,
+      paymentDate: purchaseDate,
+      status: 'PAID',
+    });
+    console.log(`[EmailService] ✅ PDF receipt generated (${pdfBuffer?.length} bytes) for payment: ${paymentId}`);
+  } catch (pdfErr) {
+    console.error('[EmailService] ⚠️ PDF receipt generation failed:', pdfErr.message);
+  }
+
+  // 2. Primary method: Brevo HTTP API with PDF attachment
+  const result = await sendProSubscriptionEmailViaBrevoApi({
+    email,
+    name,
+    amount,
+    currency,
+    paymentId,
+    orderId,
+    purchaseDate,
+    duration,
+    pdfBuffer,
+    receiptNumber,
+  });
+
+  if (result.success) {
+    return { ...result, receiptNumber };
+  }
+
+  // 3. Fallback to SMTP with attachment
+  console.warn('[EmailService] Brevo HTTP API pro subscription send unfulfilled, attempting SMTP fallback...');
+  try {
+    const { transporter, fromAddress } = getTransporter();
+    const mailOptions = {
+      from:    `"UI-HUB Pro" <${fromAddress}>`,
+      to:      email,
+      replyTo: 'support@uihub.design',
+      subject: 'Welcome to PRO ACCESS — Payment Confirmed & Receipt Attached 🚀',
+      html:    buildProSubscriptionEmailHtml({
+        name,
+        email,
+        amount,
+        currency,
+        paymentId,
+        orderId,
+        purchaseDate,
+        duration,
+      }),
+      attachments: pdfBuffer ? [
+        {
+          filename: `UI-HUB-Receipt-${receiptNumber}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf',
+        }
+      ] : [],
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[EmailService] ✅ PRO subscription email sent to ${email} via SMTP fallback — messageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId, receiptNumber };
+  } catch (err) {
+    console.error(`[EmailService] ❌ SMTP fallback for PRO subscription failed:`, err.message);
+    return { ...result, receiptNumber };
+  }
+}
+
+export default {
+  sendWelcomeEmail,
+  sendFreeSubscriptionEmail,
+  sendProSubscriptionEmail,
+};

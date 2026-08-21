@@ -1,6 +1,5 @@
 import crypto from 'crypto';
-import { fulfillPayment } from '../services/firebaseService.js';
-import { sendInvoiceEmail } from '../services/emailService.js';
+import { fulfillPayment, dispatchProSubscriptionReceipt } from '../services/firebaseService.js';
 import admin from '../utils/firebaseAdmin.js';
 
 export async function handleRazorpayWebhook(req, res) {
@@ -42,6 +41,11 @@ export async function handleRazorpayWebhook(req, res) {
     const payment = event.payload.payment.entity;
     const paymentId = payment.id;
     const email = payment.email;
+    const displayName = payment.notes?.displayName || '';
+    const tier = payment.notes?.tier || 'pro';
+    const amount = payment.amount ? payment.amount / 100 : 0;
+    const currency = payment.currency || 'USD';
+    const orderId = payment.order_id;
     
     try {
         const db = admin.firestore();
@@ -52,59 +56,31 @@ export async function handleRazorpayWebhook(req, res) {
             console.log(`[WEBHOOK] Fulfilling payment ${paymentId} for user ${email}`);
             const result = await fulfillPayment({
               paymentId,
-              orderId: payment.order_id,
-              tier: payment.notes?.tier || 'pro',
+              orderId,
+              tier,
               email,
-              amount: payment.amount ? payment.amount / 100 : 0,
-              currency: payment.currency,
-              signature: 'webhook_captured'
+              amount,
+              currency,
+              signature: 'webhook_captured',
+              displayName,
             });
 
             if (!result.success) {
                 console.error(`[WEBHOOK] Fulfill payment failed for paymentId: ${paymentId}`);
                 return res.status(500).json({ error: 'Fulfillment failed' });
             }
-
-            // Fetch the newly created document
-            paymentDoc = await paymentRef.get();
         }
 
-        const paymentData = paymentDoc.data() || {};
-        
-        // FIX 3 & 6: Only send if not already sent
-        if (!paymentData.invoiceEmailSent) {
-          try {
-            console.log(`[WEBHOOK] Triggering invoice email for ${paymentId} (${email}).`);
-            const emailResult = await sendInvoiceEmail({
-                email,
-                displayName: payment.notes?.displayName || '',
-                planId: payment.notes?.tier || 'pro',
-                paymentId,
-                orderId: payment.order_id,
-                purchaseDate: new Date(),
-            });
-
-            // FIX 6: Set flag to true only if email sent successfully
-            if (emailResult && emailResult.success) {
-              await paymentRef.update({ invoiceEmailSent: true });
-              console.log(`[WEBHOOK] ✅ Invoice email sent successfully to ${email} for payment ${paymentId}`);
-            } else {
-              console.error(`[WEBHOOK] ❌ Invoice email FAILED for ${email}, paymentId: ${paymentId}. Will retry on next webhook event.`);
-            }
-
-          } catch (emailError) {
-            // FIX 6: Full structured error log so failures are visible in Render logs
-            console.error(`[WEBHOOK] ❌ Invoice email threw an exception for paymentId: ${paymentId}`, {
-              message:      emailError.message,
-              code:         emailError.code,
-              response:     emailError.response,
-              responseCode: emailError.responseCode,
-            });
-            // Do not set flag — allow retry on next event
-          }
-        } else {
-          console.log(`[WEBHOOK] Invoice email already sent for payment ${paymentId} — skipping (idempotency guard).`);
-        }
+        // Idempotently dispatch the PRO subscription email with attached PDF receipt
+        await dispatchProSubscriptionReceipt({
+          paymentId,
+          orderId,
+          email,
+          displayName,
+          amount,
+          currency,
+          duration: '6 Months',
+        });
 
     } catch (e) {
         console.error('[WEBHOOK] fulfillPayment or email sending flow failed: ', e.message);
