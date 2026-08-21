@@ -2346,7 +2346,7 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         title: "Cloud Scroll",
         category: "scroll",
         isPremium: true,
-        preview: renderComponent("cloud-scroll", "CloudScroll", { showDemoButton: true }),
+        preview: renderComponent("cloud-scroll", "CloudScroll"),
         code: `import CloudScroll from '@/components/ui/CloudScroll/CloudScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <CloudScroll />\n    </div>\n  );\n}`,
         vibePrompt: "An immersive 3D cloud scrolling experience featuring floating clouds, interactive portals to work/education and side projects, integrated timeline and projects carousel, ambient music/theme switching, and smooth scroll animations."
     },
