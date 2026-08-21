@@ -223,33 +223,39 @@ router.post('/sync', verifyToken, async (req, res) => {
             }
         });
 
-        // 1. Send Welcome Email outside transaction if claimed
-        if (shouldSendWelcome) {
-            console.log(`[Auth] Triggering welcome email for ${uid} (${resolvedEmail}).`);
-            sendWelcomeEmail(resolvedEmail, resolvedName)
-                .then(async (result) => {
-                    await userDocRef.update({ welcomeEmailSent: result.success ? true : false });
-                    console.log(`[Auth] Welcome email result for ${uid}:`, result.success ? '✅ Success' : '❌ Failed');
-                })
-                .catch(async (err) => {
+        // Sequential Email Dispatch: Welcome Email 1st, FREE Subscription Email 2nd
+        (async () => {
+            // 1. Send Welcome Email 1st
+            if (shouldSendWelcome) {
+                try {
+                    console.log(`[Auth] 1st: Triggering Welcome Email for ${uid} (${resolvedEmail})...`);
+                    const welcomeResult = await sendWelcomeEmail(resolvedEmail, resolvedName);
+                    await userDocRef.update({ welcomeEmailSent: welcomeResult.success ? true : false });
+                    console.log(`[Auth] ✅ Welcome email sent for ${uid}:`, welcomeResult.success ? 'Success' : 'Failed');
+                } catch (err) {
                     await userDocRef.update({ welcomeEmailSent: false });
-                    console.error(`[Auth] Welcome email error for ${uid}:`, err);
-                });
-        }
+                    console.error(`[Auth] ❌ Welcome email error for ${uid}:`, err.message);
+                }
+            }
 
-        // 2. Send FREE Subscription Email outside transaction if claimed
-        if (shouldSendFreeSub) {
-            console.log(`[Auth] Triggering FREE subscription email for ${uid} (${resolvedEmail}).`);
-            sendFreeSubscriptionEmail({ email: resolvedEmail, name: resolvedName, activatedAt: new Date() })
-                .then(async (result) => {
-                    await userDocRef.update({ freeSubscriptionEmailSent: result.success ? true : false });
-                    console.log(`[Auth] FREE subscription email result for ${uid}:`, result.success ? '✅ Success' : '❌ Failed');
-                })
-                .catch(async (err) => {
+            // Spacing to guarantee mail delivery order (Welcome 1st, Free 2nd)
+            if (shouldSendWelcome && shouldSendFreeSub) {
+                await new Promise((r) => setTimeout(r, 2500));
+            }
+
+            // 2. Send FREE Subscription Email 2nd
+            if (shouldSendFreeSub) {
+                try {
+                    console.log(`[Auth] 2nd: Triggering FREE Subscription Email for ${uid} (${resolvedEmail})...`);
+                    const freeResult = await sendFreeSubscriptionEmail({ email: resolvedEmail, name: resolvedName, activatedAt: new Date() });
+                    await userDocRef.update({ freeSubscriptionEmailSent: freeResult.success ? true : false });
+                    console.log(`[Auth] ✅ FREE subscription email sent for ${uid}:`, freeResult.success ? 'Success' : 'Failed');
+                } catch (err) {
                     await userDocRef.update({ freeSubscriptionEmailSent: false });
-                    console.error(`[Auth] FREE subscription email error for ${uid}:`, err);
-                });
-        }
+                    console.error(`[Auth] ❌ FREE subscription email error for ${uid}:`, err.message);
+                }
+            }
+        })().catch((bgErr) => console.error('[Auth] Background sequential email error:', bgErr));
 
         res.json({ 
             success: true, 
