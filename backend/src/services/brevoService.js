@@ -713,11 +713,14 @@ export async function sendFreeSubscriptionEmail({ email, name, activatedAt = new
         return { success: false, error: 'Brevo API credentials missing' };
     }
 
+    const frontendUrl = process.env.FRONTEND_URL || 'https://uihub.design';
     const payload = {
         sender: { name: senderName, email: senderEmail },
         to: [{ email, name: name || 'there' }],
+        replyTo: { email: 'uihub.design@gmail.com', name: 'UI-HUB Support' },
         subject: 'Your FREE UI-HUB Subscription is Active 🎨',
         htmlContent: buildFreeSubscriptionEmailHtml({ name, email, activatedAt }),
+        textContent: `Hello ${name || 'there'},\n\nYour FREE UI-HUB Subscription is confirmed and active.\n\nPlan: FREE (Starter)\nEmail: ${email}\nStatus: Active / Unlimited\n\nYou have full access to our starter collection of 50+ open-source React components and foundational vibe prompts.\n\nStart browsing components: ${frontendUrl}/library\n\nNeed help? Contact support at uihub.design@gmail.com\n\n© ${new Date().getFullYear()} UI-HUB · uihub.design`,
     };
 
     try {
