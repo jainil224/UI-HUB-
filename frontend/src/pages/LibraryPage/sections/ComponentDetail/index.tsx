@@ -648,16 +648,14 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [isFullscreen, setIsFullscreen] = React.useState(false);
     const previewRef = React.useRef<HTMLDivElement>(null);
 
-    const toggleFullscreen = () => {
-        if (!previewRef.current) return;
+    const handleOpenFullscreen = () => {
+        let demoUrl = `/demo/${item.id}`;
+        if (item.id === '3d-scroll-animation') demoUrl = '/demo/3d-scroll-animation';
+        else if (item.id === '3d-slider') demoUrl = '/demo/3d-slider';
+        else if (item.id === 'section-scroll') demoUrl = '/demo/section-scroll';
+        else if (item.id === 'cloud-scroll') demoUrl = '/demo/cloud-scroll';
 
-        if (!document.fullscreenElement) {
-            previewRef.current.requestFullscreen().catch(err => {
-                console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-            });
-        } else {
-            document.exitFullscreen();
-        }
+        window.open(demoUrl, '_blank');
     };
 
     React.useEffect(() => {
@@ -925,11 +923,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     </div>
 
                     <button
-                        onClick={toggleFullscreen}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-yellow transition-all brutal-shadow-black"
-                        title="Toggle Fullscreen"
+                        onClick={handleOpenFullscreen}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-yellow transition-all brutal-shadow-black cursor-pointer"
+                        title="Open Preview in Full Screen Page"
                     >
-                        <Maximize2 size={13} />
+                        <ExternalLink size={13} />
                         <span>Fullscreen</span>
                     </button>
                 </div>
@@ -1008,11 +1006,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         <RotateCcw size={13} className={resetKey > 0 ? 'animate-spin-once' : ''} />
                                     </button>
                                     <button
-                                        onClick={toggleFullscreen}
-                                        className="p-1 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors"
-                                        title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                                        onClick={handleOpenFullscreen}
+                                        className="p-1 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                                        title="Open in Full Screen Page"
                                     >
-                                        {isFullscreen ? <Minimize2 size={13} /> : <Maximize2 size={13} />}
+                                        <ExternalLink size={13} />
                                     </button>
                                 </div>
                             </div>
