@@ -472,7 +472,7 @@ export function buildProSubscriptionEmailHtml({
           <tr>
             <td style="padding:36px 32px;">
               <h2 style="font-size:22px; font-weight:900; color:#FFFFFF; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 10px 0;">
-                WELCOME TO THE ELITE TIER, ${displayName.toUpperCase()}! 🔥
+                WELCOME TO PRO ACCESS, ${displayName.toUpperCase()}! 🚀
               </h2>
               <p style="color:#A1A1AA; font-size:14px; line-height:1.7; margin:0 0 24px 0; font-weight:500;">
                 Your payment was <strong style="color:#00FF1A;">successfully verified</strong>. Your UI-HUB account has been immediately upgraded to PRO ACCESS. You now have unrestricted power to explore, download, and vibe-code with all premium components.
