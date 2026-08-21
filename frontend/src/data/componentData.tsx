@@ -66,7 +66,6 @@ const SocialTooltipButtons = React.lazy(() => import('../components/animations/S
 const ImageTrail = React.lazy(() => import('../components/ui/image-trail').then(m => ({ default: m.ImageTrail })));
 const PerspectiveCarousel = React.lazy(() => import('../components/ui/perspective-carousel').then(m => ({ default: m.PerspectiveCarousel })));
 const DiagonalCarousel = React.lazy(() => import('../components/ui/diagonal-carousel').then(m => ({ default: m.DiagonalCarousel })));
-const ScrollDissolveReveal = React.lazy(() => import('../components/ui/ScrollDissolveReveal').then(m => ({ default: m.ScrollDissolveReveal })));
 const TestimonialsCard = React.lazy(() => import('../components/ui/testimonials-card').then(m => ({ default: m.TestimonialsCard })));
 const ImageCollage = React.lazy(() => import('../components/ui/image-collage').then(m => ({ default: m.ImageCollage })));
 
@@ -1400,7 +1399,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'image-trail': ImageTrail,
     'perspective-carousel': PerspectiveCarousel,
     'diagonal-carousel': DiagonalCarousel,
-    'scroll-dissolve-reveal': ScrollDissolveReveal,
     'testimonials-card': TestimonialsCard,
     'image-collage': ImageCollage,
 };
@@ -2498,35 +2496,6 @@ export function DiagonalCarouselDemo() {
   );
 }`,
         vibePrompt: "Create a fluid 'DiagonalCarousel' React component with Framer Motion that organizes photographic cards along a cascading diagonal staircase axis. As the user slides left or right, cards simultaneously translate horizontally, vertically (distance * verticalStep), and rotate dynamically (distance * rotationStep) with spring bounce physics. Features smooth active item scaling, title fade/blur, navigation controls, and pagination indicators."
-    },
-    {
-        id: "scroll-dissolve-reveal",
-        title: "Scroll Dissolve Reveal",
-        category: "image-interaction",
-        isPremium: false,
-        preview: () => (
-            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative">
-                <ScrollDissolveReveal
-                    imageFront="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350123/Recreate_image_color_replacement__202607181004_nuwnho.jpg"
-                    imageBack="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350122/ChatGPT_Image_Jul_18__2026__202607181004_lw9hel.jpg"
-                    className="h-full min-h-[500px] w-full"
-                />
-            </div>
-        ),
-        code: `// Install via shadcn CLI:
-// npx shadcn@latest add https://www.vengenceui.com/r/scroll-dissolve-reveal.json
-
-import { ScrollDissolveReveal } from "@/components/ui/scroll-dissolve-reveal";
-
-export function ScrollDissolveRevealDemo() {
-  return (
-    <ScrollDissolveReveal
-      imageFront="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350123/Recreate_image_color_replacement__202607181004_nuwnho.jpg"
-      imageBack="https://res.cloudinary.com/dsn0ks2hl/image/upload/v1784350122/ChatGPT_Image_Jul_18__2026__202607181004_lw9hel.jpg"
-    />
-  );
-}`,
-        vibePrompt: "Create a cinematic 'ScrollDissolveReveal' component with React Three Fiber (@react-three/fiber), Three.js, and custom GLSL shaders (Sobel edge-detection filter, fractional Brownian motion FBM noise, and pixelated threshold dissolution). As the user scrolls (or scrubs the progress controller), the foreground image dissolves organically into an edge-glowing wireframe sparkle before resolving smoothly into the background image with adaptive aspect ratio correction."
     },
     {
         id: "testimonials-card",

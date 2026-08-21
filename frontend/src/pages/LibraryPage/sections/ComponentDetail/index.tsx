@@ -586,6 +586,59 @@ const VibeSystemSection = React.memo(({
     );
 });
 
+class PreviewErrorBoundary extends React.Component<
+    { children: React.ReactNode; onReset?: () => void; componentId?: string },
+    { hasError: boolean; error: Error | null }
+> {
+    constructor(props: { children: React.ReactNode; onReset?: () => void; componentId?: string }) {
+        super(props);
+        this.state = { hasError: false, error: null };
+    }
+
+    static getDerivedStateFromError(error: Error) {
+        return { hasError: true, error };
+    }
+
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+        console.error("[UI-HUB Preview Error]:", error, errorInfo);
+    }
+
+    componentDidUpdate(prevProps: { componentId?: string }) {
+        if (prevProps.componentId !== this.props.componentId && this.state.hasError) {
+            this.setState({ hasError: false, error: null });
+        }
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="flex flex-col items-center justify-center p-8 text-center text-neutral-300 w-full h-full min-h-[360px] bg-neutral-950/80 rounded-2xl border border-white/10 m-4">
+                    <div className="w-12 h-12 rounded-full bg-brand-blue/10 border border-brand-blue/30 flex items-center justify-center text-brand-blue mb-3">
+                        <RotateCcw size={20} />
+                    </div>
+                    <p className="text-sm font-bold uppercase tracking-wider text-white mb-1 font-heading">
+                        Interactive Preview Reload
+                    </p>
+                    <p className="text-xs text-neutral-400 max-w-sm mb-5 leading-relaxed">
+                        WebGL canvas state or runtime resources reset during component switch. Click below to load fresh.
+                    </p>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            this.setState({ hasError: false, error: null });
+                            this.props.onReset?.();
+                        }}
+                        className="px-5 py-2 rounded-xl bg-brand-blue hover:bg-brand-blue/90 text-white font-mono text-xs font-bold uppercase tracking-wider border border-white/20 transition-all shadow-[3px_3px_0px_0px_#000000] cursor-pointer hover:scale-105 active:scale-95"
+                    >
+                        ↻ Reload Component
+                    </button>
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+}
+
 const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => void }) => {
     const navigate = useNavigate();
     const { theme } = useTheme();
@@ -606,6 +659,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             document.exitFullscreen();
         }
     };
+
+    React.useEffect(() => {
+        setResetKey(0);
+        setFetchedSource('');
+    }, [item.id]);
 
     React.useEffect(() => {
         const handleFullscreenChange = () => {
@@ -960,16 +1018,22 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
 
                             <div className="relative w-full flex-1 min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center overflow-hidden">
-                                <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`} key={resetKey}>
-                                    <React.Suspense fallback={
-                                        <div className="flex flex-col items-center justify-center p-12 text-neutral-400">
-                                            <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />
-                                            <p className="text-[10px] uppercase tracking-widest font-black">INITIALIZING PREVIEW...</p>
-                                        </div>
-                                    }>
-                                        {item.preview({ showDemoButton: true })}
-                                    </React.Suspense>
-                                </div>
+                                <PreviewErrorBoundary 
+                                    key={`${item.id}-${resetKey}`} 
+                                    componentId={item.id}
+                                    onReset={() => setResetKey(k => k + 1)}
+                                >
+                                    <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
+                                        <React.Suspense fallback={
+                                            <div className="flex flex-col items-center justify-center p-12 text-neutral-400">
+                                                <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />
+                                                <p className="text-[10px] uppercase tracking-widest font-black">INITIALIZING PREVIEW...</p>
+                                            </div>
+                                        }>
+                                            {item.preview({ showDemoButton: true })}
+                                        </React.Suspense>
+                                    </div>
+                                </PreviewErrorBoundary>
                             </div>
                         </div>
 

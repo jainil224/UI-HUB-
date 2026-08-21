@@ -47,6 +47,15 @@ const LibraryPage = () => {
     const mainContainerRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
+        if (idFromUrl) {
+            const found = allComponents.find(c => c.id === idFromUrl);
+            if (found && found.id !== activeComponent?.id) {
+                setActiveComponent(found);
+            }
+        }
+    }, [idFromUrl, allComponents]);
+
+    useEffect(() => {
         setSearchQuery(qFromUrl);
     }, [qFromUrl]);
 
@@ -272,11 +281,14 @@ const LibraryPage = () => {
                 {/* ── Middle Column: Playground & Documentation ── */}
                 <main ref={mainContainerRef} className="flex-1 min-h-0 overflow-y-auto main-scroll p-6 lg:p-10">
                     <div className="max-w-4xl mx-auto">
-                        <AnimatePresence mode="wait">
-                            <motion.div key={activeComponent.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}>
-                                <ComponentDetail item={activeComponent} onBack={() => {}} />
-                            </motion.div>
-                        </AnimatePresence>
+                        <motion.div 
+                            key={activeComponent.id} 
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }} 
+                            transition={{ duration: 0.15 }}
+                        >
+                            <ComponentDetail item={activeComponent} onBack={() => {}} />
+                        </motion.div>
                     </div>
                 </main>
 
