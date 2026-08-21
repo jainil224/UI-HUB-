@@ -10,15 +10,13 @@ interface CheckoutOverlayProps {
     onClose?: () => void;
 }
 
-// ... rest of the helper components ...
-
 const LoadingDots = () => {
     return (
-        <span className="inline-flex gap-1 ml-1">
+        <span className="inline-flex gap-1 ml-1.5 align-middle">
             {[0, 1, 2].map((i) => (
                 <motion.span
                     key={i}
-                    className="w-1 h-1 rounded-full bg-blue-400 inline-block"
+                    className="w-1.5 h-1.5 rounded-none bg-brand-blue inline-block"
                     animate={{ opacity: [0.2, 1, 0.2], y: [0, -3, 0] }}
                     transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.2 }}
                 />
@@ -27,66 +25,72 @@ const LoadingDots = () => {
     );
 };
 
-// Spinning ring loader — responsive size (small on mobile, larger on sm+)
-const SpinnerRing = () => (
-    <div className="relative w-16 h-16 sm:w-24 sm:h-24 flex items-center justify-center">
-        {/* Outer glow */}
-        <div className="absolute inset-0 rounded-full bg-blue-500/20 blur-xl animate-pulse" />
+// Cyberpunk Neo-Brutalist Lock & Scanner
+const CyberpunkSpinner = () => (
+    <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
+        {/* Background brutalist square frame */}
+        <div className="absolute inset-0 border-2 border-white/20 bg-brand-bg rounded-lg" />
+        
+        {/* Corner accent markers */}
+        <div className="absolute -top-1 -left-1 w-3 h-3 bg-brand-blue" />
+        <div className="absolute -top-1 -right-1 w-3 h-3 bg-brand-yellow" />
+        <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-brand-green" />
+        <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-brand-blue" />
 
-        {/* Track ring */}
-        <svg className="absolute inset-0 w-full h-full -rotate-90" viewBox="0 0 100 100">
-            <circle
-                cx="50" cy="50" r="42"
-                fill="none"
-                stroke="rgba(59,130,246,0.12)"
-                strokeWidth="6"
-            />
-        </svg>
-
-        {/* Spinning arc */}
+        {/* Outer rotating dashed ring */}
         <motion.svg
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-2 w-[calc(100%-16px)] h-[calc(100%-16px)]"
             viewBox="0 0 100 100"
             animate={{ rotate: 360 }}
-            transition={{ duration: 1.4, repeat: Infinity, ease: 'linear' }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
         >
-            <defs>
-                <linearGradient id="spinGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#3B82F6" stopOpacity="0" />
-                    <stop offset="100%" stopColor="#60A5FA" stopOpacity="1" />
-                </linearGradient>
-            </defs>
             <circle
                 cx="50" cy="50" r="42"
                 fill="none"
-                stroke="url(#spinGrad)"
-                strokeWidth="6"
-                strokeLinecap="round"
-                strokeDasharray="80 185"
+                stroke="#3D5CFF"
+                strokeWidth="3"
+                strokeDasharray="16 12"
             />
         </motion.svg>
 
-        {/* Center icon */}
-        <motion.div
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="relative z-10"
+        {/* Inner reverse rotating ring */}
+        <motion.svg
+            className="absolute inset-4 w-[calc(100%-32px)] h-[calc(100%-32px)]"
+            viewBox="0 0 100 100"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: 'linear' }}
         >
-            <Lock size={18} className="sm:hidden text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
-            <Lock size={26} className="hidden sm:block text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+            <circle
+                cx="50" cy="50" r="38"
+                fill="none"
+                stroke="#00FF1A"
+                strokeWidth="2"
+                strokeDasharray="24 16"
+            />
+        </motion.svg>
+
+        {/* Center lock icon */}
+        <motion.div
+            animate={{ scale: [1, 1.08, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+            className="relative z-10 w-12 h-12 rounded border-2 border-white bg-[#1A1A24] flex items-center justify-center text-white shadow-[2px_2px_0px_#000000]"
+        >
+            <Lock size={22} className="text-brand-blue" />
         </motion.div>
     </div>
 );
 
 const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, message, onClose }) => {
-    const [dots, setDots] = useState('');
+    const [currentStep, setCurrentStep] = useState(0);
 
     useEffect(() => {
         if (status !== 'loading') return;
-        const interval = setInterval(() => {
-            setDots(d => d.length >= 3 ? '' : d + '.');
-        }, 500);
-        return () => clearInterval(interval);
+        const timer1 = setTimeout(() => setCurrentStep(1), 600);
+        const timer2 = setTimeout(() => setCurrentStep(2), 1200);
+        return () => {
+            clearTimeout(timer1);
+            clearTimeout(timer2);
+        };
     }, [status]);
 
     return (
@@ -96,102 +100,46 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="fixed inset-0 z-[200] flex items-center justify-center p-4"
-                    style={{ backdropFilter: 'blur(20px)', background: 'rgba(0,0,0,0.75)' }}
+                    transition={{ duration: 0.2 }}
+                    className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md"
                 >
-                    {/* Background ambient orbs */}
-                    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                        <motion.div
-                            animate={{ x: [0, 40, 0], y: [0, -30, 0] }}
-                            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-[120px]"
-                            style={{
-                                background: status === 'success'
-                                    ? 'rgba(0,255,26,0.08)'
-                                    : status === 'error'
-                                    ? 'rgba(239,68,68,0.08)'
-                                    : 'rgba(59,130,246,0.08)'
-                            }}
-                        />
-                        <motion.div
-                            animate={{ x: [0, -40, 0], y: [0, 30, 0] }}
-                            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-                            className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-[120px]"
-                            style={{
-                                background: status === 'success'
-                                    ? 'rgba(0,200,20,0.06)'
-                                    : status === 'error'
-                                    ? 'rgba(220,38,38,0.06)'
-                                    : 'rgba(99,102,241,0.06)'
-                            }}
-                        />
-                    </div>
-
-                    {/* Card */}
+                    {/* Modal Card - Neo-Brutalist Style */}
                     <motion.div
-                        initial={{ scale: 0.85, y: 30, opacity: 0 }}
+                        initial={{ scale: 0.9, y: 20, opacity: 0 }}
                         animate={{ scale: 1, y: 0, opacity: 1 }}
-                        exit={{ scale: 0.85, y: 30, opacity: 0 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 28 }}
-                        className="relative w-full max-w-md overflow-hidden"
-                        style={{
-                            background: 'linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.03) 100%)',
-                            border: `1px solid ${status === 'success' ? 'rgba(0,255,26,0.25)' : status === 'error' ? 'rgba(239,68,68,0.25)' : 'rgba(59,130,246,0.25)'}`,
-                            borderRadius: '28px',
-                            boxShadow: status === 'success'
-                                ? '0 0 60px rgba(0,255,26,0.12), 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)'
-                                : status === 'error'
-                                ? '0 0 60px rgba(239,68,68,0.12), 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)'
-                                : '0 0 60px rgba(59,130,246,0.12), 0 40px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08)',
-                        }}
+                        exit={{ scale: 0.9, y: 20, opacity: 0 }}
+                        transition={{ type: 'spring', stiffness: 350, damping: 26 }}
+                        className="relative w-full max-w-lg overflow-hidden rounded-xl border-2 border-white bg-[#0E0E14] text-white shadow-[8px_8px_0px_#000000]"
                     >
-                        {/* Top gradient bar */}
-                        <div
-                            className="absolute top-0 left-0 right-0 h-[2px]"
-                            style={{
-                                background: status === 'success'
-                                    ? 'linear-gradient(90deg, transparent, #00FF1A, transparent)'
-                                    : status === 'error'
-                                    ? 'linear-gradient(90deg, transparent, #EF4444, transparent)'
-                                    : 'linear-gradient(90deg, transparent, #60A5FA, #818CF8, transparent)',
-                            }}
-                        />
-
-                        {/* Inner shimmer sweep (loading only) */}
-                        {status === 'loading' && (
-                            <motion.div
-                                className="absolute inset-0 pointer-events-none"
-                                animate={{ x: ['-100%', '200%'] }}
-                                transition={{ duration: 2.5, repeat: Infinity, ease: 'linear', repeatDelay: 0.5 }}
-                                style={{
-                                    background: 'linear-gradient(105deg, transparent 40%, rgba(96,165,250,0.06) 50%, transparent 60%)',
-                                }}
-                            />
-                        )}
-
-                        {/* Close button — error state only */}
-                        {status === 'error' && onClose && (
-                            <motion.button
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                whileHover={{ scale: 1.1, background: 'rgba(239,68,68,0.15)' }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={onClose}
-                                className="absolute top-4 right-4 z-20 p-2 rounded-full transition-colors"
-                                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.08)' }}
-                            >
-                                <X size={16} className="text-white/50" />
-                            </motion.button>
-                        )}
-
-                        <div className="relative z-10 p-6 sm:p-10 flex flex-col items-center text-center">
-                            {/* Branding Logo — smaller margin on mobile */}
-                            <div className="mb-5 sm:mb-10">
-                                <Logo showText={true} className="w-10 h-10" />
+                        {/* Terminal Top Window Bar */}
+                        <div className="flex items-center justify-between px-4 py-3 bg-[#181822] border-b-2 border-white">
+                            <div className="flex items-center gap-2">
+                                <span className="w-3 h-3 rounded-full bg-[#FF3B30] border border-black inline-block" />
+                                <span className="w-3 h-3 rounded-full bg-[#FFC700] border border-black inline-block" />
+                                <span className="w-3 h-3 rounded-full bg-[#00FF1A] border border-black inline-block" />
+                                <span className="font-mono text-[11px] font-black uppercase tracking-wider text-neutral-300 ml-2">
+                                    UI-HUB // SECURE_CHECKOUT
+                                </span>
                             </div>
 
-                            {/* ── LOADING STATE ── */}
+                            {status === 'error' && onClose && (
+                                <button
+                                    onClick={onClose}
+                                    className="p-1 rounded border border-white bg-black hover:bg-neutral-800 text-white transition-colors"
+                                >
+                                    <X size={14} />
+                                </button>
+                            )}
+                        </div>
+
+                        {/* Modal Body */}
+                        <div className="p-6 sm:p-8 flex flex-col items-center text-center">
+                            {/* Branding Logo */}
+                            <div className="mb-6">
+                                <Logo showText={true} className="w-9 h-9" />
+                            </div>
+
+                            {/* ── 1. LOADING STATE ── */}
                             <AnimatePresence mode="wait">
                                 {status === 'loading' && (
                                     <motion.div
@@ -201,77 +149,76 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                         exit={{ opacity: 0, y: -10 }}
                                         className="flex flex-col items-center w-full"
                                     >
-                                        <div className="mb-4 sm:mb-7">
-                                            <SpinnerRing />
+                                        <div className="mb-6">
+                                            <CyberpunkSpinner />
                                         </div>
 
-                                        {/* Label pill */}
-                                        <div
-                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full mb-3 sm:mb-5 text-[10px] font-bold uppercase tracking-[0.2em]"
-                                            style={{ background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.2)', color: '#60A5FA' }}
-                                        >
-                                            <ShieldCheck size={10} />
-                                            Secure Checkout
+                                        {/* Status Badge */}
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#3D5CFF]/15 border border-[#3D5CFF] text-[#3D5CFF] font-mono text-[10px] font-black uppercase tracking-widest mb-3 shadow-[2px_2px_0px_#000000]">
+                                            <ShieldCheck size={12} />
+                                            SECURE RAZORPAY GATEWAY
                                         </div>
 
-                                        <h3
-                                            className="text-lg sm:text-2xl font-black tracking-tight mb-1 sm:mb-2"
-                                            style={{ fontFamily: 'inherit', color: '#fff' }}
-                                        >
-                                            Initializing Checkout
+                                        <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white mb-2">
+                                            INITIALIZING CHECKOUT
                                         </h3>
 
-                                        <p className="text-xs sm:text-sm mb-4 sm:mb-8" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                                            {message || 'Initializing secure checkout'}
+                                        <p className="text-xs sm:text-sm font-medium text-neutral-400 mb-6 font-mono">
+                                            {message || 'Connecting to payment provider'}
                                             <LoadingDots />
                                         </p>
 
-                                        {/* Progress steps — compact on mobile */}
-                                        <div className="w-full space-y-1.5 sm:space-y-2.5">
+                                        {/* Telemetry Progress Checklist */}
+                                        <div className="w-full space-y-2.5 mb-6 text-left">
                                             {[
-                                                { label: 'Securing connection', done: true },
-                                                { label: 'Loading payment gateway', done: true },
-                                                { label: 'Preparing your order', done: false },
+                                                { label: 'Securing encrypted 256-bit TLS connection', done: currentStep >= 0 },
+                                                { label: 'Loading verified Razorpay checkout engine', done: currentStep >= 1 },
+                                                { label: 'Generating payment order & receipt buffer', done: currentStep >= 2 },
                                             ].map((step, i) => (
-                                                <motion.div
+                                                <div
                                                     key={i}
-                                                    initial={{ opacity: 0, x: -10 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    transition={{ delay: i * 0.15 }}
-                                                    className="flex items-center gap-2.5 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl"
-                                                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}
+                                                    className={`flex items-center justify-between p-3 rounded-lg border-2 ${
+                                                        step.done
+                                                            ? 'border-white bg-[#14141E]'
+                                                            : 'border-neutral-800 bg-[#0A0A0E] opacity-60'
+                                                    } transition-all`}
                                                 >
+                                                    <div className="flex items-center gap-2.5">
+                                                        {step.done ? (
+                                                            <div className="w-5 h-5 rounded bg-brand-green border border-black flex items-center justify-center text-black shrink-0">
+                                                                <CheckCircle2 size={13} strokeWidth={3} />
+                                                            </div>
+                                                        ) : (
+                                                            <div className="w-5 h-5 rounded border border-neutral-700 bg-neutral-900 flex items-center justify-center shrink-0">
+                                                                <div className="w-1.5 h-1.5 bg-brand-blue rounded-none animate-ping" />
+                                                            </div>
+                                                        )}
+                                                        <span className="text-xs font-bold text-neutral-200">
+                                                            {step.label}
+                                                        </span>
+                                                    </div>
+
                                                     {step.done ? (
-                                                        <div className="w-4 h-4 rounded-full flex items-center justify-center shrink-0" style={{ background: 'rgba(0,255,26,0.15)', border: '1px solid rgba(0,255,26,0.35)' }}>
-                                                            <CheckCircle2 size={10} className="text-green-400" />
-                                                        </div>
+                                                        <span className="font-mono text-[9px] font-black uppercase px-2 py-0.5 rounded bg-black border border-[#00FF1A] text-[#00FF1A]">
+                                                            DONE
+                                                        </span>
                                                     ) : (
-                                                        <motion.div
-                                                            animate={{ opacity: [0.4, 1, 0.4] }}
-                                                            transition={{ duration: 1.5, repeat: Infinity }}
-                                                            className="w-4 h-4 rounded-full shrink-0"
-                                                            style={{ background: 'rgba(59,130,246,0.3)', border: '1px solid rgba(59,130,246,0.5)' }}
-                                                        />
+                                                        <span className="font-mono text-[9px] font-black uppercase px-2 py-0.5 rounded bg-black border border-neutral-700 text-neutral-400">
+                                                            WAIT
+                                                        </span>
                                                     )}
-                                                    <span className="text-[11px] sm:text-xs" style={{ color: step.done ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.35)' }}>
-                                                        {step.label}
-                                                    </span>
-                                                    {step.done && (
-                                                        <span className="ml-auto text-[9px] font-bold" style={{ color: '#4ADE80' }}>Done</span>
-                                                    )}
-                                                </motion.div>
+                                                </div>
                                             ))}
                                         </div>
 
-                                        {/* Secured by */}
-                                        <div className="mt-4 sm:mt-6 flex items-center gap-2 text-[10px]" style={{ color: 'rgba(255,255,255,0.2)' }}>
-                                            <Lock size={10} />
-                                            256-bit SSL · Secured by Razorpay
+                                        <div className="flex items-center gap-2 font-mono text-[10px] text-neutral-500 uppercase tracking-wider">
+                                            <Lock size={11} className="text-brand-blue" />
+                                            <span>256-BIT SSL ENCRYPTION • RAZORPAY VERIFIED</span>
                                         </div>
                                     </motion.div>
                                 )}
 
-                                {/* ── SUCCESS STATE ── */}
+                                {/* ── 2. SUCCESS STATE ── */}
                                 {status === 'success' && (
                                     <motion.div
                                         key="success"
@@ -280,85 +227,34 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                         exit={{ opacity: 0, y: -10 }}
                                         className="flex flex-col items-center w-full"
                                     >
-                                        {/* Success icon with burst */}
-                                        <div className="relative mb-7">
-                                            <motion.div
-                                                initial={{ scale: 0, opacity: 0 }}
-                                                animate={{ scale: [0, 1.3, 1], opacity: [0, 0.6, 0] }}
-                                                transition={{ duration: 0.8, times: [0, 0.6, 1] }}
-                                                className="absolute inset-0 rounded-full"
-                                                style={{ background: 'rgba(0,255,26,0.4)', filter: 'blur(20px)' }}
-                                            />
-                                            <motion.div
-                                                initial={{ scale: 0, rotate: -45 }}
-                                                animate={{ scale: 1, rotate: 0 }}
-                                                transition={{ type: 'spring', stiffness: 280, damping: 18, delay: 0.1 }}
-                                                className="relative w-24 h-24 rounded-full flex items-center justify-center"
-                                                style={{ background: 'linear-gradient(135deg, rgba(0,255,26,0.2), rgba(0,180,20,0.1))', border: '2px solid rgba(0,255,26,0.4)' }}
-                                            >
-                                                <CheckCircle2 size={44} className="text-green-400 drop-shadow-[0_0_20px_rgba(0,255,26,0.8)]" />
-                                            </motion.div>
-
-                                            {/* Orbiting sparkles */}
-                                            {[0, 60, 120, 180, 240, 300].map((deg, i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    initial={{ opacity: 0, scale: 0 }}
-                                                    animate={{ opacity: [0, 1, 0], scale: [0, 1, 0] }}
-                                                    transition={{ delay: 0.3 + i * 0.07, duration: 0.8 }}
-                                                    className="absolute w-2 h-2 rounded-full"
-                                                    style={{
-                                                        background: '#00FF1A',
-                                                        top: `calc(50% + ${Math.sin(deg * Math.PI / 180) * 48}px - 4px)`,
-                                                        left: `calc(50% + ${Math.cos(deg * Math.PI / 180) * 48}px - 4px)`,
-                                                        boxShadow: '0 0 8px #00FF1A',
-                                                    }}
-                                                />
-                                            ))}
+                                        <div className="w-20 h-20 rounded-xl border-2 border-black bg-brand-green flex items-center justify-center text-black mb-5 shadow-[4px_4px_0px_#000000]">
+                                            <CheckCircle2 size={42} strokeWidth={2.5} />
                                         </div>
 
-                                        <div
-                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full mb-4 text-[10px] font-bold uppercase tracking-[0.2em]"
-                                            style={{ background: 'rgba(0,255,26,0.1)', border: '1px solid rgba(0,255,26,0.25)', color: '#4ADE80' }}
-                                        >
-                                            <Zap size={10} className="fill-current" />
-                                            Plan Activated
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#00FF1A]/20 border border-[#00FF1A] text-[#00FF1A] font-mono text-[10px] font-black uppercase tracking-widest mb-3">
+                                            <Zap size={11} className="fill-current" />
+                                            PAYMENT CONFIRMED & VERIFIED
                                         </div>
 
-                                        <h3
-                                            className="text-3xl font-black tracking-tight mb-2"
-                                            style={{ background: 'linear-gradient(135deg, #00FF1A, #4ADE80)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
-                                        >
-                                            Payment Successful!
+                                        <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-white mb-2">
+                                            PAYMENT SUCCESSFUL!
                                         </h3>
 
-                                        <p className="text-sm mb-8 leading-relaxed" style={{ color: 'rgba(255,255,255,0.5)' }}>
-                                            {message || 'You now have premium access. Welcome to the elite tier!'}
+                                        <p className="text-xs sm:text-sm text-neutral-300 mb-6 leading-relaxed max-w-sm">
+                                            {message || 'Your UI-HUB account has been upgraded to PRO ACCESS. Your payment receipt has been sent to your email.'}
                                         </p>
 
-                                        <motion.button
-                                            whileHover={{ scale: 1.03 }}
-                                            whileTap={{ scale: 0.97 }}
+                                        <button
                                             onClick={onClose}
-                                            className="w-full py-4 rounded-2xl font-black uppercase text-xs tracking-widest text-black relative overflow-hidden"
-                                            style={{ background: 'linear-gradient(135deg, #00FF1A, #00CC15)' }}
+                                            className="brutal-btn-primary w-full py-3.5 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
                                         >
-                                            {/* button shimmer */}
-                                            <motion.div
-                                                className="absolute inset-0"
-                                                animate={{ x: ['-100%', '200%'] }}
-                                                transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                                                style={{ background: 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.25) 50%, transparent 60%)' }}
-                                            />
-                                            <span className="relative z-10 flex items-center justify-center gap-2">
-                                                <Zap size={14} className="fill-current" />
-                                                Start Exploring
-                                            </span>
-                                        </motion.button>
+                                            <Zap size={14} className="fill-current" />
+                                            <span>START EXPLORING PRO COMPONENTS →</span>
+                                        </button>
                                     </motion.div>
                                 )}
 
-                                {/* ── ERROR STATE ── */}
+                                {/* ── 3. ERROR STATE ── */}
                                 {status === 'error' && (
                                     <motion.div
                                         key="error"
@@ -367,52 +263,28 @@ const CheckoutOverlay: React.FC<CheckoutOverlayProps> = ({ isOpen, status, messa
                                         exit={{ opacity: 0, y: -10 }}
                                         className="flex flex-col items-center w-full"
                                     >
-                                        <div className="relative mb-7">
-                                            <motion.div
-                                                animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
-                                                transition={{ duration: 2.5, repeat: Infinity }}
-                                                className="absolute inset-0 rounded-full blur-xl"
-                                                style={{ background: 'rgba(239,68,68,0.4)' }}
-                                            />
-                                            <motion.div
-                                                initial={{ scale: 0 }}
-                                                animate={{ scale: 1 }}
-                                                transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-                                                className="relative w-24 h-24 rounded-full flex items-center justify-center"
-                                                style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.2), rgba(185,28,28,0.1))', border: '2px solid rgba(239,68,68,0.35)' }}
-                                            >
-                                                <AlertCircle size={44} className="text-red-400 drop-shadow-[0_0_12px_rgba(239,68,68,0.7)]" />
-                                            </motion.div>
+                                        <div className="w-20 h-20 rounded-xl border-2 border-black bg-[#FF3B30] flex items-center justify-center text-white mb-5 shadow-[4px_4px_0px_#000000]">
+                                            <AlertCircle size={42} strokeWidth={2.5} />
                                         </div>
 
-                                        <div
-                                            className="flex items-center gap-1.5 px-3 py-1 rounded-full mb-4 text-[10px] font-bold uppercase tracking-[0.2em]"
-                                            style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)', color: '#F87171' }}
-                                        >
-                                            Payment Failed
+                                        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#FF3B30]/20 border border-[#FF3B30] text-[#FF3B30] font-mono text-[10px] font-black uppercase tracking-widest mb-3">
+                                            TRANSACTION INCOMPLETE
                                         </div>
 
-                                        <h3 className="text-2xl font-black tracking-tight mb-2 text-red-400">
-                                            Transaction Declined
+                                        <h3 className="text-2xl font-black uppercase tracking-tight text-[#FF3B30] mb-2">
+                                            PAYMENT DECLINED
                                         </h3>
 
-                                        <p className="text-sm mb-8 leading-relaxed max-w-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>
-                                            {message || 'Something went wrong during checkout. No charges were made.'}
+                                        <p className="text-xs sm:text-sm text-neutral-400 mb-6 leading-relaxed max-w-sm">
+                                            {message || 'Transaction could not be completed. No charges were made to your account.'}
                                         </p>
 
-                                        <div className="flex flex-col gap-3 w-full">
-                                            <motion.button
-                                                whileHover={{ scale: 1.02 }}
-                                                whileTap={{ scale: 0.98 }}
-                                                onClick={onClose}
-                                                className="w-full py-4 rounded-2xl font-black uppercase text-xs tracking-widest text-white relative overflow-hidden"
-                                                style={{ background: 'linear-gradient(135deg, rgba(239,68,68,0.2), rgba(185,28,28,0.15))', border: '1px solid rgba(239,68,68,0.3)' }}
-                                            >
-                                                <span className="flex items-center justify-center gap-2">
-                                                    Try Again
-                                                </span>
-                                            </motion.button>
-                                        </div>
+                                        <button
+                                            onClick={onClose}
+                                            className="w-full py-3.5 rounded-lg border-2 border-white bg-black hover:bg-neutral-900 text-white font-black text-xs uppercase tracking-wider shadow-[4px_4px_0px_#000000] transition-all flex items-center justify-center gap-2"
+                                        >
+                                            <span>TRY AGAIN</span>
+                                        </button>
                                     </motion.div>
                                 )}
                             </AnimatePresence>
