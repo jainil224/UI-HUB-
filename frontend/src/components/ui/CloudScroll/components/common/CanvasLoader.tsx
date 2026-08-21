@@ -15,9 +15,9 @@ import { ScrollHint } from "./ScrollHint";
 import ThemeSwitcher from "./ThemeSwitcher";
 // import {Perf} from "r3f-perf"
 
-const CanvasLoader = (props: { children: React.ReactNode }) => {
+const CanvasLoader = (props: { children: React.ReactNode; isPreview?: boolean }) => {
   const isMobile = useIsMobile();
-  const ref= useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const backgroundColor = useThemeStore((state) => state.theme.color);
   const { progress } = useProgress();
@@ -29,10 +29,10 @@ const CanvasLoader = (props: { children: React.ReactNode }) => {
     bottom: 0,
     left: 0,
     right: 0,
-    opacity: progress === 100 ? 1 : 0,
-    transition: "opacity 3s ease 1s",
+    opacity: 1,
+    transition: "opacity 0.5s ease",
     overflow: "hidden",
-    ...(mounted && !isMobile && {
+    ...(mounted && !isMobile && !props.isPreview && {
       inset: '1rem',
       width: 'calc(100% - 2rem)',
       height: 'calc(100% - 2rem)',

@@ -59,7 +59,7 @@ const ProgressLoader = ({ progress }: { progress: number }) => {
 
   if (isMobile) {
     return (
-      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+      <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none z-30">
         <div className="relative w-[100px] transition-all duration-500 font-sans font-bold"
           style={{ opacity: progress === 100 ? 0 : 0.7, fontSize: '0.6rem' }}>
           <div className='absolute w-[100px] bg-black opacity-30 h-[2px]'/>
@@ -79,9 +79,8 @@ const ProgressLoader = ({ progress }: { progress: number }) => {
     );
   }
   return (
-    // Use fixed positioning to overlay the loader
     <div
-      className="fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none"
+      className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-none z-30"
       style={{ padding: '1rem' }}
     >
       <svg

@@ -19,17 +19,16 @@ const Hero = () => {
   const isMobile = useIsMobile();
 
   useEffect(() => {
-    if (progress === 100 && titleRef.current) {
+    if (titleRef.current) {
       gsap.fromTo(titleRef.current.position, {
-        y: -10,
-        duration: 1,
-        // delay: 1.5,
+        y: -3,
       }, {
         y: 0,
-        duration: 3
+        duration: 1.8,
+        ease: "power2.out"
       });
     }
-  }, [progress]);
+  }, []);
 
   // Dynamically scale font size based on 3D viewport width to prevent horizontal clipping
   const fontProps = {
