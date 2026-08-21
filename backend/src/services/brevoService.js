@@ -6,12 +6,12 @@ import axios from 'axios';
 function buildColorStrip() {
     return `
       <tr>
-        <td style="padding:0; height:5px; line-height:5px; font-size:0;">
-          <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; height:5px;">
+        <td style="padding:0; height:6px; line-height:6px; font-size:0; border-top:1px solid #000000; border-bottom:1px solid #000000;">
+          <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse; height:6px;">
             <tr>
-              <td width="33.33%" style="background-color:#FF3B30; height:5px;"></td>
-              <td width="33.33%" style="background-color:#3D5CFF; height:5px;"></td>
-              <td width="33.34%" style="background-color:#FFC700; height:5px;"></td>
+              <td width="33.33%" style="background-color:#FFFFFF; height:6px; border-right:1px solid #000000;"></td>
+              <td width="33.33%" style="background-color:#3D5CFF; height:6px; border-right:1px solid #000000;"></td>
+              <td width="33.34%" style="background-color:#FF3B30; height:6px;"></td>
             </tr>
           </table>
         </td>
