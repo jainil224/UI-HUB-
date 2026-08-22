@@ -2550,6 +2550,46 @@ Type: Interactive UI Button
 
 * High-performance GPU-accelerated circle scale animations using Framer Motion.
 * Optimized state transitions for hover and click micro-interactions.
+`,
+
+    "mesh-text-hover": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert WebGL2 and React animation engineer.
+
+## Task
+Generate a production-ready interactive WebGL2 "Mesh Text Hover" distortion animation component with spring-mass physics and chromatic fringe splitting.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* WebGL2 Context & GLSL Shaders (Vertex + Fragment shaders)
+* 2D Offscreen Canvas Texture Generation
+* ResizeObserver for responsive high-DPI scaling
+
+## Component Specifications & Requirements
+1. **WebGL2 Grid & Geometry Mesh**:
+   - Construct a 96x40 vertex triangle mesh with static vertex positions (aPos) and texture coordinates (aUv).
+   - Maintain dynamic displacement (aDisp) and velocity (vel) Float32Arrays.
+2. **Spring-Mass Cursor Dynamics**:
+   - Track pointer coordinates and compute frame-to-frame cursor velocities.
+   - Vertices near the cursor get pulled by mouse velocity with a proximity falloff curve.
+   - Apply Hooke's spring restoration (SPRING_K = 0.08) and damping (DAMPING = 0.9) every frame.
+3. **Multi-Spectrum Chromatic Aberration Shader**:
+   - Fragment shader extracts horizontal texture offsets scaled by vertex displacement magnitude (vMag).
+   - Implements chromatic fringe color splitting using smooth time-cycled palette pairs (uColorA, uColorB).
+4. **Asynchronous Font Loading & Dynamic Text Rendering**:
+   - Render font onto an offscreen 2D canvas texture with document.fonts.load/ready support.
+5. **Configurable Props**:
+   - text: string = "MESH"
+   - color: string = "#ffffff"
+   - font: { fontFamily?: string, variant?: string, fontSize?: number | string, fontWeight?: number | string }
+   - colorSplit: boolean = true
+   - customColors: string[] = ["#ff40c0", "#40ff80"]
+   - force: number = 18
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
+
 

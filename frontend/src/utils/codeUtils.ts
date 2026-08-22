@@ -67,6 +67,16 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "mesh-text-hover":
+        return vanillaBoilerplateLocal(
+          `<div class="mesh-text-container" id="mesh-text-wrap"><canvas id="mesh-canvas"></canvas></div>`,
+          `.mesh-text-container { width: 100%; height: 350px; position: relative; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+           #mesh-canvas { width: 100%; height: 100%; display: block; }`,
+          `// WebGL2 Mesh Text interactive displacement
+           const canvas${tsTypeChars} = document.getElementById('mesh-canvas');
+           const gl = canvas.getContext('webgl2', { alpha: true, antialias: true });
+           // Interactive Spring physics & Chromatic Aberration Shader compiled on mount.`
+        );
       case "letter-pull-up":
         return vanillaBoilerplateLocal(
           `<div class="letter-pull-up" id="text">LETTER PULL UP</div>`,
