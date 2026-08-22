@@ -11,6 +11,8 @@ export { PixelDrift, ParticleText } from './PixelDrift';
 export type { PixelDriftProps, TransitionValue } from './PixelDrift';
 export { RandomLetterSwap } from './RandomLetterSwap';
 export type { RandomLetterSwapProps } from './RandomLetterSwap';
+export { RollingLetters, SlotMachine } from './RollingLetters';
+export type { RollingLettersProps } from './RollingLetters';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;
