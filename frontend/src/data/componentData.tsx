@@ -1583,6 +1583,85 @@ COMPONENT FEATURES & PHYSICS:
    - text: string, colors: string[], mode: "onEnter" | "onHover", replay: boolean, position: "above" | "middle" | "below", particleSize: number, particleCount: number, mouseEnabled: boolean, mouseRadius: number, mouseForce: number, fontSize: number, autoFit: boolean, transition: TransitionValue.`
     },
     {
+        id: "random-letter-swap",
+        title: "Random Letter Swap",
+        category: "text",
+        preview: () => (
+            <div className="w-full h-full min-h-[350px] flex flex-col items-center justify-center p-6 bg-gradient-to-b from-neutral-950 via-neutral-900 to-black select-none rounded-2xl overflow-hidden border border-white/5">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60 font-mono text-[10px] uppercase tracking-widest mb-6">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    HOVER OVER TEXT TO SWAP
+                </div>
+                <RandomLetterSwap
+                    label="LETTER SWAP"
+                    mode="pingpong"
+                    reverse={false}
+                    staggerDuration={0.08}
+                    color="#FFFFFF"
+                    font={{
+                        fontFamily: "Inter, sans-serif",
+                        fontWeight: 900,
+                        fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+                        lineHeight: "1.1em",
+                        letterSpacing: "-0.03em",
+                    }}
+                />
+                <p className="text-xs font-mono text-neutral-400 tracking-wider uppercase mt-6">
+                    Randomized vertical letter swap with Framer Motion spring physics
+                </p>
+            </div>
+        ),
+        code: `import React from 'react';
+import { RandomLetterSwap } from '@/components/animations/RandomLetterSwap';
+
+export function RandomLetterSwapDemo() {
+  return (
+    <div className="w-full min-h-[350px] flex items-center justify-center bg-black">
+      <RandomLetterSwap
+        label="LETTER SWAP"
+        mode="pingpong"
+        reverse={false}
+        staggerDuration={0.08}
+        color="#FFFFFF"
+        font={{
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 800,
+          fontSize: "clamp(2rem, 8vw, 5rem)",
+          lineHeight: "1.1em",
+          letterSpacing: "-0.02em",
+        }}
+        ease={{
+          type: "spring",
+          stiffness: 400,
+          damping: 28,
+        }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create an interactive typography micro-interaction named "Random Letter Swap" using React, TypeScript, and Framer Motion.
+
+COMPONENT ARCHITECTURE & PHYSICS:
+1. Randomized Vertical Swap Mechanism:
+   - Split label into individual letter nodes while preserving accessible sr-only semantic markup.
+   - Each letter slot contains a primary letter and an absolute secondary resting letter (placed at +100% or -100% depending on reverse prop).
+   - On hover, shuffle the letter order at runtime (filtering out whitespaces so spaces do not consume stagger delay slots).
+2. Two Operating Modes:
+   - "forward": Slides primary letters off-screen in shuffled sequence, snaps back to rest, and transitions secondaries into view. Employs a 'blocked' latch to suppress overlapping executions until completed.
+   - "pingpong": Plays forward sequence on hover-enter and reverse on hover-leave, generating fresh randomized shuffle sequences for each direction.
+3. Debounced Interaction Latch:
+   - 100ms leading + trailing debounce on hover enter/leave to prevent hover thrashing and settle gracefully to the target state.
+4. Props:
+   - label: string = "LETTER SWAP"
+   - mode: "forward" | "pingpong" = "pingpong"
+   - reverse: boolean = false
+   - staggerDuration: number = 0.08
+   - ease: AnimationOptions = { type: "spring", stiffness: 400, damping: 28 }
+   - font: Record<string, any>
+   - color: string = "#FFFFFF"
+   - onClick?: () => void`
+    },
+    {
         id: "letter-pull-up",
         title: "Letter Pull Up",
         category: "text",

@@ -67,6 +67,20 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "random-letter-swap":
+        return vanillaBoilerplateLocal(
+          `<div class="random-letter-swap-container">
+  <span class="swap-text" id="swap-text">LETTER SWAP</span>
+</div>`,
+          `.random-letter-swap-container { width: 100%; min-height: 250px; display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden; }
+           .swap-text { font-family: 'Inter', sans-serif; font-size: 3.5rem; font-weight: 900; color: #fff; display: inline-flex; cursor: pointer; }
+           .letter-slot { position: relative; display: inline-block; overflow: hidden; }
+           .letter-primary, .letter-secondary { display: inline-block; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+           .letter-secondary { position: absolute; left: 0; top: 100%; }`,
+          `// Shuffled letter swap on hover
+           const swapEl${tsTypeChars} = document.getElementById('swap-text');
+           // Letter indices are shuffled on pointerenter and transformed with staggered delays.`
+        );
       case "pixel-drift":
         return vanillaBoilerplateLocal(
           `<div class="pixel-drift-container" id="pixel-drift-wrap"><canvas id="pixel-canvas"></canvas></div>`,
