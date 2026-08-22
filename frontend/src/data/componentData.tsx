@@ -84,7 +84,8 @@ import {
     WavyText,
     WordPullUpText,
     MeshText,
-    PixelDrift
+    PixelDrift,
+    RandomLetterSwap
 } from '../components/animations/TextAnimations';
 
 
