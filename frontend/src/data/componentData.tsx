@@ -1531,9 +1531,9 @@ COMPONENT FEATURES & PHYSICS:
         preview: () => (
             <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
                 <PixelDrift
-                    text="PIXEL DRIFT"
+                    text="UI HUB"
                     colors={["#FFFFFF", "#F9731A", "#3D5CFF"]}
-                    fontSize={75}
+                    fontSize={90}
                     particleSize={10}
                     particleCount={45}
                     mouseEnabled={true}
@@ -1551,9 +1551,9 @@ export function PixelDriftDemo() {
   return (
     <div className="w-full h-[400px] flex items-center justify-center bg-black">
       <PixelDrift
-        text="PIXEL DRIFT"
+        text="UI HUB"
         colors={["#FFFFFF", "#F9731A", "#3D5CFF"]}
-        fontSize={80}
+        fontSize={90}
         particleSize={10}
         particleCount={45}
         mouseEnabled={true}

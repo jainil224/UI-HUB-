@@ -108,7 +108,7 @@ export interface PixelDriftProps {
 }
 
 const COMPONENT_DEFAULTS: PixelDriftProps = {
-    text: "PIXEL DRIFT",
+    text: "UI HUB",
     colors: ["#FFFFFF", "#F9731A", "#3D5CFF"],
     mode: "onEnter",
     replay: true,
@@ -126,7 +126,7 @@ const COMPONENT_DEFAULTS: PixelDriftProps = {
 export const PixelDrift: React.FC<PixelDriftProps> = (props) => {
     const merged = { ...COMPONENT_DEFAULTS, ...props };
     const {
-        text = "PIXEL DRIFT",
+        text = "UI HUB",
         colors,
         mode = "onEnter",
         replay = true,
