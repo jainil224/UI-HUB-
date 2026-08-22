@@ -441,6 +441,8 @@ ${componentHeader}
       ${content}
     </div>
   );
+};`;
+
   switch (id) {
     case "letter-pull-up":
       return reactOutput(`
