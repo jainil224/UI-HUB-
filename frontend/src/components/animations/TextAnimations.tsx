@@ -9,6 +9,8 @@ export { MeshText } from './MeshText';
 export type { MeshTextProps, MeshTextFontProps } from './MeshText';
 export { PixelDrift, ParticleText } from './PixelDrift';
 export type { PixelDriftProps, TransitionValue } from './PixelDrift';
+export { RandomLetterSwap } from './RandomLetterSwap';
+export type { RandomLetterSwapProps } from './RandomLetterSwap';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;
