@@ -2656,6 +2656,49 @@ Generate a production-ready interactive Canvas particle text animation component
    - transition: { type?: "tween" | "spring", duration?: number, ease?: string | number[] }
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "random-letter-swap": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert typography and React animation engineer.
+
+## Task
+Generate a production-ready interactive typography micro-interaction named "Random Letter Swap" (RandomLetterSwap) where text characters swap vertically on hover in a randomized stagger sequence using React, TypeScript, and Framer Motion.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* Framer Motion (\`useAnimate\`, \`motion.span\`, \`AnimationOptions\`)
+* Semantic Screen Reader accessibility (\`sr-only\` hidden element + \`aria-hidden\` letter slots)
+
+## Component Specifications & Requirements
+1. **Vertical Dual-Layer Letter Slot Construction**:
+   - Wrap the full string into a container with \`overflow: hidden\` and \`display: inline-flex\`.
+   - Render an accessible \`span\` marked as \`sr-only\` containing the full label for screen readers.
+   - For visual characters, create individual \`span\` wrappers marked \`aria-hidden\`.
+   - Inside each slot, place a primary letter (\`.letter-N\`) and an absolutely positioned secondary letter (\`.letter-secondary-N\`) resting at \`+100%\` (or \`-100%\` when \`reverse: true\`).
+2. **Whitespace-Aware Stagger Delay Calculation**:
+   - Collect indices of non-space characters (\`letterIdxs\`). Spaces are omitted from the shuffled array so they don't consume stagger delay time.
+   - Shuffle indices at runtime using randomized sort.
+3. **Dual Interactive Modes**:
+   - **"forward"**: Slides primary letters off-screen in shuffled sequence, snaps each back to 0 with zero duration, while sliding secondary letters into view and resetting offscreen. Uses a \`blocked\` boolean latch to ignore overlapping hovers until the last letter finishes.
+   - **"pingpong"**: Plays forward transition on hover-enter and reverse transition on hover-leave, generating a fresh randomized shuffle order on each direction.
+4. **Leading + Trailing Debounce Engine (100ms)**:
+   - Debounce hover enter and exit handlers so quick hover thrashing settles gracefully to the final intended state.
+5. **Configurable Props**:
+   - label: string = "LETTER SWAP"
+   - mode: "forward" | "pingpong" = "pingpong"
+   - reverse: boolean = false
+   - staggerDuration: number = 0.08
+   - ease: AnimationOptions = { type: "spring", stiffness: 400, damping: 28, duration: 0.8 }
+   - font: Record<string, any> = { fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: "clamp(2rem, 8vw, 6rem)" }
+   - color: string = "#FFFFFF"
+   - onClick?: () => void
+   - className?: string
+   - style?: React.CSSProperties
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 
