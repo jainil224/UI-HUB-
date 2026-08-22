@@ -67,6 +67,38 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "rolling-letters":
+        return vanillaBoilerplateLocal(
+          `<div class="rolling-letters-container">
+  <h1 class="rolling-text" id="rolling-text">UI HUB</h1>
+</div>`,
+          `.rolling-letters-container { width: 100%; min-height: 250px; display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden; cursor: pointer; }
+           .rolling-text { font-family: 'Inter', sans-serif; font-size: 4.5rem; font-weight: 800; color: #fff; display: flex; overflow: hidden; margin: 0; }
+           .char { display: inline-block; will-change: transform; }`,
+          `// GSAP Rolling Letters Animation
+           const el${tsTypeChars} = document.getElementById('rolling-text');
+           const chars${tsArrayType} = el.innerText.split('').map((c, i) => {
+             const span = document.createElement('span');
+             span.className = 'char';
+             span.innerText = c === ' ' ? '\\u00A0' : c;
+             return span;
+           });
+           el.innerHTML = '';
+           chars.forEach(c => el.appendChild(c));
+           
+           const play = () => {
+             gsap.set(chars, { clearProps: 'transform' });
+             gsap.from(chars, {
+               yPercent: 500,
+               duration: 0.6,
+               stagger: { each: 0.08, from: 'center' },
+               ease: 'power4.out'
+             });
+           };
+           el.parentElement.addEventListener('mouseenter', play);
+           el.parentElement.addEventListener('click', play);
+           play();`
+        );
       case "random-letter-swap":
         return vanillaBoilerplateLocal(
           `<div class="random-letter-swap-container">

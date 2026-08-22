@@ -1662,6 +1662,92 @@ COMPONENT ARCHITECTURE & PHYSICS:
    - font: Record<string, any>
    - color: string = "#FFFFFF"
    - onClick?: () => void`
+    {
+        id: "rolling-letters",
+        title: "Rolling Letters",
+        category: "text",
+        preview: () => (
+            <div className="w-full h-full min-h-[350px] flex flex-col items-center justify-center p-6 bg-gradient-to-b from-neutral-950 via-neutral-900 to-black select-none rounded-2xl overflow-hidden border border-white/5">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60 font-mono text-[10px] uppercase tracking-widest mb-6">
+                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                    HOVER OR CLICK TO ROLL
+                </div>
+                <RollingLetters
+                    text="ROLLING LETTERS"
+                    color="#FFFFFF"
+                    startFrom="bottom"
+                    staggerFrom="center"
+                    font={{
+                        fontFamily: "Inter, system-ui, sans-serif",
+                        fontSize: "clamp(2rem, 5.5vw, 4.2rem)",
+                        fontWeight: 800,
+                        letterSpacing: "-0.03em",
+                        lineHeight: "1.1em",
+                        textAlign: "center",
+                    }}
+                    transition={{
+                        type: "tween",
+                        duration: 0.6,
+                        delay: 0,
+                        ease: "backOut",
+                        staggerChildren: 0.06,
+                    }}
+                />
+                <p className="text-xs font-mono text-neutral-400 tracking-wider uppercase mt-6">
+                    GSAP staggered slot-machine cascade from top/bottom
+                </p>
+            </div>
+        ),
+        code: `import React from 'react';
+import { RollingLetters } from '@/components/animations/RollingLetters';
+
+export function RollingLettersDemo() {
+  return (
+    <div className="w-full min-h-[350px] flex items-center justify-center bg-black">
+      <RollingLetters
+        text="UI HUB"
+        color="#ffffff"
+        startFrom="bottom"
+        staggerFrom="center"
+        font={{
+          fontFamily: "Inter, system-ui, sans-serif",
+          fontSize: "100px",
+          fontWeight: 700,
+          letterSpacing: "-0.025em",
+          lineHeight: "1.1em",
+          textAlign: "center",
+        }}
+        transition={{
+          type: "tween",
+          duration: 0.6,
+          delay: 0,
+          ease: "easeOut",
+          staggerChildren: 0.08,
+        }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create a dynamic GSAP-powered typography cascading micro-interaction named "Rolling Letters" (SlotMachine) in React and TypeScript.
+
+COMPONENT FEATURES & PHYSICS:
+1. Slot-Machine Kinetic Entrance:
+   - Splits input text string into individual character spans (.char) with whiteSpace preservation (non-breaking spaces for gaps).
+   - Animates characters vertically from offscreen (yPercent: -500 for 'top', +500 for 'bottom') into natural alignment.
+   - Clears transform properties upon re-trigger to guarantee pixel-sharp layout geometry.
+2. Configurable GSAP Stagger Orchestration:
+   - Supports directional and origin-based stagger sequences: 'start', 'center', 'end', or 'random'.
+   - Maps standard Framer easing names (easeIn, easeOut, easeInOut, backOut, circOut, anticipate) to GSAP equivalents (power2.in, power4.out, back.out(1.7), circ.out).
+3. Dynamic HTML Tag Polymorphism:
+   - Renders cleanly as semantic typography nodes: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'p' | 'span' | 'div' | 'section'.
+4. Configurable Props:
+   - text: string = "UI HUB"
+   - font: React.CSSProperties
+   - color: string = "#ffffff"
+   - startFrom: "top" | "bottom" = "bottom"
+   - staggerFrom: "start" | "center" | "end" | "random" = "center"
+   - tag: TextTag = "h1"
+   - transition: { type?: string, duration?: number, delay?: number, ease?: string | number[], staggerChildren?: number }`
     },
     {
         id: "letter-pull-up",
