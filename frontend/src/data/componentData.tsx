@@ -82,7 +82,8 @@ import {
     ScaleLetterText,
     SeparateAwayText,
     WavyText,
-    WordPullUpText
+    WordPullUpText,
+    MeshText
 } from '../components/animations/TextAnimations';
 
 
@@ -1413,6 +1414,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'separate-away': SeparateAwayText as any,
     'wavy-text': WavyText as any,
     'word-pull-up': WordPullUpText as any,
+    'mesh-text-hover': MeshText as any,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -1471,6 +1473,50 @@ export const componentList: ComponentItem[] = [
         preview: () => <MagneticCursorPreview />,
         code: "",
         vibePrompt: ""
+    },
+    {
+        id: "mesh-text-hover",
+        title: "Mesh Text Hover",
+        category: "text",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
+                <MeshText text="HOVER" color="#ffffff" colorSplit={true} customColors={["#ff40c0", "#40ff80", "#00f0ff"]} force={18} font={{ fontFamily: "Inter", variant: "Bold", fontSize: 130, fontWeight: 800 }} />
+            </div>
+        ),
+        code: `import React from 'react';
+import { MeshText } from '@/components/animations/MeshText';
+
+export function MeshTextHoverDemo() {
+  return (
+    <div className="w-full h-[400px] flex items-center justify-center bg-black">
+      <MeshText
+        text="HOVER"
+        color="#ffffff"
+        colorSplit={true}
+        customColors={["#ff40c0", "#40ff80", "#00f0ff"]}
+        force={18}
+        font={{
+          fontFamily: "Inter",
+          variant: "Bold",
+          fontSize: 160,
+          fontWeight: 800
+        }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create an interactive WebGL2 "Mesh Text Hover" distortion animation in React and TypeScript.
+
+COMPONENT FEATURES & PHYSICS:
+1. Dynamic WebGL2 Grid Geometry: Generate a 96x40 vertex triangle mesh mapped with a 2D offscreen text canvas.
+2. Spring-Mass Physics Simulation:
+   - Each vertex experiences cursor velocity drag (DRAG = 1.8), Hooke's spring restoration (SPRING_K = 0.08), and damping (DAMPING = 0.9).
+   - Dynamic vertex displacement (aDisp buffer) stretches and snaps back as the mouse sweeps over the text.
+3. Multi-Spectrum Chromatic Aberration Shader:
+   - Custom GLSL Fragment Shader samples horizontal texture offsets based on displacement magnitude (vMag).
+   - Implements chromatic fringe splitting with customizable cycling palette pairs (uColorA, uColorB) and alpha preservation.
+4. Auto-Resizing & High-DPI Support: Handles devicePixelRatio scaling with ResizeObserver and asynchronous Canvas2D font loading readiness.
+5. Fully Configurable Props: Support text, color, customColors palette array, force intensity slider, font family, weight, and style.`
     },
     {
         id: "letter-pull-up",

@@ -5,8 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-
-
+export { MeshText } from './MeshText';
+export type { MeshTextProps, MeshTextFontProps } from './MeshText';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;
