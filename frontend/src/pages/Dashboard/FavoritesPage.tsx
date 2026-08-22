@@ -19,13 +19,8 @@ const FavoritesPage = () => {
     const allAvailableComponents = useMemo(() => [...componentList, ...firebaseComponents], [firebaseComponents]);
 
     useEffect(() => {
-        if (!user) {
-            setLoading(false);
-            return;
-        }
-
-        // Listen to favorites metadata
-        const unsubFavorites = getUserFavorites(user.uid, (data) => {
+        // Listen to favorites metadata (works for logged in users and guests)
+        const unsubFavorites = getUserFavorites(user?.uid, (data) => {
             setFavoriteMetadata(data);
             setLoading(false);
         });
@@ -47,13 +42,15 @@ const FavoritesPage = () => {
                 } as unknown as ComponentItem;
             });
             setFirebaseComponents(fetched);
+        }, (err) => {
+            console.error("Error loading components:", err);
         });
 
         return () => {
-            unsubFavorites();
-            unsubComponents();
+            if (typeof unsubFavorites === 'function') unsubFavorites();
+            if (typeof unsubComponents === 'function') unsubComponents();
         };
-    }, [user]);
+    }, [user?.uid]);
 
     const enrichedFavorites = useMemo(() => {
         return favoriteMetadata.map(fav => {
@@ -68,16 +65,13 @@ const FavoritesPage = () => {
     const handleRemove = (e: React.MouseEvent, componentId: string) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!user) return;
 
         // Optimistic UI update: remove item from local state immediately
-        // This ensures the exit animation starts the exact moment the user clicks
         setFavoriteMetadata(prev => prev.filter(fav => fav.componentId !== componentId));
 
-        // Trigger server delete in background
-        removeFromFavorites(user.uid, componentId).catch(error => {
+        // Trigger delete
+        removeFromFavorites(user?.uid, componentId).catch(error => {
             console.error("Error removing from favorites:", error);
-            // Optionally: we could re-fetch or show a toast here if it fails
         });
     };
 
@@ -89,9 +83,7 @@ const FavoritesPage = () => {
         setTimeout(() => setCopiedId(null), 2000);
     };
 
-
-
-    if (!user) {
+    if (!user && favoriteMetadata.length === 0 && !loading) {
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
                 <div className="glass p-12 rounded-[3.5rem] text-center max-w-lg border border-white/5 bg-black/40 backdrop-blur-2xl">
@@ -99,10 +91,15 @@ const FavoritesPage = () => {
                         <Heart size={40} className="text-red-500 fill-red-500/20" />
                     </div>
                     <h2 className="text-4xl font-display font-black mb-4 uppercase tracking-tight text-white">The Vault</h2>
-                    <p className="text-white/40 mb-10 font-medium text-lg leading-relaxed">Sign in to access your curated selection of high-performance UI components.</p>
-                    <Link to="/login" className="inline-flex items-center gap-3 px-10 py-5 bg-brand-green text-black font-display font-black rounded-2xl hover:shadow-[0_0_50px_rgba(0,255,0,0.4)] transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-xs">
-                        Unlock Now <Zap size={16} fill="currentColor" />
-                    </Link>
+                    <p className="text-white/40 mb-10 font-medium text-lg leading-relaxed">You haven't liked any components yet. Explore the component library and click the heart icon to save components to your Vault.</p>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <Link to="/library" className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-display font-black rounded-2xl hover:bg-neutral-200 transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-xs">
+                            Explore Library <Library size={16} />
+                        </Link>
+                        <Link to="/login" className="inline-flex items-center gap-3 px-8 py-4 bg-brand-green text-black font-display font-black rounded-2xl hover:shadow-[0_0_50px_rgba(0,255,0,0.4)] transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-xs">
+                            Sign In <Zap size={16} fill="currentColor" />
+                        </Link>
+                    </div>
                 </div>
             </div>
         );

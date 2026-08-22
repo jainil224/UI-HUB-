@@ -693,33 +693,30 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [toastMessage, setToastMessage] = React.useState('');
 
     React.useEffect(() => {
-        if (!user) {
-            setIsFavorited(false);
-            setFavoritesCount(0);
-            return;
-        }
-        const unsubscribe = getUserFavorites(user.uid, (favorites) => {
+        const unsubscribe = getUserFavorites(user?.uid, (favorites) => {
             setFavoritesCount(favorites.length);
             const found = favorites.find(f => f.componentId === item.id);
             setIsFavorited(!!found);
         });
         return unsubscribe;
-    }, [user, item.id]);
+    }, [user?.uid, item.id]);
 
     const toggleFavorite = async () => {
-        if (!user) {
-            setShowAuthModal(true);
-            return;
-        }
         if (isFavorited) {
-            await removeFromFavorites(user.uid, item.id);
+            setIsFavorited(false);
+            await removeFromFavorites(user?.uid, item.id);
+            setToastMessage("REMOVED FROM FAVORITES");
+            setShowToast(true);
         } else {
-            if (!isProUser && favoritesCount >= 5) {
+            if (user && !isProUser && favoritesCount >= 5) {
                 alert("Vault Limit Reached: Free members can save up to 5 components. Upgrade to Pro for unlimited storage in your vault!");
                 navigate('/pricing');
                 return;
             }
-            await saveToFavorites(user.uid, item);
+            setIsFavorited(true);
+            await saveToFavorites(user?.uid, item);
+            setToastMessage("SAVED TO FAVORITES ❤️");
+            setShowToast(true);
         }
     };
     React.useEffect(() => {
@@ -868,17 +865,20 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
                     <div className="flex items-center gap-3 shrink-0">
                         <button
+                            type="button"
                             onClick={toggleFavorite}
-                            title={isFavorited ? "Saved in Vault" : "Save to Vault"}
-                            className={`p-2.5 rounded-lg border-2 border-white transition-all ${
+                            title={isFavorited ? "Remove from Favorites" : "Save to Favorites"}
+                            aria-label={isFavorited ? "Remove from Favorites" : "Save to Favorites"}
+                            className={`p-2.5 rounded-lg border-2 border-white transition-all cursor-pointer select-none active:scale-90 ${
                                 isFavorited
-                                    ? 'bg-brand-red text-white brutal-shadow-black'
-                                    : 'bg-brand-surface text-neutral-400 hover:text-white brutal-shadow-black hover:translate-x-0.5 hover:translate-y-0.5'
+                                    ? 'bg-brand-red text-white brutal-shadow-black scale-105'
+                                    : 'bg-brand-surface text-neutral-400 hover:text-white hover:border-brand-red brutal-shadow-black hover:translate-x-0.5 hover:translate-y-0.5'
                             }`}
                         >
                             <Heart
                                 size={18}
-                                fill={isFavorited ? "currentColor" : "transparent"}
+                                className={`transition-all duration-200 ${isFavorited ? 'text-white fill-white scale-110' : 'text-neutral-400 hover:text-brand-red'}`}
+                                fill={isFavorited ? "currentColor" : "none"}
                             />
                         </button>
                     </div>
