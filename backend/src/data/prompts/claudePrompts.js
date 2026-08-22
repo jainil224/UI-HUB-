@@ -2699,6 +2699,49 @@ Generate a production-ready interactive typography micro-interaction named "Rand
    - style?: React.CSSProperties
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "rolling-letters": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert typography and animation engineer specializing in GSAP and React.
+
+## Task
+Generate a production-ready kinetic typography component named "Rolling Letters" (RollingLetters / SlotMachine) where character spans cascade smoothly into view with directional stagger and customizable easing using React, TypeScript, and GSAP.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* GSAP (\`gsap\`)
+* Native DOM Character Splitting (\`span.char\`)
+
+## Component Specifications & Requirements
+1. **Kinetic Vertical Entrance**:
+   - Split input text string into individual character spans with class \`.char\` and \`display: inline-block\`.
+   - Preserve whitespaces accurately using non-breaking spaces (\`\\u00A0\`).
+   - Animate from vertical offscreen offset (\`yPercent: -500\` for \`"top"\`, \`+500\` for \`"bottom"\`).
+   - Prior to triggering new tweens, execute \`gsap.killTweensOf(chars)\` and \`gsap.set(chars, { clearProps: "transform" })\` to guarantee zero visual glitching.
+2. **GSAP Stagger & Easing Translation**:
+   - Support \`staggerFrom\` origins: \`"start"\`, \`"center"\`, \`"end"\`, \`"random"\`.
+   - Translate standard easing names (\`easeIn\`, \`easeOut\`, \`easeInOut\`, \`backIn\`, \`backOut\`, \`circIn\`, \`circOut\`, \`anticipate\`) to GSAP equivalents (\`power2.in\`, \`power4.out\`, \`power2.inOut\`, \`back.in\`, \`back.out(1.7)\`, \`circ.in\`, \`circ.out\`).
+3. **Polymorphic Tag Support**:
+   - Render the requested HTML tag dynamically: \`"h1" | "h2" | "h3" | "h4" | "h5" | "p" | "span" | "div" | "section"\`.
+4. **Interactive Hover & Click Replay**:
+   - Automatically replay on mount and text updates.
+   - Optional \`triggerOnHover\` and click handlers to re-roll the kinetic animation on interaction.
+5. **Configurable Props**:
+   - text: string = "UI HUB"
+   - font?: React.CSSProperties
+   - color?: string = "#ffffff"
+   - startFrom?: "top" | "bottom" = "bottom"
+   - staggerFrom?: "start" | "center" | "end" | "random" = "center"
+   - tag?: TextTag = "h1"
+   - transition?: { type?: string, duration?: number, delay?: number, ease?: string | number[], staggerChildren?: number }
+   - className?: string
+   - style?: React.CSSProperties
+   - triggerOnHover?: boolean
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 

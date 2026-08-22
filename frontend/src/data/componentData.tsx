@@ -1662,6 +1662,7 @@ COMPONENT ARCHITECTURE & PHYSICS:
    - font: Record<string, any>
    - color: string = "#FFFFFF"
    - onClick?: () => void`
+    },
     {
         id: "rolling-letters",
         title: "Rolling Letters",
