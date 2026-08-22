@@ -85,7 +85,8 @@ import {
     WordPullUpText,
     MeshText,
     PixelDrift,
-    RandomLetterSwap
+    RandomLetterSwap,
+    RollingLetters
 } from '../components/animations/TextAnimations';
 
 
@@ -1419,6 +1420,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'mesh-text-hover': MeshText as any,
     'pixel-drift': PixelDrift as any,
     'random-letter-swap': RandomLetterSwap as any,
+    'rolling-letters': RollingLetters as any,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
