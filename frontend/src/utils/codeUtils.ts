@@ -67,6 +67,15 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "pixel-drift":
+        return vanillaBoilerplateLocal(
+          `<div class="pixel-drift-container" id="pixel-drift-wrap"><canvas id="pixel-canvas"></canvas></div>`,
+          `.pixel-drift-container { width: 100%; height: 350px; position: relative; background: #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+           #pixel-canvas { width: 100%; height: 100%; display: block; }`,
+          `// HTML5 Canvas Particle Text Assembly & Black-Hole Cursor Repulsion
+           const canvas${tsTypeChars} = document.getElementById('pixel-canvas');
+           const ctx = canvas.getContext('2d', { alpha: true });`
+        );
       case "mesh-text-hover":
         return vanillaBoilerplateLocal(
           `<div class="mesh-text-container" id="mesh-text-wrap"><canvas id="mesh-canvas"></canvas></div>`,

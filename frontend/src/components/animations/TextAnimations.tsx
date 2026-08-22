@@ -7,6 +7,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 export { MeshText } from './MeshText';
 export type { MeshTextProps, MeshTextFontProps } from './MeshText';
+export { PixelDrift, ParticleText } from './PixelDrift';
+export type { PixelDriftProps, TransitionValue } from './PixelDrift';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;

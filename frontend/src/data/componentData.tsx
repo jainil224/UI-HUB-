@@ -83,7 +83,8 @@ import {
     SeparateAwayText,
     WavyText,
     WordPullUpText,
-    MeshText
+    MeshText,
+    PixelDrift
 } from '../components/animations/TextAnimations';
 
 
@@ -1415,6 +1416,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'wavy-text': WavyText as any,
     'word-pull-up': WordPullUpText as any,
     'mesh-text-hover': MeshText as any,
+    'pixel-drift': PixelDrift as any,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -1517,6 +1519,66 @@ COMPONENT FEATURES & PHYSICS:
    - Implements chromatic fringe splitting with customizable cycling palette pairs (uColorA, uColorB) and alpha preservation.
 4. Auto-Resizing & High-DPI Support: Handles devicePixelRatio scaling with ResizeObserver and asynchronous Canvas2D font loading readiness.
 5. Fully Configurable Props: Support text, color, customColors palette array, force intensity slider, font family, weight, and style.`
+    },
+    {
+        id: "pixel-drift",
+        title: "Pixel Drift",
+        category: "text",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
+                <PixelDrift
+                    text="PIXEL DRIFT"
+                    colors={["#FFFFFF", "#F9731A", "#3D5CFF"]}
+                    fontSize={75}
+                    particleSize={10}
+                    particleCount={45}
+                    mouseEnabled={true}
+                    mouseRadius={70}
+                    mouseForce={28}
+                    mode="onEnter"
+                    replay={true}
+                />
+            </div>
+        ),
+        code: `import React from 'react';
+import { PixelDrift } from '@/components/animations/PixelDrift';
+
+export function PixelDriftDemo() {
+  return (
+    <div className="w-full h-[400px] flex items-center justify-center bg-black">
+      <PixelDrift
+        text="PIXEL DRIFT"
+        colors={["#FFFFFF", "#F9731A", "#3D5CFF"]}
+        fontSize={80}
+        particleSize={10}
+        particleCount={45}
+        mouseEnabled={true}
+        mouseRadius={65}
+        mouseForce={25}
+        mode="onEnter"
+        replay={true}
+        transition={{ type: "tween", duration: 1.2, ease: "easeOut" }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create an interactive particle text assembly and cursor-repulsion animation named "Pixel Drift" (ParticleText) using HTML5 Canvas, React, and TypeScript.
+
+COMPONENT FEATURES & PHYSICS:
+1. Dynamic Text Sampling & Grid Generation:
+   - Render font onto an offscreen 2D canvas with auto-fit measurement to ensure text never overflows canvas bounds.
+   - Sample positive alpha pixel locations into a structured Float32Array coordinate grid (ox, oy).
+2. Assembly & Dissolve Transition Animation:
+   - Spawn particles randomly around an outer boundary ring beyond canvas edges.
+   - Interpolate particles inward using cubic-bezier easing curves (easeIn, easeOut, easeInOut, or custom [x1, y1, x2, y2]).
+   - Seamless rate-based formation value allowing interruption between appear and dissolve states without snapping.
+3. Velocity-Aware Black-Hole Cursor Repulsion:
+   - Compute smoothed pointer positions and cursor momentum/speed.
+   - Particles within mouseRadius are displaced outward with smooth falloff and return to home position when cursor departs.
+4. Triggers & Observation:
+   - Supports 'onEnter' viewport sentinel intersection trigger (with optional replay) and 'onHover' interactive pointer triggers.
+5. Props:
+   - text: string, colors: string[], mode: "onEnter" | "onHover", replay: boolean, position: "above" | "middle" | "below", particleSize: number, particleCount: number, mouseEnabled: boolean, mouseRadius: number, mouseForce: number, fontSize: number, autoFit: boolean, transition: TransitionValue.`
     },
     {
         id: "letter-pull-up",
