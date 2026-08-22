@@ -77,6 +77,13 @@ const ImageCollage = React.lazy(() => import('../components/ui/image-collage').t
 
 
 import Logo from '../components/ui/Logo';
+import {
+    LetterPullUpText,
+    ScaleLetterText,
+    SeparateAwayText,
+    WavyText,
+    WordPullUpText
+} from '../components/animations/TextAnimations';
 
 
 
@@ -1401,6 +1408,11 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'diagonal-carousel': DiagonalCarousel,
     'testimonials-card': TestimonialsCard,
     'image-collage': ImageCollage,
+    'letter-pull-up': LetterPullUpText as any,
+    'scale-letter': ScaleLetterText as any,
+    'separate-away': SeparateAwayText as any,
+    'wavy-text': WavyText as any,
+    'word-pull-up': WordPullUpText as any,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -1418,7 +1430,7 @@ const renderComponent = (id: string, _name: string, props: any = {}): (() => Rea
                        id.includes('cinematic') || 
                        id.includes('separate') || 
                        id.includes('wavy') || 
-                       ['font-weight', 'gradual-spacing', 'letter-pull-up', 'multi-direction-slide', 'scale-letter', 'word-pull-up'].includes(id);
+                       ['letter-pull-up', 'scale-letter', 'word-pull-up'].includes(id);
         const CompName = isText ? (id.endsWith('-text') ? rawName : `${rawName}Text`) : rawName;
 
         return (
@@ -1461,47 +1473,6 @@ export const componentList: ComponentItem[] = [
         vibePrompt: ""
     },
     {
-        id: "blur-text",
-        title: "Blur In Text",
-        category: "text",
-        preview: renderComponent("blur-text", "Blur In Text"),
-        code: ``,
-        vibePrompt: ""
-    },
-    {
-        id: "fade-text",
-        title: "Fade Text",
-        category: "text",
-        preview: renderComponent("fade-text", "Fade Text"),
-        code: `import { motion } from 'framer-motion';\n\nexport const FadeText = ({ text = "FADE TEXT" }) => (\n  <motion.div\n    initial={{ opacity: 0 }}\n    animate={{ opacity: 1 }}\n    transition={{ duration: 1.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: ""
-    },
-    {
-        id: "dock-text",
-        title: "Dock Text",
-        category: "text",
-        preview: renderComponent("dock-text", "Dock Text"),
-        code: `import { motion } from 'framer-motion';\n\nexport const DockText = ({ text = "DOCK TEXT" }) => (\n  <motion.div\n    whileHover={{ scale: 1.5 }}\n    transition={{ type: "spring", duration: 0.5 }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: ""
-    },
-    {
-        id: "font-weight",
-        title: "Font Weight Text",
-        category: "text",
-        preview: renderComponent("font-weight", "Font Weight Text"),
-        code: `import { motion } from 'framer-motion';\n\nexport const FontWeightText = ({ text = "VARIABLE WEIGHT" }) => (\n  <motion.div\n    animate={{ fontWeight: [400, 900, 400] }}\n    transition={{ duration: 1, repeat: Infinity }}\n  >\n    {text}\n  </motion.div>\n);`,
-        vibePrompt: ""
-    },
-
-    {
-        id: "gradual-spacing",
-        title: "Gradual Spacing",
-        category: "text",
-        preview: renderComponent("gradual-spacing", "Gradual Spacing"),
-        code: `import { motion } from 'framer-motion';\n\nexport const GradualSpacing = ({ text = "GRADUAL SPACING" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ letterSpacing: "-0.5em", opacity: 0 }}\n        animate={{ letterSpacing: "normal", opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ""
-    },
-    {
         id: "letter-pull-up",
         title: "Letter Pull Up",
         category: "text",
@@ -1509,14 +1480,7 @@ export const componentList: ComponentItem[] = [
         code: `import { motion } from 'framer-motion';\n\nexport const LetterPullUp = ({ text = "LETTER PULL UP" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
         vibePrompt: ""
     },
-    {
-        id: "multi-direction-slide",
-        title: "Multi Direction Slide",
-        category: "text",
-        preview: renderComponent("multi-direction-slide", "Multi Direction Slide"),
-        code: `import { motion } from 'framer-motion';\n\nexport const MultiDirectionSlide = ({ text = "MULTI DIRECTION" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: i % 2 === 0 ? -50 : 50, y: i % 2 !== 0 ? -50 : 50, opacity: 0 }}\n        animate={{ x: 0, y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
-        vibePrompt: ""
-    },
+
     {
         id: "scale-letter",
         title: "Scale Letter",

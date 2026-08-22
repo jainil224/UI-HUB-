@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight } from 'lucide-react';
@@ -34,10 +34,16 @@ const LibraryPage = () => {
     const qFromUrl = queryParams.get('q') || '';
 
     const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
-    const allComponents = [...componentList, ...firebaseComponents];
+    const allComponents = useMemo(() => [...componentList, ...firebaseComponents], [firebaseComponents]);
 
-    const defaultComponent = allComponents.find(c => c.id === idFromUrl) || allComponents.find(c => c.id === '3d-hero') || allComponents[0];
-    const [activeComponent, setActiveComponent] = useState<ComponentItem>(defaultComponent);
+    const activeComponent = useMemo(() => {
+        if (idFromUrl) {
+            const found = allComponents.find(c => c.id === idFromUrl);
+            if (found) return found;
+        }
+        return allComponents.find(c => c.id === '3d-hero') || allComponents[0];
+    }, [idFromUrl, allComponents]);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState(qFromUrl);
@@ -45,15 +51,6 @@ const LibraryPage = () => {
     const [showUpdates, setShowUpdates] = useState(false);
 
     const mainContainerRef = useRef<HTMLElement>(null);
-
-    useEffect(() => {
-        if (idFromUrl) {
-            const found = allComponents.find(c => c.id === idFromUrl);
-            if (found && found.id !== activeComponent?.id) {
-                setActiveComponent(found);
-            }
-        }
-    }, [idFromUrl, allComponents]);
 
     useEffect(() => {
         setSearchQuery(qFromUrl);
@@ -87,7 +84,7 @@ const LibraryPage = () => {
         return () => unsubscribe();
     }, []);
 
-    const baseCategories: Category[] = [
+    const baseCategories: Category[] = useMemo(() => [
         { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
         { name: "Text Animations", items: allComponents.filter(item => item.category === 'text') },
         { name: "Visual Effects", items: allComponents.filter(item => item.category === 'effect') },
@@ -98,9 +95,9 @@ const LibraryPage = () => {
         { name: "3D CHATBOT", items: allComponents.filter(item => item.category === '3d-chatbot') },
         { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
-    ];
+    ], [allComponents]);
 
-    const categories = baseCategories
+    const categories = useMemo(() => baseCategories
         .map(cat => {
             return {
                 ...cat,
@@ -111,7 +108,7 @@ const LibraryPage = () => {
                 )
             };
         })
-        .filter(cat => cat.items.length > 0);
+        .filter(cat => cat.items.length > 0), [baseCategories, searchQuery]);
 
     useEffect(() => {
         if (activeComponent) {
@@ -120,17 +117,16 @@ const LibraryPage = () => {
                 setExpandedCategories(prev => prev.includes(activeCat.name) ? prev : [...prev, activeCat.name]);
             }
         }
-    }, [activeComponent.id, allComponents.length]);
+    }, [activeComponent?.id, baseCategories]);
 
     const toggleCategory = (name: string) => {
         setExpandedCategories(prev => prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]);
     };
 
     const handleComponentSelect = (item: ComponentItem) => {
-        setActiveComponent(item);
         setIsMobileMenuOpen(false);
         navigate(`/library?id=${item.id}`, { replace: true });
-        if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     const totalComponents = allComponents.length;

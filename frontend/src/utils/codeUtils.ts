@@ -67,44 +67,6 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
-      case "blur-text":
-        return vanillaBoilerplateLocal(
-          `<h1 class="blur-text">BLUR IN TEXT</h1>`,
-          `.blur-text { font-size: 5rem; font-weight: 800; filter: blur(10px); opacity: 0; transition: all 0.8s ease-out; cursor: pointer; }
-           .blur-text.animate { filter: blur(0px); opacity: 1; }`,
-          `const el${tsTypeChars} = document.querySelector('.blur-text');
-           const run = () => {
-             el.classList.remove('animate');
-             void el.offsetWidth; // Force reflow
-             el.classList.add('animate');
-           };
-           el.addEventListener('click', run);
-           setTimeout(run, 100);`
-        );
-      case "gradual-spacing":
-        return vanillaBoilerplateLocal(
-          `<div class="gradual-spacing" id="text">GRADUAL SPACING</div>`,
-          `.gradual-spacing { font-size: 5rem; font-weight: 800; display: flex; cursor: pointer; }
-           .char { opacity: 0; letter-spacing: 1em; transition: all 1.5s ease-out; }
-           .char.animate { opacity: 1; letter-spacing: 0.1em; }`,
-          `const el${tsTypeChars} = document.getElementById('text');
-           const chars${tsArrayType} = el.innerText.split('').map((c, i) => {
-             const span = document.createElement('span');
-             span.className = 'char';
-             span.innerText = c === ' ' ? '\\u00A0' : c;
-             span.style.transitionDelay = (i * 0.05) + 's';
-             return span;
-           });
-           el.innerHTML = '';
-           chars.forEach(c => el.appendChild(c));
-           const run = () => {
-             chars.forEach(c => c.classList.remove('animate'));
-             void el.offsetWidth;
-             chars.forEach(c => c.classList.add('animate'));
-           };
-           el.addEventListener('click', run);
-           setTimeout(run, 100);`
-        );
       case "letter-pull-up":
         return vanillaBoilerplateLocal(
           `<div class="letter-pull-up" id="text">LETTER PULL UP</div>`,
@@ -116,32 +78,6 @@ export const Component = () => {
              const span = document.createElement('span');
              span.className = 'char';
              span.innerText = c === ' ' ? '\\u00A0' : c;
-             span.style.transitionDelay = (i * 0.05) + 's';
-             return span;
-           });
-           el.innerHTML = '';
-           chars.forEach(c => el.appendChild(c));
-           const run = () => {
-             chars.forEach(c => c.classList.remove('animate'));
-             void el.offsetWidth;
-             chars.forEach(c => c.classList.add('animate'));
-           };
-           el.addEventListener('click', run);
-           setTimeout(run, 100);`
-        );
-      case "multi-direction-slide":
-        return vanillaBoilerplateLocal(
-          `<div class="multi-direction" id="text">MULTI DIRECTION</div>`,
-          `.multi-direction { font-size: 5rem; font-weight: 800; display: flex; overflow: hidden; cursor: pointer; }
-           .char { display: inline-block; opacity: 0; transition: all 0.8s ease-out; }
-           .char.animate { opacity: 1; transform: translate(0, 0) !important; }`,
-          `const el${tsTypeChars} = document.getElementById('text');
-           const dirs = ['translateY(-100px)', 'translateY(100px)', 'translateX(-100px)', 'translateX(100px)'];
-           const chars${tsArrayType} = el.innerText.split('').map((c, i) => {
-             const span = document.createElement('span');
-             span.className = 'char';
-             span.innerText = c === ' ' ? '\\u00A0' : c;
-             span.style.transform = dirs[i % 4];
              span.style.transitionDelay = (i * 0.05) + 's';
              return span;
            });
@@ -252,45 +188,7 @@ export const Component = () => {
            el.addEventListener('click', run);
            setTimeout(run, 100);`
         );
-      case "dock-text":
-        return vanillaBoilerplateLocal(
-          `<h1 class="dock-text">DOCK TEXT</h1>`,
-          `.dock-text { font-size: 5rem; font-weight: 800; scale: 0.8; opacity: 0; transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer; }
-           .dock-text.animate { scale: 1; opacity: 1; }`,
-          `const el${tsTypeChars} = document.querySelector('.dock-text');
-           const run = () => {
-             el.classList.remove('animate');
-             void el.offsetWidth;
-             el.classList.add('animate');
-           };
-           el.addEventListener('click', run);
-           setTimeout(run, 100);`
-        );
-      case "fade-text":
-        return vanillaBoilerplateLocal(
-          `<h1 class="fade-text">FADE TEXT</h1>`,
-          `.fade-text { font-size: 5rem; font-weight: 800; opacity: 0; transition: opacity 1.5s ease-in; cursor: pointer; }
-           .fade-text.animate { opacity: 1; }`,
-          `const el${tsTypeChars} = document.querySelector('.fade-text');
-           const run = () => {
-             el.classList.remove('animate');
-             void el.offsetWidth;
-             el.classList.add('animate');
-           };
-           el.addEventListener('click', run);
-           setTimeout(run, 100);`
-        );
-      case "font-weight":
-        return vanillaBoilerplateLocal(
-          `<h1 class="font-weight-text">VARIABLE WEIGHT</h1>`,
-          `.font-weight-text { font-size: 5rem; font-weight: 400; transition: font-weight 1s ease-in-out; cursor: pointer; }`,
-          `const el${tsTypeChars} = document.querySelector('.font-weight-text');
-           const run = () => {
-             el.style.fontWeight = el.style.fontWeight === '900' ? '400' : '900';
-           };
-           el.addEventListener('click', run);
-           setInterval(run, 1000);`
-        );
+
       case "liquid-glass":
         return vanillaBoilerplateLocal(
           `<div class="liquid-glass"></div>`,
@@ -513,13 +411,7 @@ export const Component = () => {
 
   if (lang === 'html') {
     switch (id) {
-      case "blur-text": return `<h1 class="blur-in">BLUR IN TEXT</h1>`;
-      case "fade-text": return `<div class="fade-in">FADE TEXT</div>`;
-      case "dock-text": return `<div class="dock">DOCK TEXT</div>`;
-      case "font-weight": return `<div class="variable-weight">VARIABLE WEIGHT</div>`;
-      case "gradual-spacing": return `<div class="gradual-spacing">GRADUAL SPACING</div>`;
       case "letter-pull-up": return `<div class="letter-pull-up">LETTER PULL UP</div>`;
-      case "multi-direction-slide": return `<div class="multi-direction">MULTI DIRECTION</div>`;
       case "scale-letter": return `<div class="scale-letter">SCALE LETTER</div>`;
       case "separate-away": return `<div class="separate-away">SEPARATE AWAY</div>`;
       case "wavy-text": return `<div class="wavy-text">WAVY TEXT</div>`;
@@ -549,55 +441,7 @@ ${componentHeader}
       ${content}
     </div>
   );
-};`;
-
   switch (id) {
-    case "blur-text":
-      return reactOutput(`
-        <motion.h1
-          initial={{ filter: "blur(10px)", opacity: 0 }}
-          whileInView={{ filter: "blur(0px)", opacity: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-6xl md:text-8xl font-display text-white tracking-tighter text-center"
-        >
-          BLUR IN TEXT
-        </motion.h1>`);
-    case "fade-text":
-      return reactOutput(`
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5 }}
-          className="text-6xl md:text-8xl font-display font-bold text-white tracking-tighter"
-        >
-          FADE TEXT
-        </motion.div>`);
-    case "dock-text":
-      return reactOutput(`
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-6xl md:text-8xl font-display font-bold text-white tracking-tighter"
-        >
-          DOCK TEXT
-        </motion.div>`);
-    case "font-weight":
-      return isTS ? `import React, { useState, useEffect } from 'react';\nimport { motion } from 'framer-motion';\n\nexport const Component: React.FC = () => {\n  const [weight, setWeight] = useState(400);\n  useEffect(() => {\n    const interval = setInterval(() => setWeight(p => p === 400 ? 900 : 400), 1000);\n    return () => clearInterval(interval);\n  }, []);\n  return (\n    <motion.div animate={{ fontWeight: weight }} className="text-6xl font-display text-white" style={{ fontWeight: weight }}>\n      VARIABLE WEIGHT\n    </motion.div>\n  );\n};` : `import React, { useState, useEffect } from 'react';\nimport { motion } from 'framer-motion';\n\nexport const Component = () => {\n  const [weight, setWeight] = useState(400);\n  useEffect(() => {\n    const interval = setInterval(() => setWeight(p => p === 400 ? 900 : 400), 1000);\n    return () => clearInterval(interval);\n  }, []);\n  return (\n    <motion.div animate={{ fontWeight: weight }} className="text-6xl font-display text-white" style={{ fontWeight: weight }}>\n      VARIABLE WEIGHT\n    </motion.div>\n  );\n};`;
-    case "gradual-spacing":
-      return reactOutput(`
-        <div className="flex justify-center flex-wrap">
-          {"GRADUAL SPACING".split("").map((char, i) => (
-            <motion.span
-              key={i}
-              initial={{ letterSpacing: "1em", opacity: 0 }}
-              animate={{ letterSpacing: "0.1em", opacity: 1 }}
-              transition={{ duration: 1.5, ease: "easeOut", delay: i * 0.05 }}
-              className="text-6xl md:text-8xl font-display text-white tracking-tighter"
-            >
-              {char === " " ? "\\u00A0" : char}
-            </motion.span>
-          ))}
-        </div>`);
     case "letter-pull-up":
       return reactOutput(`
         <div className="flex justify-center flex-wrap overflow-hidden py-4">
@@ -612,25 +456,6 @@ ${componentHeader}
               {char === " " ? "\\u00A0" : char}
             </motion.span>
           ))}
-        </div>`);
-    case "multi-direction-slide":
-      return reactOutput(`
-        <div className="flex justify-center flex-wrap overflow-hidden">
-          {"MULTI DIRECTION".split("").map((char, i) => {
-            const directions = ["top", "bottom", "left", "right"];
-            const direction = directions[i % 4];
-            return (
-              <motion.span
-                key={i}
-                initial={{ opacity: 0, x: direction === "left" ? -100 : direction === "right" ? 100 : 0, y: direction === "top" ? -100 : direction === "bottom" ? 100 : 0 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.05 }}
-                className="text-6xl md:text-8xl font-display text-white tracking-tighter inline-block"
-              >
-                {char === " " ? "\\u00A0" : char}
-              </motion.span>
-            );
-          })}
         </div>`);
     case "scale-letter":
       return reactOutput(`
