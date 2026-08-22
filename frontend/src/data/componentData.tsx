@@ -1418,6 +1418,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'word-pull-up': WordPullUpText as any,
     'mesh-text-hover': MeshText as any,
     'pixel-drift': PixelDrift as any,
+    'random-letter-swap': RandomLetterSwap as any,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
