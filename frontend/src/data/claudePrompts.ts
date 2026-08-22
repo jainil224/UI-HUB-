@@ -2589,6 +2589,54 @@ Generate a production-ready interactive WebGL2 "Mesh Text Hover" distortion anim
    - force: number = 18
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "pixel-drift": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert HTML5 Canvas and React animation engineer.
+
+## Task
+Generate a production-ready interactive Canvas particle text animation component called "Pixel Drift" (ParticleText) where text is sampled into a dense particle field that assembles with cubic-bezier easing and gets dynamically repulsed by the cursor like a black hole carving a void out of a star field.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* HTML5 Canvas 2D (Float32Array buffers for GPU-like particle physics)
+* Custom Cubic-Bezier Transition Parser & Easing Engine
+* ResizeObserver & IntersectionObserver for responsive high-DPI viewport triggers
+
+## Component Specifications & Requirements
+1. **Text Alpha Pixel Sampling**:
+   - Measure and rasterize text to an offscreen canvas at devicePixelRatio.
+   - Scan alpha channels (>128) with dynamic stride downsampling based on particleCount.
+   - Store origins (ox, oy), outer spawn ring positions (sx, sy), current coordinates (px, py), and repulsion vectors (repX, repY) in typed Float32Arrays.
+2. **Cubic-Bezier Formation Transition**:
+   - Parse transition configs (e.g. cubicBezier, circIn/circOut/easeInOut or standard spring/tween).
+   - Advance formation progress rate (formValRef) from spawn ring to target origin with smooth interruptibility.
+3. **Black-Hole Cursor Repulsion Physics**:
+   - Track cursor speed and smooth LERP position.
+   - Particles within mouseRadius experience velocity-scaled displacement push: (falloff * hitSpeed * mouseForce * 0.05).
+   - Apply elastic return decay (repX *= 0.97, repY *= 0.97) as the cursor exits the zone.
+4. **Viewport Triggers**:
+   - Support 'onEnter' (with IntersectionObserver and sentinel element) and 'onHover' modes.
+   - Support 'replay' mode to disperse and re-form upon scrolling back into view.
+5. **Configurable Props**:
+   - text: string = "PIXEL DRIFT"
+   - colors: string[] = ["#FFFFFF", "#F9731A", "#3D5CFF"]
+   - mode: "onEnter" | "onHover" = "onEnter"
+   - replay: boolean = true
+   - position: "above" | "middle" | "below" = "above"
+   - particleSize: number = 10
+   - particleCount: number = 45
+   - mouseEnabled: boolean = true
+   - mouseRadius: number = 65
+   - mouseForce: number = 25
+   - fontSize: number = 80
+   - autoFit: boolean = true
+   - transition: { type?: "tween" | "spring", duration?: number, ease?: string | number[] }
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 
