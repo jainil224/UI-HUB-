@@ -2763,6 +2763,95 @@ Generate a production-ready interactive kinetic typography glitch reveal and cur
    - tag: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "div" | "span"
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "scroll-text-highlight": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert typography and creative interaction engineer specializing in GSAP and React.
+
+## Task
+Generate a production-ready typography scroll interaction component named "Scroll Text Highlight" (ScrollHighlight / ScrollTextHighlight) where words or characters progressively transition from a dimmed state to a vibrant highlight state based on scroll progress using React, TypeScript, GSAP, and ScrollTrigger.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* GSAP (\`gsap\`)
+* GSAP ScrollTrigger (\`gsap/ScrollTrigger\`)
+* Native DOM Splitting (\`.word\` / \`.char\`)
+
+## Component Specifications & Requirements
+1. **Scroll-Linked Text Highlighting**:
+   - Register \`ScrollTrigger\` plugin with GSAP.
+   - Split input text dynamically into either individual words (\`.word\`) or characters (\`.char\`) with whitespace and non-breaking space preservation.
+   - Initialize typography targets at \`dimColor\` (default: \`rgba(255, 255, 255, 0.15)\`).
+   - Tween target color to \`highlightColor\` (default: \`#FFFFFF\`) using GSAP stagger (0.1 for words, 0.03 for characters).
+2. **Fluid Scrubbing & Scroller Integration**:
+   - Bind animation to \`ScrollTrigger\` with \`scrub: true | number\`.
+   - Support customizable \`scrollStart\` and \`scrollEnd\` anchors (e.g. \`"top center"\`, \`"bottom center"\`, \`"top 80%"\`).
+   - Support optional \`scroller\` property (container element or selector) allowing scoped scroll execution inside preview modals/cards.
+   - Clean up animations with \`gsap.context\` on unmount.
+3. **Configurable Props**:
+   - text?: string
+   - font?: React.CSSProperties
+   - dimColor?: string
+   - highlightColor?: string
+   - splitBy?: "characters" | "words"
+   - scrollStart?: ScrollPosition
+   - scrollEnd?: ScrollPosition
+   - scrub?: boolean | number
+   - scroller?: HTMLElement | string | null
+   - paddingTop?: string
+   - paddingBottom?: string
+   - className?: string
+   - style?: React.CSSProperties
+   - containerStyle?: React.CSSProperties
+
+Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "smoky-text": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert typography and creative interaction engineer specializing in CSS physics and React animations.
+
+## Task
+Generate a production-ready typography condensation and smoke particle dissipation animation component named "Smoky Text" (SmokyText) in React and TypeScript where characters dynamically diffuse as gaseous clouds and condense into crisp text.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* Native CSS Keyframes & Dynamic \`<style>\` Injection
+* ResizeObserver & Multi-line Detection
+* IntersectionObserver / Scroll Trigger Physics
+
+## Component Specifications & Requirements
+1. **Dynamic Smoke Keyframe Physics**:
+   - Calculate blur radii and multi-layered stacked text shadows proportional to intensity (range 1–20).
+   - Generate alternating trajectories for even/odd character indices with rotational skews, 3D translation vectors, and scale contractions.
+   - Inject scoped \`@keyframes\` stylesheets using \`useId()\` to eliminate name collisions across multiple component instances.
+2. **Multiple Animation Modes**:
+   - \`"singleLine"\`: Sequential left-to-right character stagger across the entire string.
+   - \`"multiLine"\`: Automatically detect line wraps using \`ResizeObserver\` and \`offsetTop\` grouping; triggers staggered line-by-line smoke reveals.
+   - \`"inPlace"\`: Compresses diffuse gaseous clouds inward into crisp letter glyphs simultaneously without translational offset.
+3. **Multi-Trigger System**:
+   - \`"default"\`: Plays immediately on mount.
+   - \`"hover"\`: Triggers animation once when user pointer enters the container boundary.
+   - \`"scroll"\`: Viewport boundary detection with customizable trigger distance (%) and top/bottom anchor positioning.
+4. **Configurable Props**:
+   - text?: string = "SMOKY\\nTEXT"
+   - font?: React.CSSProperties
+   - color?: string = "whitesmoke"
+   - appearTrigger?: "default" | "hover" | "scroll"
+   - scrollConfig?: { position?: "top" | "bottom"; distance?: number }
+   - appearTransition?: { type?: "tween" | "spring"; ease?: string | number[]; duration?: number; delay?: number }
+   - intensity?: number = 10
+   - position?: "bottomLeft" | "topLeft"
+   - animationMode?: "singleLine" | "multiLine" | "inPlace"
+   - className?: string
+   - style?: React.CSSProperties
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 

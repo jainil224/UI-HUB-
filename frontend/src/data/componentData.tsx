@@ -87,10 +87,119 @@ import {
     PixelDrift,
     RandomLetterSwap,
     RollingLetters,
-    ScrambleText
+    ScrambleText,
+    ScrollHighlight,
+    SmokyText
 } from '../components/animations/TextAnimations';
 
+// ── Smoky Text scoped preview ───────────────────
+const SmokyTextPreview: React.FC = () => {
+    const [key, setKey] = useState(0);
+    const [mode, setMode] = useState<"singleLine" | "multiLine" | "inPlace">("singleLine");
+    const [pos, setPos] = useState<"bottomLeft" | "topLeft">("bottomLeft");
+    const [intensity, setIntensity] = useState(12);
 
+    return (
+        <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-8 bg-black select-none rounded-2xl overflow-hidden relative border border-white/5">
+            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setKey(k => k + 1)}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+                    >
+                        ↻ Replay
+                    </button>
+                    <button
+                        onClick={() => setMode(m => m === "singleLine" ? "multiLine" : m === "multiLine" ? "inPlace" : "singleLine")}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Mode: {mode}
+                    </button>
+                    <button
+                        onClick={() => setPos(p => p === "bottomLeft" ? "topLeft" : "bottomLeft")}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Pos: {pos}
+                    </button>
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono text-white/40">Smoke: {intensity}</span>
+                </div>
+            </div>
+
+            <div className="w-full flex-1 flex items-center justify-center pt-8">
+                <SmokyText
+                    key={`${key}-${mode}-${pos}-${intensity}`}
+                    text={"SMOKY\nTEXT"}
+                    color="#ffffff"
+                    intensity={intensity}
+                    animationMode={mode}
+                    position={pos}
+                    appearTrigger="default"
+                    font={{
+                        fontFamily: "Inter, system-ui, sans-serif",
+                        fontSize: "clamp(2.5rem, 6.5vw, 5rem)",
+                        fontWeight: 800,
+                        lineHeight: "1.05em",
+                        letterSpacing: "0.02em",
+                        textAlign: "center",
+                    }}
+                />
+            </div>
+            <p className="text-xs font-mono text-neutral-400 tracking-wider uppercase mt-4">
+                Cinematic atmospheric smoke dispersion & condensation physics
+            </p>
+        </div>
+    );
+};
+
+
+
+// ── Scroll Text Highlight scoped preview ────────
+const ScrollHighlightPreview: React.FC = () => {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [scrollerEl, setScrollerEl] = useState<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        if (scrollContainerRef.current) {
+            setScrollerEl(scrollContainerRef.current);
+        }
+    }, []);
+
+    return (
+        <div className="relative w-full h-full min-h-[380px] max-h-[420px] bg-black select-none rounded-2xl overflow-hidden border border-white/5 flex flex-col items-center justify-start">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/70 font-mono text-[10px] uppercase tracking-widest backdrop-blur-md">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                SCROLL INSIDE BOX TO REVEAL
+            </div>
+            <div
+                ref={scrollContainerRef}
+                className="w-full h-full overflow-y-auto px-8 py-4 custom-scrollbar"
+                style={{ scrollBehavior: 'smooth' }}
+            >
+                {scrollerEl && (
+                    <ScrollHighlight
+                        scroller={scrollerEl}
+                        paddingTop="140px"
+                        paddingBottom="180px"
+                        splitBy="words"
+                        text="Every detail matters. Small interactions shape perception, build trust, and transform ordinary experiences into memorable ones."
+                        dimColor="rgba(255, 255, 255, 0.18)"
+                        highlightColor="#FFFFFF"
+                        font={{
+                            fontFamily: "Inter, system-ui, sans-serif",
+                            fontSize: "clamp(1.35rem, 3vw, 2.1rem)",
+                            fontWeight: 700,
+                            letterSpacing: "-0.02em",
+                            lineHeight: "1.35em",
+                            textAlign: "left",
+                        }}
+                    />
+                )}
+            </div>
+        </div>
+    );
+};
 
 // ── Magnetic Cursor scoped preview ────────────
 const MagneticCursorPreview: React.FC = () => {
@@ -1422,6 +1531,9 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'pixel-drift': PixelDrift as any,
     'random-letter-swap': RandomLetterSwap as any,
     'rolling-letters': RollingLetters as any,
+    'scramble-text': ScrambleText as any,
+    'scroll-text-highlight': ScrollHighlight as any,
+    'smoky-text': SmokyText as any,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -1874,6 +1986,123 @@ COMPONENT SPECIFICATIONS:
    - color: string = "#ffffff"
    - font: React.CSSProperties
    - tag: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "div" | "span"`
+    },
+    {
+        id: "scroll-text-highlight",
+        title: "Scroll Text Highlight",
+        category: "text",
+        preview: () => <ScrollHighlightPreview />,
+        code: `import React from 'react';
+import { ScrollHighlight } from '@/components/animations/ScrollHighlight';
+
+export function ScrollHighlightDemo() {
+  return (
+    <div className="w-full min-h-screen bg-black px-6 py-20 flex items-center justify-center">
+      <div className="max-w-4xl w-full">
+        <ScrollHighlight
+          text="Every detail matters. Small interactions shape perception, build trust, and transform ordinary experiences into memorable ones."
+          dimColor="rgba(255, 255, 255, 0.15)"
+          highlightColor="#FFFFFF"
+          splitBy="words"
+          scrollStart="top 80%"
+          scrollEnd="bottom 30%"
+          scrub={true}
+          paddingTop="40vh"
+          paddingBottom="40vh"
+          font={{
+            fontFamily: "Inter, system-ui, sans-serif",
+            fontSize: "clamp(2rem, 5vw, 3.8rem)",
+            fontWeight: 600,
+            letterSpacing: "-0.025em",
+            lineHeight: "1.2em",
+            textAlign: "left",
+          }}
+        />
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: `Create a buttery smooth GSAP ScrollTrigger typography highlight effect named "Scroll Text Highlight" (ScrollHighlight / ScrollTextHighlight) in React and TypeScript.
+
+COMPONENT SPECIFICATIONS:
+1. GSAP ScrollTrigger Integration:
+   - Registers ScrollTrigger plugin with GSAP.
+   - Splits input text into individual words (.word) or characters (.char) with whitespace and non-breaking space preservation.
+   - Sets initial text elements to dimColor (default: rgba(255, 255, 255, 0.15)).
+   - Animates targets to highlightColor (default: #FFFFFF) using GSAP stagger (0.1 for words, 0.03 for characters) tied to scroll progress.
+2. Scrubbing & Custom Scroller Support:
+   - Supports fluid scrub (scrub: true | number) and customizable trigger start/end anchors (e.g., "top center", "bottom center").
+   - Supports optional scoped scroller container element or selector for preview cards and custom overflow areas.
+3. Typography & Responsiveness:
+   - Responsive clamp font sizes, custom font styling (FontStyle), letter-spacing, and line-height.
+4. Configurable Props:
+   - text: string
+   - font: React.CSSProperties
+   - dimColor: string = "rgba(255, 255, 255, 0.15)"
+   - highlightColor: string = "#FFFFFF"
+   - splitBy: "characters" | "words" = "words"
+   - scrollStart: ScrollPosition = "top center"
+   - scrollEnd: ScrollPosition = "bottom center"
+   - scrub: boolean | number = true
+   - scroller?: HTMLElement | string | null
+   - paddingTop: string = "100dvh"
+   - paddingBottom: string = "100dvh"`
+    },
+    {
+        id: "smoky-text",
+        title: "Smoky Text",
+        category: "text",
+        preview: () => <SmokyTextPreview />,
+        code: `import React from 'react';
+import { SmokyText } from '@/components/animations/SmokyText';
+
+export function SmokyTextDemo() {
+  return (
+    <div className="w-full min-h-[380px] flex items-center justify-center bg-black p-8">
+      <SmokyText
+        text={"SMOKY\\nTEXT"}
+        color="#ffffff"
+        intensity={12}
+        animationMode="singleLine"
+        position="bottomLeft"
+        appearTrigger="default"
+        font={{
+          fontFamily: "Inter, system-ui, sans-serif",
+          fontSize: "clamp(2.5rem, 7vw, 5.5rem)",
+          fontWeight: 800,
+          lineHeight: "1.05em",
+          letterSpacing: "0.02em",
+          textAlign: "center",
+        }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create an atmospheric, cinematic text condensation and smoke particle dissipation effect named "Smoky Text" in React and TypeScript.
+
+COMPONENT SPECIFICATIONS:
+1. Dynamic Smoke Keyframe Physics:
+   - Dynamic blur radii and stacked text-shadow layers proportional to intensity level (1 to 20).
+   - Generates multi-layered smoke shadows (text-shadow: 0 0 ...px color) to give genuine physical density and mass to the gas cloud.
+   - Alternating odd/even character trajectories with skew, rotation, 3D translation, and scale contraction into crystal-clear typography.
+2. Multiple Animation Modes:
+   - "singleLine": Sequential character stagger across the entire string.
+   - "multiLine": Automatic visual line-wrapping detection using ResizeObserver and offsetTop grouping; triggers line-by-line staggered smoke reveals.
+   - "inPlace": Compresses in-place from large diffuse smoke clouds into crisp letter glyphs simultaneously without directional translation.
+3. Trigger System:
+   - "default": Plays automatically on mount.
+   - "hover": Triggers on cursor entry over text boundary.
+   - "scroll": Threshold-based scroll intersection trigger with custom trigger distance and top/bottom anchor positioning.
+4. Configurable Props:
+   - text: string = "SMOKY\\nTEXT"
+   - font: React.CSSProperties
+   - color: string = "whitesmoke"
+   - appearTrigger: "default" | "hover" | "scroll"
+   - scrollConfig: { position: "top" | "bottom", distance: number }
+   - appearTransition: { type: "tween" | "spring", ease: string | number[], duration: number, delay: number }
+   - intensity: number = 10
+   - position: "bottomLeft" | "topLeft"
+   - animationMode: "singleLine" | "multiLine" | "inPlace"`
     },
     {
         id: "letter-pull-up",

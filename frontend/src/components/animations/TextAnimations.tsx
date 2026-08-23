@@ -17,6 +17,8 @@ export { ScrambleText, GlitchCharReveal } from './ScrambleText';
 export type { ScrambleTextProps, EnterMode, HoverMode } from './ScrambleText';
 export { ScrollHighlight, ScrollTextHighlight } from './ScrollHighlight';
 export type { ScrollHighlightProps, SplitBy, ScrollPosition } from './ScrollHighlight';
+export { SmokyText } from './SmokyText';
+export type { SmokyTextProps, SmokyPosition, SmokyAnimationMode, SmokyPhase, SmokyAppearTrigger } from './SmokyText';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;

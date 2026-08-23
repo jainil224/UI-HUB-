@@ -67,6 +67,72 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "smoky-text":
+        return vanillaBoilerplateLocal(
+          `<div class="smoky-container" id="smoky-box">
+  <div class="smoky-text" id="smoky-target">
+    <span class="word">SMOKY</span>
+    <br />
+    <span class="word">TEXT</span>
+  </div>
+</div>`,
+          `.smoky-container { width: 100%; min-height: 360px; display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden; cursor: pointer; user-select: none; }
+           .smoky-text { font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2.5rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05em; letter-spacing: 0.02em; text-align: center; color: transparent; }
+           .smoky-char { display: inline-block; text-shadow: 0 0 0 #f5f5f5; }
+           @keyframes smt-ap-bl-a { from { opacity: 0; text-shadow: 0 0 40px #f5f5f5; transform: translate3d(-15rem, 8rem, 0) rotate(40deg) skewX(-70deg) scale(0.7); } 40% { text-shadow: 0 0 100px #f5f5f5; } to { opacity: 1; text-shadow: 0 0 0 #f5f5f5; transform: none; } }
+           @keyframes smt-ap-bl-b { from { opacity: 0; text-shadow: 0 0 40px #f5f5f5; transform: translate3d(-18rem, 8rem, 0) rotate(40deg) skewX(70deg) scale(0.5); } 40% { text-shadow: 0 0 100px #f5f5f5; } to { opacity: 1; text-shadow: 0 0 0 #f5f5f5; transform: none; } }`,
+          `// Smoky Text Kinetic Dissipation
+           const target = document.getElementById('smoky-target');
+           const chars = target.querySelectorAll('.smoky-char');
+           
+           function triggerSmoky() {
+             const words = target.querySelectorAll('.word');
+             let globalIdx = 0;
+             words.forEach(word => {
+               const text = word.textContent || '';
+               word.innerHTML = text.split('').map(c => {
+                 const isEven = globalIdx % 2 === 0;
+                 const anim = isEven ? 'smt-ap-bl-a' : 'smt-ap-bl-b';
+                 const delay = (globalIdx * 0.08).toFixed(2);
+                 globalIdx++;
+                 return \`<span class="smoky-char" style="animation: \${anim} 1.4s \${delay}s cubic-bezier(0,0.58,1) both;">\${c}</span>\`;
+               }).join('');
+             });
+           }
+           
+           triggerSmoky();
+           document.getElementById('smoky-box').addEventListener('click', triggerSmoky);`
+        );
+      case "scroll-text-highlight":
+        return vanillaBoilerplateLocal(
+          `<div class="scroll-highlight-wrapper">
+  <div class="spacer">Scroll down to see the highlight effect ↓</div>
+  <p class="highlight-paragraph" id="highlight-target">Every detail matters. Small interactions shape perception, build trust, and transform ordinary experiences into memorable ones.</p>
+  <div class="spacer"></div>
+</div>`,
+          `.scroll-highlight-wrapper { width: 100%; max-width: 900px; padding: 2rem; margin: 0 auto; }
+           .spacer { height: 60vh; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.4); font-family: 'Inter', sans-serif; font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; }
+           .highlight-paragraph { font-family: 'Inter', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 600; line-height: 1.25em; letter-spacing: -0.025em; color: rgba(255, 255, 255, 0.15); margin: 0; }
+           .word { display: inline-block; color: rgba(255, 255, 255, 0.15); transition: color 0.1s; }`,
+          `// GSAP ScrollTrigger Text Highlight
+           const paragraph${tsTypeChars} = document.getElementById('highlight-target');
+           const words = paragraph.innerText.trim().split(/\\s+/);
+           paragraph.innerHTML = words.map(w => \`<span class="word">\${w}</span>\`).join(' ');
+           
+           const wordEls${tsArrayType} = Array.from(paragraph.querySelectorAll('.word'));
+           gsap.registerPlugin(ScrollTrigger);
+           
+           gsap.to(wordEls, {
+             color: '#FFFFFF',
+             stagger: 0.1,
+             scrollTrigger: {
+               trigger: paragraph,
+               start: 'top 75%',
+               end: 'bottom 25%',
+               scrub: true
+             }
+           });`
+        );
       case "scramble-text":
         return vanillaBoilerplateLocal(
           `<div class="scramble-container" id="scramble-box">
