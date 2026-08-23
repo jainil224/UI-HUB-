@@ -67,6 +67,37 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "scramble-text":
+        return vanillaBoilerplateLocal(
+          `<div class="scramble-container" id="scramble-box">
+  <h1 class="scramble-text" id="scramble-target">SCRAMBLE TEXT</h1>
+</div>`,
+          `.scramble-container { width: 100%; min-height: 280px; display: flex; align-items: center; justify-content: center; background: #000; overflow: hidden; cursor: pointer; user-select: none; }
+           .scramble-text { font-family: 'Inter', sans-serif; font-size: clamp(2rem, 6vw, 4.5rem); font-weight: 800; color: #fff; letter-spacing: 0.05em; margin: 0; }
+           .glitch-char { display: inline-block; transition: color 0.1s; }
+           .flicker { color: #3D5CFF !important; text-shadow: 0 0 10px #3D5CFF; }`,
+          `// Kinetic Scramble & Glitch Text Reveal
+           const GLITCH_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+           const el = document.getElementById('scramble-target');
+           const originalText = el.innerText;
+           
+           function scramble() {
+             let iteration = 0;
+             clearInterval(el._interval);
+             el._interval = setInterval(() => {
+               el.innerText = originalText.split("").map((letter, index) => {
+                 if (index < iteration) return originalText[index];
+                 return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+               }).join("");
+               if (iteration >= originalText.length) clearInterval(el._interval);
+               iteration += 1 / 3;
+             }, 30);
+           }
+           
+           scramble();
+           document.getElementById('scramble-box').addEventListener('mouseenter', scramble);
+           document.getElementById('scramble-box').addEventListener('click', scramble);`
+        );
       case "rolling-letters":
         return vanillaBoilerplateLocal(
           `<div class="rolling-letters-container">
