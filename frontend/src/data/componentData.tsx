@@ -70,6 +70,7 @@ const TestimonialsCard = React.lazy(() => import('../components/ui/testimonials-
 const ImageCollage = React.lazy(() => import('../components/ui/image-collage').then(m => ({ default: m.ImageCollage })));
 const PointDNAHelix = React.lazy(() => import('../components/ui/PointDNAHelix'));
 const TwinGalaxyRings = React.lazy(() => import('../components/ui/TwinGalaxyRings'));
+const Tornado = React.lazy(() => import('../components/ui/Tornado'));
 
 
 
@@ -1743,6 +1744,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'smoky-text': SmokyText as any,
     'point-dna-helix': PointDNAHelix,
     'twin-galaxy-rings': TwinGalaxyRings,
+    'tornado': Tornado,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
