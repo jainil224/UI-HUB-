@@ -2871,6 +2871,55 @@ Generate a production-ready typography condensation and smoke particle dissipati
    - style?: React.CSSProperties
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "text-carousel": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert typography and creative interaction engineer specializing in GSAP animations and React components.
+
+## Task
+Generate a production-ready rotating typography badge carousel animation component named "RotatingText" / "TextCarousel" in React and TypeScript where animated words/characters transition seamlessly inside a dynamic auto-sizing badge container pill.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* GSAP (\`gsap\`)
+* Intl.Segmenter / Grapheme Splitting
+* Responsive Layout & Accessibility (ARIA)
+
+## Component Specifications & Requirements
+1. **Dynamic Auto-Sizing Badge Pill**:
+   - Measure active text width dynamically using \`useLayoutEffect\` / \`ResizeObserver\` and smoothly resize the badge container width with GSAP tweens.
+   - Screen-reader accessible hidden text overlay with \`aria-hidden\` on animated visual segments.
+2. **GSAP Staggered Letter/Word Animations**:
+   - Supports splitting by \`"characters"\`, \`"words"\`, and \`"lines"\`.
+   - Exit animation: translates letters to \`yPercent: -120\` with \`opacity: 0\`.
+   - Entrance animation: animates incoming letters from \`yPercent: 100\` to \`yPercent: 0\` with \`opacity: 1\`.
+   - Stagger directions: \`"first"\` (start), \`"last"\` (end), \`"center"\`, \`"random"\`.
+3. **Auto-Rotation & Timers**:
+   - Configurable \`auto\` boolean and \`rotationInterval\` (default 2000ms).
+   - Clean interval and tween garbage collection on unmount.
+4. **Configurable Props**:
+   - prefix?: string = "Text"
+   - texts?: string[] = ["components!", "interfaces!", "experiences!"]
+   - font?: React.CSSProperties
+   - color?: string = "#ffffff"
+   - prefixColor?: string = "#E8E8E8"
+   - badgeBackground?: string = "#1EE7B3"
+   - badgePaddingX?: number = 16
+   - badgePaddingY?: number = 6
+   - badgeRadius?: number = 14
+   - gap?: number = 12
+   - splitBy?: "characters" | "words" | "lines" = "characters"
+   - staggerFrom?: "first" | "last" | "center" | "random" = "first"
+   - auto?: boolean = true
+   - rotationInterval?: number = 2000
+   - transition?: { type?: string; duration?: number; delay?: number; ease?: string | number[]; staggerChildren?: number }
+   - className?: string
+   - style?: React.CSSProperties
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 
