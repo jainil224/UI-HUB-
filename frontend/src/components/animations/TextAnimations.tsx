@@ -23,6 +23,8 @@ export { RotatingText, TextCarousel } from './RotatingText';
 export type { RotatingTextProps, FontStyle as RotatingFontStyle, StaggerFrom as RotatingStaggerFrom, SplitBy as RotatingSplitBy } from './RotatingText';
 export { TextPath } from './TextPath';
 export type { TextPathProps, TextPathFontValue } from './TextPath';
+export { VaporizeTextCycle, TextVaporize } from './VaporizeTextCycle';
+export type { VaporizeTextCycleProps, VaporizeTextCycleFont, VaporizeTextCyclePhaseConfig, VaporizeTextCycleTransition } from './VaporizeTextCycle';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;

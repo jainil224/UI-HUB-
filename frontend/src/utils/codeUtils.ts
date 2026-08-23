@@ -67,6 +67,112 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "text-vaporize":
+        return vanillaBoilerplateLocal(
+          `<div class="vaporize-container" id="vaporize-box">
+  <canvas id="vaporize-canvas"></canvas>
+</div>`,
+          `.vaporize-container { width: 100%; min-height: 380px; display: flex; align-items: center; justify-content: center; background: #0a0a0a; position: relative; overflow: hidden; }
+           #vaporize-canvas { position: absolute; pointer-events: none; }`,
+          `// Text Vaporize Canvas Particle Animation
+           const canvas = document.getElementById('vaporize-canvas');
+           const ctx = canvas.getContext('2d');
+           const texts = ["UI HUB", "VAPORIZE", "PARTICLES"];
+           let currentIdx = 0;
+           let particles = [];
+           let phase = "in"; // "in" -> "hold" -> "out"
+           let phaseTime = 0;
+           const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+           function resize() {
+             const box = document.getElementById('vaporize-box');
+             const w = box.clientWidth || 800;
+             const h = box.clientHeight || 380;
+             canvas.width = w * dpr;
+             canvas.height = h * dpr;
+             canvas.style.width = w + 'px';
+             canvas.style.height = h + 'px';
+             createParticles(texts[currentIdx]);
+           }
+
+           function createParticles(text) {
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+             ctx.fillStyle = "#ffffff";
+             ctx.font = 'bold ' + (64 * dpr) + "px 'Inter', sans-serif";
+             ctx.textAlign = "center";
+             ctx.textBaseline = "middle";
+             ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+             const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+             const data = imgData.data;
+             particles = [];
+             const step = Math.max(1, Math.round(dpr));
+
+             for (let y = 0; y < canvas.height; y += step) {
+               for (let x = 0; x < canvas.width; x += step) {
+                 const i = (y * canvas.width + x) * 4;
+                 if (data[i + 3] > 60) {
+                   const angle = Math.random() * Math.PI * 2;
+                   const reach = (20 + Math.random() * 80) * dpr;
+                   particles.push({
+                     ox: x, oy: y,
+                     x: x + Math.cos(angle) * reach,
+                     y: y + Math.sin(angle) * reach,
+                     r: data[i], g: data[i + 1], b: data[i + 2],
+                     alpha: data[i + 3] / 255,
+                     progress: 0
+                   });
+                 }
+               }
+             }
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+           }
+
+           let lastT = performance.now();
+           function loop(t) {
+             const dt = Math.min((t - lastT) / 1000, 0.1);
+             lastT = t;
+             phaseTime += dt;
+
+             ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+             if (phase === "in") {
+               const p = Math.min(1, phaseTime / 1.0);
+               particles.forEach(pt => {
+                 const curX = pt.x + (pt.ox - pt.x) * p;
+                 const curY = pt.y + (pt.oy - pt.y) * p;
+                 ctx.fillStyle = 'rgba(' + pt.r + ',' + pt.g + ',' + pt.b + ',' + (pt.alpha * p) + ')';
+                 ctx.fillRect(curX, curY, dpr, dpr);
+               });
+               if (p >= 1) { phase = "hold"; phaseTime = 0; }
+             } else if (phase === "hold") {
+               particles.forEach(pt => {
+                 ctx.fillStyle = 'rgba(' + pt.r + ',' + pt.g + ',' + pt.b + ',' + pt.alpha + ')';
+                 ctx.fillRect(pt.ox, pt.oy, dpr, dpr);
+               });
+               if (phaseTime >= 1.2) { phase = "out"; phaseTime = 0; }
+             } else if (phase === "out") {
+               const p = Math.min(1, phaseTime / 1.4);
+               particles.forEach(pt => {
+                 const curX = pt.ox + (pt.x - pt.ox) * p;
+                 const curY = pt.oy + (pt.y - pt.oy) * p;
+                 ctx.fillStyle = 'rgba(' + pt.r + ',' + pt.g + ',' + pt.b + ',' + (pt.alpha * (1 - p)) + ')';
+                 ctx.fillRect(curX, curY, dpr, dpr);
+               });
+               if (p >= 1) {
+                 currentIdx = (currentIdx + 1) % texts.length;
+                 createParticles(texts[currentIdx]);
+                 phase = "in";
+                 phaseTime = 0;
+               }
+             }
+             requestAnimationFrame(loop);
+           }
+
+           window.addEventListener('resize', resize);
+           resize();
+           requestAnimationFrame(loop);`
+        );
       case "text-path":
         return vanillaBoilerplateLocal(
           `<div class="text-path-container" id="text-path-box">

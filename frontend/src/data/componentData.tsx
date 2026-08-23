@@ -91,8 +91,77 @@ import {
     ScrollHighlight,
     SmokyText,
     RotatingText,
-    TextPath
+    TextPath,
+    VaporizeTextCycle
 } from '../components/animations/TextAnimations';
+
+// ── Text Vaporize scoped preview ─────────────────
+const VaporizeTextPreview: React.FC = () => {
+    const [spread, setSpread] = useState(20);
+    const [order, setOrder] = useState<"together" | "left-to-right" | "right-to-left">("left-to-right");
+    const [textColor, setTextColor] = useState("#FFFFFF");
+    const colors = ["#FFFFFF", "#38BDF8", "#F43F5E", "#A855F7", "#34D399", "#FBBF24"];
+
+    return (
+        <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-8 bg-neutral-950 select-none rounded-2xl overflow-hidden relative border border-white/5">
+            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setSpread(s => s === 10 ? 20 : s === 20 ? 35 : 10)}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Spread: {spread}
+                    </button>
+                    <button
+                        onClick={() => setOrder(o => o === "left-to-right" ? "together" : o === "together" ? "right-to-left" : "left-to-right")}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Order: {order}
+                    </button>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    {colors.map((c) => (
+                        <button
+                            key={c}
+                            onClick={() => setTextColor(c)}
+                            className="w-4 h-4 rounded-full transition-transform hover:scale-125 border border-white/20"
+                            style={{ backgroundColor: c, outline: textColor === c ? '2px solid white' : 'none' }}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <div className="w-full flex-1 flex items-center justify-center pt-8">
+                <VaporizeTextCycle
+                    texts={["UI HUB", "VAPORIZE", "PARTICLES", "CREATIVE"]}
+                    spread={spread}
+                    density={10}
+                    color={textColor}
+                    alignment="center"
+                    font={{
+                        fontFamily: "Inter, system-ui, sans-serif",
+                        fontWeight: 700,
+                        fontSize: 64,
+                        letterSpacing: 1,
+                    }}
+                    appear={{
+                        mode: "particle",
+                        order,
+                        transition: { duration: 1, ease: "easeOut" },
+                    }}
+                    disappear={{
+                        mode: "particle",
+                        order,
+                        transition: { duration: 1.6, ease: "easeOut", delay: 0.8 },
+                    }}
+                />
+            </div>
+            <p className="text-xs font-mono text-neutral-400 tracking-wider uppercase mt-4">
+                Off-screen buffer pixel rasterization with 60fps particle vaporization
+            </p>
+        </div>
+    );
+};
 
 // ── Text Path scoped preview ─────────────────────
 const TextPathPreview: React.FC = () => {
@@ -2352,6 +2421,64 @@ COMPONENT SPECIFICATIONS:
    - gap: number = 0
    - width: string | number = "100%"
    - height: string | number = 200`
+    },
+    {
+        id: "text-vaporize",
+        title: "Text Vaporize",
+        category: "text",
+        preview: () => <VaporizeTextPreview />,
+        code: `import React from 'react';
+import { VaporizeTextCycle } from '@/components/animations/VaporizeTextCycle';
+
+export function TextVaporizeDemo() {
+  return (
+    <div className="w-full min-h-[380px] flex items-center justify-center bg-neutral-950 p-8">
+      <VaporizeTextCycle
+        texts={["UI HUB", "VAPORIZE", "PARTICLES", "CREATIVE"]}
+        spread={20}
+        density={10}
+        color="#FFFFFF"
+        alignment="center"
+        font={{
+          fontFamily: "Inter, system-ui, sans-serif",
+          fontWeight: 700,
+          fontSize: 64,
+          letterSpacing: 1,
+        }}
+        appear={{
+          mode: "particle",
+          order: "left-to-right",
+          transition: { duration: 1, ease: "easeOut" },
+        }}
+        disappear={{
+          mode: "particle",
+          order: "together",
+          transition: { duration: 1.6, ease: "easeOut", delay: 0.8 },
+        }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create a canvas-based particle text vaporization and reconstitution animation component named "VaporizeTextCycle" / "TextVaporize" in React and TypeScript.
+
+COMPONENT SPECIFICATIONS:
+1. High-Performance Canvas Buffer:
+   - Off-screen text rasterization using getImageData() to sample pixel alpha and color values.
+   - Low-overhead direct pixel manipulation using single ImageData buffer putImageData() running at buttery-smooth 60fps.
+2. 3-Phase Animation Lifecycle:
+   - "appear" (particle reconstitution or opacity fade) -> "hold" delay -> "disappear" (particle vaporization or opacity fade) -> loop with next text item.
+   - Particle trajectories: randomized radial dispersion with sine-wave wobble and individual particle velocity spread.
+   - Directional sweep ordering: "together", "left-to-right", and "right-to-left".
+3. Configurable Props:
+   - texts: string[] = ["TEXT", "VAPORIZE"]
+   - font: { fontFamily: string, fontWeight: number | string, fontSize: number | string, letterSpacing: number }
+   - color: string = "#FFFFFF"
+   - spread: number = 20
+   - density: number = 10
+   - appear: { mode: "particle" | "opacity", order: "together" | "left-to-right" | "right-to-left", transition: { duration: number, ease: string } }
+   - disappear: { mode: "particle" | "opacity", order: "together" | "left-to-right" | "right-to-left", transition: { duration: number, ease: string, delay: number } }
+   - alignment: "left" | "center" | "right" = "center"
+   - tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "div" | "span" = "h1"`
     },
     {
         id: "letter-pull-up",
