@@ -38,16 +38,16 @@ export function buildWelcomeEmailHtml(name) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Welcome to UI-HUB</title>
 </head>
-<body style="margin:0; padding:0; background-color:#0D0D11; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0D0D11; padding:40px 16px;">
+<body style="margin:0; padding:0; background-color:#F4F4F5; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F4F4F5; padding:40px 16px; width:100%;">
     <tr>
       <td align="center">
-        <!-- Main Card Container -->
-        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:6px; box-shadow:8px 8px 0px #000000; overflow:hidden;">
+        <!-- Main Card Container with Black Line Border & Corners -->
+        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
           
           <!-- Top Header Bar -->
           <tr>
-            <td style="background-color:#000000; padding:26px 20px; text-align:center;">
+            <td style="background-color:#000000; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
               <div style="font-size:26px; font-weight:900; color:#FFFFFF; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
                 UI-HUB
               </div>
@@ -114,7 +114,7 @@ export function buildWelcomeEmailHtml(name) {
 
           <!-- Dark Footer -->
           <tr>
-            <td style="background-color:#000000; padding:24px 20px; text-align:center;">
+            <td style="background-color:#000000; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
               <p style="color:#FFFFFF; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
                 © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
               </p>
@@ -160,16 +160,16 @@ export function buildFreeSubscriptionEmailHtml({ name, email, activatedAt = new 
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Your FREE UI-HUB Subscription is Active</title>
 </head>
-<body style="margin:0; padding:0; background-color:#0D0D11; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0D0D11; padding:40px 16px;">
+<body style="margin:0; padding:0; background-color:#F4F4F5; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F4F4F5; padding:40px 16px; width:100%;">
     <tr>
       <td align="center">
-        <!-- Main Card Container -->
-        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:6px; box-shadow:8px 8px 0px #000000; overflow:hidden;">
+        <!-- Main Card Container with Black Line Border & Corners -->
+        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
           
           <!-- Top Header Bar -->
           <tr>
-            <td style="background-color:#000000; padding:26px 20px; text-align:center;">
+            <td style="background-color:#000000; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
               <div style="font-size:26px; font-weight:900; color:#FFFFFF; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
                 UI-HUB
               </div>
@@ -265,7 +265,7 @@ export function buildFreeSubscriptionEmailHtml({ name, email, activatedAt = new 
 
           <!-- Dark Footer -->
           <tr>
-            <td style="background-color:#000000; padding:24px 20px; text-align:center;">
+            <td style="background-color:#000000; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
               <p style="color:#FFFFFF; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
                 © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
               </p>
@@ -327,16 +327,16 @@ export function buildProSubscriptionEmailHtml({
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Welcome to PRO ACCESS</title>
 </head>
-<body style="margin:0; padding:0; background-color:#0D0D11; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#0D0D11; padding:40px 16px;">
+<body style="margin:0; padding:0; background-color:#F4F4F5; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F4F4F5; padding:40px 16px; width:100%;">
     <tr>
       <td align="center">
-        <!-- Main Card Container -->
-        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:6px; box-shadow:8px 8px 0px #000000; overflow:hidden;">
+        <!-- Main Card Container with Black Line Border & Corners -->
+        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
           
           <!-- Top Header Bar -->
           <tr>
-            <td style="background-color:#000000; padding:26px 20px; text-align:center;">
+            <td style="background-color:#000000; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
               <div style="font-size:26px; font-weight:900; color:#FFFFFF; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
                 UI-HUB
               </div>
@@ -420,7 +420,7 @@ export function buildProSubscriptionEmailHtml({
 
           <!-- Dark Footer -->
           <tr>
-            <td style="background-color:#000000; padding:24px 20px; text-align:center;">
+            <td style="background-color:#000000; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
               <p style="color:#FFFFFF; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
                 © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
               </p>
