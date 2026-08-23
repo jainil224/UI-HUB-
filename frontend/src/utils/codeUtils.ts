@@ -67,6 +67,57 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "text-carousel":
+        return vanillaBoilerplateLocal(
+          `<div class="carousel-container">
+  <span class="carousel-prefix">Text</span>
+  <span class="carousel-badge" id="carousel-badge">
+    <span class="carousel-content" id="carousel-content"></span>
+  </span>
+</div>`,
+          `.carousel-container { display: flex; align-items: center; justify-content: center; gap: 12px; font-family: 'Inter', system-ui, sans-serif; font-size: clamp(2rem, 5.5vw, 4.2rem); font-weight: 700; color: #fff; min-height: 360px; background: #0a0a0a; flex-wrap: wrap; }
+           .carousel-prefix { color: #e8e8e8; }
+           .carousel-badge { display: inline-flex; align-items: center; justify-content: center; background: #1EE7B3; color: #000; border-radius: 14px; padding: 6px 18px; overflow: hidden; transition: width 0.45s cubic-bezier(0, 0, 0.58, 1); box-sizing: border-box; }
+           .carousel-content { display: inline-flex; position: relative; white-space: nowrap; }
+           .char { display: inline-block; transition: transform 0.45s cubic-bezier(0, 0, 0.58, 1), opacity 0.45s cubic-bezier(0, 0, 0.58, 1); }
+           .char-exit { transform: translateY(-120%); opacity: 0; }
+           .char-enter-init { transform: translateY(100%); opacity: 0; }
+           .char-enter-active { transform: translateY(0); opacity: 1; }`,
+          `// Rotating Text Carousel Animation
+           const texts = ["components!", "interfaces!", "experiences!", "interactions!"];
+           let currentIndex = 0;
+           const content = document.getElementById('carousel-content');
+           const badge = document.getElementById('carousel-badge');
+           
+           function renderWord(word${isTS ? ': string' : ''}) {
+             content.innerHTML = word.split('').map((c, i) => 
+               \`<span class="char char-enter-init" style="transition-delay: \${i * 0.03}s;">\${c === ' ' ? '&nbsp;' : c}</span>\`
+             ).join('');
+             badge.style.width = (content.scrollWidth + 36) + 'px';
+             requestAnimationFrame(() => {
+               content.querySelectorAll('.char').forEach(el => {
+                 el.classList.remove('char-enter-init');
+                 el.classList.add('char-enter-active');
+               });
+             });
+           }
+           
+           function nextWord() {
+             const chars = content.querySelectorAll('.char');
+             chars.forEach((el, i) => {
+               el.style.transitionDelay = (i * 0.03) + 's';
+               el.classList.remove('char-enter-active');
+               el.classList.add('char-exit');
+             });
+             setTimeout(() => {
+               currentIndex = (currentIndex + 1) % texts.length;
+               renderWord(texts[currentIndex]);
+             }, 450);
+           }
+           
+           renderWord(texts[0]);
+           setInterval(nextWord, 2000);`
+        );
       case "smoky-text":
         return vanillaBoilerplateLocal(
           `<div class="smoky-container" id="smoky-box">

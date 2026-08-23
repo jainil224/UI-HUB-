@@ -89,8 +89,67 @@ import {
     RollingLetters,
     ScrambleText,
     ScrollHighlight,
-    SmokyText
+    SmokyText,
+    RotatingText
 } from '../components/animations/TextAnimations';
+
+// ── Text Carousel (Rotating Text) scoped preview ─
+const RotatingTextPreview: React.FC = () => {
+    const [splitBy, setSplitBy] = useState<"characters" | "words">("characters");
+    const [badgeBg, setBadgeBg] = useState("#1EE7B3");
+    const colors = ["#1EE7B3", "#3B82F6", "#EC4899", "#8B5CF6", "#F59E0B"];
+
+    return (
+        <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-8 bg-neutral-950 select-none rounded-2xl overflow-hidden relative border border-white/5">
+            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setSplitBy(s => s === "characters" ? "words" : "characters")}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Split: {splitBy}
+                    </button>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    {colors.map((c) => (
+                        <button
+                            key={c}
+                            onClick={() => setBadgeBg(c)}
+                            className="w-4 h-4 rounded-full transition-transform hover:scale-125 border border-white/20"
+                            style={{ backgroundColor: c, outline: badgeBg === c ? '2px solid white' : 'none' }}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <div className="w-full flex-1 flex items-center justify-center pt-8">
+                <RotatingText
+                    prefix="Text"
+                    texts={["components!", "interfaces!", "experiences!", "interactions!"]}
+                    splitBy={splitBy}
+                    staggerFrom="first"
+                    badgeBackground={badgeBg}
+                    color="#000000"
+                    prefixColor="#ffffff"
+                    badgeRadius={14}
+                    badgePaddingX={18}
+                    badgePaddingY={6}
+                    font={{
+                        fontFamily: "Inter, system-ui, sans-serif",
+                        fontSize: "clamp(2rem, 5.5vw, 4.2rem)",
+                        fontWeight: 700,
+                        letterSpacing: "-0.02em",
+                        lineHeight: "1.1em",
+                        textAlign: "center",
+                    }}
+                />
+            </div>
+            <p className="text-xs font-mono text-neutral-400 tracking-wider uppercase mt-4">
+                Smooth auto-sizing badge carousel with GSAP staggered letter transitions
+            </p>
+        </div>
+    );
+};
 
 // ── Smoky Text scoped preview ───────────────────
 const SmokyTextPreview: React.FC = () => {
@@ -2103,6 +2162,66 @@ COMPONENT SPECIFICATIONS:
    - intensity: number = 10
    - position: "bottomLeft" | "topLeft"
    - animationMode: "singleLine" | "multiLine" | "inPlace"`
+    },
+    {
+        id: "text-carousel",
+        title: "Text Carousel",
+        category: "text",
+        preview: () => <RotatingTextPreview />,
+        code: `import React from 'react';
+import { RotatingText } from '@/components/animations/RotatingText';
+
+export function TextCarouselDemo() {
+  return (
+    <div className="w-full min-h-[380px] flex items-center justify-center bg-neutral-950 p-8">
+      <RotatingText
+        prefix="Text"
+        texts={["components!", "interfaces!", "experiences!", "interactions!"]}
+        splitBy="characters"
+        staggerFrom="first"
+        badgeBackground="#1EE7B3"
+        color="#000000"
+        prefixColor="#ffffff"
+        badgeRadius={14}
+        badgePaddingX={18}
+        badgePaddingY={6}
+        font={{
+          fontFamily: "Inter, system-ui, sans-serif",
+          fontSize: "clamp(2rem, 5.5vw, 4.2rem)",
+          fontWeight: 700,
+          letterSpacing: "-0.02em",
+          lineHeight: "1.1em",
+          textAlign: "left",
+        }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create an interactive rotating typography carousel component named "RotatingText" / "TextCarousel" in React & TypeScript.
+
+COMPONENT SPECIFICATIONS:
+1. Smooth Badge Container Auto-Sizing:
+   - Dynamic width recalculation on active text changes using GSAP tween transitions on badge pill element.
+   - Screen-reader accessible hidden text overlay alongside styled visual container.
+2. GSAP Staggered Character/Word Splitting:
+   - Supports "characters", "words", and "lines" splitting using Intl.Segmenter or fallback grapheme slicing.
+   - Smooth exit animation (-120% yPercent, opacity 0) and entrance animation (+100% -> 0% yPercent, opacity 0 -> 1) with customizable stagger ("first", "last", "center", "random").
+3. Configurable Props:
+   - prefix: string = "Text"
+   - texts: string[] = ["components!", "interfaces!", "experiences!"]
+   - font: FontStyle
+   - color: string = "#ffffff"
+   - prefixColor: string = "#E8E8E8"
+   - badgeBackground: string = "#1EE7B3"
+   - badgePaddingX: number = 16
+   - badgePaddingY: number = 6
+   - badgeRadius: number = 14
+   - gap: number = 12
+   - splitBy: "characters" | "words" | "lines" = "characters"
+   - staggerFrom: "first" | "last" | "center" | "random" = "first"
+   - auto: boolean = true
+   - rotationInterval: number = 2000
+   - transition: { type: "tween", duration: 0.45, ease: "easeOut", staggerChildren: 0.03 }`
     },
     {
         id: "letter-pull-up",

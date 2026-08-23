@@ -19,6 +19,8 @@ export { ScrollHighlight, ScrollTextHighlight } from './ScrollHighlight';
 export type { ScrollHighlightProps, SplitBy, ScrollPosition } from './ScrollHighlight';
 export { SmokyText } from './SmokyText';
 export type { SmokyTextProps, SmokyPosition, SmokyAnimationMode, SmokyPhase, SmokyAppearTrigger } from './SmokyText';
+export { RotatingText, TextCarousel } from './RotatingText';
+export type { RotatingTextProps, FontStyle as RotatingFontStyle, StaggerFrom as RotatingStaggerFrom, SplitBy as RotatingSplitBy } from './RotatingText';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;
