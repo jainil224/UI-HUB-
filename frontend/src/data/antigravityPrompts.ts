@@ -779,7 +779,7 @@ Build a premium vertical panel scroll animation component in React + TypeScript 
 2. **Preventing Height Collapse**:
    - In preview mode (\`showDemoButton = true\`), the inner wrapper and the main panel container must stretch using absolute positioning (\`absolute inset-0 overflow-hidden\` and \`h-full absolute inset-0\`) to match the relative outer wrapper's height (\`min-h-[500px]\`), ensuring panels render at full scale.
 3. **UI HUB Premium Branding**:
-   - **Brand Badge**: A floating brand indicator is positioned in the top-right corner (\`absolute top-6 right-6 z-40\`) with backdrop blur, a neat border, the UI HUB logo icon (\`/logo.png\`), tracking-spaced uppercase brand title (\`UI HUB\`), and a pulsing green LED indicator (\`bg-brand-green animate-pulse\`).
+   - **Brand Badge**: A floating brand indicator is positioned in the top-right corner (\`absolute top-6 right-6 z-40\`) with backdrop blur, a neat border, the UI HUB logo icon (\`/logo.svg\`), tracking-spaced uppercase brand title (\`UI HUB\`), and a pulsing green LED indicator (\`bg-brand-green animate-pulse\`).
    - **Tracked Subheadings**: Every panel features a cohesive technical subheading tracking its progressive state:
      - Panel 1: "01 // UI HUB ARCHITECTURE"
      - Panel 2: "02 // UI HUB EXPRESSION"

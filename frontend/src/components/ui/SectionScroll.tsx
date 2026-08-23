@@ -131,7 +131,7 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
       {/* Premium UI HUB Brand Badge */}
       <div className="absolute top-6 right-6 z-40 pointer-events-none flex items-center gap-2 px-3 py-1.5 bg-black/40 backdrop-blur-md rounded-full border border-white/10 select-none">
         <img 
-          src="/logo.png" 
+          src="/logo.svg" 
           alt="UI HUB" 
           className="w-3.5 h-3.5 object-contain" 
           onError={(e) => { e.currentTarget.style.display = 'none'; }} 
