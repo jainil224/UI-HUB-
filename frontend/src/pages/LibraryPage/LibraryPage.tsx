@@ -27,6 +27,15 @@ const CATEGORY_META: Record<string, { icon: string; color: string; bg: string; b
     "Scroll Animation": { icon: "↕", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
 };
 
+/** Components added within the last 3 weeks show an auto-expiring "NEW" badge. */
+const NEW_BADGE_DURATION_MS = 21 * 24 * 60 * 60 * 1000;
+export const isNewComponent = (item: { addedAt?: string }): boolean => {
+    if (!item.addedAt) return false;
+    const added = new Date(item.addedAt).getTime();
+    if (Number.isNaN(added)) return false;
+    return Date.now() - added < NEW_BADGE_DURATION_MS;
+};
+
 const LibraryPage = () => {
     const { isPro } = useAuth();
     const location = useLocation();
@@ -270,7 +279,14 @@ const LibraryPage = () => {
                                                                         : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70 hover:translate-x-1 hover:border-l-2 hover:border-brand-blue'
                                                                 }`}
                                                             >
-                                                                <span className="truncate pr-2">{item.title}</span>
+                                                                <span className="truncate pr-2 flex items-center gap-1.5">
+                                                                    {item.title}
+                                                                    {isNewComponent(item) && (
+                                                                        <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">
+                                                                            New
+                                                                        </span>
+                                                                    )}
+                                                                </span>
                                                                 {!isActive && (
                                                                     <span className="opacity-0 group-hover:opacity-100 text-brand-blue font-bold text-[10px] transition-opacity">→</span>
                                                                 )}

@@ -71,6 +71,7 @@ const ImageCollage = React.lazy(() => import('../components/ui/image-collage').t
 const PointDNAHelix = React.lazy(() => import('../components/ui/PointDNAHelix'));
 const TwinGalaxyRings = React.lazy(() => import('../components/ui/TwinGalaxyRings'));
 const Tornado = React.lazy(() => import('../components/ui/Tornado'));
+const ParticleSphere = React.lazy(() => import('../components/ui/ParticleSphere'));
 
 
 
@@ -1636,6 +1637,8 @@ export type ComponentItem = {
     imageUrl?: string;
     isPremium?: boolean;
     downloadUrl?: string;
+    /** ISO date the component was added — drives the auto-expiring "NEW" badge (3 weeks). */
+    addedAt?: string;
 };
 
 // Helper to render lazy text/effect components
@@ -1745,6 +1748,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'point-dna-helix': PointDNAHelix,
     'twin-galaxy-rings': TwinGalaxyRings,
     'tornado': Tornado,
+    'particle-sphere': ParticleSphere,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -3559,6 +3563,7 @@ export function ImageCollageDemo() {
         id: "point-dna-helix",
         title: "Point DNA Helix",
         category: "interactive-background",
+        addedAt: "2026-08-23",
         isPremium: false,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
@@ -3598,6 +3603,7 @@ export function PointDNAHelixDemo() {
         id: "twin-galaxy-rings",
         title: "Twin Galaxy Rings",
         category: "interactive-background",
+        addedAt: "2026-08-23",
         isPremium: false,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
@@ -3637,6 +3643,7 @@ export function TwinGalaxyRingsDemo() {
         id: "tornado",
         title: "Tornado",
         category: "interactive-background",
+        addedAt: "2026-08-23",
         isPremium: false,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
@@ -3673,6 +3680,42 @@ export function TornadoDemo() {
   );
 }`,
         vibePrompt: "Create a 'Tornado' particle vortex background in React + TypeScript using three.js (single WebGLRenderer kept for the component's lifetime, settings read from a ref inside one rAF loop; rebuild() re-lays buffers within the open context instead of recreating it). Strands spiral up a pinched hyperboloid defined by three monotone-cubic (Fritsch-Carlson) baked curves for radius/height/angle with a controllable waist position and twist. Dots ride the strands as an InstancedMesh with per-dot flicker (sine^2.5 twinkle) and brightness spread; orange comets race along strands with glowing sprite heads, fading tails and delay staggering — comet-vs-dot collisions flash the dot out, pop its scale and throw an expanding shockwave ring that displaces strand vertices while shoved dots spring back (position + scale springs). Cursor proximity repels the whole form via a clip-space displacement patched into stock materials through onBeforeCompile with shared uniforms. Staged entrance (strands -> dots -> comets), prefers-reduced-motion support, Reinhard tone mapping, additive blending."
+    },
+    {
+        id: "particle-sphere",
+        title: "Particle Sphere",
+        category: "interactive-background",
+        addedAt: "2026-08-23",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
+                <ParticleSphere />
+            </div>
+        ),
+        code: `import ParticleSphere from "@/components/ui/ParticleSphere";
+
+export function ParticleSphereDemo() {
+  return (
+    <div className="relative h-[500px] w-full overflow-hidden">
+      <ParticleSphere
+        particlesCount={10000}
+        particleScale={4}
+        speed={20}
+        smoothing={7}
+        scale={10}
+        rotationDirection="clockwise"
+        drag
+        dragSpeed={5}
+        cursorOn
+        cursorRadiusUI={75}
+        cursorStrengthUI={10}
+        clickForce={5}
+        sphereColor="#ffffff"
+      />
+    </div>
+  );
+}`,
+        vibePrompt: "Create an interactive 'Particle Sphere' background in React + TypeScript using three.js. Distribute particles evenly across a unit sphere surface with a Fibonacci golden-angle spiral, rendered as rounded instances via InstancedMesh of low-poly spheres (SphereGeometry 8x8) with additive blending and per-instance colors. The sphere auto-rotates continuously (clockwise/anticlockwise) with lerp-smoothed rotation, drag-to-rotate with time-normalized throw velocity and momentum decay, and optional stop-on-hover. Cursor proximity pushes front-facing particles outward in screen space (projected per-particle, camera right/up vector conversion back to local space) with friction + return-force decay; clicking scatters particles radially in 3D via velocity-based spring-back. Oversized canvas (2.5x container, FOV-compensated) prevents clipping; ResizeObserver-driven resizing; frame-rate independent via delta-time normalization."
     }
 ];
 
