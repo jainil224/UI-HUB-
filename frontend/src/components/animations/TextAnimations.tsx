@@ -13,6 +13,8 @@ export { RandomLetterSwap } from './RandomLetterSwap';
 export type { RandomLetterSwapProps } from './RandomLetterSwap';
 export { RollingLetters, SlotMachine } from './RollingLetters';
 export type { RollingLettersProps } from './RollingLetters';
+export { ScrambleText, GlitchCharReveal } from './ScrambleText';
+export type { ScrambleTextProps, EnterMode, HoverMode } from './ScrambleText';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;

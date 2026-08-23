@@ -86,7 +86,8 @@ import {
     MeshText,
     PixelDrift,
     RandomLetterSwap,
-    RollingLetters
+    RollingLetters,
+    ScrambleText
 } from '../components/animations/TextAnimations';
 
 
