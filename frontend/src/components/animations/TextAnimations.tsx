@@ -15,6 +15,8 @@ export { RollingLetters, SlotMachine } from './RollingLetters';
 export type { RollingLettersProps } from './RollingLetters';
 export { ScrambleText, GlitchCharReveal } from './ScrambleText';
 export type { ScrambleTextProps, EnterMode, HoverMode } from './ScrambleText';
+export { ScrollHighlight, ScrollTextHighlight } from './ScrollHighlight';
+export type { ScrollHighlightProps, SplitBy, ScrollPosition } from './ScrollHighlight';
 export interface LetterPullUpTextProps {
     text?: string;
     className?: string;
