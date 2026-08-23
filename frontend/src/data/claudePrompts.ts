@@ -2901,6 +2901,50 @@ Generate a production-ready rotating typography badge carousel animation compone
    - style?: React.CSSProperties
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "text-path": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert creative developer and SVG interaction specialist in React and TypeScript.
+
+## Task
+Generate a production-ready infinite wave marquee text animation component named "TextPath" in React and TypeScript where text continuously and smoothly scrolls along a procedural SVG sine wave with no visible path endpoints and zero-hop loop wrapping.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* SVG \`<textPath>\` & Cubic Bézier Sine Waves
+* High Performance \`requestAnimationFrame\` Loop
+* ResizeObserver for Responsive Geometry
+
+## Component Specifications & Requirements
+1. **Procedural Sine Wave Math**:
+   - Calculate wave geometry dynamically extending past both container edges with overflow margins so endpoints are never visible.
+   - Symmetrically scale cubic control points (ctrlAmp = amplitude * 4/3) to hit exact requested peak amplitudes.
+   - Clamp amplitude to \`h/2 - fontSizePx\` to keep typography fully within container bounds without clipping.
+2. **Dual-Measurement Difference Technique**:
+   - Measure 2 and 4 repeat units in hidden SVG \`<text>\` tags and calculate per-unit period as \`(length4 - length2) / 2\`.
+   - Eliminates whitespace-trimming edge artifacts from \`getComputedTextLength()\`.
+3. **Seamless rAF Animation**:
+   - Drive SVG \`startOffset\` imperatively via a single long-lived \`requestAnimationFrame\` loop with dt-clamped delta time.
+   - Wrap position within \`[0, unitWidth)\` for visual continuity across infinite cycles.
+4. **Configurable Props**:
+   - text?: string = "TEXT PATH"
+   - speed?: number = 30
+   - reversed?: boolean = true
+   - textFont?: { fontFamily?: string; fontWeight?: number | string; fontStyle?: string; fontSize?: number | string; letterSpacing?: number | string; lineHeight?: number | string }
+   - textColor?: string = "#FFFFFF"
+   - waveFrequency?: number = 3
+   - waveHeight?: number = 100
+   - separator?: string = "   •   "
+   - gap?: number = 0
+   - width?: string | number = "100%"
+   - height?: string | number = 200
+   - className?: string
+   - style?: React.CSSProperties
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 

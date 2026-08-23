@@ -67,6 +67,39 @@ export const Component = () => {
     const tsArrayType = isTS ? ': HTMLElement[]' : '';
 
     switch (id) {
+      case "text-path":
+        return vanillaBoilerplateLocal(
+          `<div class="text-path-container" id="text-path-box">
+  <svg viewBox="0 0 800 200" preserveAspectRatio="xMidYMid meet">
+    <defs>
+      <path id="sine-wave" fill="none" d="M -200,100 C -133,20 -66,20 0,100 C 66,180 133,180 200,100 C 266,20 333,20 400,100 C 466,180 533,180 600,100 C 666,20 733,20 800,100 C 866,180 933,180 1000,100" />
+    </defs>
+    <text fill="#ffffff" font-size="18" font-family="'Inter', sans-serif" font-weight="700" letter-spacing="1">
+      <textPath id="wave-text-path" href="#sine-wave">
+        UI HUB • INFINITE SINE WAVE MARQUEE • UI HUB • INFINITE SINE WAVE MARQUEE • UI HUB • INFINITE SINE WAVE MARQUEE • 
+      </textPath>
+    </text>
+  </svg>
+</div>`,
+          `.text-path-container { width: 100%; min-height: 360px; display: flex; align-items: center; justify-content: center; background: #050505; overflow: hidden; user-select: none; }
+           svg { width: 100%; height: 220px; display: block; }`,
+          `// Text Path Sine Wave Marquee
+           const tp = document.getElementById('wave-text-path');
+           let offset = 0;
+           const speed = 150; // pixels per second
+           let lastTime = performance.now();
+           const unitWidth = 420; // approximate unit repeat width
+
+           function animate(time) {
+             const dt = Math.min((time - lastTime) / 1000, 0.05);
+             lastTime = time;
+             offset -= speed * dt;
+             offset = offset % unitWidth;
+             if (tp) tp.setAttribute('startOffset', offset + 'px');
+             requestAnimationFrame(animate);
+           }
+           requestAnimationFrame(animate);`
+        );
       case "text-carousel":
         return vanillaBoilerplateLocal(
           `<div class="carousel-container">

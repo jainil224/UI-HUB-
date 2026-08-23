@@ -2301,6 +2301,59 @@ COMPONENT SPECIFICATIONS:
    - transition: { type: "tween", duration: 0.45, ease: "easeOut", staggerChildren: 0.03 }`
     },
     {
+        id: "text-path",
+        title: "Text Path",
+        category: "text",
+        preview: () => <TextPathPreview />,
+        code: `import React from 'react';
+import { TextPath } from '@/components/animations/TextPath';
+
+export function TextPathDemo() {
+  return (
+    <div className="w-full min-h-[380px] flex items-center justify-center bg-black p-8">
+      <TextPath
+        text="UI HUB • INFINITE SINE WAVE MARQUEE"
+        separator="   ★   "
+        gap={0}
+        speed={30}
+        reversed={true}
+        waveFrequency={3}
+        waveHeight={100}
+        textColor="#FFFFFF"
+        textFont={{
+          fontSize: 18,
+          fontWeight: 700,
+          letterSpacing: 1,
+          fontFamily: "Inter, system-ui, sans-serif",
+        }}
+        height={220}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create an infinite wave marquee text component named "TextPath" in React and TypeScript.
+
+COMPONENT SPECIFICATIONS:
+1. Procedural SVG Sine Wave Geometry:
+   - Dynamic cubic bézier sine wave path extending past both container edges with overflow margin so endpoints are never visible.
+   - True peak-to-trough wave height math with glyph-preserving vertical margin clamping.
+2. Seamless rAF Loop Flow:
+   - Smooth continuous scrolling along the SVG <textPath> using startOffset calculation in a high-performance requestAnimationFrame loop.
+   - Dual-width difference text measurement ((len4 - len2) / 2) for exact per-unit period wrapping without edge-whitespace hops.
+3. Configurable Props:
+   - text: string = "TEXT PATH"
+   - speed: number = 30
+   - reversed: boolean = true
+   - textFont: { fontSize: number | string, fontWeight: number | string, fontFamily: string, letterSpacing: number | string }
+   - textColor: string = "#FFFFFF"
+   - waveFrequency: number = 3
+   - waveHeight: number = 100
+   - separator: string = "   •   "
+   - gap: number = 0
+   - width: string | number = "100%"
+   - height: string | number = 200`
+    },
+    {
         id: "letter-pull-up",
         title: "Letter Pull Up",
         category: "text",
