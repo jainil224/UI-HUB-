@@ -2742,6 +2742,46 @@ Generate a production-ready kinetic typography component named "Rolling Letters"
    - triggerOnHover?: boolean
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "scramble-text": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert kinetic typography and creative developer specializing in high-performance React interactions.
+
+## Task
+Generate a production-ready interactive kinetic typography glitch reveal and cursor-diffusion component named "Scramble Text" (GlitchCharReveal / ScrambleText) with dual entrance and hover physics using React and TypeScript.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* Custom Cubic-Bezier & Easing Solver
+* IntersectionObserver & ResizeObserver for Line Detection
+* Zero External UI Dependencies (Pure React / DOM / requestAnimationFrame)
+
+## Component Specifications & Requirements
+1. **Multi-Stage Kinetic Enter Reveal**:
+   - Modes: \`"none" | "oneLine" | "multiLine" | "random"\`.
+   - Dynamic line and whitespace detection to prevent layout shift during scramble transformations.
+   - High-speed glitch frame randomization prior to locking target characters into place.
+   - Configurable scramble intensity, custom cubic-bezier ease curves, and duration.
+   - Micro-flicker physics with customizable flicker color, intensity, and speed.
+2. **Interactive Hover Diffusion & Wave Sweeps**:
+   - Hover modes: \`"diffusion" | "wave" | "none"\` across \`"oneLine"\` or \`"multiLine"\`.
+   - Diffusion mode scatters characters in a radial falloff with optional collapsing decay timer.
+   - Wave mode runs high-performance independent requestAnimationFrame scanner loops per line with wave cursor blocks (\`░▒▓█\`).
+3. **Typography & Layout Fidelity**:
+   - Preserves multi-line paragraphs and spacing with ghost measurement elements.
+   - Configurable font styling, tag polymorphism (\`h1\`..\`h5\`, \`p\`, \`div\`, \`span\`), and text alignment.
+4. **Configurable Props**:
+   - words: string = "UI HUB SCRAMBLE"
+   - enterAnimation: { mode, restState, replay, position, scrambleIntensity, ease, flickerEnabled, flickerColor, flickerIntensity, flickerSpeed }
+   - hoverAnimation: { type, lines, radius, collapse, collapseTime, glitchChars, glitchShuffle, flickerEnabled, flickerColor, flickerIntensity, flickerSpeed, waveEase, waveShuffleLimitEnabled, waveShuffleLimitValue }
+   - color: string = "#ffffff"
+   - font: React.CSSProperties
+   - tag: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "div" | "span"
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 
