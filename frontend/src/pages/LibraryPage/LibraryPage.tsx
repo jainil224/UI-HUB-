@@ -7,6 +7,7 @@ import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../lib/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 
 interface Category {
     name: string;
@@ -33,16 +34,17 @@ const LibraryPage = () => {
     const idFromUrl = queryParams.get('id');
     const qFromUrl = queryParams.get('q') || '';
 
+    const [optimisticId, setOptimisticId] = useState<string | null>(null);
     const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
     const allComponents = useMemo(() => [...componentList, ...firebaseComponents], [firebaseComponents]);
 
+    const activeId = optimisticId || idFromUrl || '3d-hero';
+
     const activeComponent = useMemo(() => {
-        if (idFromUrl) {
-            const found = allComponents.find(c => c.id === idFromUrl);
-            if (found) return found;
-        }
+        const found = allComponents.find(c => c.id === activeId);
+        if (found) return found;
         return allComponents.find(c => c.id === '3d-hero') || allComponents[0];
-    }, [idFromUrl, allComponents]);
+    }, [activeId, allComponents]);
 
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
@@ -51,6 +53,10 @@ const LibraryPage = () => {
     const [showUpdates, setShowUpdates] = useState(false);
 
     const mainContainerRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+        setOptimisticId(null);
+    }, [idFromUrl]);
 
     useEffect(() => {
         setSearchQuery(qFromUrl);
@@ -124,6 +130,7 @@ const LibraryPage = () => {
     };
 
     const handleComponentSelect = (item: ComponentItem) => {
+        setOptimisticId(item.id);
         setIsMobileMenuOpen(false);
         navigate(`/library?id=${item.id}`, { replace: true });
         if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
@@ -167,11 +174,13 @@ const LibraryPage = () => {
                                     <h4 className="text-xs font-black uppercase text-brand-blue mb-2 tracking-wider">{cat.name}</h4>
                                     <div className="space-y-1 pl-2 border-l border-neutral-800">
                                         {cat.items.map(item => {
-                                            const isActive = activeComponent?.id === item.id;
+                                            const isActive = (optimisticId || activeComponent?.id) === item.id;
                                             return (
                                                 <button 
                                                     key={item.id} 
                                                     onClick={() => handleComponentSelect(item)} 
+                                                    onMouseEnter={() => prefetchComponentChunk(item.id)}
+                                                    onFocus={() => prefetchComponentChunk(item.id)}
                                                     className={`w-full flex items-center justify-between text-left px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
                                                         isActive 
                                                             ? 'bg-brand-blue text-white border border-white' 
@@ -221,7 +230,7 @@ const LibraryPage = () => {
                             <p className="text-[9px] uppercase tracking-widest text-neutral-500 font-black px-2 mb-2">COMPONENTS</p>
                             <div className="space-y-1.5">
                                 {categories.map((cat, idx) => {
-                                    const hasActive = cat.items.some(item => item.id === activeComponent?.id);
+                                    const hasActive = cat.items.some(item => (optimisticId || activeComponent?.id) === item.id);
                                     const isExpanded = expandedCategories.includes(cat.name);
                                     
                                     return (
@@ -246,11 +255,13 @@ const LibraryPage = () => {
                                             {isExpanded && (
                                                 <div className="pl-2.5 py-1.5 border-l-2 border-neutral-800/80 ml-3.5 space-y-1 mt-1">
                                                     {cat.items.map(item => {
-                                                        const isActive = activeComponent?.id === item.id;
+                                                        const isActive = (optimisticId || activeComponent?.id) === item.id;
                                                         return (
                                                             <button 
                                                                 key={item.id} 
                                                                 onClick={() => handleComponentSelect(item)} 
+                                                                onMouseEnter={() => prefetchComponentChunk(item.id)}
+                                                                onFocus={() => prefetchComponentChunk(item.id)}
                                                                 className={`w-full flex items-center justify-between text-left px-2.5 py-1.5 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all duration-150 group ${
                                                                     isActive 
                                                                         ? 'bg-brand-blue text-white border-2 border-white shadow-[3px_3px_0px_0px_#000000] translate-x-1 z-10' 

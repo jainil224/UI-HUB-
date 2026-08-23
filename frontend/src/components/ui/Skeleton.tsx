@@ -124,3 +124,39 @@ export const ComponentGridSkeleton: React.FC = () => {
         </div>
     );
 };
+
+// ── 4. Library Preview Skeleton ──
+export const PreviewSkeleton: React.FC<{ className?: string }> = ({ className = "" }) => {
+    return (
+        <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden select-none pointer-events-none ${className}`}>
+            {/* Background shimmer ambient */}
+            <div className="absolute inset-0 bg-brand-surface/40 flex items-center justify-center">
+                <div className="w-64 h-64 rounded-full bg-brand-blue/5 blur-3xl animate-pulse" />
+            </div>
+
+            {/* Central Preview Content Placeholder */}
+            <div className="relative z-10 flex flex-col items-center justify-center gap-4 max-w-sm w-full">
+                {/* Visual Icon / Canvas placeholder */}
+                <div className="relative flex items-center justify-center">
+                    <Skeleton className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl border-2 border-white/20" glow />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+                    </div>
+                </div>
+
+                {/* Subtitle / Status bar placeholder */}
+                <div className="w-full flex flex-col items-center gap-2 mt-2">
+                    <Skeleton className="w-3/4 h-5 rounded border border-neutral-700" />
+                    <Skeleton className="w-1/2 h-3 rounded" />
+                </div>
+
+                {/* Simulated interactive pill badges */}
+                <div className="flex items-center gap-2 mt-3">
+                    <Skeleton className="w-16 h-6 rounded-full border border-neutral-700" />
+                    <Skeleton className="w-20 h-6 rounded-full border border-brand-blue/40" glow />
+                    <Skeleton className="w-16 h-6 rounded-full border border-neutral-700" />
+                </div>
+            </div>
+        </div>
+    );
+};

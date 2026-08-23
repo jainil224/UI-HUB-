@@ -18,18 +18,8 @@ import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../..
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
 import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMetadata';
 import Toast from '../../../../components/ui/Toast';
-
-const preloadComponent = (id: string) => {
-    if (id === '3d-rubiks-cube') {
-        import('../../../../components/ui/RubiksCube');
-    } else if (id === '3d-scroll-animation') {
-        import('../../../Components/Scroll3DAnimationPage');
-    } else if (id === '3d-slider') {
-        import('../../../Components/ThreeDSliderPage');
-    } else if (id === 'cloud-scroll') {
-        import('../../../Components/CloudScrollPage');
-    }
-};
+import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
+import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
 
 
 const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
@@ -1022,13 +1012,16 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     onReset={() => setResetKey(k => k + 1)}
                                 >
                                     <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
-                                        <React.Suspense fallback={
-                                            <div className="flex flex-col items-center justify-center p-12 text-neutral-400">
-                                                <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />
-                                                <p className="text-[10px] uppercase tracking-widest font-black">INITIALIZING PREVIEW...</p>
-                                            </div>
-                                        }>
-                                            {item.preview({ showDemoButton: true })}
+                                        <React.Suspense fallback={<PreviewSkeleton />}>
+                                            <motion.div
+                                                key={`preview-${item.id}-${resetKey}`}
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                                className="w-full h-full flex items-center justify-center"
+                                            >
+                                                {item.preview({ showDemoButton: true })}
+                                            </motion.div>
                                         </React.Suspense>
                                     </div>
                                 </PreviewErrorBoundary>

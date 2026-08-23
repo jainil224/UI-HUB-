@@ -19,6 +19,7 @@ import ScrollToTop from './components/ui/ScrollToTop';
 import FourierFlow from './components/ui/FourierFlow';
 import { SkeletonProvider } from './context/SkeletonContext';
 import { HeroSkeleton } from './components/ui/Skeleton';
+import TopLoader from './components/ui/TopLoader';
 
 
 // Wrapper: only shows Navbar + Footer on non-library pages
@@ -35,6 +36,7 @@ const AppShell = () => {
         ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black' 
         : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
     }`}>
+      <TopLoader />
       {!isDemo && <Navbar />}
 
       <main className="flex-1 flex flex-col">
