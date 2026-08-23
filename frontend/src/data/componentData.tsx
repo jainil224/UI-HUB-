@@ -69,6 +69,7 @@ const DiagonalCarousel = React.lazy(() => import('../components/ui/diagonal-caro
 const TestimonialsCard = React.lazy(() => import('../components/ui/testimonials-card').then(m => ({ default: m.TestimonialsCard })));
 const ImageCollage = React.lazy(() => import('../components/ui/image-collage').then(m => ({ default: m.ImageCollage })));
 const PointDNAHelix = React.lazy(() => import('../components/ui/PointDNAHelix'));
+const TwinGalaxyRings = React.lazy(() => import('../components/ui/TwinGalaxyRings'));
 
 
 
@@ -1741,6 +1742,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'scroll-text-highlight': ScrollHighlight as any,
     'smoky-text': SmokyText as any,
     'point-dna-helix': PointDNAHelix,
+    'twin-galaxy-rings': TwinGalaxyRings,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -3589,6 +3591,45 @@ export function PointDNAHelixDemo() {
   );
 }`,
         vibePrompt: "Create a bioluminescent 3D point-cloud double DNA helix background in React + TypeScript using raw WebGL (single GL context, one rAF loop, all state via refs). Two interwoven helical backbone strands 180° out of phase connected by discrete base-pair rungs, surrounded by ambient genetic dust. All helical parametric math, camera transform, perspective point sizing, depth fade and screen-space cursor displacement live in the vertex shader. The helix runs horizontally past both frame edges so no end is ever visible; it auto-spins about its own axis, supports drag-to-spin with flick momentum, a cursor-proximity particle push (hover), breathing pulse, tilt X/Y, zoom, density and dot-size controls, cyan/magenta accent color mixing, additive premultiplied blending with exponential point falloff."
+    },
+    {
+        id: "twin-galaxy-rings",
+        title: "Twin Galaxy Rings",
+        category: "interactive-background",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
+                <TwinGalaxyRings />
+            </div>
+        ),
+        code: `import TwinGalaxyRings from "@/components/ui/TwinGalaxyRings";
+
+export function TwinGalaxyRingsDemo() {
+  return (
+    <div className="relative h-screen w-full overflow-hidden">
+      <TwinGalaxyRings
+        background="#050A14"
+        colors={["#A050FF", "#C9D6E8"]}
+        density={98}
+        dotSize={2}
+        speed={47}
+        hoverSpeed={85}
+        direction="cw"
+        distance={3540}
+        innerVoid={14}
+        armThickness={100}
+        armCount={5}
+        tilt={{ tilt: 26, sideTilt: -8 }}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Twin Galaxy Rings' WebGL particle spiral-galaxy background in React + TypeScript (raw WebGL, single GL context, one rAF loop, all live state via refs). Logarithmic-spiral arms rendered as a GPU point cloud with gaussian-scattered arm width/height offsets, seeded mulberry32 RNG for deterministic layout. The galaxy streams endlessly along its arms with adjustable speed and cw/ccw direction, accelerating on hover. Cursor position is un-projected onto the galactic plane (planeHit ray cast) to lift and swell nearby particles; pressing boosts stream speed and dollies the camera in. Scroll progress drives camera pitch/roll tilt. Supports up to 8-color palette uploaded as a uniform array, density/dot-size/arm-count/arm-thickness/inner-void controls, radial-gradient ambient glow corners, additive premultiplied blending."
     }
 ];
 

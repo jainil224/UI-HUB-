@@ -723,7 +723,7 @@ export interface PointDNAHelixProps {
 
 
 
-function __OriginkitBase_PointDNAHelix({
+function __UIHub_PointDNAHelix({
 
     background = "#030712",
 
@@ -1497,7 +1497,7 @@ function __OriginkitBase_PointDNAHelix({
 
 
 
-const __originkitPresetProps = {
+const __uihubPresetProps = {
 
   "tilt": {
 
@@ -1523,7 +1523,7 @@ const __originkitPresetProps = {
 
 export default function PointDNAHelix(props: Record<string, unknown>) {
 
-  return <__OriginkitBase_PointDNAHelix {...(__originkitPresetProps as Record<string, unknown>)} {...props} />;
+  return <__UIHub_PointDNAHelix {...(__uihubPresetProps as Record<string, unknown>)} {...props} />;
 
 }
 
