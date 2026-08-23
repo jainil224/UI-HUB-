@@ -2964,6 +2964,48 @@ Generate a production-ready infinite wave marquee text animation component named
    - style?: React.CSSProperties
 
 Provide the complete, single-file, production-ready React TypeScript component.
+`,
+
+    "text-vaporize": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert creative technologist and canvas animation engineer in React and TypeScript.
+
+## Task
+Generate a production-ready canvas-based particle text vaporization and reconstitution animation component named "VaporizeTextCycle" / "TextVaporize" in React and TypeScript where words vaporize into diffuse particle swarms and reconstitute cleanly in infinite cycles.
+
+## Tech Stack
+* React 18+ (TypeScript)
+* HTML5 Canvas & Direct \`ImageData\` Buffer Manipulation
+* Single Long-Lived \`requestAnimationFrame\` Loop
+* Custom Cubic-Bézier Timing & Easing Curves
+
+## Component Specifications & Requirements
+1. **Direct Pixel Buffer Rasterization**:
+   - Render text to canvas and extract particle coordinates via \`getImageData()\`.
+   - Update and render particles by writing direct RGBA channels into a single reusable \`ImageData\` buffer via \`putImageData()\`, avoiding DOM node overhead and maintaining 60fps performance.
+2. **3-Phase Animation State Machine**:
+   - \`"in"\` (appear) -> \`"hold"\` (settled reading time) -> \`"out"\` (disappear/vaporize) -> loop with next word.
+   - Modes: \`"particle"\` (radial dispersion with sinusoidal wobble) or \`"opacity"\` (alpha transition).
+   - Directional sweep order: \`"together"\`, \`"left-to-right"\`, \`"right-to-left"\`.
+3. **Accessibility & DPR Handling**:
+   - Hidden semantic text tag (\`h1\`..\`p\`) for search engines and screen readers alongside an \`aria-hidden\` canvas.
+   - Scales with \`devicePixelRatio\` (capped at 2) and calculates bleed margins to prevent particle clipping.
+4. **Configurable Props**:
+   - texts?: string[] = ["TEXT", "VAPORIZE"]
+   - font?: { fontFamily?: string; fontWeight?: number | string; fontSize?: number | string; letterSpacing?: number }
+   - color?: string = "#FFFFFF"
+   - spread?: number = 20
+   - density?: number = 10
+   - appear?: { mode?: "particle" | "opacity"; order?: "together" | "left-to-right" | "right-to-left"; transition?: { duration?: number; ease?: string | number[]; delay?: number } }
+   - disappear?: { mode?: "particle" | "opacity"; order?: "together" | "left-to-right" | "right-to-left"; transition?: { duration?: number; ease?: string | number[]; delay?: number } }
+   - alignment?: "left" | "center" | "right" = "center"
+   - tag?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "div" | "span" = "h1"
+   - className?: string
+   - style?: React.CSSProperties
+
+Provide the complete, single-file, production-ready React TypeScript component.
 `
 };
 
