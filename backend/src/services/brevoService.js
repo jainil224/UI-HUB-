@@ -32,27 +32,34 @@ export function buildWelcomeEmailHtml(name) {
 
     return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light"/>
+  <meta name="supported-color-schemes" content="light"/>
   <title>Welcome to UI-HUB</title>
+  <style>
+    :root { color-scheme: light; }
+    body, table, td, div { background-color: #FFFFFF; }
+  </style>
 </head>
-<body style="margin:0; padding:0; background-color:#FFFFFF; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF; padding:40px 16px; width:100%;">
-    <tr>
-      <td align="center" style="background-color:#FFFFFF;">
-        <!-- Main Card Container with Black Line Border & Corners -->
-        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
-          
-          <!-- Top Header Bar -->
-          <tr>
-            <td style="background-color:#000000; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
-              <div style="font-size:26px; font-weight:900; color:#FFFFFF; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                UI-HUB
-              </div>
-            </td>
-          </tr>
+<body bgcolor="#FFFFFF" style="margin:0; padding:0; background-color:#FFFFFF !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <div style="background-color:#FFFFFF !important; width:100%; margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important; padding:40px 16px; width:100%;">
+      <tr>
+        <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important;">
+          <!-- Main Card Container with Black Line Border & Corners -->
+          <table width="580" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="max-width:580px; width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
+            
+            <!-- Top Header Bar -->
+            <tr>
+              <td bgcolor="#000000" style="background-color:#000000 !important; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
+                <div style="font-size:26px; font-weight:900; color:#FFFFFF !important; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
+                  UI-HUB
+                </div>
+              </td>
+            </tr>
 
           <!-- Signature Color Strip (Red, Blue, Yellow) -->
           ${buildColorStrip()}
@@ -114,8 +121,8 @@ export function buildWelcomeEmailHtml(name) {
 
           <!-- Dark Footer -->
           <tr>
-            <td style="background-color:#000000; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
+            <td bgcolor="#000000" style="background-color:#000000 !important; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
+              <p style="color:#FFFFFF !important; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
                 © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
               </p>
               <p style="color:#71717A; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin:0;">
@@ -128,6 +135,7 @@ export function buildWelcomeEmailHtml(name) {
       </td>
     </tr>
   </table>
+  </div>
 </body>
 </html>
     `;
@@ -154,131 +162,139 @@ export function buildFreeSubscriptionEmailHtml({ name, email, activatedAt = new 
 
     return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light"/>
+  <meta name="supported-color-schemes" content="light"/>
   <title>Your FREE UI-HUB Subscription is Active</title>
+  <style>
+    :root { color-scheme: light; }
+    body, table, td, div { background-color: #FFFFFF; }
+  </style>
 </head>
-<body style="margin:0; padding:0; background-color:#FFFFFF; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF; padding:40px 16px; width:100%;">
-    <tr>
-      <td align="center" style="background-color:#FFFFFF;">
-        <!-- Main Card Container with Black Line Border & Corners -->
-        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
-          
-          <!-- Top Header Bar -->
-          <tr>
-            <td style="background-color:#000000; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
-              <div style="font-size:26px; font-weight:900; color:#FFFFFF; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                UI-HUB
-              </div>
-            </td>
-          </tr>
+<body bgcolor="#FFFFFF" style="margin:0; padding:0; background-color:#FFFFFF !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <div style="background-color:#FFFFFF !important; width:100%; margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important; padding:40px 16px; width:100%;">
+      <tr>
+        <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important;">
+          <!-- Main Card Container with Black Line Border & Corners -->
+          <table width="580" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="max-width:580px; width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
+            
+            <!-- Top Header Bar -->
+            <tr>
+              <td bgcolor="#000000" style="background-color:#000000 !important; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
+                <div style="font-size:26px; font-weight:900; color:#FFFFFF !important; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
+                  UI-HUB
+                </div>
+              </td>
+            </tr>
 
-          <!-- Signature Color Strip (Red, Blue, Yellow) -->
-          ${buildColorStrip()}
+            <!-- Signature Color Strip (Red, Blue, Yellow) -->
+            ${buildColorStrip()}
 
-          <!-- Card Content Body -->
-          <tr>
-            <td style="padding:36px 32px 28px 32px; background-color:#FFFFFF; text-align:left;">
-              
-              <!-- Badge -->
-              <div style="margin-bottom:20px;">
-                <span style="display:inline-block; background-color:#00FF1A; color:#000000; font-size:10px; font-weight:900; padding:5px 12px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px;">
-                  FREE SUBSCRIPTION ACTIVE
-                </span>
-              </div>
+            <!-- Card Content Body -->
+            <tr>
+              <td bgcolor="#FFFFFF" style="padding:36px 32px 28px 32px; background-color:#FFFFFF !important; text-align:left;">
+                
+                <!-- Badge -->
+                <div style="margin-bottom:20px;">
+                  <span style="display:inline-block; background-color:#00FF1A; color:#000000; font-size:10px; font-weight:900; padding:5px 12px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px;">
+                    FREE SUBSCRIPTION ACTIVE
+                  </span>
+                </div>
 
-              <!-- Main Title -->
-              <h1 style="font-size:26px; font-weight:900; color:#000000; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 14px 0; line-height:1.2;">
-                YOUR FREE PLAN IS CONFIRMED
-              </h1>
+                <!-- Main Title -->
+                <h1 style="font-size:26px; font-weight:900; color:#000000; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 14px 0; line-height:1.2;">
+                  YOUR FREE PLAN IS CONFIRMED
+                </h1>
 
-              <!-- Greeting & Copy -->
-              <p style="font-size:15px; color:#222222; line-height:1.6; margin:0 0 16px 0; font-weight:500;">
-                Hi <strong>${displayName}</strong>, your <strong>FREE Subscription</strong> is now active.
-              </p>
-
-              <p style="font-size:14px; color:#444444; line-height:1.6; margin:0 0 24px 0;">
-                You now have unlimited access to our collection of open-source React components, starter blueprints, and AI prompt trials.
-              </p>
-
-              <!-- Subscription Info Table Box -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8FAFC; border:2px solid #000000; margin-bottom:24px; box-shadow:3px 3px 0px #000000;">
-                <tr>
-                  <td style="padding:16px 18px;">
-                    <div style="font-family:monospace; font-size:10px; font-weight:900; color:#3D5CFF; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">
-                      // SUBSCRIPTION DETAILS
-                    </div>
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Plan:</td>
-                        <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:900;">FREE (Starter)</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Account:</td>
-                        <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:800;">${email}</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Billing:</td>
-                        <td align="right" style="padding:4px 0; font-size:13px; color:#059669; font-weight:900;">$0.00 (Free Forever)</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Status:</td>
-                        <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:800;">Active / Unlimited</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Brutalist Primary Action Button -->
-              <div style="margin:24px 0 24px 0;">
-                <a href="${libraryUrl}"
-                   style="display:inline-block; background-color:#3D5CFF; color:#FFFFFF; text-decoration:none; font-weight:900; font-size:14px; padding:16px 36px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px; box-shadow:5px 5px 0px #000000;">
-                  START BROWSING FREE COMPONENTS →
-                </a>
-              </div>
-
-              <!-- Link Fallback Box -->
-              <p style="font-size:12px; color:#666666; margin:0 0 8px 0;">
-                Or copy and paste this link in your browser:
-              </p>
-              <div style="background-color:#F1F5F9; border:1.5px solid #000000; padding:12px 14px; font-family:monospace; font-size:12px; color:#2563EB; word-break:break-all; margin-bottom:24px;">
-                <a href="${libraryUrl}" style="color:#2563EB; text-decoration:underline;">${libraryUrl}</a>
-              </div>
-
-              <!-- Yellow Notice Box -->
-              <div style="background-color:#FEF9C3; border:2px solid #000000; padding:14px 16px; margin-bottom:28px; box-shadow:3px 3px 0px #000000;">
-                <p style="margin:0; font-size:12px; color:#000000; font-weight:600; line-height:1.5;">
-                  ⚡ <strong>Notice:</strong> This is a 100% Free plan. No credit card or payment receipt is required. Upgrade to PRO anytime to unlock 3D assets & ZIP downloads!
+                <!-- Greeting & Copy -->
+                <p style="font-size:15px; color:#222222; line-height:1.6; margin:0 0 16px 0; font-weight:500;">
+                  Hi <strong>${displayName}</strong>, your <strong>FREE Subscription</strong> is now active.
                 </p>
-              </div>
 
-              <!-- Sign-off -->
-              <p style="font-size:13px; color:#444444; margin:0 0 4px 0;">Best regards,</p>
-              <p style="font-size:14px; color:#000000; font-weight:900; margin:0;">The UI-HUB Engineering Team</p>
+                <p style="font-size:14px; color:#444444; line-height:1.6; margin:0 0 24px 0;">
+                  You now have unlimited access to our collection of open-source React components, starter blueprints, and AI prompt trials.
+                </p>
 
-            </td>
-          </tr>
+                <!-- Subscription Info Table Box -->
+                <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8FAFC" style="background-color:#F8FAFC; border:2px solid #000000; margin-bottom:24px; box-shadow:3px 3px 0px #000000;">
+                  <tr>
+                    <td style="padding:16px 18px;">
+                      <div style="font-family:monospace; font-size:10px; font-weight:900; color:#3D5CFF; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">
+                        // SUBSCRIPTION DETAILS
+                      </div>
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Plan:</td>
+                          <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:900;">FREE (Starter)</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Account:</td>
+                          <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:800;">${email}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Billing:</td>
+                          <td align="right" style="padding:4px 0; font-size:13px; color:#059669; font-weight:900;">$0.00 (Free Forever)</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Status:</td>
+                          <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:800;">Active / Unlimited</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
 
-          <!-- Dark Footer -->
-          <tr>
-            <td style="background-color:#000000; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
-                © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
-              </p>
-              <p style="color:#71717A; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin:0;">
-                CINEMA-GRADE UI • MASTER AI PROMPTS • ZERO BLOAT
-              </p>
-            </td>
-          </tr>
+                <!-- Brutalist Primary Action Button -->
+                <div style="margin:24px 0 24px 0;">
+                  <a href="${libraryUrl}"
+                     style="display:inline-block; background-color:#3D5CFF; color:#FFFFFF; text-decoration:none; font-weight:900; font-size:14px; padding:16px 36px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px; box-shadow:5px 5px 0px #000000;">
+                    START BROWSING FREE COMPONENTS →
+                  </a>
+                </div>
 
-        </table>
-      </td>
-    </tr>
-  </table>
+                <!-- Link Fallback Box -->
+                <p style="font-size:12px; color:#666666; margin:0 0 8px 0;">
+                  Or copy and paste this link in your browser:
+                </p>
+                <div style="background-color:#F1F5F9; border:1.5px solid #000000; padding:12px 14px; font-family:monospace; font-size:12px; color:#2563EB; word-break:break-all; margin-bottom:24px;">
+                  <a href="${libraryUrl}" style="color:#2563EB; text-decoration:underline;">${libraryUrl}</a>
+                </div>
+
+                <!-- Yellow Notice Box -->
+                <div style="background-color:#FEF9C3; border:2px solid #000000; padding:14px 16px; margin-bottom:28px; box-shadow:3px 3px 0px #000000;">
+                  <p style="margin:0; font-size:12px; color:#000000; font-weight:600; line-height:1.5;">
+                    ⚡ <strong>Notice:</strong> This is a 100% Free plan. No credit card or payment receipt is required. Upgrade to PRO anytime to unlock 3D assets & ZIP downloads!
+                  </p>
+                </div>
+
+                <!-- Sign-off -->
+                <p style="font-size:13px; color:#444444; margin:0 0 4px 0;">Best regards,</p>
+                <p style="font-size:14px; color:#000000; font-weight:900; margin:0;">The UI-HUB Engineering Team</p>
+
+              </td>
+            </tr>
+
+            <!-- Dark Footer -->
+            <tr>
+              <td bgcolor="#000000" style="background-color:#000000 !important; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
+                <p style="color:#FFFFFF !important; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
+                  © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
+                </p>
+                <p style="color:#71717A; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin:0;">
+                  CINEMA-GRADE UI • MASTER AI PROMPTS • ZERO BLOAT
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
 </body>
 </html>
     `;
@@ -321,119 +337,127 @@ export function buildProSubscriptionEmailHtml({
 
     return `
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light"/>
+  <meta name="supported-color-schemes" content="light"/>
   <title>Welcome to PRO ACCESS</title>
+  <style>
+    :root { color-scheme: light; }
+    body, table, td, div { background-color: #FFFFFF; }
+  </style>
 </head>
-<body style="margin:0; padding:0; background-color:#FFFFFF; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#FFFFFF; padding:40px 16px; width:100%;">
-    <tr>
-      <td align="center" style="background-color:#FFFFFF;">
-        <!-- Main Card Container with Black Line Border & Corners -->
-        <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px; width:100%; background-color:#FFFFFF; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
-          
-          <!-- Top Header Bar -->
-          <tr>
-            <td style="background-color:#000000; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
-              <div style="font-size:26px; font-weight:900; color:#FFFFFF; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                UI-HUB
-              </div>
-            </td>
-          </tr>
+<body bgcolor="#FFFFFF" style="margin:0; padding:0; background-color:#FFFFFF !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <div style="background-color:#FFFFFF !important; width:100%; margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important; padding:40px 16px; width:100%;">
+      <tr>
+        <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important;">
+          <!-- Main Card Container with Black Line Border & Corners -->
+          <table width="580" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="max-width:580px; width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-radius:12px; box-shadow:6px 6px 0px #000000; overflow:hidden; border-collapse:separate;">
+            
+            <!-- Top Header Bar -->
+            <tr>
+              <td bgcolor="#000000" style="background-color:#000000 !important; padding:26px 20px; text-align:center; border-top-left-radius:10px; border-top-right-radius:10px;">
+                <div style="font-size:26px; font-weight:900; color:#FFFFFF !important; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
+                  UI-HUB
+                </div>
+              </td>
+            </tr>
 
-          <!-- Signature Color Strip (Red, Blue, Yellow) -->
-          ${buildColorStrip()}
+            <!-- Signature Color Strip (Red, Blue, Yellow) -->
+            ${buildColorStrip()}
 
-          <!-- Card Content Body -->
-          <tr>
-            <td style="padding:36px 32px 28px 32px; background-color:#FFFFFF; text-align:left;">
-              
-              <!-- Badge -->
-              <div style="margin-bottom:20px;">
-                <span style="display:inline-block; background-color:#3D5CFF; color:#FFFFFF; font-size:10px; font-weight:900; padding:5px 12px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px;">
-                  PRO ACCESS ACTIVATED
-                </span>
-              </div>
+            <!-- Card Content Body -->
+            <tr>
+              <td bgcolor="#FFFFFF" style="padding:36px 32px 28px 32px; background-color:#FFFFFF !important; text-align:left;">
+                
+                <!-- Badge -->
+                <div style="margin-bottom:20px;">
+                  <span style="display:inline-block; background-color:#3D5CFF; color:#FFFFFF; font-size:10px; font-weight:900; padding:5px 12px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px;">
+                    PRO ACCESS ACTIVATED
+                  </span>
+                </div>
 
-              <!-- Main Title -->
-              <h1 style="font-size:26px; font-weight:900; color:#000000; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 14px 0; line-height:1.2;">
-                WELCOME TO PRO ACCESS, ${displayName.toUpperCase()}! 🚀
-              </h1>
+                <!-- Main Title -->
+                <h1 style="font-size:26px; font-weight:900; color:#000000; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 14px 0; line-height:1.2;">
+                  WELCOME TO PRO ACCESS, ${displayName.toUpperCase()}! 🚀
+                </h1>
 
-              <!-- Greeting & Copy -->
-              <p style="font-size:15px; color:#222222; line-height:1.6; margin:0 0 16px 0; font-weight:500;">
-                Your payment was <strong style="color:#059669;">successfully verified</strong>. Your UI-HUB account has been upgraded to <strong>PRO ACCESS</strong> for <strong>${duration}</strong>.
-              </p>
-
-              <!-- Payment Summary Table Box -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F8FAFC; border:2px solid #000000; margin-bottom:24px; box-shadow:3px 3px 0px #000000;">
-                <tr>
-                  <td style="padding:16px 18px;">
-                    <div style="font-family:monospace; font-size:10px; font-weight:900; color:#3D5CFF; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">
-                      // TRANSACTION & RECEIPT SUMMARY
-                    </div>
-                    <table width="100%" cellpadding="0" cellspacing="0">
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Plan:</td>
-                        <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:900;">PRO ACCESS (${duration})</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Amount Paid:</td>
-                        <td align="right" style="padding:4px 0; font-size:13px; color:#059669; font-weight:900;">${formattedAmount}</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Payment ID:</td>
-                        <td align="right" style="padding:4px 0; font-size:12px; font-family:monospace; color:#000000; font-weight:800;">${paymentId}</td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Date:</td>
-                        <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:800;">${formattedDate}</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
-              <!-- Brutalist Primary Action Button -->
-              <div style="margin:24px 0 24px 0;">
-                <a href="${libraryUrl}"
-                   style="display:inline-block; background-color:#3D5CFF; color:#FFFFFF; text-decoration:none; font-weight:900; font-size:14px; padding:16px 36px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px; box-shadow:5px 5px 0px #000000;">
-                  LAUNCH PRO LIBRARY & DOWNLOADS →
-                </a>
-              </div>
-
-              <!-- Green Attached Receipt Notice Box -->
-              <div style="background-color:#ECFDF5; border:2px solid #000000; padding:14px 16px; margin-bottom:28px; box-shadow:3px 3px 0px #000000;">
-                <p style="margin:0; font-size:12px; color:#065F46; font-weight:700; line-height:1.5;">
-                  📎 <strong>PDF PAYMENT RECEIPT ATTACHED:</strong> Your official payment receipt has been generated and attached to this email as a PDF. Please retain it for your accounting records.
+                <!-- Greeting & Copy -->
+                <p style="font-size:15px; color:#222222; line-height:1.6; margin:0 0 16px 0; font-weight:500;">
+                  Your payment was <strong style="color:#059669;">successfully verified</strong>. Your UI-HUB account has been upgraded to <strong>PRO ACCESS</strong> for <strong>${duration}</strong>.
                 </p>
-              </div>
 
-              <!-- Sign-off -->
-              <p style="font-size:13px; color:#444444; margin:0 0 4px 0;">Best regards,</p>
-              <p style="font-size:14px; color:#000000; font-weight:900; margin:0;">The UI-HUB Engineering Team</p>
+                <!-- Payment Summary Table Box -->
+                <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8FAFC" style="background-color:#F8FAFC; border:2px solid #000000; margin-bottom:24px; box-shadow:3px 3px 0px #000000;">
+                  <tr>
+                    <td style="padding:16px 18px;">
+                      <div style="font-family:monospace; font-size:10px; font-weight:900; color:#3D5CFF; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:10px;">
+                        // TRANSACTION & RECEIPT SUMMARY
+                      </div>
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Plan:</td>
+                          <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:900;">PRO ACCESS (${duration})</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Amount Paid:</td>
+                          <td align="right" style="padding:4px 0; font-size:13px; color:#059669; font-weight:900;">${formattedAmount}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Payment ID:</td>
+                          <td align="right" style="padding:4px 0; font-size:12px; font-family:monospace; color:#000000; font-weight:800;">${paymentId}</td>
+                        </tr>
+                        <tr>
+                          <td style="padding:4px 0; font-size:13px; color:#64748B; font-weight:600;">Date:</td>
+                          <td align="right" style="padding:4px 0; font-size:13px; color:#000000; font-weight:800;">${formattedDate}</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
 
-            </td>
-          </tr>
+                <!-- Brutalist Primary Action Button -->
+                <div style="margin:24px 0 24px 0;">
+                  <a href="${libraryUrl}"
+                     style="display:inline-block; background-color:#3D5CFF; color:#FFFFFF; text-decoration:none; font-weight:900; font-size:14px; padding:16px 36px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px; box-shadow:5px 5px 0px #000000;">
+                    LAUNCH PRO LIBRARY & DOWNLOADS →
+                  </a>
+                </div>
 
-          <!-- Dark Footer -->
-          <tr>
-            <td style="background-color:#000000; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
-              <p style="color:#FFFFFF; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
-                © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
-              </p>
-              <p style="color:#71717A; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin:0;">
-                CINEMA-GRADE UI • MASTER AI PROMPTS • ZERO BLOAT
-              </p>
-            </td>
-          </tr>
+                <!-- Green Attached Receipt Notice Box -->
+                <div style="background-color:#ECFDF5; border:2px solid #000000; padding:14px 16px; margin-bottom:28px; box-shadow:3px 3px 0px #000000;">
+                  <p style="margin:0; font-size:12px; color:#065F46; font-weight:700; line-height:1.5;">
+                    📎 <strong>PDF PAYMENT RECEIPT ATTACHED:</strong> Your official payment receipt has been generated and attached to this email as a PDF. Please retain it for your accounting records.
+                  </p>
+                </div>
 
-        </table>
-      </td>
-    </tr>
-  </table>
+                <!-- Sign-off -->
+                <p style="font-size:13px; color:#444444; margin:0 0 4px 0;">Best regards,</p>
+                <p style="font-size:14px; color:#000000; font-weight:900; margin:0;">The UI-HUB Engineering Team</p>
+
+              </td>
+            </tr>
+
+            <!-- Dark Footer -->
+            <tr>
+              <td bgcolor="#000000" style="background-color:#000000 !important; padding:24px 20px; text-align:center; border-bottom-left-radius:10px; border-bottom-right-radius:10px;">
+                <p style="color:#FFFFFF !important; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
+                  © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
+                </p>
+                <p style="color:#71717A; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin:0;">
+                  CINEMA-GRADE UI • MASTER AI PROMPTS • ZERO BLOAT
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
 </body>
 </html>
     `;
