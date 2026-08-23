@@ -1273,9 +1273,11 @@ function createVortex(
       container.removeEventListener("pointerleave", onPointerLeave);
       container.removeEventListener("pointercancel", onPointerLeave);
       for (const d of disposables) d.dispose();
+      // Keep the GL context alive — do NOT call forceContextLoss here. React
+      // StrictMode mounts -> unmounts -> remounts on the SAME canvas, and a
+      // canvas whose context has been lost can never hand out a working one
+      // again, which leaves the remounted component rendering nothing.
       renderer.dispose();
-      // Free the GL context at once; browsers cap how many can be open.
-      renderer.forceContextLoss?.();
     },
   };
 }
