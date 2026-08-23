@@ -917,10 +917,15 @@ export default function ParticleSphereRefactor(__props?: Partial<ParticleSphereR
                 mouseYInContainer <= containerRect.height
             ) {
                 // Convert container coordinates to canvas coordinates (add offset)
+                const wasOutside = mouseRef.current === null
                 mouseRef.current = {
                     x: mouseXInContainer + offsetX,
                     y: mouseYInContainer + offsetY,
                 }
+                // Hovering INTO the sphere fires the scatter burst — the
+                // animation that previously required a click. Leaving and
+                // re-entering arms it again.
+                if (wasOutside) applyScatter(event.clientX, event.clientY)
                 // Start animation if not running (needed for cursor interaction to work)
                 startAnimation()
             } else {
@@ -964,17 +969,19 @@ export default function ParticleSphereRefactor(__props?: Partial<ParticleSphereR
             mouseRef.current = null
         }
 
-        // Click scatter effect handler
-        const handleClick = (event: MouseEvent) => {
+        // Scatter burst — the radial explosion that used to require a click.
+        // Shared by click, touch AND hover entry, so merely hovering over
+        // the sphere plays the same animation.
+        const applyScatter = (clientX: number, clientY: number) => {
             if (!cursorConfig.enabled || !cursorConfig.clickForce) return
 
             // Update matrix to ensure it's current
             particlesGroup.updateMatrixWorld(true)
 
             const containerRect = container.getBoundingClientRect()
-            // Convert container coordinates to canvas coordinates (add offset)
-            const clickX = event.clientX - containerRect.left + offsetX
-            const clickY = event.clientY - containerRect.top + offsetY
+            // Convert pointer coordinates to canvas coordinates (add offset)
+            const clickX = clientX - containerRect.left + offsetX
+            const clickY = clientY - containerRect.top + offsetY
             const cursorRadiusSquared = cursorRadius * cursorRadius
             const clickForce = cursorConfig.clickForce || 10
 
@@ -1082,127 +1089,17 @@ export default function ParticleSphereRefactor(__props?: Partial<ParticleSphereR
             startAnimation()
         }
 
-        // Touch scatter effect handler
+        // Click still fires the burst too, but hover now triggers it first.
+        const handleClick = (event: MouseEvent) => {
+            applyScatter(event.clientX, event.clientY)
+        }
+
+        // Touch keeps its own guard (preventDefault) before scattering.
         const handleTouchStart = (event: TouchEvent) => {
-            if (!cursorConfig.enabled || !cursorConfig.clickForce) return
-
             event.preventDefault()
-
-            // Update matrix to ensure it's current
-            particlesGroup.updateMatrixWorld(true)
-
-            const containerRect = container.getBoundingClientRect()
             const touch = event.touches[0]
             if (!touch) return
-
-            // Convert container coordinates to canvas coordinates (add offset)
-            const touchX = touch.clientX - containerRect.left + offsetX
-            const touchY = touch.clientY - containerRect.top + offsetY
-            const cursorRadiusSquared = cursorRadius * cursorRadius
-            const clickForce = cursorConfig.clickForce || 10
-
-            const touchContainerWidth = containerRef.current?.clientWidth || 400
-            const touchContainerHeight =
-                containerRef.current?.clientHeight || 400
-            const touchCanvasWidth =
-                touchContainerWidth * canvasOverflowMultiplier
-            const touchCanvasHeight =
-                touchContainerHeight * canvasOverflowMultiplier
-            const currentCamera = cameraRef.current
-
-            // Convert touch point from screen space to 3D world space
-            // Normalize touch coordinates to NDC (Normalized Device Coordinates) using canvas dimensions
-            const ndcX = (touchX / touchCanvasWidth) * 2 - 1
-            const ndcY = 1 - (touchY / touchCanvasHeight) * 2
-
-            // Create a ray from camera through the touch point
-            const touchRay = new Vector3(ndcX, ndcY, 0.5)
-            touchRay.unproject(currentCamera)
-
-            // Get camera position in world space
-            const cameraWorldPos = new Vector3()
-            cameraWorldPos.setFromMatrixPosition(currentCamera.matrixWorld)
-
-            // Calculate direction from camera through touch point
-            const touchDirection = new Vector3()
-            touchDirection.subVectors(touchRay, cameraWorldPos).normalize()
-
-            // Estimate touch point in world space (at sphere distance)
-            const sphereCenter = new Vector3(0, 0, 0)
-            const cameraToCenter = new Vector3()
-            cameraToCenter.subVectors(sphereCenter, cameraWorldPos)
-            const sphereDistance = cameraToCenter.length()
-            const touchWorldPos = new Vector3()
-            touchWorldPos.copy(cameraWorldPos)
-            touchWorldPos.addScaledVector(touchDirection, sphereDistance)
-
-            // Apply scatter velocity to particles (velocity-based, radial in 3D)
-            for (let i = 0; i < baseParticlePositionsRef.current.length; i++) {
-                const basePos = baseParticlePositionsRef.current[i]
-                const displacement = particleDisplacementsRef.current[i]
-                const scatterVelocity = particleScatterVelocitiesRef.current[i]
-
-                // Calculate current position: base position + displacement, then rotated by group
-                const currentLocalPos = new Vector3()
-                currentLocalPos.copy(basePos)
-                currentLocalPos.add(displacement)
-
-                // Transform to world space (apply group rotation)
-                const worldPos = new Vector3()
-                worldPos.copy(currentLocalPos)
-                worldPos.applyMatrix4(particlesGroup.matrixWorld)
-
-                // Project 3D position to 2D screen space for distance check (using canvas dimensions)
-                const projected = worldPos.clone().project(currentCamera)
-                const screenX = (projected.x * 0.5 + 0.5) * touchCanvasWidth
-                const screenY = (-projected.y * 0.5 + 0.5) * touchCanvasHeight
-
-                // Calculate distance from touch point to particle in screen space
-                const dx = touchX - screenX
-                const dy = touchY - screenY
-                const distanceSquared = dx * dx + dy * dy
-
-                if (
-                    distanceSquared < cursorRadiusSquared &&
-                    distanceSquared > 0
-                ) {
-                    // Calculate scatter force based on screen distance
-                    const screenDistance = Math.sqrt(distanceSquared)
-                    const force =
-                        ((cursorRadius - screenDistance) / cursorRadius) *
-                        clickForce
-
-                    // Calculate radial direction in 3D: from touch point to particle
-                    const radialDirection = new Vector3()
-                    radialDirection.subVectors(worldPos, touchWorldPos)
-                    const radialDistance = radialDirection.length()
-
-                    if (radialDistance > 0.001) {
-                        radialDirection.normalize()
-
-                        // Apply scatter velocity along radial direction (in world space)
-                        const scatterMagnitude = force * 0.5 // Velocity multiplier
-                        const worldScatter = new Vector3()
-                        worldScatter.copy(radialDirection)
-                        worldScatter.multiplyScalar(scatterMagnitude)
-
-                        // Transform world scatter back to local space (inverse of group rotation)
-                        const localScatter = new Vector3()
-                        localScatter.copy(worldScatter)
-                        const inverseGroupMatrix = new Matrix4()
-                        inverseGroupMatrix
-                            .copy(particlesGroup.matrixWorld)
-                            .invert()
-                        localScatter.applyMatrix4(inverseGroupMatrix)
-
-                        // Set scatter velocity (adds to existing velocity for momentum)
-                        scatterVelocity.add(localScatter)
-                    }
-                }
-            }
-
-            // Start animation to ensure scatter effect is visible
-            startAnimation()
+            applyScatter(touch.clientX, touch.clientY)
         }
 
         // Only add cursor interaction event listeners if enabled
