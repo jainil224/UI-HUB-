@@ -56,7 +56,7 @@ function buildGroups(text: string) {
     let gi = 0;
     lines.forEach((line, lineIdx) => {
         let posInLine = 0;
-        (line.match(/\S+|\s+/g) ?? []).forEach((seg) => {
+        (line.match(/\S+|\s+/g) ?? [] as string[]).forEach((seg: string) => {
             groups.push({
                 type: /^\s/.test(seg) ? "space" : "word",
                 chars: seg.split("").map((c) => ({
