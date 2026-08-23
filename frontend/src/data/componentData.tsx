@@ -1637,8 +1637,10 @@ export type ComponentItem = {
     imageUrl?: string;
     isPremium?: boolean;
     downloadUrl?: string;
-    /** ISO date the component was added — drives the auto-expiring "NEW" badge (3 weeks). */
+    /** ISO date the component was added — drives the auto-expiring "NEW" badge. */
     addedAt?: string;
+    /** Optional badge lifetime in days (default: 120 = 4 months). */
+    newBadgeDays?: number;
 };
 
 // Helper to render lazy text/effect components
@@ -1812,6 +1814,7 @@ export const componentList: ComponentItem[] = [
         id: "mesh-text-hover",
         title: "Mesh Text Hover",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => (
             <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
                 <MeshText text="HOVER" color="#ffffff" colorSplit={true} customColors={["#ff40c0", "#40ff80", "#00f0ff"]} force={18} font={{ fontFamily: "Inter", variant: "Bold", fontSize: 130, fontWeight: 800 }} />
@@ -1856,6 +1859,7 @@ COMPONENT FEATURES & PHYSICS:
         id: "pixel-drift",
         title: "Pixel Drift",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => (
             <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
                 <PixelDrift
@@ -1916,6 +1920,7 @@ COMPONENT FEATURES & PHYSICS:
         id: "random-letter-swap",
         title: "Random Letter Swap",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => (
             <div className="w-full h-full min-h-[350px] flex flex-col items-center justify-center p-6 bg-gradient-to-b from-neutral-950 via-neutral-900 to-black select-none rounded-2xl overflow-hidden border border-white/5">
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60 font-mono text-[10px] uppercase tracking-widest mb-6">
@@ -1995,6 +2000,7 @@ COMPONENT ARCHITECTURE & PHYSICS:
         id: "rolling-letters",
         title: "Rolling Letters",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => (
             <div className="w-full h-full min-h-[350px] flex flex-col items-center justify-center p-6 bg-gradient-to-b from-neutral-950 via-neutral-900 to-black select-none rounded-2xl overflow-hidden border border-white/5">
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60 font-mono text-[10px] uppercase tracking-widest mb-6">
@@ -2082,6 +2088,7 @@ COMPONENT FEATURES & PHYSICS:
         id: "scramble-text",
         title: "Scramble Text",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => (
             <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-8 bg-black select-none rounded-2xl overflow-hidden relative border border-white/5">
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue font-mono text-[10px] uppercase tracking-widest mb-6">
@@ -2206,6 +2213,7 @@ COMPONENT SPECIFICATIONS:
         id: "scroll-text-highlight",
         title: "Scroll Text Highlight",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => <ScrollHighlightPreview />,
         code: `import React from 'react';
 import { ScrollHighlight } from '@/components/animations/ScrollHighlight';
@@ -2267,6 +2275,7 @@ COMPONENT SPECIFICATIONS:
         id: "smoky-text",
         title: "Smoky Text",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => <SmokyTextPreview />,
         code: `import React from 'react';
 import { SmokyText } from '@/components/animations/SmokyText';
@@ -2323,6 +2332,7 @@ COMPONENT SPECIFICATIONS:
         id: "text-carousel",
         title: "Text Carousel",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => <RotatingTextPreview />,
         code: `import React from 'react';
 import { RotatingText } from '@/components/animations/RotatingText';
@@ -2383,6 +2393,7 @@ COMPONENT SPECIFICATIONS:
         id: "text-path",
         title: "Text Path",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => <TextPathPreview />,
         code: `import React from 'react';
 import { TextPath } from '@/components/animations/TextPath';
@@ -2436,6 +2447,7 @@ COMPONENT SPECIFICATIONS:
         id: "text-vaporize",
         title: "Text Vaporize",
         category: "text",
+        addedAt: "2026-08-23",
         preview: () => <VaporizeTextPreview />,
         code: `import React from 'react';
 import { VaporizeTextCycle } from '@/components/animations/VaporizeTextCycle';
@@ -2494,6 +2506,7 @@ COMPONENT SPECIFICATIONS:
         id: "letter-pull-up",
         title: "Letter Pull Up",
         category: "text",
+        addedAt: "2026-08-23",
         preview: renderComponent("letter-pull-up", "Letter Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const LetterPullUp = ({ text = "LETTER PULL UP" }) => (\n  <div className="flex overflow-hidden">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
         vibePrompt: ""
@@ -2503,6 +2516,7 @@ COMPONENT SPECIFICATIONS:
         id: "scale-letter",
         title: "Scale Letter",
         category: "text",
+        addedAt: "2026-08-23",
         preview: renderComponent("scale-letter", "Scale Letter"),
         code: `import { motion } from 'framer-motion';\n\nexport const ScaleLetter = ({ text = "SCALE LETTER" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ scale: 0, opacity: 0 }}\n        animate={{ scale: 1, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.05 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
         vibePrompt: ""
@@ -2511,6 +2525,7 @@ COMPONENT SPECIFICATIONS:
         id: "separate-away",
         title: "Separate Away",
         category: "text",
+        addedAt: "2026-08-23",
         preview: renderComponent("separate-away", "Separate Away"),
         code: `import { motion } from 'framer-motion';\n\nexport const SeparateAway = ({ text = "SEPARATE AWAY" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        initial={{ x: 0 }}\n        animate={{ x: i < text.length / 2 ? -15 : 15 }}\n        transition={{ duration: 0.5 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
         vibePrompt: ""
@@ -2519,6 +2534,7 @@ COMPONENT SPECIFICATIONS:
         id: "wavy-text",
         title: "Wavy Text",
         category: "text",
+        addedAt: "2026-08-23",
         preview: renderComponent("wavy-text", "Wavy Text"),
         code: `import { motion } from 'framer-motion';\n\nexport const WavyText = ({ text = "WAVY TEXT" }) => (\n  <div className="flex">\n    {text.split('').map((char, i) => (\n      <motion.span\n        key={i}\n        animate={{ y: [0, -8, 0] }}\n        transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}\n      >\n        {char === ' ' ? '\\u00A0' : char}\n      </motion.span>\n    ))}\n  </div>\n);`,
         vibePrompt: ""
@@ -2527,6 +2543,7 @@ COMPONENT SPECIFICATIONS:
         id: "word-pull-up",
         title: "Word Pull Up",
         category: "text",
+        addedAt: "2026-08-23",
         preview: renderComponent("word-pull-up", "Word Pull Up"),
         code: `import { motion } from 'framer-motion';\n\nexport const WordPullUp = ({ text = "WORD PULL UP" }) => (\n  <div className="flex gap-2 overflow-hidden">\n    {text.split(' ').map((word, i) => (\n      <motion.span\n        key={i}\n        initial={{ y: "100%", opacity: 0 }}\n        animate={{ y: 0, opacity: 1 }}\n        transition={{ duration: 0.5, delay: i * 0.2 }}\n      >\n        {word}\n      </motion.span>\n    ))}\n  </div>\n);`,
         vibePrompt: ""
@@ -3564,6 +3581,7 @@ export function ImageCollageDemo() {
         title: "Point DNA Helix",
         category: "interactive-background",
         addedAt: "2026-08-23",
+        newBadgeDays: 21,
         isPremium: false,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
@@ -3604,6 +3622,7 @@ export function PointDNAHelixDemo() {
         title: "Twin Galaxy Rings",
         category: "interactive-background",
         addedAt: "2026-08-23",
+        newBadgeDays: 21,
         isPremium: false,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
@@ -3644,6 +3663,7 @@ export function TwinGalaxyRingsDemo() {
         title: "Tornado",
         category: "interactive-background",
         addedAt: "2026-08-23",
+        newBadgeDays: 21,
         isPremium: false,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
@@ -3686,6 +3706,7 @@ export function TornadoDemo() {
         title: "Particle Sphere",
         category: "interactive-background",
         addedAt: "2026-08-23",
+        newBadgeDays: 21,
         isPremium: false,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">

@@ -27,13 +27,15 @@ const CATEGORY_META: Record<string, { icon: string; color: string; bg: string; b
     "Scroll Animation": { icon: "↕", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
 };
 
-/** Components added within the last 3 weeks show an auto-expiring "NEW" badge. */
-const NEW_BADGE_DURATION_MS = 21 * 24 * 60 * 60 * 1000;
-export const isNewComponent = (item: { addedAt?: string }): boolean => {
+/** Components added recently show an auto-expiring "NEW" badge.
+ *  Default lifetime: 4 months — overridable per item via newBadgeDays. */
+const NEW_BADGE_DEFAULT_DAYS = 120;
+export const isNewComponent = (item: { addedAt?: string; newBadgeDays?: number }): boolean => {
     if (!item.addedAt) return false;
     const added = new Date(item.addedAt).getTime();
     if (Number.isNaN(added)) return false;
-    return Date.now() - added < NEW_BADGE_DURATION_MS;
+    const durationMs = (item.newBadgeDays ?? NEW_BADGE_DEFAULT_DAYS) * 24 * 60 * 60 * 1000;
+    return Date.now() - added < durationMs;
 };
 
 const LibraryPage = () => {
