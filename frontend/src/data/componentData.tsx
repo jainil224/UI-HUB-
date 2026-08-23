@@ -90,8 +90,85 @@ import {
     ScrambleText,
     ScrollHighlight,
     SmokyText,
-    RotatingText
+    RotatingText,
+    TextPath
 } from '../components/animations/TextAnimations';
+
+// ── Text Path scoped preview ─────────────────────
+const TextPathPreview: React.FC = () => {
+    const [freq, setFreq] = useState(3);
+    const [waveH, setWaveH] = useState(100);
+    const [speed, setSpeed] = useState(30);
+    const [reversed, setReversed] = useState(true);
+    const [textColor, setTextColor] = useState("#FFFFFF");
+    const colors = ["#FFFFFF", "#38BDF8", "#F43F5E", "#A855F7", "#34D399", "#FBBF24"];
+
+    return (
+        <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-8 bg-black select-none rounded-2xl overflow-hidden relative border border-white/5">
+            <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10 flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={() => setFreq(f => (f % 4) + 1)}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Freq: {freq}
+                    </button>
+                    <button
+                        onClick={() => setWaveH(h => h === 60 ? 100 : h === 100 ? 140 : 60)}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Height: {waveH}px
+                    </button>
+                    <button
+                        onClick={() => setSpeed(s => s === 15 ? 30 : s === 30 ? 60 : 15)}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Speed: {speed}
+                    </button>
+                    <button
+                        onClick={() => setReversed(r => !r)}
+                        className="px-3 py-1 text-[11px] font-mono rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 text-white/80 transition-colors uppercase"
+                    >
+                        Dir: {reversed ? "←" : "→"}
+                    </button>
+                </div>
+                <div className="flex items-center gap-1.5">
+                    {colors.map((c) => (
+                        <button
+                            key={c}
+                            onClick={() => setTextColor(c)}
+                            className="w-4 h-4 rounded-full transition-transform hover:scale-125 border border-white/20"
+                            style={{ backgroundColor: c, outline: textColor === c ? '2px solid white' : 'none' }}
+                        />
+                    ))}
+                </div>
+            </div>
+
+            <div className="w-full flex-1 flex items-center justify-center pt-8">
+                <TextPath
+                    text="UI HUB • INFINITE SINE WAVE MARQUEE"
+                    separator="   ★   "
+                    gap={0}
+                    speed={speed}
+                    reversed={reversed}
+                    waveFrequency={freq}
+                    waveHeight={waveH}
+                    textColor={textColor}
+                    textFont={{
+                        fontSize: 18,
+                        fontWeight: 700,
+                        letterSpacing: 1,
+                        fontFamily: "Inter, system-ui, sans-serif",
+                    }}
+                    height={220}
+                />
+            </div>
+            <p className="text-xs font-mono text-neutral-400 tracking-wider uppercase mt-4">
+                Procedural SVG Sine Wave with seamless rAF marquee flow
+            </p>
+        </div>
+    );
+};
 
 // ── Text Carousel (Rotating Text) scoped preview ─
 const RotatingTextPreview: React.FC = () => {
