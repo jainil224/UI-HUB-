@@ -1752,6 +1752,130 @@ COMPONENT FEATURES & PHYSICS:
    - transition: { type?: string, duration?: number, delay?: number, ease?: string | number[], staggerChildren?: number }`
     },
     {
+        id: "scramble-text",
+        title: "Scramble Text",
+        category: "text",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] flex flex-col items-center justify-center p-8 bg-black select-none rounded-2xl overflow-hidden relative border border-white/5">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue font-mono text-[10px] uppercase tracking-widest mb-6">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
+                    HOVER TO TRIGGER DIFFUSION WAVE
+                </div>
+                <ScrambleText
+                    words="SCRAMBLE TEXT"
+                    color="#FFFFFF"
+                    font={{
+                        fontFamily: "Inter, system-ui, sans-serif",
+                        fontSize: "clamp(2.2rem, 6vw, 4.8rem)",
+                        fontWeight: 800,
+                        lineHeight: "1.1em",
+                        letterSpacing: "0.04em",
+                        textAlign: "center",
+                    }}
+                    enterAnimation={{
+                        mode: "oneLine",
+                        restState: "solid",
+                        replay: true,
+                        position: "above",
+                        scrambleIntensity: 100,
+                        ease: { type: "tween", duration: 1.8, ease: "linear" },
+                        flickerEnabled: true,
+                        flickerColor: "#3D5CFF",
+                        flickerIntensity: 80,
+                        flickerSpeed: 10,
+                    }}
+                    hoverAnimation={{
+                        type: "diffusion",
+                        lines: "oneLine",
+                        radius: 3,
+                        collapse: false,
+                        collapseTime: 1,
+                        glitchChars: "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*",
+                        glitchShuffle: true,
+                        flickerEnabled: true,
+                        flickerColor: "#3D5CFF",
+                        flickerIntensity: 50,
+                        flickerSpeed: 10,
+                        waveEase: { type: "tween", duration: 1.5, ease: "linear" },
+                        waveShuffleLimitEnabled: false,
+                        waveShuffleLimitValue: 10,
+                    }}
+                />
+                <p className="text-xs font-mono text-neutral-400 tracking-wider uppercase mt-8">
+                    Interactive kinetic glitch reveal • diffusion radius & wave pulse
+                </p>
+            </div>
+        ),
+        code: `import React from 'react';
+import { ScrambleText } from '@/components/animations/ScrambleText';
+
+export function ScrambleTextDemo() {
+  return (
+    <div className="w-full min-h-[380px] flex items-center justify-center bg-black p-8">
+      <ScrambleText
+        words="SCRAMBLE TEXT"
+        color="#ffffff"
+        font={{
+          fontFamily: "Inter, system-ui, sans-serif",
+          fontSize: "clamp(2rem, 5vw, 4rem)",
+          fontWeight: 800,
+          lineHeight: "1.1em",
+          letterSpacing: "0.04em",
+          textAlign: "center",
+        }}
+        enterAnimation={{
+          mode: "oneLine",
+          restState: "solid",
+          replay: true,
+          position: "above",
+          scrambleIntensity: 100,
+          ease: { type: "tween", duration: 1.8, ease: "linear" },
+          flickerEnabled: true,
+          flickerColor: "#3D5CFF",
+          flickerIntensity: 80,
+          flickerSpeed: 10,
+        }}
+        hoverAnimation={{
+          type: "diffusion",
+          lines: "oneLine",
+          radius: 3,
+          collapse: false,
+          collapseTime: 1,
+          glitchChars: "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*",
+          glitchShuffle: true,
+          flickerEnabled: true,
+          flickerColor: "#3D5CFF",
+          flickerIntensity: 50,
+          flickerSpeed: 10,
+          waveEase: { type: "tween", duration: 1.5, ease: "linear" },
+        }}
+      />
+    </div>
+  );
+}`,
+        vibePrompt: `Create an interactive kinetic typography glitch reveal and cursor-diffusion micro-interaction named "Scramble Text" (GlitchCharReveal) in React and TypeScript.
+
+COMPONENT SPECIFICATIONS:
+1. Multi-Stage Enter Animation:
+   - Supports modes: 'oneLine' | 'multiLine' | 'random' | 'none'.
+   - Words and whitespace gaps are mapped dynamically with zero layout jitter.
+   - Includes custom ease curves (cubicBezier, easeOut, easeInOut, circIn, circOut, backIn, backOut).
+   - Scramble intensity and glitch character substitutions occur in high-speed animation frames before locking the actual character.
+2. Interactive Hover Dispersion & Wave Scan:
+   - Hover types: 'diffusion' (radial character scattering) and 'wave' (sequential cursor sweeps).
+   - Modes: 'diffusionOneLine', 'diffusionMultiLine', 'waveOneLine', 'waveMultiLine'.
+   - Independent requestAnimationFrame wave loops per measured line top with customizable cursor symbols and glitch bleed.
+3. Micro-Flicker Physics:
+   - Per-character flicker state tracking (flickerColor, flickerIntensity, flickerSpeed).
+4. Configurable Props:
+   - words: string = "SCRAMBLE TEXT"
+   - enterAnimation: { mode, restState, replay, position, scrambleIntensity, ease, flickerEnabled, flickerColor, flickerIntensity, flickerSpeed }
+   - hoverAnimation: { type, lines, radius, collapse, collapseTime, glitchChars, glitchShuffle, flickerEnabled, flickerColor, flickerIntensity, flickerSpeed, waveEase }
+   - color: string = "#ffffff"
+   - font: React.CSSProperties
+   - tag: "p" | "h1" | "h2" | "h3" | "h4" | "h5" | "div" | "span"`
+    },
+    {
         id: "letter-pull-up",
         title: "Letter Pull Up",
         category: "text",
