@@ -68,6 +68,7 @@ const PerspectiveCarousel = React.lazy(() => import('../components/ui/perspectiv
 const DiagonalCarousel = React.lazy(() => import('../components/ui/diagonal-carousel').then(m => ({ default: m.DiagonalCarousel })));
 const TestimonialsCard = React.lazy(() => import('../components/ui/testimonials-card').then(m => ({ default: m.TestimonialsCard })));
 const ImageCollage = React.lazy(() => import('../components/ui/image-collage').then(m => ({ default: m.ImageCollage })));
+const PointDNAHelix = React.lazy(() => import('../components/ui/PointDNAHelix'));
 
 
 
@@ -1624,7 +1625,7 @@ const ThreeDSliderPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "3d-chatbot" | "scroll" | "image-interaction";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "3d-chatbot" | "scroll" | "image-interaction" | "interactive-background";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -1739,6 +1740,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'scramble-text': ScrambleText as any,
     'scroll-text-highlight': ScrollHighlight as any,
     'smoky-text': SmokyText as any,
+    'point-dna-helix': PointDNAHelix,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -3548,6 +3550,45 @@ export function ImageCollageDemo() {
   );
 }`,
         vibePrompt: "Create an interactive 'ImageCollage' component in React + TypeScript with Framer Motion. Clicking anywhere dynamically toggles between a scattered artistic collage (using configured x, y, and rotate values with realistic drop shadows) and an organized linear showcase grid with spring physics (stiffness: 350, damping: 25)."
+    },
+    {
+        id: "point-dna-helix",
+        title: "Point DNA Helix",
+        category: "interactive-background",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
+                <PointDNAHelix />
+            </div>
+        ),
+        code: `import PointDNAHelix from "@/components/ui/PointDNAHelix";
+
+export function PointDNAHelixDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <PointDNAHelix
+        background="#030712"
+        baseColor="#00E5FF"
+        accentColor="#FF007A"
+        accentMix={42}
+        glow="#00E5FF20"
+        density={31}
+        dotSize={100}
+        speed={70}
+        zoom={30}
+        hover={80}
+        tilt={{ x: 0, y: 90 }}
+        helix={{ turns: 2, thickness: 21, pulse: 40 }}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a bioluminescent 3D point-cloud double DNA helix background in React + TypeScript using raw WebGL (single GL context, one rAF loop, all state via refs). Two interwoven helical backbone strands 180° out of phase connected by discrete base-pair rungs, surrounded by ambient genetic dust. All helical parametric math, camera transform, perspective point sizing, depth fade and screen-space cursor displacement live in the vertex shader. The helix runs horizontally past both frame edges so no end is ever visible; it auto-spins about its own axis, supports drag-to-spin with flick momentum, a cursor-proximity particle push (hover), breathing pulse, tilt X/Y, zoom, density and dot-size controls, cyan/magenta accent color mixing, additive premultiplied blending with exponential point falloff."
     }
 ];
 
