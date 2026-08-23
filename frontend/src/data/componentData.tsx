@@ -3632,6 +3632,47 @@ export function TwinGalaxyRingsDemo() {
   );
 }`,
         vibePrompt: "Create a 'Twin Galaxy Rings' WebGL particle spiral-galaxy background in React + TypeScript (raw WebGL, single GL context, one rAF loop, all live state via refs). Logarithmic-spiral arms rendered as a GPU point cloud with gaussian-scattered arm width/height offsets, seeded mulberry32 RNG for deterministic layout. The galaxy streams endlessly along its arms with adjustable speed and cw/ccw direction, accelerating on hover. Cursor position is un-projected onto the galactic plane (planeHit ray cast) to lift and swell nearby particles; pressing boosts stream speed and dollies the camera in. Scroll progress drives camera pitch/roll tilt. Supports up to 8-color palette uploaded as a uniform array, density/dot-size/arm-count/arm-thickness/inner-void controls, radial-gradient ambient glow corners, additive premultiplied blending."
+    },
+    {
+        id: "tornado",
+        title: "Tornado",
+        category: "interactive-background",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <Tornado />
+            </div>
+        ),
+        code: `import Tornado from "@/components/ui/Tornado";
+
+export function TornadoDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <Tornado
+        background="#000000"
+        topRadius={380}
+        waistRadius={53}
+        waistPosition={50}
+        bottomRadius={1150}
+        twist={3}
+        zoom={75}
+        speed={10}
+        direction="right"
+        lineOptions={{ count: 240, color: "#ffffff", glow: 10 }}
+        dots
+        dotOptions={{ count: 8000, size: 20, color: "#ffffff", glow: 10, flicker: 10 }}
+        comets
+        cometOptions={{ count: 10, speed: 6, color: "#F9731A", glow: 6, tail: 19, delay: 8, collide: 6 }}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Tornado' particle vortex background in React + TypeScript using three.js (single WebGLRenderer kept for the component's lifetime, settings read from a ref inside one rAF loop; rebuild() re-lays buffers within the open context instead of recreating it). Strands spiral up a pinched hyperboloid defined by three monotone-cubic (Fritsch-Carlson) baked curves for radius/height/angle with a controllable waist position and twist. Dots ride the strands as an InstancedMesh with per-dot flicker (sine^2.5 twinkle) and brightness spread; orange comets race along strands with glowing sprite heads, fading tails and delay staggering — comet-vs-dot collisions flash the dot out, pop its scale and throw an expanding shockwave ring that displaces strand vertices while shoved dots spring back (position + scale springs). Cursor proximity repels the whole form via a clip-space displacement patched into stock materials through onBeforeCompile with shared uniforms. Staged entrance (strands -> dots -> comets), prefers-reduced-motion support, Reinhard tone mapping, additive blending."
     }
 ];
 
