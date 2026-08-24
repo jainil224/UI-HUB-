@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, LogOut, User as UserIcon, Search } from 'lucide-react';
-import logo from '../../Assets/logo.svg';
+import logo from '../../Assets/logo.png';
 import PlanBadge, { PlanTier } from './PlanBadge';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
