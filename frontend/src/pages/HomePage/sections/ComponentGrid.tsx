@@ -9,20 +9,36 @@ import { ComponentGridSkeleton } from '../../../components/ui/Skeleton';
 interface BentoSpec {
     id: string;
     className: string;
+    /** Optional per-card framing for previews that need custom alignment */
+    frame?: string;
 }
 
 type BentoComp = (typeof componentList)[number];
+
+// Default: oversized cover container centered in the tile
+const DEFAULT_FRAME =
+    'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[170%] flex items-center justify-center';
 
 // Curated live demos — always-on previews, no hover needed
 const bentoSpecs: BentoSpec[] = [
     { id: '3d-hero', className: 'sm:col-span-2 lg:row-span-2' },
     { id: 'pixel-drift', className: 'sm:col-span-2' },
-    { id: 'twin-galaxy-rings', className: 'sm:col-span-2' },
+    {
+        id: 'twin-galaxy-rings',
+        className: 'sm:col-span-2',
+        // Galaxy sits in the lower half of its canvas — anchor the preview to the tile bottom
+        frame: 'absolute bottom-0 left-1/2 -translate-x-1/2 w-[175%] h-[520px] flex items-center justify-center',
+    },
     { id: 'mesh-text-hover', className: 'sm:col-span-2' },
     { id: 'lizard-cursor', className: '' },
     { id: 'point-dna-helix', className: 'lg:row-span-2' },
     { id: 'liquid-glass', className: 'lg:row-span-2' },
-    { id: 'perspective-carousel', className: 'sm:col-span-2' },
+    {
+        id: 'perspective-carousel',
+        className: 'sm:col-span-2',
+        // Zoom out so the whole 3D carousel fits inside the tile
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[210%] h-[500px] scale-[0.5] flex items-center justify-center',
+    },
     { id: 'wave-background', className: 'sm:col-span-2' },
     { id: 'corner-border-button', className: '' },
 ];
@@ -49,7 +65,7 @@ const BentoCard = ({ spec, comp }: { spec: BentoSpec; comp: BentoComp }) => {
             {/* Live preview — cover-fitted so it always fills the tile edge-to-edge */}
             <div className="absolute inset-0 overflow-hidden">
                 {inView ? (
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[170%] flex items-center justify-center">
+                    <div className={spec.frame ?? DEFAULT_FRAME}>
                         <React.Suspense
                             fallback={
                                 <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
