@@ -152,10 +152,11 @@ const Navbar = () => {
 
                                     <button
                                         onClick={() => signOut(auth)}
-                                        className="w-8 h-8 bg-white border-2 border-black flex items-center justify-center text-black hover:bg-[#E52520] hover:text-white shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all"
+                                        aria-label="Sign out"
+                                        className="w-11 h-11 bg-white border-2 border-black flex items-center justify-center text-black hover:bg-[#E52520] hover:text-white shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all"
                                         title="Sign Out"
                                     >
-                                        <LogOut size={13} />
+                                        <LogOut size={15} />
                                     </button>
                                 </div>
                             ) : (
@@ -179,7 +180,9 @@ const Navbar = () => {
                             {/* Mobile Hamburger */}
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
-                                className="md:hidden flex items-center justify-center w-9 h-9 bg-white border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all"
+                                aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                                aria-expanded={isOpen}
+                                className="md:hidden flex items-center justify-center w-11 h-11 bg-white border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all"
                             >
                                 <AnimatePresence mode="wait" initial={false}>
                                     {isOpen ? (

@@ -34,9 +34,9 @@ const Footer = () => (
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={label}
-                                className="flex items-center justify-center w-9 h-9 rounded border-2 border-white bg-brand-bg text-neutral-400 hover:text-white hover:bg-brand-blue hover:border-black brutal-shadow-black transition-all"
+                                className="flex items-center justify-center w-11 h-11 rounded border-2 border-white bg-brand-bg text-neutral-400 hover:text-white hover:bg-brand-blue hover:border-black brutal-shadow-black transition-all"
                             >
-                                <Icon size={16} />
+                                <Icon size={17} />
                             </a>
                         ))}
                     </div>

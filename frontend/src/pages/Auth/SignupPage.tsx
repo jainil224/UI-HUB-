@@ -252,9 +252,10 @@ const SignupPage = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-black transition-colors"
+                                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                        className="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-neutral-600 hover:text-black transition-colors"
                                     >
-                                        {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                     </button>
                                 </div>
                             </div>
@@ -276,9 +277,10 @@ const SignupPage = () => {
                                     <button
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-neutral-600 hover:text-black transition-colors"
+                                        aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                                        className="absolute right-1 top-1/2 -translate-y-1/2 p-2 text-neutral-600 hover:text-black transition-colors"
                                     >
-                                        {showConfirmPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                                        {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                                     </button>
                                 </div>
                             </div>
