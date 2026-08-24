@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { getUserFavorites, removeFromFavorites } from '../../services/favorites';
-import { Heart, Trash2, Library, Copy, Check, ArrowUpRight, Component as ComponentIcon } from 'lucide-react';
+import { Heart, Trash2, Library, ArrowUpRight, Component as ComponentIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { db } from '../../lib/firebase';
@@ -20,7 +20,6 @@ const FavoritesPage = () => {
     const [favoriteMetadata, setFavoriteMetadata] = useState<any[]>([]);
     const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
     const [loading, setLoading] = useState(true);
-    const [copiedId, setCopiedId] = useState<string | null>(null);
 
     // Combine local and firebase components for lookup
     const allAvailableComponents = useMemo(() => [...componentList, ...firebaseComponents], [firebaseComponents]);
@@ -82,14 +81,6 @@ const FavoritesPage = () => {
         });
     };
 
-    const handleCopy = (e: React.MouseEvent, code: string, id: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-        navigator.clipboard.writeText(code);
-        setCopiedId(id);
-        setTimeout(() => setCopiedId(null), 2000);
-    };
-
     /* ── Guest Empty State ── */
     if (!user && favoriteMetadata.length === 0 && !loading) {
         return (
@@ -137,6 +128,7 @@ const FavoritesPage = () => {
                 .favorites-preview::-webkit-scrollbar { width: 4px; height: 4px; }
                 .favorites-preview::-webkit-scrollbar-track { background: transparent; }
                 .favorites-preview::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+                .favorites-preview a[href*="/demo/"] { display: none !important; }
             `}</style>
 
             {/* ── Ambient Page Texture ── */}
@@ -202,7 +194,7 @@ const FavoritesPage = () => {
                         /* Loading Skeletons */
                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="skeleton-glass skeleton-pulse h-[340px] rounded-lg" />
+                                <div key={i} className="skeleton-glass skeleton-pulse h-[360px] rounded-lg" />
                             ))}
                         </div>
                     ) : enrichedFavorites.length === 0 ? (
@@ -254,7 +246,7 @@ const FavoritesPage = () => {
                                             <Link
                                                 to={`/library?id=${fav.componentId}&tab=preview`}
                                                 onClick={(e) => e.stopPropagation()}
-                                                className={`block relative h-[340px] bg-brand-surface border-2 border-white rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer select-none transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:brightness-110 ${shadowClass} no-underline`}
+                                                className={`block relative h-[360px] bg-brand-surface border-2 border-white rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer select-none transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:brightness-110 ${shadowClass} no-underline`}
                                             >
                                                 {/* Card Top Traffic Bar */}
                                                 <div className="relative z-30 flex items-center justify-between px-3.5 py-2.5 border-b-2 border-neutral-800 bg-[#0A0A0E]">
@@ -286,7 +278,7 @@ const FavoritesPage = () => {
 
                                                     {comp?.preview ? (
                                                         <div className="absolute inset-0 w-full h-full favorites-preview">
-                                                            <div className="w-full h-full flex items-center justify-center transform scale-[0.75] origin-center relative pointer-events-none">
+                                                            <div className="w-full h-full flex items-center justify-center transform scale-[0.65] origin-center relative pointer-events-none transition-transform duration-300 group-hover:scale-[0.7]">
                                                                 {comp.preview()}
                                                             </div>
                                                         </div>
@@ -310,27 +302,9 @@ const FavoritesPage = () => {
                                                             {fav.componentName}
                                                         </span>
                                                     </span>
-                                                    <div className="flex items-center gap-1.5 shrink-0">
-                                                        {/* Copy Code */}
-                                                        {comp?.code && (
-                                                            <button
-                                                                type="button"
-                                                                title={copiedId === fav.componentId ? 'Copied!' : 'Copy Code'}
-                                                                aria-label="Copy Code"
-                                                                onClick={(e) => handleCopy(e, typeof comp.code === 'string' ? comp.code : '', fav.componentId)}
-                                                                className={`w-6 h-6 rounded border flex items-center justify-center transition-colors shadow-[1px_1px_0px_0px_#000] cursor-pointer ${
-                                                                    copiedId === fav.componentId
-                                                                        ? 'bg-brand-blue border-black text-white'
-                                                                        : 'border-white bg-brand-surface text-neutral-400 hover:bg-brand-blue hover:border-black hover:text-white'
-                                                                }`}
-                                                            >
-                                                                {copiedId === fav.componentId ? <Check size={12} /> : <Copy size={12} />}
-                                                            </button>
-                                                        )}
-                                                        {/* Open */}
-                                                        <div className="w-6 h-6 rounded border border-white bg-brand-surface flex items-center justify-center group-hover:bg-brand-blue group-hover:border-black transition-colors shadow-[1px_1px_0px_0px_#000]">
-                                                            <ArrowUpRight size={14} className="text-white" />
-                                                        </div>
+                                                    {/* Open */}
+                                                    <div className="w-7 h-7 rounded-md border-2 border-white bg-brand-surface flex items-center justify-center shrink-0 shadow-[2px_2px_0px_0px_#000] transition-all duration-150 group-hover:bg-brand-blue group-hover:border-black group-hover:shadow-none">
+                                                        <ArrowUpRight size={14} className="text-white transition-transform duration-150 group-hover:translate-x-px group-hover:-translate-y-px" />
                                                     </div>
                                                 </div>
                                             </Link>
