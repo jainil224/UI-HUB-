@@ -1,13 +1,21 @@
 import React from 'react';
-import { Github, Linkedin, Instagram, ArrowUpRight, Zap } from 'lucide-react';
+import { Github, Linkedin, Instagram, ArrowUpRight, Zap, CircleDot } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
+import PixelDrift from './PixelDrift';
+
+const utilityLinks = [
+    { label: 'Privacy Policy', to: '/privacy' },
+    { label: 'Terms & Conditions', to: '/terms' },
+    { label: 'Payment Policy', to: '/pricing' },
+    { label: 'Cookie Settings', to: '/privacy' },
+];
 
 const Footer = () => (
-    <footer className="w-full border-t-4 border-black bg-brand-surface relative">
+    <footer className="w-full border-t-4 border-black bg-brand-bg relative overflow-hidden">
+        {/* ── Top: Brand + Link Columns ─────────────────────────────── */}
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-            {/* Main footer body */}
-            <div className="py-16 grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+            <div className="pt-16 pb-12 grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
                 {/* Brand column */}
                 <div className="md:col-span-2 flex flex-col gap-5">
                     <Link to="/" className="flex items-center gap-2.5 group w-fit">
@@ -34,17 +42,26 @@ const Footer = () => (
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 aria-label={label}
-                                className="flex items-center justify-center w-11 h-11 rounded border-2 border-white bg-brand-bg text-neutral-400 hover:text-white hover:bg-brand-blue hover:border-black brutal-shadow-black transition-all"
+                                className="flex items-center justify-center w-11 h-11 rounded border-2 border-white bg-brand-surface text-neutral-400 hover:text-white hover:bg-brand-blue hover:border-black brutal-shadow-black transition-all"
                             >
                                 <Icon size={17} />
                             </a>
                         ))}
                     </div>
+
+                    {/* Status badge */}
+                    <div className="flex items-center gap-2 mt-1 px-3 py-1.5 rounded border-2 border-white bg-brand-surface w-fit brutal-shadow-black">
+                        <CircleDot size={10} className="text-brand-blue animate-pulse" />
+                        <span className="text-[10px] font-black text-white uppercase tracking-widest">All Systems Live</span>
+                    </div>
                 </div>
 
                 {/* Navigation */}
                 <div className="flex flex-col gap-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-400">Navigate</h4>
+                    <h4 className="text-[11px] font-black uppercase tracking-widest text-white flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-brand-blue border border-black" />
+                        Navigate
+                    </h4>
                     <ul className="flex flex-col gap-2.5">
                         {[
                             { to: '/', label: 'Home' },
@@ -67,7 +84,10 @@ const Footer = () => (
 
                 {/* Resources */}
                 <div className="flex flex-col gap-4">
-                    <h4 className="text-[10px] font-black uppercase tracking-widest text-neutral-400">Resources</h4>
+                    <h4 className="text-[11px] font-black uppercase tracking-widest text-white flex items-center gap-2">
+                        <span className="w-2 h-2 rounded-full bg-brand-yellow border border-black" />
+                        Resources
+                    </h4>
                     <ul className="flex flex-col gap-2.5">
                         {[
                             { href: 'https://github.com/jainil224/UI-HUB-', label: 'GitHub Repo' },
@@ -87,33 +107,69 @@ const Footer = () => (
                             </li>
                         ))}
                     </ul>
-
-                    {/* Status badge */}
-                    <div className="flex items-center gap-2 mt-2 px-3 py-1.5 rounded border-2 border-white bg-brand-bg w-fit brutal-shadow-black">
-                        <span className="w-2 h-2 rounded-full bg-brand-blue" />
-                        <span className="text-[9px] font-black text-white uppercase tracking-widest">All Systems Live</span>
-                    </div>
                 </div>
             </div>
+        </div>
 
-            {/* Bottom bar */}
-            <div className="py-6 border-t-2 border-white flex flex-col sm:flex-row items-center justify-between gap-3">
-                <p className="text-neutral-500 text-xs font-mono tracking-wider">
-                    © 2026 UI HUB — Built for vibe coders.
+        {/* ── Utility Links Row (United-Carriers style) ─────────────── */}
+        <div className="relative z-10 border-t-2 border-neutral-800">
+            <div className="max-w-7xl mx-auto px-6 py-5 flex flex-wrap items-center justify-center lg:justify-between gap-x-6 gap-y-2">
+                <p className="text-neutral-500 text-[11px] font-mono tracking-wider">
+                    © 2026 UI HUB — BUILT FOR VIBE CODERS.
                 </p>
-                <div className="flex items-center gap-1.5 text-neutral-400 text-[10px] font-black tracking-widest">
-                    <Zap size={10} className="text-brand-blue" fill="currentColor" />
-                    <span className="uppercase">Made with love by</span>
-                    <a
-                        href="https://github.com/jainil224"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-white hover:text-brand-blue transition-colors"
-                    >
-                        Jainil Patel
-                    </a>
-                </div>
+                <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2" aria-label="Legal">
+                    {utilityLinks.map(({ label, to }) => (
+                        <Link
+                            key={label}
+                            to={to}
+                            className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500 hover:text-white underline-offset-2 hover:underline transition-colors"
+                        >
+                            {label}
+                        </Link>
+                    ))}
+                    <span className="flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+                        <Zap size={10} className="text-brand-blue" fill="currentColor" />
+                        Made by
+                        <a
+                            href="https://github.com/jainil224"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-white hover:text-brand-blue transition-colors"
+                        >
+                            Jainil Patel
+                        </a>
+                    </span>
+                </nav>
             </div>
+        </div>
+
+        {/* ── Giant Interactive Particle Wordmark ──────────────────── */}
+        <div
+            className="relative select-none cursor-crosshair"
+            style={{ background: 'radial-gradient(ellipse at 50% 120%, rgba(61,92,255,0.12), transparent 60%)' }}
+        >
+            <PixelDrift
+                text="UI HUB"
+                colors={['#FFFFFF', '#3D5CFF', '#FFC700']}
+                mode="onEnter"
+                replay={true}
+                position="above"
+                fontSize={220}
+                particleSize={9}
+                particleCount={45}
+                mouseEnabled={true}
+                mouseRadius={70}
+                mouseForce={28}
+                autoFit={true}
+                transition={{ type: 'tween', duration: 1.4, ease: 'easeOut' }}
+                className="h-[200px] sm:h-[280px] md:h-[360px] w-full"
+            />
+
+            {/* Corner ticks for brutalist framing */}
+            <span className="absolute top-3 left-4 w-3 h-3 border-t-2 border-l-2 border-neutral-700 pointer-events-none" />
+            <span className="absolute top-3 right-4 w-3 h-3 border-t-2 border-r-2 border-neutral-700 pointer-events-none" />
+            <span className="absolute bottom-3 left-4 w-3 h-3 border-b-2 border-l-2 border-neutral-700 pointer-events-none" />
+            <span className="absolute bottom-3 right-4 w-3 h-3 border-b-2 border-r-2 border-neutral-700 pointer-events-none" />
         </div>
     </footer>
 );
