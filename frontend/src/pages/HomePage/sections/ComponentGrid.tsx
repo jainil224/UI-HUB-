@@ -30,8 +30,18 @@ const bentoSpecs: BentoSpec[] = [
         frame: 'absolute bottom-0 left-1/2 -translate-x-1/2 w-[175%] h-[520px] flex items-center justify-center',
     },
     { id: 'mesh-text-hover', className: 'sm:col-span-2' },
-    { id: 'lizard-cursor', className: '' },
-    { id: 'point-dna-helix', className: 'lg:row-span-2' },
+    {
+        id: 'lizard-cursor',
+        className: '',
+        // Mini landing page (~400px tall) — zoom out so the whole demo fits the tile
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[175%] h-[400px] scale-[0.62] flex items-center justify-center',
+    },
+    {
+        id: 'point-dna-helix',
+        className: 'lg:row-span-2',
+        // Zoom into the canvas so the wrapper's edge bands never show
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[150%] flex items-center justify-center',
+    },
     {
         id: 'liquid-glass',
         className: 'lg:row-span-2',
