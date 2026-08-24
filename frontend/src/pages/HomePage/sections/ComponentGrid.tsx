@@ -17,13 +17,13 @@ type BentoComp = (typeof componentList)[number];
 const bentoSpecs: BentoSpec[] = [
     { id: '3d-hero', className: 'sm:col-span-2 lg:row-span-2' },
     { id: 'pixel-drift', className: 'sm:col-span-2' },
-    { id: 'twin-galaxy-rings', className: '' },
-    { id: 'lizard-cursor', className: '' },
+    { id: 'twin-galaxy-rings', className: 'sm:col-span-2' },
     { id: 'mesh-text-hover', className: 'sm:col-span-2' },
-    { id: 'tornado', className: '' },
-    { id: 'liquid-glass', className: '' },
+    { id: 'lizard-cursor', className: '' },
+    { id: 'point-dna-helix', className: 'lg:row-span-2' },
+    { id: 'liquid-glass', className: 'lg:row-span-2' },
     { id: 'perspective-carousel', className: 'sm:col-span-2' },
-    { id: 'wave-background', className: '' },
+    { id: 'wave-background', className: 'sm:col-span-2' },
     { id: 'corner-border-button', className: '' },
 ];
 
