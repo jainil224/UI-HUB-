@@ -43,8 +43,14 @@ async function runTests() {
     // 2. Test Welcome Email HTML
     console.log('\n2️⃣ Testing Welcome Email HTML...');
     const welcomeHtml = buildWelcomeEmailHtml('Alex Dev');
-    if (!welcomeHtml.includes('WELCOME TO UI-HUB, ALEX DEV!') || !welcomeHtml.includes('UI-HUB // SYSTEM_VERIFIED')) {
-        throw new Error('Welcome Email HTML missing essential elements');
+    if (!welcomeHtml.includes('WELCOME TO UI-HUB, ALEX DEV!') || !welcomeHtml.includes('Hi <strong>Alex Dev</strong>')) {
+        throw new Error('Welcome Email HTML missing personalized name elements');
+    }
+    if (!welcomeHtml.includes('MEMBER SINCE') || !welcomeHtml.includes('background-color:#000000 !important')) {
+        throw new Error('Welcome Email HTML missing Slotify detail rows / highlighted status row');
+    }
+    if (welcomeHtml.includes('#F0F0F2') || !welcomeHtml.includes('bgcolor="#FFFFFF"')) {
+        throw new Error('Welcome Email HTML must use a white page background');
     }
     console.log('✅ Welcome Email HTML generated successfully!');
 
@@ -55,11 +61,17 @@ async function runTests() {
         email: 'alex@example.com',
         activatedAt: new Date(),
     });
-    if (!freeHtml.includes('FREE PLAN ACTIVE') || !freeHtml.includes('50+ Essential UI Components')) {
+    if (!freeHtml.includes('YOUR FREE PLAN IS CONFIRMED') || !freeHtml.includes('Hi <strong>Alex Dev</strong>') || !freeHtml.includes('MEMBER SINCE')) {
         throw new Error('FREE Subscription HTML missing essential elements');
+    }
+    if (!freeHtml.includes('ACTIVE / UNLIMITED')) {
+        throw new Error('FREE Subscription HTML missing highlighted status row');
     }
     if (freeHtml.includes('PDF PAYMENT RECEIPT ATTACHED')) {
         throw new Error('CRITICAL: Free subscription email MUST NOT contain receipt attachment notice!');
+    }
+    if (freeHtml.includes('#F0F0F2') || !freeHtml.includes('bgcolor="#FFFFFF"')) {
+        throw new Error('FREE Subscription HTML must use a white page background');
     }
     console.log('✅ FREE Subscription Email HTML verified! (No receipt notice present).');
 
@@ -75,8 +87,11 @@ async function runTests() {
         purchaseDate: new Date(),
         duration: '6 Months',
     });
-    if (!proHtml.includes("YOU'RE PRO NOW!") || !proHtml.includes('PDF PAYMENT RECEIPT ATTACHED')) {
+    if (!proHtml.includes('WELCOME TO PRO ACCESS, ALEX DEV!') || !proHtml.includes('PDF PAYMENT RECEIPT ATTACHED') || !proHtml.includes('PURCHASE DATE')) {
         throw new Error('PRO Subscription HTML missing essential elements');
+    }
+    if (proHtml.includes('#F0F0F2') || !proHtml.includes('bgcolor="#FFFFFF"')) {
+        throw new Error('PRO Subscription HTML must use a white page background');
     }
     console.log('✅ PRO Subscription Email HTML verified! (Receipt notice correctly present).');
 
