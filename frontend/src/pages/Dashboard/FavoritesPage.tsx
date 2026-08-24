@@ -139,40 +139,60 @@ const FavoritesPage = () => {
                 .favorites-preview::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
             `}</style>
 
+            {/* ── Ambient Page Texture ── */}
+            <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:20px_20px]" />
+                <div className="absolute -top-48 -left-48 w-[560px] h-[560px] bg-brand-blue/[0.07] blur-[130px] rounded-full" />
+                <div className="absolute -bottom-48 -right-48 w-[560px] h-[560px] bg-brand-red/[0.04] blur-[130px] rounded-full" />
+            </div>
+
             <div className="max-w-[1400px] mx-auto">
-                {/* ── Section Header (matches homepage style) ── */}
+                {/* ── Section Header: single full-width hero card ── */}
                 <motion.header
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="relative z-10 mb-12"
+                    className="relative z-10 mb-10"
                 >
-                    {/* Eyebrow Badge */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 border-2 border-white bg-brand-surface text-white rounded-md font-black text-xs uppercase tracking-widest brutal-shadow-black">
-                        <Heart size={13} className="text-brand-red fill-brand-red" />
-                        <span>SAVED COMPONENTS</span>
-                    </div>
+                    <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue overflow-hidden">
+                        {/* Brand accent strip */}
+                        <div className="absolute top-0 inset-x-0 h-1 bg-brand-blue" />
+                        <div className="absolute inset-0 bg-[radial-gradient(#ffffff04_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
-                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-                        <div className="border-2 border-white p-6 md:p-8 rounded-lg bg-brand-surface brutal-shadow-blue flex-1">
-                            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight mb-4 text-white leading-none font-heading">
-                                MY <span className="text-brand-blue">FAVORITES</span>
-                            </h1>
-                            <p className="text-neutral-400 font-medium text-base md:text-lg max-w-2xl leading-relaxed">
-                                Your personal collection of saved components — ready to preview, copy and ship.
-                            </p>
+                        <div className="relative p-6 md:p-8 lg:p-10">
+                            {/* Top meta row */}
+                            <div className="flex flex-wrap items-center justify-between gap-3 mb-6 md:mb-8">
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 border-2 border-white bg-black rounded-md font-black text-[10px] uppercase tracking-widest text-white">
+                                    <Heart size={12} className="text-brand-red fill-brand-red" />
+                                    <span>Saved Components</span>
+                                </div>
+                                <div className="inline-flex items-center gap-2 px-3 py-1.5 border-2 border-white bg-black rounded-md">
+                                    <span className="w-2 h-2 rounded-full bg-brand-blue border border-black animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">Total Saved</span>
+                                    <span className="text-sm font-black text-brand-blue font-mono">{enrichedFavorites.length}</span>
+                                </div>
+                            </div>
+
+                            {/* Title + CTA row */}
+                            <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                                <div className="min-w-0">
+                                    <h1 className="text-5xl sm:text-7xl xl:text-8xl font-black uppercase tracking-tight mb-3 md:mb-4 text-white leading-[0.95] font-heading">
+                                        MY <span className="text-brand-blue">FAVORITES</span>
+                                    </h1>
+                                    <p className="text-neutral-400 font-medium text-sm md:text-base max-w-xl leading-relaxed">
+                                        Your personal collection of saved components — ready to preview, copy and ship.
+                                    </p>
+                                </div>
+
+                                <Link
+                                    to="/library"
+                                    className="group shrink-0 brutal-btn-primary inline-flex px-8 py-4 text-xs tracking-widest items-center justify-center gap-2.5 no-underline cursor-pointer"
+                                >
+                                    <span>Open Catalog</span>
+                                    <ArrowUpRight size={15} className="transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                </Link>
+                            </div>
                         </div>
-
-                        {/* Count Stat Box */}
-                        <Link to="/library" className="group shrink-0 flex items-stretch gap-4 no-underline cursor-pointer">
-                            <div className="border-2 border-white bg-brand-surface rounded-lg brutal-shadow-white p-4 md:px-6 min-w-[120px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:translate-y-0.5">
-                                <p className="text-[9px] text-neutral-400 uppercase tracking-widest font-black mb-1">TOTAL SAVED</p>
-                                <span className="text-3xl font-black text-brand-blue">{enrichedFavorites.length}</span>
-                            </div>
-                            <div className="hidden sm:flex items-center justify-center border-2 border-white bg-brand-blue rounded-lg brutal-shadow-black px-5 text-white text-[10px] font-black uppercase tracking-widest transition-all duration-150 group-hover:bg-[#324FE0] group-hover:-translate-y-0.5">
-                                Open Catalog →
-                            </div>
-                        </Link>
                     </div>
                 </motion.header>
 
@@ -234,7 +254,7 @@ const FavoritesPage = () => {
                                             <Link
                                                 to={`/library?id=${fav.componentId}&tab=preview`}
                                                 onClick={(e) => e.stopPropagation()}
-                                                className={`block relative h-[320px] bg-brand-surface border-2 border-white rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer select-none transition-transform duration-150 hover:translate-x-0.5 hover:translate-y-0.5 ${shadowClass} no-underline`}
+                                                className={`block relative h-[340px] bg-brand-surface border-2 border-white rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer select-none transition-all duration-150 hover:translate-x-0.5 hover:translate-y-0.5 hover:brightness-110 ${shadowClass} no-underline`}
                                             >
                                                 {/* Card Top Traffic Bar */}
                                                 <div className="relative z-30 flex items-center justify-between px-3.5 py-2.5 border-b-2 border-neutral-800 bg-[#0A0A0E]">
@@ -291,8 +311,11 @@ const FavoritesPage = () => {
 
                                                 {/* Bottom bar: title + arrow */}
                                                 <div className="relative z-30 flex items-center justify-between gap-2 px-4 py-3 bg-[#0A0A0E] border-t-2 border-white">
-                                                    <span className="text-xs uppercase font-black tracking-wider text-white truncate">
-                                                        {fav.componentName}
+                                                    <span className="flex items-center gap-2 min-w-0">
+                                                        <Heart size={12} className="text-brand-red fill-brand-red shrink-0" />
+                                                        <span className="text-xs uppercase font-black tracking-wider text-white truncate">
+                                                            {fav.componentName}
+                                                        </span>
                                                     </span>
                                                     <div className="flex items-center gap-1.5 shrink-0">
                                                         {/* Copy Code */}
