@@ -57,7 +57,9 @@ const Footer = () => (
                 {/* Brand */}
                 <div className="lg:col-span-5 flex flex-col gap-5">
                     <Link to="/" className="flex items-center gap-2.5 group w-fit">
-                        <Logo />
+                        <span className="flex items-center justify-center w-11 h-11 bg-white border-2 border-black rounded-sm brutal-shadow-blue shrink-0 group-hover:-translate-y-0.5 transition-transform">
+                            <Logo className="w-7 h-7" />
+                        </span>
                         <span className="font-black text-xl tracking-tight text-white group-hover:text-brand-blue transition-colors">
                             UI HUB
                         </span>
