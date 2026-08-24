@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Check, Zap } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 interface ToastProps {
     message: string;
@@ -24,25 +24,22 @@ const Toast = ({ message, isVisible, onClose, duration = 3000 }: ToastProps) => 
             {isVisible && (
                 <div className="fixed bottom-8 right-8 z-[9999] pointer-events-none">
                     <motion.div
-                        initial={{ opacity: 0, x: 50, scale: 0.9, filter: 'blur(8px)' }}
-                        animate={{ opacity: 1, x: 0, scale: 1, filter: 'blur(0px)' }}
-                        exit={{ opacity: 0, x: 20, scale: 0.9, filter: 'blur(8px)' }}
-                        transition={{ 
-                            type: 'spring', 
-                            stiffness: 400, 
+                        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                        transition={{
+                            type: 'spring',
+                            stiffness: 500,
                             damping: 30
                         }}
-                        className="relative group pointer-events-auto"
+                        className="relative pointer-events-auto"
                     >
-                        {/* Subtle Minimal Glow */}
-                        <div className="absolute -inset-1 bg-white/5 blur-lg rounded-xl opacity-40" />
-                        
-                        <div className="relative flex items-center gap-3 px-4 py-2.5 bg-[#0D0D0D] backdrop-blur-3xl border border-white/10 rounded-xl shadow-2xl">
-                            <div className="w-5 h-5 rounded-md bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                                <Check size={10} className="text-white/80" />
+                        <div className="relative flex items-center gap-3 pl-2.5 pr-5 py-2.5 bg-brand-surface border-2 border-white rounded-lg brutal-shadow-blue">
+                            <div className="w-6 h-6 rounded-md bg-brand-yellow border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_#000000] shrink-0">
+                                <Check size={12} strokeWidth={4} className="text-black" />
                             </div>
-                            
-                            <span className="text-[10px] font-bold text-white/90 uppercase tracking-[0.1em]">
+
+                            <span className="text-[11px] font-black text-white uppercase tracking-widest font-heading whitespace-nowrap">
                                 {message}
                             </span>
                         </div>
