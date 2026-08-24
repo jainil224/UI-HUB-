@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ArrowRight, Sparkles, Zap, Layers, Flame } from 'lucide-react';
+import { Search, ArrowRight, Sparkles, Zap, Layers, Flame, Bot } from 'lucide-react';
 import { useSkeleton } from '../../../context/SkeletonContext';
 import { HeroSkeleton } from '../../../components/ui/Skeleton';
+
+// ─── Inline icon badge embedded inside headline text (scales with font via em) ──
+const InlineIcon: React.FC<{ children: React.ReactNode; bg: string }> = ({ children, bg }) => (
+    <motion.span
+        animate={{ y: [0, -0.06, 0], rotate: [0, -4, 0] }}
+        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+        className={`inline-flex items-center justify-center align-middle w-[0.82em] h-[0.82em] mx-[0.14em] -translate-y-[0.1em] rounded-[22%] border-[3px] md:border-4 border-black shadow-[0.05em_0.07em_0px_#000000] ${bg}`}
+    >
+        {children}
+    </motion.span>
+);
 
 const Hero = () => {
     const { isLoading } = useSkeleton();
@@ -102,13 +113,19 @@ const Hero = () => {
                             <h1 className="hero-title text-[clamp(48px,7.5vw,90px)] text-center text-white leading-[1.04] mb-6 max-w-[1000px] mx-auto">
                                 <span className="block drop-shadow-md whitespace-nowrap">
                                     <span className="text-white font-semibold">
-                                        Craft the{' '}
+                                        Craft the
                                     </span>
+                                    <InlineIcon bg="bg-[#A78BFA]">
+                                        <Bot className="w-[0.5em] h-[0.5em] text-black" strokeWidth={2.5} />
+                                    </InlineIcon>
                                     <span className="serif-italic text-[#3D5CFF] drop-shadow-[0_0_30px_rgba(61,92,255,0.45)]">
                                         Future,
                                     </span>
                                 </span>
                                 <span className="block mt-2 sm:mt-4 drop-shadow-md whitespace-nowrap">
+                                    <InlineIcon bg="bg-[#FFC700]">
+                                        <Sparkles className="w-[0.48em] h-[0.48em] text-black" strokeWidth={2.5} />
+                                    </InlineIcon>
                                     <span className="text-white font-semibold">
                                         of{' '}
                                     </span>
