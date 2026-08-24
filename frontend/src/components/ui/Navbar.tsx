@@ -8,7 +8,6 @@ import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
 import Toast from './Toast';
-import WelcomeNotifications from './WelcomeNotifications';
 import { useSkeleton } from '../../context/SkeletonContext';
 import { NavbarSkeleton } from './Skeleton';
 
@@ -31,27 +30,16 @@ const Navbar = () => {
     // Welcome Toast Logic
     const [showToast, setShowToast] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
-    const [showWelcome, setShowWelcome] = useState(false);
-    const [welcomeName, setWelcomeName] = useState<string | undefined>(undefined);
-    const [welcomeEmail, setWelcomeEmail] = useState<string | undefined>(undefined);
     const prevUserRef = useRef<any>(undefined);
 
     React.useEffect(() => {
         const shouldWelcome = sessionStorage.getItem('ui-hub-show-welcome');
-        const isNewUser = sessionStorage.getItem('ui-hub-is-new-user');
 
         if (user && shouldWelcome === 'true') {
-            if (isNewUser === 'true') {
-                setWelcomeName(user.displayName || undefined);
-                setWelcomeEmail(user.email || undefined);
-                setShowWelcome(true);
-            } else {
-                setToastMsg(`WELCOME BACK, ${user.displayName?.split(' ')[0].toUpperCase() || 'AGENT'}`);
-                setShowToast(true);
-            }
+            setToastMsg(`WELCOME BACK, ${user.displayName?.split(' ')[0].toUpperCase() || 'AGENT'}`);
+            setShowToast(true);
 
             sessionStorage.removeItem('ui-hub-show-welcome');
-            sessionStorage.removeItem('ui-hub-is-new-user');
         }
 
         if (prevUserRef.current && !user) {
@@ -302,13 +290,6 @@ const Navbar = () => {
                         isVisible={showToast} 
                         message={toastMsg} 
                         onClose={() => setShowToast(false)} 
-                    />
-
-                    {/* New User Welcome Notifications */}
-                    <WelcomeNotifications
-                        isVisible={showWelcome}
-                        name={welcomeName}
-                        email={welcomeEmail}
                     />
                 </motion.header>
             )}

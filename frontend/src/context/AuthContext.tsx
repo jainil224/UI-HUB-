@@ -1,10 +1,17 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, User, getRedirectResult } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { getApiBaseUrl } from '../utils/apiConfig';
 import { syncUserWithBackend } from '../utils/syncUser';
+import WelcomeNotifications from '../components/ui/WelcomeNotifications';
 
 let syncedThisSession = false;
+
+interface WelcomeEvent {
+    name?: string;
+    email?: string;
+    seq: number;
+}
 
 interface AuthContextType {
     user: User | null;
@@ -22,6 +29,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isPro, setIsPro] = useState(() => localStorage.getItem('ui-hub-pro') === 'true');
     const [isElite, setIsElite] = useState(() => localStorage.getItem('ui-hub-elite') === 'true');
     const [loading, setLoading] = useState(true);
+    const [welcome, setWelcome] = useState<WelcomeEvent | null>(null);
+    const welcomeFiredForRef = useRef<string | null>(null);
+
+    const fireWelcome = (u: User) => {
+        if (welcomeFiredForRef.current === u.uid) return;
+        welcomeFiredForRef.current = u.uid;
+        try {
+            const creationTime = new Date(u.metadata.creationTime || 0).getTime();
+            const lastSignInTime = new Date(u.metadata.lastSignInTime || 0).getTime();
+            const isNewUser = Math.abs(creationTime - lastSignInTime) < 5000;
+            if (isNewUser) {
+                setWelcome({
+                    name: u.displayName || undefined,
+                    email: u.email || undefined,
+                    seq: Date.now(),
+                });
+            }
+        } catch (err) {
+            console.error('[Auth] New user detection failed:', err);
+        }
+    };
 
     useEffect(() => {
         const checkRedirect = async () => {
@@ -30,6 +58,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 if (result?.user) {
                     console.log(`[Auth] Redirect result found: ${result.user.email}`);
                     setUser(result.user);
+                    fireWelcome(result.user);
                     if (!syncedThisSession) {
                         syncedThisSession = true;
                         await syncUserWithBackend(result.user);
@@ -50,25 +79,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             
             if (user) {
                 console.log(`[Auth] User detected: ${user.email}. Fetching status...`);
-                
+
+                // First-time registration welcome (fired immediately, before any network sync)
+                fireWelcome(user);
+
                 // 4. Synchronize user with backend exactly once per session
                 if (!syncedThisSession) {
                     syncedThisSession = true;
                     await syncUserWithBackend(user);
-                }
-
-                try {
-                    // First-time registration flags
-                    const creationTime = new Date(user.metadata.creationTime || 0).getTime();
-                    const lastSignInTime = new Date(user.metadata.lastSignInTime || 0).getTime();
-                    const isNewUser = Math.abs(creationTime - lastSignInTime) < 5000; // 5s window
-                    
-                    if (isNewUser && !sessionStorage.getItem('ui-hub-show-welcome')) {
-                        sessionStorage.setItem('ui-hub-is-new-user', 'true');
-                        sessionStorage.setItem('ui-hub-show-welcome', 'true');
-                    }
-                } catch (syncErr) {
-                    console.error('[Auth] Local storage config fail:', syncErr);
                 }
 
                 try {
@@ -126,8 +144,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         <AuthContext.Provider value={{ user, isPro: isPro || isElite || isSpecialUser, isElite: isElite || isSpecialUser, loading }}>
             {/* Always render children immediately to unblock app mount */}
             {children}
-            
-            {/* Minimal overlay to show if auth is still resolving on initial load, only on protected or user-dependent pages if necessary. For now, we prefer speed. */}
+
+            {welcome && (
+                <WelcomeNotifications
+                    key={welcome.seq}
+                    isVisible={true}
+                    name={welcome.name}
+                    email={welcome.email}
+                />
+            )}
         </AuthContext.Provider>
     );
 };
