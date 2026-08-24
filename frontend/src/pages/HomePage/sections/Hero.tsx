@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ArrowRight, Sparkles, Zap, Layers, Flame, Bot } from 'lucide-react';
+import { Search, ArrowRight, Sparkles, Flame, Bot } from 'lucide-react';
 import { useSkeleton } from '../../../context/SkeletonContext';
 import { HeroSkeleton } from '../../../components/ui/Skeleton';
 
@@ -20,11 +20,6 @@ const Hero = () => {
     const { isLoading } = useSkeleton();
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
-
-    const categories = [
-        'Buttons', '3D Design', 'Text Animations', 'Visual Effects',
-        'Backgrounds', 'Cursor Effects', 'Scroll Animation'
-    ];
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,7 +49,7 @@ const Hero = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.4 }}
                     id="hero"
-                    className="relative min-h-[92vh] bg-[#0A0A0A] flex flex-col items-center justify-center px-6 pt-28 pb-20 overflow-hidden border-b-4 border-black"
+                    className="relative bg-[#0A0A0A] flex flex-col items-center justify-center px-6 pt-28 pb-24 overflow-hidden border-b-4 border-black"
                     style={{
                         backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.10) 1.2px, transparent 1.2px)',
                         backgroundSize: '28px 28px'
@@ -62,7 +57,7 @@ const Hero = () => {
                 >
                     {/* ── Geometric Decorative Accents ── */}
                     {/* Top-Left Crimson Red Bauhaus Circle */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.7, x: -30 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -70,19 +65,19 @@ const Hero = () => {
                     />
 
                     {/* Bottom-Right Tilted Yellow Bauhaus Card */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, scale: 0.7, rotate: 0 }}
                         animate={{ opacity: 1, scale: 1, rotate: 12 }}
                         transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                        className="hidden md:block absolute bottom-28 sm:bottom-36 right-4 sm:right-10 md:right-16 w-28 h-28 md:w-40 md:h-40 bg-[#FFC700] border-4 border-black shadow-[8px_8px_0px_0px_#000000] pointer-events-none z-0 rotate-12"
+                        className="hidden md:block absolute top-1/2 right-4 sm:right-10 md:right-16 w-28 h-28 md:w-40 md:h-40 bg-[#FFC700] border-4 border-black shadow-[8px_8px_0px_0px_#000000] pointer-events-none z-0 rotate-12"
                     />
 
                     {/* Bottom-Left Electric Blue Floating Pill */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
-                        className="hidden lg:flex absolute bottom-20 left-16 px-4 py-2 rounded-full bg-[#1F4BFF] border-2 border-black shadow-[3px_3px_0px_0px_#000000] items-center gap-2 pointer-events-none z-0"
+                        className="hidden lg:flex absolute top-[46%] left-16 px-4 py-2 rounded-full bg-[#1F4BFF] border-2 border-black shadow-[3px_3px_0px_0px_#000000] items-center gap-2 pointer-events-none z-0"
                     >
                         <Flame size={14} className="text-yellow-300 fill-yellow-300" />
                         <span className="text-[10px] font-black text-white uppercase tracking-wider">60FPS MOTION</span>
@@ -90,7 +85,7 @@ const Hero = () => {
 
                     {/* ── Main Hero Content ── */}
                     <div className="relative z-10 text-center max-w-5xl mx-auto flex flex-col items-center">
-                        
+
                         {/* Top Eyebrow Badge */}
                         <motion.div
                             initial={{ opacity: 0, y: -10 }}
@@ -178,7 +173,7 @@ const Hero = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.4 }}
-                            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 w-full sm:w-auto"
+                            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-10 w-full sm:w-auto"
                         >
                             <Link to="/library" className="w-full sm:w-auto">
                                 <button className="w-full sm:w-auto px-8 py-4 rounded-xl border-3 border-black bg-[#1F4BFF] text-white font-black text-xs uppercase tracking-widest shadow-[5px_5px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000000] transition-all flex items-center justify-center gap-3">
@@ -194,27 +189,6 @@ const Hero = () => {
                                     <span>VIEW PLANS</span>
                                 </button>
                             </Link>
-                        </motion.div>
-
-                        {/* Popular Category Quick Filter Tags */}
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5, delay: 0.5 }}
-                            className="flex flex-wrap justify-center items-center gap-2 pt-6 border-t-2 border-neutral-800/80 w-full max-w-3xl"
-                        >
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 mr-2 flex items-center gap-1.5">
-                                <Layers size={13} /> POPULAR:
-                            </span>
-                            {categories.map((category, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => navigate(`/library?q=${encodeURIComponent(category)}`)}
-                                    className="px-3 py-1.5 rounded-lg border-2 border-black bg-neutral-900 text-neutral-200 text-[11px] font-bold uppercase tracking-wider shadow-[2px_2px_0px_0px_#000000] hover:bg-white hover:text-black hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer"
-                                >
-                                    {category}
-                                </button>
-                            ))}
                         </motion.div>
                     </div>
                 </motion.section>
