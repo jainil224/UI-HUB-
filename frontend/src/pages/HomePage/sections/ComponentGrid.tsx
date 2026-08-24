@@ -32,7 +32,12 @@ const bentoSpecs: BentoSpec[] = [
     { id: 'mesh-text-hover', className: 'sm:col-span-2' },
     { id: 'lizard-cursor', className: '' },
     { id: 'point-dna-helix', className: 'lg:row-span-2' },
-    { id: 'liquid-glass', className: 'lg:row-span-2' },
+    {
+        id: 'liquid-glass',
+        className: 'lg:row-span-2',
+        // Widget is width-fluid — contain it fully inside the tile instead of covering
+        frame: 'absolute inset-0 flex items-center justify-center p-5',
+    },
     {
         id: 'perspective-carousel',
         className: 'sm:col-span-2',
