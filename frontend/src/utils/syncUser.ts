@@ -1,7 +1,35 @@
 import { User } from 'firebase/auth';
 import { getApiBaseUrl } from './apiConfig';
 
+const DISPLAY_NAME_WAIT_TIMEOUT_MS = 4000;
+const DISPLAY_NAME_POLL_INTERVAL_MS = 250;
+
+/**
+ * Email/password signups fire onAuthStateChanged before updateProfile() lands,
+ * so displayName can still be null right after account creation. Poll briefly
+ * until the real name appears so the backend welcome emails use the correct name.
+ */
+async function waitForDisplayName(user: User): Promise<string | null> {
+  if (user.displayName) return user.displayName;
+
+  const deadline = Date.now() + DISPLAY_NAME_WAIT_TIMEOUT_MS;
+  while (Date.now() < deadline) {
+    await new Promise((resolve) => setTimeout(resolve, DISPLAY_NAME_POLL_INTERVAL_MS));
+    try {
+      await user.reload();
+    } catch {
+      // Transient token/network errors — keep polling until the deadline
+    }
+    if (user.displayName) return user.displayName;
+  }
+
+  return user.displayName || null;
+}
+
 export async function syncUserWithBackend(user: User): Promise<void> {
+  // Email/password signups: wait briefly for updateProfile to provide the real name
+  const resolvedName = (await waitForDisplayName(user)) || 'UI Challenger';
+
   // Wait for a fresh token — do NOT use cached token
   let idToken: string;
   try {
@@ -22,7 +50,7 @@ export async function syncUserWithBackend(user: User): Promise<void> {
       },
       body: JSON.stringify({
         email: user.email,
-        name:  user.displayName || 'UI Challenger',
+        name:  resolvedName,
       }),
     });
 

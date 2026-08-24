@@ -20,12 +20,70 @@ function buildColorStrip() {
 }
 
 /**
+ * Formats a date as "Saturday, August 22, 2026" for detail rows.
+ */
+function formatEmailDate(date) {
+    return new Date(date).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+}
+
+/**
+ * Builds a Slotify-style divided detail table: white rows separated by hard
+ * 2px black dividers, with the final row highlighted (black bg + yellow label).
+ *
+ * @param {Array<{label: string, value: string, highlight?: boolean, mono?: boolean}>} rows
+ * @returns {string} HTML content
+ */
+function buildDetailRows(rows) {
+    const rowHtml = rows.map((row, index) => {
+        const isLast = index === rows.length - 1;
+        const divider = isLast ? '' : 'border-bottom:2px solid #000000;';
+        const base = `padding:12px 16px; ${divider} font-family:-apple-system, BlinkMacSystemFont, sans-serif;`;
+
+        if (row.highlight) {
+            return `
+                  <tr>
+                    <td style="${base} background-color:#000000 !important; font-size:12px; font-weight:900; color:#FFC700; text-transform:uppercase; letter-spacing:0.5px;">
+                      ${row.label}
+                    </td>
+                    <td align="right" style="${base} background-color:#000000 !important; font-size:13px; font-weight:900; color:#FFFFFF;">
+                      ${row.value}
+                    </td>
+                  </tr>`;
+        }
+
+        const valueStyle = row.mono
+            ? 'font-size:12px; font-family:monospace; font-weight:800; color:#000000;'
+            : 'font-size:13px; font-weight:800; color:#000000;';
+
+        return `
+                  <tr>
+                    <td style="${base} background-color:#FFFFFF !important; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px;">
+                      ${row.label}
+                    </td>
+                    <td align="right" style="${base} background-color:#FFFFFF !important; ${valueStyle}">
+                      ${row.value}
+                    </td>
+                  </tr>`;
+    }).join('');
+
+    return `
+                  <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-collapse:collapse; margin-bottom:24px;">
+                    ${rowHtml}
+                  </table>`;
+}
+/**
  * Builds the UI-HUB Welcome Email HTML with the Slotify-style high-contrast neo-brutalist layout.
  *
  * @param {string} name Display name of the user
+ * @param {string|Date} [joinedAt]
  * @returns {string} HTML content
  */
-export function buildWelcomeEmailHtml(name) {
+export function buildWelcomeEmailHtml(name, joinedAt = new Date()) {
     const displayName = (name && name !== 'there') ? name : 'Creator';
     const frontendUrl = process.env.FRONTEND_URL || 'https://ui-hub-design.vercel.app';
     const libraryUrl = `${frontendUrl}/library`;
@@ -43,11 +101,11 @@ export function buildWelcomeEmailHtml(name) {
     :root { color-scheme: light; }
   </style>
 </head>
-<body bgcolor="#F0F0F2" style="margin:0; padding:0; background-color:#F0F0F2 !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <div style="background-color:#F0F0F2 !important; width:100%; margin:0; padding:0;">
-    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#F0F0F2" style="background-color:#F0F0F2 !important; padding:40px 16px; width:100%;">
+<body bgcolor="#FFFFFF" style="margin:0; padding:0; background-color:#FFFFFF !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <div style="background-color:#FFFFFF !important; width:100%; margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important; padding:40px 16px; width:100%;">
       <tr>
-        <td align="center" bgcolor="#F0F0F2" style="background-color:#F0F0F2 !important;">
+        <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important;">
           <!-- Main Card Container with Black Line Border -->
           <table width="580" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="max-width:580px; width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-collapse:collapse;">
             
@@ -76,7 +134,7 @@ export function buildWelcomeEmailHtml(name) {
 
                 <!-- Main Title -->
                 <h1 style="font-size:26px; font-weight:900; color:#000000; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 14px 0; line-height:1.2;">
-                  WELCOME TO UI-HUB
+                  WELCOME TO UI-HUB, ${displayName.toUpperCase()}!
                 </h1>
 
                 <!-- Greeting & Copy -->
@@ -88,33 +146,13 @@ export function buildWelcomeEmailHtml(name) {
                   Welcome to UI-HUB! Click the button below to explore our cinema-grade React component library, 3D interactive canvases, and AI-powered master prompts.
                 </p>
 
-                <!-- Slotify-Style Table Box -->
-                <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#EBEBEB" style="width:100%; background-color:#EBEBEB !important; border:2px solid #000000; border-collapse:collapse; margin-bottom:24px;">
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ACCOUNT USER
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:900; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ${displayName}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      EMAIL STATUS
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:900; color:#00A843; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ✓ VERIFIED &amp; READY
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      FEATURES
-                    </td>
-                    <td align="right" style="padding:12px 16px; font-size:12px; font-weight:800; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      3D Canvases • Master Prompts • Zero Bloat Code
-                    </td>
-                  </tr>
-                </table>
+                <!-- Slotify-Style Divided Detail Rows -->
+                ${buildDetailRows([
+                    { label: 'MEMBER', value: displayName },
+                    { label: 'MEMBER SINCE', value: formatEmailDate(joinedAt) },
+                    { label: 'PLAN', value: 'FREE (Starter)' },
+                    { label: 'STATUS', value: '✓ VERIFIED &amp; READY', highlight: true },
+                ])}
 
                 <!-- Slotify-Style Action Button -->
                 <div style="margin:24px 0 24px 0;">
@@ -188,11 +226,11 @@ export function buildFreeSubscriptionEmailHtml({ name, email, activatedAt = new 
     :root { color-scheme: light; }
   </style>
 </head>
-<body bgcolor="#F0F0F2" style="margin:0; padding:0; background-color:#F0F0F2 !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <div style="background-color:#F0F0F2 !important; width:100%; margin:0; padding:0;">
-    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#F0F0F2" style="background-color:#F0F0F2 !important; padding:40px 16px; width:100%;">
+<body bgcolor="#FFFFFF" style="margin:0; padding:0; background-color:#FFFFFF !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <div style="background-color:#FFFFFF !important; width:100%; margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important; padding:40px 16px; width:100%;">
       <tr>
-        <td align="center" bgcolor="#F0F0F2" style="background-color:#F0F0F2 !important;">
+        <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important;">
           <!-- Main Card Container with Black Line Border -->
           <table width="580" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="max-width:580px; width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-collapse:collapse;">
             
@@ -233,41 +271,14 @@ export function buildFreeSubscriptionEmailHtml({ name, email, activatedAt = new 
                   You now have unlimited access to our collection of open-source React components, starter blueprints, and AI prompt trials.
                 </p>
 
-                <!-- Slotify-Style Table Box for Plan, Account, Billing, Status -->
-                <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#EBEBEB" style="width:100%; background-color:#EBEBEB !important; border:2px solid #000000; border-collapse:collapse; margin-bottom:24px;">
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      PLAN
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:900; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      FREE (Starter)
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ACCOUNT
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:800; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ${email}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      BILLING
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:900; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      $0.00 (Free Forever)
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      STATUS
-                    </td>
-                    <td align="right" style="padding:12px 16px; font-size:13px; font-weight:900; color:#00A843; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ✓ VERIFIED &amp; READY
-                    </td>
-                  </tr>
-                </table>
+                <!-- Slotify-Style Divided Detail Rows -->
+                ${buildDetailRows([
+                    { label: 'PLAN', value: 'FREE (Starter)' },
+                    { label: 'ACCOUNT', value: email },
+                    { label: 'BILLING', value: '$0.00 (Free Forever)' },
+                    { label: 'MEMBER SINCE', value: formatEmailDate(activatedAt) },
+                    { label: 'STATUS', value: '✓ ACTIVE / UNLIMITED', highlight: true },
+                ])}
 
                 <!-- Slotify-Style Action Button -->
                 <div style="margin:24px 0 24px 0;">
@@ -357,11 +368,11 @@ export function buildProSubscriptionEmailHtml({
     :root { color-scheme: light; }
   </style>
 </head>
-<body bgcolor="#F0F0F2" style="margin:0; padding:0; background-color:#F0F0F2 !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
-  <div style="background-color:#F0F0F2 !important; width:100%; margin:0; padding:0;">
-    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#F0F0F2" style="background-color:#F0F0F2 !important; padding:40px 16px; width:100%;">
+<body bgcolor="#FFFFFF" style="margin:0; padding:0; background-color:#FFFFFF !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <div style="background-color:#FFFFFF !important; width:100%; margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important; padding:40px 16px; width:100%;">
       <tr>
-        <td align="center" bgcolor="#F0F0F2" style="background-color:#F0F0F2 !important;">
+        <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important;">
           <!-- Main Card Container with Black Line Border -->
           <table width="580" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="max-width:580px; width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-collapse:collapse;">
             
@@ -398,49 +409,15 @@ export function buildProSubscriptionEmailHtml({
                   Your payment was <strong style="color:#00A843;">successfully verified</strong>. Your UI-HUB account has been upgraded to <strong>PRO ACCESS</strong> for <strong>${duration}</strong>.
                 </p>
 
-                <!-- Slotify-Style Table Box for PRO details -->
-                <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#EBEBEB" style="width:100%; background-color:#EBEBEB !important; border:2px solid #000000; border-collapse:collapse; margin-bottom:24px;">
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      PLAN
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:900; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      PRO ACCESS (${duration})
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ACCOUNT
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:800; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ${email}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      AMOUNT PAID
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:13px; font-weight:900; color:#000000; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ${formattedAmount}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      PAYMENT ID
-                    </td>
-                    <td align="right" style="padding:12px 16px; border-bottom:2px solid #000000; font-size:12px; font-family:monospace; font-weight:800; color:#000000;">
-                      ${paymentId}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding:12px 16px; font-size:12px; font-weight:900; color:#333333; text-transform:uppercase; letter-spacing:0.5px; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      STATUS
-                    </td>
-                    <td align="right" style="padding:12px 16px; font-size:13px; font-weight:900; color:#00A843; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
-                      ✓ PRO VERIFIED &amp; ACTIVE
-                    </td>
-                  </tr>
-                </table>
+                <!-- Slotify-Style Divided Detail Rows -->
+                ${buildDetailRows([
+                    { label: 'PLAN', value: `PRO ACCESS (${duration})` },
+                    { label: 'ACCOUNT', value: email },
+                    { label: 'AMOUNT PAID', value: formattedAmount },
+                    { label: 'PURCHASE DATE', value: formatEmailDate(purchaseDate) },
+                    { label: 'PAYMENT ID', value: paymentId, mono: true },
+                    { label: 'STATUS', value: '✓ PRO VERIFIED &amp; ACTIVE', highlight: true },
+                ])}
 
                 <!-- Slotify-Style Action Button -->
                 <div style="margin:24px 0 24px 0;">
