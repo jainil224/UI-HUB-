@@ -50,11 +50,18 @@ const Hero = () => {
                     transition={{ duration: 0.4 }}
                     id="hero"
                     className="relative bg-[#0A0A0A] flex flex-col items-center justify-center px-6 pt-28 pb-24 overflow-hidden border-b-4 border-black"
-                    style={{
-                        backgroundImage: 'radial-gradient(circle, rgba(255, 255, 255, 0.10) 1.2px, transparent 1.2px)',
-                        backgroundSize: '28px 28px'
-                    }}
                 >
+                    {/* Graph-square grid backdrop (matches footer) */}
+                    <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                            backgroundImage:
+                                'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+                            backgroundSize: '32px 32px',
+                            maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                            WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)',
+                        }}
+                    />
                     {/* ── Geometric Decorative Accents ── */}
                     {/* Top-Left Crimson Red Bauhaus Circle */}
                     <motion.div

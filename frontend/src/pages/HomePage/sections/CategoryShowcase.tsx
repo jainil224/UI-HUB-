@@ -351,18 +351,18 @@ const CategoryShowcase = () => {
                 </div>
 
                 {/* Arrows */}
-                <div className="flex justify-center items-center gap-4 mt-4">
+                <div className="flex justify-center items-center gap-4 mt-6">
                     <button
                         onClick={() => nudge(-1)}
                         aria-label="Previous category"
-                        className="w-11 h-11 flex items-center justify-center bg-black text-white border-2 border-black active:translate-y-0.5 hover:bg-[#3D5CFF] transition-colors"
+                        className="w-12 h-12 flex items-center justify-center bg-brand-surface text-white border-2 border-white rounded-sm brutal-shadow-blue hover:bg-brand-blue hover:border-black hover:-translate-y-1 active:translate-y-0 active:shadow-none transition-all"
                     >
                         <ArrowLeft size={18} />
                     </button>
                     <button
                         onClick={() => nudge(1)}
                         aria-label="Next category"
-                        className="w-11 h-11 flex items-center justify-center bg-black text-white border-2 border-black active:translate-y-0.5 hover:bg-[#3D5CFF] transition-colors"
+                        className="w-12 h-12 flex items-center justify-center bg-brand-surface text-white border-2 border-white rounded-sm brutal-shadow-blue hover:bg-brand-blue hover:border-black hover:-translate-y-1 active:translate-y-0 active:shadow-none transition-all"
                     >
                         <ArrowRight size={18} />
                     </button>
