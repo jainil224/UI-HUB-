@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ArrowRight, Sparkles, Flame, Bot } from 'lucide-react';
+import { Search, ArrowRight, Sparkles, Flame, Bot, Pointer } from 'lucide-react';
 import { useSkeleton } from '../../../context/SkeletonContext';
 import { HeroSkeleton } from '../../../components/ui/Skeleton';
 
@@ -119,7 +119,7 @@ const Hero = () => {
                                 </span>
                                 <span className="block mt-2 sm:mt-4 drop-shadow-md sm:whitespace-nowrap">
                                     <InlineIcon bg="bg-[#FFC700]">
-                                        <Sparkles className="w-[0.48em] h-[0.48em] text-black" strokeWidth={2.5} />
+                                        <Flame className="w-[0.48em] h-[0.48em] text-black" fill="currentColor" strokeWidth={2.5} />
                                     </InlineIcon>
                                     <span className="text-white font-semibold">
                                         of{' '}
