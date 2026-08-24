@@ -1,6 +1,6 @@
 import React from 'react';
 import Hero from './sections/Hero';
-import VibePrompts from './sections/VibePrompts';
+import FAQ from './sections/FAQ';
 import ComponentGrid from './sections/ComponentGrid';
 import Stats from './sections/Stats';
 import Testimonials from './sections/Testimonials';
@@ -11,7 +11,7 @@ const HomePage = () => (
         <Stats />
         <ComponentGrid />
         <Testimonials />
-        <VibePrompts />
+        <FAQ />
     </div>
 );
 
