@@ -93,8 +93,8 @@ const Navbar = () => {
                         {/* ── Center Navigation Links ── */}
                         <nav className="hidden md:flex items-center gap-6 lg:gap-8">
                             {[
-                                { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                 { to: '/', label: 'HOW IT WORKS', active: location.pathname === '/' },
+                                { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                 { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
                                 { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
                             ].map(({ to, label, active }) => (
@@ -233,8 +233,8 @@ const Navbar = () => {
                                 {/* Links */}
                                 <div className="flex flex-col gap-2">
                                     {[
-                                        { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                         { to: '/', label: 'HOW IT WORKS', active: location.pathname === '/' },
+                                        { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                         { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
                                         { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
                                     ].map(({ to, label, active }) => (
