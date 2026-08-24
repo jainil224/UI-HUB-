@@ -73,25 +73,28 @@ const Navbar = () => {
                     transition={{ duration: 0.25 }}
                     className="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black select-none"
                 >
+                    {/* Accent strip */}
+                    <div className="h-1 w-full bg-gradient-to-r from-[#1F4BFF] via-[#FFC700] to-[#E52520]" />
+
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-                        
+
                         {/* ── Brand Logo ── */}
                         <Link to="/" className="flex items-center gap-3 shrink-0 group">
-                            <div className="relative">
+                            <div className="relative transition-transform duration-200 group-hover:-rotate-6 group-hover:scale-110">
                                 <img
                                     src={logo}
                                     alt="UI HUB Logo"
                                     className="w-8 h-8 rounded-sm object-contain"
                                 />
-                                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-black shadow-[1px_1px_0px_0px_#000]" />
+                                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-black shadow-[1px_1px_0px_0px_#000] animate-pulse" />
                             </div>
-                            <span className="font-heading font-black text-2xl tracking-tight text-black uppercase">
+                            <span className="font-heading font-black text-2xl tracking-tight text-black uppercase group-hover:text-[#1F4BFF] transition-colors">
                                 UI HUB
                             </span>
                         </Link>
 
                         {/* ── Center Navigation Links ── */}
-                        <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+                        <nav className="hidden md:flex items-center gap-2 lg:gap-3">
                             {[
                                 { to: '/', label: 'HOW IT WORKS', active: location.pathname === '/' },
                                 { to: '/library', label: 'COMPONENTS', active: isLibrary },
@@ -101,13 +104,16 @@ const Navbar = () => {
                                 <Link
                                     key={to + label}
                                     to={to}
-                                    className={`text-xs lg:text-sm font-black uppercase tracking-wider transition-colors ${
-                                        active 
-                                            ? 'text-[#1F4BFF]' 
-                                            : 'text-black hover:text-[#1F4BFF]'
+                                    className={`relative px-3 py-1.5 text-xs lg:text-[13px] font-black uppercase tracking-wider border-2 transition-all ${
+                                        active
+                                            ? 'bg-[#1F4BFF] text-white border-black shadow-[3px_3px_0px_0px_#000000]'
+                                            : 'bg-transparent text-black border-transparent hover:border-black hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#000000]'
                                     }`}
                                 >
                                     {label}
+                                    {active && (
+                                        <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-black" />
+                                    )}
                                 </Link>
                             ))}
                         </nav>
@@ -115,16 +121,16 @@ const Navbar = () => {
                         {/* ── Right Actions ── */}
                         <div className="flex items-center gap-3">
                             {/* Search (Desktop) */}
-                            <form onSubmit={handleSearchSubmit} className="hidden xl:flex relative mr-1">
+                            <form onSubmit={handleSearchSubmit} className="hidden xl:flex relative mr-1 group">
                                 <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                                    <Search size={13} className="text-neutral-500" />
+                                    <Search size={13} className="text-neutral-500 group-focus-within:text-[#1F4BFF] transition-colors" />
                                 </div>
                                 <input
                                     type="text"
                                     placeholder="SEARCH..."
                                     value={globalSearch}
                                     onChange={(e) => setGlobalSearch(e.target.value)}
-                                    className="w-36 lg:w-44 bg-[#F5F5F5] border-2 border-black rounded-none py-1.5 pl-8 pr-2.5 text-xs font-mono font-bold text-black placeholder:text-neutral-400 focus:outline-none focus:bg-white focus:shadow-[2px_2px_0px_0px_#000000] transition-all uppercase"
+                                    className="w-36 lg:w-48 bg-[#F5F5F5] border-2 border-black rounded-none py-1.5 pl-8 pr-2.5 text-xs font-mono font-bold text-black placeholder:text-neutral-400 focus:outline-none focus:bg-white focus:border-[#1F4BFF] focus:shadow-[3px_3px_0px_0px_#1F4BFF] transition-all uppercase"
                                 />
                             </form>
 
@@ -145,7 +151,15 @@ const Navbar = () => {
                                         <span className="text-xs font-black uppercase tracking-tight text-black max-w-[80px] truncate">
                                             {user.displayName?.split(' ')[0] || 'USER'}
                                         </span>
-                                        <span className="px-1.5 py-0.5 bg-[#FFC700] text-black border border-black text-[9px] font-black uppercase shadow-[1px_1px_0px_0px_#000]">
+                                        <span
+                                            className={`px-1.5 py-0.5 border border-black text-[9px] font-black uppercase shadow-[1px_1px_0px_0px_#000] ${
+                                                planTier === 'elite'
+                                                    ? 'bg-[#FFC700] text-black'
+                                                    : planTier === 'pro'
+                                                    ? 'bg-[#1F4BFF] text-white'
+                                                    : 'bg-neutral-200 text-black'
+                                            }`}
+                                        >
                                             {planTier.toUpperCase()}
                                         </span>
                                     </Link>
@@ -170,7 +184,7 @@ const Navbar = () => {
 
                                     {/* GET STARTED Button */}
                                     <Link to="/signup">
-                                        <button className="bg-[#E52520] hover:bg-[#CC1E1A] text-white border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_#000000] transition-all">
+                                        <button className="bg-[#1F4BFF] hover:bg-[#1638CC] text-white border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0px_0px_#000000] transition-all">
                                             GET STARTED
                                         </button>
                                     </Link>
@@ -182,7 +196,7 @@ const Navbar = () => {
                                 onClick={() => setIsOpen(!isOpen)}
                                 aria-label={isOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={isOpen}
-                                className="md:hidden flex items-center justify-center w-11 h-11 bg-white border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all"
+                                className="md:hidden flex items-center justify-center w-11 h-11 bg-white border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] hover:bg-black hover:text-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
                             >
                                 <AnimatePresence mode="wait" initial={false}>
                                     {isOpen ? (
