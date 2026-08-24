@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { componentList } from '../../../data/componentData';
-import { ArrowUpRight, Zap } from 'lucide-react';
+import { ArrowUpRight, Zap, Flame } from 'lucide-react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useSkeleton } from '../../../context/SkeletonContext';
 import { ComponentGridSkeleton } from '../../../components/ui/Skeleton';
@@ -109,6 +109,25 @@ const ComponentGrid = () => {
 
     return (
         <section id="explore" className="relative py-24 md:py-32 px-4 sm:px-6 max-w-[1400px] mx-auto w-full bg-brand-bg">
+            {/* Section Heading */}
+            <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="relative z-10 text-center text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight mb-6 px-4"
+            >
+                <span className="inline-flex items-center gap-3 flex-wrap justify-center">
+                    <span className="inline-flex items-center justify-center w-[0.85em] h-[0.85em] rounded-[22%] bg-brand-yellow border-2 border-black shadow-[3px_3px_0px_#000000]">
+                        <Flame className="w-[0.55em] h-[0.55em] text-black" fill="currentColor" strokeWidth={2.5} />
+                    </span>
+                    Supercharge Your Projects with
+                </span>
+                <span className="block mt-1 sm:mt-2">
+                    Ready-to-Use <span className="text-brand-blue">Components.</span>
+                </span>
+            </motion.h2>
+
             {/* Section Header — minimal live-preview ticker */}
             <motion.div
                 initial={{ opacity: 0 }}
