@@ -1,5 +1,5 @@
 import express from 'express';
-import admin from '../utils/firebaseAdmin.js';
+import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
 import { verifyToken } from '../middleware/auth.js';
 import { checkProStatus, checkEliteStatus } from '../services/userService.js';
 import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail } from '../utils/sendEmail.js';
@@ -166,96 +166,99 @@ router.post('/sync', verifyToken, async (req, res) => {
             return res.status(400).json({ success: false, error: 'Email is required' });
         }
 
-        const db = admin.firestore();
-        const userDocRef = db.collection('users').doc(uid);
-
         let shouldSendWelcome = false;
         let shouldSendFreeSub = false;
         let resolvedEmail = email;
         let resolvedName = name || 'UI Challenger';
 
-        await db.runTransaction(async (transaction) => {
-            const userDoc = await transaction.get(userDocRef);
+        if (hasCredentials) {
+            try {
+                const db = admin.firestore();
+                const userDocRef = db.collection('users').doc(uid);
 
-            if (!userDoc.exists) {
-                // Brand new user — create document and claim the email slots atomically
-                console.log(`[SYNC] Creating new Firestore document for ${uid} (${email})`);
-                transaction.set(userDocRef, {
-                    uid,
-                    email,
-                    displayName: resolvedName,
-                    planTier: 'free',
-                    welcomeEmailSent: 'sending',
-                    freeSubscriptionEmailSent: 'sending',
-                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                await db.runTransaction(async (transaction) => {
+                    const userDoc = await transaction.get(userDocRef);
+
+                    if (!userDoc.exists) {
+                        console.log(`[SYNC] Creating new Firestore document for ${uid} (${email})`);
+                        transaction.set(userDocRef, {
+                            uid,
+                            email,
+                            displayName: resolvedName,
+                            planTier: 'free',
+                            welcomeEmailSent: 'sending',
+                            freeSubscriptionEmailSent: 'sending',
+                            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        });
+                        shouldSendWelcome = true;
+                        shouldSendFreeSub = true;
+                    } else {
+                        const userData = userDoc.data() || {};
+                        const welcomeFlag = userData.welcomeEmailSent;
+                        const freeFlag = userData.freeSubscriptionEmailSent;
+                        const planTier = userData.planTier || 'free';
+
+                        resolvedEmail = email;
+                        resolvedName  = name || userData.displayName || 'UI Challenger';
+
+                        const updates = {
+                            email,
+                            displayName: resolvedName,
+                            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                        };
+
+                        if (welcomeFlag !== true && welcomeFlag !== 'sending') {
+                            updates.welcomeEmailSent = 'sending';
+                            shouldSendWelcome = true;
+                        }
+
+                        if (planTier === 'free' && freeFlag !== true && freeFlag !== 'sending') {
+                            updates.freeSubscriptionEmailSent = 'sending';
+                            shouldSendFreeSub = true;
+                        }
+
+                        transaction.update(userDocRef, updates);
+                    }
                 });
-                shouldSendWelcome = true;
-                shouldSendFreeSub = true;
-            } else {
-                const userData = userDoc.data() || {};
-                const welcomeFlag = userData.welcomeEmailSent;
-                const freeFlag = userData.freeSubscriptionEmailSent;
-                const planTier = userData.planTier || 'free';
 
-                resolvedEmail = email;
-                resolvedName  = name || userData.displayName || 'UI Challenger';
+                // Sequential Email Dispatch: Welcome Email 1st, FREE Subscription Email 2nd
+                (async () => {
+                    if (shouldSendWelcome) {
+                        try {
+                            console.log(`[Auth] 1st: Triggering Welcome Email for ${uid} (${resolvedEmail})...`);
+                            const welcomeResult = await sendWelcomeEmail(resolvedEmail, resolvedName);
+                            await userDocRef.update({ welcomeEmailSent: welcomeResult.success ? true : false });
+                            console.log(`[Auth] ✅ Welcome email sent for ${uid}:`, welcomeResult.success ? 'Success' : 'Failed');
+                        } catch (err) {
+                            await userDocRef.update({ welcomeEmailSent: false });
+                            console.error(`[Auth] ❌ Welcome email error for ${uid}:`, err.message);
+                        }
+                    }
 
-                const updates = {
-                    email,
-                    displayName: resolvedName,
-                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-                };
+                    if (shouldSendWelcome && shouldSendFreeSub) {
+                        await new Promise((r) => setTimeout(r, 2500));
+                    }
 
-                // Claim welcome email slot if not yet sent
-                if (welcomeFlag !== true && welcomeFlag !== 'sending') {
-                    updates.welcomeEmailSent = 'sending';
-                    shouldSendWelcome = true;
-                }
+                    if (shouldSendFreeSub) {
+                        try {
+                            console.log(`[Auth] 2nd: Triggering FREE Subscription Email for ${uid} (${resolvedEmail})...`);
+                            const freeResult = await sendFreeSubscriptionEmail({ email: resolvedEmail, name: resolvedName, activatedAt: new Date() });
+                            await userDocRef.update({ freeSubscriptionEmailSent: freeResult.success ? true : false });
+                            console.log(`[Auth] ✅ FREE subscription email sent for ${uid}:`, freeResult.success ? 'Success' : 'Failed');
+                        } catch (err) {
+                            await userDocRef.update({ freeSubscriptionEmailSent: false });
+                            console.error(`[Auth] ❌ FREE subscription email error for ${uid}:`, err.message);
+                        }
+                    }
+                })().catch((bgErr) => console.error('[Auth] Background sequential email error:', bgErr));
 
-                // Claim free subscription email slot if on free tier and not yet sent
-                if (planTier === 'free' && freeFlag !== true && freeFlag !== 'sending') {
-                    updates.freeSubscriptionEmailSent = 'sending';
-                    shouldSendFreeSub = true;
-                }
-
-                transaction.update(userDocRef, updates);
+            } catch (firestoreErr) {
+                console.warn('[SYNC] Firestore sync warning (running in local fallback mode):', firestoreErr.message);
             }
-        });
-
-        // Sequential Email Dispatch: Welcome Email 1st, FREE Subscription Email 2nd
-        (async () => {
-            // 1. Send Welcome Email 1st
-            if (shouldSendWelcome) {
-                try {
-                    console.log(`[Auth] 1st: Triggering Welcome Email for ${uid} (${resolvedEmail})...`);
-                    const welcomeResult = await sendWelcomeEmail(resolvedEmail, resolvedName);
-                    await userDocRef.update({ welcomeEmailSent: welcomeResult.success ? true : false });
-                    console.log(`[Auth] ✅ Welcome email sent for ${uid}:`, welcomeResult.success ? 'Success' : 'Failed');
-                } catch (err) {
-                    await userDocRef.update({ welcomeEmailSent: false });
-                    console.error(`[Auth] ❌ Welcome email error for ${uid}:`, err.message);
-                }
-            }
-
-            // Spacing to guarantee mail delivery order (Welcome 1st, Free 2nd)
-            if (shouldSendWelcome && shouldSendFreeSub) {
-                await new Promise((r) => setTimeout(r, 2500));
-            }
-
-            // 2. Send FREE Subscription Email 2nd
-            if (shouldSendFreeSub) {
-                try {
-                    console.log(`[Auth] 2nd: Triggering FREE Subscription Email for ${uid} (${resolvedEmail})...`);
-                    const freeResult = await sendFreeSubscriptionEmail({ email: resolvedEmail, name: resolvedName, activatedAt: new Date() });
-                    await userDocRef.update({ freeSubscriptionEmailSent: freeResult.success ? true : false });
-                    console.log(`[Auth] ✅ FREE subscription email sent for ${uid}:`, freeResult.success ? 'Success' : 'Failed');
-                } catch (err) {
-                    await userDocRef.update({ freeSubscriptionEmailSent: false });
-                    console.error(`[Auth] ❌ FREE subscription email error for ${uid}:`, err.message);
-                }
-            }
-        })().catch((bgErr) => console.error('[Auth] Background sequential email error:', bgErr));
+        } else {
+            console.log(`[SYNC] Local dev mode without Firestore credentials — user ${email} (${uid}) synced in-memory.`);
+        }
 
         res.json({ 
             success: true, 
@@ -278,32 +281,40 @@ router.post('/activate-free', verifyToken, async (req, res) => {
         const email = req.user.email;
         const name = req.user.displayName || req.user.name || 'Creator';
 
-        const db = admin.firestore();
-        const userDocRef = db.collection('users').doc(uid);
-        const userDoc = await userDocRef.get();
+        if (hasCredentials) {
+            try {
+                const db = admin.firestore();
+                const userDocRef = db.collection('users').doc(uid);
+                const userDoc = await userDocRef.get();
 
-        const userData = userDoc.exists ? userDoc.data() : {};
-        const freeFlag = userData?.freeSubscriptionEmailSent;
+                const userData = userDoc.exists ? userDoc.data() : {};
+                const freeFlag = userData?.freeSubscriptionEmailSent;
 
-        await userDocRef.set({
-            email,
-            displayName: name,
-            planTier: 'free',
-            status: 'FREE',
-            freeActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-        }, { merge: true });
+                await userDocRef.set({
+                    email,
+                    displayName: name,
+                    planTier: 'free',
+                    status: 'FREE',
+                    freeActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                }, { merge: true });
 
-        // If FREE email wasn't sent yet, send it now
-        if (freeFlag !== true && freeFlag !== 'sending') {
-            await userDocRef.update({ freeSubscriptionEmailSent: 'sending' });
-            sendFreeSubscriptionEmail({ email, name, activatedAt: new Date() })
-                .then(async (result) => {
-                    await userDocRef.update({ freeSubscriptionEmailSent: result.success ? true : false });
-                })
-                .catch(async () => {
-                    await userDocRef.update({ freeSubscriptionEmailSent: false });
-                });
+                // If FREE email wasn't sent yet, send it now
+                if (freeFlag !== true && freeFlag !== 'sending') {
+                    await userDocRef.update({ freeSubscriptionEmailSent: 'sending' });
+                    sendFreeSubscriptionEmail({ email, name, activatedAt: new Date() })
+                        .then(async (result) => {
+                            await userDocRef.update({ freeSubscriptionEmailSent: result.success ? true : false });
+                        })
+                        .catch(async () => {
+                            await userDocRef.update({ freeSubscriptionEmailSent: false });
+                        });
+                }
+            } catch (fsErr) {
+                console.warn('[ActivateFree] Firestore write skipped in dev mode:', fsErr.message);
+            }
+        } else {
+            console.log(`[ActivateFree] Dev mode without Firestore credentials — user ${email} activated FREE.`);
         }
 
         res.json({

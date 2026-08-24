@@ -4,13 +4,17 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 dotenv.config();
+dotenv.config({ path: join(__dirname, '../../.env') });
 
 const projectId = process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
 
 if (!projectId) {
   console.error('[FirebaseAdmin] CRITICAL: VITE_FIREBASE_PROJECT_ID is not defined in environment variables!');
 }
+
+let serviceAccountLoaded = false;
 
 function initializeFirebaseAdmin() {
   if (admin.apps.length > 0) {
@@ -50,21 +54,22 @@ function initializeFirebaseAdmin() {
   }
 
   if (!serviceAccount || !serviceAccount.project_id) {
-    console.error('[FirebaseAdmin] Failed to extract project_id. Vercel env variable/local file is likely malformed or missing!');
+    console.warn('[FirebaseAdmin] No service account credentials found. Running in local fallback mode.');
     serviceAccount = null; 
   }
 
   try {
-    const initPayload = {
-      ...(projectId && { projectId }),
-      ...(serviceAccount && { credential: admin.credential.cert(serviceAccount) }),
-    };
     if (serviceAccount) {
-      admin.initializeApp(initPayload);
+      admin.initializeApp({
+        projectId: projectId || serviceAccount.project_id,
+        credential: admin.credential.cert(serviceAccount)
+      });
+      serviceAccountLoaded = true;
       console.log('[FirebaseAdmin] Initialized successfully with project:', serviceAccount.project_id);
     } else {
       admin.initializeApp({ projectId: projectId || 'ui-hub-dev' });
-      console.log('[FirebaseAdmin] Initialized in local dev mode with project ID:', projectId || 'ui-hub-dev');
+      serviceAccountLoaded = false;
+      console.log('[FirebaseAdmin] Initialized in local dev mode (without service account credentials) with project ID:', projectId || 'ui-hub-dev');
     }
   } catch (error) {
     console.error('[FirebaseAdmin] Initialization error:', error);
@@ -72,5 +77,7 @@ function initializeFirebaseAdmin() {
 }
 
 initializeFirebaseAdmin();
-// Removed top-level export const auth = admin.auth(); to prevent boot crash
+export const hasCredentials = serviceAccountLoaded;
 export default admin;
+
+
