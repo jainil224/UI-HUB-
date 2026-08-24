@@ -193,6 +193,7 @@ const CategoryShowcase = () => {
         if (e.pointerType === 'mouse' && e.button !== 0) return;
         modeRef.current = 'drag';
         draggedRef.current = false;
+        offsetRef.current = wrap(offsetRef.current);
         dragStartXRef.current = e.clientX;
         dragStartOffsetRef.current = offsetRef.current;
         velocityRef.current = 0;
@@ -206,7 +207,11 @@ const CategoryShowcase = () => {
         const move = (e: PointerEvent) => {
             const dx = e.clientX - dragStartXRef.current;
             if (Math.abs(dx) > 5) draggedRef.current = true;
-            offsetRef.current = dragStartOffsetRef.current - dx;
+            // Wrap while dragging so the strip loops seamlessly in both directions
+            const raw = dragStartOffsetRef.current - dx;
+            const wrapped = wrap(raw);
+            dragStartOffsetRef.current += wrapped - raw;
+            offsetRef.current = wrapped;
             const now = performance.now();
             const dt = now - lastMoveRef.current.t;
             if (dt > 0) {
@@ -232,7 +237,7 @@ const CategoryShowcase = () => {
             window.removeEventListener('pointerup', up);
             window.removeEventListener('pointercancel', up);
         };
-    }, [isDragging, nearestSnapOffset]);
+    }, [isDragging, nearestSnapOffset, wrap]);
 
     const nudge = (dir: 1 | -1) => {
         const from = modeRef.current === 'ease' ? easeTargetRef.current : offsetRef.current;
