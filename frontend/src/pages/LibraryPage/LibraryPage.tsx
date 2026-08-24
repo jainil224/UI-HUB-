@@ -147,6 +147,7 @@ const LibraryPage = () => {
         setIsMobileMenuOpen(false);
         navigate(`/library?id=${item.id}`, { replace: true });
         if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
+        window.scrollTo({ top: 0, behavior: 'auto' });
     };
 
     const totalComponents = allComponents.length;
@@ -162,11 +163,18 @@ const LibraryPage = () => {
                 .main-scroll::-webkit-scrollbar-thumb { background: #262626; }
             `}</style>
 
-            <div className="h-dvh flex flex-col md:flex-row overflow-hidden relative pt-16 bg-brand-bg text-white">
+            <div className="flex flex-col md:flex-row relative pt-16 bg-brand-bg text-white md:h-dvh md:overflow-hidden">
                 {/* ── Mobile top nav ── */}
                 <div className="md:hidden flex items-center justify-between px-4 py-3 border-b-2 border-white shrink-0 z-30 bg-brand-surface">
                     <span className="font-bold text-sm uppercase">UI HUB</span>
-                    <button onClick={() => setIsMobileMenuOpen(true)}><MenuIcon size={20} /></button>
+                    <button
+                        onClick={() => setIsMobileMenuOpen(true)}
+                        aria-label="Open components menu"
+                        aria-expanded={isMobileMenuOpen}
+                        className="w-11 h-11 -mr-2 flex items-center justify-center rounded-lg border-2 border-white bg-brand-surface text-white active:translate-y-0.5"
+                    >
+                        <MenuIcon size={22} />
+                    </button>
                 </div>
 
                 {/* ── Mobile Menu Overlay ── */}
@@ -180,7 +188,13 @@ const LibraryPage = () => {
                         >
                             <div className="flex justify-between items-center mb-6">
                                 <span className="font-bold">UI HUB</span>
-                                <button onClick={() => setIsMobileMenuOpen(false)}><X size={18} /></button>
+                                <button
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    aria-label="Close menu"
+                                    className="w-11 h-11 -mr-3 flex items-center justify-center rounded-lg border-2 border-white bg-brand-surface text-white"
+                                >
+                                    <X size={20} />
+                                </button>
                             </div>
                             {categories.map((cat, idx) => (
                                 <div key={idx} className="mb-4">
@@ -306,7 +320,7 @@ const LibraryPage = () => {
                 </aside>
 
                 {/* ── Middle Column: Playground & Documentation ── */}
-                <main ref={mainContainerRef} className="flex-1 min-h-0 overflow-y-auto main-scroll p-6 lg:p-10">
+                <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto main-scroll p-4 sm:p-6 lg:p-10">
                     <div className="max-w-4xl mx-auto">
                         <motion.div 
                             key={activeComponent.id} 

@@ -276,7 +276,7 @@ const ToolCard = React.memo(({
             {/* Lock Badge for non-Pro users */}
             {isLocked && (
                 <div className="absolute top-2 right-2 z-30">
-                    <span className="px-2 py-0.5 rounded bg-brand-surface border border-neutral-600 text-neutral-400 text-[8px] font-black uppercase tracking-widest flex items-center gap-1">
+                    <span className="px-2 py-1 rounded bg-brand-surface border border-neutral-600 text-neutral-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-1">
                         <Lock size={10} /> PRO
                     </span>
                 </div>
@@ -498,7 +498,7 @@ const VibeSystemSection = React.memo(({
                         </div>
 
                         {/* Terminal Content */}
-                        <div className="p-6 md:p-10 text-[10px] md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
+                        <div className="p-4 sm:p-6 md:p-10 text-xs md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
                             {(!user || user.isAnonymous) && !['lovable', 'cursor'].includes(aiSystem) ? (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
                                     <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
@@ -552,15 +552,15 @@ const VibeSystemSection = React.memo(({
                         </div>
 
                         {/* Bottom Status Bar */}
-                        <div className="px-6 py-3 border-t-2 border-neutral-800 bg-[#0A0A0E] flex items-center justify-between relative z-20">
+                        <div className="px-4 sm:px-6 py-3 border-t-2 border-neutral-800 bg-[#0A0A0E] flex items-center justify-between relative z-20">
                             <div className="flex items-center gap-2">
                                 <div className={`w-2 h-2 rounded-full ${isPending ? 'bg-amber-400 animate-pulse' : (TOOL_THEMES[aiSystem]?.indicatorDot || 'bg-brand-blue') + ' animate-pulse'}`} />
-                                <span className="text-[9px] uppercase tracking-widest text-neutral-400 font-bold">{isPending ? 'Processing...' : 'Terminal Active'}</span>
+                                <span className="text-[10px] uppercase tracking-widest text-neutral-400 font-bold">{isPending ? 'Processing...' : 'Terminal Active'}</span>
                             </div>
-                            <div className="absolute left-1/2 -translate-x-1/2 flex items-center gap-1.5">
-                                <span className={`text-[9px] uppercase tracking-widest font-black ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>UI HUB</span>
+                            <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-1.5">
+                                <span className={`text-[10px] uppercase tracking-widest font-black ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>UI HUB</span>
                             </div>
-                            <span className="text-[9px] uppercase tracking-widest text-neutral-500 font-mono whitespace-nowrap">UTF-8 // LN: {(deferredVibePrompt || '').split('\n').length}</span>
+                            <span className="hidden md:inline text-[10px] uppercase tracking-widest text-neutral-500 font-mono whitespace-nowrap">UTF-8 // LN: {(deferredVibePrompt || '').split('\n').length}</span>
                         </div>
                     </div>
                 </div>
@@ -1098,11 +1098,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
-                                <div className="p-6 flex items-center justify-between bg-brand-surface">
-                                    <code className="text-white font-mono text-sm font-bold">{installCommand}</code>
+                                <div className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-3 bg-brand-surface">
+                                    <code className="text-white font-mono text-xs sm:text-sm font-bold break-all min-w-0">{installCommand}</code>
                                     <button
                                         onClick={() => handleCopy(installCommand, 'install')}
-                                        className="brutal-btn-primary px-3 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5"
+                                        className="brutal-btn-primary px-3 py-2 text-xs font-black tracking-wider flex items-center justify-center gap-1.5 shrink-0 self-start sm:self-auto"
                                     >
                                         {copied === 'install' ? <Check size={14} strokeWidth={3} /> : <Copy size={14} />}
                                         <span>{copied === 'install' ? 'COPIED' : 'COPY'}</span>

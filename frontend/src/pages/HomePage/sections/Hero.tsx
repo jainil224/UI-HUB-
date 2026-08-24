@@ -66,7 +66,7 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.7, x: -30 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="absolute top-28 sm:top-32 left-4 sm:left-10 md:left-16 w-28 h-28 md:w-40 md:h-40 rounded-full bg-[#E52520] border-4 border-black shadow-[6px_6px_0px_0px_#000000] pointer-events-none z-0"
+                        className="hidden md:block absolute top-28 sm:top-32 left-4 sm:left-10 md:left-16 w-28 h-28 md:w-40 md:h-40 rounded-full bg-[#E52520] border-4 border-black shadow-[6px_6px_0px_0px_#000000] pointer-events-none z-0"
                     />
 
                     {/* Bottom-Right Tilted Yellow Bauhaus Card */}
@@ -74,7 +74,7 @@ const Hero = () => {
                         initial={{ opacity: 0, scale: 0.7, rotate: 0 }}
                         animate={{ opacity: 1, scale: 1, rotate: 12 }}
                         transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-                        className="absolute bottom-28 sm:bottom-36 right-4 sm:right-10 md:right-16 w-28 h-28 md:w-40 md:h-40 bg-[#FFC700] border-4 border-black shadow-[8px_8px_0px_0px_#000000] pointer-events-none z-0 rotate-12"
+                        className="hidden md:block absolute bottom-28 sm:bottom-36 right-4 sm:right-10 md:right-16 w-28 h-28 md:w-40 md:h-40 bg-[#FFC700] border-4 border-black shadow-[8px_8px_0px_0px_#000000] pointer-events-none z-0 rotate-12"
                     />
 
                     {/* Bottom-Left Electric Blue Floating Pill */}
@@ -110,8 +110,8 @@ const Hero = () => {
                             transition={{ duration: 0.6, delay: 0.1 }}
                             className="mb-6 w-full max-w-[1000px] mx-auto text-center"
                         >
-                            <h1 className="hero-title text-[clamp(48px,7.5vw,90px)] text-center text-white leading-[1.04] mb-6 max-w-[1000px] mx-auto">
-                                <span className="block drop-shadow-md whitespace-nowrap">
+                            <h1 className="hero-title text-[clamp(34px,11.5vw,90px)] text-center text-white leading-[1.04] mb-6 max-w-[1000px] mx-auto">
+                                <span className="block drop-shadow-md sm:whitespace-nowrap">
                                     <span className="text-white font-semibold">
                                         Craft the
                                     </span>
@@ -122,7 +122,7 @@ const Hero = () => {
                                         Future,
                                     </span>
                                 </span>
-                                <span className="block mt-2 sm:mt-4 drop-shadow-md whitespace-nowrap">
+                                <span className="block mt-2 sm:mt-4 drop-shadow-md sm:whitespace-nowrap">
                                     <InlineIcon bg="bg-[#FFC700]">
                                         <Sparkles className="w-[0.48em] h-[0.48em] text-black" strokeWidth={2.5} />
                                     </InlineIcon>
