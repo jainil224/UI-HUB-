@@ -2,11 +2,18 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { getUserFavorites, removeFromFavorites } from '../../services/favorites';
-import { Heart, Trash2, ExternalLink, Library, Copy, Check, Sparkles, Box, Zap, Code2, Eye, X, Plus } from 'lucide-react';
+import { Heart, Trash2, Library, Copy, Check, ArrowUpRight, Component as ComponentIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { db } from '../../lib/firebase';
 import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+
+const shadowVariants = [
+    'brutal-shadow-blue',
+    'brutal-shadow-red',
+    'brutal-shadow-yellow',
+    'brutal-shadow-white',
+];
 
 const FavoritesPage = () => {
     const { user } = useAuth();
@@ -83,270 +90,242 @@ const FavoritesPage = () => {
         setTimeout(() => setCopiedId(null), 2000);
     };
 
+    /* ── Guest Empty State ── */
     if (!user && favoriteMetadata.length === 0 && !loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-4">
-                <div className="glass p-12 rounded-[3.5rem] text-center max-w-lg border border-white/5 bg-black/40 backdrop-blur-2xl">
-                    <div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-8 border border-red-500/20 shadow-[0_0_40px_rgba(239,68,68,0.1)]">
-                        <Heart size={40} className="text-red-500 fill-red-500/20" />
+            <main className="min-h-screen flex items-center justify-center p-4 pt-28 pb-20 bg-brand-bg">
+                <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                    className="relative w-full max-w-lg border-2 border-white bg-brand-surface rounded-xl brutal-shadow-blue p-8 sm:p-12 text-center overflow-hidden"
+                >
+                    <div className="absolute -top-12 -right-12 w-32 h-32 rounded-full bg-brand-blue/15 blur-2xl pointer-events-none" />
+
+                    <div className="w-16 h-16 mx-auto mb-6 rounded-lg border-2 border-white bg-black brutal-shadow-red flex items-center justify-center">
+                        <Heart size={28} className="text-brand-red fill-brand-red/20" />
                     </div>
-                    <h2 className="text-4xl font-display font-black mb-4 uppercase tracking-tight text-white">The Vault</h2>
-                    <p className="text-white/40 mb-10 font-medium text-lg leading-relaxed">You haven't liked any components yet. Explore the component library and click the heart icon to save components to your Vault.</p>
+
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-5 border-2 border-white bg-black rounded-md text-[10px] font-black uppercase tracking-widest text-neutral-300">
+                        <span className="w-2 h-2 rounded-full bg-brand-yellow border border-black" />
+                        SAVED COMPONENTS
+                    </div>
+
+                    <h1 className="text-4xl sm:text-5xl font-black uppercase tracking-tight text-white leading-none mb-4 font-heading">
+                        NO <span className="text-brand-blue">FAVORITES</span> YET
+                    </h1>
+                    <p className="text-neutral-400 font-medium text-sm sm:text-base leading-relaxed mb-8">
+                        Explore the component library and hit the heart icon to save your favorite components here.
+                    </p>
+
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <Link to="/library" className="inline-flex items-center gap-3 px-8 py-4 bg-white text-black font-display font-black rounded-2xl hover:bg-neutral-200 transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-xs">
-                            Explore Library <Library size={16} />
+                        <Link to="/library" className="brutal-btn-primary w-full sm:w-auto px-8 py-3.5 text-xs tracking-widest flex items-center justify-center gap-2 no-underline cursor-pointer">
+                            Explore Library <Library size={15} />
                         </Link>
-                        <Link to="/login" className="inline-flex items-center gap-3 px-8 py-4 bg-brand-green text-black font-display font-black rounded-2xl hover:shadow-[0_0_50px_rgba(0,255,0,0.4)] transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-xs">
-                            Sign In <Zap size={16} fill="currentColor" />
+                        <Link to="/login" className="brutal-btn-outline w-full sm:w-auto px-8 py-3.5 text-xs tracking-widest flex items-center justify-center gap-2 no-underline cursor-pointer">
+                            Sign In <Heart size={14} />
                         </Link>
                     </div>
-                </div>
-            </div>
+                </motion.div>
+            </main>
         );
     }
 
     return (
-        <main className="min-h-screen pt-32 pb-20 px-4 relative overflow-hidden bg-brand-black">
-            {/* Immersive Premium Background */}
-            <div className="fixed inset-0 pointer-events-none -z-10">
-                <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-brand-green/[0.07] blur-[120px] rounded-full animate-pulse" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-500/[0.05] blur-[120px] rounded-full" />
-                <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-[0.25] mix-blend-overlay" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-black to-brand-black opacity-80" />
-            </div>
+        <main className="min-h-screen pt-28 pb-24 px-4 sm:px-6 relative bg-brand-bg">
+            <style>{`
+                .favorites-preview::-webkit-scrollbar { width: 4px; height: 4px; }
+                .favorites-preview::-webkit-scrollbar-track { background: transparent; }
+                .favorites-preview::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+            `}</style>
 
-            <div className="max-w-7xl mx-auto">
-                <header className="flex flex-col md:flex-row md:items-end justify-between gap-10 mb-20 px-4">
-                    <div className="space-y-6">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-black uppercase tracking-[0.4em] shadow-2xl backdrop-blur-md"
-                        >
-                            <Sparkles size={14} className="opacity-40" />
-                            <span>System.Secure_Vault</span>
-                        </motion.div>
-                        <motion.h1
-                            initial={{ opacity: 0, y: 30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.1, type: 'spring', damping: 20 }}
-                            className="text-7xl md:text-9xl lg:text-[10rem] font-seekuw font-extrabold tracking-tighter leading-[0.8] uppercase flex flex-col sm:flex-row sm:items-baseline gap-2 animate-white-blink animate-flicker"
-                        >
-                            <span className="text-vault-gradient">MY</span>
-                            <span className="text-vault-stroke">VAULT</span>
-                        </motion.h1>
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 0.3 }}
-                            className="text-white/40 text-lg md:text-2xl font-medium max-w-2xl leading-relaxed"
-                        >
-                            Deterministic high-performance components. <br />
-                            Optimized for <span className="text-white/80 font-black">60fps</span> production environments.
-                        </motion.p>
+            <div className="max-w-[1400px] mx-auto">
+                {/* ── Section Header (matches homepage style) ── */}
+                <motion.header
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="relative z-10 mb-12"
+                >
+                    {/* Eyebrow Badge */}
+                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 border-2 border-white bg-brand-surface text-white rounded-md font-black text-xs uppercase tracking-widest brutal-shadow-black">
+                        <Heart size={13} className="text-brand-red fill-brand-red" />
+                        <span>SAVED COMPONENTS</span>
                     </div>
 
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ delay: 0.4 }}
-                    >
-                        <Link
-                            to="/library"
-                            className="group relative flex items-center gap-4 px-10 py-5 rounded-[2.5rem] bg-white/[0.03] border border-white/10 text-white/90 hover:text-[#39FF14] hover:border-[#39FF14]/40 transition-all overflow-hidden shadow-2xl backdrop-blur-xl"
-                        >
-                            <Library size={20} className="relative z-10 transition-transform group-hover:rotate-12" />
-                            <span className="relative z-10 text-xs font-black uppercase tracking-[0.2em]">Open Catalog</span>
-                            <div className="absolute inset-0 bg-[#39FF14]/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </Link>
-                    </motion.div>
-                </header>
+                    <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                        <div className="border-2 border-white p-6 md:p-8 rounded-lg bg-brand-surface brutal-shadow-blue flex-1">
+                            <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight mb-4 text-white leading-none font-heading">
+                                MY <span className="text-brand-blue">FAVORITES</span>
+                            </h1>
+                            <p className="text-neutral-400 font-medium text-base md:text-lg max-w-2xl leading-relaxed">
+                                Your personal collection of saved components — ready to preview, copy and ship.
+                            </p>
+                        </div>
 
-                <div className="w-full">
-                    {enrichedFavorites.length === 0 ? (
-                        <motion.div
-                            initial={{ opacity: 0, y: 40 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="rounded-[4rem] p-32 text-center border border-white/5 relative overflow-hidden group shadow-[0_40px_100px_rgba(0,0,0,0.5)] bg-white/[0.01] backdrop-blur-3xl"
-                        >
-                            <div className="absolute inset-0 bg-gradient-to-b from-brand-green/[0.03] to-transparent pointer-events-none" />
-                            <div className="w-28 h-28 bg-white/[0.02] rounded-[2.5rem] border border-white/10 flex items-center justify-center mx-auto mb-10 rotate-[15deg] group-hover:rotate-0 transition-all duration-700 shadow-2xl">
-                                <Box size={48} className="text-white/10 group-hover:text-brand-green transition-colors" />
+                        {/* Count Stat Box */}
+                        <Link to="/library" className="group shrink-0 flex items-stretch gap-4 no-underline cursor-pointer">
+                            <div className="border-2 border-white bg-brand-surface rounded-lg brutal-shadow-white p-4 md:px-6 min-w-[120px] transition-transform duration-150 group-hover:translate-x-0.5 group-hover:translate-y-0.5">
+                                <p className="text-[9px] text-neutral-400 uppercase tracking-widest font-black mb-1">TOTAL SAVED</p>
+                                <span className="text-3xl font-black text-brand-blue">{enrichedFavorites.length}</span>
                             </div>
-                            <h3 className="text-3xl font-display font-black mb-4 tracking-tight text-white uppercase">Vault Offline</h3>
-                            <p className="text-white/30 mb-12 max-w-md mx-auto font-medium text-lg leading-relaxed">Your personal asset repository is currently empty. Synchronize components from the library.</p>
-                            <Link
-                                to="/library"
-                                className="inline-flex items-center gap-4 px-12 py-6 rounded-2xl bg-brand-green text-black font-display font-black uppercase tracking-[0.2em] text-xs hover:shadow-[0_0_60px_rgba(0,255,0,0.4)] transition-all hover:-translate-y-1 active:scale-95"
-                            >
-                                <Library size={18} /> Enter Library
+                            <div className="hidden sm:flex items-center justify-center border-2 border-white bg-brand-blue rounded-lg brutal-shadow-black px-5 text-white text-[10px] font-black uppercase tracking-widest transition-all duration-150 group-hover:bg-[#324FE0] group-hover:-translate-y-0.5">
+                                Open Catalog →
+                            </div>
+                        </Link>
+                    </div>
+                </motion.header>
+
+                {/* ── Grid ── */}
+                <div className="w-full relative z-10">
+                    {loading ? (
+                        /* Loading Skeletons */
+                        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {[...Array(6)].map((_, i) => (
+                                <div key={i} className="skeleton-glass skeleton-pulse h-[320px] rounded-lg" />
+                            ))}
+                        </div>
+                    ) : enrichedFavorites.length === 0 ? (
+                        /* Logged-in Empty Vault */
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="border-2 border-white bg-brand-surface rounded-lg brutal-shadow-yellow p-12 sm:p-20 text-center relative overflow-hidden"
+                        >
+                            <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-brand-yellow/10 blur-3xl pointer-events-none" />
+
+                            <div className="w-20 h-20 mx-auto mb-8 rounded-lg border-2 border-white bg-black brutal-shadow-white flex items-center justify-center rotate-[-6deg] hover:rotate-0 transition-transform duration-300">
+                                <ComponentIcon size={36} className="text-brand-blue" />
+                            </div>
+                            <h3 className="text-3xl sm:text-4xl font-black uppercase tracking-tight mb-3 text-white font-heading">
+                                VAULT IS <span className="text-brand-blue">EMPTY</span>
+                            </h3>
+                            <p className="text-neutral-400 mb-10 max-w-md mx-auto font-medium text-sm sm:text-base leading-relaxed">
+                                Your personal asset repository is currently empty. Synchronize components from the library.
+                            </p>
+                            <Link to="/library" className="brutal-btn-primary inline-flex px-10 py-4 text-xs tracking-widest items-center gap-3 no-underline cursor-pointer">
+                                <Library size={16} /> Enter Library
                             </Link>
                         </motion.div>
                     ) : (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-                            <AnimatePresence>
-                                {enrichedFavorites.map((fav, index) => (
-                                    <motion.div
-                                        key={fav.id}
-                                        layout
-                                        initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                                        exit={{
-                                            opacity: 0,
-                                            scale: 0.85,
-                                            rotate: -4,
-                                            filter: 'blur(15px)',
-                                            transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] }
-                                        }}
-                                        transition={{
-                                            layout: {
-                                                duration: 0.4,
-                                                ease: [0.23, 1, 0.32, 1]
-                                            },
-                                            duration: 0.5,
-                                            delay: index * 0.03,
-                                            ease: [0.23, 1, 0.32, 1]
-                                        }}
-                                        className="group/card relative h-full"
-                                    >
-                                        {/* Card Outer Glow */}
-                                        <div className="absolute inset-0 bg-brand-green/0 group-hover/card:bg-brand-green/[0.05] group-hover/card:shadow-[0_0_40px_rgba(0,255,10,0.07)] blur-3xl transition-all duration-700 rounded-[3.5rem] -z-10" />
+                        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <AnimatePresence mode="popLayout">
+                                {enrichedFavorites.map((fav, index) => {
+                                    const shadowClass = shadowVariants[index % shadowVariants.length];
+                                    const comp = fav.fullComponent;
+                                    const categoryLabel = comp?.category === 'custom'
+                                        ? 'COMMUNITY'
+                                        : (comp?.category || 'UI').toUpperCase();
 
-                                        <div className="gpu-accelerated relative h-full rounded-[3.5rem] p-6 flex flex-col border border-white/[0.08] group-hover/card:border-brand-green/40 overflow-hidden bg-[#050505] shadow-[0_40px_100px_rgba(0,0,0,0.6)] group-hover/card:shadow-[0_0_30px_rgba(0,255,10,0.1)] transition-all duration-500">
-                                            {/* Top Utility Bar */}
-                                            <div className="flex justify-between items-center px-4 pb-4">
-                                                <div className="space-y-1.5">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-1.5 h-1.5 rounded-full bg-brand-green animate-terminal-green-blink" />
-                                                        <span className="text-[9px] font-black text-brand-green uppercase tracking-[0.4em] opacity-60">Verified Asset</span>
+                                    return (
+                                        <motion.div
+                                            key={fav.id}
+                                            layout
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{
+                                                opacity: 0,
+                                                scale: 0.9,
+                                                transition: { duration: 0.25, ease: 'easeIn' }
+                                            }}
+                                            transition={{ duration: 0.35, delay: index * 0.05, ease: 'easeOut' }}
+                                            className="group relative"
+                                        >
+                                            <Link
+                                                to={`/library?id=${fav.componentId}&tab=preview`}
+                                                onClick={(e) => e.stopPropagation()}
+                                                className={`block relative h-[320px] bg-brand-surface border-2 border-white rounded-lg overflow-hidden flex flex-col justify-between cursor-pointer select-none transition-transform duration-150 hover:translate-x-0.5 hover:translate-y-0.5 ${shadowClass} no-underline`}
+                                            >
+                                                {/* Card Top Traffic Bar */}
+                                                <div className="relative z-30 flex items-center justify-between px-3.5 py-2.5 border-b-2 border-neutral-800 bg-[#0A0A0E]">
+                                                    <div className="flex items-center gap-1.5">
+                                                        <span className="w-2.5 h-2.5 rounded-full bg-brand-red border border-black" />
+                                                        <span className="w-2.5 h-2.5 rounded-full bg-brand-yellow border border-black" />
+                                                        <span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-black" />
+                                                        <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-400 ml-1 truncate max-w-[140px]">
+                                                            {categoryLabel}
+                                                        </span>
                                                     </div>
-                                                    <h3 className="text-2xl font-black leading-none tracking-tighter text-white group-hover/card:text-brand-green transition-colors duration-300 drop-shadow-[0_0_10px_rgba(0,255,10,0)] group-hover/card:drop-shadow-[0_0_15px_rgba(0,255,10,0.3)]">{fav.componentName}</h3>
-                                                </div>
-                                                <motion.button
-                                                    whileHover={{
-                                                        scale: 1.25,
-                                                        boxShadow: "0 0 15px rgba(239, 68, 68, 0.3)",
-                                                        backgroundColor: "rgba(239, 68, 68, 0.1)"
-                                                    }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    onClick={(e) => handleRemove(e, fav.componentId)}
-                                                    className="w-12 h-12 rounded-full bg-white/[0.03] border border-white/5 text-white/20 hover:text-red-500 hover:border-red-500/30 transition-all flex items-center justify-center group/trash relative overflow-hidden z-20"
-                                                >
-                                                    <Trash2 size={20} className="relative z-10 transition-transform group-hover/trash:rotate-12" />
-                                                    <div className="absolute inset-0 bg-red-600 opacity-0 group-hover/trash:opacity-5 transition-opacity" />
-                                                </motion.button>
-                                            </div>
 
-                                            {/* Preview Container */}
-                                            <div className="mt-4 relative rounded-[2.5rem] overflow-hidden border border-white/[0.05] bg-black/40 h-[380px] group/container">
-                                                <div className="h-full relative">
-                                                    <div className="h-full p-4 flex items-center justify-center bg-[#030303] sharp-rendering">
-                                                        <div className="w-full h-full flex items-center justify-center transform scale-[0.8] origin-center">
-                                                            {fav.fullComponent?.preview ? (
-                                                                fav.fullComponent.preview()
-                                                            ) : (
-                                                                <div className="flex flex-col items-center gap-4 text-white/10 uppercase tracking-[0.3em] font-black text-[8px]">
-                                                                    <Box size={32} />
-                                                                    No Preview Available
-                                                                </div>
-                                                            )}
+                                                    {/* Remove Button */}
+                                                    <button
+                                                        type="button"
+                                                        title="Remove from Favorites"
+                                                        aria-label="Remove from Favorites"
+                                                        onClick={(e) => handleRemove(e, fav.componentId)}
+                                                        className="p-1.5 rounded-md border-2 border-transparent bg-transparent text-neutral-500 hover:text-brand-red hover:border-brand-red active:scale-90 transition-all cursor-pointer select-none"
+                                                    >
+                                                        <Trash2 size={14} />
+                                                    </button>
+                                                </div>
+
+                                                {/* Preview Area */}
+                                                <div className="w-full flex-1 flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-transparent to-black/40">
+                                                    {/* Subtle Grid texture */}
+                                                    <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+                                                    {comp?.preview ? (
+                                                        <div className="absolute inset-0 w-full h-full favorites-preview">
+                                                            <div className="w-full h-full flex items-center justify-center transform scale-[0.75] origin-center relative pointer-events-none">
+                                                                {comp.preview()}
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex flex-col items-center gap-3 z-10">
+                                                            <div className="w-12 h-12 rounded-lg border-2 border-white bg-black flex items-center justify-center shadow-[3px_3px_0px_0px_#000]">
+                                                                <ComponentIcon size={22} className="text-neutral-400" />
+                                                            </div>
+                                                            <span className="text-[10px] uppercase tracking-widest font-black text-neutral-500 bg-black/60 px-2.5 py-1 rounded border border-neutral-800">
+                                                                NO LIVE PREVIEW
+                                                            </span>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Heart Badge Overlay */}
+                                                    <div className="absolute top-3 right-3 z-30 pointer-events-none">
+                                                        <div className="p-1.5 rounded-md border-2 border-white bg-brand-red brutal-shadow-black">
+                                                            <Heart size={13} className="text-white fill-white" />
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            {/* Bottom Action Footer */}
-                                            {/* Bottom Action Footer - Ultra-Premium Aesthetic */}
-                                            <div className="p-6 pt-10 flex gap-4 mt-auto">
-                                                <Link
-                                                    to={`/library?id=${fav.componentId}&tab=preview`}
-                                                    className="group/btn relative flex-[3] py-4 rounded-2xl bg-[#080808] border border-white/[0.05] hover:border-transparent text-white/50 hover:text-white transition-all duration-500 flex items-center justify-center gap-3 hover:-translate-y-1.5 active:scale-[0.98] overflow-hidden shadow-2xl isolate"
-                                                >
-                                                    {/* Corner Nodes */}
-                                                    <div className="absolute top-0 left-0 w-2 h-2 border-t border-l border-white/20 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-                                                    <div className="absolute top-0 right-0 w-2 h-2 border-t border-r border-white/20 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-                                                    <div className="absolute bottom-0 left-0 w-2 h-2 border-b border-l border-white/20 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-                                                    <div className="absolute bottom-0 right-0 w-2 h-2 border-b border-r border-white/10 group-hover/btn:border-transparent transition-colors duration-300 z-20 pointer-events-none" />
-
-                                                    {/* Animated Strokes */}
-                                                    <div className="absolute top-0 left-0 h-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.2s_infinite] w-0 group-hover/btn:w-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
-                                                    <div className="absolute top-0 left-0 w-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.25s_infinite] h-0 group-hover/btn:h-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
-                                                    <div className="absolute bottom-0 right-0 h-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.22s_infinite] w-0 group-hover/btn:w-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
-                                                    <div className="absolute bottom-0 right-0 w-[2px] bg-brand-green z-30 pointer-events-none shadow-[0_0_15px_rgba(0,255,10,0.6)] group-hover/btn:animate-[jitter_0.27s_infinite] h-0 group-hover/btn:h-full transition-all duration-500 ease-[0.23,1,0.32,1]" />
-
-                                                    {/* Dynamic Gradient Background */}
-                                                    <div className="absolute inset-0 bg-gradient-to-br from-brand-green/20 via-transparent to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500" />
-
-                                                    {/* Animated Border Glow */}
-                                                    <div className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 bg-brand-green/10 blur-xl" />
-
-                                                    <span className="relative z-10 flex items-center gap-2.5 text-[10px] font-black uppercase tracking-[0.35em] transition-all duration-500">
-                                                        <span className="relative inline-block">
-                                                            Launch
-                                                            {/* Glitch Layers */}
-                                                            <span className="absolute top-0 left-0 -z-10 text-[#00ff0a] opacity-0 group-hover/btn:opacity-70 group-hover/btn:animate-[glitch_0.3s_infinite] pointer-events-none translate-x-[1px]">Launch</span>
-                                                            <span className="absolute top-0 left-0 -z-10 text-[#ff3b4d] opacity-0 group-hover/btn:opacity-70 group-hover/btn:animate-[glitch_0.3s_infinite_reverse] pointer-events-none -translate-x-[1px]">Launch</span>
-                                                        </span>
-                                                        <Zap size={13} className="transition-all duration-500 group-hover/btn:scale-120 group-hover/btn:fill-brand-green group-hover/btn:text-brand-green animate-lightning-blink" />
+                                                {/* Bottom bar: title + arrow */}
+                                                <div className="relative z-30 flex items-center justify-between gap-2 px-4 py-3 bg-[#0A0A0E] border-t-2 border-white">
+                                                    <span className="text-xs uppercase font-black tracking-wider text-white truncate">
+                                                        {fav.componentName}
                                                     </span>
-
-                                                    {/* Subtle Laser Reveal */}
-                                                    <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-green/50 to-transparent -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
-                                                </Link>
-
-                                                <Link
-                                                    to={`/library?id=${fav.componentId}`}
-                                                    className="group/det relative flex-1 py-4 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-transparent text-white/20 hover:text-brand-green transition-all duration-500 flex items-center justify-center hover:-translate-y-1.5 active:scale-[0.98] backdrop-blur-sm overflow-hidden"
-                                                >
-                                                    {/* Animated Strokes for small button */}
-                                                    <div className="absolute top-0 left-0 h-[1.5px] bg-brand-green z-30 pointer-events-none w-0 group-hover/det:w-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
-                                                    <div className="absolute top-0 left-0 w-[1.5px] bg-brand-green z-30 pointer-events-none h-0 group-hover/det:h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
-                                                    <div className="absolute bottom-0 right-0 h-[1.5px] bg-brand-green z-30 pointer-events-none w-0 group-hover/det:w-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
-                                                    <div className="absolute bottom-0 right-0 w-[1.5px] bg-brand-green z-30 pointer-events-none h-0 group-hover/det:h-full transition-all duration-500 ease-out shadow-[0_0_10px_rgba(0,255,0,0.5)]" />
-
-                                                    <div className="absolute inset-0 bg-brand-green/[0.03] opacity-0 group-hover/det:opacity-100 transition-opacity" />
-                                                    <Eye size={18} className="relative z-10 transition-all duration-500 group-hover/det:scale-110 group-hover/det:rotate-3" />
-                                                </Link>
-                                            </div>
-
-
-                                            {/* Edge Accents (Testimonials style) */}
-                                            <div className="absolute top-0 right-0 w-16 h-16 border-t border-r border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-tr-[3.5rem] pointer-events-none" />
-                                            <div className="absolute bottom-0 left-0 w-16 h-16 border-b border-l border-white/0 group-hover/card:border-brand-green/30 transition-all duration-700 rounded-bl-[3.5rem] pointer-events-none" />
-                                        </div>
-                                    </motion.div>
-                                ))}
+                                                    <div className="flex items-center gap-1.5 shrink-0">
+                                                        {/* Copy Code */}
+                                                        {comp?.code && (
+                                                            <button
+                                                                type="button"
+                                                                title={copiedId === fav.componentId ? 'Copied!' : 'Copy Code'}
+                                                                aria-label="Copy Code"
+                                                                onClick={(e) => handleCopy(e, typeof comp.code === 'string' ? comp.code : '', fav.componentId)}
+                                                                className={`w-6 h-6 rounded border flex items-center justify-center transition-colors shadow-[1px_1px_0px_0px_#000] cursor-pointer ${
+                                                                    copiedId === fav.componentId
+                                                                        ? 'bg-brand-blue border-black text-white'
+                                                                        : 'border-white bg-brand-surface text-neutral-400 hover:bg-brand-blue hover:border-black hover:text-white'
+                                                                }`}
+                                                            >
+                                                                {copiedId === fav.componentId ? <Check size={12} /> : <Copy size={12} />}
+                                                            </button>
+                                                        )}
+                                                        {/* Open */}
+                                                        <div className="w-6 h-6 rounded border border-white bg-brand-surface flex items-center justify-center group-hover:bg-brand-blue group-hover:border-black transition-colors shadow-[1px_1px_0px_0px_#000]">
+                                                            <ArrowUpRight size={14} className="text-white" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                        </motion.div>
+                                    );
+                                })}
                             </AnimatePresence>
-                        </div>
+                        </motion.div>
                     )}
                 </div>
             </div>
-
-            <style dangerouslySetInnerHTML={{
-                __html: `
-
-                .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
-                .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-                .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(57, 255, 20, 0.1); border-radius: 10px; }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(57, 255, 20, 0.3); }
-
-                @keyframes jitter {
-                    0% { transform: translate(0, 0); }
-                    25% { transform: translate(-0.5px, 0.5px); opacity: 0.8; }
-                    50% { transform: translate(0.5px, -0.5px); opacity: 1; }
-                    75% { transform: translate(-0.5px, -0.5px); opacity: 0.9; }
-                    100% { transform: translate(0.5px, 0.5px); opacity: 1; }
-                }
-
-                @keyframes glitch {
-                    0% { clip-path: inset(20% 0 30% 0); transform: translate(-2px, 2px); }
-                    20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
-                    40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, -2px); }
-                    60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, 2px); }
-                    80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
-                    100% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
-                }
-            `}} />
         </main>
     );
 };
