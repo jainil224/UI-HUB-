@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, MousePointerClick } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Sparkles } from 'lucide-react';
 
 const cards = [
     {
@@ -266,8 +266,9 @@ const CategoryShowcase = () => {
                         initial={{ opacity: 0, y: -10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="inline-flex items-center gap-1 bg-white border-2 border-black px-5 py-2.5 text-lg sm:text-xl font-bold tracking-tight shadow-[4px_4px_0px_0px_#000]"
+                        className="inline-flex items-center gap-2 bg-white border-2 border-black px-5 py-2.5 text-lg sm:text-xl font-bold tracking-tight shadow-[5px_5px_0px_0px_#3D5CFF]"
                     >
+                        <Sparkles size={18} className="text-[#3D5CFF] shrink-0" />
                         <span className="text-[#3D5CFF]">Start here.</span>
                         <span className="text-black">People like these.</span>
                     </motion.div>
@@ -309,17 +310,28 @@ const CategoryShowcase = () => {
                                             : undefined,
                                         zIndex: isActive ? 30 : 10 + i,
                                     }}
-                                    className={`relative shrink-0 w-[248px] sm:w-[268px] min-h-[300px] p-5 mr-[-8px] flex flex-col text-left cursor-pointer border-2 border-black transition-all duration-300 ease-out ${
+                                    className={`group relative shrink-0 w-[248px] sm:w-[268px] min-h-[300px] p-5 mr-[-8px] flex flex-col text-left cursor-pointer border-2 border-black transition-all duration-300 ease-out ${
                                         isActive
                                             ? 'bg-[#3D5CFF] text-white scale-[1.07] shadow-[10px_10px_0px_0px_#000,0_0_34px_8px_rgba(61,92,255,0.45)]'
-                                            : 'bg-white text-black hover:-translate-y-1'
+                                            : 'bg-white text-black hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000]'
                                     }`}
                                 >
+                                    {/* Ghost index */}
+                                    <span
+                                        aria-hidden
+                                        className={`absolute top-1.5 right-2.5 text-4xl font-black leading-none select-none pointer-events-none ${
+                                            isActive ? 'text-white/15' : 'text-black/5'
+                                        }`}
+                                    >
+                                        {String(i + 1).padStart(2, '0')}
+                                    </span>
+
                                     <p
-                                        className={`text-[10px] font-black uppercase tracking-widest mb-2 ${
+                                        className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest mb-2 ${
                                             isActive ? 'text-white/80' : 'text-[#3D5CFF]'
                                         }`}
                                     >
+                                        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isActive ? 'bg-white' : 'bg-[#3D5CFF]'}`} />
                                         {card.eyebrow}
                                     </p>
                                     <h3 className="text-xl sm:text-2xl font-bold tracking-tight leading-snug mb-2">
@@ -338,11 +350,16 @@ const CategoryShowcase = () => {
                                         className={`mt-auto flex items-center justify-between gap-2 border px-3 py-2.5 text-[11px] font-black uppercase tracking-widest transition-colors ${
                                             isActive
                                                 ? 'border-white bg-white text-black'
-                                                : 'border-neutral-300 bg-neutral-100 text-black'
+                                                : 'border-neutral-300 bg-neutral-100 text-black group-hover:border-black'
                                         }`}
                                     >
                                         <span className="truncate">View {card.title}</span>
-                                        {isActive && <MousePointerClick size={14} className="shrink-0" />}
+                                        <ArrowUpRight
+                                            size={13}
+                                            className={`shrink-0 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${
+                                                isActive ? 'text-black' : 'text-neutral-400'
+                                            }`}
+                                        />
                                     </span>
                                 </motion.article>
                             );
@@ -359,6 +376,9 @@ const CategoryShowcase = () => {
                     >
                         <ArrowLeft size={18} />
                     </button>
+                    <span className="hidden sm:block text-[10px] font-mono font-black uppercase tracking-[0.2em] text-neutral-500 px-2">
+                        or just drag the cards
+                    </span>
                     <button
                         onClick={() => nudge(1)}
                         aria-label="Next category"
