@@ -71,7 +71,7 @@ const Testimonials = () => {
                                 <div>
                                     <h4 className="text-sm font-black text-white tracking-wider uppercase">{report.author}</h4>
                                 </div>
-                                <span className={`px-2.5 py-1 rounded text-[10px] font-black uppercase tracking-wider border border-black shadow-[1px_1px_0px_0px_#000] ${report.roleBg}`}>
+                                <span className={`px-2.5 py-1 rounded text-[11px] font-black uppercase tracking-wider border border-black shadow-[1px_1px_0px_0px_#000] ${report.roleBg}`}>
                                     {report.role}
                                 </span>
                             </div>

@@ -349,7 +349,7 @@ const PricingPage = () => {
                                 {/* Popular / Best Value Badge */}
                                 {plan.popular && (
                                     <div className="absolute top-4 right-4 z-20">
-                                        <div className="flex items-center gap-1.5 px-3 py-1 rounded bg-brand-yellow text-black border-2 border-black text-[9px] font-black uppercase tracking-widest">
+                                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded bg-brand-yellow text-black border-2 border-black text-[10px] font-black uppercase tracking-widest">
                                             <Star className="w-3 h-3 fill-black text-black" />
                                             MOST POPULAR
                                         </div>

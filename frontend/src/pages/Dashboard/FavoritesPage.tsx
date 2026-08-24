@@ -265,9 +265,9 @@ const FavoritesPage = () => {
                                                         title="Remove from Favorites"
                                                         aria-label="Remove from Favorites"
                                                         onClick={(e) => handleRemove(e, fav.componentId)}
-                                                        className="p-1.5 rounded-md border-2 border-transparent bg-transparent text-neutral-500 hover:text-brand-red hover:border-brand-red active:scale-90 transition-all cursor-pointer select-none"
+                                                        className="-mr-1 p-2.5 rounded-md border-2 border-transparent bg-transparent text-neutral-500 hover:text-brand-red hover:border-brand-red active:scale-90 transition-all cursor-pointer select-none"
                                                     >
-                                                        <Trash2 size={14} />
+                                                        <Trash2 size={15} />
                                                     </button>
                                                 </div>
 

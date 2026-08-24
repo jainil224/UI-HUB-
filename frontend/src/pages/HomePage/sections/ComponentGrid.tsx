@@ -158,7 +158,7 @@ const ComponentGrid = () => {
                                             <span className="w-2.5 h-2.5 rounded-full bg-brand-red border border-black" />
                                             <span className="w-2.5 h-2.5 rounded-full bg-brand-yellow border border-black" />
                                             <span className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-black" />
-                                            <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-neutral-400 ml-1 truncate max-w-[120px]">
+                                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-400 ml-1 truncate max-w-[120px]">
                                                 {comp?.category || 'UI'}
                                             </span>
                                         </div>
@@ -196,7 +196,7 @@ const ComponentGrid = () => {
                                                 <div className="w-12 h-12 rounded-lg border-2 border-white bg-black flex items-center justify-center shadow-[3px_3px_0px_0px_#000] group-hover:border-brand-blue transition-colors">
                                                     {getCategoryIcon(comp?.category, comp?.id)}
                                                 </div>
-                                                <span className="text-[10px] uppercase tracking-widest font-black text-neutral-300 bg-black/60 px-2.5 py-1 rounded border border-neutral-800">
+                                                <span className="text-[11px] uppercase tracking-widest font-black text-neutral-300 bg-black/60 px-2.5 py-1.5 rounded border border-neutral-800">
                                                     <span className="md:hidden">TAP TO INTERACT</span>
                                                     <span className="hidden md:inline">HOVER TO INTERACT</span>
                                                 </span>

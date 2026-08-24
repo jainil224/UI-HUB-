@@ -100,7 +100,7 @@ const Hero = () => {
                         >
                             <span className="w-2 h-2 rounded-full bg-[#E52520] animate-pulse" />
                             <span>UI HUB 2.0 IS LIVE</span>
-                            <span className="px-1.5 py-0.2 rounded bg-black text-white text-[9px] font-mono ml-1">PRO</span>
+                            <span className="px-1.5 py-0.5 rounded bg-black text-white text-[10px] font-mono ml-1">PRO</span>
                         </motion.div>
 
                         {/* Main Typography Headline (Exact Image Font Arrangement) */}
