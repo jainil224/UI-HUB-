@@ -202,7 +202,7 @@ const FavoritesPage = () => {
                         /* Loading Skeletons */
                         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                             {[...Array(6)].map((_, i) => (
-                                <div key={i} className="skeleton-glass skeleton-pulse h-[320px] rounded-lg" />
+                                <div key={i} className="skeleton-glass skeleton-pulse h-[340px] rounded-lg" />
                             ))}
                         </div>
                     ) : enrichedFavorites.length === 0 ? (
@@ -300,13 +300,6 @@ const FavoritesPage = () => {
                                                             </span>
                                                         </div>
                                                     )}
-
-                                                    {/* Heart Badge Overlay */}
-                                                    <div className="absolute top-3 right-3 z-30 pointer-events-none">
-                                                        <div className="p-1.5 rounded-md border-2 border-white bg-brand-red brutal-shadow-black">
-                                                            <Heart size={13} className="text-white fill-white" />
-                                                        </div>
-                                                    </div>
                                                 </div>
 
                                                 {/* Bottom bar: title + arrow */}
