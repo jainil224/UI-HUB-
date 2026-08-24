@@ -246,14 +246,16 @@ const CategoryShowcase = () => {
     };
 
     return (
-        <section className="relative py-16 sm:py-24 overflow-hidden bg-[#E9E9E7] border-y-4 border-black">
-            {/* Graph-paper grid backdrop */}
+        <section className="relative py-16 sm:py-24 overflow-hidden bg-brand-bg border-y-4 border-black">
+            {/* Graph-square grid backdrop (matches footer) */}
             <div
                 className="absolute inset-0 pointer-events-none"
                 style={{
                     backgroundImage:
-                        'linear-gradient(rgba(0,0,0,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.06) 1px, transparent 1px)',
-                    backgroundSize: '28px 28px',
+                        'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                    maskImage: 'linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)',
                 }}
             />
 
@@ -280,8 +282,8 @@ const CategoryShowcase = () => {
                     onPointerDown={startDrag}
                 >
                     {/* Edge fade masks */}
-                    <div className="absolute inset-y-0 left-0 w-[6vw] bg-gradient-to-r from-[#E9E9E7] to-transparent z-20 pointer-events-none" />
-                    <div className="absolute inset-y-0 right-0 w-[6vw] bg-gradient-to-l from-[#E9E9E7] to-transparent z-20 pointer-events-none" />
+                    <div className="absolute inset-y-0 left-0 w-[6vw] bg-gradient-to-r from-brand-bg to-transparent z-20 pointer-events-none" />
+                    <div className="absolute inset-y-0 right-0 w-[6vw] bg-gradient-to-l from-brand-bg to-transparent z-20 pointer-events-none" />
 
                     <div ref={trackRef} className="relative flex items-center w-max pl-6 will-change-transform">
                         {[...cards, ...cards].map((card, idx) => {
