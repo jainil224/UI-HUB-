@@ -13,6 +13,21 @@ interface SectionScrollProps {
   showDemoButton?: boolean;
 }
 
+// Walk up the DOM for the nearest element that actually scrolls (computed style,
+// not class names — the library's container uses `md:overflow-y-auto`, which a
+// `.overflow-y-auto` selector never matches, leaving the preview stuck on panel 1).
+const findScrollParent = (el: HTMLElement): HTMLElement | Window => {
+  let node = el.parentElement;
+  while (node) {
+    const overflowY = getComputedStyle(node).overflowY;
+    if (overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay') {
+      return node;
+    }
+    node = node.parentElement;
+  }
+  return window;
+};
+
 export const SectionScroll: React.FC<SectionScrollProps> = ({
   className = "",
   showDemoButton = false
@@ -23,8 +38,11 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
     if (!containerRef.current) return;
 
     // Detect the nearest scroll container (for library preview vs standalone viewport)
-    const scroller = containerRef.current.closest('.overflow-y-auto, .overflow-auto') || window;
+    const scroller = findScrollParent(containerRef.current);
     const panels = containerRef.current.querySelectorAll('.panel');
+
+    // Re-measure once the lazy preview has settled its layout
+    const refreshTick = requestAnimationFrame(() => ScrollTrigger.refresh());
 
     if (showDemoButton) {
       // ── Preview Mode: Scroll-linked animation driven by main page scroll ──
@@ -74,8 +92,11 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
       });
 
       return () => {
+        cancelAnimationFrame(refreshTick);
         tl.kill();
-        ScrollTrigger.getAll().forEach(st => st.kill());
+        // Only this component's trigger — never nuke every ScrollTrigger on the
+        // page (useGSAP's context revert handles the gsap.set/tween cleanup).
+        tl.scrollTrigger?.kill();
       };
     } else {
       // ── Full Scroll Mode: Original GSAP ScrollTrigger ──
@@ -117,10 +138,30 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
       });
 
       return () => {
-        ScrollTrigger.getAll().forEach(st => st.kill());
+        cancelAnimationFrame(refreshTick);
+        // useGSAP's context revert kills the triggers created above; killing
+        // ScrollTrigger.getAll() here would also destroy unrelated components.
       };
     }
   }, { scope: containerRef });
+
+  // The preview card is only ~380–520px tall — scale content down there so
+  // panels never clip on phones. Full-screen demo keeps the original sizes.
+  const pad = showDemoButton ? 'p-5 sm:p-8 md:p-10' : 'p-8 md:p-16';
+  const heading = showDemoButton
+    ? 'text-3xl sm:text-5xl md:text-7xl'
+    : 'text-5xl sm:text-7xl md:text-8xl lg:text-9xl';
+  const headingLg = showDemoButton
+    ? 'text-2xl sm:text-4xl md:text-6xl'
+    : 'text-4xl sm:text-6xl md:text-8xl';
+  const body = showDemoButton ? 'text-xs sm:text-sm md:text-base' : 'text-lg md:text-2xl';
+  const bodySm = showDemoButton ? 'text-xs sm:text-sm' : 'text-lg md:text-xl';
+  const imgFrame = showDemoButton
+    ? 'max-sm:h-[36%] max-sm:w-auto w-full md:w-[65%]'
+    : 'w-full md:w-[65%]';
+  const imgFrameLg = showDemoButton
+    ? 'max-sm:h-[30%] max-sm:w-auto max-sm:mb-3 w-full md:w-[45%]'
+    : 'w-full md:w-[45%]';
 
   return (
     <div
