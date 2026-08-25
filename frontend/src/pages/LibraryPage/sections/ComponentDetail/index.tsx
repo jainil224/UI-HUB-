@@ -934,34 +934,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         exit={{ opacity: 0, x: 20 }}
                         className="space-y-6 md:space-y-12"
                     >
-                        {/* Meta Tags Row — compact chips on mobile, labeled columns on desktop */}
-                        <div className="flex flex-wrap items-center gap-2 sm:gap-x-6 sm:gap-y-3 px-2 mb-6">
-                            <div className="flex items-center gap-1.5 sm:gap-2.5 rounded-full border-2 border-white bg-black sm:rounded-none sm:border-0 sm:bg-transparent px-2.5 py-1 sm:p-0">
-                                <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-brand-blue border border-black flex items-center justify-center text-white font-bold shrink-0">
-                                    <Check size={9} strokeWidth={3} />
-                                </div>
-                                <p className="text-[10px] uppercase tracking-widest text-brand-blue font-black whitespace-nowrap">Verified</p>
-                                <p className="hidden sm:block text-xs font-bold text-neutral-400">UI Hub Curated</p>
-                            </div>
-
-                            <div className="hidden sm:block w-px h-8 bg-neutral-800" />
-
-                            <div className="flex items-center gap-2 sm:gap-3 rounded-full border-2 border-white bg-black sm:rounded-none sm:border-0 sm:bg-transparent px-2.5 py-1 sm:p-0">
-                                <p className="hidden sm:block text-[10px] uppercase tracking-widest font-black text-neutral-400">Build Stack</p>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="px-2 py-0.5 rounded border-2 border-white bg-brand-surface text-[10px] font-black uppercase text-white whitespace-nowrap">React 18</span>
-                                    <span className="px-2 py-0.5 rounded border-2 border-white bg-brand-surface text-[10px] font-black uppercase text-white whitespace-nowrap">Tailwind CSS</span>
-                                </div>
-                            </div>
-
-                            <div className="hidden sm:block w-px h-8 bg-neutral-800" />
-
-                            <div className="flex items-center gap-1.5 sm:gap-2 rounded-full border-2 border-brand-yellow bg-black sm:rounded-none sm:border-0 sm:bg-transparent px-2.5 py-1 sm:p-0">
-                                <p className="hidden sm:block text-[10px] uppercase tracking-widest font-black text-neutral-400">Category</p>
-                                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-brand-yellow whitespace-nowrap">{item.category}</span>
-                            </div>
-                        </div>
-
                         {item.imageUrl && (
                             <div className="mb-8">
                                 <h3 className="text-xl font-black uppercase tracking-tight text-white mb-4">Preview Image</h3>
