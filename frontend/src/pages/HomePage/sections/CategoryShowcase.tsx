@@ -298,7 +298,17 @@ const CategoryShowcase = () => {
                     <div className="absolute inset-y-0 left-0 w-[6vw] bg-gradient-to-r from-brand-bg to-transparent z-20 pointer-events-none" />
                     <div className="absolute inset-y-0 right-0 w-[6vw] bg-gradient-to-l from-brand-bg to-transparent z-20 pointer-events-none" />
 
-                    <div ref={trackRef} className="relative flex items-center w-max pl-6 will-change-transform">
+                    {/* One-time entrance on the whole strip — per-card whileInView made
+                        duplicated (loop) cards replay their fade-in every time they
+                        wrapped into view, which read as a blink while switching */}
+                    <motion.div
+                        ref={trackRef}
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
+                        className="relative flex items-center w-max pl-6 will-change-transform"
+                    >
                         {[...cards, ...cards].map((card, idx) => {
                             const i = idx % cards.length;
                             const isActive = activeIdx === i;
@@ -306,10 +316,6 @@ const CategoryShowcase = () => {
                                 <motion.article
                                     key={`${card.title}-${idx}`}
                                     data-card
-                                    initial={{ opacity: 0, y: 30 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 0.45, delay: (idx % cards.length) * 0.05 }}
                                     onClick={() => {
                                         if (!draggedRef.current) {
                                             navigate(`/library?q=${encodeURIComponent(card.query)}`);
@@ -376,7 +382,7 @@ const CategoryShowcase = () => {
                                 </motion.article>
                             );
                         })}
-                    </div>
+                    </motion.div>
                 </div>
 
                 {/* Arrows */}
