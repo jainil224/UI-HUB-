@@ -90,13 +90,18 @@ const CategoryShowcase = () => {
         const measure = () => {
             const track = trackRef.current;
             if (!track) return;
-            halfWidthRef.current = Math.max(1, track.scrollWidth / 2);
             const els = track.querySelectorAll<HTMLElement>('[data-card]');
             const centers: number[] = [];
             for (let i = 0; i < els.length / 2; i++) {
                 centers.push(els[i].offsetLeft + els[i].offsetWidth / 2);
             }
             centersRef.current = centers;
+            // True loop period = distance between the two copies of the first card.
+            // (scrollWidth/2 would be skewed by the track's leading padding)
+            const period = els.length > 1
+                ? els[els.length / 2].offsetLeft - els[0].offsetLeft
+                : track.scrollWidth / 2;
+            halfWidthRef.current = Math.max(1, period);
         };
         measure();
         const t = setTimeout(measure, 400);

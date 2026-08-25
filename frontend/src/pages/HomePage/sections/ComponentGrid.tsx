@@ -38,8 +38,9 @@ const bentoSpecs: BentoSpec[] = [
     {
         id: 'mesh-text-hover',
         className: 'sm:col-span-2',
-        // "HOVER" is a fixed 130px canvas text — zoom out on phones so it isn't cut mid-letter
-        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[170%] max-sm:scale-[0.6] flex items-center justify-center',
+        // Mobile fit is handled inside MeshTextPreview (smaller canvas font) —
+        // scaling this frame would shrink the canvas measurement and clip the text
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[170%] flex items-center justify-center',
     },
     {
         id: 'lizard-cursor',
