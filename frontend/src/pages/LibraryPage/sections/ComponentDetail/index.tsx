@@ -3,7 +3,7 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, ChevronDown, Brain, Cpu, Heart, ExternalLink, Download, Lock,
+    Check, Copy, Zap, Brain, Cpu, Heart, ExternalLink, Download, Lock,
     Maximize2, Minimize2
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -52,76 +52,6 @@ const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
         </table>
     </div>
 );
-
-const CustomSelect = ({
-    value,
-    onChange,
-    options,
-    label
-}: {
-    value: string;
-    onChange: (val: any) => void;
-    options: { id: string; name: string }[];
-    label: string;
-}) => {
-    const [isOpen, setIsOpen] = React.useState(false);
-    const containerRef = React.useRef<HTMLDivElement>(null);
-
-    React.useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const selectedOption = options.find(o => o.id === value);
-
-    return (
-        <div className="relative" ref={containerRef}>
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className={`flex items-center justify-between gap-4 px-4 py-2.5 rounded-lg bg-brand-surface border-2 transition-all text-xs font-black uppercase tracking-wider brutal-shadow-black ${
-                    isOpen ? 'border-brand-blue bg-neutral-900' : 'border-white hover:border-neutral-200'
-                }`}
-            >
-                <div className="flex flex-col items-start gap-0.5">
-                    <span className="text-[9px] text-neutral-400 font-bold">{label}</span>
-                    <span className="text-white font-black">{selectedOption?.name}</span>
-                </div>
-                <ChevronDown size={14} className={`transition-transform duration-200 text-neutral-400 ${isOpen ? 'rotate-180 text-brand-blue' : ''}`} />
-            </button>
-
-            <AnimatePresence>
-                {isOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 5 }}
-                        className="absolute bottom-full mb-2 left-0 w-full min-w-[160px] bg-brand-surface border-2 border-white rounded-lg overflow-hidden z-[100] brutal-shadow-black"
-                    >
-                        {options.map((opt) => (
-                            <button
-                                key={opt.id}
-                                onClick={() => {
-                                    onChange(opt.id);
-                                    setIsOpen(false);
-                                }}
-                                className={`w-full px-4 py-2.5 text-left text-xs font-black uppercase tracking-wider transition-colors ${
-                                    value === opt.id ? 'bg-brand-blue text-white' : 'text-neutral-300 hover:bg-neutral-800 hover:text-white'
-                                }`}
-                            >
-                                {opt.name}
-                            </button>
-                        ))}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </div>
-    );
-};
 
 import { ComponentItem } from '../../../../data/componentData';
 
@@ -340,8 +270,6 @@ const VibeSystemSection = React.memo(({
     isProUser,
     advanceTrialsUsed,
     setAdvanceTrialsUsed,
-    lang,
-    styling,
     componentConfig,
     vanillaCode,
     setShowAuthModal
@@ -351,8 +279,6 @@ const VibeSystemSection = React.memo(({
     isProUser: boolean;
     advanceTrialsUsed: number;
     setAdvanceTrialsUsed: React.Dispatch<React.SetStateAction<number>>;
-    lang: 'js' | 'ts' | 'html';
-    styling: 'tailwind' | 'css';
     componentConfig: any;
     vanillaCode: string;
     setShowAuthModal: (v: boolean) => void;
@@ -664,8 +590,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     // Dynamic states
     const [fetchedSource, setFetchedSource] = React.useState<string>('');
     const [isLoadingSource, setIsLoadingSource] = React.useState(false);
-    const [lang, setLang] = React.useState<'js' | 'ts' | 'html'>('ts');
-    const [styling, setStyling] = React.useState<'tailwind' | 'css'>('tailwind');
 
     const { user, isPro: isProUser } = useAuth();
     const [advanceTrialsUsed, setAdvanceTrialsUsed] = React.useState<number>(() => {
@@ -801,10 +725,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     };
 
     const sourceCode = React.useMemo(
-        () => fetchedSource || getComponentCode(item.id, { lang, styling }),
-        [fetchedSource, item.id, lang, styling]
+        () => fetchedSource || getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }),
+        [fetchedSource, item.id]
     );
-    const sourceFileName = `${item.title.replace(/\s+/g, '')}${lang === 'ts' ? '.tsx' : lang === 'js' ? '.jsx' : '.html'}`;
+    const sourceFileName = `${item.title.replace(/\s+/g, '')}.tsx`;
     const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);
 
     const handleDownloadSource = () => {
@@ -1022,29 +946,25 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     >
                         {/* Source Code Section */}
                         <section>
-                            <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+                            <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6">
                                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Source Code</h3>
-                                <div className="flex flex-wrap gap-3 sm:gap-4">
-                                    <CustomSelect
-                                        label="Language"
-                                        value={lang}
-                                        onChange={setLang}
-                                        options={[
-                                            { id: 'ts', name: 'TypeScript' },
-                                            { id: 'js', name: 'JavaScript' },
-                                            { id: 'html', name: 'HTML' }
-                                        ]}
-                                    />
-
-                                    <CustomSelect
-                                        label="Styling"
-                                        value={styling}
-                                        onChange={setStyling}
-                                        options={[
-                                            { id: 'tailwind', name: 'Tailwind' },
-                                            { id: 'css', name: 'CSS' }
-                                        ]}
-                                    />
+                                <div className="flex items-center gap-2 sm:gap-3">
+                                    <button
+                                        onClick={handleDownloadSource}
+                                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-blue transition-all brutal-shadow-black cursor-pointer"
+                                        title={`Download ${sourceFileName}`}
+                                    >
+                                        <Download size={13} />
+                                        <span className="hidden sm:inline">Download</span>
+                                    </button>
+                                    <button
+                                        onClick={() => handleCopy(sourceCode, 'source')}
+                                        className="brutal-btn-primary px-3 sm:px-4 py-2 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
+                                        title="Copy source code"
+                                    >
+                                        {copied === 'source' ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
+                                        <span>{copied === 'source' ? 'COPIED' : 'Copy Code'}</span>
+                                    </button>
                                 </div>
                             </div>
 
@@ -1061,27 +981,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 <div className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-black shrink-0" />
                                                 <span className="ml-2 font-mono text-[11px] font-bold text-white truncate min-w-0">{sourceFileName}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 shrink-0">
-                                                <span className="hidden md:inline px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-mono font-black uppercase tracking-widest text-neutral-400">
-                                                    {sourceLineCount} Lines
-                                                </span>
-                                                <button
-                                                    onClick={handleDownloadSource}
-                                                    className="p-1.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors cursor-pointer"
-                                                    title={`Download ${sourceFileName}`}
-                                                    aria-label={`Download ${sourceFileName}`}
-                                                >
-                                                    <Download size={13} />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleCopy(sourceCode, 'source')}
-                                                    className="brutal-btn-primary px-2.5 sm:px-3 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5 cursor-pointer"
-                                                    title="Copy source code"
-                                                >
-                                                    {copied === 'source' ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
-                                                    <span className="hidden sm:inline">{copied === 'source' ? 'COPIED' : 'COPY'}</span>
-                                                </button>
-                                            </div>
+                                            <span className="px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-mono font-black uppercase tracking-widest text-neutral-400 shrink-0">
+                                                {sourceLineCount} Lines
+                                            </span>
                                         </div>
 
                                         {/* Code Viewer with Line Numbers */}
@@ -1110,8 +1012,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 ) : (
                     <VibeSystemSection
                         item={item}
-                        lang={lang}
-                        styling={styling}
                         user={user}
                         isProUser={isProUser}
                         advanceTrialsUsed={advanceTrialsUsed}
