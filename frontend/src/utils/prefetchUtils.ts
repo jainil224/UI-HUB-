@@ -18,13 +18,6 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'cards-beam': () => import('../components/ui/CardsBeam'),
     'toonhub-hero': () => import('../components/ui/ToonhubHero'),
 
-    // Bots & Avatars
-    'hoodie-bot': () => import('../components/ui/HoodieBot'),
-    'smilo': () => import('../components/ui/Smilo'),
-    'tripy': () => import('../components/ui/Tripy'),
-    'aiva': () => import('../components/ui/Aiva'),
-    'laptop-bot': () => import('../components/ui/LaptopBot'),
-
     // Cursors
     'aurora-cursor': () => import('../components/ui/AuroraCursor'),
     'magnetic-cursor': () => import('../components/ui/MagneticCursor'),

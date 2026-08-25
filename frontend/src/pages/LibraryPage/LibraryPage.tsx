@@ -112,7 +112,6 @@ const LibraryPage = () => {
         { name: "Backgrounds", items: allComponents.filter(item => item.category === 'background') },
         { name: "Interactive Background", items: allComponents.filter(item => item.category === 'interactive-background') },
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
-        { name: "3D CHATBOT", items: allComponents.filter(item => item.category === '3d-chatbot') },
         { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
         { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ], [allComponents]);

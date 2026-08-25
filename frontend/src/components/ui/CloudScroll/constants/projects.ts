@@ -107,23 +107,5 @@ export const UI_HUB_PROJECTS: Project[] = [
     subtext: 'Immersive 3D cloud-scrolling story timeline. Combines GSAP animations with React Three Fiber, Custom GLB models, and responsive scroll container constraints.',
     url: '/demo/cloud-scroll',
   },
-  {
-    title: 'Laptop Bot',
-    date: 'Jun 2026',
-    subtext: 'Interactive 3D model of a robot and laptop screen using Three.js and custom viewport controls.',
-    url: '/demo/laptop-bot',
-  },
-  {
-    title: 'Aiva',
-    date: 'Jun 2026',
-    subtext: 'Voice assistant design concept featuring audio wave visualizers and responsive state-based animations.',
-    url: '/demo/aiva',
-  },
-  {
-    title: 'Smilo',
-    date: 'Jun 2026',
-    subtext: 'Interactive face and expressions canvas using generative geometry, SVG morphs, and physics-based particle systems.',
-    url: '/demo/smilo',
-  },
 ];
 
