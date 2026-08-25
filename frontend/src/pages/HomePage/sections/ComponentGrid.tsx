@@ -147,8 +147,10 @@ const ComponentGrid = () => {
                 transition={{ duration: 0.5 }}
                 className="relative z-10 text-center text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white leading-tight mb-6 px-4"
             >
-                <span className="inline-flex items-center gap-3 flex-wrap justify-center">
-                    <span className="inline-flex items-center justify-center w-[0.85em] h-[0.85em] rounded-[22%] bg-brand-yellow border-2 border-black shadow-[3px_3px_0px_#000000]">
+                {/* Badge is inline (not a flex item) so on phones it wraps WITH the
+                    text instead of dropping onto its own centered line */}
+                <span>
+                    <span className="inline-flex items-center justify-center w-[0.85em] h-[0.85em] rounded-[22%] bg-brand-yellow border-2 border-black shadow-[3px_3px_0px_#000000] align-middle mr-3 relative -top-[0.08em]">
                         <Flame className="w-[0.55em] h-[0.55em] text-black" fill="currentColor" strokeWidth={2.5} />
                     </span>
                     Supercharge Your Projects with
