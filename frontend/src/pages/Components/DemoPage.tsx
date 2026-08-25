@@ -121,9 +121,12 @@ const DemoPage: React.FC = () => {
                 {/* Floating Back to Library Button */}
                 <button
                     onClick={() => navigate(`/library?id=${id}`)}
-                    className="fixed top-6 left-6 z-[9999] flex items-center gap-2 px-5 py-2.5 rounded-full bg-black/80 hover:bg-black text-white transition-all text-xs font-bold uppercase tracking-widest backdrop-blur-xl border border-white/20 shadow-2xl hover:scale-105 group cursor-pointer"
+                    className="fixed top-5 left-5 sm:top-6 sm:left-6 z-[9999] flex items-center gap-2.5 pl-2 pr-5 py-2 rounded-full bg-neutral-950/90 text-white border-2 border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.75)] transition-all duration-150 text-[11px] sm:text-xs font-black uppercase tracking-widest hover:bg-black hover:-translate-y-0.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.75)] active:translate-y-0 active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.75)] group cursor-pointer"
+                    title="Back to Library"
                 >
-                    <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform text-brand-blue" />
+                    <span className="w-7 h-7 rounded-full bg-brand-yellow text-black flex items-center justify-center shrink-0 transition-transform duration-150 group-hover:-translate-x-0.5">
+                        <ChevronLeft size={15} strokeWidth={3} />
+                    </span>
                     Back to Library
                 </button>
 
