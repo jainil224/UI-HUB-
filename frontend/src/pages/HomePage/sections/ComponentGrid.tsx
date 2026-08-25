@@ -21,7 +21,13 @@ const DEFAULT_FRAME =
 
 // Curated live demos — always-on previews, no hover needed
 const bentoSpecs: BentoSpec[] = [
-    { id: '3d-hero', className: 'sm:col-span-2 lg:row-span-2' },
+    {
+        id: '3d-hero',
+        // Full 2-row feature tile on phones so the demo (min-h 420px) is never cropped
+        className: 'row-span-2 sm:col-span-2 lg:row-span-2',
+        // Contain (not cover) on phones — cover-zoom was slicing the "3D SHAPE" headline
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[170%] max-sm:w-full max-sm:h-full flex items-center justify-center',
+    },
     { id: 'pixel-drift', className: 'sm:col-span-2' },
     {
         id: 'twin-galaxy-rings',
@@ -29,22 +35,28 @@ const bentoSpecs: BentoSpec[] = [
         // Galaxy sits in the lower half of its canvas — anchor the preview to the tile bottom
         frame: 'absolute bottom-0 left-1/2 -translate-x-1/2 w-[175%] h-[520px] flex items-center justify-center',
     },
-    { id: 'mesh-text-hover', className: 'sm:col-span-2' },
+    {
+        id: 'mesh-text-hover',
+        className: 'sm:col-span-2',
+        // "HOVER" is a fixed 130px canvas text — zoom out on phones so it isn't cut mid-letter
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[170%] max-sm:scale-[0.6] flex items-center justify-center',
+    },
     {
         id: 'lizard-cursor',
         className: '',
         // Mini landing page (~400px tall) — zoom out so the whole demo fits the tile
-        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[175%] h-[400px] scale-[0.62] flex items-center justify-center',
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[175%] h-[400px] scale-[0.62] max-sm:scale-[0.55] flex items-center justify-center',
     },
     {
         id: 'point-dna-helix',
-        className: 'lg:row-span-2',
+        className: 'row-span-2 lg:row-span-2',
         // Zoom into the canvas so the wrapper's edge bands never show
         frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[140%] h-[150%] flex items-center justify-center',
     },
     {
         id: 'liquid-glass',
-        className: 'lg:row-span-2',
+        // Widget stack (~400px tall) needs 2 rows on phones too, or the bottom widgets get cut
+        className: 'row-span-2 lg:row-span-2',
         // Widget is width-fluid — contain it fully inside the tile instead of covering
         frame: 'absolute inset-0 flex items-center justify-center p-5',
     },
@@ -175,7 +187,7 @@ const ComponentGrid = () => {
                     <motion.div
                         key="grid-real"
                         initial={{ opacity: 1 }}
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[220px] sm:auto-rows-[240px] gap-4 relative z-10"
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-rows-[240px] gap-4 relative z-10"
                     >
                         {bentoComponents.map(({ spec, comp }) => (
                             <BentoCard key={comp.id} spec={spec} comp={comp} />

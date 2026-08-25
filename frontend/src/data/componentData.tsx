@@ -1233,6 +1233,37 @@ const HeartCursorPreview: React.FC = () => {
 };
 
 // ── Lizard Cursor scoped preview ────────────
+// MeshText renders text at a fixed px size onto a self-measuring canvas, so on
+// phones we shrink the font itself (scaling the frame would shrink the canvas
+// measurement too and clip the text at its own edges).
+const useIsCompactViewport = (): boolean => {
+    const [isCompact, setIsCompact] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640);
+    useEffect(() => {
+        const mq = window.matchMedia('(max-width: 639px)');
+        const update = () => setIsCompact(mq.matches);
+        update();
+        mq.addEventListener('change', update);
+        return () => mq.removeEventListener('change', update);
+    }, []);
+    return isCompact;
+};
+
+const MeshTextPreview: React.FC = () => {
+    const isCompact = useIsCompactViewport();
+    return (
+        <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
+            <MeshText
+                text="HOVER"
+                color="#ffffff"
+                colorSplit={true}
+                customColors={["#ff40c0", "#40ff80", "#00f0ff"]}
+                force={18}
+                font={{ fontFamily: "Inter", variant: "Bold", fontSize: isCompact ? 72 : 130, fontWeight: 800 }}
+            />
+        </div>
+    );
+};
+
 const LizardCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
     const [isInside, setIsInside] = useState(false);
@@ -1815,11 +1846,7 @@ export const componentList: ComponentItem[] = [
         title: "Mesh Text Hover",
         category: "text",
         addedAt: "2026-08-23",
-        preview: () => (
-            <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
-                <MeshText text="HOVER" color="#ffffff" colorSplit={true} customColors={["#ff40c0", "#40ff80", "#00f0ff"]} force={18} font={{ fontFamily: "Inter", variant: "Bold", fontSize: 130, fontWeight: 800 }} />
-            </div>
-        ),
+        preview: () => <MeshTextPreview />,
         code: `import React from 'react';
 import { MeshText } from '@/components/animations/MeshText';
 

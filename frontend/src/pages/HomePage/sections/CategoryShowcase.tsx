@@ -155,6 +155,9 @@ const CategoryShowcase = () => {
 
     // Render loop — only moves while coasting/easing, strip is static otherwise
     useEffect(() => {
+        // Center the nearest card on first paint so mobile users see a full card
+        // with symmetric peeks instead of a card glued to the left edge
+        offsetRef.current = wrap(nearestSnapOffset());
         let raf = 0;
         let last = performance.now();
         const tick = (now: number) => {
@@ -240,8 +243,12 @@ const CategoryShowcase = () => {
     }, [isDragging, nearestSnapOffset, wrap]);
 
     const nudge = (dir: 1 | -1) => {
+        const centers = centersRef.current;
+        // Step by the real card pitch so arrows land exactly on the next card
+        // (cards are narrower on phones than the desktop CARD_STEP default)
+        const step = centers.length > 1 ? Math.abs(centers[1] - centers[0]) : CARD_STEP;
         const from = modeRef.current === 'ease' ? easeTargetRef.current : offsetRef.current;
-        easeTargetRef.current = from + CARD_STEP * dir;
+        easeTargetRef.current = from + step * dir;
         modeRef.current = 'ease';
     };
 
