@@ -469,8 +469,6 @@ const VibeSystemSection = React.memo(({
                                 <div className="h-4 w-px bg-neutral-700 shrink-0" />
                                 <div className="flex items-center gap-1.5 sm:gap-2 font-mono min-w-0">
                                     <span className={`text-[10px] font-black uppercase tracking-wider shrink-0 ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>{aiSystem}</span>
-                                    <span className="text-[10px] font-black text-neutral-500 uppercase shrink-0">//</span>
-                                    <span className="hidden md:inline text-[10px] font-bold text-neutral-300 uppercase tracking-wider truncate">MASTER_{aiSystem === 'advance' ? 'PRO' : aiSystem.toUpperCase()}_v1.0.tsx</span>
                                 </div>
                             </div>
 
