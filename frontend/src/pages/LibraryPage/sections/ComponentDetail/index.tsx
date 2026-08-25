@@ -664,8 +664,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     // Dynamic states
     const [fetchedSource, setFetchedSource] = React.useState<string>('');
     const [isLoadingSource, setIsLoadingSource] = React.useState(false);
-    const [installMethod, setInstallMethod] = React.useState<'cli' | 'manual'>('cli');
-    const [pkgManager, setPkgManager] = React.useState<'npm' | 'pnpm' | 'yarn' | 'bun'>('npm');
     const [lang, setLang] = React.useState<'js' | 'ts' | 'html'>('ts');
     const [styling, setStyling] = React.useState<'tailwind' | 'css'>('tailwind');
 
@@ -802,16 +800,26 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         setTimeout(() => setCopied(null), 2000);
     };
 
-    const installCommand = React.useMemo(() => {
-        if (installMethod === 'cli') return `npx ui-hub add ${item.id}`;
-        const cmd: Record<string, string> = {
-            npm: "npm install framer-motion clsx tailwind-merge lucide-react",
-            yarn: "yarn add framer-motion clsx tailwind-merge lucide-react",
-            pnpm: "pnpm add framer-motion clsx tailwind-merge lucide-react",
-            bun: "bun add framer-motion clsx tailwind-merge lucide-react"
-        };
-        return cmd[pkgManager];
-    }, [installMethod, item.id, pkgManager]);
+    const sourceCode = React.useMemo(
+        () => fetchedSource || getComponentCode(item.id, { lang, styling }),
+        [fetchedSource, item.id, lang, styling]
+    );
+    const sourceFileName = `${item.title.replace(/\s+/g, '')}${lang === 'ts' ? '.tsx' : lang === 'js' ? '.jsx' : '.html'}`;
+    const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);
+
+    const handleDownloadSource = () => {
+        const blob = new Blob([sourceCode], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = sourceFileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        setToastMessage('SOURCE DOWNLOADED');
+        setShowToast(true);
+    };
 
     const componentConfig = React.useMemo(() => COMPONENT_CONFIG[item.id] || {
         props: [],
@@ -819,9 +827,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     }, [item.id, item.vibePrompt]);
 
     const vanillaCode = React.useMemo(() => getComponentCode(item.id, { lang: 'html', styling: 'css' }), [item.id]);
-
-    const usageCode = React.useMemo(() => `// Usage for ${item.title}
-<${item.title.replace(/\s+/g, '')} />`, [item.title]);
 
     return (
         <motion.div
@@ -1014,138 +1019,87 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
-                        className="space-y-12"
                     >
-                        {/* Install Section */}
-                        <section id="installation">
-                            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white mb-6">Install</h3>
-                            <div className="inline-flex p-1 rounded-lg border-2 border-white bg-brand-surface mb-6 brutal-shadow-black">
-                                <button
-                                    onClick={() => setInstallMethod('cli')}
-                                    className={`px-6 py-2 rounded text-xs font-black uppercase tracking-wider transition-all ${
-                                        installMethod === 'cli'
-                                            ? 'bg-brand-blue text-white border-2 border-black'
-                                            : 'text-neutral-400 hover:text-white'
-                                    }`}
-                                >
-                                    CLI
-                                </button>
-                                <button
-                                    onClick={() => setInstallMethod('manual')}
-                                    className={`px-6 py-2 rounded text-xs font-black uppercase tracking-wider transition-all ${
-                                        installMethod === 'manual'
-                                            ? 'bg-brand-blue text-white border-2 border-black'
-                                            : 'text-neutral-400 hover:text-white'
-                                    }`}
-                                >
-                                    Manual
-                                </button>
+                        {/* Source Code Section */}
+                        <section>
+                            <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
+                                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Source Code</h3>
+                                <div className="flex flex-wrap gap-3 sm:gap-4">
+                                    <CustomSelect
+                                        label="Language"
+                                        value={lang}
+                                        onChange={setLang}
+                                        options={[
+                                            { id: 'ts', name: 'TypeScript' },
+                                            { id: 'js', name: 'JavaScript' },
+                                            { id: 'html', name: 'HTML' }
+                                        ]}
+                                    />
+
+                                    <CustomSelect
+                                        label="Styling"
+                                        value={styling}
+                                        onChange={setStyling}
+                                        options={[
+                                            { id: 'tailwind', name: 'Tailwind' },
+                                            { id: 'css', name: 'CSS' }
+                                        ]}
+                                    />
+                                </div>
                             </div>
 
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
-                                <AnimatePresence mode="wait">
-                                    {installMethod === 'manual' && (
-                                        <motion.div
-                                            key="manual-tabs"
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            className="flex border-b-2 border-white bg-black"
-                                        >
-                                            {(['npm', 'pnpm', 'yarn', 'bun'] as const).map(m => (
-                                                <button
-                                                    key={m}
-                                                    onClick={() => setPkgManager(m)}
-                                                    className={`px-6 py-2.5 text-xs font-black uppercase tracking-wider transition-colors ${
-                                                        pkgManager === m
-                                                            ? 'text-brand-blue border-b-2 border-brand-blue bg-neutral-900'
-                                                            : 'text-neutral-400 hover:text-white'
-                                                    }`}
-                                                >
-                                                    {m}
-                                                </button>
-                                            ))}
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                                <div className="p-4 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-3 bg-brand-surface">
-                                    <code className="text-white font-mono text-xs sm:text-sm font-bold break-all min-w-0">{installCommand}</code>
-                                    <button
-                                        onClick={() => handleCopy(installCommand, 'install')}
-                                        className="brutal-btn-primary px-3 py-2 text-xs font-black tracking-wider flex items-center justify-center gap-1.5 shrink-0 self-start sm:self-auto"
-                                    >
-                                        {copied === 'install' ? <Check size={14} strokeWidth={3} /> : <Copy size={14} />}
-                                        <span>{copied === 'install' ? 'COPIED' : 'COPY'}</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Usage Section */}
-                        <section id="usage">
-                            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white mb-4">
-                                Usage <span className="text-xs font-mono lowercase text-neutral-400 font-normal ml-2">(with your settings)</span>
-                            </h3>
-                            <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black relative">
-                                <button
-                                    onClick={() => handleCopy(usageCode, 'usage')}
-                                    className="brutal-btn-primary absolute top-4 right-4 z-10 px-3 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5"
-                                >
-                                    {copied === 'usage' ? <Check size={14} strokeWidth={3} /> : <Copy size={14} />}
-                                    <span>{copied === 'usage' ? 'COPIED' : 'COPY'}</span>
-                                </button>
-                                <div className="p-6 md:p-8 bg-brand-surface leading-relaxed overflow-auto custom-scrollbar">
-                                    <pre className="font-sans text-xs md:text-sm"><CodeHighlighter code={usageCode} /></pre>
-                                </div>
-                            </div>
-                        </section>
-
-                        {/* Code Section */}
-                        <section>
-                            <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white mb-6">Code</h3>
-                            <div className="flex flex-wrap gap-4 mb-6">
-                                <CustomSelect
-                                    label="Language"
-                                    value={lang}
-                                    onChange={setLang}
-                                    options={[
-                                        { id: 'ts', name: 'TypeScript' },
-                                        { id: 'js', name: 'JavaScript' },
-                                        { id: 'html', name: 'HTML' }
-                                    ]}
-                                />
-
-                                <CustomSelect
-                                    label="Styling"
-                                    value={styling}
-                                    onChange={setStyling}
-                                    options={[
-                                        { id: 'tailwind', name: 'Tailwind' },
-                                        { id: 'css', name: 'CSS' }
-                                    ]}
-                                />
-                            </div>
-
-                            <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black relative min-h-[400px]">
                                 {item.isPremium && !isProUser ? (
                                     <PremiumGate message="This premium component requires a Pro subscription to view and copy the source code." />
                                 ) : (
                                     <>
-                                        <button
-                                            onClick={() => handleCopy(fetchedSource || getComponentCode(item.id, { lang, styling }), 'source')}
-                                            className="brutal-btn-primary absolute top-4 right-4 z-10 px-3 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5"
-                                        >
-                                            {copied === 'source' ? <Check size={14} strokeWidth={3} /> : <Copy size={14} />}
-                                            <span>{copied === 'source' ? 'COPIED' : 'COPY'}</span>
-                                        </button>
-                                        <div className="p-6 md:p-8 text-xs leading-relaxed max-h-[600px] overflow-auto custom-scrollbar bg-brand-surface">
+                                        {/* IDE-style File Header */}
+                                        <div className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 bg-black border-b-2 border-white">
+                                            <div className="flex items-center gap-1.5 min-w-0">
+                                                <div className="w-2.5 h-2.5 rounded-full bg-brand-red border border-black shrink-0" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-brand-yellow border border-black shrink-0" />
+                                                <div className="w-2.5 h-2.5 rounded-full bg-brand-blue border border-black shrink-0" />
+                                                <span className="ml-2 font-mono text-[11px] font-bold text-white truncate min-w-0">{sourceFileName}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                <span className="hidden md:inline px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-mono font-black uppercase tracking-widest text-neutral-400">
+                                                    {sourceLineCount} Lines
+                                                </span>
+                                                <button
+                                                    onClick={handleDownloadSource}
+                                                    className="p-1.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors cursor-pointer"
+                                                    title={`Download ${sourceFileName}`}
+                                                    aria-label={`Download ${sourceFileName}`}
+                                                >
+                                                    <Download size={13} />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleCopy(sourceCode, 'source')}
+                                                    className="brutal-btn-primary px-2.5 sm:px-3 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5 cursor-pointer"
+                                                    title="Copy source code"
+                                                >
+                                                    {copied === 'source' ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
+                                                    <span className="hidden sm:inline">{copied === 'source' ? 'COPIED' : 'COPY'}</span>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* Code Viewer with Line Numbers */}
+                                        <div className="text-xs leading-relaxed min-h-[400px] max-h-[600px] overflow-auto custom-scrollbar bg-brand-surface">
                                             {isLoadingSource ? (
                                                 <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
                                                     <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />
                                                     <p className="text-[10px] uppercase tracking-widest font-black">DECRYPTING SOURCE...</p>
                                                 </div>
                                             ) : (
-                                                <pre className="font-sans"><code><CodeHighlighter code={fetchedSource || getComponentCode(item.id, { lang, styling })} /></code></pre>
+                                                <div className="flex min-w-full w-max">
+                                                    <div aria-hidden="true" className="sticky left-0 z-10 select-none text-right px-2.5 sm:px-3 py-4 md:py-6 font-mono text-xs leading-relaxed text-neutral-600 bg-brand-bg border-r-2 border-neutral-800">
+                                                        {Array.from({ length: sourceLineCount }, (_, i) => (
+                                                            <div key={i}>{i + 1}</div>
+                                                        ))}
+                                                    </div>
+                                                    <pre className="font-mono px-3 sm:px-4 py-4 md:py-6"><code><CodeHighlighter code={sourceCode} /></code></pre>
+                                                </div>
                                             )}
                                         </div>
                                     </>
