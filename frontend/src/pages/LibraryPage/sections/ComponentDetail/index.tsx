@@ -937,7 +937,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <div
                             id="preview"
                             ref={previewRef}
-                            className={`min-h-[380px] sm:min-h-[460px] md:min-h-[520px] w-full rounded-xl relative overflow-hidden flex flex-col bg-brand-surface border-2 border-white brutal-shadow-black ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black min-h-screen' : ''}`}
+                            className={`min-h-[380px] sm:min-h-[460px] md:min-h-[520px] w-full rounded-xl overflow-hidden flex flex-col bg-brand-surface border-2 border-white brutal-shadow-black ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black min-h-screen' : 'relative'}`}
                         >
                             {/* Browser Mockup Top Bar */}
                             <div className="w-full px-4 py-2.5 bg-black border-b-2 border-white flex items-center justify-between z-40 shrink-0 select-none">

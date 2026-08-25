@@ -32,9 +32,11 @@ const AppShell = () => {
 
   return (
     <div className={`min-h-[100dvh] flex flex-col transition-colors duration-300 ${
-      theme === 'dark' 
-        ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black' 
-        : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
+      isDemo
+        ? 'bg-neutral-950 text-white'
+        : theme === 'dark'
+          ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black'
+          : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
     }`}>
       <TopLoader />
       {!isDemo && <Navbar />}

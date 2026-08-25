@@ -117,7 +117,7 @@ const DemoPage: React.FC = () => {
 
     return (
         <DemoErrorBoundary>
-            <div className="relative fixed inset-0 w-full h-full bg-neutral-950 text-white overflow-hidden select-none">
+            <div className="fixed inset-0 w-full h-full bg-neutral-950 text-white overflow-hidden select-none">
                 {/* Floating Back to Library Button */}
                 <button
                     onClick={() => navigate(`/library?id=${id}`)}
