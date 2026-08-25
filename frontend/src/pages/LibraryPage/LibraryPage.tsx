@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
@@ -61,6 +61,7 @@ const LibraryPage = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState(qFromUrl);
+    const [mobileSearch, setMobileSearch] = useState('');
 
     const [showUpdates, setShowUpdates] = useState(false);
 
@@ -142,6 +143,35 @@ const LibraryPage = () => {
         setExpandedCategories(prev => prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]);
     };
 
+    // Lock body scroll + close on Escape while the mobile drawer is open
+    useEffect(() => {
+        if (!isMobileMenuOpen) return;
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setIsMobileMenuOpen(false);
+        };
+        window.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.body.style.overflow = prevOverflow;
+            window.removeEventListener('keydown', onKeyDown);
+        };
+    }, [isMobileMenuOpen]);
+
+    const drawerQuery = mobileSearch.trim().toLowerCase();
+    const drawerCategories = useMemo(() => baseCategories
+        .map(cat => ({
+            ...cat,
+            items: cat.items.filter(item => drawerQuery === '' || item.title.toLowerCase().includes(drawerQuery))
+        }))
+        .filter(cat => cat.items.length > 0), [baseCategories, drawerQuery]);
+
+    const drawerSearchResults = useMemo(() => (
+        drawerQuery === ''
+            ? []
+            : allComponents.filter(item => item.title.toLowerCase().includes(drawerQuery))
+    ), [allComponents, drawerQuery]);
+
     const handleComponentSelect = (item: ComponentItem) => {
         setOptimisticId(item.id);
         setIsMobileMenuOpen(false);
@@ -177,51 +207,165 @@ const LibraryPage = () => {
                     </button>
                 </div>
 
-                {/* ── Mobile Menu Overlay ── */}
+                {/* ── Mobile Menu Drawer ── */}
                 <AnimatePresence>
                     {isMobileMenuOpen && (
                         <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            className="fixed inset-0 bg-brand-bg z-[999] md:hidden overflow-y-auto sidebar-scroll p-6 pt-8 border-r-2 border-white"
+                            key="drawer-backdrop"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            aria-hidden="true"
+                            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[998] md:hidden"
+                        />
+                    )}
+                </AnimatePresence>
+                <AnimatePresence>
+                    {isMobileMenuOpen && (
+                        <motion.aside
+                            key="drawer-panel"
+                            initial={{ x: '-100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '-100%' }}
+                            transition={{ type: 'tween', duration: 0.28, ease: [0.32, 0.72, 0, 1] }}
+                            role="dialog"
+                            aria-modal="true"
+                            aria-label="Components menu"
+                            className="fixed inset-y-0 left-0 z-[999] md:hidden flex flex-col w-[85vw] max-w-sm bg-brand-bg border-r-4 border-black shadow-[8px_0_0_0_rgba(0,0,0,0.6)]"
                         >
-                            <div className="flex justify-between items-center mb-6">
-                                <span className="font-bold">UI HUB</span>
-                                <button
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    aria-label="Close menu"
-                                    className="w-11 h-11 -mr-3 flex items-center justify-center rounded-lg border-2 border-white bg-brand-surface text-white"
-                                >
-                                    <X size={20} />
-                                </button>
+                            {/* Drawer Header */}
+                            <div className="shrink-0 px-4 pt-4 pb-3 space-y-3 bg-brand-surface border-b-2 border-neutral-800">
+                                <div className="flex items-center justify-between">
+                                    <span className="font-black text-sm uppercase tracking-wider">UI HUB</span>
+                                    <button
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        aria-label="Close menu"
+                                        className="w-11 h-11 -mr-2 flex items-center justify-center rounded-lg border-2 border-white bg-brand-surface text-white active:translate-y-0.5"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                </div>
+                                <div className="rounded-lg border-2 border-white bg-brand-bg px-4 py-2 brutal-shadow-black flex items-center justify-between">
+                                    <p className="text-[9px] text-neutral-400 uppercase tracking-widest font-black">Total Available</p>
+                                    <span className="text-xl font-black text-brand-blue">{totalComponents}</span>
+                                </div>
+                                <div className="relative">
+                                    <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none" />
+                                    <input
+                                        type="text"
+                                        value={mobileSearch}
+                                        onChange={(e) => setMobileSearch(e.target.value)}
+                                        placeholder="SEARCH COMPONENTS..."
+                                        aria-label="Search components"
+                                        className="w-full pl-9 pr-9 py-2.5 bg-black border-2 border-neutral-700 rounded-lg text-xs font-bold uppercase tracking-wider text-white placeholder:text-neutral-600 focus:outline-none focus:border-brand-blue transition-colors"
+                                    />
+                                    {mobileSearch && (
+                                        <button
+                                            onClick={() => setMobileSearch('')}
+                                            aria-label="Clear search"
+                                            className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded text-neutral-500 hover:text-white"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    )}
+                                </div>
+                                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 text-neutral-400 hover:text-white w-fit">
+                                    <Home size={12} /> <span className="text-[10px] font-black uppercase tracking-widest">Home</span>
+                                </Link>
                             </div>
-                            {categories.map((cat, idx) => (
-                                <div key={idx} className="mb-4">
-                                    <h4 className="text-xs font-black uppercase text-brand-blue mb-2 tracking-wider">{cat.name}</h4>
-                                    <div className="space-y-1 pl-2 border-l border-neutral-800">
-                                        {cat.items.map(item => {
+
+                            {/* Drawer Nav */}
+                            <nav className="flex-1 overflow-y-auto sidebar-scroll px-3 py-4">
+                                {drawerQuery !== '' ? (
+                                    <div className="space-y-1">
+                                        <p className="text-[9px] uppercase tracking-widest text-neutral-500 font-black px-2 mb-2">
+                                            {drawerSearchResults.length} RESULT{drawerSearchResults.length === 1 ? '' : 'S'}
+                                        </p>
+                                        {drawerSearchResults.map(item => {
                                             const isActive = (optimisticId || activeComponent?.id) === item.id;
                                             return (
-                                                <button 
-                                                    key={item.id} 
-                                                    onClick={() => handleComponentSelect(item)} 
+                                                <button
+                                                    key={item.id}
+                                                    onClick={() => handleComponentSelect(item)}
                                                     onMouseEnter={() => prefetchComponentChunk(item.id)}
                                                     onFocus={() => prefetchComponentChunk(item.id)}
-                                                    className={`w-full flex items-center justify-between text-left px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
-                                                        isActive 
-                                                            ? 'bg-brand-blue text-white border border-white' 
+                                                    className={`w-full flex items-center justify-between gap-2 text-left px-3 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all ${
+                                                        isActive
+                                                            ? 'bg-brand-blue text-white border-2 border-white shadow-[3px_3px_0px_0px_#000000]'
                                                             : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
                                                     }`}
                                                 >
-                                                    <span>{item.title}</span>
+                                                    <span className="truncate">{item.title}</span>
+                                                    <span className="text-[9px] text-neutral-500 uppercase shrink-0">{item.category}</span>
                                                 </button>
                                             );
                                         })}
+                                        {drawerSearchResults.length === 0 && (
+                                            <p className="text-xs text-neutral-500 font-bold uppercase tracking-wider text-center py-8">
+                                                No components found
+                                            </p>
+                                        )}
                                     </div>
-                                </div>
-                            ))}
-                        </motion.div>
+                                ) : (
+                                    drawerCategories.map((cat, idx) => {
+                                        const hasActive = cat.items.some(item => (optimisticId || activeComponent?.id) === item.id);
+                                        const isExpanded = expandedCategories.includes(cat.name);
+                                        return (
+                                            <div key={idx} className="mb-1.5">
+                                                <button
+                                                    onClick={() => toggleCategory(cat.name)}
+                                                    aria-expanded={isExpanded}
+                                                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg border transition-all ${
+                                                        hasActive
+                                                            ? 'bg-neutral-900/90 border-brand-blue/60 text-white'
+                                                            : 'border-transparent text-neutral-300 hover:bg-neutral-900/60 hover:text-white hover:border-neutral-800'
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />}
+                                                        <span className={`text-[11px] font-black uppercase tracking-wider ${hasActive ? 'text-brand-blue' : ''}`}>
+                                                            {cat.name}
+                                                        </span>
+                                                    </div>
+                                                    <ChevronDown size={12} className={`transition-transform duration-200 ${isExpanded ? 'rotate-180 text-brand-blue' : 'text-neutral-500'}`} />
+                                                </button>
+                                                {isExpanded && (
+                                                    <div className="pl-2.5 py-1 border-l-2 border-neutral-800/80 ml-3.5 space-y-1 mt-1">
+                                                        {cat.items.map(item => {
+                                                            const isActive = (optimisticId || activeComponent?.id) === item.id;
+                                                            return (
+                                                                <button
+                                                                    key={item.id}
+                                                                    onClick={() => handleComponentSelect(item)}
+                                                                    onMouseEnter={() => prefetchComponentChunk(item.id)}
+                                                                    onFocus={() => prefetchComponentChunk(item.id)}
+                                                                    className={`w-full flex items-center justify-between text-left px-2.5 py-2 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all duration-150 ${
+                                                                        isActive
+                                                                            ? 'bg-brand-blue text-white border-2 border-white shadow-[3px_3px_0px_0px_#000000] translate-x-1'
+                                                                            : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70 hover:translate-x-1'
+                                                                    }`}
+                                                                >
+                                                                    <span className="truncate pr-2 flex items-center gap-1.5">
+                                                                        {item.title}
+                                                                        {isNewComponent(item) && (
+                                                                            <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">
+                                                                                New
+                                                                            </span>
+                                                                        )}
+                                                                    </span>
+                                                                </button>
+                                                            );
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        );
+                                    })
+                                )}
+                            </nav>
+                        </motion.aside>
                     )}
                 </AnimatePresence>
 

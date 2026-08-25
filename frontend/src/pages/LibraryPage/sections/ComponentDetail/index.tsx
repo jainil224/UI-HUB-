@@ -829,23 +829,23 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="flex flex-col gap-10 pb-24"
+            className="flex flex-col gap-6 md:gap-10 pb-24"
         >
             {/* ── Section: Overview & Header ── */}
             <div id="overview" className="flex flex-col space-y-4 pt-2">
                 {/* Breadcrumbs */}
-                <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 uppercase tracking-wider">
-                    <Link to="/library" className="hover:text-white transition-colors">Components</Link>
-                    <span>/</span>
-                    <span className="text-brand-blue font-bold">{item.category}</span>
-                    <span>/</span>
-                    <span className="text-white font-bold">{item.title}</span>
+                <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 text-[10px] sm:text-xs font-mono text-neutral-400 uppercase tracking-wider">
+                    <Link to="/library" className="hover:text-white transition-colors shrink-0">Components</Link>
+                    <span className="shrink-0">/</span>
+                    <span className="text-brand-blue font-bold truncate min-w-0">{item.category}</span>
+                    <span className="shrink-0">/</span>
+                    <span className="text-white font-bold truncate min-w-0">{item.title}</span>
                 </div>
 
                 {/* Main Title & Action Row */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div>
-                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white leading-tight font-heading">
+                <div className="flex flex-row items-start justify-between gap-3">
+                    <div className="min-w-0">
+                        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black uppercase tracking-tight text-white leading-tight font-heading break-words">
                             {item.title}
                         </h1>
                         <p className="text-neutral-400 text-sm font-medium leading-relaxed mt-2 max-w-2xl">
@@ -853,7 +853,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3 shrink-0">
+                    <div className="flex items-center gap-3 shrink-0 mt-0.5">
                         <button
                             type="button"
                             onClick={toggleFavorite}
@@ -873,54 +873,56 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         </button>
                     </div>
                 </div>
+            </div>
 
-                {/* ── Action Toolbar: Tabs + Quick CLI snippet ── */}
-                <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t-2 border-neutral-800">
-                    <div className="flex items-center gap-2 p-1 bg-black border-2 border-white rounded-lg brutal-shadow-black">
-                        <button
-                            onClick={() => setTab('preview')}
-                            className={`px-4 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-                                tab === 'preview'
-                                    ? 'bg-white text-black font-black'
-                                    : 'text-neutral-400 hover:text-white'
-                            }`}
-                        >
-                            <Eye size={13} />
-                            <span>Preview</span>
-                        </button>
-                        <button
-                            onClick={() => setTab('code')}
-                            className={`px-4 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-                                tab === 'code'
-                                    ? 'bg-white text-black font-black'
-                                    : 'text-neutral-400 hover:text-white'
-                            }`}
-                        >
-                            <Code size={13} />
-                            <span>Code</span>
-                        </button>
-                        <button
-                            onClick={() => setTab('vibe')}
-                            className={`px-4 py-1.5 rounded text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-                                tab === 'vibe'
-                                    ? 'bg-brand-yellow text-black font-black'
-                                    : 'text-neutral-400 hover:text-white'
-                            }`}
-                        >
-                            <Zap size={13} />
-                            <span>Vibe Prompt</span>
-                        </button>
-                    </div>
-
+            {/* ── Action Toolbar: Tabs + Fullscreen (sticky below navbar on mobile) ── */}
+            <div className="sticky top-16 md:top-0 z-[45] flex items-center justify-between gap-2 sm:gap-4 py-2 bg-brand-bg/95 backdrop-blur-sm border-y-2 border-neutral-800">
+                <div className="flex items-center flex-1 sm:flex-initial gap-1 sm:gap-2 p-1 bg-black border-2 border-white rounded-lg brutal-shadow-black min-w-0">
                     <button
-                        onClick={handleOpenFullscreen}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-yellow transition-all brutal-shadow-black cursor-pointer"
-                        title="Open Preview in Full Screen Page"
+                        onClick={() => setTab('preview')}
+                        className={`flex-1 sm:flex-none justify-center px-2 sm:px-4 py-1.5 rounded text-[11px] sm:text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${
+                            tab === 'preview'
+                                ? 'bg-white text-black font-black'
+                                : 'text-neutral-400 hover:text-white'
+                        }`}
                     >
-                        <ExternalLink size={13} />
-                        <span>Fullscreen</span>
+                        <Eye size={13} className="shrink-0" />
+                        <span>Preview</span>
+                    </button>
+                    <button
+                        onClick={() => setTab('code')}
+                        className={`flex-1 sm:flex-none justify-center px-2 sm:px-4 py-1.5 rounded text-[11px] sm:text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${
+                            tab === 'code'
+                                ? 'bg-white text-black font-black'
+                                : 'text-neutral-400 hover:text-white'
+                        }`}
+                    >
+                        <Code size={13} className="shrink-0" />
+                        <span>Code</span>
+                    </button>
+                    <button
+                        onClick={() => setTab('vibe')}
+                        className={`flex-1 sm:flex-none justify-center px-2 sm:px-4 py-1.5 rounded text-[11px] sm:text-xs font-black uppercase tracking-wider transition-all flex items-center gap-1 sm:gap-1.5 ${
+                            tab === 'vibe'
+                                ? 'bg-brand-yellow text-black font-black'
+                                : 'text-neutral-400 hover:text-white'
+                        }`}
+                    >
+                        <Zap size={13} className="shrink-0" />
+                        <span className="sm:hidden">Prompt</span>
+                        <span className="hidden sm:inline">Vibe Prompt</span>
                     </button>
                 </div>
+
+                <button
+                    onClick={handleOpenFullscreen}
+                    className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-yellow transition-all brutal-shadow-black cursor-pointer shrink-0"
+                    title="Open Preview in Full Screen Page"
+                    aria-label="Open Preview in Full Screen Page"
+                >
+                    <ExternalLink size={13} />
+                    <span className="hidden sm:inline">Fullscreen</span>
+                </button>
             </div>
 
             <AnimatePresence mode="wait">
@@ -930,37 +932,33 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 20 }}
-                        className="space-y-12"
+                        className="space-y-6 md:space-y-12"
                     >
-                        {/* Meta Tags Row */}
-                        <div className="flex flex-wrap items-center gap-6 px-2 mb-6">
-                            <div className="flex items-center gap-2.5">
-                                <div className="w-5 h-5 rounded-full bg-brand-blue border border-black flex items-center justify-center text-white font-bold text-[10px]">
-                                    <Check size={10} strokeWidth={3} />
+                        {/* Meta Tags Row — compact chips on mobile, labeled columns on desktop */}
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-x-6 sm:gap-y-3 px-2 mb-6">
+                            <div className="flex items-center gap-1.5 sm:gap-2.5 rounded-full border-2 border-white bg-black sm:rounded-none sm:border-0 sm:bg-transparent px-2.5 py-1 sm:p-0">
+                                <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-brand-blue border border-black flex items-center justify-center text-white font-bold shrink-0">
+                                    <Check size={9} strokeWidth={3} />
                                 </div>
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-widest text-brand-blue font-black">VERIFIED ASSET</p>
-                                    <p className="text-xs font-bold text-neutral-400">UI Hub Curated</p>
+                                <p className="text-[10px] uppercase tracking-widest text-brand-blue font-black whitespace-nowrap">Verified</p>
+                                <p className="hidden sm:block text-xs font-bold text-neutral-400">UI Hub Curated</p>
+                            </div>
+
+                            <div className="hidden sm:block w-px h-8 bg-neutral-800" />
+
+                            <div className="flex items-center gap-2 sm:gap-3 rounded-full border-2 border-white bg-black sm:rounded-none sm:border-0 sm:bg-transparent px-2.5 py-1 sm:p-0">
+                                <p className="hidden sm:block text-[10px] uppercase tracking-widest font-black text-neutral-400">Build Stack</p>
+                                <div className="flex items-center gap-1.5">
+                                    <span className="px-2 py-0.5 rounded border-2 border-white bg-brand-surface text-[10px] font-black uppercase text-white whitespace-nowrap">React 18</span>
+                                    <span className="px-2 py-0.5 rounded border-2 border-white bg-brand-surface text-[10px] font-black uppercase text-white whitespace-nowrap">Tailwind CSS</span>
                                 </div>
                             </div>
 
-                            <div className="w-px h-8 bg-neutral-800" />
+                            <div className="hidden sm:block w-px h-8 bg-neutral-800" />
 
-                            <div className="flex items-center gap-3">
-                                <div>
-                                    <p className="text-[10px] uppercase tracking-widest font-black text-neutral-400 mb-1">BUILD STACK</p>
-                                    <div className="flex items-center gap-1.5">
-                                        <span className="px-2 py-0.5 rounded border-2 border-white bg-brand-surface text-[10px] font-black uppercase text-white">React 18</span>
-                                        <span className="px-2 py-0.5 rounded border-2 border-white bg-brand-surface text-[10px] font-black uppercase text-white">Tailwind CSS</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="w-px h-8 bg-neutral-800" />
-
-                            <div className="flex flex-col">
-                                <p className="text-[10px] uppercase tracking-widest font-black text-neutral-400 mb-1">CATEGORY</p>
-                                <span className="text-xs font-black uppercase tracking-wider text-brand-yellow">{item.category}</span>
+                            <div className="flex items-center gap-1.5 sm:gap-2 rounded-full border-2 border-brand-yellow bg-black sm:rounded-none sm:border-0 sm:bg-transparent px-2.5 py-1 sm:p-0">
+                                <p className="hidden sm:block text-[10px] uppercase tracking-widest font-black text-neutral-400">Category</p>
+                                <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-brand-yellow whitespace-nowrap">{item.category}</span>
                             </div>
                         </div>
 
