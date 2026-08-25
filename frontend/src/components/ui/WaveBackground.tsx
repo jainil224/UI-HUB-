@@ -177,10 +177,10 @@ function WaveBackground({
     const finalBlurClass = blurClassMap[backdropBlurAmount] || blurClassMap["sm"];
 
     return (
-        <div ref={containerRef} className={cn("w-full max-w-screen h-full overflow-hidden absolute inset-0 z-0", className)}>
+        <div ref={containerRef} className={cn("w-full h-full overflow-hidden absolute inset-0 z-0", className)}>
             <canvas
                 ref={canvasRef}
-                className="absolute inset-0 w-full max-w-screen h-full overflow-hidden"
+                className="absolute inset-0 w-full h-full overflow-hidden"
                 style={{ display: "block" }}
             />
             <div className={cn("absolute inset-0", finalBlurClass)} />
