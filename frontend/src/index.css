@@ -31,6 +31,13 @@ html, body {
   overflow-x: clip;
 }
 
+/* The footer is always dark — keep the document canvas dark too so no light
+   theme background can peek out below the footer on mobile (URL-bar resizes,
+   overscroll rubber-banding). */
+html {
+  background-color: #0A0A0A;
+}
+
 :root {
   --color-1: 0 100% 63%;
   --color-2: 270 100% 63%;
