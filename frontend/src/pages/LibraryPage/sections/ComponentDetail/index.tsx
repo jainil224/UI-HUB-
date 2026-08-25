@@ -174,6 +174,33 @@ const TOOL_THEMES: Record<AISystem, ToolTheme> = {
     }
 };
 
+const ToolIcon = ({ tool, active, size = 20 }: { tool: AISystem; active: boolean; size?: number }) => {
+    const idle = 'text-neutral-400';
+    if (tool === 'antigravity') {
+        return <Zap size={size} className={active ? 'text-white' : idle} />;
+    }
+    if (tool === 'lovable') {
+        return (
+            <svg style={{ width: size, height: size }} className={active ? 'text-[#FF7E67]' : idle} viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+        );
+    }
+    if (tool === 'cursor') {
+        return (
+            <div style={{ width: size, height: size }} className={`relative shrink-0 ${active ? 'text-[#58A6FF]' : idle}`}>
+                <div className="absolute inset-0 border-2 border-current rounded-sm flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 border-r border-b border-current" />
+                </div>
+            </div>
+        );
+    }
+    if (tool === 'claude') {
+        return <Cpu size={size} className={active ? 'text-[#C15F3C]' : idle} />;
+    }
+    return <Brain size={size} className={active ? 'text-brand-blue' : idle} />;
+};
+
 const ToolCard = React.memo(({
     tool,
     isActive,
@@ -191,9 +218,8 @@ const ToolCard = React.memo(({
 
     return (
         <button
-            data-tool={tool}
-            onClick={() => !isLocked && onClick(tool)}
-            className={`p-4 sm:p-5 rounded-lg border-2 transition-all duration-200 text-left relative overflow-hidden flex flex-col justify-between min-h-[110px] sm:min-h-[130px] w-[160px] shrink-0 snap-start sm:w-auto sm:min-w-0 group ${
+            onClick={() => onClick(tool)}
+            className={`p-5 rounded-lg border-2 transition-all duration-200 text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group ${
                 isLocked
                     ? 'bg-neutral-900 border-neutral-700 opacity-60 cursor-not-allowed'
                     : isActive
@@ -226,23 +252,7 @@ const ToolCard = React.memo(({
                         )}
                     </p>
                     <div className={`transition-all duration-200 ${isActive ? `scale-110 ${theme.accentColor}` : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
-                        {tool === 'antigravity' ? (
-                            <Zap size={20} className={isActive ? 'text-white' : 'text-neutral-400 group-hover:text-white'} />
-                        ) : tool === 'lovable' ? (
-                            <svg className={`w-5 h-5 ${isActive ? 'text-[#FF7E67]' : 'text-neutral-400 group-hover:text-[#FF7E67]'}`} viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                            </svg>
-                        ) : tool === 'cursor' ? (
-                            <div className={`relative w-5 h-5 ${isActive ? 'text-[#58A6FF]' : 'text-neutral-400 group-hover:text-[#58A6FF]'}`}>
-                                <div className="absolute inset-0 border-2 border-current rounded-sm flex items-center justify-center">
-                                    <div className="w-1.5 h-1.5 border-r border-b border-current" />
-                                </div>
-                            </div>
-                        ) : tool === 'claude' ? (
-                            <Cpu size={20} className={isActive ? 'text-[#C15F3C]' : 'text-neutral-400 group-hover:text-[#C15F3C]'} />
-                        ) : (
-                            <Brain size={20} className={isActive ? 'text-brand-blue' : 'text-neutral-400 group-hover:text-brand-blue'} />
-                        )}
+                        <ToolIcon tool={tool} active={isActive} size={20} />
                     </div>
                 </div>
 
@@ -305,14 +315,23 @@ const VibeSystemSection = React.memo(({
         });
     }, []);
 
-    // Keep the active tool card visible in the mobile swipe strip
-    const toolStripRef = React.useRef<HTMLDivElement>(null);
-    React.useEffect(() => {
-        const strip = toolStripRef.current;
-        if (!strip || strip.scrollWidth <= strip.clientWidth) return;
-        const active = strip.querySelector(`[data-tool="${activeTool}"]`) as HTMLElement | null;
-        active?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    }, [activeTool]);
+    // Locked tools give visible feedback instead of a silent no-op
+    const handleToolSelect = React.useCallback((tool: AISystem, locked?: boolean) => {
+        if (locked) {
+            setToastMessage('PRO TOOL — UPGRADE TO UNLOCK');
+            setShowToast(true);
+            return;
+        }
+        setAiSystem(tool);
+    }, [setAiSystem]);
+
+    const isToolLocked = React.useCallback((tool: AISystem) => (
+        !isProUser && (item.isPremium ? true : PRO_ONLY_TOOLS.includes(tool))
+    ), [isProUser, item.isPremium]);
+
+    const handleToolCardSelect = React.useCallback((tool: AISystem) => (
+        handleToolSelect(tool, isToolLocked(tool))
+    ), [handleToolSelect, isToolLocked]);
 
     // Sync state when Pro status changes (e.g. after login fetch finishes)
     React.useEffect(() => {
@@ -374,23 +393,48 @@ const VibeSystemSection = React.memo(({
                     <p className="md:hidden text-[10px] uppercase tracking-widest font-black text-neutral-500">Select AI Tool</p>
                     <h3 className="hidden md:block text-2xl lg:text-3xl font-display uppercase tracking-widest text-[var(--text-primary)]">Select AI Tool</h3>
                 </div>
-                <div className="relative">
-                    <div
-                        ref={toolStripRef}
-                        className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-1 px-4 -mx-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-4 md:gap-6 sm:overflow-visible lg:px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-                    >
-                        {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
-                            <ToolCard
+                {/* Mobile: wrap chips — every tool visible, one-tap select */}
+                <div className="flex flex-wrap gap-2 px-2 sm:hidden">
+                    {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => {
+                        const locked = isToolLocked(tool);
+                        const chipTheme = TOOL_THEMES[tool];
+                        return (
+                            <button
                                 key={tool}
-                                tool={tool}
-                                isActive={activeTool === tool}
-                                onClick={setAiSystem}
-                                itemId={item.id}
-                                isLocked={!isProUser && (item.isPremium ? true : PRO_ONLY_TOOLS.includes(tool))}
-                            />
-                        ))}
-                    </div>
-                    <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-brand-bg to-transparent sm:hidden" />
+                                onClick={() => handleToolSelect(tool, locked)}
+                                aria-pressed={activeTool === tool}
+                                className={`flex items-center gap-1.5 px-3 py-2.5 rounded-lg border-2 text-xs font-black uppercase tracking-wider transition-all active:scale-95 ${
+                                    locked
+                                        ? 'bg-neutral-900 border-neutral-700 text-neutral-500 opacity-70'
+                                        : activeTool === tool
+                                            ? `${chipTheme.bgActive} ${chipTheme.borderActive} text-white ${chipTheme.shadowActive} translate-x-0.5 translate-y-0.5`
+                                            : `${chipTheme.bgDefault} ${chipTheme.borderDefault} text-neutral-300 active:bg-neutral-800`
+                                }`}
+                            >
+                                <ToolIcon tool={tool} active={activeTool === tool && !locked} size={14} />
+                                <span>{tool === 'advance' ? 'Advance' : tool}</span>
+                                {locked ? (
+                                    <Lock size={10} className="shrink-0" />
+                                ) : (
+                                    activeTool === tool && <span className={`w-1.5 h-1.5 rounded-full ${chipTheme.indicatorDot}`} />
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Tablet/Desktop: tool cards grid */}
+                <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
+                    {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
+                        <ToolCard
+                            key={tool}
+                            tool={tool}
+                            isActive={activeTool === tool}
+                            onClick={handleToolCardSelect}
+                            itemId={item.id}
+                            isLocked={isToolLocked(tool)}
+                        />
+                    ))}
                 </div>
             </section>
 
