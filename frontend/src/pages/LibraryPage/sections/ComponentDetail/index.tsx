@@ -191,8 +191,9 @@ const ToolCard = React.memo(({
 
     return (
         <button
+            data-tool={tool}
             onClick={() => !isLocked && onClick(tool)}
-            className={`p-5 rounded-lg border-2 transition-all duration-200 text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group ${
+            className={`p-4 sm:p-5 rounded-lg border-2 transition-all duration-200 text-left relative overflow-hidden flex flex-col justify-between min-h-[110px] sm:min-h-[130px] w-[160px] shrink-0 snap-start sm:w-auto sm:min-w-0 group ${
                 isLocked
                     ? 'bg-neutral-900 border-neutral-700 opacity-60 cursor-not-allowed'
                     : isActive
@@ -304,6 +305,15 @@ const VibeSystemSection = React.memo(({
         });
     }, []);
 
+    // Keep the active tool card visible in the mobile swipe strip
+    const toolStripRef = React.useRef<HTMLDivElement>(null);
+    React.useEffect(() => {
+        const strip = toolStripRef.current;
+        if (!strip || strip.scrollWidth <= strip.clientWidth) return;
+        const active = strip.querySelector(`[data-tool="${activeTool}"]`) as HTMLElement | null;
+        active?.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }, [activeTool]);
+
     // Sync state when Pro status changes (e.g. after login fetch finishes)
     React.useEffect(() => {
         if (isProUser && !prevProStatus) {
@@ -356,28 +366,37 @@ const VibeSystemSection = React.memo(({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="space-y-12"
+            className="space-y-6 md:space-y-12"
         >
             {/* Tool Selector */}
-            <section className="space-y-6 md:space-y-10">
-                <h3 className="text-2xl md:text-3xl font-display uppercase tracking-widest text-[var(--text-primary)] px-2 lg:px-4">Select AI Tool</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:px-4">
-                    {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
-                        <ToolCard
-                            key={tool}
-                            tool={tool}
-                            isActive={activeTool === tool}
-                            onClick={setAiSystem}
-                            itemId={item.id}
-                            isLocked={!isProUser && (item.isPremium ? true : PRO_ONLY_TOOLS.includes(tool))}
-                        />
-                    ))}
+            <section className="space-y-3 md:space-y-6">
+                <div className="px-2 lg:px-4">
+                    <p className="md:hidden text-[10px] uppercase tracking-widest font-black text-neutral-500">Select AI Tool</p>
+                    <h3 className="hidden md:block text-2xl lg:text-3xl font-display uppercase tracking-widest text-[var(--text-primary)]">Select AI Tool</h3>
+                </div>
+                <div className="relative">
+                    <div
+                        ref={toolStripRef}
+                        className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-1 px-4 -mx-4 sm:mx-0 sm:px-0 sm:pb-0 sm:grid sm:grid-cols-2 lg:grid-cols-5 sm:gap-4 md:gap-6 sm:overflow-visible lg:px-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                    >
+                        {(['advance', 'antigravity', 'claude', 'lovable', 'cursor'] as const).map(tool => (
+                            <ToolCard
+                                key={tool}
+                                tool={tool}
+                                isActive={activeTool === tool}
+                                onClick={setAiSystem}
+                                itemId={item.id}
+                                isLocked={!isProUser && (item.isPremium ? true : PRO_ONLY_TOOLS.includes(tool))}
+                            />
+                        ))}
+                    </div>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-brand-bg to-transparent sm:hidden" />
                 </div>
             </section>
 
             {/* Vibe Prompt Section - AI Terminal UI */}
-            <section className="space-y-6 md:space-y-8">
-                <div className="flex items-end justify-between px-2">
+            <section className="space-y-4 md:space-y-8">
+                <div className="flex items-end justify-between gap-3 px-2">
                     <div className="space-y-1">
                         <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white line-clamp-1">Master Blueprint</h3>
                         <div className="flex items-center gap-2">
@@ -387,40 +406,40 @@ const VibeSystemSection = React.memo(({
                             </p>
                         </div>
                     </div>
+                    <span className="hidden sm:inline px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-mono font-black uppercase tracking-widest text-neutral-400 shrink-0">
+                        {(deferredVibePrompt || '').split('\n').length} Lines
+                    </span>
                 </div>
 
                 <div className="relative group/terminal">
                     <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
                         {/* Terminal Header / Toolbar */}
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between px-4 sm:px-6 py-3 border-b-2 border-white bg-black relative z-20 gap-3 sm:gap-0">
-                            <div className="flex items-center justify-between w-full sm:w-auto">
-                                <div className="flex items-center gap-3">
-                                    {/* Traffic Light Dots in Red, Yellow, Blue */}
-                                    <div className="flex gap-1.5">
-                                        <div className="w-3 h-3 rounded-full bg-brand-red border border-black" />
-                                        <div className="w-3 h-3 rounded-full bg-brand-yellow border border-black" />
-                                        <div className="w-3 h-3 rounded-full bg-brand-blue border border-black" />
-                                    </div>
-                                    <div className="h-4 w-px bg-neutral-700 mx-1 sm:mx-2" />
-                                    <div className="flex items-center gap-2 font-mono">
-                                        <span className={`text-[10px] font-black uppercase tracking-wider ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>{aiSystem}</span>
-                                        <span className="text-[10px] font-black text-neutral-500 uppercase">//</span>
-                                        <span className="text-[10px] font-bold text-neutral-300 uppercase tracking-wider">MASTER_{aiSystem === 'advance' ? 'PRO' : aiSystem.toUpperCase()}_v1.0.tsx</span>
-                                    </div>
+                        <div className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-6 py-3 border-b-2 border-white bg-black relative z-20">
+                            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                                {/* Traffic Light Dots in Red, Yellow, Blue */}
+                                <div className="flex gap-1 sm:gap-1.5 shrink-0">
+                                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-brand-red border border-black" />
+                                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-brand-yellow border border-black" />
+                                    <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-brand-blue border border-black" />
+                                </div>
+                                <div className="h-4 w-px bg-neutral-700 shrink-0" />
+                                <div className="flex items-center gap-1.5 sm:gap-2 font-mono min-w-0">
+                                    <span className={`text-[10px] font-black uppercase tracking-wider shrink-0 ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>{aiSystem}</span>
+                                    <span className="text-[10px] font-black text-neutral-500 uppercase shrink-0">//</span>
+                                    <span className="hidden md:inline text-[10px] font-bold text-neutral-300 uppercase tracking-wider truncate">MASTER_{aiSystem === 'advance' ? 'PRO' : aiSystem.toUpperCase()}_v1.0.tsx</span>
                                 </div>
                             </div>
 
                             {/* Copy Button */}
-                            <div>
-                                <button
-                                    disabled={isLoadingPrompt}
-                                    onClick={handleCopyBlueprint}
-                                    className="brutal-btn-primary px-4 py-1.5 text-xs font-black tracking-wider flex items-center gap-2"
-                                >
-                                    {copied === 'blueprint' ? <Check size={12} strokeWidth={3} /> : <Copy size={12} />}
-                                    <span>{copied === 'blueprint' ? 'COPIED' : 'COPY BLUEPRINT'}</span>
-                                </button>
-                            </div>
+                            <button
+                                disabled={isLoadingPrompt}
+                                onClick={handleCopyBlueprint}
+                                className="brutal-btn-primary px-3 sm:px-4 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5 sm:gap-2 shrink-0"
+                            >
+                                {copied === 'blueprint' ? <Check size={12} strokeWidth={3} /> : <Copy size={12} />}
+                                <span className="sm:hidden">{copied === 'blueprint' ? 'COPIED' : 'COPY'}</span>
+                                <span className="hidden sm:inline">{copied === 'blueprint' ? 'COPIED' : 'COPY BLUEPRINT'}</span>
+                            </button>
                         </div>
 
                         {/* Terminal Content */}
