@@ -50,7 +50,7 @@ const UiHubProjects = () => {
         </>
       ) : (
         <Image 
-          url="/UI HUB.png" 
+          url="/ui-hub-og.png"
           scale={[4, 4]} 
           onClick={handleImageClick}
           onPointerOver={(e) => {
