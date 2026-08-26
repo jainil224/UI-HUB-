@@ -71,7 +71,6 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'image-collage': () => import('../components/ui/image-collage'),
     'svg-page-transition': () => import('../components/ui/SVGPageTransition'),
     'section-scroll': () => import('../components/ui/SectionScroll'),
-    'portfolio-scroll': () => import('../components/ui/PortfolioScroll'),
     'infinite-marquee': () => import('../components/ui/InfiniteMarquee'),
     'buy-me-coffee': () => import('../components/ui/BuyMeCoffee'),
 

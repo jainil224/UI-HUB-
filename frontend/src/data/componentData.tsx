@@ -30,7 +30,6 @@ const ParticlesBackground = React.lazy(() => import('../components/ui/ParticlesB
 const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
-const PortfolioScroll = React.lazy(() => import('../components/ui/PortfolioScroll').then(m => ({ default: m.PortfolioScroll })));
 const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
 const BuyMeCoffee = React.lazy(() => import('../components/ui/BuyMeCoffee'));
@@ -1722,7 +1721,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'fourier-flow': FourierFlow,
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
-    'portfolio-scroll': PortfolioScroll,
     'cloud-scroll': CloudScroll,
     'infinite-marquee': InfiniteMarquee,
     'buyme-acoffee': BuyMeCoffee,
@@ -3302,15 +3300,6 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         preview: renderComponent("section-scroll", "SectionScroll", { showDemoButton: true }),
         code: `import { SectionScroll } from '@/components/ui/SectionScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <SectionScroll />\n    </div>\n  );\n}`,
         vibePrompt: "Create an immersive, full-screen vertical panel scroll experience in React + TSX with GSAP. It features a stable preview timeline linked to the main page scroll (preventing React-crashing pin-spacers), dynamic absolute panel stacking to avoid layout collapse, a premium floating UI HUB brand badge, and cohesive panel technical subheadings."
-    },
-    {
-        id: "portfolio-scroll",
-        title: "Portfolio scroll",
-        category: "scroll",
-        isPremium: false,
-        preview: renderComponent("portfolio-scroll", "PortfolioScroll", { showDemoButton: true }),
-        code: `import { PortfolioScroll } from '@/components/ui/PortfolioScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-full min-h-[600px] bg-black rounded-3xl overflow-hidden border border-white/5">\n      <PortfolioScroll />\n    </div>\n  );\n}`,
-        vibePrompt: "Create a premium, high-fidelity scroll-driven card stacking experience in React + TSX. Each card is wrapped in a dynamic conic-gradient StarBorder component and tracks scroll positions with absolute sub-pixel smooth translations. Includes a rotating desktop Kinetic Wheel arc and a mobile S-curve drawing ribbon displaying Analyze, Design, Build, Deliver flaring text overlays based on scroll progress."
     },
     {
         id: "cloud-scroll",

@@ -169,17 +169,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Three.js custom ShaderMaterial", "Portal navigation with MeshPortalMaterial", "Zustand state management", "Interactive R3F text layout", "GSAP camera movement animations", "Vercetti and Soria font styles"]
         }
     },
-    "portfolio-scroll": {
-        props: [],
-        vibeMeta: {
-            behavior: "A high-fidelity scroll-driven card stacking animation showcasing Selected Works with absolute sub-pixel translations, smooth scales, rotating desktop Kinetic Wheel arc, and mobile S-curve drawing ribbon displaying flaring Analyze, Design, Build, Deliver text overlays.",
-            states: { from: "flat list of overlapping cards", to: "pinned, scaled, stacked deck of cards on scroll" },
-            cssProperties: ["transform", "will-change", "perspective", "transform-style: preserve-3d", "conic-gradient"],
-            description: "High-fidelity portfolio-themed scroll card-stacking animation with interactive desktop/mobile sidecar visualizations.",
-            libraries: ["react"],
-            requirements: ["Dynamic card offset relative scroll bounds calculation", "Adaptive viewport checking (desktop vs mobile)", "Sub-pixel transform adjustments for card stacking", "Rotating SVG textpath wheel tracking scroll progress", "S-Curve SVG ribbon stroke-dasharray animation", "Conic-gradient rotating StarBorder layout wrapper"]
-        }
-    },
     "3d-slider": {
         props: [
             { name: "slides", type: "Slide[]", default: "default slides", description: "Array of slide objects with title, subtitle, image, and accentColor." },

@@ -72,7 +72,6 @@ const COMPONENT_FILE_MAP = {
   'fourier-flow': 'components/ui/FourierFlow.tsx',
   'svg-page-transition': 'components/ui/SVGPageTransition.tsx',
   'section-scroll': 'components/ui/SectionScroll.tsx',
-  'portfolio-scroll': 'components/ui/PortfolioScroll.tsx',
   'cloud-scroll': 'components/ui/CloudScroll/CloudScroll.tsx',
   'infinite-marquee': 'components/ui/InfiniteMarquee.tsx',
   'buyme-acoffee': 'components/ui/BuyMeCoffee.tsx',

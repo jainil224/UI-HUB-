@@ -147,6 +147,24 @@ export const InfiniteMarquee: React.FC<InfiniteMarqueeProps> = ({
                         padding-bottom: 16px;
                     }
                 }
+                @media (max-width: 768px) {
+                    .menu {
+                        padding: 20px 0;
+                    }
+                    .menu__item {
+                        padding-top: 14px;
+                        padding-bottom: 14px;
+                    }
+                    .menu__item-link, .marquee-text-span {
+                        font-size: clamp(1.5rem, 8vw, 2.5rem);
+                    }
+                    .marquee__img {
+                        width: 6rem;
+                        height: 34px;
+                        margin: 0 2vw;
+                        border-radius: 17px;
+                    }
+                }
             `}</style>
             
             <nav className="menu" style={{ ['--border-color' as any]: borderColor }}>
@@ -187,6 +205,11 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
     const marqueeRef = useRef<HTMLDivElement>(null);
     const marqueeInnerWrapRef = useRef<HTMLDivElement>(null);
     const marqueeInnerRef = useRef<HTMLDivElement>(null);
+    const touchHideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => () => {
+        if (touchHideTimer.current) clearTimeout(touchHideTimer.current);
+    }, []);
 
     useEffect(() => {
         const marqueeInner = marqueeInnerRef.current;
@@ -246,12 +269,49 @@ const PlaylistItem: React.FC<PlaylistItemProps> = ({
         });
     };
 
+    const revealMarquee = (edge: 'top' | 'bottom') => {
+        const marquee = marqueeRef.current;
+        const marqueeInnerWrap = marqueeInnerWrapRef.current;
+        if (!marquee || !marqueeInnerWrap) return;
+        const animationDefaults = { duration: 0.5, ease: 'power3.out' };
+        gsap.killTweensOf([marquee, marqueeInnerWrap]);
+        gsap.set(marquee, { y: edge === 'top' ? '-101%' : '101%' });
+        gsap.set(marqueeInnerWrap, { y: edge === 'top' ? '101%' : '-101%' });
+        gsap.to([marquee, marqueeInnerWrap], { y: '0%', ...animationDefaults });
+    };
+
+    // Touch devices have no hover — reveal the marquee overlay on tap and
+    // hide it shortly after the finger lifts.
+    const handleTouchStart = (ev: React.TouchEvent) => {
+        const el = itemRef.current;
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const touch = ev.touches[0];
+        const edge = touch && touch.clientY - rect.top < rect.height / 2 ? 'top' : 'bottom';
+        if (touchHideTimer.current) clearTimeout(touchHideTimer.current);
+        revealMarquee(edge);
+    };
+
+    const scheduleTouchHide = () => {
+        if (touchHideTimer.current) clearTimeout(touchHideTimer.current);
+        touchHideTimer.current = setTimeout(() => {
+            const marquee = marqueeRef.current;
+            const marqueeInnerWrap = marqueeInnerWrapRef.current;
+            if (!marquee || !marqueeInnerWrap) return;
+            gsap.killTweensOf([marquee, marqueeInnerWrap]);
+            gsap.to([marquee, marqueeInnerWrap], { y: '101%', duration: 0.5, ease: 'power3.out' });
+        }, 900);
+    };
+
     return (
-        <div 
-            ref={itemRef} 
+        <div
+            ref={itemRef}
             className="menu__item"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={scheduleTouchHide}
+            onTouchCancel={scheduleTouchHide}
         >
             <a href={item.link || '#'} className="menu__item-link" style={{ color: textColor }}>
                 {item.text}

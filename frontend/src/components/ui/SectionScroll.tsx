@@ -8,6 +8,10 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Mobile browsers fire resize when the URL bar shows/hides; without this flag
+// ScrollTrigger refresh-loops and pinned panels freeze touch scrolling.
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 interface SectionScrollProps {
   className?: string;
   showDemoButton?: boolean;
@@ -98,12 +102,15 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
         // page (useGSAP's context revert handles the gsap.set/tween cleanup).
         tl.scrollTrigger?.kill();
       };
-    } else {
-      // ── Full Scroll Mode: Original GSAP ScrollTrigger ──
-      panels.forEach((panel, index) => {
-        const innerContainer = panel.querySelector('.panel-container');
+    }
 
-        // 1. Entry Rotation Animation
+    // ── Full Scroll Mode ──
+    const mm = gsap.matchMedia();
+
+    // Entry rotation on every viewport (scrub-only — never blocks touch scroll).
+    const animateEntryRotation = () => {
+      panels.forEach((panel) => {
+        const innerContainer = panel.querySelector('.panel-container');
         gsap.fromTo(innerContainer,
           {
             rotate: 25,
@@ -122,8 +129,18 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
             }
           }
         );
+      });
+    };
 
-        // 2. Section Pinning (except for the last section)
+    // Phones: native stacked scroll, no pinning. position:fixed pinned panels
+    // are what froze touch scrolling on mobile.
+    mm.add("(max-width: 767px)", animateEntryRotation);
+
+    // Desktop: original pinned card-stacking effect.
+    mm.add("(min-width: 768px)", () => {
+      animateEntryRotation();
+      panels.forEach((panel, index) => {
+        // Section Pinning (except for the last section)
         if (index !== panels.length - 1) {
           ScrollTrigger.create({
             trigger: panel,
@@ -136,13 +153,12 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
           });
         }
       });
+    });
 
-      return () => {
-        cancelAnimationFrame(refreshTick);
-        // useGSAP's context revert kills the triggers created above; killing
-        // ScrollTrigger.getAll() here would also destroy unrelated components.
-      };
-    }
+    return () => {
+      cancelAnimationFrame(refreshTick);
+      mm.revert();
+    };
   }, { scope: containerRef });
 
   // The preview card is only ~380–520px tall — scale content down there so
@@ -150,7 +166,7 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
   const pad = showDemoButton ? 'p-5 sm:p-8 md:p-10' : 'p-8 md:p-16';
   const heading = showDemoButton
     ? 'text-3xl sm:text-5xl md:text-7xl'
-    : 'text-5xl sm:text-7xl md:text-8xl lg:text-9xl';
+    : 'text-4xl sm:text-7xl md:text-8xl lg:text-9xl';
   const headingLg = showDemoButton
     ? 'text-2xl sm:text-4xl md:text-6xl'
     : 'text-4xl sm:text-6xl md:text-8xl';
@@ -192,17 +208,17 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
         {/* Full Scroll Mode: Show all interactive panels */}
         <main className={`w-full ${showDemoButton ? 'h-full absolute inset-0' : 'relative'}`}>
           {/* Panel One */}
-          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
-            <div className={`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#d8d3c4] text-black transition-all will-change-transform ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
+          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
+            <div className={`panel-container p-6 sm:p-8 md:p-16 flex flex-col md:flex-row bg-[#d8d3c4] text-black will-change-transform ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
               <div className="flex-1 flex items-center">
-                <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
+                <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
                   Entry Point
                 </h1>
               </div>
               <div className="flex-1 flex items-center md:pl-12">
                 <div className="space-y-6">
                   <span className="text-xs font-black uppercase tracking-[0.25em] text-black/30">01 // UI HUB ARCHITECTURE</span>
-                  <p className="text-lg md:text-2xl leading-relaxed max-w-xl font-medium opacity-80">
+                  <p className="text-base sm:text-lg md:text-2xl leading-relaxed max-w-xl font-medium opacity-80">
                     This space introduces an initial idea without defining its outcome.
                   </p>
                 </div>
@@ -211,10 +227,10 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
           </section>
 
           {/* Panel Two */}
-          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
-            <div className={`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#1d1d1d] text-white transition-all will-change-transform ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
+          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
+            <div className={`panel-container p-6 sm:p-8 md:p-16 flex flex-col md:flex-row bg-[#1d1d1d] text-white will-change-transform ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
               <div className="flex-1 flex items-center justify-center py-8">
-                <div className="w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
+                <div className="max-sm:h-[38dvh] max-sm:w-auto w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-white/10 shadow-2xl">
                   <img
                     src="/assets/section-scroll/img1.jpg"
                     alt="Gesture"
@@ -222,13 +238,13 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
                   />
                 </div>
               </div>
-              <div className="flex-1 flex flex-col justify-between py-12 md:pl-16">
+              <div className="flex-1 flex flex-col justify-between py-8 sm:py-12 md:pl-16">
                 <span className="text-xs font-black uppercase tracking-[0.25em] text-white/30">02 // UI HUB EXPRESSION</span>
                 <div className="space-y-6">
-                  <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
+                  <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
                     Gesture
                   </h1>
-                  <p className="text-lg md:text-xl leading-relaxed max-w-xl opacity-75">
+                  <p className="text-base sm:text-lg md:text-xl leading-relaxed max-w-xl opacity-75">
                     Form and expression intersect without explanation.
                   </p>
                 </div>
@@ -238,22 +254,22 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
           </section>
 
           {/* Panel Three */}
-          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
-            <div className={`panel-container p-8 md:p-16 flex flex-col md:flex-row bg-[#8f7cff] text-black transition-all will-change-transform ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
-              <div className="flex-1 flex flex-col justify-between py-12 md:pr-16 order-2 md:order-1">
+          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
+            <div className={`panel-container p-6 sm:p-8 md:p-16 flex flex-col md:flex-row bg-[#8f7cff] text-black will-change-transform ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
+              <div className="flex-1 flex flex-col justify-between py-8 sm:py-12 md:pr-16 order-2 md:order-1">
                 <span className="text-xs font-black uppercase tracking-[0.25em] text-black/40">03 // UI HUB VARIATION</span>
                 <div className="space-y-6">
-                  <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
+                  <h1 className="text-4xl sm:text-7xl md:text-8xl lg:text-9xl font-black uppercase leading-none tracking-tight">
                     Variation
                   </h1>
-                  <p className="text-lg md:text-xl leading-relaxed max-w-xl opacity-80 font-medium">
+                  <p className="text-base sm:text-lg md:text-xl leading-relaxed max-w-xl opacity-80 font-medium">
                     Repetition is avoided in favor of subtle change.
                   </p>
                 </div>
                 <div className="h-4" />
               </div>
               <div className="flex-1 flex items-center justify-center py-8 order-1 md:order-2">
-                <div className="w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl">
+                <div className="max-sm:h-[38dvh] max-sm:w-auto w-full md:w-[65%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl">
                   <img
                     src="/assets/section-scroll/img2.jpg"
                     alt="Variation"
@@ -265,9 +281,9 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
           </section>
 
           {/* Panel Four */}
-          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
-            <div className={`panel-container p-8 md:p-16 flex flex-col items-center justify-center bg-[#f0c808] text-black text-center transition-all will-change-transform ${showDemoButton ? 'h-full' : 'min-h-screen'}`}>
-              <div className="w-full md:w-[45%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl mb-8">
+          <section className={`panel overflow-hidden relative w-full ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
+            <div className={`panel-container p-6 sm:p-8 md:p-16 flex flex-col items-center justify-center bg-[#f0c808] text-black text-center will-change-transform ${showDemoButton ? 'h-full' : 'min-h-dvh'}`}>
+              <div className="max-sm:h-[32dvh] max-sm:w-auto w-full md:w-[45%] aspect-[4/5] overflow-hidden rounded-2xl border border-black/10 shadow-2xl mb-6 sm:mb-8">
                 <img
                   src="/assets/section-scroll/img3.jpg"
                   alt="The Stance"
@@ -279,7 +295,7 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
                 <h1 className="text-4xl sm:text-6xl md:text-8xl font-black uppercase leading-none tracking-tight">
                   The Stance
                 </h1>
-                <p className="text-lg md:text-2xl leading-relaxed font-medium opacity-85">
+                <p className="text-base sm:text-lg md:text-2xl leading-relaxed font-medium opacity-85">
                   A clearer position begins to take shape.
                 </p>
               </div>
