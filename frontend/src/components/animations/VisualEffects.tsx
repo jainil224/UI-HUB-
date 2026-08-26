@@ -24,14 +24,11 @@ import { RainbowButton as RainbowButtonUI } from '../ui/rainbow-button';
 import { OrbitButton as OrbitButtonUI } from '../ui/OrbitButton';
 import { GalaxyButton as GalaxyButtonUI } from '../ui/GalaxyButton';
 import { LiquidFillButton as LiquidFillButtonUI } from '../ui/LiquidFillButton';
-import { NeonFlickerButton as NeonFlickerButtonUI } from '../ui/NeonFlickerButton';
-import { Robot3DBackground as Robot3DBackgroundUI } from '../ui/Robot3DBackground';
 
 export { OrbitButtonUI as OrbitButton };
 export { GalaxyButtonUI as GalaxyButton };
 export { LiquidFillButtonUI as LiquidFillButton };
-export { NeonFlickerButtonUI as NeonFlickerButton };
-export { Robot3DBackgroundUI as Robot3DBackground };
+
 
 // 1. Liquid-Glass (Weather Dashboard Example)
 export interface LiquidGlassProps {
@@ -607,7 +604,6 @@ export { default as BeamGridBackground } from '../ui/BeamGridBackground';
 export { default as FallBeamBackground } from '../ui/FallBeamBackground';
 export { default as HellBackground } from '../ui/HellBackground';
 export { default as InteractiveGridBackground } from '../ui/InteractiveGridBackground';
-export { default as ParticlesBackground } from '../ui/ParticlesBackground';
 export { default as WaveBackground } from '../ui/WaveBackground';
 export { default as LinesBackground } from '../ui/background-paths';
 export { default as SparklesBackground } from '../ui/sparkles-background';

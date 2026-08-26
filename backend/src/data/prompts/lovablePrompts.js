@@ -1,4 +1,4 @@
-export const LOVABLE_PROMPTS = {
+﻿export const LOVABLE_PROMPTS = {
     "3d-landing-page": `
 # UI HUB • LOVABLE PROMPT
 
@@ -97,34 +97,6 @@ A sharp, high-contrast button featuring "Corner-First" border animations. It rep
 ## Output
 Production-ready React component`,
 
-    "shatter-button": `
-# UI HUB • LOVABLE PROMPT
-Create a visually stunning component.
-
-## Concept
-A "Break-on-Click" physical simulation. Upon interaction, the button vanishes and explodes into dozens of sharp shards that fly outwards with randomized physics, before resetting.
-
-## Tech
-- React + Framer Motion
-- AnimatePresence for state-based mounting/unmounting
-- SVG clip-path for randomized geometric shards
-
-## Animation Details
-- **Explosion**: Shards are generated with randomized velocityX, velocityY, and rotation (-360 to 720 deg).
-- **Shockwave**: A circular ring expands from the center (scale: 0 to 1, opacity: 1 to 0) over 600ms.
-- **Button Collapse**: The button itself scales to 0 and fades out instantly upon click.
-
-## Performance
-- Hardware-accelerated transforms for particles.
-- Automatic cleanup of shard elements after 1000ms.
-
-## Props
-- shardCount: number (default: 20)
-- shatterColor: string (default: "#00ffff")
-- onClick: function
-
-## Output
-Production-ready React component`,
 
     "border-beam": `
 # UI HUB • LOVABLE PROMPT
@@ -400,33 +372,6 @@ Create a visually stunning component.
 ## Output
 Production-ready React component`,
 
-    "neon-flicker-button": `
-# UI HUB • LOVABLE PROMPT
-Create a visually stunning component.
-
-## Concept
-"Distressed Cyberpunk" aesthetic. A high-intensity neon button that suffers from digital glitches, power surges, and erratic flickering, feeling like a raw piece of hardware.
-
-## Tech
-- React + Framer Motion
-- Multiple animation loops (randomized)
-- Scanline & Digital Grain overlays
-
-## Animation Details
-- **Random Flicker**: Opacity oscillates using a randomized repeatDelay array to simulate bad wiring.
-- **Power Blink**: Global "blackout" blink every 6 seconds.
-- **Interactive Surge**: On click, glow intensity and shadow blur increase by 300% for 600ms.
-- **Micro-Glitch**: Discrete colored blocks appear and disappear in the corners.
-
-## Performance
-- Complex multi-layered animations; use sparingly for high-impact interactions.
-
-## Props
-- color: "red" | "cyan" | "purple" | "blue" | "pink"
-- label: string
-
-## Output
-Production-ready React component`,
 
     // 2. 3D & WebGL Experiences
 
@@ -693,34 +638,6 @@ A highly responsive grid that follows the user's cursor with a glowing light box
 ## Output
 Production-ready React component`,
 
-    "particles-background": `
-# UI HUB • LOVABLE PROMPT
-Create a visually stunning component.
-
-## Concept
-A lightweight, classic floating particle system. It adds subtle energy and movement without being distracting, perfect for ambient backgrounds.
-
-## Tech
-- React + particles.js (external library)
-- SVG filters for particle glow effects
-- Retina support
-
-## Animation Details
-- Random Brownian movement of particles
-- Interactive "repulse" (push away) on hover and "push" (add) on click
-
-## Performance
-- Leverages the battle-tested performance of particles.js
-- Responsive particle counts for Mobile, Tablet, and Desktop
-
-## Props
-- colors: string array
-- speed: number
-- countDesktop: number
-- interactive: boolean
-
-## Output
-Production-ready React component`,
 
     "wave-background": `
 # UI HUB • LOVABLE PROMPT
@@ -858,33 +775,6 @@ A vast, immersive deep space simulation. It features layered starfields, shiftin
 ## Output
 Production-ready React component`,
 
-    "neural-network-background": `
-# UI HUB • LOVABLE PROMPT
-Create a visually stunning component.
-
-## Concept
-A digital brain/connectivity network. Nodes float through space, building connections as they pass near each other, representing a living, thinking system.
-
-## Tech
-- React + HTML5 Canvas (2D)
-- Proximity-based line drawing logic
-- Kinetic physics with edge bouncing
-
-## Animation Details
-- Connection Lines: Dynamic line drawing between nodes within a specific connectionDistance
-- Magnetic Cursor: Mouse pushes nodes away while simultaneously drawing connection lines towards the cursor position
-- Pulse: Global node size oscillation for a "breathing" network effect
-
-## Performance
-- Distance checks optimized within the animation loop using a simple distance formula (sqrt(dx^2 + dy^2))
-
-## Props
-- nodeCount: number
-- connectionDistance: number
-- nodeColor/lineColor: string
-
-## Output
-Production-ready React component`,
 
     "black-hole-background": `
 # UI HUB • LOVABLE PROMPT
@@ -914,32 +804,6 @@ An astronomical simulation of a gravitational singularity. Light and matter (par
 ## Output
 Production-ready React component`,
 
-    "warp-speed-background": `
-# UI HUB • LOVABLE PROMPT
-Create a visually stunning component.
-
-## Concept
-The classic "hyperdrive" or warp speed visual. Lines of light stretch and zip past the viewer from a central vanishing point, creating an intense sense of forward velocity.
-
-## Tech
-- React + HTML5 Canvas (2D)
-- 3D Projection to 2D math (Z-axis movement)
-- High-Performance line stretching
-
-## Animation Details
-- Stretch Trails: Lines are drawn from the previous frame's 2D projection to the current one, creating trails proportionally long to their speed and proximity
-- Camera Tilt: Mouse movement shifts the vanishing point, simulating a cockpit steering through space
-
-## Performance
-- Fast Z-axis reset logic; handles 800+ stars smoothly at 60FPS
-
-## Props
-- starCount: number
-- speed: number
-- starColor: string
-
-## Output
-Production-ready React component`,
 
     "mouse-gravity-background": `
 # UI HUB • LOVABLE PROMPT

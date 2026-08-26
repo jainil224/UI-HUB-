@@ -10,8 +10,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     '3d-rubiks-cube': () => import('../components/ui/RubiksCube'),
     '3d-scroll-animation': () => import('../components/ui/Scroll3DAnimation'),
     '3d-slider': () => import('../components/ui/ThreeDSlider'),
-    '3d-hero': () => import('../components/ui/InteractiveWebGLScene'),
-    'robot-3d': () => import('../components/ui/Robot3DBackground'),
+    '3d-hero': () => import('../components/ui/ToonhubHero'),
     'solar-system': () => import('../components/ui/SolarSystem'),
     'fourier-flow': () => import('../components/ui/FourierFlow'),
     'cloud-scroll': () => import('../components/ui/CloudScroll/CloudScroll'),
@@ -67,7 +66,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'svg-page-transition': () => import('../components/ui/SVGPageTransition'),
     'section-scroll': () => import('../components/ui/SectionScroll'),
     'infinite-marquee': () => import('../components/ui/InfiniteMarquee'),
-    'buy-me-coffee': () => import('../components/ui/BuyMeCoffee'),
+
 
     // Text & Visual Effects
     'text-animations': () => import('../components/animations/TextAnimations'),

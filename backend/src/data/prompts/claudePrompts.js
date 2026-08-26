@@ -1,4 +1,4 @@
-export const CLAUDE_PROMPTS = {
+﻿export const CLAUDE_PROMPTS = {
     "3d-landing-page": `
 # UI HUB • CLAUDE PROMPT
 
@@ -174,69 +174,6 @@ Type: Interactive Button with Animated Borders
 * Pointer-events: none on border elements for flawless click interaction.`,
 
 
-    'shatter-button': `# UI HUB • CLAUDE PROMPT
-
-## Role
-
-You are an expert frontend engineer.
-
-## Task
-
-Generate a production-ready React component based on the specifications below.
-
-## Rules
-
-* Follow all instructions strictly
-* Return ONLY the final code
-* Do NOT include explanations
-* Ensure clean, optimized, and maintainable code
-
----
-
-## Component Info
-
-Name: ShatterButton
-Type: Physics-based Interactive Button
-
----
-
-## Tech Stack
-
-* React
-* TypeScript
-* Framer Motion (for physics and cleanup)
-* Tailwind CSS
-* clsx
-* tailwind-merge
-
----
-
-## Requirements
-
-* Dramatic shatter effect on click: button explodes into multiple polygonal shards.
-* Randomized shard physics (angle, velocity, rotation, scale).
-* Explosion ring expansion effect triggered at center of click.
-* Smooth reset/reassembly after 1000ms.
-* Glowing background effect using radial-gradient on hover.
-* Shards must be triangular/polygonal shapes using CSS clip-path.
-
----
-
-## Props
-
-* children: React.ReactNode — button label text.
-* shatterColor: string = "#00ffff" — color of shards and glow.
-* shardCount: number = 20 — density of fragmentation.
-* onClick: () => void — external click handler.
-
----
-
-## Performance
-
-* Use AnimatePresence for efficient shard mounting and cleanup.
-* GPU-accelerated transforms (x, y, rotate, scale).
-* Clean up timeouts and motion values on unmount.
-* Minimal re-renders through state-based shard management.`,
 
 
     'border-beam': `# UI HUB • CLAUDE PROMPT
@@ -871,67 +808,6 @@ Type: Physics-inspired Filling Button
 * Will-change: transform on the wave layer to prevent repaints.`,
 
 
-    'neon-flicker-button': `# UI HUB • CLAUDE PROMPT
-
-## Role
-
-You are an expert frontend engineer.
-
-## Task
-
-Generate a production-ready React component based on the specifications below.
-
-## Rules
-
-* Follow all instructions strictly
-* Return ONLY the final code
-* Do NOT include explanations
-* Ensure clean, optimized, and maintainable code
-
----
-
-## Component Info
-
-Name: NeonFlickerButton
-Type: Retro-Electronic Interactive Button
-
----
-
-## Tech Stack
-
-* React
-* TypeScript
-* Framer Motion (for random flicker logic)
-* Tailwind CSS
-* clsx
-* tailwind-merge
-
----
-
-## Requirements
-
-* Authentic "Neon-Sign" aesthetics with randomized flickering and hum effects.
-* Multi-layer rendering: neon glow, scanlines (CSS repeating-linear-gradient), and glass texture.
-* Random flicker system: micro-oscillations in opacity and glow intensity every 10-500ms.
-* Hover-triggered "Light-Sweep" scanning across the button surface.
-* Glitch blocks: absolute-positioned rectangles that appear randomly during interaction.
-* Critical text glow using 'drop-shadow-glow' and 'text-neon-accent'.
-
----
-
-## Props
-
-* label: string = "Neon Sign" — primary text.
-* color: string = "#ff0080" — neon accent color (pink/cyan).
-* flickerIntensity: number = 0.3 — depth of the flicker effect.
-
----
-
-## Performance
-
-* Local timers for random flicker to minimize prop-drilled re-renders.
-* Pure CSS scanlines for performance.
-* SVG turbulence filter for the "hum" distortion effect.`,
 
 
     // --- TEXT ANIMATIONS ---
