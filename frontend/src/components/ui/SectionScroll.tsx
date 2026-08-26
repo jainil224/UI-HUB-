@@ -41,15 +41,14 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
   useGSAP(() => {
     if (!containerRef.current) return;
 
-    // Detect the nearest scroll container (for library preview vs standalone viewport)
-    const scroller = findScrollParent(containerRef.current);
     const panels = containerRef.current.querySelectorAll('.panel');
 
-    // Re-measure once the lazy preview has settled its layout
-    const refreshTick = requestAnimationFrame(() => ScrollTrigger.refresh());
-
     if (showDemoButton) {
-      // ── Preview Mode: Scroll-linked animation driven by main page scroll ──
+      // ── Preview Mode: auto-playing showcase loop ──
+      // The library preview card is already on screen at load and the page has
+      // almost no scroll distance, so a scroll-scrubbed timeline can never
+      // complete (it caps at ~45% on both desktop and phone). A looping
+      // timeline showcases every panel reliably on all devices instead.
       gsap.set(panels, {
         position: "absolute",
         top: 0,
@@ -68,43 +67,28 @@ export const SectionScroll: React.FC<SectionScrollProps> = ({
         }
       });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: containerRef.current,
-          scroller: scroller,
-          start: "top 85%",
-          end: "bottom 15%",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        }
-      });
-
+      const tl = gsap.timeline({ repeat: -1, repeatDelay: 0.8 });
       panels.forEach((panel, index) => {
-        if (index > 0) {
-          const innerContainer = panel.querySelector('.panel-container');
-          tl.to(panel, {
-            yPercent: 0,
-            ease: "none",
-          }, `stage-${index}`)
-          .to(innerContainer, {
-            rotate: 0,
-            ease: "none",
-          }, `stage-${index}`);
-          
-          tl.to({}, { duration: 0.2 }); // hold slightly
+        if (index === 0) {
+          tl.to({}, { duration: 1.4 }); // hold the first panel before the stack begins
+          return;
         }
+        const innerContainer = panel.querySelector('.panel-container');
+        tl.to(panel, { yPercent: 0, ease: "power2.inOut", duration: 1 }, `slide-${index}`)
+          .to(innerContainer, { rotate: 0, ease: "power2.inOut", duration: 1 }, `slide-${index}`)
+          .to({}, { duration: 1.4 }); // hold before the next panel takes over
       });
 
       return () => {
-        cancelAnimationFrame(refreshTick);
         tl.kill();
-        // Only this component's trigger — never nuke every ScrollTrigger on the
-        // page (useGSAP's context revert handles the gsap.set/tween cleanup).
-        tl.scrollTrigger?.kill();
       };
     }
 
     // ── Full Scroll Mode ──
+    const scroller = findScrollParent(containerRef.current);
+    // Re-measure once the lazy preview has settled its layout
+    const refreshTick = requestAnimationFrame(() => ScrollTrigger.refresh());
+
     const mm = gsap.matchMedia();
 
     // Entry rotation on every viewport (scrub-only — never blocks touch scroll).
