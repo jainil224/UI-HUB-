@@ -1503,4 +1503,38 @@ React, TypeScript, HTML5 Canvas 2D, Tailwind CSS.
 
 ## Output
 Production-ready React component`,
+    "blooming-flower": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "Blooming Flower" component.
+
+## Concept
+A WebGL point-cloud flower of 60k-100k point sprites forming a layered flower on a stem. Opens on hover, closes to a bud when the pointer leaves. Three kinds of points share one buffer: petals on a parametric surface, stamens in a dome, and a swaying tapered stem.
+
+## Tech
+React, TypeScript, WebGL, motion/react, Tailwind CSS.
+
+## Animation Details
+- **Hover Bloom Gate**: motion/react's animate() drives a 0-1 motionValue with configurable spring/tween transition.
+- **Parametric Petals**: Circular-arc midrib in half-angle form s*sin(theta0+ks/2)*sinc(ks/2). Width from angular slot.
+- **Shared Sway**: Head reads swayAt(0), stem reads swayAt(t) — flower cannot drift off its stalk.
+- **Weather**: Stalk sways, petals flutter on individual phases, head breathes ±1.2%. Single clock scaled by Speed.
+- **Staggered Whorls**: Outer whorls open first via smoothstep bloom window.
+
+## Props
+- background: string (Default: "#07060C")
+- baseColor: string (Default: "#C4327E")
+- stemColor: string (Default: "#2F7A4F")
+- accentColor: string (Default: "#FFD98A")
+- accentMix: number (Default: 100)
+- density: number (Default: 100, range 1-100)
+- dotSize: number (Default: 10)
+- speed: number (Default: 50, range 0-100)
+- distance: number (Default: 2820)
+- tilt: number (Default: 66)
+- closed: number (Default: 100, range 0-100)
+- flower: { petals?: number; layers?: number }
+
+## Output
+Production-ready React component`,
 };

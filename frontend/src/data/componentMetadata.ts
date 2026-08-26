@@ -68,6 +68,31 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["HTML5 Canvas 2D", "ResizeObserver", "requestAnimationFrame", "Z-depth sorting"]
         }
     },
+    "blooming-flower": {
+        props: [
+            { name: "background", type: "string", default: '"#07060C"', description: "CSS background color behind the canvas." },
+            { name: "baseColor", type: "string", default: '"#C4327E"', description: "Primary petal color." },
+            { name: "stemColor", type: "string", default: '"#2F7A4F"', description: "Stem color." },
+            { name: "accentColor", type: "string", default: '"#FFD98A"', description: "Accent color for stamen and petal tips." },
+            { name: "accentMix", type: "number", default: "100", description: "Percentage of accent color influence." },
+            { name: "density", type: "number", default: "100", description: "Point cloud density 1-100 (controls total particle count)." },
+            { name: "dotSize", type: "number", default: "10", description: "Point radius as percent of reference size." },
+            { name: "speed", type: "number", default: "50", description: "Wind rate 0-100 (0 = dead still, 50 = default, 100 = fast)." },
+            { name: "distance", type: "number", default: "2820", description: "Camera pullback in world units." },
+            { name: "tilt", type: "number", default: "66", description: "Camera pitch above the flower in degrees." },
+            { name: "closed", type: "number", default: "100", description: "How far the flower closes at idle 0-100 (100 = full bud)." },
+            { name: "flower", type: "{ petals?: number; layers?: number }", default: "{ petals: 16, layers: 1 }", description: "Flower structure: petals per whorl and concentric whorls." },
+            { name: "transition", type: "Motion", default: "{ type: 'tween', duration: 0.4 }", description: "Framer Motion animation options for bloom gate." }
+        ],
+        vibeMeta: {
+            behavior: "A WebGL point-cloud flower of 60k-100k point sprites that opens on hover and closes to a bud when the pointer leaves. Three kinds of points share one buffer: petals on a parametric surface, stamens in a dome, and a swaying tapered stem. The head and stem share one sway expression so the flower cannot drift off its stalk.",
+            states: { from: "closed bud (idle)", to: "fully bloomed (hover)" },
+            cssProperties: ["webgl", "canvas", "point-sprites", "additive-blend", "premultiplied-alpha"],
+            description: "Premium WebGL point-cloud flower with parametric petal surface, hover bloom gate, swaying stem, and weather animation.",
+            libraries: ["react", "motion/react"],
+            requirements: ["WebGL vertex/fragment shaders", "Parametric petal surface math", "motion/react for bloom animation", "Additive blending", "ResizeObserver"]
+        }
+    },
     "3d-galaxy-animation": {
         props: [
             { name: "theme", type: "'Inferno' | 'Veridian' | 'Celestial'", default: "'Inferno'", description: "Color palette of the galaxy." },

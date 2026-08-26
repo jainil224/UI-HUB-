@@ -2798,6 +2798,56 @@ PROPS:
 TECHNICAL: Dual canvas, ResizeObserver, DPR capped at 1.5, normalize dt to 60fps, 3D perspective projection with two rotation matrices, back-to-front sorting, hexToRgb helper, destination-out trail fade.
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
+    "blooming-flower": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer and WebGL shader developer.
+
+## Task
+Create a premium "Blooming Flower" interactive background component using React, TypeScript, WebGL, and motion/react.
+
+COMPONENT NAME: BloomingFlower
+
+VISUAL DESCRIPTION:
+A WebGL point-cloud flower of 60k-100k point sprites forming a layered flower on a stem. Three kinds of points share one buffer and one drawArrays(POINTS) call: petals on a parametric petal surface, stamens in a dense dome at the centre, and a swaying tapered stem running from the flower down past the bottom of the frame.
+
+CORE FEATURES:
+1. **Hover Bloom Gate**: Flower opens on pointerenter, closes on pointerleave. Uses motion/react's animate() on a motionValue for spring/tween physics.
+2. **Parametric Petal Surface**: Each petal stores (u, v) plus azimuth and whorl index. Midrib is a circular arc in half-angle form: s*sin(theta0 + ks/2)*sinc(ks/2) — no guarded divide.
+3. **Petal Width from Angular Slot**: Width derived from the petal's angular slot at its own radius, so neighbouring petals keep a real gap at every petal count.
+4. **Shared Sway Joint**: Head and stem share one swayAt(t) expression — flower cannot drift off its own stalk.
+5. **Weather Animation**: Stalk sways, petals flutter on individual phases, head breathes ±1.2%. Single clock scaled by Speed.
+6. **Energy Conservation**: Bloom brightness scales with area (pow(S, 1.05)) to prevent bud saturation.
+7. **Staggered Whorls**: Outer whorls open first via whorlBloom(ln) with smoothstep.
+
+PROPS (with defaults):
+- background: string = "#07060C" — CSS background.
+- baseColor: string = "#C4327E" — Primary petal color.
+- stemColor: string = "#2F7A4F" — Stem color.
+- accentColor: string = "#FFD98A" — Accent for stamen and petal tips.
+- accentMix: number = 100 — Accent influence percentage.
+- density: number = 100 — Point cloud density 1-100.
+- dotSize: number = 10 — Point radius as percent.
+- speed: number = 50 — Wind rate 0-100.
+- distance: number = 2820 — Camera pullback.
+- tilt: number = 66 — Camera pitch degrees.
+- closed: number = 100 — Idle closure 0-100.
+- flower: { petals?: number; layers?: number } — Structure.
+- transition: Motion — Bloom gate animation.
+
+TECHNICAL:
+- WebGL vertex/fragment shaders, no Three.js.
+- One Float32Array buffer, 8 floats per point (aA vec4 + aB vec4), stride 32.
+- Vertex shader handles all three point kinds via aB.z selector.
+- Additive blending (ONE, ONE) on premultiplied alpha.
+- Transparent canvas (clearColor 0,0,0,0), background is CSS.
+- DPR capped at 1.5, ResizeObserver, raw rAF loop.
+- mulberry32 seeded RNG for deterministic geometry.
+- Gauss spread via rejection sampling (sampleU).
+- Near-plane culling (rz < 30 → degenerate point).
+
+Provide the complete, single-file, production-ready React TypeScript component.`,
 };
 
 

@@ -2816,5 +2816,37 @@ PROPS:
 TECHNICAL: Dual canvas, ResizeObserver, DPR capped at 1.5, normalize dt to 60fps, 3D perspective projection with two rotation matrices, back-to-front sorting, hexToRgb helper, destination-out trail fade.
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
+    "blooming-flower": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer and WebGL shader developer.
+
+## Task
+Create a premium "Blooming Flower" interactive background component using React, TypeScript, WebGL, and motion/react.
+
+COMPONENT NAME: BloomingFlower
+
+A WebGL point-cloud flower of 60k-100k point sprites that opens on hover and closes to a bud when the pointer leaves. Three kinds of points share one buffer: petals on a parametric surface, stamens in a dome, and a swaying tapered stem.
+
+CORE FEATURES:
+1. Hover Bloom Gate via motion/react's animate() on a motionValue.
+2. Parametric petal surface with circular-arc midrib in half-angle form.
+3. Petal width from angular slot so neighbours keep a real gap.
+4. Shared swayAt(t) expression for head and stem.
+5. Weather animation: sway, flutter, breathing on single clock.
+6. Energy conservation across bloom.
+7. Staggered whorl opening outside-in.
+
+PROPS:
+- background, baseColor, stemColor, accentColor, accentMix
+- density (1-100), dotSize, speed (0-100)
+- distance, tilt, closed (0-100)
+- flower: { petals, layers }
+- transition: Motion
+
+TECHNICAL: WebGL, additive blending (ONE, ONE), premultiplied alpha, transparent canvas, DPR capped 1.5, ResizeObserver, raw rAF, mulberry32 seeded RNG, near-plane culling.
+
+Provide the complete, single-file, production-ready React TypeScript component.`,
 };
 

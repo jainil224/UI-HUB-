@@ -4852,4 +4852,41 @@ A premium 3D black hole accretion disk with flowing particles leaving fading tra
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
+    "blooming-flower": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL shader expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+
+## Component: BloomingFlower
+
+### Concept
+A WebGL point-cloud flower of 60k-100k point sprites that opens on hover and closes to a bud. Three point kinds (petals, stamens, stem) share one buffer and one drawArrays(POINTS) call.
+
+### Technical Requirements
+- WebGL vertex/fragment shaders — no Three.js.
+- One Float32Array buffer, 8 floats/point (aA vec4 + aB vec4), stride 32.
+- Vertex shader selects branch via aB.z: 0=petal, 1=stamen, 2=stem.
+- Additive blending (ONE, ONE) on premultiplied alpha.
+- Transparent canvas, background is CSS.
+- motion/react animate() for bloom gate on motionValue.
+- mulberry32 seeded RNG, sampleU rejection sampling.
+- DPR capped at 1.5, ResizeObserver, raw rAF.
+
+### Props
+- background, baseColor, stemColor, accentColor, accentMix, density, dotSize, speed, distance, tilt, closed, flower, transition, style
+
+### Visual
+- Petal: circular-arc midrib half-angle sinc form, angular-slot width, cupping, scatter thickness.
+- Stamen: cbrt-radial dome, accent-colored.
+- Stem: swayAt(t) shared with head, thickens toward root, fades at ground.
+- Bloom: energy-conserved brightness, staggered whorls, breath wobble.
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
 };

@@ -780,6 +780,7 @@ export const Component = () => {
       case "hacker-background": return `<canvas id="hacker-canvas"></canvas>`;
       case "gravitational-vortex": return `<canvas id="vortex-canvas"></canvas>`;
       case "black-hole-3d": return `<canvas id="black-hole-canvas"></canvas>`;
+      case "blooming-flower": return `<canvas id="flower-canvas"></canvas>`;
       case "sparkles-background": return `<div class="sparkles"></div>`;
       default: return `<div class="${id}"></div>`;
     }
@@ -954,6 +955,8 @@ ${componentHeader}
       return `import GravitationalVortex from '@/components/ui/GravitationalVortex';\n\nexport const Component = () => (\n  <div className="w-full h-[600px]">\n    <GravitationalVortex />\n  </div>\n);`;
     case "black-hole-3d":
       return `import BlackHole from '@/components/ui/BlackHole';\n\nexport const Component = () => (\n  <div className="w-full h-[600px]">\n    <BlackHole />\n  </div>\n);`;
+    case "blooming-flower":
+      return `import BloomingFlower from '@/components/ui/BloomingFlower';\n\nexport const Component = () => (\n  <div className="w-full h-[600px]">\n    <BloomingFlower />\n  </div>\n);`;
     case "sparkles-background":
       return reactOutput(`
         <div className="relative h-full w-full flex items-center justify-center bg-neutral-950 overflow-hidden">

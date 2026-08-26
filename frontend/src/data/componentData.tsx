@@ -60,6 +60,7 @@ const TwinGalaxyRings = React.lazy(() => import('../components/ui/TwinGalaxyRing
 const Tornado = React.lazy(() => import('../components/ui/Tornado'));
 const ParticleSphere = React.lazy(() => import('../components/ui/ParticleSphere'));
 const BlackHole3d = React.lazy(() => import('../components/ui/BlackHole'));
+const BloomingFlower = React.lazy(() => import('../components/ui/BloomingFlower'));
 
 
 
@@ -1722,6 +1723,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'space-background': SpaceBackground,
     'gravitational-vortex': GravitationalVortex,
     'black-hole-3d': BlackHole3d,
+    'blooming-flower': BloomingFlower,
     'black-hole-background': BlackHoleBackground,
     'mouse-gravity-background': MouseGravityBackground,
     '3d-scroll-animation': Scroll3DAnimation,
@@ -2808,6 +2810,15 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         preview: renderComponent("black-hole-3d", "Black Hole"),
         code: `import BlackHole from '@/components/ui/BlackHole';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <BlackHole />\n  </div>\n);`,
         vibePrompt: "A premium 3D black hole accretion disk component. Renders an active gravitationally bound accretion disk with flowing particles leaving fading trail lines. Utilizes 3D Z-depth sorting to allow particles to pass behind and in front of the central event horizon with authentic physical occlusion. Features relativistic orbital speeds, adjustable tilt angles, and a premium 3D sphere at the center with rim lighting."
+    },
+
+    {
+        id: "blooming-flower",
+        title: "Blooming Flower",
+        category: "interactive-background",
+        preview: renderComponent("blooming-flower", "Blooming Flower"),
+        code: `import BloomingFlower from '@/components/ui/BloomingFlower';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <BloomingFlower />\n  </div>\n);`,
+        vibePrompt: "A WebGL point-cloud flower of 60k-100k point sprites that opens on hover and closes to a bud when the pointer leaves. Three kinds of points share one buffer: petals on a parametric surface, stamens in a dome, and a swaying tapered stem. The head and stem share one sway expression so the flower cannot drift off its stalk. Petals use a circular-arc midrib in half-angle form for smooth curling. Weather animation keeps the scene alive at idle."
     },
 
     {
