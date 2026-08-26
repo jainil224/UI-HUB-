@@ -1537,4 +1537,37 @@ React, TypeScript, WebGL, motion/react, Tailwind CSS.
 
 ## Output
 Production-ready React component`,
+  "chandelier": `
+# Chandelier — Interactive Background
+
+A cloth simulation with text rendered on a deformable grid.
+
+## Component
+- Name: Chandelier
+- Framework: React + TypeScript
+- Rendering: Canvas 2D
+
+## Description
+The cloth hangs from pin points at the top and responds to gravity, wind, and mouse interaction. Characters from a configurable phrase are drawn on each quad cell, scaling and rotating with the cloth's deformation. Users can grab and drag individual cloth nodes.
+
+## Props
+- background: string (Default: "#0B0C0E")
+- baseColor: string (Default: "#00F9AC") — Text and peg color
+- phrase: string — Text rendered on each quad cell
+- density: number (Default: 24, range 6-40)
+- speed: number (Default: 50, range 0-100)
+- hover: number (Default: 100, range 0-200)
+- cloth: { gravity?: number; wind?: number; grab?: number; stretch?: number }
+
+## Technical
+- Verlet integration with fixed timestep (H = 1/120)
+- Constraint solver with horizontal + vertical links
+- Stretch clamping to prevent over-extension
+- Pin points on top row
+- Grab nearest free node on pointerdown
+- Text rendering with quantised rotation (5-degree steps)
+- DPR capped at 2, ResizeObserver, requestAnimationFrame loop
+
+## Output
+Production-ready React component`,
 };

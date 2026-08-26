@@ -4889,4 +4889,50 @@ A WebGL point-cloud flower of 60k-100k point sprites that opens on hover and clo
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
+  "chandelier": `
+## COMPONENT: Chandelier (Interactive Background)
+
+### Overview
+A Canvas 2D cloth simulation with text rendered on a deformable grid. Characters from a configurable phrase are drawn on each quad cell of the cloth, scaling and rotating with the deformation. The cloth hangs from pin points and responds to gravity, wind, and mouse interaction.
+
+### Physics
+- Verlet integration with fixed timestep H = 1/120.
+- Constraint solver: 6 iterations normal, 12 when a node is held.
+- Horizontal + vertical links with stretch clamping (stretch prop).
+- Wind: two-frequency sinusoidal breeze scaled by wind prop.
+- Gravity scaled by min(width, height).
+- Damping factor 0.992.
+- Pin points every 5 columns on top row.
+
+### Interaction
+- Pointermove brush: push nodes away within radius (hover prop).
+- Pointerdown: grab nearest free node within reach.
+- Pointerup on window (not canvas) to prevent stuck drag.
+- Held node leads, cloth follows with 0.45 lerp.
+
+### Rendering
+- Each quad cell gets one character from the phrase string.
+- Rotation quantised to 5-degree steps (QA = PI/36) to prevent glyph shimmer.
+- Scale clamped 0.15–1.7 based on quad stretch.
+- Alpha based on quad area (how face-on it is).
+- Pin pegs drawn as small circles.
+
+### Props
+- background: string (Default: "#0B0C0E")
+- baseColor: string (Default: "#00F9AC")
+- phrase: string
+- density: number (Default: 24, range 6-40)
+- speed: number (Default: 50, range 0-100)
+- hover: number (Default: 100, range 0-200)
+- cloth: { gravity, wind, grab, stretch }
+
+### Constraints
+- DPR capped at 2.
+- ResizeObserver for responsive canvas.
+- Fixed-step accumulator prevents variable-dt stretching.
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
 };
+

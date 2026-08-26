@@ -24,6 +24,7 @@ const COMPONENT_FILE_MAP = {
   'gravitational-vortex': 'components/ui/GravitationalVortex.tsx',
   'black-hole-3d': 'components/ui/BlackHole.tsx',
   'blooming-flower': 'components/ui/BloomingFlower.tsx',
+  'chandelier': 'components/ui/Chandelier.tsx',
   'black-hole-background': 'components/ui/BlackHoleBackground.tsx',
   'mouse-gravity-background': 'components/ui/MouseGravityBackground.tsx',
   'hell-background': 'components/ui/HellBackground.tsx',

@@ -2848,5 +2848,30 @@ PROPS:
 TECHNICAL: WebGL, additive blending (ONE, ONE), premultiplied alpha, transparent canvas, DPR capped 1.5, ResizeObserver, raw rAF, mulberry32 seeded RNG, near-plane culling.
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
+  "chandelier": `# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer and Canvas 2D developer.
+
+## Task
+Create a premium "Chandelier" interactive background component using React, TypeScript, and Canvas 2D.
+
+COMPONENT NAME: Chandelier
+
+VISUAL DESCRIPTION:
+A cloth simulation with text rendered on a deformable grid. The cloth hangs from pin points at the top and responds to gravity, wind, and mouse interaction. Characters from a configurable phrase are drawn on each quad cell, scaling and rotating with the cloth's deformation. Users can grab and drag individual cloth nodes.
+
+PROPS:
+- background: string (Default: "#0B0C0E") — CSS background color.
+- baseColor: string (Default: "#00F9AC") — Text and peg color (hex or rgb).
+- phrase: string — Text rendered on each cloth quad cell.
+- density: number (Default: 24, range 6-40) — Number of columns in the cloth grid.
+- speed: number (Default: 50, range 0-100) — Simulation speed.
+- hover: number (Default: 100, range 0-200) — Mouse brush strength.
+- cloth: { gravity, wind, grab, stretch } — Cloth physics parameters.
+
+TECHNICAL: Canvas 2D, Verlet integration, fixed timestep (H=1/120), constraint solver (6/12 iterations), stretch clamping, pin points, quantised rotation, DPR capped 2, ResizeObserver, rAF loop.
+
+Provide the complete, single-file, production-ready React TypeScript component.`,
 };
 

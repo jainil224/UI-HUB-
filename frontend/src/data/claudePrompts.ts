@@ -2848,6 +2848,41 @@ TECHNICAL:
 - Near-plane culling (rz < 30 → degenerate point).
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
+  "chandelier": `# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer and Canvas 2D developer.
+
+## Task
+Create a premium "Chandelier" interactive background component using React, TypeScript, and Canvas 2D.
+
+COMPONENT NAME: Chandelier
+
+VISUAL DESCRIPTION:
+A cloth simulation with text rendered on a deformable grid. The cloth hangs from pin points at the top and responds to gravity, wind, and mouse interaction. Characters from a configurable phrase are drawn on each quad cell, scaling and rotating with the cloth's deformation. Users can grab and drag individual cloth nodes.
+
+PROPS:
+- background: string (Default: "#0B0C0E") — CSS background color.
+- baseColor: string (Default: "#00F9AC") — Text and peg color (hex or rgb).
+- phrase: string (Default: "thefabricremembersthelineitwasgivenandkeepsonsayingitwhilethewindpullsatthecorners") — Text rendered on each cloth quad cell.
+- density: number (Default: 24, range 6-40) — Number of columns in the cloth grid.
+- speed: number (Default: 50, range 0-100) — Simulation speed.
+- hover: number (Default: 100, range 0-200) — Mouse brush strength.
+- cloth: { gravity?: number; wind?: number; grab?: number; stretch?: number } — Cloth physics parameters.
+- width, height — Canvas dimensions.
+
+TECHNICAL:
+- Canvas 2D (not WebGL).
+- Verlet integration for cloth physics with fixed timestep (H = 1/120).
+- Constraint solver with 6 iterations (12 when held), horizontal + vertical links.
+- Stretch clamping via clampLink to prevent over-extension.
+- Pin points every 5 columns on top row.
+- Grab nearest free node on pointerdown, release on pointerup (window-level).
+- Text rendering: each quad cell gets one character, rotated/scaled to match deformation.
+- Quantised rotation to 5-degree steps to prevent glyph shimmer.
+- DPR capped at 2, ResizeObserver, requestAnimationFrame loop.
+
+Provide the complete, single-file, production-ready React TypeScript component.`,
 };
 
 

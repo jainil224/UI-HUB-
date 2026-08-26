@@ -93,6 +93,25 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["WebGL vertex/fragment shaders", "Parametric petal surface math", "motion/react for bloom animation", "Additive blending", "ResizeObserver"]
         }
     },
+    "chandelier": {
+        props: [
+            { name: "background", type: "string", default: '"#0B0C0E"', description: "CSS background color behind the canvas." },
+            { name: "baseColor", type: "string", default: '"#00F9AC"', description: "Text and peg color (hex or rgb)." },
+            { name: "phrase", type: "string", default: '"thefabricremembersthelineitwasgivenandkeepsonsayingitwhilethewindpullsatthecorners"', description: "Text rendered on each cloth quad cell." },
+            { name: "density", type: "number", default: "24", description: "Number of columns in the cloth grid (6-40)." },
+            { name: "speed", type: "number", default: "50", description: "Simulation speed 0-100." },
+            { name: "hover", type: "number", default: "100", description: "Mouse brush strength 0-200." },
+            { name: "cloth", type: "ClothGroup", default: "{ gravity: 300, wind: 100, grab: 100, stretch: 114 }", description: "Cloth physics parameters." }
+        ],
+        vibeMeta: {
+            behavior: "A cloth simulation with text rendered on a deformable grid. The cloth hangs from pin points at the top and responds to gravity, wind, and mouse interaction. Characters from a configurable phrase are drawn on each quad cell, scaling and rotating with the cloth's deformation.",
+            states: { from: "static hanging cloth", to: "interactive grabbed cloth" },
+            cssProperties: ["canvas", "2d-context", "cloth-simulation", "constraint-solver", "pointer-events"],
+            description: "Premium cloth simulation with text glyphs rendered on deformable grid cells, gravity, wind, and grab interaction.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D", "Verlet integration", "Constraint solver", "Pointer events", "requestAnimationFrame"]
+        }
+    },
     "3d-galaxy-animation": {
         props: [
             { name: "theme", type: "'Inferno' | 'Veridian' | 'Celestial'", default: "'Inferno'", description: "Color palette of the galaxy." },

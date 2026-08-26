@@ -61,6 +61,7 @@ const Tornado = React.lazy(() => import('../components/ui/Tornado'));
 const ParticleSphere = React.lazy(() => import('../components/ui/ParticleSphere'));
 const BlackHole3d = React.lazy(() => import('../components/ui/BlackHole'));
 const BloomingFlower = React.lazy(() => import('../components/ui/BloomingFlower'));
+const Chandelier = React.lazy(() => import('../components/ui/Chandelier'));
 
 
 
@@ -1724,6 +1725,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'gravitational-vortex': GravitationalVortex,
     'black-hole-3d': BlackHole3d,
     'blooming-flower': BloomingFlower,
+    'chandelier': Chandelier,
     'black-hole-background': BlackHoleBackground,
     'mouse-gravity-background': MouseGravityBackground,
     '3d-scroll-animation': Scroll3DAnimation,
@@ -2819,6 +2821,15 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         preview: renderComponent("blooming-flower", "Blooming Flower"),
         code: `import BloomingFlower from '@/components/ui/BloomingFlower';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <BloomingFlower />\n  </div>\n);`,
         vibePrompt: "A WebGL point-cloud flower of 60k-100k point sprites that opens on hover and closes to a bud when the pointer leaves. Three kinds of points share one buffer: petals on a parametric surface, stamens in a dome, and a swaying tapered stem. The head and stem share one sway expression so the flower cannot drift off its stalk. Petals use a circular-arc midrib in half-angle form for smooth curling. Weather animation keeps the scene alive at idle."
+    },
+
+    {
+        id: "chandelier",
+        title: "Chandelier",
+        category: "interactive-background",
+        preview: renderComponent("chandelier", "Chandelier"),
+        code: `import Chandelier from '@/components/ui/Chandelier';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <Chandelier />\n  </div>\n);`,
+        vibePrompt: "A cloth simulation with text rendered on a deformable grid. The cloth hangs from pin points at the top and responds to gravity, wind, and mouse interaction. Characters from a configurable phrase are drawn on each quad cell, scaling and rotating with the cloth's deformation. Users can grab and drag individual cloth nodes with configurable density, speed, and cloth physics."
     },
 
     {
