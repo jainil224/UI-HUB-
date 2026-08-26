@@ -1468,4 +1468,39 @@ React, TypeScript, raw WebGL (no Three.js), Tailwind CSS.
 
 ## Output
 Production-ready React component`,
+    "black-hole-3d": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "Black Hole" component.
+
+## Concept
+A 3D black hole accretion disk with flowing particles leaving fading trail lines. Utilizes 3D Z-depth sorting to allow particles to pass behind and in front of the central event horizon with authentic physical occlusion. Features relativistic orbital speeds and a premium 3D sphere center.
+
+## Tech
+React, TypeScript, HTML5 Canvas 2D, Tailwind CSS.
+
+## Animation Details
+- **Dual Canvas**: Background canvas for behind-horizon particles + sphere, foreground canvas for in-front particles (pointerEvents: "none").
+- **Z-Depth Sorting**: Particles projected via perspective (PERSPECTIVE=1300), split into background/foreground arrays, each sorted back-to-front.
+- **Relativistic Speed**: Orbit speed increases near core via sqrt(voidRadius / max(pt.radius, 10)).
+- **Power Distribution**: Particles distributed with Math.pow(random(), 2) for gravity cluster near event horizon.
+- **Trail System**: destination-out fade with configurable trail persistence.
+- **3D Sphere**: Radial gradient sphere with edge highlights and rim lighting.
+- **Dual Tilt**: Main inclination + sideway roll for varied viewing angles.
+
+## Props
+- showCenter: boolean (Default: true)
+- centre: { voidRadius?: number; voidX?: number; voidY?: number }
+- particleCount: number (Default: 1000)
+- particleSize: number (Default: 4, range 1-100)
+- colors: string[] (Default: ["#ffffff"])
+- outerRadius: number (Default: 70)
+- tilt: number (Default: 20)
+- tiltSideway: number (Default: 160)
+- trail: number (Default: 50, range 0-50)
+- orbitSpeed: number (Default: 4)
+- pullSpeed: number (Default: 0, range 0-20)
+
+## Output
+Production-ready React component`,
 };

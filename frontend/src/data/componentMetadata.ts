@@ -45,6 +45,29 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["WebGL vertex/fragment shaders", "Logarithmic spiral math", "Additive blending with premultiplied alpha", "Per-frame phase and spin advancement", "Eye-shift lens correction", "Hover speed easing with dt-correct ramp"]
         }
     },
+    "black-hole-3d": {
+        props: [
+            { name: "showCenter", type: "boolean", default: "true", description: "Whether to show the central event horizon sphere." },
+            { name: "particleCount", type: "number", default: "1000", description: "Number of particles in the accretion disk." },
+            { name: "particleSize", type: "number", default: "4", description: "Particle size from 1-100 (mapped to 0.5-4.5 effective px)." },
+            { name: "colors", type: "string[]", default: '["#ffffff"]', description: "Array of particle colors." },
+            { name: "outerRadius", type: "number", default: "70", description: "Outer disk radius as percentage of half-width." },
+            { name: "tilt", type: "number", default: "20", description: "Main inclination tilt angle in degrees." },
+            { name: "tiltSideway", type: "number", default: "160", description: "Sideway roll tilt in degrees." },
+            { name: "trail", type: "number", default: "50", description: "Trail persistence 0-50 (0 = no trail, 50 = max trail)." },
+            { name: "orbitSpeed", type: "number", default: "4", description: "Orbital rotation speed of particles." },
+            { name: "pullSpeed", type: "number", default: "0", description: "Inward pull speed 0-20 (particles fall toward center)." },
+            { name: "centre", type: "{ voidRadius?: number; voidX?: number; voidY?: number }", default: "{ voidRadius: 40, voidX: 50, voidY: 50 }", description: "Center event horizon configuration." }
+        ],
+        vibeMeta: {
+            behavior: "A 3D black hole accretion disk with particles orbiting in a disk plane, sorted by Z-depth for authentic occlusion behind and in front of the central event horizon.",
+            states: { from: "static accretion disk", to: "orbiting particles with trail and optional pull" },
+            cssProperties: ["canvas-2d", "z-depth-sorting", "perspective-projection", "dual-canvas"],
+            description: "Premium 3D black hole accretion disk with Z-depth sorted particles, relativistic orbital speeds, and 3D sphere center with rim lighting.",
+            libraries: ["react"],
+            requirements: ["HTML5 Canvas 2D", "ResizeObserver", "requestAnimationFrame", "Z-depth sorting"]
+        }
+    },
     "3d-galaxy-animation": {
         props: [
             { name: "theme", type: "'Inferno' | 'Veridian' | 'Celestial'", default: "'Inferno'", description: "Color palette of the galaxy." },

@@ -779,6 +779,7 @@ export const Component = () => {
       case "grid-background": return `<div class="grid-background"></div>`;
       case "hacker-background": return `<canvas id="hacker-canvas"></canvas>`;
       case "gravitational-vortex": return `<canvas id="vortex-canvas"></canvas>`;
+      case "black-hole-3d": return `<canvas id="black-hole-canvas"></canvas>`;
       case "sparkles-background": return `<div class="sparkles"></div>`;
       default: return `<div class="${id}"></div>`;
     }
@@ -951,6 +952,8 @@ ${componentHeader}
       return `// Interactive Grid Background\nimport React, { useEffect, useRef } from "react";\n\nexport const Component = () => {\n    const canvasRef = useRef(null);\n    const trail = useRef([]);\n    useEffect(() => {\n        const canvas = canvasRef.current;\n        const ctx = canvas.getContext("2d");\n        const onMove = (e) => {\n            trail.current.unshift({ x: e.clientX, y: e.clientY });\n            if(trail.current.length > 10) trail.current.pop();\n        };\n        window.addEventListener("mousemove", onMove);\n        const draw = () => {\n            ctx.clearRect(0, 0, canvas.width, canvas.height);\n            trail.current.forEach((p, i) => {\n                ctx.fillStyle = \`rgba(0, 255, 0, \${1 - i/10})\`;\n                ctx.fillRect(p.x - 25, p.y - 25, 50, 50);\n            });\n            requestAnimationFrame(draw);\n        };\n        draw();\n        return () => window.removeEventListener("mousemove", onMove);\n    }, []);\n    return <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight} className="bg-black" />;\n};`;
     case "gravitational-vortex":
       return `import GravitationalVortex from '@/components/ui/GravitationalVortex';\n\nexport const Component = () => (\n  <div className="w-full h-[600px]">\n    <GravitationalVortex />\n  </div>\n);`;
+    case "black-hole-3d":
+      return `import BlackHole from '@/components/ui/BlackHole';\n\nexport const Component = () => (\n  <div className="w-full h-[600px]">\n    <BlackHole />\n  </div>\n);`;
     case "sparkles-background":
       return reactOutput(`
         <div className="relative h-full w-full flex items-center justify-center bg-neutral-950 overflow-hidden">

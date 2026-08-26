@@ -2757,6 +2757,47 @@ CRITICAL RULES:
 - Export as both named and default export.
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
+    "black-hole-3d": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer and Canvas animation specialist.
+
+## Task
+Create a premium "Black Hole" interactive 3D background component using React, TypeScript, and HTML5 Canvas 2D.
+
+COMPONENT NAME: BlackHole
+
+VISUAL DESCRIPTION:
+A visually stunning 3D black hole accretion disk component. Renders an active gravitationally bound accretion disk with flowing particles leaving fading trail lines. Utilizes 3D Z-depth sorting to allow particles to pass behind and in front of the central event horizon with authentic physical occlusion.
+
+CORE FEATURES:
+1. Dual Canvas Architecture: Background canvas for behind-horizon particles + sphere, foreground canvas for in-front particles.
+2. 3D Z-Depth Sorting: Particles projected via perspective projection (PERSPECTIVE=1300), sorted back-to-front.
+3. Relativistic Orbital Speed: Speed factor = sqrt(voidRadius / max(pt.radius, 10)).
+4. Power Distribution: Particles distributed with Math.pow(random(), 2) for higher density near the event horizon.
+5. 3D Center Sphere: Premium radial gradient sphere with rim lighting.
+6. Trail System: Canvas destination-out fade with configurable persistence.
+7. Core Consumption: Particles entering the void respawn at outer edge.
+8. Dual Tilt: Main inclination + sideway roll tilt.
+
+PROPS:
+- showCenter: boolean (default: true)
+- centre: { voidRadius, voidX, voidY } (default: { voidRadius: 40, voidX: 50, voidY: 50 })
+- particleCount: number (default: 1000)
+- particleSize: number (default: 4, range 1-100)
+- colors: string[] (default: ["#ffffff"])
+- outerRadius: number (default: 70, percentage of half-width)
+- tilt: number (default: 20, degrees)
+- tiltSideway: number (default: 160, degrees)
+- trail: number (default: 50, range 0-50)
+- orbitSpeed: number (default: 4)
+- pullSpeed: number (default: 0, range 0-20)
+- style: React.CSSProperties
+
+TECHNICAL: Dual canvas, ResizeObserver, DPR capped at 1.5, normalize dt to 60fps, 3D perspective projection with two rotation matrices, back-to-front sorting, hexToRgb helper, destination-out trail fade.
+
+Provide the complete, single-file, production-ready React TypeScript component.`,
 };
 
 

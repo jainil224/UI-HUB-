@@ -59,6 +59,7 @@ const PointDNAHelix = React.lazy(() => import('../components/ui/PointDNAHelix'))
 const TwinGalaxyRings = React.lazy(() => import('../components/ui/TwinGalaxyRings'));
 const Tornado = React.lazy(() => import('../components/ui/Tornado'));
 const ParticleSphere = React.lazy(() => import('../components/ui/ParticleSphere'));
+const BlackHole3d = React.lazy(() => import('../components/ui/BlackHole'));
 
 
 
@@ -1720,6 +1721,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'target-cursor': TargetCursor,
     'space-background': SpaceBackground,
     'gravitational-vortex': GravitationalVortex,
+    'black-hole-3d': BlackHole3d,
     'black-hole-background': BlackHoleBackground,
     'mouse-gravity-background': MouseGravityBackground,
     '3d-scroll-animation': Scroll3DAnimation,
@@ -2797,6 +2799,15 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         preview: renderComponent("gravitational-vortex", "Gravitational Vortex"),
         code: `import GravitationalVortex from '@/components/ui/GravitationalVortex';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GravitationalVortex />\n  </div>\n);`,
         vibePrompt: "A premium WebGL gravitational vortex background with a logarithmic spiral accretion disc. Features ~20k motion-blurred streak particles falling into a funnel throat, rendered in real-time with additive blending. The spiral structure is generated mathematically with configurable twist and funnel depth, creating a mesmerizing cosmic whirlpool effect. Particles taper along their velocity direction with Gaussian width profiles, depth-attenuated for cinematic depth, and support interactive hover speed boost."
+    },
+
+    {
+        id: "black-hole-3d",
+        title: "Black Hole",
+        category: "background",
+        preview: renderComponent("black-hole-3d", "Black Hole"),
+        code: `import BlackHole from '@/components/ui/BlackHole';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <BlackHole />\n  </div>\n);`,
+        vibePrompt: "A premium 3D black hole accretion disk component. Renders an active gravitationally bound accretion disk with flowing particles leaving fading trail lines. Utilizes 3D Z-depth sorting to allow particles to pass behind and in front of the central event horizon with authentic physical occlusion. Features relativistic orbital speeds, adjustable tilt angles, and a premium 3D sphere at the center with rim lighting."
     },
 
     {

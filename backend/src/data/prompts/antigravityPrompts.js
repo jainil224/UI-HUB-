@@ -4806,4 +4806,50 @@ A premium WebGL gravitational vortex background with a logarithmic spiral accret
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
+    "black-hole-3d": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and Canvas animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+
+## Component: BlackHole
+
+### Concept
+A premium 3D black hole accretion disk with flowing particles leaving fading trail lines. Uses dual-canvas architecture for authentic 3D occlusion behind and in front of the central event horizon.
+
+### Technical Requirements
+- HTML5 Canvas 2D (no WebGL, no Three.js).
+- Dual canvas: background for behind-horizon + sphere, foreground for in-front particles.
+- ResizeObserver for responsive sizing, DPR capped at 1.5.
+- dt-normalized animation: Math.min((now - lastTime) / 16.667, 3).
+- Destination-out trail fade on both canvases.
+- 3D perspective projection (PERSPECTIVE=1300) with two rotation matrices.
+- Z-depth sorting: split particles into background (z >= 0) and foreground (z < 0), sort each back-to-front.
+- Relativistic speed: sqrt(voidRadius / max(pt.radius, 10)).
+- Power distribution: Math.pow(random(), 2) for gravity clustering.
+- Core consumption respawn at outer edge.
+- hexToRgb helper for sphere gradient colors.
+- Particle init uses outerRadFromSize callback resolved against live canvas dimensions.
+
+### Props
+- showCenter, centre, particleCount, particleSize, colors, outerRadius, tilt, tiltSideway, trail, orbitSpeed, pullSpeed, style
+
+### Visual
+- Background canvas: trail fade → sort back-to-front → draw particles (globalAlpha, arc fill) → draw sphere (radial gradient + rim light).
+- Foreground canvas: trail fade → sort back-to-front → draw particles (globalAlpha, arc fill).
+- Sphere: radial gradient from voidColor center to edgeR/G/B, plus rimGrad with white-to-transparent rim.
+
+### Performance
+- DPR capped at 1.5
+- Canvas size from ResizeObserver
+- Skip off-screen particles (px < -30 || px > w+30)
+- Particle count configurable via particleCount prop
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
 };

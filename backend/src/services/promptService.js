@@ -36,6 +36,7 @@ const resolveSourceCode = async (componentId) => {
     'black-box': 'ui/BlackBox.tsx',
     'space-background': 'ui/SpaceBackground.tsx',
     'gravitational-vortex': 'ui/GravitationalVortex.tsx',
+    'black-hole-3d': 'ui/BlackHole.tsx',
     'black-hole-background': 'ui/BlackHoleBackground.tsx',
     'mouse-gravity-background': 'ui/MouseGravityBackground.tsx',
     'lizard-cursor': 'ui/LizardCursor.tsx',
