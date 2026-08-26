@@ -430,66 +430,6 @@ Production-ready React component`,
 
     // 2. 3D & WebGL Experiences
 
-    "robot-3d-background": `
-# UI HUB • LOVABLE PROMPT
-
-Create a visually stunning "Robot 3D Background" component.
-
-## Concept
-A cinematic, futuristic backdrop featuring high-fidelity 3D robots sliding across a neon-lit industrial platform. The atmosphere is dense and high-tech, enhanced by a cyberpunk radial vignette and retro scanline overlays that evoke a premium sci-fi cockpit or command center interface.
-
-## Tech
-React, HTML5 Video, Tailwind CSS, Lucide-style SVGs, Blob API (for 4K downloads).
-
-## Animation Details
-- **Cinematic Background**: Seamlessly looping 4K MP4 video with a subtle \`scale(1.1)\` and offset transform for immersive framing.
-- **Interactive UI**: A shimmering "Download 4K" button with a gradient stroke and a sweeping light-refraction animation (\`shimmer\` keyframes).
-- **CRT Atmosphere**: A multi-layered scanline effect using linear gradients to create horizontal and vertical pixel-grid distortion.
-- **Dynamic Vignette**: A programmatic radial gradient that darkens towards the edges, focusing visual attention on the central action.
-
-## Performance
-- Uses \`object-cover\` for responsive video scaling.
-- Optimized programmatic download using Fetch + Blob URL to prevent browser navigation.
-- Scanline and vignette effects are rendered as lightweight CSS overlays.
-
-## Props
-- className: string (Optional container styles)
-- overlayColor: string (Default: "rgba(0,0,0,0.5)")
-- overlayOpacity: number (Default: 0.4)
-- showDownloadLink: boolean (Default: false)
-
-## Output
-Production-ready React component`,
-    "interactive-webgl-scene": `
-# UI HUB • LOVABLE PROMPT
-
-Create a visually stunning "Interactive WebGL Scene" component.
-
-## Concept
-An immersive, high-end WebGL-inspired 3D environment that serves as a premium cinematic background. It features deep indigo tones, professional lighting, and a futuristic Command & Control aesthetic, perfected with CRT scanlines and a focus-driven radial vignette.
-
-## Tech
-React, HTML5 Video, Tailwind CSS, Blob API, Scoped CSS Keyframes.
-
-## Animation Details
-- **Scene Loop**: High-fidelity 4K video source rendered with \`autoPlay\`, \`loop\`, and \`muted\` attributes.
-- **Glassmorphism UI**: High-end download button with \`backdrop-blur-xl\` and indigo-tinted glowing borders.
-- **Digital Grain**: Scoped scanline overlay mimicking a high-resolution CRT monitor's phosphorus grid.
-- **Pulse Effects**: UI HUB branding elements with shadow-glow pulses and border-radius consistency.
-
-## Performance
-- Programmatic memory management for Blob URLs during 4K asset retrieval.
-- Hardware-accelerated video rendering via \`playsInline\`.
-- Zero-dependency logic for maximum portability.
-
-## Props
-- className: string
-- overlayColor: string (Indigo-favored dark transparency)
-- overlayOpacity: number
-- showDownloadLink: boolean
-
-## Output
-Production-ready React component`,
     "3d-scroll-animation": `
 # UI HUB • LOVABLE PROMPT
 
