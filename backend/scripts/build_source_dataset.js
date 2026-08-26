@@ -21,13 +21,10 @@ const COMPONENT_FILE_MAP = {
 
   // Backgrounds
   'space-background': 'components/ui/SpaceBackground.tsx',
-  'neural-network-background': 'components/ui/NeuralNetworkBackground.tsx',
   'black-hole-background': 'components/ui/BlackHoleBackground.tsx',
-  'warp-speed-background': 'components/ui/WarpSpeedBackground.tsx',
   'mouse-gravity-background': 'components/ui/MouseGravityBackground.tsx',
   'hell-background': 'components/ui/HellBackground.tsx',
   'interactive-grid-background': 'components/ui/InteractiveGridBackground.tsx',
-  'particles-background': 'components/ui/ParticlesBackground.tsx',
   'wave-background': 'components/ui/WaveBackground.tsx',
   'lines-background': 'components/ui/background-paths.tsx',
   'sparkles-background': 'components/ui/sparkles-background.tsx',
@@ -38,7 +35,6 @@ const COMPONENT_FILE_MAP = {
 
   // Buttons
   'corner-border-button': 'components/ui/corner-border-button.tsx',
-  'shatter-button': 'components/ui/shatter-button.tsx',
   'border-beam': 'components/ui/border-beam.tsx',
   'marquee-hover-button': 'components/ui/marquee-hover-button.tsx',
   'payment-transaction-button': 'components/ui/payment-transaction-button.tsx',
@@ -48,7 +44,6 @@ const COMPONENT_FILE_MAP = {
   'orbit-button': 'components/ui/OrbitButton.tsx',
   'galaxy-button': 'components/ui/GalaxyButton.tsx',
   'liquid-fill-button': 'components/ui/LiquidFillButton.tsx',
-  'neon-flicker-button': 'components/ui/NeonFlickerButton.tsx',
   'interactive-hover-button': 'components/ui/interactive-hover-button.tsx',
 
   // 3D & Scenes
@@ -56,10 +51,8 @@ const COMPONENT_FILE_MAP = {
   '3d-scroll-animation': 'components/ui/Scroll3DAnimation.tsx',
   '3d-slider': 'components/ui/ThreeDSlider.tsx',
   '3d-rubiks-cube': 'components/ui/RubiksCube.tsx',
-  'robot-3d-background': 'components/ui/Robot3DBackground.tsx',
   'cards-beam': 'components/ui/CardsBeam.tsx',
   'solar-system': 'components/ui/SolarSystem.tsx',
-  'interactive-webgl-scene': 'components/ui/InteractiveWebGLScene.tsx',
 
   // 3D Chatbots
   'hoodiebot': 'components/ui/HoodieBot.tsx',
@@ -74,7 +67,6 @@ const COMPONENT_FILE_MAP = {
   'section-scroll': 'components/ui/SectionScroll.tsx',
   'cloud-scroll': 'components/ui/CloudScroll/CloudScroll.tsx',
   'infinite-marquee': 'components/ui/InfiniteMarquee.tsx',
-  'buyme-acoffee': 'components/ui/BuyMeCoffee.tsx',
 };
 
 // Function to make code 100% self-contained so any AI can copy and paste directly

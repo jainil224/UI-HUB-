@@ -9,11 +9,8 @@ const MagneticBackground = React.lazy(() => import('../components/ui/MagneticBac
 const BlackHoleCursor = React.lazy(() => import('../components/ui/BlackHoleCursor').then(m => ({ default: m.BlackHoleCursor })));
 const TargetCursor = React.lazy(() => import('../components/ui/TargetCursor').then(m => ({ default: m.TargetCursor })));
 const SpaceBackground = React.lazy(() => import('../components/ui/SpaceBackground').then(m => ({ default: m.SpaceBackground })));
-const NeuralNetworkBackground = React.lazy(() => import('../components/ui/NeuralNetworkBackground').then(m => ({ default: m.NeuralNetworkBackground })));
 const BlackHoleBackground = React.lazy(() => import('../components/ui/BlackHoleBackground').then(m => ({ default: m.BlackHoleBackground })));
-const WarpSpeedBackground = React.lazy(() => import('../components/ui/WarpSpeedBackground').then(m => ({ default: m.WarpSpeedBackground })));
 const MouseGravityBackground = React.lazy(() => import('../components/ui/MouseGravityBackground').then(m => ({ default: m.MouseGravityBackground })));
-const InteractiveWebGLScene = React.lazy(() => import('../components/ui/InteractiveWebGLScene').then(m => ({ default: m.InteractiveWebGLScene })));
 const Scroll3DAnimation = React.lazy(() => import('../components/ui/Scroll3DAnimation'));
 const ThreeDSlider = React.lazy(() => import('../components/ui/ThreeDSlider'));
 export const RubiksCube = React.lazy(() => import('../components/ui/RubiksCube'));
@@ -22,17 +19,14 @@ const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').th
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const StarCursor = React.lazy(() => import('../components/ui/StarCursor').then(m => ({ default: m.StarCursor })));
 
-const Robot3DBackground = React.lazy(() => import('../components/ui/Robot3DBackground').then(m => ({ default: m.Robot3DBackground })));
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
 const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
-const ParticlesBackground = React.lazy(() => import('../components/ui/ParticlesBackground'));
 const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
-const BuyMeCoffee = React.lazy(() => import('../components/ui/BuyMeCoffee'));
 const HackerBackground = React.lazy(() => import('../components/ui/HackerBackground'));
 const BeamGridBackground = React.lazy(() => import('../components/ui/BeamGridBackground'));
 const FallBeamBackground = React.lazy(() => import('../components/ui/FallBeamBackground'));
@@ -46,7 +40,6 @@ const MagicCard = React.lazy(() => import('../components/ui/magic-card').then(m 
 const MarqueeHoverButton = React.lazy(() => import('../components/ui/marquee-hover-button').then(m => ({ default: m.MarqueeHoverButton })));
 const PaymentTransactionButton = React.lazy(() => import('../components/ui/payment-transaction-button').then(m => ({ default: m.PaymentTransactionButton })));
 const RainbowButton = React.lazy(() => import('../components/ui/rainbow-button').then(m => ({ default: m.RainbowButton })));
-const ShatterButton = React.lazy(() => import('../components/ui/shatter-button').then(m => ({ default: m.ShatterButton })));
 const SparklesBackground = React.lazy(() => import('../components/ui/sparkles-background').then(m => ({ default: m.SparklesBackground })));
 const BackgroundBoxes = React.lazy(() => import('../components/ui/background-boxes').then(m => ({ default: m.BoxesCore })));
 const BackgroundPaths = React.lazy(() => import('../components/ui/background-paths').then(m => ({ default: m.BackgroundPaths })));
@@ -54,7 +47,6 @@ const BorderBeam = React.lazy(() => import('../components/ui/border-beam').then(
 const GlowButton = React.lazy(() => import('../components/ui/GlowButton'));
 const GalaxyButton = React.lazy(() => import('../components/ui/GalaxyButton').then(m => ({ default: m.GalaxyButton })));
 const LiquidFillButton = React.lazy(() => import('../components/ui/LiquidFillButton').then(m => ({ default: m.LiquidFillButton })));
-const NeonFlickerButton = React.lazy(() => import('../components/ui/NeonFlickerButton').then(m => ({ default: m.NeonFlickerButton })));
 const OrbitButton = React.lazy(() => import('../components/ui/OrbitButton').then(m => ({ default: m.OrbitButton })));
 const SocialTooltipButtons = React.lazy(() => import('../components/animations/SocialTooltipButtons').then(m => ({ default: m.SocialTooltipButtons })));
 const ImageTrail = React.lazy(() => import('../components/ui/image-trail').then(m => ({ default: m.ImageTrail })));
@@ -1726,11 +1718,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'black-hole-cursor': BlackHoleCursor,
     'target-cursor': TargetCursor,
     'space-background': SpaceBackground,
-    'neural-network-background': NeuralNetworkBackground,
     'black-hole-background': BlackHoleBackground,
-    'warp-speed-background': WarpSpeedBackground,
     'mouse-gravity-background': MouseGravityBackground,
-    'interactive-webgl-scene': InteractiveWebGLScene,
     '3d-scroll-animation': Scroll3DAnimation,
     '3d-slider': ThreeDSlider,
     '3d-rubiks-cube': RubiksCube,
@@ -1739,17 +1728,14 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'venom-cursor': VenomCursor,
     'star-cursor': StarCursor,
 
-    'robot-3d-background': Robot3DBackground,
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
     '3d-hero': ToonhubHero,
-    'particles-background': ParticlesBackground,
     'fourier-flow': FourierFlow,
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
     'cloud-scroll': CloudScroll,
     'infinite-marquee': InfiniteMarquee,
-    'buyme-acoffee': BuyMeCoffee,
     'hacker-background': HackerBackground,
 
     'beam-grid-background': BeamGridBackground,
@@ -1764,7 +1750,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'marquee-hover-button': MarqueeHoverButton,
     'payment-transaction-button': PaymentTransactionButton,
     'rainbow-button': RainbowButton,
-    'shatter-button': ShatterButton,
     'sparkles-background': SparklesBackground,
     'grid-background': BackgroundBoxes,
     'lines-background': BackgroundPaths,
@@ -1772,7 +1757,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'glow-button': GlowButton,
     'galaxy-button': GalaxyButton,
     'liquid-fill-button': LiquidFillButton,
-    'neon-flicker-button': NeonFlickerButton,
     'orbit-button': OrbitButton,
     'social-tooltip-buttons': SocialTooltipButtons,
     'image-trail': ImageTrail,

@@ -26,8 +26,6 @@ const resolveSourceCode = async (componentId) => {
   // 2. Fallback: try to read from the frontend filesystem (works in local dev only)
   const mapping = {
     '3d-hero': 'ui/ToonhubHero.tsx',
-    'robot-3d-background': 'ui/Robot3DBackground.tsx',
-    'interactive-webgl-scene': 'ui/InteractiveWebGLScene.tsx',
     '3d-scroll-animation': 'ui/Scroll3DAnimation.tsx',
     '3d-slider': 'ui/ThreeDSlider.tsx',
     'section-scroll': 'ui/SectionScroll.tsx',
@@ -49,10 +47,8 @@ const resolveSourceCode = async (componentId) => {
     'venom-cursor': 'ui/VenomCursor.tsx',
     'galaxy-button': 'ui/GalaxyButton.tsx',
     'liquid-fill-button': 'ui/LiquidFillButton.tsx',
-    'neon-flicker-button': 'ui/NeonFlickerButton.tsx',
     'orbit-button': 'ui/OrbitButton.tsx',
     'rainbow-button': 'ui/rainbow-button.tsx',
-    'shatter-button': 'ui/shatter-button.tsx',
     'marquee-hover-button': 'ui/marquee-hover-button.tsx',
     'corner-border-button': 'ui/corner-border-button.tsx',
     'payment-transaction-button': 'ui/payment-transaction-button.tsx',

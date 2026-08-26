@@ -242,14 +242,7 @@ const ToolCard = React.memo(({
             <div className="relative z-10 w-full flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                     <p className={`text-[9px] uppercase tracking-widest font-black transition-colors ${isLocked ? 'text-neutral-500' : isActive ? theme.accentColor : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
-                        {itemId === 'robot-3d-background' ? (
-                            tool === 'antigravity' ? 'NEON ENGINE' :
-                                tool === 'lovable' ? 'ROBOTIC HUB' :
-                                    tool === 'cursor' ? 'CYBER CORE' :
-                                        tool === 'claude' ? 'PHANTOM MODEL' : 'ADVANCED SYSTEM'
-                        ) : (
-                            theme.sublabel
-                        )}
+                        {theme.sublabel}
                     </p>
                     <div className={`transition-all duration-200 ${isActive ? `scale-110 ${theme.accentColor}` : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
                         <ToolIcon tool={tool} active={isActive} size={20} />
