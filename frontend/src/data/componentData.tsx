@@ -2795,7 +2795,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
     {
         id: "gravitational-vortex",
         title: "Gravitational Vortex",
-        category: "background",
+        category: "interactive-background",
         preview: renderComponent("gravitational-vortex", "Gravitational Vortex"),
         code: `import GravitationalVortex from '@/components/ui/GravitationalVortex';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GravitationalVortex />\n  </div>\n);`,
         vibePrompt: "A premium WebGL gravitational vortex background with a logarithmic spiral accretion disc. Features ~20k motion-blurred streak particles falling into a funnel throat, rendered in real-time with additive blending. The spiral structure is generated mathematically with configurable twist and funnel depth, creating a mesmerizing cosmic whirlpool effect. Particles taper along their velocity direction with Gaussian width profiles, depth-attenuated for cinematic depth, and support interactive hover speed boost."
@@ -2804,7 +2804,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
     {
         id: "black-hole-3d",
         title: "Black Hole",
-        category: "background",
+        category: "interactive-background",
         preview: renderComponent("black-hole-3d", "Black Hole"),
         code: `import BlackHole from '@/components/ui/BlackHole';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <BlackHole />\n  </div>\n);`,
         vibePrompt: "A premium 3D black hole accretion disk component. Renders an active gravitationally bound accretion disk with flowing particles leaving fading trail lines. Utilizes 3D Z-depth sorting to allow particles to pass behind and in front of the central event horizon with authentic physical occlusion. Features relativistic orbital speeds, adjustable tilt angles, and a premium 3D sphere at the center with rim lighting."
