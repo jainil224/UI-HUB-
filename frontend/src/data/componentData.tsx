@@ -440,6 +440,8 @@ const MagneticCursorPreview: React.FC = () => {
                 justifyContent: 'center',
                 flexDirection: 'column',
                 gap: 40,
+                // Keep centered content clear of the absolute nav when it wraps on phones
+                paddingTop: 'clamp(64px, 20vw, 84px)',
             }}
         >
             <MagneticBackground containerRef={containerRef} />
@@ -447,12 +449,13 @@ const MagneticCursorPreview: React.FC = () => {
 
             {/* Top Navigation Bar */}
             <div style={{
-                position: 'absolute', top: 32, left: '50%', transform: 'translateX(-50%)',
+                position: 'absolute', top: 'clamp(12px, 3vw, 32px)', left: '50%', transform: 'translateX(-50%)',
                 background: 'rgba(255, 255, 255, 0.03)',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
                 borderRadius: 999,
                 padding: '6px',
-                display: 'flex', gap: 4,
+                display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 4,
+                width: 'max-content', maxWidth: '92%',
                 backdropFilter: 'blur(24px)',
                 zIndex: 20,
                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
@@ -463,8 +466,8 @@ const MagneticCursorPreview: React.FC = () => {
                         className="mc-nav-btn"
                         onClick={() => setActiveNav(i)}
                         style={{
-                            padding: '8px 16px',
-                            fontSize: 13,
+                            padding: '8px 14px',
+                            fontSize: 'clamp(11px, 3vw, 13px)',
                             fontWeight: 500,
                             color: activeNav === i ? '#fff' : 'rgba(255,255,255,0.5)',
                             background: activeNav === i ? 'rgba(255,255,255,0.1)' : 'transparent',
@@ -484,12 +487,12 @@ const MagneticCursorPreview: React.FC = () => {
             </div>
 
             {/* Title */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, zIndex: 10, pointerEvents: 'none', /* Offset title down slightly */ marginTop: 40 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, zIndex: 10, pointerEvents: 'none', textAlign: 'center', padding: '0 16px', /* Offset title down slightly */ marginTop: 40 }}>
                 <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>
                     Interact Below
                 </div>
                 <div style={{
-                    fontSize: 42, fontWeight: 900, letterSpacing: '-0.04em',
+                    fontSize: 'clamp(28px, 8vw, 42px)', fontWeight: 900, letterSpacing: '-0.04em',
                     background: 'linear-gradient(180deg, #fff 0%, #a5b4fc 100%)',
                     WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
                     filter: 'drop-shadow(0 0 32px rgba(165,180,252,0.4))',
@@ -499,7 +502,7 @@ const MagneticCursorPreview: React.FC = () => {
             </div>
 
             {/* Magnetic buttons */}
-            <div style={{ display: 'flex', gap: 16, zIndex: 10 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px 16px', zIndex: 10, padding: '0 16px' }}>
                 {['Projects', 'About', 'Contact'].map((label, i) => (
                     <button
                         key={i}
@@ -632,11 +635,11 @@ const TargetCursorPreview: React.FC = () => {
                 }
             `}</style>
 
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', gap: 24, width: '80%' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', borderBottom: '1px solid #1a1a1a', paddingBottom: 12 }}>
+            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', gap: 24, width: '80%', minWidth: 0 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: 8, borderBottom: '1px solid #1a1a1a', paddingBottom: 12 }}>
                     <div>
                         <div style={{ fontSize: 10, color: '#444', letterSpacing: '0.2em' }}>SYSTEM_STATUS</div>
-                        <div className="cursor-target" style={{ fontSize: 24, fontWeight: 900, color: '#fff', letterSpacing: '0.1em' }}>UI_HUB // TARGETING_v4</div>
+                        <div className="cursor-target" style={{ fontSize: 'clamp(15px, 5vw, 24px)', fontWeight: 900, color: '#fff', letterSpacing: '0.1em' }}>UI_HUB // TARGETING_v4</div>
                     </div>
                     <div style={{ textAlign: 'right', fontSize: 10, color: '#fff' }}>
                         CPU: {stats.cpu}% <br />
@@ -746,12 +749,13 @@ const BlackHoleCursorPreview: React.FC = () => {
                 cursor: 'none',
             }}
         >
+            <Suspense fallback={null}>
             <BlackHoleCursor gravityRadius={250} containerRef={containerRef}>
                 {/* Mock Website Overlay */}
-                <div style={{ padding: '24px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                <div style={{ padding: '16px 20px', height: '100%', display: 'flex', flexDirection: 'column' }}>
                     {/* Mock Nav */}
                     <nav style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 'auto' }}>
-                        <div style={{ display: 'flex', gap: 24 }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: '8px 20px' }}>
                             {['Home', 'About', 'Library'].map(link => (
                                 <span key={link} style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer' }}>{link}</span>
                             ))}
@@ -759,18 +763,21 @@ const BlackHoleCursorPreview: React.FC = () => {
                     </nav>
 
                     {/* Hero Text */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, marginTop: '20%' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, flex: 1, justifyContent: 'center', textAlign: 'center', padding: '12px 0' }}>
                         <h1 style={{
-                            fontSize: 48, fontWeight: 900, letterSpacing: '-0.05em',
+                            fontSize: 'clamp(28px, 8vw, 48px)', fontWeight: 900, letterSpacing: '-0.05em',
                             color: '#fff',
                             margin: 0,
                             textShadow: '0 0 40px rgba(139, 92, 246, 0.8)',
                         }}>
                             Black Hole
                         </h1>
+                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
+                            Move cursor · Touch &amp; drag · Stars follow gravity
+                        </div>
                     </div>
                     {/* Interactive elements to test gravity pulse effect */}
-                    <div style={{ display: 'flex', gap: 24, zIndex: 10, marginTop: 'auto', alignSelf: 'center', paddingBottom: '20px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px 20px', zIndex: 10, marginTop: 'auto', paddingBottom: '16px' }}>
                         {['Singularity', 'Wormhole', 'Nebula'].map((label, i) => (
                             <button
                                 key={i}
@@ -842,6 +849,7 @@ const BlackHoleCursorPreview: React.FC = () => {
                     `}</style>
                 </div>
             </BlackHoleCursor>
+            </Suspense>
         </div>
     );
 };
@@ -889,6 +897,25 @@ const AuroraCursorPreview: React.FC = () => {
         if (!rect) return;
         target.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
     }, []);
+    const onTouch = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (!rect || e.touches.length === 0) return;
+        const t = e.touches[0];
+        target.current = { x: t.clientX - rect.left, y: t.clientY - rect.top };
+    }, []);
+
+    // Park the blob at the center and keep the loop running so it is always
+    // visible — including on touch devices with no mouse events
+    useEffect(() => {
+        const rect = containerRef.current?.getBoundingClientRect();
+        if (rect && rect.width > 0) {
+            const c = { x: rect.width / 2, y: rect.height / 2 };
+            pos.current = { ...c };
+            target.current = { ...c };
+        }
+        onEnter();
+        return onLeave;
+    }, [onEnter, onLeave]);
 
     return (
         <div
@@ -896,6 +923,8 @@ const AuroraCursorPreview: React.FC = () => {
             onMouseMove={onMove}
             onMouseEnter={onEnter}
             onMouseLeave={onLeave}
+            onTouchStart={onTouch}
+            onTouchMove={onTouch}
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '100%',
@@ -1260,15 +1289,12 @@ const MeshTextPreview: React.FC = () => {
 
 const LizardCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isInside, setIsInside] = useState(false);
-    // Eagerly pre-load lazy chunk so canvas is ready before first hover
+    // Eagerly pre-load lazy chunk so canvas is ready before first paint
     useEffect(() => { import('../components/ui/LizardCursor'); }, []);
 
     return (
         <div
             ref={containerRef}
-            onMouseEnter={() => setIsInside(true)}
-            onMouseLeave={() => setIsInside(false)}
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '400px',
@@ -1278,7 +1304,7 @@ const LizardCursorPreview: React.FC = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 flexDirection: 'column',
-                cursor: isInside ? 'none' : 'default',
+                cursor: 'none',
             }}
         >
             {/* Immersive Lab Background */}
@@ -1400,8 +1426,8 @@ const LizardCursorPreview: React.FC = () => {
                 </div>
             </div>
 
-            {/* Always mounted: opacity toggle = instant animation, no lazy-load delay on hover */}
-            <div style={{ opacity: isInside ? 1 : 0, position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+            {/* Always mounted & visible — works on desktop hover and mobile touch */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <Suspense fallback={null}><LizardCursor color="#22c55e" containerRef={containerRef} /></Suspense>
             </div>
         </div>
@@ -1411,14 +1437,11 @@ const LizardCursorPreview: React.FC = () => {
 // ── Star Cursor scoped preview ────────────
 const StarCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isInside, setIsInside] = useState(false);
     useEffect(() => { import('../components/ui/StarCursor'); }, []);
 
     return (
         <div
             ref={containerRef}
-            onMouseEnter={() => setIsInside(true)}
-            onMouseLeave={() => setIsInside(false)}
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '100%',
@@ -1496,8 +1519,8 @@ const StarCursorPreview: React.FC = () => {
                 }}>MOVE CURSOR · CLICK TO BURST · HOVER TO GLOW</div>
             </div>
 
-            {/* Star cursor — opacity-gated for performance */}
-            <div style={{ opacity: isInside ? 1 : 0, position: 'absolute', inset: 0, pointerEvents: 'none', transition: 'opacity 0.3s ease' }}>
+            {/* Star cursor — always visible (works on desktop hover and mobile touch) */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <Suspense fallback={null}>
                     <StarCursor containerRef={containerRef} hideDefaultCursor={true} />
                 </Suspense>
@@ -1509,15 +1532,12 @@ const StarCursorPreview: React.FC = () => {
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
-    const [isInside, setIsInside] = useState(false);
-    // Eagerly pre-load lazy chunk so canvas is ready before first hover
+    // Eagerly pre-load lazy chunk so canvas is ready before first paint
     useEffect(() => { import('../components/ui/VenomCursor'); }, []);
 
     return (
         <div
             ref={containerRef}
-            onMouseEnter={() => setIsInside(true)}
-            onMouseLeave={() => setIsInside(false)}
             style={{
                 position: 'relative',
                 width: '100%', height: '100%', minHeight: '100%',
@@ -1556,9 +1576,13 @@ const VenomCursorPreview: React.FC = () => {
             {/* Navigation Demo Buttons */}
             <div style={{
                 position: 'absolute',
-                top: 40,
+                top: 24,
+                left: 0, right: 0,
                 display: 'flex',
-                gap: 30,
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                gap: '8px 24px',
+                padding: '0 12px',
                 zIndex: 50,
             }}>
                 {['HOME', 'ABOUT', 'PROJECTS', 'CONTACT'].map((item) => (
@@ -1588,13 +1612,15 @@ const VenomCursorPreview: React.FC = () => {
                 ))}
             </div>
 
-            {/* Always mounted: opacity toggle = instant animation, no lazy-load delay on hover */}
-            <div style={{ opacity: isInside ? 1 : 0, position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+            {/* Always mounted & visible — works on desktop hover and mobile touch */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <Suspense fallback={null}><VenomCursor color="#ffffff" containerRef={containerRef} /></Suspense>
             </div>
 
-            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none' }}>
-                {/* Branding text removed as per user request */}
+            <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', pointerEvents: 'none', marginTop: 'auto', paddingBottom: 20, paddingInline: 16 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+                    Move cursor · Touch &amp; drag
+                </div>
             </div>
         </div>
     );

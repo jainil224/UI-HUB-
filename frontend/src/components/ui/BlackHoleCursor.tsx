@@ -118,17 +118,38 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
             };
         };
 
+        let didInitCenter = false;
         const resize = () => {
             const container = containerRef?.current || window;
             width = container === window ? window.innerWidth : (container as HTMLElement).getBoundingClientRect().width;
             height = container === window ? window.innerHeight : (container as HTMLElement).getBoundingClientRect().height;
-            canvas.width = width;
-            canvas.height = height;
+            // DPR-aware backing store for crisp stars (capped at 2x for perf)
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            canvas.width = Math.max(1, Math.floor(width * dpr));
+            canvas.height = Math.max(1, Math.floor(height * dpr));
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            // Start the black hole at the center, active — visible instantly (and on touch devices)
+            if (!didInitCenter) {
+                didInitCenter = true;
+                mouse.current.x = width / 2;
+                mouse.current.y = height / 2;
+                smoothMouse.current.x = width / 2;
+                smoothMouse.current.y = height / 2;
+                mouse.current.isActive = true;
+            } else {
+                mouse.current.x = Math.min(mouse.current.x, width);
+                mouse.current.y = Math.min(mouse.current.y, height);
+            }
             initParticles();
         };
 
         setTimeout(resize, 0);
         window.addEventListener('resize', resize);
+        let resizeObserver: ResizeObserver | undefined;
+        if (containerRef?.current) {
+            resizeObserver = new ResizeObserver(resize);
+            resizeObserver.observe(containerRef.current);
+        }
 
         const render = (time: number) => {
             ctx.clearRect(0, 0, width, height);
@@ -241,6 +262,21 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
             mouse.current.isActive = false;
         };
 
+        const onTouch = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                mouse.current.isActive = true;
+                if (containerRef?.current) {
+                    const rect = containerRef.current.getBoundingClientRect();
+                    mouse.current.x = t.clientX - rect.left;
+                    mouse.current.y = t.clientY - rect.top;
+                } else {
+                    mouse.current.x = t.clientX;
+                    mouse.current.y = t.clientY;
+                }
+            }
+        };
+
         const onMouseOverElement = (e: MouseEvent) => {
             const target = e.target as HTMLElement;
             if (target.tagName.toLowerCase() === 'button' || target.tagName.toLowerCase() === 'a' || target.closest('button, a, [data-magnetic]')) {
@@ -260,13 +296,18 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
         container.addEventListener('mouseleave', onMouseLeave as any, { passive: true });
         container.addEventListener('mouseover', onMouseOverElement as any, { passive: true });
         container.addEventListener('mouseout', onMouseOutElement as any, { passive: true });
+        container.addEventListener('touchstart', onTouch as any, { passive: true });
+        container.addEventListener('touchmove', onTouch as any, { passive: true });
 
         return () => {
             window.removeEventListener('resize', resize);
+            resizeObserver?.disconnect();
             container.removeEventListener('mousemove', onMouseMove as any);
             container.removeEventListener('mouseleave', onMouseLeave as any);
             container.removeEventListener('mouseover', onMouseOverElement as any);
             container.removeEventListener('mouseout', onMouseOutElement as any);
+            container.removeEventListener('touchstart', onTouch as any);
+            container.removeEventListener('touchmove', onTouch as any);
             cancelAnimationFrame(animationFrameId);
         };
     }, [containerRef, gravityRadius]);

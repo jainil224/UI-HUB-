@@ -128,7 +128,7 @@ export const ComponentGridSkeleton: React.FC = () => {
 // ── 4. Library Preview Skeleton ──
 export const PreviewSkeleton: React.FC<{ className?: string }> = ({ className = "" }) => {
     return (
-        <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden select-none pointer-events-none ${className}`}>
+        <div className={`w-full h-full flex flex-col items-center justify-center p-6 md:p-12 relative overflow-hidden select-none pointer-events-none ${className}`}>
             {/* Background shimmer ambient */}
             <div className="absolute inset-0 bg-brand-surface/40 flex items-center justify-center">
                 <div className="w-64 h-64 rounded-full bg-brand-blue/5 blur-3xl animate-pulse" />

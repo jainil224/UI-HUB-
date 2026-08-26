@@ -73,21 +73,32 @@ export const VenomCursor: React.FC<VenomCursorProps> = ({
         let w: number, h: number;
         const { sin, cos, PI, hypot, min, max } = Math;
 
+        let didInitCenter = false;
         const resize = () => {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
             if (containerRef?.current) {
-                w = canvas.width = containerRef.current.clientWidth;
-                h = canvas.height = containerRef.current.clientHeight;
+                w = containerRef.current.clientWidth;
+                h = containerRef.current.clientHeight;
             } else {
-                w = canvas.width = window.innerWidth;
-                h = canvas.height = window.innerHeight;
+                w = window.innerWidth;
+                h = window.innerHeight;
+            }
+            canvas.width = Math.max(1, Math.floor(w * dpr));
+            canvas.height = Math.max(1, Math.floor(h * dpr));
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            // Start entities at the center instead of crawling to the top-left corner
+            if (!didInitCenter && w > 0 && h > 0) {
+                didInitCenter = true;
+                mousePos.current = { x: w / 2, y: h / 2 };
             }
         };
         resize();
 
         window.addEventListener('resize', resize);
+        let resizeObserver: ResizeObserver | undefined;
         if (containerRef?.current) {
-            const ro = new ResizeObserver(resize);
-            ro.observe(containerRef.current);
+            resizeObserver = new ResizeObserver(resize);
+            resizeObserver.observe(containerRef.current);
         }
 
         // --- Logic Port ---
@@ -102,9 +113,11 @@ export const VenomCursor: React.FC<VenomCursorProps> = ({
         const many = (n: number, f: (i: number) => any) => Array.from({ length: n }, (_, i) => f(i));
 
         function spawn() {
+            // Spawn tentacle points within the container bounds (not the window),
+            // otherwise most points land outside a scoped preview canvas
             const pts = many(333, () => ({
-                x: rnd(window.innerWidth),
-                y: rnd(window.innerHeight),
+                x: rnd(w),
+                y: rnd(h),
                 len: 0,
                 r: 0
             }));
@@ -202,6 +215,7 @@ export const VenomCursor: React.FC<VenomCursorProps> = ({
 
         return () => {
             window.removeEventListener('resize', resize);
+            resizeObserver?.disconnect();
             cancelAnimationFrame(rafId);
         };
     }, [color, containerRef]);

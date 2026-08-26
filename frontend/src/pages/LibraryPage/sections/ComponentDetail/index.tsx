@@ -937,7 +937,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <div
                             id="preview"
                             ref={previewRef}
-                            className={`min-h-[380px] sm:min-h-[460px] md:min-h-[520px] w-full rounded-xl overflow-hidden flex flex-col bg-brand-surface border-2 border-white brutal-shadow-black ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black min-h-screen' : 'relative'}`}
+                            className={`w-full rounded-xl overflow-hidden flex flex-col bg-brand-surface border-2 border-white brutal-shadow-black ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black h-screen' : 'relative h-[420px] sm:h-[480px] md:h-[540px]'}`}
                         >
                             {/* Browser Mockup Top Bar */}
                             <div className="w-full px-4 py-2.5 bg-black border-b-2 border-white flex items-center justify-between z-40 shrink-0 select-none">
@@ -965,13 +965,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 </div>
                             </div>
 
-                            <div className="relative w-full flex-1 min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center overflow-hidden">
+                            <div className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden">
                                 <PreviewErrorBoundary 
                                     key={`${item.id}-${resetKey}`} 
                                     componentId={item.id}
                                     onReset={() => setResetKey(k => k + 1)}
                                 >
-                                    <div className={`w-full h-full min-h-[380px] sm:min-h-[460px] md:min-h-[500px] flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
+                                    <div className={`w-full h-full flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
                                         <React.Suspense fallback={<PreviewSkeleton />}>
                                             <motion.div
                                                 key={`preview-${item.id}-${resetKey}`}

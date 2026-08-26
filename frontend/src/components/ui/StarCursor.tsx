@@ -558,6 +558,30 @@ export const StarCursor: React.FC<StarCursorProps> = ({
                 : (container as HTMLElement).getBoundingClientRect();
             mouse.current = { x: me.clientX - rect.left, y: me.clientY - rect.top };
         };
+        const getPos = (clientX: number, clientY: number) => {
+            const rect = container === document.body
+                ? { left: 0, top: 0 }
+                : (container as HTMLElement).getBoundingClientRect();
+            return { x: clientX - rect.left, y: clientY - rect.top };
+        };
+        const onTouchMove = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                mouse.current = getPos(t.clientX, t.clientY);
+                inContainer.current = true;
+            }
+        };
+        const onTouchStart = (e: TouchEvent) => {
+            if (e.touches.length > 0) {
+                const t = e.touches[0];
+                const pos = getPos(t.clientX, t.clientY);
+                mouse.current = pos;
+                star.current.x = pos.x;
+                star.current.y = pos.y;
+                inContainer.current = true;
+            }
+            onDown();
+        };
         const onEnter = () => { inContainer.current = true; };
         const onLeave = () => { inContainer.current = false; };
         
@@ -596,10 +620,14 @@ export const StarCursor: React.FC<StarCursorProps> = ({
         target.addEventListener('mouseover', onOver,  { passive: true });
         target.addEventListener('mouseout',  onOut,   { passive: true });
         target.addEventListener('mousedown', onDown,  { passive: true });
+        target.addEventListener('touchstart', onTouchStart, { passive: true });
+        target.addEventListener('touchmove',  onTouchMove,  { passive: true });
 
         if (containerRef?.current) {
             containerRef.current.addEventListener('mouseenter', onEnter, { passive: true });
             containerRef.current.addEventListener('mouseleave', onLeave, { passive: true });
+            // Visible immediately at center (preview-friendly); mouseleave hides it
+            inContainer.current = true;
         } else {
             inContainer.current = true;
         }
@@ -623,6 +651,8 @@ export const StarCursor: React.FC<StarCursorProps> = ({
             target.removeEventListener('mouseover', onOver);
             target.removeEventListener('mouseout',  onOut);
             target.removeEventListener('mousedown', onDown);
+            target.removeEventListener('touchstart', onTouchStart);
+            target.removeEventListener('touchmove',  onTouchMove);
             if (containerRef?.current) {
                 containerRef.current.removeEventListener('mouseenter', onEnter);
                 containerRef.current.removeEventListener('mouseleave', onLeave);
@@ -643,6 +673,7 @@ export const StarCursor: React.FC<StarCursorProps> = ({
         const canvas = canvasRef.current;
         if (!canvas) return;
         
+        let didCenter = false;
         const setup = () => {
             const dpr = window.devicePixelRatio || 1;
             const el  = containerRef?.current ?? document.documentElement;
@@ -652,6 +683,16 @@ export const StarCursor: React.FC<StarCursorProps> = ({
             canvas.height = h * dpr;
             canvas.style.width  = `${w}px`;
             canvas.style.height = `${h}px`;
+            // Park the star at the center on first layout so it is visible
+            // before any mouse/touch input (mobile included)
+            if (!didCenter && w > 0 && h > 0) {
+                didCenter = true;
+                mouse.current = { x: w / 2, y: h / 2 };
+                star.current.x = w / 2;
+                star.current.y = h / 2;
+                star.current.lastX = w / 2;
+                star.current.lastY = h / 2;
+            }
         };
         
         setup();
