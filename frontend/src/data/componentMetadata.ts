@@ -20,23 +20,6 @@ export interface ComponentConfig {
 }
 
 export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
-    "buyme-acoffee": {
-        props: [
-            { name: "classname", type: "string", default: "''", description: "Additional CSS class for the root container." },
-            { name: "iconClassName", type: "string", default: "''", description: "CSS class for styling the coffee icon." },
-            { name: "textSvgClassName", type: "string", default: "''", description: "CSS class for styling the SVG text element (if used)." },
-            { name: "initialCount", type: "number", default: "1", description: "Default number of coffees selected." },
-            { name: "onDonate", type: "(count: number) => void", default: "undefined", description: "Callback triggered when a user supports/clicks." }
-        ],
-        vibeMeta: {
-            behavior: "A playful and creative creator sponsorship component inspired by 'Buy Me a Coffee' with animated steam, tipping cup physics, and floating coin animations.",
-            states: { from: "default coffee cup", to: "steam pulsing and floating coins" },
-            cssProperties: ["framer-motion", "lucide-react", "tailwind-css"],
-            description: "A fun and creative sponsorship component inspired by 'Buy Me a Coffee' with a twist! Perfect for creators looking to attract sponsors and supporters.",
-            libraries: ["framer-motion", "lucide-react"],
-            requirements: ["Animated steam physics", "Tipping cup animation", "Selectable amount pills", "Persistent gifted coffee counter"]
-        }
-    },
     "3d-galaxy-animation": {
         props: [
             { name: "theme", type: "'Inferno' | 'Veridian' | 'Celestial'", default: "'Inferno'", description: "Color palette of the galaxy." },
@@ -67,22 +50,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Three.js Points primitive for stars", "Volumetric shader for nebula effects", "Mouse-parallax camera controller", "Window resize listener with aspect-ratio management"]
         }
     },
-    "neural-network-background": {
-        props: [
-            { name: "nodeCount", type: "number", default: "150", description: "Number of nodes in the network." },
-            { name: "nodeColor", type: "string", default: '"#06b6d4"', description: "Color of the nodes." },
-            { name: "lineColor", type: "string", default: '"#0891b2"', description: "Color of the connecting lines." },
-            { name: "connectionDistance", type: "number", default: "150", description: "Max distance for node connections." }
-        ],
-        vibeMeta: {
-            behavior: "An interactive particle network where nodes connect based on proximity. Features realistic physics with repulsion/attraction and high-performance Canvas rendering.",
-            states: { from: "random nodes", to: "interconnected pulsing network" },
-            cssProperties: ["canvas", "background: transparent", "pointer-events: none"],
-            description: "High-performance interactive particle network background.",
-            libraries: ["react"],
-            requirements: ["Canvas 2D rendering loop", "Spatial partitioning for line optimization", "Mouse-repulsion physics implementation", "Dynamic opacity based on connection distance", "Clean unmount and resize handling"]
-        }
-    },
     "black-hole-background": {
         props: [
             { name: "interactive", type: "boolean", default: "true", description: "Enable mouse gravity interaction." },
@@ -98,21 +65,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Three.js custom ShaderMaterial", "Gravitational lensing post-processing", "Fragment shader for accretion disk glow", "Responsive camera orbit controls", "Touch and mouse interaction support"]
         }
     },
-    "warp-speed-background": {
-        props: [
-            { name: "count", type: "number", default: "2000", description: "Number of streak particles." },
-            { name: "color", type: "string", default: '"#ffffff"', description: "Color of the warp streaks." },
-            { name: "speed", type: "number", default: "1.0", description: "Warp speed multiplier." }
-        ],
-        vibeMeta: {
-            behavior: "A hyperspace jump animation with long, glowing streaks converging toward a focus point. Features speed-based field-of-view stretching and motion blur simulation.",
-            states: { from: "slow star drift", to: "rapid hyperspace warp streaks" },
-            cssProperties: ["canvas", "background: #000", "will-change: transform"],
-            description: "High-speed cinematic warp effect with perspective stretching.",
-            libraries: ["three", "gsap"],
-            requirements: ["Dynamic Point Cloud generation", "Line-based streak stretching logic", "FOV-linked camera animation", "Performance-optimized WebGL context", "Infinite loop with smooth reset"]
-        }
-    },
     "mouse-gravity-background": {
         props: [
             { name: "particleCount", type: "number", default: "500", description: "Number of particles." },
@@ -126,22 +78,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             description: "Organic particle swarm background with gravity-based physics.",
             libraries: ["react", "framer-motion"],
             requirements: ["Inverse-square law gravity implementation", "Inertia and friction physics system", "Canvas-based high-performance rendering", "Particle life-cycle management", "Touch support for mobile interaction"]
-        }
-    },
-    "interactive-webgl-scene": {
-        props: [
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
-            { name: "overlayColor", type: "string", default: '"rgba(0,0,0,0.5)"', description: "Color of the darkening overlay." },
-            { name: "overlayOpacity", type: "number", default: "0.4", description: "Opacity of the overlay." },
-            { name: "showDownloadLink", type: "boolean", default: "false", description: "Shows a download button for the video." }
-        ],
-        vibeMeta: {
-            behavior: "An immersive fullscreen WebGL scene (video-backed) featuring high-end 3D environments. Combines cinematic overlays, interactive scanlines, and a premium asset delivery system.",
-            states: { from: "static loading state", to: "interactive 3D WebGL environment" },
-            cssProperties: ["object-cover", "mix-blend-mode", "radial-gradient", "filter: drop-shadow"],
-            description: "Elite WebGL-based video background with professional cinematic post-processing.",
-            libraries: ["react", "clsx", "tailwind-merge"],
-            requirements: ["Cinematic video loop background", "Interactive scanline distortion overlay", "Indigo-themed radial vignette", "High-fidelity download button with glow", "Blob-based asset download system"]
         }
     },
     "3d-scroll-animation": {
@@ -380,33 +316,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Three.js PerspectiveCamera + Scene + WebGLRenderer", "CatmullRomCurve3 from mouse position history", "TubeGeometry generation from curve", "PointLight following cursor position", "Dynamic script loading from CDN", "Canvas resize and Three.js disposal on unmount"]
         }
     },
-    "robot-3d-background": {
-        props: [
-            { name: "showDownloadLink", type: "boolean", default: "true", description: "Shows a download button for the asset." }
-        ],
-        vibeMeta: {
-            behavior: "A futuristic 3D robot background with cinematic lighting and interactive overlays. Features a premium video-backed environment with professional post-processing.",
-            states: { from: "static loading", to: "interactive 3D robot environment" },
-            cssProperties: ["object-cover", "radial-gradient", "filter: drop-shadow"],
-            description: "Elite 3D robot background with professional cinematic post-processing and interactive UI elements.",
-            libraries: ["react", "framer-motion"],
-            requirements: ["Cinematic video loop background", "Interactive scanline distortion overlay", "High-fidelity download button with glow", "Responsive layout with backdrop-blur"]
-        }
-    },
-    "particles-background": {
-        props: [
-            { name: "speed", type: "number", default: "3", description: "Movement speed of the particles." },
-            { name: "interactive", type: "boolean", default: "true", description: "Enable mouse interaction." }
-        ],
-        vibeMeta: {
-            behavior: "A dynamic particle field that responds to mouse movement. Features high-performance Canvas rendering and smooth motion physics.",
-            states: { from: "static particles", to: "interactive particle field" },
-            cssProperties: ["canvas", "background: transparent"],
-            description: "High-performance interactive particle background.",
-            libraries: ["react"],
-            requirements: ["Canvas 2D rendering", "Particle physics system", "Mouse interaction logic"]
-        }
-    },
     "wave-background": {
         props: [],
         vibeMeta: {
@@ -523,25 +432,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             description: "Precision-styled button with animated corner brackets.",
             libraries: ["framer-motion"],
             requirements: ["Four absolute-positioned corner elements", "CSS transform expand on hover", "Configurable corner color and size"]
-        }
-    },
-
-    "shatter-button": {
-        props: [
-            { name: "children", type: "React.ReactNode", default: '"Shatter"', description: "Button text or inner content." },
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
-            { name: "shardCount", type: "number", default: "12", description: "Number of glass shards that fly out on click." },
-            { name: "shardColor", type: "string", default: '"#ffffff"', description: "Color of the exploding shards." },
-            { name: "duration", type: "number", default: "600", description: "Duration of the shatter animation in milliseconds." },
-            { name: "onClick", type: "() => void", default: "undefined", description: "Callback fired after the shatter animation completes." }
-        ],
-        vibeMeta: {
-            behavior: "On click, the button surface shatters into animated polygon fragments that fly outward before the button reforms. Provides a high-impact click confirmation.",
-            states: { from: "intact button", to: "exploded shards, then reformed" },
-            cssProperties: ["clip-path", "transform", "opacity", "transition"],
-            description: "Glass-shatter effect button with polygon fragment explosion.",
-            libraries: ["framer-motion"],
-            requirements: ["Polygon clip-path fragment generation", "Randomized trajectory per shard", "AnimatePresence for mount/unmount", "Button re-render after animation"]
         }
     },
 
@@ -752,24 +642,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
-    "neon-flicker-button": {
-        props: [
-            { name: "children", type: "React.ReactNode", default: '"NEON"', description: "Button label." },
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
-            { name: "neonColor", type: "string", default: '"#ff00ff"', description: "Primary neon glow color." },
-            { name: "flickerSpeed", type: "number", default: "0.15", description: "Duration of each flicker step in seconds." },
-            { name: "flickerOnHover", type: "boolean", default: "true", description: "Trigger flicker only on hover instead of continuously." },
-            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." }
-        ],
-        vibeMeta: {
-            behavior: "A neon sign-styled button that mimics a real fluorescent tube with random flicker pulses. The text glows and the border briefly drops opacity to simulate electrical instability.",
-            states: { from: "steady neon glow", to: "irregular flicker pulses" },
-            cssProperties: ["text-shadow", "box-shadow", "opacity", "animation: flicker"],
-            description: "Neon sign button with realistic electrical flicker simulation.",
-            libraries: ["framer-motion"],
-            requirements: ["CSS/JS randomized opacity keyframes for flicker", "Multi-layered text-shadow for neon glow depth", "Configurable flicker speed and color", "Hover-only or continuous flicker mode"]
-        }
-    }
 };
 
 
