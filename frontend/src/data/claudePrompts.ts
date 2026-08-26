@@ -1804,36 +1804,6 @@ CRITICAL RULES:
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
 
-    'particles-background': `Create a premium "Particles Background" component using React, TypeScript, and the particles.js library.
-
-COMPONENT NAME: ParticlesBackground
-
-PROPS (with defaults):
-- colors: string[] = ['#ff223e', '#5d1eb2', '#ff7300'] — pool of particle colors.
-- size: number = 3 — base particle size.
-- countDesktop: number = 60 — particle count for large screens.
-- speed: number = 2 — movement speed.
-- interactive: boolean = false — enable mouse interaction.
-
-VISUAL REQUIREMENTS:
-1. A cloud of floating, drifting particles with randomized sizes and speeds.
-2. Interaction: Support for repulse (on hover) and push (on click).
-3. Smooth Glow: Integrated SVG Filter to apply a "soft glow" to the particles.
-4. Randomized movement vectors for each particle.
-
-TECHNICAL IMPLEMENTATION:
-1. Load particles.js dynamically from a CDN.
-2. Initialize the particle system with the provided colors, counts, and interactive settings.
-3. Handle component mount/unmount to ensure the script is loaded once and cleaned up properly.
-4. Apply an SVG filter for the premium glow effect (#glow-filter).
-
-CRITICAL RULES:
-- Load external scripts safely (handling errors).
-- Clean up the particle system instance on unmount.
-- Ensure the canvas covers the designated container area.
-- Export as both named and default export.
-
-Provide the complete, single-file, production-ready React TypeScript component.`,
 
     'wave-background': `Create a premium "Wave Background" (WebGL Shader) component using React, TypeScript, and raw WebGL.
 
@@ -1981,35 +1951,6 @@ CRITICAL RULES:
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
 
-    'neural-network-background': `Create a premium "Neural Network Background" (Connected Nodes) component using React, TypeScript, and Canvas.
-
-COMPONENT NAME: NeuralNetworkBackground
-
-PROPS (with defaults):
-- nodeCount: number = 120 — number of nodes.
-- connectionDistance: number = 150 — max distance for line drawing.
-- nodeColor: string = '#22d3ee' — color of nodes.
-- interactive: boolean = false — enable mouse influence.
-
-VISUAL REQUIREMENTS:
-1. Nodes moving randomly in 2D space, bouncing off container edges.
-2. Lines drawn between nodes within a specific connectionDistance.
-3. Variable line opacity based on the distance between two nodes.
-4. Magnetic Interaction: Nodes are attracted/repelled by the cursor.
-
-TECHNICAL IMPLEMENTATION:
-1. Use HTML5 Canvas API.
-2. Maintain an array of nodes: { x, y, dx, dy, size }.
-3. Use a dual-loop (or spatial optimization) to check distances and draw connections.
-4. requestAnimationFrame for the continuous frame updates.
-
-CRITICAL RULES:
-- Use Canvas API directly.
-- Ensure the connection threshold is tuned for aesthetic density.
-- Cleanup all loops and listeners on unmount.
-- Export as both named and default export.
-
-Provide the complete, single-file, production-ready React TypeScript component.`,
 
     'black-hole-background': `Create a premium "Black Hole Background" (Spiral Particle) component using React, TypeScript, and Canvas.
 
@@ -2040,34 +1981,6 @@ CRITICAL RULES:
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
 
-    'warp-speed-background': `Create a premium "Warp Speed Background" (Hyper-Drive) component using React, TypeScript, and Canvas.
-
-COMPONENT NAME: WarpSpeedBackground
-
-PROPS (with defaults):
-- starCount: number = 800 — amount of stars.
-- speed: number = 15 — warp velocity.
-- starColor: string = '#fff' — primary color.
-
-VISUAL REQUIREMENTS:
-1. 3D projection of stars from a central vanishing point.
-2. Motion blur: Streaking lines connecting the star's current and previous positions.
-3. Depth fading: Stars appear from the center and fade out as they reach the screen edges.
-4. Mouse steering: The central point shifts based on the mouse position.
-
-TECHNICAL IMPLEMENTATION:
-1. Transform 3D star coordinates (X, Y, Z) to 2D screen positions.
-2. Loop Z coordinate: if Z < 1, reset to maximum depth.
-3. Maintain star state in a persistent array.
-4. Use requestAnimationFrame for the loop.
-
-CRITICAL RULES:
-- Use standard Canvas API.
-- Ensure the motion blur feels high-speed and clean.
-- Resource cleanup on unmount.
-- Export as both named and default export.
-
-Provide the complete, single-file, production-ready React TypeScript component.`,
 
     'mouse-gravity-background': `Create a premium "Mouse Gravity Background" component using React, TypeScript, and Canvas.
 
@@ -2128,69 +2041,7 @@ CRITICAL RULES:
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
 
-    'robot-3d-background': `Create a premium "Robot 3D Background" component using React, TypeScript, and Tailwind CSS.
 
-COMPONENT NAME: Robot3DBackground
-
-PROPS (with defaults):
-- overlayColor: string = "rgba(0,0,0,0.5)" — background depth color.
-- overlayOpacity: number = 0.4 — transparency of the radial overlay.
-- showDownloadLink: boolean = false — display the 4K video download button.
-
-VISUAL REQUIREMENTS:
-1. Cinematic 3D robot animation loop (Neon-lit robots on sliding platforms).
-2. Hardware-accelerated video background with object-cover and precise center alignment.
-3. High-fidelity UI overlays: Cyberpunk-style scanlines (opacity 0.03) and radial vignettes.
-4. Animated "Download 4K Video" button with backdrop-blur, group-hover scaling, and shimmer effects.
-5. Integrated watermark branding (UI HUB) with futuristic typography and drop-shadows.
-
-TECHNICAL IMPLEMENTATION:
-1. Use HTML5 <video> with autoPlay, loop, muted, and playsInline for seamless playback.
-2. Implement a fetch-based download handler to save the video as a Blob with a custom filename.
-3. Tailwind-based styling for all overlays, including custom @keyframes for shimmer animations.
-4. Scale-based positioning (translate-48%/-47%) for the video to ensure focus on key animation areas.
-
-VIDEO DEMO:
-- https://antigravity-ui.s3.amazonaws.com/videos/Robots_sliding_on_neon_platform.mp4
-
-CRITICAL RULES:
-- Ensure the video is properly centered and covers the entire background.
-- Clean up ObjectURLs and event listeners on component unmount.
-- Maintain the high-contrast neon aesthetic (brand-green accent).
-
-Provide the complete, single-file, production-ready React TypeScript component.`,
-
-    'interactive-webgl-scene': `Create a premium "Interactive WebGL Scene" component using React, TypeScript, and Tailwind CSS.
-
-COMPONENT NAME: InteractiveWebGLScene
-
-PROPS (with defaults):
-- overlayColor: string = "rgba(0,0,0,0.5)" — depth-mask color.
-- overlayOpacity: number = 0.4 — intensity of the radial vignette.
-- showDownloadLink: boolean = false — reveal the premium download interface.
-
-VISUAL REQUIREMENTS:
-1. Immersive WebGL-rendered scene loop displaying high-complexity geometry and lighting.
-2. Full-screen video-based rendering with absolute positioning and hardware acceleration.
-3. Cyberpunk scanline overlay (linear-gradients) for a "HUD" or "Monitor" feel.
-4. Interactive download button with glassmorphism (backdrop-blur-xl), indigo accents, and shimmer effects.
-5. Dynamic radial gradient mask to draw focus to the center of the scene.
-
-TECHNICAL IMPLEMENTATION:
-1. Responsive <video> player with object-cover and cross-browser compatibility.
-2. Blob-based download system to support direct "Download 4K" functionality within the browser.
-3. Tailwind CSS for premium UI elements (buttons, badges, and effects).
-4. Optimization: Use pointer-events: none on overlays to allow clicking background content if necessary.
-
-VIDEO DEMO:
-- https://antigravity-ui.s3.amazonaws.com/videos/Interactive_WebGL_Scene.mp4
-
-CRITICAL RULES:
-- The video must loop seamlessly.
-- Use indigo-500 as the primary accent color for UI elements.
-- Export as both named and default export.
-
-Provide the complete, single-file, production-ready React TypeScript component.`,
 
     'scroll-3d-animation': `Create a premium "3D Scroll Animation" component using React, TypeScript, GSAP, and Canvas.
 

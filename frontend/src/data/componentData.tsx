@@ -2842,15 +2842,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         vibePrompt: ""
 
     },
-    {
-        id: "particles-background",
-        title: "Particles Background",
-        category: "background",
-        preview: renderComponent("particles-background", "Particles Background", { speed: 3, interactive: true }),
-        code: ``,
-        vibePrompt: ""
 
-    },
     {
         id: "wave-background",
         title: "Wave Background",
@@ -2896,14 +2888,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         code: ``,
         vibePrompt: ""
     },
-    {
-        id: "shatter-button",
-        title: "Shatter Button",
-        category: "button",
-        preview: renderComponent("shatter-button", "Shatter Button", { children: "SHATTER BUTTON", shatterColor: "#00ffff", shardCount: 30 }),
-        code: `import { ShatterButton } from '@/components/ui/shatter-button';\n\nexport const Demo = () => (\n  <ShatterButton shatterColor="#00ffff" shardCount={30}>\n    Click Now\n  </ShatterButton>\n);`,
-        vibePrompt: ""
-    },
+
     {
         id: "border-beam",
         title: "Border Beam",
@@ -3000,14 +2985,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
         vibePrompt: ""
     },
-    {
-        id: "neon-flicker-button",
-        title: "Neon Flicker Button",
-        category: "button",
-        preview: renderComponent("neon-flicker-button", "Neon Flicker Button", { label: "NEON FLICKER", color: "red" }),
-        code: `import { NeonFlickerButton } from "@/components/ui/NeonFlickerButton";\n\nexport const Demo = () => (\n  <NeonFlickerButton label="Neon Flicker" color="red" />\n);`,
-        vibePrompt: ""
-    },
+
     {
         id: "interactive-hover-button",
         title: "Interactive Hover Button",
@@ -3067,15 +3045,7 @@ export const Demo = () => (
         vibePrompt: ""
 
     },
-    {
-        id: "neural-network-background",
-        title: "Neural Network Background",
-        category: "background",
-        preview: renderComponent("neural-network-background", "NeuralNetworkBackground"),
-        code: ``,
-        vibePrompt: ""
 
-    },
     {
         id: "black-hole-background",
         title: "Black Hole Background",
@@ -3086,15 +3056,7 @@ export const Demo = () => (
         vibePrompt: ""
 
     },
-    {
-        id: "warp-speed-background",
-        title: "Warp Speed Background",
-        category: "background",
-        preview: renderComponent("warp-speed-background", "WarpSpeedBackground"),
-        code: ``,
-        vibePrompt: ""
 
-    },
     {
         id: "mouse-gravity-background",
         title: "Mouse Gravity Background",
@@ -3202,15 +3164,7 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
         vibePrompt: "Interactive 3D Rubiks Cube with scramble and solve logic.",
         downloadUrl: "/assets/3d-rubiks-cube/Rubiks-Cube-UI-HUB-bundle.zip"
     },
-    {
-        id: "robot-3d-background",
-        title: "Robot 3D Background",
-        category: "3d",
-        isPremium: true,
-        preview: renderComponent("robot-3d-background", "Robot 3D Background", { showDownloadLink: true }),
-        code: "",
-        vibePrompt: ""
-    },
+
     {
         id: "cards-beam",
         title: "Cards Beam",
@@ -3229,15 +3183,7 @@ Outer \`<div>\` has \`backgroundColor: IMAGES[activeIndex].bg\`, transition \`ba
         code: `import { SolarSystem } from '@/components/ui/SolarSystem';\n\nexport const Demo = () => (\n  <div className="w-full h-[800px] rounded-3xl overflow-hidden bg-black">\n    <SolarSystem />\n  </div>\n);`,
         vibePrompt: "Create a cinematic 'SolarSystem' planet picker with SVG path-based orbital navigation. The UI features a large central planet visualization with smooth CSS transitions, dynamic character-by-character title animations, and real-time updating technical stats (Tilt, Gravity, Hours). Includes keyboard arrow navigation and responsive mobile scaling."
     },
-    {
-        id: "interactive-webgl-scene",
-        title: "Interactive WebGL Scene",
-        category: "3d",
-        isPremium: true,
-        preview: renderComponent("interactive-webgl-scene", "InteractiveWebGLScene", { showDownloadLink: true, overlayOpacity: 0.2 }),
-        code: "",
-        vibePrompt: ""
-    },
+
 
     {
         id: "lizard-cursor",
@@ -3345,16 +3291,7 @@ Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultC
         code: `import { InfiniteMarquee } from '@/components/ui/InfiniteMarquee';\n\nexport default function Demo() {\n  const items = [\n    { text: "UI Hub", link: "#", image: "https://picsum.photos/600/400?random=1" },\n    { text: "UI Components", link: "#", image: "https://picsum.photos/600/400?random=2" },\n    { text: "Design Systems", link: "#", image: "https://picsum.photos/600/400?random=3" },\n    { text: "Web Animations", link: "#", image: "https://picsum.photos/600/400?random=4" }\n  ];\n\n  return (\n    <div className="w-full h-[500px] rounded-3xl overflow-hidden border border-white/5">\n      <InfiniteMarquee \n        items={items} \n        speed={15} \n        textColor="#ffffff"\n        bgColor="#060010"\n        marqueeTextColor="#060010"\n        marqueeBgColor="#ffffff"\n      />\n    </div>\n  );\n}`,
         vibePrompt: "A premium infinite scrolling marquee menu component with direction-aware hover animation. Hovering an item slides in a custom marquee overlay (from the top or bottom based on cursor position) containing repeated scrolling texts and images."
     },
-    {
-        id: "buyme-acoffee",
-        title: "Buy Me Millions Coffee",
-        category: "button",
-        isPremium: false,
-        description: "A fun and creative sponsorship component inspired by 'Buy Me a Coffee' with a twist! Perfect for creators looking to attract sponsors and supporters with a playful approach. Easy to integrate and customize for your projects.",
-        preview: renderComponent("buyme-acoffee", "BuyMeCoffee"),
-        code: `import BuyMeCoffee from '@/components/ui/BuyMeCoffee';\n\nexport default function Demo() {\n  return (\n    <div className="flex flex-col items-center justify-center p-8 bg-brand-surface rounded-2xl border-2 border-white brutal-shadow-black">\n      <BuyMeCoffee \n        classname="w-full flex items-center justify-center"\n        iconClassName="text-black"\n        textSvgClassName="text-black/70"\n      />\n    </div>\n  );\n}`,
-        vibePrompt: "Build a creative sponsorship component inspired by 'Buy Me a Coffee' in React + TypeScript + Tailwind CSS with Framer Motion. Features animated rising coffee steam, tipping cup physics, click burst of floating coffee emojis, selectable coffee amount pills, and a supporter counter."
-    },
+
     {
         id: "image-trail",
         title: "Image Trail",

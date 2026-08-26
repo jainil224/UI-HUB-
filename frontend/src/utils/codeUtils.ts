@@ -778,7 +778,6 @@ export const Component = () => {
       case "animated-beam": return `<div class="animated-beam"></div>`;
       case "grid-background": return `<div class="grid-background"></div>`;
       case "hacker-background": return `<canvas id="hacker-canvas"></canvas>`;
-      case "particles-background": return `<div id="particles-js"></div>`;
       case "sparkles-background": return `<div class="sparkles"></div>`;
       default: return `<div class="${id}"></div>`;
     }
@@ -949,8 +948,6 @@ ${componentHeader}
         </div>`);
     case "interactive-grid-background":
       return `// Interactive Grid Background\nimport React, { useEffect, useRef } from "react";\n\nexport const Component = () => {\n    const canvasRef = useRef(null);\n    const trail = useRef([]);\n    useEffect(() => {\n        const canvas = canvasRef.current;\n        const ctx = canvas.getContext("2d");\n        const onMove = (e) => {\n            trail.current.unshift({ x: e.clientX, y: e.clientY });\n            if(trail.current.length > 10) trail.current.pop();\n        };\n        window.addEventListener("mousemove", onMove);\n        const draw = () => {\n            ctx.clearRect(0, 0, canvas.width, canvas.height);\n            trail.current.forEach((p, i) => {\n                ctx.fillStyle = \`rgba(0, 255, 0, \${1 - i/10})\`;\n                ctx.fillRect(p.x - 25, p.y - 25, 50, 50);\n            });\n            requestAnimationFrame(draw);\n        };\n        draw();\n        return () => window.removeEventListener("mousemove", onMove);\n    }, []);\n    return <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight} className="bg-black" />;\n};`;
-    case "particles-background":
-      return `// Particles\nimport React, { useEffect } from 'react';\n\nexport const Component = () => {\n    useEffect(() => {\n        const script = document.createElement('script');\n        script.src = "https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js";\n        script.onload = () => {\n            window.particlesJS('particles-js', { particles: { number: { value: 80 }, color: { value: '#ffffff' }, size: { value: 3 }, move: { enable: true, speed: 2 } } });\n        };\n        document.body.appendChild(script);\n    }, []);\n    return <div id="particles-js" className="bg-black absolute inset-0" />;\n};`;
     case "sparkles-background":
       return reactOutput(`
         <div className="relative h-full w-full flex items-center justify-center bg-neutral-950 overflow-hidden">
@@ -990,8 +987,6 @@ export const Component = () => {
       return isTS ? `import React, { useEffect, useRef, useState, useCallback } from 'react';\nimport { gsap } from 'gsap';\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\n\ngsap.registerPlugin(ScrollTrigger);\n\nexport const Component: React.FC = () => {\n  const canvasRef = useRef<HTMLCanvasElement>(null);\n  const [progress, setProgress] = useState(0);\n  const frameCount = 300;\n\n  useEffect(() => {\n    // Implementation logic here...\n  }, []);\n\n  return <div className="h-[500vh] bg-[#f1f1f1]"><canvas ref={canvasRef} className="fixed inset-0 w-full h-full object-cover" /></div>;\n};` : `// JS Version...`;
     case "3d-slider":
       return isTS ? `import React, { useState } from 'react';\nimport { motion } from 'framer-motion';\n\nexport const Component: React.FC = () => {\n  const [slides, setSlides] = useState([\n    { id: 1, img: './assets/slide1.jpg' },\n    { id: 2, img: './assets/slide2.jpg' },\n    { id: 3, img: './assets/slide3.jpg' },\n    { id: 4, img: './assets/slide4.jpg' }\n  ]);\n  const next = () => setSlides(prev => [...prev.slice(1), prev[0]]);\n  return <div className="h-screen bg-[#0a0a0f] relative overflow-hidden flex items-center justify-center" />;\n};` : `// JS Version...`;
-    case "robot-3d-background":
-      return `// Robot 3D Background Placeholder\n// Implementation involves Three.js and GLTF loading logic...`;
     case "odyssey-spline":
       return isTS ? `import React from 'react';
 import { OdysseySpline } from '@/components/ui/OdysseySpline';
