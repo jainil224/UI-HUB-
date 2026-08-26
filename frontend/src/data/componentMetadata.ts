@@ -20,6 +20,31 @@ export interface ComponentConfig {
 }
 
 export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
+    "gravitational-vortex": {
+        props: [
+            { name: "background", type: "string", default: '"#000000"', description: "CSS background color behind the canvas." },
+            { name: "baseColor", type: "string", default: '"#04FF3F"', description: "Primary particle color." },
+            { name: "accentColor", type: "string", default: '"#FCFF00"', description: "Accent particle color for highlight streaks." },
+            { name: "accentMix", type: "number", default: "50", description: "Percentage of particles that use the accent color." },
+            { name: "density", type: "number", default: "16", description: "Particle density 10-100 (maps to 2000-40000 particles)." },
+            { name: "dotSize", type: "number", default: "400", description: "Particle radius as percent of base size." },
+            { name: "speed", type: "number", default: "16", description: "Rotation and inward slide speed 0-100." },
+            { name: "direction", type: '"inward" | "outward"', default: '"inward"', description: "Particle flow direction." },
+            { name: "hoverSpeed", type: "number", default: "100", description: "Speed while pointer hovers over the component." },
+            { name: "scale", type: "number", default: "79", description: "Camera zoom as percent (reciprocal of pullback)." },
+            { name: "tiltX", type: "number", default: "35", description: "Camera elevation above disc plane in degrees." },
+            { name: "tiltY", type: "number", default: "0", description: "Camera yaw about Y axis in degrees." },
+            { name: "vortex", type: "{ twist: number; funnel: number }", default: "{ twist: 28, funnel: 54 }", description: "Spiral twist winding and funnel depth." }
+        ],
+        vibeMeta: {
+            behavior: "A WebGL gravitational vortex with a logarithmic spiral accretion disc of ~20k motion-blurred streaks falling into a funnel throat. Features real velocity-based motion blur, additive blending, and interactive hover speed boost.",
+            states: { from: "static disc plane", to: "spiraling vortex with depth attenuation" },
+            cssProperties: ["webgl", "canvas", "additive-blend", "radial-gradient"],
+            description: "Premium WebGL gravitational vortex with logarithmic spiral accretion disc and real motion-blurred streaks.",
+            libraries: ["react"],
+            requirements: ["WebGL vertex/fragment shaders", "Logarithmic spiral math", "Additive blending with premultiplied alpha", "Per-frame phase and spin advancement", "Eye-shift lens correction", "Hover speed easing with dt-correct ramp"]
+        }
+    },
     "3d-galaxy-animation": {
         props: [
             { name: "theme", type: "'Inferno' | 'Veridian' | 'Celestial'", default: "'Inferno'", description: "Color palette of the galaxy." },

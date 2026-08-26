@@ -1429,5 +1429,43 @@ A beautiful, highly interactive button featuring custom hover and click micro-in
 
 ## Output
 Production-ready React component
-`
+`,
+    "gravitational-vortex": `
+# UI HUB • LOVABLE PROMPT
+
+Create a visually stunning "Gravitational Vortex" component.
+
+## Concept
+A WebGL gravitational vortex with a logarithmic spiral accretion disc. Thousands of motion-blurred streaks fall into a funnel throat, creating a cosmic whirlpool. The spiral structure is generated mathematically — zero winding at the rim, several full turns at the eye. Particles taper along their true velocity with Gaussian width profiles and depth attenuation for cinematic depth.
+
+## Tech
+React, TypeScript, raw WebGL (no Three.js), Tailwind CSS.
+
+## Animation Details
+- **Spiral Disc**: Logarithmic spiral with configurable twist (winding) and funnel depth.
+- **Real Motion Blur**: Each streak is a two-triangle quad stretched along the true particle velocity.
+- **Hover Speed Boost**: Pointer hover accelerates particles with dt-correct ~0.45s easing ramp.
+- **Eye-Shift Correction**: Lens shift pins the vortex centre to the frame regardless of tilt/orbit/funnel.
+- **Additive Blending**: Premultiplied alpha with ONE/ONE blend for glowing streaks over CSS background.
+
+## Performance
+- ~20k particles rendered via drawArrays with no index buffer.
+- Two seed buffers built once; CPU only advances two wrapped scalars per frame.
+- Near-plane culling prevents behind-camera artifacts.
+- DPR-capped at 2x for mobile performance.
+
+## Props
+- background: string (Default: "#000000")
+- baseColor: string (Default: "#04FF3F")
+- accentColor: string (Default: "#FCFF00")
+- density: number (Default: 16, range 10-100)
+- speed: number (Default: 16, range 0-100)
+- direction: "inward" | "outward" (Default: "inward")
+- tiltX: number (Default: 35)
+- tiltY: number (Default: 0)
+- scale: number (Default: 79)
+- vortex: { twist: number; funnel: number }
+
+## Output
+Production-ready React component`,
 };

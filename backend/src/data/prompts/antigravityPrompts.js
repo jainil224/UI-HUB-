@@ -4763,5 +4763,47 @@ Create a button where hovering triggers a colored circle to scale up and fully c
 
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
-`
+`,
+    "gravitational-vortex": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+
+## Component: GravitationalVortex
+
+### Concept
+A premium WebGL gravitational vortex background with a logarithmic spiral accretion disc of ~20k motion-blurred streaks falling into a funnel throat.
+
+### Technical Requirements
+- Raw WebGL with vertex and fragment shaders — NO Three.js dependency.
+- Vertex shader computes particle position from logarithmic spiral math.
+- Six vertices per quad (two triangles), no index buffer, drawArrays.
+- Two seed buffers built once; CPU advances uPhase and uSpin per frame.
+- Additive blending with premultiplied alpha over transparent canvas.
+- Eye-shift lens correction computed on CPU.
+- Near-plane culling (no clamped w division).
+- dt-correct hover speed easing.
+
+### Props
+- background, baseColor, accentColor, accentMix, density, dotSize, speed, direction, hoverSpeed, scale, tiltX, tiltY, vortex
+
+### Visual
+- Logarithmic spiral: r(u) = mix(R_IN, R_OUT, u), angle = seed*TAU + TWIST*log(...) + spin
+- Motion blur via real velocity displacement (not fixed-length dash)
+- Gaussian width profile, depth attenuation, edge fade at rim and throat
+- Spiral arms seeded via ARMS = 5, ARM_SPREAD = 0.85
+
+### Performance
+- MAX_PARTICLES = 40000, MIN_PARTICLES = 2000
+- DPR_CAP = 2
+- Canvas FPS gating at 30fps with FRAME_SLACK = 4
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
 };

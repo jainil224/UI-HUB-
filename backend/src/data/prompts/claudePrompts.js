@@ -2733,6 +2733,48 @@ Generate a production-ready canvas-based particle text vaporization and reconsti
    - style?: React.CSSProperties
 
 Provide the complete, single-file, production-ready React TypeScript component.
-`
+`,
+    'gravitational-vortex': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer and WebGL shader developer.
+
+## Task
+
+Create a premium "Gravitational Vortex" interactive background component using React, TypeScript, and raw WebGL.
+
+COMPONENT NAME: GravitationalVortex
+
+PROPS (with defaults):
+- background: string = "#000000" — CSS background color behind the canvas.
+- baseColor: string = "#04FF3F" — Primary particle/streak color.
+- accentColor: string = "#FCFF00" — Accent color for highlight streaks.
+- accentMix: number = 50 — Percentage of particles using accent color.
+- density: number = 16 — Particle density 10-100 (maps to 2000-40000 particles).
+- dotSize: number = 400 — Particle radius as percent of base size.
+- speed: number = 16 — Rotation and inward slide speed 0-100.
+- direction: "inward" | "outward" = "inward" — Particle flow direction.
+- hoverSpeed: number = 100 — Speed while pointer hovers.
+- scale: number = 79 — Camera zoom as percent (reciprocal of pullback).
+- tiltX: number = 35 — Camera elevation above disc plane in degrees.
+- tiltY: number = 0 — Camera yaw about Y axis in degrees.
+- vortex: { twist: number; funnel: number } = { twist: 28, funnel: 54 } — Spiral twist and funnel depth.
+
+VISUAL REQUIREMENTS:
+1. A logarithmic spiral accretion disc with ~20k motion-blurred streaks falling into a funnel throat.
+2. Each streak is a two-triangle quad stretched along the true velocity direction.
+3. Particles taper along their tangent with Gaussian width profiles and depth attenuation.
+4. Additive blending over a transparent canvas with premultiplied alpha.
+5. Interactive hover speed boost with dt-correct easing.
+6. Eye-shift lens correction to pin the vortex centre to the frame.
+
+CRITICAL RULES:
+- The canvas clears transparent; background is CSS, never a GL clear.
+- Direction owns the sign — Speed is unsigned 0-100.
+- Hover Speed is on the SAME dial as Speed.
+- Export as both named and default export.
+
+Provide the complete, single-file, production-ready React TypeScript component.`,
 };
 

@@ -30,6 +30,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     // Backgrounds & Canvas
     'magnetic-background': () => import('../components/ui/MagneticBackground'),
     'space-background': () => import('../components/ui/SpaceBackground'),
+    'gravitational-vortex': () => import('../components/ui/GravitationalVortex'),
     'black-hole-background': () => import('../components/ui/BlackHoleBackground'),
     'mouse-gravity-background': () => import('../components/ui/MouseGravityBackground'),
     'hacker-background': () => import('../components/ui/HackerBackground'),

@@ -9,6 +9,7 @@ const MagneticBackground = React.lazy(() => import('../components/ui/MagneticBac
 const BlackHoleCursor = React.lazy(() => import('../components/ui/BlackHoleCursor').then(m => ({ default: m.BlackHoleCursor })));
 const TargetCursor = React.lazy(() => import('../components/ui/TargetCursor').then(m => ({ default: m.TargetCursor })));
 const SpaceBackground = React.lazy(() => import('../components/ui/SpaceBackground').then(m => ({ default: m.SpaceBackground })));
+const GravitationalVortex = React.lazy(() => import('../components/ui/GravitationalVortex'));
 const BlackHoleBackground = React.lazy(() => import('../components/ui/BlackHoleBackground').then(m => ({ default: m.BlackHoleBackground })));
 const MouseGravityBackground = React.lazy(() => import('../components/ui/MouseGravityBackground').then(m => ({ default: m.MouseGravityBackground })));
 const Scroll3DAnimation = React.lazy(() => import('../components/ui/Scroll3DAnimation'));
@@ -1718,6 +1719,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'black-hole-cursor': BlackHoleCursor,
     'target-cursor': TargetCursor,
     'space-background': SpaceBackground,
+    'gravitational-vortex': GravitationalVortex,
     'black-hole-background': BlackHoleBackground,
     'mouse-gravity-background': MouseGravityBackground,
     '3d-scroll-animation': Scroll3DAnimation,
@@ -2786,6 +2788,15 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         code: `// Implementation for Hacker Background\nexport const HackerBackground = () => (\n  <div className="w-full h-full bg-black text-green-500 font-mono flex items-center justify-center">\n    01010101 MATRIX 10101010\n  </div>\n);`,
         vibePrompt: ""
 
+    },
+
+    {
+        id: "gravitational-vortex",
+        title: "Gravitational Vortex",
+        category: "background",
+        preview: renderComponent("gravitational-vortex", "Gravitational Vortex"),
+        code: `import GravitationalVortex from '@/components/ui/GravitationalVortex';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GravitationalVortex />\n  </div>\n);`,
+        vibePrompt: "A premium WebGL gravitational vortex background with a logarithmic spiral accretion disc. Features ~20k motion-blurred streak particles falling into a funnel throat, rendered in real-time with additive blending. The spiral structure is generated mathematically with configurable twist and funnel depth, creating a mesmerizing cosmic whirlpool effect. Particles taper along their velocity direction with Gaussian width profiles, depth-attenuated for cinematic depth, and support interactive hover speed boost."
     },
 
     {
