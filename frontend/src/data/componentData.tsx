@@ -25,7 +25,6 @@ const ParticleCursor = React.lazy(() => import('../components/ui/ParticleCursor'
 const KineticGrid = React.lazy(() => import('../components/ui/KineticGrid').then(m => ({ default: m.KineticGrid })));
 const MagicCursor = React.lazy(() => import('../components/ui/MagicCursor').then(m => ({ default: m.MagicCursor })));
 const UserCursor = React.lazy(() => import('../components/ui/UserCursor').then(m => ({ default: m.UserCursor })));
-const FireworkCursor = React.lazy(() => import('../components/ui/FireworkCursor').then(m => ({ default: m.FireworkCursor })));
 const CardCascade = React.lazy(() => import('../components/ui/CardCascade').then(m => ({ default: m.CardCascade })));
 
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
@@ -1685,26 +1684,6 @@ const UserCursorPreview: React.FC = () => {
     );
 };
 
-// ── Firework Cursor scoped preview ────────────
-const FireworkCursorPreview: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    return (
-        <CursorPreviewShell
-            containerRef={containerRef}
-            background="radial-gradient(120% 120% at 50% 0%, #14060a 0%, #0b0406 50%, #050203 100%)"
-        >
-            <Suspense fallback={null}>
-                <FireworkCursor
-                    color="#FF3B3B"
-                    labelText="HOVER AROUND"
-                    labelColor="#FFFFFF"
-                />
-            </Suspense>
-        </CursorPreviewShell>
-    );
-};
-
 // ── Card Cascade scoped preview ────────────
 const CardCascadePreview: React.FC = () => {
     return (
@@ -1971,7 +1950,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'kinetic-grid': KineticGrid,
     'spin-cursor': MagicCursor,
     'user-cursor': UserCursor,
-    'firework-cursor': FireworkCursor,
     'card-cascade': CardCascade,
 
     'cards-beam': CardsBeam,
@@ -3737,44 +3715,6 @@ MOTION:
 
 TECH: React + TypeScript + framer-motion (useMotionValue, useSpring, useTransform, motion)
 Props: name, arrow, label, color, textColor, size, labelTiltStrength, showLabel, offsetX, offsetY, labelOffsetUseDefault, labelOffsetX, labelOffsetY, pressScale, style.
-UI HUB premium cursor component.`
-    },
-    {
-        id: "firework-cursor",
-        title: "Firework Cursor",
-        category: "cursor",
-        addedAt: "2026-08-27",
-        preview: () => <FireworkCursorPreview />,
-        code: `import { FireworkCursor } from '@/components/ui/FireworkCursor';
-
-// Requires: npm install threejs-components
-// Drop <FireworkCursor /> anywhere in your app (e.g. App.tsx or a layout root).
-// A GPGPU particle field that trails the pointer, drifting on curl noise and blooming.
-export const Demo = () => (
-  <div className="relative w-full h-[500px] bg-black rounded-2xl overflow-hidden flex items-center justify-center">
-    <FireworkCursor color="#FF3B3B" />
-    <p className="text-white/30 text-sm tracking-widest uppercase font-bold">
-      Move your cursor · A particle field blooms behind
-    </p>
-  </div>
-);`,
-        vibePrompt: `Create a premium FIREWORK GPU PARTICLE CURSOR React component called FireworkCursor.
-It replaces the native pointer inside its frame with a blooming GPGPU particle field that trails the pointer, drifting on curl noise.
-
-DESIGN:
-- Backed by the 'threejs-components' package's cursors.particles1 GPGPU particle module (dynamically imported so a missing dependency degrades to nothing)
-- Particles spawn at the pointer and trail behind, drifting on curl noise and blooming with a post-processing bloom pass
-- A centred 'HOVER AROUND' label sits in the middle of the frame as a cue
-- Configurable color / multi-color palette, particle size, lifetime / decay, density (particle count) and bloom strength
-
-MOTION:
-- Pointer is tracked against the component's own frame (not the window) so the field stays inside its box
-- Field snaps onto the pointer on first sight and every re-entry rather than easing in from elsewhere
-- Native cursor replaced only while the pointer is over the frame; field fades out (not cut) on leave
-- Prop changes push uniform writes instead of tearing the simulation down
-
-TECH: React + TypeScript + threejs-components (WebGL GPGPU particles) + dynamic import
-Props: label, labelText, labelColor, labelFont, density, color, colors, size, lifetime, bloomStrength, style.
 UI HUB premium cursor component.`
     },
     {
