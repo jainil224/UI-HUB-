@@ -62,6 +62,7 @@ const ParticleSphere = React.lazy(() => import('../components/ui/ParticleSphere'
 const BlackHole3d = React.lazy(() => import('../components/ui/BlackHole'));
 const BloomingFlower = React.lazy(() => import('../components/ui/BloomingFlower'));
 const Chandelier = React.lazy(() => import('../components/ui/Chandelier'));
+const MorphingRings = React.lazy(() => import('../components/ui/MorphingRings'));
 
 
 
@@ -1788,6 +1789,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'twin-galaxy-rings': TwinGalaxyRings,
     'tornado': Tornado,
     'particle-sphere': ParticleSphere,
+    'morphing-rings': MorphingRings,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -3689,6 +3691,45 @@ export function ParticleSphereDemo() {
   );
 }`,
         vibePrompt: "Create an interactive 'Particle Sphere' background in React + TypeScript using three.js. Distribute particles evenly across a unit sphere surface with a Fibonacci golden-angle spiral, rendered as rounded instances via InstancedMesh of low-poly spheres (SphereGeometry 8x8) with additive blending and per-instance colors. The sphere auto-rotates continuously (clockwise/anticlockwise) with lerp-smoothed rotation, drag-to-rotate with time-normalized throw velocity and momentum decay, and optional stop-on-hover. HOVERING into the sphere fires a radial scatter burst (the same animation on click/touch): particles near the entry point explode outward in 3D and spring back via velocity-based scatter physics; cursor proximity also pushes front-facing particles outward in screen space (projected per-particle, camera right/up vector conversion back to local space) with friction + return-force decay. Oversized canvas (2.5x container, FOV-compensated) prevents clipping; ResizeObserver-driven resizing; frame-rate independent via delta-time normalization."
+    },
+    {
+        id: "morphing-rings",
+        title: "Morphing Rings",
+        category: "interactive-background",
+        addedAt: "2026-08-27",
+        newBadgeDays: 21,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <MorphingRings />
+            </div>
+        ),
+        code: `import MorphingRings from "@/components/ui/MorphingRings";
+
+export function MorphingRingsDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <MorphingRings
+        background="#000000"
+        colors={["#FFEE00", "#009DFF", "#7500FF"]}
+        density={100}
+        dotSize={4}
+        speed={50}
+        direction="cw"
+        hoverSpeed={200}
+        scale={38}
+        amplitude={100}
+        ring={{ width: 50, softness: 50, ringBands: 5 }}
+        tilt={{ x: 85, y: 0 }}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Morphing Rings' WebGL particle-disc background in React + TypeScript using raw WebGL (single GL context, one rAF loop, all live state via refs). Tens of thousands of particles distributed across concentric annular bands with gaussian-scattered radial offsets for dusty band edges, viewed from a low-angle perspective camera tilted above the disc plane. The inner void continuously morphs between circle, pentagon, and heart shapes via three analytic 2D SDFs linearly interpolated by a periodic phase — particles inside the void fade out, particles at the edge get a cyan brightness boost forming a glowing inner ring. Two travelling waves (radial + X-axis) create interference moiré patterns with crest-tinted particles. The disc auto-rotates with adjustable speed and cw/ccw direction, accelerates on hover via a MotionValue-eased boost multiplier, supports up to 5-color palette as a uniform array, and uses additive premultiplied blending. Camera tilt X/Y, density, dot-size, scale (inverse pullback), amplitude (wave height), ring width/softness controls, and a configurable morph period govern the scene."
     }
 ];
-

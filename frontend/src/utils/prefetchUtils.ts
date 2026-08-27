@@ -34,6 +34,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'black-hole-3d': () => import('../components/ui/BlackHole'),
     'blooming-flower': () => import('../components/ui/BloomingFlower'),
     'chandelier': () => import('../components/ui/Chandelier'),
+    'morphing-rings': () => import('../components/ui/MorphingRings'),
     'black-hole-background': () => import('../components/ui/BlackHoleBackground'),
     'mouse-gravity-background': () => import('../components/ui/MouseGravityBackground'),
     'hacker-background': () => import('../components/ui/HackerBackground'),
