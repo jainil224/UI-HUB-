@@ -19,6 +19,7 @@ const HeartCursor = React.lazy(() => import('../components/ui/HeartCursor').then
 const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').then(m => ({ default: m.LizardCursor })));
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const StarCursor = React.lazy(() => import('../components/ui/StarCursor').then(m => ({ default: m.StarCursor })));
+const AsciiCursor = React.lazy(() => import('../components/ui/AsciiCursor').then(m => ({ default: m.AsciiCursor })));
 
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
@@ -1528,6 +1529,79 @@ const StarCursorPreview: React.FC = () => {
     );
 };
 
+// ── Ascii Cursor scoped preview ────────────
+const AsciiCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div
+            ref={containerRef}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: 'linear-gradient(160deg, #101014 0%, #0a0a0e 40%, #050507 100%)',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 24,
+            }}
+        >
+            {/* Interactive demo elements */}
+            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
+                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(236,82,40,0.65)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
+                    ▚ ASCII CURSOR ▞
+                </div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {['SCROLL', 'HOVER', 'CLICK'].map((label) => (
+                        <button key={label} style={{
+                            padding: '9px 18px',
+                            background: 'rgba(236,82,40,0.05)',
+                            border: '1px solid rgba(236,82,40,0.25)',
+                            borderRadius: 8,
+                            color: 'rgba(255,120,80,0.80)',
+                            fontSize: 9, fontWeight: 800,
+                            letterSpacing: '0.22em',
+                            cursor: 'none',
+                            transition: 'all 0.3s ease',
+                        }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(236,82,40,0.14)';
+                                e.currentTarget.style.borderColor = 'rgba(236,82,40,0.6)';
+                                e.currentTarget.style.boxShadow = '0 0 18px rgba(236,82,40,0.25)';
+                                e.currentTarget.style.color = 'rgba(255,200,180,0.95)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(236,82,40,0.05)';
+                                e.currentTarget.style.borderColor = 'rgba(236,82,40,0.25)';
+                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.color = 'rgba(255,120,80,0.80)';
+                            }}
+                        >{label}</button>
+                    ))}
+                </div>
+                <div style={{
+                    padding: '12px 24px',
+                    background: 'rgba(236,82,40,0.05)',
+                    border: '1px solid rgba(236,82,40,0.15)',
+                    borderRadius: 10,
+                    color: 'rgba(255,140,100,0.45)',
+                    fontSize: 8, fontWeight: 700,
+                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
+                }}>MOVE CURSOR · HOVER · SCRAMBLE</div>
+            </div>
+
+            {/* Ascii cursor — replaces native pointer over the frame */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <Suspense fallback={null}>
+                    <AsciiCursor label />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1738,6 +1812,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'lizard-cursor': LizardCursor,
     'venom-cursor': VenomCursor,
     'star-cursor': StarCursor,
+    'ascii-cursor': AsciiCursor,
 
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
@@ -3285,6 +3360,40 @@ CLICK EFFECT:
 
 TECH: React + TypeScript + Canvas 2D API + requestAnimationFrame + mix-blend-mode: screen
 Props: starSize, stiffness, damping, containerRef (for scoped use), hideDefaultCursor, className`
+    },
+    {
+        id: "ascii-cursor",
+        title: "Ascii Cursor",
+        category: "cursor",
+        preview: () => <AsciiCursorPreview />,
+        code: `import { AsciiCursor } from '@/components/ui/AsciiCursor';
+
+// Drop <AsciiCursor /> anywhere in your app (e.g. App.tsx or a layout root).
+// It replaces the default pointer with a scrambling ASCII trail over its frame.
+export const Demo = () => (
+  <div className="relative w-full h-[500px] bg-black rounded-2xl overflow-hidden flex items-center justify-center">
+    <AsciiCursor label />
+    <p className="text-white/30 text-sm tracking-widest uppercase font-bold">
+      Move your cursor · Watch it scramble
+    </p>
+  </div>
+);`,
+        vibePrompt: `Create a premium CHARACTER CUSTOM CURSOR React component called AsciiCursor.
+It replaces the default pointer inside its frame with a trailing scramble of ASCII characters on a canvas grid.
+
+CURSOR DESIGN:
+- A fixed grid of cells lights up as the pointer passes, filling with random alphanumeric + symbol glyphs (A-Z, 0-9, !@#$ etc.)
+- Each lit cell scrambles continuously while the pointer stays near, then fades back to blank leaving a clean trail
+- Decorative centered label text sits in the middle of the frame
+- Cells use a bold box accent color with the glyphs in a contrasting light color, giving a raw terminal aesthetic
+
+MOTION:
+- Ultra smooth requestAnimationFrame easing that interpolates the trail toward the pointer
+- Only replaces the native cursor while the pointer is over the component frame, restoring it on leave
+
+TECH: React + TypeScript + HTML5 Canvas 2D + requestAnimationFrame
+Props: label, labelText, labelColor, cellSize, radius, density, hold, boxColor, textColor, style.
+UI HUB premium cursor component.`
     },
     {
         id: "fourier-flow",
