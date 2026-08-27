@@ -56,7 +56,7 @@ const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
 import { ComponentItem } from '../../../../data/componentData';
 
 const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: string }) => (
-    <div className="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-brand-surface/95 rounded-[inherit] border-2 border-white p-8 text-center">
+    <div className="w-full h-[420px] flex flex-col items-center justify-center bg-brand-surface p-8 text-center rounded-[inherit]">
         <div className="relative mb-4">
             <div className="w-14 h-14 rounded-lg bg-brand-bg border-2 border-white flex items-center justify-center brutal-shadow-black text-brand-yellow">
                 <Lock className="w-7 h-7" />
