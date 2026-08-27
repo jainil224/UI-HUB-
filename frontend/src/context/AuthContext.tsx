@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { onAuthStateChanged, User, getRedirectResult } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { getApiBaseUrl } from '../utils/apiConfig';
@@ -18,9 +18,16 @@ interface AuthContextType {
     isPro: boolean;
     isElite: boolean;
     loading: boolean;
+    refreshProStatus: () => Promise<{ isPro: boolean; isElite: boolean } | null>;
 }
 
-const AuthContext = createContext<AuthContextType>({ user: null, isPro: false, isElite: false, loading: true });
+const AuthContext = createContext<AuthContextType>({
+    user: null,
+    isPro: false,
+    isElite: false,
+    loading: true,
+    refreshProStatus: async () => null,
+});
 
 export const useAuth = () => useContext(AuthContext);
 
@@ -50,6 +57,54 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             console.error('[Auth] New user detection failed:', err);
         }
     };
+
+    const refreshProStatus = useCallback(async (): Promise<{ isPro: boolean; isElite: boolean } | null> => {
+        const currentUser = auth.currentUser;
+        if (!currentUser) return null;
+
+        try {
+            // Do not force refresh to keep execution snappy (use cached token)
+            const idToken = await currentUser.getIdToken();
+            const apiBaseUrl = getApiBaseUrl();
+
+            console.log(`[Auth] Fetching Pro status from ${apiBaseUrl}/api/v1/users/status`);
+
+            const response = await fetch(`${apiBaseUrl}/api/v1/users/status`, {
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                    'Cache-Control': 'no-cache'
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('[Auth] API Status Response:', data);
+                setIsPro(data.isPro);
+                setIsElite(data.isElite ?? false);
+                localStorage.setItem('ui-hub-pro', String(data.isPro || false));
+                localStorage.setItem('ui-hub-elite', String(data.isElite || false));
+                console.log(`[Auth] Status Match: Pro=${data.isPro || false}, Elite=${data.isElite || false}`);
+                return { isPro: !!data.isPro, isElite: !!data.isElite };
+            } else {
+                const errorText = await response.text();
+                console.error(`[Auth] Failed: ${response.status} - Status endpoint returned error:`, errorText);
+                setIsPro(false);
+                setIsElite(false);
+                localStorage.setItem('ui-hub-pro', 'false');
+                localStorage.setItem('ui-hub-elite', 'false');
+                return { isPro: false, isElite: false };
+            }
+        } catch (error) {
+            console.error('[Auth] Connection Failure: Could not reach status endpoint. Check VITE_API_URL and CORS.', error);
+            // Don't wipe storage on network failure, preserve offline optimism
+            setIsPro(localStorage.getItem('ui-hub-pro') === 'true');
+            setIsElite(localStorage.getItem('ui-hub-elite') === 'true');
+            return {
+                isPro: localStorage.getItem('ui-hub-pro') === 'true',
+                isElite: localStorage.getItem('ui-hub-elite') === 'true',
+            };
+        }
+    }, []);
 
     useEffect(() => {
         const checkRedirect = async () => {
@@ -90,40 +145,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 }
 
                 try {
-                    // Do not force refresh to keep execution snappy (use cached token)
-                    const idToken = await user.getIdToken();
-                    const apiBaseUrl = getApiBaseUrl();
-                    
-                    console.log(`[Auth] Fetching Pro status from ${apiBaseUrl}/api/v1/users/status`);
-                    
-                    const response = await fetch(`${apiBaseUrl}/api/v1/users/status`, {
-                        headers: {
-                            'Authorization': `Bearer ${idToken}`,
-                            'Cache-Control': 'no-cache'
-                        }
-                    });
-                    
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('[Auth] API Status Response:', data);
-                        setIsPro(data.isPro);
-                        setIsElite(data.isElite ?? false);
-                        localStorage.setItem('ui-hub-pro', String(data.isPro || false));
-                        localStorage.setItem('ui-hub-elite', String(data.isElite || false));
-                        console.log(`[Auth] Status Match: Pro=${data.isPro || false}, Elite=${data.isElite || false}`);
-                    } else {
-                        const errorText = await response.text();
-                        console.error(`[Auth] Failed: ${response.status} - Status endpoint returned error:`, errorText);
-                        setIsPro(false);
-                        setIsElite(false);
-                        localStorage.setItem('ui-hub-pro', 'false');
-                        localStorage.setItem('ui-hub-elite', 'false');
-                    }
-                } catch (error) {
-                    console.error('[Auth] Connection Failure: Could not reach status endpoint. Check VITE_API_URL and CORS.', error);
-                    // Don't wipe storage on network failure, preserve offline optimism
-                    setIsPro(localStorage.getItem('ui-hub-pro') === 'true');
-                    setIsElite(localStorage.getItem('ui-hub-elite') === 'true');
+                    await refreshProStatus();
                 } finally {
                     setLoading(false);
                 }
@@ -136,12 +158,32 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         });
 
         return unsubscribe;
-    }, []);
+    }, [refreshProStatus]);
 
     const isSpecialUser = user?.email === 'jainil11199@gmail.com';
 
+    // Auto-refresh Pro/Elite status when the tab regains focus (covers upgrades
+    // completed in another tab or via external payment flows) without polling.
+    useEffect(() => {
+        let lastRefreshed = 0;
+        const refreshBudgetMs = 30000;
+        const refreshIfStale = () => {
+            if (!auth.currentUser) return;
+            const now = Date.now();
+            if (now - lastRefreshed < refreshBudgetMs) return;
+            lastRefreshed = now;
+            refreshProStatus();
+        };
+        window.addEventListener('focus', refreshIfStale);
+        document.addEventListener('visibilitychange', refreshIfStale);
+        return () => {
+            window.removeEventListener('focus', refreshIfStale);
+            document.removeEventListener('visibilitychange', refreshIfStale);
+        };
+    }, [refreshProStatus]);
+
     return (
-        <AuthContext.Provider value={{ user, isPro: isPro || isElite || isSpecialUser, isElite: isElite || isSpecialUser, loading }}>
+        <AuthContext.Provider value={{ user, isPro: isPro || isElite || isSpecialUser, isElite: isElite || isSpecialUser, loading, refreshProStatus }}>
             {/* Always render children immediately to unblock app mount */}
             {children}
 

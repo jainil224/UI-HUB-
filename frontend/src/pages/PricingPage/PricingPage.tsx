@@ -10,7 +10,7 @@ import { getApiBaseUrl } from '../../utils/apiConfig';
 
 const PricingPage = () => {
     const navigate = useNavigate();
-    const { user } = useAuth();
+    const { user, refreshProStatus } = useAuth();
     const [currencyMode, setCurrencyMode] = useState<'INR' | 'USD'>('USD');
     const [checkoutStatus, setCheckoutStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [checkoutMessage, setCheckoutMessage] = useState('');
@@ -148,6 +148,9 @@ const PricingPage = () => {
                         
                         const verifyData = await verifyRes.json();
                         if (verifyData.success) {
+                            // Refresh Pro status immediately so the new entitlement applies
+                            // without requiring a full page reload.
+                            await refreshProStatus();
                             setStatus('success');
                             setCheckoutMessage(`Welcome to ${plan.title}! Your account is upgraded.`);
                         } else if (verifyData.paymentCaptured) {
@@ -275,6 +278,7 @@ const PricingPage = () => {
                 onClose={() => {
                     setCheckoutStatus('idle');
                     if (checkoutStatus === 'success') {
+                        refreshProStatus();
                         navigate('/library');
                     }
                 }} 
