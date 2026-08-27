@@ -3779,5 +3779,46 @@ export function BlockDriftDemo() {
   );
 }`,
         vibePrompt: "Create a 'Block Drift' WebGL animated background in React + TypeScript using three.js (single WebGLRenderer, one rAF loop, all live state via refs). Sheets of instanced cubes stacked in depth, the camera sitting inside the stack so blocks fly past and exit at the frame edges. Each layer is a square grid of box instances culled by a smooth value-noise field so survivors form contiguous slabs with face-to-face contact rather than scattered confetti. The stack slides exactly one gap per beat while the noise seed advances by one, making the pattern seamless and never restarting. A clear corridor down the middle prevents blocks from clipping through the camera. Blocks grow in from nothing at the far end over the last stretch of travel, reading as fog rather than popping. Fragment shader blends near-to-far depth colouring with per-face directional shading for cube legibility, screen-space-anti-aliased seam lines along box face borders (edge colour configurable), and noise-culled collapsed instances are discarded. Controls for near/far/edge colours, grid size, block size, gap, layers, density, cluster (noise frequency), edge width, fade, shade, clear corridor radius, speed, and front/back direction."
+    },
+    {
+        id: "lightfall",
+        title: "Lightfall",
+        category: "interactive-background",
+        addedAt: "2026-08-27",
+        newBadgeDays: 21,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <Lightfall />
+            </div>
+        ),
+        code: `import Lightfall from "@/components/ui/Lightfall";
+
+export function LightfallDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <Lightfall
+        colors={["#A6C8FF", "#00CA9A"]}
+        backgroundColor="#000000"
+        speed={200}
+        streakCount={7}
+        streakWidth={207}
+        streakLength={66}
+        glow={29}
+        density={111}
+        twinkle={100}
+        zoom={1}
+        backgroundGlow={200}
+        opacity={100}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Lightfall' WebGL fullscreen-shader background in React + TypeScript (single GL context, one rAF loop, all live state via refs). A raymarched scene computes per-pixel polar coordinates from a 39-iteration sphere-intersection march, producing a curved coordinate field that wraps angularly around the vertical axis. Streaks are scattered across angular rings via a seeded hash, each streak a smooth elongated SDF with configurable width and length, palette-coloured by an up-to-8-entry colour array and twinkle-modulated. The colour palette is indexed per-streak by a fractal hash, with smooth banding across the angular ring count (density control). Background is a radial vignette tinted by a configurable glow colour, composited under the streaks. Tone mapping uses tanh with a configurable glow multiplier and subtractive offset before sqrt for filmic contrast. Controls for up to 8 colours, background colour, speed, streak count (max 16), streak width/length, glow, density (angular ring count), twinkle, zoom, background glow, and opacity. Single fullscreen-triangle draw call, premultiplied-alpha canvas over a CSS background."
     }
 ];
