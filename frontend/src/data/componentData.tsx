@@ -24,6 +24,7 @@ const AuraCursor = React.lazy(() => import('../components/ui/AuraCursor').then(m
 const ParticleCursor = React.lazy(() => import('../components/ui/ParticleCursor').then(m => ({ default: m.ParticleCursor })));
 const KineticGrid = React.lazy(() => import('../components/ui/KineticGrid').then(m => ({ default: m.KineticGrid })));
 const MagicCursor = React.lazy(() => import('../components/ui/MagicCursor').then(m => ({ default: m.MagicCursor })));
+const UserCursor = React.lazy(() => import('../components/ui/UserCursor').then(m => ({ default: m.UserCursor })));
 
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
@@ -1825,6 +1826,79 @@ const MagicCursorPreview: React.FC = () => {
     );
 };
 
+// ── User Cursor scoped preview ────────────
+const UserCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div
+            ref={containerRef}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: 'radial-gradient(120% 120% at 50% 0%, #101418 0%, #0a0d12 50%, #05070a 100%)',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 24,
+            }}
+        >
+            {/* Interactive demo elements */}
+            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
+                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
+                    ✦ USER CURSOR ✦
+                </div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {['FOLLOW', 'PULSE', 'GLIDE'].map((label) => (
+                        <button key={label} style={{
+                            padding: '9px 18px',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(255,255,255,0.16)',
+                            borderRadius: 8,
+                            color: 'rgba(255,255,255,0.72)',
+                            fontSize: 9, fontWeight: 800,
+                            letterSpacing: '0.22em',
+                            cursor: 'none',
+                            transition: 'all 0.3s ease',
+                        }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.14)';
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
+                                e.currentTarget.style.boxShadow = '0 0 18px rgba(255,255,255,0.25)';
+                                e.currentTarget.style.color = 'rgba(255,255,255,0.98)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)';
+                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.color = 'rgba(255,255,255,0.72)';
+                            }}
+                        >{label}</button>
+                    ))}
+                </div>
+                <div style={{
+                    padding: '12px 24px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.10)',
+                    borderRadius: 10,
+                    color: 'rgba(255,255,255,0.40)',
+                    fontSize: 8, fontWeight: 700,
+                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
+                }}>MOVE CURSOR · A LABEL PILL TRAILS BEHIND</div>
+            </div>
+
+            {/* User cursor — arrow + trailing label pill */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <Suspense fallback={null}>
+                    <UserCursor name="UI HUB" color="#FFFFFF" textColor="#000000" />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -2040,6 +2114,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'confetti-cursor': ParticleCursor,
     'kinetic-grid': KineticGrid,
     'spin-cursor': MagicCursor,
+    'user-cursor': UserCursor,
 
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
@@ -3767,6 +3842,43 @@ MOTION:
 
 TECH: React + TypeScript + requestAnimationFrame + CSS transforms
 Props: label, labelText, labelColor, fillColor, cursorSize, enableStretch, enableGlow, glowColor, glowIntensity, labelFont, style.
+UI HUB premium cursor component.`
+    },
+    {
+        id: "user-cursor",
+        title: "User Cursor",
+        category: "cursor",
+        addedAt: "2026-08-27",
+        preview: () => <UserCursorPreview />,
+        code: `import { UserCursor } from '@/components/ui/UserCursor';
+
+// Drop <UserCursor /> anywhere in your app (e.g. App.tsx or a layout root).
+// A custom arrow cursor with a colored label pill that trails behind on a laggier spring.
+export const Demo = () => (
+  <div className="relative w-full h-[500px] bg-black rounded-2xl overflow-hidden flex items-center justify-center">
+    <UserCursor name="UI HUB" color="#FFFFFF" textColor="#000000" />
+    <p className="text-white/30 text-sm tracking-widest uppercase font-bold">
+      Move your cursor · A label pill trails behind
+    </p>
+  </div>
+);`,
+        vibePrompt: `Create a premium USER CUSTOM CURSOR React component called UserCursor.
+It replaces the OS cursor inside its frame with an arrow glyph tracked by spring physics and a colored label pill that trails behind on a laggier spring, rocking with motion and scaling while pressed.
+
+CURSOR DESIGN:
+- A sharp macOS-style arrow (SVG path) anchored at its tip, fill color configurable
+- A rounded label pill renders BEHIND the arrow (so the arrow tip is always on top), showing the 'name' text, colored by 'color' with dark text
+- Pill padding, radius and font scale proportionally with 'size'
+
+MOTION:
+- Arrow follows the pointer with a snappy spring (stiffness 380, damping 32, mass 0.6)
+- Label trails behind with a laggier spring (stiffness 220, damping 26, mass 0.7) and a fixed offset from the arrow
+- Label tilts/rocks with horizontal velocity, capped at 'labelTiltStrength'
+- Arrow scales down on press ('pressScale') with a spring bounce and returns on release
+- Native cursor hidden only while pointer is over the frame; skipped on coarse/touch pointers
+
+TECH: React + TypeScript + framer-motion (useMotionValue, useSpring, useTransform, motion)
+Props: name, arrow, label, color, textColor, size, labelTiltStrength, showLabel, offsetX, offsetY, labelOffsetUseDefault, labelOffsetX, labelOffsetY, pressScale, style.
 UI HUB premium cursor component.`
     },
     {
