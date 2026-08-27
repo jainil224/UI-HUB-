@@ -20,6 +20,7 @@ const LizardCursor = React.lazy(() => import('../components/ui/LizardCursor').th
 const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then(m => ({ default: m.VenomCursor })));
 const StarCursor = React.lazy(() => import('../components/ui/StarCursor').then(m => ({ default: m.StarCursor })));
 const AsciiCursor = React.lazy(() => import('../components/ui/AsciiCursor').then(m => ({ default: m.AsciiCursor })));
+const AuraCursor = React.lazy(() => import('../components/ui/AuraCursor').then(m => ({ default: m.AuraCursor })));
 
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
@@ -1602,6 +1603,79 @@ const AsciiCursorPreview: React.FC = () => {
     );
 };
 
+// ── Aura Cursor scoped preview ────────────
+const AuraCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div
+            ref={containerRef}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: 'radial-gradient(120% 120% at 50% 0%, #1a1030 0%, #0c0716 45%, #06030c 100%)',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 24,
+            }}
+        >
+            {/* Interactive demo elements */}
+            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
+                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(168,85,247,0.65)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
+                    ✦ AURA CURSOR ✦
+                </div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {['FLOW', 'SWIRL', 'BLOOM'].map((label) => (
+                        <button key={label} style={{
+                            padding: '9px 18px',
+                            background: 'rgba(168,85,247,0.06)',
+                            border: '1px solid rgba(168,85,247,0.30)',
+                            borderRadius: 8,
+                            color: 'rgba(200,150,255,0.85)',
+                            fontSize: 9, fontWeight: 800,
+                            letterSpacing: '0.22em',
+                            cursor: 'none',
+                            transition: 'all 0.3s ease',
+                        }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(168,85,247,0.16)';
+                                e.currentTarget.style.borderColor = 'rgba(190,120,255,0.6)';
+                                e.currentTarget.style.boxShadow = '0 0 20px rgba(168,85,247,0.35)';
+                                e.currentTarget.style.color = 'rgba(240,210,255,0.98)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(168,85,247,0.06)';
+                                e.currentTarget.style.borderColor = 'rgba(168,85,247,0.30)';
+                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.color = 'rgba(200,150,255,0.85)';
+                            }}
+                        >{label}</button>
+                    ))}
+                </div>
+                <div style={{
+                    padding: '12px 24px',
+                    background: 'rgba(168,85,247,0.06)',
+                    border: '1px solid rgba(168,85,247,0.18)',
+                    borderRadius: 10,
+                    color: 'rgba(190,140,255,0.45)',
+                    fontSize: 8, fontWeight: 700,
+                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
+                }}>MOVE CURSOR · HOVER · CLICK TO SPLASH</div>
+            </div>
+
+            {/* AuraCursor — a flowing dye fluid that chases the pointer */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <Suspense fallback={null}>
+                    <AuraCursor label />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1813,6 +1887,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'venom-cursor': VenomCursor,
     'star-cursor': StarCursor,
     'ascii-cursor': AsciiCursor,
+    'aura-cursor': AuraCursor,
 
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
@@ -3393,6 +3468,44 @@ MOTION:
 
 TECH: React + TypeScript + HTML5 Canvas 2D + requestAnimationFrame
 Props: label, labelText, labelColor, cellSize, radius, density, hold, boxColor, textColor, style.
+UI HUB premium cursor component.`
+    },
+    {
+        id: "aura-cursor",
+        title: "Aura Cursor",
+        category: "cursor",
+        addedAt: "2026-08-27",
+        preview: () => <AuraCursorPreview />,
+        code: `import { AuraCursor } from '@/components/ui/AuraCursor';
+
+// Drop <AuraCursor /> anywhere in your app (e.g. App.tsx or a layout root).
+// A WebGL fluid-dye cursor that chases the pointer with colour.
+export const Demo = () => (
+  <div className="relative w-full h-[500px] bg-black rounded-2xl overflow-hidden flex items-center justify-center">
+    <AuraCursor label />
+    <p className="text-white/30 text-sm tracking-widest uppercase font-bold">
+      Move your cursor · Click to splash
+    </p>
+  </div>
+);`,
+        vibePrompt: `Create a premium AURA FLUID CURSOR React component called AuraCursor.
+It should render a GPU-driven WebGL fluid dye simulation that follows the pointer across its own frame, leaving a flowing, colourful trail.
+
+DESIGN:
+- A canvas-backed WebGL2 (falls back to WebGL1) fluid solver with velocity, pressure, divergence, curl/vorticity and advection passes
+- Dye colour drifts continuously around a palette loop (purple, pink, blue) so consecutive strokes stay neighbouring hues
+- A centred 'HOVER ME' label floats in the middle of the frame as a cue
+- Dark backdrop default with optional light mode via a 'backdrop' prop
+- Premium lighting: diffuse shading pass over the dye for depth
+
+MOTION:
+- Smooth, physically inspired fluid that follows the pointer with inertia and swirl
+- Replaces the native cursor only while the pointer is over the component's own frame
+- Clicking splashes a bright burst of the current palette colour
+- Pauses the solver when off-screen or the tab is hidden; rebuilds cleanly on WebGL context restore
+
+TECH: React + TypeScript + WebGL (glsl shaders) + requestAnimationFrame + ResizeObserver + IntersectionObserver
+Props: label, labelText, labelColor, labelFont, paletteColors, backdrop, densityDissipation, curl, splatRadius, splatForce, style.
 UI HUB premium cursor component.`
     },
     {
