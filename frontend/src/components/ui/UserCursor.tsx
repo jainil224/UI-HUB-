@@ -47,6 +47,7 @@ function UIHUBBase_UserCursor(props: Props) {
         // Non-serializable advanced overrides (programmatic only).
         offset: offsetOverride,
         labelOffset: labelOffsetOverride,
+        previewMode,
         style,
     } = props
 
@@ -61,7 +62,9 @@ function UIHUBBase_UserCursor(props: Props) {
     // --- touch detection -----------------------------------------------------
     const [isTouchDevice, setIsTouchDevice] = useState(false)
     useEffect(() => {
-        if (!hideOnTouch) {
+        // In preview mode the cursor is forced to render (even on touch
+        // devices) so an auto-animating demo can drive it via pointer events.
+        if (!hideOnTouch || previewMode) {
             setIsTouchDevice(false)
             return
         }
@@ -80,7 +83,7 @@ function UIHUBBase_UserCursor(props: Props) {
         }
         legacy.addListener?.(sync)
         return () => legacy.removeListener?.(sync)
-    }, [hideOnTouch])
+    }, [hideOnTouch, previewMode])
 
     // --- container refs ------------------------------------------------------
     const containerRef = useRef<HTMLDivElement | null>(null)
@@ -172,7 +175,24 @@ function UIHUBBase_UserCursor(props: Props) {
             return { x: clientX - rect.left, y: clientY - rect.top }
         }
 
+        const isInside = (clientX: number, clientY: number) => {
+            if (fullScreen) return true
+            const rect = container!.getBoundingClientRect()
+            return (
+                clientX >= rect.left &&
+                clientX <= rect.right &&
+                clientY >= rect.top &&
+                clientY <= rect.bottom
+            )
+        }
+
         const onMove = (e: MouseEvent) => {
+            // Tracked on the window: the host lives inside pointer-events:none
+            // wrappers in previews, so the rect does the hit test instead of
+            // relying on enter/leave events reaching the element itself.
+            const inside = isInside(e.clientX, e.clientY)
+            setHovering(inside)
+
             const { x, y } = getLocal(e.clientX, e.clientY)
 
             const now =
@@ -196,46 +216,43 @@ function UIHUBBase_UserCursor(props: Props) {
             const norm = Math.min(1, speed / 1500)
             const sign = vx === 0 ? 0 : vx > 0 ? 1 : -1
             labelTiltTarget.set(sign * norm * labelTiltStrength)
-
-            if (fullScreen) setHovering(true)
         }
 
-        const onDown = () => setPressed(true)
-        const onUp = () => setPressed(false)
-
-        const onEnter = () => setHovering(true)
-        const onLeave = () => {
+        const onDown = (e: MouseEvent) => {
+            if (isInside(e.clientX, e.clientY)) setPressed(true)
+        }
+        const onUp = (e: MouseEvent) => {
+            if (isInside(e.clientX, e.clientY)) setPressed(false)
+        }
+        const onWindowLeave = () => {
             setHovering(false)
+            setPressed(false)
             lastSampleRef.current = null
             labelTiltTarget.set(0)
         }
 
-        if (fullScreen) {
-            window.addEventListener("mousemove", onMove)
-            window.addEventListener("mousedown", onDown)
-            window.addEventListener("mouseup", onUp)
-        } else {
-            const el = container!
-            el.addEventListener("mousemove", onMove as EventListener)
-            el.addEventListener("mousedown", onDown)
-            el.addEventListener("mouseup", onUp)
-            el.addEventListener("mouseenter", onEnter)
-            el.addEventListener("mouseleave", onLeave)
-        }
+        window.addEventListener("pointermove", onMove as EventListener, {
+            passive: true,
+        })
+        window.addEventListener("pointerdown", onDown as EventListener, {
+            passive: true,
+        })
+        window.addEventListener("pointerup", onUp as EventListener, {
+            passive: true,
+        })
+        document.documentElement.addEventListener(
+            "pointerleave",
+            onWindowLeave
+        )
 
         return () => {
-            if (fullScreen) {
-                window.removeEventListener("mousemove", onMove)
-                window.removeEventListener("mousedown", onDown)
-                window.removeEventListener("mouseup", onUp)
-            } else {
-                const el = container!
-                el.removeEventListener("mousemove", onMove as EventListener)
-                el.removeEventListener("mousedown", onDown)
-                el.removeEventListener("mouseup", onUp)
-                el.removeEventListener("mouseenter", onEnter)
-                el.removeEventListener("mouseleave", onLeave)
-            }
+            window.removeEventListener("pointermove", onMove as EventListener)
+            window.removeEventListener("pointerdown", onDown as EventListener)
+            window.removeEventListener("pointerup", onUp as EventListener)
+            document.documentElement.removeEventListener(
+                "pointerleave",
+                onWindowLeave
+            )
             setPressed(false)
         }
     }, [
@@ -490,6 +507,9 @@ type Props = {
     labelOffset?: { x?: number; y?: number }
     classNames?: ClassNames
     style?: React.CSSProperties
+    /** Force-render even on coarse-pointer (touch) devices — used by scoped
+     * previews that drive the cursor with auto-animation. */
+    previewMode?: boolean
 }
 
 const COMPONENT_DEFAULTS = {

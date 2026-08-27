@@ -1482,55 +1482,119 @@ const StarCursorPreview: React.FC = () => {
                 `,
             }} />
 
-            {/* Interactive demo elements */}
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(0,220,240,0.45)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
-                    ✦ STAR CURSOR ✦
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {['EXPLORE', 'NEBULA', 'COSMOS'].map((label) => (
-                        <button key={label} style={{
-                            padding: '9px 18px',
-                            background: 'rgba(0,200,230,0.05)',
-                            border: '1px solid rgba(0,200,230,0.18)',
-                            borderRadius: 8,
-                            color: 'rgba(100,220,240,0.70)',
-                            fontSize: 9, fontWeight: 800,
-                            letterSpacing: '0.22em',
-                            cursor: 'none',
-                            transition: 'all 0.3s ease',
-                        }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(0,200,230,0.12)';
-                                e.currentTarget.style.borderColor = 'rgba(0,230,255,0.45)';
-                                e.currentTarget.style.boxShadow = '0 0 18px rgba(0,200,240,0.18), 0 0 40px rgba(0,180,220,0.08)';
-                                e.currentTarget.style.color = 'rgba(160,240,255,0.95)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(0,200,230,0.05)';
-                                e.currentTarget.style.borderColor = 'rgba(0,200,230,0.18)';
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.color = 'rgba(100,220,240,0.70)';
-                            }}
-                        >{label}</button>
-                    ))}
-                </div>
-                <div style={{
-                    padding: '12px 24px',
-                    background: 'rgba(0,180,220,0.05)',
-                    border: '1px solid rgba(0,180,220,0.12)',
-                    borderRadius: 10,
-                    color: 'rgba(80,200,225,0.40)',
-                    fontSize: 8, fontWeight: 700,
-                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
-                }}>MOVE CURSOR · CLICK TO BURST · HOVER TO GLOW</div>
-            </div>
-
-            {/* Star cursor — always visible (works on desktop hover and mobile touch) */}
+            {/* Interactive hint — keep the component's own label visible */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
                 <Suspense fallback={null}>
                     <StarCursor containerRef={containerRef} hideDefaultCursor={true} />
                 </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Shared cursor preview helpers ────────────
+// A scoped cursor preview that strips the demo buttons/decorative text and
+// leaves only the component's own centered "HOVER AROUND" label. On coarse
+// (touch) pointers — where there is no hover — a small animation canvases a
+// cursor-sized point around the frame by dispatching real window `pointermove`
+// events, so the cursor is visible without a real pointer.
+const CursorPreviewShell: React.FC<{
+    containerRef: React.RefObject<HTMLDivElement | null>;
+    background: string;
+    children: React.ReactNode;
+}> = ({ containerRef, background, children }) => {
+    const [autoAnim, setAutoAnim] = useState(true);
+
+    useEffect(() => {
+        if (typeof window === 'undefined' || !window.matchMedia) return;
+        const mql = window.matchMedia('(pointer: coarse)');
+        const sync = () => setAutoAnim(!!mql.matches);
+        sync();
+        if (mql.addEventListener) {
+            mql.addEventListener('change', sync);
+            return () => mql.removeEventListener('change', sync);
+        }
+        const legacy = mql as MediaQueryList & {
+            addListener?: (l: (e: MediaQueryListEvent) => void) => void;
+            removeListener?: (l: (e: MediaQueryListEvent) => void) => void;
+        };
+        legacy.addListener?.(sync);
+        return () => legacy.removeListener?.(sync);
+    }, []);
+
+    useEffect(() => {
+        if (!autoAnim) return;
+        const host = containerRef.current;
+        if (!host) return;
+
+        let raf = 0;
+        const start = performance.now();
+
+        const dispatch = (clientX: number, clientY: number) => {
+            try {
+                window.dispatchEvent(
+                    new PointerEvent('pointermove', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX,
+                        clientY,
+                        pointerType: 'mouse',
+                        pointerId: 1,
+                        isPrimary: true,
+                        buttons: 0,
+                    })
+                );
+            } catch {
+                // Synthetic pointer events unsupported; fall through to rAF.
+            }
+        };
+
+        const frame = (now: number) => {
+            const rect = host.getBoundingClientRect();
+            const t = (now - start) / 1000;
+            const w = rect.width || 320;
+            const h = rect.height || 320;
+            // A Lissajous-style orbit that stays inside the frame.
+            const cx = w * 0.5 + Math.sin(t * 1.2) * w * 0.32;
+            const cy = h * 0.5 + Math.cos(t * 0.9) * h * 0.3;
+            dispatch(rect.left + cx, rect.top + cy);
+            raf = requestAnimationFrame(frame);
+        };
+        raf = requestAnimationFrame(frame);
+
+        let suppress = false;
+        const stopOnReal = () => {
+            if (suppress) return;
+            suppress = true;
+            cancelAnimationFrame(raf);
+        };
+        window.addEventListener('pointermove', stopOnReal, { passive: true });
+        window.addEventListener('touchstart', stopOnReal, { passive: true });
+
+        return () => {
+            cancelAnimationFrame(raf);
+            window.removeEventListener('pointermove', stopOnReal);
+            window.removeEventListener('touchstart', stopOnReal);
+        };
+    }, [autoAnim, containerRef]);
+
+    return (
+        <div
+            ref={containerRef}
+            style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                minHeight: '100%',
+                background,
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+            }}
+        >
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                {children}
             </div>
         </div>
     );
@@ -1541,71 +1605,14 @@ const AsciiCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: 'linear-gradient(160deg, #101014 0%, #0a0a0e 40%, #050507 100%)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 24,
-            }}
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="linear-gradient(160deg, #101014 0%, #0a0a0e 40%, #050507 100%)"
         >
-            {/* Interactive demo elements */}
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(236,82,40,0.65)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
-                    ▚ ASCII CURSOR ▞
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {['SCROLL', 'HOVER', 'CLICK'].map((label) => (
-                        <button key={label} style={{
-                            padding: '9px 18px',
-                            background: 'rgba(236,82,40,0.05)',
-                            border: '1px solid rgba(236,82,40,0.25)',
-                            borderRadius: 8,
-                            color: 'rgba(255,120,80,0.80)',
-                            fontSize: 9, fontWeight: 800,
-                            letterSpacing: '0.22em',
-                            cursor: 'none',
-                            transition: 'all 0.3s ease',
-                        }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(236,82,40,0.14)';
-                                e.currentTarget.style.borderColor = 'rgba(236,82,40,0.6)';
-                                e.currentTarget.style.boxShadow = '0 0 18px rgba(236,82,40,0.25)';
-                                e.currentTarget.style.color = 'rgba(255,200,180,0.95)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(236,82,40,0.05)';
-                                e.currentTarget.style.borderColor = 'rgba(236,82,40,0.25)';
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.color = 'rgba(255,120,80,0.80)';
-                            }}
-                        >{label}</button>
-                    ))}
-                </div>
-                <div style={{
-                    padding: '12px 24px',
-                    background: 'rgba(236,82,40,0.05)',
-                    border: '1px solid rgba(236,82,40,0.15)',
-                    borderRadius: 10,
-                    color: 'rgba(255,140,100,0.45)',
-                    fontSize: 8, fontWeight: 700,
-                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
-                }}>MOVE CURSOR · HOVER · SCRAMBLE</div>
-            </div>
-
-            {/* Ascii cursor — replaces native pointer over the frame */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <Suspense fallback={null}>
-                    <AsciiCursor label />
-                </Suspense>
-            </div>
-        </div>
+            <Suspense fallback={null}>
+                <AsciiCursor label labelText="HOVER AROUND" />
+            </Suspense>
+        </CursorPreviewShell>
     );
 };
 
@@ -1614,71 +1621,14 @@ const AuraCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: 'radial-gradient(120% 120% at 50% 0%, #1a1030 0%, #0c0716 45%, #06030c 100%)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 24,
-            }}
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="radial-gradient(120% 120% at 50% 0%, #1a1030 0%, #0c0716 45%, #06030c 100%)"
         >
-            {/* Interactive demo elements */}
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(168,85,247,0.65)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
-                    ✦ AURA CURSOR ✦
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {['FLOW', 'SWIRL', 'BLOOM'].map((label) => (
-                        <button key={label} style={{
-                            padding: '9px 18px',
-                            background: 'rgba(168,85,247,0.06)',
-                            border: '1px solid rgba(168,85,247,0.30)',
-                            borderRadius: 8,
-                            color: 'rgba(200,150,255,0.85)',
-                            fontSize: 9, fontWeight: 800,
-                            letterSpacing: '0.22em',
-                            cursor: 'none',
-                            transition: 'all 0.3s ease',
-                        }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(168,85,247,0.16)';
-                                e.currentTarget.style.borderColor = 'rgba(190,120,255,0.6)';
-                                e.currentTarget.style.boxShadow = '0 0 20px rgba(168,85,247,0.35)';
-                                e.currentTarget.style.color = 'rgba(240,210,255,0.98)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(168,85,247,0.06)';
-                                e.currentTarget.style.borderColor = 'rgba(168,85,247,0.30)';
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.color = 'rgba(200,150,255,0.85)';
-                            }}
-                        >{label}</button>
-                    ))}
-                </div>
-                <div style={{
-                    padding: '12px 24px',
-                    background: 'rgba(168,85,247,0.06)',
-                    border: '1px solid rgba(168,85,247,0.18)',
-                    borderRadius: 10,
-                    color: 'rgba(190,140,255,0.45)',
-                    fontSize: 8, fontWeight: 700,
-                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
-                }}>MOVE CURSOR · HOVER · CLICK TO SPLASH</div>
-            </div>
-
-            {/* AuraCursor — a flowing dye fluid that chases the pointer */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <Suspense fallback={null}>
-                    <AuraCursor label />
-                </Suspense>
-            </div>
-        </div>
+            <Suspense fallback={null}>
+                <AuraCursor label labelText="HOVER AROUND" />
+            </Suspense>
+        </CursorPreviewShell>
     );
 };
 
@@ -1687,71 +1637,14 @@ const ParticleCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: 'radial-gradient(120% 120% at 50% 0%, #14161d 0%, #0a0b10 45%, #05060a 100%)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 24,
-            }}
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="radial-gradient(120% 120% at 50% 0%, #14161d 0%, #0a0b10 45%, #05060a 100%)"
         >
-            {/* Interactive demo elements */}
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(255,107,107,0.75)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
-                    ✦ CONFETTI CURSOR ✦
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {['POP', 'PARTY', 'SPARKLE'].map((label) => (
-                        <button key={label} style={{
-                            padding: '9px 18px',
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.16)',
-                            borderRadius: 8,
-                            color: 'rgba(255,255,255,0.75)',
-                            fontSize: 9, fontWeight: 800,
-                            letterSpacing: '0.22em',
-                            cursor: 'none',
-                            transition: 'all 0.3s ease',
-                        }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.14)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
-                                e.currentTarget.style.boxShadow = '0 0 18px rgba(78,205,196,0.35)';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.98)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)';
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.75)';
-                            }}
-                        >{label}</button>
-                    ))}
-                </div>
-                <div style={{
-                    padding: '12px 24px',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.10)',
-                    borderRadius: 10,
-                    color: 'rgba(255,255,255,0.40)',
-                    fontSize: 8, fontWeight: 700,
-                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
-                }}>MOVE CURSOR · TRAIL OF STARS</div>
-            </div>
-
-            {/* Confetti cursor — spawning particles trail the pointer */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <Suspense fallback={null}>
-                    <ParticleCursor label labelText="HOVER AROUND" />
-                </Suspense>
-            </div>
-        </div>
+            <Suspense fallback={null}>
+                <ParticleCursor label labelText="HOVER AROUND" />
+            </Suspense>
+        </CursorPreviewShell>
     );
 };
 
@@ -1760,71 +1653,14 @@ const MagicCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: 'radial-gradient(120% 120% at 50% 0%, #121318 0%, #0a0b0f 45%, #05060a 100%)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 24,
-            }}
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="radial-gradient(120% 120% at 50% 0%, #121318 0%, #0a0b0f 45%, #05060a 100%)"
         >
-            {/* Interactive demo elements */}
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
-                    ✦ SPIN CURSOR ✦
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {['ZOOM', 'AIM', 'TRACE'].map((label) => (
-                        <button key={label} style={{
-                            padding: '9px 18px',
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.16)',
-                            borderRadius: 8,
-                            color: 'rgba(255,255,255,0.72)',
-                            fontSize: 9, fontWeight: 800,
-                            letterSpacing: '0.22em',
-                            cursor: 'none',
-                            transition: 'all 0.3s ease',
-                        }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.14)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
-                                e.currentTarget.style.boxShadow = '0 0 18px rgba(255,255,255,0.25)';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.98)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)';
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.72)';
-                            }}
-                        >{label}</button>
-                    ))}
-                </div>
-                <div style={{
-                    padding: '12px 24px',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.10)',
-                    borderRadius: 10,
-                    color: 'rgba(255,255,255,0.40)',
-                    fontSize: 8, fontWeight: 700,
-                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
-                }}>MOVE CURSOR · IT ROTATES WITH SPEED</div>
-            </div>
-
-            {/* Spin cursor — a white arrow that rotates and stretches with velocity */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <Suspense fallback={null}>
-                    <MagicCursor label labelText="HOVER AROUND" />
-                </Suspense>
-            </div>
-        </div>
+            <Suspense fallback={null}>
+                <MagicCursor label labelText="HOVER AROUND" />
+            </Suspense>
+        </CursorPreviewShell>
     );
 };
 
@@ -1833,71 +1669,19 @@ const UserCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: 'radial-gradient(120% 120% at 50% 0%, #101418 0%, #0a0d12 50%, #05070a 100%)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 24,
-            }}
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="radial-gradient(120% 120% at 50% 0%, #101418 0%, #0a0d12 50%, #05070a 100%)"
         >
-            {/* Interactive demo elements */}
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
-                    ✦ USER CURSOR ✦
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {['FOLLOW', 'PULSE', 'GLIDE'].map((label) => (
-                        <button key={label} style={{
-                            padding: '9px 18px',
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.16)',
-                            borderRadius: 8,
-                            color: 'rgba(255,255,255,0.72)',
-                            fontSize: 9, fontWeight: 800,
-                            letterSpacing: '0.22em',
-                            cursor: 'none',
-                            transition: 'all 0.3s ease',
-                        }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.14)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
-                                e.currentTarget.style.boxShadow = '0 0 18px rgba(255,255,255,0.25)';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.98)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)';
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.72)';
-                            }}
-                        >{label}</button>
-                    ))}
-                </div>
-                <div style={{
-                    padding: '12px 24px',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.10)',
-                    borderRadius: 10,
-                    color: 'rgba(255,255,255,0.40)',
-                    fontSize: 8, fontWeight: 700,
-                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
-                }}>MOVE CURSOR · A LABEL PILL TRAILS BEHIND</div>
-            </div>
-
-            {/* User cursor — arrow + trailing label pill */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <Suspense fallback={null}>
-                    <UserCursor name="UI HUB" color="#FFFFFF" textColor="#000000" />
-                </Suspense>
-            </div>
-        </div>
+            <Suspense fallback={null}>
+                <UserCursor
+                    name="HOVER AROUND"
+                    color="#FFFFFF"
+                    textColor="#000000"
+                    previewMode
+                />
+            </Suspense>
+        </CursorPreviewShell>
     );
 };
 
@@ -1906,71 +1690,18 @@ const FireworkCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: 'radial-gradient(120% 120% at 50% 0%, #14060a 0%, #0b0406 50%, #050203 100%)',
-                overflow: 'hidden',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                gap: 24,
-            }}
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="radial-gradient(120% 120% at 50% 0%, #14060a 0%, #0b0406 50%, #050203 100%)"
         >
-            {/* Interactive demo elements */}
-            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
-                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
-                    ✦ FIREWORK CURSOR ✦
-                </div>
-                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
-                    {['TRAIL', 'BURST', 'DRIFT'].map((label) => (
-                        <button key={label} style={{
-                            padding: '9px 18px',
-                            background: 'rgba(255,255,255,0.05)',
-                            border: '1px solid rgba(255,255,255,0.16)',
-                            borderRadius: 8,
-                            color: 'rgba(255,255,255,0.72)',
-                            fontSize: 9, fontWeight: 800,
-                            letterSpacing: '0.22em',
-                            cursor: 'none',
-                            transition: 'all 0.3s ease',
-                        }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.14)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
-                                e.currentTarget.style.boxShadow = '0 0 18px rgba(255,255,255,0.25)';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.98)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)';
-                                e.currentTarget.style.boxShadow = 'none';
-                                e.currentTarget.style.color = 'rgba(255,255,255,0.72)';
-                            }}
-                        >{label}</button>
-                    ))}
-                </div>
-                <div style={{
-                    padding: '12px 24px',
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.10)',
-                    borderRadius: 10,
-                    color: 'rgba(255,255,255,0.40)',
-                    fontSize: 8, fontWeight: 700,
-                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
-                }}>MOVE CURSOR · A GPGPU PARTICLE TRAIL</div>
-            </div>
-
-            {/* Firework cursor — blooming GPGPU particle field */}
-            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                <Suspense fallback={null}>
-                    <FireworkCursor color="#FF3B3B" labelText="HOVER AROUND" labelColor="#FFFFFF" />
-                </Suspense>
-            </div>
-        </div>
+            <Suspense fallback={null}>
+                <FireworkCursor
+                    color="#FF3B3B"
+                    labelText="HOVER AROUND"
+                    labelColor="#FFFFFF"
+                />
+            </Suspense>
+        </CursorPreviewShell>
     );
 };
 
