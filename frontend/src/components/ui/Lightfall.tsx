@@ -395,8 +395,8 @@ export default function Lightfall(props: LightfallProps) {
             style={{
                 position: "relative",
                 overflow: "hidden",
-                minWidth: 1200,
-                minHeight: 800,
+                minWidth: 120,
+                minHeight: 120,
                 width: typeof width === "number" ? width : "100%",
                 height: typeof height === "number" ? height : "100%",
                 ...style,

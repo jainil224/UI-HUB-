@@ -3583,7 +3583,7 @@ export function PointDNAHelixDemo() {
         newBadgeDays: 21,
         isPremium: false,
         preview: () => (
-            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
                 <TwinGalaxyRings />
             </div>
         ),
@@ -3667,7 +3667,7 @@ export function TornadoDemo() {
         newBadgeDays: 21,
         isPremium: false,
         preview: () => (
-            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
                 <ParticleSphere />
             </div>
         ),
@@ -3704,7 +3704,7 @@ export function ParticleSphereDemo() {
         newBadgeDays: 21,
         isPremium: false,
         preview: () => (
-            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
                 <MorphingRings />
             </div>
         ),
@@ -3788,7 +3788,7 @@ export function BlockDriftDemo() {
         newBadgeDays: 21,
         isPremium: false,
         preview: () => (
-            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
                 <Lightfall />
             </div>
         ),

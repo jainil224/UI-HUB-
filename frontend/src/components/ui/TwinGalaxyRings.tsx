@@ -1371,9 +1371,9 @@ export default function TwinGalaxyRings(props: Props) {
 
             style={{
 
-                minWidth: 1200,
+                minWidth: 120,
 
-                minHeight: 800,
+                minHeight: 120,
 
                 width: "100%",
 

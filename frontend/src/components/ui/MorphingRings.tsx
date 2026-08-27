@@ -762,8 +762,8 @@ function __UIHUBBase_MorphingRings(props: Props) {
                 // Floor BEFORE the style spread: the canvas is absolutely
                 // positioned, so the root has no in-flow content and would
                 // collapse to a dot under Fit Content sizing.
-                minWidth: 1200,
-                minHeight: 800,
+                minWidth: 120,
+                minHeight: 120,
                 width: "100%",
                 height: "100%",
                 position: "relative",
