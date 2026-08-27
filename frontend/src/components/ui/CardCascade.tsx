@@ -340,9 +340,19 @@ export function CardCascade({ preview = false }: { preview?: boolean }) {
     };
   }, [preview]);
 
+  // Eased interpolation between cards so each transition glides with a smooth
+  // ease-in/out instead of moving linearly with scroll. The fractional part of
+  // the raw position is remapped through an ease curve; this keeps the motion
+  // locked to scroll while making the card-to-card animation feel beautiful.
+  const easeInOutCubic = (t: number) =>
+    t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+
   // Continuous active position (0..total-1)
-  const activeFloat = scrollProgress * (total - 1);
-  const activeIndex = Math.round(activeFloat);
+  const baseFloat = scrollProgress * (total - 1);
+  const localPart = baseFloat % 1;
+  const easedLocal = easeInOutCubic(localPart);
+  const activeFloat = Math.floor(baseFloat) + easedLocal;
+  const activeIndex = Math.round(baseFloat);
 
   /* --------------------------------------------------------------- */
   /*  Semi-circle arc maths                                           */
@@ -368,7 +378,7 @@ export function CardCascade({ preview = false }: { preview?: boolean }) {
       id="skills"
       ref={sectionRef}
       className="relative w-full bg-black"
-      style={{ height: preview ? "100%" : `${(total + 1) * 100}vh` }}
+      style={{ height: preview ? "100%" : `${total * 100}vh` }}
     >
       {/* ===== Sticky viewport ===== */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
@@ -475,7 +485,7 @@ export function CardCascade({ preview = false }: { preview?: boolean }) {
                     opacity: Math.max(0, finalOpacity),
                     filter: `blur(${finalBlur}px)`,
                     transition: entered
-                      ? "transform 0.15s ease-out, opacity 0.15s ease-out, filter 0.15s ease-out"
+                      ? "none"
                       : `transform 1.4s cubic-bezier(0.16, 1, 0.3, 1) ${i * 0.15}s, opacity 0.6s ease-out ${i * 0.15}s, filter 0.8s ease-out ${i * 0.15}s`,
                     willChange: "transform, opacity, filter",
                   }}
