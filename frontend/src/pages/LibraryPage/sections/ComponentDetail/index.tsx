@@ -867,7 +867,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 )}
                                 <div className="leading-tight">
                                     <p className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">
-                                        Contributed by
+                                        Designed by
                                     </p>
                                     <p className="text-sm font-black text-white">
                                         {item.contributor.name}

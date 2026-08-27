@@ -280,23 +280,25 @@ export function CardCascade({ preview = false }: { preview?: boolean }) {
     if (preview) {
       setEntered(true);
       let rafId = 0;
-      let last = performance.now();
-      const START_HOLD = 1200; // let the cascade-in finish before moving
-      const CARD_HOLD = 1000;  // dwell on each card
+      // Card-stepped auto-advance computed from elapsed time (deterministic, so
+      // it can't stall regardless of rAF timing): ease to each card, hold so
+      // its content is clearly visible, then move to the next and loop.
+      const EASE_MS = 550;   // time to travel between cards
+      const HOLD_MS = 1700;  // dwell on each card
+      const cardCycleMs = EASE_MS + HOLD_MS;
+      let start = 0;         // first rAF timestamp — same clock domain as `now`
 
       const frame = (now: number) => {
-        const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
-        last = now;
+        if (!start) start = now;
+        const elapsed = now - start;
+        const period = cardCycleMs * total;
+        const ph = ((elapsed % period) + period) % period; // 0..period
+        const cardIdx = Math.floor(ph / cardCycleMs);      // current card
+        const within = ph - cardIdx * cardCycleMs;         // progress within its cycle
+        const easedCard = cardIdx + Math.min(1, within / EASE_MS);
+        const nextProgress = Math.max(0, Math.min(1, easedCard / (total - 1)));
 
-        setScrollProgress((prev) => {
-          // Hold on the first card long enough to see the entrance animation.
-          const hold = prev === 0 ? START_HOLD : CARD_HOLD;
-          const eased = Math.min(1, prev + dt / (hold / 1000));
-          // Loop back to the start once the last card has had its dwell.
-          const next = prev >= 1 - 1e-6 ? 0 : eased;
-          return next;
-        });
-
+        setScrollProgress(nextProgress);
         rafId = requestAnimationFrame(frame);
       };
       rafId = requestAnimationFrame(frame);
