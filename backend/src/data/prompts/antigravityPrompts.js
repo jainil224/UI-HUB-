@@ -4934,5 +4934,43 @@ A Canvas 2D cloth simulation with text rendered on a deformable grid. Characters
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
+  "point-dna-helix": `
+## COMPONENT: Point DNA Helix (Interactive Background)
+
+### Overview
+A bioluminescent 3D point-cloud double DNA helix background built with raw WebGL (single GL context, one rAF loop, all live state via refs). Two interwoven helical backbone strands 180 degrees out of phase are connected by discrete base-pair rungs, surrounded by ambient genetic dust. The helix runs horizontally past both frame edges so no end is ever visible.
+
+### Shader / Rendering
+- All helical parametric math, camera transform, perspective point sizing, depth fade and screen-space cursor displacement computed in the vertex shader.
+- Additive premultiplied blending with exponential point falloff for a soft bioluminescent glow.
+
+### Interaction
+- Auto-spin about its own axis.
+- Drag-to-spin with flick momentum.
+- Cursor-proximity particle push (hover).
+- Breathing pulse.
+
+### Props
+- background: string (Default: "#030712")
+- baseColor: string (Default: "#00E5FF")
+- accentColor: string (Default: "#FF007A")
+- accentMix: number (Default: 42)
+- glow: string
+- density: number (Default: 31)
+- dotSize: number (Default: 100)
+- speed: number (Default: 70)
+- zoom: number (Default: 30)
+- hover: number (Default: 80)
+- tilt: { x, y }
+- helix: { turns, thickness, pulse }
+
+### Constraints
+- Single GL context kept for the component lifetime; all state in refs to avoid re-renders.
+- ResizeObserver-driven responsive canvas with DPR capping.
+- prefers-reduced-motion respected.
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
 };
 

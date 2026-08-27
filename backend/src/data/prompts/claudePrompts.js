@@ -2873,5 +2873,35 @@ PROPS:
 TECHNICAL: Canvas 2D, Verlet integration, fixed timestep (H=1/120), constraint solver (6/12 iterations), stretch clamping, pin points, quantised rotation, DPR capped 2, ResizeObserver, rAF loop.
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
+  "point-dna-helix": `# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer and raw WebGL developer.
+
+## Task
+Create a premium "Point DNA Helix" interactive background component using React, TypeScript, and raw WebGL (single GL context, one rAF loop, all live state via refs).
+
+COMPONENT NAME: Point DNA Helix
+
+VISUAL DESCRIPTION:
+A bioluminescent 3D point-cloud double DNA helix background. Two interwoven helical backbone strands 180 degrees out of phase are connected by discrete base-pair rungs, surrounded by ambient genetic dust. The helix runs horizontally past both frame edges so no end is ever visible; it auto-spins about its own axis, supports drag-to-spin with flick momentum, a cursor-proximity particle push (hover), and a breathing pulse.
+
+TECHNICAL: All helical parametric math, camera transform, perspective point sizing, depth fade and screen-space cursor displacement computed in the vertex shader. Additive premultiplied blending with exponential point falloff. ResizeObserver-driven responsive canvas with DPR capping. prefers-reduced-motion respected.
+
+PROPS:
+- background: string (Default: "#030712")
+- baseColor: string (Default: "#00E5FF")
+- accentColor: string (Default: "#FF007A")
+- accentMix: number (Default: 42)
+- glow: string
+- density: number (Default: 31)
+- dotSize: number (Default: 100)
+- speed: number (Default: 70)
+- zoom: number (Default: 30)
+- hover: number (Default: 80)
+- tilt: { x, y }
+- helix: { turns, thickness, pulse }
+
+Provide the complete, single-file, production-ready React TypeScript component.`,
 };
 

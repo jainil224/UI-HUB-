@@ -1570,4 +1570,40 @@ The cloth hangs from pin points at the top and responds to gravity, wind, and mo
 
 ## Output
 Production-ready React component`,
+  "point-dna-helix": `## Component: Point DNA Helix
+
+Build a premium "Point DNA Helix" interactive background using React, TypeScript, and raw WebGL.
+
+## What it does
+A bioluminescent 3D point-cloud double DNA helix. Two interwoven helical backbone strands 180 degrees out of phase are connected by discrete base-pair rungs, surrounded by ambient genetic dust.
+
+## Technical
+- Single WebGL context kept for component lifetime; one rAF loop; all live state via refs (no re-renders).
+- All helical parametric math, camera transform, perspective point sizing, depth fade and screen-space cursor displacement computed in the vertex shader.
+- Additive premultiplied blending with exponential point falloff.
+- ResizeObserver-driven responsive canvas with DPR capping.
+- prefers-reduced-motion respected.
+
+## Interaction
+- Auto-spin about its own axis
+- Drag-to-spin with flick momentum
+- Cursor-proximity particle push (hover)
+- Breathing pulse
+
+## Props
+- background: string (Default: "#030712")
+- baseColor: string (Default: "#00E5FF")
+- accentColor: string (Default: "#FF007A")
+- accentMix: number (Default: 42)
+- glow: string
+- density: number (Default: 31)
+- dotSize: number (Default: 100)
+- speed: number (Default: 70)
+- zoom: number (Default: 30)
+- hover: number (Default: 80)
+- tilt: { x, y }
+- helix: { turns, thickness, pulse }
+
+## Output
+Production-ready React component`,
 };
