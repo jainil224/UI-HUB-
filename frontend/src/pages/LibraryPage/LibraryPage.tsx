@@ -298,7 +298,7 @@ const LibraryPage = () => {
                                                 >
                                                     <span className="truncate flex items-center gap-1.5">
                                                         {item.title}
-                                                        {item.isPremium && (
+                                                        {item.isPremium && !isPro && (
                                                             <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
                                                         )}
                                                     </span>
@@ -353,7 +353,7 @@ const LibraryPage = () => {
                                                                 >
                                                                     <span className="truncate pr-2 flex items-center gap-1.5">
                                                                         {item.title}
-                                                                        {item.isPremium && (
+                                                                        {item.isPremium && !isPro && (
                                                                             <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
                                                                         )}
                                                                         {isNewComponent(item) && (
@@ -448,7 +448,7 @@ const LibraryPage = () => {
                                                             >
                                                                 <span className="truncate pr-2 flex items-center gap-1.5">
                                                                     {item.title}
-                                                                    {item.isPremium && (
+                                                                    {item.isPremium && !isPro && (
                                                                         <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
                                                                     )}
                                                                     {isNewComponent(item) && (
