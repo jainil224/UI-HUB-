@@ -1723,6 +1723,31 @@ const CardCascadePreview: React.FC = () => {
     );
 };
 
+// Fullscreen demo mode: the Card Cascade must be USER-scroll-driven (never
+// auto-scrolls). DemoPage renders inside a `fixed inset-0 overflow-hidden`
+// container, so we provide our own internal scroll container and pass its ref
+// to CardCascade, which then tracks only that container's scroll.
+const CardCascadeScrollDemo: React.FC = () => {
+    const scrollerRef = useRef<HTMLDivElement>(null);
+    return (
+        <div
+            ref={scrollerRef}
+            style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                background: '#000000',
+                overflowY: 'auto',
+                overflowX: 'hidden',
+            }}
+        >
+            <Suspense fallback={null}>
+                <CardCascade scrollerRef={scrollerRef} />
+            </Suspense>
+        </div>
+    );
+};
+
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -3758,7 +3783,10 @@ UI HUB premium cursor component.`
         category: "image-interaction",
         addedAt: "2026-08-27",
         contributor: { name: "Sahil Patel" },
-        preview: () => <CardCascadePreview />,
+        preview: (props?: any) =>
+            props?.showDemoButton === false
+                ? <CardCascadeScrollDemo />
+                : <CardCascadePreview />,
         code: `import { CardCascade } from '@/components/ui/CardCascade';
 
 // Requires: npm install react-icons

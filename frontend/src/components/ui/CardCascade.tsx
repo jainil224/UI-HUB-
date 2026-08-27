@@ -1,5 +1,5 @@
 // Card Cascade — UI HUB
-import { useEffect, useRef, useState, type ComponentType } from "react";
+import { useEffect, useRef, useState, type ComponentType, type RefObject } from "react";
 import { useIsMobile } from "../../hooks/use-mobile";
 import {
   SiMongodb,
@@ -264,7 +264,13 @@ function IconRail({ skills, isActive, isMobile }: { skills: Skill[]; isActive: b
 /* ================================================================== */
 /*  Main Component — Semi-circular scroll-driven cascade               */
 /* ================================================================== */
-export function CardCascade({ preview = false }: { preview?: boolean }) {
+export function CardCascade({
+  preview = false,
+  scrollerRef,
+}: {
+  preview?: boolean;
+  scrollerRef?: RefObject<HTMLElement | null>;
+}) {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -306,28 +312,58 @@ export function CardCascade({ preview = false }: { preview?: boolean }) {
     }
 
     let rafId = 0;
+    // When scrollerRef is provided (fullscreen demo), the section is driven by
+    // an internal scroll container; otherwise it's driven by the window scroll
+    // (standalone/landing usage). Either way it moves ONLY as the user scrolls.
+    const getScroller = () => scrollerRef?.current ?? (window as unknown as HTMLElement);
+
     const onScroll = () => {
       if (rafId) return;
 
       rafId = requestAnimationFrame(() => {
         rafId = 0;
-        const el = sectionRef.current;
-        if (!el) return;
+        const scroller = getScroller();
+        if (!scroller) return;
 
-        const rect = el.getBoundingClientRect();
-        const sectionHeight = el.offsetHeight - window.innerHeight;
-        if (sectionHeight <= 0) return;
+        let raw = 0;
+        if (scrollerRef?.current) {
+          const maxScroll = scroller.scrollHeight - scroller.clientHeight;
+          raw = maxScroll > 0 ? scroller.scrollTop / maxScroll : 0;
+        } else {
+          const el = sectionRef.current;
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          const sectionHeight = el.offsetHeight - window.innerHeight;
+          if (sectionHeight <= 0) return;
+          raw = -rect.top / sectionHeight;
+        }
 
-        const raw = -rect.top / sectionHeight;
         const clamped = Math.max(0, Math.min(1, raw));
         setScrollProgress(clamped);
 
         // Enter when section is visible in the viewport
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
+        if (scrollerRef?.current) {
           setEntered(true);
+        } else {
+          const el = sectionRef.current;
+          const rect = el?.getBoundingClientRect();
+          if (rect && rect.top < window.innerHeight && rect.bottom > 0) {
+            setEntered(true);
+          }
         }
       });
     };
+
+    if (scrollerRef?.current) {
+      scrollerRef.current.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+      const t = setTimeout(onScroll, 100);
+      return () => {
+        scrollerRef.current?.removeEventListener("scroll", onScroll);
+        clearTimeout(t);
+        if (rafId) cancelAnimationFrame(rafId);
+      };
+    }
 
     window.addEventListener("scroll", onScroll, { passive: true });
     // Run on mount + small delay to ensure layout is ready
@@ -338,7 +374,7 @@ export function CardCascade({ preview = false }: { preview?: boolean }) {
       clearTimeout(t);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [preview]);
+  }, [preview, scrollerRef]);
 
   // Eased interpolation between cards so each transition glides with a smooth
   // ease-in/out instead of moving linearly with scroll. The fractional part of
