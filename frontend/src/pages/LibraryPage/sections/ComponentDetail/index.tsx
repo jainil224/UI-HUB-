@@ -358,10 +358,19 @@ const VibeSystemSection = React.memo(({
 
     const deferredVibePrompt = React.useDeferredValue(fetchedPrompt);
 
-    // Copy to clipboard with authentication check
+    // Copy to clipboard with authentication + premium/pro access check
     const handleCopyBlueprint = async () => {
         if (!user || user.isAnonymous) {
             setShowAuthModal(true);
+            return;
+        }
+
+        // Non-Pro users cannot copy premium/pro vibe prompts
+        if (item.isPremium && !isProUser) {
+            setShowAuthModal(false);
+            return;
+        }
+        if (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2) {
             return;
         }
 
@@ -466,15 +475,17 @@ const VibeSystemSection = React.memo(({
                             </div>
 
                             {/* Copy Button */}
-                            <button
-                                disabled={isLoadingPrompt}
-                                onClick={handleCopyBlueprint}
-                                className="brutal-btn-primary px-3 sm:px-4 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5 sm:gap-2 shrink-0"
-                            >
-                                {copied === 'blueprint' ? <Check size={12} strokeWidth={3} /> : <Copy size={12} />}
-                                <span className="sm:hidden">{copied === 'blueprint' ? 'COPIED' : 'COPY'}</span>
-                                <span className="hidden sm:inline">{copied === 'blueprint' ? 'COPIED' : 'COPY BLUEPRINT'}</span>
-                            </button>
+                            {!(item.isPremium && !isProUser) && !(!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2) && (
+                                <button
+                                    disabled={isLoadingPrompt}
+                                    onClick={handleCopyBlueprint}
+                                    className="brutal-btn-primary px-3 sm:px-4 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5 sm:gap-2 shrink-0"
+                                >
+                                    {copied === 'blueprint' ? <Check size={12} strokeWidth={3} /> : <Copy size={12} />}
+                                    <span className="sm:hidden">{copied === 'blueprint' ? 'COPIED' : 'COPY'}</span>
+                                    <span className="hidden sm:inline">{copied === 'blueprint' ? 'COPIED' : 'COPY BLUEPRINT'}</span>
+                                </button>
+                            )}
                         </div>
 
                         {/* Terminal Content */}
