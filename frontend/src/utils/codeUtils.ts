@@ -1,7 +1,15 @@
+import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources';
+
 export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'html', styling: 'tailwind' | 'css' }) => {
   const { lang, styling } = options;
   const isTS = lang === 'ts';
   const isTailwind = styling === 'tailwind';
+
+  // Full production source is preferred over the generated snippet when the
+  // real component file exists — keeps the exact code the component uses
+  // visible in production even where the deployed bundle has no filesystem.
+  const fullSource = COMPONENT_FULL_SOURCES[id];
+  if (isTS && isTailwind && fullSource) return fullSource;
 
   const vanillaBoilerplate = (html: string, css: string, js: string) => `
 <!DOCTYPE html>

@@ -5,6 +5,7 @@ import { ANTIGRAVITY_PROMPTS } from '../data/prompts/antigravityPrompts.js';
 import { CLAUDE_PROMPTS } from '../data/prompts/claudePrompts.js';
 import { LOVABLE_PROMPTS } from '../data/prompts/lovablePrompts.js';
 import { EMBEDDED_SOURCE_CODE } from '../data/sourceCodeData.js';
+import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources.js';
 import { TOOL_BUILDERS } from './vibeEngine.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,6 +19,11 @@ const FRONTEND_COMPONENTS_PATH = path.resolve(__dirname, '../../../frontend/src/
  * Maps component IDs to their file paths in the frontend.
  */
 const resolveSourceCode = async (componentId) => {
+  // 0. Full real source first (production-safe, no filesystem needed)
+  if (COMPONENT_FULL_SOURCES[componentId]) {
+    return COMPONENT_FULL_SOURCES[componentId];
+  }
+
   // 1. Check embedded source code first (production-safe, no filesystem needed)
   if (EMBEDDED_SOURCE_CODE[componentId]) {
     return EMBEDDED_SOURCE_CODE[componentId];
