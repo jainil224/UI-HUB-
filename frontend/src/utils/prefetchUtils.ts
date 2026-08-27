@@ -35,6 +35,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'blooming-flower': () => import('../components/ui/BloomingFlower'),
     'chandelier': () => import('../components/ui/Chandelier'),
     'morphing-rings': () => import('../components/ui/MorphingRings'),
+    'block-drift': () => import('../components/ui/BlockDrift'),
     'black-hole-background': () => import('../components/ui/BlackHoleBackground'),
     'mouse-gravity-background': () => import('../components/ui/MouseGravityBackground'),
     'hacker-background': () => import('../components/ui/HackerBackground'),

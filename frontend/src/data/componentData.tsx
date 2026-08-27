@@ -63,6 +63,8 @@ const BlackHole3d = React.lazy(() => import('../components/ui/BlackHole'));
 const BloomingFlower = React.lazy(() => import('../components/ui/BloomingFlower'));
 const Chandelier = React.lazy(() => import('../components/ui/Chandelier'));
 const MorphingRings = React.lazy(() => import('../components/ui/MorphingRings'));
+const BlockDrift = React.lazy(() => import('../components/ui/BlockDrift'));
+const Lightfall = React.lazy(() => import('../components/ui/Lightfall'));
 
 
 
@@ -1790,6 +1792,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'tornado': Tornado,
     'particle-sphere': ParticleSphere,
     'morphing-rings': MorphingRings,
+    'block-drift': BlockDrift,
+    'lightfall': Lightfall,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -3731,5 +3735,49 @@ export function MorphingRingsDemo() {
   );
 }`,
         vibePrompt: "Create a 'Morphing Rings' WebGL particle-disc background in React + TypeScript using raw WebGL (single GL context, one rAF loop, all live state via refs). Tens of thousands of particles distributed across concentric annular bands with gaussian-scattered radial offsets for dusty band edges, viewed from a low-angle perspective camera tilted above the disc plane. The inner void continuously morphs between circle, pentagon, and heart shapes via three analytic 2D SDFs linearly interpolated by a periodic phase — particles inside the void fade out, particles at the edge get a cyan brightness boost forming a glowing inner ring. Two travelling waves (radial + X-axis) create interference moiré patterns with crest-tinted particles. The disc auto-rotates with adjustable speed and cw/ccw direction, accelerates on hover via a MotionValue-eased boost multiplier, supports up to 5-color palette as a uniform array, and uses additive premultiplied blending. Camera tilt X/Y, density, dot-size, scale (inverse pullback), amplitude (wave height), ring width/softness controls, and a configurable morph period govern the scene."
+    },
+    {
+        id: "block-drift",
+        title: "Block Drift",
+        category: "interactive-background",
+        addedAt: "2026-08-27",
+        newBadgeDays: 21,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <BlockDrift />
+            </div>
+        ),
+        code: `import BlockDrift from "@/components/ui/BlockDrift";
+
+export function BlockDriftDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <BlockDrift
+        near="#8B10B3"
+        far="#029A00"
+        edge="#020200"
+        grid={17}
+        blockSize={12}
+        gap={20}
+        layers={15}
+        density={10}
+        cluster={10}
+        edgeWidth={1}
+        fade={1}
+        shade={20}
+        clearCentre={3}
+        speed={12}
+        direction="front"
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Block Drift' WebGL animated background in React + TypeScript using three.js (single WebGLRenderer, one rAF loop, all live state via refs). Sheets of instanced cubes stacked in depth, the camera sitting inside the stack so blocks fly past and exit at the frame edges. Each layer is a square grid of box instances culled by a smooth value-noise field so survivors form contiguous slabs with face-to-face contact rather than scattered confetti. The stack slides exactly one gap per beat while the noise seed advances by one, making the pattern seamless and never restarting. A clear corridor down the middle prevents blocks from clipping through the camera. Blocks grow in from nothing at the far end over the last stretch of travel, reading as fog rather than popping. Fragment shader blends near-to-far depth colouring with per-face directional shading for cube legibility, screen-space-anti-aliased seam lines along box face borders (edge colour configurable), and noise-culled collapsed instances are discarded. Controls for near/far/edge colours, grid size, block size, gap, layers, density, cluster (noise frequency), edge width, fade, shade, clear corridor radius, speed, and front/back direction."
     }
 ];
