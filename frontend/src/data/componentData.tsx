@@ -21,6 +21,7 @@ const VenomCursor = React.lazy(() => import('../components/ui/VenomCursor').then
 const StarCursor = React.lazy(() => import('../components/ui/StarCursor').then(m => ({ default: m.StarCursor })));
 const AsciiCursor = React.lazy(() => import('../components/ui/AsciiCursor').then(m => ({ default: m.AsciiCursor })));
 const AuraCursor = React.lazy(() => import('../components/ui/AuraCursor').then(m => ({ default: m.AuraCursor })));
+const ParticleCursor = React.lazy(() => import('../components/ui/ParticleCursor').then(m => ({ default: m.ParticleCursor })));
 
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
@@ -1676,6 +1677,79 @@ const AuraCursorPreview: React.FC = () => {
     );
 };
 
+// ── Confetti Cursor scoped preview ────────────
+const ParticleCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    return (
+        <div
+            ref={containerRef}
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%', minHeight: '100%',
+                background: 'radial-gradient(120% 120% at 50% 0%, #14161d 0%, #0a0b10 45%, #05060a 100%)',
+                overflow: 'hidden',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                gap: 24,
+            }}
+        >
+            {/* Interactive demo elements */}
+            <div style={{ position: 'relative', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, width: '82%' }}>
+                <div style={{ fontSize: 8, fontWeight: 900, color: 'rgba(255,107,107,0.75)', letterSpacing: '0.5em', textTransform: 'uppercase' }}>
+                    ✦ CONFETTI CURSOR ✦
+                </div>
+                <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+                    {['POP', 'PARTY', 'SPARKLE'].map((label) => (
+                        <button key={label} style={{
+                            padding: '9px 18px',
+                            background: 'rgba(255,255,255,0.05)',
+                            border: '1px solid rgba(255,255,255,0.16)',
+                            borderRadius: 8,
+                            color: 'rgba(255,255,255,0.75)',
+                            fontSize: 9, fontWeight: 800,
+                            letterSpacing: '0.22em',
+                            cursor: 'none',
+                            transition: 'all 0.3s ease',
+                        }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.14)';
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.45)';
+                                e.currentTarget.style.boxShadow = '0 0 18px rgba(78,205,196,0.35)';
+                                e.currentTarget.style.color = 'rgba(255,255,255,0.98)';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
+                                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.16)';
+                                e.currentTarget.style.boxShadow = 'none';
+                                e.currentTarget.style.color = 'rgba(255,255,255,0.75)';
+                            }}
+                        >{label}</button>
+                    ))}
+                </div>
+                <div style={{
+                    padding: '12px 24px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.10)',
+                    borderRadius: 10,
+                    color: 'rgba(255,255,255,0.40)',
+                    fontSize: 8, fontWeight: 700,
+                    letterSpacing: '0.28em', textAlign: 'center', cursor: 'none',
+                }}>MOVE CURSOR · TRAIL OF STARS</div>
+            </div>
+
+            {/* Confetti cursor — spawning particles trail the pointer */}
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
+                <Suspense fallback={null}>
+                    <ParticleCursor label labelText="HOVER AROUND" />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -1888,6 +1962,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'star-cursor': StarCursor,
     'ascii-cursor': AsciiCursor,
     'aura-cursor': AuraCursor,
+    'confetti-cursor': ParticleCursor,
 
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
@@ -3506,6 +3581,43 @@ MOTION:
 
 TECH: React + TypeScript + WebGL (glsl shaders) + requestAnimationFrame + ResizeObserver + IntersectionObserver
 Props: label, labelText, labelColor, labelFont, paletteColors, backdrop, densityDissipation, curl, splatRadius, splatForce, style.
+UI HUB premium cursor component.`
+    },
+    {
+        id: "confetti-cursor",
+        title: "Confetti Cursor",
+        category: "cursor",
+        addedAt: "2026-08-27",
+        preview: () => <ParticleCursorPreview />,
+        code: `import { ParticleCursor } from '@/components/ui/ParticleCursor';
+
+// Drop <ParticleCursor /> anywhere in your app (e.g. App.tsx or a layout root).
+// A colourful confetti particle trail that bursts from the pointer.
+export const Demo = () => (
+  <div className="relative w-full h-[500px] bg-black rounded-2xl overflow-hidden flex items-center justify-center">
+    <ParticleCursor label />
+    <p className="text-white/30 text-sm tracking-widest uppercase font-bold">
+      Move your cursor · Burst of confetti
+    </p>
+  </div>
+);`,
+        vibePrompt: `Create a premium CONFETTI CUSTOM CURSOR React component called ParticleCursor.
+It replaces the default pointer with a colourful bursting confetti particle trail.
+
+CURSOR DESIGN:
+- A small white dot marks the pointer, gently pulsing
+- As the pointer moves, bursts of tiny coloured particles (confetti) fly outward in every direction
+- Particles come in a bright rainbow palette (red, teal, blue, green, yellow, pink)
+- Each particle fades out over about two seconds, shrinking as it falls under gravity
+
+MOTION:
+- Smooth spawning throttled per-second for consistent density
+- Particles drift with drag, fall with gravity and fade with an eased curve
+- Only replaces the native cursor while the pointer is over the component's own frame, restoring it on leave
+- A centred 'HOVER AROUND' label sits in the middle of the frame
+
+TECH: React + TypeScript + HTML5 Canvas 2D + requestAnimationFrame
+Props: label, labelText, labelColor, dotColor, dotSize, colors, particleCount, particleSize, particleSpeed, gravity, style.
 UI HUB premium cursor component.`
     },
     {
