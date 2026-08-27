@@ -26,6 +26,7 @@ const KineticGrid = React.lazy(() => import('../components/ui/KineticGrid').then
 const MagicCursor = React.lazy(() => import('../components/ui/MagicCursor').then(m => ({ default: m.MagicCursor })));
 const UserCursor = React.lazy(() => import('../components/ui/UserCursor').then(m => ({ default: m.UserCursor })));
 const FireworkCursor = React.lazy(() => import('../components/ui/FireworkCursor').then(m => ({ default: m.FireworkCursor })));
+const CardCascade = React.lazy(() => import('../components/ui/CardCascade').then(m => ({ default: m.CardCascade })));
 
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
@@ -1973,6 +1974,24 @@ const FireworkCursorPreview: React.FC = () => {
     );
 };
 
+// ── Card Cascade scoped preview ────────────
+const CardCascadePreview: React.FC = () => {
+    return (
+        <div
+            style={{
+                position: 'relative',
+                width: '100%', height: '100%',
+                background: '#000000',
+                overflow: 'hidden',
+            }}
+        >
+            <Suspense fallback={null}>
+                <CardCascade />
+            </Suspense>
+        </div>
+    );
+};
+
 // ── Venom Cursor scoped preview ────────────
 const VenomCursorPreview: React.FC = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -2190,6 +2209,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'spin-cursor': MagicCursor,
     'user-cursor': UserCursor,
     'firework-cursor': FireworkCursor,
+    'card-cascade': CardCascade,
 
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
@@ -3993,6 +4013,44 @@ MOTION:
 TECH: React + TypeScript + threejs-components (WebGL GPGPU particles) + dynamic import
 Props: label, labelText, labelColor, labelFont, density, color, colors, size, lifetime, bloomStrength, style.
 UI HUB premium cursor component.`
+    },
+    {
+        id: "card-cascade",
+        title: "Card Cascade",
+        category: "image-interaction",
+        addedAt: "2026-08-27",
+        preview: () => <CardCascadePreview />,
+        code: `import { CardCascade } from '@/components/ui/CardCascade';
+
+// Requires: npm install react-icons
+// A scroll-driven 3D arc cascade of themed skill cards with a trailing icon rail.
+export default function Demo() {
+  return (
+    <div className="w-full h-screen bg-black">
+      <CardCascade />
+    </div>
+  );
+}`,
+        vibePrompt: `Create a premium CAROUSEL CARD CASCADE React component called CardCascade.
+It is a scroll-driven, semi-circular 3D arc of four themed skill cards that cascade over each other on a sticky viewport, each with its own unique card layout and a vertical marquee icon rail on the right.
+
+DESIGN:
+- A tall scroll section (height = (cards+1) x 100vh) with the stage sticky and full-screen
+- Four cards with distinct themes: 'red' (MERN Stack), 'dark' (Frontend Dev), 'light' (Backend & APIs), 'accent' (Dev Tools)
+- Every card reuses one unified layout: a 0N/04 counter, skill-count pill, category eyebrow, giant black uppercase title, description, a stacked list of skill rows (icon tile + name), a huge cropped numeral in the background and a gradient accent stripe at the bottom
+- Each theme has its own linear-gradient shell, border and layered box-shadow; light theme inverts black/white
+- A vertical marquee 'icon rail' on the right shows the active card's skills, masked and infinitely scrolling downward
+- Tech-stack brand icons via react-icons/si (React, MongoDB, Node.js, Express, HTML5, Tailwind, Git, npm, etc.)
+
+MOTION:
+- As the user scrolls, cards travel along a circle whose centre is far left of the cards (x = R·cos(a), y = R·sin(a)) so they arrange into an arc
+- Cards tilt with the tangent of the curve, scale/fade/blur as they move off-centre, and the one nearest the active index sits at full opacity and scale
+- On first entering view, cards cascade in from above with offsets and stagger delays
+- Scroll progress is rAF-throttled; a giant glowing 'TECHNICAL SKILLS' header, left progress dots/counter, active-category label and a scroll hint complete the scene
+
+TECH: React + TypeScript + react-icons + lucide-react + CSS 3D transforms + intersection/scroll observers
+Props: none (self-contained data + scrolling). Category: image-interaction / cards.
+UI HUB premium component.`
     },
     {
         id: "fourier-flow",

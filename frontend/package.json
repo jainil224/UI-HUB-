@@ -35,6 +35,7 @@
     "react": "^19.0.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "^19.0.0",
+    "react-icons": "^5.7.0",
     "react-router-dom": "^7.13.1",
     "recharts": "^3.8.1",
     "simplex-noise": "^4.0.3",
