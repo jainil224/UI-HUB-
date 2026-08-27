@@ -1,8 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Code2, Crown, Gem } from 'lucide-react';
+import { Code2, Crown } from 'lucide-react';
 
-export type PlanTier = 'free' | 'pro' | 'elite';
+export type PlanTier = 'free' | 'pro';
 
 interface PlanBadgeProps {
     tier: PlanTier;
@@ -30,15 +30,6 @@ const BADGE_CONFIG = {
         iconClass: 'text-black',
         glowClass: '',
         description: 'Pro Member',
-    },
-    elite: {
-        label: 'ELITE',
-        icon: Gem,
-        containerClass: 'bg-brand-blue text-white border-2 border-black',
-        textClass: 'text-white font-black',
-        iconClass: 'text-white',
-        glowClass: '',
-        description: 'Elite Member',
     },
 };
 

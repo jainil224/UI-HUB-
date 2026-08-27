@@ -12,7 +12,7 @@ import { useSkeleton } from '../../context/SkeletonContext';
 import { NavbarSkeleton } from './Skeleton';
 
 const Navbar = () => {
-    const { user, isPro, isElite, loading } = useAuth();
+    const { user, isPro, loading } = useAuth();
     const { isLoading } = useSkeleton();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
@@ -50,7 +50,7 @@ const Navbar = () => {
         prevUserRef.current = user;
     }, [user, loading]);
 
-    const planTier: PlanTier = isElite ? 'elite' : isPro ? 'pro' : 'free';
+    const planTier: PlanTier = isPro ? 'pro' : 'free';
 
     return (
         <AnimatePresence mode="wait">
@@ -153,9 +153,7 @@ const Navbar = () => {
                                         </span>
                                         <span
                                             className={`px-1.5 py-0.5 border border-black text-[9px] font-black uppercase shadow-[1px_1px_0px_0px_#000] ${
-                                                planTier === 'elite'
-                                                    ? 'bg-[#FFC700] text-black'
-                                                    : planTier === 'pro'
+                                                planTier === 'pro'
                                                     ? 'bg-[#1F4BFF] text-white'
                                                     : 'bg-neutral-200 text-black'
                                             }`}

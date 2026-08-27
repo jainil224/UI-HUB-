@@ -152,7 +152,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             behavior: "A scientifically-inspired 3D black hole with a glowing accretion disk and gravitational lensing effects. Event horizon distorts surrounding light on interaction.",
             states: { from: "simple singularity", to: "radiant glowing black hole" },
             cssProperties: ["canvas", "filter: blur", "mix-blend-mode"],
-            description: "Elite 3D singularity visualization with premium accretion disk shaders.",
+            description: "Premium 3D singularity visualization with premium accretion disk shaders.",
             libraries: ["three", "framer-motion"],
             requirements: ["Three.js custom ShaderMaterial", "Gravitational lensing post-processing", "Fragment shader for accretion disk glow", "Responsive camera orbit controls", "Touch and mouse interaction support"]
         }
@@ -181,7 +181,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             behavior: "A scroll-linked 3D experience with 300 pre-rendered frames. Features GSAP-powered image sequence scrubbing, progressive text reveals, and high-performance Canvas rendering.",
             states: { from: "loading screen with progress bar", to: "fully scrubbable 3D sequence with blur-in text" },
             cssProperties: ["canvas", "background-size: cover", "filter: blur", "z-index"],
-            description: "Elite scroll-driven 3D character animation with professional GSAP scrubbing logic.",
+            description: "Premium scroll-driven 3D character animation with professional GSAP scrubbing logic.",
             libraries: ["gsap", "@gsap/react", "framer-motion"],
             requirements: ["300-frame image sequence preloading", "Canvas-driven high-performance scrubbing", "GSAP ScrollTrigger master timeline", "Staggered blur-in/out text transitions", "Infinite horizontal hero marquee", "Premium percentage loader UI"]
         }
@@ -234,7 +234,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             behavior: "An immersive 3D animated scene powered by Spline with premium loading overlay featuring rotating concentric rings. Includes programmatic Spline branding removal and CSS watermark hiding.",
             states: { from: "animated ring loader", to: "interactive 3D Odyssey scene" },
             cssProperties: ["transform", "opacity", "filter", "z-index"],
-            description: "Elite Spline-powered 3D Odyssey animation with premium loader and branding removal.",
+            description: "Premium Spline-powered 3D Odyssey animation with premium loader and branding removal.",
             libraries: ["@splinetool/react-spline", "framer-motion"],
             requirements: ["Spline scene loading integration", "AnimatePresence loader with rotating rings", "Programmatic findObjectByName branding removal", "CSS watermark hiding selectors", "Background color matching (#050508)"]
         }

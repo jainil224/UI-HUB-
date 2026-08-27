@@ -11,7 +11,7 @@ const faqs = [
     {
         question: 'Are the components free to use?',
         answer:
-            'Yes. All open components are free for personal and commercial projects. Pro and Elite plans unlock the full catalog, including exclusive 3D scenes and elite AI prompts.',
+            'Yes. All open components are free for personal and commercial projects. The Pro plan unlocks the full catalog, including exclusive 3D scenes and premium AI prompts.',
     },
     {
         question: 'Which frameworks are supported?',

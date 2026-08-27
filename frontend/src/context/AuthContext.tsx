@@ -16,15 +16,13 @@ interface WelcomeEvent {
 interface AuthContextType {
     user: User | null;
     isPro: boolean;
-    isElite: boolean;
     loading: boolean;
-    refreshProStatus: () => Promise<{ isPro: boolean; isElite: boolean } | null>;
+    refreshProStatus: () => Promise<boolean | null>;
 }
 
 const AuthContext = createContext<AuthContextType>({
     user: null,
     isPro: false,
-    isElite: false,
     loading: true,
     refreshProStatus: async () => null,
 });
@@ -33,8 +31,7 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
-    const [isPro, setIsPro] = useState(() => localStorage.getItem('ui-hub-pro') === 'true');
-    const [isElite, setIsElite] = useState(() => localStorage.getItem('ui-hub-elite') === 'true');
+    const [isPro, setIsPro] = useState(() => (localStorage.getItem('ui-hub-pro') === 'true' || localStorage.getItem('ui-hub-elite') === 'true'));
     const [loading, setLoading] = useState(true);
     const [welcome, setWelcome] = useState<WelcomeEvent | null>(null);
     const welcomeFiredForRef = useRef<string | null>(null);
@@ -58,7 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
-    const refreshProStatus = useCallback(async (): Promise<{ isPro: boolean; isElite: boolean } | null> => {
+    const refreshProStatus = useCallback(async (): Promise<boolean | null> => {
         const currentUser = auth.currentUser;
         if (!currentUser) return null;
 
@@ -79,30 +76,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('[Auth] API Status Response:', data);
-                setIsPro(data.isPro);
-                setIsElite(data.isElite ?? false);
-                localStorage.setItem('ui-hub-pro', String(data.isPro || false));
-                localStorage.setItem('ui-hub-elite', String(data.isElite || false));
-                console.log(`[Auth] Status Match: Pro=${data.isPro || false}, Elite=${data.isElite || false}`);
-                return { isPro: !!data.isPro, isElite: !!data.isElite };
+                // Elite users are folded into Pro so there is only Free/Pro.
+                const proStatus = !!(data.isPro || data.isElite);
+                setIsPro(proStatus);
+                const flag = String(proStatus);
+                localStorage.setItem('ui-hub-pro', flag);
+                localStorage.setItem('ui-hub-elite', flag);
+                console.log(`[Auth] Status Match: Pro=${proStatus}`);
+                return proStatus;
             } else {
                 const errorText = await response.text();
                 console.error(`[Auth] Failed: ${response.status} - Status endpoint returned error:`, errorText);
                 setIsPro(false);
-                setIsElite(false);
                 localStorage.setItem('ui-hub-pro', 'false');
                 localStorage.setItem('ui-hub-elite', 'false');
-                return { isPro: false, isElite: false };
+                return false;
             }
         } catch (error) {
             console.error('[Auth] Connection Failure: Could not reach status endpoint. Check VITE_API_URL and CORS.', error);
             // Don't wipe storage on network failure, preserve offline optimism
-            setIsPro(localStorage.getItem('ui-hub-pro') === 'true');
-            setIsElite(localStorage.getItem('ui-hub-elite') === 'true');
-            return {
-                isPro: localStorage.getItem('ui-hub-pro') === 'true',
-                isElite: localStorage.getItem('ui-hub-elite') === 'true',
-            };
+            const pro = (localStorage.getItem('ui-hub-pro') === 'true' || localStorage.getItem('ui-hub-elite') === 'true');
+            setIsPro(pro);
+            return pro;
         }
     }, []);
 
@@ -152,7 +147,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 syncedThisSession = false; // reset when user signs out
                 setIsPro(false);
-                setIsElite(false);
                 setLoading(false);
             }
         });
@@ -162,7 +156,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const isSpecialUser = user?.email === 'jainil11199@gmail.com';
 
-    // Auto-refresh Pro/Elite status when the tab regains focus (covers upgrades
+    // Auto-refresh Pro status when the tab regains focus (covers upgrades
     // completed in another tab or via external payment flows) without polling.
     useEffect(() => {
         let lastRefreshed = 0;
@@ -183,7 +177,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [refreshProStatus]);
 
     return (
-        <AuthContext.Provider value={{ user, isPro: isPro || isElite || isSpecialUser, isElite: isElite || isSpecialUser, loading, refreshProStatus }}>
+        <AuthContext.Provider value={{ user, isPro: isPro || isSpecialUser, loading, refreshProStatus }}>
             {/* Always render children immediately to unblock app mount */}
             {children}
 

@@ -330,18 +330,17 @@ router.post('/activate-free', verifyToken, async (req, res) => {
 
 /**
  * @route GET /api/v1/users/status
- * @desc Get current user's Pro and Elite status
+ * @desc Get current user's Pro status
  * @access Private
  */
 router.get('/status', verifyToken, async (req, res) => {
     try {
         const email = req.user.email;
-        const isElite = await checkEliteStatus(email);
-        const isPro = isElite || await checkProStatus(email);
+        // Elite users are folded into Pro so the frontend only needs Free/Pro.
+        const isPro = await checkProStatus(email) || await checkEliteStatus(email);
         
         res.json({
             isPro,
-            isElite,
             email: req.user.email,
             uid: req.user.uid
         });

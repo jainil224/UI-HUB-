@@ -245,7 +245,7 @@ const PricingPage = () => {
         {
             tier: 'Premium',
             title: 'PRO ACCESS',
-            tagline: 'Elite Tools for Principal Engineers',
+            tagline: 'Pro Tools for Principal Engineers',
             price: proPrice,
             duration: '/ 6 months',
             icon: Crown,
@@ -254,7 +254,7 @@ const PricingPage = () => {
                 'Everything in Free, plus',
                 'Unlimited Downloads',
                 'Pixel-Perfect AI Generation',
-                'Elite AI (Antigravity + Claude + Advance)',
+                'Premium AI (Antigravity + Claude + Advance)',
                 'One-Click ZIP Export',
                 'Premium UI & Animation Library',
                 'Advanced 3D Components',

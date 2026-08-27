@@ -2,7 +2,7 @@ import { body, validationResult } from 'express-validator';
 
 export const validateCreateOrder = [
   body('planId')
-    .isIn(['pro', 'elite'])
+    .isIn(['pro'])
     .withMessage('Invalid plan selected'),
   body('amount')
     .isNumeric()
@@ -36,10 +36,10 @@ export const validateVerifyPayment = [
     .normalizeEmail()
     .withMessage('Invalid email'),
   body('tier')
-    .isIn(['pro', 'elite'])
+    .isIn(['pro'])
     .withMessage('Invalid tier'),
   body('planId')
-    .isIn(['pro', 'elite'])
+    .isIn(['pro'])
     .withMessage('Invalid plan selected'),
   body('amount')
     .isNumeric()
