@@ -1,4 +1,4 @@
-// Lightfall — Originkit
+// Lightfall — UI HUB
 // Using component defaults.
 
 "use client"

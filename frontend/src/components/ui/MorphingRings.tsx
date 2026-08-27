@@ -1,5 +1,5 @@
-// Morphing Rings — Originkit
-// Originkit — props baked into the default export.
+// Morphing Rings — UI HUB
+// UI HUB — props baked into the default export.
 "use client"
 
 import * as React from "react"
@@ -429,7 +429,7 @@ interface Props {
 
 /* ----------------------------------------------------------------- component */
 
-function __OriginkitBase_MorphingRings(props: Props) {
+function __UIHUBBase_MorphingRings(props: Props) {
     const {
         background = "#000000",
         colors = { items: ["#FFEE00"] },
@@ -789,7 +789,7 @@ function __OriginkitBase_MorphingRings(props: Props) {
     )
 }
 
-const __originkitPresetProps = {
+const __uihubPresetProps = {
   "colors": {
     "items": [
       "#FFEE00",
@@ -800,5 +800,5 @@ const __originkitPresetProps = {
 };
 
 export default function MorphingRings(props: Record<string, unknown>) {
-  return <__OriginkitBase_MorphingRings {...(__originkitPresetProps as Record<string, unknown>)} {...props} />;
+  return <__UIHUBBase_MorphingRings {...(__uihubPresetProps as Record<string, unknown>)} {...props} />;
 }

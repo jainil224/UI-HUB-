@@ -61,7 +61,7 @@ interface Props {
     cloth?: ClothGroup
 }
 
-function __OriginkitBase_ClothStudy(props: Props) {
+function __UIHUBBase_ClothStudy(props: Props) {
     const {
         style,
         background = "#0B0C0E",
@@ -425,7 +425,7 @@ function __OriginkitBase_ClothStudy(props: Props) {
     )
 }
 
-const __originkitPresetProps = {
+const __uihubPresetProps = {
   "cloth": {
     "grab": 100,
     "wind": 100,
@@ -435,5 +435,5 @@ const __originkitPresetProps = {
 };
 
 export default function Chandelier(props: Record<string, unknown>) {
-  return <__OriginkitBase_ClothStudy {...(__originkitPresetProps as Record<string, unknown>)} {...props} />;
+  return <__UIHUBBase_ClothStudy {...(__uihubPresetProps as Record<string, unknown>)} {...props} />;
 }

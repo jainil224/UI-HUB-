@@ -1,5 +1,5 @@
-// Block Drift — Originkit
-// Originkit — props baked into the default export.
+// Block Drift — UI HUB
+// UI HUB — props baked into the default export.
 "use client"
 
 import * as React from "react"
@@ -572,7 +572,7 @@ interface BlockDriftProps {
     style?: React.CSSProperties
 }
 
-function __OriginkitBase_BlockDrift(props: BlockDriftProps) {
+function __UIHUBBase_BlockDrift(props: BlockDriftProps) {
     const {
         near = DEFAULTS.near,
         far = DEFAULTS.far,
@@ -680,7 +680,7 @@ function __OriginkitBase_BlockDrift(props: BlockDriftProps) {
 BlockDrift.displayName = "Block Drift"
 BlockDrift.defaultProps = { ...DEFAULTS }
 
-const __originkitPresetProps = {
+const __uihubPresetProps = {
   "near": "#8B10B3",
   "far": "#029A00",
   "edge": "#020200",
@@ -691,5 +691,5 @@ const __originkitPresetProps = {
 };
 
 export default function BlockDrift(props: Record<string, unknown>) {
-  return <__OriginkitBase_BlockDrift {...(__originkitPresetProps as Record<string, unknown>)} {...props} />;
+  return <__UIHUBBase_BlockDrift {...(__uihubPresetProps as Record<string, unknown>)} {...props} />;
 }
