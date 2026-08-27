@@ -1898,6 +1898,7 @@ COMPONENT FEATURES & PHYSICS:
         id: "pixel-drift",
         title: "Pixel Drift",
         category: "text",
+        isPremium: true,
         addedAt: "2026-08-23",
         preview: () => (
             <div className="w-full h-full min-h-[380px] flex items-center justify-center bg-black rounded-2xl overflow-hidden p-6 relative">
@@ -2806,6 +2807,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "gravitational-vortex",
         title: "Gravitational Vortex",
         category: "interactive-background",
+        isPremium: true,
         preview: renderComponent("gravitational-vortex", "Gravitational Vortex"),
         code: `import GravitationalVortex from '@/components/ui/GravitationalVortex';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <GravitationalVortex />\n  </div>\n);`,
         vibePrompt: "A premium WebGL gravitational vortex background with a logarithmic spiral accretion disc. Features ~20k motion-blurred streak particles falling into a funnel throat, rendered in real-time with additive blending. The spiral structure is generated mathematically with configurable twist and funnel depth, creating a mesmerizing cosmic whirlpool effect. Particles taper along their velocity direction with Gaussian width profiles, depth-attenuated for cinematic depth, and support interactive hover speed boost."
@@ -2824,6 +2826,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "blooming-flower",
         title: "Blooming Flower",
         category: "interactive-background",
+        isPremium: true,
         preview: renderComponent("blooming-flower", "Blooming Flower"),
         code: `import BloomingFlower from '@/components/ui/BloomingFlower';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <BloomingFlower />\n  </div>\n);`,
         vibePrompt: "A WebGL point-cloud flower of 60k-100k point sprites that opens on hover and closes to a bud when the pointer leaves. Three kinds of points share one buffer: petals on a parametric surface, stamens in a dome, and a swaying tapered stem. The head and stem share one sway expression so the flower cannot drift off its stalk. Petals use a circular-arc midrib in half-angle form for smooth curling. Weather animation keeps the scene alive at idle."
@@ -2833,6 +2836,7 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         id: "chandelier",
         title: "Chandelier",
         category: "interactive-background",
+        isPremium: true,
         preview: renderComponent("chandelier", "Chandelier"),
         code: `import Chandelier from '@/components/ui/Chandelier';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <Chandelier />\n  </div>\n);`,
         vibePrompt: "A cloth simulation with text rendered on a deformable grid. The cloth hangs from pin points at the top and responds to gravity, wind, and mouse interaction. Characters from a configurable phrase are drawn on each quad cell, scaling and rotating with the cloth's deformation. Users can grab and drag individual cloth nodes with configurable density, speed, and cloth physics."
@@ -3581,7 +3585,7 @@ export function PointDNAHelixDemo() {
         category: "interactive-background",
         addedAt: "2026-08-23",
         newBadgeDays: 21,
-        isPremium: false,
+        isPremium: true,
         preview: () => (
             <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950">
                 <TwinGalaxyRings />
@@ -3622,7 +3626,7 @@ export function TwinGalaxyRingsDemo() {
         category: "interactive-background",
         addedAt: "2026-08-23",
         newBadgeDays: 21,
-        isPremium: false,
+        isPremium: true,
         preview: () => (
             <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
                 <Tornado />
@@ -3702,7 +3706,7 @@ export function ParticleSphereDemo() {
         category: "interactive-background",
         addedAt: "2026-08-27",
         newBadgeDays: 21,
-        isPremium: false,
+        isPremium: true,
         preview: () => (
             <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
                 <MorphingRings />
@@ -3786,7 +3790,7 @@ export function BlockDriftDemo() {
         category: "interactive-background",
         addedAt: "2026-08-27",
         newBadgeDays: 21,
-        isPremium: false,
+        isPremium: true,
         preview: () => (
             <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
                 <Lightfall />
