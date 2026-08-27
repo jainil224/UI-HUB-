@@ -771,6 +771,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     };
 
     const handleCopy = (text: string, id: string) => {
+        if (item.isPremium && !isProUser) return;
         navigator.clipboard.writeText(text);
         setCopied(id);
         setToastMessage(`CODE COPIED`);
@@ -786,6 +787,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);
 
     const handleDownloadSource = () => {
+        if (item.isPremium && !isProUser) return;
         const blob = new Blob([sourceCode], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -1002,24 +1004,31 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <section>
                             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6">
                                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Source Code</h3>
-                                <div className="flex items-center gap-2 sm:gap-3">
-                                    <button
-                                        onClick={handleDownloadSource}
-                                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-blue transition-all brutal-shadow-black cursor-pointer"
-                                        title={`Download ${sourceFileName}`}
-                                    >
-                                        <Download size={13} />
-                                        <span className="hidden sm:inline">Download</span>
-                                    </button>
-                                    <button
-                                        onClick={() => handleCopy(sourceCode, 'source')}
-                                        className="brutal-btn-primary px-3 sm:px-4 py-2 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
-                                        title="Copy source code"
-                                    >
-                                        {copied === 'source' ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
-                                        <span>{copied === 'source' ? 'COPIED' : 'Copy Code'}</span>
-                                    </button>
-                                </div>
+                                {item.isPremium && !isProUser ? (
+                                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-brand-yellow bg-brand-bg text-brand-yellow text-xs font-black uppercase tracking-wider">
+                                        <Lock size={13} />
+                                        <span>PRO Only</span>
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center gap-2 sm:gap-3">
+                                        <button
+                                            onClick={handleDownloadSource}
+                                            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-blue transition-all brutal-shadow-black cursor-pointer"
+                                            title={`Download ${sourceFileName}`}
+                                        >
+                                            <Download size={13} />
+                                            <span className="hidden sm:inline">Download</span>
+                                        </button>
+                                        <button
+                                            onClick={() => handleCopy(sourceCode, 'source')}
+                                            className="brutal-btn-primary px-3 sm:px-4 py-2 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
+                                            title="Copy source code"
+                                        >
+                                            {copied === 'source' ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
+                                            <span>{copied === 'source' ? 'COPIED' : 'Copy Code'}</span>
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
