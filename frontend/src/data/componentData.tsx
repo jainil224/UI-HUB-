@@ -22,6 +22,7 @@ const StarCursor = React.lazy(() => import('../components/ui/StarCursor').then(m
 const AsciiCursor = React.lazy(() => import('../components/ui/AsciiCursor').then(m => ({ default: m.AsciiCursor })));
 const AuraCursor = React.lazy(() => import('../components/ui/AuraCursor').then(m => ({ default: m.AuraCursor })));
 const ParticleCursor = React.lazy(() => import('../components/ui/ParticleCursor').then(m => ({ default: m.ParticleCursor })));
+const KineticGrid = React.lazy(() => import('../components/ui/KineticGrid').then(m => ({ default: m.KineticGrid })));
 
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
@@ -1963,6 +1964,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'ascii-cursor': AsciiCursor,
     'aura-cursor': AuraCursor,
     'confetti-cursor': ParticleCursor,
+    'kinetic-grid': KineticGrid,
 
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
@@ -3619,6 +3621,40 @@ MOTION:
 TECH: React + TypeScript + HTML5 Canvas 2D + requestAnimationFrame
 Props: label, labelText, labelColor, dotColor, dotSize, colors, particleCount, particleSize, particleSpeed, gravity, style.
 UI HUB premium cursor component.`
+    },
+    {
+        id: "kinetic-grid",
+        title: "Kinetic Grid",
+        category: "background",
+        addedAt: "2026-08-27",
+        preview: renderComponent("kinetic-grid", "KineticGrid"),
+        code: `import { KineticGrid } from '@/components/ui/KineticGrid';
+
+// Drop <KineticGrid /> anywhere in your app (e.g. as a full-page or card
+// background). A reactive dot grid pulled toward the cursor with a trail.
+export const Demo = () => (
+  <div className="w-full h-[500px] rounded-2xl overflow-hidden bg-black">
+    <KineticGrid />
+  </div>
+);`,
+        vibePrompt: `Create a premium KINETIC GRID React component called KineticGrid.
+It is a full-surface canvas background of dots on a grid mesh that react to the cursor.
+
+DESIGN:
+- A black (configurable) backdrop with a regular grid of small dots
+- Faint lines connect neighbouring dots into a mesh
+- As the pointer moves, the dots within a chosen radius are pulled toward the cursor, and the mesh brightens and thickens near it
+- A smooth blue trail line follows the pointer and fades out
+
+MOTION:
+- Each dot springs back to its home position when the cursor leaves its radius
+- Physics update per frame: acceleration toward home plus attraction toward the cursor, damped velocity
+- requestAnimationFrame loop, throttled by ResizeObserver
+- Replaces nothing; it is a background component, sets a crosshair cursor on its own frame
+
+TECH: React + TypeScript + HTML5 Canvas 2D + requestAnimationFrame + ResizeObserver
+Props: background, dotColor, lineColor, trailColor, spacing, radius, strength, trail, style.
+UI HUB premium background component.`
     },
     {
         id: "fourier-flow",
