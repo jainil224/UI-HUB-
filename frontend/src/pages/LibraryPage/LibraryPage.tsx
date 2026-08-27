@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
@@ -296,7 +296,12 @@ const LibraryPage = () => {
                                                             : 'text-neutral-400 hover:text-white hover:bg-neutral-900'
                                                     }`}
                                                 >
-                                                    <span className="truncate">{item.title}</span>
+                                                    <span className="truncate flex items-center gap-1.5">
+                                                        {item.title}
+                                                        {item.isPremium && (
+                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
+                                                        )}
+                                                    </span>
                                                     <span className="text-[9px] text-neutral-500 uppercase shrink-0">{item.category}</span>
                                                 </button>
                                             );
@@ -348,6 +353,9 @@ const LibraryPage = () => {
                                                                 >
                                                                     <span className="truncate pr-2 flex items-center gap-1.5">
                                                                         {item.title}
+                                                                        {item.isPremium && (
+                                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
+                                                                        )}
                                                                         {isNewComponent(item) && (
                                                                             <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">
                                                                                 New
@@ -440,6 +448,9 @@ const LibraryPage = () => {
                                                             >
                                                                 <span className="truncate pr-2 flex items-center gap-1.5">
                                                                     {item.title}
+                                                                    {item.isPremium && (
+                                                                        <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
+                                                                    )}
                                                                     {isNewComponent(item) && (
                                                                         <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">
                                                                             New
