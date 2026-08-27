@@ -847,6 +847,34 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <p className="text-neutral-400 text-sm font-medium leading-relaxed mt-2 max-w-2xl">
                             {item.description || "Production-ready UI component with interactive animations, customizable parameters, and full TypeScript support."}
                         </p>
+                        {item.contributor && (
+                            <div className="flex items-center gap-2.5 mt-4">
+                                {item.contributor.avatar ? (
+                                    <img
+                                        src={item.contributor.avatar}
+                                        alt={item.contributor.name}
+                                        className="w-9 h-9 rounded-full border-2 border-brand-blue object-cover"
+                                    />
+                                ) : (
+                                    <div className="w-9 h-9 rounded-full border-2 border-brand-blue bg-brand-surface flex items-center justify-center text-[11px] font-black text-brand-blue uppercase select-none">
+                                        {item.contributor.name
+                                            .split(/\s+/)
+                                            .filter(Boolean)
+                                            .slice(0, 2)
+                                            .map((w) => w[0])
+                                            .join("")}
+                                    </div>
+                                )}
+                                <div className="leading-tight">
+                                    <p className="text-[9px] font-bold uppercase tracking-wider text-neutral-500">
+                                        Contributed by
+                                    </p>
+                                    <p className="text-sm font-black text-white">
+                                        {item.contributor.name}
+                                    </p>
+                                </div>
+                            </div>
+                        )}
                     </div>
 
                     <div className="flex items-center gap-3 shrink-0 mt-0.5">

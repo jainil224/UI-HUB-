@@ -1717,7 +1717,7 @@ const CardCascadePreview: React.FC = () => {
             }}
         >
             <Suspense fallback={null}>
-                <CardCascade />
+                <CardCascade preview />
             </Suspense>
         </div>
     );
@@ -1879,6 +1879,13 @@ export type ComponentItem = {
     vibePrompt: string;
     description?: string;
     uploader?: string;
+    /** Optional contributor/author displayed as a credit badge on the detail
+     * page. `avatar` is an optional image path; when omitted an initials
+     * avatar is rendered from the name. */
+    contributor?: {
+        name: string;
+        avatar?: string;
+    };
     imageUrl?: string;
     isPremium?: boolean;
     downloadUrl?: string;
@@ -3750,6 +3757,7 @@ UI HUB premium cursor component.`
         title: "Card Cascade",
         category: "image-interaction",
         addedAt: "2026-08-27",
+        contributor: { name: "Sahil Patel" },
         preview: () => <CardCascadePreview />,
         code: `import { CardCascade } from '@/components/ui/CardCascade';
 

@@ -264,8 +264,7 @@ function IconRail({ skills, isActive, isMobile }: { skills: Skill[]; isActive: b
 /* ================================================================== */
 /*  Main Component — Semi-circular scroll-driven cascade               */
 /* ================================================================== */
-
-export function CardCascade() {
+export function CardCascade({ preview = false }: { preview?: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
   const isMobile = useIsMobile();
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -273,11 +272,41 @@ export function CardCascade() {
 
   const total = slideCards.length;
 
-  // Scroll tracking — rAF-throttled to avoid excessive re-renders
+  // Scroll tracking — rAF-throttled to avoid excessive re-renders. In preview
+  // mode there is no page scroll (the component is boxed inside a fixed-height
+  // preview), so the progress is auto-driven instead: it eases through all
+  // cards, pauses on each, then loops.
   useEffect(() => {
+    if (preview) {
+      setEntered(true);
+      let rafId = 0;
+      let last = performance.now();
+      const START_HOLD = 1200; // let the cascade-in finish before moving
+      const CARD_HOLD = 1000;  // dwell on each card
+
+      const frame = (now: number) => {
+        const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
+        last = now;
+
+        setScrollProgress((prev) => {
+          // Hold on the first card long enough to see the entrance animation.
+          const hold = prev === 0 ? START_HOLD : CARD_HOLD;
+          const eased = Math.min(1, prev + dt / (hold / 1000));
+          // Loop back to the start once the last card has had its dwell.
+          const next = prev >= 1 - 1e-6 ? 0 : eased;
+          return next;
+        });
+
+        rafId = requestAnimationFrame(frame);
+      };
+      rafId = requestAnimationFrame(frame);
+      return () => cancelAnimationFrame(rafId);
+    }
+
     let rafId = 0;
     const onScroll = () => {
       if (rafId) return;
+
       rafId = requestAnimationFrame(() => {
         rafId = 0;
         const el = sectionRef.current;
@@ -307,7 +336,7 @@ export function CardCascade() {
       clearTimeout(t);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, []);
+  }, [preview]);
 
   // Continuous active position (0..total-1)
   const activeFloat = scrollProgress * (total - 1);
@@ -337,7 +366,7 @@ export function CardCascade() {
       id="skills"
       ref={sectionRef}
       className="relative w-full bg-black"
-      style={{ height: `${(total + 1) * 100}vh` }}
+      style={{ height: preview ? "100%" : `${(total + 1) * 100}vh` }}
     >
       {/* ===== Sticky viewport ===== */}
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
@@ -354,19 +383,6 @@ export function CardCascade() {
           </svg>
         </div>
 
-        {/* Radial glow */}
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            width: "900px", height: "900px",
-            top: "50%", left: "40%",
-            transform: "translate(-50%, -50%)",
-            background: "radial-gradient(circle, rgba(220,38,38,0.05) 0%, transparent 70%)",
-            opacity: entered ? 1 : 0,
-            transition: "opacity 2s ease-out",
-          }}
-        />
-
         {/* Header */}
         <div
           className="relative z-10 pt-10 sm:pt-16 pb-2 text-center"
@@ -381,9 +397,8 @@ export function CardCascade() {
           </p>
           <h2
             className="mt-3 text-4xl sm:text-6xl md:text-8xl font-black uppercase tracking-widest text-white px-2 sm:px-4"
-            style={{ 
+            style={{
               fontFamily: 'Bebas Neue, sans-serif',
-              textShadow: "0 0 10px rgba(255,255,255,0.6), 0 0 30px rgba(255,255,255,0.4), 0 0 60px rgba(255,255,255,0.2)" 
             }}
           >
             TECHNICAL SKILLS
