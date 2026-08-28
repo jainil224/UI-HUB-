@@ -65,12 +65,12 @@ const ProBlurGate = ({
 }) => (
     <div className="relative">
         <div
-            className="pointer-events-none select-none blur-md opacity-40 saturate-50"
+            className="pointer-events-none select-none blur-[2px] opacity-60 saturate-50"
             aria-hidden="true"
         >
             {children}
         </div>
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 p-6 text-center bg-brand-bg/30 backdrop-blur-[2px]">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 p-6 text-center bg-brand-bg/30">
             <div className="relative">
                 <div className="w-14 h-14 rounded-lg bg-brand-bg border-2 border-white flex items-center justify-center brutal-shadow-black text-brand-yellow">
                     <Lock className="w-7 h-7" />
@@ -651,43 +651,39 @@ const VibeSystemSection = React.memo(({
                                         Log In to Access
                                     </button>
                                 </div>
+                            ) : !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked)) ? (
+                                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
+                                    <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
+                                        <Lock className="text-black" size={26} />
+                                    </div>
+                                    <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Pro Access Required</h4>
+                                    <p className="text-neutral-400 max-w-sm mb-8 font-sans text-sm font-medium">
+                                        {item.isPremium
+                                            ? "The specialized AI prompts for this premium component are available only to Pro members."
+                                            : trialBlocked.reason === 'EXPIRY'
+                                                ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial window has ended. Upgrade to Pro for unlimited elite prompts.`
+                                                : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial has been used up. Upgrade to Pro for unlimited elite prompts.`
+                                        }
+                                    </p>
+                                    <Link to="/pricing">
+                                        <button className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest">
+                                            Upgrade for Pro Access
+                                        </button>
+                                    </Link>
+                                </div>
                             ) : (
-                                <>
-                                    <pre
-                                        className="font-mono whitespace-pre-wrap select-none selection:bg-brand-blue selection:text-white"
-                                    >
-                                        {isLoadingPrompt ? (
-                                            <div className="flex flex-col items-center justify-center h-full py-20 text-brand-blue">
-                                                <div className="w-8 h-8 rounded-full border-2 border-brand-blue/20 border-t-brand-blue animate-spin mb-4" />
-                                                <p className="text-[10px] uppercase tracking-[0.2em] font-black animate-pulse text-neutral-400">Establishing Secure Link...</p>
-                                            </div>
-                                        ) : (
-                                            <CodeHighlighter code={deferredVibePrompt} />
-                                        )}
-                                    </pre>
-
-                                    {!isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked)) && (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E]/50 backdrop-blur-[2px] z-30">
-                                            <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
-                                                <Lock className="text-black" size={26} />
-                                            </div>
-                                            <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Pro Access Required</h4>
-                                            <p className="text-neutral-300 max-w-sm mb-8 font-sans text-sm font-medium">
-                                                {item.isPremium
-                                                    ? "The specialized AI prompts for this premium component are available only to Pro members."
-                                                    : trialBlocked.reason === 'EXPIRY'
-                                                        ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial window has ended. Upgrade to Pro for unlimited elite prompts.`
-                                                        : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial has been used up. Upgrade to Pro for unlimited elite prompts.`
-                                                }
-                                            </p>
-                                            <Link to="/pricing">
-                                                <button className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest">
-                                                    Upgrade for Pro Access
-                                                </button>
-                                            </Link>
+                                <pre
+                                    className="font-mono whitespace-pre-wrap select-none selection:bg-brand-blue selection:text-white"
+                                >
+                                    {isLoadingPrompt ? (
+                                        <div className="flex flex-col items-center justify-center h-full py-20 text-brand-blue">
+                                            <div className="w-8 h-8 rounded-full border-2 border-brand-blue/20 border-t-brand-blue animate-spin mb-4" />
+                                            <p className="text-[10px] uppercase tracking-[0.2em] font-black animate-pulse text-neutral-400">Establishing Secure Link...</p>
                                         </div>
+                                    ) : (
+                                        <CodeHighlighter code={deferredVibePrompt} />
                                     )}
-                                </>
+                                </pre>
                             )}
                         </div>
 
@@ -1263,7 +1259,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
 
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
-                                {!isProUser ? (
+                                {item.isPremium && !isProUser ? (
                                     <ProBlurGate message="Upgrade to Pro to view and copy the full source code.">
                                         <CodeViewer
                                             sourceFileName={sourceFileName}
