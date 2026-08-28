@@ -6,8 +6,10 @@ import admin from '../utils/firebaseAdmin.js';
  * ensures they have a matching document in the Firestore 'users' collection.
  */
 
-const SYNC_INTERVAL_MS = 15000; // 15 seconds
+const SYNC_INTERVAL_MS = 3600000; // 1 hour (was 15s — exhausted the free Firestore read quota)
 let isRunning = false;
+let taskRunning = false;
+let quotaPauseUntil = 0;
 
 export const startUserSyncWorker = () => {
     if (isRunning) return;
@@ -18,7 +20,7 @@ export const startUserSyncWorker = () => {
         return;
     }
     
-    console.log('[SyncWorker] User registration monitor started (15s interval)...');
+    console.log('[SyncWorker] User registration monitor started (1h interval)...');
     
     // Immediate first run
     runSyncTask();
@@ -32,15 +34,24 @@ const runSyncTask = async () => {
         return;
     }
 
+    if (Date.now() < quotaPauseUntil) {
+        return;
+    }
+
+    if (taskRunning) {
+        return;
+    }
+    taskRunning = true;
+
     try {
         const auth = admin.auth();
         const db = admin.firestore();
         const USERS_COLLECTION = 'users';
 
-        // Fetch only the most recent 50 users from Auth to keep it efficient
+        // Fetch only the most recent 20 users from Auth to keep it efficient
         // Firebase listUsers sorts by UID, so for a true "recent" check 
         // we'd need to iterate more, but a shallow check handles most new signups.
-        const listResult = await auth.listUsers(50);
+        const listResult = await auth.listUsers(20);
         let syncCount = 0;
 
         for (const userRecord of listResult.users) {
@@ -77,7 +88,19 @@ const runSyncTask = async () => {
             !error.message.includes('Could not load the default credentials') &&
             !error.message.includes('The default Firebase app does not exist')
         ) {
-            console.error('[SyncWorker] Error during auto-sync:', error.message);
+            const quotaExhausted =
+                error.code === 8 ||
+                /resource exhausted/i.test(error.message || '') ||
+                /quota exceeded/i.test(error.message || '');
+
+            if (quotaExhausted) {
+                quotaPauseUntil = Date.now() + 60 * 60 * 1000;
+                console.error('[SyncWorker] Firestore quota exhausted (free tier). Pausing sync for 1 hour to avoid hammering the quota.');
+            } else {
+                console.error('[SyncWorker] Error during auto-sync:', error.message);
+            }
         }
+    } finally {
+        taskRunning = false;
     }
 };
