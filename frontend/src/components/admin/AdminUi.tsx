@@ -141,15 +141,17 @@ export function useData<T>(loader: () => Promise<T>, deps: React.DependencyList 
     const [error, setError] = React.useState<string | null>(null);
     const loaderRef = React.useRef(loader);
     loaderRef.current = loader;
+    const dataRef = React.useRef<T | null>(null);
 
     const reload = React.useCallback(async () => {
-        setLoading(true);
+        if (dataRef.current === null) setLoading(true);
         setError(null);
         try {
             const result = await loaderRef.current();
+            dataRef.current = result;
             setData(result);
         } catch (e: any) {
-            setError(e?.message || 'Failed to load data');
+            if (dataRef.current === null) setError(e?.message || 'Failed to load data');
         } finally {
             setLoading(false);
         }

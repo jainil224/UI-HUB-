@@ -8,6 +8,7 @@ import { getApiBaseUrl } from '../utils/apiConfig';
  */
 
 const MCP_BASE = import.meta.env.VITE_MCP_API_URL || 'http://localhost:3001';
+const DEFAULT_TIMEOUT_MS = 10000;
 
 async function authHeaders(): Promise<Record<string, string>> {
     const user = auth.currentUser;
@@ -19,12 +20,20 @@ async function authHeaders(): Promise<Record<string, string>> {
     };
 }
 
-async function mcpFetch(url: string, init?: RequestInit): Promise<Response> {
+async function mcpFetch(url: string, init?: RequestInit, timeoutMs: number = DEFAULT_TIMEOUT_MS): Promise<Response> {
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
-            const res = await fetch(url, init);
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            let res: Response;
+            try {
+                res = await fetch(url, { ...init, signal: controller.signal });
+            } finally {
+                clearTimeout(timer);
+            }
             if (res.status !== 502 && res.status !== 504) return res;
         } catch (e) {
+            if (e instanceof DOMException && e.name === 'AbortError') throw new Error('Request timed out');
             if (attempt === 1) throw e;
         }
         if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));

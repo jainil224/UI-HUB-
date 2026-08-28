@@ -31,6 +31,13 @@ export class AnalyticsService {
   private static instance: AnalyticsService;
   private static buffer: McpEvent[] = [];
   private static flushTimer: NodeJS.Timeout | null = null;
+  private static queryCache: Map<string, { expiresAt: number; events: McpEvent[] }> = new Map();
+  private static QUERY_CACHE_TTL_MS = 30000;
+  private static QUERY_EVENT_CAP = 2000;
+
+  static invalidateQueryCache(): void {
+    AnalyticsService.queryCache.clear();
+  }
 
   static getInstance(): AnalyticsService {
     if (!AnalyticsService.instance) {
@@ -93,6 +100,7 @@ export class AnalyticsService {
       });
 
       await batch.commit();
+      AnalyticsService.invalidateQueryCache();
     } catch (error: any) {
       if (!error?.message?.includes('Could not load the default credentials')) {
         console.error('[AnalyticsService] Error flushing events:', error);
@@ -204,19 +212,30 @@ export class AnalyticsService {
     }
   }
 
-  async queryEvents(fromKey: string, toKey?: string): Promise<McpEvent[]> {
+  async queryEvents(fromKey: string, toKey?: string, opts?: { refresh?: boolean; maxEvents?: number }): Promise<McpEvent[]> {
     try {
       const db = this.getDb();
       if (!db) return [];
+      const cacheKey = `${fromKey}__${toKey || ''}`;
+      const cached = AnalyticsService.queryCache.get(cacheKey);
+      if (!opts?.refresh && cached && Date.now() < cached.expiresAt) {
+        return cached.events;
+      }
       let query: any = db.collection('mcp_analytics').where('date', '>=', fromKey);
       if (toKey) query = query.where('date', '<=', toKey);
       const snapshot = await query.get();
       const events: McpEvent[] = [];
+      const max = opts?.maxEvents ?? AnalyticsService.QUERY_EVENT_CAP;
       snapshot.docs.forEach((doc: any) => {
+        if (events.length >= max) return;
         const data = doc.data();
         if (data.events && Array.isArray(data.events)) {
-          events.push(...data.events);
+          events.push(...data.events.slice(0, max - events.length));
         }
+      });
+      AnalyticsService.queryCache.set(cacheKey, {
+        expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS,
+        events,
       });
       return events;
     } catch (error: any) {

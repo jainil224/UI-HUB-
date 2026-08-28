@@ -18,16 +18,38 @@ async function authHeaders(): Promise<Record<string, string>> {
     };
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+const DEFAULT_TIMEOUT_MS = 10000;
+const STATUS_TTL_MS = 60000;
+const OVERVIEW_TTL_MS = 30000;
+
+let adminStatusCache: { value: AdminStatus; expiresAt: number } | null = null;
+const overviewCache = new Map<string, { value: AdminOverview; expiresAt: number }>();
+
+function isAbortError(e: unknown): boolean {
+    return e instanceof DOMException && e.name === 'AbortError';
+}
+
+async function fetchWithTimeout(url: string, init: RequestInit, timeoutMs: number): Promise<Response> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await fetch(url, { ...init, signal: controller.signal });
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+async function request<T>(path: string, init?: RequestInit, timeoutMs: number = DEFAULT_TIMEOUT_MS): Promise<T> {
     let res: Response | null = null;
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
-            res = await fetch(`${MCP_BASE}${path}`, {
+            res = await fetchWithTimeout(`${MCP_BASE}${path}`, {
                 ...init,
                 headers: { ...(await authHeaders()), ...(init?.headers || {}) },
-            });
+            }, timeoutMs);
             if (res.status !== 502 && res.status !== 504) break;
         } catch (e) {
+            if (isAbortError(e)) throw new Error('Request timed out');
             if (attempt === 1) throw e;
         }
         if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));
@@ -368,12 +390,25 @@ export interface PlaygroundResult {
 }
 
 export async function getAdminStatus(): Promise<AdminStatus> {
-    return request<AdminStatus>('/api/admin/mcp/status');
+    if (adminStatusCache && Date.now() < adminStatusCache.expiresAt) {
+        return adminStatusCache.value;
+    }
+    const status = await request<AdminStatus>('/api/admin/mcp/status');
+    adminStatusCache = { value: status, expiresAt: Date.now() + STATUS_TTL_MS };
+    return status;
 }
 
 export function getOverview(range?: string): Promise<AdminOverview> {
+    const key = range || 'default';
+    const cached = overviewCache.get(key);
+    if (cached && Date.now() < cached.expiresAt) {
+        return Promise.resolve(cached.value);
+    }
     const q = range ? `?range=${encodeURIComponent(range)}` : '';
-    return request<AdminOverview>(`/api/admin/mcp/overview${q}`);
+    return request<AdminOverview>(`/api/admin/mcp/overview${q}`).then((data) => {
+        overviewCache.set(key, { value: data, expiresAt: Date.now() + OVERVIEW_TTL_MS });
+        return data;
+    });
 }
 
 export function getAnalytics(range?: string): Promise<AdminAnalytics> {
@@ -508,11 +543,12 @@ export async function downloadExport(type: ExportType, format: ExportFormat, ran
     let res: Response | null = null;
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
-            res = await fetch(`${MCP_BASE}/api/admin/mcp/export?${p.toString()}`, {
+            res = await fetchWithTimeout(`${MCP_BASE}/api/admin/mcp/export?${p.toString()}`, {
                 headers: await authHeaders(),
-            });
+            }, 30000);
             if (res.status !== 502 && res.status !== 504) break;
         } catch (e) {
+            if (isAbortError(e)) throw new Error('Export timed out');
             if (attempt === 1) throw e;
         }
         if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));

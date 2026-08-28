@@ -229,13 +229,15 @@ interface Alert {
   at: number;
 }
 
-async function computeAlerts(): Promise<Alert[]> {
+async function computeAlerts(eventsArg?: McpEvent[], keysArg?: Array<Record<string, any>>): Promise<Alert[]> {
   const alerts: Alert[] = [];
   const now = Date.now();
-  const events = await analyticsService.queryEvents(daysAgoKey(2));
+  const events = eventsArg
+    ? eventsArg.filter((e) => now - e.timestamp < 2 * 86400000)
+    : await analyticsService.queryEvents(daysAgoKey(2));
   const recentEvents = events.filter((e) => now - e.timestamp < 86400000);
   const stats = aggregateEvents(recentEvents);
-  const keys = await getAllKeys();
+  const keys = keysArg ?? (await getAllKeys());
   const activeKeys = keys.filter((k) => String(k.status || 'active') === 'active');
 
   if (activeKeys.length === 0) {
@@ -363,7 +365,7 @@ adminRouter.get('/overview', requireAdmin, async (req: Request, res: Response) =
 
   const last24 = events.filter((e) => Date.now() - e.timestamp < 86400000);
   const last7 = events.filter((e) => Date.now() - e.timestamp < 7 * 86400000);
-  const alerts = await computeAlerts();
+  const alerts = await computeAlerts(events, keys);
   const resolved = await getResolvedAlerts();
   const activeAlerts = alerts.filter((a) => !resolved.includes(a.key));
 
@@ -1148,7 +1150,7 @@ adminRouter.get('/export', requireAdmin, async (req: Request, res: Response) => 
   }
 
   if (type === 'keys') {
-    const keys = await getAllKeys();
+    const keys = (await getAllKeys()).slice(0, 2000);
     if (format === 'csv') {
       const headers = ['id', 'name', 'keyPrefix', 'userId', 'status', 'created_at', 'last_used_at', 'expires_at', 'revoked_at'];
       const rows = keys.map((k) => [
