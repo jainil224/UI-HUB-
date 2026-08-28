@@ -5,8 +5,9 @@ import {
     PageHeader, Panel, PanelHeader, StatusBadge, ErrorState, SkeletonBlock,
     useData, formatNum,
 } from '../../components/admin/AdminUi';
+import { MCP_BASE_URL } from '../../utils/mcpConfig';
 
-const MCP_ENDPOINT = import.meta.env.VITE_MCP_API_URL || 'http://localhost:3001';
+const MCP_ENDPOINT = MCP_BASE_URL;
 
 const SettingsPage: React.FC = () => {
     const s = useData(() => getSettings(), []);

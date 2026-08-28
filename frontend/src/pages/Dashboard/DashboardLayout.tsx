@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Bot, Heart, ArrowLeft } from 'lucide-react';
+import { useMcpKeepAlive, warmUpMcp } from '../../hooks/useMcpKeepAlive';
 
 const navItems = [
     { to: '/dashboard/mcp', label: 'MCP', icon: Bot, end: true },
@@ -10,6 +11,10 @@ const navItems = [
 
 const DashboardLayout: React.FC = () => {
     const navigate = useNavigate();
+    useMcpKeepAlive();
+    React.useEffect(() => {
+        warmUpMcp();
+    }, []);
 
     return (
         <main className="min-h-screen pt-28 pb-24 px-4 sm:px-6 relative bg-brand-bg">
@@ -40,6 +45,9 @@ const DashboardLayout: React.FC = () => {
                                         key={item.to}
                                         to={item.to}
                                         end={item.end}
+                                        onMouseEnter={() => {
+                                            if (item.to === '/dashboard/mcp') warmUpMcp();
+                                        }}
                                         className={({ isActive }) =>
                                             `flex items-center gap-3 px-4 py-3 rounded-md text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
                                                 isActive

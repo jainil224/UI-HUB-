@@ -1,24 +1,33 @@
 import { useEffect } from 'react';
+import { MCP_BASE_URL } from '../utils/mcpConfig';
 
-const MCP_BASE = import.meta.env.VITE_MCP_API_URL || 'https://api.ui-hub-design.com';
 const KEEP_ALIVE_INTERVAL = 2 * 60 * 1000;
+
+/**
+ * Fire-and-forget warm-up ping to the MCP backend's /health endpoint.
+ * Best-effort: failures (e.g. server cold-starting) are ignored silently.
+ */
+export function warmUpMcp(): void {
+    if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
+    if (typeof navigator !== 'undefined' && !navigator.onLine) return;
+    fetch(`${MCP_BASE_URL}/health`, { method: 'GET', cache: 'no-store' }).catch(() => {
+        // Ignore — warm-up pings are best-effort.
+    });
+}
 
 export function useMcpKeepAlive() {
     useEffect(() => {
         let stopped = false;
 
-        const ping = async () => {
+        const ping = () => {
             if (stopped) return;
-            if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
-            if (typeof navigator !== 'undefined' && !navigator.onLine) return;
-            try {
-                await fetch(`${MCP_BASE}/health`, { method: 'GET', cache: 'no-store' });
-            } catch {
-                // Keep-alive failures are expected while the server is cold — ignore silently.
-            }
+            warmUpMcp();
         };
 
-        const id = window.setInterval(() => void ping(), KEEP_ALIVE_INTERVAL);
+        // Ping immediately on mount so a cold backend starts booting right away,
+        // not only after the first interval tick.
+        warmUpMcp();
+        const id = window.setInterval(ping, KEEP_ALIVE_INTERVAL);
 
         return () => {
             stopped = true;

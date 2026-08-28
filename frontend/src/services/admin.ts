@@ -1,4 +1,5 @@
 import { auth } from '../lib/firebase';
+import { MCP_BASE_URL } from '../utils/mcpConfig';
 
 /**
  * MCP Admin API client.
@@ -6,7 +7,7 @@ import { auth } from '../lib/firebase';
  * Every request is authorized server-side via Firebase ID token + ADMIN/ELITE tier.
  */
 
-const MCP_BASE = import.meta.env.VITE_MCP_API_URL || 'http://localhost:3001';
+const MCP_BASE = MCP_BASE_URL;
 
 async function authHeaders(): Promise<Record<string, string>> {
     const user = auth.currentUser;

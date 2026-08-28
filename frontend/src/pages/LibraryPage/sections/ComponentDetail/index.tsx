@@ -1330,7 +1330,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 };
 
 /* ── Use with AI section ── */
-const MCP_SERVER_URL = import.meta.env.VITE_MCP_API_URL || 'https://api.ui-hub-design.com';
+import { MCP_BASE_URL } from '../../../../utils/mcpConfig';
+const MCP_SERVER_URL = MCP_BASE_URL;
 
 const UseWithAI: React.FC<{ isPremium: boolean; componentId: string }> = ({ isPremium, componentId }) => {
     const navigate = useNavigate();

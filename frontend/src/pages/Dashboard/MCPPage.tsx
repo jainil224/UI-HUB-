@@ -3,10 +3,11 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
     Bot, KeyRound, Copy, Check, Plus, X, Trash2, Shield, Zap, Server,
     RefreshCw, AlertTriangle, Link2, ExternalLink, Fingerprint, LucideIcon,
-    Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles
+    Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles, Wifi
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useMcpKeepAlive } from '../../hooks/useMcpKeepAlive';
+import { MCP_BASE_URL } from '../../utils/mcpConfig';
 import {
     getMcpOverview, createApiKey, revokeApiKey, getAdminMetrics,
     McpApiKey, McpStatus, McpUsage, McpAdminMetrics
@@ -24,7 +25,7 @@ function maskKey(prefix: string): string {
     return `${prefix}${dots}`;
 }
 
-const MCP_SERVER_URL = import.meta.env.VITE_MCP_API_URL || 'https://api.ui-hub-design.com';
+const MCP_SERVER_URL = MCP_BASE_URL;
 
 const CONFIG_TEMPLATE = `{
   "mcpServers": {
@@ -74,6 +75,7 @@ const MCPPage: React.FC = () => {
     const [adminMetrics, setAdminMetrics] = useState<McpAdminMetrics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [retryAttempt, setRetryAttempt] = useState(0);
     const hasLoadedRef = React.useRef(false);
 
     const [showKey, setShowKey] = useState<string | null>(null);
@@ -83,8 +85,10 @@ const MCPPage: React.FC = () => {
     const load = useCallback(async (refresh = false) => {
         if (!hasLoadedRef.current) setLoading(true);
         setError(null);
+        setRetryAttempt(0);
+        const onAttempt = (attempt: number) => setRetryAttempt(attempt);
         try {
-            const overview = await getMcpOverview(refresh);
+            const overview = await getMcpOverview(refresh, onAttempt);
             setStatus({
                 endpoint: overview.endpoint,
                 headerAuth: overview.headerAuth,
@@ -97,13 +101,14 @@ const MCPPage: React.FC = () => {
             setUsage(overview.usage);
 
             if (overview.tier === 'ADMIN' || overview.tier === 'ELITE') {
-                const metrics = await getAdminMetrics(refresh);
+                const metrics = await getAdminMetrics(refresh, onAttempt);
                 if (metrics) setAdminMetrics(metrics);
             }
         } catch (e: any) {
             setError(e?.message || 'Failed to load MCP data');
         } finally {
             setLoading(false);
+            setRetryAttempt(0);
             hasLoadedRef.current = true;
         }
     }, []);
@@ -142,6 +147,20 @@ const MCPPage: React.FC = () => {
     if (loading && !status) {
         return (
             <div>
+                <div className="flex items-start gap-3 border-2 border-brand-yellow bg-brand-yellow/10 rounded-lg p-4 mb-6">
+                    <Wifi size={20} className="text-brand-yellow shrink-0 mt-0.5 animate-pulse" />
+                    <div className="flex-1">
+                        <p className="text-sm font-bold text-white">
+                            Waking up MCP server…
+                            {retryAttempt > 0 && (
+                                <span className="text-brand-yellow ml-2">(attempt {Math.min(retryAttempt + 1, 3)}/3)</span>
+                            )}
+                        </p>
+                        <p className="text-xs text-neutral-400 mt-1">
+                            First load can take up to a minute while the on-demand backend boots. Retrying automatically — hang tight.
+                        </p>
+                    </div>
+                </div>
                 <div className="h-40 rounded-lg border-2 border-white bg-brand-surface skeleton-glass skeleton-pulse" />
                 <div className="grid sm:grid-cols-2 gap-6 mt-8">
                     <div className="h-56 rounded-lg border-2 border-white bg-brand-surface skeleton-glass skeleton-pulse" />
@@ -184,7 +203,7 @@ const MCPPage: React.FC = () => {
                     <div className="flex-1">
                         <p className="text-sm font-bold text-white">{error}</p>
                         <p className="text-xs text-neutral-400 mt-1">
-                            If the MCP server is not deployed yet, set the local URL via <code className="font-mono bg-black px-1 rounded">VITE_MCP_API_URL=http://localhost:3001</code>
+                            Tried {MCP_SERVER_URL} after multiple retries. If it fails to stay up, enable a keep-alive (see KEEPALIVE.md). Local dev? Set <code className="font-mono bg-black px-1 rounded">VITE_MCP_API_URL=http://localhost:3001</code>.
                         </p>
                     </div>
                     <button onClick={() => void load()} className="text-neutral-400 hover:text-white transition-colors cursor-pointer"><RefreshCw size={16} /></button>
