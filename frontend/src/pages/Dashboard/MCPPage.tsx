@@ -269,19 +269,61 @@ const MCPPage: React.FC = () => {
                             animate={{ opacity: 1, y: 0 }}
                             className="border-2 border-brand-green bg-brand-surface rounded-lg p-6 mb-6 brutal-shadow-white"
                         >
-                            <div className="flex items-center gap-2 mb-3">
-                                <Shield size={16} className="text-brand-green" />
-                                <h3 className="text-xs font-black uppercase tracking-widest text-brand-green">Key Created — Copy it now</h3>
+                            <div className="flex items-center justify-between gap-2 mb-3">
+                                <div className="flex items-center gap-2">
+                                    <Shield size={16} className="text-brand-green" />
+                                    <h3 className="text-xs font-black uppercase tracking-widest text-brand-green">Key Created — Copy it now</h3>
+                                </div>
+                                <button onClick={() => setShowKey(null)} className="text-neutral-400 hover:text-white cursor-pointer p-1 rounded hover:bg-neutral-800 transition-colors">
+                                    <X size={18} />
+                                </button>
                             </div>
-                            <p className="text-xs text-neutral-400 mb-3">
-                                For security, the full key is shown <strong className="text-white">only once</strong>. Store it in your MCP client configuration.
+
+                            <p className="text-xs text-neutral-400 mb-4">
+                                For security, the full key is shown <strong className="text-white">only once</strong>. You can copy the key alone or copy the complete, ready-to-paste AI config directly.
                             </p>
-                            <div className="flex items-center gap-3">
-                                <code className="flex-1 px-3 py-2.5 bg-black border-2 border-neutral-700 rounded-md text-sm font-mono text-brand-green break-all">
+
+                            {/* Raw key field + quick action buttons */}
+                            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 mb-4">
+                                <code className="flex-1 px-3.5 py-2.5 bg-black border-2 border-neutral-700 rounded-md text-sm font-mono text-brand-green break-all select-all">
                                     {showKey}
                                 </code>
-                                <CopyButton text={showKey} label="Copy Key" />
-                                <button onClick={() => setShowKey(null)} className="text-neutral-400 hover:text-white cursor-pointer"><X size={18} /></button>
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <CopyButton text={showKey} label="Copy Key" />
+                                    <CopyButton
+                                        text={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
+                                        label="Copy Full MCP JSON"
+                                    />
+                                    <CopyButton
+                                        text={`claude mcp add ui-hub --transport http ${status?.endpoint || `${MCP_SERVER_URL}/mcp`} --header "Authorization: Bearer ${showKey}"`}
+                                        label="Copy Claude CLI"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Live AI Configuration snippet preview */}
+                            <div className="border border-neutral-800 bg-black/60 rounded-md overflow-hidden">
+                                <div className="border-b border-neutral-800 px-3.5 py-2 flex items-center justify-between bg-neutral-900/50">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                                        Ready-to-paste AI Config (.cursor/mcp.json or .vscode/mcp.json)
+                                    </span>
+                                    <CopyButton
+                                        text={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
+                                        label="Copy JSON"
+                                    />
+                                </div>
+                                <pre className="p-3.5 text-xs font-mono text-brand-green/90 overflow-x-auto whitespace-pre">
+{`{
+  "mcpServers": {
+    "ui-hub": {
+      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",
+      "headers": {
+        "Authorization": "Bearer ${showKey}"
+      }
+    }
+  }
+}`}
+                                </pre>
                             </div>
                         </motion.div>
                     )}
