@@ -5,6 +5,9 @@ import type { ApiKeyRecord, McpUser } from '../types/index.js';
 
 const API_KEYS_COLLECTION = 'mcp_api_keys';
 
+const LIST_CACHE_TTL_MS = 10_000;
+const listCache = new Map<string, { keys: Array<Omit<ApiKeyRecord, 'key_hash'>>; expiresAt: number }>();
+
 export class ApiKeyService {
   private static instance: ApiKeyService;
 
@@ -68,6 +71,7 @@ export class ApiKeyService {
     };
 
     const docRef = await db.collection(API_KEYS_COLLECTION).add(record);
+    listCache.delete(userId);
 
     return {
       plaintextKey,
@@ -154,6 +158,11 @@ export class ApiKeyService {
    * NEVER returns key_hash or full keys - only prefixes and metadata.
    */
   async listApiKeys(userId: string): Promise<Array<Omit<ApiKeyRecord, 'key_hash'>>> {
+    const cached = listCache.get(userId);
+    if (cached && Date.now() < cached.expiresAt) {
+      return cached.keys;
+    }
+
     try {
       const db = this.getDb();
       const snapshot = await db
@@ -162,11 +171,14 @@ export class ApiKeyService {
         .orderBy('created_at', 'desc')
         .get();
 
-      return snapshot.docs.map((doc) => {
+      const keys = snapshot.docs.map((doc) => {
         const data = doc.data() as Omit<ApiKeyRecord, 'id'>;
         const { key_hash, ...safe } = data;
         return { ...safe, id: doc.id };
       });
+
+      listCache.set(userId, { keys, expiresAt: Date.now() + LIST_CACHE_TTL_MS });
+      return keys;
     } catch (error: any) {
       if (!error?.message?.includes('Could not load the default credentials')) {
         console.error('[ApiKeyService] Error listing API keys:', error);
@@ -174,10 +186,6 @@ export class ApiKeyService {
       return [];
     }
   }
-
-  /**
-   * Revoke an API key belonging to a user.
-   */
   async revokeApiKey(keyId: string, userId: string): Promise<boolean> {
     try {
       const db = this.getDb();
@@ -192,6 +200,7 @@ export class ApiKeyService {
         status: 'revoked',
         revoked_at: Date.now(),
       });
+      listCache.delete(userId);
       return true;
     } catch (error: any) {
       if (!error?.message?.includes('Could not load the default credentials')) {
@@ -215,6 +224,7 @@ export class ApiKeyService {
       if (data?.user_id !== userId) return false;
 
       await docRef.delete();
+      listCache.delete(userId);
       return true;
     } catch (error: any) {
       if (!error?.message?.includes('Could not load the default credentials')) {

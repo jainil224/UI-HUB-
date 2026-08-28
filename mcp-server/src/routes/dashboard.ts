@@ -118,6 +118,47 @@ dashboardRouter.get('/status', verifyFirebaseToken, async (req: Request, res: Re
   });
 });
 
+// GET /api/dashboard/mcp/overview — combined status + keys + usage in one round-trip
+dashboardRouter.get('/overview', verifyFirebaseToken, async (req: Request, res: Response) => {
+  const uid = (req as any).uid;
+  const email = (req as any).email;
+
+  const tier = await firebaseService.getUserTier(uid, email);
+  const keys = await apiKeyService.listApiKeys(uid);
+  const activeKeys = keys.filter((k) => k.status === 'active');
+  const cfg = await configService.get();
+  const now = Date.now();
+  const todayKey = new Date().toISOString().split('T')[0];
+
+  const usedToday = activeKeys.some((k) => {
+    if (!k.last_used_at) return false;
+    const t = typeof k.last_used_at === 'number' ? k.last_used_at : (k.last_used_at as any)?._seconds ? (k.last_used_at as any)._seconds * 1000 : new Date(k.last_used_at as any).getTime();
+    return new Date(t).toISOString().split('T')[0] === todayKey;
+  });
+
+  res.json({
+    endpoint: `${config.mcpServerUrl}/mcp`,
+    headerAuth: 'Authorization: Bearer uh_live_...',
+    tier,
+    keys: {
+      total: keys.length,
+      active: activeKeys.length,
+    },
+    items: keys,
+    rateLimit: {
+      free: cfg.rateLimitFree,
+      pro: cfg.rateLimitPro,
+    },
+    features: await configService.getToolStates(),
+    usage: {
+      totalKeys: keys.length,
+      activeKeys: activeKeys.length,
+      usedToday,
+      status: activeKeys.length > 0 ? 'active' : 'inactive',
+    },
+  });
+});
+
 // GET /api/dashboard/mcp/admin/metrics — Platform-wide telemetry (Admin only)
 dashboardRouter.get('/admin/metrics', verifyFirebaseToken, async (req: Request, res: Response) => {
   const allowed = await requireAdminMetrics(req, res);

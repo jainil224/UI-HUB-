@@ -1,6 +1,9 @@
 import admin from 'firebase-admin';
 import config from '../config/env.js';
 
+const TIER_CACHE_TTL_MS = 30_000;
+const tierCache = new Map<string, { tier: 'FREE' | 'PRO' | 'ELITE' | 'ADMIN'; expiresAt: number }>();
+
 export class FirebaseService {
   private static instance: FirebaseService;
   private app: admin.app.App | null = null;
@@ -50,6 +53,12 @@ export class FirebaseService {
       return 'ADMIN';
     }
 
+    const cacheKey = `${userId}__${normalizedEmail}`;
+    const cached = tierCache.get(cacheKey);
+    if (cached && Date.now() < cached.expiresAt) {
+      return cached.tier;
+    }
+
     try {
       const db = this.getDb();
       let userData: admin.firestore.DocumentData | undefined;
@@ -68,22 +77,25 @@ export class FirebaseService {
         }
       }
 
-      if (!userData) return 'FREE';
+      if (!userData) {
+        tierCache.set(cacheKey, { tier: 'FREE', expiresAt: Date.now() + TIER_CACHE_TTL_MS });
+        return 'FREE';
+      }
 
       const status = (userData.status || userData.planTier || '').toUpperCase();
 
-      if (status === 'ELITE') return 'ELITE';
-      if (status === 'PRO') return 'PRO';
-
-      // Legacy expiry check
-      if (userData.proExpiry) {
+      let tier: 'FREE' | 'PRO' | 'ELITE' | 'ADMIN' = 'FREE';
+      if (status === 'ELITE') tier = 'ELITE';
+      else if (status === 'PRO') tier = 'PRO';
+      else if (userData.proExpiry) {
         const expiryDate = new Date(userData.proExpiry);
         if (expiryDate > new Date()) {
-          return 'PRO';
+          tier = 'PRO';
         }
       }
 
-      return 'FREE';
+      tierCache.set(cacheKey, { tier, expiresAt: Date.now() + TIER_CACHE_TTL_MS });
+      return tier;
     } catch (error: any) {
       if (error?.message?.includes('Could not load the default credentials')) {
         return 'FREE';

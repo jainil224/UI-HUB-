@@ -8,7 +8,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useMcpKeepAlive } from '../../hooks/useMcpKeepAlive';
 import {
-    getMcpStatus, listApiKeys, createApiKey, revokeApiKey, getMcpUsage, getAdminMetrics,
+    getMcpOverview, createApiKey, revokeApiKey, getAdminMetrics,
     McpApiKey, McpStatus, McpUsage, McpAdminMetrics
 } from '../../services/mcp';
 
@@ -74,28 +74,37 @@ const MCPPage: React.FC = () => {
     const [adminMetrics, setAdminMetrics] = useState<McpAdminMetrics | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const hasLoadedRef = React.useRef(false);
 
     const [showKey, setShowKey] = useState<string | null>(null);
     const [keyName, setKeyName] = useState('');
     const [creating, setCreating] = useState(false);
 
-    const load = useCallback(async () => {
-        setLoading(true);
+    const load = useCallback(async (refresh = false) => {
+        if (!hasLoadedRef.current) setLoading(true);
         setError(null);
         try {
-            const [s, k, u] = await Promise.all([getMcpStatus(), listApiKeys(), getMcpUsage()]);
-            setStatus(s);
-            setKeys(k);
-            setUsage(u);
+            const overview = await getMcpOverview(refresh);
+            setStatus({
+                endpoint: overview.endpoint,
+                headerAuth: overview.headerAuth,
+                tier: overview.tier,
+                keys: overview.keys,
+                rateLimit: overview.rateLimit,
+                features: overview.features,
+            });
+            setKeys(overview.items);
+            setUsage(overview.usage);
 
-            if (s.tier === 'ADMIN' || s.tier === 'ELITE') {
-                const metrics = await getAdminMetrics();
+            if (overview.tier === 'ADMIN' || overview.tier === 'ELITE') {
+                const metrics = await getAdminMetrics(refresh);
                 if (metrics) setAdminMetrics(metrics);
             }
         } catch (e: any) {
             setError(e?.message || 'Failed to load MCP data');
         } finally {
             setLoading(false);
+            hasLoadedRef.current = true;
         }
     }, []);
 
@@ -104,6 +113,7 @@ const MCPPage: React.FC = () => {
             void load();
         } else if (!authLoading && !user) {
             setLoading(false);
+            hasLoadedRef.current = true;
         }
     }, [authLoading, user, load]);
 
@@ -115,7 +125,7 @@ const MCPPage: React.FC = () => {
             const { key } = await createApiKey(keyName || 'MCP Key');
             setShowKey(key);
             setKeyName('');
-            await load();
+            await load(true);
         } catch (e: any) {
             setError(e?.message || 'Failed to create key');
         } finally {
@@ -125,11 +135,11 @@ const MCPPage: React.FC = () => {
 
     const handleRevoke = async (id: string) => {
         await revokeApiKey(id);
-        await load();
+        await load(true);
     };
 
     /* ── Loading ── */
-    if (loading) {
+    if (loading && !status) {
         return (
             <div>
                 <div className="h-40 rounded-lg border-2 border-white bg-brand-surface skeleton-glass skeleton-pulse" />

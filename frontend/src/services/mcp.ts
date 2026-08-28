@@ -69,6 +69,34 @@ export interface McpUsage {
     status: 'active' | 'inactive';
 }
 
+export interface McpOverview {
+    endpoint: string;
+    headerAuth: string;
+    tier: 'FREE' | 'PRO' | 'ELITE' | 'ADMIN';
+    keys: { total: number; active: number };
+    items: McpApiKey[];
+    rateLimit: { free: number; pro: number };
+    features: Record<string, boolean>;
+    usage: McpUsage;
+}
+
+const OVERVIEW_TTL_MS = 30000;
+const METRICS_TTL_MS = 60000;
+
+let overviewCache: { value: McpOverview; expiresAt: number } | null = null;
+let metricsCache: { value: McpAdminMetrics; expiresAt: number } | null = null;
+
+export async function getMcpOverview(refresh = false): Promise<McpOverview> {
+    if (!refresh && overviewCache && Date.now() < overviewCache.expiresAt) {
+        return overviewCache.value;
+    }
+    const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/overview`, { headers: await authHeaders() });
+    if (!res.ok) throw new Error(`Failed to fetch MCP overview: ${res.status}`);
+    const data = await res.json();
+    overviewCache = { value: data, expiresAt: Date.now() + OVERVIEW_TTL_MS };
+    return data;
+}
+
 export async function getMcpStatus(): Promise<McpStatus> {
     const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/status`, { headers: await authHeaders() });
     if (!res.ok) throw new Error(`Failed to fetch MCP status: ${res.status}`);
@@ -134,11 +162,16 @@ export interface McpAdminMetrics {
     };
 }
 
-export async function getAdminMetrics(): Promise<McpAdminMetrics | null> {
+export async function getAdminMetrics(refresh = false): Promise<McpAdminMetrics | null> {
     try {
+        if (!refresh && metricsCache && Date.now() < metricsCache.expiresAt) {
+            return metricsCache.value;
+        }
         const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/admin/metrics`, { headers: await authHeaders() });
         if (!res.ok) return null;
-        return res.json();
+        const data = await res.json();
+        metricsCache = { value: data, expiresAt: Date.now() + METRICS_TTL_MS };
+        return data;
     } catch {
         return null;
     }

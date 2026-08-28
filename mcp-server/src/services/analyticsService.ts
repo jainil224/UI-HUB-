@@ -27,6 +27,18 @@ export interface McpEvent {
   responseTimeMs?: number;
 }
 
+export interface DailySummary {
+  totalRequests: number;
+  requestsToday: number;
+  activeKeys: number;
+  topComponents: string[];
+  topSearches: string[];
+  freeUsage: number;
+  proUsage: number;
+  failedRequests: number;
+  rateLimitEvents: number;
+}
+
 export class AnalyticsService {
   private static instance: AnalyticsService;
   private static buffer: McpEvent[] = [];
@@ -34,9 +46,13 @@ export class AnalyticsService {
   private static queryCache: Map<string, { expiresAt: number; events: McpEvent[] }> = new Map();
   private static QUERY_CACHE_TTL_MS = 30000;
   private static QUERY_EVENT_CAP = 2000;
+  private static dailySummaryCache: Map<string, { value: DailySummary; expiresAt: number }> = new Map();
+  private static activeKeyCountCache: { value: number; expiresAt: number } | null = null;
 
   static invalidateQueryCache(): void {
     AnalyticsService.queryCache.clear();
+    AnalyticsService.dailySummaryCache.clear();
+    AnalyticsService.activeKeyCountCache = null;
   }
 
   static getInstance(): AnalyticsService {
@@ -111,17 +127,12 @@ export class AnalyticsService {
   /**
    * Get daily usage summary (for admin dashboard).
    */
-  async getDailySummary(dateKey: string): Promise<{
-    totalRequests: number;
-    requestsToday: number;
-    activeKeys: number;
-    topComponents: string[];
-    topSearches: string[];
-    freeUsage: number;
-    proUsage: number;
-    failedRequests: number;
-    rateLimitEvents: number;
-  }> {
+  async getDailySummary(dateKey: string): Promise<DailySummary> {
+    const cached = AnalyticsService.dailySummaryCache.get(dateKey);
+    if (cached && Date.now() < cached.expiresAt) {
+      return cached.value;
+    }
+
     try {
       const db = this.getDb();
       const snapshot = await db
@@ -164,7 +175,7 @@ export class AnalyticsService {
         }
       });
 
-      return {
+      const summary: DailySummary = {
         totalRequests,
         requestsToday,
         activeKeys: await this.getActiveKeyCount(),
@@ -181,6 +192,12 @@ export class AnalyticsService {
         failedRequests,
         rateLimitEvents,
       };
+
+      AnalyticsService.dailySummaryCache.set(dateKey, {
+        value: summary,
+        expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS,
+      });
+      return summary;
     } catch (error: any) {
       if (!error?.message?.includes('Could not load the default credentials')) {
         console.error('[AnalyticsService] Error getting daily summary:', error);
@@ -200,13 +217,18 @@ export class AnalyticsService {
   }
 
   private async getActiveKeyCount(): Promise<number> {
+    if (AnalyticsService.activeKeyCountCache && Date.now() < AnalyticsService.activeKeyCountCache.expiresAt) {
+      return AnalyticsService.activeKeyCountCache.value;
+    }
     try {
       const db = this.getDb();
       const snapshot = await db
         .collection('mcp_api_keys')
         .where('status', '==', 'active')
         .get();
-      return snapshot.size;
+      const count = snapshot.size;
+      AnalyticsService.activeKeyCountCache = { value: count, expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS };
+      return count;
     } catch {
       return 0;
     }
