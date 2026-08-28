@@ -6,6 +6,7 @@ import {
     Download, ChevronLeft, Menu, X, ArrowLeft, Bot
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useMcpKeepAlive } from '../../hooks/useMcpKeepAlive';
 
 export const ADMIN_NAV = [
     { to: '/admin/mcp/overview', label: 'Overview', icon: LayoutDashboard },
@@ -27,6 +28,7 @@ export const ADMIN_NAV = [
 
 const AdminLayout: React.FC = () => {
     const { user } = useAuth();
+    useMcpKeepAlive();
     const [collapsed, setCollapsed] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const location = useLocation();

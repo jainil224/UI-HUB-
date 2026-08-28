@@ -19,6 +19,19 @@ async function authHeaders(): Promise<Record<string, string>> {
     };
 }
 
+async function mcpFetch(url: string, init?: RequestInit): Promise<Response> {
+    for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+            const res = await fetch(url, init);
+            if (res.status !== 502 && res.status !== 504) return res;
+        } catch (e) {
+            if (attempt === 1) throw e;
+        }
+        if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));
+    }
+    throw new Error('MCP server unreachable');
+}
+
 export interface McpApiKey {
     id: string;
     user_id: string;
@@ -48,20 +61,20 @@ export interface McpUsage {
 }
 
 export async function getMcpStatus(): Promise<McpStatus> {
-    const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/status`, { headers: await authHeaders() });
+    const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/status`, { headers: await authHeaders() });
     if (!res.ok) throw new Error(`Failed to fetch MCP status: ${res.status}`);
     return res.json();
 }
 
 export async function listApiKeys(): Promise<McpApiKey[]> {
-    const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/keys`, { headers: await authHeaders() });
+    const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/keys`, { headers: await authHeaders() });
     if (!res.ok) throw new Error(`Failed to list keys: ${res.status}`);
     const data = await res.json();
     return data.keys;
 }
 
 export async function createApiKey(name: string): Promise<{ key: string; record: McpApiKey }> {
-    const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/keys`, {
+    const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/keys`, {
         method: 'POST',
         headers: await authHeaders(),
         body: JSON.stringify({ name }),
@@ -71,7 +84,7 @@ export async function createApiKey(name: string): Promise<{ key: string; record:
 }
 
 export async function revokeApiKey(id: string): Promise<void> {
-    const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/keys/${id}/revoke`, {
+    const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/keys/${id}/revoke`, {
         method: 'POST',
         headers: await authHeaders(),
     });
@@ -79,7 +92,7 @@ export async function revokeApiKey(id: string): Promise<void> {
 }
 
 export async function deleteApiKey(id: string): Promise<void> {
-    const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/keys/${id}`, {
+    const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/keys/${id}`, {
         method: 'DELETE',
         headers: await authHeaders(),
     });
@@ -87,7 +100,7 @@ export async function deleteApiKey(id: string): Promise<void> {
 }
 
 export async function getMcpUsage(): Promise<McpUsage> {
-    const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/usage`, { headers: await authHeaders() });
+    const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/usage`, { headers: await authHeaders() });
     if (!res.ok) throw new Error(`Failed to fetch usage: ${res.status}`);
     return res.json();
 }
@@ -114,7 +127,7 @@ export interface McpAdminMetrics {
 
 export async function getAdminMetrics(): Promise<McpAdminMetrics | null> {
     try {
-        const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/admin/metrics`, { headers: await authHeaders() });
+        const res = await mcpFetch(`${MCP_BASE}/api/dashboard/mcp/admin/metrics`, { headers: await authHeaders() });
         if (!res.ok) return null;
         return res.json();
     } catch {

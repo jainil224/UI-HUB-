@@ -19,10 +19,20 @@ async function authHeaders(): Promise<Record<string, string>> {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-    const res = await fetch(`${MCP_BASE}${path}`, {
-        ...init,
-        headers: { ...(await authHeaders()), ...(init?.headers || {}) },
-    });
+    let res: Response | null = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+            res = await fetch(`${MCP_BASE}${path}`, {
+                ...init,
+                headers: { ...(await authHeaders()), ...(init?.headers || {}) },
+            });
+            if (res.status !== 502 && res.status !== 504) break;
+        } catch (e) {
+            if (attempt === 1) throw e;
+        }
+        if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));
+    }
+    if (!res) throw new Error('MCP server unreachable');
     if (!res.ok) {
         let message = `Request failed: ${res.status}`;
         try {
@@ -495,9 +505,19 @@ export type ExportFormat = 'csv' | 'json';
 export async function downloadExport(type: ExportType, format: ExportFormat, range?: string, filename?: string): Promise<void> {
     const p = new URLSearchParams({ type, format });
     if (range) p.set('range', range);
-    const res = await fetch(`${MCP_BASE}/api/admin/mcp/export?${p.toString()}`, {
-        headers: await authHeaders(),
-    });
+    let res: Response | null = null;
+    for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+            res = await fetch(`${MCP_BASE}/api/admin/mcp/export?${p.toString()}`, {
+                headers: await authHeaders(),
+            });
+            if (res.status !== 502 && res.status !== 504) break;
+        } catch (e) {
+            if (attempt === 1) throw e;
+        }
+        if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));
+    }
+    if (!res) throw new Error('Export failed: server unreachable');
     if (!res.ok) {
         throw new Error(`Export failed: ${res.status}`);
     }
