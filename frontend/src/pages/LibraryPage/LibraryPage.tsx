@@ -328,8 +328,8 @@ const LibraryPage = () => {
                                                     }`}
                                                 >
                                                     <div className="flex items-center gap-2">
-                                                        {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />}
-                                                        <span className={`text-[11px] font-black uppercase tracking-wider ${hasActive ? 'text-brand-blue' : ''}`}>
+                                                        {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-yellow animate-pulse" />}
+                                                        <span className="text-[11px] font-black uppercase tracking-wider !text-brand-yellow">
                                                             {cat.name}
                                                         </span>
                                                     </div>
@@ -422,8 +422,8 @@ const LibraryPage = () => {
                                                 }`}
                                             >
                                                 <div className="flex items-center gap-2">
-                                                    {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />}
-                                                    <span className={`text-[10px] font-black uppercase tracking-wider ${hasActive ? 'text-brand-blue' : ''}`}>
+                                                    {hasActive && <span className="w-1.5 h-1.5 rounded-full bg-brand-yellow animate-pulse" />}
+                                                    <span className="text-[10px] font-black uppercase tracking-wider !text-brand-yellow">
                                                         {cat.name}
                                                     </span>
                                                 </div>
