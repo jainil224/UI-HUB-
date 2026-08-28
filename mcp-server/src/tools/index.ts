@@ -20,3 +20,5 @@ export const TOOLS: McpTool[] = [
   list_categories,
   get_dependencies,
 ];
+
+export const TOOL_NAMES: string[] = TOOLS.map((t) => t.name);

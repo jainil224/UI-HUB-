@@ -1,9 +1,10 @@
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { authenticateMcp } from '../middleware/auth.js';
 import { mcpRateLimiter } from '../middleware/rateLimiter.js';
 import { TOOLS } from '../tools/index.js';
 import type { McpToolResult, McpUser } from '../types/index.js';
 import { analyticsService } from '../services/analyticsService.js';
+import { configService } from '../config/configService.js';
 import { Redis } from '@upstash/redis';
 import crypto from 'crypto';
 
@@ -49,10 +50,47 @@ function getRedis(): Redis | null {
   }
 }
 
+// Honours the "authentication enabled" setting. When disabled, requests are
+// admitted in a dev/admin tier so the playground keeps working.
+async function optionalAuth(req: Request, res: Response, next: NextFunction) {
+  const cfg = await configService.get();
+  if (!cfg.authEnabled) {
+    (req as any).user = {
+      userId: 'no-auth',
+      email: '',
+      name: 'Admin',
+      tier: 'ADMIN',
+      keyId: 'no-auth',
+      keyPrefix: '',
+      keyStatus: 'active',
+    };
+    return next();
+  }
+  return authenticateMcp(req as any, res, next);
+}
+
 // The main MCP endpoint (authenticated)
-mcpRouter.post('/', authenticateMcp, mcpRateLimiter, async (req: Request, res: Response) => {
+mcpRouter.post('/', optionalAuth, mcpRateLimiter, async (req: Request, res: Response) => {
   const user = (req as any).user as McpUser;
   const body = req.body;
+  const startedAt = Date.now();
+
+  const finishTrack = () => {
+    void analyticsService.track({
+      event: 'mcp_request',
+      userId: user.userId,
+      apiKeyId: user.keyId,
+      keyPrefix: user.keyPrefix,
+      tier: user.tier,
+      tool: body?.method,
+      timestamp: Date.now(),
+      statusCode: res.statusCode,
+      responseTimeMs: Date.now() - startedAt,
+      success: res.statusCode < 400,
+    });
+  };
+
+  res.on('finish', finishTrack);
 
   try {
     // Validate JSON-RPC envelope
@@ -71,14 +109,6 @@ mcpRouter.post('/', authenticateMcp, mcpRateLimiter, async (req: Request, res: R
       res.setHeader('Content-Type', 'application/json');
     }
 
-    await analyticsService.track({
-      event: 'mcp_request',
-      userId: user.userId,
-      apiKeyId: user.keyId,
-      tool: method,
-      timestamp: Date.now(),
-    });
-
     switch (method) {
       case 'initialize':
         return res.json({
@@ -96,12 +126,14 @@ mcpRouter.post('/', authenticateMcp, mcpRateLimiter, async (req: Request, res: R
           },
         });
 
-      case 'tools/list':
+      case 'tools/list': {
+        const states = await configService.getToolStates();
+        const available = TOOLS.filter((t) => states[t.name] !== false);
         return res.json({
           jsonrpc: '2.0',
           id,
           result: {
-            tools: TOOLS.map((t) => ({
+            tools: available.map((t) => ({
               name: t.name,
               description: t.description,
               inputSchema: {
@@ -111,6 +143,7 @@ mcpRouter.post('/', authenticateMcp, mcpRateLimiter, async (req: Request, res: R
             })),
           },
         });
+      }
 
       case 'tools/call': {
         const { name, arguments: args } = params || {};
@@ -118,6 +151,11 @@ mcpRouter.post('/', authenticateMcp, mcpRateLimiter, async (req: Request, res: R
 
         if (!tool) {
           return jsonRpcError(res, req, id, -32601, `Unknown tool: ${name}`);
+        }
+
+        const enabled = await configService.isToolEnabled(name);
+        if (!enabled) {
+          return jsonRpcError(res, req, id, -32601, `Tool disabled: ${name}`);
         }
 
         const result = await tool.handler(args || {}, { user });
@@ -139,14 +177,16 @@ mcpRouter.post('/', authenticateMcp, mcpRateLimiter, async (req: Request, res: R
 });
 
 // Also accept GET on the endpoint for discovery/health check
-mcpRouter.get('/', (req: Request, res: Response) => {
+mcpRouter.get('/', async (req: Request, res: Response) => {
+  const states = await configService.getToolStates();
+  const available = TOOLS.filter((t) => states[t.name] !== false).map((t) => t.name);
   res.json({
     name: 'ui-hub-mcp',
     description: 'UI HUB Model Context Protocol server',
     endpoint: `${process.env.MCP_SERVER_URL || ''}/mcp`,
     protocol: 'Streamable HTTP',
     auth: 'Bearer <UI_HUB_API_KEY>',
-    tools: TOOLS.map((t) => t.name),
+    tools: available,
     health: '/mcp/health',
   });
 });

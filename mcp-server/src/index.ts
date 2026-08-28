@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import config from './config/env.js';
+import { configService } from './config/configService.js';
 import { mcpRouter } from './routes/mcp.js';
 import { dashboardRouter } from './routes/dashboard.js';
+import { adminRouter } from './routes/admin.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 const app = express();
@@ -35,17 +37,25 @@ app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: false }));
 
 // Request logging (without secrets)
-app.use((req, res, next) => {
-  const auth = req.headers.authorization;
-  // Log only key prefix, never the full key
-  const maskedAuth = auth ? `${auth.slice(0, 20)}...` : 'none';
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} auth=${maskedAuth}`);
+app.use(async (req, res, next) => {
+  try {
+    const cfg = await configService.get();
+    if (cfg.loggingEnabled) {
+      const auth = req.headers.authorization;
+      // Log only key prefix, never the full key
+      const maskedAuth = auth ? `${auth.slice(0, 20)}...` : 'none';
+      console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl} auth=${maskedAuth}`);
+    }
+  } catch {
+    // never block traffic because of logging
+  }
   next();
 });
 
 // Routes
 app.use('/mcp', mcpRouter);
 app.use('/api/dashboard/mcp', dashboardRouter);
+app.use('/api/admin/mcp', adminRouter);
 
 // Health endpoint
 app.get('/health', (req, res) => {

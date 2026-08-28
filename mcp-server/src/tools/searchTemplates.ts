@@ -1,4 +1,4 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -19,6 +19,8 @@ export const search_templates = createTool(
       event: 'template_fetch',
       userId: user.userId,
       apiKeyId: user.keyId,
+      tier: user.tier,
+      keyPrefix: user.keyPrefix,
       tool: 'search_templates',
       query: args.query,
       timestamp: Date.now(),
@@ -28,3 +30,4 @@ export const search_templates = createTool(
     return { count: results.length, templates: results };
   }
 );
+

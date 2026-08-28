@@ -2,17 +2,10 @@ import { NextFunction, Response } from 'express';
 import { Redis } from '@upstash/redis';
 import type { AuthenticatedRequest } from '../types/index.js';
 import config from '../config/env.js';
+import { configService } from '../config/configService.js';
 import { analyticsService } from '../services/analyticsService.js';
 
 const SECONDS_IN_DAY = 24 * 60 * 60;
-
-// Per-tier daily request limits
-const TIER_LIMITS: Record<string, number> = {
-  FREE: config.rateLimitFree || 100,
-  PRO: config.rateLimitPro || 10000,
-  ELITE: Number.MAX_SAFE_INTEGER,
-  ADMIN: Number.MAX_SAFE_INTEGER,
-};
 
 let upstash: Redis | null = null;
 
@@ -42,13 +35,19 @@ const memoryStore = new Map<string, { count: number; resetAt: number }>();
  * Rate limit MCP requests per API key, per plan tier.
  * Returns proper 429 with Retry-After on exhaustion.
  */
-export function mcpRateLimiter(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+export async function mcpRateLimiter(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const user = req.user;
   if (!user) {
     return next();
   }
 
-  const limit = TIER_LIMITS[user.tier] ?? TIER_LIMITS.FREE;
+  const cfg = await configService.get();
+  const limit =
+    user.tier === 'PRO'
+      ? cfg.rateLimitPro
+      : user.tier === 'ELITE' || user.tier === 'ADMIN'
+        ? Number.MAX_SAFE_INTEGER
+        : cfg.rateLimitFree;
   const keyId = user.keyId;
 
   const redis = getRedis();
@@ -63,7 +62,7 @@ export function mcpRateLimiter(req: AuthenticatedRequest, res: Response, next: N
           await redis.expire(key, SECONDS_IN_DAY);
         }
         if (count > limit) {
-          await analyticsService.track({ event: 'rate_limit', userId: user.userId, apiKeyId: keyId, timestamp: Date.now() });
+          await analyticsService.track({ event: 'rate_limit', userId: user.userId, apiKeyId: keyId, tier: user.tier, keyPrefix: user.keyPrefix, timestamp: Date.now() });
           return res.status(429).json({
             error: 'RATE_LIMIT_EXCEEDED',
             message: 'You have exceeded your current MCP usage limit.',
@@ -100,7 +99,7 @@ function fallbackMemoryLimit(
   entry.count++;
 
   if (entry.count > limit) {
-    void analyticsService.track({ event: 'rate_limit', userId: user.userId, apiKeyId: user.keyId, timestamp: Date.now() });
+    void analyticsService.track({ event: 'rate_limit', userId: user.userId, apiKeyId: user.keyId, tier: user.tier, keyPrefix: user.keyPrefix, timestamp: Date.now() });
     return res.status(429).json({
       error: 'RATE_LIMIT_EXCEEDED',
       message: 'You have exceeded your current MCP usage limit.',

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 import { createTool, mcpError } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -25,6 +25,8 @@ export const get_component = createTool(
           event: 'premium_denied',
           userId: user.userId,
           apiKeyId: user.keyId,
+          tier: user.tier,
+          keyPrefix: user.keyPrefix,
           componentId: args.componentId,
           tool: 'get_component',
           timestamp: Date.now(),
@@ -39,6 +41,8 @@ export const get_component = createTool(
       event: 'component_fetch',
       userId: user.userId,
       apiKeyId: user.keyId,
+      tier: user.tier,
+      keyPrefix: user.keyPrefix,
       componentId: args.componentId,
       tool: 'get_component',
       timestamp: Date.now(),
@@ -52,3 +56,4 @@ export const get_component = createTool(
     return result;
   }
 );
+

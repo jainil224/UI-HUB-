@@ -1,4 +1,4 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 import { createTool, mcpError } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -22,6 +22,8 @@ export const get_dependencies = createTool(
       event: 'component_fetch',
       userId: user.userId,
       apiKeyId: user.keyId,
+      tier: user.tier,
+      keyPrefix: user.keyPrefix,
       componentId: args.componentId,
       tool: 'get_dependencies',
       timestamp: Date.now(),
@@ -35,3 +37,4 @@ export const get_dependencies = createTool(
     return { componentId: args.componentId, dependencies };
   }
 );
+

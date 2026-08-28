@@ -1,4 +1,4 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 import { createTool, mcpError } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -25,6 +25,8 @@ export const get_animation_code = createTool(
           event: 'premium_denied',
           userId: user.userId,
           apiKeyId: user.keyId,
+          tier: user.tier,
+          keyPrefix: user.keyPrefix,
           componentId,
           tool: 'get_animation_code',
           timestamp: Date.now(),
@@ -39,6 +41,8 @@ export const get_animation_code = createTool(
       event: 'animation_fetch',
       userId: user.userId,
       apiKeyId: user.keyId,
+      tier: user.tier,
+      keyPrefix: user.keyPrefix,
       componentId,
       tool: 'get_animation_code',
       timestamp: Date.now(),
@@ -52,3 +56,4 @@ export const get_animation_code = createTool(
     return result;
   }
 );
+

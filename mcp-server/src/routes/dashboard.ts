@@ -2,8 +2,9 @@ import { Router, Request, Response } from 'express';
 import { apiKeyService } from '../services/apiKeyService.js';
 import { firebaseService } from '../services/firebase.js';
 import { analyticsService } from '../services/analyticsService.js';
-import admin from 'firebase-admin';
+import { verifyFirebaseToken } from '../middleware/dashboardAuth.js';
 import config from '../config/env.js';
+import { configService } from '../config/configService.js';
 
 /**
  * Dashboard routes for MCP.
@@ -13,48 +14,16 @@ import config from '../config/env.js';
 
 export const dashboardRouter = Router();
 
-// Middleware: verify Firebase ID token from the website
-async function verifyFirebaseToken(req: Request, res: Response, next: () => void) {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Missing auth token' });
+const requireAdminMetrics = async (req: Request, res: Response): Promise<boolean> => {
+  const { uid, email } = req as any;
+  const tier = await firebaseService.getUserTier(uid, email);
+  if (tier !== 'ADMIN' && tier !== 'ELITE') {
+    res.status(403).json({ error: 'FORBIDDEN', message: 'Admin access required' });
+    return false;
   }
-
-  const token = authHeader.slice(7).trim();
-
-  try {
-    const app = firebaseService.getAdmin();
-    let decoded: any;
-    if (config.firebase.clientEmail && config.firebase.privateKey) {
-      try {
-        decoded = await app.auth().verifyIdToken(token);
-      } catch (verifyErr: any) {
-        console.warn('[DashboardAuth] verifyIdToken failed, falling back to safe payload decode:', verifyErr?.message);
-        const parts = token.split('.');
-        if (parts.length === 3) {
-          decoded = JSON.parse(Buffer.from(parts[1], 'base64').toString());
-        } else {
-          throw verifyErr;
-        }
-      }
-    } else {
-      // Dev fallback: decode payload without verification
-      const parts = token.split('.');
-      if (parts.length === 3) {
-        decoded = JSON.parse(Buffer.from(parts[1], 'base64').toString());
-      } else {
-        return res.status(401).json({ error: 'INVALID_TOKEN', message: 'Invalid token format' });
-      }
-    }
-
-    (req as any).uid = decoded.uid || decoded.user_id || decoded.sub;
-    (req as any).email = decoded.email || (decoded.user_id?.includes('@') ? decoded.user_id : null);
-    next();
-  } catch (error: any) {
-    console.error('[DashboardAuth] Authentication failed:', error?.message);
-    return res.status(401).json({ error: 'INVALID_TOKEN', message: 'Authentication failed' });
-  }
-}
+  (req as any).tier = tier;
+  return true;
+};
 
 // GET /api/dashboard/mcp/keys — list user's API keys
 dashboardRouter.get('/keys', verifyFirebaseToken, async (req: Request, res: Response) => {
@@ -131,6 +100,7 @@ dashboardRouter.get('/status', verifyFirebaseToken, async (req: Request, res: Re
   const tier = await firebaseService.getUserTier(uid, email);
   const keys = await apiKeyService.listApiKeys(uid);
   const activeKeys = keys.filter((k) => k.status === 'active');
+  const cfg = await configService.get();
 
   res.json({
     endpoint: `${config.mcpServerUrl}/mcp`,
@@ -141,18 +111,17 @@ dashboardRouter.get('/status', verifyFirebaseToken, async (req: Request, res: Re
       active: activeKeys.length,
     },
     rateLimit: {
-      free: config.rateLimitFree,
-      pro: config.rateLimitPro,
+      free: cfg.rateLimitFree,
+      pro: cfg.rateLimitPro,
     },
+    features: await configService.getToolStates(),
+  });
+});
+
 // GET /api/dashboard/mcp/admin/metrics — Platform-wide telemetry (Admin only)
 dashboardRouter.get('/admin/metrics', verifyFirebaseToken, async (req: Request, res: Response) => {
-  const uid = (req as any).uid;
-  const email = (req as any).email;
-  const tier = await firebaseService.getUserTier(uid, email);
-
-  if (tier !== 'ADMIN' && tier !== 'ELITE') {
-    return res.status(403).json({ error: 'FORBIDDEN', message: 'Admin access required' });
-  }
+  const allowed = await requireAdminMetrics(req, res);
+  if (!allowed) return;
 
   const todayKey = new Date().toISOString().split('T')[0];
   const summary = await analyticsService.getDailySummary(todayKey);

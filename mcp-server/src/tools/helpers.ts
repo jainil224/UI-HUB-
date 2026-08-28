@@ -1,4 +1,4 @@
-import { z, ZodTypeAny } from 'zod';
+﻿import { z, ZodTypeAny } from 'zod';
 import type { McpTool, McpToolResult, McpUser } from '../types/index.js';
 import { permissionService } from '../services/permissionService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -30,6 +30,8 @@ export function createTool(
             event: 'premium_denied',
             userId: user.userId,
             apiKeyId: user.keyId,
+            tier: user.tier,
+            keyPrefix: user.keyPrefix,
             tool: name,
             timestamp: Date.now(),
           });
@@ -118,3 +120,4 @@ export function mcpError(error: string, message: string): McpToolResult {
     isError: true,
   };
 }
+

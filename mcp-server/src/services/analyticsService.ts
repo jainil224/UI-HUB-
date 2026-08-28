@@ -15,12 +15,16 @@ export interface McpEvent {
   event: McpEventType;
   userId?: string;
   apiKeyId?: string;
+  keyPrefix?: string;
+  tier?: string;
   componentId?: string;
   tool?: string;
   query?: string;
   timestamp: number;
   success?: boolean;
   errorCode?: string;
+  statusCode?: number;
+  responseTimeMs?: number;
 }
 
 export class AnalyticsService {
@@ -72,6 +76,10 @@ export class AnalyticsService {
     if (events.length === 0) return;
 
     try {
+      const { configService } = await import('../config/configService.js');
+      const cfg = await configService.get();
+      if (!cfg.analyticsEnabled) return;
+
       const db = this.getDb();
       const batch = db.batch();
       const now = Date.now();
@@ -195,6 +203,231 @@ export class AnalyticsService {
       return 0;
     }
   }
+
+  async queryEvents(fromKey: string, toKey?: string): Promise<McpEvent[]> {
+    try {
+      const db = this.getDb();
+      if (!db) return [];
+      let query: any = db.collection('mcp_analytics').where('date', '>=', fromKey);
+      if (toKey) query = query.where('date', '<=', toKey);
+      const snapshot = await query.get();
+      const events: McpEvent[] = [];
+      snapshot.docs.forEach((doc: any) => {
+        const data = doc.data();
+        if (data.events && Array.isArray(data.events)) {
+          events.push(...data.events);
+        }
+      });
+      return events;
+    } catch (error: any) {
+      if (!error?.message?.includes('Could not load the default credentials')) {
+        console.error('[AnalyticsService] Error querying events:', error);
+      }
+      return [];
+    }
+  }
+
+  async getActiveKeyCountByUser(): Promise<Map<string, number>> {
+    const counts = new Map<string, number>();
+    try {
+      const db = this.getDb();
+      if (!db) return counts;
+      const snapshot = await db.collection('mcp_api_keys').get();
+      snapshot.docs.forEach((doc) => {
+        const data = doc.data() || {};
+        if (data.user_id) {
+          counts.set(data.user_id, (counts.get(data.user_id) || 0) + 1);
+        }
+      });
+    } catch {
+      // dev mode
+    }
+    return counts;
+  }
+}
+
+export interface ToolUsage {
+  name: string;
+  total: number;
+  success: number;
+  failed: number;
+  uniqueUsers: number;
+  avgResponseTimeMs: number;
+  lastUsed: number;
+}
+
+export interface ComponentUsage {
+  id: string;
+  count: number;
+  searches: number;
+  codeFetches: number;
+  fetchCount: number;
+  uniqueUsers: number;
+  freeCount: number;
+  proCount: number;
+}
+
+export interface SearchUsage {
+  query: string;
+  count: number;
+  zeroResults: boolean;
+}
+
+export interface McpStats {
+  requests: number;
+  uniqueUsers: number;
+  errorRate: number;
+  failedRequests: number;
+  avgResponseTimeMs: number;
+  rateLimitEvents: number;
+  premiumDenied: number;
+  authFailures: number;
+  byDay: Record<string, number>;
+  byTool: Record<string, ToolUsage>;
+  byTier: Record<string, number>;
+  byStatus: Record<string, number>;
+  topComponents: ComponentUsage[];
+  topSearches: SearchUsage[];
+  zeroResultSearches: SearchUsage[];
+}
+
+export function aggregateEvents(events: McpEvent[]): McpStats {
+  const totalRequestEvents = events.filter((e) => e.event === 'mcp_request');
+  const toolEvents = events.filter(
+    (e) =>
+      e.event === 'component_search' ||
+      e.event === 'component_fetch' ||
+      e.event === 'code_fetch' ||
+      e.event === 'template_fetch' ||
+      e.event === 'animation_fetch'
+  );
+
+  const byDay: Record<string, number> = {};
+  const byTier: Record<string, number> = {};
+  const byStatus: Record<string, number> = {};
+  const byTool: Record<string, ToolUsage> = {};
+  const toolUsers: Record<string, Set<string>> = {};
+  const componentMap: Record<string, ComponentUsage> = {};
+  const componentUsers: Record<string, Set<string>> = {};
+  const searchMap: Record<string, SearchUsage> = {};
+  const users = new Set<string>();
+  let failed = 0;
+  let responseTimeSum = 0;
+  let responseTimeCount = 0;
+  let rateLimitEvents = 0;
+  let premiumDenied = 0;
+  let authFailures = 0;
+
+  events.forEach((e) => {
+    if (e.userId) users.add(e.userId);
+
+    if (e.event === 'rate_limit') rateLimitEvents++;
+    if (e.event === 'premium_denied') premiumDenied++;
+    if (e.event === 'auth_failure') authFailures++;
+
+    if (e.tier && e.tier !== 'FREE') byTier[e.tier] = (byTier[e.tier] || 0) + 1;
+    else if (e.tier) byTier.FREE = (byTier.FREE || 0) + 1;
+
+    if (e.statusCode) byStatus[String(e.statusCode)] = (byStatus[String(e.statusCode)] || 0) + 1;
+    if (e.responseTimeMs != null) {
+      responseTimeSum += e.responseTimeMs;
+      responseTimeCount++;
+    }
+
+    if (e.event === 'mcp_request') {
+      if (e.success === false) failed++;
+    }
+
+    if (e.componentId) {
+      const c = componentMap[e.componentId] || {
+        id: e.componentId,
+        count: 0,
+        searches: 0,
+        codeFetches: 0,
+        fetchCount: 0,
+        uniqueUsers: 0,
+        freeCount: 0,
+        proCount: 0,
+      };
+      c.count++;
+      c.fetchCount++;
+      if (e.event === 'code_fetch') c.codeFetches++;
+      if (e.tier && e.tier !== 'FREE') c.proCount++;
+      else c.freeCount++;
+      if (e.userId) {
+        if (!componentUsers[e.componentId]) componentUsers[e.componentId] = new Set();
+        componentUsers[e.componentId].add(e.userId);
+      }
+      componentMap[e.componentId] = c;
+    }
+
+    if (e.event === 'component_search' && e.query) {
+      const q = e.query.trim().toLowerCase();
+      const s = searchMap[q] || { query: q, count: 0, zeroResults: e.success === false };
+      s.count++;
+      if (e.success === false) s.zeroResults = true;
+      searchMap[q] = s;
+    }
+  });
+
+  totalRequestEvents.forEach((e) => {
+    const day = new Date(e.timestamp).toISOString().slice(0, 10);
+    byDay[day] = (byDay[day] || 0) + 1;
+  });
+
+  toolEvents.forEach((e) => {
+    const name = e.tool || 'unknown';
+    const t = byTool[name] || {
+      name,
+      total: 0,
+      success: 0,
+      failed: 0,
+      uniqueUsers: 0,
+      avgResponseTimeMs: 0,
+      lastUsed: 0,
+    };
+    t.total++;
+    if (e.success === false || e.errorCode) t.failed++;
+    else t.success++;
+    if (e.userId) {
+      if (!toolUsers[name]) toolUsers[name] = new Set();
+      toolUsers[name].add(e.userId);
+    }
+    if (e.timestamp > t.lastUsed) t.lastUsed = e.timestamp;
+    byTool[name] = t;
+  });
+
+  if (responseTimeCount > 0) {
+    responseTimeSum = Math.round(responseTimeSum / responseTimeCount);
+  }
+
+  const sortedToolUsage = Object.values(byTool)
+    .sort((a, b) => b.total - a.total)
+    .map((t) => ({ ...t, avgResponseTimeMs: 0, uniqueUsers: toolUsers[t.name] ? toolUsers[t.name].size : 0 }));
+
+  return {
+    requests: totalRequestEvents.length,
+    uniqueUsers: users.size,
+    errorRate: totalRequestEvents.length > 0 ? failed / totalRequestEvents.length : 0,
+    failedRequests: failed,
+    avgResponseTimeMs: responseTimeSum,
+    rateLimitEvents,
+    premiumDenied,
+    authFailures,
+    byDay,
+    byTool: Object.fromEntries(sortedToolUsage.map((t) => [t.name, t])),
+    byTier: Object.fromEntries(Object.entries(byTier).sort((a, b) => b[1] - a[1])),
+    byStatus: Object.fromEntries(Object.entries(byStatus).sort((a, b) => b[1] - a[1])),
+    topComponents: Object.values(componentMap)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 25)
+      .map((c) => ({ ...c, uniqueUsers: componentUsers[c.id] ? componentUsers[c.id].size : 0 })),
+    topSearches: Object.values(searchMap).sort((a, b) => b.count - a.count).slice(0, 25),
+    zeroResultSearches: Object.values(searchMap)
+      .filter((s) => s.zeroResults)
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 25),
+  };
 }
 
 export const analyticsService = AnalyticsService.getInstance();

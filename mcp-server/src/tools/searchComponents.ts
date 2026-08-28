@@ -1,4 +1,4 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -25,6 +25,8 @@ export const search_components = createTool(
       event: 'component_search',
       userId: user.userId,
       apiKeyId: user.keyId,
+      tier: user.tier,
+      keyPrefix: user.keyPrefix,
       tool: 'search_components',
       query: args.query,
       timestamp: Date.now(),
@@ -50,3 +52,4 @@ function permissionAwareNote(isPremium: boolean, user: any): string {
   if (['PRO', 'ELITE', 'ADMIN'].includes(user.tier)) return 'premium-available';
   return 'premium-required';
 }
+

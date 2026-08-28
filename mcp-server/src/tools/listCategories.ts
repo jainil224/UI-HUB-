@@ -1,4 +1,4 @@
-import { z } from 'zod';
+﻿import { z } from 'zod';
 import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
@@ -15,6 +15,8 @@ export const list_categories = createTool(
       event: 'component_search',
       userId: user.userId,
       apiKeyId: user.keyId,
+      tier: user.tier,
+      keyPrefix: user.keyPrefix,
       tool: 'list_categories',
       timestamp: Date.now(),
       success: true,
@@ -26,3 +28,4 @@ export const list_categories = createTool(
     };
   }
 );
+
