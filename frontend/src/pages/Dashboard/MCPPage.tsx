@@ -64,7 +64,7 @@ const CONNECT_CLIENTS = [
 
 /* ── Main Page ── */
 const MCPPage: React.FC = () => {
-    const { user, isPro } = useAuth();
+    const { user, isPro, loading: authLoading } = useAuth();
     const [status, setStatus] = useState<McpStatus | null>(null);
     const [keys, setKeys] = useState<McpApiKey[]>([]);
     const [usage, setUsage] = useState<McpUsage | null>(null);
@@ -90,7 +90,13 @@ const MCPPage: React.FC = () => {
         }
     }, []);
 
-    useEffect(() => { void load(); }, [load]);
+    useEffect(() => {
+        if (!authLoading && user) {
+            void load();
+        } else if (!authLoading && !user) {
+            setLoading(false);
+        }
+    }, [authLoading, user, load]);
 
     const handleCreate = async () => {
         if (!user) return;
