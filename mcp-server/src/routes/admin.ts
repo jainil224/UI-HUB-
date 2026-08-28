@@ -387,10 +387,17 @@ adminRouter.get('/overview', requireAdmin, async (req: Request, res: Response) =
 
   const days: Array<{ date: string; requests: number; errors: number }> = [];
   const today = new Date();
+  const errorsByDay: Record<string, number> = {};
+  events.forEach((e) => {
+    if (e.event === 'mcp_request' && e.success === false) {
+      const key = dateKeyFor(e.timestamp);
+      errorsByDay[key] = (errorsByDay[key] || 0) + 1;
+    }
+  });
   for (let i = 0; i < 30; i++) {
     const d = new Date(today.getTime() - i * 86400000);
     const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
-    days.push({ date: key, requests: stats.byDay[key] || 0, errors: 0 });
+    days.push({ date: key, requests: stats.byDay[key] || 0, errors: errorsByDay[key] || 0 });
   }
   days.reverse();
 
