@@ -986,7 +986,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);
 
     const handleDownloadSource = () => {
-        if (item.isPremium && !isProUser) return;
+        if (!isProUser) {
+            setToastMessage('DOWNLOADS ARE A PRO FEATURE — UPGRADE TO PRO');
+            setShowToast(true);
+            navigate('/pricing');
+            return;
+        }
         const blob = new Blob([sourceCode], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -1238,14 +1243,24 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-2 sm:gap-3">
-                                        <button
-                                            onClick={handleDownloadSource}
-                                            className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-blue transition-all brutal-shadow-black cursor-pointer"
-                                            title={`Download ${sourceFileName}`}
-                                        >
-                                            <Download size={13} />
-                                            <span className="hidden sm:inline">Download</span>
-                                        </button>
+                                        {isProUser ? (
+                                            <button
+                                                onClick={handleDownloadSource}
+                                                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-blue transition-all brutal-shadow-black cursor-pointer"
+                                                title={`Download ${sourceFileName}`}
+                                            >
+                                                <Download size={13} />
+                                                <span className="hidden sm:inline">Download</span>
+                                            </button>
+                                        ) : (
+                                            <div
+                                                title="Download is a Pro feature"
+                                                className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-brand-yellow bg-brand-bg text-brand-yellow text-xs font-black uppercase tracking-wider cursor-not-allowed"
+                                            >
+                                                <Lock size={13} />
+                                                <span className="hidden sm:inline">Download</span>
+                                            </div>
+                                        )}
                                         <button
                                             onClick={() => handleCopy(sourceCode, 'source')}
                                             className="brutal-btn-primary px-3 sm:px-4 py-2 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
