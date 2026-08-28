@@ -3537,6 +3537,7 @@ UI HUB premium cursor component.`
         id: "aura-cursor",
         title: "Aura Cursor",
         category: "cursor",
+        isPremium: true,
         addedAt: "2026-08-27",
         preview: () => <AuraCursorPreview />,
         code: `import { AuraCursor } from '@/components/ui/AuraCursor';
