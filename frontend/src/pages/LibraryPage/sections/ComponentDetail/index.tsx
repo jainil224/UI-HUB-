@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
     Check, Copy, Zap, Brain, Cpu, Heart, ExternalLink, Download, Lock,
-    Maximize2, Minimize2
+    Maximize2, Minimize2, Sparkles, Bot
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
@@ -1310,6 +1310,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 )}
             </AnimatePresence>
 
+            {/* ── Use with AI ── */}
+            <UseWithAI isPremium={!!item.isPremium} componentId={item.id} />
+
             <AuthRequiredModal
                 isOpen={showAuthModal}
                 onClose={() => setShowAuthModal(false)}
@@ -1323,6 +1326,77 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 onClose={() => setShowToast(false)}
             />
         </motion.div>
+    );
+};
+
+/* ── Use with AI section ── */
+const MCP_SERVER_URL = import.meta.env.VITE_MCP_API_URL || 'https://api.ui-hub-design.com';
+
+const UseWithAI: React.FC<{ isPremium: boolean; componentId: string }> = ({ isPremium, componentId }) => {
+    const navigate = useNavigate();
+    const [copied, setCopied] = React.useState(false);
+
+    const mcpSnippet = `# Use this UI HUB component with your AI assistant
+# 1. Connect the UI HUB MCP server in your client config:
+# ${JSON.stringify({ mcpServers: { "ui-hub": { url: `${MCP_SERVER_URL}/mcp`, headers: { Authorization: "Bearer YOUR_UI_HUB_API_KEY" } } } }, null)}
+# 2. Then ask your AI: "Search UI HUB for '${componentId}' and use get_component_code with componentId '${componentId}'"`;
+
+    const handleCopySetup = () => {
+        navigator.clipboard.writeText(mcpSnippet).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        });
+    };
+
+    return (
+        <section className="mt-6 md:mt-10">
+            <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue overflow-hidden">
+                <div className="absolute top-0 inset-x-0 h-1 bg-brand-blue" />
+                <div className="absolute inset-0 bg-[radial-gradient(#ffffff04_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+
+                <div className="relative p-6 md:p-8">
+                    <div className="inline-flex items-center gap-2 px-3 py-1.5 border-2 border-white bg-black rounded-md font-black text-[10px] uppercase tracking-widest text-white mb-4">
+                        <Sparkles size={12} className="text-brand-blue" />
+                        <span>Use with AI</span>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+                        <div className="flex-1 min-w-0">
+                            <h3 className="text-2xl font-black uppercase tracking-tight text-white font-heading mb-2">
+                                USE THIS <span className="text-brand-blue">COMPONENT</span> FROM YOUR AI
+                            </h3>
+                            <p className="text-neutral-400 font-medium text-sm leading-relaxed max-w-2xl">
+                                Use this UI HUB component directly from your AI coding assistant.
+                                Connect the MCP server and your AI can discover, fetch, and drop this component into your project.
+                            </p>
+
+                            {isPremium && (
+                                <p className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-brand-yellow">
+                                    <Lock size={13} />
+                                    Premium component — full MCP source access requires a Pro subscription.
+                                </p>
+                            )}
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+                            <button
+                                onClick={() => navigate('/dashboard/mcp')}
+                                className="brutal-btn-primary px-6 py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
+                            >
+                                <Bot size={15} /> Connect MCP
+                            </button>
+                            <button
+                                onClick={handleCopySetup}
+                                className="brutal-btn-outline px-6 py-3 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
+                            >
+                                {copied ? <Check size={15} /> : <Copy size={15} />}
+                                {copied ? 'Copied' : 'Copy MCP Setup'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 };
 

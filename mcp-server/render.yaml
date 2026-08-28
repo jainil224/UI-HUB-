@@ -1,0 +1,36 @@
+# Render blueprint for UI HUB MCP Server
+services:
+  - name: ui-hub-mcp
+    type: web
+    runtime: node
+    plan: starter
+    region: oregon
+    rootDir: mcp-server
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MCP_PORT
+        value: 3001
+      - key: MCP_SERVER_URL
+        value: https://api.ui-hub-design.com
+      - key: MCP_API_KEY_PREFIX
+        value: uh_live_
+      - key: MCP_RATE_LIMIT_FREE
+        value: 100
+      - key: MCP_RATE_LIMIT_PRO
+        value: 10000
+      - key: MCP_ALLOWED_ORIGINS
+        value: https://ui-hub-design.vercel.app,http://localhost:5173,http://localhost:3000
+      - key: MCP_ADMIN_EMAILS
+        value: jainil11199@gmail.com,jainil224@gmail.com,jainilpatel2224@gmail.com
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: REDIS_URL
+        sync: false

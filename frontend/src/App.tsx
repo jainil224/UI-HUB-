@@ -1,11 +1,13 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useTheme } from './context/ThemeContext';
 import Navbar from './components/ui/Navbar';
 import Footer from './components/ui/Footer';
 const HomePage = React.lazy(() => import('./pages/HomePage/HomePage'));
 const LibraryPage = React.lazy(() => import('./pages/LibraryPage/LibraryPage'));
 const FavoritesPage = React.lazy(() => import('./pages/Dashboard/FavoritesPage'));
+const DashboardLayout = React.lazy(() => import('./pages/Dashboard/DashboardLayout'));
+const MCPPage = React.lazy(() => import('./pages/Dashboard/MCPPage'));
 const LoginPage = React.lazy(() => import('./pages/Auth/LoginPage'));
 const SignupPage = React.lazy(() => import('./pages/Auth/SignupPage'));
 const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
@@ -27,6 +29,7 @@ const AppShell = () => {
   const { theme } = useTheme();
   const location = useLocation();
   const isLibrary = location.pathname.startsWith('/library');
+  const isDashboard = location.pathname.startsWith('/dashboard');
   const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
   const isDemo = location.pathname.startsWith('/demo');
 
@@ -51,6 +54,10 @@ const AppShell = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/library" element={<LibraryPage />} />
             <Route path="/favorites" element={<FavoritesPage />} />
+            <Route path="/dashboard" element={<DashboardLayout />}>
+                <Route index element={<Navigate to="/dashboard/mcp" replace />} />
+                <Route path="mcp" element={<MCPPage />} />
+            </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -64,7 +71,7 @@ const AppShell = () => {
         </React.Suspense>
       </main>
 
-      {!isLibrary && !isAuth && !isDemo && <Footer />}
+      {!isLibrary && !isAuth && !isDemo && !isDashboard && <Footer />}
       <ScrollToTop />
     </div>
   );
