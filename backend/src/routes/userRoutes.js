@@ -170,6 +170,7 @@ router.post('/sync', verifyToken, async (req, res) => {
         let shouldSendFreeSub = false;
         let resolvedEmail = email;
         let resolvedName = name || 'UI Challenger';
+        let welcomeNotificationShown = false;
 
         if (hasCredentials) {
             try {
@@ -188,6 +189,7 @@ router.post('/sync', verifyToken, async (req, res) => {
                             planTier: 'free',
                             welcomeEmailSent: 'sending',
                             freeSubscriptionEmailSent: 'sending',
+                            welcomeNotificationShown: false,
                             createdAt: admin.firestore.FieldValue.serverTimestamp(),
                             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
                         });
@@ -198,6 +200,8 @@ router.post('/sync', verifyToken, async (req, res) => {
                         const welcomeFlag = userData.welcomeEmailSent;
                         const freeFlag = userData.freeSubscriptionEmailSent;
                         const planTier = userData.planTier || 'free';
+
+                        welcomeNotificationShown = userData.welcomeNotificationShown === true || userData.welcomeEmailSent === true;
 
                         resolvedEmail = email;
                         resolvedName  = name || userData.displayName || 'UI Challenger';
@@ -262,11 +266,46 @@ router.post('/sync', verifyToken, async (req, res) => {
 
         res.json({ 
             success: true, 
-            message: 'User sync completed'
+            message: 'User sync completed',
+            welcomeNotificationShown
         });
     } catch (error) {
         console.error('Error in user sync route:', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/welcome-shown
+ * @desc Permanently mark the welcome notification as shown for this user
+ * @access Private
+ */
+router.post('/welcome-shown', verifyToken, async (req, res) => {
+    try {
+        const uid = req.user?.uid;
+        if (!uid) {
+            return res.status(400).json({ success: false, error: 'UID missing from token.' });
+        }
+
+        if (hasCredentials) {
+            try {
+                const db = admin.firestore();
+                await db.collection('users').doc(uid).update({
+                    welcomeNotificationShown: true,
+                    updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+                });
+                console.log(`[Welcome] Marked welcome notification shown for ${uid}`);
+            } catch (fsErr) {
+                console.warn('[Welcome] Firestore write skipped in dev mode:', fsErr.message);
+            }
+        } else {
+            console.log(`[Welcome] Dev mode without Firestore credentials — welcome marked shown for ${uid}.`);
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error marking welcome notification shown:', error);
+        res.status(500).json({ success: false, error: 'Internal server error' });
     }
 });
 

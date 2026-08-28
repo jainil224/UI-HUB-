@@ -7,6 +7,10 @@ import WelcomeNotifications from '../components/ui/WelcomeNotifications';
 
 let syncedThisSession = false;
 
+const WELCOME_STORAGE_PREFIX = 'ui-hub-welcomed-';
+
+const welcomeStorageKey = (uid: string) => `${WELCOME_STORAGE_PREFIX}${uid}`;
+
 interface WelcomeEvent {
     name?: string;
     email?: string;
@@ -36,22 +40,64 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [welcome, setWelcome] = useState<WelcomeEvent | null>(null);
     const welcomeFiredForRef = useRef<string | null>(null);
 
-    const fireWelcome = (u: User) => {
+    const fireWelcome = (u: User, alreadyShown: boolean | null) => {
         if (welcomeFiredForRef.current === u.uid) return;
         welcomeFiredForRef.current = u.uid;
-        try {
-            const creationTime = new Date(u.metadata.creationTime || 0).getTime();
-            const lastSignInTime = new Date(u.metadata.lastSignInTime || 0).getTime();
-            const isNewUser = Math.abs(creationTime - lastSignInTime) < 5000;
-            if (isNewUser) {
-                setWelcome({
-                    name: u.displayName || undefined,
-                    email: u.email || undefined,
-                    seq: Date.now(),
-                });
+
+        const storageKey = welcomeStorageKey(u.uid);
+
+        // Fast path: this user already saw the welcome on this browser.
+        if (localStorage.getItem(storageKey) === '1') return;
+
+        let shouldShow = false;
+
+        if (alreadyShown !== null) {
+            // Backend is authoritative: only brand-new accounts get the welcome.
+            if (alreadyShown === true) {
+                localStorage.setItem(storageKey, '1');
+                return;
             }
+            shouldShow = true;
+        } else {
+            // Fallback when the sync call failed (offline/CORS): detect a
+            // genuinely brand-new account so new users still get welcomed once.
+            try {
+                const creationTime = new Date(u.metadata.creationTime || 0).getTime();
+                const lastSignInTime = new Date(u.metadata.lastSignInTime || 0).getTime();
+                shouldShow = Math.abs(creationTime - lastSignInTime) < 5000;
+            } catch (err) {
+                console.error('[Auth] New user detection failed:', err);
+                shouldShow = false;
+            }
+        }
+
+        if (!shouldShow) return;
+
+        localStorage.setItem(storageKey, '1');
+        setWelcome({
+            name: u.displayName || undefined,
+            email: u.email || undefined,
+            seq: Date.now(),
+        });
+
+        if (alreadyShown === false) {
+            markWelcomeShown(u);
+        }
+    };
+
+    const markWelcomeShown = async (u: User) => {
+        try {
+            const idToken = await u.getIdToken();
+            const apiBaseUrl = getApiBaseUrl();
+            await fetch(`${apiBaseUrl}/api/v1/users/welcome-shown`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${idToken}`,
+                },
+            });
+            console.log('[Auth] Welcome notification marked as shown on backend.');
         } catch (err) {
-            console.error('[Auth] New user detection failed:', err);
+            console.error('[Auth] Failed to mark welcome notification as shown:', err);
         }
     };
 
@@ -108,11 +154,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 if (result?.user) {
                     console.log(`[Auth] Redirect result found: ${result.user.email}`);
                     setUser(result.user);
-                    fireWelcome(result.user);
+                    let welcomeAlreadyShown: boolean | null = null;
                     if (!syncedThisSession) {
                         syncedThisSession = true;
-                        await syncUserWithBackend(result.user);
+                        const syncResult = await syncUserWithBackend(result.user);
+                        welcomeAlreadyShown = syncResult?.welcomeNotificationShown ?? null;
                     }
+                    fireWelcome(result.user, welcomeAlreadyShown);
                     sessionStorage.setItem('ui-hub-show-welcome', 'true');
                 }
             } catch (error: any) {
@@ -130,14 +178,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (user) {
                 console.log(`[Auth] User detected: ${user.email}. Fetching status...`);
 
-                // First-time registration welcome (fired immediately, before any network sync)
-                fireWelcome(user);
-
-                // 4. Synchronize user with backend exactly once per session
+                // Synchronize user with backend exactly once per session and
+                // learn whether this user has already seen the welcome bar.
+                let welcomeAlreadyShown: boolean | null = null;
                 if (!syncedThisSession) {
                     syncedThisSession = true;
-                    await syncUserWithBackend(user);
+                    const syncResult = await syncUserWithBackend(user);
+                    welcomeAlreadyShown = syncResult?.welcomeNotificationShown ?? null;
                 }
+
+                // First-time registration welcome (only for brand-new accounts,
+                // shown at most once ever per user).
+                fireWelcome(user, welcomeAlreadyShown);
 
                 try {
                     await refreshProStatus();

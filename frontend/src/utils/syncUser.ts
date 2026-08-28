@@ -26,7 +26,7 @@ async function waitForDisplayName(user: User): Promise<string | null> {
   return user.displayName || null;
 }
 
-export async function syncUserWithBackend(user: User): Promise<void> {
+export async function syncUserWithBackend(user: User): Promise<{ welcomeNotificationShown: boolean } | null> {
   // Email/password signups: wait briefly for updateProfile to provide the real name
   const resolvedName = (await waitForDisplayName(user)) || 'UI Challenger';
 
@@ -36,7 +36,7 @@ export async function syncUserWithBackend(user: User): Promise<void> {
     idToken = await user.getIdToken(true); // force refresh
   } catch (err) {
     console.error('[SYNC] Failed to get ID token:', err);
-    return;
+    return null;
   }
 
   const apiBaseUrl = getApiBaseUrl();
@@ -57,14 +57,16 @@ export async function syncUserWithBackend(user: User): Promise<void> {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error('[SYNC] Backend sync failed:', response.status, errorData);
-      return;
+      return null;
     }
 
     const data = await response.json();
     console.log('[SYNC] User synced successfully:', data);
+    return data;
 
   } catch (err) {
     // Network error or CORS — log but don't crash the app
     console.error('[SYNC] Network error during sync:', err);
+    return null;
   }
 }

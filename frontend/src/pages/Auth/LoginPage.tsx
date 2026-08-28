@@ -82,7 +82,6 @@ const LoginPage = () => {
 
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            sessionStorage.setItem('ui-hub-show-welcome', 'true');
             navigate('/');
         } catch (err: any) {
             setError(formatAuthError(err.message) || 'Failed to sign in. Please check your credentials.');
