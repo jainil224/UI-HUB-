@@ -59,7 +59,7 @@ const CONNECT_CLIENTS = [
     { name: 'Cursor', description: 'Add to your project\'s .cursor/mcp.json', config: 'Available in Cursor Settings → MCP → Add Server' },
     { name: 'Claude Code', description: 'claude mcp add ui-hub --transport http', config: 'Use: claude mcp add ui-hub --transport http <url>' },
     { name: 'VS Code / Copilot', description: 'Configure via .vscode/mcp.json', config: 'Place the JSON config in .vscode/mcp.json' },
-    { name: 'Generic MCP Clients', description: 'Any MCP-compatible client', config: 'Use the generic configuration below' },
+    { name: 'Antigravity', description: 'Configure via mcp_config.json or IDE Settings', config: 'Add to ~/.gemini/config/mcp_config.json' },
 ];
 
 /* ── Main Page ── */
@@ -305,7 +305,7 @@ const MCPPage: React.FC = () => {
                             <div className="border border-neutral-800 bg-black/60 rounded-md overflow-hidden">
                                 <div className="border-b border-neutral-800 px-3.5 py-2 flex items-center justify-between bg-neutral-900/50">
                                     <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                                        Ready-to-paste AI Config (.cursor/mcp.json or .vscode/mcp.json)
+                                        Ready-to-paste AI Config (Cursor, Antigravity, VS Code, Claude)
                                     </span>
                                     <CopyButton
                                         text={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
