@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
     Activity, Zap, Users, KeyRound, AlertOctagon, Timer, ServerCog, ArrowRight, RefreshCw,
-    Search, Download, ShieldAlert, Crown
+    Search, Download, ShieldAlert, Crown, LucideIcon
 } from 'lucide-react';
 import { getOverview, getLogs, McpLogEntry } from '../../services/admin';
 import {
@@ -51,7 +51,7 @@ const OverviewPage: React.FC = () => {
               ]
             : [];
 
-    const recentActivity: Array<{ icon: React.ElementType; text: React.ReactNode; ts: number; tone: Tone }> = (activity.data?.events || []).map((e: McpLogEntry) => {
+    const recentActivity: Array<{ icon: LucideIcon; text: React.ReactNode; ts: number; tone: Tone }> = (activity.data?.events || []).map((e: McpLogEntry) => {
         const icon = e.event === 'auth_failure' || e.event === 'rate_limit' || e.event === 'premium_denied' ? ShieldAlert : e.event === 'component_search' ? Search : Download;
         const tone: Tone = e.status === 200 ? 'ok' : e.status === 429 ? 'warn' : e.status === 403 ? 'bad' : 'warn';
         let text: React.ReactNode = (

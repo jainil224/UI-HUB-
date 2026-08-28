@@ -151,6 +151,16 @@ export interface AdminUser {
     requests: number;
     lastActive: number | null;
     createdAt: number | null;
+    keys?: Array<{
+        id: string;
+        keyPrefix: string;
+        name: string;
+        status: string;
+        created_at: number | null;
+        last_used_at: number | null;
+        expires_at: number | null;
+        revoked_at: number | null;
+    }>;
 }
 
 export interface AdminUserList {

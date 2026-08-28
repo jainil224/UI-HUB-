@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate, Link } from 'react-router-dom';
+import { Navigate, Link, Outlet } from 'react-router-dom';
 import { ShieldOff, KeyRound } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getAdminStatus } from '../../services/admin';
@@ -54,7 +54,7 @@ const AccessDenied: React.FC<{ reason: 'forbidden' | 'unreachable' }> = ({ reaso
     </main>
 );
 
-const AdminGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AdminGuard: React.FC = () => {
     const { user, loading } = useAuth();
     const [screen, setScreen] = useState<Screen>('loading');
     const [reason, setReason] = useState<'forbidden' | 'unreachable'>('forbidden');
@@ -84,7 +84,7 @@ const AdminGuard: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (loading || screen === 'loading') return <AdminLoading />;
     if (!user) return <Navigate to="/login" replace />;
     if (screen === 'denied') return <AccessDenied reason={reason} />;
-    return <>{children}</>;
+    return <Outlet />;
 };
 
 export default AdminGuard;

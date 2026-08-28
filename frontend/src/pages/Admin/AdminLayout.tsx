@@ -3,7 +3,7 @@ import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard, BarChart3, Wrench, FlaskConical, Boxes, Search, Users,
     KeyRound, ScrollText, ShieldCheck, HeartPulse, BellRing, Settings, History,
-    Download, ChevronLeft, Menu, X, ArrowLeft, Robot
+    Download, ChevronLeft, Menu, X, ArrowLeft, Bot
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -37,7 +37,7 @@ const AdminLayout: React.FC = () => {
         <div className="flex flex-col h-full">
             <div className={`border-b-2 border-white px-4 py-4 flex items-center gap-3 ${collapsed ? 'justify-center px-2' : ''}`}>
                 <div className="w-9 h-9 shrink-0 rounded-md border-2 border-white bg-brand-blue flex items-center justify-center text-white">
-                    <Robot size={18} />
+                    <Bot size={18} />
                 </div>
                 {!collapsed && (
                     <div className="min-w-0">

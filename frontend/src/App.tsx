@@ -17,6 +17,24 @@ const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
 const CloudScrollPage = React.lazy(() => import('./pages/Components/CloudScrollPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
+const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
+const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
+const OverviewPage = React.lazy(() => import('./pages/Admin/OverviewPage'));
+const AnalyticsPage = React.lazy(() => import('./pages/Admin/AnalyticsPage'));
+const ToolsPage = React.lazy(() => import('./pages/Admin/ToolsPage'));
+const PlaygroundPage = React.lazy(() => import('./pages/Admin/PlaygroundPage'));
+const ComponentsPage = React.lazy(() => import('./pages/Admin/ComponentsPage'));
+const SearchPage = React.lazy(() => import('./pages/Admin/SearchPage'));
+const UsersPage = React.lazy(() => import('./pages/Admin/UsersPage'));
+const UserDetailPage = React.lazy(() => import('./pages/Admin/UserDetailPage'));
+const ApiKeysPage = React.lazy(() => import('./pages/Admin/ApiKeysPage'));
+const LogsPage = React.lazy(() => import('./pages/Admin/LogsPage'));
+const SecurityPage = React.lazy(() => import('./pages/Admin/SecurityPage'));
+const HealthPage = React.lazy(() => import('./pages/Admin/HealthPage'));
+const AlertsPage = React.lazy(() => import('./pages/Admin/AlertsPage'));
+const SettingsPage = React.lazy(() => import('./pages/Admin/SettingsPage'));
+const AuditPage = React.lazy(() => import('./pages/Admin/AuditPage'));
+const ExportPage = React.lazy(() => import('./pages/Admin/ExportPage'));
 import ScrollToTop from './components/ui/ScrollToTop';
 import FourierFlow from './components/ui/FourierFlow';
 import { SkeletonProvider } from './context/SkeletonContext';
@@ -30,6 +48,7 @@ const AppShell = () => {
   const location = useLocation();
   const isLibrary = location.pathname.startsWith('/library');
   const isDashboard = location.pathname.startsWith('/dashboard');
+  const isAdmin = location.pathname.startsWith('/admin');
   const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
   const isDemo = location.pathname.startsWith('/demo');
 
@@ -42,7 +61,7 @@ const AppShell = () => {
           : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
     }`}>
       <TopLoader />
-      {!isDemo && <Navbar />}
+      {!isDemo && !isAdmin && <Navbar />}
 
       <main className="flex-1 flex flex-col">
         <React.Suspense fallback={
@@ -58,6 +77,27 @@ const AppShell = () => {
                 <Route index element={<Navigate to="/dashboard/mcp" replace />} />
                 <Route path="mcp" element={<MCPPage />} />
             </Route>
+            <Route path="/admin/mcp" element={<AdminGuard />}>
+                <Route element={<AdminLayout />}>
+                    <Route index element={<Navigate to="/admin/mcp/overview" replace />} />
+                    <Route path="overview" element={<OverviewPage />} />
+                    <Route path="analytics" element={<AnalyticsPage />} />
+                    <Route path="tools" element={<ToolsPage />} />
+                    <Route path="playground" element={<PlaygroundPage />} />
+                    <Route path="components" element={<ComponentsPage />} />
+                    <Route path="search" element={<SearchPage />} />
+                    <Route path="users" element={<UsersPage />} />
+                    <Route path="users/:uid" element={<UserDetailPage />} />
+                    <Route path="api-keys" element={<ApiKeysPage />} />
+                    <Route path="logs" element={<LogsPage />} />
+                    <Route path="security" element={<SecurityPage />} />
+                    <Route path="health" element={<HealthPage />} />
+                    <Route path="alerts" element={<AlertsPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="audit" element={<AuditPage />} />
+                    <Route path="export" element={<ExportPage />} />
+                </Route>
+            </Route>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -71,7 +111,7 @@ const AppShell = () => {
         </React.Suspense>
       </main>
 
-      {!isLibrary && !isAuth && !isDemo && !isDashboard && <Footer />}
+      {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && <Footer />}
       <ScrollToTop />
     </div>
   );

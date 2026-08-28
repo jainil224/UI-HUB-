@@ -6,6 +6,7 @@ import {
     Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useMcpKeepAlive } from '../../hooks/useMcpKeepAlive';
 import {
     getMcpStatus, listApiKeys, createApiKey, revokeApiKey, getMcpUsage, getAdminMetrics,
     McpApiKey, McpStatus, McpUsage, McpAdminMetrics
@@ -66,6 +67,7 @@ const CONNECT_CLIENTS = [
 /* ── Main Page ── */
 const MCPPage: React.FC = () => {
     const { user, isPro, loading: authLoading } = useAuth();
+    useMcpKeepAlive();
     const [status, setStatus] = useState<McpStatus | null>(null);
     const [keys, setKeys] = useState<McpApiKey[]>([]);
     const [usage, setUsage] = useState<McpUsage | null>(null);
