@@ -91,3 +91,34 @@ export async function getMcpUsage(): Promise<McpUsage> {
     if (!res.ok) throw new Error(`Failed to fetch usage: ${res.status}`);
     return res.json();
 }
+
+export interface McpAdminMetrics {
+    date: string;
+    totalRequests: number;
+    requestsToday: number;
+    activeKeys: number;
+    topComponents: string[];
+    topSearches: string[];
+    freeUsage: number;
+    proUsage: number;
+    failedRequests: number;
+    rateLimitEvents: number;
+    server: {
+        status: string;
+        uptime: number;
+        memoryUsage: string;
+        environment: string;
+        version: string;
+    };
+}
+
+export async function getAdminMetrics(): Promise<McpAdminMetrics | null> {
+    try {
+        const res = await fetch(`${MCP_BASE}/api/dashboard/mcp/admin/metrics`, { headers: await authHeaders() });
+        if (!res.ok) return null;
+        return res.json();
+    } catch {
+        return null;
+    }
+}
+

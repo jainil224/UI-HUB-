@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { apiKeyService } from '../services/apiKeyService.js';
 import { firebaseService } from '../services/firebase.js';
+import { analyticsService } from '../services/analyticsService.js';
 import admin from 'firebase-admin';
 import config from '../config/env.js';
 
@@ -143,16 +144,29 @@ dashboardRouter.get('/status', verifyFirebaseToken, async (req: Request, res: Re
       free: config.rateLimitFree,
       pro: config.rateLimitPro,
     },
-    features: {
-      searchComponents: true,
-      getComponent: true,
-      getComponentCode: true,
-      searchTemplates: true,
-      getTemplate: true,
-      searchAnimations: true,
-      getAnimationCode: true,
-      listCategories: true,
-      getDependencies: true,
+// GET /api/dashboard/mcp/admin/metrics — Platform-wide telemetry (Admin only)
+dashboardRouter.get('/admin/metrics', verifyFirebaseToken, async (req: Request, res: Response) => {
+  const uid = (req as any).uid;
+  const email = (req as any).email;
+  const tier = await firebaseService.getUserTier(uid, email);
+
+  if (tier !== 'ADMIN' && tier !== 'ELITE') {
+    return res.status(403).json({ error: 'FORBIDDEN', message: 'Admin access required' });
+  }
+
+  const todayKey = new Date().toISOString().split('T')[0];
+  const summary = await analyticsService.getDailySummary(todayKey);
+
+  res.json({
+    date: todayKey,
+    ...summary,
+    server: {
+      status: 'healthy',
+      uptime: Math.round(process.uptime()),
+      memoryUsage: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + ' MB',
+      environment: config.nodeEnv,
+      version: '1.0.0',
     },
   });
 });
+
