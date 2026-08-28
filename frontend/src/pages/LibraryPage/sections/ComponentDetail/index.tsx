@@ -13,6 +13,7 @@ import * as VisualEffects from '../../../../components/animations/VisualEffects'
 import { getComponentCode } from '../../../../utils/codeUtils';
 import { downloadComponentZip } from '../../../../utils/zipUtils';
 import { fetchVibePrompt, fetchComponentSource, getFallbackVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
+import { getApiBaseUrl } from '../../../../utils/apiConfig';
 import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
@@ -272,8 +273,10 @@ const VibeSystemSection = React.memo(({
     item,
     user,
     isProUser,
-    advanceTrialsUsed,
-    setAdvanceTrialsUsed,
+    trialsRemaining,
+    trialExpiresAt,
+    setTrialsRemaining,
+    setTrialExpiresAt,
     componentConfig,
     vanillaCode,
     setShowAuthModal
@@ -281,8 +284,10 @@ const VibeSystemSection = React.memo(({
     item: ComponentItem;
     user: any;
     isProUser: boolean;
-    advanceTrialsUsed: number;
-    setAdvanceTrialsUsed: React.Dispatch<React.SetStateAction<number>>;
+    trialsRemaining: number;
+    trialExpiresAt: number | null;
+    setTrialsRemaining: React.Dispatch<React.SetStateAction<number>>;
+    setTrialExpiresAt: React.Dispatch<React.SetStateAction<number | null>>;
     componentConfig: any;
     vanillaCode: string;
     setShowAuthModal: (v: boolean) => void;
@@ -318,9 +323,14 @@ const VibeSystemSection = React.memo(({
         setAiSystem(tool);
     }, [setAiSystem]);
 
+    // Whether a non-pro user currently has at least one free premium AI trial.
+    const trialActive = !isProUser && trialsRemaining > 0 &&
+        (!trialExpiresAt || Date.now() < trialExpiresAt);
+
+    // Whether a premium AI tool is selectable for a non-pro user (trial based).
     const isToolLocked = React.useCallback((tool: AISystem) => (
-        !isProUser && (item.isPremium ? true : PRO_ONLY_TOOLS.includes(tool))
-    ), [isProUser, item.isPremium]);
+        !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(tool) && !trialActive))
+    ), [isProUser, item.isPremium, trialActive]);
 
     const handleToolCardSelect = React.useCallback((tool: AISystem) => (
         handleToolSelect(tool, isToolLocked(tool))
@@ -337,26 +347,63 @@ const VibeSystemSection = React.memo(({
         setPrevProStatus(isProUser);
     }, [isProUser, prevProStatus, setAiSystem]);
 
+    // Server-driven block state for non-pro premium AI tools (trial exhausted/expired).
+    const [trialBlocked, setTrialBlocked] = React.useState<{ blocked: boolean; reason?: 'COUNT' | 'EXPIRY' }>({ blocked: false });
+
     const loadPrompt = React.useCallback(async () => {
         setIsLoadingPrompt(true);
         try {
             const token = user ? await user.getIdToken() : undefined;
             console.log(`[VibeSystem] Fetching prompt for ${item.id} (${aiSystem})...`);
-            const prompt = await fetchVibePrompt(item.id, aiSystem, token, item);
-            setFetchedPrompt(prompt || getFallbackVibePrompt(item.id, aiSystem, item));
+            const result = await fetchVibePrompt(item.id, aiSystem, token, item);
+
+            setFetchedPrompt(result.prompt || getFallbackVibePrompt(item.id, aiSystem, item));
+
+            if (result.ok) {
+                // Premium trial consumed on the server — reflect remaining count + expiry.
+                if (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem)) {
+                    if (typeof result.trialsRemaining === 'number' && result.trialsRemaining >= 0) {
+                        setTrialsRemaining(result.trialsRemaining);
+                    }
+                    if (result.expiresAt != null) {
+                        setTrialExpiresAt(result.expiresAt);
+                    }
+                }
+                setTrialBlocked({ blocked: false });
+            } else if (result.code === 'TRIAL_LIMIT') {
+                setTrialBlocked({ blocked: true, reason: result.reason || 'COUNT' });
+                if (typeof result.trialsRemaining === 'number' && result.trialsRemaining >= 0) {
+                    setTrialsRemaining(result.trialsRemaining);
+                }
+                if (result.expiresAt != null) {
+                    setTrialExpiresAt(result.expiresAt);
+                }
+            } else if (result.code === 'AUTH_REQUIRED') {
+                setTrialBlocked({ blocked: false });
+                setShowAuthModal(true);
+            } else {
+                // Network/server error on premium tool — don't bypass; show terminal fallback but
+                // keep last known trial state.
+                setTrialBlocked({ blocked: false });
+            }
         } catch (error) {
             console.warn('[VibeSystem] Falling back to local blueprint for:', item.id);
             setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item));
         } finally {
             setIsLoadingPrompt(false);
         }
-    }, [aiSystem, item, user]);
+    }, [aiSystem, item, user, isProUser, setTrialsRemaining, setTrialExpiresAt]);
 
     React.useEffect(() => {
         loadPrompt();
     }, [loadPrompt]);
 
     const deferredVibePrompt = React.useDeferredValue(fetchedPrompt);
+
+    // Reset server block state when switching tools outside the trial-flow.
+    React.useEffect(() => {
+        setTrialBlocked({ blocked: false });
+    }, [item.id]);
 
     // Copy to clipboard with authentication + premium/pro access check
     const handleCopyBlueprint = async () => {
@@ -365,13 +412,20 @@ const VibeSystemSection = React.memo(({
             return;
         }
 
-        // Non-Pro users cannot copy premium/pro vibe prompts
         if (item.isPremium && !isProUser) {
             setShowAuthModal(false);
             return;
         }
-        if (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2) {
-            return;
+
+        // Non-pro users: premium tools only allowed while a trial is active.
+        if (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem)) {
+            if (trialBlocked.blocked || !trialActive) {
+                setToastMessage(trialBlocked.reason === 'EXPIRY'
+                    ? 'TRIAL WINDOW EXPIRED — UPGRADE TO PRO'
+                    : 'FREE TRIAL USED UP — UPGRADE TO PRO');
+                setShowToast(true);
+                return;
+            }
         }
 
         await navigator.clipboard.writeText(deferredVibePrompt);
@@ -394,6 +448,18 @@ const VibeSystemSection = React.memo(({
                 <div className="px-2 lg:px-4">
                     <p className="md:hidden text-[10px] uppercase tracking-widest font-black text-neutral-500">Select AI Tool</p>
                     <h3 className="hidden md:block text-2xl lg:text-3xl font-display uppercase tracking-widest text-[var(--text-primary)]">Select AI Tool</h3>
+                    {!isProUser && !item.isPremium && (
+                        <span className={`inline-flex items-center gap-1.5 mt-2 px-2.5 py-1 rounded border text-[9px] font-black uppercase tracking-widest ${
+                            trialActive
+                                ? 'border-brand-yellow/60 text-brand-yellow bg-brand-yellow/10'
+                                : 'border-neutral-600 text-neutral-400 bg-neutral-900'
+                        }`}>
+                            <Zap size={11} />
+                            {trialActive
+                                ? `${trialsRemaining} Premium AI Trial${trialsRemaining === 1 ? '' : 's'} Left${trialExpiresAt ? ' • Expires in 24h' : ''}`
+                                : 'Free Premium Trial Used Up — Upgrade to Pro'}
+                        </span>
+                    )}
                 </div>
                 {/* Mobile: wrap chips — every tool visible, one-tap select */}
                 <div className="flex flex-wrap gap-2 px-2 sm:hidden">
@@ -475,7 +541,7 @@ const VibeSystemSection = React.memo(({
                             </div>
 
                             {/* Copy Button */}
-                            {!(item.isPremium && !isProUser) && !(!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2) && (
+                            {!(item.isPremium && !isProUser) && !(!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked) && (
                                 <button
                                     disabled={isLoadingPrompt}
                                     onClick={handleCopyBlueprint}
@@ -506,7 +572,7 @@ const VibeSystemSection = React.memo(({
                                         Log In to Access
                                     </button>
                                 </div>
-                            ) : (!isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && advanceTrialsUsed >= 2))) ? (
+                            ) : (!isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked))) ? (
                                 <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
                                     <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
                                         <Lock className="text-black" size={26} />
@@ -515,9 +581,9 @@ const VibeSystemSection = React.memo(({
                                     <p className="text-neutral-400 max-w-sm mb-8 font-sans text-sm font-medium">
                                         {item.isPremium
                                             ? "The specialized AI prompts for this premium component are available only to Pro members."
-                                            : advanceTrialsUsed >= 2
-                                                ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} trial has ended. Upgrade to Pro for unlimited elite prompts.`
-                                                : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} prompts require a Pro subscription. Free members can use Lovable and Cursor prompts.`
+                                            : trialBlocked.reason === 'EXPIRY'
+                                                ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial window has ended. Upgrade to Pro for unlimited elite prompts.`
+                                                : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial has been used up. Upgrade to Pro for unlimited elite prompts.`
                                         }
                                     </p>
                                     <Link to="/pricing">
@@ -657,10 +723,53 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [isLoadingSource, setIsLoadingSource] = React.useState(false);
 
     const { user, isPro: isProUser } = useAuth();
-    const [advanceTrialsUsed, setAdvanceTrialsUsed] = React.useState<number>(() => {
-        const used = localStorage.getItem('advanceTrialsUsed');
-        return used ? parseInt(used, 10) : 0;
+    const [trialsRemaining, setTrialsRemaining] = React.useState<number>(() => {
+        const stored = localStorage.getItem('ui-hub-ai-trials-remaining');
+        return stored !== null ? parseInt(stored, 10) : 2;
     });
+    const [trialExpiresAt, setTrialExpiresAt] = React.useState<number | null>(() => {
+        const stored = localStorage.getItem('ui-hub-ai-trial-expires');
+        return stored ? parseInt(stored, 10) : null;
+    });
+
+    // Keep an optimistic mirror of trial state in localStorage for logged-out/offline UX.
+    React.useEffect(() => {
+        if (!isProUser) {
+            localStorage.setItem('ui-hub-ai-trials-remaining', String(trialsRemaining));
+            if (trialExpiresAt != null) {
+                localStorage.setItem('ui-hub-ai-trial-expires', String(trialExpiresAt));
+            }
+        }
+    }, [trialsRemaining, trialExpiresAt, isProUser]);
+
+    // Fetch authoritative trial status from the backend when the user is known.
+    React.useEffect(() => {
+        const fetchTrialStatus = async () => {
+            if (!user || user.isAnonymous || isProUser) return;
+            try {
+                const idToken = await user.getIdToken();
+                const apiBaseUrl = getApiBaseUrl();
+                const response = await fetch(`${apiBaseUrl}/api/v1/users/status`, {
+                    headers: { 'Authorization': `Bearer ${idToken}`, 'Cache-Control': 'no-cache' }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.trial) {
+                        setTrialsRemaining(data.trial.remaining);
+                        const newExpiry = data.trial.expiresAt != null ? data.trial.expiresAt : null;
+                        setTrialExpiresAt(prev => {
+                            if (data.trial.expiresAt != null) return data.trial.expiresAt;
+                            return prev;
+                        });
+                        void newExpiry;
+                    }
+                }
+            } catch (err) {
+                console.error('[ComponentDetail] Failed to fetch trial status:', err);
+            }
+        };
+        fetchTrialStatus();
+    }, [user, isProUser]);
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [showAuthModal, setShowAuthModal] = React.useState(false);
     const [favoritesCount, setFavoritesCount] = React.useState(0);
@@ -1116,8 +1225,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         item={item}
                         user={user}
                         isProUser={isProUser}
-                        advanceTrialsUsed={advanceTrialsUsed}
-                        setAdvanceTrialsUsed={setAdvanceTrialsUsed}
+                        trialsRemaining={trialsRemaining}
+                        trialExpiresAt={trialExpiresAt}
+                        setTrialsRemaining={setTrialsRemaining}
+                        setTrialExpiresAt={setTrialExpiresAt}
                         componentConfig={componentConfig}
                         vanillaCode={vanillaCode}
                         setShowAuthModal={setShowAuthModal}

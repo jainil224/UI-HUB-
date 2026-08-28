@@ -1,7 +1,7 @@
 import express from 'express';
 import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
 import { verifyToken } from '../middleware/auth.js';
-import { checkProStatus, checkEliteStatus } from '../services/userService.js';
+import { checkProStatus, checkEliteStatus, evaluateAiTrial, MAX_FREE_AI_TRIALS } from '../services/userService.js';
 import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail } from '../utils/sendEmail.js';
 
 const router = express.Router();
@@ -336,13 +336,34 @@ router.post('/activate-free', verifyToken, async (req, res) => {
 router.get('/status', verifyToken, async (req, res) => {
     try {
         const email = req.user.email;
+        const uid = req.user.uid;
         // Elite users are folded into Pro so the frontend only needs Free/Pro.
         const isPro = await checkProStatus(email) || await checkEliteStatus(email);
-        
+
+        // Premium AI trial info for non-pro users (unlimited for pro).
+        let trial = null;
+        if (!isPro) {
+            try {
+                const evalResult = await evaluateAiTrial(uid, email);
+                trial = {
+                    maxTrials: MAX_FREE_AI_TRIALS,
+                    used: evalResult.trialCount,
+                    remaining: evalResult.remaining,
+                    expiresAt: evalResult.expiresAt,
+                    windowMs: 24 * 60 * 60 * 1000,
+                    allowed: evalResult.allowed,
+                };
+            } catch (trialErr) {
+                console.error('[Status] Trial evaluation failed:', trialErr.message);
+                trial = { maxTrials: MAX_FREE_AI_TRIALS, used: 0, remaining: MAX_FREE_AI_TRIALS, expiresAt: null, windowMs: 24 * 60 * 60 * 1000, allowed: true };
+            }
+        }
+
         res.json({
             isPro,
-            email: req.user.email,
-            uid: req.user.uid
+            email,
+            uid,
+            trial
         });
     } catch (error) {
         console.error('Error in user status route:', error);

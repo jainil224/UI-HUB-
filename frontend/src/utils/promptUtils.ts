@@ -308,43 +308,91 @@ export const getFallbackVibePrompt = (componentId: string, system: AISystem, ite
 };
 
 /**
+ * Result of fetching / recording a Vibe Prompt.
+ * When ok=false the caller must decide how to surface the block (e.g. show upgrade UI)
+ * and must NOT fall back to local generation for the blocked premium tool.
+ */
+export interface PromptFetchResult {
+    ok: boolean;
+    prompt: string;
+    consumed?: boolean;
+    trialsRemaining?: number;
+    expiresAt?: number | null;
+    code?: 'AUTH_REQUIRED' | 'TRIAL_LIMIT' | 'ERROR';
+    reason?: 'COUNT' | 'EXPIRY';
+    status?: number;
+}
+
+export const isPremiumAITool = (system: AISystem): boolean =>
+    system === 'advance' || system === 'antigravity' || system === 'claude';
+
+/**
  * Fetches the specific Vibe Prompt for a component from the backend.
- * Automatically falls back to local blueprint generator if backend is unavailable.
+ * For premium AI tools (advance/antigravity/claude) the backend is the source
+ * of truth for the free-trial limit and 24h window, so a block (TRIAL_LIMIT /
+ * AUTH_REQUIRED) is surfaced to the caller instead of silently falling back to
+ * local generation (which would bypass enforcement).
  */
 export const fetchVibePrompt = async (
-    componentId: string, 
-    system: AISystem, 
+    componentId: string,
+    system: AISystem,
     token?: string,
     item?: any
-): Promise<string> => {
+): Promise<PromptFetchResult> => {
     try {
         const headers: Record<string, string> = {};
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
-        
+
         const apiBaseUrl = getApiBaseUrl();
         const fullUrl = `${apiBaseUrl}/api/v1/components/${componentId}/prompt/${system}`;
-        
+
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 3500);
-        
+
         const response = await fetch(fullUrl, {
             headers,
             signal: controller.signal
         });
         clearTimeout(timeoutId);
-        
+
         if (response.ok) {
             const data = await response.json();
             if (data && data.prompt && data.prompt.length > 50 && !data.prompt.includes('// Source code not available')) {
-                return data.prompt;
+                return {
+                    ok: true,
+                    prompt: data.prompt,
+                    consumed: !!data.consumed,
+                    trialsRemaining: data.trialsRemaining,
+                    expiresAt: data.expiresAt != null ? data.expiresAt : null,
+                };
             }
+        } else if (response.status === 403) {
+            let body: any = {};
+            try { body = await response.json(); } catch (e) { /* ignore */ }
+            const code = body?.code === 'TRIAL_LIMIT' ? 'TRIAL_LIMIT' as const : 'AUTH_REQUIRED' as const;
+            return {
+                ok: false,
+                prompt: getFallbackVibePrompt(componentId, system, item),
+                code,
+                reason: body?.reason,
+                expiresAt: body?.expiresAt != null ? body.expiresAt : null,
+                trialsRemaining: body?.remaining != null ? body.remaining : 0,
+                status: 403,
+            };
         }
-        
-        return getFallbackVibePrompt(componentId, system, item);
+
+        // Network / server error on premium tool: do not bypass — surface as error.
+        if (isPremiumAITool(system)) {
+            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item), code: 'ERROR', status: response.status };
+        }
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item) };
     } catch (error) {
-        return getFallbackVibePrompt(componentId, system, item);
+        if (isPremiumAITool(system)) {
+            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item), code: 'ERROR' };
+        }
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item) };
     }
 };
 
