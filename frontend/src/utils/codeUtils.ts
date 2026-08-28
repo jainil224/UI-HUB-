@@ -1,4 +1,6 @@
 import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources';
+import { EMBEDDED_SOURCE_CODE } from '../data/embeddedSourceCode';
+import { CARD_CASCADE_SOURCE } from '../data/cardCascadeSource';
 
 export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'html', styling: 'tailwind' | 'css' }) => {
   const { lang, styling } = options;
@@ -8,8 +10,14 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
   // Full production source is preferred over the generated snippet when the
   // real component file exists — keeps the exact code the component uses
   // visible in production even where the deployed bundle has no filesystem.
-  const fullSource = COMPONENT_FULL_SOURCES[id];
+  const fullSource = COMPONENT_FULL_SOURCES[id] || EMBEDDED_SOURCE_CODE[id];
   if (isTS && isTailwind && fullSource) return fullSource;
+
+  // Card Cascade has no embedded key yet, so fall back to its dedicated
+  // pre-embedded production source (mirrors the backend resolveSourceCode).
+  if (isTS && isTailwind && id === 'card-cascade' && CARD_CASCADE_SOURCE) {
+    return CARD_CASCADE_SOURCE;
+  }
 
   const vanillaBoilerplate = (html: string, css: string, js: string) => `
 <!DOCTYPE html>

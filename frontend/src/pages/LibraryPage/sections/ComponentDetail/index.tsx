@@ -594,7 +594,7 @@ const VibeSystemSection = React.memo(({
                                 </div>
                             ) : (
                                 <pre
-                                    className="font-mono whitespace-pre-wrap select-text selection:bg-brand-blue selection:text-white"
+                                    className="font-mono whitespace-pre-wrap select-none selection:bg-brand-blue selection:text-white"
                                 >
                                     {isLoadingPrompt ? (
                                         <div className="flex flex-col items-center justify-center h-full py-20 text-brand-blue">
@@ -1211,7 +1211,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                             <div key={i}>{i + 1}</div>
                                                         ))}
                                                     </div>
-                                                    <pre className="font-mono px-3 sm:px-4 py-4 md:py-6"><code><CodeHighlighter code={sourceCode} /></code></pre>
+                                                    <pre className="font-mono px-3 sm:px-4 py-4 md:py-6 select-none"><code><CodeHighlighter code={sourceCode} /></code></pre>
                                                 </div>
                                             )}
                                         </div>
