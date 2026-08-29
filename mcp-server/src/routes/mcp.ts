@@ -10,18 +10,73 @@ import crypto from 'crypto';
 
 /**
  * MCP Streamable HTTP transport.
- * Implements the core MCP JSON-RPC methods over HTTP:
- *  - initialize
- *  - tools/list
- *  - tools/call
+ * Implements the MCP JSON-RPC 2.0 protocol over HTTP.
  *
- * Each request is authenticated with a UI HUB API key.
+ * IMPORTANT: `initialize` MUST be handled BEFORE authentication per the MCP spec.
+ * Clients (Antigravity, Cursor, Claude Code, etc.) send `initialize` first to
+ * negotiate the protocol — gating it behind auth causes "request terminated
+ * without response" errors.
  */
 
 export const mcpRouter = Router();
 
-// Health endpoint (public)
-mcpRouter.get('/health', (req: Request, res: Response) => {
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function jsonRpcSuccess(res: Response, id: unknown, result: unknown, sessionId?: string) {
+  if (sessionId) {
+    res.setHeader('Mcp-Session-Id', sessionId);
+  }
+  // Ensure content-type is always application/json for streamable HTTP
+  res.setHeader('Content-Type', 'application/json');
+  return res.json({ jsonrpc: '2.0', id, result });
+}
+
+function jsonRpcError(res: Response, id: unknown, code: number, message: string, httpStatus = 200) {
+  res.setHeader('Content-Type', 'application/json');
+  return res.status(httpStatus).json({
+    jsonrpc: '2.0',
+    id: id ?? null,
+    error: { code, message },
+  });
+}
+
+function objectToSchemaProperties(schema: any): { properties: Record<string, any>; required?: string[] } {
+  if (!schema || typeof schema !== 'object' || !schema.shape) {
+    return { properties: {} };
+  }
+  const properties: Record<string, any> = {};
+  const required: string[] = [];
+  const shape = (schema as any).shape || {};
+
+  Object.entries(shape).forEach(([key, def]: [string, any]) => {
+    const prop: any = { type: 'string' };
+    const typeName = def?._def?.typeName;
+
+    if (typeName === 'ZodString') prop.type = 'string';
+    else if (typeName === 'ZodNumber') prop.type = 'number';
+    else if (typeName === 'ZodBoolean') prop.type = 'boolean';
+    else if (typeName === 'ZodArray') prop.type = 'array';
+    else if (typeName === 'ZodEnum') {
+      prop.type = 'string';
+      prop.enum = def._def.values;
+    }
+    if (def?.description) prop.description = def.description;
+    properties[key] = prop;
+
+    // Mark as required only if not optional
+    const isOptional =
+      typeName === 'ZodOptional' || def?._def?.innerType?._def?.typeName === 'ZodOptional';
+    if (!isOptional) {
+      required.push(key);
+    }
+  });
+
+  return { properties, required: required.length > 0 ? required : undefined };
+}
+
+// ── Health endpoint (public, no auth) ────────────────────────────────────────
+
+mcpRouter.get('/health', (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     service: 'ui-hub-mcp',
@@ -30,119 +85,168 @@ mcpRouter.get('/health', (req: Request, res: Response) => {
   });
 });
 
-// Streamable session protocol support
-type Session = {
-  clientId: string;
-  createdAt: number;
-};
+// ── Session store (in-memory; used for Streamable HTTP session tracking) ─────
 
-let sessionStore: Map<string, Session> = new Map();
-function getRedis(): Redis | null {
-  const url = process.env.REDIS_URL;
-  if (!url) return null;
-  try {
-    if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
-      return Redis.fromEnv();
-    }
-    return new (Redis as any)({ url, token: process.env.UPSTASH_REDIS_REST_TOKEN || '' });
-  } catch {
-    return null;
-  }
-}
+const sessionStore = new Map<string, { clientId: string; createdAt: number }>();
 
-// Honours the "authentication enabled" setting. When disabled, requests are
-// admitted in a dev/admin tier so the playground keeps working.
+// ── Auth middleware ───────────────────────────────────────────────────────────
+
+/**
+ * Honours the "authentication enabled" setting. When disabled, requests are
+ * admitted in a dev/admin tier so the playground keeps working.
+ * Returns a proper JSON-RPC error (not a raw HTTP 401) so MCP clients can parse it.
+ */
 async function optionalAuth(req: Request, res: Response, next: NextFunction) {
-  const cfg = await configService.get();
-  if (!cfg.authEnabled) {
-    (req as any).user = {
-      userId: 'no-auth',
-      email: '',
-      name: 'Admin',
-      tier: 'ADMIN',
-      keyId: 'no-auth',
-      keyPrefix: '',
-      keyStatus: 'active',
-    };
-    return next();
+  try {
+    const cfg = await configService.get();
+    if (!cfg.authEnabled) {
+      (req as any).user = {
+        userId: 'no-auth',
+        email: '',
+        name: 'Admin',
+        tier: 'ADMIN',
+        keyId: 'no-auth',
+        keyPrefix: '',
+        keyStatus: 'active',
+      };
+      return next();
+    }
+    return authenticateMcp(req as any, res, next);
+  } catch (err) {
+    console.error('[MCP] optionalAuth error:', err);
+    // Config fetch failed — fall back to auth-required mode
+    return authenticateMcp(req as any, res, next);
   }
-  return authenticateMcp(req as any, res, next);
 }
 
-// The main MCP endpoint (authenticated)
-mcpRouter.post('/', optionalAuth, mcpRateLimiter, async (req: Request, res: Response) => {
-  const user = (req as any).user as McpUser;
-  const body = req.body;
-  const startedAt = Date.now();
+// ── Main MCP POST endpoint ────────────────────────────────────────────────────
+//
+// The MCP protocol requires that `initialize` is answered BEFORE auth so
+// clients can negotiate the session. We handle it first, then authenticate
+// all other methods.
 
-  const finishTrack = () => {
+mcpRouter.post('/', async (req: Request, res: Response) => {
+  const body = req.body;
+
+  // Validate JSON-RPC envelope
+  if (!body || typeof body !== 'object' || body.jsonrpc !== '2.0') {
+    return jsonRpcError(res, body?.id, -32600, 'Invalid Request: expected JSON-RPC 2.0', 400);
+  }
+
+  const { method, id, params } = body;
+
+  // ── STEP 1: Handle `initialize` WITHOUT auth (MCP spec requirement) ──────
+  // This is the very first message any MCP client sends. Responding to it
+  // correctly (and quickly) is what prevents "request terminated without
+  // response" errors in Antigravity, Cursor, Claude Code, etc.
+  if (method === 'initialize') {
+    const sessionId = crypto.randomUUID();
+    sessionStore.set(sessionId, { clientId: sessionId, createdAt: Date.now() });
+
+    // Clean up old sessions (older than 1 hour) to prevent memory leaks
+    const oneHourAgo = Date.now() - 60 * 60 * 1000;
+    for (const [sid, session] of sessionStore) {
+      if (session.createdAt < oneHourAgo) sessionStore.delete(sid);
+    }
+
+    const clientProtocolVersion = params?.protocolVersion || '2024-11-05';
+
+    return jsonRpcSuccess(
+      res,
+      id,
+      {
+        protocolVersion: clientProtocolVersion,
+        capabilities: {
+          tools: {},
+        },
+        serverInfo: {
+          name: 'ui-hub',
+          version: '1.0.0',
+        },
+      },
+      sessionId
+    );
+  }
+
+  // ── STEP 2: Handle `ping` without auth (keep-alive, no session needed) ────
+  if (method === 'ping') {
+    return jsonRpcSuccess(res, id, {});
+  }
+
+  // ── STEP 3: Handle notifications (no response needed, no auth needed) ─────
+  if (!id && id !== 0) {
+    // JSON-RPC notifications have no `id` — just acknowledge silently
+    res.status(204).end();
+    return;
+  }
+
+  // ── STEP 4: Authenticate all other methods ────────────────────────────────
+  // Run auth inline so we can return a proper JSON-RPC error (not HTTP 401)
+  // which MCP clients can actually understand and display.
+  await new Promise<void>((resolve, reject) => {
+    optionalAuth(req, res, (err?: any) => {
+      if (err) return reject(err);
+      resolve();
+    });
+  }).catch((err) => {
+    console.error('[MCP] Auth middleware error:', err);
+  });
+
+  // If auth middleware already sent a response (401), stop here
+  if (res.headersSent) return;
+
+  const user = (req as any).user as McpUser | undefined;
+  if (!user) {
+    return jsonRpcError(res, id, -32001, 'Unauthorized: missing or invalid API key', 200);
+  }
+
+  // ── STEP 5: Rate limiting ─────────────────────────────────────────────────
+  const rateLimitPassed = await new Promise<boolean>((resolve) => {
+    mcpRateLimiter(req as any, res, () => resolve(true));
+    // If res is already sent after 100ms, rate limit must have fired
+    setTimeout(() => {
+      if (res.headersSent) resolve(false);
+    }, 100);
+  });
+
+  if (!rateLimitPassed || res.headersSent) return;
+
+  // ── STEP 6: Track analytics ───────────────────────────────────────────────
+  const startedAt = Date.now();
+  res.on('finish', () => {
     void analyticsService.track({
       event: 'mcp_request',
       userId: user.userId,
       apiKeyId: user.keyId,
       keyPrefix: user.keyPrefix,
       tier: user.tier,
-      tool: body?.method,
+      tool: method,
       timestamp: Date.now(),
       statusCode: res.statusCode,
       responseTimeMs: Date.now() - startedAt,
       success: res.statusCode < 400,
     });
-  };
+  });
 
-  res.on('finish', finishTrack);
-
+  // ── STEP 7: Dispatch authenticated methods ────────────────────────────────
   try {
-    // Validate JSON-RPC envelope
-    if (!body || typeof body !== 'object' || body.jsonrpc !== '2.0') {
-      return jsonRpcError(res, req, body?.id, -32600, 'Invalid Request: expected JSON-RPC 2.0');
-    }
-
-    const { method, id, params } = body;
-
-    // MCP content negotiation (Streamable HTTP)
-    if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
-      res.setHeader('Content-Type', 'text/event-stream');
-      res.setHeader('Cache-Control', 'no-cache');
-      res.setHeader('Connection', 'keep-alive');
-    } else {
-      res.setHeader('Content-Type', 'application/json');
-    }
-
     switch (method) {
-      case 'initialize':
-        return res.json({
-          jsonrpc: '2.0',
-          id,
-          result: {
-            protocolVersion: '2025-03-26',
-            capabilities: {
-              tools: {},
-            },
-            serverInfo: {
-              name: 'ui-hub',
-              version: '1.0.0',
-            },
-          },
-        });
-
       case 'tools/list': {
         const states = await configService.getToolStates();
         const available = TOOLS.filter((t) => states[t.name] !== false);
-        return res.json({
-          jsonrpc: '2.0',
-          id,
-          result: {
-            tools: available.map((t) => ({
-              name: t.name,
-              description: t.description,
-              inputSchema: {
-                type: 'object',
-                properties: objectToSchemaProperties(t.inputSchema),
-              },
-            })),
-          },
+        const schema = available.map((t) => {
+          const s = objectToSchemaProperties(t.inputSchema);
+          return {
+            name: t.name,
+            description: t.description,
+            inputSchema: {
+              type: 'object',
+              properties: s.properties,
+              ...(s.required ? { required: s.required } : {}),
+            },
+          };
         });
+        return jsonRpcSuccess(res, id, { tools: schema });
       }
 
       case 'tools/call': {
@@ -150,96 +254,67 @@ mcpRouter.post('/', optionalAuth, mcpRateLimiter, async (req: Request, res: Resp
         const tool = TOOLS.find((t) => t.name === name);
 
         if (!tool) {
-          return jsonRpcError(res, req, id, -32601, `Unknown tool: ${name}`);
+          return jsonRpcError(res, id, -32601, `Unknown tool: ${name}`);
         }
 
         const enabled = await configService.isToolEnabled(name);
         if (!enabled) {
-          return jsonRpcError(res, req, id, -32601, `Tool disabled: ${name}`);
+          return jsonRpcError(res, id, -32601, `Tool disabled: ${name}`);
         }
 
         const result = await tool.handler(args || {}, { user });
-
-        return res.json({
-          jsonrpc: '2.0',
-          id,
-          result,
-        });
+        return jsonRpcSuccess(res, id, result);
       }
 
       default:
-        return jsonRpcError(res, req, id, -32601, `Method not found: ${method}`);
+        return jsonRpcError(res, id, -32601, `Method not found: ${method}`);
     }
   } catch (err: any) {
     console.error('[MCP] Internal error:', err);
-    return jsonRpcError(res, req, body?.id, -32603, 'Internal error');
+    return jsonRpcError(res, id, -32603, `Internal error: ${err?.message || 'Unknown error'}`);
   }
 });
 
-// Accept GET on the endpoint for SSE transport connection or JSON discovery
+// ── GET /mcp — SSE transport or JSON discovery ────────────────────────────────
+
 mcpRouter.get('/', async (req: Request, res: Response) => {
-  // Support standard MCP SSE Transport
-  if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
+  // Support standard MCP SSE Transport (legacy clients)
+  if (req.headers.accept?.includes('text/event-stream')) {
     const sessionId = crypto.randomUUID();
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    if ((res as any).flushHeaders) {
-      (res as any).flushHeaders();
-    }
+    res.setHeader('Mcp-Session-Id', sessionId);
+    if ((res as any).flushHeaders) (res as any).flushHeaders();
 
     // Send the required MCP SSE endpoint event
     res.write(`event: endpoint\ndata: /mcp?sessionId=${sessionId}\n\n`);
 
     sessionStore.set(sessionId, { clientId: sessionId, createdAt: Date.now() });
-
-    req.on('close', () => {
-      sessionStore.delete(sessionId);
-    });
+    req.on('close', () => sessionStore.delete(sessionId));
     return;
   }
 
+  // JSON discovery — return server info
   const states = await configService.getToolStates();
   const available = TOOLS.filter((t) => states[t.name] !== false).map((t) => t.name);
   res.json({
     name: 'ui-hub-mcp',
     description: 'UI HUB Model Context Protocol server',
     endpoint: `${process.env.MCP_SERVER_URL || ''}/mcp`,
-    protocol: 'Streamable HTTP & SSE',
+    protocol: 'Streamable HTTP & SSE (JSON-RPC 2.0)',
     auth: 'Bearer <UI_HUB_API_KEY>',
     tools: available,
     health: '/mcp/health',
   });
 });
 
-function jsonRpcError(res: Response, req: Request, id: unknown, code: number, message: string) {
-  return res.status(code === -32600 ? 400 : 200).json({
-    jsonrpc: '2.0',
-    id: id ?? null,
-    error: { code, message },
-  });
-}
+// ── DELETE /mcp — Session termination ────────────────────────────────────────
 
-function objectToSchemaProperties(schema: any): Record<string, any> {
-  if (!schema || typeof schema !== 'object' || !schema.shape) {
-    return {};
+mcpRouter.delete('/', (req: Request, res: Response) => {
+  const sessionId = req.headers['mcp-session-id'] as string;
+  if (sessionId && sessionStore.has(sessionId)) {
+    sessionStore.delete(sessionId);
   }
-  const result: Record<string, any> = {};
-  const shape = (schema as any).shape || {};
-
-  Object.entries(shape).forEach(([key, def]: [string, any]) => {
-    const prop: any = { type: 'string' };
-    if (def?._def?.typeName === 'ZodString') prop.type = 'string';
-    else if (def?._def?.typeName === 'ZodNumber') prop.type = 'number';
-    else if (def?._def?.typeName === 'ZodBoolean') prop.type = 'boolean';
-    else if (def?._def?.typeName === 'ZodArray') prop.type = 'array';
-    else if (def?._def?.typeName === 'ZodEnum') {
-      prop.type = 'string';
-      prop.enum = def._def.values;
-    }
-    if (def?.description) prop.description = def.description;
-    result[key] = prop;
-  });
-
-  return result;
-}
+  res.status(204).end();
+});
