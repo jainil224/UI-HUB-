@@ -1,8 +1,23 @@
+export interface DocStep {
+    title: string;
+    body: string;
+    code?: { label?: string; lang?: string; content: string };
+}
+
+export interface DocCta {
+    intro: string;
+    backLabel?: string;
+    toIntro?: string;
+    browseLabel?: string;
+}
+
 export interface DocBlock {
     heading: string;
     body?: string;
     code?: { label?: string; lang?: string; content: string };
     bullets?: string[];
+    steps?: DocStep[];
+    cta?: DocCta;
 }
 
 export interface GetStartedDoc {
@@ -78,6 +93,34 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
                 code: { lang: 'bash', content: 'npm run dev' },
                 body: 'Frontend runs on http://localhost:3000, backend on http://localhost:5000 (health check at /api/health).',
             },
+            {
+                heading: 'Your first components',
+                body: 'Once UI HUB is running, add cinematic interactions in three quick steps:',
+                steps: [
+                    {
+                        title: 'Curate & Select',
+                        body: "Explore the library's high-fidelity previews. Once you find the perfect interaction, navigate to the code explorer.",
+                    },
+                    {
+                        title: 'Prime Dependencies',
+                        body: 'UI HUB components leverage industry-standard packages for physics-based animations and utility class management.',
+                        code: { lang: 'bash', content: 'npm install framer-motion clsx tailwind-merge' },
+                    },
+                    {
+                        title: 'Inject Source',
+                        body: 'Copy the raw source directly into your components folder. We provide optimized TypeScript variants for every block.',
+                    },
+                ],
+            },
+            {
+                heading: 'Ready to accelerate?',
+                cta: {
+                    intro: 'Start browsing the collection and bring cinematic interactions to your users today.',
+                    backLabel: 'Back to Intro',
+                    toIntro: 'introduction',
+                    browseLabel: 'Browse Library',
+                },
+            },
         ],
     },
     {
@@ -101,52 +144,11 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
             },
             {
                 heading: 'Using the theme prop',
-                body: 'Reactive components accept a theme prop. Watch the Theme Manager page for a full walkthrough, including dark / light mode via useTheme().',
+                body: 'Reactive components accept a theme prop. UI HUB ships a ThemeContext for dark / light mode via useTheme(); set a per-component theme prop to override it locally.',
             },
             {
                 heading: 'Generate with AI',
                 body: 'On the Vibe tab, describe your goal and let the built-in AI assistants (Claude, Lovable, or the advanced engine) write the code for you — great for sprawling sections like pricing and landing heroes.',
-            },
-        ],
-    },
-    {
-        id: 'theme-manager',
-        title: 'Theme Manager',
-        icon: '🎨',
-        tagline: 'Dark / light mode and per-component theming made simple.',
-        blocks: [
-            {
-                heading: 'The ThemeContext',
-                body: 'UI HUB ships a ThemeContext that switches between light and dark mode and persists your choice to localStorage under the "theme" key.',
-                code: {
-                    lang: 'tsx',
-                    label: 'ThemeContext.tsx',
-                    content: 'import { useTheme } from "./context/ThemeContext";\n\nfunction App() {\n  const { theme, toggleTheme } = useTheme();\n  return (\n    <button onClick={toggleTheme}>\n      Switch to {theme === "dark" ? "light" : "dark"}\n    </button>\n  );\n}',
-                },
-            },
-            {
-                heading: 'Design tokens',
-                bullets: [
-                    'Dark: bg-brand-black + white text + brand-green accents',
-                    'Light: soft blue background + dark text + blue accents',
-                    'Smooth cross-fade via transition-colors duration-300',
-                ],
-            },
-            {
-                heading: 'Per-component theme prop',
-                body: 'Individual components expose a theme prop so you can override the active theme for just that component without touching the global toggle.',
-                code: {
-                    lang: 'tsx',
-                    content: '<MagneticCursor\n  theme={theme}        // "dark" | "light"\n  radius={120}\n/>',
-                },
-            },
-            {
-                heading: 'Wrap with the provider',
-                body: 'Make sure your app is wrapped in ThemeProvider so useTheme works anywhere.',
-                code: {
-                    lang: 'tsx',
-                    content: 'import { ThemeProvider } from "./context/ThemeContext";\n\nroot.render(\n  <ThemeProvider>\n    <App />\n  </ThemeProvider>\n);',
-                },
             },
         ],
     },

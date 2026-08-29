@@ -535,7 +535,11 @@ const LibraryPage = () => {
                             transition={{ duration: 0.15 }}
                         >
                             {activeDoc ? (
-                                <GetStartedPage page={activeDoc} />
+                                <GetStartedPage
+                                    page={activeDoc}
+                                    onBackToIntro={() => handleDocSelect('introduction')}
+                                    onBrowseLibrary={() => handleComponentSelect(allComponents[0])}
+                                />
                             ) : (
                                 <ComponentDetail item={activeComponent} onBack={() => {}} />
                             )}
