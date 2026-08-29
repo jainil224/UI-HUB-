@@ -3,9 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
+import GetStartedPage from './sections/GetStarted/GetStartedPage';
+import { GET_STARTED_PAGES } from './sections/GetStarted/getStartedData';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
-import { fetchCommunityComponents } from '../../services/community';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 
 interface Category {
@@ -21,7 +22,6 @@ const CATEGORY_META: Record<string, { icon: string; color: string; bg: string; b
     "Backgrounds": { icon: "◉", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Interactive Background": { icon: "◍", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Cursor Effects": { icon: "⊕", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
-    "Community Uploads": { icon: "✿", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "3D CHATBOT": { icon: "🤖", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Scroll Animation": { icon: "↕", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
 };
@@ -43,11 +43,14 @@ const LibraryPage = () => {
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const idFromUrl = queryParams.get('id');
+    const docFromUrl = queryParams.get('get-started') || '';
     const qFromUrl = queryParams.get('q') || '';
 
     const [optimisticId, setOptimisticId] = useState<string | null>(null);
-    const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
-    const allComponents = useMemo(() => [...componentList, ...firebaseComponents], [firebaseComponents]);
+    const [activeDocId, setActiveDocId] = useState<string | null>(docFromUrl || null);
+    const allComponents = useMemo(() => componentList, []);
+
+    const activeDoc = GET_STARTED_PAGES.find(p => p.id === activeDocId) || null;
 
     const activeId = optimisticId || idFromUrl || '3d-hero';
 
@@ -57,12 +60,16 @@ const LibraryPage = () => {
         return allComponents.find(c => c.id === '3d-hero') || allComponents[0];
     }, [activeId, allComponents]);
 
+    const highlightedComponentId = activeDoc ? null : (optimisticId || activeComponent?.id);
+
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState(qFromUrl);
     const [mobileSearch, setMobileSearch] = useState('');
 
     const [showUpdates, setShowUpdates] = useState(false);
+
+    const [showGetStarted, setShowGetStarted] = useState(true);
 
     const mainContainerRef = useRef<HTMLElement>(null);
 
@@ -71,27 +78,12 @@ const LibraryPage = () => {
     }, [idFromUrl]);
 
     useEffect(() => {
-        setSearchQuery(qFromUrl);
-    }, [qFromUrl]);
+        setActiveDocId(docFromUrl || null);
+    }, [docFromUrl]);
 
     useEffect(() => {
-        let cancelled = false;
-        let timer: ReturnType<typeof setInterval> | null = null;
-        const load = async () => {
-            try {
-                const fetched = await fetchCommunityComponents();
-                if (!cancelled) setFirebaseComponents(fetched);
-            } catch (error) {
-                if (!cancelled) console.error("Failed to load community components:", error);
-            }
-        };
-        load();
-        timer = setInterval(load, 30000);
-        return () => {
-            cancelled = true;
-            if (timer) clearInterval(timer);
-        };
-    }, []);
+        setSearchQuery(qFromUrl);
+    }, [qFromUrl]);
 
     const baseCategories: Category[] = useMemo(() => [
         { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
@@ -103,7 +95,6 @@ const LibraryPage = () => {
         { name: "Interactive Background", items: allComponents.filter(item => item.category === 'interactive-background') },
         { name: "Cursor Effects", items: allComponents.filter(item => item.category === 'cursor') },
         { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
-        { name: "Community Uploads", items: allComponents.filter(item => item.category === 'custom') },
     ], [allComponents]);
 
     const categories = useMemo(() => baseCategories
@@ -120,13 +111,14 @@ const LibraryPage = () => {
         .filter(cat => cat.items.length > 0), [baseCategories, searchQuery]);
 
     useEffect(() => {
+        if (activeDoc) return;
         if (activeComponent) {
             const activeCat = baseCategories.find(cat => cat.items.some(item => item.id === activeComponent.id));
             if (activeCat) {
                 setExpandedCategories(prev => prev.includes(activeCat.name) ? prev : [...prev, activeCat.name]);
             }
         }
-    }, [activeComponent?.id, baseCategories]);
+    }, [activeComponent?.id, activeDoc, baseCategories]);
 
     const toggleCategory = (name: string) => {
         setExpandedCategories(prev => prev.includes(name) ? prev.filter(c => c !== name) : [...prev, name]);
@@ -163,8 +155,18 @@ const LibraryPage = () => {
 
     const handleComponentSelect = (item: ComponentItem) => {
         setOptimisticId(item.id);
+        setActiveDocId(null);
         setIsMobileMenuOpen(false);
         navigate(`/library?id=${item.id}`, { replace: true });
+        if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
+    const handleDocSelect = (docId: string) => {
+        setActiveDocId(docId);
+        setOptimisticId(null);
+        setIsMobileMenuOpen(false);
+        navigate(`/library?get-started=${docId}`, { replace: true });
         if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
         window.scrollTo({ top: 0, behavior: 'auto' });
     };
@@ -273,7 +275,7 @@ const LibraryPage = () => {
                                             {drawerSearchResults.length} RESULT{drawerSearchResults.length === 1 ? '' : 'S'}
                                         </p>
                                         {drawerSearchResults.map(item => {
-                                            const isActive = (optimisticId || activeComponent?.id) === item.id;
+                                            const isActive = highlightedComponentId === item.id;
                                             return (
                                                 <button
                                                     key={item.id}
@@ -303,8 +305,40 @@ const LibraryPage = () => {
                                         )}
                                     </div>
                                 ) : (
-                                    drawerCategories.map((cat, idx) => {
-                                        const hasActive = cat.items.some(item => (optimisticId || activeComponent?.id) === item.id);
+                                    <>
+                                        <div className="mb-1.5 rounded border border-neutral-800 bg-neutral-900/40">
+                                            <button
+                                                onClick={() => setShowGetStarted(!showGetStarted)}
+                                                aria-expanded={showGetStarted}
+                                                className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg"
+                                            >
+                                                <span className="text-[11px] font-black uppercase tracking-wider !text-brand-yellow">Get Started</span>
+                                                <ChevronDown size={12} className={`transition-transform duration-200 ${showGetStarted ? 'rotate-180 text-brand-blue' : 'text-neutral-500'}`} />
+                                            </button>
+                                            {showGetStarted && (
+                                                <div className="pl-2.5 pb-1.5 border-l-2 border-neutral-800/80 ml-3.5 space-y-1">
+                                                    {GET_STARTED_PAGES.map(doc => {
+                                                        const isActive = activeDocId === doc.id;
+                                                        return (
+                                                            <button
+                                                                key={doc.id}
+                                                                onClick={() => handleDocSelect(doc.id)}
+                                                                className={`w-full flex items-center gap-2 text-left px-2.5 py-2 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all duration-150 ${
+                                                                    isActive
+                                                                        ? 'bg-brand-blue text-white border-2 border-white shadow-[3px_3px_0px_0px_#000000] translate-x-1'
+                                                                        : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70 hover:translate-x-1'
+                                                                }`}
+                                                            >
+                                                                <span className="text-xs">{doc.icon}</span>
+                                                                <span className="truncate">{doc.title}</span>
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                        </div>
+                                    {drawerCategories.map((cat, idx) => {
+                                        const hasActive = cat.items.some(item => highlightedComponentId === item.id);
                                         const isExpanded = expandedCategories.includes(cat.name);
                                         return (
                                             <div key={idx} className="mb-1.5">
@@ -328,7 +362,7 @@ const LibraryPage = () => {
                                                 {isExpanded && (
                                                     <div className="pl-2.5 py-1 border-l-2 border-neutral-800/80 ml-3.5 space-y-1 mt-1">
                                                         {cat.items.map(item => {
-                                                            const isActive = (optimisticId || activeComponent?.id) === item.id;
+                                                            const isActive = highlightedComponentId === item.id;
                                                             return (
                                                                 <button
                                                                     key={item.id}
@@ -359,7 +393,8 @@ const LibraryPage = () => {
                                                 )}
                                             </div>
                                         );
-                                    })
+                                    })}
+                                    </>
                                 )}
                             </nav>
                         </motion.aside>
@@ -394,11 +429,38 @@ const LibraryPage = () => {
                                 </div>
                             )}
                         </div>
+                        <div className="border border-neutral-800 rounded bg-brand-bg p-2.5">
+                            <button onClick={() => setShowGetStarted(!showGetStarted)} className="w-full flex items-center justify-between text-[10px] uppercase font-black">
+                                <span className="!text-brand-yellow">Get Started</span>
+                                <ChevronDown size={12} className={`transition-transform duration-200 ${showGetStarted ? 'rotate-180 text-brand-blue' : 'text-neutral-500'}`} />
+                            </button>
+                            {showGetStarted && (
+                                <div className="mt-2 pt-2 border-t border-neutral-800 flex flex-col gap-0.5">
+                                    {GET_STARTED_PAGES.map(doc => {
+                                        const isActive = activeDocId === doc.id;
+                                        return (
+                                            <button
+                                                key={doc.id}
+                                                onClick={() => handleDocSelect(doc.id)}
+                                                className={`w-full flex items-center gap-2 text-left px-2.5 py-1.5 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all duration-150 ${
+                                                    isActive
+                                                        ? 'bg-brand-blue text-white border-2 border-white shadow-[3px_3px_0px_0px_#000000] translate-x-1'
+                                                        : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70 hover:translate-x-1'
+                                                }`}
+                                            >
+                                                <span className="text-xs">{doc.icon}</span>
+                                                <span className="truncate">{doc.title}</span>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </div>
                         <div className="pt-2">
                             <p className="text-[9px] uppercase tracking-widest text-neutral-500 font-black px-2 mb-2">COMPONENTS</p>
                             <div className="space-y-1.5">
                                 {categories.map((cat, idx) => {
-                                    const hasActive = cat.items.some(item => (optimisticId || activeComponent?.id) === item.id);
+                                    const hasActive = cat.items.some(item => highlightedComponentId === item.id);
                                     const isExpanded = expandedCategories.includes(cat.name);
                                     
                                     return (
@@ -423,7 +485,7 @@ const LibraryPage = () => {
                                             {isExpanded && (
                                                 <div className="pl-2.5 py-1.5 border-l-2 border-neutral-800/80 ml-3.5 space-y-1 mt-1">
                                                     {cat.items.map(item => {
-                                                        const isActive = (optimisticId || activeComponent?.id) === item.id;
+                                                        const isActive = highlightedComponentId === item.id;
                                                         return (
                                                             <button 
                                                                 key={item.id} 
@@ -467,12 +529,16 @@ const LibraryPage = () => {
                 <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto main-scroll p-4 sm:p-6 lg:p-10">
                     <div className="max-w-4xl mx-auto">
                         <motion.div 
-                            key={activeComponent.id} 
+                            key={activeDoc ? activeDoc.id : activeComponent.id} 
                             initial={{ opacity: 0 }} 
                             animate={{ opacity: 1 }} 
                             transition={{ duration: 0.15 }}
                         >
-                            <ComponentDetail item={activeComponent} onBack={() => {}} />
+                            {activeDoc ? (
+                                <GetStartedPage page={activeDoc} />
+                            ) : (
+                                <ComponentDetail item={activeComponent} onBack={() => {}} />
+                            )}
                         </motion.div>
                     </div>
                 </main>
