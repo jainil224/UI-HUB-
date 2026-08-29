@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logEmailEvent } from './emailLogService.js';
 
 /**
  * Builds the UI-HUB signature 3-color neo-brutalist strip.
@@ -497,10 +498,12 @@ export async function sendWelcomeEmail(email, name) {
 
         const messageId = response.data?.messageId || response.data?.messageIds?.[0] || 'sent';
         console.log(`[BrevoService] ✅ Welcome email sent successfully to ${email} | messageId: ${messageId}`);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'welcome', subject: payload.subject, status: 'sent', messageId });
         return { success: true, messageId, data: response.data };
     } catch (error) {
         const brevoError = error.response?.data || error.message;
         console.error(`[BrevoService] ❌ Failed to send welcome email to ${email}:`, brevoError);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'welcome', subject: payload.subject, status: 'failed', error: brevoError });
         return { success: false, error: typeof brevoError === 'object' ? JSON.stringify(brevoError) : brevoError };
     }
 }
@@ -540,10 +543,12 @@ export async function sendFreeSubscriptionEmail({ email, name, activatedAt = new
 
         const messageId = response.data?.messageId || response.data?.messageIds?.[0] || 'sent';
         console.log(`[BrevoService] ✅ FREE subscription email sent to ${email} | messageId: ${messageId}`);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'free_subscription', subject: payload.subject, status: 'sent', messageId });
         return { success: true, messageId, data: response.data };
     } catch (error) {
         const brevoError = error.response?.data || error.message;
         console.error(`[BrevoService] ❌ Failed to send FREE email to ${email}:`, brevoError);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'free_subscription', subject: payload.subject, status: 'failed', error: brevoError });
         return { success: false, error: typeof brevoError === 'object' ? JSON.stringify(brevoError) : brevoError };
     }
 }
@@ -610,10 +615,12 @@ export async function sendProSubscriptionEmail({
 
         const messageId = response.data?.messageId || response.data?.messageIds?.[0] || 'sent';
         console.log(`[BrevoService] ✅ PRO subscription email with receipt sent to ${email} | messageId: ${messageId}`);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'pro_subscription', subject: payload.subject, status: 'sent', messageId, hasAttachment: Boolean(pdfBuffer), metadata: { paymentId, orderId, amount, currency } });
         return { success: true, messageId, data: response.data };
     } catch (error) {
         const brevoError = error.response?.data || error.message;
         console.error(`[BrevoService] ❌ Failed to send PRO email to ${email}:`, brevoError);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'pro_subscription', subject: payload.subject, status: 'failed', error: brevoError, hasAttachment: Boolean(pdfBuffer), metadata: { paymentId, orderId, amount, currency } });
         return { success: false, error: typeof brevoError === 'object' ? JSON.stringify(brevoError) : brevoError };
     }
 }

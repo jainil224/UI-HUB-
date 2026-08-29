@@ -1,0 +1,47 @@
+# Render Blueprint for Unified UI-HUB Production Deployment (Core Backend + MCP Server)
+services:
+  - type: web
+    name: ui-hub-backend-mcp
+    runtime: node
+    plan: starter
+    region: oregon
+    buildCommand: cd mcp-server && npm install && npm run build && cd ../backend && npm install
+    startCommand: cd backend && npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: MONGODB_DB
+        value: uihub
+      - key: MCP_SERVER_URL
+        value: https://api.ui-hub-design.com
+      - key: MCP_API_KEY_PREFIX
+        value: uh_live_
+      - key: MCP_RATE_LIMIT_FREE
+        value: 100
+      - key: MCP_RATE_LIMIT_PRO
+        value: 10000
+      - key: MCP_ALLOWED_ORIGINS
+        value: https://ui-hub-design.vercel.app,http://localhost:5173,http://localhost:3000
+      - key: MCP_ADMIN_EMAILS
+        value: jainil11199@gmail.com,jainilpatel2224@gmail.com,jainil224@gmail.com
+      - key: BREVO_API_KEY
+        sync: false
+      - key: BREVO_SENDER_EMAIL
+        value: uihub.design@gmail.com
+      - key: BREVO_SENDER_NAME
+        value: UI-HUB
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: FIREBASE_PROJECT_ID
+        value: ui-hub-3fe3d
+      - key: FIREBASE_CLIENT_EMAIL
+        sync: false
+      - key: FIREBASE_PRIVATE_KEY
+        sync: false
+      - key: REDIS_URL
+        sync: false

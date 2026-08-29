@@ -83,13 +83,13 @@ app.use(cors({
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'X-Requested-With', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'X-Requested-With', 'Accept', 'MCP-Protocol-Version', 'MCP-Session-Id']
 }));
 
 // 3. Body parsers (with size limits)
 app.use('/api/v1/payment/webhook', express.raw({ type: 'application/json' }));
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(express.json({ limit: '2mb' }));
+app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 
 // 4. Global Limiter
 app.use(globalLimiter);
@@ -102,11 +102,29 @@ router.use('/v1/config', configRoutes);
 router.use('/v1/payment', paymentRoutes);
 router.use('/v1', favoritesRoutes);
 
+// 6. MCP Server Integration (Unified Deployment)
+try {
+  const { mcpRouter } = await import('../../mcp-server/dist/routes/mcp.js');
+  const { dashboardRouter } = await import('../../mcp-server/dist/routes/dashboard.js');
+  const { adminRouter } = await import('../../mcp-server/dist/routes/admin.js');
+
+  app.use('/mcp', mcpRouter);
+  app.use('/api/dashboard/mcp', dashboardRouter);
+  app.use('/api/admin/mcp', adminRouter);
+  console.log('[MCP] ✅ MCP endpoints (/mcp, /api/dashboard/mcp, /api/admin/mcp) mounted');
+} catch (mcpErr) {
+  console.warn('[MCP] ⚠️ MCP routes could not be mounted:', mcpErr.message);
+}
+
 // Health check endpoint (at the very top levels)
 const healthCheck = (req, res) => {
   res.json({ 
     status: 'ok', 
-    message: 'UI-Hub Backend is Live',
+    services: {
+      backend: 'online',
+      mcp: 'online'
+    },
+    message: 'UI-Hub Unified Backend & MCP Server is Live',
     timestamp: new Date().toISOString(),
     env: process.env.NODE_ENV || 'development'
   });
@@ -120,7 +138,7 @@ app.use('/api', router);
 app.use('/', router);
 
 app.get('/', (req, res) => {
-  res.send('<h1>UI-Hub Backend is Live</h1><p>The API is running successfully. <a href="/api/health">Check Health</a></p>');
+  res.send('<h1>UI-Hub Unified Backend & MCP Server is Live</h1><p>The API is running successfully. <a href="/api/health">Check Health</a></p>');
 });
 
 // Basic error handling
