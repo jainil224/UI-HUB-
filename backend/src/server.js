@@ -104,6 +104,24 @@ router.use('/v1', favoritesRoutes);
 
 // 6. MCP Server Integration (Unified Deployment)
 try {
+  // Ensure mcp-server can resolve node_modules (e.g. express, cors) from backend
+  const { existsSync, symlinkSync } = await import('node:fs');
+  const { resolve, dirname } = await import('node:path');
+  const { fileURLToPath } = await import('node:url');
+  
+  const currentDir = dirname(fileURLToPath(import.meta.url));
+  const backendModules = resolve(currentDir, '../node_modules');
+  const mcpModules = resolve(currentDir, '../../mcp-server/node_modules');
+  
+  if (existsSync(backendModules) && !existsSync(mcpModules)) {
+    try {
+      symlinkSync(backendModules, mcpModules, 'junction');
+      console.log('[MCP] Linked backend node_modules to mcp-server');
+    } catch (symErr) {
+      // Ignore if symlink fails or not permitted
+    }
+  }
+
   const { mcpRouter } = await import('../../mcp-server/dist/routes/mcp.js');
   const { dashboardRouter } = await import('../../mcp-server/dist/routes/dashboard.js');
   const { adminRouter } = await import('../../mcp-server/dist/routes/admin.js');

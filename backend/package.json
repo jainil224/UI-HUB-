@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "cd ../mcp-server && npm install && npm run build",
+    "postinstall": "cd ../mcp-server && npm install",
     "start": "node src/server.js",
     "dev": "node --watch src/server.js"
   },
@@ -25,6 +26,7 @@
     "pdfkit": "^0.19.1",
     "rate-limit-redis": "^4.3.1",
     "razorpay": "^2.9.6",
-    "resend": "^6.9.4"
+    "resend": "^6.9.4",
+    "zod": "^3.23.8"
   }
 }
