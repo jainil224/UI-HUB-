@@ -166,7 +166,10 @@ export const getUserFavorites = (userId: string | undefined | null, callback: (f
             callback(favorites);
         } catch (error) {
             if (cancelled) return;
-            console.error("Error fetching user favorites:", error);
+            const code = (error as FavoritesError)?.code;
+            if (code !== 'DATABASE_UNAVAILABLE') {
+                console.error("Error fetching user favorites:", error);
+            }
             callback(getGuestFavorites());
         }
     };

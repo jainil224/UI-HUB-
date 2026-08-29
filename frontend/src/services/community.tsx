@@ -37,6 +37,7 @@ const toComponentItem = (c: RawCommunityComponent): ComponentItem => {
 
 export const fetchCommunityComponents = async (): Promise<ComponentItem[]> => {
     const res = await fetch(`${BASE}/api/v1/components/community`);
+    if (res.status === 503) return []; // DB unavailable — caller keeps polling
     if (!res.ok) throw new Error('Failed to load community components');
     const data = await res.json();
     const list = (data.components || []) as RawCommunityComponent[];

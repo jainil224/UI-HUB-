@@ -1,5 +1,6 @@
 import admin from '../utils/firebaseAdmin.js';
 import { getCollection } from './mongoService.js';
+import { logActivity } from './activityLogService.js';
 
 /**
  * Sync Service
@@ -75,6 +76,13 @@ const runSyncTask = async () => {
           { upsert: true }
         );
         syncCount++;
+        await logActivity({
+          type: 'user.created',
+          userId: userRecord.uid,
+          email,
+          level: 'success',
+          metadata: { source: 'sync_worker', provider: userRecord.providerData[0]?.providerId || 'password' },
+        });
       }
     }
 

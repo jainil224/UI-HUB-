@@ -1,5 +1,6 @@
 import { getCollection } from './mongoService.js';
 import { sendProSubscriptionEmail } from '../utils/sendEmail.js';
+import { logActivity } from './activityLogService.js';
 
 const PAYMENTS_COLLECTION = 'payments';
 const USERS_COLLECTION = 'users';
@@ -56,6 +57,13 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
     );
 
     console.log(`[MongoService] User ${email} upgraded to ${newStatus}`);
+    await logActivity({
+      type: 'payment.captured',
+      userId: undefined,
+      email,
+      level: 'success',
+      metadata: { paymentId, orderId, tier, amount: Number(amount), currency },
+    });
   } catch (err) {
     console.error('[MongoService] Error updating user tier:', err);
     throw err;

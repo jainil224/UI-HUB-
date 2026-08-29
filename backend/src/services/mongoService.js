@@ -6,6 +6,15 @@ dotenv.config();
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017';
 const dbName = process.env.MONGODB_DB || 'uihub';
 
+const hostFromUri = (u) => {
+  try {
+    const m = /@([^\/?#]+)/.exec(u);
+    return m ? m[1] : (u.replace(/^mongodb(\+srv)?:\/\//, '').split('/')[0] || u);
+  } catch {
+    return u;
+  }
+};
+
 let client = null;
 let db = null;
 let connecting = null;
@@ -23,10 +32,10 @@ const getClient = async () => {
       client = new MongoClient(uri, { serverSelectionTimeoutMS: 15000 });
       await client.connect();
       db = client.db(dbName);
-      console.log(`[MongoService] Connected to MongoDB database: "${dbName}"`);
+      console.log(`[MongoService] Connected to MongoDB database: "${dbName}" @ ${hostFromUri(uri)}`);
       return client;
     } catch (error) {
-      console.error('[MongoService] MongoDB connection failed:', error.message);
+      console.error(`[MongoService] MongoDB connection failed (URI host: ${hostFromUri(uri)}): ${error.message}`);
       throw error;
     } finally {
       connecting = null;
@@ -34,6 +43,19 @@ const getClient = async () => {
   })();
 
   return connecting;
+};
+
+/**
+ * Returns true if the shared Mongo client is currently connected.
+ * Useful for health checks / graceful 503 responses during outages.
+ * @returns {boolean}
+ */
+export const isMongoConnected = () => {
+  try {
+    return !!(client && client.topology && client.topology.isConnected && client.topology.isConnected());
+  } catch {
+    return false;
+  }
 };
 
 /**
@@ -66,5 +88,5 @@ export const ensureIndex = async (collection, keys, options = {}) => {
   await col.createIndex(keys, options);
 };
 
-export const mongoService = { getClient, getDb, getCollection, ensureIndex };
+export const mongoService = { getClient, getDb, getCollection, ensureIndex, isMongoConnected };
 export default mongoService;

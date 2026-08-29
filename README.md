@@ -552,7 +552,40 @@ PORT=5000
 FIREBASE_PROJECT_ID=your_project_id
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
 FIREBASE_CLIENT_EMAIL=firebase-adminsdk@your_project.iam.gserviceaccount.com
+FIREBASE_SERVICE_ACCOUNT_JSON={ "full": "service-account.json", "contents": "as a string" }
 RESEND_API_KEY=your_resend_api_key
+
+# Storage — all reads/writes use MongoDB (Firestore no longer used for data)
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/uihub?appName=Cluster0
+MONGODB_DB=uihub
+
+# Payments (required or the Razorpay webhook is ignored and no payment is recorded)
+RAZORPAY_KEY_ID=rzp_test_xxx
+RAZORPAY_KEY_SECRET=your_razorpay_secret
+RAZORPAY_WEBHOOK_SECRET=your_razorpay_webhook_secret
+
+# Frontend origin used in email links
+FRONTEND_URL=https://ui-hub-design.vercel.app
+```
+
+> **Important (Render/Vercel):** these exact keys must be set on the deployed UI-HUB backend. If `MONGODB_URI`/`MONGODB_DB` are missing, Mongo-backed routes
+> (`/api/v1/components/community`, `/api/v1/favorites`, …) fall back to `localhost` and return **503/500**. If `RAZORPAY_WEBHOOK_SECRET` is missing,
+> the payment webhook is ignored and no `payments` record is created.
+
+**Backend MongoDB collections & logs**
+- `users`, `payments`, `components`, `favorites` — application data.
+- `activity_logs` — audit trail, automatically captures new-user signups (`user.created`) and payments (`payment.captured`).
+- `mcp_analytics`, `mcp_audit`, `mcp_config`, `mcp_api_keys` — written by the MCP server.
+
+**MCP server** (`mcp-server/.env`) — used by the deployed `ui-hub-mcp.onrender.com`:
+```env
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/uihub?appName=Cluster0
+MONGODB_DB=uihub
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk@your_project.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
+MCP_ADMIN_EMAILS=you@example.com
+MCP_ALLOWED_ORIGINS=http://localhost:3000,https://ui-hub-design.vercel.app
 ```
 
 ### 4. Run Development Servers
