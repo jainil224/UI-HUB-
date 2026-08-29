@@ -30,6 +30,8 @@ backend/service-account.json
 
 # Output
 dist/
+!mcp-server/dist/
+!mcp-server/dist/**
 dist-ssr/
 build/
 backend/tmp/

@@ -1,0 +1,377 @@
+import { getCollection as mongoCollection } from './mongo.js';
+export class AnalyticsService {
+    static instance;
+    static buffer = [];
+    static flushTimer = null;
+    static queryCache = new Map();
+    static QUERY_CACHE_TTL_MS = 30000;
+    static QUERY_EVENT_CAP = 2000;
+    static dailySummaryCache = new Map();
+    static activeKeyCountCache = null;
+    static invalidateQueryCache() {
+        AnalyticsService.queryCache.clear();
+        AnalyticsService.dailySummaryCache.clear();
+        AnalyticsService.activeKeyCountCache = null;
+    }
+    static getInstance() {
+        if (!AnalyticsService.instance) {
+            AnalyticsService.instance = new AnalyticsService();
+        }
+        return AnalyticsService.instance;
+    }
+    async getDb() {
+        return mongoCollection('mcp_analytics');
+    }
+    /**
+     * Track an MCP event.
+     * Events are buffered and flushed in batches to avoid Firestore write spam.
+     */
+    async track(event) {
+        // Don't store sensitive data - no raw keys, no full queries that could be PII
+        const sanitized = {
+            ...event,
+            query: event.query ? event.query.slice(0, 200) : undefined,
+        };
+        if (AnalyticsService.flushTimer) {
+            AnalyticsService.buffer.push(sanitized);
+            return;
+        }
+        // Flush after 5 seconds or 100 events, whichever comes first
+        AnalyticsService.buffer.push(sanitized);
+        AnalyticsService.flushTimer = setTimeout(() => {
+            void this.flushBuffer();
+        }, 5000);
+    }
+    async flushBuffer() {
+        if (AnalyticsService.flushTimer) {
+            clearTimeout(AnalyticsService.flushTimer);
+            AnalyticsService.flushTimer = null;
+        }
+        const events = AnalyticsService.buffer.splice(0);
+        if (events.length === 0)
+            return;
+        try {
+            const { configService } = await import('../config/configService.js');
+            const cfg = await configService.get();
+            if (!cfg.analyticsEnabled)
+                return;
+            const db = await this.getDb();
+            const now = Date.now();
+            const dateKey = new Date(now).toISOString().split('T')[0];
+            await db.insertOne({
+                events,
+                date: dateKey,
+                createdAt: now,
+            });
+            AnalyticsService.invalidateQueryCache();
+        }
+        catch (error) {
+            if (!error?.message?.includes('Could not load the default credentials')) {
+                console.error('[AnalyticsService] Error flushing events:', error);
+            }
+        }
+    }
+    /**
+     * Immediately flush any buffered events to MongoDB.
+     * Called on graceful shutdown so no real traffic is lost on restart.
+     */
+    async flushNow() {
+        if (AnalyticsService.flushTimer) {
+            clearTimeout(AnalyticsService.flushTimer);
+            AnalyticsService.flushTimer = null;
+        }
+        await this.flushBuffer();
+    }
+    /**
+     * Get daily usage summary (for admin dashboard).
+     */
+    async getDailySummary(dateKey) {
+        const cached = AnalyticsService.dailySummaryCache.get(dateKey);
+        if (cached && Date.now() < cached.expiresAt) {
+            return cached.value;
+        }
+        try {
+            const db = await this.getDb();
+            const docs = await db.find({ date: dateKey }).toArray();
+            let totalRequests = 0;
+            let requestsToday = 0;
+            const componentCounts = {};
+            const searchCounts = {};
+            let freeUsage = 0;
+            let proUsage = 0;
+            let failedRequests = 0;
+            let rateLimitEvents = 0;
+            docs.forEach((doc) => {
+                const data = doc;
+                if (data.events && Array.isArray(data.events)) {
+                    data.events.forEach((e) => {
+                        totalRequests++;
+                        if (e.timestamp >= Date.now() - 24 * 60 * 60 * 1000) {
+                            requestsToday++;
+                        }
+                        if (e.componentId) {
+                            componentCounts[e.componentId] = (componentCounts[e.componentId] || 0) + 1;
+                        }
+                        if (e.query) {
+                            const q = e.query.toLowerCase();
+                            searchCounts[q] = (searchCounts[q] || 0) + 1;
+                        }
+                        if (e.userId) {
+                            // We can't easily distinguish free/pro from the event alone,
+                            // but if there was an error it counts as failed
+                            if (e.success === false)
+                                failedRequests++;
+                        }
+                        if (e.event === 'rate_limit')
+                            rateLimitEvents++;
+                        if (e.event === 'premium_denied')
+                            failedRequests++;
+                    });
+                }
+            });
+            const summary = {
+                totalRequests,
+                requestsToday,
+                activeKeys: await this.getActiveKeyCount(),
+                topComponents: Object.entries(componentCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10)
+                    .map(([k]) => k),
+                topSearches: Object.entries(searchCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10)
+                    .map(([k]) => k),
+                freeUsage,
+                proUsage,
+                failedRequests,
+                rateLimitEvents,
+            };
+            AnalyticsService.dailySummaryCache.set(dateKey, {
+                value: summary,
+                expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS,
+            });
+            return summary;
+        }
+        catch (error) {
+            if (!error?.message?.includes('Could not load the default credentials')) {
+                console.error('[AnalyticsService] Error getting daily summary:', error);
+            }
+            return {
+                totalRequests: 0,
+                requestsToday: 0,
+                activeKeys: 0,
+                topComponents: [],
+                topSearches: [],
+                freeUsage: 0,
+                proUsage: 0,
+                failedRequests: 0,
+                rateLimitEvents: 0,
+            };
+        }
+    }
+    async getActiveKeyCount() {
+        if (AnalyticsService.activeKeyCountCache && Date.now() < AnalyticsService.activeKeyCountCache.expiresAt) {
+            return AnalyticsService.activeKeyCountCache.value;
+        }
+        try {
+            const keysCollection = await mongoCollection('mcp_api_keys');
+            const count = await keysCollection.countDocuments({ status: 'active' });
+            AnalyticsService.activeKeyCountCache = { value: count, expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS };
+            return count;
+        }
+        catch {
+            return 0;
+        }
+    }
+    async queryEvents(fromKey, toKey, opts) {
+        try {
+            const db = await this.getDb();
+            const cacheKey = `${fromKey}__${toKey || ''}`;
+            const cached = AnalyticsService.queryCache.get(cacheKey);
+            if (!opts?.refresh && cached && Date.now() < cached.expiresAt) {
+                return cached.events;
+            }
+            const filter = { date: { $gte: fromKey } };
+            if (toKey)
+                filter.date.$lte = toKey;
+            const docs = await db.find(filter).toArray();
+            const events = [];
+            const max = opts?.maxEvents ?? AnalyticsService.QUERY_EVENT_CAP;
+            docs.forEach((doc) => {
+                if (events.length >= max)
+                    return;
+                const data = doc;
+                if (data.events && Array.isArray(data.events)) {
+                    events.push(...data.events.slice(0, max - events.length));
+                }
+            });
+            AnalyticsService.queryCache.set(cacheKey, {
+                expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS,
+                events,
+            });
+            return events;
+        }
+        catch (error) {
+            console.error('[AnalyticsService] Error querying events:', error);
+            return [];
+        }
+    }
+    async getActiveKeyCountByUser() {
+        const counts = new Map();
+        try {
+            const db = await mongoCollection('mcp_api_keys');
+            const docs = await db.find({}).toArray();
+            docs.forEach((doc) => {
+                const data = doc;
+                if (data.user_id) {
+                    counts.set(data.user_id, (counts.get(data.user_id) || 0) + 1);
+                }
+            });
+        }
+        catch {
+            // dev mode
+        }
+        return counts;
+    }
+}
+export function aggregateEvents(events) {
+    const totalRequestEvents = events.filter((e) => e.event === 'mcp_request');
+    const toolEvents = events.filter((e) => e.event === 'component_search' ||
+        e.event === 'component_fetch' ||
+        e.event === 'code_fetch' ||
+        e.event === 'template_fetch' ||
+        e.event === 'animation_fetch');
+    const byDay = {};
+    const byTier = {};
+    const byStatus = {};
+    const byTool = {};
+    const toolUsers = {};
+    const componentMap = {};
+    const componentUsers = {};
+    const searchMap = {};
+    const users = new Set();
+    let failed = 0;
+    let responseTimeSum = 0;
+    let responseTimeCount = 0;
+    let rateLimitEvents = 0;
+    let premiumDenied = 0;
+    let authFailures = 0;
+    events.forEach((e) => {
+        if (e.userId)
+            users.add(e.userId);
+        if (e.event === 'rate_limit')
+            rateLimitEvents++;
+        if (e.event === 'premium_denied')
+            premiumDenied++;
+        if (e.event === 'auth_failure')
+            authFailures++;
+        if (e.tier && e.tier !== 'FREE')
+            byTier[e.tier] = (byTier[e.tier] || 0) + 1;
+        else if (e.tier)
+            byTier.FREE = (byTier.FREE || 0) + 1;
+        if (e.statusCode)
+            byStatus[String(e.statusCode)] = (byStatus[String(e.statusCode)] || 0) + 1;
+        if (e.responseTimeMs != null) {
+            responseTimeSum += e.responseTimeMs;
+            responseTimeCount++;
+        }
+        if (e.event === 'mcp_request') {
+            if (e.success === false)
+                failed++;
+        }
+        if (e.componentId) {
+            const c = componentMap[e.componentId] || {
+                id: e.componentId,
+                count: 0,
+                searches: 0,
+                codeFetches: 0,
+                fetchCount: 0,
+                uniqueUsers: 0,
+                freeCount: 0,
+                proCount: 0,
+            };
+            c.count++;
+            c.fetchCount++;
+            if (e.event === 'code_fetch')
+                c.codeFetches++;
+            if (e.tier && e.tier !== 'FREE')
+                c.proCount++;
+            else
+                c.freeCount++;
+            if (e.userId) {
+                if (!componentUsers[e.componentId])
+                    componentUsers[e.componentId] = new Set();
+                componentUsers[e.componentId].add(e.userId);
+            }
+            componentMap[e.componentId] = c;
+        }
+        if (e.event === 'component_search' && e.query) {
+            const q = e.query.trim().toLowerCase();
+            const s = searchMap[q] || { query: q, count: 0, zeroResults: e.success === false };
+            s.count++;
+            if (e.success === false)
+                s.zeroResults = true;
+            searchMap[q] = s;
+        }
+    });
+    totalRequestEvents.forEach((e) => {
+        const day = new Date(e.timestamp).toISOString().slice(0, 10);
+        byDay[day] = (byDay[day] || 0) + 1;
+    });
+    toolEvents.forEach((e) => {
+        const name = e.tool || 'unknown';
+        const t = byTool[name] || {
+            name,
+            total: 0,
+            success: 0,
+            failed: 0,
+            uniqueUsers: 0,
+            avgResponseTimeMs: 0,
+            lastUsed: 0,
+        };
+        t.total++;
+        if (e.success === false || e.errorCode)
+            t.failed++;
+        else
+            t.success++;
+        if (e.userId) {
+            if (!toolUsers[name])
+                toolUsers[name] = new Set();
+            toolUsers[name].add(e.userId);
+        }
+        if (e.timestamp > t.lastUsed)
+            t.lastUsed = e.timestamp;
+        byTool[name] = t;
+    });
+    if (responseTimeCount > 0) {
+        responseTimeSum = Math.round(responseTimeSum / responseTimeCount);
+    }
+    const sortedToolUsage = Object.values(byTool)
+        .sort((a, b) => b.total - a.total)
+        .map((t) => ({ ...t, avgResponseTimeMs: 0, uniqueUsers: toolUsers[t.name] ? toolUsers[t.name].size : 0 }));
+    return {
+        requests: totalRequestEvents.length,
+        uniqueUsers: users.size,
+        errorRate: totalRequestEvents.length > 0 ? failed / totalRequestEvents.length : 0,
+        failedRequests: failed,
+        avgResponseTimeMs: responseTimeSum,
+        rateLimitEvents,
+        premiumDenied,
+        authFailures,
+        byDay,
+        byTool: Object.fromEntries(sortedToolUsage.map((t) => [t.name, t])),
+        byTier: Object.fromEntries(Object.entries(byTier).sort((a, b) => b[1] - a[1])),
+        byStatus: Object.fromEntries(Object.entries(byStatus).sort((a, b) => b[1] - a[1])),
+        topComponents: Object.values(componentMap)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 25)
+            .map((c) => ({ ...c, uniqueUsers: componentUsers[c.id] ? componentUsers[c.id].size : 0 })),
+        topSearches: Object.values(searchMap).sort((a, b) => b.count - a.count).slice(0, 25),
+        zeroResultSearches: Object.values(searchMap)
+            .filter((s) => s.zeroResults)
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 25),
+    };
+}
+export const analyticsService = AnalyticsService.getInstance();
+//# sourceMappingURL=analyticsService.js.map

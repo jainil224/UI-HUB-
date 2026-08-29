@@ -5,6 +5,7 @@
   "main": "src/server.js",
   "type": "module",
   "scripts": {
+    "build": "cd ../mcp-server && npm install && npm run build",
     "start": "node src/server.js",
     "dev": "node --watch src/server.js"
   },
