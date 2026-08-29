@@ -167,7 +167,7 @@ const ApiKeysPage: React.FC = () => {
                 <Panel>
                     <PanelHeader title="Security note" />
                     <div className="p-5 text-xs text-neutral-400 space-y-2.5">
-                        <p className="flex items-start gap-2"><Trash2 size={13} className="text-brand-red mt-0.5" /> <span>Revoked keys return <span className="font-mono">401 AUTH_FAILURE</span> from the MCP server immediately. Deleting is a Firestore delete — prefer revoke so audits keep the full key history.</span></p>
+                        <p className="flex items-start gap-2"><Trash2 size={13} className="text-brand-red mt-0.5" /> <span>Revoked keys return <span className="font-mono">401 AUTH_FAILURE</span> from the MCP server immediately. Deleting is a MongoDB delete — prefer revoke so audits keep the full key history.</span></p>
                         <p className="flex items-start gap-2"><KeyRound size={13} className="text-brand-blue mt-0.5" /> <span>Full key IDs are never shown here — only the masked prefix.</span></p>
                     </div>
                 </Panel>

@@ -284,7 +284,7 @@ const MCPPage: React.FC = () => {
                                 <Activity size={13} className="text-brand-blue" /> Total AI Requests
                             </div>
                             <div className="text-2xl sm:text-3xl font-black text-white font-heading">
-                                {adminMetrics?.totalRequests ?? usage?.totalKeys ?? 0}
+                                {adminMetrics ? formatNum(adminMetrics.totalRequests) : '—'}
                             </div>
                             <span className="text-[10px] text-neutral-500 font-medium">Platform-wide MCP hits</span>
                         </div>
@@ -294,7 +294,7 @@ const MCPPage: React.FC = () => {
                                 <KeyRound size={13} className="text-brand-green" /> Total Active Keys
                             </div>
                             <div className="text-2xl sm:text-3xl font-black text-brand-green font-heading">
-                                {adminMetrics?.activeKeys ?? status?.keys.active ?? keys.length}
+                                {adminMetrics ? formatNum(adminMetrics.activeKeys) : '—'}
                             </div>
                             <span className="text-[10px] text-neutral-500 font-medium">Across all users</span>
                         </div>
@@ -304,19 +304,19 @@ const MCPPage: React.FC = () => {
                                 <Cpu size={13} className="text-purple-400" /> Server Memory / Load
                             </div>
                             <div className="text-2xl sm:text-3xl font-black text-purple-400 font-heading">
-                                {adminMetrics?.server?.memoryUsage || '38 MB'}
+                                {adminMetrics?.server?.memoryUsage || '—'}
                             </div>
                             <span className="text-[10px] text-neutral-500 font-medium">Node.js Heap Memory</span>
                         </div>
 
                         <div className="p-4 rounded-md border border-neutral-800 bg-neutral-900/60">
                             <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-1">
-                                <Shield size={13} className="text-brand-yellow" /> Rate Limit Status
+                                <Shield size={13} className="text-brand-yellow" /> Rate Limit (free / pro)
                             </div>
                             <div className="text-2xl sm:text-3xl font-black text-brand-yellow font-heading">
-                                Unlimited
+                                {status?.rateLimit ? `${status.rateLimit.free} / ${status.rateLimit.pro}` : adminMetrics ? `${adminMetrics.failedRequests} failed` : '—'}
                             </div>
-                            <span className="text-[10px] text-neutral-500 font-medium">Admin bypass active</span>
+                            <span className="text-[10px] text-neutral-500 font-medium">requests per period</span>
                         </div>
                     </div>
 
@@ -332,30 +332,30 @@ const MCPPage: React.FC = () => {
                                     <span className="text-white font-mono font-medium">Streamable HTTP (JSON-RPC 2.0)</span>
                                 </div>
                                 <div className="flex justify-between text-neutral-400">
-                                    <span>Database & Auth:</span>
-                                    <span className="text-brand-green font-mono font-medium">Firestore Admin SDK (Online)</span>
+                                    <span>Database:</span>
+                                    <span className={`font-mono font-medium ${adminMetrics?.dbConnected ? 'text-brand-green' : 'text-brand-red'}`}>
+                                        MongoDB Atlas {adminMetrics ? (adminMetrics.dbConnected ? '(Online)' : '(Offline)') : '(unknown)'}
+                                    </span>
                                 </div>
                                 <div className="flex justify-between text-neutral-400">
-                                    <span>Rate Limiter Store:</span>
-                                    <span className="text-white font-mono font-medium">Upstash Redis / Distributed Memory</span>
+                                    <span>Server Status:</span>
+                                    <span className={`font-mono font-medium ${adminMetrics?.server?.status === 'healthy' ? 'text-brand-green' : 'text-brand-yellow'}`}>
+                                        {adminMetrics?.server?.status || '—'}
+                                    </span>
                                 </div>
                                 <div className="flex justify-between text-neutral-400">
                                     <span>Server Version:</span>
-                                    <span className="text-neutral-300 font-mono">v1.0.0 (Oregon Node.js 20)</span>
+                                    <span className="text-neutral-300 font-mono">{adminMetrics?.server?.version || '—'}</span>
                                 </div>
                             </div>
                         </div>
 
                         <div className="p-4 rounded-md border border-neutral-800 bg-black">
                             <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white mb-3">
-                                <Sparkles size={14} className="text-brand-yellow" /> Registered AI Tools (9 Active)
+                                <Sparkles size={14} className="text-brand-yellow" /> Registered AI Tools ({featuredTools.length} {featuredTools.length === 1 ? 'Active' : 'Active'})
                             </div>
                             <div className="flex flex-wrap gap-1.5">
-                                {[
-                                    'search_components', 'get_component', 'get_component_code',
-                                    'search_templates', 'get_template', 'search_animations',
-                                    'get_animation_code', 'list_categories', 'get_dependencies'
-                                ].map((tool) => (
+                                {featuredTools.map((tool) => (
                                     <span key={tool} className="px-2.5 py-1 bg-neutral-900 border border-neutral-800 rounded text-[10px] font-mono text-neutral-300">
                                         {tool}
                                     </span>

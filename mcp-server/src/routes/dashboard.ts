@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { apiKeyService } from '../services/apiKeyService.js';
 import { firebaseService } from '../services/firebase.js';
 import { analyticsService } from '../services/analyticsService.js';
+import { getCollection as mongoCollection } from '../services/mongo.js';
 import { verifyFirebaseToken } from '../middleware/dashboardAuth.js';
 import config from '../config/env.js';
 import { configService } from '../config/configService.js';
@@ -167,11 +168,21 @@ dashboardRouter.get('/admin/metrics', verifyFirebaseToken, async (req: Request, 
   const todayKey = new Date().toISOString().split('T')[0];
   const summary = await analyticsService.getDailySummary(todayKey);
 
+  let dbConnected = false;
+  try {
+    const col = await mongoCollection('mcp_analytics');
+    await col.findOne({});
+    dbConnected = true;
+  } catch {
+    dbConnected = false;
+  }
+
   res.json({
     date: todayKey,
     ...summary,
+    dbConnected,
     server: {
-      status: 'healthy',
+      status: dbConnected ? 'healthy' : 'degraded',
       uptime: Math.round(process.uptime()),
       memoryUsage: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + ' MB',
       environment: config.nodeEnv,

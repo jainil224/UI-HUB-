@@ -18,7 +18,7 @@ const AnalyticsPage: React.FC = () => {
     const [range, setRange] = useState('30d');
     const [params] = useSearchParams();
     const toolFilter = params.get('tool') || '';
-    const a = useData(() => getAnalytics(range), [range]);
+    const a = useData(() => getAnalytics(range), [range], { intervalMs: 30000 });
 
     if (a.loading) {
         return (

@@ -25,7 +25,7 @@ function humanUptime(s?: number): string {
 }
 
 const HealthPage: React.FC = () => {
-    const h = useData(() => getHealth(), []);
+    const h = useData(() => getHealth(), [], { intervalMs: 15000 });
 
     if (h.loading) {
         return (
@@ -48,7 +48,7 @@ const HealthPage: React.FC = () => {
         <div>
             <PageHeader
                 title="Server Health"
-                subtitle="Live status of the MCP server process and its Firestore connection."
+                subtitle="Live status of the MCP server process and its MongoDB connection."
                 actions={
                     <button onClick={() => void h.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
@@ -69,7 +69,7 @@ const HealthPage: React.FC = () => {
                 </Panel>
                 <StatCard label="Uptime" value={humanUptime(data.uptime)} icon={Timer} sub={`${data.service} v${data.version}`} />
                 <StatCard label="Memory (RSS)" value={humanBytes(data.memory?.rss)} icon={MemoryStick} sub={`heap ${humanBytes(data.memory?.heapUsed)}`} />
-                <StatCard label="Database" value={data.dbConnected ? 'Online' : 'Offline'} icon={Database} tone={data.dbConnected ? 'ok' : 'bad'} sub="Firestore mcp_analytics" />
+                <StatCard label="Database" value={data.dbConnected ? 'Online' : 'Offline'} icon={Database} tone={data.dbConnected ? 'ok' : 'bad'} sub="MongoDB · uihub" />
             </div>
 
             <div className="grid lg:grid-cols-2 gap-6 mt-6">
@@ -89,7 +89,7 @@ const HealthPage: React.FC = () => {
                             <span className="font-mono text-sm text-white">{new Date(data.timestamp).toLocaleString()}</span>
                         </div>
                         <div className="flex items-center justify-between px-5 py-4">
-                            <span className="text-xs text-neutral-400">Firestore</span>
+                            <span className="text-xs text-neutral-400">MongoDB</span>
                             <StatusBadge value={data.dbConnected ? 'Connected' : 'Disconnected'} tone={data.dbConnected ? 'ok' : 'bad'} />
                         </div>
                     </div>

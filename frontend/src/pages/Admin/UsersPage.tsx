@@ -145,7 +145,7 @@ const UsersPage: React.FC = () => {
                     <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPage={(p) => apply({ page: p })} />
                 </Panel>
             )}
-            <p className="text-[10px] text-neutral-500 mt-3">Suspending a user marks their account suspended in Firestore. Revoke the user's API keys from the API Keys page to fully block MCP access.</p>
+            <p className="text-[10px] text-neutral-500 mt-3">Suspending a user marks their account suspended in MongoDB. Revoke the user's API keys from the API Keys page to fully block MCP access.</p>
         </div>
     );
 };

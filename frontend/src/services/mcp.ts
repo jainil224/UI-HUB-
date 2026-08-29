@@ -126,8 +126,8 @@ export interface McpOverview {
     usage: McpUsage;
 }
 
-const OVERVIEW_TTL_MS = 30000;
-const METRICS_TTL_MS = 60000;
+const OVERVIEW_TTL_MS = 10000;
+const METRICS_TTL_MS = 20000;
 
 let overviewCache: { value: McpOverview; expiresAt: number } | null = null;
 let metricsCache: { value: McpAdminMetrics; expiresAt: number } | null = null;
@@ -204,6 +204,7 @@ export interface McpAdminMetrics {
     proUsage: number;
     failedRequests: number;
     rateLimitEvents: number;
+    dbConnected: boolean;
     server: {
         status: string;
         uptime: number;

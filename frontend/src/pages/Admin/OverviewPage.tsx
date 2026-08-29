@@ -19,8 +19,8 @@ const RANGES: Array<{ id: string; label: string }> = [
 
 const OverviewPage: React.FC = () => {
     const [range, setRange] = useState('30d');
-    const overview = useData(() => getOverview(range), [range]);
-    const activity = useData(() => getLogs({ pageSize: 8 }), []);
+    const overview = useData(() => getOverview(range), [range], { intervalMs: 20000 });
+    const activity = useData(() => getLogs({ pageSize: 8 }), [], { intervalMs: 20000 });
 
     if (overview.loading || activity.loading) {
         return (
@@ -75,7 +75,7 @@ const OverviewPage: React.FC = () => {
         <div>
             <PageHeader
                 title="MCP Overview"
-                subtitle="Live snapshot of the MCP service — real data from the mcp-server and Firestore."
+                subtitle="Live snapshot of the MCP service — real data from the mcp-server and MongoDB."
                 actions={
                     <div className="flex items-center gap-2">
                         {RANGES.map((r) => (

@@ -20,8 +20,8 @@ async function authHeaders(): Promise<Record<string, string>> {
 }
 
 const DEFAULT_TIMEOUT_MS = 10000;
-const STATUS_TTL_MS = 60000;
-const OVERVIEW_TTL_MS = 30000;
+const STATUS_TTL_MS = 15000;
+const OVERVIEW_TTL_MS = 10000;
 
 let adminStatusCache: { value: AdminStatus; expiresAt: number } | null = null;
 const overviewCache = new Map<string, { value: AdminOverview; expiresAt: number }>();

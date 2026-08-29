@@ -135,13 +135,15 @@ export interface DataState<T> {
     reload: () => Promise<void>;
 }
 
-export function useData<T>(loader: () => Promise<T>, deps: React.DependencyList = []): DataState<T> {
+export function useData<T>(loader: () => Promise<T>, deps: React.DependencyList = [], options?: { intervalMs?: number }): DataState<T> {
     const [data, setData] = React.useState<T | null>(null);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
     const loaderRef = React.useRef(loader);
     loaderRef.current = loader;
     const dataRef = React.useRef<T | null>(null);
+    const optionsRef = React.useRef(options);
+    optionsRef.current = options;
 
     const reload = React.useCallback(async () => {
         if (dataRef.current === null) setLoading(true);
@@ -158,7 +160,19 @@ export function useData<T>(loader: () => Promise<T>, deps: React.DependencyList 
     }, []);
 
     React.useEffect(() => {
-        void reload();
+        let cancelled = false;
+        const run = () => {
+            if (cancelled) return;
+            void reload();
+        };
+        run();
+        const interval = optionsRef.current?.intervalMs && optionsRef.current.intervalMs > 0
+            ? setInterval(run, optionsRef.current.intervalMs)
+            : undefined;
+        return () => {
+            cancelled = true;
+            if (interval) clearInterval(interval);
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, deps);
 
