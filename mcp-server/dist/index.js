@@ -25,7 +25,15 @@ app.use(cors({
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'MCP-Protocol-Version', 'MCP-Session-Id'],
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'Accept',
+        'MCP-Protocol-Version',
+        'MCP-Session-Id',
+        'Mcp-Session-Id',
+    ],
+    exposedHeaders: ['Mcp-Session-Id', 'MCP-Session-Id'],
 }));
 // Body parsers
 app.use(express.json({ limit: '1mb' }));
