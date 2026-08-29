@@ -24,6 +24,32 @@ export class FirebaseService {
   getAdmin(): admin.app.App {
     if (this.app) return this.app;
 
+    // Reuse existing initialized Firebase Admin app if available
+    if (admin.apps && admin.apps.length > 0) {
+      this.app = admin.app();
+      return this.app;
+    }
+
+    // Support FIREBASE_SERVICE_ACCOUNT_JSON if present
+    const rawJson = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+    if (rawJson) {
+      try {
+        const cleanRaw = rawJson.trim();
+        const serviceAccount = JSON.parse(
+          cleanRaw.startsWith('{') ? cleanRaw : Buffer.from(cleanRaw, 'base64').toString('utf8')
+        );
+        if (serviceAccount.private_key) {
+          serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+        }
+        this.app = admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount),
+        });
+        return this.app;
+      } catch (e: any) {
+        console.warn('[MCP Firebase] Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:', e.message);
+      }
+    }
+
     const { projectId, clientEmail, privateKey } = config.firebase;
 
     if (projectId && clientEmail && privateKey) {
