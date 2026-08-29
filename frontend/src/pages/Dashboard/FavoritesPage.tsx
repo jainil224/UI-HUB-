@@ -5,8 +5,7 @@ import { getUserFavorites, removeFromFavorites } from '../../services/favorites'
 import { Heart, Trash2, Library, ArrowUpRight, Component as ComponentIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { componentList, ComponentItem } from '../../data/componentData';
-import { db } from '../../lib/firebase';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { fetchCommunityComponents } from '../../services/community';
 
 const shadowVariants = [
     'brutal-shadow-blue',
@@ -31,26 +30,24 @@ const FavoritesPage = () => {
             setLoading(false);
         });
 
-        // Listen to all custom components to enrich favorites
-        const q = query(collection(db, 'components'), orderBy('createdAt', 'desc'));
-        const unsubComponents = onSnapshot(q, (snapshot) => {
-            const fetched = snapshot.docs.map(doc => {
-                const data = doc.data();
-                return {
-                    id: doc.id,
-                    title: data.componentName,
-                    description: data.description,
-                    category: 'custom',
-                    code: data.code,
-                    uploader: data.uploaderName || 'Anonymous',
-                    preview: () => null,
-                    vibePrompt: ''
-                } as unknown as ComponentItem;
-            });
-            setFirebaseComponents(fetched);
-        }, (err) => {
-            console.error("Error loading components:", err);
-        });
+        // Load all custom components to enrich favorites
+        let cancelled = false;
+        let timer: ReturnType<typeof setInterval> | null = null;
+        const loadComponents = async () => {
+            try {
+                const fetched = await fetchCommunityComponents();
+                if (!cancelled) setFirebaseComponents(fetched);
+            } catch (err) {
+                console.error("Error loading components:", err);
+            }
+        };
+        loadComponents();
+        timer = setInterval(loadComponents, 30000);
+
+        const unsubComponents = () => {
+            cancelled = true;
+            if (timer) clearInterval(timer);
+        };
 
         return () => {
             if (typeof unsubFavorites === 'function') unsubFavorites();

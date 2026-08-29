@@ -1,4 +1,4 @@
-import { firebaseService } from './firebase.js';
+import { getCollection } from './mongo.js';
 
 const AUDIT_COLLECTION = 'mcp_audit';
 
@@ -13,24 +13,23 @@ export interface AuditEntry {
 
 export async function recordAudit(entry: Omit<AuditEntry, 'at'>): Promise<void> {
   try {
-    const db = firebaseService.getDb();
-    await db.collection(AUDIT_COLLECTION).add({ ...entry, at: Date.now() });
+    const collection = await getCollection(AUDIT_COLLECTION);
+    await collection.insertOne({ ...entry, at: Date.now() });
   } catch (error: any) {
-    if (!String(error?.message || '').includes('Could not load the default credentials')) {
-      console.error('[Audit] Write failed:', error);
-    }
+    console.error('[Audit] Write failed:', error);
   }
 }
 
-export async function listAudit(limit = 300): Promise<AuditEntry[]> {
+export async function listAudit(limit = 300): Promise<AuditEntry[] & { id?: string }[]> {
   try {
-    const db = firebaseService.getDb();
-    const snapshot = await db.collection(AUDIT_COLLECTION).orderBy('at', 'desc').limit(limit).get();
-    return snapshot.docs.map((doc) => ({ id: doc.id, ...(doc.data() as AuditEntry) }) as AuditEntry & { id: string });
+    const collection = await getCollection(AUDIT_COLLECTION);
+    const docs = await collection.find({}).sort({ at: -1 }).limit(limit).toArray();
+    return docs.map((doc) => {
+      const { _id, ...rest } = doc;
+      return { ...(rest as AuditEntry), id: String(_id) };
+    });
   } catch (error: any) {
-    if (!String(error?.message || '').includes('Could not load the default credentials')) {
-      console.error('[Audit] Read failed:', error);
-    }
+    console.error('[Audit] Read failed:', error);
     return [];
   }
 }

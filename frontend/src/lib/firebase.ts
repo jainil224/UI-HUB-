@@ -1,12 +1,10 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
-import { getFirestore, Firestore } from "firebase/firestore";
 import { getAuth, Auth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 import { getAnalytics, Analytics } from "firebase/analytics";
 
 let app: FirebaseApp;
 export let auth: Auth;
-export let db: Firestore;
 export let storage: FirebaseStorage;
 export let analytics: Analytics;
 
@@ -27,7 +25,6 @@ export const initFirebase = (config: any) => {
         });
     }
 
-    db = getFirestore(app);
     storage = getStorage(app);
     
     if (typeof window !== 'undefined') {

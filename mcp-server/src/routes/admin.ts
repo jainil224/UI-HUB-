@@ -3,7 +3,7 @@ import { configService } from '../config/configService.js';
 import { requireAdmin } from '../middleware/requireAdmin.js';
 import { analyticsService, aggregateEvents, McpEvent, McpStats, ToolUsage } from '../services/analyticsService.js';
 import { recordAudit, listAudit } from '../services/auditService.js';
-import { firebaseService } from '../services/firebase.js';
+import { getCollection as mongoCollection } from '../services/mongo.js';
 import { componentService } from '../services/componentService.js';
 import { TOOLS } from '../tools/index.js';
 import type { McpUser } from '../types/index.js';
@@ -86,15 +86,15 @@ interface UserAgg {
 }
 
 async function buildUsers(events: McpEvent[]): Promise<UserAgg[]> {
-  const db = firebaseService.getDb();
   const usersByUid = new Map<string, Record<string, any>>();
   const usersByEmail = new Map<string, Record<string, any>>();
   try {
-    const snap = await db.collection('users').get();
-    snap.docs.forEach((doc) => {
-      const data = doc.data() || {};
+    const col = await mongoCollection('users');
+    const docs = await col.find({}).toArray();
+    docs.forEach((doc) => {
+      const data = doc;
       if (data.uid) usersByUid.set(String(data.uid), data);
-      usersByEmail.set(String(doc.id).toLowerCase(), data);
+      usersByEmail.set(String(doc._id).toLowerCase(), data);
     });
   } catch {
     // dev mode
@@ -102,8 +102,9 @@ async function buildUsers(events: McpEvent[]): Promise<UserAgg[]> {
 
   let keys: Array<Record<string, any>> = [];
   try {
-    const snap = await db.collection('mcp_api_keys').get();
-    keys = snap.docs.map((doc) => ({ id: doc.id, ...(doc.data() || {}) }));
+    const col = await mongoCollection('mcp_api_keys');
+    const docs = await col.find({}).toArray();
+    keys = docs.map((doc) => ({ id: String(doc._id), ...doc }));
   } catch {
     // dev mode
   }
@@ -214,8 +215,9 @@ async function buildUsers(events: McpEvent[]): Promise<UserAgg[]> {
 
 async function getAllKeys(): Promise<Array<Record<string, any>>> {
   try {
-    const snap = await firebaseService.getDb().collection('mcp_api_keys').get();
-    return snap.docs.map((doc) => ({ id: doc.id, ...(doc.data() || {}) }));
+    const col = await mongoCollection('mcp_api_keys');
+    const docs = await col.find({}).toArray();
+    return docs.map((doc) => ({ id: String(doc._id), ...doc }));
   } catch {
     return [];
   }
@@ -322,8 +324,9 @@ const SEVERITY_RANK: Record<string, number> = { critical: 0, warning: 1, info: 2
 
 async function getResolvedAlerts(): Promise<string[]> {
   try {
-    const doc = await firebaseService.getDb().collection('mcp_config').doc('app').get();
-    const data = doc.data() || {};
+    const col = await mongoCollection('mcp_config');
+    const doc = await col.findOne({ _id: 'app' });
+    const data = (doc || {}) as Record<string, any>;
     return Array.isArray(data.resolvedAlerts) ? data.resolvedAlerts.map(String) : [];
   } catch {
     return [];
@@ -332,11 +335,8 @@ async function getResolvedAlerts(): Promise<string[]> {
 
 async function setResolvedAlerts(resolved: string[]) {
   try {
-    await firebaseService
-      .getDb()
-      .collection('mcp_config')
-      .doc('app')
-      .set({ resolvedAlerts: resolved }, { merge: true });
+    const col = await mongoCollection('mcp_config');
+    await col.updateOne({ _id: 'app' }, { $set: { resolvedAlerts: resolved } }, { upsert: true });
   } catch {
     // dev mode
   }
@@ -375,11 +375,9 @@ adminRouter.get('/overview', requireAdmin, async (req: Request, res: Response) =
 
   let dbConnected = false;
   try {
-    const db = firebaseService.getDb();
-    if (db) {
-      await db.collection('mcp_analytics').limit(1).get();
-      dbConnected = true;
-    }
+    const col = await mongoCollection('mcp_analytics');
+    await col.findOne({});
+    dbConnected = true;
   } catch {
     dbConnected = false;
   }
@@ -546,7 +544,11 @@ adminRouter.get('/users/:id', requireAdmin, async (req: Request, res: Response) 
 adminRouter.post('/users/:id/suspend', requireAdmin, async (req: Request, res: Response) => {
   const uid = req.params.id;
   try {
-    await firebaseService.getDb().collection('users').doc(uid).update({ status: 'suspended' });
+    const col = await mongoCollection('users');
+    const result = await col.updateOne({ $or: [{ _id: uid }, { uid }] }, { $set: { status: 'suspended' } });
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: 'NOT_FOUND', message: 'User document not found' });
+    }
   } catch {
     return res.status(404).json({ error: 'NOT_FOUND', message: 'User document not found' });
   }
@@ -562,7 +564,11 @@ adminRouter.post('/users/:id/suspend', requireAdmin, async (req: Request, res: R
 adminRouter.post('/users/:id/unsuspend', requireAdmin, async (req: Request, res: Response) => {
   const uid = req.params.id;
   try {
-    await firebaseService.getDb().collection('users').doc(uid).update({ status: 'active' });
+    const col = await mongoCollection('users');
+    const result = await col.updateOne({ $or: [{ _id: uid }, { uid }] }, { $set: { status: 'active' } });
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: 'NOT_FOUND', message: 'User document not found' });
+    }
   } catch {
     return res.status(404).json({ error: 'NOT_FOUND', message: 'User document not found' });
   }
@@ -583,12 +589,12 @@ adminRouter.get('/api-keys', requireAdmin, async (req: Request, res: Response) =
     if (e.apiKeyId) usageByKey.set(e.apiKeyId, (usageByKey.get(e.apiKeyId) || 0) + 1);
   });
 
-  const db = firebaseService.getDb();
   const usersByUid = new Map<string, Record<string, any>>();
   try {
-    const snap = await db.collection('users').get();
-    snap.docs.forEach((doc) => {
-      const data = doc.data() || {};
+    const col = await mongoCollection('users');
+    const docs = await col.find({}).toArray();
+    docs.forEach((doc) => {
+      const data = doc;
       if (data.uid) usersByUid.set(String(data.uid), data);
     });
   } catch {
@@ -644,13 +650,12 @@ adminRouter.get('/api-keys', requireAdmin, async (req: Request, res: Response) =
 adminRouter.patch('/api-keys/:id', requireAdmin, async (req: Request, res: Response) => {
   const id = req.params.id;
   const action = String(req.body?.action || '');
-  const db = firebaseService.getDb();
-  const docRef = db.collection('mcp_api_keys').doc(id);
-  const doc = await docRef.get().catch(() => null);
-  if (!doc || !doc.exists) {
+  const col = await mongoCollection('mcp_api_keys');
+  const doc = await col.findOne({ _id: id }).catch(() => null);
+  if (!doc) {
     return res.status(404).json({ error: 'NOT_FOUND', message: 'API key not found' });
   }
-  const docData = doc.data() || {};
+  const docData = doc;
 
   let patch: Record<string, any> = {};
   switch (action) {
@@ -670,7 +675,7 @@ adminRouter.patch('/api-keys/:id', requireAdmin, async (req: Request, res: Respo
       return res.status(400).json({ error: 'BAD_REQUEST', message: 'action must be revoke|disable|enable|restore' });
   }
 
-  await docRef.update(patch);
+  await col.updateOne({ _id: id }, { $set: patch });
   await recordAudit({
     adminEmail: (req as any).email,
     action: `api_key.${action}`,
@@ -965,7 +970,8 @@ adminRouter.get('/security', requireAdmin, async (req: Request, res: Response) =
 adminRouter.get('/health', requireAdmin, async (req: Request, res: Response) => {
   let dbConnected = false;
   try {
-    await firebaseService.getDb().collection('mcp_analytics').limit(1).get();
+    const col = await mongoCollection('mcp_analytics');
+    await col.findOne({});
     dbConnected = true;
   } catch {
     dbConnected = false;

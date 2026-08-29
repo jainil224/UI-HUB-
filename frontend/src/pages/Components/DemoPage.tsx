@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, RotateCcw } from 'lucide-react';
 import { componentList, ComponentItem } from '../../data/componentData';
-import { collection, doc, getDoc } from 'firebase/firestore';
-import { db } from '../../lib/firebase';
+import { getCommunityComponent } from '../../services/community';
 
 class DemoErrorBoundary extends React.Component<
     { children: React.ReactNode },
@@ -58,24 +57,9 @@ const DemoPage: React.FC = () => {
         if (!componentItem && id) {
             const fetchCustom = async () => {
                 try {
-                    const snap = await getDoc(doc(collection(db, 'components'), id));
-                    if (snap.exists()) {
-                        const data = snap.data();
-                        setComponentItem({
-                            id: snap.id,
-                            title: data.componentName,
-                            description: data.description || "Community component",
-                            category: data.category || "Community Uploads",
-                            preview: () => (
-                                <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
-                                    <h3 className="text-2xl font-bold text-white mb-2">{data.componentName}</h3>
-                                    <p className="text-sm text-neutral-400 max-w-md">{data.description}</p>
-                                </div>
-                            ),
-                            code: data.code || "// No code available",
-                            isPremium: false,
-                            vibePrompt: data.vibePrompt || data.description || ""
-                        });
+                    const comp = await getCommunityComponent(id);
+                    if (comp) {
+                        setComponentItem(comp);
                     }
                 } catch (e) {
                     console.error("Failed to load custom component demo:", e);

@@ -1,4 +1,4 @@
-import { firebaseService } from './firebase.js';
+import { getCollection as mongoCollection } from './mongo.js';
 
 export type McpEventType =
   | 'mcp_request'
@@ -62,8 +62,8 @@ export class AnalyticsService {
     return AnalyticsService.instance;
   }
 
-  private getDb() {
-    return firebaseService.getDb();
+  private async getDb() {
+    return mongoCollection('mcp_analytics');
   }
 
   /**
@@ -103,19 +103,15 @@ export class AnalyticsService {
       const cfg = await configService.get();
       if (!cfg.analyticsEnabled) return;
 
-      const db = this.getDb();
-      const batch = db.batch();
+      const db = await this.getDb();
       const now = Date.now();
       const dateKey = new Date(now).toISOString().split('T')[0];
-      const ref = db.collection('mcp_analytics').doc(`${dateKey}_${now}_${Math.random().toString(36).slice(2, 8)}`);
 
-      batch.set(ref, {
+      await db.insertOne({
         events,
         date: dateKey,
         createdAt: now,
       });
-
-      await batch.commit();
       AnalyticsService.invalidateQueryCache();
     } catch (error: any) {
       if (!error?.message?.includes('Could not load the default credentials')) {
@@ -134,11 +130,8 @@ export class AnalyticsService {
     }
 
     try {
-      const db = this.getDb();
-      const snapshot = await db
-        .collection('mcp_analytics')
-        .where('date', '==', dateKey)
-        .get();
+      const db = await this.getDb();
+      const docs = await db.find({ date: dateKey }).toArray();
 
       let totalRequests = 0;
       let requestsToday = 0;
@@ -149,8 +142,8 @@ export class AnalyticsService {
       let failedRequests = 0;
       let rateLimitEvents = 0;
 
-      snapshot.docs.forEach((doc) => {
-        const data = doc.data();
+      docs.forEach((doc) => {
+        const data = doc;
         if (data.events && Array.isArray(data.events)) {
           data.events.forEach((e: McpEvent) => {
             totalRequests++;
@@ -221,12 +214,8 @@ export class AnalyticsService {
       return AnalyticsService.activeKeyCountCache.value;
     }
     try {
-      const db = this.getDb();
-      const snapshot = await db
-        .collection('mcp_api_keys')
-        .where('status', '==', 'active')
-        .get();
-      const count = snapshot.size;
+      const keysCollection = await mongoCollection('mcp_api_keys');
+      const count = await keysCollection.countDocuments({ status: 'active' });
       AnalyticsService.activeKeyCountCache = { value: count, expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS };
       return count;
     } catch {
@@ -236,21 +225,20 @@ export class AnalyticsService {
 
   async queryEvents(fromKey: string, toKey?: string, opts?: { refresh?: boolean; maxEvents?: number }): Promise<McpEvent[]> {
     try {
-      const db = this.getDb();
-      if (!db) return [];
+      const db = await this.getDb();
       const cacheKey = `${fromKey}__${toKey || ''}`;
       const cached = AnalyticsService.queryCache.get(cacheKey);
       if (!opts?.refresh && cached && Date.now() < cached.expiresAt) {
         return cached.events;
       }
-      let query: any = db.collection('mcp_analytics').where('date', '>=', fromKey);
-      if (toKey) query = query.where('date', '<=', toKey);
-      const snapshot = await query.get();
+      const filter: Record<string, any> = { date: { $gte: fromKey } };
+      if (toKey) filter.date.$lte = toKey;
+      const docs = await db.find(filter).toArray();
       const events: McpEvent[] = [];
       const max = opts?.maxEvents ?? AnalyticsService.QUERY_EVENT_CAP;
-      snapshot.docs.forEach((doc: any) => {
+      docs.forEach((doc) => {
         if (events.length >= max) return;
-        const data = doc.data();
+        const data = doc;
         if (data.events && Array.isArray(data.events)) {
           events.push(...data.events.slice(0, max - events.length));
         }
@@ -261,9 +249,7 @@ export class AnalyticsService {
       });
       return events;
     } catch (error: any) {
-      if (!error?.message?.includes('Could not load the default credentials')) {
-        console.error('[AnalyticsService] Error querying events:', error);
-      }
+      console.error('[AnalyticsService] Error querying events:', error);
       return [];
     }
   }
@@ -271,11 +257,10 @@ export class AnalyticsService {
   async getActiveKeyCountByUser(): Promise<Map<string, number>> {
     const counts = new Map<string, number>();
     try {
-      const db = this.getDb();
-      if (!db) return counts;
-      const snapshot = await db.collection('mcp_api_keys').get();
-      snapshot.docs.forEach((doc) => {
-        const data = doc.data() || {};
+      const db = await mongoCollection('mcp_api_keys');
+      const docs = await db.find({}).toArray();
+      docs.forEach((doc) => {
+        const data = doc as any;
         if (data.user_id) {
           counts.set(data.user_id, (counts.get(data.user_id) || 0) + 1);
         }

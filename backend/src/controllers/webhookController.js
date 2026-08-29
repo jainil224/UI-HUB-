@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { fulfillPayment, dispatchProSubscriptionReceipt } from '../services/firebaseService.js';
-import admin from '../utils/firebaseAdmin.js';
+import { getCollection } from '../services/mongoService.js';
 
 export async function handleRazorpayWebhook(req, res) {
   const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
@@ -48,11 +48,10 @@ export async function handleRazorpayWebhook(req, res) {
     const orderId = payment.order_id;
     
     try {
-        const db = admin.firestore();
-        const paymentRef = db.collection('payments').doc(paymentId);
-        let paymentDoc = await paymentRef.get();
+        const payments = await getCollection('payments');
+        const paymentDoc = await payments.findOne({ _id: paymentId });
 
-        if (!paymentDoc.exists) {
+        if (!paymentDoc) {
             console.log(`[WEBHOOK] Fulfilling payment ${paymentId} for user ${email}`);
             const result = await fulfillPayment({
               paymentId,

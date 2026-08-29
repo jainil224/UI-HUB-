@@ -5,8 +5,7 @@ import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock } from
 import ComponentDetail from './sections/ComponentDetail/index';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
-import { db } from '../../lib/firebase';
-import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { fetchCommunityComponents } from '../../services/community';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 
 interface Category {
@@ -76,31 +75,22 @@ const LibraryPage = () => {
     }, [qFromUrl]);
 
     useEffect(() => {
-        const q = query(collection(db, 'components'), orderBy('createdAt', 'desc'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const fetched = snapshot.docs.map(doc => {
-                const data = doc.data();
-                return {
-                    id: doc.id,
-                    title: data.componentName,
-                    description: data.description || "Community contributed component",
-                    category: data.category || "Community Uploads",
-                    preview: () => (
-                        <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
-                            <h3 className="text-xl font-bold text-white mb-2">{data.componentName}</h3>
-                            <p className="text-xs text-neutral-400 max-w-sm mb-4">{data.description}</p>
-                        </div>
-                    ),
-                    code: data.code || "// No code available",
-                    isPremium: false,
-                    vibePrompt: data.vibePrompt || data.description || ""
-                } as ComponentItem;
-            });
-            setFirebaseComponents(fetched);
-        }, (error) => {
-            console.error("Failed to load Firebase components:", error);
-        });
-        return () => unsubscribe();
+        let cancelled = false;
+        let timer: ReturnType<typeof setInterval> | null = null;
+        const load = async () => {
+            try {
+                const fetched = await fetchCommunityComponents();
+                if (!cancelled) setFirebaseComponents(fetched);
+            } catch (error) {
+                if (!cancelled) console.error("Failed to load community components:", error);
+            }
+        };
+        load();
+        timer = setInterval(load, 30000);
+        return () => {
+            cancelled = true;
+            if (timer) clearInterval(timer);
+        };
     }, []);
 
     const baseCategories: Category[] = useMemo(() => [

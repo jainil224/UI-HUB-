@@ -6,6 +6,7 @@ import componentRoutes from './routes/componentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import configRoutes from './routes/configRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
+import favoritesRoutes from './routes/favoritesRoutes.js';
 import { globalLimiter } from './middleware/rateLimiters.js';
 import { startUserSyncWorker } from './services/syncService.js';
 
@@ -99,6 +100,7 @@ router.use('/v1/components', componentRoutes);
 router.use('/v1/users', userRoutes);
 router.use('/v1/config', configRoutes);
 router.use('/v1/payment', paymentRoutes);
+router.use('/v1', favoritesRoutes);
 
 // Health check endpoint (at the very top levels)
 const healthCheck = (req, res) => {

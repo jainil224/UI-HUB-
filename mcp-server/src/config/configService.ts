@@ -1,4 +1,4 @@
-import { firebaseService } from '../services/firebase.js';
+import { getCollection } from '../services/mongo.js';
 import config from './env.js';
 import { TOOL_NAMES } from '../tools/index.js';
 
@@ -34,11 +34,10 @@ class ConfigService {
     };
 
     try {
-      const db = firebaseService.getDb();
-      if (!db) return merged;
-      const doc = await db.collection(CONFIG_COLLECTION).doc(CONFIG_DOC).get();
-      if (doc.exists) {
-        const data = doc.data() || {};
+      const collection = await getCollection(CONFIG_COLLECTION);
+      const doc = await collection.findOne({ _id: CONFIG_DOC });
+      if (doc) {
+        const data = doc;
         if (typeof data.rateLimitFree === 'number') merged.rateLimitFree = data.rateLimitFree;
         if (typeof data.rateLimitPro === 'number') merged.rateLimitPro = data.rateLimitPro;
         if (typeof data.authEnabled === 'boolean') merged.authEnabled = data.authEnabled;
@@ -47,9 +46,7 @@ class ConfigService {
         if (data.tools && typeof data.tools === 'object') merged.tools = { ...(data.tools as Record<string, boolean>) };
       }
     } catch (error: any) {
-      if (!String(error?.message || '').includes('Could not load the default credentials')) {
-        console.error('[ConfigService] Error reading config:', error);
-      }
+      console.error('[ConfigService] Error reading config:', error);
     }
 
     this.cache = merged;
@@ -74,17 +71,16 @@ class ConfigService {
 
   async update(partial: Partial<McpAppConfig>): Promise<McpAppConfig> {
     try {
-      const db = firebaseService.getDb();
+      const collection = await getCollection(CONFIG_COLLECTION);
       const current = await this.get();
       const next = { ...current, ...partial };
       if (partial.tools) {
         next.tools = { ...current.tools, ...partial.tools };
       }
-      await db
-        .collection(CONFIG_COLLECTION)
-        .doc(CONFIG_DOC)
-        .set(
-          {
+      await collection.updateOne(
+        { _id: CONFIG_DOC },
+        {
+          $set: {
             rateLimitFree: next.rateLimitFree,
             rateLimitPro: next.rateLimitPro,
             authEnabled: next.authEnabled,
@@ -93,14 +89,13 @@ class ConfigService {
             tools: next.tools,
             updatedAt: new Date().toISOString(),
           },
-          { merge: true }
-        );
+        },
+        { upsert: true }
+      );
       this.cache = null;
       return this.get();
     } catch (error: any) {
-      if (!String(error?.message || '').includes('Could not load the default credentials')) {
-        console.error('[ConfigService] Error saving config:', error);
-      }
+      console.error('[ConfigService] Error saving config:', error);
       this.cache = null;
       return this.get();
     }

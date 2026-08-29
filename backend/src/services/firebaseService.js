@@ -1,21 +1,22 @@
-import admin from '../utils/firebaseAdmin.js';
+import { getCollection } from './mongoService.js';
 import { sendProSubscriptionEmail } from '../utils/sendEmail.js';
 
-const getDb = () => admin.firestore();
+const PAYMENTS_COLLECTION = 'payments';
+const USERS_COLLECTION = 'users';
 
 export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, amount, currency = 'USD', signature, displayName }) => {
-  const db = getDb();
-  const paymentRef = db.collection('payments').doc(paymentId);
-  const existing = await paymentRef.get();
-  
-  if (existing.exists) {
+  const payments = await getCollection(PAYMENTS_COLLECTION);
+  const existing = await payments.findOne({ _id: paymentId });
+
+  if (existing) {
     console.warn(`[REPLAY] Payment ${paymentId} already processed. Rejecting duplicate set.`);
     return { alreadyProcessed: true };
   }
 
   // 1. Save payment record
   try {
-    await paymentRef.set({
+    await payments.insertOne({
+      _id: paymentId,
       payment_id: paymentId,
       order_id: orderId,
       email: email,
@@ -27,33 +28,39 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
       signature: signature,
       proEmailSent: false,
       invoiceEmailSent: false,
-      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      timestamp: new Date(),
     });
-    console.log(`[FirebaseService] Payment stored for order: ${orderId}, payment: ${paymentId}`);
+    console.log(`[MongoService] Payment stored for order: ${orderId}, payment: ${paymentId}`);
   } catch (error) {
-    console.error('[FirebaseService] Error saving payment to Firestore:', error);
+    console.error('[MongoService] Error saving payment to MongoDB:', error);
     throw error;
   }
 
   // 2. Update user tier
   try {
-      const userDocRef = db.collection('users').doc(email.toLowerCase());
-      const newStatus = (tier || 'pro').toUpperCase();
-      
-      await userDocRef.set({
+    const users = await getCollection(USERS_COLLECTION);
+    const newStatus = (tier || 'pro').toUpperCase();
+
+    await users.updateOne(
+      { _id: email.toLowerCase() },
+      {
+        $set: {
           email: email.toLowerCase(),
           planTier: tier || 'pro',
           status: newStatus,
-          proActivatedAt: admin.firestore.FieldValue.serverTimestamp(),
-          updatedAt: admin.firestore.FieldValue.serverTimestamp()
-      }, { merge: true });
-      
-      console.log(`[FirebaseService] User ${email} upgraded to ${newStatus}`);
-  } catch(err) {
-      console.error('[FirebaseService] Error updating user tier:', err);
-      throw err;
+          proActivatedAt: new Date(),
+          updatedAt: new Date(),
+        },
+      },
+      { upsert: true }
+    );
+
+    console.log(`[MongoService] User ${email} upgraded to ${newStatus}`);
+  } catch (err) {
+    console.error('[MongoService] Error updating user tier:', err);
+    throw err;
   }
-  
+
   return { success: true };
 };
 
@@ -71,47 +78,54 @@ export const dispatchProSubscriptionReceipt = async ({
   currency = 'USD',
   duration = '6 Months',
 }) => {
-  const db = getDb();
-  const paymentRef = db.collection('payments').doc(paymentId);
+  const payments = await getCollection(PAYMENTS_COLLECTION);
 
-  let shouldSend = false;
+  // Atomically claim the send mutex. `findOneAndUpdate` with the `proEmailSent: { $ne: 'sending' }`
+  // condition ensures only one caller can transition to 'sending' (idempotency guard).
   let paymentRecord = null;
+  let shouldSend = false;
 
   try {
-    await db.runTransaction(async (transaction) => {
-      const doc = await transaction.get(paymentRef);
-      if (!doc.exists) {
-        console.warn(`[DispatchReceipt] Payment ${paymentId} doc does not exist yet.`);
-        return;
-      }
+    const claim = await payments.findOneAndUpdate(
+      { _id: paymentId, $or: [{ proEmailSent: { $ne: 'sending' } }, { proEmailSent: { $exists: false } }] },
+      { $set: { proEmailSent: 'sending', invoiceEmailSent: 'sending' } },
+      { returnDocument: 'after' }
+    );
 
-      const data = doc.data() || {};
-      paymentRecord = data;
-
-      if (data.proEmailSent === true || data.invoiceEmailSent === true) {
-        console.log(`[DispatchReceipt] PRO email & receipt already sent for payment: ${paymentId} — skipping.`);
-        return;
-      }
-
-      if (data.proEmailSent === 'sending') {
-        console.log(`[DispatchReceipt] PRO email currently in-flight for payment: ${paymentId} — skipping.`);
-        return;
-      }
-
-      // Claim the send mutex
-      transaction.update(paymentRef, {
-        proEmailSent: 'sending',
-        invoiceEmailSent: 'sending',
-      });
-      shouldSend = true;
-    });
-
-    if (!shouldSend) {
+    const doc = claim?.value || claim;
+    if (!doc) {
+      console.log(`[DispatchReceipt] Payment ${paymentId} doc does not exist yet.`);
       return { success: true, skipped: true };
     }
 
-    console.log(`[DispatchReceipt] Triggering PRO email & PDF receipt generation for ${paymentId} (${email})...`);
+    paymentRecord = doc;
 
+    if (doc.proEmailSent === true || doc.invoiceEmailSent === true) {
+      console.log(`[DispatchReceipt] PRO email & receipt already sent for payment: ${paymentId} — skipping.`);
+      return { success: true, skipped: true };
+    }
+
+    // If it returned an already-true value, another caller finished first.
+    if (doc.proEmailSent === true) {
+      return { success: true, skipped: true };
+    }
+
+    shouldSend = true;
+  } catch (error) {
+    console.error(`[DispatchReceipt] Exception claiming mutex for ${paymentId}:`, error.message);
+    try {
+      await payments.updateOne({ _id: paymentId }, { $set: { proEmailSent: false, invoiceEmailSent: false } });
+    } catch (_) {}
+    return { success: false, error: error.message };
+  }
+
+  if (!shouldSend) {
+    return { success: true, skipped: true };
+  }
+
+  console.log(`[DispatchReceipt] Triggering PRO email & PDF receipt generation for ${paymentId} (${email})...`);
+
+  try {
     const result = await sendProSubscriptionEmail({
       email,
       name: displayName || paymentRecord?.displayName || '',
@@ -124,28 +138,29 @@ export const dispatchProSubscriptionReceipt = async ({
     });
 
     if (result && result.success) {
-      await paymentRef.update({
-        proEmailSent: true,
-        invoiceEmailSent: true,
-        receiptNumber: result.receiptNumber || `UIHUB-${paymentId.slice(-8).toUpperCase()}`,
-        receiptSentAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
+      await payments.updateOne(
+        { _id: paymentId },
+        {
+          $set: {
+            proEmailSent: true,
+            invoiceEmailSent: true,
+            receiptNumber: result.receiptNumber || `UIHUB-${String(paymentId).slice(-8).toUpperCase()}`,
+            receiptSentAt: new Date(),
+          },
+        }
+      );
       console.log(`[DispatchReceipt] ✅ PRO email and receipt marked as sent for ${paymentId}`);
       return { success: true, messageId: result.messageId };
     } else {
       // Reset mutex on failure so retry can happen
-      await paymentRef.update({
-        proEmailSent: false,
-        invoiceEmailSent: false,
-      });
+      await payments.updateOne({ _id: paymentId }, { $set: { proEmailSent: false, invoiceEmailSent: false } });
       console.error(`[DispatchReceipt] ❌ PRO email dispatch failed for ${paymentId}:`, result?.error);
       return { success: false, error: result?.error };
     }
-
   } catch (error) {
     console.error(`[DispatchReceipt] Exception in dispatchProSubscriptionReceipt for ${paymentId}:`, error.message);
     try {
-      await paymentRef.update({ proEmailSent: false, invoiceEmailSent: false });
+      await payments.updateOne({ _id: paymentId }, { $set: { proEmailSent: false, invoiceEmailSent: false } });
     } catch (_) {}
     return { success: false, error: error.message };
   }

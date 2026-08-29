@@ -1,6 +1,5 @@
-import admin from '../utils/firebaseAdmin.js';
+import { getCollection } from './mongoService.js';
 
-const getDb = () => admin.firestore();
 const USERS_COLLECTION = 'users';
 
 export const PREMIUM_AI_TOOLS = ['advance', 'antigravity', 'claude'];
@@ -9,125 +8,114 @@ export const TRIAL_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 /**
  * User Service
- * Handles server-side user logic and Pro status verification via Firestore.
+ * Handles server-side user logic and Pro status verification via MongoDB.
  */
+
+const readTs = (value) => {
+  if (!value) return null;
+  if (value instanceof Date) return value.getTime();
+  if (value._seconds) return value._seconds * 1000;
+  if (typeof value === 'number') return value;
+  return new Date(value).getTime();
+};
+
+/**
+ * Finds a user document by email or uid.
+ * Reads are flexible: matches on the `_id` (email or uid) or the stored `uid`/`email` fields.
+ * @returns {Promise<{ data: object|null }>}
+ */
+const findUserData = async (uid, email) => {
+  const users = await getCollection(USERS_COLLECTION);
+  const emailKey = (email || '').trim().toLowerCase();
+
+  if (emailKey) {
+    const byEmail = await users.findOne({ $or: [{ _id: emailKey }, { email: emailKey }] });
+    if (byEmail) return { data: byEmail };
+  }
+  if (uid) {
+    const byUid = await users.findOne({ $or: [{ _id: uid }, { uid }] });
+    if (byUid) return { data: byUid };
+  }
+  return { data: null };
+};
 
 /**
  * Checks if a user has Elite status based on their email.
- * @param {string} email 
+ * @param {string} email
  * @returns {Promise<boolean>}
  */
 export const checkEliteStatus = async (email) => {
-    if (!email) return false;
-    const userEmail = email.trim().toLowerCase();
-    console.log(`[UserStatus] checkEliteStatus for: "${userEmail}"`);
-    
-    // Explicit Elite override for admin/test accounts
-    if (userEmail === 'jainil11199@gmail.com' || userEmail === 'jainil224@gmail.com' || userEmail === 'jainilpatel2224@gmail.com') {
-        console.log(`[UserStatus] MATCH FOUND for ${userEmail} via hardcoded ELITE override`);
-        return true;
-    }
-    console.log(`[UserStatus] No hardcoded match for ${userEmail}`);
+  if (!email) return false;
+  const userEmail = email.trim().toLowerCase();
+  console.log(`[UserStatus] checkEliteStatus for: "${userEmail}"`);
 
-    try {
-        const db = getDb();
-        const userDoc = await db.collection(USERS_COLLECTION).doc(userEmail).get();
-        if (!userDoc.exists) return false;
-        
-        const userData = userDoc.data();
-        return userData.status === 'ELITE';
-    } catch (error) {
-        if (error.message && error.message.includes('Could not load the default credentials')) {
-            // Suppress the massive stack trace for local development without credentials
-            // console.warn('[UserStatus] Missing local Firebase credentials, skipping Elite check.');
-        } else {
-            console.error('[UserStatus] Error checking Elite status from Firestore:', error);
-        }
-        return false;
-    }
+  // Explicit Elite override for admin/test accounts
+  if (userEmail === 'jainil11199@gmail.com' || userEmail === 'jainil224@gmail.com' || userEmail === 'jainilpatel2224@gmail.com') {
+    console.log(`[UserStatus] MATCH FOUND for ${userEmail} via hardcoded ELITE override`);
+    return true;
+  }
+  console.log(`[UserStatus] No hardcoded match for ${userEmail}`);
+
+  try {
+    const users = await getCollection(USERS_COLLECTION);
+    const user = await users.findOne({ $or: [{ _id: userEmail }, { email: userEmail }] });
+    if (!user) return false;
+    return user.status === 'ELITE';
+  } catch (error) {
+    console.error('[UserStatus] Error checking Elite status from MongoDB:', error);
+    return false;
+  }
 };
 
 /**
  * Checks if a user has Pro status based on their email.
- * @param {string} email 
+ * @param {string} email
  * @returns {Promise<boolean>}
  */
 export const checkProStatus = async (email) => {
-    if (!email) {
-        console.warn('[UserStatus] checkProStatus called with null/undefined email');
-        return false;
+  if (!email) {
+    console.warn('[UserStatus] checkProStatus called with null/undefined email');
+    return false;
+  }
+
+  const userEmail = email.trim().toLowerCase();
+  console.log(`[UserStatus] checkProStatus for: "${userEmail}"`);
+
+  // Explicit Pro override for admin/test accounts
+  if (userEmail === 'jainil11199@gmail.com' || userEmail === 'jainil224@gmail.com' || userEmail === 'jainilpatel2224@gmail.com') {
+    console.log(`[UserStatus] MATCH FOUND for ${userEmail} via hardcoded 1-year PRO override`);
+    return true;
+  }
+  console.log(`[UserStatus] No hardcoded Pro match for ${userEmail}`);
+
+  try {
+    const users = await getCollection(USERS_COLLECTION);
+    const user = await users.findOne({ $or: [{ _id: userEmail }, { email: userEmail }] });
+
+    if (!user) {
+      console.log(`[UserStatus] User ${userEmail} not found in MongoDB. Defaulting to free.`);
+      return false;
     }
-    
-    const userEmail = email.trim().toLowerCase();
-    console.log(`[UserStatus] checkProStatus for: "${userEmail}"`);
-    
-    // Explicit Pro override for admin/test accounts
-    if (userEmail === 'jainil11199@gmail.com' || userEmail === 'jainil224@gmail.com' || userEmail === 'jainilpatel2224@gmail.com') {
-        const overrideExpiry = new Date();
-        overrideExpiry.setFullYear(overrideExpiry.getFullYear() + 1); // 1 year from now
-        
-        console.log(`[UserStatus] MATCH FOUND for ${userEmail} via hardcoded 1-year PRO override`);
+
+    // Elite users are automatically Pro
+    if (user.status === 'ELITE') return true;
+    if (user.status === 'PRO') return true;
+
+    // Check for premium access with expiry (legacy support)
+    if (user.proExpiry) {
+      const expiryDate = new Date(user.proExpiry);
+      if (expiryDate > new Date()) {
+        console.log(`[UserStatus] ${userEmail} verified via MongoDB (expires: ${user.proExpiry})`);
         return true;
+      }
+      console.warn(`[UserStatus] ${userEmail} premium status EXPIRED on ${user.proExpiry}`);
     }
-    console.log(`[UserStatus] No hardcoded Pro match for ${userEmail}`);
-    
-    try {
-        const db = getDb();
-        // Fetch user from Firestore
-        const userDoc = await db.collection(USERS_COLLECTION).doc(userEmail).get();
-        
-        if (!userDoc.exists) {
-            console.log(`[UserStatus] User ${userEmail} not found in Firestore. Defaulting to free.`);
-            return false;
-        }
 
-        const userData = userDoc.data();
-        
-        // Elite users are automatically Pro
-        if (userData.status === 'ELITE') return true;
-        if (userData.status === 'PRO') return true;
-
-        // Check for premium access with expiry (legacy support)
-        if (userData.proExpiry) {
-            const expiryDate = new Date(userData.proExpiry);
-            if (expiryDate > new Date()) {
-                console.log(`[UserStatus] ${userEmail} verified via Firestore (expires: ${userData.proExpiry})`);
-                return true;
-            }
-            console.warn(`[UserStatus] ${userEmail} premium status EXPIRED on ${userData.proExpiry}`);
-        }
-
-        return false;
-    } catch (error) {
-        if (error.message && error.message.includes('Could not load the default credentials')) {
-            // console.warn('[UserStatus] Missing local Firebase credentials, skipping Pro check.');
-        } else {
-            console.error('[UserStatus] Error checking Pro status from Firestore:', error);
-        }
-        return false;
-    }
-};
-
-/**
- * Resolves the user document reference used for trial tracking.
- * Plan-status data is authoritative on the email-keyed doc, so we read full
- * Firestore docs by email. We also fall back to the uid-keyed doc for
- * robustness given the codebase writes user records under both keys.
- */
-const findUserDoc = async (uid, email) => {
-    const db = getDb();
-    const emailKey = (email || '').trim().toLowerCase();
-
-    if (emailKey) {
-        const emailDoc = await db.collection(USERS_COLLECTION).doc(emailKey).get();
-        if (emailDoc.exists) return { ref: emailDoc.ref, data: emailDoc.data() };
-    }
-    if (uid) {
-        const uidDoc = await db.collection(USERS_COLLECTION).doc(uid).get();
-        if (uidDoc.exists) return { ref: uidDoc.ref, data: uidDoc.data() };
-    }
-    // No existing doc — prefer the email key for new writes (matches fulfillPayment).
-    return { ref: emailKey ? db.collection(USERS_COLLECTION).doc(emailKey) : null, data: null };
+    return false;
+  } catch (error) {
+    console.error('[UserStatus] Error checking Pro status from MongoDB:', error);
+    return false;
+  }
 };
 
 /**
@@ -135,28 +123,17 @@ const findUserDoc = async (uid, email) => {
  * @returns {Promise<{ trialCount: number, trialStartedAt: number|null }>}
  */
 export const getUserTrialState = async (uid, email) => {
-    try {
-        const db = getDb();
-        const { ref, data } = await findUserDoc(uid, email);
-        if (!ref || !data) return { trialCount: 0, trialStartedAt: null };
+  try {
+    const { data } = await findUserData(uid, email);
+    if (!data) return { trialCount: 0, trialStartedAt: null };
 
-        const trialCount = typeof data.premiumTrialsUsed === 'number' ? data.premiumTrialsUsed : 0;
-        const startedRaw = data.premiumTrialStartedAt;
-        let trialStartedAt = null;
-        if (startedRaw) {
-            trialStartedAt = startedRaw instanceof Date
-                ? startedRaw.getTime()
-                : (startedRaw._seconds ? startedRaw._seconds * 1000 : new Date(startedRaw).getTime());
-        }
-        return { trialCount, trialStartedAt };
-    } catch (error) {
-        if (error.message && error.message.includes('Could not load the default credentials')) {
-            // Local fallback without credentials — no enforcement source of truth.
-        } else {
-            console.error('[Trial] Error reading trial state from Firestore:', error);
-        }
-        return { trialCount: 0, trialStartedAt: null };
-    }
+    const trialCount = typeof data.premiumTrialsUsed === 'number' ? data.premiumTrialsUsed : 0;
+    const trialStartedAt = readTs(data.premiumTrialStartedAt);
+    return { trialCount, trialStartedAt };
+  } catch (error) {
+    console.error('[Trial] Error reading trial state from MongoDB:', error);
+    return { trialCount: 0, trialStartedAt: null };
+  }
 };
 
 /**
@@ -164,74 +141,102 @@ export const getUserTrialState = async (uid, email) => {
  * @returns {Promise<{ allowed: boolean, reason: 'COUNT'|'EXPIRY'|null, remaining: number, expiresAt: number|null, trialCount: number, trialStartedAt: number|null }>}
  */
 export const evaluateAiTrial = async (uid, email) => {
-    const state = await getUserTrialState(uid, email);
-    const { trialCount, trialStartedAt } = state;
+  const state = await getUserTrialState(uid, email);
+  const { trialCount, trialStartedAt } = state;
 
-    const now = Date.now();
+  const now = Date.now();
 
-    // 24h window from first trial use.
-    if (trialStartedAt && now - trialStartedAt > TRIAL_WINDOW_MS) {
-        const remaining = Math.max(0, MAX_FREE_AI_TRIALS - trialCount);
-        return { ...state, allowed: false, reason: 'EXPIRY', remaining, expiresAt: trialStartedAt + TRIAL_WINDOW_MS };
-    }
+  // 24h window from first trial use.
+  if (trialStartedAt && now - trialStartedAt > TRIAL_WINDOW_MS) {
+    const remaining = Math.max(0, MAX_FREE_AI_TRIALS - trialCount);
+    return { ...state, allowed: false, reason: 'EXPIRY', remaining, expiresAt: trialStartedAt + TRIAL_WINDOW_MS };
+  }
 
-    if (trialCount >= MAX_FREE_AI_TRIALS) {
-        // Window may not be expired yet, but count is exhausted.
-        const expiresAt = trialStartedAt ? trialStartedAt + TRIAL_WINDOW_MS : null;
-        return { ...state, allowed: false, reason: 'COUNT', remaining: 0, expiresAt };
-    }
-
+  if (trialCount >= MAX_FREE_AI_TRIALS) {
     const expiresAt = trialStartedAt ? trialStartedAt + TRIAL_WINDOW_MS : null;
-    return { ...state, allowed: true, reason: null, remaining: MAX_FREE_AI_TRIALS - trialCount, expiresAt };
+    return { ...state, allowed: false, reason: 'COUNT', remaining: 0, expiresAt };
+  }
+
+  const expiresAt = trialStartedAt ? trialStartedAt + TRIAL_WINDOW_MS : null;
+  return { ...state, allowed: true, reason: null, remaining: MAX_FREE_AI_TRIALS - trialCount, expiresAt };
 };
 
 /**
  * Records a premium AI trial use. First use also sets the 24h start timestamp.
+ * Uses an atomic $inc + conditional update so concurrent requests can't overshoot the cap.
  * @returns {Promise<{ trialCount: number, trialStartedAt: number|null, remaining: number, expiresAt: number|null }>}
  */
 export const recordPremiumTrialUse = async (uid, email) => {
-    try {
-        const db = getDb();
-        const { ref, data } = await findUserDoc(uid, email);
-        if (!ref) return { trialCount: 0, trialStartedAt: null, remaining: 0, expiresAt: null };
+  try {
+    const users = await getCollection(USERS_COLLECTION);
+    const emailKey = (email || '').trim().toLowerCase();
 
-        const prevCount = (data && typeof data.premiumTrialsUsed === 'number') ? data.premiumTrialsUsed : 0;
-        const prevStarted = data && data.premiumTrialStartedAt
-            ? (data.premiumTrialStartedAt instanceof Date
-                ? data.premiumTrialStartedAt.getTime()
-                : (data.premiumTrialStartedAt._seconds ? data.premiumTrialStartedAt._seconds * 1000 : new Date(data.premiumTrialStartedAt).getTime()))
-            : null;
+    // Resolve the target user doc id for the atomic update (prefer email key like before).
+    const { data } = await findUserData(uid, email);
+    const targetId = data?._id || emailKey || uid;
+    if (!targetId) return { trialCount: 0, trialStartedAt: null, remaining: 0, expiresAt: null };
 
-        const newCount = Math.min(prevCount + 1, MAX_FREE_AI_TRIALS);
-        const startedAt = prevStarted || Date.now();
+    const now = Date.now();
 
-        // Atomic-ish update: only bump counter if it hasn't been raised past the cap already.
-        await db.runTransaction(async (transaction) => {
-            const fresh = await transaction.get(ref);
-            const freshData = fresh.exists ? fresh.data() : {};
-            const freshCount = (freshData && typeof freshData.premiumTrialsUsed === 'number') ? freshData.premiumTrialsUsed : 0;
-            const freshStarted = freshData && freshData.premiumTrialStartedAt
-                ? (freshData.premiumTrialStartedAt instanceof Date
-                    ? freshData.premiumTrialStartedAt.getTime()
-                    : (freshData.premiumTrialStartedAt._seconds ? freshData.premiumTrialStartedAt._seconds * 1000 : new Date(freshData.premiumTrialStartedAt).getTime()))
-                : null;
-            const count = Math.min(freshCount + 1, MAX_FREE_AI_TRIALS);
-            const started = freshStarted || startedAt;
-            transaction.set(ref, {
-                premiumTrialsUsed: count,
-                premiumTrialStartedAt: admin.firestore.Timestamp.fromMillis(started),
-                updatedAt: admin.firestore.FieldValue.serverTimestamp(),
-            }, { merge: true });
-        });
+    // Atomically increment the counter only if it is below the cap.
+    const updated = await users.findOneAndUpdate(
+      { _id: targetId, $or: [
+          { premiumTrialsUsed: { $lt: MAX_FREE_AI_TRIALS } },
+          { premiumTrialsUsed: { $exists: false } },
+        ] },
+      [
+        { $set: { updatedAt: new Date() } },
+        {
+          $set: {
+            premiumTrialsUsed: { $min: [{ $add: [{ $ifNull: ['$premiumTrialsUsed', 0] }, 1] }, MAX_FREE_AI_TRIALS] },
+            premiumTrialStartedAt: { $ifNull: ['$premiumTrialStartedAt', now] },
+          },
+        },
+      ],
+      { returnDocument: 'after', upsert: false }
+    );
 
-        const expiresAt = startedAt + TRIAL_WINDOW_MS;
-        return { trialCount: newCount, trialStartedAt: startedAt, remaining: Math.max(0, MAX_FREE_AI_TRIALS - newCount), expiresAt };
-    } catch (error) {
-        if (error.message && error.message.includes('Could not load the default credentials')) {
-            // No credentials — reflect a best-effort local count without persistence.
-            return { trialCount: 1, trialStartedAt: Date.now(), remaining: Math.max(0, MAX_FREE_AI_TRIALS - 1), expiresAt: Date.now() + TRIAL_WINDOW_MS };
-        }
-        console.error('[Trial] Error recording premium trial use:', error);
-        throw error;
+    const doc = updated?.value || updated;
+
+    if (!doc) {
+      // Fallback: find and update by email/uid field match.
+      const filter = emailKey
+        ? { $or: [{ _id: emailKey }, { email: emailKey }] }
+        : { $or: [{ _id: uid }, { uid }] };
+      const fallback = await users.findOneAndUpdate(
+        { ...filter, $or: [
+            { premiumTrialsUsed: { $lt: MAX_FREE_AI_TRIALS } },
+            { premiumTrialsUsed: { $exists: false } },
+          ] },
+        [
+          { $set: { updatedAt: new Date() } },
+          {
+            $set: {
+              premiumTrialsUsed: { $min: [{ $add: [{ $ifNull: ['$premiumTrialsUsed', 0] }, 1] }, MAX_FREE_AI_TRIALS] },
+              premiumTrialStartedAt: { $ifNull: ['$premiumTrialStartedAt', now] },
+            },
+          },
+        ],
+        { returnDocument: 'after', upsert: true }
+      );
+      const fDoc = fallback?.value || fallback;
+      const fCount = fDoc && typeof fDoc.premiumTrialsUsed === 'number' ? fDoc.premiumTrialsUsed : 0;
+      const fStarted = readTs(fDoc?.premiumTrialStartedAt) || now;
+      const fExpiresAt = fStarted + TRIAL_WINDOW_MS;
+      return {
+        trialCount: fCount,
+        trialStartedAt: fStarted,
+        remaining: Math.max(0, MAX_FREE_AI_TRIALS - fCount),
+        expiresAt: fExpiresAt,
+      };
     }
+
+    const count = typeof doc.premiumTrialsUsed === 'number' ? doc.premiumTrialsUsed : 0;
+    const startedAt = readTs(doc.premiumTrialStartedAt) || now;
+    const expiresAt = startedAt + TRIAL_WINDOW_MS;
+    return { trialCount: count, trialStartedAt: startedAt, remaining: Math.max(0, MAX_FREE_AI_TRIALS - count), expiresAt };
+  } catch (error) {
+    console.error('[Trial] Error recording premium trial use:', error);
+    throw error;
+  }
 };

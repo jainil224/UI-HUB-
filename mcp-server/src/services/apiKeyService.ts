@@ -1,7 +1,7 @@
 import crypto from 'crypto';
-import { firebaseService } from './firebase.js';
+import { getCollection } from './mongo.js';
 import config from '../config/env.js';
-import type { ApiKeyRecord, McpUser } from '../types/index.js';
+import type { ApiKeyRecord } from '../types/index.js';
 
 const API_KEYS_COLLECTION = 'mcp_api_keys';
 
@@ -16,10 +16,6 @@ export class ApiKeyService {
       ApiKeyService.instance = new ApiKeyService();
     }
     return ApiKeyService.instance;
-  }
-
-  private getDb() {
-    return firebaseService.getDb();
   }
 
   /**
@@ -42,7 +38,7 @@ export class ApiKeyService {
 
   /**
    * Get the visible prefix of an API key (for display).
-   * Example: uh_live_abc123... → uh_live_abc1
+   * Example: uh_live_abc123... -> uh_live_abc1
    */
   getKeyPrefix(apiKey: string): string {
     return apiKey.slice(0, 14);
@@ -53,7 +49,6 @@ export class ApiKeyService {
    * Returns the plaintext key ONCE, plus the hashed record.
    */
   async createApiKey(userId: string, name: string = 'MCP Key'): Promise<{ plaintextKey: string; record: ApiKeyRecord }> {
-    const db = this.getDb();
     const plaintextKey = this.generateApiKey();
     const keyHash = this.hashApiKey(plaintextKey);
     const keyPrefix = this.getKeyPrefix(plaintextKey);
@@ -70,12 +65,13 @@ export class ApiKeyService {
       status: 'active',
     };
 
-    const docRef = await db.collection(API_KEYS_COLLECTION).add(record);
+    const collection = await getCollection(API_KEYS_COLLECTION);
+    const result = await collection.insertOne(record);
     listCache.delete(userId);
 
     return {
       plaintextKey,
-      record: { ...record, id: docRef.id },
+      record: { ...record, id: String(result.insertedId) },
     };
   }
 
@@ -91,19 +87,13 @@ export class ApiKeyService {
     const keyHash = this.hashApiKey(apiKey);
 
     try {
-      const db = this.getDb();
-      const snapshot = await db
-        .collection(API_KEYS_COLLECTION)
-        .where('key_hash', '==', keyHash)
-        .limit(1)
-        .get();
+      const collection = await getCollection(API_KEYS_COLLECTION);
+      const doc = await collection.findOne({ key_hash: keyHash });
 
-      if (snapshot.empty) return null;
+      if (!doc) return null;
 
-      const doc = snapshot.docs[0];
-      const data = doc.data() as Omit<ApiKeyRecord, 'id'>;
-
-      const record: ApiKeyRecord = { ...data, id: doc.id };
+      const data = doc as unknown as Omit<ApiKeyRecord, 'id'>;
+      const record: ApiKeyRecord = { ...data, id: String(doc._id) };
 
       // Check revoked
       if (record.status === 'revoked' || record.revoked_at) {
@@ -121,16 +111,13 @@ export class ApiKeyService {
 
         if (Date.now() > expiryMs) {
           // Mark as expired
-          await doc.ref.update({ status: 'expired' });
+          await collection.updateOne({ _id: doc._id }, { $set: { status: 'expired' } });
           return null;
         }
       }
 
       return record;
     } catch (error: any) {
-      if (error?.message?.includes('Could not load the default credentials')) {
-        return null;
-      }
       console.error('[ApiKeyService] Error validating API key:', error);
       return null;
     }
@@ -141,15 +128,10 @@ export class ApiKeyService {
    */
   async touchApiKey(keyId: string): Promise<void> {
     try {
-      const db = this.getDb();
-      await db
-        .collection(API_KEYS_COLLECTION)
-        .doc(keyId)
-        .update({ last_used_at: Date.now() });
+      const collection = await getCollection(API_KEYS_COLLECTION);
+      await collection.updateOne({ _id: keyId }, { $set: { last_used_at: Date.now() } });
     } catch (error: any) {
-      if (!error?.message?.includes('Could not load the default credentials')) {
-        console.error('[ApiKeyService] Error touching API key:', error);
-      }
+      console.error('[ApiKeyService] Error touching API key:', error);
     }
   }
 
@@ -164,48 +146,40 @@ export class ApiKeyService {
     }
 
     try {
-      const db = this.getDb();
-      const snapshot = await db
-        .collection(API_KEYS_COLLECTION)
-        .where('user_id', '==', userId)
-        .orderBy('created_at', 'desc')
-        .get();
+      const collection = await getCollection(API_KEYS_COLLECTION);
+      const docs = await collection.find({ user_id: userId }).sort({ created_at: -1 }).toArray();
 
-      const keys = snapshot.docs.map((doc) => {
-        const data = doc.data() as Omit<ApiKeyRecord, 'id'>;
+      const keys = docs.map((doc) => {
+        const data = doc as unknown as Omit<ApiKeyRecord, 'id'>;
         const { key_hash, ...safe } = data;
-        return { ...safe, id: doc.id };
+        return { ...safe, id: String(doc._id) };
       });
 
       listCache.set(userId, { keys, expiresAt: Date.now() + LIST_CACHE_TTL_MS });
       return keys;
     } catch (error: any) {
-      if (!error?.message?.includes('Could not load the default credentials')) {
-        console.error('[ApiKeyService] Error listing API keys:', error);
-      }
+      console.error('[ApiKeyService] Error listing API keys:', error);
       return [];
     }
   }
+
   async revokeApiKey(keyId: string, userId: string): Promise<boolean> {
     try {
-      const db = this.getDb();
-      const docRef = db.collection(API_KEYS_COLLECTION).doc(keyId);
-      const doc = await docRef.get();
-
-      if (!doc.exists) return false;
-      const data = doc.data();
-      if (data?.user_id !== userId) return false;
-
-      await docRef.update({
-        status: 'revoked',
-        revoked_at: Date.now(),
-      });
+      const collection = await getCollection(API_KEYS_COLLECTION);
+      const result = await collection.updateOne(
+        { _id: keyId, user_id: userId },
+        {
+          $set: {
+            status: 'revoked',
+            revoked_at: Date.now(),
+          },
+        }
+      );
+      if (result.matchedCount === 0) return false;
       listCache.delete(userId);
       return true;
     } catch (error: any) {
-      if (!error?.message?.includes('Could not load the default credentials')) {
-        console.error('[ApiKeyService] Error revoking API key:', error);
-      }
+      console.error('[ApiKeyService] Error revoking API key:', error);
       return false;
     }
   }
@@ -215,21 +189,13 @@ export class ApiKeyService {
    */
   async deleteApiKey(keyId: string, userId: string): Promise<boolean> {
     try {
-      const db = this.getDb();
-      const docRef = db.collection(API_KEYS_COLLECTION).doc(keyId);
-      const doc = await docRef.get();
-
-      if (!doc.exists) return false;
-      const data = doc.data();
-      if (data?.user_id !== userId) return false;
-
-      await docRef.delete();
+      const collection = await getCollection(API_KEYS_COLLECTION);
+      const result = await collection.deleteOne({ _id: keyId, user_id: userId });
+      if (result.deletedCount === 0) return false;
       listCache.delete(userId);
       return true;
     } catch (error: any) {
-      if (!error?.message?.includes('Could not load the default credentials')) {
-        console.error('[ApiKeyService] Error deleting API key:', error);
-      }
+      console.error('[ApiKeyService] Error deleting API key:', error);
       return false;
     }
   }
