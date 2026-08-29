@@ -176,15 +176,36 @@ mcpRouter.post('/', optionalAuth, mcpRateLimiter, async (req: Request, res: Resp
   }
 });
 
-// Also accept GET on the endpoint for discovery/health check
+// Accept GET on the endpoint for SSE transport connection or JSON discovery
 mcpRouter.get('/', async (req: Request, res: Response) => {
+  // Support standard MCP SSE Transport
+  if (req.headers.accept && req.headers.accept.includes('text/event-stream')) {
+    const sessionId = crypto.randomUUID();
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    if ((res as any).flushHeaders) {
+      (res as any).flushHeaders();
+    }
+
+    // Send the required MCP SSE endpoint event
+    res.write(`event: endpoint\ndata: /mcp?sessionId=${sessionId}\n\n`);
+
+    sessionStore.set(sessionId, { clientId: sessionId, createdAt: Date.now() });
+
+    req.on('close', () => {
+      sessionStore.delete(sessionId);
+    });
+    return;
+  }
+
   const states = await configService.getToolStates();
   const available = TOOLS.filter((t) => states[t.name] !== false).map((t) => t.name);
   res.json({
     name: 'ui-hub-mcp',
     description: 'UI HUB Model Context Protocol server',
     endpoint: `${process.env.MCP_SERVER_URL || ''}/mcp`,
-    protocol: 'Streamable HTTP',
+    protocol: 'Streamable HTTP & SSE',
     auth: 'Bearer <UI_HUB_API_KEY>',
     tools: available,
     health: '/mcp/health',

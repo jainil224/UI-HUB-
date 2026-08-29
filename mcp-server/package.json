@@ -6,6 +6,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "stdio": "tsx src/stdio.ts",
     "build": "tsc && node scripts/copy-data.mjs",
     "start": "node dist/index.js",
     "test": "vitest run",
