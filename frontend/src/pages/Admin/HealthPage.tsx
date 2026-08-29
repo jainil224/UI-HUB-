@@ -3,7 +3,7 @@ import { Activity, Database, Cloud, MemoryStick, Wrench, RefreshCw, Timer } from
 import { getHealth } from '../../services/admin';
 import {
     PageHeader, Panel, PanelHeader, StatCard, StatusBadge, ErrorState, SkeletonBlock,
-    useData, formatCompact, timeAgo,
+    useData, formatCompact, timeAgo, Table, Th, Td,
 } from '../../components/admin/AdminUi';
 
 function humanBytes(n?: number): string {
@@ -117,6 +117,36 @@ const HealthPage: React.FC = () => {
                     </div>
                 </Panel>
             </div>
+
+            <Panel className="mt-6">
+                <PanelHeader
+                    title="MongoDB Collections"
+                    subtitle="Real document counts in the uihub database (updates on each poll)"
+                    actions={<StatusBadge value={data.dbConnected ? 'DB Connected' : 'DB Offline'} tone={data.dbConnected ? 'ok' : 'bad'} />}
+                />
+                {!(data.collections && data.collections.length > 0) ? (
+                    <div className="p-5 text-xs text-neutral-400">No collection data available.</div>
+                ) : (
+                    <Table>
+                        <thead>
+                            <tr>
+                                <Th>Collection</Th>
+                                <Th>Documents</Th>
+                                <Th>Last activity</Th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data.collections.map((c) => (
+                                <tr key={c.name} className="hover:bg-neutral-900/40 transition-colors">
+                                    <Td className="font-mono text-brand-blue">{c.name}</Td>
+                                    <Td className="text-white font-semibold">{formatCompact(c.count)}</Td>
+                                    <Td className="text-neutral-400">{c.lastEventAt ? timeAgo(c.lastEventAt) : '—'}</Td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                )}
+            </Panel>
         </div>
     );
 };
