@@ -16,7 +16,11 @@ export async function getClient(): Promise<MongoClient> {
 
   connecting = (async () => {
     try {
-      client = new MongoClient(config.mongoUri, { serverSelectionTimeoutMS: 15000 });
+      client = new MongoClient(config.mongoUri, {
+        serverSelectionTimeoutMS: 5000,
+        connectTimeoutMS: 5000,
+        socketTimeoutMS: 8000,
+      });
       await client.connect();
       database = client.db(config.mongoDbName);
       console.log(`[Mongo] Connected to MongoDB database: "${config.mongoDbName}"`);

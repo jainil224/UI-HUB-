@@ -12,6 +12,7 @@ export interface McpAppConfig {
 }
 
 const CACHE_TTL_MS = 30_000;
+const CONFIG_DB_TIMEOUT_MS = 5_000;
 const CONFIG_COLLECTION = 'mcp_config';
 const CONFIG_DOC = 'app';
 
@@ -34,7 +35,12 @@ class ConfigService {
     };
 
     try {
-      const collection = await getCollection(CONFIG_COLLECTION);
+      const collection = await Promise.race([
+        getCollection(CONFIG_COLLECTION),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Config DB timeout')), CONFIG_DB_TIMEOUT_MS)
+        ),
+      ]);
       const doc = await collection.findOne({ _id: CONFIG_DOC });
       if (doc) {
         const data = doc;
@@ -46,7 +52,7 @@ class ConfigService {
         if (data.tools && typeof data.tools === 'object') merged.tools = { ...(data.tools as Record<string, boolean>) };
       }
     } catch (error: any) {
-      console.error('[ConfigService] Error reading config:', error);
+      console.error('[ConfigService] Error reading config (using defaults):', error?.message || error);
     }
 
     this.cache = merged;
