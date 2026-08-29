@@ -977,6 +977,30 @@ adminRouter.get('/health', requireAdmin, async (req: Request, res: Response) => 
     dbConnected = false;
   }
   const cfg = await configService.get();
+
+  const collections = await (async () => {
+    const names = ['mcp_analytics', 'mcp_api_keys', 'mcp_audit', 'mcp_config', 'users', 'activity_logs'];
+    const out: Array<{ name: string; count: number; lastEventAt: number | null }> = [];
+    for (const name of names) {
+      let count = 0;
+      let lastEventAt: number | null = null;
+      if (dbConnected) {
+        try {
+          const col = await mongoCollection(name);
+          count = await col.countDocuments({});
+          const last = await col.find({}).sort({ createdAt: -1 }).limit(1).toArray();
+          if (last[0] && typeof (last[0] as any).createdAt === 'number') {
+            lastEventAt = (last[0] as any).createdAt;
+          }
+        } catch {
+          // collection may not exist yet — count stays 0
+        }
+      }
+      out.push({ name, count, lastEventAt });
+    }
+    return out;
+  })();
+
   res.json({
     status: dbConnected ? 'ok' : 'degraded',
     dbConnected,
@@ -988,6 +1012,7 @@ adminRouter.get('/health', requireAdmin, async (req: Request, res: Response) => 
       rss: process.memoryUsage().rss,
       heapUsed: process.memoryUsage().heapUsed,
     },
+    collections,
     config: {
       authEnabled: cfg.authEnabled,
       analyticsEnabled: cfg.analyticsEnabled,

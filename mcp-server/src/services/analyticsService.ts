@@ -121,6 +121,18 @@ export class AnalyticsService {
   }
 
   /**
+   * Immediately flush any buffered events to MongoDB.
+   * Called on graceful shutdown so no real traffic is lost on restart.
+   */
+  async flushNow(): Promise<void> {
+    if (AnalyticsService.flushTimer) {
+      clearTimeout(AnalyticsService.flushTimer);
+      AnalyticsService.flushTimer = null;
+    }
+    await this.flushBuffer();
+  }
+
+  /**
    * Get daily usage summary (for admin dashboard).
    */
   async getDailySummary(dateKey: string): Promise<DailySummary> {

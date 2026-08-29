@@ -25,6 +25,11 @@ function maskKey(prefix: string): string {
     return `${prefix}${dots}`;
 }
 
+function formatNum(n?: number | null): string {
+    if (n === undefined || n === null || isNaN(n)) return '0';
+    return n.toLocaleString('en-US');
+}
+
 const MCP_SERVER_URL = MCP_BASE_URL;
 
 const CONFIG_TEMPLATE = `{
@@ -194,6 +199,12 @@ const MCPPage: React.FC = () => {
     const tier = status?.tier || (isPro ? 'PRO' : 'FREE');
     const isAdmin = tier === 'ADMIN' || tier === 'ELITE';
 
+    const featuredTools = status?.features
+        ? Object.entries(status.features)
+              .filter(([, enabled]) => !!enabled)
+              .map(([name]) => name)
+        : [];
+
     return (
         <div className="flex flex-col gap-8">
             {/* ── Error banner ── */}
@@ -352,7 +363,7 @@ const MCPPage: React.FC = () => {
 
                         <div className="p-4 rounded-md border border-neutral-800 bg-black">
                             <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white mb-3">
-                                <Sparkles size={14} className="text-brand-yellow" /> Registered AI Tools ({featuredTools.length} {featuredTools.length === 1 ? 'Active' : 'Active'})
+                                <Sparkles size={14} className="text-brand-yellow" /> Registered AI Tools ({featuredTools.length} Active)
                             </div>
                             <div className="flex flex-wrap gap-1.5">
                                 {featuredTools.map((tool) => (

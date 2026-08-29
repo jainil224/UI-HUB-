@@ -342,6 +342,7 @@ export interface AdminHealth {
     service: string;
     version: string;
     memory: { rss: number; heapUsed: number };
+    collections: Array<{ name: string; count: number; lastEventAt: number | null }>;
     config: {
         authEnabled: boolean;
         analyticsEnabled: boolean;

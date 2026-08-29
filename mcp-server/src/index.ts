@@ -7,6 +7,7 @@ import { mcpRouter } from './routes/mcp.js';
 import { dashboardRouter } from './routes/dashboard.js';
 import { adminRouter } from './routes/admin.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
+import { analyticsService } from './services/analyticsService.js';
 
 const app = express();
 const PORT = config.port;
@@ -92,6 +93,16 @@ if (isMain) {
     console.log(`[MCP Server] Health: http://localhost:${PORT}/health`);
     console.log(`[MCP Server] MCP endpoint: ${config.mcpServerUrl}/mcp`);
   });
+
+  const shutdown = (signal: string) => {
+    console.log(`[MCP Server] ${signal} received — flushing analytics before exit...`);
+    Promise.race([analyticsService.flushNow(), new Promise((r) => setTimeout(r, 3000))])
+      .catch(() => {})
+      .finally(() => process.exit(0));
+    setTimeout(() => process.exit(0), 4000).unref();
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
 }
 
 export { app, started };
