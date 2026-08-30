@@ -79,6 +79,7 @@ const BlockDrift = React.lazy(() => import('../components/ui/BlockDrift'));
 const Lightfall = React.lazy(() => import('../components/ui/Lightfall'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
+const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
 
 
 
@@ -2021,6 +2022,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'lightfall': Lightfall,
     'isometric-portal': IsometricPortal,
     'morphing-glow': MorphingGlow,
+    'gear-system': GearSystem,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -4572,5 +4574,243 @@ const MorphingGlow: React.FC = () => {
 
 export default MorphingGlow;`,
         vibePrompt: "Create a 'Morphing Glow' loader in React + TypeScript using a pure inline SVG mask with CSS keyframe animations (no dependencies). The mark is a morphing glass diamond: a 100x100px circular glass disc with an amber-to-rust linear gradient body, a glowing edge rim (light amber top border, deep rust bottom border) and layered inset/outer box-shadows in semi-transparent amber and rust. The disc is clipped by an SVG <mask> of blurred polygon blades — a full-cover black rectangle (rotated 90deg) plus two large white triangles and four identical small white triangles — whose blur, contrast and 360deg rotation animations continuously reshape the clipped diamond silhouette. Each blade runs its own 2s spin (staggered via negative animation-delays and alternating directions) around individual transform-origins, while the mask's contrast pulses between 15 and 3 over 1s to round and sharpen the silhouette. The whole loader breathes color by hue-rotating from 0deg to -90deg and back over 6s (ease-in-out). All timing flows from CSS custom properties (--time-animation: 2s, --size: 1 for scaling). Center in a full-size flexbox container, loop forever with no JS, and keep every effect driven purely by CSS filters and transforms."
+    },
+    {
+        id: "gear-system",
+        title: "Gear System",
+        category: "loader",
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#17181d]">
+                <GearSystem />
+            </div>
+        ),
+        code: `import React from 'react';
+
+const GearSystem: React.FC = () => {
+  return (
+    <div
+      className="w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none"
+      style={{
+        background: 'radial-gradient(120% 120% at 50% 40%, #2a2e36 0%, #17181d 55%, #0d0e12 100%)',
+      }}
+    >
+      <style>{\`
+        @keyframes gs-clockwise {
+          0% {
+            transform: rotate(0deg);
+          }
+
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes gs-counter-clockwise {
+          0% {
+            transform: rotate(0deg);
+          }
+
+          100% {
+            transform: rotate(-360deg);
+          }
+        }
+
+        .gs-gearbox {
+          background: #111;
+          height: 150px;
+          width: 200px;
+          position: relative;
+          border: none;
+          overflow: hidden;
+          border-radius: 6px;
+          box-shadow: 0px 0px 0px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .gs-gearbox .gs-overlay {
+          border-radius: 6px;
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 10;
+          box-shadow: inset 0px 0px 20px black;
+          transition: background 0.2s;
+        }
+
+        .gs-gearbox .gs-overlay {
+          background: transparent;
+        }
+
+        .gs-gear {
+          position: absolute;
+          height: 60px;
+          width: 60px;
+          box-shadow: 0px -1px 0px 0px #888888, 0px 1px 0px 0px black;
+          border-radius: 30px;
+        }
+
+        .gs-gear.gs-large {
+          height: 120px;
+          width: 120px;
+          border-radius: 60px;
+        }
+
+        .gs-gear.gs-large:after {
+          height: 96px;
+          width: 96px;
+          border-radius: 48px;
+          margin-left: -48px;
+          margin-top: -48px;
+        }
+
+        .gs-gear.gs-one {
+          top: 12px;
+          left: 10px;
+        }
+
+        .gs-gear.gs-two {
+          top: 61px;
+          left: 60px;
+        }
+
+        .gs-gear.gs-three {
+          top: 110px;
+          left: 10px;
+        }
+
+        .gs-gear.gs-four {
+          top: 13px;
+          left: 128px;
+        }
+
+        .gs-gear:after {
+          content: "";
+          position: absolute;
+          height: 36px;
+          width: 36px;
+          border-radius: 36px;
+          background: #111;
+          top: 50%;
+          left: 50%;
+          margin-left: -18px;
+          margin-top: -18px;
+          z-index: 3;
+          box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1), inset 0px 0px 10px rgba(0, 0, 0, 0.1), inset 0px 2px 0px 0px #090909, inset 0px -1px 0px 0px #888888;
+        }
+
+        .gs-gear-inner {
+          position: relative;
+          height: 100%;
+          width: 100%;
+          background: #555;
+          border-radius: 30px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gs-large .gs-gear-inner {
+          border-radius: 60px;
+        }
+
+        .gs-gear.gs-one .gs-gear-inner {
+          animation: gs-counter-clockwise 3s infinite linear;
+        }
+
+        .gs-gear.gs-two .gs-gear-inner {
+          animation: gs-clockwise 3s infinite linear;
+        }
+
+        .gs-gear.gs-three .gs-gear-inner {
+          animation: gs-counter-clockwise 3s infinite linear;
+        }
+
+        .gs-gear.gs-four .gs-gear-inner {
+          animation: gs-counter-clockwise 6s infinite linear;
+        }
+
+        .gs-gear-inner .gs-bar {
+          background: #555;
+          height: 16px;
+          width: 76px;
+          position: absolute;
+          left: 50%;
+          margin-left: -38px;
+          top: 50%;
+          margin-top: -8px;
+          border-radius: 2px;
+          border-left: 1px solid rgba(255, 255, 255, 0.1);
+          border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gs-large .gs-gear-inner .gs-bar {
+          margin-left: -68px;
+          width: 136px;
+        }
+
+        .gs-gear-inner .gs-bar:nth-child(2) {
+          transform: rotate(60deg);
+        }
+
+        .gs-gear-inner .gs-bar:nth-child(3) {
+          transform: rotate(120deg);
+        }
+
+        .gs-gear-inner .gs-bar:nth-child(4) {
+          transform: rotate(90deg);
+        }
+
+        .gs-gear-inner .gs-bar:nth-child(5) {
+          transform: rotate(30deg);
+        }
+
+        .gs-gear-inner .gs-bar:nth-child(6) {
+          transform: rotate(150deg);
+        }
+      \`}</style>
+
+      <div className="gs-gearbox">
+        <div className="gs-overlay" />
+        <div className="gs-gear gs-one">
+          <div className="gs-gear-inner">
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+          </div>
+        </div>
+        <div className="gs-gear gs-two">
+          <div className="gs-gear-inner">
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+          </div>
+        </div>
+        <div className="gs-gear gs-three">
+          <div className="gs-gear-inner">
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+          </div>
+        </div>
+        <div className="gs-gear gs-four gs-large">
+          <div className="gs-gear-inner">
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+            <div className="gs-bar" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default GearSystem;`,
+        vibePrompt: "Create a 'Gear System' loader in React + TypeScript with pure CSS keyframe animations (no dependencies). The mark is a mechanical gearbox: a 150px tall by 200px wide dark panel (#111) with a 1px faint white border, 6px rounded corners and an inset black vignette overlay. Inside sit four interlocking gears built from circles with radiating tooth bars: three 60px gears (top-left, center, bottom-left) plus one 120px large gear (top-right). Each gear is a centered metal disc — a #555 gear-inner with a 1px translucent white border, a 36px darker metal hub (with subtle inner/outer box-shadows and top highlight) punched through the middle, and rectangular tooth bars (76px wide, center offset 38px) with translucent edges. The large gear's teeth are 136px wide with a 68px center offset. Gears spin continuously: the three small gears rotate 360deg (two counter-clockwise, one clockwise on 3s linear loop) while the large one counter-clockwise on a slower 6s loop. Both directions come from two @keyframes (clockwise / counter-clockwise). Center the gearbox in a full-size flexbox container with a dark gradient backdrop, and never stop animating."
     }
 ];
