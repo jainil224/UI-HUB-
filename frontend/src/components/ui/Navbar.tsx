@@ -100,6 +100,7 @@ const Navbar = () => {
                                 { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                 { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
                                 { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
+                                { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
                             ].map(({ to, label, active }) => (
                                 <Link
                                     key={to + label}
@@ -252,6 +253,7 @@ const Navbar = () => {
                                         { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                         { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
                                         { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
+                                        { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
                                     ].map(({ to, label, active }) => (
                                         <Link
                                             key={'m-' + to + label}

@@ -77,6 +77,7 @@ const AppShell = () => {
                 <Route index element={<Navigate to="/dashboard/mcp" replace />} />
                 <Route path="mcp" element={<MCPPage />} />
             </Route>
+            <Route path="/mcp" element={<Navigate to="/dashboard/mcp" replace />} />
             <Route path="/admin/mcp" element={<AdminGuard />}>
                 <Route element={<AdminLayout />}>
                     <Route index element={<Navigate to="/admin/mcp/overview" replace />} />
