@@ -10,7 +10,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
 import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
-import { getComponentCode } from '../../../../utils/codeUtils';
+import { getComponentCode, withUiHubBranding } from '../../../../utils/codeUtils';
 import { downloadComponentZip } from '../../../../utils/zipUtils';
 import { fetchVibePrompt, fetchComponentSource, getFallbackVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
 import { getApiBaseUrl } from '../../../../utils/apiConfig';
@@ -979,7 +979,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     };
 
     const sourceCode = React.useMemo(
-        () => fetchedSource || getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }),
+        () => fetchedSource ? withUiHubBranding(fetchedSource, item.id) : getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }),
         [fetchedSource, item.id]
     );
     const sourceFileName = `${item.title.replace(/\s+/g, '')}.tsx`;

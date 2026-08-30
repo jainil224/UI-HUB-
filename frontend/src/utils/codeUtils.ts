@@ -2,6 +2,41 @@ import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources';
 import { EMBEDDED_SOURCE_CODE } from '../data/embeddedSourceCode';
 import { CARD_CASCADE_SOURCE } from '../data/cardCascadeSource';
 
+const UI_HUB_DISPLAY_NAME = (id: string) =>
+    id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+
+const uiHubBanner = (title: string, include = true) => {
+    const boxWidth = 54;
+    const pad = (s: string) => {
+        const left = Math.max(0, Math.floor((boxWidth - s.length) / 2));
+        const right = Math.max(0, boxWidth - s.length - left);
+        return `   ║${' '.repeat(left)}${s}${' '.repeat(right)}║`;
+    };
+    const top = '   ╔' + '═'.repeat(boxWidth) + '╗';
+    const bottom = '   ╚' + '═'.repeat(boxWidth) + '╝';
+    const lines = [
+        top,
+        pad('U I  H U B'),
+        pad('Premium Web Component Library'),
+    ];
+    if (include && title) {
+        lines.push(pad('• ' + title + ' •'));
+    }
+    lines.push(bottom);
+    return ['/*', ...lines, '*/'].join('\n');
+};
+
+/**
+ * Prepends the UI HUB branded header to a component's code.
+ */
+export const withUiHubBranding = (code: string, id: string, html = false): string => {
+    const banner = uiHubBanner(UI_HUB_DISPLAY_NAME(id));
+    if (html) {
+        return `<!--\n${banner.replace(/^\/\*|\*\/$/g, '').trim()}\n-->\n\n${code}`;
+    }
+    return `${banner}\n\n${code}`;
+};
+
 export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'html', styling: 'tailwind' | 'css' }) => {
   const { lang, styling } = options;
   const isTS = lang === 'ts';
@@ -11,15 +46,19 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
   // real component file exists — keeps the exact code the component uses
   // visible in production even where the deployed bundle has no filesystem.
   const fullSource = COMPONENT_FULL_SOURCES[id] || EMBEDDED_SOURCE_CODE[id];
-  if (isTS && isTailwind && fullSource) return fullSource;
+  if (isTS && isTailwind && fullSource) return withUiHubBranding(fullSource, id);
 
   // Card Cascade has no embedded key yet, so fall back to its dedicated
   // pre-embedded production source (mirrors the backend resolveSourceCode).
   if (isTS && isTailwind && id === 'card-cascade' && CARD_CASCADE_SOURCE) {
-    return CARD_CASCADE_SOURCE;
+    return withUiHubBranding(CARD_CASCADE_SOURCE, id);
   }
 
   const vanillaBoilerplate = (html: string, css: string, js: string) => `
+<!--
+  U I  H U B
+  Premium Web Component Library • ${UI_HUB_DISPLAY_NAME(id)}
+-->
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,7 +76,8 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
 </html>`;
 
   // For React/Tailwind/TS versions
-  const reactBoilerplate = (imports: string, content: string) => `
+  const reactBoilerplate = (imports: string, content: string) => `${uiHubBanner(UI_HUB_DISPLAY_NAME(id))}
+
 ${imports}
 
 export const Component = () => {
@@ -49,6 +89,10 @@ export const Component = () => {
   if (!isTailwind) {
     // Return Vanilla Version when CSS is selected
     const vanillaBoilerplateLocal = (html: string, css: string, js: string) => `
+<!--
+  U I  H U B
+  Premium Web Component Library • ${UI_HUB_DISPLAY_NAME(id)}
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -778,32 +822,34 @@ export const Component = () => {
     `export const Component = () => {`;
 
   if (lang === 'html') {
+    const brandHtml = (html: string) => `<!--\n  U I  H U B\n  Premium Web Component Library • ${UI_HUB_DISPLAY_NAME(id)}\n-->\n${html}`;
     switch (id) {
-      case "letter-pull-up": return `<div class="letter-pull-up">LETTER PULL UP</div>`;
-      case "scale-letter": return `<div class="scale-letter">SCALE LETTER</div>`;
-      case "separate-away": return `<div class="separate-away">SEPARATE AWAY</div>`;
-      case "wavy-text": return `<div class="wavy-text">WAVY TEXT</div>`;
-      case "word-pull-up": return `<div class="word-pull-up">WORD PULL UP</div>`;
-      case "noise": return `<div class="noise-overlay"></div>`;
-      case "liquid-glass": return `<div class="glass-container"></div>`;
-      case "blur-vignette": return `<div class="blur-vignette"></div>`;
-      case "liquid-gradient": return `<div class="liquid-gradient"></div>`;
-      case "spotlight-cards": return `<div class="spotlight-grid"></div>`;
-      case "image-reveal": return `<div class="image-reveal"></div>`;
-      case "blocks": return `<div class="blocks-grid"></div>`;
-      case "animated-beam": return `<div class="animated-beam"></div>`;
-      case "grid-background": return `<div class="grid-background"></div>`;
-      case "hacker-background": return `<canvas id="hacker-canvas"></canvas>`;
-      case "gravitational-vortex": return `<canvas id="vortex-canvas"></canvas>`;
-      case "black-hole-3d": return `<canvas id="black-hole-canvas"></canvas>`;
-      case "blooming-flower": return `<canvas id="flower-canvas"></canvas>`;
-      case "chandelier": return `<canvas id="chandelier-canvas"></canvas>`;
-      case "sparkles-background": return `<div class="sparkles"></div>`;
-      default: return `<div class="${id}"></div>`;
+      case "letter-pull-up": return brandHtml(`<div class="letter-pull-up">LETTER PULL UP</div>`);
+      case "scale-letter": return brandHtml(`<div class="scale-letter">SCALE LETTER</div>`);
+      case "separate-away": return brandHtml(`<div class="separate-away">SEPARATE AWAY</div>`);
+      case "wavy-text": return brandHtml(`<div class="wavy-text">WAVY TEXT</div>`);
+      case "word-pull-up": return brandHtml(`<div class="word-pull-up">WORD PULL UP</div>`);
+      case "noise": return brandHtml(`<div class="noise-overlay"></div>`);
+      case "liquid-glass": return brandHtml(`<div class="glass-container"></div>`);
+      case "blur-vignette": return brandHtml(`<div class="blur-vignette"></div>`);
+      case "liquid-gradient": return brandHtml(`<div class="liquid-gradient"></div>`);
+      case "spotlight-cards": return brandHtml(`<div class="spotlight-grid"></div>`);
+      case "image-reveal": return brandHtml(`<div class="image-reveal"></div>`);
+      case "blocks": return brandHtml(`<div class="blocks-grid"></div>`);
+      case "animated-beam": return brandHtml(`<div class="animated-beam"></div>`);
+      case "grid-background": return brandHtml(`<div class="grid-background"></div>`);
+      case "hacker-background": return brandHtml(`<canvas id="hacker-canvas"></canvas>`);
+      case "gravitational-vortex": return brandHtml(`<canvas id="vortex-canvas"></canvas>`);
+      case "black-hole-3d": return brandHtml(`<canvas id="black-hole-canvas"></canvas>`);
+      case "blooming-flower": return brandHtml(`<canvas id="flower-canvas"></canvas>`);
+      case "chandelier": return brandHtml(`<canvas id="chandelier-canvas"></canvas>`);
+      case "sparkles-background": return brandHtml(`<div class="sparkles"></div>`);
+      default: return brandHtml(`<div class="${id}"></div>`);
     }
   }
 
-  const reactOutput = (content: string) => `
+  const reactOutput = (content: string) => `${uiHubBanner(UI_HUB_DISPLAY_NAME(id))}
+
 ${reactImports}
 
 ${componentHeader}
