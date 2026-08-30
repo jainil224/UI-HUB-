@@ -1013,5 +1013,36 @@ Add JS animation state, external animation libraries, or change timing/easing va
 Keep the CSS in a scoped <style> tag, preserve mask polygon order, 2s base timing, 6s color cycle and amber/rust palette.
 
 `,
+
+  "gear-system": `
+## COMPONENT: Gear System (Loader)
+
+### Overview
+A mechanical gearbox loader built purely with CSS keyframes in a self-contained React/TypeScript component. Four interlocking gears — three small 60px discs and one large 120px disc — spin inside a dark 200x150px panel with an inset vignette overlay, radiating tooth bars around each metal hub.
+
+### Animation Technique
+- CSS @keyframes on .gs-gear-inner: counter-clockwise and clockwise 360deg rotation (gs-counter-clockwise / gs-clockwise).
+- Three small gears spin on 3s linear infinite loops, alternating directions (counter, clockwise, counter); the large gear spins counter-clockwise on a slower 6s linear infinite loop.
+- Tooth bars are absolutely positioned around the axle; nth-child transforms rotate them in steps (60/120deg for small gears; 30/60/90/120/150deg for the large one).
+- No JavaScript animation state; loops forever purely via CSS animation.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]).
+- Gearbox exactly 200px wide by 150px tall; keyframes and classes prefixed gs-.
+
+### Do not
+Add JS animation state, external animation libraries, or change timing/easing values.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve the four gear positions, 3s/6s spin timing and the #111/#555 metal palette.
+
+`
 };
 

@@ -146,4 +146,23 @@ A morphing glass diamond loader: a 100x100px circular glass disc with an amber-t
 Production-ready single-file React component.
 
 `,
+
+  "gear-system": `
+## Component: Gear System
+
+Build a "Gear System" loading animation as a React + TypeScript component using Tailwind CSS and pure CSS keyframe animations (no external animation libraries).
+
+## What it does
+A mechanical gearbox loader: a 150px tall by 200px wide dark panel (#111) with a faint white border and an inset black vignette overlay. Inside sit four interlocking gears — three 60px gears (top-left, center, bottom-left) plus one 120px large gear (top-right) — each built from a metal disc with radiating tooth bars around a darker center hub.
+
+## Technical
+- All motion driven by CSS @keyframes (clockwise / counter-clockwise) on the gear-inner elements; prefix keyframes and classes: gs-clockwise, gs-counter-clockwise, .gs-gearbox, .gs-gear, .gs-gear-inner, .gs-bar.
+- Gears: 60px discs (120px large) with a 36px darker hub, 1px translucent borders, layered metal box-shadows and 76px tooth bars (136px for the large gear, centered 68px).
+- Spin timing: three small gears counter-clockwise/clockwise on 3s linear infinite loops; the large gear counter-clockwise on a slower 6s linear infinite loop.
+- Zero JavaScript animation state; loops forever purely via CSS.
+
+## Output
+Production-ready single-file React component.
+
+`
 };

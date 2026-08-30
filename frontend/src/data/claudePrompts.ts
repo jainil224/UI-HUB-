@@ -3288,6 +3288,42 @@ Acceptance:
 Produces the identical looping amber/rust morphing glass diamond with blurred, rounding, rotating mask blades and hue-cycling glow.
 
 `,
+
+  "gear-system": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in pure CSS mechanical animation.
+
+## Task
+Create a "Gear System" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes applied to the gear elements.
+
+COMPONENT NAME: Gear System
+
+VISUAL DESCRIPTION:
+A mechanical gearbox loader. The frame (.gs-gearbox) is a 200x150px dark panel (background #111, border-radius 6px, subtle 1px white outer box-shadow, overflow hidden) with an absolutely positioned .gs-overlay (inset 0px 0px 20px black vignette, z-index 10). Four gears interlock inside: three 60px gears plus one 120px .gs-gear.gs-large. Each gear is a .gs-gear disc with a .gs-gear-inner core (background #555, 1px translucent white border) and a 36px darker metal hub (.gs-gear:after, background #111, z-index 3) punched through the center with layered outer/inner box-shadows, a top highlight (#090909) and bottom rim (#888888), all inside a soft white glow.
+
+GEARS:
+- position: absolute; top/left place the gears at (12px,10px), (61px,60px), (110px,10px) and (13px,128px). The large gear's center hole is 96px.
+- Tooth bars (.gs-gear-inner .gs-bar): 16px tall, 76px wide boxes centered on the axle (margin-left -38px) with translucent left/right borders; the large gear's teeth are 136px wide (margin-left -68px).
+- nth-child transforms rotate the bars: small gears use three bars at 60/120deg; the large gear uses six bars at 60/120/90/30/150deg.
+
+ANIMATIONS (all CSS, prefixed gs-):
+- .gs-gear.gs-one .gs-gear-inner: gs-counter-clockwise 3s linear infinite
+- .gs-gear.gs-two .gs-gear-inner: gs-clockwise 3s linear infinite
+- .gs-gear.gs-three .gs-gear-inner: gs-counter-clockwise 3s linear infinite
+- .gs-gear.gs-four .gs-gear-inner: gs-counter-clockwise 6s linear infinite
+- @keyframes gs-clockwise rotates 0deg -> 360deg; gs-counter-clockwise rotates 0deg -> -360deg.
+
+TECHNICAL:
+- Self-contained <style> tag. Keyframes: gs-clockwise, gs-counter-clockwise. All classes/ids prefixed gs-.
+- Render .gs-gearbox centered in a w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none container with a dark radial background.
+- Zero runtime JS animation.
+
+Acceptance:
+Produces the identical looping dark mechanical gearbox: three small gears spinning at 3s (two counter-clockwise, one clockwise) and a larger gear spinning slowly counter-clockwise at 6s, teeth radiating continuously.
+
+`
 };
 
 
