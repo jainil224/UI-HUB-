@@ -71,12 +71,8 @@ const bentoSpecs: BentoSpec[] = [
         frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[210%] h-[500px] scale-[0.5] flex items-center justify-center',
     },
     { id: 'wave-background', className: 'sm:col-span-2' },
-    { id: 'corner-border-button', className: '' },
-    { id: 'corner-button', className: '' },
-    { id: 'creepy-button', className: '' },
     { id: 'radial-glow-button', className: '' },
     { id: 'spider-web', className: 'sm:col-span-2' },
-    { id: 'spiral-images', className: 'sm:col-span-2' },
 ];
 
 const BentoCard = ({ spec, comp }: { spec: BentoSpec; comp: BentoComp }) => {
