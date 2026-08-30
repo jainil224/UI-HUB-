@@ -5,6 +5,7 @@ interface Props {
     page: GetStartedDoc;
     onBackToIntro?: () => void;
     onBrowseLibrary?: () => void;
+    onOpenMcp?: () => void;
 }
 
 function CodeBlock({ lang, label, content }: { lang?: string; label?: string; content: string }) {
@@ -84,7 +85,7 @@ function StepsBlock({ steps }: { steps: GetStartedDoc['blocks'][number]['steps']
     );
 }
 
-export default function GetStartedPage({ page, onBackToIntro, onBrowseLibrary }: Props) {
+export default function GetStartedPage({ page, onBackToIntro, onBrowseLibrary, onOpenMcp }: Props) {
     return (
         <div className="flex flex-col gap-6">
             <div className="rounded-lg border border-brand-green/30 bg-brand-surface p-6">
@@ -147,6 +148,14 @@ export default function GetStartedPage({ page, onBackToIntro, onBrowseLibrary }:
                                     </p>
                                 ) : null}
                                 <div className="flex flex-wrap items-center gap-3">
+                                    {block.cta.mcpLabel && onOpenMcp ? (
+                                        <button
+                                            onClick={onOpenMcp}
+                                            className="rounded-lg bg-emerald-500 hover:bg-emerald-600 px-5 py-2.5 text-xs font-black uppercase tracking-wider text-white border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                                        >
+                                            {block.cta.mcpLabel}
+                                        </button>
+                                    ) : null}
                                     {onBrowseLibrary ? (
                                         <button
                                             onClick={onBrowseLibrary}

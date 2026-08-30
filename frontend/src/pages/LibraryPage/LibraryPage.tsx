@@ -541,6 +541,7 @@ const LibraryPage = () => {
                                     page={activeDoc}
                                     onBackToIntro={() => handleDocSelect('introduction')}
                                     onBrowseLibrary={() => handleComponentSelect(allComponents[0])}
+                                    onOpenMcp={() => navigate('/dashboard/mcp')}
                                 />
                             ) : (
                                 <ComponentDetail item={activeComponent} onBack={() => {}} />
