@@ -1907,4 +1907,23 @@ An AI-style generating indicator: the word "GENERATING" spelled across the middl
 ## Output
 Production-ready single-file React component.
 
+`,
+  "trading-candles": `
+## Component: Trading Candles
+
+Build a "Trading Candles" loading animation as a React + TypeScript component using Tailwind CSS and pure CSS keyframe animations (no external animation libraries).
+
+## What it does
+A mini candlestick chart of three candles bouncing like a live market ticker: green, red, green columns side by side awaiting the next print.
+
+## Technical
+- Each candle: a 4px-wide wick above and below a 12x48px rounded-2px body (wicks and body share the same color via a --tc-candle variable).
+- Three candle columns (.tc-candle-group), each bouncing (tc-bounce) on a 1s ease-in-out infinite loop: translateY(-20%) at 0%/100% with cubic-bezier(0.8, 0, 1, 1), resting pose at 50% with cubic-bezier(0, 0, 0.2, 1).
+- Delays: outer green candles 0.1s, middle red candle 0.2s so the ripple starts from the center.
+- Colors: green #22c55e (.tc-candle-green), red #ef4444 (.tc-candle-red).
+- Prefix all keyframes/classes with tc-; center in a full-size flexbox container (w-full h-full min-h-[380px]) with a dark gradient backdrop; 4px gap between columns.
+
+## Output
+Production-ready single-file React component.
+
 `};

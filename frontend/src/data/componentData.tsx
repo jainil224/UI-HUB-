@@ -82,6 +82,7 @@ const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
 const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
 const Hourglass = React.lazy(() => import('../components/ui/Hourglass'));
 const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'));
+const TradingCandles = React.lazy(() => import('../components/ui/TradingCandles'));
 
 
 
@@ -2027,6 +2028,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'gear-system': GearSystem,
     'hourglass': Hourglass,
     'generating-orb': GeneratingOrb,
+    'trading-candles': TradingCandles,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -5134,5 +5136,101 @@ const GeneratingOrb: React.FC = () => {
 
 export default GeneratingOrb;`,
         vibePrompt: "Create a 'Generating Orb' loader in React + TypeScript with pure CSS keyframe animations (no dependencies). The mark is an AI-style generating indicator: the word 'GENERATING' spelled across the middle of a spinning circular orb. The orb is a 180px full-circle element (.go-loader) that rotates continuously on a 2s linear loop (90deg -> 270deg -> 450deg), its surface colored by three layers of inset box-shadows layered on top of the inner edge: a thin white halo plus violet/magenta/indigo glow rings (0 10px 20px #fff, 0 20px 30px #ad5fff, 0 60px 60px #471eec) that shift to a magenta/indigo combo (#d60a47 with #311e80 at the 50% keyframe) as it turns, so the glow ripples around the ring. The ten letters (G-e-n-e-r-a-t-i-n-g, Inter, 1.2em, 300 weight, white) sit above the ring and pulse in a staggered wave: each letter animates on the same 2s loop with a 0.1s incremental delay, fading from 0.4 opacity to full opacity at 20% with a 1.15 scale pop before settling back. Center the orb in a full-size flexbox container with a dark gradient backdrop, keep a transparent background, and never stop animating."
+    },
+    {
+        id: "trading-candles",
+        title: "Trading Candles",
+        category: "loader",
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#17181d] flex items-center justify-center">
+                <TradingCandles />
+                <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue font-mono text-[10px] uppercase tracking-widest pointer-events-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
+                    UI HUB
+                </div>
+            </div>
+        ),
+        code: `import React from 'react';
+
+/**
+ * TradingCandles
+ * A trading-terminal loader: three candlestick columns (green, red, green)
+ * bounce in a staggered waltz like a live market ticker. Each candle is a
+ * top wick, a rounded 2px body and a bottom wick, bouncing on a 1s loop off
+ * its own delay so the middle (red) candle leads the ripple.
+ */
+export const TradingCandles: React.FC = () => {
+  return (
+    <div
+      className="w-full h-full min-h-[380px] flex items-center justify-center gap-1 overflow-hidden select-none"
+      style={{
+        background: 'radial-gradient(120% 120% at 50% 40%, #2a2e36 0%, #17181d 55%, #0d0e12 100%)',
+      }}
+    >
+      <style>{\`
+        .tc-candle-group {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          animation: tc-bounce 1s ease-in-out infinite;
+        }
+
+        .tc-wick {
+          width: 4px;
+          background: var(--tc-candle);
+        }
+
+        .tc-body {
+          width: 12px;
+          height: 48px;
+          border-radius: 2px;
+          background: var(--tc-candle);
+        }
+
+        .tc-candle-green {
+          --tc-candle: #22c55e;
+        }
+
+        .tc-candle-red {
+          --tc-candle: #ef4444;
+        }
+
+        @keyframes tc-bounce {
+          0%,
+          100% {
+            transform: translateY(-20%);
+            animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+          }
+          50% {
+            transform: none;
+            animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+          }
+        }
+      \`}</style>
+
+      <div className="tc-candle-group tc-candle-green" style={{ animationDelay: '0.1s' }}>
+        <div className="tc-wick h-6" />
+        <div className="tc-body" />
+        <div className="tc-wick h-6" />
+      </div>
+      <div className="tc-candle-group tc-candle-red" style={{ animationDelay: '0.2s' }}>
+        <div className="tc-wick h-6" />
+        <div className="tc-body" />
+        <div className="tc-wick h-6" />
+      </div>
+      <div className="tc-candle-group tc-candle-green" style={{ animationDelay: '0.1s' }}>
+        <div className="tc-wick h-6" />
+        <div className="tc-body" />
+        <div className="tc-wick h-6" />
+      </div>
+    </div>
+  );
+};
+
+export default TradingCandles;`,
+        vibePrompt: "Create a 'Trading Candles' loader in React + TypeScript with pure CSS keyframes (no dependencies). The mark is a mini candlestick chart of three candles bouncing like a live market ticker: green, red, green columns side by side (4px gap) inside a full-size flexbox container on a dark gradient backdrop. Each candle is three stacked divs - a 4px-wide wick above and below a 12x48px rounded-2px body - and each whole column bounces on a 1s ease-in-out loop that peaks around the bottom of the swing, using the classic two-stage bounce ease (translateY -20% at 0%/100% with cubic-bezier(0.8, 0, 1, 1), resting pose at 50% with cubic-bezier(0, 0, 0.2, 1)). The outer two green candles share a 0.1s delay and the middle red candle leads at 0.2s so the ripple starts from the center. Drive the candle colors from a --tc-candle CSS variable (green #22c55e, red #ef4444) on small tc-candle-green/tc-candle-red modifier classes, prefix every keyframe/class with tc- (tc-bounce, tc-candle-group, tc-wick, tc-body) so nothing leaks, and never stop animating."
     }
 ];

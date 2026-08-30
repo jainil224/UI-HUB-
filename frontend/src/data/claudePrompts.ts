@@ -3392,6 +3392,38 @@ TECHNICAL:
 Acceptance:
 Produces the identical looping violet/magenta orb with "GENERATING" letters rippling across it, orb spinning a full revolution every 2s, hue cycling white -> violet -> indigo -> magenta -> back.
 
+`,
+  "trading-candles": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in pure CSS motion design.
+
+## Task
+Create a "Trading Candles" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes.
+
+COMPONENT NAME: Trading Candles
+
+VISUAL DESCRIPTION:
+A market-ticker loader on a dark radial backdrop: three candlestick columns (green, red, green) in a row, 4px apart, bouncing in a staggered ripple as if waiting for live prints. Each candle is three stacked divs: a 4px-wide wick (h-6) above, a 12x48px rounded-2px body, and a 4px-wide wick (h-6) below.
+
+THE CANDLES:
+.columns .tc-candle-group (display flex, column, align-items center). Color is supplied by a --tc-candle CSS variable: .tc-candle-green sets #22c55e, .tc-candle-red sets #ef4444. Wicks (.tc-wick, width 4px, no fixed height) and the body (.tc-body, 12x48px, radius 2px) both fill --tc-candle.
+
+THE BOUNCE:
+Each whole column animates tc-bounce on a 1s ease-in-out infinite loop. At 0%/100% translateY(-20%) with timing cubic-bezier(0.8, 0, 1, 1) (slow up swing), at 50% translateY(0) with cubic-bezier(0, 0, 0.2, 1) (fast settle) - the classic two-ease bounce. Stagger with animation-delay: both green columns 0.1s, the middle red column 0.2s, so the ripple starts at the center red candle.
+
+ANIMATIONS (all CSS, prefixed tc-):
+- tc-bounce (column translateY bounce, 1s ease-in-out infinite, staggered delays).
+
+TECHNICAL:
+- Self-contained <style> tag. Keyframe: tc-bounce. All classes prefixed tc-.
+- Wrapper inside a w-full h-full min-h-[380px] flex items-center justify-center gap-1 overflow-hidden select-none container with a dark radial background.
+- Zero runtime JS animation.
+
+Acceptance:
+Produces the identical green/red/green candle triplet where the middle red candle leads a 1s bounce and the green flanking candles follow 0.1s behind in a continuous loop.
+
 `};
 
 

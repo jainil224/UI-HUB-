@@ -1102,5 +1102,35 @@ Add JS animation state, external animation libraries, or change the 2s cycle/del
 ### Do
 Keep the CSS in a scoped <style> tag, preserve the ten G-E-N-E-R-A-T-I-N-G letters, the three inset shadow layers and the violet/magenta/indigo hue cycle.
 
+`,
+  "trading-candles": `
+## COMPONENT: Trading Candles (Loader)
+
+### Overview
+A trading-terminal loader made of three animated candlesticks: green, red, green columns that bounce in a staggered ripple like a live market ticker.
+
+### Animation Technique
+- CSS @keyframes tc-bounce: each whole candle column swings from translateY(-20%) (0%/100%, cubic-bezier(0.8, 0, 1, 1)) to a resting pose (50%, cubic-bezier(0, 0, 0.2, 1)) on a 1s ease-in-out infinite loop.
+- Animation-delay 0.1s for the outer green candles and 0.2s for the middle red candle.
+- No JavaScript animation state; loops forever purely via CSS.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- Three .tc-candle-group columns; each contains a 4px top wick, a 12x48px rounded-2px body and a 4px bottom wick.
+- Candle color driven by --tc-candle set on .tc-candle-green (#22c55e) / .tc-candle-red (#ef4444).
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]); 4px gap between columns; everything prefixed tc-.
+
+### Do not
+Add JS animation state, external animation libraries, or change the 1s loop / 0.1s-0.2s delays.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve the green/red/green order and the two-stage bounce easing curves.
+
 `};
 
