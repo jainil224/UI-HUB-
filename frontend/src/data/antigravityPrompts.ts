@@ -1165,5 +1165,37 @@ Add JS animation state, external animation libraries, or change the 0.5s/3s cycl
 ### Do
 Keep the CSS in a scoped <style> tag, preserve the red/white/blue palette, the 14x14 grid and the two alternating flicker phases.
 
+`,
+  "gradient-orb": `
+## COMPONENT: Gradient Orb (Loader)
+
+### Overview
+A glossy liquid-gradient sphere: two spinning DOM surfaces plus an animated-SVG wave mask layer, hue-cycling through red/blue/yellow/cyan on a dark backdrop.
+
+### Animation Technique
+- gorb-rotation: 360deg spin, applied at different durations - 2s linear on the sphere pseudos, 3s cubic-bezier(0.7,0.6,0.3,0.4) on the SVG.
+- gorb-wave-one / gorb-wave-two: animate the d attribute of the two duplicated mask paths (up bulge vs down bulge), each offset by half a period, the second pair running reverse, on a 1s cubic-bezier(0.7,0.6,0.3,0.4) loop.
+- gorb-colorize / gorb-colorblur: hue-rotate sweep 0 -> -30 -> -60 -> -90 -> -45 -> 0 deg on a 2s ease-in-out; colorblur adds blur(size/15).
+- No JavaScript animation state; loops forever purely via CSS.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- .gorb-loader > (.gorb-sphere with ::before/::after) + inline svg.
+- SVG masks: gorb-waves (d-animated paths), gorb-clipping, gorb-blurriness, gorb-fade; #gorb-shapes circles fill white.
+- CSS variables: --gorb-size, --gorb-time-animation, --gorb-color-one..five.
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]); everything prefixed gorb-.
+
+### Do not
+Add JS animation state, external animation libraries, or change the 1s/2s/3s cycle timings.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve the four masks, the d-path animation pair and the hue-rotate palette sweep.
+
 `};
 

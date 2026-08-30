@@ -3193,5 +3193,49 @@ TECHNICAL:
 Acceptance:
 Produces the identical bobbing red pixel ghost with flickering belly, scanning pupils and pulsing shadow, all looping forever.
 
+`,
+  "gradient-orb": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in pure CSS motion design.
+
+## Task
+Create a "Gradient Orb" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes (including SVG path d animation).
+
+COMPONENT NAME: Gradient Orb
+
+VISUAL DESCRIPTION:
+A glossy 100px liquid-gradient sphere floating on a dark radial backdrop. It layers a white specular pill, two spinning pseudo-element surfaces, and a blurred red-to-blue gradient shell, then an animated 100x100 SVG carves liquid wave ripples across the face via masks. The palette continuously drifts red -> blue -> yellow -> cyan through hue-rotate filters.
+
+THE STRUCTURE (all prefixed gorb-):
+- .gorb-loader: position relative, display flex centered, overflow hidden, border-radius 50%, defines CSS variables --gorb-size (100px), --gorb-time-animation (1s), --gorb-color-one (red), --gorb-color-two (blue), --gorb-color-three (yellow), --gorb-color-fore (cyan), --gorb-color-five (white).
+- .gorb-sphere: 100px circle with a white radial specular gradient anchored at 80% 20%.
+- .gorb-sphere::before: full-size inset box-shadows as colored blobs - inset calc(--gorb-size / -20) calc(--gorb-size / -20) calc(--gorb-size / 10) var(--gorb-color-fore) (cyan, top-left) plus inset calc(--gorb-size / 10) 0 calc(--gorb-size / 5) var(--gorb-color-three) (yellow, right). Animates gorb-rotation 2s linear + gorb-colorize 2s ease-in-out.
+- .gorb-sphere::after: z-index -1, paints radial white glow over linear-gradient(120deg, red 20%, blue 80%); animates gorb-rotation 2s linear + gorb-colorblur 2s ease-in-out.
+
+THE SVG (100x100 viewBox, width/height var(--gorb-size), animates gorb-rotation 3s cubic-bezier(0.7,0.6,0.3,0.4)):
+- defs with four masks (maskUnits userSpaceOnUse), all gorb- prefixed:
+  1. gorb-waves: a <g stroke=white fill=none strokeLinecap round> holding TWO distinct M5,50 C25,50 30,20 50,20 C70,20 75,50 95,50 arrows (up) and TWO M5,50 C25,50 30,80 50,80 C70,80 75,50 95,50 arrows (down), total 4 paths, stroke-width 7px.
+  2. gorb-blurriness: white circle r50 + black ellipse rx25 ry25 (a doughnut hole) - BOTH have filter blur(7px) via CSS.
+  3. gorb-clipping: white vertical ellipse rx25 ry50.
+  4. gorb-fade: white ellipse rx45 ry50.
+- #gorb-shapes group mask=url(#gorb-fade): two child groups - first mask=url(#gorb-clipping) with a r50 circle fill currentColor mask=url(#gorb-waves); second mask=url(#gorb-blurriness) with the same; CSS fills #gorb-shapes circle with var(--gorb-color-five) (white) and blurs the clip/blur children 7px.
+
+THE ANIMATIONS (all CSS, prefixed gorb-):
+- gorb-rotation: rotate 0 -> 360deg.
+- gorb-wave-one: path d morphs from a flat line (M5,50 C10,50 15,50 20,50 C25,50 30,50 95,50) to the upward bulge (M5,50 C25,50 30,20 50,20 C70,20 75,50 95,50) and back - 1s cubic-bezier(0.7,0.6,0.3,0.4) infinite; nth-of-type(1) delay 0, nth-of-type(3) delay -0.5s.
+- gorb-wave-two: same but downward bulge mask path - nth-of-type(2) & (4) run direction reverse, delay -0.5s.
+- gorb-colorize: filter hue-rotate 0 -> -30 -> -60 -> -90 -> -45 -> 0 deg.
+- gorb-colorblur: same hue-rotate plus blur(calc(var(--gorb-size) / 15)).
+
+TECHNICAL:
+- Self-contained <style> tag. will-change: d on the animated paths.
+- Wrapper inside a w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none container with a dark radial background.
+- Zero runtime JS animation.
+
+Acceptance:
+Produces the identical liquid-gradient orb: spinning specular sphere with cyan/yellow blobs, blurred red/blue shell behind, wave ripples crossing the surface via animated mask paths, and a slow hue-rotate drift - all looping forever.
+
 `};
 

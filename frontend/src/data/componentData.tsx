@@ -84,6 +84,7 @@ const Hourglass = React.lazy(() => import('../components/ui/Hourglass'));
 const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'));
 const TradingCandles = React.lazy(() => import('../components/ui/TradingCandles'));
 const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
+const GradientOrb = React.lazy(() => import('../components/ui/GradientOrb'));
 
 
 
@@ -2031,6 +2032,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'generating-orb': GeneratingOrb,
     'trading-candles': TradingCandles,
     'pixel-bounce': PixelBounce,
+    'gradient-orb': GradientOrb,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -5633,5 +5635,274 @@ export const PixelBounce: React.FC = () => {
 
 export default PixelBounce;`,
         vibePrompt: "Create a 'Pixel Bounce' loader in React + TypeScript with pure CSS keyframes (no dependencies). The mark is a retro pixel-art red ghost drawn on a 14x14 CSS grid (.pb-red, 140x140px, grid-template-columns/rows repeat(14,1fr)) whose rows are stitched together with a grid-template-areas pattern (transparent corner cells, a solid head built from top0-top4 areas spanning the eyebrows and dome, and a scalloped bottom hem in a final row of st0/st5 and an1-an18 cells). The whole body bobs on a 0.5s loop (pb-upNDown: translateY 0->-10px at the 50% mark), while pixels across its belly flicker between red and transparent in two alternating phases - pb-flicker0 (red 0-49%, transparent 50-100%) and pb-flicker1 (inverted) - each an-cell assigned one of the two so the ghost looks like static. Two white eyes (.pb-eye/.pb-eye1, drawn with ::before/::after rectangles) hold blue pupils that scan sideways on a slow 3s loop (pb-eyesMovement: translateX 0->10px->0), and a blurred black circular shadow beneath pulses its opacity in sync with the bob (pb-shadowMovement: 0.5 <-> 0.2 on the same 0.5s cycle). All keyframes/classes prefixed pb-, drawn on a dark radial backdrop."
+    },
+    {
+        id: "gradient-orb",
+        title: "Gradient Orb",
+        category: "loader",
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#17181d] flex items-center justify-center">
+                <GradientOrb />
+                <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue font-mono text-[10px] uppercase tracking-widest pointer-events-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
+                    UI HUB
+                </div>
+            </div>
+        ),
+        code: `import React from 'react';
+
+/**
+ * GradientOrb
+ * A liquid-gradient orb loader. A glossy sphere layers two rotating animated
+ * surfaces (inset-shadow blobs + a blurred color gradient behind it) while a
+ * 100x100 SVG on top sculpts the orb's face with masks: an animated pair of
+ * paths drives a wave ripple mask, a clipping + blur mask softens the crests,
+ * and a fade mask edges the sphere into a diffused glow. All layers spin on
+ * their own durations and the palette shifts through red/blue/yellow/cyan via
+ * hue-rotate keyframes.
+ */
+export const GradientOrb: React.FC = () => {
+  return (
+    <div
+      className="w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none"
+      style={{
+        background: 'radial-gradient(120% 120% at 50% 40%, #2a2e36 0%, #17181d 55%, #0d0e12 100%)',
+      }}
+    >
+      <style>{\`
+        .gorb-loader {
+          --gorb-color-one: red;
+          --gorb-color-two: blue;
+          --gorb-color-three: yellow;
+          --gorb-color-fore: cyan;
+          --gorb-color-five: white;
+          --gorb-time-animation: 1s;
+          --gorb-size: 100px;
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          overflow: hidden;
+          border-radius: 50%;
+        }
+
+        .gorb-loader .gorb-sphere {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          border-radius: 50%;
+          width: var(--gorb-size);
+          height: var(--gorb-size);
+          background: radial-gradient(
+            circle at 80% 20%,
+            rgba(255, 255, 255, 1) 0%,
+            rgba(255, 255, 255, 0.8) 20%,
+            rgba(255, 255, 255, 0.4) 50%,
+            rgba(255, 255, 255, 0) 70%
+          );
+        }
+
+        .gorb-loader .gorb-sphere::before {
+          content: "";
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: var(--gorb-size);
+          height: var(--gorb-size);
+          border-radius: 50%;
+          box-shadow:
+            inset calc(var(--gorb-size) / -20) calc(var(--gorb-size) / -20) calc(var(--gorb-size) / 10) var(--gorb-color-fore),
+            inset calc(var(--gorb-size) / 10) 0 calc(var(--gorb-size) / 5) var(--gorb-color-three);
+          animation:
+            gorb-rotation calc(var(--gorb-time-animation) * 2) linear infinite,
+            gorb-colorize calc(var(--gorb-time-animation) * 2) ease-in-out infinite;
+        }
+
+        .gorb-loader .gorb-sphere::after {
+          content: "";
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: var(--gorb-size);
+          height: var(--gorb-size);
+          border-radius: 50%;
+          z-index: -1;
+          background: radial-gradient(
+              circle at 80% 20%,
+              rgba(255, 255, 255, 0.7) 0%,
+              rgba(255, 255, 255, 0.5) 30%,
+              rgba(255, 255, 255, 0) 70%
+            ),
+            linear-gradient(120deg, var(--gorb-color-one) 20%, var(--gorb-color-two) 80%);
+          animation:
+            gorb-rotation calc(var(--gorb-time-animation) * 2) linear infinite,
+            gorb-colorblur calc(var(--gorb-time-animation) * 2) ease-in-out infinite;
+        }
+
+        .gorb-loader svg {
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: var(--gorb-size);
+          height: var(--gorb-size);
+          animation: gorb-rotation calc(var(--gorb-time-animation) * 3) cubic-bezier(0.7, 0.6, 0.3, 0.4) infinite;
+        }
+
+        .gorb-loader svg #gorb-shapes circle {
+          fill: var(--gorb-color-five);
+        }
+
+        .gorb-loader svg #gorb-blurriness g,
+        .gorb-loader svg #gorb-clipping ellipse,
+        .gorb-loader svg #gorb-shapes g:nth-of-type(2),
+        .gorb-loader svg #gorb-fade ellipse {
+          filter: blur(7px);
+        }
+
+        .gorb-loader svg #gorb-waves g path {
+          will-change: d;
+          stroke-width: 7px;
+        }
+
+        .gorb-loader svg #gorb-waves g path:nth-of-type(1) {
+          animation: gorb-wave-one var(--gorb-time-animation) cubic-bezier(0.7, 0.6, 0.3, 0.4) infinite;
+        }
+
+        .gorb-loader svg #gorb-waves g path:nth-of-type(2) {
+          animation: gorb-wave-two var(--gorb-time-animation) cubic-bezier(0.7, 0.6, 0.3, 0.4) calc(var(--gorb-time-animation) / -2) infinite reverse;
+        }
+
+        .gorb-loader svg #gorb-waves g path:nth-of-type(3) {
+          animation: gorb-wave-one var(--gorb-time-animation) cubic-bezier(0.7, 0.6, 0.3, 0.4) calc(var(--gorb-time-animation) / -2) infinite;
+        }
+
+        .gorb-loader svg #gorb-waves g path:nth-of-type(4) {
+          animation: gorb-wave-two var(--gorb-time-animation) cubic-bezier(0.7, 0.6, 0.3, 0.4) infinite reverse;
+        }
+
+        @keyframes gorb-wave-one {
+          0% {
+            d: path("M5,50 C10,50 15,50 20,50 C25,50 30,50 95,50");
+          }
+          50% {
+            d: path("M5,50 C25,50 30,20 50,20 C70,20 75,50 95,50");
+          }
+          100% {
+            d: path("M5,50 C70,50 75,50 80,50 C85,50 90,50 95,50");
+          }
+        }
+
+        @keyframes gorb-wave-two {
+          0% {
+            d: path("M5,50 C10,50 15,50 20,50 C25,50 30,50 95,50");
+          }
+          50% {
+            d: path("M5,50 C25,50 30,80 50,80 C70,80 75,50 95,50");
+          }
+          100% {
+            d: path("M5,50 C70,50 75,50 80,50 C85,50 90,50 95,50");
+          }
+        }
+
+        @keyframes gorb-rotation {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes gorb-colorize {
+          0% {
+            filter: hue-rotate(0deg);
+          }
+          20% {
+            filter: hue-rotate(-30deg);
+          }
+          40% {
+            filter: hue-rotate(-60deg);
+          }
+          60% {
+            filter: hue-rotate(-90deg);
+          }
+          80% {
+            filter: hue-rotate(-45deg);
+          }
+          100% {
+            filter: hue-rotate(0deg);
+          }
+        }
+
+        @keyframes gorb-colorblur {
+          0% {
+            filter: hue-rotate(0deg) blur(calc(var(--gorb-size) / 15));
+          }
+          20% {
+            filter: hue-rotate(-30deg) blur(calc(var(--gorb-size) / 15));
+          }
+          40% {
+            filter: hue-rotate(-60deg) blur(calc(var(--gorb-size) / 15));
+          }
+          60% {
+            filter: hue-rotate(-90deg) blur(calc(var(--gorb-size) / 15));
+          }
+          80% {
+            filter: hue-rotate(-45deg) blur(calc(var(--gorb-size) / 15));
+          }
+          100% {
+            filter: hue-rotate(0deg) blur(calc(var(--gorb-size) / 15));
+          }
+        }
+      \`}</style>
+
+      <div className="gorb-loader">
+        <div className="gorb-sphere" />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <defs>
+            <mask id="gorb-waves" maskUnits="userSpaceOnUse">
+              <g fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5,50 C25,50 30,20 50,20 C70,20 75,50 95,50" />
+                <path d="M5,50 C25,50 30,20 50,20 C70,20 75,50 95,50" />
+                <path d="M5,50 C25,50 30,80 50,80 C70,80 75,50 95,50" />
+                <path d="M5,50 C25,50 30,80 50,80 C70,80 75,50 95,50" />
+              </g>
+            </mask>
+            <mask id="gorb-blurriness" maskUnits="userSpaceOnUse">
+              <g>
+                <circle cx={50} cy={50} r={50} fill="white" />
+                <ellipse cx={50} cy={50} rx={25} ry={25} fill="black" />
+              </g>
+            </mask>
+            <mask id="gorb-clipping" maskUnits="userSpaceOnUse">
+              <ellipse cx={50} cy={50} rx={25} ry={50} fill="white" />
+            </mask>
+            <mask id="gorb-fade" maskUnits="userSpaceOnUse">
+              <ellipse cx={50} cy={50} rx={45} ry={50} fill="white" />
+            </mask>
+          </defs>
+          <g id="gorb-shapes" mask="url(#gorb-fade)">
+            <g mask="url(#gorb-clipping)">
+              <circle cx={50} cy={50} r={50} fill="currentColor" mask="url(#gorb-waves)" />
+            </g>
+            <g mask="url(#gorb-blurriness)">
+              <circle cx={50} cy={50} r={50} fill="currentColor" mask="url(#gorb-waves)" />
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+  );
+};
+
+export default GradientOrb;`,
+        vibePrompt: "Create a 'Gradient Orb' loader in React + TypeScript with pure CSS keyframes and animated SVG masks (no dependencies). The mark is a glossy 100px liquid-gradient sphere built from three stacked layers inside a .gorb-loader (position relative, border-radius 50%, overflow hidden). Layer one is a .gorb-sphere pill with a white radial specular gradient at 80% 20%. Its ::before pseudo spins on a 2s loop (gorb-rotation) while carrying two inset box-shadows that act as colored blobs - a cyan blob inset from the top-left (-size/20,-size/20 blur size/10) and a yellow blob inset from the right (size/10,0 blur size/5) - plus a hue-rotate palette animation (gorb-colorize) sweeping 0deg -> -30 -> -60 -> -90 -> -45 -> 0 on a 2s ease-in-out. The ::after pseudo sits at z-index -1 behind it painting a blurred linear-gradient from red to blue at 120deg, and animates the same rotation but with a gorb-colorblur filter that adds a soft blur(size/15) while hue-rotating. Over the sphere an inline 100x100 SVG rotates on a slower 3s cubic-bezier(0.7,0.6,0.3,0.4) loop and sculpts the orb's face with four masks (all gorb- prefixed ids): a #gorb-waves stroke mask whose two duplicated paths animate their d attribute (gorb-wave-one bulges upward, gorb-wave-two bulges downward, each offset by half a period and the second pair running reverse) so liquid ripples cross the surface; a #gorb-clipping ellipse mask so the ripple pattern wraps a vertical band; a #gorb-blurriness mask blurring 7px; and a #gorb-fade ellipse mask that diffuses the whole mark's edges. Everything is driven off CSS variables (--gorb-size 100px, --gorb-time-animation 1s, red/blue/yellow/cyan/white palette vars) and drawn on a dark radial backdrop."
     }
 ];

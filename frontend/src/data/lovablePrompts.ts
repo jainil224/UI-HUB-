@@ -239,4 +239,22 @@ A retro pixel-art red ghost that bobs up and down. Its white eyes hold blue pupi
 ## Output
 Production-ready single-file React component.
 
+`,
+  "gradient-orb": `
+## Component: Gradient Orb
+
+Build a "Gradient Orb" loading animation as a React + TypeScript component using Tailwind CSS and pure CSS keyframe animations (no external animation libraries).
+
+## What it does
+A glossy 100px liquid-gradient sphere. Three stacked layers - a specular sphere, its inset-shadow blobs, and a blurred red-to-blue gradient behind - spin on their own durations while an inline SVG uses animated path masks to ripple liquid waves across the orb's face, and the whole palette drifts through red/blue/yellow/cyan via hue-rotate.
+
+## Technical
+- Structure: .gorb-loader (position relative, border-radius 50%, overflow hidden) > .gorb-sphere + svg.
+- Sphere: white radial specular at 80% 20%. Its ::before spins 2s (gorb-rotation linear) with two inset box-shadows (cyan blob top-left, yellow blob right) and a hue-rotate loop (gorb-colorize, 0 -> -30 -> -60 -> -90 -> -45 -> 0 deg on 2s ease-in-out). Its ::after sits at z-index -1, painting a blurred linear-gradient red->blue at 120deg with the same rotation but a gorb-colorblur filter adding blur(size/15).
+- SVG: 100x100 viewBox spinning 3s cubic-bezier(0.7,0.6,0.3,0.4). Four masks sculpt the face - #gorb-waves (two duplicated paths animating their d attribute: gorb-wave-one bulges up, gorb-wave-two bulges down, offset by half a period, second pair reversed), #gorb-clipping (vertical ellipse band), #gorb-blurriness (7px blur), #gorb-fade (edge diffusion).
+- Drive everything from CSS variables (--gorb-size 100px, --gorb-time-animation 1s, palette vars); prefix all keyframes/classes/ids with gorb-.
+
+## Output
+Production-ready single-file React component.
+
 `};
