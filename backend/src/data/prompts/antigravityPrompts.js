@@ -5470,6 +5470,35 @@ Add JS animation state, external animation libraries, or change timing/easing va
 ### Do
 Keep the CSS in a scoped <style> tag, preserve the four gear positions, 3s/6s spin timing and the #111/#555 metal palette.
 
-`
-};
+`,
+  "hourglass": `
+## COMPONENT: Hourglass (Loader)
+
+### Overview
+A sand-glass loader built purely with SVG and CSS keyframes in a self-contained React/TypeScript component. A ring of three trailing motion curves swings clockwise around the glass while the glass model flips a full 180deg each cycle and its sand column drains, refills and mounds over.
+
+### Animation Technique
+- CSS @keyframes on SVG elements: hg-flip (model 180deg flip), hg-motion-thick/medium/thin (three rotating curves with dashoffset strokes), hg-glare-top/bottom (fading glare bands), and hg-sand-* (dash-drop, fill, grains, lines and two clipped sand mounds).
+- 2s cycle (--dur: 2s) with cubic-bezier timing and stroke-dashoffset driven sand currents.
+- Amber/gold palette from --hue: 35 (hsl(35,90%,90%) sand; hsl(var(--hue),90%,50%/57.5%/85%) frames and glass).
+- No JavaScript animation state; loops forever purely via CSS.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]).
+- svg viewBox 0 0 56 56, width 14em; both clipPath ids (hg-sand-mound-top/bottom) unique and prefixed.
+
+### Do not
+Add JS animation state, external animation libraries, or change the 2s cycle/timing values.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve all hg- prefixed keyframes, the three motion curves, the amber palette and the clip-path mound sand shapes.
+
+`};
 

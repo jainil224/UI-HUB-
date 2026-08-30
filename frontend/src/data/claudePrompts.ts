@@ -3323,7 +3323,42 @@ TECHNICAL:
 Acceptance:
 Produces the identical looping dark mechanical gearbox: three small gears spinning at 3s (two counter-clockwise, one clockwise) and a larger gear spinning slowly counter-clockwise at 6s, teeth radiating continuously.
 
-`
-};
+`,
+  "hourglass": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in precise SVG/CSS animation.
+
+## Task
+Create an "Hourglass" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes applied to inline SVG elements.
+
+COMPONENT NAME: Hourglass
+
+VISUAL DESCRIPTION:
+A sand-glass loader on a dark radial backdrop. The base is a 56x56 viewBox (rendered 14em) ringed by three white motion curves (.hg-loader__motion-thick strokeWidth 2.5, .motion-medium 1.75, .motion-thin 1) that rotate clockwise around the glass, each with a partially applied stroke-dasharray 153.94 and fading dash offsets. The glass model (.hg-loader__model, filled hsl(var(--hue),90%,85%)) is a rounded hourglass with amber metal top/bottom frames (hsl(var(--hue),90%,50%), with 1px 57.5% highlight strips) and sand lines steeped in hsl(35,90%,90%): the fill column, drop, grains, and two clipped sand mounds.
+
+SANDBOX GEOMETRY:
+- clipPath hg-sand-mound-top clips a top sand mound; clipPath hg-sand-mound-bottom clips the bottom mound. Each mound is a filled path clipped so it animates independently (top sinks, bottom scales up).
+- Sand features are vertical dashed <line>s (sand-drop, sand-fill, sand-grain-left/right, sand-line-left/right) whose stroke-dashoffset drives the draining/refilling illusion.
+- A <g> of two glare strokes fades across the upper half when upright and the lower half after flipping.
+
+ANIMATIONS (all CSS, prefixed hg-, 2s cycle):
+- hg-flip: model rotates -180deg -> 0deg, completing over the first 24% of the cycle.
+- hg-motion-thick/medium/thin: curves rotate 0.67->1.33, 0.5->1.17, 0.33->1 turn with dashes appearing then fading.
+- hg-sand-drop/fill/grain-x/line-x: stroke-dashoffset sweeps (e.g. drop 1 -> -107, fill 55 -> -54, lines 53->-55 / 14->-24.5).
+- hg-sand-mound-top: translate(0,0) -> (0,13px) as the glass empties; hg-sand-mound-bottom: scale(1,0) -> scale(1,1) as it fills.
+- hg-glare-top/bottom: white stroke fades across the flipped-glass glare band.
+
+TECHNICAL:
+- Self-contained <style> tag. Keyframes: hg-flip, hg-glare-top, hg-glare-bottom, hg-motion-thick/medium/thin, hg-sand-drop, hg-sand-fill, hg-sand-grain-left/right, hg-sand-line-left/right, hg-sand-mound-top/bottom.
+- Drive amber hue from --hue: 35; duration via --dur: 2s. Both clipPath ids and all classes prefixed hg- to avoid collisions.
+- Render svg className hg-loader (width 14em) centered in a w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none container with a dark radial background.
+- Zero runtime JS animation.
+
+Acceptance:
+Produces the identical looping amber sand-glass: three trailing motion curves circling clockwise while the glass flips, sand draining then refilling with moving grain and mounding sand, all in a continuous 2s loop.
+
+`};
 
 

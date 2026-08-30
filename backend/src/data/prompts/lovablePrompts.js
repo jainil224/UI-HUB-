@@ -1871,5 +1871,22 @@ A mechanical gearbox loader: a 150px tall by 200px wide dark panel (#111) with a
 ## Output
 Production-ready single-file React component.
 
-`
-};
+`,
+  "hourglass": `
+## Component: Hourglass
+
+Build an "Hourglass" loading animation as a React + TypeScript component using Tailwind CSS and a single self-contained inline SVG with pure CSS keyframe animations (no external animation libraries).
+
+## What it does
+A sand-glass loader: a 56x56 viewBox ring of three trailing motion curves swing clockwise around the glass while the glass model itself flips a full 180deg each cycle. The glass is a rounded hourglass silhouette with amber metal frames and a glowing sand column that drains, refills and mounds over through dashed-line stroke-dashoffset animations.
+
+## Technical
+- All motion driven by CSS @keyframes on SVG elements; prefix keyframes and classes: hg-flip, hg-glare-top/bottom, hg-motion-thick/medium/thin, hg-sand-drop, hg-sand-fill, hg-sand-grain-left/right, hg-sand-line-left/right, hg-sand-mound-top/bottom.
+- Amber/gold palette driven by a --hue CSS variable (--hue: 35) with hsl(35,90%,90%) sand, plus hsl(var(--hue),90%,50%/57.5%/85%) for frames and glass.
+- 2s animation cycle (--dur: 2s) with cubic-bezier easing and stroke-dashoffset-driven sand flow.
+- Zero JavaScript animation state; loops forever purely via CSS.
+
+## Output
+Production-ready single-file React component.
+
+`};
