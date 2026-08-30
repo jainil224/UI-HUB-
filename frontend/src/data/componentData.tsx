@@ -81,6 +81,7 @@ const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPorta
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
 const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
 const Hourglass = React.lazy(() => import('../components/ui/Hourglass'));
+const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'));
 
 
 
@@ -2025,6 +2026,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'morphing-glow': MorphingGlow,
     'gear-system': GearSystem,
     'hourglass': Hourglass,
+    'generating-orb': GeneratingOrb,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -4995,5 +4997,142 @@ const Hourglass: React.FC = () => {
 
 export default Hourglass;`,
         vibePrompt: "Create an 'Hourglass' loader in React + TypeScript with a single self-contained inline SVG and pure CSS keyframe animations (no dependencies). The mark is a sand-glass: a 56x56 viewBox ring of three trailing motion curves (2.5px thick, 1.75px medium, 1px thin) that swing clockwise around the glass while the glass model itself flips a full 180deg each cycle. The glass is a rounded hourglass silhouette (2px-wide metal top/bottom frames in amber, 1px highlight strips) filled with glowing sand: a light fill column drains down through dashed vertical sand lines and drops, while grain ticks and two clipped sand mounds (a rising top mound that sinks as the sand empties, and a bottom mound that scales from 0 to 1 as it fills). A glare band fades across the upper half when the glass is upright and across the lower half after the flip. Everything animates on a single 2s cycle with cubic-bezier timing curves and stroke-dashoffset driven currents, looping forever with zero JS. Prefix all keyframes/classes with hg- (hg-flip, hg-motion-thick, hg-sand-drop, etc.), drive the amber palette from a --hue CSS variable, render the svg at width 14em centered in a full-size flexbox container with a dark gradient backdrop."
+    },
+    {
+        id: "generating-orb",
+        title: "Generating Orb",
+        category: "loader",
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#17181d] flex items-center justify-center">
+                <GeneratingOrb />
+                <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue font-mono text-[10px] uppercase tracking-widest pointer-events-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
+                    UI HUB
+                </div>
+            </div>
+        ),
+        code: `import React from 'react';
+
+const GeneratingOrb: React.FC = () => {
+  return (
+    <div
+      className="w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none"
+      style={{
+        background: 'radial-gradient(120% 120% at 50% 40%, #2a2e36 0%, #17181d 55%, #0d0e12 100%)',
+      }}
+    >
+      <style>{\`
+        .go-loader-wrapper {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 180px;
+          height: 180px;
+          font-family: "Inter", sans-serif;
+          font-size: 1.2em;
+          font-weight: 300;
+          color: white;
+          border-radius: 50%;
+          background-color: transparent;
+          user-select: none;
+        }
+
+        .go-loader {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          border-radius: 50%;
+          background-color: transparent;
+          animation: go-loader-rotate 2s linear infinite;
+          z-index: 0;
+        }
+
+        @keyframes go-loader-rotate {
+          0% {
+            transform: rotate(90deg);
+            box-shadow:
+              0 10px 20px 0 #fff inset,
+              0 20px 30px 0 #ad5fff inset,
+              0 60px 60px 0 #471eec inset;
+          }
+          50% {
+            transform: rotate(270deg);
+            box-shadow:
+              0 10px 20px 0 #fff inset,
+              0 20px 10px 0 #d60a47 inset,
+              0 40px 60px 0 #311e80 inset;
+          }
+          100% {
+            transform: rotate(450deg);
+            box-shadow:
+              0 10px 20px 0 #fff inset,
+              0 20px 30px 0 #ad5fff inset,
+              0 60px 60px 0 #471eec inset;
+          }
+        }
+
+        .go-loader-letter {
+          display: inline-block;
+          opacity: 0.4;
+          transform: translateY(0);
+          animation: go-loader-letter-anim 2s infinite;
+          z-index: 1;
+          border-radius: 50ch;
+          border: none;
+        }
+
+        .go-loader-letter:nth-child(1) { animation-delay: 0s; }
+        .go-loader-letter:nth-child(2) { animation-delay: 0.1s; }
+        .go-loader-letter:nth-child(3) { animation-delay: 0.2s; }
+        .go-loader-letter:nth-child(4) { animation-delay: 0.3s; }
+        .go-loader-letter:nth-child(5) { animation-delay: 0.4s; }
+        .go-loader-letter:nth-child(6) { animation-delay: 0.5s; }
+        .go-loader-letter:nth-child(7) { animation-delay: 0.6s; }
+        .go-loader-letter:nth-child(8) { animation-delay: 0.7s; }
+        .go-loader-letter:nth-child(9) { animation-delay: 0.8s; }
+        .go-loader-letter:nth-child(10) { animation-delay: 0.9s; }
+
+        @keyframes go-loader-letter-anim {
+          0%,
+          100% {
+            opacity: 0.4;
+            transform: translateY(0);
+          }
+          20% {
+            opacity: 1;
+            transform: scale(1.15);
+          }
+          40% {
+            opacity: 0.7;
+            transform: translateY(0);
+          }
+        }
+      \`}</style>
+
+      <div className="go-loader-wrapper">
+        <span className="go-loader-letter">G</span>
+        <span className="go-loader-letter">e</span>
+        <span className="go-loader-letter">n</span>
+        <span className="go-loader-letter">e</span>
+        <span className="go-loader-letter">r</span>
+        <span className="go-loader-letter">a</span>
+        <span className="go-loader-letter">t</span>
+        <span className="go-loader-letter">i</span>
+        <span className="go-loader-letter">n</span>
+        <span className="go-loader-letter">g</span>
+        <div className="go-loader" />
+      </div>
+    </div>
+  );
+};
+
+export default GeneratingOrb;`,
+        vibePrompt: "Create a 'Generating Orb' loader in React + TypeScript with pure CSS keyframe animations (no dependencies). The mark is an AI-style generating indicator: the word 'GENERATING' spelled across the middle of a spinning circular orb. The orb is a 180px full-circle element (.go-loader) that rotates continuously on a 2s linear loop (90deg -> 270deg -> 450deg), its surface colored by three layers of inset box-shadows layered on top of the inner edge: a thin white halo plus violet/magenta/indigo glow rings (0 10px 20px #fff, 0 20px 30px #ad5fff, 0 60px 60px #471eec) that shift to a magenta/indigo combo (#d60a47 with #311e80 at the 50% keyframe) as it turns, so the glow ripples around the ring. The ten letters (G-e-n-e-r-a-t-i-n-g, Inter, 1.2em, 300 weight, white) sit above the ring and pulse in a staggered wave: each letter animates on the same 2s loop with a 0.1s incremental delay, fading from 0.4 opacity to full opacity at 20% with a 1.15 scale pop before settling back. Center the orb in a full-size flexbox container with a dark gradient backdrop, keep a transparent background, and never stop animating."
     }
 ];

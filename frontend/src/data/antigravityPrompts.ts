@@ -1073,5 +1073,34 @@ Add JS animation state, external animation libraries, or change the 2s cycle/tim
 ### Do
 Keep the CSS in a scoped <style> tag, preserve all hg- prefixed keyframes, the three motion curves, the amber palette and the clip-path mound sand shapes.
 
+`,
+  "generating-orb": `
+## COMPONENT: Generating Orb (Loader)
+
+### Overview
+An AI-style generating loader: the word "GENERATING" spelled across the middle of a spinning circular orb. One rotating ring element and ten pulsing letters make up the mark.
+
+### Animation Technique
+- CSS @keyframes: go-loader-rotate spins the full-circle orb 90deg -> 270deg -> 450deg on a 2s linear loop while its inset box-shadow glow shifts hues (white/violet/indigo at 0% and 100%, magenta/indigo at 50%).
+- go-loader-letter-anim pulses each letter (opacity 0.4 -> 1 at 20% with scale 1.15 -> 0.7) with incremental 0.1s animation-delays via nth-child (0s to 0.9s).
+- No JavaScript animation state; loops forever purely via CSS.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]).
+- Wrapper 180x180px; letter spans above the orb (z-index 1); everything prefixed go-.
+
+### Do not
+Add JS animation state, external animation libraries, or change the 2s cycle/delay timings.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve the ten G-E-N-E-R-A-T-I-N-G letters, the three inset shadow layers and the violet/magenta/indigo hue cycle.
+
 `};
 

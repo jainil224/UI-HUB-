@@ -1889,4 +1889,22 @@ A sand-glass loader: a 56x56 viewBox ring of three trailing motion curves swing 
 ## Output
 Production-ready single-file React component.
 
+`,
+  "generating-orb": `
+## Component: Generating Orb
+
+Build a "Generating Orb" loading animation as a React + TypeScript component using Tailwind CSS and pure CSS keyframe animations (no external animation libraries).
+
+## What it does
+An AI-style generating indicator: the word "GENERATING" spelled across the middle of a spinning circular orb. The orb turns continuously while three layers of inset box-shadows glow through violet, magenta and indigo, and each letter pulses in a staggered wave.
+
+## Technical
+- All motion driven by CSS @keyframes; prefix keyframes and classes: go-loader-rotate, go-loader-letter-anim, .go-loader-wrapper, .go-loader, .go-loader-letter.
+- Orb: 180px full-circle (aspect-ratio 1/1) rotating 90deg -> 270deg -> 450deg on a 2s linear loop; surface colored by inset box-shadows (0 10px 20px #fff, 0 20px 30px #ad5fff, 0 60px 60px #471eec) that shift to magenta/indigo (#d60a47, #311e80) at the 50% keyframe.
+- Ten letters (G-e-n-e-r-a-t-i-n-g, Inter, 1.2em, 300 weight, white) pulse on the same 2s loop with 0.1s incremental delays (0.4 opacity -> 1 at 20% with 1.15 scale pop -> 0.7).
+- Zero JavaScript animation state; loops forever purely via CSS.
+
+## Output
+Production-ready single-file React component.
+
 `};

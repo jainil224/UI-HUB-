@@ -3359,6 +3359,39 @@ TECHNICAL:
 Acceptance:
 Produces the identical looping amber sand-glass: three trailing motion curves circling clockwise while the glass flips, sand draining then refilling with moving grain and mounding sand, all in a continuous 2s loop.
 
+`,
+  "generating-orb": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in pure CSS motion design.
+
+## Task
+Create a "Generating Orb" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes.
+
+COMPONENT NAME: Generating Orb
+
+VISUAL DESCRIPTION:
+An AI-style generating indicator on a dark radial backdrop. A 180x180px wrapper (.go-loader-wrapper, border-radius 50%, Inter, 1.2em, 300 weight, white) contains the full word "GENERATING" as ten individual letter spans plus a full-size rotating orb behind them.
+
+THE ORB:
+Uses .go-loader: position absolute, top 0 left 0, width 100%, aspect-ratio 1 / 1, border-radius 50%, background transparent, z-index 0. It is invisible except for three inset box-shadow layers hugging the ring: 0 10px 20px 0 #fff inset (white rim), 0 20px 30px 0 #ad5fff inset (violet glow) and 0 60px 60px 0 #471eec inset (deep indigo halo). Animating transform + box-shadow on a 2s linear loop cycles the hue: at 0% rotate(90deg) with white/violet/indigo, at 50% rotate(270deg) with white/magenta #d60a47/indigo #311e80, at 100% rotate(450deg) back to the 0% palette.
+
+THE LETTERS:
+.spans .go-loader-letter, z-index 1, border-radius 50ch, no border. Each animates go-loader-letter-anim on the same 2s loop with a 0.1s incremental animation-delay (nth-child 1..10 -> 0s..0.9s): 0%/100% opacity 0.4, translateY(0); 20% opacity 1 scale(1.15); 40% opacity 0.7 translateY(0). The effect reads as a ripple of letters firing across the word.
+
+ANIMATIONS (all CSS, prefixed go-):
+- go-loader-rotate (orb rotate + inset-shadow hue cycle, 2s linear infinite).
+- go-loader-letter-anim (opacity/scale pulse, 2s infinite, staggered delays).
+
+TECHNICAL:
+- Self-contained <style> tag. Keyframes: go-loader-rotate, go-loader-letter-anim. All classes prefixed go-.
+- Wrapper .go-loader-wrapper 180x180px inside a w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none container with a dark radial background.
+- Zero runtime JS animation.
+
+Acceptance:
+Produces the identical looping violet/magenta orb with "GENERATING" letters rippling across it, orb spinning a full revolution every 2s, hue cycling white -> violet -> indigo -> magenta -> back.
+
 `};
 
 
