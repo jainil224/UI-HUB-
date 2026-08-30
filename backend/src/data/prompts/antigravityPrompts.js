@@ -276,6 +276,73 @@ Create a sharp button whose corner brackets slide around the edges with a laser-
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
+    "creepy-button": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component.
+
+---
+
+## COMPONENT INFO
+
+Name: CreepyButton
+Type: UI / Interaction
+
+---
+
+## GOAL
+
+Create a playful-horror button with two glowing white eyes whose pupils track the cursor, pupils that watch the pointer in real time, and a cover face that tilts sideways on hover.
+
+---
+
+## TECH STACK
+
+* React (Next.js, "use client")
+* TypeScript (TSX)
+* Tailwind CSS
+* framer-motion (spring covers + looping blink keyframes)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Cursor-Tracking Eyes**: Two white eyes with black pupils that follow the mouse via atan2 angle math, clamped by visionRangeX (180) and visionRangeY (75).
+* **Blink Loop**: Eyes blink every 3s via framer-motion keyframes [0.75em, 0.75em, 0em, 0.75em] at times [0, 0.92, 0.96, 1].
+* **Tilt Cover**: A cover layer above the eyes rotates -12° on hover with a spring (stiffness 300, damping 20, mass 0.8), origin [1.25em 50%] so it pivots off-center.
+* **Touch Support**: OnTouchMove updates pupils; onMouseLeave/onBlur resets them.
+* **Accessibility**: Focus-visible ring, select-none, keyboard focus resets pupils.
+
+---
+
+## PROPS (with defaults):
+- children: React.ReactNode — the button label.
+- className: string = '' — container classes.
+- coverClassName: string = '' — classes for the tilting cover.
+- onClick + all native button attributes forwarded.
+
+---
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
+
     "border-beam": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 

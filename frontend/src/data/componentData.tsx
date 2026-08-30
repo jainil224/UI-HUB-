@@ -43,6 +43,7 @@ const InteractiveGridBackground = React.lazy(() => import('../components/ui/Inte
 const WaveBackground = React.lazy(() => import('../components/ui/WaveBackground'));
 const CornerBorderButton = React.lazy(() => import('../components/ui/corner-border-button').then(m => ({ default: m.CornerBorderButton })));
 const CornerButton = React.lazy(() => import('../components/ui/corner-button').then(m => ({ default: m.CornerButton })));
+const CreepyButton = React.lazy(() => import('../components/ui/creepy-button').then(m => ({ default: m.CreepyButton })));
 const InteractiveHoverButton = React.lazy(() => import('../components/ui/interactive-hover-button'));
 const IsometricGridBackground = React.lazy(() => import('../components/ui/isometric-grid-background').then(m => ({ default: m.IsometricGridBackground })));
 const MagicCard = React.lazy(() => import('../components/ui/magic-card').then(m => ({ default: m.MagicCard })));
@@ -1969,6 +1970,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'wave-background': WaveBackground,
     'corner-border-button': CornerBorderButton,
     'corner-button': CornerButton,
+    'creepy-button': CreepyButton,
     'interactive-hover-button': InteractiveHoverButton,
     'isometric-grid-background': IsometricGridBackground,
     'magic-card-effect': MagicCard,
@@ -3145,6 +3147,14 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         category: "button",
         preview: renderComponent("corner-button", "Corner Button", { children: "START DESIGNING" }),
         code: `import { CornerButton } from '@/components/ui/corner-button';\n\nexport const Demo = () => (\n  <CornerButton accentColor="#FF3B4D" children="Start designing" />\n);`,
+        vibePrompt: ""
+    },
+    {
+        id: "creepy-button",
+        title: "Creepy Button",
+        category: "button",
+        preview: renderComponent("creepy-button", "Creepy Button", { children: "HOVER ME" }),
+        code: `import { CreepyButton } from '@/components/ui/creepy-button';\n\nexport const Demo = () => (\n  <CreepyButton>HOVER ME</CreepyButton>\n);`,
         vibePrompt: ""
     },
 

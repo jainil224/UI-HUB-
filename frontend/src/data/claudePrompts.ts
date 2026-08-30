@@ -245,6 +245,70 @@ Type: Interactive Button with Corner Brackets & Glow
 * Pointer-events: none on decorative layers.
 * useId-scoped <style> prevents cascading side effects.`,
 
+    'creepy-button': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: CreepyButton
+Type: Interactive Button with Cursor-Tracking Eyes
+
+---
+
+## Tech Stack
+
+* React ("use client")
+* TypeScript
+* framer-motion
+* clsx
+* tailwind-merge (cn utility)
+
+---
+
+## Requirements
+
+* Two white eyes with black pupils that track the cursor using atan2 angle math, clamped by visionRangeX (180) and visionRangeY (75) so pupils stay inside the socket.
+* Pupils snap back to center when the pointer leaves (onMouseLeave) or the button loses keyboard focus (onBlur).
+* A 3-second looping blink: eye height keyframes [0.75em, 0.75em, 0em, 0.75em] with times [0, 0.92, 0.96, 1].
+* A cover layer that tilts to -12° on hover via a spring (stiffness 300, damping 20, mass 0.8) with transform-origin [1.25em 50%].
+* Maintain layout with an invisible placeholder span since the cover is absolute.
+* Touch support via onTouchMove.
+* Focus-visible ring and select-none for accessibility.
+
+---
+
+## Props
+
+* children: React.ReactNode — the button label.
+* className: string = "" — container classes.
+* coverClassName: string = "" — classes for the tilting cover face.
+* onClick and all native button attributes forwarded.
+
+---
+
+## Performance
+
+* Transform-only animations for 60fps (rotate keyframes need no layout).
+* Eyes layer pointer-events: none.
+* Minimal state: a Coords tuple for pupils and a hovered boolean.
+`,
+
     'border-beam': `# UI HUB • CLAUDE PROMPT
 
 ## Role

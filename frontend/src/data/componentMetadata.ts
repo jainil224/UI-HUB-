@@ -548,6 +548,23 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "creepy-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: "required", description: "The button label content." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the button container." },
+            { name: "coverClassName", type: "string", default: '""', description: "Classes for the tilting cover face." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler, forwarded to the native button." }
+        ],
+        vibeMeta: {
+            behavior: "Two white eyes with cursor-tracking pupils peek from under a cover face that tilts to -12deg on hover, blinking every 3 seconds.",
+            states: { from: "relaxed eyes centered, cover upright", to: "pupils track cursor, cover tilted, eyes blink" },
+            cssProperties: ["transform", "translate", "rotate", "transition"],
+            description: "Playful-horror button with cursor-tracking eyes.",
+            libraries: ["framer-motion"],
+            requirements: ["atan2 pupil tracking with vision clamping", "3s looping blink keyframes", "Spring cover tilt on hover", "Touch + focus-visible support"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },

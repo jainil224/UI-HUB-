@@ -1471,6 +1471,44 @@ A premium action button framed by corner brackets that ignite with a laser-glow 
 ## Output
 Production-ready React component
 `,
+    "creepy-button": `# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A cute-creepy button: two tiny white eyes peek out from beneath a blue cover face. The pupils track your cursor through the button, blink every three seconds, and the cover tilts playfully to the side whenever you hover.
+
+## Tech
+- React + Tailwind CSS
+- framer-motion for spring cover tilt and looping blink animation
+- Absolute-positioned eye layer + cover layer with an invisible placeholder to preserve layout size
+
+## Animation Details
+- **Eye Tracking**: Compute the angle from the eye center to the cursor with atan2, then move pupils within visionRangeX (180) and visionRangeY (75) so they never leave the eye socket.
+- **Blink**: A 3s repeating keyframe squashes the eye height to 0 for a few milliseconds (times 0, 0.92, 0.96, 1).
+- **Cover Tilt**: On hover the cover springs to -12° rotation (origin [1.25em 50%]) for a cheeky sideways reveal of the eyes.
+- **Reset**: Pupils snap back and the cover straightens when the pointer leaves or the button loses focus.
+
+## Performance
+- GPU-friendly transforms only (rotate + translate) and lightweight state changes.
+- Eyes are pointer-events: none so the button stays fully clickable.
+- Touch events handled via onTouchMove for mobile.
+
+## Props
+- children: React.ReactNode - the button label.
+- className: string (default: '') - container classes.
+- coverClassName: string (default: '') - classes for the tilting cover face.
+- onClick and all native button props pass through.
+
+## Styling Guide
+- Button base: black rounded container, min-w 9em.
+- Eyes: white circles 0.75em with black pupils 0.375em, sitting bottom-right of the button.
+- Cover: blue (bg-blue-500) with an inset black ring shadow, bold uppercase tracking-wider label.
+- Keep the focus-visible ring for accessibility.
+
+## Output
+Production-ready React component
+`,
+
     "gravitational-vortex": `
 # UI HUB • LOVABLE PROMPT
 
