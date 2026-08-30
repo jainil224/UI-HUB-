@@ -3139,7 +3139,8 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         category: "button",
         preview: renderComponent("corner-border-button", "Corner Border Button", { children: "CORNER BORDER" }),
         code: ``,
-        vibePrompt: ""
+        vibePrompt: "",
+        addedAt: "2026-08-30"
     },
     {
         id: "corner-button",
@@ -3147,7 +3148,8 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         category: "button",
         preview: renderComponent("corner-button", "Corner Button", { children: "START DESIGNING" }),
         code: `import { CornerButton } from '@/components/ui/corner-button';\n\nexport const Demo = () => (\n  <CornerButton accentColor="#FF3B4D" children="Start designing" />\n);`,
-        vibePrompt: ""
+        vibePrompt: "",
+        addedAt: "2026-08-30"
     },
     {
         id: "creepy-button",
@@ -3155,7 +3157,8 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         category: "button",
         preview: renderComponent("creepy-button", "Creepy Button", { children: "HOVER ME" }),
         code: `import { CreepyButton } from '@/components/ui/creepy-button';\n\nexport const Demo = () => (\n  <CreepyButton>HOVER ME</CreepyButton>\n);`,
-        vibePrompt: ""
+        vibePrompt: "",
+        addedAt: "2026-08-30"
     },
 
     {

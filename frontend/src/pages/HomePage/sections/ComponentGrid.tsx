@@ -115,10 +115,16 @@ const BentoCard = ({ spec, comp }: { spec: BentoSpec; comp: BentoComp }) => {
             </div>
 
             {/* Label chip */}
-            <div className="absolute top-3 left-3 z-20">
+            <div className="absolute top-3 left-3 z-20 flex items-center gap-1.5">
                 <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-sm border border-white/15 text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest text-white">
                     {comp.title}
                 </span>
+                {comp.addedAt &&
+                    Date.now() - new Date(comp.addedAt).getTime() < 120 * 24 * 60 * 60 * 1000 && (
+                        <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000]">
+                            New
+                        </span>
+                    )}
             </div>
 
             {/* Hover arrow */}
