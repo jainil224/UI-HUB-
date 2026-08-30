@@ -712,28 +712,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["framer-motion"],
             requirements: ["Canvas or DOM particle system inside button", "Star drift physics (slow floaty movement)", "Nebula radial gradient on hover", "Click ripple from center"]
         }
-    },
-
-    "liquid-fill-button": {
-        props: [
-            { name: "children", type: "React.ReactNode", default: '"Fill"', description: "Button label." },
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes." },
-            { name: "fillColor", type: "string", default: '"#00ff9f"', description: "Color of the liquid fill that rises on hover." },
-            { name: "textColor", type: "string", default: '"#000000"', description: "Text color after fill covers the button." },
-            { name: "waveHeight", type: "number", default: "8", description: "Amplitude of the wave in pixels." },
-            { name: "fillSpeed", type: "number", default: "0.5", description: "Duration of the fill animation in seconds." },
-            { name: "onClick", type: "() => void", default: "undefined", description: "Click handler." }
-        ],
-        vibeMeta: {
-            behavior: "On hover, a liquid wave rises from the bottom of the button until it fully covers the background. A wavy SVG path sits at the waterline for an organic fill effect.",
-            states: { from: "transparent / outlined button", to: "fully filled with liquid wave on hover" },
-            cssProperties: ["clip-path", "transform: translateY", "SVG path", "transition"],
-            description: "Liquid wave fill button with organic SVG waterline animation.",
-            libraries: ["framer-motion"],
-            requirements: ["SVG sinusoidal wave path at fill boundary", "Y-axis translate for fill rise", "Color transition for text when covered", "Configurable wave height and fill speed"]
-        }
-    },
-
+    }
 };
 
 

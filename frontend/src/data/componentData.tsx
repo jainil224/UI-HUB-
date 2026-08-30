@@ -54,7 +54,6 @@ const BackgroundPaths = React.lazy(() => import('../components/ui/background-pat
 const BorderBeam = React.lazy(() => import('../components/ui/border-beam').then(m => ({ default: m.BorderBeam })));
 const GlowButton = React.lazy(() => import('../components/ui/GlowButton'));
 const GalaxyButton = React.lazy(() => import('../components/ui/GalaxyButton').then(m => ({ default: m.GalaxyButton })));
-const LiquidFillButton = React.lazy(() => import('../components/ui/LiquidFillButton').then(m => ({ default: m.LiquidFillButton })));
 const OrbitButton = React.lazy(() => import('../components/ui/OrbitButton').then(m => ({ default: m.OrbitButton })));
 const SocialTooltipButtons = React.lazy(() => import('../components/animations/SocialTooltipButtons').then(m => ({ default: m.SocialTooltipButtons })));
 const ImageTrail = React.lazy(() => import('../components/ui/image-trail').then(m => ({ default: m.ImageTrail })));
@@ -1980,7 +1979,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'border-beam': BorderBeam,
     'glow-button': GlowButton,
     'galaxy-button': GalaxyButton,
-    'liquid-fill-button': LiquidFillButton,
     'orbit-button': OrbitButton,
     'social-tooltip-buttons': SocialTooltipButtons,
     'image-trail': ImageTrail,
@@ -3226,14 +3224,6 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         category: "button",
         preview: renderComponent("galaxy-button", "Galaxy Button", { label: "GALAXY BUTTON" }),
         code: `import { GalaxyButton } from "@/components/ui/GalaxyButton";\n\nexport const Demo = () => (\n  <GalaxyButton label="Galaxy Button" />\n);`,
-        vibePrompt: ""
-    },
-    {
-        id: "liquid-fill-button",
-        title: "Liquid Fill Button",
-        category: "button",
-        preview: renderComponent("liquid-fill-button", "Liquid Fill Button", { label: "LIQUID FILL", liquidColor: "#06b6d4" }),
-        code: `import { LiquidFillButton } from "@/components/ui/LiquidFillButton";\n\nexport const Demo = () => (\n  <LiquidFillButton label="Liquid Fill" liquidColor="#06b6d4" />\n);`,
         vibePrompt: ""
     },
 

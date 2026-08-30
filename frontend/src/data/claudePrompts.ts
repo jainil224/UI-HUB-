@@ -1,4 +1,4 @@
-﻿export const CLAUDE_PROMPTS: Record<string, string> = {
+export const CLAUDE_PROMPTS: Record<string, string> = {
     "3d-landing-page": `
 # UI HUB • CLAUDE PROMPT
 
@@ -744,68 +744,6 @@ Type: Deep Space Atmospheric Button
 * Isolation: isolate to prevent mix-blend-mode conflicts.
 * GPU-optimized conic-gradient rotation via CSS variables.`,
 
-
-    'liquid-fill-button': `# UI HUB • CLAUDE PROMPT
-
-## Role
-
-You are an expert frontend engineer.
-
-## Task
-
-Generate a production-ready React component based on the specifications below.
-
-## Rules
-
-* Follow all instructions strictly
-* Return ONLY the final code
-* Do NOT include explanations
-* Ensure clean, optimized, and maintainable code
-
----
-
-## Component Info
-
-Name: LiquidFillButton
-Type: Physics-inspired Filling Button
-
----
-
-## Tech Stack
-
-* React
-* TypeScript
-* Framer Motion (for height and wave oscillation)
-* Tailwind CSS
-* clsx
-* tailwind-merge (cn utility)
-
----
-
-## Requirements
-
-* Fill-up animation on hover: liquid rises from 0% to 100% height.
-* Sinuous wave effect at the liquid surface using a duplicated SVG path.
-* Double-wave layering with staggered animation times for organic fluid motion.
-* Text color inverse: label changes from primary to white as the liquid passes over it.
-* Spring-based return: liquid "falls back" and settles when the mouse departs.
-* Gradient color scheme from base to accent.
-
----
-
-## Props
-
-* label: string = "Fill Button" — label text.
-* fillColor: string = "#3b82f6" — color of the rising liquid.
-* liquidSpeed: number = 0.6 — transition duration for filling.
-
----
-
-## Performance
-
-* SVG path optimization for smooth sin/cos wave calculation.
-* Framer Motion layout-level height transitions.
-* Will-change: transform on the wave layer to prevent repaints.`,
 
 
 

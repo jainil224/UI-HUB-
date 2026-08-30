@@ -59,7 +59,6 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'border-beam': () => import('../components/ui/border-beam'),
     'glow-button': () => import('../components/ui/GlowButton'),
     'galaxy-button': () => import('../components/ui/GalaxyButton'),
-    'liquid-fill-button': () => import('../components/ui/LiquidFillButton'),
     'orbit-button': () => import('../components/ui/OrbitButton'),
     'social-tooltip-buttons': () => import('../components/animations/SocialTooltipButtons'),
     'magic-card': () => import('../components/ui/magic-card'),
