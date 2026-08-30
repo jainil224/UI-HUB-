@@ -949,6 +949,37 @@ Create a continuous infinity ring gallery where thumbnail cards flow seamlessly 
 
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
-`
+`,
+  "isometric-portal": `
+## COMPONENT: Isometric Portal (Loader)
+
+### Overview
+A neo-brutalist isometric diamond loading animation built purely with an inline SVG and CSS keyframes in a self-contained React/TypeScript component. Dark faceted diamond shell in layered gunmetal grays over an inner diamond with a grey-to-slate gradient; two thin golden diamond outlines bounce apart and together on a 4s ease-in-out loop (second frame delayed 0.5s).
+
+### Animation Technique
+- CSS @keyframes using transform translate on SVG <polygon> elements (ip-bounce, ip-bounce2).
+- Gradient pulsing via @keyframes stop-color on the SVG linear-gradient stops (ip-umbral).
+- Rising ember particles with a 4s ease-in-out translate loop (ip-particles).
+- Id-selector driven animation rules (#bounce, #bounce2, #particles, #animatedStop).
+- No JavaScript animation state; infinite purely via CSS animation.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component, self-contained <style> tag.
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]).
+- SVG renders at exactly 200x200.
+
+### Do not
+Add JS animation state, external animation libraries, or change timing/easing values.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve the 4s timing, 0.5s offset, and golden-on-gunmetal palette.
+
+`,
 };
 

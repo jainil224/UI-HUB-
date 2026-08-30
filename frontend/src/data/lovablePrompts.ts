@@ -104,5 +104,24 @@ Production-ready React component
 You are an expert AI developer. Create an "InfinityImage" React component in TypeScript and Tailwind CSS.
 It renders an endless loop of photographic thumbnail cards traveling around a figure-eight infinity curve using CSS motion paths (offset-path: path(...)).
 Each card rotates tangentially, staggered evenly via negative animation delays. Cards display real portrait and fashion photography with glossy sheen overlays, pause on hover, and auto-scale dynamically to fit any container width smoothly.
-`
+`,
+  "isometric-portal": `
+## Component: Isometric Portal
+
+Build a "Isometric Portal" loading animation as a React + TypeScript component using Tailwind CSS and a pure inline SVG with CSS keyframes (no external animation libraries).
+
+## What it does
+A neo-brutalist isometric diamond loader centered on a dark radial gradient. A faceted 3D diamond shell in layered gunmetal grays wraps a smaller inner diamond filled with a subtle grey-to-slate linear gradient. Two thin golden diamond outlines overlap at 45 degrees and "bounce" vertically apart and back together on a 4s ease-in-out loop, the second frame trailing 0.5s behind. Four golden isometric slabs extend from the diamond sides and pulse a warm amber glow by animating the SVG gradient stop-color (4s infinite). Three tiny faceted particles (champagne, gold, white) drift upward inside the portal face on a 4s ease-in-out loop like embers rising through a vent.
+
+## Technical
+- Render exactly 200x200 SVG, centered in a full-size flexbox container (w-full h-full min-h-[380px]).
+- Scoped keyframes (ip-bounce, ip-bounce2, ip-umbral, ip-particles) plus id selectors (#bounce, #bounce2, #particles, #animatedStop).
+- Animate SVG with transform translate keyframes; gradient pulsing via stop-color keyframes.
+- Zero JavaScript animation state; loops forever via animation: ... infinite.
+- Inline the CSS in a <style> tag inside the component so it is self-contained.
+
+## Output
+Production-ready single-file React component.
+
+`,
 };

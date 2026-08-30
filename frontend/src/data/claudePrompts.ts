@@ -3227,6 +3227,32 @@ TECHNICAL:
 - DPR capped at 2, ResizeObserver, requestAnimationFrame loop.
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
+  "isometric-portal": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in CSS-driven SVG animation.
+
+## Task
+Create a "Isometric Portal" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes applied to inline SVG elements.
+
+COMPONENT NAME: Isometric Portal
+
+VISUAL DESCRIPTION:
+A neo-brutalist isometric diamond loader: a faceted 3D diamond shell in layered gunmetal grays (fills #414750, #292d34, #1f2127, #1e2026) with a smaller inner diamond filled by a grey-to-slate linear gradient. Two thin golden (#d3a410) diamond outlines wrap the figure at 45 degrees and bounce vertically apart (36px to 46px baseline) on a 4s ease-in-out loop; the second outline trails 0.5s later. Four golden isometric slabs extend from the sides; their gradient stops animate between transparent gold and rgba(211,165,16,0.52) via stop-color keyframes to pulse. Three tiny particles (champagne #ffe4a1, gold #ccb069, white) drift upward inside the portal face on a 4s loop. Background is a radial-gradient slab of dark blues (#2a2e36 -> #17181d -> #0d0e12).
+
+TECHNICAL:
+- CSS keyframes names: ip-bounce, ip-bounce2, ip-umbral, ip-particles.
+- Animation rules target SVG ids: #bounce, #bounce2, #particles, #animatedStop.
+- Put CSS in a <style> tag inside the component so it is fully self-contained.
+- Render <svg height={200} width={200}>, container is w-full h-full min-h-[380px] flex items-center justify-center.
+- preserve translate baseline via each keyframe block (0%,100% and 50% frames).
+- Zero runtime JS animation; rely only on animation: <name> 4s ease-in-out infinite.
+
+Acceptance:
+Produces the identical looping neo-brutalist golden diamond loader with correct stopping/gradient pulses and particle drift.
+
+`,
 };
 
 
