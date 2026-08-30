@@ -509,6 +509,79 @@ Type: Image Interaction (Canvas 2D Vortex)
 * Canvas DPR-capped at 2.
 * ResizeObserver keeps the canvas exactly container-sized; overflow arms are clipped by the wrapper.`,
 
+    'infinity-image': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: InfinityImage
+Type: Image Interaction (CSS Motion Path Figure-8 Gallery)
+
+---
+
+## Tech Stack
+
+* React ("use client")
+* TypeScript
+* CSS Motion Path (offset-path, offset-rotate, offset-anchor)
+* HTML5 / Tailwind CSS
+
+---
+
+## Requirements
+
+* An endless procession of photographic thumbnail cards flowing along a figure-eight infinity loop.
+* Path geometry: Two circles meeting at the center point (350, 160) within a 700x320 stage:
+  "M 350,160 C 350,90 280,60 210,60 C 140,60 70,90 70,160 C 70,230 140,260 210,260 C 280,260 350,230 350,160 C 350,90 420,60 490,60 C 560,60 630,90 630,160 C 630,230 560,260 490,260 C 420,260 350,230 350,160 Z"
+* Cards rotate tangentially to the curve via CSS \`offset-rotate: auto\`, anchored at \`50% 50%\`.
+* Even spacing along the loop via negative animation delays: delay = -(i * (duration / count)).
+* Keyframes: 0% { offset-distance: 0%; } 100% { offset-distance: 100%; }.
+* Each card renders a real image thumbnail with object-cover, fallbacks, subtle rounded corners, and a glossy specular glassmorphic overlay gradient.
+* Subtle background SVG path guideline highlighting the infinity track with soft glow.
+* Responsive auto-scaling with ResizeObserver to fit smaller viewport widths smoothly.
+* Optional pause on hover (pauseOnHover = true) and corner label.
+* Default export InfinityImage; set displayName = "Infinity Image".
+
+---
+
+## Props
+
+* images: Array<{ src: string; alt?: string; title?: string }> = DEFAULT_IMAGES
+* count: number = 26
+* duration: number = 16
+* cardWidth: number = 56
+* cardHeight: number = 78
+* cardRadius: number = 12
+* label: string = "Infinity Gallery"
+* pauseOnHover: boolean = true
+* showTrack: boolean = true
+* className: string = ""
+* style: React.CSSProperties
+
+---
+
+## Performance
+
+* Pure hardware-accelerated CSS animations using CSS motion path.
+* Zero JS animation frame overhead during idle or running state.
+* Clean ResizeObserver disconnect on unmount.`,
+
     'border-beam': `# UI HUB • CLAUDE PROMPT
 
 ## Role

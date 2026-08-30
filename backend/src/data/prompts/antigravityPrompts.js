@@ -488,7 +488,50 @@ Create an orb web strung across the frame whose silk gives way under the pointer
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.`,
 
-    "spiral-images": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+        "infinity-image": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance Infinity Image figure-8 loop gallery React component.
+
+---
+
+## COMPONENT INFO
+
+Name: InfinityImage
+Type: Image Interaction (CSS Motion Path Figure-8 Gallery)
+
+---
+
+## GOAL
+
+Create a continuous infinity ring gallery where thumbnail cards flow seamlessly along a figure-eight path using CSS offset-path, rotating tangentially and evenly spaced around the dual-lobe loop. Each card renders a real image thumbnail with glossy overlays, auto-scales responsively for all viewport widths, and pauses on hover.
+
+---
+
+## TECH STACK
+
+* React ("use client")
+* TypeScript (TSX)
+* CSS Motion Path (offset-path, offset-rotate, offset-anchor)
+* Tailwind CSS`,
+
+"spiral-images": `# UI HUB • ANTIGRAVITY MASTER PROMPT
 
 ## SYSTEM (DO NOT IGNORE)
 

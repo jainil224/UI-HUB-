@@ -97,5 +97,12 @@ A beautiful, highly interactive button featuring custom hover and click micro-in
 
 ## Output
 Production-ready React component
+`,
+    "infinity-image": `
+# UI HUB • LOVABLE PROMPT
+
+You are an expert AI developer. Create an "InfinityImage" React component in TypeScript and Tailwind CSS.
+It renders an endless loop of photographic thumbnail cards traveling around a figure-eight infinity curve using CSS motion paths (offset-path: path(...)).
+Each card rotates tangentially, staggered evenly via negative animation delays. Cards display real portrait and fashion photography with glossy sheen overlays, pause on hover, and auto-scale dynamically to fit any container width smoothly.
 `
 };

@@ -47,6 +47,7 @@ const CreepyButton = React.lazy(() => import('../components/ui/creepy-button').t
 const RadialGlowButton = React.lazy(() => import('../components/ui/radial-glow-button').then(m => ({ default: m.RadialGlowButton })));
 const SpiderWeb = React.lazy(() => import('../components/ui/spider-web'));
 const SpiralImages = React.lazy(() => import('../components/ui/spiral-images'));
+const InfinityImage = React.lazy(() => import('../components/ui/infinity-image'));
 const InteractiveHoverButton = React.lazy(() => import('../components/ui/interactive-hover-button'));
 const IsometricGridBackground = React.lazy(() => import('../components/ui/isometric-grid-background').then(m => ({ default: m.IsometricGridBackground })));
 const MagicCard = React.lazy(() => import('../components/ui/magic-card').then(m => ({ default: m.MagicCard })));
@@ -1977,6 +1978,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'radial-glow-button': RadialGlowButton,
     'spider-web': SpiderWeb,
     'spiral-images': SpiralImages,
+    'infinity-image': InfinityImage,
     'interactive-hover-button': InteractiveHoverButton,
     'isometric-grid-background': IsometricGridBackground,
     'magic-card-effect': MagicCard,
@@ -3199,6 +3201,21 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         ),
         code: `import SpiralImages from '@/components/ui/spiral-images';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden bg-neutral-950">\n    <SpiralImages />\n  </div>\n);`,
         vibePrompt: "Images flow along an Archimedean spiral from the outer edge into the center (a vortex/whirl), each card rotating to follow the spiral's tangent and fading in and out at the ends. Cards sit at equal ARC distance along the path, reparameterized by arc length so they never bunch near the center, cycle through a small image set for a continuous infinite stream, and shrink toward the center via size attenuation. Built in self-contained Canvas 2D — no workers, no WebGL, single file. DPR-capped at 2, ResizeObserver-driven, rounded-corner clipping, configurable turns/speed/spacing/spread/sizeAttenuation/imageSize/fadeIn/fadeOut/cornerRadius."
+    },
+
+    {
+        id: "infinity-image",
+        title: "Infinity Image",
+        category: "image-interaction",
+        addedAt: "2026-08-30",
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[500px] rounded-3xl overflow-hidden border border-white/10 relative bg-neutral-950 flex items-center justify-center p-4">
+                <InfinityImage />
+            </div>
+        ),
+        code: `import InfinityImage from '@/components/ui/infinity-image';\n\nexport const Demo = () => (\n  <div className="w-full h-[500px] rounded-3xl overflow-hidden bg-neutral-950 flex items-center justify-center">\n    <InfinityImage />\n  </div>\n);`,
+        vibePrompt: "An endless procession of photographic thumbnail cards circulating along a figure-eight infinity loop using CSS motion paths (offset-path: path(...)). Each card aligns tangentially to the lemniscate curve, evenly spaced via staggered negative animation delays with linear infinite timing. Cards feature real high-resolution images, rounded corners, specular glassmorphic overlays, and pause-on-hover interaction with auto-responsive container scaling."
     },
 
     {

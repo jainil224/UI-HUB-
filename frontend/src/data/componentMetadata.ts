@@ -629,6 +629,30 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "infinity-image": {
+        props: [
+            { name: "images", type: "Array<{ src: string; alt?: string; title?: string }>", default: "DEFAULT_IMAGES", description: "Array of image objects rendered onto loop cards." },
+            { name: "count", type: "number", default: "26", description: "Total number of cards travelling around the infinity loop." },
+            { name: "duration", type: "number", default: "16", description: "Loop duration in seconds for one complete circuit." },
+            { name: "cardWidth", type: "number", default: "56", description: "Width of each card in pixels." },
+            { name: "cardHeight", type: "number", default: "78", description: "Height of each card in pixels." },
+            { name: "cardRadius", type: "number", default: "12", description: "Border radius of each card in pixels." },
+            { name: "label", type: "string", default: '"Infinity Gallery"', description: "Text label displayed in the corner of the gallery." },
+            { name: "pauseOnHover", type: "boolean", default: "true", description: "Whether to pause the infinity flow when hovering over the gallery." },
+            { name: "showTrack", type: "boolean", default: "true", description: "Whether to render the subtle glowing infinity track guideline." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for outer container." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Extra wrapper styles." }
+        ],
+        vibeMeta: {
+            behavior: "A continuous infinity ring gallery where thumbnail cards flow seamlessly along a figure-eight path using CSS offset-path, rotating tangentially and evenly spaced around the dual-lobe loop.",
+            states: { from: "still thumbnail cards", to: "infinite flowing cards along figure-eight motion path" },
+            cssProperties: ["offset-path", "offset-rotate", "animation-delay", "transform-scale"],
+            description: "Premium continuous infinity figure-8 loop gallery with photographic thumbnail cards.",
+            libraries: ["react"],
+            requirements: ["CSS offset-path figure-eight curve", "Evenly staggered negative animation delays", "High-res images with glossy glassmorphic overlay", "Responsive container scaling", "Pause on hover"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },

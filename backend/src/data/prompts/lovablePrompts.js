@@ -1587,7 +1587,13 @@ A delicate orb web strung across the whole frame. The silk bows where your point
 ## Output
 Production-ready React component`,
 
-    "spiral-images": `# UI HUB • LOVABLE PROMPT
+        "infinity-image": `# UI HUB • LOVABLE PROMPT
+
+You are an expert AI developer. Create an "InfinityImage" React component in TypeScript and Tailwind CSS.
+It renders an endless loop of photographic thumbnail cards traveling around a figure-eight infinity curve using CSS motion paths (offset-path: path(...)).
+Each card rotates tangentially, staggered evenly via negative animation delays. Cards display real portrait and fashion photography with glossy sheen overlays, pause on hover, and auto-scale dynamically to fit any container width smoothly.`,
+
+"spiral-images": `# UI HUB • LOVABLE PROMPT
 Create a visually stunning component.
 
 ## Concept

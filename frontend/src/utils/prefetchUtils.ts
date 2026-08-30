@@ -57,6 +57,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'radial-glow-button': () => import('../components/ui/radial-glow-button'),
     'spider-web': () => import('../components/ui/spider-web'),
     'spiral-images': () => import('../components/ui/spiral-images'),
+    'infinity-image': () => import('../components/ui/infinity-image'),
     'interactive-hover-button': () => import('../components/ui/interactive-hover-button'),
     'marquee-hover-button': () => import('../components/ui/marquee-hover-button'),
     'payment-transaction-button': () => import('../components/ui/payment-transaction-button'),
