@@ -527,6 +527,27 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "corner-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Start designing"', description: "Button label content." },
+            { name: "icon", type: "LucideIcon", default: "Pencil", description: "Trailing action icon rendered on the right." },
+            { name: "accentColor", type: "string", default: '"#FF3B4D"', description: "Color of the corner brackets and hover glow." },
+            { name: "showTitleImage", type: "boolean", default: "true", description: "Whether to show the brand logo image on the left." },
+            { name: "titleImage", type: "string | null", default: "UI HUB mark", description: "Brand logo URL or data URI rendered next to the label." },
+            { name: "titleImageAlt", type: "string", default: '""', description: "Alt text for the brand logo image." },
+            { name: "titleImageClassName", type: "string", default: '""', description: "Sizing classes applied to the brand logo image." },
+            { name: "className", type: "string", default: '""', description: "Additional CSS classes for the button." }
+        ],
+        vibeMeta: {
+            behavior: "A button whose corner brackets slide around the edges with a radial laser-glow burst on hover, with a logo mark on the left and an action icon on the right.",
+            states: { from: "collapsed corner brackets at rest", to: "full corner frame + glow on hover" },
+            cssProperties: ["transform", "opacity", "transition", "box-shadow"],
+            description: "Corner-bracket button with laser glow and logo mark.",
+            libraries: ["lucide-react"],
+            requirements: ["useId-scoped <style> block", "Four absolute-positioned corner brackets", "Radial-gradient glow on hover", "Brand logo + icon pair", "Responsive scaling under 480px"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },

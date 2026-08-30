@@ -176,6 +176,75 @@ Type: Interactive Button with Animated Borders
 
 
 
+    'corner-button': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: CornerButton
+Type: Interactive Button with Corner Brackets & Glow
+
+---
+
+## Tech Stack
+
+* React ("use client")
+* TypeScript
+* clsx
+* tailwind-merge (cn utility)
+* lucide-react (for the trailing action icon)
+* Scoped CSS: a <style> tag bound to a useId-generated id so styles never leak
+
+---
+
+## Requirements
+
+* Resting state: four corner brackets (~14px) visible; centered label flanked by a brand logo on the left and an action icon on the right.
+* Hover/focus: brackets extend to ~100% along their edges and a radial laser-glow fades in behind the button.
+* All accent colors (brackets + glow) derive from a single accentColor prop.
+* Logo nudges left and icon nudges right slightly on hover.
+* Use only transform/opacity transitions (60fps, hardware-accelerated).
+* Decorative corner/glow layers must be pointer-events: none.
+* Fully responsive: scale down gracefully below 480px.
+* Preserve visible :focus-visible treatment for accessibility.
+
+---
+
+## Props
+
+* children: React.ReactNode = "Start designing" — the button label.
+* icon: LucideIcon = Pencil — trailing action icon.
+* accentColor: string = "#FF3B4D" — bracket + glow color.
+* showTitleImage: boolean = true — toggle the brand mark.
+* titleImage: string | null = built-in mark — brand logo URL (URL or data URI).
+* titleImageAlt: string — alt text for the brand mark.
+* titleImageClassName: string — sizing classes for the brand mark.
+* className: string = "" — extra button classes.
+
+---
+
+## Performance
+
+* Pure CSS transitions (transform/opacity only).
+* Pointer-events: none on decorative layers.
+* useId-scoped <style> prevents cascading side effects.`,
+
     'border-beam': `# UI HUB • CLAUDE PROMPT
 
 ## Role

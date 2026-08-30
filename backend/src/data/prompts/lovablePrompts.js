@@ -1430,6 +1430,47 @@ A beautiful, highly interactive button featuring custom hover and click micro-in
 ## Output
 Production-ready React component
 `,
+    "corner-button": `
+# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A premium action button framed by corner brackets that ignite with a laser-glow burst on hover. It reads like studio-branded UI: a logo mark on the left, an uppercase label in the middle, and an action icon on the right.
+
+## Tech
+- React + Tailwind CSS
+- Scoped CSS via a <style> tag stamped with a useId-generated id, so styles never leak to the rest of the page.
+- lucide-react for the trailing action icon.
+
+## Animation Details
+- **Corner Brackets (Rest -> Hover)**: Four corner pieces (~14px) that extend to ~100% along their edges on hover/focus, completing a rounded-tech frame around the button.
+- **Glow Ignition**: A radial-gradient halo behind the button fades in on hover in the accent color, like a laser pulse.
+- **Icon & Logo Motion**: The logo slides slightly left and the trailing icon slides slightly right on hover for a tactile feel.
+- **Color**: Every accent (brackets + glow) is driven by one accentColor prop.
+
+## Performance
+- Pure CSS transitions (transform/opacity only) - 60fps, zero frame drops.
+- ~8 lightweight DOM nodes; decorative layers are pointer-events: none.
+- useId-scoped styles prevent cascade side effects.
+
+## Props
+- children: React.ReactNode (default: 'Start designing') - the button label.
+- accentColor: string (default: '#FF3B4D') - bracket and glow color.
+- showTitleImage: boolean (default: true) - toggle the brand mark.
+- titleImage: string | null (default: built-in UI HUB mark) - brand logo URL (URL or data URI).
+- titleImageAlt / titleImageClassName - alt text and sizing classes for the mark.
+- icon: LucideIcon (default: Pencil) - trailing action icon.
+- className: string (default: '').
+
+## Styling Guide
+- Resting corners ~14px, hover corners ~100% of the edge.
+- Label styled uppercase with generous letter-spacing (tracking-widest ~0.2em).
+- Keep hover state focus-visible for accessibility.
+- Scale the whole button down gracefully on screens under 480px.
+
+## Output
+Production-ready React component
+`,
     "gravitational-vortex": `
 # UI HUB • LOVABLE PROMPT
 

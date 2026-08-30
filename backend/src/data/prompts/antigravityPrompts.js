@@ -202,6 +202,80 @@ Create a component that features sharp, high-contrast "Corner-First" border anim
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 
 `,
+    "corner-button": `
+# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component.
+
+---
+
+## COMPONENT INFO
+
+Name: CornerButton
+Type: UI / Interaction
+
+---
+
+## GOAL
+
+Create a sharp button whose corner brackets slide around the edges with a laser-glow burst on hover. A brand logo sits left of the label and an action icon sits right, all wrapped in a useId-scoped <style> block so effects never leak.
+
+---
+
+## TECH STACK
+
+* React (Next.js, \"use client\")
+* TypeScript (TSX)
+* Tailwind CSS
+* lucide-react for iconography
+* Scoped CSS via useId + inline <style> (no external stylesheet)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Corner Brackets**: Four absolutely-positioned corner spans (~14px rest) that extend to ~100% of their edge on hover/focus, coordinated with transition delays.
+* **Radial Glow**: A radial-gradient glow layer behind the button that fades in on hover in the accent color.
+* **Icon Pairing**: Logo image left of label (slides left on hover) + lucide icon right (slides right on hover).
+* **Single Accent Source**: accentColor prop drives bracket and glow color everywhere.
+* **Scoped Styles**: useId generates a unique style id so instances never fight.
+* **Mobile**: Responsive downscaling under 480px.
+
+---
+
+## PROPS (with defaults):
+- children: React.ReactNode = 'Start designing' — button label.
+- icon: LucideIcon = Pencil — trailing action icon.
+- accentColor: string = '#FF3B4D' — bracket + glow color.
+- showTitleImage: boolean = true — show the brand mark.
+- titleImage: string | null = default mark — brand logo (URL or data URI).
+- titleImageAlt: string — brand mark alt text.
+- titleImageClassName: string — brand mark sizing classes.
+- className: string = '' — optional styling.
+
+---
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+
+`,
     "border-beam": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 

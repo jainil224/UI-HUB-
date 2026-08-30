@@ -61,6 +61,7 @@ const resolveSourceCode = async (componentId) => {
     'rainbow-button': 'ui/rainbow-button.tsx',
     'marquee-hover-button': 'ui/marquee-hover-button.tsx',
     'corner-border-button': 'ui/corner-border-button.tsx',
+    'corner-button': 'ui/corner-button.tsx',
     'payment-transaction-button': 'ui/payment-transaction-button.tsx',
     'magic-card-effect': 'ui/magic-card.tsx',
     'border-beam': 'ui/border-beam.tsx',
