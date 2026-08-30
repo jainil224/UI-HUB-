@@ -54,6 +54,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'corner-border-button': () => import('../components/ui/corner-border-button'),
     'corner-button': () => import('../components/ui/corner-button'),
     'creepy-button': () => import('../components/ui/creepy-button'),
+    'radial-glow-button': () => import('../components/ui/radial-glow-button'),
     'interactive-hover-button': () => import('../components/ui/interactive-hover-button'),
     'marquee-hover-button': () => import('../components/ui/marquee-hover-button'),
     'payment-transaction-button': () => import('../components/ui/payment-transaction-button'),

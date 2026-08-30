@@ -565,6 +565,21 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "radial-glow-button": {
+        props: [
+            { name: "children", type: "React.ReactNode", default: '"Get Extension"', description: "The button label content." },
+            { name: "className", type: "string", default: '""', description: "Extra classes merged onto the button." }
+        ],
+        vibeMeta: {
+            behavior: "Animated radial-gradient surface that drifts, a 1px gradient border that rotates, and a light sweep that crosses the button on hover — all via CSS @property-registered custom properties.",
+            states: { from: "drifting gradient, border idle, shine hidden", to: "retuned gradient stops, rotated border angle, shine sweep visible" },
+            cssProperties: ["background", "radial-gradient", "mask-composite", "transform", "@property"],
+            description: "Gradient button with drifting glow and light sweep.",
+            libraries: [],
+            requirements: ["@property-registered custom properties", "radial-gradient surface with animated stops", "mask-composite: exclude 1px border", "container-type: size shine sweep", "0.75s registered-property transitions"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },

@@ -1509,6 +1509,41 @@ A cute-creepy button: two tiny white eyes peek out from beneath a blue cover fac
 Production-ready React component
 `,
 
+    "radial-glow-button": `# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A slick, modern gradient button with a constantly drifting radial glow, a 1px animated gradient border, and a rotating light spark that sweeps across the face when hovered. Feels premium and alive without any JavaScript animation.
+
+## Tech
+- React + Tailwind CSS
+- Pure CSS powered by @property-registered CSS custom properties so colors and numbers interpolate smoothly.
+- cn utility only for merging the extra className.
+
+## Animation Details
+- **Gradient drift**: The radial gradient's center position, spread, color stack, and color stops are all @property variables; hover retunes them (0.75s transitions).
+- **Border frame**: A mask-composite: exclude ::before layer draws a 1px gradient border whose angle rotates on hover.
+- **Light sweep**: A container-sized square (aspect-ratio 1) slides across the button (100cqw) while a conic-gradient spark rotates behind it (rg-spin), shown only on hover via --button-line-opacity, blended soft-light.
+- **Cut edge**: A 1px inset layer (rg-bg) repaints the gradient so the edge stays crisp.
+
+## Performance
+- Zero JS animation - everything is CSS transitions/keyframes on registered custom properties (GPU friendly).
+- Lightweight: one button + three spans + a single <style> tag.
+
+## Props
+- children: React.ReactNode (default: 'Get Extension') - the label.
+- className: string (default: '') - merged onto the button.
+- All native button attributes pass through.
+
+## Styling Guide
+- Button base: min-width 160px, min-height 51px, padding 16px 24px, radius 11px.
+- Text: white at 0.95 opacity with a subtle dark text-shadow.
+- Wire every animatable value as an @property (with syntax and initial-value) or the transitions will snap.
+
+## Output
+Production-ready React component
+`,
+
     "gravitational-vortex": `
 # UI HUB • LOVABLE PROMPT
 

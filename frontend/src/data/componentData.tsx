@@ -44,6 +44,7 @@ const WaveBackground = React.lazy(() => import('../components/ui/WaveBackground'
 const CornerBorderButton = React.lazy(() => import('../components/ui/corner-border-button').then(m => ({ default: m.CornerBorderButton })));
 const CornerButton = React.lazy(() => import('../components/ui/corner-button').then(m => ({ default: m.CornerButton })));
 const CreepyButton = React.lazy(() => import('../components/ui/creepy-button').then(m => ({ default: m.CreepyButton })));
+const RadialGlowButton = React.lazy(() => import('../components/ui/radial-glow-button').then(m => ({ default: m.RadialGlowButton })));
 const InteractiveHoverButton = React.lazy(() => import('../components/ui/interactive-hover-button'));
 const IsometricGridBackground = React.lazy(() => import('../components/ui/isometric-grid-background').then(m => ({ default: m.IsometricGridBackground })));
 const MagicCard = React.lazy(() => import('../components/ui/magic-card').then(m => ({ default: m.MagicCard })));
@@ -1971,6 +1972,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'corner-border-button': CornerBorderButton,
     'corner-button': CornerButton,
     'creepy-button': CreepyButton,
+    'radial-glow-button': RadialGlowButton,
     'interactive-hover-button': InteractiveHoverButton,
     'isometric-grid-background': IsometricGridBackground,
     'magic-card-effect': MagicCard,
@@ -3157,6 +3159,15 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         category: "button",
         preview: renderComponent("creepy-button", "Creepy Button", { children: "HOVER ME" }),
         code: `import { CreepyButton } from '@/components/ui/creepy-button';\n\nexport const Demo = () => (\n  <CreepyButton>HOVER ME</CreepyButton>\n);`,
+        vibePrompt: "",
+        addedAt: "2026-08-30"
+    },
+    {
+        id: "radial-glow-button",
+        title: "Radial Glow Button",
+        category: "button",
+        preview: renderComponent("radial-glow-button", "Radial Glow Button", { children: "GET EXTENSION" }),
+        code: `import { RadialGlowButton } from '@/components/ui/radial-glow-button';\n\nexport const Demo = () => (\n  <RadialGlowButton>Get Extension</RadialGlowButton>\n);`,
         vibePrompt: "",
         addedAt: "2026-08-30"
     },

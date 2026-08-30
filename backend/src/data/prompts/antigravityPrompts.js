@@ -343,6 +343,74 @@ Create a playful-horror button with two glowing white eyes whose pupils track th
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
 
+    "radial-glow-button": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component.
+
+---
+
+## COMPONENT INFO
+
+Name: RadialGlowButton
+Type: UI / Interaction
+
+---
+
+## GOAL
+
+Create a modern gradient button whose radial-gradient surface continually shifts color and position, framed by an animated gradient border and swept by a rotating light 'spark' — all driven by CSS @property-registered custom properties for smooth, GPU-friendly interpolation.
+
+---
+
+## TECH STACK
+
+* React (Next.js, "use client")
+* TypeScript (TSX)
+* Tailwind CSS (cn utility only for class merge)
+* Pure CSS: @property-registered custom properties (no JS animation loop)
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Drifting Radial Surface**: background set via radial-gradient(var(--rg-spread-x) var(--rg-spread-y) at var(--rg-pos-x) var(--rg-pos-y), five color stops).
+* **Registered Custom Properties**: Every animatable value must be declared with @property (correct syntax + initial-value) so the browser interpolates it: --rg-pos-x/y, --rg-spread-x/y, --rg-color-1..5, --rg-stop-1..5, --rg-border-angle, --rg-border-color-1/2.
+* **Gradient Border Frame**: a ::before layer (inset 0, padding 1px, mask-composite: exclude) paints a 1px linear-gradient border that shifts its angle and colors.
+* **Light Sweep (rg-shine)**: container-type: size; an aspect-ratio square slides across the full width (translate calc(100cqw - 100%)) while a conic-gradient spark rotates (rg-spin keyframes), blended with soft-light.
+* **Inner Cutout (rg-bg)**: an inset 1px layer re-paints the same gradient for a crisp cut edge.
+* **Hover State**: repaints color stack to a light/dark contrast palette, tightens spread, rewrites stops, rotates border angle, reveals the shine layer.
+* **Transitions**: .75s on every registered property + .25s/0.3s on opacity, so hover morphs are butter-smooth.
+
+---
+
+## PROPS (with defaults):
+- children: React.ReactNode = 'Get Extension' — the label.
+- className: string = '' — extra classes merged onto the button.
+- All native button attributes forwarded.
+
+---
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
+`,
+
     "border-beam": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 

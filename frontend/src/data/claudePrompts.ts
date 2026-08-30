@@ -309,6 +309,67 @@ Type: Interactive Button with Cursor-Tracking Eyes
 * Minimal state: a Coords tuple for pupils and a hovered boolean.
 `,
 
+    'radial-glow-button': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: RadialGlowButton
+Type: Gradient Button with Drifting Glow & Light Sweep
+
+---
+
+## Tech Stack
+
+* React ("use client")
+* TypeScript
+* clsx
+* tailwind-merge (cn utility)
+* Pure CSS with @property-registered custom properties
+
+---
+
+## Requirements
+
+* Every animatable value (gradient position, spread, color stops, colors, border angle/colors) must be a CSS custom property registered via @property with a correct syntax and initial-value so the browser interpolates it.
+* Background: radial-gradient building from those variables; recompose the same gradient on an inset 1px layer (rg-bg) for a crisp cut edge.
+* A ::before layer using mask: linear-gradient content-box + full box, mask-composite: exclude draws a 1px gradient border.
+* A shine layer (rg-shine, container-type: size) with an aspect-ratio square that slides across the button (rg-slide keyframe) while a conic-gradient spark rotates (rg-spin keyframe), blended soft-light and revealed on hover via --button-line-opacity.
+* Hover retunes all gradient/border variables with .75s transitions and shows the shine.
+* No animation libraries, no JS animation loop.
+
+---
+
+## Props
+
+* children: React.ReactNode = "Get Extension" — the label.
+* className: string = "" — extra classes merged onto the button.
+* All native button attributes forwarded.
+
+---
+
+## Performance
+
+* Pure CSS transitions/keyframes on registered custom properties (no layout thrash).
+* Single <style> block, three spans + button, pointer-events: none on the decorative border layer.
+`,
+
     'border-beam': `# UI HUB • CLAUDE PROMPT
 
 ## Role
