@@ -1544,6 +1544,49 @@ A slick, modern gradient button with a constantly drifting radial glow, a 1px an
 Production-ready React component
 `,
 
+    "spider-web": `# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+A delicate orb web strung across the whole frame. The silk bows where your pointer passes over it and springs back once you move on, like the web is breathing. At rest it sits completely still — no animation cost until you touch it.
+
+## Tech
+- React + TypeScript + Vite
+- HTML5 Canvas 2D rendering (no WebGL, no animation libraries)
+- A WebScene class that owns the canvas, the physics loop, and pointer events
+- ResizeObserver so the web rebuilds to fit whatever container it lives in
+
+## Animation Details
+- **Spring silk**: every web intersection is a particle on a damped spring (stiffness 460, damping derived from stiffness) pulling back to its home position; integrate with capped dt.
+- **Pointer push**: a squared-falloff force pushes nearby nodes away from the cursor, dragging neighbours along through the strands.
+- **Curved strands**: rings are drawn as quadratic curves that bow toward the centre (sag), radials go from centre to the far pinned ring; the outer ring sits past the corners so silk runs off the edge.
+- **Auto-park**: the animation loop stops itself when everything is still and no pointer is near, and wakes back up on pointermove.
+
+## Performance
+- Zero JS animation when idle (loop parks itself).
+- Canvas sized to devicePixelRatio (capped at 2) for crisp retina lines.
+- Deterministic hash wobble keeps the web identical frame to frame.
+
+## Props
+- color: string (default: '#DCE6FF') - silk color.
+- opacity: number (default: 100) - web opacity.
+- segments: number (default: 28) - spokes.
+- rings: number (default: 14) - concentric rings.
+- thickness: number (default: 3) - silk weight.
+- sag: number (default: 20) - how much strands bow inward.
+- irregularity: number (default: 0) - wobble.
+- hoverIntensity: number (default: 20) - pointer push.
+- nodes: boolean (default: false) - draw intersection dots.
+- nodeColor, nodeSize - dot styling.
+- style - extra wrapper styles.
+
+## Styling Guide
+- The component fills 100% of its parent (relative, overflow hidden), so give it a bounded container with its own background.
+- Silk should read as faint neon thread on a dark backdrop — pick a light color like #DCE6FF.
+
+## Output
+Production-ready React component`,
+
     "gravitational-vortex": `
 # UI HUB • LOVABLE PROMPT
 

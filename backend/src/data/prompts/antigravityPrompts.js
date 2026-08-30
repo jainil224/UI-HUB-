@@ -411,6 +411,83 @@ Create a modern gradient button whose radial-gradient surface continually shifts
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.
 `,
 
+    "spider-web": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and WebGL/animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component.
+
+---
+
+## COMPONENT INFO
+
+Name: SpiderWeb
+Type: Interactive Canvas Background
+
+---
+
+## GOAL
+
+Create an orb web strung across the frame whose silk gives way under the pointer and springs back once it has passed. Every intersection is a mass on a spring anchored to where it ought to be, so the whole sheet rings for a moment before it settles. The loop must park itself when nothing is moving or hovering, so an idle web costs nothing.
+
+---
+
+## TECH STACK
+
+* React (Next.js, "use client")
+* TypeScript (TSX)
+* HTML5 Canvas 2D — no WebGL, no external animation libraries
+* ResizeObserver for responsive sizing
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Spring Physics**: Each node is a damped spring (STIFFNESS 460, DAMPING = 2 * sqrt(STIFFNESS) * 0.05) pulling back to its rest position, integrated explicitly with frame-capped dt (max 0.033s so backgrounded tabs never explode).
+* **Pointer Influence**: Squared-falloff outward force within REACH 370px, strength PUSH 90 scaled by hoverIntensity/10, so silk stretches away from the cursor.
+* **Orb Layout**: Nodes stored as a [ring][spoke] grid; rings crowd toward the centre (radius = outer * t^1.35); the outer ring is placed past the corners (Math.hypot * 0.56) and pinned so the silk runs off the frame edge.
+* **Curved Silk**: Spiral strands drawn as quadratic curves bowed toward the centre by \`sag\` (a share of the strand's own span); radials drawn from centre out through every ring.
+* **Deterministic Wobble**: A hash() function adds slight angle/radius irregularity so the web keeps the same crooked strands frame to frame.
+* **Self-Parking Loop**: cancels requestAnimationFrame when nothing is moving and no pointer influence is active; wakes on pointermove.
+* **Config Mapping**: Panel-friendly whole numbers clamped and mapped to simulation values (thickness 0.3 + 0.22*val, sag 0.011*val, irregularity 0.02*val, nodeSize 0.4 + 0.18*val).
+* **Cleanup**: dispose() removes canvas and listeners on unmount.
+
+---
+
+## PROPS (with defaults):
+- color: string = '#DCE6FF' — silk color.
+- opacity: number = 100 — global web opacity (0–100).
+- segments: number = 28 — radial spokes (5–28).
+- rings: number = 14 — concentric rings (3–14).
+- thickness: number = 3 — silk weight (1–10).
+- sag: number = 20 — strand bow toward centre (0–20).
+- irregularity: number = 0 — wobble of angle/radius (0–20).
+- hoverIntensity: number = 20 — pointer push strength (0–20).
+- nodes: boolean = false — draw intersection dots.
+- nodeColor: string = '#FFFFFF' — dot color.
+- nodeSize: number = 4 — dot size (1–10).
+- style: React.CSSProperties — extra container styles.
+
+---
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.`,
+
     "border-beam": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 

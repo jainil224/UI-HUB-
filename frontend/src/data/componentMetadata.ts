@@ -580,6 +580,31 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "spider-web": {
+        props: [
+            { name: "color", type: "string", default: '"#DCE6FF"', description: "Silk strand color." },
+            { name: "opacity", type: "number", default: "100", description: "Global web opacity (0–100)." },
+            { name: "segments", type: "number", default: "28", description: "Radial spokes (5–28)." },
+            { name: "rings", type: "number", default: "14", description: "Concentric rings (3–14)." },
+            { name: "thickness", type: "number", default: "3", description: "Silk weight (1–10)." },
+            { name: "sag", type: "number", default: "20", description: "How far ring strands bow inward (0–20)." },
+            { name: "irregularity", type: "number", default: "0", description: "Deterministic wobble of angle/radius (0–20)." },
+            { name: "hoverIntensity", type: "number", default: "20", description: "Pointer push strength (0–20)." },
+            { name: "nodes", type: "boolean", default: "false", description: "Draw dots at silk intersections." },
+            { name: "nodeColor", type: "string", default: '"#FFFFFF"', description: "Intersection dot color." },
+            { name: "nodeSize", type: "number", default: "4", description: "Intersection dot size (1–10)." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Extra wrapper styles." }
+        ],
+        vibeMeta: {
+            behavior: "An orb web of spring-simulated silk that gives way under the pointer and rings back, parking its animation loop when idle.",
+            states: { from: "web at rest, loop parked", to: "pointer pushes nodes outward, silk stretches and rings" },
+            cssProperties: ["canvas", "transform", "spring physics"],
+            description: "Interactive spring-silk orb web for full-frame backgrounds.",
+            libraries: [],
+            requirements: ["Canvas 2D spring-simulation of [ring][spoke] nodes", "Squared-falloff pointer force", "Self-parking requestAnimationFrame loop", "ResizeObserver + devicePixelRatio (cap 2)", "Deterministic hash irregularity"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },

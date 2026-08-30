@@ -370,6 +370,76 @@ Type: Gradient Button with Drifting Glow & Light Sweep
 * Single <style> block, three spans + button, pointer-events: none on the decorative border layer.
 `,
 
+    'spider-web': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: SpiderWeb
+Type: Interactive Canvas Background (Spring-Silk Web)
+
+---
+
+## Tech Stack
+
+* React ("use client")
+* TypeScript
+* HTML5 Canvas 2D (no WebGL, no animation libraries)
+
+---
+
+## Requirements
+
+* An orb web built from a [ring][spoke] grid of nodes, each simulated as a damped spring (STIFFNESS 460, DAMPING = 2 * sqrt(STIFFNESS) * 0.05) returning to a rest position; integrate explicitly with a frame-capped dt (max 0.033s).
+* Pointer interaction via pointermove/pointerleave/pointercancel on the canvas: a squared-falloff force (REACH 370, scaled by hoverIntensity) pushes nodes outward so the silk visibly stretches and rings.
+* Rings crowd toward the centre (radius = outer * t^1.35); the outer ring is placed beyond the corners (Math.hypot(width,height) * 0.56) and pinned so strands run off the frame edge.
+* Ring strands drawn as quadratic curves bowed toward the centre by \`sag\`; radials stroked from the centre through every ring.
+* Deterministic hash() wobble for irregularity so the web shape is stable between frames.
+* Self-parking loop: cancel requestAnimationFrame when energy is low and no pointer is active; wake on pointermove.
+* Clamp + map panel-friendly config values to simulation ranges; expose defaults matching DEFAULTS block.
+* Optional drawn nodes at intersections; full dispose() on unmount (canvas removal + listener removal + ResizeObserver disconnect).
+
+---
+
+## Props
+
+* color: string = "#DCE6FF"
+* opacity: number = 100
+* segments: number = 28
+* rings: number = 14
+* thickness: number = 3
+* sag: number = 20
+* irregularity: number = 0
+* hoverIntensity: number = 20
+* nodes: boolean = false
+* nodeColor: string = "#FFFFFF"
+* nodeSize: number = 4
+* style: React.CSSProperties
+
+---
+
+## Performance
+
+* Idle cost zero (parked loop).
+* Canvas DPR-capped at 2 for retina crispness.
+* No per-frame allocations of note; styles/typical stroke config set once per frame group.`,
+
     'border-beam': `# UI HUB • CLAUDE PROMPT
 
 ## Role

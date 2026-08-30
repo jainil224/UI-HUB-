@@ -45,6 +45,7 @@ const CornerBorderButton = React.lazy(() => import('../components/ui/corner-bord
 const CornerButton = React.lazy(() => import('../components/ui/corner-button').then(m => ({ default: m.CornerButton })));
 const CreepyButton = React.lazy(() => import('../components/ui/creepy-button').then(m => ({ default: m.CreepyButton })));
 const RadialGlowButton = React.lazy(() => import('../components/ui/radial-glow-button').then(m => ({ default: m.RadialGlowButton })));
+const SpiderWeb = React.lazy(() => import('../components/ui/spider-web'));
 const InteractiveHoverButton = React.lazy(() => import('../components/ui/interactive-hover-button'));
 const IsometricGridBackground = React.lazy(() => import('../components/ui/isometric-grid-background').then(m => ({ default: m.IsometricGridBackground })));
 const MagicCard = React.lazy(() => import('../components/ui/magic-card').then(m => ({ default: m.MagicCard })));
@@ -1973,6 +1974,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'corner-button': CornerButton,
     'creepy-button': CreepyButton,
     'radial-glow-button': RadialGlowButton,
+    'spider-web': SpiderWeb,
     'interactive-hover-button': InteractiveHoverButton,
     'isometric-grid-background': IsometricGridBackground,
     'magic-card-effect': MagicCard,
@@ -3169,6 +3171,16 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
         preview: renderComponent("radial-glow-button", "Radial Glow Button", { children: "GET EXTENSION" }),
         code: `import { RadialGlowButton } from '@/components/ui/radial-glow-button';\n\nexport const Demo = () => (\n  <RadialGlowButton>Get Extension</RadialGlowButton>\n);`,
         vibePrompt: "",
+        addedAt: "2026-08-30"
+    },
+
+    {
+        id: "spider-web",
+        title: "Spider Web",
+        category: "interactive-background",
+        preview: renderComponent("spider-web", "Spider Web"),
+        code: `import SpiderWeb from '@/components/ui/spider-web';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <SpiderWeb />\n  </div>\n);`,
+        vibePrompt: "An interactive orb web strung across the frame whose silk gives way under the pointer and springs back once it has passed. Every intersection is a mass on a spring anchored to where it ought to be, so the web is never posed: the pointer pushes the nearest nodes outward, their neighbours are dragged along by the strands drawn between them, and the whole sheet rings for a moment before it settles. The outer ring is pinned beyond the frame so the silk runs off the edge like a real guyed web, and the animation loop parks itself when nothing is moving or hovering so an idle web costs nothing.",
         addedAt: "2026-08-30"
     },
 

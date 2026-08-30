@@ -64,6 +64,7 @@ const resolveSourceCode = async (componentId) => {
     'corner-button': 'ui/corner-button.tsx',
     'creepy-button': 'ui/creepy-button.tsx',
     'radial-glow-button': 'ui/radial-glow-button.tsx',
+    'spider-web': 'ui/spider-web.tsx',
     'payment-transaction-button': 'ui/payment-transaction-button.tsx',
     'magic-card-effect': 'ui/magic-card.tsx',
     'border-beam': 'ui/border-beam.tsx',
