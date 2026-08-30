@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock, Crown, Check, Sparkles } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import GetStartedPage from './sections/GetStarted/GetStartedPage';
 import { GET_STARTED_PAGES } from './sections/GetStarted/getStartedData';
@@ -554,42 +554,65 @@ const LibraryPage = () => {
                         <div className="rounded-xl border-2 border-white bg-brand-surface p-4 text-white brutal-shadow-black relative overflow-hidden group">
                             {/* Ambient brand blue accent */}
                             <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-brand-blue/15 blur-xl pointer-events-none" />
+                            <div className="absolute -bottom-12 -left-12 w-28 h-28 rounded-full bg-emerald-400/10 blur-xl pointer-events-none" />
 
                             {/* PRO Badge */}
-                            <div className="inline-flex items-center px-2 py-0.5 rounded border border-black bg-brand-blue text-white text-[9px] font-black uppercase tracking-wider mb-2.5 font-mono shadow-[2px_2px_0px_0px_#000000]">
+                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-black bg-brand-blue text-white text-[9px] font-black uppercase tracking-wider mb-2.5 font-mono shadow-[2px_2px_0px_0px_#000000]">
+                                <Crown size={9} strokeWidth={2.5} />
                                 PRO
                             </div>
 
                             {/* Title */}
                             <h4 className="text-sm font-black text-white uppercase tracking-tight leading-snug mb-1 font-heading">
-                                Get UI Hub Pro
+                                Unlock Everything
                             </h4>
 
-                            {/* Description */}
-                            <p className="text-[11px] text-neutral-300 leading-relaxed mb-3.5">
-                                87 components, AI-powered design prompts, and physics-driven animations.
+                            {/* Hook */}
+                            <p className="text-[11px] text-neutral-300 leading-relaxed mb-2.5">
+                                Some components are locked. Go Pro to download full source code, generate with premium AI, and get every new drop first.
                             </p>
 
+                            {/* Feature Checklist */}
+                            <ul className="space-y-1.5 mb-3.5">
+                                {[
+                                    'Full component source code',
+                                    'Premium AI — Antigravity + Claude',
+                                    'Early access to new components',
+                                    'Unlimited storage & 24/7 support',
+                                ].map(f => (
+                                    <li key={f} className="flex items-start gap-1.5 text-[10.5px] text-neutral-200 font-medium leading-snug">
+                                        <Check size={11} strokeWidth={3} className="text-emerald-400 mt-0.5 shrink-0" />
+                                        <span>{f}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
                             {/* Explore Pro CTA Button */}
-                            <Link 
-                                to="/pricing" 
+                            <Link
+                                to="/pricing"
                                 className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-brand-blue hover:bg-[#324FE0] text-white text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[5px_5px_0px_0px_#000000] hover:-translate-y-0.5 active:translate-y-0 transition-all mb-2.5 no-underline cursor-pointer font-heading"
                             >
-                                <span>Explore Pro</span>
+                                <Sparkles size={13} strokeWidth={2.5} />
+                                <span>Go Pro</span>
                                 <ArrowRight size={13} strokeWidth={2.5} />
                             </Link>
 
+                            {/* Urgency Microcopy */}
+                            <p className="text-center text-[9.5px] text-neutral-400 font-mono uppercase tracking-wider mb-2">
+                                Upgrade in 30 seconds · Cancel anytime
+                            </p>
+
                             {/* Discount Code Pill */}
-                            <div 
+                            <div
                                 onClick={() => {
                                     navigator.clipboard.writeText('UIHUB30');
                                     alert("Coupon code 'UIHUB30' copied to clipboard! 30% discount applied.");
                                 }}
-                                className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-neutral-950 border border-neutral-700 text-[10px] text-neutral-300 font-medium cursor-pointer hover:border-brand-blue hover:text-white transition-colors"
+                                className="flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-neutral-950 border border-emerald-400/40 text-[10px] text-neutral-300 font-medium cursor-pointer hover:border-emerald-400 hover:text-white transition-colors"
                                 title="Click to copy code UIHUB30"
                             >
                                 <span>⚡</span>
-                                <span>Pro Access - 30% off: <strong className="text-brand-blue font-bold font-mono">UIHUB30</strong></span>
+                                <span>Pro Access - 30% off: <strong className="text-emerald-400 font-bold font-mono">UIHUB30</strong></span>
                             </div>
                         </div>
                     </div>

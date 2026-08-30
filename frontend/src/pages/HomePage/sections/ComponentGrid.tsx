@@ -76,6 +76,7 @@ const bentoSpecs: BentoSpec[] = [
     { id: 'creepy-button', className: '' },
     { id: 'radial-glow-button', className: '' },
     { id: 'spider-web', className: 'sm:col-span-2' },
+    { id: 'spiral-images', className: 'sm:col-span-2' },
 ];
 
 const BentoCard = ({ spec, comp }: { spec: BentoSpec; comp: BentoComp }) => {

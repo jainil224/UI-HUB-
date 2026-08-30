@@ -440,6 +440,75 @@ Type: Interactive Canvas Background (Spring-Silk Web)
 * Canvas DPR-capped at 2 for retina crispness.
 * No per-frame allocations of note; styles/typical stroke config set once per frame group.`,
 
+    'spiral-images': `# UI HUB • CLAUDE PROMPT
+
+## Role
+
+You are an expert frontend engineer.
+
+## Task
+
+Generate a production-ready React component based on the specifications below.
+
+## Rules
+
+* Follow all instructions strictly
+* Return ONLY the final code
+* Do NOT include explanations
+* Ensure clean, optimized, and maintainable code
+
+---
+
+## Component Info
+
+Name: SpiralImages
+Type: Image Interaction (Canvas 2D Vortex)
+
+---
+
+## Tech Stack
+
+* React ("use client")
+* TypeScript
+* HTML5 Canvas 2D (no WebGL, no workers, no animation libraries)
+
+---
+
+## Requirements
+
+* Images flow along an Archimedean spiral (linear radius) from the outer edge into the center, forming a vortex/whirl; each card rotates with the spiral's tangent angle and fades in/out at the two ends of the path.
+* Reparameterize the spiral path by arc length: build an arc-length lookup table once (R-independent) and map equal arc fractions back to spiral parameters via interpolation, so cards sit at EQUAL ARC spacing and never bunch near the center.
+* Advance a 0–100 progress value with a frame-capped delta time (max 0.1s); slots cover the whole path at equal arc step and cycle through the provided image list so the stream is continuous and infinite even with one image.
+* Sort cards outer→center so center cards are drawn on top.
+* Cards scale down toward the center via size attenuation (Math.pow(min(dist/R,1), sizeAttenuation*0.5)); maintain aspect ratio from naturalWidth/naturalHeight.
+* Rounded-rect clipping per card (cornerRadius scaled to card size); fill a per-index hsl placeholder until the image has loaded.
+* Canvas sized to the container via ResizeObserver, DPR capped at 2; cancel animation frame and disconnect observer on unmount.
+* Default export a single component; set displayName = "Spiral Images".
+
+---
+
+## Props
+
+* images: Array<{ src: string }> = DEFAULT_IMAGES (14 seeded images)
+* turns: number = 3.5
+* speed: number = 2
+* spacing: number = 5
+* spread: number = 6
+* sizeAttenuation: number = 2
+* imageSize: number = 200
+* fadeIn: number = 20
+* fadeOut: number = 0
+* cornerRadius: number = 5
+* style: React.CSSProperties
+
+---
+
+## Performance
+
+* Single rAF loop; no per-frame array allocations of note beyond the slot/card bookkeeping.
+* Canvas DPR-capped at 2.
+* ResizeObserver keeps the canvas exactly container-sized; overflow arms are clipped by the wrapper.`,
+
     'border-beam': `# UI HUB • CLAUDE PROMPT
 
 ## Role

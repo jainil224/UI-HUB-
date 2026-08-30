@@ -605,6 +605,30 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "spiral-images": {
+        props: [
+            { name: "images", type: "Array<{ src: string }>", default: "DEFAULT_IMAGES", description: "Source images drawn along the spiral (cycles continuously)." },
+            { name: "turns", type: "number", default: "3.5", description: "Total spiral turns from outer edge to center." },
+            { name: "speed", type: "number", default: "2", description: "Progress advance per second (0–100 wraps)." },
+            { name: "spacing", type: "number", default: "5", description: "Card density along the spiral arc (smaller = more cards)." },
+            { name: "spread", type: "number", default: "6", description: "Scales the spiral radius uniformly (arms overflow and clip)." },
+            { name: "sizeAttenuation", type: "number", default: "2", description: "How strongly cards shrink toward the center." },
+            { name: "imageSize", type: "number", default: "200", description: "Base card size in pixels before attenuation." },
+            { name: "fadeIn", type: "number", default: "20", description: "Fade ramp (0–100) as cards enter the outer edge." },
+            { name: "fadeOut", type: "number", default: "0", description: "Fade ramp (0–100) as cards reach the center." },
+            { name: "cornerRadius", type: "number", default: "5", description: "Rounded-corner radius of each card." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Extra wrapper styles." }
+        ],
+        vibeMeta: {
+            behavior: "An infinite vortex of images flowing along an Archimedean spiral from the outer edge into the center, rotating to follow the spiral tangent and fading at both ends.",
+            states: { from: "cards entering at the outer edge", to: "cards shrinking toward the center along equal-arc slots" },
+            cssProperties: ["canvas", "transform", "ResizeObserver", "arc-length reparameterization"],
+            description: "Self-contained Canvas 2D spiral vortex image stream.",
+            libraries: [],
+            requirements: ["Archimedean spiral with equal-arc reparameterization", "Arc-length-accurate equal card spacing", "Per-card tangent rotation + center fade/size attenuation", "DPR-capped (2) canvas with ResizeObserver", "Rounded-rect clipping, placeholder color until image loads"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },

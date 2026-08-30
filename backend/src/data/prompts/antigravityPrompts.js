@@ -488,6 +488,82 @@ Create an orb web strung across the frame whose silk gives way under the pointer
 ## FINAL OUTPUT
 Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.`,
 
+    "spiral-images": `# UI HUB • ANTIGRAVITY MASTER PROMPT
+
+## SYSTEM (DO NOT IGNORE)
+
+You are a senior frontend engineer and Canvas animation expert.
+Your task is to generate a **fully working, production-ready React component**.
+
+STRICT RULES:
+* Return ONLY code
+* Return ONE complete file
+* Do NOT explain anything
+* Do NOT simplify logic
+* Do NOT remove features
+* Follow structure exactly
+
+---
+
+## TASK
+
+Build a high-performance React component.
+
+---
+
+## COMPONENT INFO
+
+Name: SpiralImages
+Type: Image Interaction (Canvas 2D Vortex)
+
+---
+
+## GOAL
+
+Create an infinite vortex of images flowing along an Archimedean spiral from the outer edge into the center (a "whirl"), each card rotating to follow the spiral's tangent and fading out as it reaches the edges of the path. Self-contained Canvas 2D — no workers, no WebGL, no external animation libraries, single file.
+
+---
+
+## TECH STACK
+
+* React (Next.js, "use client")
+* TypeScript (TSX)
+* HTML5 Canvas 2D — no WebGL, no workers, no animation libraries
+* ResizeObserver for responsive sizing
+
+---
+
+## FEATURES (STRICT – DO NOT SKIP)
+
+* **Archimedean Spiral**: spiral(n, R) → angle = n * turns * TWO_PI, radius = R * (1 - n); n in [0,1] maps outer edge (0) to center (1).
+* **Arc-Length Reparameterization**: build a cumulative arc-length table over the spiral at R=1 (2000 samples) plus a 1024-entry inverse lookup; arcToN(s) interpolates between table entries so EQUAL ARC fraction → equal visual card spacing (a uniform parameter step would bunch cards near the center).
+* **Continuous Stream**: advance a 0–100 progress at \`speed\` units per second (frame-capped dt, max 0.1s); slots tiled over the whole path at stepFrac = max(0.005, spacing*0.5/100) with a cap of 400 cards; cards cycle through the provided image list (img = i % nImgs) so one image still fills the spiral.
+* **Per-Card Transform**: tangent angle via finite difference at n+0.001; size attenuation Math.pow(Math.min(dist/R,1), sizeAttenuation*0.5); aspect ratio from naturalWidth/naturalHeight (swap axis for portrait); fade in over \`fadeIn\` and out over \`fadeOut\` of the 0–100 path with cards below 0.01 opacity skipped.
+* **Rounded-Card Clipping**: roundRect path clipped per card — cornerRadius scaled by (cornerRadius/20) * (min(cw,ch)/2); fill hsl(imgIdx*360/nImgs, 65%, 55%) placeholder until the image is loaded, then drawImage.
+* **Z-Ordering**: cards sorted by spiral parameter ascending (outer → center) so center cards draw on top.
+* **DPR & Resize**: canvas sized to the container (clientWidth/clientHeight, 600 fallback) with DPR capped at 2, via ResizeObserver; cleanup cancels rAF and disconnects the observer.
+* **Default Export**: single default export function; set displayName = "Spiral Images"; merged defaults via COMPONENT_DEFAULTS so every prop has a working default.
+
+---
+
+## PROPS (with defaults):
+- images: Array<{ src: string }> = DEFAULT_IMAGES — source images (14 seeded).
+- turns: number = 3.5 — total spiral turns.
+- speed: number = 2 — progress per second.
+- spacing: number = 5 — card density along the arc (smaller = more cards).
+- spread: number = 6 — uniform radius scale (arms overflow + clip).
+- sizeAttenuation: number = 2 — center shrink strength.
+- imageSize: number = 200 — base card size.
+- fadeIn: number = 20 — fade ramp entering (0–100).
+- fadeOut: number = 0 — fade ramp hitting the center (0–100).
+- cornerRadius: number = 5 — card rounded corners.
+- style: React.CSSProperties — wrapper styles.
+
+---
+
+## FINAL OUTPUT
+Your first and only output should be the direct tool execution to build and inject the component into the codebase, followed by a concise confirmation message that the file has been successfully implemented. Avoid markdown conversation; stick strictly to agentic deployment.`,
+
     "border-beam": `
 # UI HUB • ANTIGRAVITY MASTER PROMPT
 

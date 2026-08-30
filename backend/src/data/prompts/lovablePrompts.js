@@ -1587,6 +1587,49 @@ A delicate orb web strung across the whole frame. The silk bows where your point
 ## Output
 Production-ready React component`,
 
+    "spiral-images": `# UI HUB • LOVABLE PROMPT
+Create a visually stunning component.
+
+## Concept
+An infinite vortex of images swirling along an Archimedean spiral from the outer edge into the center. Each card rides the spiral, rotating to follow its tangent, shrinking as it dives inward and fading at both ends — like a gallery falling into a whirl.
+
+## Tech
+- React + TypeScript + Vite
+- HTML5 Canvas 2D rendering (no WebGL, no animation libraries)
+- A single rAF loop owned by a useEffect; ResizeObserver keeps the canvas exactly container-sized
+- Canvas sharpened with devicePixelRatio (capped at 2)
+
+## Animation Details
+- **Archimedean spiral**: radius decreases linearly, so every turn is equally spaced; the path parameterizes outer edge (0) to center (1).
+- **Equal arc spacing**: reparameterize by arc length (cumulative table built once at R=1, inverse lookup interpolated) so cards keep equal VISUAL distance apart and never bunch near the center.
+- **Continuous stream**: a 0–100 progress advances at \`speed\` per second and wraps; cards fill the whole path and cycle through your image list, so the flow is endless even with a single image.
+- **Per-card transform**: rotate to the spiral tangent (finite difference), scale down toward center with size attenuation, keep aspect ratio, clip to rounded corners, fade in/out along the path; cards draw outer→center so inner ones sit on top.
+
+## Performance
+- One rAF loop, no per-frame allocations of note.
+- Rounded-rect clip with a colored placeholder while each image loads (drawImage once ready).
+- Cleanup cancels the frame and disconnects the ResizeObserver on unmount.
+
+## Props
+- images (default: 14 seeded images) - the source image list.
+- turns: number = 3.5 - spiral turns.
+- speed: number = 2 - progress per second.
+- spacing: number = 5 - arc density (smaller = more cards).
+- spread: number = 6 - radius scale (arms overflow and clip).
+- sizeAttenuation: number = 2 - center shrink strength.
+- imageSize: number = 200 - base card size.
+- fadeIn: number = 20 - fade entering the edge.
+- fadeOut: number = 0 - fade at the center.
+- cornerRadius: number = 5 - card rounded corners.
+- style - wrapper styles.
+
+## Styling Guide
+- The component fills 100% of its parent (relative, overflow hidden), so give it a bounded dark container (bg-neutral-950) with its own background.
+- Images read best on a dark backdrop so the vortex edge of the frame stays clean.
+
+## Output
+Production-ready React component`,
+
     "gravitational-vortex": `
 # UI HUB • LOVABLE PROMPT
 
