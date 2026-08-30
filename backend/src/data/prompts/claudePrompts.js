@@ -3149,5 +3149,49 @@ TECHNICAL:
 Acceptance:
 Produces the identical green/red/green candle triplet where the middle red candle leads a 1s bounce and the green flanking candles follow 0.1s behind in a continuous loop.
 
+`,
+  "pixel-bounce": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in pure CSS motion design.
+
+## Task
+Create a "Pixel Bounce" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes.
+
+COMPONENT NAME: Pixel Bounce
+
+VISUAL DESCRIPTION:
+A retro pixel-art red ghost on a dark radial backdrop. A .pb-ghost wrapper (position relative, scale 0.8) contains a .pb-red 14x14 CSS grid plus an absolutely-positioned blurred shadow. The ghost bobs on a 0.5s cycle while pink pixel cells across its belly flicker like static, blue pupils scan within white eyes, and the shadow pulses in sync.
+
+THE GRID:
+.pb-red is 140x140px, display grid, 14 columns AND 14 rows at repeat(14,1fr). Its silhouette comes from a grid-template-areas string: empty corner cells (a1..a14, b1..b14, c13, c14, d1/d14, e1/e14, f1/f14) leaving the head/dome rows (top0-top4), a solid body block (top4 repeating for rows 7-12), and a bottom hem row ("st0 st0 an4 st1 an7 st2 an10 an10 st3 an13 st4 an16 st5 st5" then "an1 an2 an3 an5 an6 an8 an9 an9 an11 an12 an14 an15 an17 an18") forming the scalloped feet.
+
+THE BOB:
+@keyframes pb-upNDown animates the grid 0->-10px translateY, jumping at the 50% keyframe on a 0.5s infinite loop.
+
+THE FLICKER:
+The an-cells carry one of two alternating phases so the belly shimmers: pb-flicker0 (background red 0-49%, transparent 50-100%) and pb-flicker1 (inverted), each infinite 0.5s. an1/an18/an6/an12/an7/an13/an8/an11 use flicker0; an2/an3/an4/an9/an10/an15/an16/an17 use flicker1.
+
+THE EYES:
+.pb-eye (40x50px, absolute, top 30px left 10px) and .pb-eye1 (right 30px). Each draws a white T-shape via ::before (20x50 white bar translateX 10px) and ::after (40x30 white bar translateY 10px). Blue 20x20 pupils .pb-pupil/.pb-pupil1 (top 50, z-index 1) scan with pb-eyesMovement on a 3s loop: translateX 0 -> 10px (50-99%) -> 0.
+
+THE SHADOW:
+.pb-shadow: black, 140x140, border-radius 50%, transform rotateX(80deg), filter blur(20px), top 80%. Pulsing opacity 0.5 -> 0.2 (pb-shadowMovement) in phase with the bob at 0.5s.
+
+ANIMATIONS (all CSS, prefixed pb-):
+- pb-upNDown (grid bob + translateY, 0.5s infinite).
+- pb-flicker0 / pb-flicker1 (belly pixel shimmer, 0.5s infinite, alternating phases).
+- pb-eyesMovement (pupil scan, 3s infinite).
+- pb-shadowMovement (shadow opacity pulse, 0.5s infinite).
+
+TECHNICAL:
+- Self-contained <style> tag. All classes prefixed pb-; :root script has no effect on layout.
+- Wrapper inside a w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none container with a dark radial background.
+- Zero runtime JS animation.
+
+Acceptance:
+Produces the identical bobbing red pixel ghost with flickering belly, scanning pupils and pulsing shadow, all looping forever.
+
 `};
 

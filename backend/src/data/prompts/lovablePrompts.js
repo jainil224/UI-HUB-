@@ -1926,4 +1926,24 @@ A mini candlestick chart of three candles bouncing like a live market ticker: gr
 ## Output
 Production-ready single-file React component.
 
+`,
+  "pixel-bounce": `
+## Component: Pixel Bounce
+
+Build a "Pixel Bounce" loading animation as a React + TypeScript component using Tailwind CSS and pure CSS keyframe animations (no external animation libraries).
+
+## What it does
+A retro pixel-art red ghost that bobs up and down. Its white eyes hold blue pupils that slowly scan sideways, the pixel cells across its belly flicker between red and transparent like static, and a blurred shadow pulses underneath in sync with the bob.
+
+## Technical
+- The ghost body is a 14x14 CSS grid (140x140px, grid-template-columns/rows repeat(14,1fr)) with rows stitched by a grid-template-areas string decribing a rounded head (top0-top4 areas) and a scalloped bottom hem (st0/st5 + an1-an18 cells).
+- Body bob: @keyframes pb-upNDown translates the grid 0px -> -10px on a 0.5s loop (jump at the 50% keyframe).
+- Belly flicker: alternate classes pb-flicker0 (red 0-49%, transparent 50-100%) and pb-flicker1 (inverted), each an-cell assigned one for a static effect, both on 0.5s loops.
+- Eyes: two absolutely-placed 40x50px boxes (.pb-eye/.pb-eye1) drawn from ::before/::after white bars; blue 20x20px pupils (.pb-pupil/.pb-pupil1, z-index 1) scan via @keyframes pb-eyesMovement on a 3s loop (translateX 0 -> 10px -> 0).
+- Shadow: a blurred black circle (border-radius 50%, rotateX(80deg), blur 20px) that pulses opacity 0.5 -> 0.2 in sync with the bob (pb-shadowMovement, 0.5s).
+- Prefix all keyframes/classes with pb-; draw on a full-size flexbox container (w-full h-full min-h-[380px]) with a dark gradient backdrop.
+
+## Output
+Production-ready single-file React component.
+
 `};

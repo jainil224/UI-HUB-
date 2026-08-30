@@ -1132,5 +1132,38 @@ Add JS animation state, external animation libraries, or change the 1s loop / 0.
 ### Do
 Keep the CSS in a scoped <style> tag, preserve the green/red/green order and the two-stage bounce easing curves.
 
+`,
+  "pixel-bounce": `
+## COMPONENT: Pixel Bounce (Loader)
+
+### Overview
+A retro pixel-art red ghost rendered with a 14x14 CSS grid, bobbing on a 0.5s loop with flickering belly pixels, scanning pupils and a synchronous soft shadow pulse.
+
+### Animation Technique
+- pb-upNDown: whole grid translates 0 -> -10px at the 50% keyframe on a 0.5s loop.
+- pb-flicker0 / pb-flicker1: alternate red/transparent backgrounds on 0.5s loops; every an-cell gets one of the two phases to look like static.
+- pb-eyesMovement: blue pupils translateX 0 -> 10px -> 0 on a slow 3s loop.
+- pb-shadowMovement: blurred ellipse shadow pulses opacity 0.5 -> 0.2 on the same 0.5s cycle.
+- No JavaScript animation state; loops forever purely via CSS.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- Structure: .pb-ghost (scale 0.8) > .pb-red (140x140 grid) + .pb-shadow (absolute).
+- Grid: repeat(14,1fr) columns AND rows; grid-template-areas covering head, body and the bottom hem row.
+- Eyes/pupils absolutely positioned with z-index 1; eye shape from ::before/::after.
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]); everything prefixed pb-.
+
+### Do not
+Add JS animation state, external animation libraries, or change the 0.5s/3s cycle timings.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve the red/white/blue palette, the 14x14 grid and the two alternating flicker phases.
+
 `};
 

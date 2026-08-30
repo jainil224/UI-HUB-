@@ -83,6 +83,7 @@ const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
 const Hourglass = React.lazy(() => import('../components/ui/Hourglass'));
 const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'));
 const TradingCandles = React.lazy(() => import('../components/ui/TradingCandles'));
+const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
 
 
 
@@ -2029,6 +2030,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'hourglass': Hourglass,
     'generating-orb': GeneratingOrb,
     'trading-candles': TradingCandles,
+    'pixel-bounce': PixelBounce,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -5232,5 +5234,404 @@ export const TradingCandles: React.FC = () => {
 
 export default TradingCandles;`,
         vibePrompt: "Create a 'Trading Candles' loader in React + TypeScript with pure CSS keyframes (no dependencies). The mark is a mini candlestick chart of three candles bouncing like a live market ticker: green, red, green columns side by side (4px gap) inside a full-size flexbox container on a dark gradient backdrop. Each candle is three stacked divs - a 4px-wide wick above and below a 12x48px rounded-2px body - and each whole column bounces on a 1s ease-in-out loop that peaks around the bottom of the swing, using the classic two-stage bounce ease (translateY -20% at 0%/100% with cubic-bezier(0.8, 0, 1, 1), resting pose at 50% with cubic-bezier(0, 0, 0.2, 1)). The outer two green candles share a 0.1s delay and the middle red candle leads at 0.2s so the ripple starts from the center. Drive the candle colors from a --tc-candle CSS variable (green #22c55e, red #ef4444) on small tc-candle-green/tc-candle-red modifier classes, prefix every keyframe/class with tc- (tc-bounce, tc-candle-group, tc-wick, tc-body) so nothing leaks, and never stop animating."
+    },
+    {
+        id: "pixel-bounce",
+        title: "Pixel Bounce",
+        category: "loader",
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#17181d] flex items-center justify-center">
+                <PixelBounce />
+                <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue font-mono text-[10px] uppercase tracking-widest pointer-events-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
+                    UI HUB
+                </div>
+            </div>
+        ),
+        code: `import React from 'react';
+
+/**
+ * PixelBounce
+ * A retro pixel-art ghost made from a CSS grid of 14x14 cells. The full body
+ * bobs up and down on a 0.5s loop, its eye holds two animated pupils that
+ * scan sideways, the eye area flickers between red and transparent in a
+ * staggered pattern (flicker0/flicker1 alternate), and a blurred shadow under
+ * the ghost pulses in sync with the bob.
+ */
+export const PixelBounce: React.FC = () => {
+  return (
+    <div
+      className="w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none"
+      style={{
+        background: 'radial-gradient(120% 120% at 50% 40%, #2a2e36 0%, #17181d 55%, #0d0e12 100%)',
+      }}
+    >
+      <style>{\`
+        .pb-ghost {
+          position: relative;
+          scale: 0.8;
+        }
+
+        .pb-red {
+          animation: pb-upNDown infinite 0.5s;
+          position: relative;
+          width: 140px;
+          height: 140px;
+          display: grid;
+          grid-template-columns: repeat(14, 1fr);
+          grid-template-rows: repeat(14, 1fr);
+          grid-column-gap: 0px;
+          grid-row-gap: 0px;
+          grid-template-areas:
+            "a1  a2  a3  a4  a5  top0  top0  top0  top0  a10 a11 a12 a13 a14"
+            "b1  b2  b3  top1 top1 top1 top1 top1 top1 top1 top1 b12 b13 b14"
+            "c1 c2 top2 top2 top2 top2 top2 top2 top2 top2 top2 top2 c13 c14"
+            "d1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 d14"
+            "e1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 e14"
+            "f1 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 top3 f14"
+            "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+            "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+            "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+            "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+            "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+            "top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4 top4"
+            "st0 st0 an4 st1 an7 st2 an10 an10 st3 an13 st4 an16 st5 st5"
+            "an1 an2 an3 an5 an6 an8 an9 an9 an11 an12 an14 an15 an17 an18";
+        }
+
+        @keyframes pb-upNDown {
+          0%,
+          49% {
+            transform: translateY(0px);
+          }
+          50%,
+          100% {
+            transform: translateY(-10px);
+          }
+        }
+
+        .pb-top0,
+        .pb-top1,
+        .pb-top2,
+        .pb-top3,
+        .pb-top4,
+        .pb-st0,
+        .pb-st1,
+        .pb-st2,
+        .pb-st3,
+        .pb-st4,
+        .pb-st5 {
+          background-color: red;
+        }
+
+        .pb-top0 {
+          grid-area: top0;
+        }
+
+        .pb-top1 {
+          grid-area: top1;
+        }
+
+        .pb-top2 {
+          grid-area: top2;
+        }
+
+        .pb-top3 {
+          grid-area: top3;
+        }
+
+        .pb-top4 {
+          grid-area: top4;
+        }
+
+        .pb-st0 {
+          grid-area: st0;
+        }
+
+        .pb-st1 {
+          grid-area: st1;
+        }
+
+        .pb-st2 {
+          grid-area: st2;
+        }
+
+        .pb-st3 {
+          grid-area: st3;
+        }
+
+        .pb-st4 {
+          grid-area: st4;
+        }
+
+        .pb-st5 {
+          grid-area: st5;
+        }
+
+        .pb-an1 {
+          grid-area: an1;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        .pb-an18 {
+          grid-area: an18;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        .pb-an2 {
+          grid-area: an2;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an17 {
+          grid-area: an17;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an3 {
+          grid-area: an3;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an16 {
+          grid-area: an16;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an4 {
+          grid-area: an4;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an15 {
+          grid-area: an15;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an6 {
+          grid-area: an6;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        .pb-an12 {
+          grid-area: an12;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        .pb-an7 {
+          grid-area: an7;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        .pb-an13 {
+          grid-area: an13;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        .pb-an9 {
+          grid-area: an9;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an10 {
+          grid-area: an10;
+          animation: pb-flicker1 infinite 0.5s;
+        }
+
+        .pb-an8 {
+          grid-area: an8;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        .pb-an11 {
+          grid-area: an11;
+          animation: pb-flicker0 infinite 0.5s;
+        }
+
+        @keyframes pb-flicker0 {
+          0%,
+          49% {
+            background-color: red;
+          }
+          50%,
+          100% {
+            background-color: transparent;
+          }
+        }
+
+        @keyframes pb-flicker1 {
+          0%,
+          49% {
+            background-color: transparent;
+          }
+          50%,
+          100% {
+            background-color: red;
+          }
+        }
+
+        .pb-eye {
+          width: 40px;
+          height: 50px;
+          position: absolute;
+          top: 30px;
+          left: 10px;
+        }
+
+        .pb-eye::before {
+          content: "";
+          background-color: white;
+          width: 20px;
+          height: 50px;
+          transform: translateX(10px);
+          display: block;
+          position: absolute;
+        }
+
+        .pb-eye::after {
+          content: "";
+          background-color: white;
+          width: 40px;
+          height: 30px;
+          transform: translateY(10px);
+          display: block;
+          position: absolute;
+        }
+
+        .pb-eye1 {
+          width: 40px;
+          height: 50px;
+          position: absolute;
+          top: 30px;
+          right: 30px;
+        }
+
+        .pb-eye1::before {
+          content: "";
+          background-color: white;
+          width: 20px;
+          height: 50px;
+          transform: translateX(10px);
+          display: block;
+          position: absolute;
+        }
+
+        .pb-eye1::after {
+          content: "";
+          background-color: white;
+          width: 40px;
+          height: 30px;
+          transform: translateY(10px);
+          display: block;
+          position: absolute;
+        }
+
+        .pb-pupil {
+          width: 20px;
+          height: 20px;
+          background-color: blue;
+          position: absolute;
+          top: 50px;
+          left: 10px;
+          z-index: 1;
+          animation: pb-eyesMovement infinite 3s;
+        }
+
+        .pb-pupil1 {
+          width: 20px;
+          height: 20px;
+          background-color: blue;
+          position: absolute;
+          top: 50px;
+          right: 50px;
+          z-index: 1;
+          animation: pb-eyesMovement infinite 3s;
+        }
+
+        @keyframes pb-eyesMovement {
+          0%,
+          49% {
+            transform: translateX(0px);
+          }
+          50%,
+          99% {
+            transform: translateX(10px);
+          }
+          100% {
+            transform: translateX(0px);
+          }
+        }
+
+        .pb-shadow {
+          background-color: black;
+          width: 140px;
+          height: 140px;
+          position: absolute;
+          border-radius: 50%;
+          transform: rotateX(80deg);
+          filter: blur(20px);
+          top: 80%;
+          animation: pb-shadowMovement infinite 0.5s;
+        }
+
+        @keyframes pb-shadowMovement {
+          0%,
+          49% {
+            opacity: 0.5;
+          }
+          50%,
+          100% {
+            opacity: 0.2;
+          }
+        }
+      \`}</style>
+
+      <div className="pb-ghost">
+        <div className="pb-red">
+          <div className="pb-pupil" />
+          <div className="pb-pupil1" />
+          <div className="pb-eye" />
+          <div className="pb-eye1" />
+          <div className="pb-top0" />
+          <div className="pb-top1" />
+          <div className="pb-top2" />
+          <div className="pb-top3" />
+          <div className="pb-top4" />
+          <div className="pb-st0" />
+          <div className="pb-st1" />
+          <div className="pb-st2" />
+          <div className="pb-st3" />
+          <div className="pb-st4" />
+          <div className="pb-st5" />
+          <div className="pb-an1" />
+          <div className="pb-an2" />
+          <div className="pb-an3" />
+          <div className="pb-an4" />
+          <div className="pb-an5" />
+          <div className="pb-an6" />
+          <div className="pb-an7" />
+          <div className="pb-an8" />
+          <div className="pb-an9" />
+          <div className="pb-an10" />
+          <div className="pb-an11" />
+          <div className="pb-an12" />
+          <div className="pb-an13" />
+          <div className="pb-an14" />
+          <div className="pb-an15" />
+          <div className="pb-an16" />
+          <div className="pb-an17" />
+          <div className="pb-an18" />
+        </div>
+        <div className="pb-shadow" />
+      </div>
+    </div>
+  );
+};
+
+export default PixelBounce;`,
+        vibePrompt: "Create a 'Pixel Bounce' loader in React + TypeScript with pure CSS keyframes (no dependencies). The mark is a retro pixel-art red ghost drawn on a 14x14 CSS grid (.pb-red, 140x140px, grid-template-columns/rows repeat(14,1fr)) whose rows are stitched together with a grid-template-areas pattern (transparent corner cells, a solid head built from top0-top4 areas spanning the eyebrows and dome, and a scalloped bottom hem in a final row of st0/st5 and an1-an18 cells). The whole body bobs on a 0.5s loop (pb-upNDown: translateY 0->-10px at the 50% mark), while pixels across its belly flicker between red and transparent in two alternating phases - pb-flicker0 (red 0-49%, transparent 50-100%) and pb-flicker1 (inverted) - each an-cell assigned one of the two so the ghost looks like static. Two white eyes (.pb-eye/.pb-eye1, drawn with ::before/::after rectangles) hold blue pupils that scan sideways on a slow 3s loop (pb-eyesMovement: translateX 0->10px->0), and a blurred black circular shadow beneath pulses its opacity in sync with the bob (pb-shadowMovement: 0.5 <-> 0.2 on the same 0.5s cycle). All keyframes/classes prefixed pb-, drawn on a dark radial backdrop."
     }
 ];
