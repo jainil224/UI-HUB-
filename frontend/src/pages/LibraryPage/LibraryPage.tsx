@@ -567,7 +567,7 @@ const LibraryPage = () => {
 
                             {/* Description */}
                             <p className="text-[11px] text-neutral-300 leading-relaxed mb-3.5">
-                                134 components, 238 blocks, 300 app UI blocks, 11 templates and 19 agent skills.
+                                87 components, AI-powered design prompts, and physics-driven animations.
                             </p>
 
                             {/* Explore Pro CTA Button */}
