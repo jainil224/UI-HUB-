@@ -257,4 +257,25 @@ A glossy 100px liquid-gradient sphere. Three stacked layers - a specular sphere,
 ## Output
 Production-ready single-file React component.
 
+`,
+  "super-mario": `
+## Component: Super Mario
+
+Build a "Super Mario" hover tooltip as a React + TypeScript component using Tailwind CSS and pure CSS (no external animation libraries).
+
+## What it does
+A NES-style pixel scene inspired by Super Mario. Two brick tiles frame a glassy "?" block. When the user hovers the block's invisible hit area, a 1-up mushroom pops out of the box, rises through the brick, and floats above it before resetting on mouse-leave.
+
+## Technical
+- All sprites are 2x2px divs whose art is drawn entirely with big comma-separated box-shadow stacks (each shadow = an "Xpx Ypx 0px #color" pixel), replicating the classic block/brick/mushroom art pixel-for-pixel.
+- Structure: two .sm-brick tiles + one .sm-container (the "?" block) that holds an invisible .sm-box hit zone and the .sm-mush sprite.
+- .sm-container: draws the 34x34 "?" block (border #ce3100, face #ff9c31, black hinges/rivets), position absolute, translateX(-30px), z-index 3.
+- .sm-brick: draws the 34x34 brick tile (#cc3300 fill, #ff9999 top highlight row, #000 mortar/outline). .sm-brick.one is translateX(-60px), .sm-brick.two stays neutral so the two tiles flank the block.
+- .sm-mush: draws the 34x34 1-up mushroom (#fc9838 cap, #d82800 gills/spots, #fff mushroom spots on stem rows), opacity 0, z-index -1.
+- Interaction: .sm-box is an invisible 34x34 absolute hit zone (z-index 3) over the block. On .sm-box:hover + .sm-mush, opacity goes to 1 and the sm-mush keyframe runs 0.5s linear forwards: scale 0.8 -> 1.1 while translating -80px (pop out), then settling at -35px (float above the block), held by fill-mode forwards until the cursor leaves.
+- Prefix all keyframes/classes with sm-; draw on a full-size flexbox container (w-full h-full min-h-[380px]) with a dark gradient backdrop.
+
+## Output
+Production-ready single-file React component.
+
 `};

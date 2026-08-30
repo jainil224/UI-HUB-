@@ -85,6 +85,7 @@ const GeneratingOrb = React.lazy(() => import('../components/ui/GeneratingOrb'))
 const TradingCandles = React.lazy(() => import('../components/ui/TradingCandles'));
 const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
 const GradientOrb = React.lazy(() => import('../components/ui/GradientOrb'));
+const SuperMario = React.lazy(() => import('../components/ui/SuperMario'));
 
 
 
@@ -2033,6 +2034,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'trading-candles': TradingCandles,
     'pixel-bounce': PixelBounce,
     'gradient-orb': GradientOrb,
+    'super-mario': SuperMario,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -5904,5 +5906,327 @@ export const GradientOrb: React.FC = () => {
 
 export default GradientOrb;`,
         vibePrompt: "Create a 'Gradient Orb' loader in React + TypeScript with pure CSS keyframes and animated SVG masks (no dependencies). The mark is a glossy 100px liquid-gradient sphere built from three stacked layers inside a .gorb-loader (position relative, border-radius 50%, overflow hidden). Layer one is a .gorb-sphere pill with a white radial specular gradient at 80% 20%. Its ::before pseudo spins on a 2s loop (gorb-rotation) while carrying two inset box-shadows that act as colored blobs - a cyan blob inset from the top-left (-size/20,-size/20 blur size/10) and a yellow blob inset from the right (size/10,0 blur size/5) - plus a hue-rotate palette animation (gorb-colorize) sweeping 0deg -> -30 -> -60 -> -90 -> -45 -> 0 on a 2s ease-in-out. The ::after pseudo sits at z-index -1 behind it painting a blurred linear-gradient from red to blue at 120deg, and animates the same rotation but with a gorb-colorblur filter that adds a soft blur(size/15) while hue-rotating. Over the sphere an inline 100x100 SVG rotates on a slower 3s cubic-bezier(0.7,0.6,0.3,0.4) loop and sculpts the orb's face with four masks (all gorb- prefixed ids): a #gorb-waves stroke mask whose two duplicated paths animate their d attribute (gorb-wave-one bulges upward, gorb-wave-two bulges downward, each offset by half a period and the second pair running reverse) so liquid ripples cross the surface; a #gorb-clipping ellipse mask so the ripple pattern wraps a vertical band; a #gorb-blurriness mask blurring 7px; and a #gorb-fade ellipse mask that diffuses the whole mark's edges. Everything is driven off CSS variables (--gorb-size 100px, --gorb-time-animation 1s, red/blue/yellow/cyan/white palette vars) and drawn on a dark radial backdrop."
+},
+    {
+        id: "super-mario",
+        title: "Super Mario",
+        category: "button",
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#17181d] flex items-center justify-center">
+                <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10 font-mono text-[10px] uppercase tracking-widest text-white/40 pointer-events-none">hover the question block</div>
+                <SuperMario />
+                <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 px-3 py-1 rounded-full bg-brand-blue/10 border border-brand-blue/20 text-brand-blue font-mono text-[10px] uppercase tracking-widest pointer-events-none">
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-blue animate-pulse" />
+                    UI HUB
+                </div>
+            </div>
+        ),
+        code: `import React from 'react';
+
+/**
+ * SuperMario
+ * A NES-style pixel tooltip. Two brick tiles frame a glassy "?" block whose
+ * invisible hit area, when hovered, launches a 1-up mushroom out of the box -
+ * it scales up, pops through the ceiling of the brick and lands floating above,
+ * all on a CSS keyframe triggered purely by :hover.
+ */
+export const SuperMario: React.FC = () => {
+    return (
+        <div
+            className="w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none"
+            style={{
+                background: 'radial-gradient(120% 120% at 50% 40%, #2a2e36 0%, #17181d 55%, #0d0e12 100%)',
+            }}
+        >
+            <style>{\`
+                .sm-brick {
+                    height: 2px;
+                    width: 2px;
+                    box-shadow: 2px 2px 0px #ff9999, 4px 2px 0px #ff9999, 6px 2px 0px #ff9999,
+                      8px 2px 0px #ff9999, 10px 2px 0px #ff9999, 12px 2px 0px #ff9999,
+                      14px 2px 0px #ff9999, 16px 2px 0px #ff9999, 18px 2px 0px #ff9999,
+                      20px 2px 0px #ff9999, 22px 2px 0px #ff9999, 24px 2px 0px #ff9999,
+                      26px 2px 0px #ff9999, 28px 2px 0px #ff9999, 30px 2px 0px #ff9999,
+                      32px 2px 0px #ff9999, 2px 4px 0px #cc3300, 4px 4px 0px #cc3300,
+                      6px 4px 0px #cc3300, 8px 4px 0px #cc3300, 10px 4px 0px #cc3300,
+                      12px 4px 0px #cc3300, 14px 4px 0px #cc3300, 16px 4px 0px #000,
+                      18px 4px 0px #cc3300, 20px 4px 0px #cc3300, 22px 4px 0px #cc3300,
+                      24px 4px 0px #cc3300, 26px 4px 0px #cc3300, 28px 4px 0px #cc3300,
+                      30px 4px 0px #cc3300, 32px 4px 0px #000, 2px 6px 0px #cc3300,
+                      4px 6px 0px #cc3300, 6px 6px 0px #cc3300, 8px 6px 0px #cc3300,
+                      10px 6px 0px #cc3300, 12px 6px 0px #cc3300, 14px 6px 0px #cc3300,
+                      16px 6px 0px #000, 18px 6px 0px #cc3300, 20px 6px 0px #cc3300,
+                      22px 6px 0px #cc3300, 24px 6px 0px #cc3300, 26px 6px 0px #cc3300,
+                      28px 6px 0px #cc3300, 30px 6px 0px #cc3300, 32px 6px 0px #000,
+                      2px 8px 0px #000, 4px 8px 0px #000, 6px 8px 0px #000, 8px 8px 0px #000,
+                      10px 8px 0px #000, 12px 8px 0px #000, 14px 8px 0px #000, 16px 8px 0px #000,
+                      18px 8px 0px #000, 20px 8px 0px #000, 22px 8px 0px #000, 24px 8px 0px #000,
+                      26px 8px 0px #000, 28px 8px 0px #000, 30px 8px 0px #000, 32px 8px 0px #000,
+                      2px 10px 0px #cc3300, 4px 10px 0px #cc3300, 6px 10px 0px #cc3300,
+                      8px 10px 0px #000, 10px 10px 0px #cc3300, 12px 10px 0px #cc3300,
+                      14px 10px 0px #cc3300, 16px 10px 0px #cc3300, 18px 10px 0px #cc3300,
+                      20px 10px 0px #cc3300, 22px 10px 0px #cc3300, 24px 10px 0px #000,
+                      26px 10px 0px #cc3300, 28px 10px 0px #cc3300, 30px 10px 0px #cc3300,
+                      32px 10px 0px #cc3300, 2px 12px 0px #cc3300, 4px 12px 0px #cc3300,
+                      6px 12px 0px #cc3300, 8px 12px 0px #000, 10px 12px 0px #cc3300,
+                      12px 12px 0px #cc3300, 14px 12px 0px #cc3300, 16px 12px 0px #cc3300,
+                      18px 12px 0px #cc3300, 20px 12px 0px #cc3300, 22px 12px 0px #cc3300,
+                      24px 12px 0px #000, 26px 12px 0px #cc3300, 28px 12px 0px #cc3300,
+                      30px 12px 0px #cc3300, 32px 12px 0px #cc3300, 2px 14px 0px #cc3300,
+                      4px 14px 0px #cc3300, 6px 14px 0px #cc3300, 8px 14px 0px #000,
+                      10px 14px 0px #cc3300, 12px 14px 0px #cc3300, 14px 14px 0px #cc3300,
+                      16px 14px 0px #cc3300, 18px 14px 0px #cc3300, 20px 14px 0px #cc3300,
+                      22px 14px 0px #cc3300, 24px 14px 0px #000, 26px 14px 0px #cc3300,
+                      28px 14px 0px #cc3300, 30px 14px 0px #cc3300, 32px 14px 0px #cc3300,
+                      2px 16px 0px #000, 4px 16px 0px #000, 6px 16px 0px #000, 8px 16px 0px #000,
+                      10px 16px 0px #000, 12px 16px 0px #000, 14px 16px 0px #000,
+                      16px 16px 0px #000, 18px 16px 0px #000, 20px 16px 0px #000,
+                      22px 16px 0px #000, 24px 16px 0px #000, 26px 16px 0px #000,
+                      28px 16px 0px #000, 30px 16px 0px #000, 32px 16px 0px #000,
+                      2px 18px 0px #cc3300, 4px 18px 0px #cc3300, 6px 18px 0px #cc3300,
+                      8px 18px 0px #cc3300, 10px 18px 0px #cc3300, 12px 18px 0px #cc3300,
+                      14px 18px 0px #cc3300, 16px 18px 0px #000, 18px 18px 0px #cc3300,
+                      20px 18px 0px #cc3300, 22px 18px 0px #cc3300, 24px 18px 0px #cc3300,
+                      26px 18px 0px #cc3300, 28px 18px 0px #cc3300, 30px 18px 0px #cc3300,
+                      32px 18px 0px #000, 2px 20px 0px #cc3300, 4px 20px 0px #cc3300,
+                      6px 20px 0px #cc3300, 8px 20px 0px #cc3300, 10px 20px 0px #cc3300,
+                      12px 20px 0px #cc3300, 14px 20px 0px #cc3300, 16px 20px 0px #000,
+                      18px 20px 0px #cc3300, 20px 20px 0px #cc3300, 22px 20px 0px #cc3300,
+                      24px 20px 0px #cc3300, 26px 20px 0px #cc3300, 28px 20px 0px #cc3300,
+                      30px 20px 0px #cc3300, 32px 20px 0px #000, 2px 22px 0px #cc3300,
+                      4px 22px 0px #cc3300, 6px 22px 0px #cc3300, 8px 22px 0px #cc3300,
+                      10px 22px 0px #cc3300, 12px 22px 0px #cc3300, 14px 22px 0px #cc3300,
+                      16px 22px 0px #000, 18px 22px 0px #cc3300, 20px 22px 0px #cc3300,
+                      22px 22px 0px #cc3300, 24px 22px 0px #cc3300, 26px 22px 0px #cc3300,
+                      28px 22px 0px #cc3300, 30px 22px 0px #cc3300, 32px 22px 0px #000,
+                      2px 24px 0px #000, 4px 24px 0px #000, 6px 24px 0px #000, 8px 24px 0px #000,
+                      10px 24px 0px #000, 12px 24px 0px #000, 14px 24px 0px #000,
+                      16px 24px 0px #000, 18px 24px 0px #000, 20px 24px 0px #000,
+                      22px 24px 0px #000, 24px 24px 0px #000, 26px 24px 0px #000,
+                      28px 24px 0px #000, 30px 24px 0px #000, 32px 24px 0px #000,
+                      2px 26px 0px #cc3300, 4px 26px 0px #cc3300, 6px 26px 0px #cc3300,
+                      8px 26px 0px #000, 10px 26px 0px #cc3300, 12px 26px 0px #cc3300,
+                      14px 26px 0px #cc3300, 16px 26px 0px #cc3300, 18px 26px 0px #cc3300,
+                      20px 26px 0px #cc3300, 22px 26px 0px #cc3300, 24px 26px 0px #000,
+                      26px 26px 0px #cc3300, 28px 26px 0px #cc3300, 30px 26px 0px #cc3300,
+                      32px 26px 0px #cc3300, 2px 28px 0px #cc3300, 4px 28px 0px #cc3300,
+                      6px 28px 0px #cc3300, 8px 28px 0px #000, 10px 28px 0px #cc3300,
+                      12px 28px 0px #cc3300, 14px 28px 0px #cc3300, 16px 28px 0px #cc3300,
+                      18px 28px 0px #cc3300, 20px 28px 0px #cc3300, 22px 28px 0px #cc3300,
+                      24px 28px 0px #000, 26px 28px 0px #cc3300, 28px 28px 0px #cc3300,
+                      30px 28px 0px #cc3300, 32px 28px 0px #cc3300, 2px 30px 0px #cc3300,
+                      4px 30px 0px #cc3300, 6px 30px 0px #cc3300, 8px 30px 0px #000,
+                      10px 30px 0px #cc3300, 12px 30px 0px #cc3300, 14px 30px 0px #cc3300,
+                      16px 30px 0px #cc3300, 18px 30px 0px #cc3300, 20px 30px 0px #cc3300,
+                      22px 30px 0px #cc3300, 24px 30px 0px #000, 26px 30px 0px #cc3300,
+                      28px 30px 0px #cc3300, 30px 30px 0px #cc3300, 32px 30px 0px #cc3300,
+                      2px 32px 0px #000, 4px 32px 0px #000, 6px 32px 0px #000, 8px 32px 0px #000,
+                      10px 32px 0px #000, 12px 32px 0px #000, 14px 32px 0px #000,
+                      16px 32px 0px #000, 18px 32px 0px #000, 20px 32px 0px #000,
+                      22px 32px 0px #000, 24px 32px 0px #000, 26px 32px 0px #000,
+                      28px 32px 0px #000, 30px 32px 0px #000, 32px 32px 0px #000;
+                }
+                .sm-brick.one {
+                    transform: translateX(-60px);
+                }
+                .sm-mush {
+                    height: 2px;
+                    width: 2px;
+                    box-shadow: 14px 2px 0px #fc9838, 16px 2px 0px #fc9838, 18px 2px 0px #fc9838,
+                      20px 2px 0px #fc9838, 12px 4px 0px #fc9838, 14px 4px 0px #fc9838,
+                      16px 4px 0px #fc9838, 18px 4px 0px #fc9838, 20px 4px 0px #d82800,
+                      22px 4px 0px #d82800, 10px 6px 0px #fc9838, 12px 6px 0px #fc9838,
+                      14px 6px 0px #fc9838, 16px 6px 0px #fc9838, 18px 6px 0px #d82800,
+                      20px 6px 0px #d82800, 22px 6px 0px #d82800, 24px 6px 0px #d82800,
+                      8px 8px 0px #fc9838, 10px 8px 0px #fc9838, 12px 8px 0px #fc9838,
+                      14px 8px 0px #fc9838, 16px 8px 0px #fc9838, 18px 8px 0px #d82800,
+                      20px 8px 0px #d82800, 22px 8px 0px #d82800, 24px 8px 0px #d82800,
+                      26px 8px 0px #d82800, 6px 10px 0px #fc9838, 8px 10px 0px #fc9838,
+                      10px 10px 0px #fc9838, 12px 10px 0px #fc9838, 14px 10px 0px #fc9838,
+                      16px 10px 0px #fc9838, 18px 10px 0px #fc9838, 20px 10px 0px #d82800,
+                      22px 10px 0px #d82800, 24px 10px 0px #d82800, 26px 10px 0px #fc9838,
+                      28px 10px 0px #fc9838, 4px 12px 0px #fc9838, 6px 12px 0px #fc9838,
+                      8px 12px 0px #d82800, 10px 12px 0px #d82800, 12px 12px 0px #d82800,
+                      14px 12px 0px #fc9838, 16px 12px 0px #fc9838, 18px 12px 0px #fc9838,
+                      20px 12px 0px #fc9838, 22px 12px 0px #fc9838, 24px 12px 0px #fc9838,
+                      26px 12px 0px #fc9838, 28px 12px 0px #fc9838, 30px 12px 0px #fc9838,
+                      4px 14px 0px #fc9838, 6px 14px 0px #d82800, 8px 14px 0px #d82800,
+                      10px 14px 0px #d82800, 12px 14px 0px #d82800, 14px 14px 0px #d82800,
+                      16px 14px 0px #fc9838, 18px 14px 0px #fc9838, 20px 14px 0px #fc9838,
+                      22px 14px 0px #fc9838, 24px 14px 0px #fc9838, 26px 14px 0px #fc9838,
+                      28px 14px 0px #fc9838, 30px 14px 0px #fc9838, 2px 16px 0px #fc9838,
+                      4px 16px 0px #fc9838, 6px 16px 0px #d82800, 8px 16px 0px #d82800,
+                      10px 16px 0px #d82800, 12px 16px 0px #d82800, 14px 16px 0px #d82800,
+                      16px 16px 0px #fc9838, 18px 16px 0px #fc9838, 20px 16px 0px #fc9838,
+                      22px 16px 0px #fc9838, 24px 16px 0px #fc9838, 26px 16px 0px #d82800,
+                      28px 16px 0px #d82800, 30px 16px 0px #fc9838, 32px 16px 0px #fc9838,
+                      2px 18px 0px #fc9838, 4px 18px 0px #fc9838, 6px 18px 0px #d82800,
+                      8px 18px 0px #d82800, 10px 18px 0px #d82800, 12px 18px 0px #d82800,
+                      14px 18px 0px #d82800, 16px 18px 0px #fc9838, 18px 18px 0px #fc9838,
+                      20px 18px 0px #fc9838, 22px 18px 0px #fc9838, 24px 18px 0px #fc9838,
+                      26px 18px 0px #d82800, 28px 18px 0px #d82800, 30px 18px 0px #d82800,
+                      32px 18px 0px #fc9838, 2px 20px 0px #fc9838, 4px 20px 0px #fc9838,
+                      6px 20px 0px #fc9838, 8px 20px 0px #d82800, 10px 20px 0px #d82800,
+                      12px 20px 0px #d82800, 14px 20px 0px #fc9838, 16px 20px 0px #fc9838,
+                      18px 20px 0px #fc9838, 20px 20px 0px #fc9838, 22px 20px 0px #fc9838,
+                      24px 20px 0px #fc9838, 26px 20px 0px #fc9838, 28px 20px 0px #d82800,
+                      30px 20px 0px #d82800, 32px 20px 0px #fc9838, 2px 22px 0px #fc9838,
+                      4px 22px 0px #fc9838, 6px 22px 0px #fc9838, 8px 22px 0px #fc9838,
+                      10px 22px 0px #fc9838, 12px 22px 0px #fc9838, 14px 22px 0px #fc9838,
+                      16px 22px 0px #fc9838, 18px 22px 0px #fc9838, 20px 22px 0px #fc9838,
+                      22px 22px 0px #fc9838, 24px 22px 0px #fc9838, 26px 22px 0px #fc9838,
+                      28px 22px 0px #fc9838, 30px 22px 0px #fc9838, 32px 22px 0px #fc9838,
+                      4px 24px 0px #fc9838, 6px 24px 0px #d82800, 8px 24px 0px #d82800,
+                      10px 24px 0px #d82800, 12px 24px 0px #fff, 14px 24px 0px #fff,
+                      16px 24px 0px #fff, 18px 24px 0px #fff, 20px 24px 0px #fff,
+                      22px 24px 0px #fff, 24px 24px 0px #d82800, 26px 24px 0px #d82800,
+                      28px 24px 0px #d82800, 30px 24px 0px #fc9838, 10px 26px 0px #fff,
+                      12px 26px 0px #fff, 14px 26px 0px #fff, 16px 26px 0px #fff,
+                      18px 26px 0px #fff, 20px 26px 0px #fff, 22px 26px 0px #fff,
+                      24px 26px 0px #fff, 10px 28px 0px #fff, 12px 28px 0px #fff,
+                      14px 28px 0px #fff, 16px 28px 0px #fff, 18px 28px 0px #fff,
+                      20px 28px 0px #fff, 22px 28px 0px #fc9838, 24px 28px 0px #fff,
+                      10px 30px 0px #fff, 12px 30px 0px #fff, 14px 30px 0px #fff,
+                      16px 30px 0px #fff, 18px 30px 0px #fff, 20px 30px 0px #fff,
+                      22px 30px 0px #fc9838, 24px 30px 0px #fff, 12px 32px 0px #fff,
+                      14px 32px 0px #fff, 16px 32px 0px #fff, 18px 32px 0px #fff,
+                      20px 32px 0px #fc9838, 22px 32px 0px #fff;
+                    transform: translate(-0px, -0px);
+                    z-index: -1;
+                    opacity: 0;
+                }
+                .sm-box {
+                    position: absolute;
+                    background-color: rgba(46, 37, 37, 0);
+                    z-index: 3;
+                    width: 34px;
+                    height: 34px;
+                }
+                .sm-box:hover + .sm-mush {
+                    animation: sm-mush 0.5s linear forwards;
+                    opacity: 1;
+                }
+                @keyframes sm-mush {
+                    0% {
+                        transform: scale(0.8) translate(-0px, -0px);
+                    }
+                    50% {
+                        transform: scale(1.1) translate(-0px, -80px);
+                    }
+                    100% {
+                        transform: scale(1.1) translate(-0px, -35px);
+                    }
+                }
+                .sm-container {
+                    height: 2px;
+                    width: 2px;
+                    box-shadow: 4px 2px 0px #ce3100, 6px 2px 0px #ce3100, 8px 2px 0px #ce3100,
+                      10px 2px 0px #ce3100, 12px 2px 0px #ce3100, 14px 2px 0px #ce3100,
+                      16px 2px 0px #ce3100, 18px 2px 0px #ce3100, 20px 2px 0px #ce3100,
+                      22px 2px 0px #ce3100, 24px 2px 0px #ce3100, 26px 2px 0px #ce3100,
+                      28px 2px 0px #ce3100, 30px 2px 0px #ce3100, 2px 4px 0px #ce3100,
+                      4px 4px 0px #ff9c31, 6px 4px 0px #ff9c31, 8px 4px 0px #ff9c31,
+                      10px 4px 0px #ff9c31, 12px 4px 0px #ff9c31, 14px 4px 0px #ff9c31,
+                      16px 4px 0px #ff9c31, 18px 4px 0px #ff9c31, 20px 4px 0px #ff9c31,
+                      22px 4px 0px #ff9c31, 24px 4px 0px #ff9c31, 26px 4px 0px #ff9c31,
+                      28px 4px 0px #ff9c31, 30px 4px 0px #ff9c31, 32px 4px 0px #000,
+                      2px 6px 0px #ce3100, 4px 6px 0px #ff9c31, 6px 6px 0px #000,
+                      8px 6px 0px #ff9c31, 10px 6px 0px #ff9c31, 12px 6px 0px #ff9c31,
+                      14px 6px 0px #ff9c31, 16px 6px 0px #ff9c31, 18px 6px 0px #ff9c31,
+                      20px 6px 0px #ff9c31, 22px 6px 0px #ff9c31, 24px 6px 0px #ff9c31,
+                      26px 6px 0px #ff9c31, 28px 6px 0px #000, 30px 6px 0px #ff9c31,
+                      32px 6px 0px #000, 2px 8px 0px #ce3100, 4px 8px 0px #ff9c31,
+                      6px 8px 0px #ff9c31, 8px 8px 0px #ff9c31, 10px 8px 0px #ff9c31,
+                      12px 8px 0px #ce3100, 14px 8px 0px #ce3100, 16px 8px 0px #ce3100,
+                      18px 8px 0px #ce3100, 20px 8px 0px #ce3100, 22px 8px 0px #ff9c31,
+                      24px 8px 0px #ff9c31, 26px 8px 0px #ff9c31, 28px 8px 0px #ff9c31,
+                      30px 8px 0px #ff9c31, 32px 8px 0px #000, 2px 10px 0px #ce3100,
+                      4px 10px 0px #ff9c31, 6px 10px 0px #ff9c31, 8px 10px 0px #ff9c31,
+                      10px 10px 0px #ce3100, 12px 10px 0px #ce3100, 14px 10px 0px #000,
+                      16px 10px 0px #000, 18px 10px 0px #000, 20px 10px 0px #ce3100,
+                      22px 10px 0px #ce3100, 24px 10px 0px #ff9c31, 26px 10px 0px #ff9c31,
+                      28px 10px 0px #ff9c31, 30px 10px 0px #ff9c31, 32px 10px 0px #000,
+                      2px 12px 0px #ce3100, 4px 12px 0px #ff9c31, 6px 12px 0px #ff9c31,
+                      8px 12px 0px #ff9c31, 10px 12px 0px #ce3100, 12px 12px 0px #ce3100,
+                      14px 12px 0px #000, 16px 12px 0px #ff9c31, 18px 12px 0px #ff9c31,
+                      20px 12px 0px #ce3100, 22px 12px 0px #ce3100, 24px 12px 0px #000,
+                      26px 12px 0px #ff9c31, 28px 12px 0px #ff9c31, 30px 12px 0px #ff9c31,
+                      32px 12px 0px #000, 2px 14px 0px #ce3100, 4px 14px 0px #ff9c31,
+                      6px 14px 0px #ff9c31, 8px 14px 0px #ff9c31, 10px 14px 0px #ce3100,
+                      12px 14px 0px #ce3100, 14px 14px 0px #000, 16px 14px 0px #ff9c31,
+                      18px 14px 0px #ff9c31, 20px 14px 0px #ce3100, 22px 14px 0px #ce3100,
+                      24px 14px 0px #000, 26px 14px 0px #ff9c31, 28px 14px 0px #ff9c31,
+                      30px 14px 0px #ff9c31, 32px 14px 0px #000, 2px 16px 0px #ce3100,
+                      4px 16px 0px #ff9c31, 6px 16px 0px #ff9c31, 8px 16px 0px #ff9c31,
+                      10px 16px 0px #ff9c31, 12px 16px 0px #000, 14px 16px 0px #000,
+                      16px 16px 0px #ff9c31, 18px 16px 0px #ce3100, 20px 16px 0px #ce3100,
+                      22px 16px 0px #ce3100, 24px 16px 0px #000, 26px 16px 0px #ff9c31,
+                      28px 16px 0px #ff9c31, 30px 16px 0px #ff9c31, 32px 16px 0px #000,
+                      2px 18px 0px #ce3100, 4px 18px 0px #ff9c31, 6px 18px 0px #ff9c31,
+                      8px 18px 0px #ff9c31, 10px 18px 0px #ff9c31, 12px 18px 0px #ff9c31,
+                      14px 18px 0px #ff9c31, 16px 18px 0px #ce3100, 18px 18px 0px #ce3100,
+                      20px 18px 0px #000, 22px 18px 0px #000, 24px 18px 0px #000,
+                      26px 18px 0px #ff9c31, 28px 18px 0px #ff9c31, 30px 18px 0px #ff9c31,
+                      32px 18px 0px #000, 2px 20px 0px #ce3100, 4px 20px 0px #ff9c31,
+                      6px 20px 0px #ff9c31, 8px 20px 0px #ff9c31, 10px 20px 0px #ff9c31,
+                      12px 20px 0px #ff9c31, 14px 20px 0px #ff9c31, 16px 20px 0px #ce3100,
+                      18px 20px 0px #ce3100, 20px 20px 0px #000, 22px 20px 0px #ff9c31,
+                      24px 20px 0px #ff9c31, 26px 20px 0px #ff9c31, 28px 20px 0px #ff9c31,
+                      30px 20px 0px #ff9c31, 32px 20px 0px #000, 2px 22px 0px #ce3100,
+                      4px 22px 0px #ff9c31, 6px 22px 0px #ff9c31, 8px 22px 0px #ff9c31,
+                      10px 22px 0px #ff9c31, 12px 22px 0px #ff9c31, 14px 22px 0px #ff9c31,
+                      16px 22px 0px #ff9c31, 18px 22px 0px #000, 20px 22px 0px #000,
+                      22px 22px 0px #ff9c31, 24px 22px 0px #ff9c31, 26px 22px 0px #ff9c31,
+                      28px 22px 0px #ff9c31, 30px 22px 0px #ff9c31, 32px 22px 0px #000,
+                      2px 24px 0px #ce3100, 4px 24px 0px #ff9c31, 6px 24px 0px #ff9c31,
+                      8px 24px 0px #ff9c31, 10px 24px 0px #ff9c31, 12px 24px 0px #ff9c31,
+                      14px 24px 0px #ff9c31, 16px 24px 0px #ce3100, 18px 24px 0px #ce3100,
+                      20px 24px 0px #ff9c31, 22px 24px 0px #ff9c31, 24px 24px 0px #ff9c31,
+                      26px 24px 0px #ff9c31, 28px 24px 0px #ff9c31, 30px 24px 0px #ff9c31,
+                      32px 24px 0px #000, 2px 26px 0px #ce3100, 4px 26px 0px #ff9c31,
+                      6px 26px 0px #ff9c31, 8px 26px 0px #ff9c31, 10px 26px 0px #ff9c31,
+                      12px 26px 0px #ff9c31, 14px 26px 0px #ff9c31, 16px 26px 0px #ce3100,
+                      18px 26px 0px #ce3100, 20px 26px 0px #000, 22px 26px 0px #ff9c31,
+                      24px 26px 0px #ff9c31, 26px 26px 0px #ff9c31, 28px 26px 0px #ff9c31,
+                      30px 26px 0px #ff9c31, 32px 26px 0px #000, 2px 28px 0px #ce3100,
+                      4px 28px 0px #ff9c31, 6px 28px 0px #000, 8px 28px 0px #ff9c31,
+                      10px 28px 0px #ff9c31, 12px 28px 0px #ff9c31, 14px 28px 0px #ff9c31,
+                      16px 28px 0px #ff9c31, 18px 28px 0px #000, 20px 28px 0px #000,
+                      22px 28px 0px #ff9c31, 24px 28px 0px #ff9c31, 26px 28px 0px #ff9c31,
+                      28px 28px 0px #000, 30px 28px 0px #ff9c31, 32px 28px 0px #000,
+                      2px 30px 0px #ce3100, 4px 30px 0px #ff9c31, 6px 30px 0px #ff9c31,
+                      8px 30px 0px #ff9c31, 10px 30px 0px #ff9c31, 12px 30px 0px #ff9c31,
+                      14px 30px 0px #ff9c31, 16px 30px 0px #ff9c31, 18px 30px 0px #ff9c31,
+                      20px 30px 0px #ff9c31, 22px 30px 0px #ff9c31, 24px 30px 0px #ff9c31,
+                      26px 30px 0px #ff9c31, 28px 30px 0px #ff9c31, 30px 30px 0px #ff9c31,
+                      32px 30px 0px #000, 2px 32px 0px #000, 4px 32px 0px #000, 6px 32px 0px #000,
+                      8px 32px 0px #000, 10px 32px 0px #000, 12px 32px 0px #000,
+                      14px 32px 0px #000, 16px 32px 0px #000, 18px 32px 0px #000,
+                      20px 32px 0px #000, 22px 32px 0px #000, 24px 32px 0px #000,
+                      26px 32px 0px #000, 28px 32px 0px #000, 30px 32px 0px #000,
+                      32px 32px 0px #000;
+                    position: absolute;
+                    transform: translate(-30px);
+                    z-index: 3;
+                }
+            \`}</style>
+
+            <div>
+                <div className="sm-brick one" />
+                <div className="sm-container">
+                    <div className="sm-box" />
+                    <div className="sm-mush" />
+                </div>
+                <div className="sm-brick two" />
+            </div>
+        </div>
+    );
+};
+
+export default SuperMario;`,
+        vibePrompt: "Create a 'Super Mario' hover tooltip in React + TypeScript with pure CSS (no dependencies). The mark is a NES-style pixel scene inspired by Super Mario: two brick tiles frame a glassy '?' block, and hovering the block's invisible hit area launches a 1-up mushroom out of the box. Everything is drawn with 2x2px divs whose art comes entirely from huge comma-separated box-shadow stacks (each shadow is an Xpx Ypx 0px #color pixel), replicating the classic block/brick/mushroom pixel art pixel-for-pixel. Sprites: .sm-container renders the 34x34 '?' block (border #ce3100, face #ff9c31, black hinges and rivets at the seams) and is position absolute translateX(-30px) z-index 3; .sm-brick draws the 34x34 brick tile (#cc3300 fill, #ff9999 highlight top row, #000 mortar/outline) with .sm-brick.one translateX(-60px) and .sm-brick.two at neutral so the two tiles flank the block; .sm-mush draws the 34x34 1-up mushroom (#fc9838 cap with #d82800 gills and spots, #fff eyes/mushroom spots on the lower stem rows) hidden below the block (opacity 0, z-index -1). Interaction: .sm-box is an invisible 34x34 absolute hit-zone (z-index 3) sitting over the '?' block; on .sm-box:hover the adjacent .sm-mush is revealed (opacity 1) and runs sm-mush 0.5s linear forwards, which scales the mushroom 0.8 -> 1.1 while translating it -80px (pop up through the brick) and settling at -35px above the block, frozen by fill-mode forwards until the cursor leaves. All keyframes/classes prefixed sm-, drawn on a dark radial backdrop."
     }
 ];

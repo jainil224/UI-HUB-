@@ -5624,5 +5624,34 @@ Add JS animation state, external animation libraries, or change the 1s/2s/3s cyc
 ### Do
 Keep the CSS in a scoped <style> tag, preserve the four masks, the d-path animation pair and the hue-rotate palette sweep.
 
+`,
+  "super-mario": `
+## COMPONENT: Super Mario (Hover Tooltip)
+
+### Overview
+A NES-style pixel scene: two brick tiles frame a "?" block, and hovering the block's invisible hit area launches a 1-up mushroom out of the box that settles floating above it.
+
+### Animation Technique
+- CSS @keyframes sm-mush: on .sm-box:hover the sibling .sm-mush becomes opacity 1 and runs 0.5s linear forwards - scale(0.8) at 0%, scale(1.1) translateY(-80px) at 50%, scale(1.1) translateY(-35px) at 100% - frozen by fill-mode forwards.
+- All pixel art via box-shadow pixel stacks on 2x2px divs; no images, no SVG.
+
+### Interaction
+- Hover the invisible hit-zone over the "?" block to trigger; the mushroom retracts on mouse-leave.
+
+### Props
+None (static interaction).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- Structure: .sm-brick.one, .sm-container (.sm-box + .sm-mush), .sm-brick.two.
+- Box-shadow pixel art: brick tile (#cc3300/#ff9999/#000), "?" block (#ce3100/#ff9c31/#000), mushroom (#fc9838/#d82800/#fff).
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]); everything prefixed sm-.
+
+### Do not
+Add JS event handlers, images/SVG art, or change the 0.5s animation / pixel coordinates.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve the three pixel sprites and the :hover + sibling trigger.
+
 `};
 

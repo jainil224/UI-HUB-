@@ -3237,5 +3237,39 @@ TECHNICAL:
 Acceptance:
 Produces the identical liquid-gradient orb: spinning specular sphere with cyan/yellow blobs, blurred red/blue shell behind, wave ripples crossing the surface via animated mask paths, and a slow hue-rotate drift - all looping forever.
 
+`,
+  "super-mario": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in pixel-art CSS and hover-driven micro-interactions.
+
+## Task
+Create a "Super Mario" hover tooltip React component with TypeScript and Tailwind CSS. No animation libraries, no images, no SVG; all art is CSS box-shadow pixel stacks on 2x2px divs and all motion is CSS @keyframes triggered by :hover.
+
+COMPONENT NAME: Super Mario
+
+VISUAL DESCRIPTION:
+A NES-style scene on a dark radial backdrop: a glassy "?" block flanked by two red brick tiles. When hovering the block, a 1-up mushroom scales up, pops out of the box, and settles floating above it, held until the cursor leaves.
+
+THE SPRITES (all pixels drawn as box-shadow offsets on 2x2px base divs; each shadow is Xpx Ypx 0px #color):
+- .sm-brick draws the 34x34 brick tile: top highlight row #ff9999, body #cc3300, mortar gaps and silhouette #000. .sm-brick.one translates -60px (left flank); .sm-brick.two stays at neutral 0 (right flank), so the tile art occupies x 2..34 relative to its origin.
+- .sm-container draws the 34x34 "?" block: strong border #ce3100, face #ff9c31, and #000 hinges/rivets where the seams meet (including the black seam running across the middle and the two eyes of the "?" cutout). position absolute, transform translate(-30px), z-index 3.
+- .sm-mush draws the 34x34 1-up mushroom: cap #fc9838 with #d82800 gills and side spots, #fff circular spots on the cap's lower rows and the stem eyes, stem base #fc9838. opacity 0, z-index -1 (sits hidden behind the block until triggered).
+
+THE INTERACTION:
+.sm-box is an invisible 34x34 absolute hit-zone (background rgba(46,37,37,0), z-index 3, width/height 34px) positioned exactly over the "?" block. The rule .sm-box:hover + .sm-mush sets opacity 1 and animation sm-mush 0.5s linear forwards.
+
+THE ANIMATION (all CSS, prefixed sm-):
+- sm-mush: 0% scale(0.8) translate(0,0); 50% scale(1.1) translate(0,-80px) (the launch, clearing the block); 100% scale(1.1) translate(0,-35px) (the settle, floating above the block). Fill-mode forwards keeps it floating until hover ends.
+
+TECHNICAL:
+- Self-contained <style> tag. All classes prefixed sm-.
+- Composition inside a w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none container with a dark radial background.
+- Zero runtime JS; hover state drives everything.
+
+Acceptance:
+Produces the identical pixel composition: two brick tiles framing the "?" block, mushroom hidden, that on hover pops out and floats above the block, retracting when the cursor leaves.
+
 `};
 
