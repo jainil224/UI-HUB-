@@ -3253,6 +3253,41 @@ Acceptance:
 Produces the identical looping neo-brutalist golden diamond loader with correct stopping/gradient pulses and particle drift.
 
 `,
+
+  "morphing-glow": `
+# UI HUB • CLAUDE PROMPT
+
+## Role
+You are an expert frontend engineer specializing in CSS-driven SVG mask animation.
+
+## Task
+Create a "Morphing Glow" loader React component with TypeScript and Tailwind CSS. No animation libraries; all motion must be CSS @keyframes applied to an inline SVG mask and the loader surface.
+
+COMPONENT NAME: Morphing Glow
+
+VISUAL DESCRIPTION:
+A morphing glass diamond loader. The base is a 100x100px circle (.mg-loader) with a linear-gradient body (amber #ffbf48 30% -> rust #be4a1d 70%), a 1px rim (amber top border, rust bottom border), outer box-shadow halo in rgba amber/rust (0 0 25px amber, 0 20px 50px rust) plus matching inset glows. A .mg-box fills the same 100x100px and is clipped with mask: url(#mg-clipping): its content is the amber/rust gradient, so the visible shape is wherever the mask is white.
+
+MASK:
+An SVG <mask id="mg-clipping"> containing 7 <polygon> blades: (1) full-cover black rectangle (transform rotate(90deg), origin 75% 25%) that hides the disc; (2,3) two large white triangles; (4,5,6,7) four identical small white triangles. White regions remain visible, black hides.
+
+ANIMATIONS (all CSS, prefixed mg-):
+- Each blade rotates 360deg (mg-rotation, 2s linear infinite) around its own transform-origin; directions alternate and delays are negative and staggered (-2s/3, -2s/2, -2s/1.5).
+- Blades share filter: blur(7px).
+- Mask contrast pulses 15 -> 3 -> 15 (mg-roundness, 1s linear infinite) so the silhouettes round and sharpen.
+- Loader hue-rotates 0 -> -30 -> -60 -> -90 -> -45 -> 0 (mg-colorize, 6s ease-in-out infinite).
+- Timing from custom props: --time-animation:2s, --size:1.
+
+TECHNICAL:
+- Self-contained <style> tag. Keyframes: mg-rotation, mg-roundness, mg-colorize. Mask id: mg-clipping (unique, prefixed).
+- Render <svg width={100} height={100} viewBox="0 0 100 100"> positioned absolutely behind .mg-box.
+- Container: w-full h-full min-h-[380px] flex items-center justify-center overflow-hidden select-none with dark radial background.
+- Zero runtime JS animation.
+
+Acceptance:
+Produces the identical looping amber/rust morphing glass diamond with blurred, rounding, rotating mask blades and hue-cycling glow.
+
+`,
 };
 
 

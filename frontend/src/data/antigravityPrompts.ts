@@ -981,5 +981,37 @@ Add JS animation state, external animation libraries, or change timing/easing va
 Keep the CSS in a scoped <style> tag, preserve the 4s timing, 0.5s offset, and golden-on-gunmetal palette.
 
 `,
+
+  "morphing-glow": `
+## COMPONENT: Morphing Glow (Loader)
+
+### Overview
+A morphing glass diamond loader built purely with a clipped inline SVG and CSS keyframes in a self-contained React/TypeScript component. A circular glass disc (amber-to-rust gradient, glowing rims, layered halo shadows) is clipped by an animated SVG mask whose blurred polygon blades reshape the silhouette continuously.
+
+### Animation Technique
+- CSS @keyframes on SVG mask polygons: 360deg rotation (mg-rotation) with per-blade transform-origins, staggered negative delays and alternating directions.
+- Mask contrast pulse 15 -> 3 -> 15 over 1s (mg-roundness) to round and sharpen the sliced diamond.
+- Whole-loader hue-rotate drift 0/-30/-60/-90/-45/0 degrees over 6s ease-in-out (mg-colorize).
+- Blur(7px) filter on all mask blades; Mask referenced as url(#mg-clipping); CSS custom props --time-animation and --size keep timing/scaling tunable.
+- No JavaScript animation state; infinite purely via CSS animation.
+
+### Interaction
+- Mount and continue loop indefinitely.
+
+### Props
+None (static loader).
+
+### Requirements
+- Single-file component with a self-contained <style> tag.
+- Centered in a full-size flexbox container (w-full h-full min-h-[380px]).
+- svg width/height exactly 100, mask id mg-clipping.
+
+### Do not
+Add JS animation state, external animation libraries, or change timing/easing values.
+
+### Do
+Keep the CSS in a scoped <style> tag, preserve mask polygon order, 2s base timing, 6s color cycle and amber/rust palette.
+
+`,
 };
 

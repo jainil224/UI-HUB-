@@ -124,4 +124,26 @@ A neo-brutalist isometric diamond loader centered on a dark radial gradient. A f
 Production-ready single-file React component.
 
 `,
+
+  "morphing-glow": `
+## Component: Morphing Glow
+
+Build a "Morphing Glow" loading animation as a React + TypeScript component using Tailwind CSS and a pure inline SVG mask with CSS keyframes (no external animation libraries).
+
+## What it does
+A morphing glass diamond loader: a 100x100px circular glass disc with an amber-to-rust linear gradient body, a glowing rim (amber top border, rust bottom border) and layered semi-transparent amber/rust outer and inset box-shadows. The disc is clipped by an inline SVG <mask> whose blurred polygon blades continuously reshape the diamond silhouette as they blur, round off and spin.
+
+## Technical
+- All animation driven by CSS @keyframes on SVG mask polygons and on the loader element itself.
+- Prefix keyframes and ids: mg-rotation, mg-roundness, mg-colorize and mask id #mg-clipping.
+- Animation timing via CSS custom properties: --time-animation: 2s, --size: 1 (scalable).
+- Mask polygon blades: one full black rectangle (rotate 90deg), two large white triangles, four identical small white triangles. Staggered negative animation-delays and alternating spin directions.
+- Contrast pulses from 15 to 3 and back over 1s (roundness); whole loader hue-rotates 0deg -> -90deg -> 0deg over 6s (colorize).
+- Zero JavaScript animation state; loops forever purely via CSS.
+- Render svg at width/height 100, centered in a full-size flexbox container (w-full h-full min-h-[380px]).
+
+## Output
+Production-ready single-file React component.
+
+`,
 };
