@@ -1997,6 +1997,99 @@ const FloatingDarkCapsuleNavbarPreview: React.FC = () => {
     );
 };
 
+const MinimalAICapsuleNavbarPreview: React.FC = () => {
+    const PlusIcon = (
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 5v14M5 12h14" />
+        </svg>
+    );
+
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            background: '#ffffff',
+            overflow: 'hidden',
+            borderRadius: '24px',
+        }}>
+            <style>{`
+                .mn-nav {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    z-index: 50;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    padding: 16px;
+                    pointer-events: none;
+                    animation: mn-down 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+                }
+                .mn-nav > * { pointer-events: auto; }
+                .mn-left { display: flex; align-items: center; gap: 12px; }
+                .mn-right { display: flex; align-items: center; }
+                .mn-logo { display: flex; align-items: center; gap: 8px; }
+                .mn-brand { font-family: "Inter", system-ui, sans-serif; font-weight: 500; font-size: 14px; color: #000000; display: none; }
+                .mn-menu-pill { display: flex; align-items: center; gap: 8px; background: #000000; border: none; border-radius: 999px; padding: 6px 14px 6px 6px; cursor: pointer; }
+                .mn-menu-dot { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #ffffff; flex-shrink: 0; }
+                .mn-menu-text { font-family: "Inter", system-ui, sans-serif; font-weight: 400; font-size: 11px; color: #ffffff; }
+                .mn-tags-pill { display: none; align-items: center; gap: 4px; background: #f4f4f6; border-radius: 999px; padding: 6px; }
+                .mn-tag { font-family: "Inter", system-ui, sans-serif; font-weight: 400; font-size: 11px; color: #000000; padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
+                .mn-right-pill { display: flex; align-items: center; gap: 8px; background: #f4f4f6; border-radius: 999px; padding: 6px; }
+                .mn-right-circle { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #000000; flex-shrink: 0; }
+                .mn-right-label { display: none; font-family: "Inter", system-ui, sans-serif; font-weight: 400; font-size: 11px; color: #000000; padding-right: 8px; }
+                @media (min-width: 768px) {
+                    .mn-nav { padding: 24px 32px; }
+                    .mn-brand { display: inline-block; }
+                    .mn-tags-pill { display: flex; }
+                    .mn-right-label { display: inline-block; }
+                    .mn-menu-dot, .mn-right-circle { width: 32px; height: 32px; }
+                }
+                @keyframes mn-down { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+            `}</style>
+
+            <nav className="mn-nav" style={{ position: 'absolute' }}>
+                <div className="mn-left">
+                    <div className="mn-logo">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                            <rect x="8" y="2" width="12" height="5" rx="2.5" fill="#000000" transform="rotate(-35 14 14)" />
+                            <rect x="8" y="21" width="12" height="5" rx="2.5" fill="#000000" transform="rotate(-35 14 14)" />
+                        </svg>
+                        <span className="mn-brand">NeuralKinetics</span>
+                    </div>
+
+                    <button className="mn-menu-pill" type="button">
+                        <span className="mn-menu-dot">{PlusIcon}</span>
+                        <span className="mn-menu-text">Menu</span>
+                    </button>
+
+                    <div className="mn-tags-pill">
+                        <span className="mn-tag">Advanced Bionics</span>
+                        <span className="mn-tag">Cognitive AI</span>
+                    </div>
+                </div>
+
+                <div className="mn-right">
+                    <div className="mn-right-pill">
+                        <span className="mn-right-circle">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <circle cx="2.5" cy="2.5" r="1.5" fill="#ffffff" />
+                                <circle cx="9.5" cy="2.5" r="1.5" fill="#ffffff" />
+                                <circle cx="2.5" cy="9.5" r="1.5" fill="#ffffff" />
+                                <circle cx="9.5" cy="9.5" r="1.5" fill="#ffffff" />
+                            </svg>
+                        </span>
+                        <span className="mn-right-label">Adaptive Systems</span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    );
+};
+
 export type ComponentItem = {
     id: string;
     title: string;
@@ -6670,5 +6763,244 @@ const Navbar: React.FC = () => {
 
 export default Navbar;`,
         vibePrompt: "Create a 'Floating Dark Capsule' navbar in React and TypeScript styled with Tailwind CSS. It is an absolutely-positioned top bar (absolute z-20 top-0 left-0 right-0, padding px-6 md:px-10 pt-6) laid out with flex items-center justify-between gap-4 above a dark radial hero (radial-gradient 120% 160% at 50% 0%, #2a2a2e -> #141416 -> #050506). Three floating capsules separated by a soft drop shadow: (1) Left brand pill - rounded-full with bg-neutral-900/90 and backdrop-blur, pl-4 pr-6 py-3, containing a white 20x20 SVG 'securify' logo (four-part geometric mark built from M/L/Z path segments on a 256 viewBox, fill #ffffff) plus a white 'securify' wordmark (text-sm font-normal tracking-tight); (2) Center nav pill - hidden md:flex, also bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2, mapping over const navLinks = ['platform','solutions','company','support'] to render <a> links with text-neutral-300 hover:text-white transition-colors text-sm px-5 py-2 rounded-full; (3) Right CTA button - bg-white text-black rounded-full px-6 py-3 hover:bg-neutral-200 transition-colors labelled 'get started' in lowercase. Keep all three pills glassy, dark rounded-full capsules that float over a dark surface; nav links collapse away on mobile (hidden md:flex) while logo and CTA remain. The exact production source used to build this component is embedded below - preserve it verbatim.",
+    },
+    {
+        id: "minimal-ai-capsule",
+        title: "Minimal AI Capsule",
+        category: "navbar",
+        isPremium: false,
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        description: "A minimal floating AI navbar built with Framer Motion: circular black menu pill with a white plus button, a NeutralKinetics logo wordmark, grey tag and status pills, sliding in on load.",
+        preview: () => (<MinimalAICapsuleNavbarPreview />),
+        code: `// Navbar.tsx
+import { motion } from "motion/react";
+import { Plus } from "lucide-react";
+import "./Navbar.css";
+
+const ease = [0.16, 1, 0.3, 1] as const;
+
+const LogoIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+    <rect
+      x="8"
+      y="2"
+      width="12"
+      height="5"
+      rx="2.5"
+      fill="#000000"
+      transform="rotate(-35 14 14)"
+    />
+    <rect
+      x="8"
+      y="21"
+      width="12"
+      height="5"
+      rx="2.5"
+      fill="#000000"
+      transform="rotate(-35 14 14)"
+    />
+  </svg>
+);
+
+const GridIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <circle cx="2.5" cy="2.5" r="1.5" fill="#ffffff" />
+    <circle cx="9.5" cy="2.5" r="1.5" fill="#ffffff" />
+    <circle cx="2.5" cy="9.5" r="1.5" fill="#ffffff" />
+    <circle cx="9.5" cy="9.5" r="1.5" fill="#ffffff" />
+  </svg>
+);
+
+export default function Navbar() {
+  return (
+    <motion.nav
+      className="navbar"
+      initial={{ y: -16, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease }}
+    >
+      <div className="navbar__left">
+        <div className="navbar__logo">
+          <LogoIcon />
+          <span className="navbar__brand">NeuralKinetics</span>
+        </div>
+
+        <button className="navbar__menu-pill" type="button">
+          <span className="navbar__menu-dot">
+            <Plus size={12} strokeWidth={3} color="#000000" />
+          </span>
+          <span className="navbar__menu-text">Menu</span>
+        </button>
+
+        <div className="navbar__tags-pill">
+          <span className="navbar__tag">Advanced Bionics</span>
+          <span className="navbar__tag">Cognitive AI</span>
+        </div>
+      </div>
+
+      <div className="navbar__right">
+        <div className="navbar__right-pill">
+          <span className="navbar__right-circle">
+            <GridIcon />
+          </span>
+          <span className="navbar__right-label">Adaptive Systems</span>
+        </div>
+      </div>
+    </motion.nav>
+  );
+}
+
+// ============================================================
+// Navbar.css
+// ============================================================
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  pointer-events: none;
+}
+
+.navbar > * {
+  pointer-events: auto;
+}
+
+.navbar__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar__right {
+  display: flex;
+  align-items: center;
+}
+
+/* Logo */
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navbar__brand {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #000000;
+  display: none;
+}
+
+/* Menu pill */
+.navbar__menu-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #000000;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px 6px 6px;
+  cursor: pointer;
+}
+
+.navbar__menu-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  flex-shrink: 0;
+}
+
+.navbar__menu-text {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  color: #ffffff;
+}
+
+/* Tags pill */
+.navbar__tags-pill {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  background: #f4f4f6;
+  border-radius: 999px;
+  padding: 6px 6px;
+}
+
+.navbar__tag {
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  color: #000000;
+  padding: 6px 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* Right pill */
+.navbar__right-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f4f4f6;
+  border-radius: 999px;
+  padding: 6px 6px 6px 6px;
+}
+
+.navbar__right-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #000000;
+  flex-shrink: 0;
+}
+
+.navbar__right-label {
+  display: none;
+  font-family: "Inter", system-ui, sans-serif;
+  font-weight: 400;
+  font-size: 11px;
+  color: #000000;
+  padding-right: 8px;
+}
+
+/* Desktop (768px+) */
+@media (min-width: 768px) {
+  .navbar {
+    padding: 24px 32px;
+  }
+
+  .navbar__brand {
+    display: inline-block;
+  }
+
+  .navbar__tags-pill {
+    display: flex;
+  }
+
+  .navbar__right-label {
+    display: inline-block;
+  }
+
+  .navbar__menu-dot,
+  .navbar__right-circle {
+    width: 32px;
+    height: 32px;
+  }
+}`,
+        vibePrompt: "Create a 'Minimal AI Capsule' navbar as a React + TypeScript component using motion/react (Framer Motion) and lucide-react. Two files. Navbar.tsx imports { motion } from 'motion/react' and { Plus } from 'lucide-react', plus './Navbar.css'. Easing const ease = [0.16, 1, 0.3, 1] as const. Two inline SVG icon components: LogoIcon (28x28, two rotated 12x5 rounded rects #000000, the NeuralKinetics diagonal mark) and GridIcon (12x12, four white 1.5r dots). The exported Navbar renders <motion.nav className='navbar' initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.8, ease }}> laid out with flex space-between; nav is pointer-events none, children auto. Left group (.navbar__left, gap 12px): logo (LogoIcon + 'NeuralKinetics' .navbar__brand, Inter 500 14px #000000, hidden until desktop 768px), a black (#000000) 999px 'Menu' pill (.navbar__menu-pill, padding 6px 14px 6px 6px) holding a white 28px circle (.navbar__menu-dot) with a black Plus (lucide size 12 strokeWidth 3) and white Inter 400 11px 'Menu' label, plus a grey tags pill (.navbar__tags-pill, #f4f4f6, 999px, hidden until desktop) with two .navbar__tag chips 'Advanced Bionics' and 'Cognitive AI' (Inter 11px #000000, padding 6px 12px). Right group (.navbar__right): .navbar__right-pill (#f4f4f6, 999px, gap 8px) with a black 28px circle (.navbar__right-circle) containing GridIcon and a 'Adaptive Systems' label (.navbar__right-label, Inter 400 11px, padding-right 8px, hidden until desktop). In Navbar.css the nav is fixed, top 0 left 0 right 0, z-index 50. At min-width 768px: nav padding 24px 32px and brand, tags pill and right label become visible; menu dot and right circle grow to 32px. Reproduce the exact production source embedded below verbatim.",
     }
 ];
