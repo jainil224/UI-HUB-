@@ -1948,6 +1948,55 @@ const CinematicNavbarPreview: React.FC = () => {
     );
 };
 
+const FloatingDarkCapsuleNavbarPreview: React.FC = () => {
+    const navLinks = ["platform", "solutions", "company", "support"];
+
+    const Logo = () => (
+        <svg viewBox="0 0 256 256" className="h-5 w-5" xmlns="http://www.w3.org/2000/svg">
+            <path
+                fill="#ffffff"
+                d="M 128 192 L 128 256 L 64.5 256 L 32 223 L 0 192 L 0 128 L 64 128 Z
+                   M 256 192 L 256 256 L 192.5 256 L 160 223 L 128 192 L 128 128 L 192 128 Z
+                   M 128 64 L 128 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 Z
+                   M 256 64 L 256 128 L 192.5 128 L 160 95 L 128 64 L 128 0 L 192 0 Z"
+            />
+        </svg>
+    );
+
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            background: 'radial-gradient(120% 160% at 50% 0%, #2a2a2e 0%, #141416 55%, #050506 100%)',
+            overflow: 'hidden',
+            borderRadius: '24px',
+        }}>
+            <nav className="absolute top-0 left-0 right-0 z-20 px-6 md:px-10 pt-6 flex items-center justify-between gap-4" style={{ position: 'absolute' }}>
+                <div className="flex items-center gap-2 bg-neutral-900/90 backdrop-blur rounded-full pl-4 pr-6 py-3">
+                    <Logo />
+                    <span className="text-white text-sm font-normal tracking-tight">securify</span>
+                </div>
+                <div className="hidden md:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
+                    {navLinks.map((link) => (
+                        <a
+                            key={link}
+                            href="#"
+                            className="text-neutral-300 hover:text-white transition-colors text-sm px-5 py-2 rounded-full"
+                        >
+                            {link}
+                        </a>
+                    ))}
+                </div>
+                <button className="bg-white text-black text-sm font-normal rounded-full px-6 py-3 hover:bg-neutral-200 transition-colors">
+                    get started
+                </button>
+            </nav>
+        </div>
+    );
+};
+
 export type ComponentItem = {
     id: string;
     title: string;
@@ -6557,5 +6606,69 @@ export default SuperMario;`,
 </body>
 </html>`,
         vibePrompt: "Create a 'Cinematic Navbar' for the Vesper.ai brand in HTML/CSS/JS with zero external dependencies. Design language: a black cinematic site header. Layout is a 3-column grid (1fr auto 1fr) so the logo sits left, centered nav, and a CTA button right. Logo: a white 'Vesper.ai' wordmark with a unique mark — an SVG shape of a vertical bar/capsule with end dots (circle cx 7.3 cy 3.2 r 1.45, rounded rect 5.5 4.7 3.6x14.6 rx1.8, and a second rounded rect 14.9 4.7 3.6x14.6 rx1.8, circle cx 16.7 cy 20.8 r 1.45) inside a <g transform=rotate(-30 12 12)>, filled currentColor, sized 22px; 'Vesper' in 600 weight followed by '.ai' in 400 weight, letter-spacing -0.03em. Background: radial-gradient(120% 220% at 50% -60%, #232323 0%, #101010 45%, #000000 100%) with a subtle white bottom border, plus an optional film-grain overlay (.grain) using a feTurbulence SVG data-URI at opacity 0.5, mix-blend-mode screen. Nav links: 'nav-pill' ghosts — #232323 fill, 1px rgba(255,255,255,0.14) border, 7px radius, height 40px, font 14px #e6e6e6; a :before sheen sweeps across on hover (linear-gradient 115deg transparent->rgba(255,255,255,0.16)->transparent, translateX -120% -> 120%) and the pill lights up (bg #2e2e2e, border 0.28 alpha, glow box-shadow). CTA: '.btn btn-solid' — white-to-#cfcfcf vertical gradient, #111 text, inset top highlight; a :after diagonal light sweep animates on hover. Mobile (<900px): a 3-bar burger toggles a full-screen menu; body gets .menu-open which morphs links to an X; nav links become large centered pills; the CTA hides; Escape and resize >900px close it. Shared liquid-glass motion: all sheens/glows transition 0.35s ease, reduced-motion disables them. Keep everything responsive with CSS variables for sizing."
+    },
+    {
+        id: "floating-dark-capsule",
+        title: "Floating Dark Capsule",
+        category: "navbar",
+        isPremium: false,
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        description: "A floating dark glass capsule navbar with a custom securify logo, center pill navigation, and a white get-started button. Fully responsive with pill links that hide on mobile.",
+        preview: () => (<FloatingDarkCapsuleNavbarPreview />),
+        code: `import React from "react";
+
+const navLinks = ["platform", "solutions", "company", "support"];
+
+const Logo = () => (
+  <svg
+    viewBox="0 0 256 256"
+    className="h-5 w-5"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill="#ffffff"
+      d="M 128 192 L 128 256 L 64.5 256 L 32 223 L 0 192 L 0 128 L 64 128 Z
+         M 256 192 L 256 256 L 192.5 256 L 160 223 L 128 192 L 128 128 L 192 128 Z
+         M 128 64 L 128 128 L 64.5 128 L 32 95 L 0 64 L 0 0 L 64 0 Z
+         M 256 64 L 256 128 L 192.5 128 L 160 95 L 128 64 L 128 0 L 192 0 Z"
+    />
+  </svg>
+);
+
+const Navbar: React.FC = () => {
+  return (
+    <nav className="absolute z-20 top-0 left-0 right-0 px-6 md:px-10 pt-6 flex items-center justify-between gap-4">
+      {/* Left pill: logo + brand */}
+      <div className="flex items-center gap-2 bg-neutral-900/90 backdrop-blur rounded-full pl-4 pr-6 py-3">
+        <Logo />
+        <span className="text-white text-sm font-normal tracking-tight">
+          securify
+        </span>
+      </div>
+
+      {/* Center pill: nav links (hidden on mobile) */}
+      <div className="hidden md:flex items-center gap-1 bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2">
+        {navLinks.map((link) => (
+          <a
+            key={link}
+            href="#"
+            className="text-neutral-300 hover:text-white transition-colors text-sm px-5 py-2 rounded-full"
+          >
+            {link}
+          </a>
+        ))}
+      </div>
+
+      {/* Right button */}
+      <button className="bg-white text-black text-sm font-normal rounded-full px-6 py-3 hover:bg-neutral-200 transition-colors">
+        get started
+      </button>
+    </nav>
+  );
+};
+
+export default Navbar;`,
+        vibePrompt: "Create a 'Floating Dark Capsule' navbar in React and TypeScript styled with Tailwind CSS. It is an absolutely-positioned top bar (absolute z-20 top-0 left-0 right-0, padding px-6 md:px-10 pt-6) laid out with flex items-center justify-between gap-4 above a dark radial hero (radial-gradient 120% 160% at 50% 0%, #2a2a2e -> #141416 -> #050506). Three floating capsules separated by a soft drop shadow: (1) Left brand pill - rounded-full with bg-neutral-900/90 and backdrop-blur, pl-4 pr-6 py-3, containing a white 20x20 SVG 'securify' logo (four-part geometric mark built from M/L/Z path segments on a 256 viewBox, fill #ffffff) plus a white 'securify' wordmark (text-sm font-normal tracking-tight); (2) Center nav pill - hidden md:flex, also bg-neutral-900/90 backdrop-blur rounded-full px-3 py-2, mapping over const navLinks = ['platform','solutions','company','support'] to render <a> links with text-neutral-300 hover:text-white transition-colors text-sm px-5 py-2 rounded-full; (3) Right CTA button - bg-white text-black rounded-full px-6 py-3 hover:bg-neutral-200 transition-colors labelled 'get started' in lowercase. Keep all three pills glassy, dark rounded-full capsules that float over a dark surface; nav links collapse away on mobile (hidden md:flex) while logo and CTA remain. The exact production source used to build this component is embedded below - preserve it verbatim.",
     }
 ];
