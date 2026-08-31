@@ -2489,9 +2489,6 @@ const SplitNavigationNavPreview: React.FC = () => {
                     white-space: nowrap;
                     text-decoration: none;
                     font-family: "Inter", system-ui, sans-serif;
-                    opacity: 0;
-                    transform: translate3d(-16px, 0, 0);
-                    animation: sn-link-in 0.55s cubic-bezier(0.16,1,0.3,1) backwards;
                 }
                 .sn-links a::after {
                     content: "";
@@ -2522,9 +2519,6 @@ const SplitNavigationNavPreview: React.FC = () => {
                 .sn-logo polygon {
                     transform-box: fill-box;
                     transform-origin: left center;
-                    opacity: 0;
-                    transform: translate3d(-12px, 8px, 0);
-                    animation: sn-mark-in 0.5s cubic-bezier(0.16,1,0.3,1) backwards;
                 }
                 .sn-logo polygon:nth-child(1) { animation-delay: 0.04s; }
                 .sn-logo polygon:nth-child(2) { animation-delay: 0.09s; }
@@ -2552,9 +2546,6 @@ const SplitNavigationNavPreview: React.FC = () => {
                     color: #fff;
                     border: none;
                     font-family: "Inter", system-ui, sans-serif;
-                    opacity: 0;
-                    clip-path: inset(0 100% 0 0);
-                    animation: sn-wipe 0.65s cubic-bezier(0.16,1,0.3,1) 0.16s backwards;
                 }
                 .sn-btn::before {
                     content: "";
@@ -2590,8 +2581,6 @@ const SplitNavigationNavPreview: React.FC = () => {
                     border: none;
                     cursor: pointer;
                     transition: transform 0.22s cubic-bezier(0.16,1,0.3,1);
-                    opacity: 0;
-                    animation: sn-link-in 0.5s cubic-bezier(0.16,1,0.3,1) 0.16s backwards;
                 }
                 .sn-burger:hover { transform: scale(1.08); }
                 .sn-burger-bar {
@@ -2684,6 +2673,115 @@ const SplitNavigationNavPreview: React.FC = () => {
                     <span className="sn-btn__label">Book Demo</span>
                     <span className="sn-btn__icon">{arrowIcon}</span>
                 </button>
+            </div>
+        </div>
+    );
+};
+
+const AwwwardsNavPreview: React.FC = () => {
+    const [expanded, setExpanded] = React.useState(false);
+    const items = ['Home', 'Nominees', 'Directory', 'Collections'];
+    const columns = [
+        { title: 'Awards', links: ['Winners', 'Site of the Day', 'Nominees'] },
+        { title: 'Inspiration', links: ['Collections', 'Elements', 'Resources'] },
+        { title: 'Directory', links: ['Professionals', 'Agencies', 'Freelancers'] },
+        { title: 'Market', links: ['Jobs', 'New Events', 'Products'] },
+    ];
+    const panelH = expanded ? 190 : 0;
+
+    return (
+        <div style={{
+            position: 'relative', width: '100%', height: '100%', minHeight: '300px',
+            overflow: 'hidden', borderRadius: '24px',
+            background: 'radial-gradient(120% 120% at 50% 0%, #fafafa 0%, #e8e8e8 100%)',
+            fontFamily: '"Inter", system-ui, sans-serif',
+        }}>
+            <div style={{
+                position: 'absolute', left: '50%', bottom: 16, transform: 'translateX(-50%)',
+                width: 'min(540px, 92%)', zIndex: 5,
+            }}>
+                <nav style={{
+                    display: 'flex', flexDirection: 'column', overflow: 'hidden',
+                    borderRadius: 14, border: '1px solid rgba(0,0,0,0.10)',
+                    background: 'rgba(255,255,255,0.70)', backdropFilter: 'blur(14px)',
+                    boxShadow: '0 14px 40px rgba(0,0,0,0.12)', boxSizing: 'border-box',
+                    transition: 'height .45s cubic-bezier(.76,0,.24,1)',
+                    height: panelH + 60,
+                }}>
+                    <div style={{
+                        height: panelH, overflow: 'hidden', padding: '10px 10px 0 10px', boxSizing: 'border-box',
+                        opacity: expanded ? 1 : 0, transform: expanded ? 'translateY(0)' : 'translateY(-6px)',
+                        transition: 'opacity .3s ease, transform .3s ease',
+                    }}>
+                        <div style={{
+                            display: 'flex', height: '100%',
+                            border: '1px solid rgba(0,0,0,0.06)', borderRadius: 10,
+                            background: 'rgba(0,0,0,0.03)', padding: 14, boxSizing: 'border-box',
+                        }}>
+                            {columns.map((col, ci) => (
+                                <div key={col.title} style={{
+                                    flex: 1, display: 'flex', flexDirection: 'column', gap: 3,
+                                    borderLeft: ci > 0 ? '1px dashed rgba(0,0,0,0.15)' : 'none',
+                                    paddingLeft: ci > 0 ? 14 : 0, minWidth: 0,
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                                        <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#000', flexShrink: 0 }} />
+                                        <span style={{ fontSize: 11.5, fontWeight: 600, color: 'rgba(0,0,0,0.72)' }}>{col.title}</span>
+                                    </div>
+                                    {col.links.map(l => (
+                                        <a key={l} href="#" onClick={(e) => e.preventDefault()} style={{
+                                            display: 'block', padding: '4px 0', fontSize: 12,
+                                            color: '#171717', textDecoration: 'none',
+                                        }}>{l}</a>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div style={{ display: 'flex', height: 60, alignItems: 'center', gap: 6, padding: 10, boxSizing: 'border-box' }}>
+                        <button
+                            type="button"
+                            onClick={() => setExpanded(v => !v)}
+                            style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                flexShrink: 0, padding: '0 16px', height: 40, borderRadius: 10,
+                                border: '1px solid rgba(0,0,0,0.10)',
+                                background: expanded ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
+                                color: '#404040', cursor: 'pointer', fontSize: 13, fontWeight: 500,
+                            }}
+                        >
+                            {expanded ? (
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#000" strokeWidth="1.4" strokeLinecap="round"><path d="M3 12L13 4M13 12L3 4" /></svg>
+                            ) : (
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#000" strokeWidth="1.4" strokeLinecap="round"><path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13" /></svg>
+                            )}
+                            <span>More</span>
+                        </button>
+
+                        <div style={{ display: 'flex', flex: 4, alignItems: 'center', gap: 6, minWidth: 0 }}>
+                            {items.map((it) => (
+                                <a
+                                    key={it}
+                                    href="#"
+                                    onClick={(e) => e.preventDefault()}
+                                    style={{
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        flex: 1, height: 40, borderRadius: 10, fontSize: 13,
+                                        textAlign: 'center', textDecoration: 'none', color: '#525252',
+                                        border: expanded ? '1px solid transparent' : '1px solid rgba(0,0,0,0.15)',
+                                        opacity: expanded ? 0 : 1, pointerEvents: expanded ? 'none' : 'auto',
+                                        transition: 'opacity .12s ease, border-color .2s ease',
+                                    }}
+                                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.4)'; e.currentTarget.style.color = '#000'; }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'; e.currentTarget.style.color = '#525252'; }}
+                                >
+                                    {it}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </nav>
             </div>
         </div>
     );
@@ -9359,6 +9457,320 @@ button {
   });
 })();`,
         vibePrompt: "Build a split navigation header (navbar) called \"Meridian\" for a clean, light-themed site. This is a plain HTML / vanilla CSS / vanilla JavaScript component (no framework, no build step). Three files:\nindex.html: includes the Google Fonts Inter stylesheet (weights 300,400,500,600,700) with a preconnect to fonts.googleapis.com and fonts.gstatic.com, links styles.css and main.js. Markup inside a .page wrapper: a <nav class=\"nav\"> laid out as a 3-column grid (1fr auto 1fr) — left is a .nav__links div (aria-label=\"Primary\") with four <a> links (Platform, Solutions, Company, Pricing); center is an <a class=\"logo\" aria-label=\"Meridian\"> containing an inline SVG (viewBox 0 0 42 34) built from six <polygon> elements forming a diagonal chevron/mark (each with style=\"--i:0\" through --i:5\"); right is a .nav__right with a <button class=\"btn btn--nav\"> (a Book Demo button: a .btn__label span + a .btn__icon span with an inline arrow SVG using a stroke on a path d=\"M4 10h10.2M10.4 5.6 15.2 10l-4.8 4.4\") plus a <button class=\"nav__burger\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"mobile-menu\"> with three .nav__burger-bar spans. After the nav, include a <div id=\"mobile-menu\" class=\"mobile-menu\" hidden> with a .mobile-menu__links column of the same four links and a Book Demo button. Then <script src=\"main.js\"></script> before </body>.\nstyles.css: define :root variables (--bg:#ffffff, --text:#0a0a0a, --blue:#006cd2, --blue-dark:#0053a3, --glass:rgba(0,0,0,0.13), --glass-blur:18px, --radius:0, --font:\"Inter\",... and spacing --pad-x, --nav-top, --btn-icon:36px, --btn-pad-y:12px, --btn-pad-x:22px). Reset (* box-sizing, margin 0, padding 0), html/body height 100% overflow hidden, body uses the font and background. .page is position relative, 100vh/100dvh, flex column, padding var(--nav-top) var(--pad-x). .nav is a grid 1fr auto 1fr aligned center. .nav__links is a glass pill: flex, gap clamp(22px,2.6vw,32px), justify-self start, padding 24px 34px, background var(--glass), backdrop-filter blur(var(--glass-blur)). Each link starts hidden (opacity 0, translate3d(-16px,0,0)) and animates in with a staggered @keyframes link-in (animation-delay 0.02s/0.08s/0.14s/0.2s); each link has a ::after 3px underline in #006cd2 that scaleX(0)->1 on hover, and hover turns the link #006cd2 and translateY(-2px). .logo is inline-flex justify-self center with the SVG sized clamp(30px,3.2vw,38px); each polygon starts hidden/offset and animates in via @keyframes mark-in with staggered delays (0.04/0.09/0.14/0.19/0.24/0.29s), and .logo:hover scale(1.1). .nav__right is flex gap 14px justify-self end. Buttons: .btn is inline-flex height 58px padding var(--btn-pad-y) 10px var(--btn-pad-y) var(--btn-pad-x) gap 18px, with a ::before overlay that scaleX(0)->1 on hover; .btn--nav is the blue variant (background #006cd2, white text) that starts hidden with clip-path inset(0 100% 0 0) and animates via @keyframes wipe-right (0.16s delay), .btn__icon bg #0053a3 switching to white bg + blue icon on hover, ::before background #004a96. .nav__burger hidden by default (display none) with three 18px bars that shrink to 14px on hover (bars 1 and 3) and turn blue; shown flex only at <=820px via media query. .mobile-menu is a flex column gap 1.25rem that is hidden when [hidden], with .mobile-menu__links a glass column of links (padding 16px 20px, font-size 1.05rem). Include a @media (prefers-reduced-motion: reduce) rule turning off all entrance animations. Responsive: @media (max-width:820px) collapses the grid to auto 1fr auto, hides .nav__links and the nav .btn--nav, shows the .nav__burger, and reveals the mobile menu; @media (min-width:821px) hides the burger.\nmain.js: an IIFE that queries .nav__burger and #mobile-menu, defines openMenu/closeMenu/toggleMenu (toggling menu.hidden and syncing aria-expanded/aria-label on the burger), listens for burger click, closes on Escape, and closes when any link/button inside the menu is clicked.",
+    },
+,
+    {
+        id: "awwwards-nav",
+        title: "Awwwards Nav",
+        category: "navbar",
+        isPremium: false,
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        description: "A glassmorphic bottom navigation pill (\"Awwwards Nav\") that expands upward into a multi-column mega-menu: a single GSAP-powered, prop-driven React component fixed to the bottom center with inline links and a 'More' button that reveals a 4-column panel (Awards, Inspiration, Directory, Market), the icon flipping to an X while collapsed links fade out.",
+        preview: () => (<AwwwardsNavPreview />),
+        code: `// awwwards-nav.tsx
+"use client";
+
+import * as React from "react";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { List, X } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
+
+/**
+ * Awwwards Nav
+ *
+ * A glassmorphic bottom navigation pill with inline links and a "More" button.
+ * Tapping "More" expands the bar upward with a smooth \`power4.inOut\` motion:
+ * the inline links fade out, the button grows to full width, its icon flips to
+ * an X, and a multi-column mega-menu reveals inside the expanded panel.
+ *
+ * Ported from the vanilla "CodeGrid Awwwards Nav" (GSAP) into a single,
+ * self-contained, prop-driven React component. Positioning is left to the
+ * consumer via \`className\`, so it works fixed to the viewport or absolutely
+ * inside a positioned container.
+ */
+
+export interface AwwwardsNavLink {
+  label: string;
+  href: string;
+}
+
+export interface AwwwardsNavColumn {
+  /** Column heading shown above its links. */
+  title: string;
+  /** Links listed under the heading. */
+  links: AwwwardsNavLink[];
+}
+
+export interface AwwwardsNavProps {
+  /** Inline links shown in the collapsed bar. Defaults to a sample set. */
+  items?: AwwwardsNavLink[];
+  /** Columns revealed in the expanded mega-menu. Defaults to a sample set. */
+  columns?: AwwwardsNavColumn[];
+  /** Label on the expand/collapse button. Defaults to "More". */
+  moreLabel?: string;
+  /** Called whenever the panel opens (true) or closes (false). */
+  onOpenChange?: (open: boolean) => void;
+  /**
+   * Extra class names for the root nav. Use this to position it —
+   * e.g. \`fixed bottom-6 left-1/2 -translate-x-1/2\` (default) or
+   * \`absolute\` inside a positioned parent.
+   */
+  className?: string;
+}
+
+const DEFAULT_ITEMS: AwwwardsNavLink[] = [
+  { label: "Home", href: "#" },
+  { label: "Nominees", href: "#" },
+  { label: "Directory", href: "#" },
+  { label: "Collections", href: "#" },
+];
+
+const DEFAULT_COLUMNS: AwwwardsNavColumn[] = [
+  {
+    title: "Awards",
+    links: [
+      { label: "Winners", href: "#" },
+      { label: "Site of the Day", href: "#" },
+      { label: "Nominees", href: "#" },
+    ],
+  },
+  {
+    title: "Inspiration",
+    links: [
+      { label: "Collections", href: "#" },
+      { label: "Elements", href: "#" },
+      { label: "Resources", href: "#" },
+    ],
+  },
+  {
+    title: "Directory",
+    links: [
+      { label: "Professionals", href: "#" },
+      { label: "Agencies", href: "#" },
+      { label: "Freelancers", href: "#" },
+    ],
+  },
+  {
+    title: "Market",
+    links: [
+      { label: "Jobs", href: "#" },
+      { label: "New Events", href: "#" },
+      { label: "Products", href: "#" },
+    ],
+  },
+];
+
+const COLLAPSED_HEIGHT = 60;
+const EXPANDED_HEIGHT = 370;
+
+export function AwwwardsNav({
+  items = DEFAULT_ITEMS,
+  columns = DEFAULT_COLUMNS,
+  moreLabel = "More",
+  onOpenChange,
+  className,
+}: AwwwardsNavProps) {
+  const navRef = useRef<HTMLElement>(null);
+  const navTopRef = useRef<HTMLDivElement>(null);
+  const navItemsRef = useRef<HTMLDivElement>(null);
+  const navHomeRef = useRef<HTMLDivElement>(null);
+
+  const openRef = useRef(false);
+  const animatingRef = useRef(false);
+  const [showClose, setShowClose] = useState(false);
+
+  const onOpenChangeRef = useRef(onOpenChange);
+  useEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+  }, [onOpenChange]);
+
+  // Establish the collapsed baseline imperatively (matches the source's gsap.set).
+  useEffect(() => {
+    const nav = navRef.current;
+    const navTop = navTopRef.current;
+    const navItems = navItemsRef.current;
+    const navHome = navHomeRef.current;
+    if (!nav || !navTop || !navItems || !navHome) return;
+
+    gsap.set(nav, { height: COLLAPSED_HEIGHT });
+    gsap.set(navTop, { opacity: 0, scale: 0.9, display: "none" });
+    gsap.set(navItems, { opacity: 1, display: "flex" });
+    gsap.set(navHome, { flexGrow: 0 });
+
+    return () => {
+      gsap.killTweensOf([nav, navTop, navItems, navHome]);
+    };
+  }, []);
+
+  const toggle = () => {
+    const nav = navRef.current;
+    const navTop = navTopRef.current;
+    const navItems = navItemsRef.current;
+    const navHome = navHomeRef.current;
+    if (!nav || !navTop || !navItems || !navHome || animatingRef.current) return;
+
+    animatingRef.current = true;
+    const opening = !openRef.current;
+    openRef.current = opening;
+    onOpenChangeRef.current?.(opening);
+
+    if (opening) {
+      gsap.to(nav, { height: EXPANDED_HEIGHT, duration: 0.75, ease: "power4.inOut" });
+      gsap.to(navItems, {
+        opacity: 0,
+        duration: 0.1,
+        onComplete: () => gsap.set(navItems, { display: "none" }),
+      });
+      gsap.to(navHome, {
+        flexGrow: 1,
+        duration: 0.2,
+        ease: "power4.inOut",
+        onComplete: () => setShowClose(true),
+      });
+      gsap.to(navTop, {
+        opacity: 1,
+        scale: 1,
+        duration: 0.3,
+        delay: 0.5,
+        onStart: () => gsap.set(navTop, { display: "block" }),
+        onComplete: () => {
+          animatingRef.current = false;
+        },
+      });
+    } else {
+      gsap.to(nav, { height: COLLAPSED_HEIGHT, duration: 0.75, ease: "power4.inOut", delay: 0.2 });
+      gsap.to(navTop, {
+        opacity: 0,
+        scale: 0.9,
+        duration: 0.2,
+        onComplete: () => gsap.set(navTop, { display: "none" }),
+      });
+      gsap.to(navHome, {
+        flexGrow: 0,
+        duration: 0.2,
+        ease: "power4.inOut",
+        onComplete: () => setShowClose(false),
+      });
+      gsap.to(navItems, {
+        opacity: 1,
+        duration: 0.2,
+        delay: 0.5,
+        onStart: () => gsap.set(navItems, { display: "flex" }),
+        onComplete: () => {
+          animatingRef.current = false;
+        },
+      });
+    }
+  };
+
+  return (
+    <nav
+      ref={navRef}
+      className={cn(
+        "fixed bottom-6 left-1/2 z-50 -translate-x-1/2",
+        "h-[60px] w-[min(680px,92vw)] overflow-hidden rounded-xl border backdrop-blur-xl",
+        "border-black/10 bg-white/70 dark:border-white/25 dark:bg-black/75",
+        className,
+      )}
+    >
+      {/* Expanded mega-menu, fills the space above the bottom row */}
+      <div ref={navTopRef} className="absolute inset-x-0 top-0 bottom-[60px] hidden p-2.5">
+        <div className="flex h-full w-full gap-0 rounded-[10px] border border-black/[0.06] bg-black/[0.03] p-5 dark:border-white/[0.06] dark:bg-white/[0.04]">
+          {columns.map((col, ci) => (
+            <div
+              key={col.title}
+              className={cn(
+                "flex flex-1 flex-col gap-1",
+                ci > 0 && "border-l border-dashed border-black/15 pl-4 dark:border-white/20",
+              )}
+            >
+              <div className="mb-3 flex items-center gap-2">
+                <span className="h-1 w-1 shrink-0 rounded-full bg-black dark:bg-white" />
+                <p className="text-sm text-black/70 dark:text-white/75">{col.title}</p>
+              </div>
+              {col.links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="block py-2 text-sm text-black transition-colors hover:text-black/50 dark:text-white dark:hover:text-white/60"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Collapsed bottom row: More button + inline items */}
+      <div className="absolute inset-x-0 bottom-0 flex h-[60px] gap-1.5 p-2.5">
+        <div
+          ref={navHomeRef}
+          role="button"
+          tabIndex={0}
+          aria-expanded={showClose}
+          aria-label={showClose ? "Close menu" : "Open menu"}
+          onClick={toggle}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              toggle();
+            }
+          }}
+          className={cn(
+            "flex shrink-0 cursor-pointer select-none items-center justify-center gap-2.5 rounded-[10px] border px-5 text-sm transition-colors",
+            "border-black/10 bg-black/[0.04] text-neutral-600 hover:bg-black/[0.08] hover:text-black",
+            "dark:border-white/10 dark:bg-white/[0.06] dark:text-neutral-300 dark:hover:bg-white/[0.12] dark:hover:text-white",
+            showClose && "bg-black/[0.08] text-black dark:bg-white/[0.12] dark:text-white",
+          )}
+        >
+          {showClose ? (
+            <X weight="light" className="h-4 w-4 text-black dark:text-white" />
+          ) : (
+            <List weight="light" className="h-4 w-4 text-black dark:text-white" />
+          )}
+          <span>{moreLabel}</span>
+        </div>
+
+        <div ref={navItemsRef} className="flex min-w-0 flex-[4] items-center gap-1.5">
+          {items.map((item) => (
+            <div
+              key={item.label}
+              className="flex h-full flex-1 items-center justify-center rounded-[10px] border border-black/15 transition-colors hover:border-black/40 dark:border-white/20 dark:hover:border-white/50"
+            >
+              <a
+                href={item.href}
+                className="px-2 text-center text-sm text-neutral-600 transition-colors hover:text-black dark:text-neutral-400 dark:hover:text-white"
+              >
+                {item.label}
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default AwwwardsNav;
+// demo.tsx
+import { AwwwardsNav } from "@/components/ui/awwwards-nav"
+
+export function AwwwardsNavDemo() {
+  return (
+    <AwwwardsNav
+      items={[
+        { label: "Home", href: "#" },
+        { label: "Nominees", href: "#" },
+        { label: "Directory", href: "#" },
+        { label: "Collections", href: "#" },
+      ]}
+    />
+  )
+}`,
+        vibePrompt: "Build an \"Awwwards Nav\" — a glassmorphic bottom navigation pill (navbar) that sits fixed to the bottom center of the viewport and expands upward into a mega-menu when its 'More' button is tapped. Two files: awwwards-nav.tsx and demo.tsx.\nawwwards-nav.tsx: a single self-contained, prop-driven React + TypeScript + GSAP component. Top: \"use client\";. Imports: * as React, { useEffect, useRef, useState } from react, gsap from 'gsap', { List, X } from '@phosphor-icons/react', and { cn } from '@/lib/utils' (set up the path alias accordingly). Export interfaces: AwwwardsNavLink { label, href }, AwwwardsNavColumn { title, links: AwwwardsNavLink[] }, AwwwardsNavProps { items?: AwwwardsNavLink[] (inline links, default sample set Home/Nominees/Directory/Collections), columns?: AwwwardsNavColumn[] (default 4 columns: Awards, Inspiration, Directory, Market each with sample links), moreLabel?: string (default 'More'), onOpenChange?: (open: boolean) => void, className?: string }. Default constants DEFAULT_ITEMS and DEFAULT_COLUMNS. Constants COLLAPSED_HEIGHT=60 and EXPANDED_HEIGHT=370. Export function AwwwardsNav({ items, columns, moreLabel, onOpenChange, className }): uses refs navRef (HTMLElement), navTopRef, navItemsRef, navHomeRef; refs openRef/animationRef; state showClose (boolean). On mount (useEffect), a gsap.set baseline: nav height COLLAPSED_HEIGHT, navTop opacity 0 scale 0.9 display none, navItems opacity 1 display flex, navHome flexGrow 0; cleanup kills tweens. toggle() opens/closes: opening -> gsap.to nav height EXPANDED_HEIGHT (0.75s, ease power4.inOut), navItems opacity 0 then display none, navHome flexGrow 1 (0.2s) then setShowClose(true), navTop opacity 1 scale 1 (0.3s, delay 0.5) then display block; closing reverses (nav to COLLAPSED_HEIGHT with 0.2s delay, navTop fade out, navHome flexGrow 0 then setShowClose(false), navItems fade in). Markup: a <nav ref={navRef}> with className built from cn('fixed bottom-6 left-1/2 z-50 -translate-x-1/2','h-[60px] w-[min(680px,92vw)] overflow-hidden rounded-xl border backdrop-blur-xl','border-black/10 bg-white/70 dark:border-white/25 dark:bg-black/75', className). Inside: an expanded mega-menu div (ref navTopRef, absolute inset-x-0 top-0 bottom-[60px] hidden p-2.5) containing a flex row of 4 columns, each a flex-col with a small dot + column title and its links (each an <a>, column separators via border-l for ci>0); and a collapsed bottom row (absolute inset-x-0 bottom-0 flex h-[60px] gap-1.5 p-2.5) with the More button (ref navHomeRef, a role=button div with aria-expanded=showClose, aria-label, onClick toggle, onKeyDown Enter/Space, cn styling, icon flips between <X> and <List> from @phosphor-icons/react weight='light' based on showClose, plus {moreLabel} span) and the inline navItems container (ref navItemsRef, flex flex-[4] gap-1.5) mapping items to bordered rounded cells each containing an <a> link.\ndemo.tsx: import { AwwwardsNav } from '@/components/ui/awwwards-nav' and export function AwwwardsNavDemo() that returns <AwwwardsNav items={[{label:'Home'},{label:'Nominees'},{label:'Directory'},{label:'Collections'}]} /> (each with href '#'). No other deps needed beyond gsap, @phosphor-icons/react, and shadcn's cn utility.",
     },
 
 ];
