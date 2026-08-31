@@ -2295,11 +2295,31 @@ const PillNavbarPreview: React.FC = () => {
 };
 
 const ModernDarkNavbarPreview: React.FC = () => {
-    const Chevron = (
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="m6 9 6 6 6-6" />
-        </svg>
-    );
+    const [hoveredTrigger, setHoveredTrigger] = React.useState<number | null>(null);
+    const [hoveredCta, setHoveredCta] = React.useState(false);
+
+    const baseTrigger: React.CSSProperties = {
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 4,
+        padding: '6px 12px',
+        borderRadius: 6,
+        fontSize: 13,
+        fontWeight: 500,
+        cursor: 'pointer',
+        transition: 'background-color .18s ease, color .18s ease',
+        border: 'none',
+        backgroundColor: 'transparent',
+        fontFamily: '"Inter", system-ui, sans-serif',
+    };
+
+    const hoveredTriggerStyle: React.CSSProperties = {
+        ...baseTrigger,
+        backgroundColor: 'rgba(255,255,255,0.14)',
+        color: '#ffffff',
+    };
+
+    const triggers = ['Product', 'Company', 'Pricing'];
 
     return (
         <div style={{
@@ -2311,117 +2331,87 @@ const ModernDarkNavbarPreview: React.FC = () => {
             overflow: 'hidden',
             borderRadius: '24px',
         }}>
-            <style>{`
-                .md-dots {
-                    position: absolute;
-                    inset: 0;
-                    z-index: 0;
-                    background-image: radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2px);
-                    background-size: 12px 12px;
-                }
-                .md-wrap {
-                    position: absolute;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    z-index: 1;
-                    width: 92%;
-                    max-width: 720px;
-                }
-                .md-bar {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    height: 56px;
-                    width: 100%;
-                    border: 1px solid rgba(255,255,255,0.12);
-                    border-radius: 12px;
-                    padding: 0 16px;
-                    background: rgba(18,20,26,0.85);
-                    backdrop-filter: blur(12px);
-                    box-sizing: border-box;
-                    font-family: "Inter", system-ui, sans-serif;
-                }
-                .md-left { display: flex; align-items: center; gap: 8px; }
-                .md-logo-box { width: 26px; height: 26px; border-radius: 6px; background: #7c3aed; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px; transition: background-color 0.2s ease, transform 0.2s ease; }
-                .md-brand { font-family: ui-monospace, monospace; font-size: 16px; font-weight: 700; color: #f4f4f5; letter-spacing: 0.5px; }
-                .md-triggers { display: flex; align-items: center; gap: 4px; }
-                .md-trigger {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 4px;
-                    padding: 6px 12px;
-                    border-radius: 6px;
-                    color: #a1a1aa;
-                    font-size: 13px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: background-color 0.15s ease, color 0.15s ease;
-                }
-                .md-trigger:hover {
-                    background: rgba(255,255,255,0.08);
-                    color: #ffffff;
-                }
-                .md-trigger:hover svg {
-                    color: #ffffff;
-                }
-                .md-trigger svg { color: #71717a; margin-top: 1px; transition: color 0.15s ease; }
-                .md-right { display: flex; align-items: center; gap: 8px; }
-                .md-cta {
-                    background: #f4f4f5;
-                    color: #0a0a0b;
-                    border: none;
-                    border-radius: 6px;
-                    padding: 8px 14px;
-                    font-size: 13px;
-                    font-weight: 500;
-                    cursor: pointer;
-                    transition: background-color 0.15s ease, transform 0.15s ease;
-                }
-                .md-cta:hover {
-                    background: #ffffff;
-                    transform: translateY(-1px);
-                }
-                .md-menu {
-                    display: none;
-                    width: 34px;
-                    height: 34px;
-                    border-radius: 50%;
-                    border: none;
-                    background: transparent;
-                    color: #f4f4f5;
-                    cursor: pointer;
-                    align-items: center;
-                    justify-content: center;
-                    transition: background-color 0.15s ease;
-                }
-                .md-menu:hover {
-                    background: rgba(255,255,255,0.08);
-                }
-                .md-logo-box:hover {
-                    background: #8b5cf6;
-                }
-                .md-hide-lg { display: flex; }
-                @media (min-width: 1024px) { .md-hide-lg { display: none; } }
-            `}</style>
+            <div style={{
+                position: 'absolute', inset: 0, zIndex: 0,
+                backgroundImage: 'radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2px)',
+                backgroundSize: '12px 12px',
+            }} />
 
-            <div className="md-dots" />
-            <div className="md-wrap">
-                <div className="md-bar">
-                    <div className="md-left">
-                        <div className="md-logo-box">▦</div>
-                        <span className="md-brand">UI HUB</span>
+            <div style={{
+                position: 'absolute', top: '50%', left: '50%',
+                transform: 'translate(-50%, -50%)', zIndex: 1,
+                width: '92%', maxWidth: 720, borderRadius: 12,
+            }}>
+                <div style={{
+                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                    height: 56, width: '100%', border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: 12, padding: '0 16px', boxSizing: 'border-box',
+                    background: 'rgba(18,20,26,0.85)', backdropFilter: 'blur(12px)',
+                    fontFamily: '"Inter", system-ui, sans-serif',
+                }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <div style={{
+                            width: 26, height: 26, borderRadius: 6, background: '#7c3aed',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            color: '#fff', fontWeight: 800, fontSize: 14,
+                            transition: 'background-color .2s ease',
+                        }}>▦</div>
+                        <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 16, fontWeight: 700, color: '#f4f4f5', letterSpacing: 0.5 }}>UI HUB</span>
                     </div>
 
-                    <div className="md-triggers">
-                        <div className="md-trigger">Product {Chevron}</div>
-                        <div className="md-trigger">Company {Chevron}</div>
-                        <div className="md-trigger">Pricing</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                        {triggers.map((label, i) => {
+                            const hovered = hoveredTrigger === i;
+                            const isDropdown = label !== 'Pricing';
+                            return (
+                                <button
+                                    key={label}
+                                    type="button"
+                                    style={hovered ? hoveredTriggerStyle : baseTrigger}
+                                    onMouseEnter={() => setHoveredTrigger(i)}
+                                    onMouseLeave={() => setHoveredTrigger(null)}
+                                >
+                                    <span style={{ lineHeight: 1 }}>{label}</span>
+                                    {isDropdown && (
+                                        <svg
+                                            width="12" height="12" viewBox="0 0 24 24" fill="none"
+                                            stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                            style={{
+                                                marginTop: 1,
+                                                color: hovered ? '#ffffff' : '#71717a',
+                                                transform: hovered ? 'rotate(180deg)' : 'rotate(0deg)',
+                                                transition: 'transform .3s ease, color .18s ease',
+                                            }}
+                                        >
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    )}
+                                </button>
+                            );
+                        })}
                     </div>
 
-                    <div className="md-right">
-                        <button className="md-cta" type="button">Get Started</button>
-                        <div className="md-menu md-hide-lg">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <button
+                            type="button"
+                            onMouseEnter={() => setHoveredCta(true)}
+                            onMouseLeave={() => setHoveredCta(false)}
+                            style={{
+                                background: hoveredCta ? '#ffffff' : '#f4f4f5',
+                                color: '#0a0a0b', border: 'none', borderRadius: 6,
+                                padding: '8px 14px', fontSize: 13, fontWeight: 500, cursor: 'pointer',
+                                transform: hoveredCta ? 'translateY(-1px)' : 'translateY(0px)',
+                                transition: 'background-color .15s ease, transform .15s ease',
+                                fontFamily: '"Inter", system-ui, sans-serif',
+                            }}
+                        >
+                            Get Started
+                        </button>
+                        <div style={{
+                            display: 'flex', width: 34, height: 34, borderRadius: '50%',
+                            border: 'none', background: 'transparent', color: '#f4f4f5',
+                            cursor: 'pointer', alignItems: 'center', justifyContent: 'center',
+                        }}>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
                         </div>
                     </div>
@@ -6774,7 +6764,7 @@ export default SuperMario;`,
     },
     {
         id: "cinematic-navbar",
-        title: "Cinematic Navbar",
+        title: "Cinematic Nav",
         category: "navbar",
         isPremium: false,
         addedAt: "2026-08-31",
@@ -7043,7 +7033,7 @@ export default SuperMario;`,
     },
     {
         id: "floating-dark-capsule",
-        title: "Floating Dark Capsule",
+        title: "Floating Dark Capsule nav",
         category: "navbar",
         isPremium: false,
         addedAt: "2026-08-31",
@@ -7107,7 +7097,7 @@ export default Navbar;`,
     },
     {
         id: "minimal-ai-capsule",
-        title: "Minimal AI Capsule",
+        title: "Minimal AI Capsule nav",
         category: "navbar",
         isPremium: false,
         addedAt: "2026-08-31",
@@ -7346,7 +7336,7 @@ export default function Navbar() {
     },
     {
         id: "pill-navbar",
-        title: "Pill Navbar",
+        title: "Pill Navbar nav",
         category: "navbar",
         isPremium: false,
         addedAt: "2026-08-31",
@@ -7950,7 +7940,7 @@ export default PillNav;
     },
     {
         id: "modern-dark",
-        title: "Modern Dark",
+        title: "Modern Dark nav",
         category: "navbar",
         isPremium: false,
         addedAt: "2026-08-31",
