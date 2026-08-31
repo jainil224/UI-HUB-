@@ -8,6 +8,7 @@ import {
   listCommunityComponents,
   getCommunityComponent,
 } from '../services/favoritesService.js';
+import { logActivity } from '../services/activityLogService.js';
 
 const router = express.Router();
 
@@ -39,6 +40,13 @@ router.post('/favorites', verifyToken, async (req, res) => {
     if (!result.ok && result.overLimit) {
       return res.status(403).json({ error: 'VAULT_LIMIT', message: 'Free members can save up to 5 components. Upgrade to Pro for unlimited storage.' });
     }
+    logActivity({
+      type: 'favorite.added',
+      userId,
+      email: req.user?.email,
+      level: 'info',
+      metadata: { componentId: id, title, category },
+    });
     res.status(201).json({ ok: true, favorites: await listUserFavorites(userId) });
   } catch (error) {
     console.error('[Favorites] Add error:', error);
@@ -52,6 +60,13 @@ router.delete('/favorites/:componentId', verifyToken, async (req, res) => {
     const userId = req.user?.uid || '';
     const { componentId } = req.params;
     await removeFavorite(userId, componentId);
+    logActivity({
+      type: 'favorite.removed',
+      userId,
+      email: req.user?.email,
+      level: 'info',
+      metadata: { componentId },
+    });
     res.json({ ok: true, favorites: await listUserFavorites(userId) });
   } catch (error) {
     console.error('[Favorites] Remove error:', error);

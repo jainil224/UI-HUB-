@@ -1276,4 +1276,87 @@ adminRouter.get('/export', requireAdmin, async (req: Request, res: Response) => 
   return res.json({ type, range, stats });
 });
 
+/**
+ * GET /api/admin/mcp/logs
+ * Unified log viewer querying MongoDB activity_logs and mcp_analytics.
+ */
+adminRouter.get('/logs', requireAdmin, async (req: Request, res: Response) => {
+  const page = Math.max(1, parseInt(String(req.query.page || '1'), 10));
+  const pageSize = Math.min(100, Math.max(5, parseInt(String(req.query.pageSize || '25'), 10)));
+  const eventFilter = String(req.query.event || '').trim();
+  const search = String(req.query.search || '').trim();
+  const statusFilter = String(req.query.status || '').trim();
+  const resultFilter = String(req.query.result || '').trim();
+
+  try {
+    const actCol = await mongoCollection('activity_logs');
+    const filter: any = {};
+
+    if (eventFilter) {
+      filter.type = eventFilter;
+    }
+
+    if (resultFilter === 'error') {
+      filter.level = { $in: ['error', 'warn'] };
+    } else if (resultFilter === 'success') {
+      filter.level = { $nin: ['error', 'warn'] };
+    }
+
+    if (search) {
+      filter.$or = [
+        { email: { $regex: search, $options: 'i' } },
+        { type: { $regex: search, $options: 'i' } },
+        { userId: { $regex: search, $options: 'i' } },
+        { 'metadata.componentId': { $regex: search, $options: 'i' } },
+        { 'metadata.displayName': { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const skip = (page - 1) * pageSize;
+    const [total, rawLogs] = await Promise.all([
+      actCol.countDocuments(filter),
+      actCol.find(filter).sort({ createdAt: -1 }).skip(skip).limit(pageSize).toArray(),
+    ]);
+
+    const events = rawLogs.map((doc: any) => {
+      const isErr = doc.level === 'error' || doc.level === 'warn';
+      const statusCode = isErr ? 500 : 200;
+      const ts = doc.createdAt instanceof Date ? doc.createdAt.getTime() : (typeof doc.createdAt === 'number' ? doc.createdAt : Date.now());
+
+      return {
+        event: doc.type || 'unknown',
+        timestamp: ts,
+        userId: doc.email || doc.userId || 'anonymous',
+        keyPrefix: doc.metadata?.provider || 'web',
+        tier: doc.metadata?.tier || 'free',
+        componentId: doc.metadata?.componentId,
+        tool: doc.metadata?.system || doc.metadata?.tool || doc.type,
+        query: doc.metadata?.query || doc.metadata?.displayName || doc.email,
+        success: !isErr,
+        errorCode: isErr ? doc.metadata?.error || 'ERROR' : undefined,
+        statusCode,
+        status: statusCode,
+        result: isErr ? 'error' : 'success',
+      };
+    });
+
+    const now = Date.now();
+    return res.json({
+      total,
+      page,
+      pageSize,
+      range: {
+        from: now - 30 * 86400000,
+        to: now,
+        fromKey: new Date(now - 30 * 86400000).toISOString().slice(0, 10),
+        toKey: new Date(now).toISOString().slice(0, 10),
+      },
+      events,
+    });
+  } catch (err: any) {
+    console.error('[AdminLogs] Failed to fetch logs:', err?.message);
+    return res.status(500).json({ error: 'Failed to retrieve logs' });
+  }
+});
+
 export { adminRouter, ADMIN_BASE };

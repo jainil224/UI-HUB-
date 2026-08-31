@@ -3,6 +3,8 @@ import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
 import { verifyToken } from '../middleware/auth.js';
 import { checkProStatus, checkEliteStatus, evaluateAiTrial, MAX_FREE_AI_TRIALS } from '../services/userService.js';
 import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail } from '../utils/sendEmail.js';
+import { getCollection } from '../services/mongoService.js';
+import { logActivity } from '../services/activityLogService.js';
 
 const router = express.Router();
 
@@ -264,6 +266,64 @@ router.post('/sync', verifyToken, async (req, res) => {
             console.log(`[SYNC] Local dev mode without Firestore credentials — user ${email} (${uid}) synced in-memory.`);
         }
 
+        // Persist user and active session log directly to MongoDB
+        try {
+            const usersCol = await getCollection('users');
+            const userEmailKey = resolvedEmail.toLowerCase();
+            const existingMongoUser = await usersCol.findOne({ $or: [{ _id: userEmailKey }, { email: userEmailKey }, { uid }] });
+            const isNewUser = !existingMongoUser;
+            const now = new Date();
+
+            if (isNewUser) {
+                await usersCol.updateOne(
+                    { _id: userEmailKey },
+                    {
+                        $set: {
+                            _id: userEmailKey,
+                            email: userEmailKey,
+                            uid,
+                            displayName: resolvedName,
+                            planTier: 'free',
+                            status: 'FREE',
+                            createdAt: now,
+                            lastLogin: now,
+                            lastActive: now,
+                            updatedAt: now,
+                        }
+                    },
+                    { upsert: true }
+                );
+            } else {
+                await usersCol.updateOne(
+                    { _id: existingMongoUser._id || userEmailKey },
+                    {
+                        $set: {
+                            displayName: resolvedName || existingMongoUser.displayName,
+                            lastLogin: now,
+                            lastActive: now,
+                            updatedAt: now,
+                        }
+                    }
+                );
+            }
+
+            // Log user login / signup activity to MongoDB activity_logs
+            await logActivity({
+                type: isNewUser ? 'user.created' : 'user.login',
+                userId: uid,
+                email: resolvedEmail,
+                level: 'info',
+                metadata: {
+                    displayName: resolvedName,
+                    ip: req.ip || req.headers['x-forwarded-for'] || '',
+                    userAgent: req.headers['user-agent'] || '',
+                    source: 'web_auth_sync'
+                }
+            });
+        } catch (mongoSyncErr) {
+            console.error('[SYNC] Error syncing user to MongoDB:', mongoSyncErr.message);
+        }
+
         res.json({ 
             success: true, 
             message: 'User sync completed',
@@ -356,6 +416,39 @@ router.post('/activate-free', verifyToken, async (req, res) => {
             console.log(`[ActivateFree] Dev mode without Firestore credentials — user ${email} activated FREE.`);
         }
 
+        // Persist to MongoDB users and activity_logs
+        try {
+            const usersCol = await getCollection('users');
+            const userEmailKey = (email || '').toLowerCase();
+            const now = new Date();
+            await usersCol.updateOne(
+                { $or: [{ _id: userEmailKey }, { email: userEmailKey }, { uid }] },
+                {
+                    $set: {
+                        planTier: 'free',
+                        status: 'FREE',
+                        freeActivatedAt: now,
+                        lastActive: now,
+                        updatedAt: now,
+                    },
+                },
+                { upsert: true }
+            );
+
+            await logActivity({
+                type: 'user.plan_activated',
+                userId: uid,
+                email,
+                level: 'success',
+                metadata: {
+                    planTier: 'free',
+                    source: 'activate_free_route',
+                },
+            });
+        } catch (mongoErr) {
+            console.error('[ActivateFree] MongoDB update error:', mongoErr.message);
+        }
+
         res.json({
             success: true,
             planTier: 'free',
@@ -376,6 +469,19 @@ router.get('/status', verifyToken, async (req, res) => {
     try {
         const email = req.user.email;
         const uid = req.user.uid;
+
+        // Touch user lastActive in MongoDB
+        if (email || uid) {
+            try {
+                const usersCol = await getCollection('users');
+                const userEmailKey = (email || '').toLowerCase();
+                await usersCol.updateOne(
+                    userEmailKey ? { $or: [{ _id: userEmailKey }, { email: userEmailKey }] } : { $or: [{ _id: uid }, { uid }] },
+                    { $set: { lastActive: new Date() } }
+                );
+            } catch (_) {}
+        }
+
         // Elite users are folded into Pro so the frontend only needs Free/Pro.
         const isPro = await checkProStatus(email) || await checkEliteStatus(email);
 
@@ -407,6 +513,47 @@ router.get('/status', verifyToken, async (req, res) => {
     } catch (error) {
         console.error('Error in user status route:', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Middleware for optional token verification on activity route
+const optionalVerifyToken = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return next();
+    }
+    return verifyToken(req, res, () => next());
+};
+
+/**
+ * @route POST /api/v1/users/activity
+ * @desc Track user actions (component views, code copy, prompt generation, heartbeat) in MongoDB activity_logs
+ * @access Public / Private (attaches user if authenticated)
+ */
+router.post('/activity', optionalVerifyToken, async (req, res) => {
+    try {
+        const { type = 'user.active', metadata = {}, level = 'info' } = req.body || {};
+        const userId = req.user?.uid || req.body?.userId || null;
+        const email = req.user?.email || req.body?.email || null;
+
+        const safeMetadata = {
+            ...metadata,
+            ip: req.ip || req.headers['x-forwarded-for'] || '',
+            userAgent: req.headers['user-agent'] || '',
+        };
+
+        await logActivity({
+            type,
+            userId,
+            email,
+            level,
+            metadata: safeMetadata,
+        });
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('[UserActivity] Error logging user activity:', err.message);
+        res.status(500).json({ success: false, error: 'Failed to record activity' });
     }
 });
 

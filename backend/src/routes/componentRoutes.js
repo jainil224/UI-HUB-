@@ -2,6 +2,7 @@ import express from 'express';
 import { verifyToken } from '../middleware/auth.js';
 import { generateVibePrompt, getComponentSource } from '../services/promptService.js';
 import { checkProStatus, checkEliteStatus, evaluateAiTrial, recordPremiumTrialUse, PREMIUM_AI_TOOLS } from '../services/userService.js';
+import { logActivity } from '../services/activityLogService.js';
 
 const router = express.Router();
 
@@ -82,6 +83,13 @@ const enforcePremiumTrial = async (req, res, system) => {
   }
 
   const prompt = await generateVibePrompt(id, system);
+  logActivity({
+    type: 'ai.prompt_generated',
+    userId: user?.uid,
+    email: user?.email,
+    level: 'info',
+    metadata: { componentId: id, system, tier: isPro ? 'pro' : 'trial' },
+  });
   return res.json({
     prompt,
     consumed: true,
@@ -101,6 +109,13 @@ router.get('/:id/prompt/:system', optionalVerifyToken, async (req, res) => {
     }
 
     const prompt = await generateVibePrompt(id, system);
+    logActivity({
+      type: 'ai.prompt_generated',
+      userId: req.user?.uid,
+      email: req.user?.email,
+      level: 'info',
+      metadata: { componentId: id, system, tool: 'free' },
+    });
     res.json({ prompt });
   } catch (error) {
     console.error(`Error generating prompt for ${id}:`, error);
@@ -120,6 +135,13 @@ router.get('/:id/source', verifyToken, async (req, res) => {
     if (!source) {
       return res.status(404).json({ error: 'Source code not found' });
     }
+    logActivity({
+      type: 'component.source_fetch',
+      userId: req.user?.uid,
+      email: req.user?.email,
+      level: 'info',
+      metadata: { componentId: id },
+    });
     res.json({ source });
   } catch (error) {
     console.error(`Error getting source for ${id}:`, error);

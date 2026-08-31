@@ -21,6 +21,7 @@ import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMeta
 import Toast from '../../../../components/ui/Toast';
 import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
+import { logUserActivity } from '../../../../utils/activityLogger';
 
 
 const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
@@ -787,6 +788,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     React.useEffect(() => {
         setResetKey(0);
         setFetchedSource('');
+        if (item?.id) {
+            logUserActivity({
+                type: 'component.view',
+                metadata: { componentId: item.id, title: item.title, category: item.category }
+            });
+        }
     }, [item.id]);
 
     React.useEffect(() => {
@@ -967,6 +974,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         }
 
         await downloadComponentZip(item.id, item.title, assets, reactCode, htmlCode);
+        logUserActivity({
+            type: 'component.download_zip',
+            metadata: { componentId: item.id, title: item.title, category: item.category }
+        });
     };
 
     const handleCopy = (text: string, id: string) => {
@@ -976,6 +987,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         setToastMessage(`CODE COPIED`);
         setShowToast(true);
         setTimeout(() => setCopied(null), 2000);
+        logUserActivity({
+            type: 'component.copy_code',
+            metadata: { componentId: item.id, title: item.title, category: item.category, codeType: id }
+        });
     };
 
     const sourceCode = React.useMemo(
@@ -1003,6 +1018,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         URL.revokeObjectURL(url);
         setToastMessage('SOURCE DOWNLOADED');
         setShowToast(true);
+        logUserActivity({
+            type: 'component.download_source',
+            metadata: { componentId: item.id, title: item.title, category: item.category }
+        });
     };
 
     const componentConfig = React.useMemo(() => COMPONENT_CONFIG[item.id] || {

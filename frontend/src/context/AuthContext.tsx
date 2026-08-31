@@ -3,6 +3,7 @@ import { onAuthStateChanged, User, getRedirectResult } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { getApiBaseUrl } from '../utils/apiConfig';
 import { syncUserWithBackend } from '../utils/syncUser';
+import { logUserActivity } from '../utils/activityLogger';
 import WelcomeNotifications from '../components/ui/WelcomeNotifications';
 
 let syncedThisSession = false;
@@ -219,6 +220,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             if (now - lastRefreshed < refreshBudgetMs) return;
             lastRefreshed = now;
             refreshProStatus();
+            logUserActivity({ type: 'user.active', metadata: { trigger: 'tab_focus' } });
         };
         window.addEventListener('focus', refreshIfStale);
         document.addEventListener('visibilitychange', refreshIfStale);
