@@ -339,6 +339,14 @@ export const fetchVibePrompt = async (
     token?: string,
     item?: any
 ): Promise<PromptFetchResult> => {
+    // Locally-defined components have no backend vault entry, so the backend
+    // returns a generic code-less prompt. Force the local source (which embeds
+    // the exact component code) for those components.
+    const LOCAL_ONLY_COMPONENTS = ['cinematic-navbar'];
+    if (LOCAL_ONLY_COMPONENTS.includes(componentId)) {
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item) };
+    }
+
     try {
         const headers: Record<string, string> = {};
         if (token) {
