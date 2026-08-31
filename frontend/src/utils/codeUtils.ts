@@ -1,6 +1,7 @@
 import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources';
 import { EMBEDDED_SOURCE_CODE } from '../data/embeddedSourceCode';
 import { CARD_CASCADE_SOURCE } from '../data/cardCascadeSource';
+import { CINEMATIC_NAVBAR_SOURCE } from '../data/cinematicNavbarSource';
 
 const UI_HUB_DISPLAY_NAME = (id: string) =>
     id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
@@ -52,6 +53,12 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
   // pre-embedded production source (mirrors the backend resolveSourceCode).
   if (isTS && isTailwind && id === 'card-cascade' && CARD_CASCADE_SOURCE) {
     return withUiHubBranding(CARD_CASCADE_SOURCE, id);
+  }
+
+  // Cinematic Navbar is a self-contained HTML/CSS/JS file (not a React component),
+  // so always return the full source regardless of the requested lang/styling.
+  if (id === 'cinematic-navbar') {
+    return withUiHubBranding(CINEMATIC_NAVBAR_SOURCE, id, true);
   }
 
   const vanillaBoilerplate = (html: string, css: string, js: string) => `

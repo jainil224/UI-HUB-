@@ -993,10 +993,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         });
     };
 
-    const sourceCode = React.useMemo(
-        () => fetchedSource ? withUiHubBranding(fetchedSource, item.id) : getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }),
-        [fetchedSource, item.id]
-    );
+    const sourceCode = React.useMemo(() => {
+        const hasValidSource = fetchedSource && !fetchedSource.includes('Failed to load source code');
+        return hasValidSource
+            ? withUiHubBranding(fetchedSource, item.id)
+            : getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' });
+    }, [fetchedSource, item.id]);
     const sourceFileName = `${item.title.replace(/\s+/g, '')}.tsx`;
     const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);
 
