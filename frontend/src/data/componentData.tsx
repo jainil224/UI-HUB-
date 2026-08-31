@@ -1888,10 +1888,70 @@ const ThreeDSliderPreview: React.FC = () => {
 
 
 
+const CinematicNavbarPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            background: '#000000',
+            overflow: 'hidden',
+            borderRadius: '24px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 0,
+        }}>
+            <style>{`
+                .cin-nav {
+                    display: grid;
+                    grid-template-columns: 1fr auto 1fr;
+                    align-items: center;
+                    padding: 22px 40px 10px;
+                    background: radial-gradient(120% 220% at 50% -60%, #232323 0%, #101010 45%, #000000 100%);
+                    border-bottom: 1px solid rgba(255,255,255,0.06);
+                }
+                .cin-logo { display: inline-flex; align-items: center; gap: 9px; justify-self: start; font-size: 15.5px; font-weight: 600; letter-spacing: -0.03em; color: #fff; text-decoration: none; }
+                .cin-logo svg { width: 22px; height: 22px; }
+                .cin-suffix { font-weight: 400; }
+                .cin-nav-links { display: flex; align-items: center; gap: 8px; justify-self: center; }
+                .cin-pill { height: 40px; padding: 0 18px; border-radius: 7px; overflow: hidden; position: relative; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,0.14); background: #232323; color: #e6e6e6; font-size: 14px; font-weight: 400; letter-spacing: -0.01em; white-space: nowrap; text-decoration: none; transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease; }
+                .cin-pill::before { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.16) 50%, transparent 70%); transform: translateX(-120%); transition: transform 0.6s ease; }
+                .cin-pill:hover::before { transform: translateX(120%); }
+                .cin-pill:hover { border-color: rgba(255,255,255,0.28); background: #2e2e2e; box-shadow: 0 0 18px rgba(200,210,230,0.12); }
+                .cin-cta { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; border-radius: 6px; font-size: 13.5px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; position: relative; overflow: hidden; justify-self: end; background: linear-gradient(180deg, #ffffff 0%, #e7e7e7 48%, #cfcfcf 100%); color: #111; border: 1px solid #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.95); text-decoration: none; }
+                .cin-cta::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.45) 48%, transparent 76%); transform: translateX(-130%); transition: transform 0.65s ease; }
+                .cin-cta:hover::after { transform: translateX(130%); }
+                .cin-fill { flex: 1; background: #000; }
+            `}</style>
+            <header className="cin-nav">
+                <a className="cin-logo" href="#top">
+                    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <g transform="rotate(-30 12 12)">
+                            <circle cx="7.3" cy="3.2" r="1.45"/>
+                            <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+                            <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+                            <circle cx="16.7" cy="20.8" r="1.45"/>
+                        </g>
+                    </svg>
+                    Vesper<span className="cin-suffix">.ai</span>
+                </a>
+                <nav className="cin-nav-links">
+                    <a className="cin-pill" href="#benefits">Benefits</a>
+                    <a className="cin-pill" href="#how-it-works">How It Works</a>
+                    <a className="cin-pill" href="#faqs">FAQs</a>
+                </nav>
+                <a className="cin-cta" href="#start">Start for Free</a>
+            </header>
+            <div className="cin-fill" />
+        </div>
+    );
+};
+
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "loader";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "loader" | "navbar";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -6228,5 +6288,274 @@ export const SuperMario: React.FC = () => {
 
 export default SuperMario;`,
         vibePrompt: "Create a 'Super Mario' hover tooltip in React + TypeScript with pure CSS (no dependencies). The mark is a NES-style pixel scene inspired by Super Mario: two brick tiles frame a glassy '?' block, and hovering the block's invisible hit area launches a 1-up mushroom out of the box. Everything is drawn with 2x2px divs whose art comes entirely from huge comma-separated box-shadow stacks (each shadow is an Xpx Ypx 0px #color pixel), replicating the classic block/brick/mushroom pixel art pixel-for-pixel. Sprites: .sm-container renders the 34x34 '?' block (border #ce3100, face #ff9c31, black hinges and rivets at the seams) and is position absolute translateX(-30px) z-index 3; .sm-brick draws the 34x34 brick tile (#cc3300 fill, #ff9999 highlight top row, #000 mortar/outline) with .sm-brick.one translateX(-60px) and .sm-brick.two at neutral so the two tiles flank the block; .sm-mush draws the 34x34 1-up mushroom (#fc9838 cap with #d82800 gills and spots, #fff eyes/mushroom spots on the lower stem rows) hidden below the block (opacity 0, z-index -1). Interaction: .sm-box is an invisible 34x34 absolute hit-zone (z-index 3) sitting over the '?' block; on .sm-box:hover the adjacent .sm-mush is revealed (opacity 1) and runs sm-mush 0.5s linear forwards, which scales the mushroom 0.8 -> 1.1 while translating it -80px (pop up through the brick) and settling at -35px above the block, frozen by fill-mode forwards until the cursor leaves. All keyframes/classes prefixed sm-, drawn on a dark radial backdrop."
+    },
+    {
+        id: "cinematic-navbar",
+        title: "Cinematic Navbar",
+        category: "navbar",
+        isPremium: false,
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        description: "A dark cinematic navbar with a liquid-glass logo, sheen-sweep navigation pills, and a gradient call-to-action button. Fully responsive with a mobile burger menu.",
+        preview: () => (<CinematicNavbarPreview />),
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UI HUB — Cinematic Navbar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#000000;
+    --border: rgba(255,255,255,0.16);
+    --logo:15.5px;
+    --logo-mark:22px;
+    --nav:14px;
+    --nav-h:40px;
+    --btn:13.5px;
+    --btn-h:40px;
+    --header-y:22px;
+    --header-x:40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family:"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #000;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Grain texture */
+  .grain{
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Header */
+  .header{
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items:center;
+    padding: var(--header-y) var(--header-x) 10px;
+    z-index:50;
+    position:relative;
+    background: radial-gradient(120% 220% at 50% -60%, #232323 0%, #101010 45%, #000000 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* UI HUB Logo */
+  .logo{ display:inline-flex; align-items:center; gap:9px; justify-self:start; font-size: var(--logo); font-weight:600; letter-spacing:-0.03em; color:#fff; }
+  .logo svg{ width:var(--logo-mark); height:var(--logo-mark); }
+  .logo-suffix{ font-weight:400; }
+
+  /* Nav */
+  .site-nav{ display:flex; align-items:center; gap:8px; justify-self:center; }
+  .nav-pill{
+    height: var(--nav-h);
+    padding: 0 18px;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+    display:inline-flex;
+    align-items:center;
+    border: 1px solid rgba(255,255,255,0.14);
+    background: #232323;
+    color: #e6e6e6;
+    font-size: var(--nav);
+    font-weight:400;
+    letter-spacing:-0.01em;
+    white-space:nowrap;
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+  }
+  .nav-pill::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.16) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform 0.6s ease;
+  }
+  .nav-pill:hover::before{ transform: translateX(120%); }
+  .nav-pill:hover{
+    border-color: rgba(255,255,255,0.28);
+    background: #2e2e2e;
+    box-shadow: 0 0 18px rgba(200,210,230,0.12);
+  }
+
+  /* CTA Button (liquid-glass language) */
+  .btn{
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--btn-h);
+    padding: 0 16px;
+    border-radius: 6px;
+    font-size: var(--btn);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
+  }
+  .btn::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.45) 48%, transparent 76%);
+    transform: translateX(-130%);
+    transition: transform 0.65s ease;
+  }
+  .btn:hover::after{ transform: translateX(130%); }
+
+  .btn-solid{
+    background: linear-gradient(180deg, #ffffff 0%, #e7e7e7 48%, #cfcfcf 100%);
+    color:#111;
+    border:1px solid #fff;
+    justify-self:end;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.95);
+  }
+  .btn-solid:hover{
+    background: linear-gradient(180deg, #fff 0%, #f3f6ff 42%, #d5def2 100%);
+    border-color:#f2f6ff;
+    box-shadow: inset 0 1px 0 #fff, 0 0 22px rgba(186,208,255,0.35), 0 8px 18px rgba(255,255,255,0.12);
+  }
+
+  /* Burger (mobile) */
+  .burger{
+    display:none;
+    width:42px;
+    height:42px;
+    border-radius:6px;
+    border:1px solid var(--border);
+    background: rgba(8,8,8,0.55);
+    z-index:60;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    position:relative;
+    flex-direction:column;
+    gap:5px;
+    transition: border-color 0.25s ease, background 0.25s ease;
+  }
+  .burger .bar{ width:16px; height:1.5px; background:#fff; border-radius:1px; transition: transform 0.25s ease, opacity 0.2s ease; }
+  body.menu-open .burger .bar:nth-child(1){ transform: translateY(6.5px) rotate(45deg); }
+  body.menu-open .burger .bar:nth-child(2){ opacity: 0; }
+  body.menu-open .burger .bar:nth-child(3){ transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* Full-screen mobile menu */
+  .menu-backdrop{
+    display:block;
+    position:fixed;
+    inset:0;
+    z-index:40;
+    background: rgba(8,8,8,0.42);
+    opacity:0;
+    visibility:hidden;
+    transition: opacity 0.28s ease, backdrop-filter 0.28s ease;
+  }
+  body.menu-open .menu-backdrop{ opacity:1; visibility:visible; backdrop-filter: blur(24px); }
+  body.menu-open{ overflow:hidden; }
+
+  @media (max-width: 900px){
+    .burger{ display:flex; }
+    .header{ grid-template-columns: 1fr auto auto; gap:8px; padding: 16px 16px 10px; }
+    .logo, .burger{ z-index:80; position:relative; }
+    .btn-solid{ display:none; }
+    .site-nav{
+      display: none;
+      position: fixed;
+      inset:0;
+      z-index:45;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:12px;
+      padding: 96px 22px 32px;
+    }
+    body.menu-open .site-nav{ display:flex; }
+    .nav-pill{ width:auto; min-width:200px; height:56px; font-size:19px; border-radius:10px; justify-content:center; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="menu-backdrop" id="menuBackdrop"></div>
+
+<header class="header">
+  <a class="logo" href="#top" aria-label="Vesper.ai">
+    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <g transform="rotate(-30 12 12)">
+        <circle cx="7.3" cy="3.2" r="1.45"/>
+        <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+        <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
+        <circle cx="16.7" cy="20.8" r="1.45"/>
+      </g>
+    </svg>
+    Vesper<span class="logo-suffix">.ai</span>
+  </a>
+
+  <nav class="site-nav" id="site-nav" aria-label="Primary">
+    <a class="nav-pill" href="#benefits">Benefits</a>
+    <a class="nav-pill" href="#how-it-works">How It Works</a>
+    <a class="nav-pill" href="#faqs">FAQs</a>
+    <a class="nav-pill" href="#pricing">Pricing</a>
+  </nav>
+
+  <a class="btn btn-solid" href="#start">Start for Free</a>
+
+  <button class="burger" id="burger" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu">
+    <span class="bar"></span>
+    <span class="bar"></span>
+    <span class="bar"></span>
+  </button>
+</header>
+
+<script>
+(function(){
+  var burger = document.getElementById('burger');
+  var backdrop = document.getElementById('menuBackdrop');
+  var navLinks = document.querySelectorAll('#site-nav a');
+
+  function closeMenu(){
+    document.body.classList.remove('menu-open');
+    burger.setAttribute('aria-expanded', 'false');
+    burger.setAttribute('aria-label', 'Open menu');
+  }
+  function openMenu(){
+    document.body.classList.add('menu-open');
+    burger.setAttribute('aria-expanded', 'true');
+    burger.setAttribute('aria-label', 'Close menu');
+  }
+
+  burger.addEventListener('click', function(){
+    document.body.classList.contains('menu-open') ? closeMenu() : openMenu();
+  });
+
+  navLinks.forEach(function(link){ link.addEventListener('click', closeMenu); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  window.addEventListener('resize', function(){
+    if (window.matchMedia('(min-width: 901px)').matches) closeMenu();
+  });
+})();
+</script>
+</body>
+</html>`,
+        vibePrompt: "Create a 'Cinematic Navbar' for the Vesper.ai brand in HTML/CSS/JS with zero external dependencies. Design language: a black cinematic site header. Layout is a 3-column grid (1fr auto 1fr) so the logo sits left, centered nav, and a CTA button right. Logo: a white 'Vesper.ai' wordmark with a unique mark — an SVG shape of a vertical bar/capsule with end dots (circle cx 7.3 cy 3.2 r 1.45, rounded rect 5.5 4.7 3.6x14.6 rx1.8, and a second rounded rect 14.9 4.7 3.6x14.6 rx1.8, circle cx 16.7 cy 20.8 r 1.45) inside a <g transform=rotate(-30 12 12)>, filled currentColor, sized 22px; 'Vesper' in 600 weight followed by '.ai' in 400 weight, letter-spacing -0.03em. Background: radial-gradient(120% 220% at 50% -60%, #232323 0%, #101010 45%, #000000 100%) with a subtle white bottom border, plus an optional film-grain overlay (.grain) using a feTurbulence SVG data-URI at opacity 0.5, mix-blend-mode screen. Nav links: 'nav-pill' ghosts — #232323 fill, 1px rgba(255,255,255,0.14) border, 7px radius, height 40px, font 14px #e6e6e6; a :before sheen sweeps across on hover (linear-gradient 115deg transparent->rgba(255,255,255,0.16)->transparent, translateX -120% -> 120%) and the pill lights up (bg #2e2e2e, border 0.28 alpha, glow box-shadow). CTA: '.btn btn-solid' — white-to-#cfcfcf vertical gradient, #111 text, inset top highlight; a :after diagonal light sweep animates on hover. Mobile (<900px): a 3-bar burger toggles a full-screen menu; body gets .menu-open which morphs links to an X; nav links become large centered pills; the CTA hides; Escape and resize >900px close it. Shared liquid-glass motion: all sheens/glows transition 0.35s ease, reduced-motion disables them. Keep everything responsive with CSS variables for sizing."
     }
 ];

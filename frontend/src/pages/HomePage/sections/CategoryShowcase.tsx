@@ -52,6 +52,12 @@ const cards = [
         desc: 'Backdrops that respond to every move your visitors make.',
         query: 'interactive-background',
     },
+    {
+        title: 'Navbars',
+        eyebrow: 'SET THE STAGE',
+        desc: 'Cinematic headers and navigation bars that anchor the experience.',
+        query: 'navbar',
+    },
 ];
 
 // Hand-laid collage tilts (degrees)
