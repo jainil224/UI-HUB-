@@ -2421,118 +2421,269 @@ const ModernDarkNavbarPreview: React.FC = () => {
     );
 };
 
-const AwwwardsNavPreview: React.FC = () => {
-    const [expanded, setExpanded] = React.useState(false);
-    const linkStyle: React.CSSProperties = {
-        textAlign: 'center', fontSize: '12.5px', color: '#525252',
-        textDecoration: 'none', fontFamily: '"Inter", system-ui, sans-serif',
-    };
-    const items = ['Home', 'Nominees', 'Directory', 'Collections'];
-    const columns = [
-        { title: 'Awards', links: ['Winners', 'Site of the Day', 'Nominees'] },
-        { title: 'Inspiration', links: ['Collections', 'Elements', 'Resources'] },
-        { title: 'Directory', links: ['Professionals', 'Agencies', 'Freelancers'] },
-        { title: 'Market', links: ['Jobs', 'New Events', 'Products'] },
-    ];
-    const panelH = expanded ? 190 : 0;
+const SplitNavigationNavPreview: React.FC = () => {
+    const [menuOpen, setMenuOpen] = React.useState(false);
+    const links = ['Platform', 'Solutions', 'Company', 'Pricing'];
+
+    const chevronLogo = (
+        <svg width="34" height="28" viewBox="0 0 42 34" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="12,0 30,0 33.2,3.2 15.2,3.2" />
+            <polygon points="14.6,5.6 32.6,5.6 35.8,8.8 17.8,8.8" />
+            <polygon points="17.2,11.2 35.2,11.2 38.4,14.4 20.4,14.4" />
+            <polygon points="3.2,16.8 21.2,16.8 24.4,20 6.4,20" />
+            <polygon points="5.8,22.4 23.8,22.4 27,25.6 9,25.6" />
+            <polygon points="8.4,28 26.4,28 29.6,31.2 11.6,31.2" />
+        </svg>
+    );
+
+    const arrowIcon = (
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="14" height="14">
+            <path
+                d="M4 10h10.2M10.4 5.6 15.2 10l-4.8 4.4"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+        </svg>
+    );
 
     return (
         <div style={{
-            position: 'relative', width: '100%', height: '100%', minHeight: '300px',
-            overflow: 'hidden', borderRadius: '24px',
-            background: 'radial-gradient(120% 120% at 50% 0%, #fafafa 0%, #ececec 100%)',
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: '280px',
+            background: '#ffffff',
+            overflow: 'hidden',
+            borderRadius: '24px',
+            display: 'flex',
+            flexDirection: 'column',
         }}>
-            <div style={{
-                position: 'absolute', left: '50%', bottom: 14, transform: 'translateX(-50%)',
-                width: 'min(560px, 92%)', zIndex: 5,
-            }}>
-                <nav style={{
-                    display: 'flex', flexDirection: 'column', overflow: 'hidden',
-                    borderRadius: 14, border: '1px solid rgba(0,0,0,0.10)',
-                    background: 'rgba(255,255,255,0.70)', backdropFilter: 'blur(14px)',
-                    boxShadow: '0 12px 40px rgba(0,0,0,0.12)', boxSizing: 'border-box',
-                    transition: 'height .45s cubic-bezier(.76,0,.24,1)',
-                    height: panelH + 60,
-                }}>
-                    <div style={{
-                        height: panelH, overflow: 'hidden', padding: '10px 10px 0 10px', boxSizing: 'border-box',
-                        opacity: expanded ? 1 : 0, transform: expanded ? 'translateY(0)' : 'translateY(-6px)',
-                        transition: 'opacity .3s ease, transform .3s ease',
-                    }}>
-                        <div style={{
-                            display: 'flex', height: '100%',
-                            border: '1px solid rgba(0,0,0,0.06)', borderRadius: 10,
-                            background: 'rgba(0,0,0,0.03)', padding: 14, boxSizing: 'border-box', gap: 0,
-                        }}>
-                            {columns.map((col, ci) => (
-                                <div key={col.title} style={{
-                                    flex: 1, display: 'flex', flexDirection: 'column', gap: 3,
-                                    borderLeft: ci > 0 ? '1px dashed rgba(0,0,0,0.15)' : 'none',
-                                    paddingLeft: ci > 0 ? 14 : 0,
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                                        <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#000', flexShrink: 0 }} />
-                                        <span style={{ fontSize: 11.5, color: 'rgba(0,0,0,0.72)', fontFamily: '"Inter", system-ui, sans-serif', fontWeight: 600 }}>{col.title}</span>
-                                    </div>
-                                    {col.links.map(l => (
-                                        <a key={l} href="#" onClick={(e) => e.preventDefault()} style={{
-                                            display: 'block', padding: '4px 0', fontSize: 12,
-                                            color: '#171717', textDecoration: 'none', fontFamily: '"Inter", system-ui, sans-serif',
-                                        }}>{l}</a>
-                                    ))}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+            <style>{`
+                .sn-nav {
+                    display: grid;
+                    grid-template-columns: 1fr auto 1fr;
+                    align-items: center;
+                    padding: 22px 28px 0;
+                    width: 100%;
+                    box-sizing: border-box;
+                }
+                .sn-links {
+                    display: flex;
+                    align-items: center;
+                    gap: 26px;
+                    justify-self: start;
+                    padding: 22px 32px;
+                    background: rgba(0,0,0,0.13);
+                    backdrop-filter: blur(18px);
+                    -webkit-backdrop-filter: blur(18px);
+                }
+                .sn-links a {
+                    position: relative;
+                    font-size: 14.5px;
+                    font-weight: 500;
+                    letter-spacing: -0.01em;
+                    color: #0a0a0a;
+                    line-height: 1;
+                    white-space: nowrap;
+                    text-decoration: none;
+                    font-family: "Inter", system-ui, sans-serif;
+                    opacity: 0;
+                    transform: translate3d(-16px, 0, 0);
+                    animation: sn-link-in 0.55s cubic-bezier(0.16,1,0.3,1) backwards;
+                }
+                .sn-links a::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: -6px;
+                    width: 100%;
+                    height: 3px;
+                    background: #006cd2;
+                    transform: scaleX(0);
+                    transform-origin: left;
+                    transition: transform 0.28s cubic-bezier(0.16,1,0.3,1);
+                }
+                .sn-links a:hover { color: #006cd2; transform: translateY(-2px); }
+                .sn-links a:hover::after { transform: scaleX(1); }
+                .sn-links a:nth-child(1) { animation-delay: 0.02s; }
+                .sn-links a:nth-child(2) { animation-delay: 0.08s; }
+                .sn-links a:nth-child(3) { animation-delay: 0.14s; }
+                .sn-links a:nth-child(4) { animation-delay: 0.2s; }
+                .sn-logo {
+                    display: inline-flex;
+                    justify-self: center;
+                    color: #0a0a0a;
+                    cursor: pointer;
+                    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+                }
+                .sn-logo:hover { transform: scale(1.1); }
+                .sn-logo polygon {
+                    transform-box: fill-box;
+                    transform-origin: left center;
+                    opacity: 0;
+                    transform: translate3d(-12px, 8px, 0);
+                    animation: sn-mark-in 0.5s cubic-bezier(0.16,1,0.3,1) backwards;
+                }
+                .sn-logo polygon:nth-child(1) { animation-delay: 0.04s; }
+                .sn-logo polygon:nth-child(2) { animation-delay: 0.09s; }
+                .sn-logo polygon:nth-child(3) { animation-delay: 0.14s; }
+                .sn-logo polygon:nth-child(4) { animation-delay: 0.19s; }
+                .sn-logo polygon:nth-child(5) { animation-delay: 0.24s; }
+                .sn-logo polygon:nth-child(6) { animation-delay: 0.29s; }
+                .sn-right { display: flex; align-items: center; gap: 14px; justify-self: end; }
+                .sn-btn {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    height: 52px;
+                    border-radius: 0;
+                    padding: 12px 12px 12px 22px;
+                    gap: 16px;
+                    font-size: 15px;
+                    font-weight: 500;
+                    letter-spacing: -0.015em;
+                    line-height: 1;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    cursor: pointer;
+                    background: #006cd2;
+                    color: #fff;
+                    border: none;
+                    font-family: "Inter", system-ui, sans-serif;
+                    opacity: 0;
+                    clip-path: inset(0 100% 0 0);
+                    animation: sn-wipe 0.65s cubic-bezier(0.16,1,0.3,1) 0.16s backwards;
+                }
+                .sn-btn::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    background: #004a96;
+                    transform: scaleX(0);
+                    transform-origin: left;
+                    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+                    pointer-events: none;
+                }
+                .sn-btn:hover::before { transform: scaleX(1); }
+                .sn-btn__label, .sn-btn__icon { position: relative; z-index: 1; }
+                .sn-btn__icon {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 34px;
+                    height: 34px;
+                    background: #0053a3;
+                    color: #fff;
+                }
+                .sn-btn:hover .sn-btn__icon { background: #fff; color: #006cd2; }
+                .sn-burger {
+                    display: none;
+                    width: 36px;
+                    height: 36px;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 5px;
+                    background: none;
+                    border: none;
+                    cursor: pointer;
+                    transition: transform 0.22s cubic-bezier(0.16,1,0.3,1);
+                    opacity: 0;
+                    animation: sn-link-in 0.5s cubic-bezier(0.16,1,0.3,1) 0.16s backwards;
+                }
+                .sn-burger:hover { transform: scale(1.08); }
+                .sn-burger-bar {
+                    width: 18px;
+                    height: 1.5px;
+                    background: #0a0a0a;
+                    transition: width 0.22s cubic-bezier(0.16,1,0.3,1), background 0.22s cubic-bezier(0.16,1,0.3,1);
+                }
+                .sn-burger:hover .sn-burger-bar { background: #006cd2; }
+                .sn-burger:hover .sn-burger-bar:nth-child(1),
+                .sn-burger:hover .sn-burger-bar:nth-child(3) { width: 14px; }
+                .sn-mobile {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.25rem;
+                    padding: 1.25rem 28px 0.5rem;
+                }
+                .sn-mobile[hidden] { display: none; }
+                .sn-mobile__links {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.9rem;
+                    padding: 16px 20px;
+                    background: rgba(0,0,0,0.13);
+                    backdrop-filter: blur(18px);
+                    -webkit-backdrop-filter: blur(18px);
+                }
+                .sn-mobile__links a {
+                    font-size: 1.05rem;
+                    font-weight: 500;
+                    color: #0a0a0a;
+                    text-decoration: none;
+                    font-family: "Inter", system-ui, sans-serif;
+                }
+                @keyframes sn-link-in {
+                    from { opacity: 0; transform: translate3d(-16px,0,0); }
+                    to { opacity: 1; transform: translate3d(0,0,0); }
+                }
+                @keyframes sn-mark-in {
+                    from { opacity: 0; transform: translate3d(-12px,8px,0); }
+                    to { opacity: 1; transform: translate3d(0,0,0); }
+                }
+                @keyframes sn-wipe {
+                    from { opacity: 0; clip-path: inset(0 100% 0 0); }
+                    to { opacity: 1; clip-path: inset(0 0 0 0); }
+                }
+                @media (max-width: 820px) {
+                    .sn-links, .sn-right .sn-btn { display: none; }
+                    .sn-nav { grid-template-columns: auto 1fr auto; }
+                    .sn-logo { justify-self: start; }
+                    .sn-burger { display: flex; }
+                    .sn-mobile { display: flex; }
+                }
+                @media (min-width: 821px) {
+                    .sn-burger { display: none; }
+                }
+            `}</style>
 
-                    <div style={{
-                        display: 'flex', height: 60, alignItems: 'center', gap: 6, padding: 10, boxSizing: 'border-box',
-                    }}>
-                        <button
-                            type="button"
-                            onClick={() => setExpanded(v => !v)}
-                            style={{
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                flexShrink: 0, padding: '0 16px', height: 40, borderRadius: 10,
-                                border: '1px solid rgba(0,0,0,0.10)', background: expanded ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
-                                color: '#404040', cursor: 'pointer', fontSize: 13, fontWeight: 500,
-                                fontFamily: '"Inter", system-ui, sans-serif',
-                            }}
-                        >
-                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" style={{ color: '#000' }}>
-                                {expanded ? (
-                                    <path d="M3 12L13 4M13 12L3 4" />
-                                ) : (
-                                    <path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13" />
-                                )}
-                            </svg>
-                            <span>More</span>
-                        </button>
+            <nav className="sn-nav">
+                <div className="sn-links">
+                    {links.map(l => <a key={l} href="#" onClick={(e) => e.preventDefault()}>{l}</a>)}
+                </div>
 
-                        <div style={{ display: 'flex', flex: 4, alignItems: 'center', gap: 6, minWidth: 0 }}>
-                            {items.map((it) => (
-                                <a
-                                    key={it}
-                                    href="#"
-                                    onClick={(e) => e.preventDefault()}
-                                    style={{
-                                        ...linkStyle,
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        flex: 1, height: 40, borderRadius: 10,
-                                        border: expanded ? '1px solid transparent' : '1px solid rgba(0,0,0,0.15)',
-                                        backgroundColor: 'transparent',
-                                        opacity: expanded ? 0 : 1, pointerEvents: expanded ? 'none' : 'auto',
-                                        transition: 'opacity .12s ease, border-color .2s ease',
-                                    }}
-                                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.4)'; e.currentTarget.style.color = '#000'; }}
-                                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'; e.currentTarget.style.color = '#525252'; }}
-                                >
-                                    {it}
-                                </a>
-                            ))}
-                        </div>
-                    </div>
-                </nav>
+                <a className="sn-logo" href="#" onClick={(e) => e.preventDefault()}>{chevronLogo}</a>
+
+                <div className="sn-right">
+                    <button type="button" className="sn-btn">
+                        <span className="sn-btn__label">Book Demo</span>
+                        <span className="sn-btn__icon">{arrowIcon}</span>
+                    </button>
+                    <button
+                        type="button"
+                        className="sn-burger"
+                        aria-label={menuOpen ? "Close menu" : "Open menu"}
+                        aria-expanded={menuOpen}
+                        onClick={() => setMenuOpen(v => !v)}
+                    >
+                        <span className="sn-burger-bar" />
+                        <span className="sn-burger-bar" />
+                        <span className="sn-burger-bar" />
+                    </button>
+                </div>
+            </nav>
+
+            <div className="sn-mobile" hidden={!menuOpen}>
+                <div className="sn-mobile__links">
+                    {links.map(l => <a key={l} href="#" onClick={(e) => { e.preventDefault(); setMenuOpen(false); }}>{l}</a>)}
+                </div>
+                <button type="button" className="sn-btn">
+                    <span className="sn-btn__label">Book Demo</span>
+                    <span className="sn-btn__icon">{arrowIcon}</span>
+                </button>
             </div>
         </div>
     );
@@ -8659,5 +8810,555 @@ function MoileNav() {
 	);
 }`,
         vibePrompt: "Build a 'Modern Dark' shadcn-style navigation bar (navbar) for a dark-themed site. This is a Radix UI based navigation menu project. The setup requires a shadcn project structure, Tailwind CSS, and TypeScript; if not present, scaffold via the shadcn CLI, install Tailwind and TypeScript), and copy components into /components/ui which must import { cn } from '@/lib/utils' (set up the path alias accordingly). Two files. navigation-menu.tsx: imports * as React, * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu', { ArrowRightIcon, ChevronDownIcon } from lucide-react, { cn } from '@/lib/utils', and { GridCard } from '@/components/ui/grid-card'. Define type NavItemType { title, href, description?, icon?: React.ComponentType<React.SVGProps<SVGSVGElement>> }. Export shadcn-style primitives: NavigationMenu (Root, optional viewport prop), NavigationMenuList, NavigationMenuItem, NavigationMenuTrigger (shows a ChevronDownIcon that rotates 180deg when open, list triggers have hover/focus accent styling and data-[state=open] accent/50 bg), NavigationMenuContent (with tw-animate-css enter/exit animations, slide/fade/zoom, and a viewport=false variant that is absolutely positioned below the trigger with mt-1.5, border, shadow, rounded-md, duration-300), NavigationMenuViewport (absolute full-width dropdown region using --radix-navigation-menu-viewport-* variables, bg-background/95 with backdrop-blur-xl), NavigationMenuLink, NavigationMenuIndicator (rotated diamond), and helper cards: NavGridCard (a button-like GridCard from a grid-card component with icon + title + description), NavSmallItem (icon + title with an ArrowRightIcon that slides in on group-hover), NavLargeItem (bordered background card with title, optional description, right icon), NavItemMobile (mobile row: 40px rounded icon tile + title + description). Export all plus the NavItemType type. demo.tsx: exports productLinks and companyLinks arrays (Website Builder, Cloud Platform, Team Collaboration, Analytics, Integrations, E-Commerce, Security, API; About Us, Customer Stories, Terms of Service, Privacy Policy, Refund Policy, Partnerships, Blog, Help Center — each with lucide icon and optional description) and default export NavigationMenuDemo. The shell is a full-screen page with a subtle radial dot grid background (bg-[radial-gradient(...) 2px transparent 2px] at 12px) and a sticky centered max-w-4xl h-14 rounded-lg nav bar (bg-background border) containing: left brand group (Grid2x2PlusIcon + monospace bold title) — use 'UI HUB' as the brand wordmark (remove any placeholder like Acme), a large-screen DesktopMenu (NavigationMenu with 'Product' and 'Company' triggers that open mega-menus via NavigationMenuContent, plus a plain 'Pricing' NavigationMenuLink), and a right group with a 'Get Started' Button and a mobile MoileNav Sheet (MenuIcon trigger opening a SheetContent with accordions per section using Accordion/AccordionTrigger/AccordionContent and NavItemMobile rows, with a XIcon close). Dependencies to install: lucide-react, @radix-ui/react-navigation-menu, @radix-ui/react-accordion, plus sheet/button/accordion/grid-card shadcn components. Add Tailwind 4 keyframes in index.css (@theme inline { --animate-accordion-down/up } with @keyframes accordion-down { from { height: 0 } to { height: var(--radix-accordion-content-height) } } and accordion-up reverse) so the mobile accordion animates. Reproduce the exact production source of navigation-menu.tsx and demo.tsx verbatim (embedded below), with the brand set to UI HUB.",
+    },
+    {
+        id: "split-navigation-nav",
+        title: "Split Navigation Nav",
+        category: "navbar",
+        isPremium: false,
+        addedAt: "2026-08-31",
+        newBadgeDays: 120,
+        description: "A clean split navigation header (\"Meridian\") built in plain HTML, CSS, and vanilla JS: a left glass-pill of links, a centered chevron-mark logo, and a right-side blue Book Demo button, with staggered entrance animations for the links, logo mark, and button, a blue underline + color hover on links, and a responsive hamburger that toggles a mobile menu on narrow screens.",
+        preview: () => (<SplitNavigationNavPreview />),
+        code: `// index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meridian — Nav</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<div class="page">
+
+  <nav class="nav">
+    <!-- Left: glass pill of links -->
+    <div class="nav__links" aria-label="Primary">
+      <a href="#">Platform</a>
+      <a href="#">Solutions</a>
+      <a href="#">Company</a>
+      <a href="#">Pricing</a>
+    </div>
+
+    <!-- Center: logo -->
+    <a class="logo" href="#" aria-label="Meridian">
+      <svg viewBox="0 0 42 34" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="12,0 30,0 33.2,3.2 15.2,3.2" style="--i:0" />
+        <polygon points="14.6,5.6 32.6,5.6 35.8,8.8 17.8,8.8" style="--i:1" />
+        <polygon points="17.2,11.2 35.2,11.2 38.4,14.4 20.4,14.4" style="--i:2" />
+        <polygon points="3.2,16.8 21.2,16.8 24.4,20 6.4,20" style="--i:3" />
+        <polygon points="5.8,22.4 23.8,22.4 27,25.6 9,25.6" style="--i:4" />
+        <polygon points="8.4,28 26.4,28 29.6,31.2 11.6,31.2" style="--i:5" />
+      </svg>
+    </a>
+
+    <!-- Right: Book Demo + burger -->
+    <div class="nav__right">
+      <button class="btn btn--nav" type="button">
+        <span class="btn__label">Book Demo</span>
+        <span class="btn__icon">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M4 10h10.2M10.4 5.6 15.2 10l-4.8 4.4"
+              stroke="currentColor"
+              stroke-width="1.7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </span>
+      </button>
+
+      <button
+        class="nav__burger"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <span class="nav__burger-bar"></span>
+        <span class="nav__burger-bar"></span>
+        <span class="nav__burger-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu" hidden>
+    <div class="mobile-menu__links">
+      <a href="#">Platform</a>
+      <a href="#">Solutions</a>
+      <a href="#">Company</a>
+      <a href="#">Pricing</a>
+    </div>
+    <button class="btn btn--nav" type="button">
+      <span class="btn__label">Book Demo</span>
+      <span class="btn__icon">
+        <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M4 10h10.2M10.4 5.6 15.2 10l-4.8 4.4"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    </button>
+  </div>
+
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
+// styles.css
+:root {
+  --bg: #ffffff;
+  --text: #0a0a0a;
+  --muted: #1a1a1a;
+  --blue: #006cd2;
+  --blue-dark: #0053a3;
+  --headline-muted: #6b7378;
+  --glass: rgba(0, 0, 0, 0.13);
+  --glass-blur: 18px;
+  --glass-light: rgba(255, 255, 255, 0.28);
+  --radius: 0;
+  --font: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --pad-x: clamp(20px, 3.52vw, 64px);
+  --nav-top: clamp(16px, 2.05vw, 28px);
+  --btn-icon: 36px;
+  --btn-pad-y: 12px;
+  --btn-pad-x: 22px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* ---------- Page shell ---------- */
+.page {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: var(--nav-top) var(--pad-x) clamp(28px, 4.9vw, 48px);
+}
+
+.nav,
+.mobile-menu {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Nav grid ---------- */
+.nav {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+/* Left: glass links pill */
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: clamp(22px, 2.6vw, 32px);
+  justify-self: start;
+  padding: 24px 34px;
+  background: var(--glass);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-radius: var(--radius);
+}
+
+.nav__links a {
+  position: relative;
+  font-size: clamp(13px, 1.37vw, 15px);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #0a0a0a;
+  line-height: 1;
+  white-space: nowrap;
+  padding-bottom: 2px;
+  transition: color 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translate3d(-16px, 0, 0);
+  animation: link-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.nav__links a:nth-child(1) { animation-delay: 0.02s; }
+.nav__links a:nth-child(2) { animation-delay: 0.08s; }
+.nav__links a:nth-child(3) { animation-delay: 0.14s; }
+.nav__links a:nth-child(4) { animation-delay: 0.2s; }
+
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  width: 100%;
+  height: 3px;
+  background: #006cd2;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav__links a:hover {
+  color: #006cd2;
+  transform: translateY(-2px);
+}
+
+.nav__links a:hover::after {
+  transform: scaleX(1);
+}
+
+@keyframes link-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-16px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Center: logo */
+.logo {
+  display: inline-flex;
+  justify-self: center;
+  color: #0a0a0a;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+.logo svg {
+  width: clamp(30px, 3.2vw, 38px);
+  height: auto;
+  fill: currentColor;
+}
+
+.logo svg polygon {
+  transform-box: fill-box;
+  transform-origin: left center;
+  opacity: 0;
+  transform: translate3d(-12px, 8px, 0);
+  animation: mark-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+.logo svg polygon:nth-child(1) { animation-delay: 0.04s; }
+.logo svg polygon:nth-child(2) { animation-delay: 0.09s; }
+.logo svg polygon:nth-child(3) { animation-delay: 0.14s; }
+.logo svg polygon:nth-child(4) { animation-delay: 0.19s; }
+.logo svg polygon:nth-child(5) { animation-delay: 0.24s; }
+.logo svg polygon:nth-child(6) { animation-delay: 0.29s; }
+
+@keyframes mark-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-12px, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Right: Book Demo + burger */
+.nav__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  justify-self: end;
+}
+
+/* ---------- Buttons (shared) ---------- */
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 58px;
+  border-radius: var(--radius);
+  padding: var(--btn-pad-y) 10px var(--btn-pad-y) var(--btn-pad-x);
+  gap: 18px;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.btn:hover::before {
+  transform: scaleX(1);
+}
+
+.btn__label,
+.btn__icon {
+  position: relative;
+  z-index: 1;
+}
+
+.btn__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--btn-icon);
+  height: var(--btn-icon);
+  border-radius: var(--radius);
+}
+
+.btn__icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Nav Book Demo variant */
+.btn--nav {
+  background: #006cd2;
+  color: #ffffff;
+  opacity: 0;
+  clip-path: inset(0 100% 0 0);
+  animation: wipe-right 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.16s backwards;
+}
+
+.btn--nav .btn__icon {
+  background: #0053a3;
+  color: #ffffff;
+}
+
+.btn--nav:hover .btn__icon {
+  background: #ffffff;
+  color: #006cd2;
+}
+
+.btn--nav::before {
+  background: #004a96;
+}
+
+@keyframes wipe-right {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* ---------- Burger ---------- */
+.nav__burger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  animation: link-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.16s backwards;
+}
+
+.nav__burger-bar {
+  width: 18px;
+  height: 1.5px;
+  background: #0a0a0a;
+  transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav__burger:hover {
+  transform: scale(1.08);
+}
+
+.nav__burger:hover .nav__burger-bar {
+  background: #006cd2;
+}
+
+.nav__burger:hover .nav__burger-bar:nth-child(1),
+.nav__burger:hover .nav__burger-bar:nth-child(3) {
+  width: 14px;
+}
+
+/* ---------- Mobile menu ---------- */
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem 0 0.5rem;
+}
+
+.mobile-menu[hidden] {
+  display: none;
+}
+
+.mobile-menu__links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 16px 20px;
+  background: var(--glass);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.mobile-menu__links a {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #0a0a0a;
+}
+
+/* ---------- prefers-reduced-motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .nav__links a,
+  .logo svg polygon,
+  .btn--nav,
+  .nav__burger {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: inset(0 0 0 0) !important;
+  }
+}
+
+/* ---------- Responsive ≤820px ---------- */
+@media (max-width: 820px) {
+  html,
+  body {
+    overflow: auto;
+  }
+
+  .page {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  .nav__links,
+  .nav .btn--nav {
+    display: none;
+  }
+
+  .nav {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .logo {
+    justify-self: start;
+  }
+
+  .nav__burger {
+    display: flex;
+  }
+
+  .mobile-menu {
+    display: flex;
+  }
+}
+
+@media (min-width: 821px) {
+  .nav__burger {
+    display: none;
+  }
+}
+// main.js
+(function () {
+  var burger = document.querySelector(".nav__burger");
+  var menu = document.getElementById("mobile-menu");
+
+  if (!burger || !menu) return;
+
+  function openMenu() {
+    menu.hidden = false;
+    burger.setAttribute("aria-expanded", "true");
+    burger.setAttribute("aria-label", "Close menu");
+  }
+
+  function closeMenu() {
+    menu.hidden = true;
+    burger.setAttribute("aria-expanded", "false");
+    burger.setAttribute("aria-label", "Open menu");
+  }
+
+  function toggleMenu() {
+    if (menu.hidden) {
+      openMenu();
+    } else {
+      closeMenu();
     }
+  }
+
+  burger.addEventListener("click", toggleMenu);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !menu.hidden) {
+      closeMenu();
+    }
+  });
+
+  menu.querySelectorAll("a, button").forEach(function (el) {
+    el.addEventListener("click", closeMenu);
+  });
+})();`,
+        vibePrompt: "Build a split navigation header (navbar) called \"Meridian\" for a clean, light-themed site. This is a plain HTML / vanilla CSS / vanilla JavaScript component (no framework, no build step). Three files:\nindex.html: includes the Google Fonts Inter stylesheet (weights 300,400,500,600,700) with a preconnect to fonts.googleapis.com and fonts.gstatic.com, links styles.css and main.js. Markup inside a .page wrapper: a <nav class=\"nav\"> laid out as a 3-column grid (1fr auto 1fr) — left is a .nav__links div (aria-label=\"Primary\") with four <a> links (Platform, Solutions, Company, Pricing); center is an <a class=\"logo\" aria-label=\"Meridian\"> containing an inline SVG (viewBox 0 0 42 34) built from six <polygon> elements forming a diagonal chevron/mark (each with style=\"--i:0\" through --i:5\"); right is a .nav__right with a <button class=\"btn btn--nav\"> (a Book Demo button: a .btn__label span + a .btn__icon span with an inline arrow SVG using a stroke on a path d=\"M4 10h10.2M10.4 5.6 15.2 10l-4.8 4.4\") plus a <button class=\"nav__burger\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"mobile-menu\"> with three .nav__burger-bar spans. After the nav, include a <div id=\"mobile-menu\" class=\"mobile-menu\" hidden> with a .mobile-menu__links column of the same four links and a Book Demo button. Then <script src=\"main.js\"></script> before </body>.\nstyles.css: define :root variables (--bg:#ffffff, --text:#0a0a0a, --blue:#006cd2, --blue-dark:#0053a3, --glass:rgba(0,0,0,0.13), --glass-blur:18px, --radius:0, --font:\"Inter\",... and spacing --pad-x, --nav-top, --btn-icon:36px, --btn-pad-y:12px, --btn-pad-x:22px). Reset (* box-sizing, margin 0, padding 0), html/body height 100% overflow hidden, body uses the font and background. .page is position relative, 100vh/100dvh, flex column, padding var(--nav-top) var(--pad-x). .nav is a grid 1fr auto 1fr aligned center. .nav__links is a glass pill: flex, gap clamp(22px,2.6vw,32px), justify-self start, padding 24px 34px, background var(--glass), backdrop-filter blur(var(--glass-blur)). Each link starts hidden (opacity 0, translate3d(-16px,0,0)) and animates in with a staggered @keyframes link-in (animation-delay 0.02s/0.08s/0.14s/0.2s); each link has a ::after 3px underline in #006cd2 that scaleX(0)->1 on hover, and hover turns the link #006cd2 and translateY(-2px). .logo is inline-flex justify-self center with the SVG sized clamp(30px,3.2vw,38px); each polygon starts hidden/offset and animates in via @keyframes mark-in with staggered delays (0.04/0.09/0.14/0.19/0.24/0.29s), and .logo:hover scale(1.1). .nav__right is flex gap 14px justify-self end. Buttons: .btn is inline-flex height 58px padding var(--btn-pad-y) 10px var(--btn-pad-y) var(--btn-pad-x) gap 18px, with a ::before overlay that scaleX(0)->1 on hover; .btn--nav is the blue variant (background #006cd2, white text) that starts hidden with clip-path inset(0 100% 0 0) and animates via @keyframes wipe-right (0.16s delay), .btn__icon bg #0053a3 switching to white bg + blue icon on hover, ::before background #004a96. .nav__burger hidden by default (display none) with three 18px bars that shrink to 14px on hover (bars 1 and 3) and turn blue; shown flex only at <=820px via media query. .mobile-menu is a flex column gap 1.25rem that is hidden when [hidden], with .mobile-menu__links a glass column of links (padding 16px 20px, font-size 1.05rem). Include a @media (prefers-reduced-motion: reduce) rule turning off all entrance animations. Responsive: @media (max-width:820px) collapses the grid to auto 1fr auto, hides .nav__links and the nav .btn--nav, shows the .nav__burger, and reveals the mobile menu; @media (min-width:821px) hides the burger.\nmain.js: an IIFE that queries .nav__burger and #mobile-menu, defines openMenu/closeMenu/toggleMenu (toggling menu.hidden and syncing aria-expanded/aria-label on the burger), listens for burger click, closes on Escape, and closes when any link/button inside the menu is clicked.",
+    },
+
 ];
