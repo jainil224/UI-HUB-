@@ -1924,6 +1924,13 @@ const CinematicNavbarPreview: React.FC = () => {
                 .cin-cta::after { content: ""; position: absolute; inset: 0; background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,0.45) 48%, transparent 76%); transform: translateX(-130%); transition: transform 0.65s ease; }
                 .cin-cta:hover::after { transform: translateX(130%); }
                 .cin-fill { flex: 1; background: #000; }
+                @media (max-width: 820px) {
+                    .cin-nav { padding: 18px 16px 8px; gap: 8px; }
+                    .cin-pill { padding: 0 12px; font-size: 13px; }
+                }
+                @media (max-width: 640px) {
+                    .cin-nav-links { display: none; }
+                }
             `}</style>
             <header className="cin-nav">
                 <a className="cin-logo" href="#top">
@@ -2259,6 +2266,11 @@ const PillNavbarPreview: React.FC = () => {
                     transform: translateY(0);
                     opacity: 1;
                 }
+                @media (max-width: 640px) {
+                    .pn-nav { --nav-h: 36px; --logo: 30px; --pill-pad-x: 10px; --pill-gap: 2px; }
+                    .pn-pill { font-size: 11.5px; }
+                    .pn-container { max-width: 100%; }
+                }
             `}</style>
 
             <div className="pn-container">
@@ -2336,6 +2348,11 @@ const ModernDarkNavbarPreview: React.FC = () => {
                 backgroundImage: 'radial-gradient(rgba(255,255,255,0.18) 2px, transparent 2px)',
                 backgroundSize: '12px 12px',
             }} />
+            <style>{`
+                @media (max-width: 640px) {
+                    .md-triggers { display: none !important; }
+                }
+            `}</style>
 
             <div style={{
                 position: 'absolute', top: '50%', left: '50%',
@@ -2359,7 +2376,7 @@ const ModernDarkNavbarPreview: React.FC = () => {
                         <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 16, fontWeight: 700, color: '#f4f4f5', letterSpacing: 0.5 }}>UI HUB</span>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <div className="md-triggers" style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                         {triggers.map((label, i) => {
                             const hovered = hoveredTrigger === i;
                             const isDropdown = label !== 'Pricing';
@@ -2714,8 +2731,9 @@ const AwwwardsNavPreview: React.FC = () => {
             }}>
                 <div style={{
                     height: panelH, overflow: 'hidden', padding: '10px 10px 0 10px', boxSizing: 'border-box',
-                    opacity: expanded ? 1 : 0, transform: expanded ? 'translateY(0)' : 'translateY(-6px)',
-                    transition: 'opacity .3s ease, transform .3s ease',
+                    display: expanded ? 'block' : 'none',
+                    opacity: expanded ? 1 : 0,
+                    transition: 'opacity .3s ease',
                 }}>
                     <div style={{
                         display: 'flex', height: '100%',
