@@ -2689,100 +2689,101 @@ const AwwwardsNavPreview: React.FC = () => {
     ];
     const panelH = expanded ? 190 : 0;
 
+    const itemLinkStyle: React.CSSProperties = {
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flex: 1, height: 40, borderRadius: 10, fontSize: 13,
+        textAlign: 'center', textDecoration: 'none', color: '#525252',
+    };
+
     return (
         <div style={{
-            position: 'relative', width: '100%', height: '100%', minHeight: '300px',
+            position: 'relative', width: '100%', height: '100%', minHeight: '280px',
             overflow: 'hidden', borderRadius: '24px',
-            background: 'radial-gradient(120% 120% at 50% 0%, #fafafa 0%, #e8e8e8 100%)',
+            background: 'radial-gradient(120% 160% at 50% 0%, #17181c 0%, #0b0c0f 55%, #07080a 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '24px 16px', boxSizing: 'border-box',
             fontFamily: '"Inter", system-ui, sans-serif',
         }}>
-            <div style={{
-                position: 'absolute', left: '50%', bottom: 16, transform: 'translateX(-50%)',
-                width: 'min(540px, 92%)', zIndex: 5,
+            <nav style={{
+                display: 'flex', flexDirection: 'column', overflow: 'hidden',
+                borderRadius: 14, border: '1px solid rgba(255,255,255,0.14)',
+                background: 'rgba(255,255,255,0.92)', boxShadow: '0 18px 50px rgba(0,0,0,0.45)',
+                boxSizing: 'border-box', width: '100%', maxWidth: 540,
+                transition: 'height .45s cubic-bezier(.76,0,.24,1)',
+                height: panelH + 60,
             }}>
-                <nav style={{
-                    display: 'flex', flexDirection: 'column', overflow: 'hidden',
-                    borderRadius: 14, border: '1px solid rgba(0,0,0,0.10)',
-                    background: 'rgba(255,255,255,0.70)', backdropFilter: 'blur(14px)',
-                    boxShadow: '0 14px 40px rgba(0,0,0,0.12)', boxSizing: 'border-box',
-                    transition: 'height .45s cubic-bezier(.76,0,.24,1)',
-                    height: panelH + 60,
+                <div style={{
+                    height: panelH, overflow: 'hidden', padding: '10px 10px 0 10px', boxSizing: 'border-box',
+                    opacity: expanded ? 1 : 0, transform: expanded ? 'translateY(0)' : 'translateY(-6px)',
+                    transition: 'opacity .3s ease, transform .3s ease',
                 }}>
                     <div style={{
-                        height: panelH, overflow: 'hidden', padding: '10px 10px 0 10px', boxSizing: 'border-box',
-                        opacity: expanded ? 1 : 0, transform: expanded ? 'translateY(0)' : 'translateY(-6px)',
-                        transition: 'opacity .3s ease, transform .3s ease',
+                        display: 'flex', height: '100%',
+                        border: '1px solid rgba(0,0,0,0.06)', borderRadius: 10,
+                        background: 'rgba(0,0,0,0.03)', padding: 14, boxSizing: 'border-box',
                     }}>
-                        <div style={{
-                            display: 'flex', height: '100%',
-                            border: '1px solid rgba(0,0,0,0.06)', borderRadius: 10,
-                            background: 'rgba(0,0,0,0.03)', padding: 14, boxSizing: 'border-box',
-                        }}>
-                            {columns.map((col, ci) => (
-                                <div key={col.title} style={{
-                                    flex: 1, display: 'flex', flexDirection: 'column', gap: 3,
-                                    borderLeft: ci > 0 ? '1px dashed rgba(0,0,0,0.15)' : 'none',
-                                    paddingLeft: ci > 0 ? 14 : 0, minWidth: 0,
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                                        <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#000', flexShrink: 0 }} />
-                                        <span style={{ fontSize: 11.5, fontWeight: 600, color: 'rgba(0,0,0,0.72)' }}>{col.title}</span>
-                                    </div>
-                                    {col.links.map(l => (
-                                        <a key={l} href="#" onClick={(e) => e.preventDefault()} style={{
-                                            display: 'block', padding: '4px 0', fontSize: 12,
-                                            color: '#171717', textDecoration: 'none',
-                                        }}>{l}</a>
-                                    ))}
+                        {columns.map((col, ci) => (
+                            <div key={col.title} style={{
+                                flex: 1, display: 'flex', flexDirection: 'column', gap: 3,
+                                borderLeft: ci > 0 ? '1px dashed rgba(0,0,0,0.15)' : 'none',
+                                paddingLeft: ci > 0 ? 14 : 0, minWidth: 0,
+                            }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#000', flexShrink: 0 }} />
+                                    <span style={{ fontSize: 11.5, fontWeight: 600, color: 'rgba(0,0,0,0.72)' }}>{col.title}</span>
                                 </div>
-                            ))}
-                        </div>
+                                {col.links.map(l => (
+                                    <a key={l} href="#" onClick={(e) => e.preventDefault()} style={{
+                                        display: 'block', padding: '4px 0', fontSize: 12,
+                                        color: '#171717', textDecoration: 'none',
+                                    }}>{l}</a>
+                                ))}
+                            </div>
+                        ))}
                     </div>
+                </div>
 
-                    <div style={{ display: 'flex', height: 60, alignItems: 'center', gap: 6, padding: 10, boxSizing: 'border-box' }}>
-                        <button
-                            type="button"
-                            onClick={() => setExpanded(v => !v)}
-                            style={{
-                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-                                flexShrink: 0, padding: '0 16px', height: 40, borderRadius: 10,
-                                border: '1px solid rgba(0,0,0,0.10)',
-                                background: expanded ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
-                                color: '#404040', cursor: 'pointer', fontSize: 13, fontWeight: 500,
-                            }}
-                        >
-                            {expanded ? (
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#000" strokeWidth="1.4" strokeLinecap="round"><path d="M3 12L13 4M13 12L3 4" /></svg>
-                            ) : (
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#000" strokeWidth="1.4" strokeLinecap="round"><path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13" /></svg>
-                            )}
-                            <span>More</span>
-                        </button>
+                <div style={{ display: 'flex', height: 60, alignItems: 'center', gap: 6, padding: 10, boxSizing: 'border-box' }}>
+                    <button
+                        type="button"
+                        onClick={() => setExpanded(v => !v)}
+                        style={{
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                            flexShrink: 0, padding: '0 16px', height: 40, borderRadius: 10,
+                            border: '1px solid rgba(0,0,0,0.10)',
+                            background: expanded ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
+                            color: '#404040', cursor: 'pointer', fontSize: 13, fontWeight: 500,
+                        }}
+                    >
+                        {expanded ? (
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#000" strokeWidth="1.4" strokeLinecap="round"><path d="M3 12L13 4M13 12L3 4" /></svg>
+                        ) : (
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#000" strokeWidth="1.4" strokeLinecap="round"><path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13" /></svg>
+                        )}
+                        <span>More</span>
+                    </button>
 
-                        <div style={{ display: 'flex', flex: 4, alignItems: 'center', gap: 6, minWidth: 0 }}>
-                            {items.map((it) => (
-                                <a
-                                    key={it}
-                                    href="#"
-                                    onClick={(e) => e.preventDefault()}
-                                    style={{
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        flex: 1, height: 40, borderRadius: 10, fontSize: 13,
-                                        textAlign: 'center', textDecoration: 'none', color: '#525252',
-                                        border: expanded ? '1px solid transparent' : '1px solid rgba(0,0,0,0.15)',
-                                        opacity: expanded ? 0 : 1, pointerEvents: expanded ? 'none' : 'auto',
-                                        transition: 'opacity .12s ease, border-color .2s ease',
-                                    }}
-                                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.4)'; e.currentTarget.style.color = '#000'; }}
-                                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'; e.currentTarget.style.color = '#525252'; }}
-                                >
-                                    {it}
-                                </a>
-                            ))}
-                        </div>
+                    <div style={{ display: 'flex', flex: 4, alignItems: 'center', gap: 6, minWidth: 0 }}>
+                        {items.map((it) => (
+                            <a
+                                key={it}
+                                href="#"
+                                onClick={(e) => e.preventDefault()}
+                                style={{
+                                    ...itemLinkStyle,
+                                    border: expanded ? '1px solid transparent' : '1px solid rgba(0,0,0,0.15)',
+                                    opacity: expanded ? 0 : 1, pointerEvents: expanded ? 'none' : 'auto',
+                                    transition: 'opacity .12s ease, border-color .2s ease',
+                                }}
+                                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.4)'; e.currentTarget.style.color = '#000'; }}
+                                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'; e.currentTarget.style.color = '#525252'; }}
+                            >
+                                {it}
+                            </a>
+                        ))}
                     </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
         </div>
     );
 };
@@ -9458,7 +9459,6 @@ button {
 })();`,
         vibePrompt: "Build a split navigation header (navbar) called \"Meridian\" for a clean, light-themed site. This is a plain HTML / vanilla CSS / vanilla JavaScript component (no framework, no build step). Three files:\nindex.html: includes the Google Fonts Inter stylesheet (weights 300,400,500,600,700) with a preconnect to fonts.googleapis.com and fonts.gstatic.com, links styles.css and main.js. Markup inside a .page wrapper: a <nav class=\"nav\"> laid out as a 3-column grid (1fr auto 1fr) — left is a .nav__links div (aria-label=\"Primary\") with four <a> links (Platform, Solutions, Company, Pricing); center is an <a class=\"logo\" aria-label=\"Meridian\"> containing an inline SVG (viewBox 0 0 42 34) built from six <polygon> elements forming a diagonal chevron/mark (each with style=\"--i:0\" through --i:5\"); right is a .nav__right with a <button class=\"btn btn--nav\"> (a Book Demo button: a .btn__label span + a .btn__icon span with an inline arrow SVG using a stroke on a path d=\"M4 10h10.2M10.4 5.6 15.2 10l-4.8 4.4\") plus a <button class=\"nav__burger\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"mobile-menu\"> with three .nav__burger-bar spans. After the nav, include a <div id=\"mobile-menu\" class=\"mobile-menu\" hidden> with a .mobile-menu__links column of the same four links and a Book Demo button. Then <script src=\"main.js\"></script> before </body>.\nstyles.css: define :root variables (--bg:#ffffff, --text:#0a0a0a, --blue:#006cd2, --blue-dark:#0053a3, --glass:rgba(0,0,0,0.13), --glass-blur:18px, --radius:0, --font:\"Inter\",... and spacing --pad-x, --nav-top, --btn-icon:36px, --btn-pad-y:12px, --btn-pad-x:22px). Reset (* box-sizing, margin 0, padding 0), html/body height 100% overflow hidden, body uses the font and background. .page is position relative, 100vh/100dvh, flex column, padding var(--nav-top) var(--pad-x). .nav is a grid 1fr auto 1fr aligned center. .nav__links is a glass pill: flex, gap clamp(22px,2.6vw,32px), justify-self start, padding 24px 34px, background var(--glass), backdrop-filter blur(var(--glass-blur)). Each link starts hidden (opacity 0, translate3d(-16px,0,0)) and animates in with a staggered @keyframes link-in (animation-delay 0.02s/0.08s/0.14s/0.2s); each link has a ::after 3px underline in #006cd2 that scaleX(0)->1 on hover, and hover turns the link #006cd2 and translateY(-2px). .logo is inline-flex justify-self center with the SVG sized clamp(30px,3.2vw,38px); each polygon starts hidden/offset and animates in via @keyframes mark-in with staggered delays (0.04/0.09/0.14/0.19/0.24/0.29s), and .logo:hover scale(1.1). .nav__right is flex gap 14px justify-self end. Buttons: .btn is inline-flex height 58px padding var(--btn-pad-y) 10px var(--btn-pad-y) var(--btn-pad-x) gap 18px, with a ::before overlay that scaleX(0)->1 on hover; .btn--nav is the blue variant (background #006cd2, white text) that starts hidden with clip-path inset(0 100% 0 0) and animates via @keyframes wipe-right (0.16s delay), .btn__icon bg #0053a3 switching to white bg + blue icon on hover, ::before background #004a96. .nav__burger hidden by default (display none) with three 18px bars that shrink to 14px on hover (bars 1 and 3) and turn blue; shown flex only at <=820px via media query. .mobile-menu is a flex column gap 1.25rem that is hidden when [hidden], with .mobile-menu__links a glass column of links (padding 16px 20px, font-size 1.05rem). Include a @media (prefers-reduced-motion: reduce) rule turning off all entrance animations. Responsive: @media (max-width:820px) collapses the grid to auto 1fr auto, hides .nav__links and the nav .btn--nav, shows the .nav__burger, and reveals the mobile menu; @media (min-width:821px) hides the burger.\nmain.js: an IIFE that queries .nav__burger and #mobile-menu, defines openMenu/closeMenu/toggleMenu (toggling menu.hidden and syncing aria-expanded/aria-label on the burger), listens for burger click, closes on Escape, and closes when any link/button inside the menu is clicked.",
     },
-,
     {
         id: "awwwards-nav",
         title: "Awwwards Nav",
