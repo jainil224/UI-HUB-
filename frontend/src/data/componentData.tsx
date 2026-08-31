@@ -7136,7 +7136,7 @@ export default SuperMario;`,
         isPremium: false,
         addedAt: "2026-08-31",
         newBadgeDays: 120,
-        description: "A dark cinematic navbar with a liquid-glass logo, sheen-sweep navigation pills, and a gradient call-to-action button. Fully responsive with a mobile burger menu.",
+        description: "A dark cinematic navbar with a liquid-glass logo, sheen-sweep nav pills, a gradient CTA, and a responsive mobile burger menu.",
         preview: () => (<CinematicNavbarPreview />),
         code: `<!DOCTYPE html>
 <html lang="en">
@@ -7405,7 +7405,7 @@ export default SuperMario;`,
         isPremium: false,
         addedAt: "2026-08-31",
         newBadgeDays: 120,
-        description: "A floating dark glass capsule navbar with a custom securify logo, center pill navigation, and a white get-started button. Fully responsive with pill links that hide on mobile.",
+        description: "A floating dark glass capsule navbar with a custom logo, center pill navigation, a white get-started button, and mobile-responsive links.",
         preview: () => (<FloatingDarkCapsuleNavbarPreview />),
         code: `import React from "react";
 
@@ -7469,7 +7469,7 @@ export default Navbar;`,
         isPremium: false,
         addedAt: "2026-08-31",
         newBadgeDays: 120,
-        description: "A minimal floating AI navbar built with Framer Motion: circular black menu pill with a white plus button, a NeutralKinetics logo wordmark, grey tag and status pills, sliding in on load.",
+        description: "A minimal floating AI navbar built with Framer Motion: a circular menu pill, logo wordmark, status pills, sliding in on load.",
         preview: () => (<MinimalAICapsuleNavbarPreview />),
         code: `// Navbar.tsx
 import { motion } from "motion/react";
@@ -7708,7 +7708,7 @@ export default function Navbar() {
         isPremium: false,
         addedAt: "2026-08-31",
         newBadgeDays: 120,
-        description: "A GSAP-powered pill navigation bar from React Bits: a circular logo that spins on hover beside a row of rounded capsules whose base-colored circles expand from the bottom on hover, all driven by per-pill gsap timelines.",
+        description: "A GSAP-powered pill navbar with a spinning circular logo and rounded capsules that expand on hover, driven by per-pill timelines.",
         preview: () => (<PillNavbarPreview />),
         code: `// PillNav.tsx
 import { useEffect, useRef, useState } from 'react';
@@ -8312,7 +8312,7 @@ export default PillNav;
         isPremium: false,
         addedAt: "2026-08-31",
         newBadgeDays: 120,
-        description: "A modern dark shadcn/Radix navigation menu: a sticky blurred navbar with a UI HUB brand, Product and Company mega-menu dropdowns with icon grid cards, a Pricing link, a Get Started button, and a mobile sheet with accordions.",
+        description: "A modern dark navbar with a sticky blurred header, mega-menu dropdowns, a Pricing link, and a get-started button.",
         preview: () => (<ModernDarkNavbarPreview />),
         code: `// navigation-menu.tsx
 import * as React from 'react';
@@ -8917,7 +8917,7 @@ function MoileNav() {
         isPremium: false,
         addedAt: "2026-08-31",
         newBadgeDays: 120,
-        description: "A clean split navigation header (\"Meridian\") built in plain HTML, CSS, and vanilla JS: a left glass-pill of links, a centered chevron-mark logo, and a right-side blue Book Demo button, with staggered entrance animations for the links, logo mark, and button, a blue underline + color hover on links, and a responsive hamburger that toggles a mobile menu on narrow screens.",
+        description: "A clean split navigation header with a left glass-pill of links, a centered logo mark, a blue Book Demo button, and a responsive mobile menu.",
         preview: () => (<SplitNavigationNavPreview />),
         code: `// index.html
 <!DOCTYPE html>
@@ -9466,7 +9466,7 @@ button {
         isPremium: false,
         addedAt: "2026-08-31",
         newBadgeDays: 120,
-        description: "A glassmorphic bottom navigation pill (\"Awwwards Nav\") that expands upward into a multi-column mega-menu: a single GSAP-powered, prop-driven React component fixed to the bottom center with inline links and a 'More' button that reveals a 4-column panel (Awards, Inspiration, Directory, Market), the icon flipping to an X while collapsed links fade out.",
+        description: "A glassmorphic bottom navigation pill that expands into a four-column mega-menu with a 'More' button.",
         preview: () => (<AwwwardsNavPreview />),
         code: `// awwwards-nav.tsx
 "use client";
