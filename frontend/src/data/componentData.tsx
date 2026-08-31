@@ -2421,6 +2421,123 @@ const ModernDarkNavbarPreview: React.FC = () => {
     );
 };
 
+const AwwwardsNavPreview: React.FC = () => {
+    const [expanded, setExpanded] = React.useState(false);
+    const linkStyle: React.CSSProperties = {
+        textAlign: 'center', fontSize: '12.5px', color: '#525252',
+        textDecoration: 'none', fontFamily: '"Inter", system-ui, sans-serif',
+    };
+    const items = ['Home', 'Nominees', 'Directory', 'Collections'];
+    const columns = [
+        { title: 'Awards', links: ['Winners', 'Site of the Day', 'Nominees'] },
+        { title: 'Inspiration', links: ['Collections', 'Elements', 'Resources'] },
+        { title: 'Directory', links: ['Professionals', 'Agencies', 'Freelancers'] },
+        { title: 'Market', links: ['Jobs', 'New Events', 'Products'] },
+    ];
+    const panelH = expanded ? 190 : 0;
+
+    return (
+        <div style={{
+            position: 'relative', width: '100%', height: '100%', minHeight: '300px',
+            overflow: 'hidden', borderRadius: '24px',
+            background: 'radial-gradient(120% 120% at 50% 0%, #fafafa 0%, #ececec 100%)',
+        }}>
+            <div style={{
+                position: 'absolute', left: '50%', bottom: 14, transform: 'translateX(-50%)',
+                width: 'min(560px, 92%)', zIndex: 5,
+            }}>
+                <nav style={{
+                    display: 'flex', flexDirection: 'column', overflow: 'hidden',
+                    borderRadius: 14, border: '1px solid rgba(0,0,0,0.10)',
+                    background: 'rgba(255,255,255,0.70)', backdropFilter: 'blur(14px)',
+                    boxShadow: '0 12px 40px rgba(0,0,0,0.12)', boxSizing: 'border-box',
+                    transition: 'height .45s cubic-bezier(.76,0,.24,1)',
+                    height: panelH + 60,
+                }}>
+                    <div style={{
+                        height: panelH, overflow: 'hidden', padding: '10px 10px 0 10px', boxSizing: 'border-box',
+                        opacity: expanded ? 1 : 0, transform: expanded ? 'translateY(0)' : 'translateY(-6px)',
+                        transition: 'opacity .3s ease, transform .3s ease',
+                    }}>
+                        <div style={{
+                            display: 'flex', height: '100%',
+                            border: '1px solid rgba(0,0,0,0.06)', borderRadius: 10,
+                            background: 'rgba(0,0,0,0.03)', padding: 14, boxSizing: 'border-box', gap: 0,
+                        }}>
+                            {columns.map((col, ci) => (
+                                <div key={col.title} style={{
+                                    flex: 1, display: 'flex', flexDirection: 'column', gap: 3,
+                                    borderLeft: ci > 0 ? '1px dashed rgba(0,0,0,0.15)' : 'none',
+                                    paddingLeft: ci > 0 ? 14 : 0,
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                                        <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#000', flexShrink: 0 }} />
+                                        <span style={{ fontSize: 11.5, color: 'rgba(0,0,0,0.72)', fontFamily: '"Inter", system-ui, sans-serif', fontWeight: 600 }}>{col.title}</span>
+                                    </div>
+                                    {col.links.map(l => (
+                                        <a key={l} href="#" onClick={(e) => e.preventDefault()} style={{
+                                            display: 'block', padding: '4px 0', fontSize: 12,
+                                            color: '#171717', textDecoration: 'none', fontFamily: '"Inter", system-ui, sans-serif',
+                                        }}>{l}</a>
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div style={{
+                        display: 'flex', height: 60, alignItems: 'center', gap: 6, padding: 10, boxSizing: 'border-box',
+                    }}>
+                        <button
+                            type="button"
+                            onClick={() => setExpanded(v => !v)}
+                            style={{
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+                                flexShrink: 0, padding: '0 16px', height: 40, borderRadius: 10,
+                                border: '1px solid rgba(0,0,0,0.10)', background: expanded ? 'rgba(0,0,0,0.08)' : 'rgba(0,0,0,0.04)',
+                                color: '#404040', cursor: 'pointer', fontSize: 13, fontWeight: 500,
+                                fontFamily: '"Inter", system-ui, sans-serif',
+                            }}
+                        >
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" style={{ color: '#000' }}>
+                                {expanded ? (
+                                    <path d="M3 12L13 4M13 12L3 4" />
+                                ) : (
+                                    <path d="M1.5 3.5h13M1.5 8h13M1.5 12.5h13" />
+                                )}
+                            </svg>
+                            <span>More</span>
+                        </button>
+
+                        <div style={{ display: 'flex', flex: 4, alignItems: 'center', gap: 6, minWidth: 0 }}>
+                            {items.map((it) => (
+                                <a
+                                    key={it}
+                                    href="#"
+                                    onClick={(e) => e.preventDefault()}
+                                    style={{
+                                        ...linkStyle,
+                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                        flex: 1, height: 40, borderRadius: 10,
+                                        border: expanded ? '1px solid transparent' : '1px solid rgba(0,0,0,0.15)',
+                                        backgroundColor: 'transparent',
+                                        opacity: expanded ? 0 : 1, pointerEvents: expanded ? 'none' : 'auto',
+                                        transition: 'opacity .12s ease, border-color .2s ease',
+                                    }}
+                                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.4)'; e.currentTarget.style.color = '#000'; }}
+                                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.15)'; e.currentTarget.style.color = '#525252'; }}
+                                >
+                                    {it}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    );
+};
+
 export type ComponentItem = {
     id: string;
     title: string;
