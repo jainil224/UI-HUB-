@@ -40,12 +40,17 @@ import FourierFlow from './components/ui/FourierFlow';
 import { SkeletonProvider } from './context/SkeletonContext';
 import { HeroSkeleton } from './components/ui/Skeleton';
 import TopLoader from './components/ui/TopLoader';
+import { triggerBackgroundComponentSync } from './utils/componentSync';
 
 
 // Wrapper: only shows Navbar + Footer on non-library pages
 const AppShell = () => {
   const { theme } = useTheme();
   const location = useLocation();
+
+  React.useEffect(() => {
+    triggerBackgroundComponentSync();
+  }, []);
   const isLibrary = location.pathname.startsWith('/library');
   const isDashboard = location.pathname.startsWith('/dashboard');
   const isAdmin = location.pathname.startsWith('/admin');

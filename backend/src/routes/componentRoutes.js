@@ -3,6 +3,8 @@ import { verifyToken } from '../middleware/auth.js';
 import { generateVibePrompt, getComponentSource } from '../services/promptService.js';
 import { checkProStatus, checkEliteStatus, evaluateAiTrial, recordPremiumTrialUse, PREMIUM_AI_TOOLS } from '../services/userService.js';
 import { logActivity } from '../services/activityLogService.js';
+import { syncAllComponentsToMongo, inferCategory, formatTitle } from '../services/componentSyncService.js';
+import { getCollection } from '../services/mongoService.js';
 
 const router = express.Router();
 
@@ -146,6 +148,110 @@ router.get('/:id/source', verifyToken, async (req, res) => {
   } catch (error) {
     console.error(`Error getting source for ${id}:`, error);
     res.status(500).json({ error: 'Failed to get source code' });
+  }
+});
+
+/**
+ * @route POST /api/v1/components/sync
+ * @desc Synchronize all website components into MongoDB Atlas
+ * @access Public (safe upsert, non-destructive)
+ */
+router.post('/sync', async (req, res) => {
+  try {
+    const result = await syncAllComponentsToMongo();
+    res.json(result);
+  } catch (error) {
+    console.error('[ComponentSyncRoute] Sync failed:', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route POST /api/v1/components
+ * @desc Upsert a new or updated component into MongoDB Atlas
+ * @access Public / Authenticated
+ */
+router.post('/', async (req, res) => {
+  try {
+    const { id, title, category, code, isPro = false, vibePrompt = '', framework = 'react', styling = 'tailwind', tags } = req.body || {};
+
+    if (!id) {
+      return res.status(400).json({ success: false, error: 'Component ID is required.' });
+    }
+
+    const cleanId = String(id).trim().toLowerCase();
+    const finalCategory = category || inferCategory(cleanId);
+    const finalTitle = title || formatTitle(cleanId);
+    const finalTags = Array.isArray(tags) && tags.length > 0
+      ? tags
+      : [finalCategory, isPro ? 'pro' : 'free', 'react', 'tailwind', ...cleanId.split('-')];
+
+    const col = await getCollection('components');
+    const now = new Date();
+
+    await col.updateOne(
+      { _id: cleanId },
+      {
+        $set: {
+          _id: cleanId,
+          title: finalTitle,
+          category: finalCategory,
+          framework,
+          styling,
+          isPro: Boolean(isPro),
+          code: typeof code === 'string' ? { react: code } : (code || {}),
+          vibePrompt: vibePrompt || '',
+          tags: finalTags,
+          updatedAt: now,
+        },
+        $setOnInsert: {
+          viewsCount: 0,
+          copyCount: 0,
+          createdAt: now,
+        },
+      },
+      { upsert: true }
+    );
+
+    await logActivity({
+      type: 'component.registered',
+      level: 'info',
+      metadata: {
+        componentId: cleanId,
+        title: finalTitle,
+        category: finalCategory,
+        isPro: Boolean(isPro),
+      },
+    });
+
+    res.json({
+      success: true,
+      message: `Component "${cleanId}" successfully updated in MongoDB.`,
+      component: {
+        _id: cleanId,
+        title: finalTitle,
+        category: finalCategory,
+        isPro: Boolean(isPro),
+      },
+    });
+  } catch (error) {
+    console.error('[RegisterComponent] Error updating component in MongoDB:', error.message);
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+/**
+ * @route GET /api/v1/components/db
+ * @desc Get summary of components stored in MongoDB Atlas
+ */
+router.get('/db', async (req, res) => {
+  try {
+    const col = await getCollection('components');
+    const total = await col.countDocuments();
+    const items = await col.find({}, { projection: { _id: 1, title: 1, category: 1, isPro: 1, updatedAt: 1 } }).toArray();
+    res.json({ total, components: items });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
   }
 });
 

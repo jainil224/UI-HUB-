@@ -11,7 +11,8 @@
     "dev": "npx concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:all": "npx concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:mcp\"",
     "build": "cd frontend && npm install && npm run build",
-    "start": "cd backend && npm start"
+    "start": "cd backend && npm start",
+    "sync:components": "cd backend && npm run sync:components"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",

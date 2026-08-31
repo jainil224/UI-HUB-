@@ -1,11 +1,12 @@
 import admin from '../utils/firebaseAdmin.js';
 import { getCollection } from './mongoService.js';
 import { logActivity } from './activityLogService.js';
+import { syncAllComponentsToMongo } from './componentSyncService.js';
 
 /**
  * Sync Service
  * Periodically polls Firebase Authentication for new users and
- * ensures they have a matching document in the MongoDB 'users' collection.
+ * ensures components and users have matching documents in MongoDB Atlas.
  */
 
 const SYNC_INTERVAL_MS = 3600000; // 1 hour
@@ -17,8 +18,13 @@ export const startUserSyncWorker = () => {
   if (isRunning) return;
   isRunning = true;
 
+  // Always run component sync
+  syncAllComponentsToMongo().catch((err) =>
+    console.error('[SyncWorker] Component sync error:', err.message)
+  );
+
   if (!admin.apps || admin.apps.length === 0) {
-    console.warn('[SyncWorker] Firebase Admin is not initialized (no service account credentials found). Background sync worker paused.');
+    console.warn('[SyncWorker] Firebase Admin is not initialized (no service account credentials found). Background user sync paused.');
     return;
   }
 
@@ -28,7 +34,10 @@ export const startUserSyncWorker = () => {
   runSyncTask();
 
   // Scheduled runs
-  setInterval(runSyncTask, SYNC_INTERVAL_MS);
+  setInterval(() => {
+    runSyncTask();
+    syncAllComponentsToMongo().catch((e) => console.error('[SyncWorker] Scheduled component sync error:', e.message));
+  }, SYNC_INTERVAL_MS);
 };
 
 const runSyncTask = async () => {

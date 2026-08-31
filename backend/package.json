@@ -8,7 +8,8 @@
     "build": "cd ../mcp-server && npm install && npm run build",
     "postinstall": "cd ../mcp-server && npm install",
     "start": "node src/server.js",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "sync:components": "node src/scripts/syncComponents.js"
   },
   "dependencies": {
     "@upstash/redis": "^1.37.0",

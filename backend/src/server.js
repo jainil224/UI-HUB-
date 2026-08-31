@@ -9,6 +9,7 @@ import paymentRoutes from './routes/paymentRoutes.js';
 import favoritesRoutes from './routes/favoritesRoutes.js';
 import { globalLimiter } from './middleware/rateLimiters.js';
 import { startUserSyncWorker } from './services/syncService.js';
+import { syncAllComponentsToMongo } from './services/componentSyncService.js';
 
 dotenv.config();
 console.log('Environment variables loaded from .env');
@@ -167,6 +168,11 @@ app.use((err, req, res, next) => {
 
 // Export the app for Vercel
 export default app;
+
+// Synchronize all website UI components to MongoDB Atlas on boot
+syncAllComponentsToMongo().catch((err) =>
+  console.error('[Startup] Component sync notice:', err.message)
+);
 
 // Start background user synchronization worker
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
