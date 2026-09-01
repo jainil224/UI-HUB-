@@ -40,6 +40,8 @@ type ToolDef = {
     hint: string;
     color: string;
     icon: LucideIcon;
+    logo: string;
+    logoClass?: string;
     build: (url: string) => string;
 };
 
@@ -62,6 +64,8 @@ const TOOLS: ToolDef[] = [
         hint: 'Place in .cursor/mcp.json',
         color: '#5B5BD6',
         icon: Boxes,
+        logo: '/logos/cursor.svg',
+        logoClass: 'brightness-0 invert',
         build: JSON_CONFIG,
     },
     {
@@ -70,6 +74,7 @@ const TOOLS: ToolDef[] = [
         hint: 'Run: claude mcp add ui-hub',
         color: '#D97757',
         icon: Terminal,
+        logo: '/logos/claude-color.svg',
         build: (url) => `claude mcp add ui-hub --transport http ${url} --header "Authorization: Bearer YOUR_UI_HUB_API_KEY"`,
     },
     {
@@ -78,6 +83,7 @@ const TOOLS: ToolDef[] = [
         hint: 'Place in ~/.gemini/config/mcp_config.json',
         color: '#3B82F6',
         icon: Sparkles,
+        logo: '/logos/antigravity-color.svg',
         build: JSON_CONFIG,
     },
     {
@@ -86,6 +92,7 @@ const TOOLS: ToolDef[] = [
         hint: 'Place in .vscode/mcp.json',
         color: '#0EA5E9',
         icon: Code2,
+        logo: '/logos/copilot-color.svg',
         build: JSON_CONFIG,
     },
 ];
@@ -112,6 +119,17 @@ const CopyButton: React.FC<{ text: string; label?: string; red?: boolean }> = ({
         </button>
     );
 };
+
+const ToolLogo: React.FC<{ tool: ToolDef; size?: number; className?: string }> = ({ tool, size = 16, className = '' }) => (
+    <img
+        src={tool.logo}
+        alt={`${tool.label} logo`}
+        width={size}
+        height={size}
+        style={{ width: size, height: size }}
+        className={`shrink-0 object-contain ${tool.logoClass || ''} ${className}`}
+    />
+);
 
 /* ── Main Page ── */
 const MCPPage: React.FC = () => {
@@ -619,7 +637,7 @@ const MCPPage: React.FC = () => {
                                 onClick={() => setToolOpen((o) => !o)}
                                 className="inline-flex items-center gap-2.5 rounded-md border-2 border-white bg-black text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest hover:bg-neutral-900 transition-colors cursor-pointer"
                             >
-                                <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: activeTool.color }} />
+                                <ToolLogo tool={activeTool} size={18} />
                                 <span style={{ color: activeTool.color }}>{activeTool.label}</span>
                                 <ChevronDown size={14} className={`transition-transform ${toolOpen ? 'rotate-180' : ''}`} />
                             </button>
@@ -628,25 +646,22 @@ const MCPPage: React.FC = () => {
                                 <>
                                     <div className="fixed inset-0 z-40" onClick={() => setToolOpen(false)} />
                                     <div className="absolute top-full left-0 mt-2 z-50 w-72 rounded-lg border-2 border-white bg-brand-surface shadow-[4px_4px_0_0_#000] overflow-hidden">
-                                        {TOOLS.map((tool) => {
-                                            const Icon = tool.icon;
-                                            return (
-                                                <button
-                                                    key={tool.id}
-                                                    onClick={() => { setActiveTool(tool); setToolOpen(false); }}
-                                                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${activeTool.id === tool.id ? 'bg-neutral-900' : 'hover:bg-neutral-900/60'}`}
-                                                >
-                                                    <span className="w-8 h-8 shrink-0 rounded-md border-2 border-white/30 flex items-center justify-center" style={{ color: tool.color }}>
-                                                        <Icon size={15} />
-                                                    </span>
-                                                    <span className="min-w-0 flex-1">
-                                                        <span className="block text-[11px] font-black uppercase tracking-widest text-white">{tool.label}</span>
-                                                        <span className="block text-[10px] text-neutral-400 truncate">{tool.hint}</span>
-                                                    </span>
-                                                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: tool.color }} />
-                                                </button>
-                                            );
-                                        })}
+                                        {TOOLS.map((tool) => (
+                                            <button
+                                                key={tool.id}
+                                                onClick={() => { setActiveTool(tool); setToolOpen(false); }}
+                                                className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${activeTool.id === tool.id ? 'bg-neutral-900' : 'hover:bg-neutral-900/60'}`}
+                                            >
+                                                <span className="w-7 h-7 shrink-0 rounded-md border border-white/30 bg-black flex items-center justify-center p-1">
+                                                    <ToolLogo tool={tool} size={18} />
+                                                </span>
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="block text-[11px] font-black uppercase tracking-widest text-white">{tool.label}</span>
+                                                    <span className="block text-[10px] text-neutral-400 truncate">{tool.hint}</span>
+                                                </span>
+                                                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: tool.color }} />
+                                            </button>
+                                        ))}
                                     </div>
                                 </>
                             )}
@@ -658,7 +673,7 @@ const MCPPage: React.FC = () => {
                     <div className="relative">
                         <div className="absolute top-0 inset-x-0 h-1" style={{ backgroundColor: activeTool.color }} />
                         <div className="flex items-center gap-2 px-5 pt-4 text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                            {(() => { const Icon = activeTool.icon; return <Icon size={12} style={{ color: activeTool.color }} />; })()}
+                            <ToolLogo tool={activeTool} size={14} />
                             <span style={{ color: activeTool.color }}>{activeTool.label}</span>
                             <span className="text-neutral-600">· {activeTool.hint}</span>
                         </div>
