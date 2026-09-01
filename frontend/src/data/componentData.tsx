@@ -3799,6 +3799,215 @@ const LeeuwarderGolfclubPreview: React.FC = () => {
     );
 };
 
+const NewsletterCardPreview: React.FC = () => {
+    const [joined, setJoined] = useState(false);
+    const [email, setEmail] = useState("");
+    const promoBg = "https://res.cloudinary.com/chhwhdhk/image/upload/v1788255735/ChatGPT_Image_Sep_1_2026_03_11_12_PM_kzw430.png";
+    const cardBg = "https://res.cloudinary.com/chhwhdhk/image/upload/v1788257136/ChatGPT_Image_Sep_1_2026_03_32_14_PM_ustzc6.png";
+    const avatars = [
+        { url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 1" },
+        { url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 2" },
+        { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 3" },
+        { url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 4" },
+        { url: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 5" },
+    ];
+
+    const iconButton: React.CSSProperties = {
+        width: 34,
+        height: 34,
+        borderRadius: 999,
+        background: "rgba(255,255,255,0.8)",
+        color: "#152038",
+        border: "1px solid rgba(255,255,255,0.8)",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        transition: "all 0.2s",
+        padding: 0,
+    };
+
+    const InstagramIcon = () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="5" stroke="#152038" strokeWidth="1.8" />
+            <circle cx="12" cy="12" r="4" stroke="#152038" strokeWidth="1.8" />
+            <circle cx="17.2" cy="6.8" r="1.2" fill="#152038" />
+        </svg>
+    );
+    const GithubIcon = () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#152038" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-1.05-.01-1.91-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.89 1.57 2.34 1.12 2.91.85.09-.66.35-1.12.63-1.37-2.22-.26-4.56-1.14-4.56-5.08 0-1.12.39-2.04 1.03-2.75-.1-.26-.45-1.3.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.91-1.33 2.75-1.05 2.75-1.05.55 1.42.2 2.46.1 2.72.64.71 1.03 1.63 1.03 2.75 0 3.95-2.34 4.82-4.57 5.08.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.8 0 .27.18.6.69.49A10.24 10.24 0 0 0 22 12.25C22 6.58 17.52 2 12 2z" />
+        </svg>
+    );
+    const LinkedinIcon = () => (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#152038" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23H.5V8zM8 8h3.84v2.05h.05c.53-1 1.83-2.05 3.77-2.05C19.78 8 21 10.34 21 13.57V23h-4v-8.4c0-2-.04-4.58-2.8-4.58-2.8 0-3.2 2.18-3.2 4.43V23H8V8z" />
+        </svg>
+    );
+
+    return (
+        <div style={{
+            position: "relative",
+            width: "100%",
+            minHeight: 540,
+            overflow: "hidden",
+            fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+            WebkitFontSmoothing: "antialiased",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 24,
+        }}>
+            {/* Full page background */}
+            <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${promoBg})`, backgroundSize: "cover", backgroundPosition: "center", zIndex: 0 }} />
+
+            {/* Card */}
+            <div id="newsletter-card" style={{
+                position: "relative",
+                width: "100%",
+                maxWidth: 1000,
+                minHeight: 295,
+                borderRadius: 16,
+                border: "1px solid rgba(255,255,255,0.4)",
+                overflow: "hidden",
+                backdropFilter: "blur(16px)",
+                background: "rgba(255,255,255,0.2)",
+                boxShadow: "0 8px 32px rgba(0,0,0,0.06)",
+                zIndex: 1,
+            }}>
+                {/* Card internal background */}
+                <div style={{ position: "absolute", inset: 0, backgroundImage: `url(${cardBg})`, backgroundSize: "cover", backgroundPosition: "center" }} />
+                {/* Overlay */}
+                <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.25)", backdropFilter: "blur(2px)", pointerEvents: "none" }} />
+
+                {/* Inner content */}
+                <div style={{
+                    position: "relative",
+                    zIndex: 10,
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    height: "100%",
+                    width: "100%",
+                }}>
+                    {/* LEFT */}
+                    <div style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "flex-start",
+                        padding: "44px 0 40px 46px",
+                        maxWidth: 460,
+                    }}>
+                        <h2 style={{
+                            margin: 0,
+                            fontWeight: 700,
+                            fontSize: 24,
+                            lineHeight: "29px",
+                            letterSpacing: "-0.015em",
+                            color: "#152038",
+                            textShadow: "0 1px 1px rgba(255,255,255,0.8)",
+                            whiteSpace: "nowrap",
+                        }}>Subscribe to Our Community</h2>
+
+                        <p style={{
+                            margin: "10px 0 0",
+                            fontWeight: 500,
+                            fontSize: 13,
+                            lineHeight: "18px",
+                            maxWidth: 390,
+                            color: "#2c3e55",
+                            textShadow: "0 1px 1px rgba(255,255,255,0.6)",
+                        }}>
+                            Get exclusive access to cutting-edge tech insights, industry trends, and expert advice delivered straight to your inbox. Join our growing community today!
+                        </p>
+
+                        {/* Form */}
+                        <form onSubmit={(e) => { e.preventDefault(); setJoined(true); setEmail(""); }} style={{ marginTop: 22, display: "flex", flexWrap: "wrap", gap: 12 }}>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email here"
+                                aria-label="Email address"
+                                style={{
+                                    width: 255,
+                                    height: 37,
+                                    padding: "0 16px",
+                                    fontSize: 13,
+                                    color: "#152038",
+                                    background: "rgba(255,255,255,0.9)",
+                                    backdropFilter: "blur(12px)",
+                                    border: "1px solid rgba(255,255,255,0.6)",
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                                    borderRadius: 999,
+                                    outline: "none",
+                                }}
+                            />
+                            <button
+                                type="submit"
+                                style={{
+                                    width: 87,
+                                    height: 37,
+                                    background: "rgba(255,255,255,0.9)",
+                                    color: "#152038",
+                                    fontWeight: 600,
+                                    fontSize: 13,
+                                    borderRadius: 999,
+                                    border: "1px solid rgba(255,255,255,0.6)",
+                                    boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
+                                    backdropFilter: "blur(12px)",
+                                    cursor: "pointer",
+                                    transition: "all 0.2s",
+                                    userSelect: "none",
+                                }}
+                            >
+                                {joined ? "Joined!" : "Join Now"}
+                            </button>
+                        </form>
+
+                        {/* Avatars */}
+                        <div style={{ marginTop: 24, display: "flex", alignItems: "center", userSelect: "none" }}>
+                            <div style={{ display: "flex" }}>
+                                {avatars.map((a, i) => (
+                                    <img
+                                        key={a.url}
+                                        src={a.url}
+                                        alt={a.alt}
+                                        width={27}
+                                        height={27}
+                                        style={{
+                                            width: 27,
+                                            height: 27,
+                                            borderRadius: 999,
+                                            border: "1.5px solid #fff",
+                                            objectFit: "cover",
+                                            boxShadow: "0 1px 3px rgba(0,0,0,0.12)",
+                                            marginLeft: i === 0 ? 0 : -6,
+                                        }}
+                                    />
+                                ))}
+                            </div>
+                            <span style={{ marginLeft: 12, fontWeight: 600, fontSize: 12, lineHeight: 1, color: "#152038", textShadow: "0 1px 1px rgba(255,255,255,0.7)" }}>5,000+ happy members</span>
+                        </div>
+                    </div>
+
+                    {/* RIGHT social icons */}
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", paddingRight: 46 }}>
+                        <span style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 700, color: "#152038", textShadow: "0 1px 1px rgba(255,255,255,0.7)", whiteSpace: "nowrap" }}>SOCIAL MEDIA</span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8 }}>
+                            <button type="button" style={iconButton} aria-label="Instagram"><InstagramIcon /></button>
+                            <button type="button" style={iconButton} aria-label="Github"><GithubIcon /></button>
+                            <button type="button" style={iconButton} aria-label="LinkedIn"><LinkedinIcon /></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // Assuming these prompts apply as they were defined in VibeMeta
 export const componentList: ComponentItem[] = [
 
@@ -11170,6 +11379,146 @@ export default function LeeuwarderGolfclub() {
 5. THREE-COLUMN DESKTOP CONTENT LAYOUT (12-col grid): A. LEFT COLUMN (4 cols): "Contact" heading text-[18px] font-bold text-[#FFF6C7] mb-3; contact text-[13.5px] text-[#FFF6C7]/85 leading-relaxed: "Woelwijk 101,", "8926 XD Leeuwarden", "0511 - 43 22 99" (hover #00F27A), "info@leeuwardergolfclub.nl" (hover #00F27A); right social links "Facebook ↗", "Instagram ↗", "LinkedIn ↗" text-[#FFF6C7] with w-3.5 h-3.5 text-[#00F27A] arrow that moves translate-x-0.5 -translate-y-0.5 on hover. Left-Bottom badges: score pill bg-[#00F27A] text-[#121212] font-black text-[11px] px-2 py-0.5 rounded-full "7,9" + "Leadingcourses score" text-[#FFF6C7]/90 text-[12px]; NGF orange badge bg-[#E05A1E] w-6 h-7 rounded-[4px]; Leadingcourses dark pine bg-[#0E4A35] border border-[#00F27A]/40 with gold star + "2024"; GOLF.NL blue bg-[#009EE0] w-7 h-5 rounded-[4px]; PGA Holland tricolor flag (Red/White/Blue). B. CENTER COLUMN (4 cols): Brand "Leeuwarder" above "Golfclub", font-display font-black text-[38px] sm:text-[46px] md:text-[50px] leading-[1.05] tracking-tight text-[#FFF6C7] text-center; tagline "Waar golfgeluk begint" font-serif italic text-[19px] sm:text-[21px] text-[#FFF6C7]/95 mt-2.5 mb-7 text-center. Two CTA pills: (1 "Starttijd reserveren") bg-[#00F27A] hover:bg-[#05FF83] text-[#111111] font-bold text-[13.5px] sm:text-[14px] rounded-full px-5 py-2.5 shadow-[0_4px_14px_rgba(0,242,122,0.35)] with dark circle badge w-5 h-5 bg-[#0E281C] text-[#00F27A] ArrowRight icon; (2 "Direct lid worden") bg-[#006B4F] hover:bg-[#007E5C] text-[#FFF6C7] font-bold text-[13.5px] sm:text-[14px] rounded-full px-5 py-2.5 border border-[#00F27A]/20 shadow-md with neon circle badge w-5 h-5 bg-[#00F27A] text-[#004A35] ArrowRight. Both CTA buttons are anchor links to the live URL https://ai.studio/apps/54435c8b-0890-4430-9b21-d8ca1aaeced3 with target="_blank" rel="noopener noreferrer". C. RIGHT COLUMN (4 cols): "Snel naar" heading text-[18px] font-bold text-[#FFF6C7] mb-3; 2-column nav grid text-[13.5px] text-[#FFF6C7]/85 space-y-2 hover:#00F27A: col1 "Onze club", "Voor gasten", "Begin met Golf"; col2 "De baan", "Onze evenementen", "Contact". Bottom-right legal bar: bg-[#FFF6C7] text-[#1E1E1E] text-[11px] font-medium px-3.5 py-1 rounded-[5px] shadow-sm containing "Cookies policy | Privacy policy | ©2025".
 
 6. RESPONSIVE BEHAVIOR: Desktop >=1024px crisp 3-column layout; Tablet 768-1023 proportional scaling; Mobile <768 stacked vertical with center-aligned brand/CTAs followed by contact and navigation without horizontal overflow. Use lucide-react ArrowRight for arrow icons. The two center CTA buttons ('Starttijd reserveren' and 'Direct lid worden') must be non-navigating: clicking or hovering them must never redirect — use href="#" with onClick={(e) => e.preventDefault()} so the footer stays in place.`,
+
+    },
+
+    {
+        id: "community-newsletter",
+        title: "Community Newsletter",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-01",
+        newBadgeDays: 120,
+        description: "An ultra-high-fidelity Community Newsletter subscription card with a scenic glassmorphic card, email signup form with a 'Join Now'/'Joined!' state, 5,000+ member avatar proof, and floating social media icons.",
+        preview: () => (<NewsletterCardPreview />),
+        code: `import { useState } from "react";
+import { Instagram, Github, Linkedin } from "lucide-react";
+
+export default function CommunityNewsletter() {
+  const [joined, setJoined] = useState(false);
+  const [email, setEmail] = useState("");
+
+  const avatars = [
+    { url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 1" },
+    { url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 2" },
+    { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 3" },
+    { url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 4" },
+    { url: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&auto=format&fit=crop&crop=faces&q=80", alt: "Member 5" },
+  ];
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setJoined(true);
+    setEmail("");
+  };
+
+  const socialBtn =
+    "w-[34px] h-[34px] rounded-full bg-white/80 hover:bg-white hover:scale-110 active:scale-95 text-[#152038] border border-white/80 shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-center transition-all cursor-pointer";
+
+  return (
+    <div className="min-h-screen w-full relative overflow-hidden flex items-center justify-center p-4 sm:p-8 lg:p-12 font-sans antialiased">
+      {/* Full Page Background Image */}
+      <img
+        src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788255735/ChatGPT_Image_Sep_1_2026_03_11_12_PM_kzw430.png"
+        alt=""
+        className="fixed inset-0 w-full h-full object-cover object-center pointer-events-none select-none z-0"
+      />
+
+      {/* Card */}
+      <div
+        id="newsletter-card"
+        className="relative w-full max-w-[1000px] min-h-[295px] rounded-[16px] border border-white/40 overflow-hidden backdrop-blur-md bg-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.06)]"
+      >
+        {/* Card internal background */}
+        <img
+          src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788257136/ChatGPT_Image_Sep_1_2026_03_32_14_PM_ustzc6.png"
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+        />
+        {/* Overlay */}
+        <div className="absolute inset-0 bg-white/25 backdrop-blur-[2px] pointer-events-none" />
+
+        {/* Inner flex wrapper */}
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center h-full w-full">
+          {/* LEFT: content */}
+          <div className="flex flex-col justify-start h-full pt-[44px] pb-[40px] px-[24px] sm:px-[36px] md:pl-[46px] md:pr-0 max-w-[460px]">
+            <h2 className="font-bold text-[22px] sm:text-[24px] leading-[29px] tracking-[-0.015em] text-[#152038] drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)] whitespace-nowrap">
+              Subscribe to Our Community
+            </h2>
+            <p className="mt-[10px] font-medium text-[13px] leading-[18px] max-w-[390px] text-[#2c3e55] drop-shadow-[0_1px_1px_rgba(255,255,255,0.6)]">
+              Get exclusive access to cutting-edge tech insights, industry trends, and expert advice delivered straight to your inbox. Join our growing community today!
+            </p>
+
+            {/* Email form */}
+            <form onSubmit={handleSubmit} className="mt-[22px] flex flex-col sm:flex-row items-stretch sm:items-center gap-[12px]">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email here"
+                aria-label="Email address"
+                className="px-[16px] text-[13px] text-[#152038] placeholder:text-[#7d8b9e] rounded-full bg-white/90 backdrop-blur-md border border-white/60 shadow-[0_2px_8px_rgba(0,0,0,0.06)] focus:outline-none focus:ring-2 focus:ring-[#8d7cd6]/50"
+                style={{ width: "100%", maxWidth: 255, height: 37 }}
+              />
+              <button
+                type="submit"
+                className="bg-white/90 hover:bg-white active:scale-[0.98] text-[#152038] font-semibold text-[13px] rounded-full border border-white/60 shadow-[0_2px_8px_rgba(0,0,0,0.06)] backdrop-blur-md flex items-center justify-center cursor-pointer transition-all duration-200"
+                style={{ width: "100%", maxWidth: 87, height: 37 }}
+              >
+                {joined ? "Joined!" : "Join Now"}
+              </button>
+            </form>
+
+            {/* Social proof */}
+            <div className="mt-[24px] flex items-center select-none">
+              <div className="flex">
+                {avatars.map((a, i) => (
+                  <img
+                    key={a.url}
+                    src={a.url}
+                    alt={a.alt}
+                    width={27}
+                    height={27}
+                    className="w-[27px] h-[27px] rounded-full border-[1.5px] border-white object-cover shadow-[0_1px_3px_rgba(0,0,0,0.12)]"
+                    style={{ marginLeft: i === 0 ? 0 : -6 }}
+                  />
+                ))}
+              </div>
+              <span className="ml-[12px] font-semibold text-[12px] leading-none text-[#152038] drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]">
+                5,000+ happy members
+              </span>
+            </div>
+          </div>
+
+          {/* RIGHT: social media */}
+          <div className="hidden md:flex flex-col items-end pr-[46px] self-center">
+            <span className="text-[11px] uppercase tracking-wider font-bold text-[#152038] drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)]">SOCIAL MEDIA</span>
+            <div className="flex items-center gap-[10px] mt-2">
+              <button type="button" className={socialBtn} aria-label="Instagram"><Instagram className="w-[16px] h-[16px]" /></button>
+              <button type="button" className={socialBtn} aria-label="Github"><Github className="w-[16px] h-[16px]" /></button>
+              <button type="button" className={socialBtn} aria-label="LinkedIn"><Linkedin className="w-[16px] h-[16px]" /></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: `Create an ultra-high-fidelity, pixel-accurate React + Tailwind CSS Community Newsletter / Footer subscription card component matching these exact specifications:
+
+1. GLOBAL PAGE LAYOUT & BACKGROUND: Viewport: Full screen (min-h-screen w-full relative overflow-hidden flex items-center justify-center p-4 sm:p-8 lg:p-12). Font Family: 'Plus Jakarta Sans', system-ui, sans-serif with antialiasing (-webkit-font-smoothing: antialiased). Full Page Background Image: URL "https://res.cloudinary.com/chhwhdhk/image/upload/v1788255735/ChatGPT_Image_Sep_1_2026_03_11_12_PM_kzw430.png", styling fixed inset-0 w-full h-full object-cover object-center pointer-events-none select-none z-0. No dark/heavy overlay; keep the artwork clear.
+
+2. CARD CONTAINER: Selector/ID #newsletter-card. Dimensions: max-width 1000px, min-height 295px, aspect-ratio 1000 / 295, width 100%. Shape & Borders: rounded-[16px], border border-white/40, overflow-hidden. Glassmorphism & Shadow: backdrop-blur-md bg-white/20, box-shadow 0 8px 32px rgba(0,0,0,0.06). Card Internal Background Image: URL "https://res.cloudinary.com/chhwhdhk/image/upload/v1788257136/ChatGPT_Image_Sep_1_2026_03_32_14_PM_ustzc6.png", styling absolute inset-0 w-full h-full object-cover pointer-events-none select-none. Overlay: absolute inset-0 bg-white/25 backdrop-blur-[2px] pointer-events-none. Inner Flex Wrapper: relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center h-full w-full.
+
+3. LEFT-SIDE CONTENT & TYPOGRAPHY: Container flex flex-col justify-start h-full pt-[44px] pb-[40px] px-[24px] sm:px-[36px] md:pl-[46px] md:pr-0 max-w-[420px]. Main Heading "Subscribe to Our Community": font-bold text-[22px] sm:text-[24px] line-height [29px] tracking-[-0.015em] color #152038 drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)], single line on desktop. Description mt-[10px] "Get exclusive access to cutting-edge tech insights, industry trends, and expert advice delivered straight to your inbox. Join our growing community today!" font-medium text-[13px] line-height [18px] max-w-[390px] color #2c3e55 drop-shadow-[0_1px_1px_rgba(255,255,255,0.6)], exactly 3 lines on desktop.
+
+4. EMAIL INPUT & SUBMISSION BUTTON ROW: Form Container mt-[22px] flex flex-col sm:flex-row items-stretch sm:items-center gap-[12px]. Email Input width 100% on mobile / sm:w-[255px], height 37px, px-[16px], text-[13px], text-[#152038], placeholder text-[#7d8b9e] "Enter your email here", fully rounded pill rounded-full, bg-white/90, backdrop-blur-md, border border-white/60, shadow-[0_2px_8px_rgba(0,0,0,0.06)], focus:outline-none focus:ring-2 focus:ring-[#8d7cd6]/50. Submit Button width 100% on mobile / sm:w-[87px], height 37px, text "Join Now" (or "Joined!" upon submit), bg-white/90 hover:bg-white active:scale-[0.98], text-[#152038], font-semibold, text-[13px], rounded-full, border border-white/60, shadow-[0_2px_8px_rgba(0,0,0,0.06)], backdrop-blur-md, flex items-center justify-center cursor-pointer transition-all duration-200. Handle form submit with a controlled state (useState), briefly switching the button label to "Joined!" and clearing the input; submission must never redirect.
+
+5. SOCIAL PROOF / MEMBER AVATARS: Container mt-[24px] flex items-center select-none. Avatars group: flex row with -ml-[6px] overlap between 5 circular avatars. Each avatar w-[27px] h-[27px] rounded-full border-[1.5px] border-white object-cover shadow-[0_1px_3px_rgba(0,0,0,0.12)]. Image URLs (Unsplash faces): (1) https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&auto=format&fit=crop&crop=faces&q=80 (2) https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&auto=format&fit=crop&crop=faces&q=80 (3) https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&auto=format&fit=crop&crop=faces&q=80 (4) https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&auto=format&fit=crop&crop=faces&q=80 (5) https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&auto=format&fit=crop&crop=faces&q=80. Member Text ml-[12px] "5,000+ happy members" font-semibold text-[12px] leading-none color #152038 drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)].
+
+6. RIGHT-SIDE FLOATING SOCIAL MEDIA ICONS: Container hidden md:flex flex-col items-end pr-[46px] self-center. Group flex flex-col items-end gap-[8px]. Label text-[11px] uppercase tracking-wider font-bold text-[#152038] drop-shadow-[0_1px_1px_rgba(255,255,255,0.7)] "SOCIAL MEDIA". Icon Row flex items-center gap-[10px]: 3 circular buttons for Instagram, GitHub, and LinkedIn — w-[34px] h-[34px] rounded-full bg-white/80 hover:bg-white hover:scale-110 active:scale-95 text-[#152038] border border-white/80 shadow-[0_2px_6px_rgba(0,0,0,0.05)] flex items-center justify-center transition-all cursor-pointer. Icons: Lucide React icons <Instagram className="w-[16px] h-[16px]" />, <Github className="w-[16px] h-[16px]" />, <Linkedin className="w-[16px] h-[16px]" />. The social buttons must be non-navigating (buttons, not links) so clicking never redirects.
+
+7. INTERACTIVITY & ANIMATIONS: Email State: handle form submit with a controlled state, briefly switching the button label to "Joined!" and clearing the input. Hover Transitions: smooth transition-all duration-200 across button active scale (active:scale-[0.98]), social icon hover zoom (hover:scale-110), and input focus rings. Responsiveness: fluid width scaling down seamlessly on mobile with vertical form stacking and preserved legibility. Non-navigating behavior: no buttons, links, or hover elements should redirect anywhere or leave the component; everything stays in place.`,
 
     },
 

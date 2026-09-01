@@ -1222,11 +1222,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     </button>
                 </div>
 
-                {(item.id === 'leeuwarder-golfclub' || item.id === 'alpine-footer') && (
+                {(item.id === 'leeuwarder-golfclub' || item.id === 'alpine-footer' || item.id === 'community-newsletter') && (
                     <a
                         href={item.id === 'leeuwarder-golfclub'
                             ? 'https://ai.studio/apps/54435c8b-0890-4430-9b21-d8ca1aaeced3'
-                            : 'https://ai.studio/apps/ba450faa-d535-476c-9979-27adc00efe2f'}
+                            : item.id === 'alpine-footer'
+                                ? 'https://ai.studio/apps/ba450faa-d535-476c-9979-27adc00efe2f'
+                                : 'https://ai.studio/apps/6fe73a1b-79af-4689-9899-fc0b5c3c6bc5'}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-lg border-2 border-brand-red bg-brand-red text-white text-xs font-black uppercase tracking-wider hover:bg-[#E8380D] hover:border-[#E8380D] transition-all brutal-shadow-black cursor-pointer shrink-0"
