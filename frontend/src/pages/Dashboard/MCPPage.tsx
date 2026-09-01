@@ -258,6 +258,15 @@ const MCPPage: React.FC = () => {
                             <MetaCell icon={Zap} label="Plan" value={tier} />
                             <MetaCell icon={Fingerprint} label="Auth" value="Bearer uh_live_..." mono />
                         </div>
+
+                        <div className="mt-4 flex items-start gap-2.5 border-2 border-brand-yellow/70 bg-black/60 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300">
+                            <AlertTriangle size={15} className="text-brand-yellow shrink-0 mt-0.5" />
+                            <span>
+                                <strong className="text-white">The endpoint URL alone won't connect.</strong>{' '}
+                                AI tools require the <code className="font-mono text-brand-yellow px-1 bg-neutral-900 rounded">Authorization: Bearer uh_live_...</code>{' '}
+                                header. After creating a key, copy the <strong className="text-white">full ready-to-paste config</strong> below — it embeds your key so a bare URL is never pasted.
+                            </span>
+                        </div>
                     </div>
                 </div>
             </motion.header>

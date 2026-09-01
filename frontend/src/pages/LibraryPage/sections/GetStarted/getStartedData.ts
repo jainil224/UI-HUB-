@@ -164,6 +164,10 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
                         },
                     },
                     {
+                        title: 'Important: paste the full config, not just the URL',
+                        body: 'A bare endpoint URL (https://ui-hub-mcp.onrender.com/mcp) will NOT connect on its own — the server answers unauthenticated requests with "Unauthorized: Missing API key. Use the header Authorization: Bearer uh_live_...". Always paste the complete config block (or the claude mcp add command) that includes the Authorization header with your key, so your AI tool can authenticate and list tools.',
+                    },
+                    {
                         title: 'Ask your assistant',
                         body: 'That is it — just ask. The AI wires up the tools automatically:',
                         code: {

@@ -49,27 +49,36 @@ describe('MCP HTTP endpoint', () => {
     vi.clearAllMocks();
   });
 
-  it('rejects requests without an Authorization header (401)', async () => {
-    const res = await request(app).post('/mcp').send({ jsonrpc: '2.0', method: 'initialize', id: 1 });
-    expect(res.status).toBe(401);
-    expect(res.body.error).toBe('INVALID_API_KEY');
+  // Auth failures are returned as HTTP 200 with a JSON-RPC -32001 error envelope,
+  // NOT a bare HTTP 401. Rationale: a naked 401 is the trigger for the OAuth 2.1
+  // discovery flow (clients look for /.well-known/oauth-protected-resource), which
+  // this server does not implement. Since we use a simple Bearer API key, the
+  // transport succeeded and the *method* failed — exactly what a JSON-RPC error
+  // envelope is for. MCP clients parse the envelope and surface the message.
+  it('rejects requests without an Authorization header (200 + JSON-RPC -32001)', async () => {
+    const res = await request(app).post('/mcp').send({ jsonrpc: '2.0', method: 'tools/list', id: 1 });
+    expect(res.status).toBe(200);
+    expect(res.body.error.code).toBe(-32001);
+    expect(res.body.error.message).toContain('Authorization: Bearer uh_live_');
   });
 
-  it('rejects requests with invalid API key (401)', async () => {
+  it('rejects requests with invalid API key (200 + JSON-RPC -32001)', async () => {
     const res = await request(app)
       .post('/mcp')
       .set('Authorization', 'Bearer uh_live_invalidkey')
-      .send({ jsonrpc: '2.0', method: 'initialize', id: 1 });
-    expect(res.status).toBe(401);
-    expect(res.body.error).toBe('INVALID_API_KEY');
+      .send({ jsonrpc: '2.0', method: 'tools/list', id: 1 });
+    expect(res.status).toBe(200);
+    expect(res.body.error.code).toBe(-32001);
+    expect(res.body.error.message).toContain('Authorization: Bearer uh_live_');
   });
 
-  it('rejects revoked keys (401)', async () => {
+  it('rejects revoked keys (200 + JSON-RPC -32001)', async () => {
     const res = await request(app)
       .post('/mcp')
       .set('Authorization', 'Bearer uh_live_revoked')
-      .send({ jsonrpc: '2.0', method: 'initialize', id: 1 });
-    expect(res.status).toBe(401);
+      .send({ jsonrpc: '2.0', method: 'tools/list', id: 1 });
+    expect(res.status).toBe(200);
+    expect(res.body.error.code).toBe(-32001);
   });
 
   it('accepts a valid API key and initializes', async () => {

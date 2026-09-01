@@ -45,7 +45,7 @@ export async function authenticateMcp(req: AuthenticatedRequest, res: Response, 
       error: {
         code: -32001,
         message:
-          'Unauthorized: Missing API key. Add your UI HUB key via Authorization: Bearer uh_live_...',
+          'Unauthorized: Missing API key. Send requests with the header `Authorization: Bearer uh_live_...` (create a key at ui-hub-design.com/mcp). Note: pasting only the server URL will not work — the API key header is required.',
       },
     });
   }
@@ -72,7 +72,7 @@ export async function authenticateMcp(req: AuthenticatedRequest, res: Response, 
         error: {
           code: -32001,
           message:
-            'Unauthorized: Invalid or revoked UI HUB API key. Generate a new key at ui-hub-design.com/mcp.',
+            'Unauthorized: Invalid or revoked UI HUB API key. Use the header `Authorization: Bearer uh_live_...` with a valid key. Generate a new key at ui-hub-design.com/mcp.',
         },
       });
     }

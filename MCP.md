@@ -1,882 +1,375 @@
-# Integrate MCP into Existing UI HUB Website
+# UI Hub MCP Server — Diagnostic & Fix Guide
 
-I already have a fully built website called **UI HUB**.
-
-Website:
-https://ui-hub-design.vercel.app/
-
-I want you to integrate a new feature called **MCP (Model Context Protocol)** into the existing project.
-
-IMPORTANT:
-
-* Do NOT rebuild the website from scratch.
-* Do NOT replace my existing UI/UX.
-* Do NOT remove or break any existing functionality.
-* First inspect the existing project structure, frontend, backend/API, database, authentication, component system, and deployment configuration.
-* Reuse the existing architecture wherever possible.
-* Keep the current design system, colors, typography, spacing, animations, responsive behavior, and overall branding.
-* Make the MCP integration feel like a native part of UI HUB.
-
-## MAIN GOAL
-
-Turn UI HUB into an **AI-accessible UI component platform**.
-
-Users should be able to connect UI HUB to MCP-compatible AI coding tools such as Cursor, Claude Code, VS Code/Copilot, and other compatible clients.
-
-The AI assistant should be able to discover UI HUB components and retrieve their code, dependencies, styles, metadata, templates, and animations through MCP.
-
-The MCP server should be owned and controlled by UI HUB.
-
-Do NOT depend on an external third-party MCP server.
+**Purpose of this file:** Give an AI coding assistant (or a developer) full context to
+diagnose and permanently fix the "copy MCP URL → paste into any AI tool → doesn't work"
+flow for the UI Hub MCP server.
 
 ---
 
-# 1. CREATE A UI HUB MCP SERVER
+## 1. System Overview
 
-Create a dedicated MCP server for UI HUB.
+| Component | URL | Status (checked from outside) |
+|---|---|---|
+| UI Hub frontend/backend | `https://ui-hub.onrender.com` | Separate Render service |
+| UI Hub MCP server | `https://ui-hub-mcp.onrender.com` | Deployed, root path responds |
 
-Recommended architecture:
-
-Frontend:
-Existing UI HUB frontend
-
-Backend:
-Existing backend if available, otherwise create a separate Node.js + TypeScript MCP service
-
-MCP endpoint:
-
-https://ui-hub-design.vercel.app/mcp
-
-Use **Streamable HTTP** for the production MCP transport.
-
-The MCP server must be designed for production use and should be modular and scalable.
-
-Suggested structure:
-
-/mcp
-/src
-/server
-/tools
-/resources
-/auth
-/services
-/db
-/utils
-package.json
-tsconfig.json
-.env
-
-Adapt this structure to the existing project instead of blindly creating duplicate systems.
-
----
-
-# 2. MCP TOOLS
-
-Create MCP tools for UI HUB.
-
-At minimum implement:
-
-### search_components
-
-Search UI HUB components by:
-
-* name
-* category
-* framework
-* styling
-* tags
-* keyword
-* free/premium status
-
-Example:
-
-search_components({
-query: "pricing card",
-framework: "react",
-styling: "tailwind"
-})
-
-Return useful structured information such as:
-
-* component ID
-* component name
-* description
-* category
-* framework
-* styling
-* tags
-* preview URL
-* premium/free status
-
----
-
-### get_component
-
-Retrieve complete information about a specific component.
-
-Example:
-
-get_component({
-componentId: "pricing-card-pro"
-})
-
-Return:
-
-* metadata
-* description
-* code
-* styles
-* dependencies
-* installation instructions
-* usage example
-* preview URL
-
----
-
-### get_component_code
-
-Return copy-paste-ready source code.
-
-Example:
-
-get_component_code({
-componentId: "pricing-card-pro",
-framework: "react",
-styling: "tailwind"
-})
-
-Return clean production-ready code.
-
----
-
-### search_templates
-
-Allow AI tools to search UI HUB templates.
-
-Example:
-
-search_templates({
-query: "SaaS dashboard"
-})
-
----
-
-### get_template
-
-Return complete template information and code.
-
----
-
-### search_animations
-
-Search UI HUB animation resources.
-
-Example:
-
-search_animations({
-query: "scroll reveal"
-})
-
----
-
-### get_animation_code
-
-Return the implementation/code for a selected animation.
-
----
-
-### list_categories
-
-Return all available UI HUB component categories.
-
-Examples:
-
-* Hero
-* Navbar
-* Pricing
-* Cards
-* Forms
-* Dashboard
-* Authentication
-* Buttons
-* Modals
-* Tables
-* Footer
-* Animations
-* etc.
-
----
-
-### get_dependencies
-
-Return dependencies required by a component.
-
-Example response:
-
+Root path (`GET /`) currently returns:
+```json
 {
-"dependencies": [
-"lucide-react",
-"framer-motion"
-]
+  "service": "ui-hub-mcp",
+  "status": "ok",
+  "endpoints": {
+    "mcp": "/mcp",
+    "health": "/health",
+    "dashboard": "/api/dashboard/mcp"
+  }
+}
+```
+
+**Intended user flow:**
+1. User visits `ui-hub.onrender.com`, generates a personal MCP connection (likely an API
+   key + the `/mcp` URL, shown via the `/api/dashboard/mcp` endpoint).
+2. User pastes that URL/config into Claude, Cursor, Claude Code, Windsurf, ChatGPT, etc.
+3. That AI tool opens a **Streamable HTTP** connection to `https://ui-hub-mcp.onrender.com/mcp`
+   and expects standard MCP JSON-RPC handshake + tool list + tool calls to work from a
+   cold, unauthenticated (until auth handshake) client, from an arbitrary origin.
+
+Because the server responds fine on `/` but "doesn't work" when pasted into an AI tool,
+the bug is almost certainly in how `/mcp` itself is implemented, not in whether the
+service is up. The sections below are ordered by likelihood.
+
+---
+
+## 2. Most Likely Root Causes (check in this order)
+
+### 2.1 `/mcp` isn't a valid Streamable HTTP endpoint
+
+The current MCP spec's HTTP transport requires a **single endpoint that accepts POST**
+(and optionally GET for server-initiated streams / DELETE to close a session). If your
+`/mcp` route:
+- only accepts GET, or
+- returns HTML/404 for POST, or
+- isn't mounted at all (typo in route path, router not registered, mounted under a
+  different base path like `/api/mcp`)
+
+...every external AI tool will fail immediately, usually with a generic "could not
+connect" or "failed to fetch tools" error and no useful detail shown to the user.
+
+**Action:** Confirm the exact route registration in your server code. It must be:
+```js
+app.post("/mcp", async (req, res) => { ... });
+```
+Not `app.get`, not `router.use("/mcp/tools", ...)`, not nested under Express routers that
+never get mounted on the main app.
+
+### 2.2 CORS is blocking cross-origin requests
+
+AI tools like Claude.ai (web), Claude Desktop, Cursor, and browser-based MCP clients
+make the request **from their own origin**, not from `ui-hub.onrender.com`. If your
+Express app only allows `ui-hub.onrender.com` in CORS, or has no CORS middleware at all,
+the browser-based clients will be silently blocked (Node-based clients like Claude
+Desktop/Claude Code aren't blocked by CORS, but any browser-hosted MCP client will be).
+
+**Action:** Add permissive CORS on the `/mcp` route specifically, allowing the headers
+MCP clients send:
+```js
+import cors from "cors";
+
+app.use(
+  "/mcp",
+  cors({
+    origin: "*", // or an allowlist if you need to restrict it
+    methods: ["GET", "POST", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "mcp-session-id",
+      "mcp-protocol-version",
+    ],
+    exposedHeaders: ["mcp-session-id"],
+  })
+);
+```
+Make sure this middleware runs **before** your `/mcp` handler, and that you're not
+relying on a global CORS config that excludes this path.
+
+### 2.3 Missing/incorrect `Accept` and `Content-Type` handling
+
+Streamable HTTP clients send `Accept: application/json, text/event-stream` and
+`Content-Type: application/json`. If your route:
+- doesn't call `express.json()` before the handler (so `req.body` is undefined), or
+- rejects requests that don't have a JSON `Content-Type`, or
+- doesn't set the response `Content-Type` correctly for the SSE stream case
+
+...the JSON-RPC handshake (`initialize` method) will fail before any tool is even
+listed.
+
+**Action:** Confirm `app.use(express.json())` (or an equivalent) is registered globally
+or specifically ahead of the `/mcp` route, with no size limit that's too small for
+larger tool-call payloads.
+
+### 2.4 A new `StreamableHTTPServerTransport`/`McpServer` isn't created correctly per request (Node SDK)
+
+If you're using `@modelcontextprotocol/sdk`, the common **stateless** pattern is to
+create a fresh `McpServer` + `StreamableHTTPServerTransport` **per incoming request**,
+connect them, then hand off the request:
+
+```js
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+
+app.post("/mcp", async (req, res) => {
+  const transport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: undefined, // stateless mode
+  });
+
+  const server = buildMcpServer(); // your function that registers all tools
+  await server.connect(transport);
+
+  res.on("close", () => {
+    transport.close();
+    server.close();
+  });
+
+  await transport.handleRequest(req, res, req.body);
+});
+```
+
+A common bug: creating **one global `McpServer`/transport at startup** and reusing it
+across requests. This breaks under concurrent users (two AI tools/users hitting the
+server at once corrupt each other's session), and can produce hangs or 500s that look
+like "the MCP server is broken" from the client's perspective.
+
+If you instead want **stateful** sessions (session ID reused across calls), you need to
+track transports by `mcp-session-id` in a map and route subsequent requests to the same
+transport instance — and handle `GET /mcp` (server-to-client stream) and
+`DELETE /mcp` (session termination) as well, not just `POST`.
+
+**Action:** Decide stateless vs. stateful deliberately; stateless is simpler and works
+fine for most tool-calling servers with no per-session memory needs. Don't mix the two
+patterns.
+
+### 2.5 Protocol version mismatch
+
+MCP clients send an `MCP-Protocol-Version` header (or negotiate it in `initialize`). If
+your server/SDK version is old and rejects the version the client sends (or vice versa),
+the handshake fails. This usually shows up as an "unsupported protocol version" error in
+the client, or a silent failure.
+
+**Action:** Update `@modelcontextprotocol/sdk` (or `fastmcp` if Python) to the latest
+version. Confirm in your `package.json` you're not pinned to a version older than
+2025-06 spec support.
+
+### 2.6 Render free-tier cold starts causing client-side timeouts
+
+If the MCP service is on Render's **free** instance type, it spins down after ~15
+minutes of inactivity. The first request after idle can take 30–60+ seconds to respond
+while the container boots. Many MCP clients have a much shorter connection timeout and
+will report "failed to connect" or "server not responding" even though the server is
+fine — it just wasn't awake yet.
+
+**Action, in order of cost:**
+1. Upgrade the MCP service to a paid instance type so it never sleeps (most reliable).
+2. If staying on free tier, add a lightweight external uptime pinger (e.g. a cron job or
+   a service like UptimeRobot) that hits `/health` every 10 minutes to keep it warm —
+   note this only helps if there's *some* traffic; long idle windows overnight will
+   still cold-start.
+3. Make sure your `/health` endpoint responds instantly and doesn't itself depend on a
+   slow cold dependency (e.g. a Firebase Admin SDK re-init on every request).
+
+### 2.7 Auth/API key flow breaks the copy-paste config
+
+If the MCP URL your dashboard generates embeds a per-user API key (e.g.
+`https://ui-hub-mcp.onrender.com/mcp?key=...` or expects an `Authorization: Bearer ...`
+header the user has to paste separately), check:
+- Does the generated snippet match what your `/mcp` route actually expects
+  (query param vs. header vs. both)?
+- Does your server correctly read the key from **both** places if you support both
+  config UIs (raw URL entry vs. JSON config block with a `headers` field)?
+- Do invalid/missing keys return a proper `401`/`403` with a JSON-RPC error body,
+  rather than crashing the process or hanging? A silent hang looks identical to "MCP
+  server not working" from the user's side.
+
+**Action:** Log every incoming request to `/mcp` (method, headers present, whether a key
+was found and validated) during testing so you can see exactly what real AI tools send
+when a user pastes your config.
+
+### 2.8 Tool schemas fail validation
+
+If any registered tool has an invalid JSON Schema (e.g. a Zod schema that doesn't
+serialize cleanly, or a missing `description`), some clients will fail the entire
+`tools/list` call, not just that one tool — the user sees "no tools available" or a
+generic error with zero tools loaded.
+
+**Action:** Validate each tool definition individually against the MCP tool schema spec.
+Test with the MCP Inspector (see Section 4) to see the raw `tools/list` response and
+confirm every tool is well-formed.
+
+---
+
+## 3. Recommended Correct Reference Implementation (Node/Express)
+
+```js
+import express from "express";
+import cors from "cors";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { z } from "zod";
+
+const app = express();
+app.use(express.json({ limit: "2mb" }));
+
+app.use(
+  "/mcp",
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Content-Type",
+      "Accept",
+      "Authorization",
+      "mcp-session-id",
+      "mcp-protocol-version",
+    ],
+    exposedHeaders: ["mcp-session-id"],
+  })
+);
+
+function buildMcpServer() {
+  const server = new McpServer({ name: "ui-hub-mcp", version: "1.0.0" });
+
+  server.tool(
+    "search_components",
+    { query: z.string().describe("Search term for UI components") },
+    async ({ query }) => {
+      // ... call your actual UI Hub backend here, e.g.
+      // const res = await fetch(`https://ui-hub.onrender.com/api/components?q=${encodeURIComponent(query)}`);
+      // const data = await res.json();
+      return {
+        content: [{ type: "text", text: `Results for "${query}": ...` }],
+      };
+    }
+  );
+
+  // register remaining tools here (get_component, get_component_prompt, etc.)
+
+  return server;
 }
 
----
+app.post("/mcp", async (req, res) => {
+  try {
+    const transport = new StreamableHTTPServerTransport({
+      sessionIdGenerator: undefined, // stateless: simplest, scales horizontally
+    });
+    const server = buildMcpServer();
+    await server.connect(transport);
 
-# 3. USE THE EXISTING UI HUB DATA
+    res.on("close", () => {
+      transport.close();
+      server.close();
+    });
 
-Do NOT duplicate component data manually if the project already has a database/API/content system.
+    await transport.handleRequest(req, res, req.body);
+  } catch (err) {
+    console.error("MCP request failed:", err);
+    if (!res.headersSent) {
+      res.status(500).json({
+        jsonrpc: "2.0",
+        error: { code: -32603, message: "Internal server error" },
+        id: null,
+      });
+    }
+  }
+});
 
-Inspect the current application and identify where UI HUB currently stores:
+// Streamable HTTP clients may also probe GET/DELETE on the same path.
+// If you don't support server-initiated streams or session termination,
+// respond with 405 rather than letting Express 404 the whole route.
+app.get("/mcp", (req, res) => res.status(405).json({ error: "Method not supported" }));
+app.delete("/mcp", (req, res) => res.status(405).json({ error: "Method not supported" }));
 
-* components
-* component code
-* templates
-* animations
-* categories
-* tags
-* dependencies
-* pricing information
-* user information
+app.get("/health", (req, res) => res.json({ status: "ok" }));
 
-The MCP server should reuse the existing source of truth.
+const port = parseInt(process.env.PORT || "8080", 10);
+app.listen(port, "0.0.0.0", () => {
+  console.log(`UI Hub MCP server listening on port ${port}`);
+});
+```
 
-Create a service/repository layer if necessary so both the website and MCP server can access the same data.
-
-Do NOT create two independent databases containing duplicate component data unless absolutely necessary.
-
----
-
-# 4. API KEY AUTHENTICATION
-
-I want UI HUB to use **its own API key system** for MCP authentication.
-
-Do NOT require users to provide an OpenAI API key.
-
-Do NOT depend on Anthropic API keys.
-
-Do NOT depend on another company's API key.
-
-Create a UI HUB API key system.
-
-API key format:
-
-uh_live_xxxxxxxxxxxxxxxxxxxxxxxxx
-
-Each user should be able to create/manage their own MCP API keys from their UI HUB account/dashboard.
-
-Add functionality for:
-
-* Create API key
-* Show newly generated key once
-* Copy API key
-* Revoke API key
-* Delete/revoke old keys
-* View created date
-* View last used date
-* View key status
-* Optional expiration date
-
-IMPORTANT SECURITY REQUIREMENTS:
-
-* Never store plaintext API keys in the database.
-* Store a secure hash of the API key.
-* Show the full secret only once when it is created.
-* Use secure random key generation.
-* Support key revocation.
-* Validate keys on every MCP request.
-* Add rate limiting.
-* Never expose secret keys to the public frontend.
-* Never log raw API keys.
-
-Use:
-
-Authorization: Bearer <UI_HUB_API_KEY>
-
-for MCP authentication.
+Key points this reference encodes:
+- CORS scoped to `/mcp` with the exact headers MCP clients use.
+- A **new server + transport per request** (stateless), so concurrent users never
+  collide.
+- Explicit `try/catch` so a bug in a tool handler returns a proper JSON-RPC error
+  instead of hanging the connection until the client times out.
+- `GET`/`DELETE` on `/mcp` return a clean `405` instead of Express's default 404 HTML
+  page, which is a common cause of "AI tool shows a weird error" reports.
 
 ---
 
-# 5. FREE VS PREMIUM ACCESS
+## 4. How to Test Before Trusting a "Copy MCP" Button
 
-Integrate MCP with the existing UI HUB subscription system.
+1. **MCP Inspector** — the official debugging tool:
+   ```bash
+   npx @modelcontextprotocol/inspector
+   ```
+   Point it at `https://ui-hub-mcp.onrender.com/mcp` with Streamable HTTP transport.
+   Confirm: `initialize` succeeds, `tools/list` returns every tool with valid schemas,
+   and at least one real `tools/call` returns the expected content.
 
-The MCP server must understand whether a user is:
+2. **Raw curl handshake** (sanity check independent of any SDK):
+   ```bash
+   curl -i -X POST https://ui-hub-mcp.onrender.com/mcp \
+     -H "Content-Type: application/json" \
+     -H "Accept: application/json, text/event-stream" \
+     -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"curl-test","version":"1.0"}}}'
+   ```
+   You should get a `200` with a JSON-RPC `result` containing `serverInfo` and
+   `capabilities` — not a `404`, not an empty body, not a hang.
 
-* Free
-* Pro/Premium
-* Admin
+3. **Cold-start test** — leave the service idle for 20+ minutes (or manually suspend/
+   resume on Render), then immediately run the curl test above and time it. If it takes
+   longer than ~10 seconds, that's the timeout most AI tool clients will hit in real
+   usage — go back to Section 2.6.
 
-Example:
+4. **Real client test** — after Inspector and curl both pass, test the actual copy-paste
+   flow end to end in at least one real tool (e.g. Claude Desktop's MCP connector
+   settings, or Cursor's MCP config) using the exact snippet your dashboard generates at
+   `/api/dashboard/mcp`, not a hand-written one.
 
-FREE:
-
-* Limited MCP requests
-* Free components only
-* Limited code access
-
-PRO:
-
-* Higher/unlimited MCP usage according to subscription rules
-* Premium components
-* Premium templates
-* Premium animations
-* Full source code
-
-ADMIN:
-
-* Full access
-
-Do not hardcode subscription logic in multiple places.
-
-Create a reusable permission/authorization service.
-
----
-
-# 6. MCP DASHBOARD UI
-
-Add a new page/section to the existing UI HUB dashboard:
-
-**MCP**
-
-Possible URL:
-
-/dashboard/mcp
-
-Design it using the current UI HUB visual language.
-
-The page should contain:
-
-## MCP Overview
-
-Explain:
-
-"Connect UI HUB to your AI coding assistant and use UI HUB components directly inside your development workflow."
-
-Show:
-
-* MCP status
-* MCP endpoint
-* API key status
-* Usage
-* Connected clients if available
+5. **Two concurrent clients** — run the Inspector and a real client against the server
+   at the same time. If one breaks the other, you have the stateless/global-server bug
+   from Section 2.4.
 
 ---
 
-## API Keys
+## 5. Checklist Summary
 
-Create a professional API key management interface.
-
-Example:
-
-API Keys
-
-+--------------------------------------+
-| UI HUB MCP API Key                   |
-|                                      |
-| uh_live_••••••••••••••••             |
-| Created: Aug 28, 2026                |
-| Last used: Today                     |
-| Status: Active                       |
-|                                      |
-| [Copy] [Revoke]                      |
-+--------------------------------------+
-
-Button:
-
-[ + Create API Key ]
+- [ ] `/mcp` accepts `POST` and is mounted on the running app (not an unmounted router)
+- [ ] CORS allows `*` (or your intended origins) on `/mcp` with MCP-specific headers
+- [ ] `express.json()` (or equivalent) runs before the `/mcp` handler
+- [ ] A fresh `McpServer` + `StreamableHTTPServerTransport` is created per request
+      (stateless) — or a correctly tracked session map (stateful), not a single shared
+      global instance
+- [ ] `@modelcontextprotocol/sdk` (or `fastmcp`) is up to date
+- [ ] MCP service is on a paid Render instance, or has a documented cold-start warning
+      to users, or is kept warm via periodic health pings
+- [ ] Auth key flow matches exactly what the dashboard's generated snippet sends
+      (query param vs. header)
+- [ ] Every tool schema is validated and passes `tools/list` in MCP Inspector
+- [ ] Errors inside tool handlers return proper JSON-RPC error responses, never a hang
+- [ ] `GET`/`DELETE /mcp` return clean 405s instead of falling through to a 404 page
+- [ ] Full flow tested with MCP Inspector, curl, and a real AI tool using the exact
+      copy-paste snippet from `ui-hub.onrender.com`
 
 ---
 
-# 7. CONNECTION GUIDE
-
-Add a section called:
-
-## Connect UI HUB to your AI
-
-Explain how users can configure MCP clients.
-
-Example configuration:
-
-{
-"mcpServers": {
-"ui-hub": {
-"url": "https://ui-hub-mcp.onrender.com/mcp",
-"headers": {
-"Authorization": "Bearer YOUR_UI_HUB_API_KEY"
-}
-}
-}
-}
-
-Add a copy button.
-
-Also provide separate instructions/cards for:
-
-* Cursor
-* Claude Code
-* VS Code/Copilot
-* Generic MCP clients
-
-Do not claim support for a client unless the actual configuration is compatible.
-
----
-
-# 8. WEBSITE COMPONENT PAGE INTEGRATION
-
-On every component detail page, add a new section:
-
-## Use with AI
-
-Example:
-
-┌──────────────────────────────────────┐
-│ ✦ Use with AI                       │
-│                                      │
-│ Use this UI HUB component directly   │
-│ from your AI coding assistant.       │
-│                                      │
-│ [ Connect MCP ]                      │
-│ [ Copy MCP Setup ]                   │
-└──────────────────────────────────────┘
-
-When clicked, users should be taken to the MCP setup/dashboard page.
-
-For premium components, clearly indicate that premium MCP access may require a Pro subscription.
-
----
-
-# 9. MCP RESPONSE DESIGN
-
-The MCP tools should return structured, AI-friendly information.
-
-Do NOT return huge unnecessary HTML pages or irrelevant website content.
-
-For example:
-
-{
-"id": "pricing-card-pro",
-"name": "Pro Pricing Card",
-"category": "pricing",
-"framework": "react",
-"styling": "tailwind",
-"description": "Modern SaaS pricing card",
-"tags": [
-"pricing",
-"saas",
-"modern"
-],
-"code": "...",
-"dependencies": [
-"lucide-react"
-],
-"installation": "...",
-"previewUrl": "...",
-"isPremium": true
-}
-
-Responses should be optimized for AI agents.
-
----
-
-# 10. DATABASE CHANGES
-
-Inspect the current database first.
-
-Only add new tables/fields when required.
-
-Possible new table:
-
-mcp_api_keys
-
-Example fields:
-
-* id
-* user_id
-* key_hash
-* key_prefix
-* name
-* created_at
-* last_used_at
-* expires_at
-* revoked_at
-* status
-
-If the project already has a suitable API-key/auth table, reuse it.
-
----
-
-# 11. RATE LIMITING
-
-Implement MCP API rate limiting.
-
-Rate limits should depend on the user's plan.
-
-Example:
-
-Free:
-100 MCP requests/day
-
-Pro:
-Higher/unlimited according to business rules
-
-Make the values configurable using environment variables.
-
-Do not hardcode limits throughout the application.
-
-Return proper errors such as:
-
-401 Unauthorized
-403 Forbidden
-429 Too Many Requests
-
----
-
-# 12. SECURITY
-
-Follow production security best practices.
-
-Implement:
-
-* API key authentication
-* secure key hashing
-* rate limiting
-* request validation
-* input validation
-* authorization
-* subscription checks
-* CORS configuration
-* safe error responses
-* request logging without secrets
-* protection against unauthorized component access
-* protection against premium content leakage
-
-Do not expose private database fields through MCP.
-
-Do not return API keys in MCP responses.
-
----
-
-# 13. ERROR HANDLING
-
-Create clean MCP error responses.
-
-Examples:
-
-Invalid API key:
-
-{
-"error": "INVALID_API_KEY",
-"message": "The provided UI HUB API key is invalid."
-}
-
-Premium component:
-
-{
-"error": "PREMIUM_ACCESS_REQUIRED",
-"message": "This component requires a UI HUB Pro subscription."
-}
-
-Rate limit:
-
-{
-"error": "RATE_LIMIT_EXCEEDED",
-"message": "You have exceeded your current MCP usage limit."
-}
-
-Component not found:
-
-{
-"error": "COMPONENT_NOT_FOUND",
-"message": "The requested UI HUB component was not found."
-}
-
----
-
-# 14. ADMIN PANEL
-
-If the existing project has an admin dashboard, add MCP analytics.
-
-Show:
-
-* Total MCP requests
-* Requests today
-* Active API keys
-* Top components requested
-* Top searches
-* Free vs Pro usage
-* Failed requests
-* Rate-limit events
-
-This should use the existing admin architecture where possible.
-
----
-
-# 15. ANALYTICS
-
-Track MCP events such as:
-
-* mcp_request
-* component_search
-* component_fetch
-* code_fetch
-* template_fetch
-* animation_fetch
-* auth_failure
-* rate_limit
-* premium_denied
-
-Do not store sensitive data unnecessarily.
-
----
-
-# 16. ENVIRONMENT VARIABLES
-
-Create/update environment variables appropriately.
-
-Example:
-
-MCP_SERVER_URL=
-MCP_API_KEY_PREFIX=uh_live_
-MCP_RATE_LIMIT_FREE=
-MCP_RATE_LIMIT_PRO=
-DATABASE_URL=
-
-Do NOT commit secrets.
-
-Update `.env.example`.
-
----
-
-# 17. DEPLOYMENT
-
-The MCP server must be deployable independently from the UI frontend.
-
-Recommended architecture:
-
-UI HUB frontend:
-https://ui-hub-design.vercel.app
-
-MCP API:
-https://ui-hub-mcp.onrender.com/mcp
-
-Use a deployment platform appropriate for a long-running Node.js service.
-
-Configure:
-
-* production environment variables
-* HTTPS
-* custom domain
-* CORS
-* authentication
-* health endpoint
-* logging
-* monitoring
-
-Add:
-
-GET /health
-
-which returns something like:
-
-{
-"status": "ok",
-"service": "ui-hub-mcp"
-}
-
----
-
-# 18. TESTING
-
-Before finishing, create tests for:
-
-* API key creation
-* API key hashing
-* API key authentication
-* revoked key
-* expired key
-* invalid key
-* Free user permissions
-* Pro user permissions
-* premium component protection
-* rate limiting
-* search_components
-* get_component
-* get_component_code
-* search_templates
-* get_template
-* search_animations
-* get_animation_code
-
-Also test that the existing UI HUB website still works.
-
-Do not introduce breaking changes.
-
----
-
-# 19. DOCUMENTATION
-
-Create documentation for developers.
-
-Add:
-
-/docs/mcp.md
-
-Documentation should explain:
-
-* What UI HUB MCP is
-* How to create an API key
-* MCP endpoint
-* Authentication
-* Cursor setup
-* Claude Code setup
-* VS Code setup
-* Available MCP tools
-* Tool parameters
-* Example MCP requests
-* Free vs Pro limitations
-* Security notes
-* Troubleshooting
-
----
-
-# 20. FINAL USER EXPERIENCE
-
-The final experience should be:
-
-User opens UI HUB
-
-↓
-
-User opens Dashboard
-
-↓
-
-User opens MCP
-
-↓
-
-User creates UI HUB API key
-
-↓
-
-User copies MCP configuration
-
-↓
-
-User adds UI HUB MCP to Cursor/Claude/etc.
-
-↓
-
-AI can search UI HUB
-
-↓
-
-AI finds components
-
-↓
-
-AI retrieves source code
-
-↓
-
-AI retrieves dependencies
-
-↓
-
-AI uses the UI HUB component inside the user's project
-
-Example:
-
-User tells Cursor:
-
-"Create a modern SaaS pricing section. Use a pricing card from UI HUB."
-
-Cursor:
-
-search_components("modern SaaS pricing card")
-
-↓
-
-UI HUB MCP
-
-↓
-
-returns matching component
-
-↓
-
-Cursor:
-
-get_component_code(componentId)
-
-↓
-
-UI HUB MCP
-
-↓
-
-returns code
-
-↓
-
-Cursor generates the page using the UI HUB component.
-
----
-
-# IMPORTANT IMPLEMENTATION RULES
-
-1. Inspect the existing codebase before making changes.
-2. Reuse existing authentication/database/API systems.
-3. Do not rebuild the existing website.
-4. Do not change the current visual design unnecessarily.
-5. Do not break existing pages or functionality.
-6. Keep MCP code modular.
-7. Keep frontend and MCP backend responsibilities separate.
-8. Use TypeScript where possible.
-9. Use proper input validation.
-10. Use secure API-key authentication.
-11. Never store plaintext API keys.
-12. Protect premium components.
-13. Add rate limiting.
-14. Add tests.
-15. Update documentation.
-16. Add `.env.example`.
-17. Add proper production error handling.
-18. Make the implementation scalable for thousands of users.
-19. Keep the MCP API response optimized for AI agents.
-20. Do not use an external AI API unless it is actually required.
-
----
-
-# FIRST STEP
-
-Before writing code, inspect the entire existing project and produce a short technical audit containing:
-
-* Current frontend framework
-* Current backend
-* Database
-* Authentication
-* Component storage
-* Existing API routes
-* Existing subscription/payment system
-* Existing dashboard structure
-* Existing deployment configuration
-* Best location for the MCP server
-* Any architecture conflicts or risks
-
-Then implement the MCP feature directly into the existing project based on that audit.
-
-After implementation, provide:
-
-1. Files created
-2. Files modified
-3. Database changes
-4. Environment variables required
-5. MCP endpoint
-6. API key setup
-7. Deployment steps
-8. Test results
-9. Example MCP client configuration
-10. Any remaining limitations
-
-The final implementation must be production-ready, secure, maintainable, and integrated naturally into the existing UI HUB website.
+## 6. What To Send Back If You Want a Precise (Not General) Fix
+
+This document covers the standard failure modes for a Render-hosted Streamable HTTP MCP
+server. To get an exact, line-level fix rather than general guidance, share:
+1. The actual `server.js`/`app.js` (or equivalent) source for `ui-hub-mcp`.
+2. The exact error message/behavior the AI tool shows when you paste the MCP config.
+3. The exact snippet your `/api/dashboard/mcp` endpoint currently generates for users.
+4. Render logs from the MCP service around the time of a failed connection attempt.

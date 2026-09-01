@@ -22,16 +22,25 @@ export const mcpRouter = Router();
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
-function jsonRpcSuccess(res: Response, id: unknown, result: unknown, sessionId?: string) {
+function jsonRpcHeader(res: Response, version?: string, sessionId?: string) {
   if (sessionId) {
     res.setHeader('Mcp-Session-Id', sessionId);
   }
+  // Echo the negotiated protocol version so strict MCP clients can confirm the
+  // handshake. For stateless (sessionless) requests we fall back to the latest
+  // stable version the server supports.
+  res.setHeader('MCP-Protocol-Version', version || '2024-11-05');
+}
+
+function jsonRpcSuccess(res: Response, id: unknown, result: unknown, sessionId?: string, protocolVersion?: string) {
+  jsonRpcHeader(res, protocolVersion, sessionId);
   // Ensure content-type is always application/json for streamable HTTP
   res.setHeader('Content-Type', 'application/json');
   return res.json({ jsonrpc: '2.0', id, result });
 }
 
-function jsonRpcError(res: Response, id: unknown, code: number, message: string, httpStatus = 200) {
+function jsonRpcError(res: Response, id: unknown, code: number, message: string, httpStatus = 200, protocolVersion?: string) {
+  jsonRpcHeader(res, protocolVersion);
   res.setHeader('Content-Type', 'application/json');
   return res.status(httpStatus).json({
     jsonrpc: '2.0',
@@ -135,6 +144,13 @@ mcpRouter.post('/', async (req: Request, res: Response) => {
 
   const { method, id, params } = body;
 
+  // Negotiated protocol version — take it from the request header if present,
+  // otherwise derive it from `initialize` params / default to the latest stable.
+  const protocolVersion =
+    (req.headers['mcp-protocol-version'] as string) ||
+    (method === 'initialize' && (params as any)?.protocolVersion) ||
+    '2024-11-05';
+
   // ── STEP 1: Handle `initialize` WITHOUT auth (MCP spec requirement) ──────
   // This is the very first message any MCP client sends. Responding to it
   // correctly (and quickly) is what prevents "request terminated without
@@ -164,13 +180,14 @@ mcpRouter.post('/', async (req: Request, res: Response) => {
           version: '1.0.0',
         },
       },
-      sessionId
+      sessionId,
+      clientProtocolVersion
     );
   }
 
   // ── STEP 2: Handle `ping` without auth (keep-alive, no session needed) ────
   if (method === 'ping') {
-    return jsonRpcSuccess(res, id, {});
+    return jsonRpcSuccess(res, id, {}, undefined, protocolVersion);
   }
 
   // ── STEP 3: Handle notifications (no response needed, no auth needed) ─────
@@ -197,16 +214,27 @@ mcpRouter.post('/', async (req: Request, res: Response) => {
 
   const user = (req as any).user as McpUser | undefined;
   if (!user) {
-    return jsonRpcError(res, id, -32001, 'Unauthorized: missing or invalid API key', 200);
+    return jsonRpcError(res, id, -32001, 'Unauthorized: missing or invalid API key', 200, protocolVersion);
   }
 
   // ── STEP 5: Rate limiting ─────────────────────────────────────────────────
+  // mcpRateLimiter calls `next()` on success and sends a 429 on failure. Because
+  // this is invoked inline (not as Express middleware), guard against calling
+  // `next()` after a response has already been sent.
   const rateLimitPassed = await new Promise<boolean>((resolve) => {
-    mcpRateLimiter(req as any, res, () => resolve(true));
-    // If res is already sent after 100ms, rate limit must have fired
+    let resolved = false;
+    mcpRateLimiter(req as any, res, () => {
+      if (!resolved && !res.headersSent) {
+        resolved = true;
+        resolve(true);
+      }
+    });
     setTimeout(() => {
-      if (res.headersSent) resolve(false);
-    }, 100);
+      if (!resolved) {
+        resolved = true;
+        resolve(false);
+      }
+    }, 500);
   });
 
   if (!rateLimitPassed || res.headersSent) return;
@@ -246,7 +274,7 @@ mcpRouter.post('/', async (req: Request, res: Response) => {
             },
           };
         });
-        return jsonRpcSuccess(res, id, { tools: schema });
+        return jsonRpcSuccess(res, id, { tools: schema }, undefined, protocolVersion);
       }
 
       case 'tools/call': {
@@ -254,20 +282,20 @@ mcpRouter.post('/', async (req: Request, res: Response) => {
         const tool = TOOLS.find((t) => t.name === name);
 
         if (!tool) {
-          return jsonRpcError(res, id, -32601, `Unknown tool: ${name}`);
+          return jsonRpcError(res, id, -32601, `Unknown tool: ${name}`, 200, protocolVersion);
         }
 
         const enabled = await configService.isToolEnabled(name);
         if (!enabled) {
-          return jsonRpcError(res, id, -32601, `Tool disabled: ${name}`);
+          return jsonRpcError(res, id, -32601, `Tool disabled: ${name}`, 200, protocolVersion);
         }
 
         const result = await tool.handler(args || {}, { user });
-        return jsonRpcSuccess(res, id, result);
+        return jsonRpcSuccess(res, id, result, undefined, protocolVersion);
       }
 
       default:
-        return jsonRpcError(res, id, -32601, `Method not found: ${method}`);
+        return jsonRpcError(res, id, -32601, `Method not found: ${method}`, 200, protocolVersion);
     }
   } catch (err: any) {
     console.error('[MCP] Internal error:', err);
