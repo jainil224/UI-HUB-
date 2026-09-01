@@ -3330,6 +3330,7 @@ const AlpineFooterPreview: React.FC = () => {
                 .alpine-pill:hover { background: #d8dce1; }
                 .alpine-author { background: #dce7e1; color: #2c443b; border-radius: 5px; padding: 2px 10px; transition: background 0.2s; }
                 .alpine-author:hover { background: #ceddd6; }
+                .alpine-live:hover { background: #000000 !important; transform: translateY(-1px); }
                 .alpine-pretzel { display: inline-block; transition: transform 0.15s; }
                 .alpine-pretzel:hover { transform: scale(1.1); }
                 .alpine-modal { animation: alpine-in 0.25s cubic-bezier(0.16,1,0.3,1) both; }
@@ -3428,6 +3429,32 @@ const AlpineFooterPreview: React.FC = () => {
                         <span className="alpine-author" style={{ margin: "0 2px", fontWeight: 500 }}>UI HUB</span>
                         <span>in California.</span>
                     </div>
+
+                    {/* Bottom: View Live button */}
+                    <div style={{ marginTop: "1.5rem", display: "flex" }}>
+                        <a
+                            href="#"
+                            onClick={(e) => e.preventDefault()}
+                            className="alpine-live"
+                            style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: 8,
+                                background: "#1f2937",
+                                color: "#ffffff",
+                                borderRadius: 999,
+                                padding: "10px 20px",
+                                fontSize: 14,
+                                fontWeight: 600,
+                                textDecoration: "none",
+                                boxShadow: "0 6px 18px rgba(15,23,42,0.18)",
+                                transition: "background 0.2s, transform 0.15s",
+                            }}
+                        >
+                            View Live
+                            <span style={{ fontSize: 15, lineHeight: 1 }}>↗</span>
+                        </a>
+                    </div>
                 </div>
 
                 {/* Lower scenic spacer */}
@@ -3447,6 +3474,327 @@ const AlpineFooterPreview: React.FC = () => {
                     </div>
                 </>
             )}
+        </div>
+    );
+};
+
+const LeeuwarderGolfclubPreview: React.FC = () => {
+    const starEmblem = "https://res.cloudinary.com/chhwhdhk/image/upload/v1788254211/ChatGPT_Image_Sep_1_2026_02_46_36_PM_gxnmtp.png";
+
+    const Arrow = ({ color = "#004A35" }: { color?: string }) => (
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+    const ArrowUpRight = () => (
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 17L17 7M17 7H8M17 7V16" stroke="#00F27A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+    const Star = () => (
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2l2.9 6.26L21.5 9.27l-4.9 4.57 1.24 7.16L12 17.77l-5.84 3.23 1.24-7.16L2.5 9.27l6.6-1.01L12 2z" />
+        </svg>
+    );
+    const Check = () => (
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6L9 17l-5-5" stroke="#00F27A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    );
+    const ChefHat = () => (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBBF24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3a4.5 4.5 0 0 0-4.5 4.5c0 .4.05.8.15 1.17A4.75 4.75 0 0 0 4 13.25 4.9 4.9 0 0 0 6 17.5v1.2a1.3 1.3 0 0 0 1.3 1.3h9.4a1.3 1.3 0 0 0 1.3-1.3v-1.2a4.9 4.9 0 0 0 2-4.25 4.75 4.75 0 0 0-3.15-4.58c.1-.37.15-.77.15-1.17A4.5 4.5 0 0 0 12 3z" />
+        </svg>
+    );
+
+    const partnerStyle: React.CSSProperties = {
+        aspectRatio: "1 / 1",
+        borderRadius: 24,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+        background: "#004D36",
+        transition: "background .2s, transform .2s, box-shadow .2s",
+        cursor: "pointer",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+    };
+
+    return (
+        <div style={{
+            width: "100%",
+            minHeight: 900,
+            background: "radial-gradient(circle at 30% 20%, #39544a, #2c3f30)",
+            padding: "0 0 10px",
+            fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif",
+            display: "flex",
+            justifyContent: "center",
+            overflow: "hidden",
+        }}>
+            <style>{`
+                .lg-pillar:hover { transform: translateY(-1px); }
+                .lg-pillar:hover { transform: translateY(-1px); }
+                .lg-card:hover { transform: translateY(-4px); box-shadow: 0 10px 22px rgba(0,0,0,0.22); background: #005B40; }
+                .lg-link { color: rgba(255,246,199,0.85); transition: color .2s; }
+                .lg-link:hover { color: #00F27A; }
+                .lg-so-link { display: inline-flex; align-items: center; gap: 4px; color: #FFF6C7; text-decoration: none; transition: color .2s; }
+                .lg-so-link:hover { color: #00F27A; }
+                .lg-so-link span { transition: transform .2s; display: inline-block; }
+                .lg-so-link:hover span { transform: translate(2px,-2px); }
+                .lg-arrow-slide { transition: transform .2s; display: inline-block; }
+                .lg-live:hover { transform: translateY(-1px); }
+            `}</style>
+
+            <div style={{
+                width: "100%",
+                maxWidth: "80rem",
+                padding: "18px 0 0",
+            }}>
+                {/* Canvas cream inner container */}
+                <div style={{
+                    background: "#FAF5DF",
+                    borderRadius: 48,
+                    overflow: "hidden",
+                    boxShadow: "0 20px 50px rgba(0,0,0,0.35)",
+                }}>
+
+                    {/* === PARTNERS SECTION === */}
+                    <div style={{ padding: "54px 32px 40px", textAlign: "center" }}>
+                        <h2 style={{
+                            margin: "0 0 18px",
+                            fontSize: 38,
+                            fontWeight: 700,
+                            color: "#1e231e",
+                            letterSpacing: "-0.02em",
+                        }}>
+                            Onze trotse partners
+                        </h2>
+                        {/* Word ook partner pill */}
+                        <button type="button" style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 8,
+                            background: "#E5F7E8",
+                            border: "1px solid #B3E8BC",
+                            color: "#006B4F",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            padding: "6px 16px",
+                            borderRadius: 999,
+                            cursor: "pointer",
+                            marginBottom: 28,
+                        }}>
+                            Word ook partner
+                            <span style={{ width: 20, height: 20, borderRadius: 999, background: "#00F27A", color: "#004A35", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#004A35" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                            </span>
+                        </button>
+
+                        {/* Partner cards */}
+                        <div style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(6, 1fr)",
+                            gap: 16,
+                            maxWidth: "72rem",
+                            margin: "0 auto",
+                        }}>
+                            {/* e fresh */}
+                            <div className="lg-card" style={{ ...partnerStyle }}>
+                                <div style={{ width: 40, height: 40, borderRadius: 999, border: "2px solid rgba(0,242,122,0.5)", display: "flex", alignItems: "center", justifyContent: "center", color: "#00F27A", fontSize: 14, fontWeight: 800 }}>ef</div>
+                                <div style={{ color: "#00F27A", fontWeight: 700, fontSize: 13 }}>e fresh</div>
+                            </div>
+                            {/* Heineken */}
+                            <div className="lg-card" style={{ ...partnerStyle }}>
+                                <div style={{ color: "#FF0000", width: 34, height: 34, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                    <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L21.5 9.27l-4.9 4.57 1.24 7.16L12 17.77l-5.84 3.23 1.24-7.16L2.5 9.27l6.6-1.01L12 2z" /></svg>
+                                </div>
+                                <div style={{ color: "#64D98A", fontWeight: 700, fontSize: 15 }}>Heineken</div>
+                            </div>
+                            {/* 11STEDENHAL */}
+                            <div className="lg-card" style={{ ...partnerStyle }}>
+                                <div style={{ width: 40, height: 40, padding: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "#F77F00" }}>
+                                    <svg width="34" height="34" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="6" fill="none" stroke="#00B4D8" strokeWidth="3" /><path d="M2 12a10 6 0 0 0 20 0" fill="none" stroke="#F77F00" strokeWidth="3" /></svg>
+                                </div>
+                                <div style={{ color: "#38BDF8", fontWeight: 800, fontSize: 12, letterSpacing: "0.04em" }}>11STEDENHAL</div>
+                            </div>
+                            {/* lippe wonen */}
+                            <div className="lg-card" style={{ ...partnerStyle }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 3, marginBottom: 8 }}>
+                                    <span style={{ background: "#F59E0B", color: "#fff", fontSize: 9, fontWeight: 700, padding: "2px 6px", borderRadius: 4 }}>lippe</span>
+                                </div>
+                                <div style={{ color: "#fff", fontWeight: 700, fontSize: 16 }}>wonen</div>
+                            </div>
+                            {/* NIVO */}
+                            <div className="lg-card" style={{ ...partnerStyle }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
+                                    <div style={{ color: "#C084FC", fontWeight: 900, fontSize: 24 }}>NIV</div>
+                                    <Check />
+                                </div>
+                            </div>
+                            {/* Sligro */}
+                            <div className="lg-card" style={{ ...partnerStyle }}>
+                                <ChefHat />
+                                <div style={{ color: "#fff", fontWeight: 650, fontStyle: "italic", fontSize: 16 }}>Sligro</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* === FOOTER === */}
+                    <div style={{
+                        position: "relative",
+                        width: "100%",
+                        maxWidth: "80rem",
+                        margin: "0 auto",
+                        padding: "88px clamp(24px, 6vw, 64px) 32px",
+                        background: "#242424",
+                        borderRadius: "48px 48px 0 0",
+                    }}>
+                        {/* Topographic overlay */}
+                        <svg
+                            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", color: "rgba(255,255,255,0.10)", zIndex: 0 }}
+                            xmlns="http://www.w3.org/2000/svg">
+                            <g fill="none" stroke="currentColor" strokeWidth="1.25" opacity="0.5">
+                                <path d="M0 180 C 200 120, 400 240, 700 160 C 900 100, 1100 220, 1400 150" />
+                                <path d="M0 260 C 250 200, 500 320, 800 240 C 1000 190, 1200 300, 1400 230" />
+                                <path d="M0 340 C 200 280, 450 400, 750 320 C 950 270, 1200 380, 1400 310" />
+                                <path d="M0 420 C 300 360, 550 480, 850 400 C 1050 350, 1300 460, 1400 390" />
+                                <path d="M0 500 C 220 440, 470 560, 770 480 C 970 430, 1250 540, 1400 470" />
+                                <path d="M0 580 C 260 520, 520 640, 820 560 C 1020 510, 1280 620, 1400 550" />
+                            </g>
+                        </svg>
+
+                        {/* Center floating star emblem */}
+                        <img
+                            src={starEmblem}
+                            alt="Leeuwarder Golfclub logo"
+                            style={{
+                                position: "absolute",
+                                top: -70,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                                zIndex: 30,
+                                width: 120,
+                                height: 120,
+                                objectFit: "contain",
+                                filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.5))",
+                                transition: "transform .3s",
+                                cursor: "pointer",
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.transform = "translateX(-50%) scale(1.05)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.transform = "translateX(-50%)")}
+                        />
+
+                        {/* 3-column layout */}
+                        <div style={{
+                            position: "relative",
+                            zIndex: 1,
+                            display: "grid",
+                            gridTemplateColumns: "repeat(12, 1fr)",
+                            gap: 24,
+                        }}>
+                            {/* LEFT column */}
+                            <div style={{ gridColumn: "span 4", textAlign: "left" }}>
+                                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#FFF6C7", margin: "0 0 12px" }}>Contact</h3>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: 16 }}>
+                                    <div style={{ fontSize: 13.5, color: "rgba(255,246,199,0.85)", lineHeight: 1.7 }}>
+                                        <div style={{ marginBottom: 6 }}>Woelwijk 101,<br />8926 XD Leeuwarden</div>
+                                        <div className="lg-link" style={{ marginBottom: 6, cursor: "pointer" }}>0511 - 43 22 99</div>
+                                        <div className="lg-link" style={{ cursor: "pointer" }}>info@leeuwardergolfclub.nl</div>
+                                    </div>
+                                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, fontSize: 13.5 }}>
+                                        <a className="lg-so-link" href="#" onClick={(e) => e.preventDefault()}>Facebook <span><ArrowUpRight /></span></a>
+                                        <a className="lg-so-link" href="#" onClick={(e) => e.preventDefault()}>Instagram <span><ArrowUpRight /></span></a>
+                                        <a className="lg-so-link" href="#" onClick={(e) => e.preventDefault()}>LinkedIn <span><ArrowUpRight /></span></a>
+                                    </div>
+                                </div>
+
+                                {/* Score & badges */}
+                                <div style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 8, alignItems: "flex-start" }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                        <span style={{ background: "#00F27A", color: "#121212", fontWeight: 900, fontSize: 11, padding: "2px 8px", borderRadius: 999 }}>7,9</span>
+                                        <span style={{ color: "rgba(255,246,199,0.9)", fontSize: 12 }}>Leadingcourses score</span>
+                                    </div>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                        {/* NGF */}
+                                        <div style={{ background: "#E05A1E", width: 28, height: 32, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 9, fontWeight: 900 }}>NGF</div>
+                                        {/* Leadingcourses */}
+                                        <div style={{ background: "#0E4A35", border: "1px solid rgba(0,242,122,0.4)", width: 46, height: 32, borderRadius: 4, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2, color: "#FBBF24" }}>
+                                            <Star />
+                                            <span style={{ color: "#fff", fontSize: 8, fontWeight: 700 }}>2024</span>
+                                        </div>
+                                        {/* GOLF.NL */}
+                                        <div style={{ background: "#009EE0", width: 56, height: 22, borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 9, fontWeight: 800 }}>GOLF.NL</div>
+                                        {/* PGA flag */}
+                                        <div style={{ display: "flex", width: 10, height: 32, borderRadius: 3, overflow: "hidden", border: "1px solid rgba(255,255,255,0.15)" }}>
+                                            <div style={{ flex: 1, background: "#E8380D" }} />
+                                            <div style={{ flex: 1, background: "#fff" }} />
+                                            <div style={{ flex: 1, background: "#244FAE" }} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* CENTER column */}
+                            <div style={{ gridColumn: "span 4", textAlign: "center", padding: "0 8px" }}>
+                                <div style={{ fontWeight: 900, fontSize: 46, lineHeight: 1.05, letterSpacing: "-0.02em", color: "#FFF6C7" }}>
+                                    Leeuwarder<br />Golfclub
+                                </div>
+                                <div style={{ fontFamily: "'Instrument Serif', Georgia, serif", fontStyle: "italic", fontSize: 21, color: "rgba(255,246,199,0.95)", margin: "10px 0 28px" }}>
+                                    Waar golfgeluk begint
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
+                                    <a href="#" onClick={(e) => e.preventDefault()} className="lg-live" style={{
+                                        display: "inline-flex", alignItems: "center", gap: 8,
+                                        background: "#00F27A", color: "#111111", fontWeight: 700, fontSize: 14,
+                                        borderRadius: 999, padding: "10px 20px", textDecoration: "none",
+                                        boxShadow: "0 4px 14px rgba(0,242,122,0.35)", transition: "transform .2s",
+                                    }}>
+                                        Starttijd reserveren
+                                        <span style={{ width: 20, height: 20, borderRadius: 999, background: "#0E281C", color: "#00F27A", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#00F27A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                                        </span>
+                                    </a>
+                                    <a href="#" onClick={(e) => e.preventDefault()} className="lg-live" style={{
+                                        display: "inline-flex", alignItems: "center", gap: 8,
+                                        background: "#006B4F", color: "#FFF6C7", fontWeight: 700, fontSize: 14,
+                                        borderRadius: 999, padding: "10px 20px", textDecoration: "none",
+                                        border: "1px solid rgba(0,242,122,0.2)", boxShadow: "0 6px 16px rgba(0,0,0,0.25)", transition: "transform .2s",
+                                    }}>
+                                        Direct lid worden
+                                        <span style={{ width: 20, height: 20, borderRadius: 999, background: "#00F27A", color: "#004A35", display: "inline-flex", alignItems: "center", justifyContent: "center" }}>
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="#004A35" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {/* RIGHT column */}
+                            <div style={{ gridColumn: "span 4", textAlign: "left" }}>
+                                <h3 style={{ fontSize: 18, fontWeight: 700, color: "#FFF6C7", margin: "0 0 12px" }}>Snel naar</h3>
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, fontSize: 13.5, marginBottom: 24 }}>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                                        <span className="lg-link" style={{ cursor: "pointer" }}>Onze club</span>
+                                        <span className="lg-link" style={{ cursor: "pointer" }}>Voor gasten</span>
+                                        <span className="lg-link" style={{ cursor: "pointer" }}>Begin met Golf</span>
+                                    </div>
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                                        <span className="lg-link" style={{ cursor: "pointer" }}>De baan</span>
+                                        <span className="lg-link" style={{ cursor: "pointer" }}>Onze evenementen</span>
+                                        <span className="lg-link" style={{ cursor: "pointer" }}>Contact</span>
+                                    </div>
+                                </div>
+                                <div style={{
+                                    background: "#FFF6C7", color: "#1E1E1E", fontSize: 11, fontWeight: 500,
+                                    padding: "4px 14px", borderRadius: 5, boxShadow: "0 1px 3px rgba(0,0,0,0.3)", display: "inline-block",
+                                }}>
+                                    Cookies policy&nbsp;&nbsp;|&nbsp;&nbsp;Privacy policy&nbsp;&nbsp;|&nbsp;&nbsp;©2025
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
@@ -10554,6 +10902,18 @@ export default function AlpineFooter() {
             <span className="bg-[#dce7e1] hover:bg-[#ceddd6] text-[#2c443b] rounded-[5px] px-2.5 py-0.5 mx-0.5">UI HUB</span>
             <span>in California.</span>
           </div>
+
+          {/* Bottom: View Live button */}
+          <div className="mt-6 sm:mt-8">
+            <a
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="inline-flex items-center gap-2 bg-[#1f2937] hover:bg-black text-white rounded-full px-5 py-2.5 text-[14px] font-semibold shadow-[0_6px_18px_rgba(15,23,42,0.18)] transition-colors"
+            >
+              View Live
+              <span className="text-[15px] leading-none">↗</span>
+            </a>
+          </div>
         </div>
 
         {/* Lower scenic spacer */}
@@ -10610,9 +10970,207 @@ Root element: <footer id="alpine-footer" class="relative w-full min-h-screen fle
 
 4. MIDDLE SECTION - SYSTEM BADGES & POLICY PILLS: container space-y-2 sm:space-y-2.5 max-w-2xl. All pills: background #e2e5e9 hover #d8dce1, rounded-[6px], padding px-3.5 py-1, text-[12px] sm:text-[13px] text-[#374151] font-normal. Row 1 metadata tags: 'Font: SF Pro', 'Framework: Next.js', 'Last Updated: Jul 23, 2026'. Row 2 policy pills (buttons that open modals): 'Privacy Policy', 'Manifesto', 'Changelog'.
 
-5. BOTTOM SECTION - ATTRIBUTION LINE: margin-top mt-6 sm:mt-8, text-[13px] text-[#374151] font-normal flex items-center flex-wrap gap-1. 'Made with' + pretzel icon 🥨 (mx-0.5 text-base sm:text-lg select-none hover:scale-110 transition-transform) + 'By' + author pill badge 'UI HUB' (background #dce7e1 hover #ceddd6, text #2c443b, rounded-[5px], padding px-2.5 py-0.5 mx-0.5) + 'in California.'
+5. BOTTOM SECTION - ATTRIBUTION LINE: margin-top mt-6 sm:mt-8, text-[13px] text-[#374151] font-normal flex items-center flex-wrap gap-1. 'Made with' + pretzel icon 🥨 (mx-0.5 text-base sm:text-lg select-none hover:scale-110 transition-transform) + 'By' + author pill badge 'UI HUB' (background #dce7e1 hover #ceddd6, text #2c443b, rounded-[5px], padding px-2.5 py-0.5 mx-0.5) + 'in California.' Then, in a separate row below (margin-top mt-6 sm:mt-8), add a 'View Live' button: an anchor <a> that is non-navigating (href="#" with onClick={(e) => e.preventDefault()} so clicking or hovering never redirects and the footer stays in place), styled as a dark pill (inline-flex items-center gap-2 bg-[#1f2937] hover:bg-black text-white rounded-full px-5 py-2.5 text-[14px] font-semibold shadow-[0_6px_18px_rgba(15,23,42,0.18)] transition-colors) with label 'View Live' and a ↗ arrow glyph.
 
 6. INTERACTIVE MODAL SHEETS: accessible popover/modal for Privacy Policy, Manifesto, and Changelog with a close button (✕), backdrop blur, and smooth entrance animation using motion/react (import { AnimatePresence, motion } from 'motion/react'). Use useState to track the active modal. Each modal shows a title and a short body. Use AnimatePresence for exit animations; backdrop is a clickable div that closes the modal. Ensure the footer root is min-h-screen with the scenic background filling it and the card stacked near the top.`
+    },
+
+    {
+        id: "leeuwarder-golfclub",
+        title: "Leeuwarder Golfclub",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-01",
+        newBadgeDays: 120,
+        description: "A modern luxury golf club footer for 'Leeuwarder Golfclub' with a polished partner section above it, a dark charcoal footer shell, topographic contour overlay, centered floating star emblem, three-column contact/brand/nav layout, and a live 'Starttijd reserveren' CTA.",
+        preview: () => (<LeeuwarderGolfclubPreview />),
+        code: `import { ArrowRight } from "lucide-react";
+
+const STAR_EMBLEM = "https://res.cloudinary.com/chhwhdhk/image/upload/v1788254211/ChatGPT_Image_Sep_1_2026_02_46_36_PM_gxnmtp.png";
+
+const partners = [
+  { name: "e fresh", color: "#00F27A", icon: "ring" },
+  { name: "Heineken", color: "#64D98A", icon: "star" },
+  { name: "11STEDENHAL", color: "#38BDF8", icon: "oval" },
+  { name: "lippe wonen", color: "#ffffff", icon: "badge" },
+  { name: "NIVO", color: "#C084FC", icon: "check" },
+  { name: "Sligro", color: "#ffffff", icon: "chef" },
+];
+
+export default function LeeuwarderGolfclub() {
+  return (
+    <div className="w-full bg-[radial-gradient(circle_at_30%_20%,#39544a,#2c3f30)] flex justify-center overflow-hidden font-sans">
+      <div className="w-full max-w-[80rem] py-4">
+        <div className="bg-[#FAF5DF] rounded-[48px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.35)]">
+          {/* PARTNERS SECTION */}
+          <section className="px-8 sm:px-12 pt-14 pb-10 text-center">
+            <h2 className="text-[34px] sm:text-[38px] font-bold text-[#1e231e] tracking-tight mb-5">Onze trotse partners</h2>
+            <button type="button" className="inline-flex items-center gap-2 bg-[#E5F7E8] border border-[#B3E8BC] text-[#006B4F] text-[13px] font-semibold px-4 py-1.5 rounded-full mb-7 group cursor-pointer">
+              Word ook partner
+              <span className="w-5 h-5 bg-[#00F27A] text-[#004A35] rounded-full flex items-center justify-center transition-transform group-hover:translate-x-0.5">
+                <ArrowRight size={12} strokeWidth={3} />
+              </span>
+            </button>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4 max-w-6xl mx-auto">
+              {partners.map((p) => (
+                <div key={p.name} className="aspect-square rounded-[22px] sm:rounded-[24px] bg-[#004D36] hover:bg-[#005B40] flex flex-col items-center justify-center gap-2 hover:-translate-y-1 hover:shadow-lg transition-all duration-200 cursor-pointer">
+                  {p.icon === "ring" && (
+                    <div className="w-10 h-10 rounded-full border-2 border-[#00F27A]/50 flex items-center justify-center" style={{ color: p.color }}>
+                      <span className="font-black text-sm">ef</span>
+                    </div>
+                  )}
+                  {p.icon === "star" && (
+                    <svg className="w-6 h-6 text-[#FF0000]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L21.5 9.27l-4.9 4.57 1.24 7.16L12 17.77l-5.84 3.23 1.24-7.16L2.5 9.27l6.6-1.01L12 2z" /></svg>
+                  )}
+                  {p.icon === "oval" && (
+                    <svg className="w-10 h-10" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="6" fill="none" stroke="#00B4D8" strokeWidth="3" /><path d="M2 12a10 6 0 0 0 20 0" fill="none" stroke="#F77F00" strokeWidth="3" /></svg>
+                  )}
+                  {p.icon === "badge" && (
+                    <span className="bg-[#F59E0B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-[4px]">lippe</span>
+                  )}
+                  {p.icon === "check" && (
+                    <div className="flex items-center gap-1">
+                      <span className="font-black text-2xl" style={{ color: p.color }}>NIV</span>
+                      <svg className="w-4 h-4 text-[#00F27A]" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                    </div>
+                  )}
+                  {p.icon === "chef" && (
+                    <svg className="w-6 h-6 text-[#FBBF24]" viewBox="0 0 24 24"><path fill="currentColor" d="M12 3a4.5 4.5 0 0 0-4.5 4.5c0 .4.05.8.15 1.17A4.75 4.75 0 0 0 4 13.25 4.9 4.9 0 0 0 6 17.5v1.2a1.3 1.3 0 0 0 1.3 1.3h9.4a1.3 1.3 0 0 0 1.3-1.3v-1.2a4.9 4.9 0 0 0 2-4.25 4.75 4.75 0 0 0-3.15-4.58c.1-.37.15-.77.15-1.17A4.5 4.5 0 0 0 12 3z" /></svg>
+                  )}
+                  {p.icon !== "badge" && p.icon !== "check" && p.icon !== "ring" && (
+                    <span className="font-bold text-sm" style={{ color: p.color, fontStyle: p.icon === "chef" ? "italic" : "normal" }}>{p.name}</span>
+                  )}
+                  {p.icon === "ring" && <span className="font-bold text-[13px] text-[#00F27A]">{p.name}</span>}
+                  {p.icon === "badge" && <span className="font-bold text-base text-white">{p.name.replace("lippe ", "")}</span>}
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* FOOTER */}
+          <footer className="relative w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 pt-20 sm:pt-24 pb-8 bg-[#242424] rounded-t-[32px] sm:rounded-t-[48px] md:rounded-t-[52px] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.65)] border border-white/5 overflow-hidden">
+            {/* Topographic overlay */}
+            <svg className="absolute inset-0 w-full h-full text-white/10" style={{ opacity: 0.5 }} xmlns="http://www.w3.org/2000/svg">
+              <g fill="none" stroke="currentColor" strokeWidth="1.25" opacity="0.5">
+                <path d="M0 180 C 200 120, 400 240, 700 160 C 900 100, 1100 220, 1400 150" />
+                <path d="M0 260 C 250 200, 500 320, 800 240 C 1000 190, 1200 300, 1400 230" />
+                <path d="M0 340 C 200 280, 450 400, 750 320 C 950 270, 1200 380, 1400 310" />
+              </g>
+            </svg>
+
+            {/* Center floating star emblem */}
+            <img
+              src={STAR_EMBLEM}
+              alt="Leeuwarder Golfclub logo"
+              className="absolute -top-14 sm:-top-16 md:-top-20 left-1/2 -translate-x-1/2 z-30 w-[110px] h-[110px] sm:w-[135px] sm:h-[135px] md:w-[150px] md:h-[150px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer"
+            />
+
+            {/* 3-column layout */}
+            <div className="relative z-10 grid grid-cols-12 gap-6">
+              {/* LEFT: Contact */}
+              <div className="col-span-12 md:col-span-4">
+                <h3 className="text-[18px] font-bold text-[#FFF6C7] mb-3">Contact</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:block xl:grid">
+                  <div className="text-[13.5px] text-[#FFF6C7]/85 leading-relaxed">
+                    <p className="mb-1.5">Woelwijk 101,<br />8926 XD Leeuwarden</p>
+                    <p className="mb-1.5 hover:text-[#00F27A] transition-colors">0511 - 43 22 99</p>
+                    <p className="hover:text-[#00F27A] transition-colors">info@leeuwardergolfclub.nl</p>
+                  </div>
+                  <div className="flex flex-col items-start sm:items-end gap-2 text-[13.5px]">
+                    {["Facebook", "Instagram", "LinkedIn"].map((s) => (
+                      <a key={s} href="#" onClick={(e) => e.preventDefault()} className="inline-flex items-center gap-1 text-[#FFF6C7] hover:text-[#00F27A] transition-colors group">
+                        {s}
+                        <svg className="w-3.5 h-3.5 text-[#00F27A] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H8M17 7V16" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+                {/* Score & badges */}
+                <div className="mt-5 flex flex-col gap-2 items-start">
+                  <div className="flex items-center gap-1.5">
+                    <span className="bg-[#00F27A] text-[#121212] font-black text-[11px] px-2 py-0.5 rounded-full">7,9</span>
+                    <span className="text-[#FFF6C7]/90 text-[12px]">Leadingcourses score</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="bg-[#E05A1E] w-6 h-7 rounded-[4px] flex items-center justify-center text-white text-[8px] font-black">NGF</div>
+                    <div className="bg-[#0E4A35] border border-[#00F27A]/40 px-2 py-0.5 rounded-[4px] flex flex-col items-center">
+                      <svg className="w-4 h-4 text-[#FBBF24]" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L21.5 9.27l-4.9 4.57 1.24 7.16L12 17.77l-5.84 3.23 1.24-7.16L2.5 9.27l6.6-1.01L12 2z" /></svg>
+                      <span className="text-white text-[8px] font-bold">2024</span>
+                    </div>
+                    <div className="bg-[#009EE0] w-7 h-5 rounded-[4px] flex items-center justify-center text-white text-[8px] font-black">GOLF.NL</div>
+                    <div className="flex w-2.5 h-7 rounded-[3px] overflow-hidden border border-white/15">
+                      <div className="flex-1 bg-[#E8380D]" />
+                      <div className="flex-1 bg-white" />
+                      <div className="flex-1 bg-[#244FAE]" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* CENTER: Brand */}
+              <div className="col-span-12 md:col-span-4 text-center px-2 pt-4 md:pt-0">
+                <div className="font-display font-black text-[38px] sm:text-[46px] md:text-[50px] leading-[1.05] tracking-tight text-[#FFF6C7]">
+                  Leeuwarder<br />Golfclub
+                </div>
+                <div className="font-serif italic text-[19px] sm:text-[21px] text-[#FFF6C7]/95 mt-2.5 mb-7 font-normal tracking-wide">
+                  Waar golfgeluk begint
+                </div>
+                <div className="flex flex-col items-center gap-3">
+                  <a href="#" onClick={(e) => e.preventDefault()} className="inline-flex items-center gap-2 bg-[#00F27A] hover:bg-[#05FF83] text-[#111111] font-bold text-[13.5px] sm:text-[14px] rounded-full px-5 py-2.5 shadow-[0_4px_14px_rgba(0,242,122,0.35)] transition-colors">
+                    Starttijd reserveren
+                    <span className="w-5 h-5 bg-[#0E281C] text-[#00F27A] rounded-full flex items-center justify-center">
+                      <ArrowRight size={12} strokeWidth={3} />
+                    </span>
+                  </a>
+                  <a href="#" onClick={(e) => e.preventDefault()} className="inline-flex items-center gap-2 bg-[#006B4F] hover:bg-[#007E5C] text-[#FFF6C7] font-bold text-[13.5px] sm:text-[14px] rounded-full px-5 py-2.5 border border-[#00F27A]/20 shadow-md transition-colors">
+                    Direct lid worden
+                    <span className="w-5 h-5 bg-[#00F27A] text-[#004A35] rounded-full flex items-center justify-center">
+                      <ArrowRight size={12} strokeWidth={3} />
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              {/* RIGHT: Snel naar */}
+              <div className="col-span-12 md:col-span-4">
+                <h3 className="text-[18px] font-bold text-[#FFF6C7] mb-3">Snel naar</h3>
+                <div className="grid grid-cols-2 gap-6 text-[13.5px] text-[#FFF6C7]/85 space-y-2 mb-6">
+                  <div className="flex flex-col gap-2">
+                    {["Onze club", "Voor gasten", "Begin met Golf"].map((l) => (
+                      <span key={l} className="hover:text-[#00F27A] transition-colors cursor-pointer">{l}</span>
+                    ))}
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {["De baan", "Onze evenementen", "Contact"].map((l) => (
+                      <span key={l} className="hover:text-[#00F27A] transition-colors cursor-pointer">{l}</span>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-[#FFF6C7] text-[#1E1E1E] text-[11px] font-medium px-3.5 py-1 rounded-[5px] shadow-sm inline-block">
+                  Cookies policy&nbsp;&nbsp;|&nbsp;&nbsp;Privacy policy&nbsp;&nbsp;|&nbsp;&nbsp;©2025
+                </div>
+              </div>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: `Create a pixel-perfect, responsive React/HTML/Tailwind CSS web component recreating the modern luxury golf club footer for "Leeuwarder Golfclub" with the partner section above it. Follow the exact specifications below:
+
+1. OVERALL COLOR PALETTE & TYPOGRAPHY: Canvas/Page Background: Deep scenic forest green #2c3f30 with subtle radial lighting. Main App Container Background: Warm ivory / soft cream #FAF5DF with rounded corners (rounded-[40px] to rounded-[56px]). Footer Container Background: Very dark charcoal/black #242424. Primary Text Color: Warm pale cream #FFF6C7. Primary Accent / Neon Green: #00F27A. Secondary Dark Green: #006B4F. Fonts: Main Display Brand = geometric modern display sans (Syne or Plus Jakarta Sans bold/extrabold); Tagline = elegant italic serif (Instrument Serif or Fraunces, italic, font-normal); Body & Links = clean sans (Plus Jakarta Sans, weights 400/500/700).
+
+2. TOP SECTION "ONZE TROTSE PARTNERS": Heading centered text-[34px] sm:text-[38px] font-bold color #1e231e tracking-tight "Onze trotse partners". Pill Button "Word ook partner": style bg-[#E5F7E8] border border-[#B3E8BC] text-[#006B4F] text-[13px] font-semibold px-4 py-1.5 rounded-full; right icon = small circular neon-green badge (w-5 h-5 bg-[#00F27A] text-[#004A35] rounded-full) with ArrowRight that slides translate-x-0.5 on hover. Partner Cards Grid (6 cards): container grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4 max-w-6xl mx-auto. Card: aspect-square rounded-[22px] sm:rounded-[24px] bg-[#004D36] hover:bg-[#005B40] hover:-translate-y-1 hover:shadow-lg transition-all duration-200 cursor-pointer. Card content: (1 e fresh) neon ring w-10 h-10 rounded-full border-2 border-[#00F27A]/50 with "ef" + text "e fresh" in #00F27A; (2 Heineken) red 5-point star w-6 h-6 text-[#FF0000] + bold serif "Heineken" #64D98A; (3 11STEDENHAL) cyan/orange oval speed-skating track icon border-2 border-[#00B4D8] border-t-[#F77F00] + "11STEDENHAL" #38BDF8 bold; (4 lippe wonen) amber badge bg-[#F59E0B] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-[4px] + white "wonen"; (5 NIVO) purple bold "NIV" with neon-green checkmark #00F27A; (6 Sligro) golden chef hat icon #FBBF24 + italic bold serif "Sligro" #FFFFFF.
+
+3. FOOTER CONTAINER & TOPOGRAPHIC CONTOURS: Footer Shell: relative w-full max-w-7xl mx-auto px-6 sm:px-12 lg:px-16 pt-20 sm:pt-24 pb-8, rounded-[32px] sm:rounded-[48px] md:rounded-[52px], shadow-[0_25px_50px_-12px_rgba(0,0,0,0.65)], border border-white/5, background #242424. Topographic Background Pattern: full-coverage organic elevation/golf-course contour curves via SVG overlay with stroke=currentColor strokeWidth=1.25 opacity text-white/10, low contrast.
+
+4. CENTER FLOATING STAR EMBLEM (overlapping top border): absolute -top-14 sm:-top-16 md:-top-20 left-1/2 -translate-x-1/2 z-30. Asset image https://res.cloudinary.com/chhwhdhk/image/upload/v1788254211/ChatGPT_Image_Sep_1_2026_02_46_36_PM_gxnmtp.png. Sizing w-[110px] h-[110px] sm:w-[135px] sm:h-[135px] md:w-[150px] md:h-[150px]. Effects drop-shadow-2xl hover:scale-105 transition-transform duration-300 cursor-pointer object-contain.
+
+5. THREE-COLUMN DESKTOP CONTENT LAYOUT (12-col grid): A. LEFT COLUMN (4 cols): "Contact" heading text-[18px] font-bold text-[#FFF6C7] mb-3; contact text-[13.5px] text-[#FFF6C7]/85 leading-relaxed: "Woelwijk 101,", "8926 XD Leeuwarden", "0511 - 43 22 99" (hover #00F27A), "info@leeuwardergolfclub.nl" (hover #00F27A); right social links "Facebook ↗", "Instagram ↗", "LinkedIn ↗" text-[#FFF6C7] with w-3.5 h-3.5 text-[#00F27A] arrow that moves translate-x-0.5 -translate-y-0.5 on hover. Left-Bottom badges: score pill bg-[#00F27A] text-[#121212] font-black text-[11px] px-2 py-0.5 rounded-full "7,9" + "Leadingcourses score" text-[#FFF6C7]/90 text-[12px]; NGF orange badge bg-[#E05A1E] w-6 h-7 rounded-[4px]; Leadingcourses dark pine bg-[#0E4A35] border border-[#00F27A]/40 with gold star + "2024"; GOLF.NL blue bg-[#009EE0] w-7 h-5 rounded-[4px]; PGA Holland tricolor flag (Red/White/Blue). B. CENTER COLUMN (4 cols): Brand "Leeuwarder" above "Golfclub", font-display font-black text-[38px] sm:text-[46px] md:text-[50px] leading-[1.05] tracking-tight text-[#FFF6C7] text-center; tagline "Waar golfgeluk begint" font-serif italic text-[19px] sm:text-[21px] text-[#FFF6C7]/95 mt-2.5 mb-7 text-center. Two CTA pills: (1 "Starttijd reserveren") bg-[#00F27A] hover:bg-[#05FF83] text-[#111111] font-bold text-[13.5px] sm:text-[14px] rounded-full px-5 py-2.5 shadow-[0_4px_14px_rgba(0,242,122,0.35)] with dark circle badge w-5 h-5 bg-[#0E281C] text-[#00F27A] ArrowRight icon; (2 "Direct lid worden") bg-[#006B4F] hover:bg-[#007E5C] text-[#FFF6C7] font-bold text-[13.5px] sm:text-[14px] rounded-full px-5 py-2.5 border border-[#00F27A]/20 shadow-md with neon circle badge w-5 h-5 bg-[#00F27A] text-[#004A35] ArrowRight. Both CTA buttons are anchor links to the live URL https://ai.studio/apps/54435c8b-0890-4430-9b21-d8ca1aaeced3 with target="_blank" rel="noopener noreferrer". C. RIGHT COLUMN (4 cols): "Snel naar" heading text-[18px] font-bold text-[#FFF6C7] mb-3; 2-column nav grid text-[13.5px] text-[#FFF6C7]/85 space-y-2 hover:#00F27A: col1 "Onze club", "Voor gasten", "Begin met Golf"; col2 "De baan", "Onze evenementen", "Contact". Bottom-right legal bar: bg-[#FFF6C7] text-[#1E1E1E] text-[11px] font-medium px-3.5 py-1 rounded-[5px] shadow-sm containing "Cookies policy | Privacy policy | ©2025".
+
+6. RESPONSIVE BEHAVIOR: Desktop >=1024px crisp 3-column layout; Tablet 768-1023 proportional scaling; Mobile <768 stacked vertical with center-aligned brand/CTAs followed by contact and navigation without horizontal overflow. Use lucide-react ArrowRight for arrow icons. The two center CTA buttons ('Starttijd reserveren' and 'Direct lid worden') must be non-navigating: clicking or hovering them must never redirect — use href="#" with onClick={(e) => e.preventDefault()} so the footer stays in place.`,
+
     },
 
 ];

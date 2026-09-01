@@ -1222,6 +1222,22 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     </button>
                 </div>
 
+                {(item.id === 'leeuwarder-golfclub' || item.id === 'alpine-footer') && (
+                    <a
+                        href={item.id === 'leeuwarder-golfclub'
+                            ? 'https://ai.studio/apps/54435c8b-0890-4430-9b21-d8ca1aaeced3'
+                            : 'https://ai.studio/apps/ba450faa-d535-476c-9979-27adc00efe2f'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-lg border-2 border-brand-red bg-brand-red text-white text-xs font-black uppercase tracking-wider hover:bg-[#E8380D] hover:border-[#E8380D] transition-all brutal-shadow-black cursor-pointer shrink-0"
+                        title="Open Live Link in New Tab"
+                        aria-label="Open Live Link in New Tab"
+                    >
+                        <ExternalLink size={13} />
+                        <span className="hidden sm:inline">Live Link</span>
+                    </a>
+                )}
+
                 <button
                     onClick={handleOpenFullscreen}
                     className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 sm:py-1.5 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-yellow transition-all brutal-shadow-black cursor-pointer shrink-0"
