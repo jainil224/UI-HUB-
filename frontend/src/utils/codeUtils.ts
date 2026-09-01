@@ -4,6 +4,7 @@ import { CARD_CASCADE_SOURCE } from '../data/cardCascadeSource';
 import { CINEMATIC_NAVBAR_SOURCE } from '../data/cinematicNavbarSource';
 import { SUI_FOUNDATION_SOURCE } from '../data/suiFoundationSource';
 import { HAUL_FOOTER_SOURCE } from '../data/haulFooterSource';
+import { OMNIFLOW_FOOTER_SOURCE } from '../data/omniflowFooterSource';
 
 const UI_HUB_DISPLAY_NAME = (id: string) =>
     id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
@@ -59,6 +60,11 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
   // Haul Footer dedicated pre-embedded source
   if (id === 'haul-footer' && HAUL_FOOTER_SOURCE) {
     return withUiHubBranding(HAUL_FOOTER_SOURCE, id);
+  }
+
+  // Omniflow Footer dedicated pre-embedded source
+  if (id === 'omniflow-footer' && OMNIFLOW_FOOTER_SOURCE) {
+    return withUiHubBranding(OMNIFLOW_FOOTER_SOURCE, id);
   }
 
   // Card Cascade has no embedded key yet, so fall back to its dedicated
