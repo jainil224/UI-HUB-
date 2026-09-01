@@ -34,6 +34,18 @@ const ComponentsPage: React.FC = () => {
 
     const maxCount = Math.max(1, ...leaderboard.map((x) => x.count));
 
+    const catAcc = new Map<string, { total: number; used: number; premium: number }>();
+    (data?.catalog || []).forEach((row) => {
+        const c = catAcc.get(row.category) || { total: 0, used: 0, premium: 0 };
+        c.total += 1;
+        if (row.usageCount > 0) c.used += 1;
+        if (row.isPremium) c.premium += 1;
+        catAcc.set(row.category, c);
+    });
+    const categories = Array.from(catAcc.entries())
+        .map(([name, v]) => ({ name, ...v }))
+        .sort((a, b) => b.total - a.total);
+
     return (
         <div>
             <PageHeader
@@ -47,11 +59,43 @@ const ComponentsPage: React.FC = () => {
             />
 
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue p-5"><p className="text-[11px] font-black uppercase tracking-widest text-neutral-400">Catalog</p><p className="text-2xl font-black text-white mt-1.5">{formatCompact(data?.total)}</p><p className="text-[11px] text-neutral-400 mt-2">{formatCompact(data?.premiumCount)} premium</p></div>
+                <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue p-5"><p className="text-[11px] font-black uppercase tracking-widest text-neutral-400">Catalog</p><p className="text-2xl font-black text-white mt-1.5">{formatCompact(data?.total)}</p><p className="text-[11px] text-neutral-400 mt-2">{categories.length} real categories · {formatCompact(data?.premiumCount)} premium</p></div>
                 <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue p-5"><p className="text-[11px] font-black uppercase tracking-widest text-neutral-400">Used Components</p><p className="text-2xl font-black text-white mt-1.5">{formatCompact(data?.usedComponents)}</p><p className="text-[11px] text-neutral-400 mt-2">of {formatCompact(data?.total)} catalog</p></div>
                 <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue p-5"><p className="text-[11px] font-black uppercase tracking-widest text-neutral-400">Component Calls</p><p className="text-2xl font-black text-white mt-1.5">{formatCompact(data?.requestedComponentCalls)}</p><p className="text-[11px] text-neutral-400 mt-2">fetch + code events</p></div>
                 <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue p-5"><p className="text-[11px] font-black uppercase tracking-widest text-neutral-400">Searches</p><p className="text-2xl font-black text-white mt-1.5">{formatCompact(s.data?.totalSearches)}</p><p className="text-[11px] text-neutral-400 mt-2">{formatCompact(s.data?.zeroResultSearches?.length)} zero-result queries</p></div>
             </div>
+
+            <Panel className="mt-6">
+                <PanelHeader
+                    title="Category Breakdown"
+                    subtitle={`${categories.length} real component categories · ${formatCompact(data?.total)} components`}
+                />
+                {categories.length === 0 ? (
+                    <EmptyState icon={Boxes} title="No categories" message="No component catalog data available." />
+                ) : (
+                    <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4 p-5">
+                        {categories.map((cat) => {
+                            const pct = Math.max(1, Math.round((cat.total / (data?.total || 1)) * 100));
+                            return (
+                                <div key={cat.name} className="rounded-md border-2 border-white/60 bg-brand-bg p-4">
+                                    <div className="flex items-center justify-between gap-2">
+                                        <p className="text-[11px] font-black uppercase tracking-widest text-white capitalize">{cat.name}</p>
+                                        <span className="text-xs font-black text-white">{cat.total}</span>
+                                    </div>
+                                    <div className="h-2 rounded-full bg-neutral-800 mt-3 overflow-hidden">
+                                        <div className="h-full bg-brand-blue rounded-full" style={{ width: `${pct}%` }} />
+                                    </div>
+                                    <div className="flex items-center gap-3 mt-3 text-[10px] text-neutral-400">
+                                        <span>{formatCompact(cat.used)} used</span>
+                                        <span className="inline-flex items-center gap-1"><Code2 size={10} /> {formatCompact(cat.premium)} premium</span>
+                                        <span className="ml-auto font-mono text-neutral-500">{pct}% of catalog</span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </Panel>
 
             <Panel className="mt-6">
                 <PanelHeader

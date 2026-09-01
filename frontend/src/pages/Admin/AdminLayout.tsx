@@ -138,6 +138,31 @@ const AdminLayout: React.FC = () => {
                     </div>
                 </header>
 
+                <nav className="lg:hidden -mx-4 px-4 mb-6">
+                    <div className="flex gap-2 overflow-x-auto pb-1 max-w-full custom-scrollbar">
+                        {ADMIN_NAV.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <NavLink
+                                    key={item.to}
+                                    to={item.to}
+                                    onClick={() => setMobileOpen(false)}
+                                    className={({ isActive }) =>
+                                        `flex items-center gap-1.5 shrink-0 whitespace-nowrap rounded-md border-2 px-3 py-2 text-[10px] font-black uppercase tracking-widest transition-colors cursor-pointer ${
+                                            isActive
+                                                ? 'bg-brand-blue text-white border-white'
+                                                : 'bg-brand-surface text-neutral-400 border-white/60 hover:text-white hover:border-white'
+                                        }`
+                                    }
+                                >
+                                    <Icon size={13} className="shrink-0" />
+                                    {item.label}
+                                </NavLink>
+                            );
+                        })}
+                    </div>
+                </nav>
+
                 <div className="flex flex-col lg:flex-row gap-8">
                     <aside className={`hidden lg:block shrink-0 transition-all duration-200 ${collapsed ? 'w-16' : 'w-64'}`}>
                         <div className="lg:sticky lg:top-24 border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue overflow-hidden">
