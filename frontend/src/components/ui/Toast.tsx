@@ -7,9 +7,12 @@ interface ToastProps {
     isVisible: boolean;
     onClose: () => void;
     duration?: number;
+    image?: string;
+    imageAlt?: string;
+    logo?: React.ReactNode;
 }
 
-const Toast = ({ message, isVisible, onClose, duration = 3000 }: ToastProps) => {
+const Toast = ({ message, isVisible, onClose, duration = 3000, image, imageAlt, logo }: ToastProps) => {
     React.useEffect(() => {
         if (isVisible) {
             const timer = setTimeout(() => {
@@ -18,6 +21,8 @@ const Toast = ({ message, isVisible, onClose, duration = 3000 }: ToastProps) => 
             return () => clearTimeout(timer);
         }
     }, [isVisible, onClose, duration]);
+
+    const hasRichContent = Boolean(image || logo);
 
     return (
         <AnimatePresence>
@@ -34,15 +39,33 @@ const Toast = ({ message, isVisible, onClose, duration = 3000 }: ToastProps) => 
                         }}
                         className="relative pointer-events-auto"
                     >
-                        <div className="relative flex items-center gap-3 pl-2.5 pr-5 py-2.5 bg-brand-surface border-2 border-white rounded-lg brutal-shadow-blue max-w-full sm:max-w-sm">
-                            <div className="w-6 h-6 rounded-md bg-brand-yellow border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_#000000] shrink-0">
-                                <Check size={12} strokeWidth={4} className="text-black" />
+                        {hasRichContent ? (
+                            <div className="relative flex items-center gap-3 pr-5 py-2 pl-2.5 bg-brand-surface border-2 border-white rounded-lg brutal-shadow-blue max-w-full sm:max-w-sm">
+                                {image && (
+                                    <img
+                                        src={image}
+                                        alt={imageAlt || 'preview'}
+                                        className="w-11 h-11 rounded-md border-2 border-black object-cover shrink-0"
+                                    />
+                                )}
+                                <div className="flex flex-col gap-1 min-w-0">
+                                    {logo && <div className="flex items-center">{logo}</div>}
+                                    <span className="text-[11px] font-black text-white uppercase tracking-widest font-heading break-words min-w-0">
+                                        {message}
+                                    </span>
+                                </div>
                             </div>
+                        ) : (
+                            <div className="relative flex items-center gap-3 pl-2.5 pr-5 py-2.5 bg-brand-surface border-2 border-white rounded-lg brutal-shadow-blue max-w-full sm:max-w-sm">
+                                <div className="w-6 h-6 rounded-md bg-brand-yellow border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_#000000] shrink-0">
+                                    <Check size={12} strokeWidth={4} className="text-black" />
+                                </div>
 
-                            <span className="text-[11px] font-black text-white uppercase tracking-widest font-heading break-words min-w-0">
-                                {message}
-                            </span>
-                        </div>
+                                <span className="text-[11px] font-black text-white uppercase tracking-widest font-heading break-words min-w-0">
+                                    {message}
+                                </span>
+                            </div>
+                        )}
                     </motion.div>
                 </div>
             )}

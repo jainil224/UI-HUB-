@@ -837,6 +837,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         navigator.clipboard.writeText(prompt).then(() => {
             setPromptCopied(system);
             setPromptMenuOpen(false);
+            const label = PROMPT_OPTIONS.find(o => o.system === system)?.label || system.toUpperCase();
+            setToastTool(system);
+            setToastImage(item.imageUrl);
+            setToastMessage(`${label} PROMPT COPIED`);
+            setShowToast(true);
             setTimeout(() => setPromptCopied(null), 2000);
         });
     }, [item.id, item]);
@@ -939,6 +944,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     // Toast state for code copy
     const [showToast, setShowToast] = React.useState(false);
     const [toastMessage, setToastMessage] = React.useState('');
+    const [toastImage, setToastImage] = React.useState<string | undefined>();
+    const [toastTool, setToastTool] = React.useState<AISystem | null>(null);
 
     React.useEffect(() => {
         const unsubscribe = getUserFavorites(user?.uid, (favorites) => {
@@ -1275,7 +1282,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     <div className="relative" ref={promptMenuRef}>
                                         <button
                                             onClick={() => setPromptMenuOpen(o => !o)}
-                                            className={`p-1 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors flex items-center gap-1 ${
+                                            className={`px-3 py-1.5 rounded bg-neutral-900 border-2 border-neutral-600 text-neutral-100 hover:border-brand-yellow hover:text-brand-yellow transition-colors flex items-center gap-1.5 cursor-pointer ${
                                                 promptMenuOpen ? 'text-brand-yellow border-brand-yellow' : ''
                                             }`}
                                             title="Copy Prompt"
@@ -1283,8 +1290,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             aria-haspopup="true"
                                             aria-expanded={promptMenuOpen}
                                         >
-                                            <Copy size={13} />
-                                            <ChevronDown size={12} className={promptMenuOpen ? 'rotate-180' : ''} />
+                                            <Copy size={14} strokeWidth={2.5} />
+                                            <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Copy Prompt</span>
+                                            <ChevronDown size={13} className={promptMenuOpen ? 'rotate-180' : ''} />
                                         </button>
                                         {promptMenuOpen && (
                                             <div className="absolute right-0 top-full mt-1.5 z-[60] w-52 rounded-lg border-2 border-neutral-700 bg-[#0A0A0E] shadow-[4px_4px_0px_0px_#000000] overflow-hidden">
@@ -1311,17 +1319,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     </div>
                                     <button
                                         onClick={() => setResetKey(prev => prev + 1)}
-                                        className="p-1 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors"
+                                        className="p-1.5 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors"
                                         title="Replay Animation"
                                     >
                                         <RotateCcw size={13} className={resetKey > 0 ? 'animate-spin-once' : ''} />
-                                    </button>
-                                    <button
-                                        onClick={handleOpenFullscreen}
-                                        className="p-1 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors cursor-pointer"
-                                        title="Open in Full Screen Page"
-                                    >
-                                        <ExternalLink size={13} />
                                     </button>
                                 </div>
                             </div>
@@ -1457,6 +1458,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             <Toast
                 isVisible={showToast}
                 message={toastMessage}
+                image={toastImage}
+                imageAlt={item.title}
+                logo={toastTool ? <ToolIcon tool={toastTool} active={false} size={16} /> : undefined}
                 onClose={() => setShowToast(false)}
             />
         </motion.div>
