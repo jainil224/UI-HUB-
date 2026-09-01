@@ -3,7 +3,7 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock,
+    Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown,
     Maximize2, Minimize2, Sparkles, Bot
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -306,6 +306,14 @@ const LOGO_ALT: Partial<Record<AISystem, string>> = {
     lovable: 'Lovable logo',
     advance: 'UI HUB Logo',
 };
+
+const PROMPT_OPTIONS: { system: AISystem; label: string }[] = [
+    { system: 'advance', label: 'ADVANCE' },
+    { system: 'antigravity', label: 'ANTIGRAVITY' },
+    { system: 'claude', label: 'CLAUDE CODE' },
+    { system: 'cursor', label: 'CURSOR' },
+    { system: 'lovable', label: 'LOVABLE' },
+];
 
 const ToolIcon = ({ tool, active, size = 20 }: { tool: AISystem; active: boolean; size?: number }) => {
     const src = LOGO_SRC[tool];
@@ -819,7 +827,29 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [copied, setCopied] = React.useState<string | null>(null);
     const [resetKey, setResetKey] = React.useState(0);
     const [isFullscreen, setIsFullscreen] = React.useState(false);
+    const [promptMenuOpen, setPromptMenuOpen] = React.useState(false);
+    const [promptCopied, setPromptCopied] = React.useState<string | null>(null);
+    const promptMenuRef = React.useRef<HTMLDivElement>(null);
     const previewRef = React.useRef<HTMLDivElement>(null);
+
+    const copyPromptFromPreview = React.useCallback((system: AISystem) => {
+        const prompt = getFallbackVibePrompt(item.id, system, item);
+        navigator.clipboard.writeText(prompt).then(() => {
+            setPromptCopied(system);
+            setPromptMenuOpen(false);
+            setTimeout(() => setPromptCopied(null), 2000);
+        });
+    }, [item.id, item]);
+
+    React.useEffect(() => {
+        const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+            if (promptMenuRef.current && !promptMenuRef.current.contains(e.target as Node)) {
+                setPromptMenuOpen(false);
+            }
+        };
+        document.addEventListener('pointerdown', handlePointerDown);
+        return () => document.removeEventListener('pointerdown', handlePointerDown);
+    }, []);
 
     const handleOpenFullscreen = () => {
         let demoUrl = `/demo/${item.id}`;
@@ -1242,6 +1272,43 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     <span className="text-[9px] font-mono text-neutral-400 font-bold uppercase tracking-wider ml-2">PREVIEW // {item.id.toUpperCase()}</span>
                                 </div>
                                 <div className="flex items-center gap-2">
+                                    <div className="relative" ref={promptMenuRef}>
+                                        <button
+                                            onClick={() => setPromptMenuOpen(o => !o)}
+                                            className={`p-1 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors flex items-center gap-1 ${
+                                                promptMenuOpen ? 'text-brand-yellow border-brand-yellow' : ''
+                                            }`}
+                                            title="Copy Prompt"
+                                            aria-label="Copy Prompt"
+                                            aria-haspopup="true"
+                                            aria-expanded={promptMenuOpen}
+                                        >
+                                            <Copy size={13} />
+                                            <ChevronDown size={12} className={promptMenuOpen ? 'rotate-180' : ''} />
+                                        </button>
+                                        {promptMenuOpen && (
+                                            <div className="absolute right-0 top-full mt-1.5 z-[60] w-52 rounded-lg border-2 border-neutral-700 bg-[#0A0A0E] shadow-[4px_4px_0px_0px_#000000] overflow-hidden">
+                                                <div className="px-2.5 py-1.5 border-b border-neutral-800 text-[8px] uppercase tracking-widest font-black text-neutral-500">
+                                                    Copy Prompt
+                                                </div>
+                                                {PROMPT_OPTIONS.map(opt => (
+                                                    <button
+                                                        key={opt.system}
+                                                        onClick={() => copyPromptFromPreview(opt.system)}
+                                                        className="w-full flex items-center gap-2 px-2.5 py-2 text-left hover:bg-neutral-900 transition-colors"
+                                                    >
+                                                        <ToolIcon tool={opt.system} active={false} size={14} />
+                                                        <span className="text-[10px] font-mono font-black uppercase tracking-wider text-neutral-200 flex-1">
+                                                            {opt.label}
+                                                        </span>
+                                                        {promptCopied === opt.system && (
+                                                            <Check size={12} className="text-brand-yellow shrink-0" strokeWidth={3} />
+                                                        )}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
                                     <button
                                         onClick={() => setResetKey(prev => prev + 1)}
                                         className="p-1 rounded bg-neutral-900 border border-neutral-700 text-neutral-300 hover:text-white transition-colors"
