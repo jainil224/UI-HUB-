@@ -3408,6 +3408,320 @@ const OmniflowFooterPreview: React.FC = () => {
     );
 };
 
+const SoraFooterPreview: React.FC = () => {
+    const ARTWORK_URL = 'https://res.cloudinary.com/chhwhdhk/image/upload/v1788285977/ChatGPT_Image_Sep_1_2026_11_36_03_PM_hz7yrh.png';
+
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: 520,
+            backgroundColor: '#050608',
+            color: '#FFFFFF',
+            fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            overflow: 'hidden',
+            boxSizing: 'border-box',
+        }}>
+            {/* Film Grain Noise Texture */}
+            <div
+                style={{
+                    position: 'absolute',
+                    inset: 0,
+                    pointerEvents: 'none',
+                    opacity: 0.035,
+                    mixBlendMode: 'overlay',
+                    backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.8\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")',
+                    zIndex: 2,
+                }}
+            />
+
+            {/* SINGLE CONTINUOUS 3D RIBBON ARTWORK OBJECT (Spans top CTA down through the glass footer) */}
+            <div style={{
+                position: 'absolute',
+                right: -20,
+                top: 0,
+                bottom: 0,
+                width: '54%',
+                maxWidth: 580,
+                pointerEvents: 'none',
+                userSelect: 'none',
+                mixBlendMode: 'screen',
+                zIndex: 3,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+            }}>
+                <img
+                    src={ARTWORK_URL}
+                    alt=""
+                    style={{
+                        width: '100%',
+                        height: 'auto',
+                        maxHeight: '100%',
+                        objectFit: 'contain',
+                        objectPosition: 'right center',
+                        filter: 'drop-shadow(0 20px 60px rgba(79,70,229,0.35))',
+                    }}
+                />
+            </div>
+
+            {/* ========================================================================= */}
+            {/* 1. TOP CTA SECTION ("Ready to step in?")                                   */}
+            {/* ========================================================================= */}
+            <div style={{
+                position: 'relative',
+                width: '100%',
+                padding: '44px 36px 28px 36px',
+                boxSizing: 'border-box',
+                zIndex: 10,
+            }}>
+                <div style={{ maxWidth: 440 }}>
+                    {/* Eyebrow */}
+                    <p style={{
+                        margin: '0 0 10px 0',
+                        fontSize: 13,
+                        color: '#A1A1AA',
+                        fontWeight: 400,
+                        letterSpacing: '0.01em',
+                    }}>
+                        Get Early Access
+                    </p>
+
+                    {/* Main Heading */}
+                    <h3 style={{
+                        margin: '0 0 24px 0',
+                        fontSize: 38,
+                        fontWeight: 600,
+                        color: '#FFFFFF',
+                        lineHeight: 1.12,
+                        letterSpacing: '-0.025em',
+                    }}>
+                        Ready to step in?
+                    </h3>
+
+                    {/* Reticle Corner-Bracket Button */}
+                    <div style={{ position: 'relative', display: 'inline-block' }}>
+                        <div style={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: '10px 22px',
+                            backgroundColor: 'rgba(24, 24, 27, 0.65)',
+                            border: '1px solid rgba(255, 255, 255, 0.12)',
+                            borderRadius: 2,
+                            color: '#F4F4F5',
+                            fontSize: 13,
+                            fontWeight: 500,
+                            letterSpacing: '0.02em',
+                            cursor: 'pointer',
+                            boxShadow: '0 0 20px rgba(255,255,255,0.05)',
+                        }}>
+                            {/* 4 Reticle Corner Accents */}
+                            <span style={{ position: 'absolute', top: -1, left: -1, width: 7, height: 7, borderTop: '2px solid rgba(255,255,255,0.85)', borderLeft: '2px solid rgba(255,255,255,0.85)' }} />
+                            <span style={{ position: 'absolute', top: -1, right: -1, width: 7, height: 7, borderTop: '2px solid rgba(255,255,255,0.85)', borderRight: '2px solid rgba(255,255,255,0.85)' }} />
+                            <span style={{ position: 'absolute', bottom: -1, left: -1, width: 7, height: 7, borderBottom: '2px solid rgba(255,255,255,0.85)', borderLeft: '2px solid rgba(255,255,255,0.85)' }} />
+                            <span style={{ position: 'absolute', bottom: -1, right: -1, width: 7, height: 7, borderBottom: '2px solid rgba(255,255,255,0.85)', borderRight: '2px solid rgba(255,255,255,0.85)' }} />
+                            Start Building
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ========================================================================= */}
+            {/* 2. BOTTOM FROSTED GLASS FOOTER CARD                                       */}
+            {/* ========================================================================= */}
+            <div style={{
+                position: 'relative',
+                width: '100%',
+                backgroundColor: 'rgba(12, 14, 18, 0.82)',
+                borderTop: '1px solid rgba(255, 255, 255, 0.18)',
+                backdropFilter: 'blur(28px)',
+                WebkitBackdropFilter: 'blur(28px)',
+                padding: '28px 36px 20px 36px',
+                boxSizing: 'border-box',
+                overflow: 'hidden',
+                zIndex: 20,
+            }}>
+                {/* Multi-Color Radial Ambient Lights behind frosted glass */}
+                <div style={{
+                    position: 'absolute',
+                    right: 40,
+                    top: -10,
+                    width: 180,
+                    height: 180,
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(20, 184, 166, 0.22)',
+                    filter: 'blur(70px)',
+                    pointerEvents: 'none',
+                }} />
+                <div style={{
+                    position: 'absolute',
+                    right: 140,
+                    bottom: -20,
+                    width: 200,
+                    height: 200,
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(245, 158, 11, 0.18)',
+                    filter: 'blur(70px)',
+                    pointerEvents: 'none',
+                }} />
+                <div style={{
+                    position: 'absolute',
+                    right: 0,
+                    bottom: -10,
+                    width: 240,
+                    height: 240,
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(79, 70, 229, 0.28)',
+                    filter: 'blur(80px)',
+                    pointerEvents: 'none',
+                }} />
+
+                {/* Left Vignette Backdrop for Complete Readability */}
+                <div style={{
+                    position: 'absolute',
+                    top: 0,
+                    bottom: 0,
+                    left: 0,
+                    width: '68%',
+                    background: 'linear-gradient(to right, rgba(12,14,18,0.96) 0%, rgba(12,14,18,0.90) 60%, rgba(12,14,18,0.6) 80%, transparent 100%)',
+                    pointerEvents: 'none',
+                    zIndex: 5,
+                }} />
+
+                {/* Footer Content */}
+                <div style={{ position: 'relative', zIndex: 10 }}>
+                    <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        gap: 24,
+                    }}>
+                        {/* Brand, Tagline & Socials */}
+                        <div style={{ maxWidth: 360 }}>
+                            {/* Logo */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                                <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: 20, height: 20, color: '#FFFFFF' }}>
+                                    <path d="M12 1.5a1 1 0 0 1 1 1v7.6l5.37-5.37a1 1 0 1 1 1.41 1.41L14.41 11.5h7.59a1 1 0 1 1 0 2h-7.6l5.38 5.38a1 1 0 0 1-1.42 1.41L13 14.91V22.5a1 1 0 1 1-2 0v-7.59l-5.37 5.38a1 1 0 0 1-1.41-1.42L9.59 13.5H2a1 1 0 1 1 0-2h7.6L4.22 6.13a1 1 0 0 1 1.41-1.41L11 10.09V2.5a1 1 0 0 1 1-1z" />
+                                </svg>
+                                <span style={{ fontSize: 19, fontWeight: 500, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
+                                    Sōra
+                                </span>
+                            </div>
+
+                            {/* Tagline */}
+                            <p style={{
+                                margin: '10px 0 0 0',
+                                fontSize: 12,
+                                lineHeight: '18px',
+                                color: '#A1A1AA',
+                                fontWeight: 400,
+                            }}>
+                                The infrastructure that empowers the next generation of intelligent applications to run faster and deliver real results.
+                            </p>
+
+                            {/* Social Buttons */}
+                            <div style={{ display: 'flex', gap: 9, marginTop: 16 }}>
+                                {[
+                                    { label: 'GitHub', svg: <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" /> },
+                                    { label: 'X', svg: <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /> },
+                                    { label: 'Reddit', svg: <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.56 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.197-2.512-.73a.326.326 0 0 0-.232-.095z" /> },
+                                ].map(({ label, svg }) => (
+                                    <div key={label} style={{
+                                        width: 32,
+                                        height: 32,
+                                        borderRadius: 8,
+                                        backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: '#A1A1AA',
+                                        cursor: 'pointer',
+                                    }}>
+                                        <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: 14, height: 14 }}>
+                                            {svg}
+                                        </svg>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* Navigation Groups - cleanly aligned in center-right */}
+                        <div style={{ display: 'flex', gap: 48, paddingRight: 24 }}>
+                            {/* Product */}
+                            <div>
+                                <div style={{ fontSize: 12, color: '#A1A1AA', marginBottom: 10, fontWeight: 400 }}>
+                                    Product
+                                </div>
+                                {['Overview', 'Features', 'Roadmap', 'Integrations'].map(item => (
+                                    <div key={item} style={{
+                                        fontSize: 12.5,
+                                        color: 'rgba(212, 212, 216, 0.9)',
+                                        lineHeight: '22px',
+                                        cursor: 'pointer',
+                                    }}>
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Resources */}
+                            <div>
+                                <div style={{ fontSize: 12, color: '#A1A1AA', marginBottom: 10, fontWeight: 400 }}>
+                                    Resources
+                                </div>
+                                {['Blog', 'Help Center', 'Community', 'API Docs'].map(item => (
+                                    <div key={item} style={{
+                                        fontSize: 12.5,
+                                        color: 'rgba(212, 212, 216, 0.9)',
+                                        lineHeight: '22px',
+                                        cursor: 'pointer',
+                                    }}>
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Hairline Divider */}
+                    <div style={{
+                        width: '100%',
+                        height: 1,
+                        backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                        margin: '22px 0 14px 0',
+                    }} />
+
+                    {/* Legal Bar */}
+                    <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        fontSize: 11.5,
+                        color: '#A1A1AA',
+                        gap: 12,
+                    }}>
+                        <div>&copy; 2025 Sōra. All rights reserved.</div>
+                        <div style={{ display: 'flex', gap: 20 }}>
+                            <span style={{ cursor: 'pointer' }}>Privacy Policy</span>
+                            <span style={{ cursor: 'pointer' }}>Terms of Service</span>
+                            <span style={{ cursor: 'pointer' }}>Cookie Policy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const AlpineFooterPreview: React.FC = () => {
     const [modal, setModal] = useState<string | null>(null);
 
@@ -11947,6 +12261,354 @@ Follow every single specification, exact dimension, hex color, typography rule, 
 7. RESPONSIVENESS RULES
 ================================================================================
 - Mobile (<640px): CTA card width scales to full width with 16px side padding; heading scales to 22px; footer columns wrap gracefully with full tap targets; giant typography scales to 115px with proportional cropping. No horizontal scrollbars.`,
+    },
+
+    {
+        id: "sora-footer",
+        title: "Sōra",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-02",
+        newBadgeDays: 120,
+        description: "A high-end, futuristic dark-mode landing page CTA and frosted glassmorphic footer featuring an overlapping 3D granular ribbon artwork, corner-bracket reticle button, geometric tri-prong brand mark, and multi-color atmospheric glows.",
+        preview: () => (<SoraFooterPreview />),
+        code: `import React from 'react';
+
+const ARTWORK_URL =
+  'https://res.cloudinary.com/chhwhdhk/image/upload/v1788285977/ChatGPT_Image_Sep_1_2026_11_36_03_PM_hz7yrh.png';
+
+export default function SoraFooter() {
+  return (
+    <div className="relative w-full bg-[#050608] text-white font-sans antialiased overflow-hidden min-h-screen flex flex-col justify-between selection:bg-white/20 selection:text-white">
+      {/* Film Grain / Noise Overlay */}
+      <div
+        className="pointer-events-none fixed inset-0 z-50 opacity-[0.035] mix-blend-overlay"
+        aria-hidden="true"
+        style={{
+          backgroundImage:
+            'url("data:image/svg+xml,%3Csvg viewBox=\\'0 0 200 200\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cfilter id=\\'noiseFilter\\'%3E%3CfeTurbulence type=\\'fractalNoise\\' baseFrequency=\\'0.8\\' numOctaves=\\'3\\' stitchTiles=\\'stitch\\'/%3E%3C/filter%3E%3Crect width=\\'100%25\\' height=\\'100%25\\' filter=\\'url(%23noiseFilter)\\'/%3E%3C/svg%3E")',
+        }}
+      />
+
+      {/* SINGLE CONTINUOUS 3D RIBBON ARTWORK (Spans top CTA down into the frosted glass footer) */}
+      <div
+        className="pointer-events-none select-none absolute right-0 top-0 bottom-0 w-[85%] sm:w-[70%] md:w-[60%] lg:w-[54%] xl:w-[48%] max-w-[800px] z-10 mix-blend-screen flex items-center justify-end"
+        aria-hidden="true"
+      >
+        <img
+          src={ARTWORK_URL}
+          alt=""
+          className="w-full h-auto max-h-[92%] object-contain object-right drop-shadow-[0_20px_60px_rgba(79,70,229,0.35)]"
+        />
+      </div>
+
+      {/* ========================================================================= */}
+      {/* 1. TOP CTA SECTION ("Ready to step in?")                                   */}
+      {/* ========================================================================= */}
+      <section className="relative w-full min-h-[396px] md:min-h-[420px] pt-16 md:pt-[76px] pb-12 flex items-center z-20">
+        {/* Content Container */}
+        <div className="relative z-20 w-full max-w-[1380px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20">
+          <div className="max-w-xl">
+            {/* Eyebrow */}
+            <p className="text-[13px] md:text-[14px] font-normal tracking-normal text-zinc-400 mb-3.5">
+              Get Early Access
+            </p>
+
+            {/* Main Heading */}
+            <h2 className="text-[42px] sm:text-[48px] md:text-[54px] lg:text-[58px] font-medium sm:font-semibold leading-[1.1] tracking-tight text-white mb-8">
+              Ready to step in?
+            </h2>
+
+            {/* Interactive "Start Building" Reticle / Corner-Bracket Button */}
+            <div>
+              <button
+                type="button"
+                className="group relative inline-flex items-center justify-center px-6 py-2.5 rounded-sm bg-zinc-900/60 hover:bg-zinc-800/80 backdrop-blur-md text-white border border-white/10 text-[14px] font-medium tracking-wide transition-all duration-200 hover:scale-[1.02] cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.05)] hover:shadow-[0_0_25px_rgba(255,255,255,0.12)]"
+              >
+                {/* 4 Corner-Bracket Accents */}
+                <span className="absolute -top-[1px] -left-[1px] w-2 h-2 border-t-2 border-l-2 border-white/70 group-hover:border-white transition-colors" />
+                <span className="absolute -top-[1px] -right-[1px] w-2 h-2 border-t-2 border-r-2 border-white/70 group-hover:border-white transition-colors" />
+                <span className="absolute -bottom-[1px] -left-[1px] w-2 h-2 border-b-2 border-l-2 border-white/70 group-hover:border-white transition-colors" />
+                <span className="absolute -bottom-[1px] -right-[1px] w-2 h-2 border-b-2 border-r-2 border-white/70 group-hover:border-white transition-colors" />
+                Start Building
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 2. BOTTOM GLASS FOOTER CARD                                               */}
+      {/* ========================================================================= */}
+      <footer className="relative w-full bg-[#0c0e12]/80 backdrop-blur-2xl border-t border-white/[0.18] pt-12 md:pt-14 pb-8 overflow-hidden z-30">
+        {/* Multi-Color Radial Atmospheric Lights under frosted glass */}
+        <div
+          className="pointer-events-none absolute right-16 top-0 w-72 h-72 rounded-full bg-[#14b8a6]/25 filter blur-[100px]"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute right-48 bottom-0 w-80 h-80 rounded-full bg-[#f59e0b]/20 filter blur-[90px]"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute right-0 bottom-4 w-96 h-96 rounded-full bg-[#4f46e5]/30 filter blur-[110px]"
+          aria-hidden="true"
+        />
+
+        {/* Left Vignette Backdrop for Crisp Readability */}
+        <div
+          className="pointer-events-none absolute inset-y-0 left-0 w-full sm:w-[75%] lg:w-[62%] bg-gradient-to-r from-[#0c0e12]/98 via-[#0c0e12]/90 to-transparent z-10"
+          aria-hidden="true"
+        />
+
+        {/* Main Content */}
+        <div className="relative z-20 w-full max-w-[1380px] mx-auto px-6 sm:px-12 md:px-16 lg:px-20">
+          <div className="flex flex-col lg:flex-row justify-between items-start gap-12 lg:gap-8">
+            {/* Left Column: Brand, Tagline & Socials */}
+            <div className="w-full lg:w-[48%] flex flex-col">
+              {/* Brand Logo */}
+              <div className="flex items-center">
+                {/* Tri-prong / Asterisk Geometric SVG Icon */}
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-[22px] h-[22px] text-white shrink-0"
+                  aria-hidden="true"
+                >
+                  <path d="M12 1.5a1 1 0 0 1 1 1v7.6l5.37-5.37a1 1 0 1 1 1.41 1.41L14.41 11.5h7.59a1 1 0 1 1 0 2h-7.6l5.38 5.38a1 1 0 0 1-1.42 1.41L13 14.91V22.5a1 1 0 1 1-2 0v-7.59l-5.37 5.38a1 1 0 0 1-1.41-1.42L9.59 13.5H2a1 1 0 1 1 0-2h7.6L4.22 6.13a1 1 0 0 1 1.41-1.41L11 10.09V2.5a1 1 0 0 1 1-1z" />
+                </svg>
+                <span className="text-[20px] font-medium tracking-tight text-white ml-2.5">
+                  Sōra
+                </span>
+              </div>
+
+              {/* Tagline */}
+              <p className="text-[14px] leading-[22px] text-zinc-400 font-normal max-w-[390px] mt-3.5">
+                The infrastructure that empowers the next generation of intelligent applications to
+                run faster and deliver real results.
+              </p>
+
+              {/* Social Media Buttons (GitHub, X / Twitter, Reddit) */}
+              <div className="flex items-center gap-2.5 mt-7">
+                {/* GitHub */}
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  aria-label="GitHub"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] hover:border-white/[0.20] flex items-center justify-center text-zinc-400 hover:text-white transition-all duration-200"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                    />
+                  </svg>
+                </a>
+
+                {/* X / Twitter */}
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  aria-label="X (Twitter)"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] hover:border-white/[0.20] flex items-center justify-center text-zinc-400 hover:text-white transition-all duration-200"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+
+                {/* Reddit */}
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  aria-label="Reddit"
+                  className="w-9 h-9 rounded-lg bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] hover:border-white/[0.20] flex items-center justify-center text-zinc-400 hover:text-white transition-all duration-200"
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+                    <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.56 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.197-2.512-.73a.326.326 0 0 0-.232-.095z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            {/* Right Column: Navigation Groups */}
+            <div className="w-full lg:w-[52%] flex justify-start lg:justify-between lg:pl-16 lg:pr-12 gap-20 sm:gap-28 md:gap-36 mt-2 lg:mt-0">
+              {/* Product Navigation */}
+              <div>
+                <h3 className="text-[13px] font-normal text-zinc-400 mb-3.5 select-none">
+                  Product
+                </h3>
+                <ul className="space-y-[7px]">
+                  {['Overview', 'Features', 'Roadmap', 'Integrations'].map((item) => (
+                    <li key={item}>
+                      <a
+                        href="#"
+                        onClick={(e) => e.preventDefault()}
+                        className="text-[14px] leading-[24px] text-zinc-300/90 hover:text-white transition-colors duration-150"
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              {/* Resources Navigation */}
+              <div>
+                <h3 className="text-[13px] font-normal text-zinc-400 mb-3.5 select-none">
+                  Resources
+                </h3>
+                <ul className="space-y-[7px]">
+                  {['Blog', 'Help Center', 'Community', 'API Docs'].map((item) => (
+                    <li key={item}>
+                      <a
+                        href="#"
+                        onClick={(e) => e.preventDefault()}
+                        className="text-[14px] leading-[24px] text-zinc-300/90 hover:text-white transition-colors duration-150"
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Hairline Divider */}
+          <div className="w-full h-[1px] bg-white/[0.12] mb-6 mt-12 md:mt-14" />
+
+          {/* Legal Bar */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 text-[13px] text-zinc-400">
+            {/* Copyright */}
+            <div className="w-full lg:w-[48%]">
+              <p className="select-none text-[13px] text-zinc-400">
+                &copy; 2025 Sōra. All rights reserved.
+              </p>
+            </div>
+
+            {/* Legal Links */}
+            <div className="w-full lg:w-[52%] flex flex-wrap items-center lg:pl-16 gap-10 sm:gap-14 md:gap-16 lg:gap-20">
+              {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map((item) => (
+                <a
+                  key={item}
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="text-[13px] text-zinc-400 hover:text-white transition-colors duration-150"
+                >
+                  {item}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}`,
+        vibePrompt: `Generate a high-end, futuristic dark-mode landing page CTA and Footer component in React (TypeScript) and Tailwind CSS with smooth animations, high-precision typography, custom SVG icons, and a layered glassmorphic 3D atmospheric artwork composition.
+
+---
+
+### 1. OVERALL CANVAS & LAYOUT SPECIFICATIONS
+- **Page Container**: Full viewport width (\`w-full\`), dark theme with pure black / ultra-deep navy background (\`bg-[#050608]\` or \`bg-black\`), font family \`Inter\` / system sans-serif, antialiased.
+- **Max Content Width**: \`max-w-[1380px]\` centered (\`mx-auto\`) with responsive horizontal padding: \`px-6 sm:px-12 md:px-16 lg:px-20\`.
+- **Film Grain / Noise Overlay**: Fixed full-screen overlay with low opacity (\`opacity-[0.035]\`), \`mix-blend-overlay\`, pointer-events-none, generated via an inline SVG fractalNoise filter (\`<filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter>\`).
+- **Two-Part Vertical Stack**:
+  1. Top CTA / Early Access Section (\`h-[396px]\` to \`h-[420px]\`)
+  2. Bottom Glassmorphic Footer Card (\`min-h-[355px]\`)
+
+---
+
+### 2. THE 3D OVERLAPPING ARTWORK OBJECT & GLASSMORPHISM
+- **Artwork Asset URL**: \`https://res.cloudinary.com/chhwhdhk/image/upload/v1788285977/ChatGPT_Image_Sep_1_2026_11_36_03_PM_hz7yrh.png\`
+- **Composition & Overlap Technique**:
+  - The 3D granular textured ribbon sits on the right side of the canvas (\`w-[85%] sm:w-[70%] md:w-[60%] lg:w-[54%] xl:w-[48%] max-w-[800px]\`, \`mix-blend-screen\`).
+  - **Upper Half (Outside Bottom Card)**: Positioned with vertical offset \`top-28 sm:top-32 md:top-36 lg:top-44\`, extending upward into the top CTA section. It renders **sharp and crisp** with 100% opacity against the dark background.
+  - **Lower Half (Inside the Bottom Card)**: The bottom footer card acts as a frosted glass layer (\`bg-[#0c0e12]/80 backdrop-blur-2xl border-t border-white/[0.18]\`). Inside the footer card, an aligned duplicate of the artwork is placed with \`filter blur-[36px] scale-105 opacity-85 mix-blend-screen\` combined with multi-color radial blur lights (Teal \`#14b8a6\` at \`blur-[100px]\`, Amber \`#f59e0b\` at \`blur-[90px]\`, and Indigo \`#4f46e5\` at \`blur-[110px]\`) so that the object seamlessly diffuses into ambient colored light across the glass boundary.
+
+---
+
+### 3. SECTION 1: TOP CTA ("READY TO STEP IN?")
+- **Section Height & Padding**: \`h-[396px] md:h-[400px]\`, top padding \`pt-16 md:pt-[76px]\`.
+- **Label / Eyebrow**:
+  - Text: \`"Get Early Access"\`
+  - Typography: \`text-[13px] md:text-[14px]\`, font weight \`400\` (normal), tracking \`tracking-normal\`, color \`text-zinc-400\` (\`#a1a1aa\`).
+  - Margin bottom: \`mb-3.5\` (\`14px\`).
+- **Main Heading**:
+  - Text: \`"Ready to step in?"\`
+  - Typography: \`text-[42px] sm:text-[48px] md:text-[54px] lg:text-[58px]\`, line-height \`leading-[1.1]\`, font weight \`600\` (semi-bold) or \`500\` (medium), tracking \`-0.02em\` (\`tracking-tight\`), color \`text-white\` (\`#ffffff\`).
+  - Margin bottom: \`mb-8\` (\`32px\`).
+- **Interactive "Start Building" Reticle / Corner-Bracket Button**:
+  - Visual Design: Dark translucent pill-card (\`bg-zinc-900/60 hover:bg-zinc-800/80 backdrop-blur-md text-white border border-white/10\`).
+  - Reticle Frame Accents: 4 distinctive right-angle corner brackets (top-left, top-right, bottom-left, bottom-right) styled in \`border-white/70 w-2 h-2 absolute\` attached to the corners of the button with glowing hover animation.
+  - Typography: \`text-[14px] font-medium text-zinc-100 tracking-wide\`.
+  - Dimensions: \`px-6 py-2.5\`, rounded \`rounded-sm\`.
+  - Interactive Animation: Subtle scale on hover (\`scale-[1.02]\`), inner glow transition, cursor pointer.
+
+---
+
+### 4. SECTION 2: BOTTOM GLASS FOOTER CARD
+- **Container Styling**:
+  - Background: \`bg-[#0c0e12]/80\`
+  - Backdrop filter: \`backdrop-blur-2xl\`
+  - Border: Top boundary line \`border-t border-white/[0.18]\`
+  - Padding: Top \`pt-12 md:pt-14\`, bottom \`pb-8\`
+  - Vignette Overlay: \`bg-gradient-to-r from-[#0c0e12]/95 via-[#0c0e12]/65 to-[#0c0e12]/30\` on the left to ensure 100% legibility of navigation items over the background graphics.
+
+#### A. Left Column (Brand & Socials)
+- **Width**: \`w-full lg:w-[48%] flex flex-col\`
+- **Logo ("Sōra")**:
+  - Brand Symbol: Modern geometric tri-prong / asterisk SVG mark (\`w-[22px] h-[22px] text-white\`).
+  - Brand Text: \`"Sōra"\` with macron over the 'o', \`text-[20px] font-medium tracking-tight text-white ml-2.5\`.
+- **Tagline Description**:
+  - Text: \`"The infrastructure that empowers the next generation of intelligent applications to run faster and deliver real results."\`
+  - Typography: \`text-[14px] leading-[22px] text-zinc-400 font-normal max-w-[390px] mt-3.5\`.
+- **Social Media Icon Buttons**:
+  - Icons: GitHub (Lucide or Octocat SVG), X / Twitter (X logo SVG), and Reddit (Reddit Alien SVG).
+  - Button Styling: Square cards \`w-9 h-9\` (\`36px x 36px\`), \`rounded-lg\`, \`bg-white/[0.04] hover:bg-white/[0.10] border border-white/[0.08] hover:border-white/[0.20]\`, flex center items, icon size \`16px x 16px\`, color \`text-zinc-400 hover:text-white\`, smooth hover transition \`duration-200\`, flex row with \`gap-2.5 mt-7\`.
+
+#### B. Right Column (Navigation Groups)
+- **Width & Spacing**: \`w-full lg:w-[52%] flex justify-start lg:justify-between lg:pl-16 lg:pr-12 gap-20 sm:gap-28 md:gap-36 mt-2 lg:mt-0\`.
+- **Navigation Column 1: "Product"**:
+  - Section Title: \`"Product"\` (\`text-[13px] font-normal text-zinc-400 mb-3.5 select-none\`).
+  - Menu Items:
+    1. \`"Overview"\` (\`text-[14px] leading-[24px] text-zinc-300/90 hover:text-white transition-colors duration-150\`)
+    2. \`"Features"\`
+    3. \`"Roadmap"\`
+    4. \`"Integrations"\`
+  - List Vertical Spacing: \`space-y-[7px]\`.
+- **Navigation Column 2: "Resources"**:
+  - Section Title: \`"Resources"\` (\`text-[13px] font-normal text-zinc-400 mb-3.5 select-none\`).
+  - Menu Items:
+    1. \`"Blog"\` (\`text-[14px] leading-[24px] text-zinc-300/90 hover:text-white transition-colors duration-150\`)
+    2. \`"Help Center"\`
+    3. \`"Community"\`
+    4. \`"API Docs"\`
+  - List Vertical Spacing: \`space-y-[7px]\`.
+
+---
+
+### 5. FOOTER DIVIDER & HORIZONTAL LEGAL BAR
+- **Divider**: Inset horizontal hairline \`w-full h-[1px] bg-white/[0.12] mb-6 mt-12 md:mt-14\`.
+- **Legal Bar Layout**: \`flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 text-[13px] text-zinc-400\`.
+- **Left Side Copyright**:
+  - Container width: \`w-full lg:w-[48%]\`.
+  - Text: \`"© 2025 Sōra. All rights reserved."\` (\`text-zinc-400 select-none text-[13px]\`).
+- **Right Side Legal Links**:
+  - Container width & alignment: \`w-full lg:w-[52%] flex flex-wrap items-center lg:pl-16 gap-10 sm:gap-14 md:gap-16 lg:gap-20\`.
+  - Links:
+    1. \`"Privacy Policy"\` (\`text-[13px] text-zinc-400 hover:text-white transition-colors duration-150\`)
+    2. \`"Terms of Service"\` (\`text-[13px] text-zinc-400 hover:text-white transition-colors duration-150\`)
+    3. \`"Cookie Policy"\` (\`text-[13px] text-zinc-400 hover:text-white transition-colors duration-150\`)
+
+---
+
+### 6. CODE STRUCTURE & DEPENDENCY REQUIREMENTS
+- Use modern functional React 18+ components with TypeScript.
+- Use Tailwind CSS utility classes with arbitrary values where exact pixel precision is needed.
+- Ensure all interactive links and buttons have valid hover states, accessible \`aria-label\` attributes, and \`id\` tags.`,
     },
 
     {

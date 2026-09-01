@@ -5,6 +5,7 @@ import { CINEMATIC_NAVBAR_SOURCE } from '../data/cinematicNavbarSource';
 import { SUI_FOUNDATION_SOURCE } from '../data/suiFoundationSource';
 import { HAUL_FOOTER_SOURCE } from '../data/haulFooterSource';
 import { OMNIFLOW_FOOTER_SOURCE } from '../data/omniflowFooterSource';
+import { SORA_FOOTER_SOURCE } from '../data/soraFooterSource';
 
 const UI_HUB_DISPLAY_NAME = (id: string) =>
     id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
@@ -65,6 +66,11 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
   // Omniflow Footer dedicated pre-embedded source
   if (id === 'omniflow-footer' && OMNIFLOW_FOOTER_SOURCE) {
     return withUiHubBranding(OMNIFLOW_FOOTER_SOURCE, id);
+  }
+
+  // Sora Footer dedicated pre-embedded source
+  if (id === 'sora-footer' && SORA_FOOTER_SOURCE) {
+    return withUiHubBranding(SORA_FOOTER_SOURCE, id);
   }
 
   // Card Cascade has no embedded key yet, so fall back to its dedicated

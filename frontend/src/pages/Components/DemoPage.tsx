@@ -8,6 +8,7 @@ const SuiFoundation = React.lazy(() => import('../../components/ui/SuiFoundation
 const FaizurPortfolio = React.lazy(() => import('../../components/ui/FaizurPortfolio'));
 const HaulFooter = React.lazy(() => import('../../components/ui/HaulFooter'));
 const OmniflowFooter = React.lazy(() => import('../../components/ui/OmniflowFooter'));
+const SoraFooter = React.lazy(() => import('../../components/ui/SoraFooter'));
 
 class DemoErrorBoundary extends React.Component<
     { children: React.ReactNode },
@@ -141,6 +142,8 @@ const DemoPage: React.FC = () => {
                             <HaulFooter />
                         ) : id === 'omniflow-footer' ? (
                             <OmniflowFooter />
+                        ) : id === 'sora-footer' ? (
+                            <SoraFooter />
                         ) : (
                             componentItem.preview({ showDemoButton: false })
                         )}
