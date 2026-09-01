@@ -12270,6 +12270,7 @@ Follow every single specification, exact dimension, hex color, typography rule, 
         isPremium: false,
         addedAt: "2026-09-02",
         newBadgeDays: 120,
+        liveUrl: "https://ai.studio/apps/236bae49-6341-480f-b310-ee6a1cae0df9",
         description: "A high-end, futuristic dark-mode landing page CTA and frosted glassmorphic footer featuring an overlapping 3D granular ribbon artwork, corner-bracket reticle button, geometric tri-prong brand mark, and multi-color atmospheric glows.",
         preview: () => (<SoraFooterPreview />),
         code: `import React from 'react';
