@@ -666,7 +666,7 @@ const VibeSystemSection = React.memo(({
                                 <button
                                     disabled={isLoadingPrompt}
                                     onClick={handleCopyBlueprint}
-                                    className="brutal-btn-primary px-3 sm:px-4 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5 sm:gap-2 shrink-0"
+                                    className="brutal-btn-primary bg-brand-red! border-brand-red! hover:bg-brand-red! px-3 sm:px-4 py-1.5 text-xs font-black tracking-wider flex items-center gap-1.5 sm:gap-2 shrink-0"
                                 >
                                     {copied === 'blueprint' ? <Check size={12} strokeWidth={3} /> : <Copy size={12} />}
                                     <span className="sm:hidden">{copied === 'blueprint' ? 'COPIED' : 'COPY'}</span>
@@ -1398,7 +1398,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         )}
                                         <button
                                             onClick={() => handleCopy(sourceCode, 'source')}
-                                            className="brutal-btn-primary px-3 sm:px-4 py-2 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
+                                            className="brutal-btn-primary bg-brand-red! border-brand-red! hover:bg-brand-red! px-3 sm:px-4 py-2 text-xs font-black uppercase tracking-wider flex items-center gap-1.5 cursor-pointer"
                                             title="Copy source code"
                                         >
                                             {copied === 'source' ? <Check size={13} strokeWidth={3} /> : <Copy size={13} />}
