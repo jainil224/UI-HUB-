@@ -99,7 +99,16 @@ export function buildAdvancePrompt(m: ComponentManifest): string {
         ? m.knownGotchas.map(g => `- ${g}`).join("\n") 
         : "- Ensure parent container has proper bounding dimensions and overflow handling.";
 
-    return `# COMPONENT BLUEPRINT: ${m.displayName}
+    return `██╗   ██╗██╗    ██╗  ██╗██╗   ██╗██████╗ 
+██║   ██║██║    ██║  ██║██║   ██║██╔══██╗
+██║   ██║██║    ███████║██║   ██║██████╔╝
+██║   ██║██║    ██╔══██║██║   ██║██╔══██╗
+╚██████╔╝██║    ██║  ██║╚██████╔╝██████╔╝
+ ╚═════╝ ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ 
+===  UI HUB  •  UNIVERSAL BLUEPRINT  ===
+> UI HUB universal component blueprint. This prompt is tool-agnostic — it works with any AI tool (Cursor, Claude, Lovable, Antigravity, ChatGPT, GitHub Copilot, etc.). Paste it into whichever assistant you use.
+
+# COMPONENT BLUEPRINT: ${m.displayName}
 
 ## Overview
 ${m.description}

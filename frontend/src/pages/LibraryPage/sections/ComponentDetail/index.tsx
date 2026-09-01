@@ -3,7 +3,7 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, Brain, Cpu, Heart, ExternalLink, Download, Lock,
+    Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock,
     Maximize2, Minimize2, Sparkles, Bot
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -22,6 +22,7 @@ import Toast from '../../../../components/ui/Toast';
 import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
 import { logUserActivity } from '../../../../utils/activityLogger';
+import uiHubLogo from '../../../../Assets/webiste logo.svg';
 
 
 const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
@@ -255,31 +256,73 @@ const TOOL_THEMES: Record<AISystem, ToolTheme> = {
     }
 };
 
+const BrandImage = ({
+    src,
+    alt,
+    size,
+    className,
+}: {
+    src: string;
+    alt: string;
+    size: number;
+    className?: string;
+}) => (
+    <img
+        src={src}
+        alt={alt}
+        width={size}
+        height={size}
+        style={{ width: size, height: size }}
+        className={`shrink-0 object-contain ${className || ''}`}
+        loading="lazy"
+    />
+);
+
+const CursorSvg = ({ size, className }: { size: number; className?: string }) => (
+    <svg
+        style={{ width: size, height: size }}
+        className={`shrink-0 ${className || ''}`}
+        viewBox="0 0 24 24"
+        fill="#58A6FF"
+        fillRule="evenodd"
+        role="img"
+        aria-label="Cursor logo"
+    >
+        <title>Cursor logo</title>
+        <path d="M22.106 5.68L12.5.135a.998.998 0 00-.998 0L1.893 5.68a.84.84 0 00-.419.726v11.186c0 .3.16.577.42.727l9.607 5.547a.999.999 0 00.998 0l9.608-5.547a.84.84 0 00.42-.727V6.407a.84.84 0 00-.42-.726zm-.603 1.176L12.228 22.92c-.063.108-.228.064-.228-.061V12.34a.59.59 0 00-.295-.51l-9.11-5.26c-.107-.062-.063-.228.062-.228h18.55c.264 0 .428.286.296.514z" />
+    </svg>
+);
+
+const LOGO_SRC: Partial<Record<AISystem, string>> = {
+    antigravity: '/logos/antigravity-color.svg',
+    claude: '/logos/claude-color.svg',
+    lovable: '/logos/lovable-color.svg',
+    advance: '/favicon.svg',
+};
+
+const LOGO_ALT: Partial<Record<AISystem, string>> = {
+    antigravity: 'Antigravity logo',
+    claude: 'Claude logo',
+    lovable: 'Lovable logo',
+    advance: 'UI HUB Logo',
+};
+
 const ToolIcon = ({ tool, active, size = 20 }: { tool: AISystem; active: boolean; size?: number }) => {
-    const idle = 'text-neutral-400';
-    if (tool === 'antigravity') {
-        return <Zap size={size} className={active ? 'text-white' : idle} />;
-    }
-    if (tool === 'lovable') {
+    const src = LOGO_SRC[tool];
+    if (src) {
         return (
-            <svg style={{ width: size, height: size }} className={active ? 'text-[#FF7E67]' : idle} viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
+            <BrandImage
+                src={src}
+                alt={LOGO_ALT[tool] || `${tool} logo`}
+                size={size}
+                className={active ? 'opacity-100 drop-shadow-[0_0_6px_rgba(255,255,255,0.15)]' : 'opacity-90'}
+            />
         );
     }
     if (tool === 'cursor') {
-        return (
-            <div style={{ width: size, height: size }} className={`relative shrink-0 ${active ? 'text-[#58A6FF]' : idle}`}>
-                <div className="absolute inset-0 border-2 border-current rounded-sm flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 border-r border-b border-current" />
-                </div>
-            </div>
-        );
+        return <CursorSvg size={size} />;
     }
-    if (tool === 'claude') {
-        return <Cpu size={size} className={active ? 'text-[#C15F3C]' : idle} />;
-    }
-    return <Brain size={size} className={active ? 'text-brand-blue' : idle} />;
+    return <Brain size={size} className={active ? 'text-brand-blue' : 'text-neutral-400'} />;
 };
 
 const ToolCard = React.memo(({
@@ -300,7 +343,7 @@ const ToolCard = React.memo(({
     return (
         <button
             onClick={() => onClick(tool)}
-            className={`p-5 rounded-lg border-2 transition-all duration-200 text-left relative overflow-hidden flex flex-col justify-between min-h-[130px] group ${
+            className={`p-5 rounded-lg border-2 transition-all duration-200 text-left relative overflow-hidden flex flex-col justify-between min-h-[168px] group ${
                 isLocked
                     ? 'bg-neutral-900 border-neutral-700 opacity-60 cursor-not-allowed'
                     : isActive
@@ -320,25 +363,22 @@ const ToolCard = React.memo(({
                 </div>
             )}
 
-            <div className="relative z-10 w-full flex flex-col gap-4">
-                <div className="flex items-center justify-between">
-                    <p className={`text-[9px] uppercase tracking-widest font-black transition-colors ${isLocked ? 'text-neutral-500' : isActive ? theme.accentColor : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
-                        {theme.sublabel}
-                    </p>
-                    <div className={`transition-all duration-200 ${isActive ? `scale-110 ${theme.accentColor}` : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
-                        <ToolIcon tool={tool} active={isActive} size={20} />
-                    </div>
+            <div className="relative z-10 w-full flex flex-col items-center text-center gap-3">
+                <p className={`text-[9px] uppercase tracking-widest font-black transition-colors ${isLocked ? 'text-neutral-500' : isActive ? theme.accentColor : 'text-neutral-400 group-hover:' + theme.accentColor}`}>
+                    {theme.sublabel}
+                </p>
+
+                <div className={`flex items-center justify-center transition-all duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-105'}`}>
+                    <ToolIcon tool={tool} active={isActive} size={44} />
                 </div>
 
-                <div className="flex items-center justify-between w-full">
-                    <h4 className={`text-lg font-black uppercase tracking-tight transition-colors ${isLocked ? 'text-neutral-500' : isActive ? 'text-white' : 'text-white group-hover:text-white'}`}>
-                        {tool === 'advance' ? 'Advance' : tool}
-                    </h4>
-                </div>
+                <h4 className={`text-xl font-black uppercase tracking-tight leading-none transition-colors ${isLocked ? 'text-neutral-500' : theme.accentColor}`}>
+                    {tool === 'advance' ? 'Advance' : tool}
+                </h4>
             </div>
 
             {!isLocked && (
-                <div className={`flex items-center gap-1.5 mt-3 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                <div className={`flex items-center justify-center gap-1.5 mt-4 transition-opacity ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
                     <div className={`w-2 h-2 rounded-full ${theme.indicatorDot}`} />
                     <span className={`text-[9px] font-black uppercase tracking-widest ${theme.accentColor}`}>
                         {isActive ? 'Active' : 'Select'}
@@ -616,6 +656,12 @@ const VibeSystemSection = React.memo(({
                                 </div>
                                 <div className="h-4 w-px bg-neutral-700 shrink-0" />
                                 <div className="flex items-center gap-1.5 sm:gap-2 font-mono min-w-0">
+                                    <img
+                                        src={uiHubLogo}
+                                        alt="UI HUB Logo"
+                                        className="w-4 h-4 md:w-5 md:h-5 shrink-0 object-contain"
+                                        loading="lazy"
+                                    />
                                     <span className={`text-[10px] font-black uppercase tracking-wider shrink-0 ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>{aiSystem}</span>
                                 </div>
                             </div>
