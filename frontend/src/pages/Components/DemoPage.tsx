@@ -6,6 +6,7 @@ import { getCommunityComponent } from '../../services/community';
 
 const SuiFoundation = React.lazy(() => import('../../components/ui/SuiFoundation'));
 const FaizurPortfolio = React.lazy(() => import('../../components/ui/FaizurPortfolio'));
+const HaulFooter = React.lazy(() => import('../../components/ui/HaulFooter'));
 
 class DemoErrorBoundary extends React.Component<
     { children: React.ReactNode },
@@ -105,7 +106,8 @@ const DemoPage: React.FC = () => {
     const isScrollable = (componentItem.category as string) === 'footer' || 
                          (componentItem.category as string) === 'navbar' || 
                          id === 'sui-foundation' ||
-                         id === 'faizur-portfolio';
+                         id === 'faizur-portfolio' ||
+                         id === 'haul-footer';
 
     return (
         <DemoErrorBoundary>
@@ -134,6 +136,8 @@ const DemoPage: React.FC = () => {
                             <SuiFoundation />
                         ) : id === 'faizur-portfolio' ? (
                             <FaizurPortfolio />
+                        ) : id === 'haul-footer' ? (
+                            <HaulFooter />
                         ) : (
                             componentItem.preview({ showDemoButton: false })
                         )}

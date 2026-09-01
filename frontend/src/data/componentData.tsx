@@ -3025,14 +3025,17 @@ const HaulFooterPreview: React.FC = () => {
             {/* Parallax backdrop */}
             <div style={{
                 position: 'relative',
-                height: 496,
+                minHeight: 620,
                 overflow: 'hidden',
                 backgroundImage: 'url(https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260430_115327_3f256636-9e63-4885-8d0b-09317dc2b0a5.png&w=1280&q=85)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
             }}>
                 {/* Top-aligned footer card */}
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, paddingTop: 32 }}>
+                <div style={{ position: 'relative', zIndex: 30, width: '100%', paddingTop: 28, paddingBottom: 16 }}>
                     <div className="haul-card" style={{
                         maxWidth: '80rem',
                         margin: '0 auto',
@@ -3047,7 +3050,7 @@ const HaulFooterPreview: React.FC = () => {
                             overflow: 'hidden',
                         }}>
                             {/* Top half */}
-                            <div style={{ padding: '2rem 1.5rem 1.75rem', display: 'flex', flexDirection: 'column', gap: 24 }}>
+                            <div style={{ padding: '1.75rem 1.5rem 1.5rem', display: 'flex', flexDirection: 'column', gap: 20 }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                                     <div style={{
                                         background: '#f97316',
@@ -3115,12 +3118,12 @@ const HaulFooterPreview: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Truck parallax layer */}
-                <div style={{ position: 'absolute', inset: '0 0 0 0', bottom: 0, zIndex: 20, pointerEvents: 'none' }}>
+                {/* Truck layer - scaled and placed at bottom without blocking card */}
+                <div style={{ position: 'relative', zIndex: 20, pointerEvents: 'none', width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'flex-end', height: 260 }}>
                     <img
                         src="https://roof-wish-40038865.figma.site/_components/v2/f31fd17907ce60745d45e83a61d44fd3810d5f25/truck_1.8c4bff83.png"
                         alt="HAUL! truck"
-                        style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'bottom', transformOrigin: 'bottom', transform: 'scale(1.05)' }}
+                        style={{ width: 'auto', height: '100%', maxWidth: '100%', objectFit: 'contain', objectPosition: 'bottom' }}
                     />
                 </div>
             </div>
