@@ -4,6 +4,9 @@ import { ChevronLeft, RotateCcw } from 'lucide-react';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { getCommunityComponent } from '../../services/community';
 
+const SuiFoundation = React.lazy(() => import('../../components/ui/SuiFoundation'));
+const FaizurPortfolio = React.lazy(() => import('../../components/ui/FaizurPortfolio'));
+
 class DemoErrorBoundary extends React.Component<
     { children: React.ReactNode },
     { hasError: boolean; error: Error | null }
@@ -99,9 +102,14 @@ const DemoPage: React.FC = () => {
                                componentItem.category === 'text' || 
                                componentItem.category === 'effect';
 
+    const isScrollable = (componentItem.category as string) === 'footer' || 
+                         (componentItem.category as string) === 'navbar' || 
+                         id === 'sui-foundation' ||
+                         id === 'faizur-portfolio';
+
     return (
         <DemoErrorBoundary>
-            <div className="fixed inset-0 w-full h-full bg-neutral-950 text-white overflow-hidden select-none">
+            <div className={`fixed inset-0 w-full h-full bg-neutral-950 text-white ${isScrollable ? 'overflow-y-auto overflow-x-hidden' : 'overflow-hidden'}`}>
                 {/* Floating Back to Library Button */}
                 <button
                     onClick={() => navigate(`/library?id=${id}`)}
@@ -115,14 +123,20 @@ const DemoPage: React.FC = () => {
                 </button>
 
                 {/* Main Fullscreen Component Canvas / Container */}
-                <div className={`w-full h-full ${isCenteredCategory ? 'flex items-center justify-center p-8' : ''}`}>
+                <div className={`w-full ${isCenteredCategory ? 'h-full flex items-center justify-center p-8' : isScrollable ? 'min-h-full flex flex-col' : 'h-full'}`}>
                     <React.Suspense fallback={
-                        <div className="w-full h-full flex flex-col items-center justify-center text-neutral-400">
+                        <div className="w-full h-full min-h-screen flex flex-col items-center justify-center text-neutral-400">
                             <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />
                             <p className="text-[11px] uppercase tracking-widest font-mono font-bold">INITIALIZING DEMO...</p>
                         </div>
                     }>
-                        {componentItem.preview({ showDemoButton: false })}
+                        {id === 'sui-foundation' ? (
+                            <SuiFoundation />
+                        ) : id === 'faizur-portfolio' ? (
+                            <FaizurPortfolio />
+                        ) : (
+                            componentItem.preview({ showDemoButton: false })
+                        )}
                     </React.Suspense>
                 </div>
             </div>

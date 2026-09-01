@@ -2,6 +2,7 @@ import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources';
 import { EMBEDDED_SOURCE_CODE } from '../data/embeddedSourceCode';
 import { CARD_CASCADE_SOURCE } from '../data/cardCascadeSource';
 import { CINEMATIC_NAVBAR_SOURCE } from '../data/cinematicNavbarSource';
+import { SUI_FOUNDATION_SOURCE } from '../data/suiFoundationSource';
 
 const UI_HUB_DISPLAY_NAME = (id: string) =>
     id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
@@ -48,6 +49,11 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
   // visible in production even where the deployed bundle has no filesystem.
   const fullSource = COMPONENT_FULL_SOURCES[id] || EMBEDDED_SOURCE_CODE[id];
   if (isTS && isTailwind && fullSource) return withUiHubBranding(fullSource, id);
+
+  // Sui Foundation dedicated pre-embedded source
+  if (id === 'sui-foundation' && SUI_FOUNDATION_SOURCE) {
+    return withUiHubBranding(SUI_FOUNDATION_SOURCE, id);
+  }
 
   // Card Cascade has no embedded key yet, so fall back to its dedicated
   // pre-embedded production source (mirrors the backend resolveSourceCode).

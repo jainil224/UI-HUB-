@@ -1222,16 +1222,18 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     </button>
                 </div>
 
-                {(item.id === 'faizur-portfolio' || item.id === 'leeuwarder-golfclub' || item.id === 'alpine-footer' || item.id === 'community-newsletter' || item.liveUrl) && (
+                {(item.id === 'sui-foundation' || item.id === 'faizur-portfolio' || item.id === 'leeuwarder-golfclub' || item.id === 'alpine-footer' || item.id === 'community-newsletter' || item.liveUrl) && (
                     <a
                         href={item.liveUrl || (
-                            item.id === 'faizur-portfolio'
-                                ? 'https://ai.studio/apps/3a30febb-b24a-4b58-925a-0413fcf885cb'
-                                : item.id === 'leeuwarder-golfclub'
-                                    ? 'https://ai.studio/apps/54435c8b-0890-4430-9b21-d8ca1aaeced3'
-                                    : item.id === 'alpine-footer'
-                                        ? 'https://ai.studio/apps/ba450faa-d535-476c-9979-27adc00efe2f'
-                                        : 'https://ai.studio/apps/6fe73a1b-79af-4689-9899-fc0b5c3c6bc5'
+                            item.id === 'sui-foundation'
+                                ? 'https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991'
+                                : item.id === 'faizur-portfolio'
+                                    ? 'https://ai.studio/apps/3a30febb-b24a-4b58-925a-0413fcf885cb'
+                                    : item.id === 'leeuwarder-golfclub'
+                                        ? 'https://ai.studio/apps/54435c8b-0890-4430-9b21-d8ca1aaeced3'
+                                        : item.id === 'alpine-footer'
+                                            ? 'https://ai.studio/apps/ba450faa-d535-476c-9979-27adc00efe2f'
+                                            : 'https://ai.studio/apps/6fe73a1b-79af-4689-9899-fc0b5c3c6bc5'
                         )}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -1349,20 +1351,20 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 </div>
                             </div>
 
-                            <div className="relative w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden">
+                            <div className={`relative w-full flex-1 min-h-0 ${item.category === 'footer' || isFullscreen ? 'overflow-y-auto overflow-x-hidden block' : 'flex items-center justify-center overflow-hidden'}`}>
                                 <PreviewErrorBoundary 
                                     key={`${item.id}-${resetKey}`} 
                                     componentId={item.id}
                                     onReset={() => setResetKey(k => k + 1)}
                                 >
-                                    <div className={`w-full h-full flex items-center justify-center ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
+                                    <div className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'} ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
                                         <React.Suspense fallback={<PreviewSkeleton />}>
                                             <motion.div
                                                 key={`preview-${item.id}-${resetKey}`}
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
                                                 transition={{ duration: 0.2, ease: "easeOut" }}
-                                                className="w-full h-full flex items-center justify-center"
+                                                className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'}`}
                                             >
                                                 {item.preview({ showDemoButton: true })}
                                             </motion.div>
