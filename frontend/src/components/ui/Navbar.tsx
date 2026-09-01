@@ -96,7 +96,7 @@ const Navbar = () => {
                         {/* ── Center Navigation Links ── */}
                         <nav className="hidden md:flex items-center gap-2 lg:gap-3">
                             {[
-                                { to: '/', label: 'HOW IT WORKS', active: location.pathname === '/' },
+                                { to: '/', label: 'HOME', active: location.pathname === '/' },
                                 { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                 { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
                                 { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
@@ -249,7 +249,7 @@ const Navbar = () => {
                                 {/* Links */}
                                 <div className="flex flex-col gap-2">
                                     {[
-                                        { to: '/', label: 'HOW IT WORKS', active: location.pathname === '/' },
+                                        { to: '/', label: 'HOME', active: location.pathname === '/' },
                                         { to: '/library', label: 'COMPONENTS', active: isLibrary },
                                         { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
                                         { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
