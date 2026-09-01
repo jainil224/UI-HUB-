@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     Bot, KeyRound, Copy, Check, Plus, X, Trash2, Shield, Zap, Server,
-    RefreshCw, AlertTriangle, Link2, ExternalLink, Fingerprint, LucideIcon,
-    Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles, Wifi, ShieldCheck, ArrowUpRight
+    RefreshCw, AlertTriangle, Link2, Fingerprint, LucideIcon,
+    Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles, Wifi, ShieldCheck, ArrowUpRight,
+    ChevronDown, Code2, Terminal, Boxes
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
@@ -33,10 +34,19 @@ function formatNum(n?: number | null): string {
 
 const MCP_SERVER_URL = MCP_BASE_URL;
 
-const CONFIG_TEMPLATE = `{
+type ToolDef = {
+    id: string;
+    label: string;
+    hint: string;
+    color: string;
+    icon: LucideIcon;
+    build: (url: string) => string;
+};
+
+const JSON_CONFIG = (url: string) => `{
   "mcpServers": {
     "ui-hub": {
-      "url": "${MCP_SERVER_URL}/mcp",
+      "url": "${url}",
       "headers": {
         "Authorization": "Bearer YOUR_UI_HUB_API_KEY"
       }
@@ -44,7 +54,43 @@ const CONFIG_TEMPLATE = `{
   }
 }`;
 
-const CopyButton: React.FC<{ text: string; label?: string }> = ({ text, label = 'Copy' }) => {
+/* ── Tool-specific MCP configs (exact structures per tool) ── */
+const TOOLS: ToolDef[] = [
+    {
+        id: 'cursor',
+        label: 'Cursor',
+        hint: 'Place in .cursor/mcp.json',
+        color: '#5B5BD6',
+        icon: Boxes,
+        build: JSON_CONFIG,
+    },
+    {
+        id: 'claude',
+        label: 'Claude Code',
+        hint: 'Run: claude mcp add ui-hub',
+        color: '#D97757',
+        icon: Terminal,
+        build: (url) => `claude mcp add ui-hub --transport http ${url} --header "Authorization: Bearer YOUR_UI_HUB_API_KEY"`,
+    },
+    {
+        id: 'antigravity',
+        label: 'Antigravity',
+        hint: 'Place in ~/.gemini/config/mcp_config.json',
+        color: '#3B82F6',
+        icon: Sparkles,
+        build: JSON_CONFIG,
+    },
+    {
+        id: 'vscode',
+        label: 'VS Code / Copilot',
+        hint: 'Place in .vscode/mcp.json',
+        color: '#0EA5E9',
+        icon: Code2,
+        build: JSON_CONFIG,
+    },
+];
+
+const CopyButton: React.FC<{ text: string; label?: string; red?: boolean }> = ({ text, label = 'Copy', red = false }) => {
     const [copied, setCopied] = useState(false);
     const handleCopy = () => {
         navigator.clipboard.writeText(text).then(() => {
@@ -55,21 +101,17 @@ const CopyButton: React.FC<{ text: string; label?: string }> = ({ text, label = 
     return (
         <button
             onClick={handleCopy}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md border-2 border-white bg-black text-white text-[11px] font-black uppercase tracking-widest hover:bg-neutral-900 transition-colors cursor-pointer"
+            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-md border-2 text-[11px] font-black uppercase tracking-widest transition-colors cursor-pointer ${
+                red
+                    ? 'bg-brand-red border-brand-red text-white hover:brightness-110'
+                    : 'bg-black border-white text-white hover:bg-neutral-900'
+            }`}
         >
             {copied ? <Check size={14} className="text-brand-green" /> : <Copy size={14} />}
             {copied ? 'Copied' : label}
         </button>
     );
 };
-
-/* ── Connection Guide ── */
-const CONNECT_CLIENTS = [
-    { name: 'Cursor', description: 'Add to your project\'s .cursor/mcp.json', config: 'Available in Cursor Settings → MCP → Add Server' },
-    { name: 'Claude Code', description: 'claude mcp add ui-hub --transport http', config: 'Use: claude mcp add ui-hub --transport http <url>' },
-    { name: 'VS Code / Copilot', description: 'Configure via .vscode/mcp.json', config: 'Place the JSON config in .vscode/mcp.json' },
-    { name: 'Antigravity', description: 'Configure via mcp_config.json or IDE Settings', config: 'Add to ~/.gemini/config/mcp_config.json' },
-];
 
 /* ── Main Page ── */
 const MCPPage: React.FC = () => {
@@ -79,6 +121,8 @@ const MCPPage: React.FC = () => {
     const [keys, setKeys] = useState<McpApiKey[]>([]);
     const [usage, setUsage] = useState<McpUsage | null>(null);
     const [adminMetrics, setAdminMetrics] = useState<McpAdminMetrics | null>(null);
+    const [activeTool, setActiveTool] = useState<ToolDef>(TOOLS[0]);
+    const [toolOpen, setToolOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [retryAttempt, setRetryAttempt] = useState(0);
@@ -240,8 +284,8 @@ const MCPPage: React.FC = () => {
                             <span>MCP Overview</span>
                         </div>
 
-                        <h1 className="text-4xl sm:text-5xl xl:text-6xl font-black uppercase tracking-tight text-white leading-none font-heading mb-4">
-                            CONNECT <span className="text-brand-blue">UI HUB</span> TO YOUR AI
+                        <h1 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-white font-heading mb-3">
+                            Connect UI HUB to <span className="text-brand-blue">your AI</span>
                         </h1>
                         <p className="max-w-2xl text-neutral-400 font-medium text-sm sm:text-base leading-relaxed">
                             Connect UI HUB to your AI coding assistant and use UI HUB components directly inside your development workflow.
@@ -569,24 +613,62 @@ const MCPPage: React.FC = () => {
                 <h2 className="text-2xl font-black uppercase tracking-tight text-white font-heading mb-4">Connect UI HUB to your AI</h2>
 
                 <div className="border-2 border-white bg-brand-surface rounded-lg overflow-hidden mb-6">
-                    <div className="border-b-2 border-white bg-brand-bg px-5 py-3 flex items-center justify-between">
-                        <span className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-neutral-300">
-                            <ExternalLink size={13} className="text-brand-blue" /> MCP Configuration
-                        </span>
-                        <CopyButton text={CONFIG_TEMPLATE} label="Copy Config" />
+                    <div className="border-b-2 border-white bg-brand-bg px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+                        <div className="relative">
+                            <button
+                                onClick={() => setToolOpen((o) => !o)}
+                                className="inline-flex items-center gap-2.5 rounded-md border-2 border-white bg-black text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest hover:bg-neutral-900 transition-colors cursor-pointer"
+                            >
+                                <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: activeTool.color }} />
+                                <span style={{ color: activeTool.color }}>{activeTool.label}</span>
+                                <ChevronDown size={14} className={`transition-transform ${toolOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {toolOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-40" onClick={() => setToolOpen(false)} />
+                                    <div className="absolute top-full left-0 mt-2 z-50 w-72 rounded-lg border-2 border-white bg-brand-surface shadow-[4px_4px_0_0_#000] overflow-hidden">
+                                        {TOOLS.map((tool) => {
+                                            const Icon = tool.icon;
+                                            return (
+                                                <button
+                                                    key={tool.id}
+                                                    onClick={() => { setActiveTool(tool); setToolOpen(false); }}
+                                                    className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${activeTool.id === tool.id ? 'bg-neutral-900' : 'hover:bg-neutral-900/60'}`}
+                                                >
+                                                    <span className="w-8 h-8 shrink-0 rounded-md border-2 border-white/30 flex items-center justify-center" style={{ color: tool.color }}>
+                                                        <Icon size={15} />
+                                                    </span>
+                                                    <span className="min-w-0 flex-1">
+                                                        <span className="block text-[11px] font-black uppercase tracking-widest text-white">{tool.label}</span>
+                                                        <span className="block text-[10px] text-neutral-400 truncate">{tool.hint}</span>
+                                                    </span>
+                                                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: tool.color }} />
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        <CopyButton red text={activeTool.build(status?.endpoint || `${MCP_SERVER_URL}/mcp`)} label="Copy Config" />
                     </div>
-                    <pre className="p-5 text-xs font-mono text-brand-green bg-black overflow-x-auto whitespace-pre">{CONFIG_TEMPLATE}</pre>
+
+                    <div className="relative">
+                        <div className="absolute top-0 inset-x-0 h-1" style={{ backgroundColor: activeTool.color }} />
+                        <div className="flex items-center gap-2 px-5 pt-4 text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                            {(() => { const Icon = activeTool.icon; return <Icon size={12} style={{ color: activeTool.color }} />; })()}
+                            <span style={{ color: activeTool.color }}>{activeTool.label}</span>
+                            <span className="text-neutral-600">· {activeTool.hint}</span>
+                        </div>
+                    </div>
+                    <pre className="p-5 text-xs font-mono text-brand-green bg-black overflow-x-auto whitespace-pre">{activeTool.build(status?.endpoint || `${MCP_SERVER_URL}/mcp`)}</pre>
                 </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                    {CONNECT_CLIENTS.map((client) => (
-                        <div key={client.name} className="border-2 border-white bg-brand-surface rounded-lg p-5">
-                            <h3 className="text-sm font-black uppercase tracking-widest text-white mb-1">{client.name}</h3>
-                            <p className="text-xs text-neutral-400 leading-relaxed mb-3">{client.description}</p>
-                            <p className="text-[11px] text-neutral-500 font-mono bg-black border border-neutral-800 rounded px-2 py-1.5">{client.config}</p>
-                        </div>
-                    ))}
-                </div>
+                <p className="text-xs text-neutral-500 font-medium leading-relaxed">
+                    Replace <code className="font-mono text-brand-yellow bg-neutral-900 px-1 rounded">YOUR_UI_HUB_API_KEY</code> with a key from above. You can copy any single tool config — it pastes the exact structure that tool expects.
+                </p>
             </section>
         </div>
     );
