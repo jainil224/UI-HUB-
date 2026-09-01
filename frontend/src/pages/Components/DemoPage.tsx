@@ -139,6 +139,8 @@ const DemoPage: React.FC = () => {
                             <FaizurPortfolio />
                         ) : id === 'haul-footer' ? (
                             <HaulFooter />
+                        ) : id === 'omniflow-footer' ? (
+                            <OmniflowFooter />
                         ) : (
                             componentItem.preview({ showDemoButton: false })
                         )}

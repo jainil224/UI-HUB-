@@ -3149,6 +3149,265 @@ const HaulFooterPreview: React.FC = () => {
         </div>
     );
 };
+
+const OmniflowFooterPreview: React.FC = () => {
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: 640,
+            backgroundColor: '#FCFBFF',
+            fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+            color: '#34334F',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            overflow: 'hidden',
+            boxSizing: 'border-box',
+        }}>
+            {/* Top CTA Card Container */}
+            <div style={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                padding: '40px 16px 48px 16px',
+                boxSizing: 'border-box',
+            }}>
+                <div style={{
+                    position: 'relative',
+                    width: '100%',
+                    maxWidth: 720,
+                    height: 250,
+                    borderRadius: 16,
+                    overflow: 'hidden',
+                    border: '1px solid #E7E6EF',
+                    backgroundColor: '#F8F7FD',
+                    boxShadow: '0 20px 45px -20px rgba(104,85,232,0.12), 0 0 0 1px rgba(231,230,239,0.8)',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}>
+                    {/* Fluted Vertical Stripes */}
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        pointerEvents: 'none',
+                        opacity: 0.4,
+                        mixBlendMode: 'multiply',
+                        backgroundImage: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.95) 0px, rgba(255,255,255,0.9) 10px, rgba(224,218,248,0.4) 11px, rgba(202,192,245,0.35) 18px, rgba(235,230,252,0.6) 22px)',
+                        backgroundSize: '22px 100%',
+                    }} />
+
+                    {/* Atmospheric Glows */}
+                    <div style={{
+                        position: 'absolute',
+                        right: -40,
+                        bottom: -40,
+                        width: 350,
+                        height: 280,
+                        borderRadius: '50%',
+                        background: 'radial-gradient(circle, rgba(212,200,250,0.7) 0%, rgba(228,220,252,0.4) 50%, transparent 70%)',
+                        filter: 'blur(30px)',
+                        pointerEvents: 'none',
+                    }} />
+                    <div style={{
+                        position: 'absolute',
+                        right: 20,
+                        top: 0,
+                        width: 240,
+                        height: 160,
+                        borderRadius: '50%',
+                        background: 'radial-gradient(circle, rgba(237,231,253,0.5) 0%, transparent 70%)',
+                        filter: 'blur(20px)',
+                        pointerEvents: 'none',
+                    }} />
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '60%',
+                        background: 'linear-gradient(to right, rgba(251,251,254,0.92) 0%, rgba(248,247,253,0.6) 65%, transparent 100%)',
+                        pointerEvents: 'none',
+                    }} />
+
+                    {/* Text and Button Content */}
+                    <div style={{ position: 'relative', zIndex: 10, paddingLeft: 36, paddingRight: 20, maxWidth: 440 }}>
+                        <h3 style={{
+                            margin: 0,
+                            fontSize: 22,
+                            fontWeight: 700,
+                            color: '#34345F',
+                            lineHeight: 1.25,
+                            letterSpacing: '-0.025em',
+                        }}>
+                            It's time for you to upgrade<br />to Omniflow
+                        </h3>
+                        <p style={{
+                            margin: '10px 0 0 0',
+                            fontSize: 11,
+                            color: '#77758A',
+                            lineHeight: '16px',
+                            letterSpacing: '-0.01em',
+                        }}>
+                            It only takes minutes to set up your first project. Lets go!
+                        </p>
+                        <div style={{ marginTop: 16 }}>
+                            <a
+                                href="#"
+                                onClick={(e) => e.preventDefault()}
+                                style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: 100,
+                                    height: 32,
+                                    borderRadius: 9999,
+                                    background: 'linear-gradient(to bottom, #7360F2, #604CE2)',
+                                    color: '#FFFFFF',
+                                    fontSize: 11,
+                                    fontWeight: 600,
+                                    textDecoration: 'none',
+                                    boxShadow: '0 4px 12px rgba(104,85,232,0.35)',
+                                }}
+                            >
+                                Try for Free &gt;
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Divider */}
+            <div style={{ width: '100%', height: 1, backgroundColor: '#E7E6EF' }} />
+
+            {/* Footer Section */}
+            <div style={{
+                position: 'relative',
+                width: '100%',
+                overflow: 'hidden',
+                background: 'linear-gradient(to bottom, #FCFCFE, #F3EDFD, #E5DBFA)',
+                paddingTop: 40,
+                boxSizing: 'border-box',
+            }}>
+                <div style={{
+                    width: '100%',
+                    maxWidth: 720,
+                    margin: '0 auto',
+                    padding: '0 16px',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    gap: 20,
+                    boxSizing: 'border-box',
+                }}>
+                    {/* Left: App Icon */}
+                    <div style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 10,
+                        background: 'linear-gradient(to bottom, #6855E8, #5944E4)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        boxShadow: '0 4px 12px rgba(104,85,232,0.25)',
+                    }}>
+                        <svg viewBox="0 0 24 24" fill="white" style={{ width: 22, height: 22 }} xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 3.5C7.306 3.5 3.5 7.306 3.5 12S7.306 20.5 12 20.5 20.5 16.694 20.5 12 16.694 3.5 12 3.5zm0 13c-2.485 0-4.5-2.015-4.5-4.5 0-1.78.99-3.268 2.41-4.018-.11.472-.16.975-.16 1.518 0 2.21 1.79 4 4 4 .543 0 1.046-.05 1.518-.16-.75 1.42-2.238 2.41-4.018 2.41z" />
+                        </svg>
+                    </div>
+
+                    {/* Middle: 3 Nav Columns */}
+                    <div style={{ display: 'flex', gap: 36, flexWrap: 'wrap' }}>
+                        <div>
+                            {['Services', 'Blog', 'Portfolio'].map(item => (
+                                <div key={item} style={{ fontSize: 11, color: '#34334F', lineHeight: '24px' }}>{item}</div>
+                            ))}
+                        </div>
+                        <div>
+                            {['Jobs', 'Help centre'].map(item => (
+                                <div key={item} style={{ fontSize: 11, color: '#34334F', lineHeight: '24px' }}>{item}</div>
+                            ))}
+                        </div>
+                        <div>
+                            {['About us', 'Contact'].map(item => (
+                                <div key={item} style={{ fontSize: 11, color: '#34334F', lineHeight: '24px' }}>{item}</div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Right: 3 Social Buttons */}
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                        {['ig', 'fb', 'yt'].map(label => (
+                            <div key={label} style={{
+                                width: 26,
+                                height: 26,
+                                borderRadius: '50%',
+                                backgroundColor: '#FFFFFF',
+                                border: '1px solid #E7E6EF',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: 9,
+                                fontWeight: 700,
+                                color: '#55536D',
+                                textTransform: 'uppercase',
+                            }}>
+                                {label}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Giant Cropped "Omniflow" Background Typography */}
+                <div style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: 120,
+                    marginTop: 16,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                    overflow: 'hidden',
+                    pointerEvents: 'none',
+                    userSelect: 'none',
+                }}>
+                    <div style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(to top, rgba(221,208,248,0.9), rgba(234,225,251,0.6), transparent)',
+                        pointerEvents: 'none',
+                    }} />
+                    <div style={{
+                        position: 'absolute',
+                        bottom: -30,
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        width: 600,
+                        height: 180,
+                        borderRadius: '50%',
+                        background: 'radial-gradient(circle, #D5C6F7 0%, rgba(226,214,250,0.8) 50%, transparent 75%)',
+                        filter: 'blur(30px)',
+                        pointerEvents: 'none',
+                    }} />
+                    <div style={{
+                        position: 'relative',
+                        fontWeight: 800,
+                        fontSize: 'clamp(64px, 15vw, 130px)',
+                        color: '#FFFFFF',
+                        letterSpacing: '-0.04em',
+                        lineHeight: 1,
+                        whiteSpace: 'nowrap',
+                        bottom: -18,
+                        filter: 'drop-shadow(0 2px 14px rgba(255,255,255,0.7))',
+                    }}>
+                        Omniflow
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const AlpineFooterPreview: React.FC = () => {
     const [modal, setModal] = useState<string | null>(null);
 
@@ -11384,6 +11643,629 @@ export default function HaulFooter() {
 - Ensure the \`y\` axis style is tied to the \`useTransform\` created in step 3 so it scrolls at a different speed than the background.
 - Inside, place an image with \`src="https://roof-wish-40038865.figma.site/_components/v2/f31fd17907ce60745d45e83a61d44fd3810d5f25/truck_1.8c4bff83.png"\`.
 - Image styling: \`w-full h-full object-contain object-bottom origin-bottom\`. Add scale responsive classes (\`scale-[1.5]\` mobile, \`scale-110\` sm, \`scale-[2.0]\` md, \`scale-105\` lg) to ensure the truck fits properly on various screen widths.`,
+    },
+
+    {
+        id: "omniflow-footer",
+        title: "Omniflow",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-01",
+        newBadgeDays: 120,
+        description: "An exact, pixel-accurate website CTA card and editorial footer featuring ribbed vertical fluting, atmospheric lavender glow, logo icon, navigation columns, social buttons, and giant cropped 'Omniflow' background typography.",
+        preview: () => (<OmniflowFooterPreview />),
+        code: `import React from 'react';
+import { Instagram, Facebook, Youtube } from 'lucide-react';
+
+export default function OmniflowFooter() {
+  return (
+    <div className="min-h-screen w-full bg-[#FCFBFF] text-[#34334F] font-sans antialiased selection:bg-[#6855E8]/20 selection:text-[#34345F] flex flex-col justify-between">
+      {/* 1. TOP CTA CARD SECTION */}
+      <section className="w-full flex justify-center px-4 pt-[78px] pb-[88px]">
+        <div
+          className="relative w-full max-w-[835px] h-[290px] rounded-[18px] overflow-hidden border border-[#E7E6EF] shadow-[0_20px_50px_-20px_rgba(104,85,232,0.12),0_0_0_1px_rgba(231,230,239,0.8)] bg-[#F8F7FD] flex items-center"
+        >
+          {/* Ribbed / Fluted Vertical Stripes Texture */}
+          <div
+            className="absolute inset-0 pointer-events-none opacity-40 mix-blend-multiply"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(90deg, rgba(255,255,255,0.95) 0px, rgba(255,255,255,0.9) 10px, rgba(224,218,248,0.4) 11px, rgba(202,192,245,0.35) 18px, rgba(235,230,252,0.6) 22px)',
+              backgroundSize: '22px 100%',
+            }}
+          />
+
+          {/* Atmospheric Glow Overlays */}
+          <div className="absolute -right-16 -bottom-16 w-[450px] h-[350px] rounded-full bg-gradient-to-tl from-[#D4C8FA]/70 via-[#E4DCFC]/40 to-transparent blur-2xl pointer-events-none" />
+          <div className="absolute right-12 top-0 w-[300px] h-[200px] rounded-full bg-gradient-to-b from-[#EDE7FD]/50 to-transparent blur-xl pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-[60%] bg-gradient-to-r from-[#FBFBFE]/90 via-[#F8F7FD]/60 to-transparent pointer-events-none" />
+
+          {/* CTA Content Container */}
+          <div className="relative z-10 pl-8 md:pl-[55px] pr-6 max-w-[500px]">
+            <h2 className="text-[22px] md:text-[27px] font-bold text-[#34345F] leading-[1.25] tracking-[-0.025em]">
+              It's time for you to upgrade
+              <br />
+              to Omniflow
+            </h2>
+
+            <p className="mt-3 text-[11px] text-[#77758A] leading-[16px] tracking-[-0.01em]">
+              It only takes minutes to set up your first project. Lets go!
+            </p>
+
+            <div className="mt-5">
+              <a
+                href="#"
+                onClick={(e) => e.preventDefault()}
+                className="inline-flex items-center justify-center w-[103px] h-[33px] rounded-full bg-gradient-to-b from-[#7360F2] to-[#604CE2] text-white text-[11px] font-semibold tracking-normal shadow-[0_4px_12px_rgba(104,85,232,0.35),0_1px_2px_rgba(0,0,0,0.1)] hover:brightness-105 active:scale-[0.98] transition-all duration-150"
+              >
+                Try for Free &gt;
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. HORIZONTAL SECTION DIVIDER */}
+      <div className="w-full h-[1px] bg-[#E7E6EF]" />
+
+      {/* 3. FOOTER SECTION */}
+      <footer className="relative w-full overflow-hidden bg-gradient-to-b from-[#FCFCFE] via-[#F3EDFD] to-[#E5DBFA] pt-[55px]">
+        <div className="w-full max-w-[835px] mx-auto px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-8 sm:gap-4">
+            {/* Left: App Icon / Logo */}
+            <div className="flex items-center">
+              <div className="w-[45px] h-[45px] rounded-[11px] bg-gradient-to-b from-[#6855E8] to-[#5944E4] shadow-[0_4px_12px_rgba(104,85,232,0.25)] flex items-center justify-center">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="white"
+                  className="w-6 h-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 3.5C7.306 3.5 3.5 7.306 3.5 12S7.306 20.5 12 20.5 20.5 16.694 20.5 12 16.694 3.5 12 3.5zm0 13c-2.485 0-4.5-2.015-4.5-4.5 0-1.78.99-3.268 2.41-4.018-.11.472-.16.975-.16 1.518 0 2.21 1.79 4 4 4 .543 0 1.046-.05 1.518-.16-.75 1.42-2.238 2.41-4.018 2.41z" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Center: 3 Navigation Columns */}
+            <div className="flex flex-wrap gap-12 sm:gap-16 md:gap-20">
+              <div>
+                <ul className="space-y-0">
+                  {['Services', 'Blog', 'Portfolio'].map((item) => (
+                    <li key={item}>
+                      <a
+                        href="#"
+                        onClick={(e) => e.preventDefault()}
+                        className="text-[11.5px] text-[#34334F] leading-[28px] hover:text-[#6855E8] transition-colors duration-150"
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <ul className="space-y-0">
+                  {['Jobs', 'Help centre'].map((item) => (
+                    <li key={item}>
+                      <a
+                        href="#"
+                        onClick={(e) => e.preventDefault()}
+                        className="text-[11.5px] text-[#34334F] leading-[28px] hover:text-[#6855E8] transition-colors duration-150"
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <ul className="space-y-0">
+                  {['About us', 'Contact'].map((item) => (
+                    <li key={item}>
+                      <a
+                        href="#"
+                        onClick={(e) => e.preventDefault()}
+                        className="text-[11.5px] text-[#34334F] leading-[28px] hover:text-[#6855E8] transition-colors duration-150"
+                      >
+                        {item}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* Right: 3 Circular Social Action Buttons */}
+            <div className="flex items-center gap-2.5">
+              {[
+                { Icon: Instagram, label: 'Instagram' },
+                { Icon: Facebook, label: 'Facebook' },
+                { Icon: Youtube, label: 'YouTube' },
+              ].map(({ Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  aria-label={label}
+                  className="w-[30px] h-[30px] rounded-full bg-white border border-[#E7E6EF] shadow-[0_1px_3px_rgba(0,0,0,0.03)] flex items-center justify-center text-[#55536D] hover:text-[#6855E8] hover:border-[#D1CEE5] transition-all duration-150"
+                >
+                  <Icon size={13} strokeWidth={1.75} />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* 4. GIANT OVERSIZED CROPPED "Omniflow" BACKGROUND TYPOGRAPHY */}
+        <div className="relative w-full h-[145px] sm:h-[185px] md:h-[225px] mt-6 flex justify-center items-end overflow-hidden pointer-events-none select-none">
+          <div className="absolute inset-0 bg-gradient-to-t from-[#DDD0F8]/90 via-[#EAE1FB]/60 to-transparent pointer-events-none" />
+          <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 w-[900px] h-[280px] rounded-full bg-gradient-to-t from-[#D5C6F7] via-[#E2D6FA]/80 to-transparent blur-3xl pointer-events-none" />
+
+          <h1 className="relative font-extrabold text-white text-[115px] sm:text-[165px] md:text-[215px] tracking-[-0.04em] leading-none whitespace-nowrap -bottom-4 sm:-bottom-6 md:-bottom-8 drop-shadow-[0_2px_18px_rgba(255,255,255,0.7)]">
+            Omniflow
+          </h1>
+        </div>
+      </footer>
+    </div>
+  );
+}`,
+        vibePrompt: `Recreate the uploaded reference image as an EXACT pixel-accurate website CTA + footer section.
+
+IMPORTANT:
+Use the uploaded image as the ONLY visual source of truth. Do not redesign, modernize, simplify, or reinterpret the design.
+
+The final implementation must visually match the reference in:
+- layout
+- dimensions
+- spacing
+- colors
+- typography
+- border radius
+- shadows
+- gradients
+- positioning
+- proportions
+- cropping
+- opacity
+
+Do not add anything that is not visible in the reference.
+
+========================================
+1. OVERALL PAGE
+========================================
+
+Create a clean, minimal page with a white/off-white background.
+
+The design consists of TWO major sections:
+
+1. A large promotional CTA card at the top.
+2. A footer section underneath separated by a thin horizontal divider.
+
+The entire design should feel like a premium SaaS/product website.
+
+========================================
+2. TOP CTA CARD
+========================================
+
+Create a large centered rectangular CTA card.
+
+Approximate desktop dimensions:
+- Width: 835px
+- Height: 290px
+- Center horizontally
+- Position approximately 78px from the top
+- Border radius: approximately 16px
+- Overflow: hidden
+
+The card should have a very subtle purple/lavender background.
+
+========================================
+3. CTA BACKGROUND
+========================================
+
+Recreate the background exactly like the reference.
+
+Use:
+- very light lavender
+- pale purple
+- white
+- extremely subtle vertical translucent stripes
+
+The card contains many narrow vertical rounded/soft gradient bands running from top to bottom.
+
+The stripes should be:
+- subtle
+- low contrast
+- alternating pale lavender and almost-white
+- slightly blurred/soft
+- evenly distributed
+- full height of the card
+
+There should also be extremely subtle purple glow areas toward the bottom/right portions.
+
+Do NOT use a strong gradient.
+
+The overall appearance should remain extremely soft and almost white.
+
+========================================
+4. CTA CONTENT
+========================================
+
+Position all CTA content on the LEFT side.
+
+Approximate left padding:
+55px.
+
+Approximate top padding:
+75px.
+
+----------------------------------------
+HEADING
+----------------------------------------
+
+Text:
+
+"It's time for you to upgrade
+to Omniflow"
+
+Exactly two lines.
+
+Typography:
+- dark navy/purple
+- bold
+- modern sans-serif
+- approximately 27px desktop
+- line-height around 34px
+- letter spacing slightly negative
+
+The first line:
+
+"It's time for you to upgrade"
+
+Second line:
+
+"to Omniflow"
+
+Match the reference line breaks exactly.
+
+----------------------------------------
+DESCRIPTION
+----------------------------------------
+
+Under the heading add:
+
+"It only takes minutes to set up your first project. Lets go!"
+
+Typography:
+- muted gray/purple
+- approximately 10–11px
+- regular weight
+- approximately 16px line height
+
+Keep the text subtle.
+
+----------------------------------------
+CTA BUTTON
+----------------------------------------
+
+Below the description add a small purple pill button.
+
+Text:
+
+"Try for Free →"
+
+Dimensions approximately:
+- Width: 103px
+- Height: 33px
+
+Style:
+- Purple/violet background
+- Slight purple gradient/glow
+- Fully rounded
+- White text
+- Font size approximately 11px
+- Medium/bold
+- Very subtle shadow/glow
+- Center vertically and horizontally
+
+Do not make the button large.
+
+========================================
+5. DIVIDER
+========================================
+
+Below the CTA card, create a large amount of white space.
+
+Then create a very thin horizontal divider across the entire viewport.
+
+Divider:
+- approximately 1px
+- extremely light gray/lavender
+- full width
+
+The divider separates the CTA section from the footer.
+
+========================================
+6. FOOTER
+========================================
+
+Below the divider create the footer.
+
+Footer background:
+- very light white/lavender
+- almost white
+- subtle extremely soft lavender glow near the bottom/center
+
+Do not use a dark footer.
+
+The footer should have a large amount of whitespace.
+
+========================================
+7. FOOTER LOGO
+========================================
+
+Position the logo on the LEFT side.
+
+Use a small rounded-square purple icon.
+
+Approximate:
+- 45px × 45px
+- border radius: 10px
+- purple/violet background
+- centered white circular/abstract Omniflow-style logo
+
+The logo should be positioned approximately:
+- 183px from the left
+- 55px below the divider
+
+If the exact logo asset exists in the project, use it.
+Otherwise recreate the simple white circular logo using SVG/CSS.
+
+========================================
+8. FOOTER NAVIGATION
+========================================
+
+Create navigation links in three areas.
+
+----------------------------------------
+COLUMN 1
+----------------------------------------
+
+Links:
+
+Services
+Blog
+Portfolio
+
+Position approximately center-left.
+
+Style:
+- dark navy/gray
+- approximately 11–12px
+- regular sans-serif
+- line-height around 28px
+
+----------------------------------------
+COLUMN 2
+----------------------------------------
+
+Links:
+
+Jobs
+Help centre
+
+Same styling.
+
+----------------------------------------
+COLUMN 3
+----------------------------------------
+
+Links:
+
+About us
+Contact
+
+Same styling.
+
+Keep the three columns horizontally aligned.
+
+========================================
+9. SOCIAL ICONS
+========================================
+
+On the RIGHT side create three circular social buttons.
+
+Icons:
+- Instagram
+- Facebook
+- YouTube
+
+Each should be:
+- approximately 30px × 30px
+- circular
+- very light/off-white background
+- thin pale gray border
+- subtle shadow
+- purple/gray icon
+- evenly spaced horizontally
+
+Keep them small and minimal.
+
+========================================
+10. GIANT FOOTER TYPOGRAPHY
+========================================
+
+THIS IS VERY IMPORTANT.
+
+At the bottom of the footer place enormous text:
+
+"Omniflow"
+
+The text should be:
+
+- extremely large
+- white
+- bold
+- modern sans-serif
+- approximately 180–220px+ depending on viewport
+- very low visual contrast against the background
+- centered horizontally
+- positioned so that only the upper portion is visible
+
+The bottom of the text MUST be cropped by the viewport/footer.
+
+The reference shows:
+
+"Omniflow"
+
+as huge background typography extending beyond the bottom of the screen.
+
+Do NOT display the full word at normal size.
+
+It should feel like oversized editorial typography sitting behind the footer.
+
+========================================
+11. COLORS
+========================================
+
+Match the reference closely.
+
+Page:
+#FFFFFF / #FCFCFF
+
+CTA background:
+#F5F3FF
+#EEEAFE
+#F8F7FF
+
+CTA heading:
+dark navy/purple approximately
+#34345F
+
+CTA description:
+#77758A
+
+CTA button:
+purple/violet approximately
+#6855E8
+with a subtle lighter purple highlight.
+
+Footer:
+#FFFFFF
+with extremely subtle lavender tint.
+
+Footer text:
+#34334F
+
+Giant Omniflow text:
+#FFFFFF
+
+Borders:
+very subtle #E7E6EF
+
+========================================
+12. SPACING AND PROPORTIONS
+========================================
+
+Pay extremely close attention to the reference.
+
+Match:
+
+- CTA card width
+- CTA card height
+- CTA card position
+- CTA card corner radius
+- CTA internal padding
+- Heading position
+- Heading line height
+- Description spacing
+- Button position
+- Space between CTA and divider
+- Divider position
+- Footer logo position
+- Navigation positions
+- Social icon position
+- Giant Omniflow position
+- Giant typography cropping
+
+Do not automatically distribute elements evenly.
+
+Use the reference image to determine their actual positions.
+
+========================================
+13. RESPONSIVE DESIGN
+========================================
+
+DESKTOP:
+Match the reference as closely as possible.
+
+TABLET:
+Scale the CTA and footer proportionally.
+
+MOBILE:
+- CTA card becomes responsive.
+- Maintain the same visual style.
+- Stack footer navigation columns if necessary.
+- Social icons remain accessible.
+- Keep the huge "Omniflow" typography partially cropped.
+- Do not introduce horizontal scrolling.
+
+========================================
+14. PIXEL-PERFECT REFINEMENT
+========================================
+
+After implementation, compare the browser rendering against the uploaded reference.
+
+Iteratively adjust:
+
+- exact card dimensions
+- card position
+- border radius
+- background stripe width
+- stripe opacity
+- purple glow
+- heading font size
+- heading line breaks
+- description size
+- button dimensions
+- button color
+- footer height
+- logo size
+- navigation spacing
+- social icon size
+- giant Omniflow font size
+- giant Omniflow vertical position
+- cropping
+- whitespace
+
+The final result should NOT look like a generic SaaS footer.
+
+It should look like the uploaded reference.
+
+========================================
+15. STRICT RESTRICTIONS
+========================================
+
+DO NOT add:
+
+- navbar
+- extra CTA buttons
+- extra text
+- cards
+- unnecessary icons
+- gradients that aren't visible
+- strong shadows
+- animations
+- decorative illustrations
+- additional footer sections
+
+Do not modify unrelated website sections.
+
+Use clean production-quality HTML/CSS/React code according to the existing project structure.
+
+The uploaded reference image must remain the source of truth throughout the implementation.`,
     },
 
     {
