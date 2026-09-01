@@ -1,5 +1,5 @@
-import React, { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+export const HAUL_FOOTER_SOURCE = `import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 const linkGroups = {
@@ -116,3 +116,4 @@ export default function HaulFooter() {
     </div>
   );
 }
+`;

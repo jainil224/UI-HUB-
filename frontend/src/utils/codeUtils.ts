@@ -3,6 +3,7 @@ import { EMBEDDED_SOURCE_CODE } from '../data/embeddedSourceCode';
 import { CARD_CASCADE_SOURCE } from '../data/cardCascadeSource';
 import { CINEMATIC_NAVBAR_SOURCE } from '../data/cinematicNavbarSource';
 import { SUI_FOUNDATION_SOURCE } from '../data/suiFoundationSource';
+import { HAUL_FOOTER_SOURCE } from '../data/haulFooterSource';
 
 const UI_HUB_DISPLAY_NAME = (id: string) =>
     id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
@@ -53,6 +54,11 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
   // Sui Foundation dedicated pre-embedded source
   if (id === 'sui-foundation' && SUI_FOUNDATION_SOURCE) {
     return withUiHubBranding(SUI_FOUNDATION_SOURCE, id);
+  }
+
+  // Haul Footer dedicated pre-embedded source
+  if (id === 'haul-footer' && HAUL_FOOTER_SOURCE) {
+    return withUiHubBranding(HAUL_FOOTER_SOURCE, id);
   }
 
   // Card Cascade has no embedded key yet, so fall back to its dedicated
