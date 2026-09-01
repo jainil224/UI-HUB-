@@ -26,6 +26,7 @@ const CATEGORY_META: Record<string, { icon: string; color: string; bg: string; b
     "Scroll Animation": { icon: "↕", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Loaders": { icon: "⏳", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Navbars": { icon: "➤", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
+    "Footers": { icon: "⌂", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
 };
 
 /** Components added recently show an auto-expiring "NEW" badge.
@@ -99,6 +100,7 @@ const LibraryPage = () => {
         { name: "Scroll Animation", items: allComponents.filter(item => item.category === 'scroll') },
         { name: "Loaders", items: allComponents.filter(item => item.category === 'loader') },
         { name: "Navbars", items: allComponents.filter(item => item.category === 'navbar') },
+        { name: "Footers", items: allComponents.filter(item => item.category === 'footer') },
     ], [allComponents]);
 
     const categories = useMemo(() => baseCategories

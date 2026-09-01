@@ -2809,7 +2809,7 @@ const AwwwardsNavPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "loader" | "navbar";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "loader" | "navbar" | "footer";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -2982,6 +2982,149 @@ const renderComponent = (id: string, _name: string, props: any = {}): (() => Rea
             />
         );
     };
+};
+
+// ── HAUL! Footer scoped preview ─────────────────────
+// Self-contained preview so it renders without pulling motion/react or
+// lucide-react into the data module. Reflects the HAUL! footer design as a
+// compact, fixed-height showcase inside the library preview card.
+const HaulFooterPreview: React.FC = () => {
+    const links = {
+        Company: ["Founding", "Platform", "Testify"],
+        Mobile: ["Get Apple App", "Get Google App"],
+        Contracts: ["Private Data", "User Consent"],
+    };
+
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: 560,
+            background: '#f8f9fa',
+            overflow: 'hidden',
+            fontFamily: "'Inter', system-ui, sans-serif",
+        }}>
+            <style>{`
+                @keyframes haul-fade-in { from { opacity: 0; } to { opacity: 1; } }
+                .haul-fade { animation: haul-fade-in 0.8s ease-out both; }
+                @keyframes haul-card-in { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+                .haul-card { animation: haul-card-in 0.8s ease-out both; }
+                .haul-social { transition: all 0.3s ease; }
+                .haul-social:hover { background: #f97316; color: #fff; border-color: #f97316; }
+            `}</style>
+
+            {/* Short spacer */}
+            <div style={{ height: 64, background: '#FDFDFD', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <p className="haul-fade" style={{ fontSize: 13, color: '#d1d5db', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5em' }}>
+                    View Below
+                </p>
+            </div>
+
+            {/* Parallax backdrop */}
+            <div style={{
+                position: 'relative',
+                height: 496,
+                overflow: 'hidden',
+                backgroundImage: 'url(https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260430_115327_3f256636-9e63-4885-8d0b-09317dc2b0a5.png&w=1280&q=85)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+            }}>
+                {/* Top-aligned footer card */}
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, paddingTop: 32 }}>
+                    <div className="haul-card" style={{
+                        maxWidth: '80rem',
+                        margin: '0 auto',
+                        padding: '0 1rem',
+                    }}>
+                        <div style={{
+                            background: 'rgba(255,255,255,0.95)',
+                            backdropFilter: 'blur(4px)',
+                            WebkitBackdropFilter: 'blur(4px)',
+                            boxShadow: '0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1)',
+                            borderRadius: '1rem',
+                            overflow: 'hidden',
+                        }}>
+                            {/* Top half */}
+                            <div style={{ padding: '2rem 1.5rem 1.75rem', display: 'flex', flexDirection: 'column', gap: 24 }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                    <div style={{
+                                        background: '#f97316',
+                                        width: 44,
+                                        height: 44,
+                                        borderRadius: '0.5rem',
+                                        boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.06)',
+                                        padding: 8,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexShrink: 0,
+                                    }}>
+                                        <svg viewBox="0 0 256 256" width="100%" height="100%" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M 228 0 C 172.772 0 128 44.772 128 100 L 128 0 L 0 0 L 0 28 C 0 83.228 44.772 128 100 128 L 0 128 L 0 256 L 28 256 C 83.228 256 128 211.228 128 156 L 128 256 L 256 256 L 256 228 C 256 172.772 211.228 128 156 128 L 256 128 L 256 0 Z" />
+                                        </svg>
+                                    </div>
+                                    <span style={{ color: '#111827', fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.05em' }}>HAUL!</span>
+                                </div>
+
+                                {/* Link columns */}
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, textAlign: 'left' }}>
+                                    {Object.entries(links).map(([group, items]) => (
+                                        <div key={group}>
+                                            <p style={{ fontSize: 14, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#111827', marginBottom: 10 }}>{group}</p>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+                                                {items.map((item) => (
+                                                    <a key={item} href="#" style={{ color: '#6b7280', fontWeight: 500, fontSize: 13, textDecoration: 'none' }} className="haul-link">{item}</a>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Bottom bar */}
+                            <div style={{
+                                borderTop: '1px solid #f3f4f6',
+                                background: '#ffffff',
+                                padding: '1rem 1.5rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                flexWrap: 'wrap',
+                                gap: 12,
+                            }}>
+                                <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 500, margin: 0 }}>© 2026 HAUL! All Rights Reserved</p>
+                                <div style={{ display: 'flex', gap: 8 }}>
+                                    {["M26 3.4c-.6.3-2.2.9-2.6 1 .3.2.5.7.6 1 .3 1.0.3 1.4.3 2.2 0 6.7-3 9.3-6.6 10.8 3.4.9 6 .0 7.8-1.2 2.3-1.5 3.9-3.8 4.2-6.6.3 2.4 1.5 4.4 3.4 5.7 1.7-1 2.3-2.8.8-7.1-.2-.5-.3-1.2-.9-2.4.1 0-.1-1.4-1.3-2.4 1 .0-2.2-.5-3.1-.4 .1-1.3-.2-2.6-1.3-3.2z", 
+                                        "M4 12l14-6-3 8 3 7-14-9", 
+                                        "M12 2c2.5 0 2.8 1 4 1s2-.5 4-1l-1.5 4.5M12 22c-2.5 0-2.8-1-4-1s-2 .5-4 1l1.5-4.5", 
+                                        "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"].map((icon, i) => (
+                                        <a key={i} href="#" className="haul-social" style={{
+                                            width: 40, height: 40, borderRadius: '50%', border: '1px solid #f3f4f6',
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280',
+                                        }}>
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d={icon} />
+                                            </svg>
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Truck parallax layer */}
+                <div style={{ position: 'absolute', inset: '0 0 0 0', bottom: 0, zIndex: 20, pointerEvents: 'none' }}>
+                    <img
+                        src="https://roof-wish-40038865.figma.site/_components/v2/f31fd17907ce60745d45e83a61d44fd3810d5f25/truck_1.8c4bff83.png"
+                        alt="HAUL! truck"
+                        style={{ width: '100%', height: '100%', objectFit: 'contain', objectPosition: 'bottom', transformOrigin: 'bottom', transform: 'scale(1.05)' }}
+                    />
+                </div>
+            </div>
+        </div>
+    );
 };
 
 // Assuming these prompts apply as they were defined in VibeMeta
@@ -9789,6 +9932,135 @@ export function AwwwardsNavDemo() {
   )
 }`,
         vibePrompt: "Build an \"Awwwards Nav\" — a glassmorphic bottom navigation pill (navbar) that sits fixed to the bottom center of the viewport and expands upward into a mega-menu when its 'More' button is tapped. Two files: awwwards-nav.tsx and demo.tsx.\nawwwards-nav.tsx: a single self-contained, prop-driven React + TypeScript + GSAP component. Top: \"use client\";. Imports: * as React, { useEffect, useRef, useState } from react, gsap from 'gsap', { List, X } from '@phosphor-icons/react', and { cn } from '@/lib/utils' (set up the path alias accordingly). Export interfaces: AwwwardsNavLink { label, href }, AwwwardsNavColumn { title, links: AwwwardsNavLink[] }, AwwwardsNavProps { items?: AwwwardsNavLink[] (inline links, default sample set Home/Nominees/Directory/Collections), columns?: AwwwardsNavColumn[] (default 4 columns: Awards, Inspiration, Directory, Market each with sample links), moreLabel?: string (default 'More'), onOpenChange?: (open: boolean) => void, className?: string }. Default constants DEFAULT_ITEMS and DEFAULT_COLUMNS. Constants COLLAPSED_HEIGHT=60 and EXPANDED_HEIGHT=370. Export function AwwwardsNav({ items, columns, moreLabel, onOpenChange, className }): uses refs navRef (HTMLElement), navTopRef, navItemsRef, navHomeRef; refs openRef/animationRef; state showClose (boolean). On mount (useEffect), a gsap.set baseline: nav height COLLAPSED_HEIGHT, navTop opacity 0 scale 0.9 display none, navItems opacity 1 display flex, navHome flexGrow 0; cleanup kills tweens. toggle() opens/closes: opening -> gsap.to nav height EXPANDED_HEIGHT (0.75s, ease power4.inOut), navItems opacity 0 then display none, navHome flexGrow 1 (0.2s) then setShowClose(true), navTop opacity 1 scale 1 (0.3s, delay 0.5) then display block; closing reverses (nav to COLLAPSED_HEIGHT with 0.2s delay, navTop fade out, navHome flexGrow 0 then setShowClose(false), navItems fade in). Markup: a <nav ref={navRef}> with className built from cn('fixed bottom-6 left-1/2 z-50 -translate-x-1/2','h-[60px] w-[min(680px,92vw)] overflow-hidden rounded-xl border backdrop-blur-xl','border-black/10 bg-white/70 dark:border-white/25 dark:bg-black/75', className). Inside: an expanded mega-menu div (ref navTopRef, absolute inset-x-0 top-0 bottom-[60px] hidden p-2.5) containing a flex row of 4 columns, each a flex-col with a small dot + column title and its links (each an <a>, column separators via border-l for ci>0); and a collapsed bottom row (absolute inset-x-0 bottom-0 flex h-[60px] gap-1.5 p-2.5) with the More button (ref navHomeRef, a role=button div with aria-expanded=showClose, aria-label, onClick toggle, onKeyDown Enter/Space, cn styling, icon flips between <X> and <List> from @phosphor-icons/react weight='light' based on showClose, plus {moreLabel} span) and the inline navItems container (ref navItemsRef, flex flex-[4] gap-1.5) mapping items to bordered rounded cells each containing an <a> link.\ndemo.tsx: import { AwwwardsNav } from '@/components/ui/awwwards-nav' and export function AwwwardsNavDemo() that returns <AwwwardsNav items={[{label:'Home'},{label:'Nominees'},{label:'Directory'},{label:'Collections'}]} /> (each with href '#'). No other deps needed beyond gsap, @phosphor-icons/react, and shadcn's cn utility.",
+    },
+
+    {
+        id: "haul-footer",
+        title: "HAUL!",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-01",
+        newBadgeDays: 120,
+        description: "A bold orange 'HAUL! footer' with a top-aligned glass card, company/mobile/contracts links, a parallax truck foreground, and hoverable circular social icons.",
+        preview: () => (<HaulFooterPreview />),
+        code: `import { useRef } from "react";
+import { motion, useScroll, useTransform } from "motion/react";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+
+const linkGroups = {
+  Company: ["Founding", "Platform", "Testify"],
+  Mobile: ["Get Apple App", "Get Google App"],
+  Contracts: ["Private Data", "User Consent"],
+};
+
+const socials = [
+  { Icon: Facebook, label: "Facebook" },
+  { Icon: Twitter, label: "Twitter" },
+  { Icon: Instagram, label: "Instagram" },
+  { Icon: Linkedin, label: "LinkedIn" },
+];
+
+export default function HaulFooter() {
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: containerRef });
+  const y = useTransform(scrollYProgress, [0, 1], [-50, 150]);
+
+  return (
+    <div className="bg-[#f8f9fa] font-sans">
+      {/* Top spacer - 50vh on mobile/lg, 30vh on md */}
+      <div className="flex h-[50vh] items-center justify-center bg-[#FDFDFD] md:h-[30vh] lg:h-[50vh]">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          className="text-[13px] font-bold uppercase tracking-[0.5em] text-gray-300"
+        >
+          View Below
+        </motion.p>
+      </div>
+
+      {/* Main full-viewport parallax container */}
+      <section
+        ref={containerRef}
+        className="relative h-screen overflow-hidden bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url(https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260430_115327_3f256636-9e63-4885-8d0b-09317dc2b0a5.png&w=1280&q=85)",
+        }}
+      >
+        {/* Top-aligned footer card */}
+        <div className="absolute top-0 w-full pt-12 md:pt-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="overflow-hidden rounded-2xl bg-white/95 shadow-xl backdrop-blur-sm md:rounded-3xl"
+            >
+              {/* Footer content - top half */}
+              <div className="flex flex-col gap-6 p-6 sm:p-8 md:flex-row md:items-start md:justify-between">
+                {/* Logo area */}
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500 p-2 shadow-inner md:h-12 md:w-12">
+                    <svg viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg" className="h-full w-full">
+                      <path d="M 228 0 C 172.772 0 128 44.772 128 100 L 128 0 L 0 0 L 0 28 C 0 83.228 44.772 128 100 128 L 0 128 L 0 256 L 28 256 C 83.228 256 128 211.228 128 156 L 128 256 L 256 256 L 256 228 C 256 172.772 211.228 128 156 128 L 256 128 L 256 0 Z" />
+                    </svg>
+                  </div>
+                  <span className="text-2xl font-bold tracking-tighter text-gray-900 md:text-3xl">HAUL!</span>
+                </div>
+
+                {/* Links area */}
+                <div className="flex flex-1 flex-col gap-8 md:flex-row md:justify-end md:gap-16">
+                  {Object.entries(linkGroups).map(([group, items]) => (
+                    <div key={group}>
+                      <h3 className="text-sm font-bold uppercase tracking-widest text-gray-900">{group}</h3>
+                      <ul className="mt-4 space-y-3">
+                        {items.map((item) => (
+                          <li key={item}>
+                            <a href="#" className="text-sm font-medium text-gray-500 transition-colors hover:text-orange-600">
+                              {item}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Footer content - bottom bar */}
+              <div className="flex items-center justify-between border-t border-gray-100 bg-white px-6 py-4 sm:px-8">
+                <p className="text-sm font-medium text-gray-500">© 2026 HAUL! All Rights Reserved</p>
+                <div className="flex gap-2">
+                  {socials.map(({ Icon, label }) => (
+                    <a
+                      key={label}
+                      href="#"
+                      aria-label={label}
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-gray-100 text-gray-500 transition-all duration-300 hover:border-orange-500 hover:bg-orange-500 hover:text-white"
+                    >
+                      <Icon className="h-5 w-5" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Truck foreground parallax layer */}
+        <motion.div style={{ y }} className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-full">
+          <img
+            src="https://roof-wish-40038865.figma.site/_components/v2/f31fd17907ce60745d45e83a61d44fd3810d5f25/truck_1.8c4bff83.png"
+            alt="HAUL! truck"
+            className="h-full w-full origin-bottom object-contain object-bottom scale-[1.5] sm:scale-110 md:scale-[2.0] lg:scale-105"
+          />
+        </motion.div>
+      </section>
+    </div>
+  );
+}`,
+        vibePrompt: "Build a React functional component using Tailwind CSS, `motion/react` for animations, and `lucide-react` for icons.\n\n1. Typography & Setup: Import the \"Inter\" font from Google Fonts (weights 400, 500, 600, 700) and set it as the default sans-serif font in the Tailwind config/CSS. The overall background of the page should be #f8f9fa.\n\n2. Top Spacer Section: Create a section at the top of the page. Height should be 50vh (on mobile/lg) and 30vh (on md screens). Background color: #FDFDFD. Center a text element that says \"View Below\". The text should be text-gray-300, small font, bold, uppercase, with wide tracking-[0.5em]. Animate this text with Framer Motion to fade in from opacity: 0 to opacity: 1.\n\n3. Main Parallax Container: Below the spacer, create a main full-viewport-height (h-screen) section. Set its background image to the provided cloudfront/higgs.ai URL. Make sure the background covers the container (bg-cover bg-center) and set overflow-hidden with relative positioning. Set up a Framer Motion useScroll target on this container. Map the scrollYProgress from [0, 1] to [-50, 150] using useTransform. Apply this transformed y-value to the foreground truck image layer (described below).\n\n4. The Top-Aligned Footer Card: Position a container absolute top-0 w-full inside the main parallax section. Give it top padding (pt-12 mobile/lg, pt-24 tablet). Inside, create a card constrained to max-w-7xl mx-auto. Card Styling: bg-white/95, backdrop-blur-sm, shadow-xl, rounded corners (rounded-2xl mobile, rounded-3xl desktop), overflow-hidden. Animation: The card should slide down and fade in (initial={{ opacity: 0, y: -20 }}, animate={{ opacity: 1, y: 0 }}, duration 0.8s easeOut). Footer Content (Top Half): Use a flex row layout (flex-col on mobile, flex-row on md+) with spread space. Logo Area: Include an orange square (bg-orange-500, 40x40px mobile, 48x48px desktop, rounded-lg, shadow-inner, p-2). Inside the square, place an SVG with viewBox \"0 0 256 256\" and the exact white path provided (M 228 0 C 172.772 0 ... Z). Next to the logo block, add the text \"HAUL!\" (text-gray-900, 2xl/3xl, font-bold, tracking-tighter). Links Area: Display 3 columns of links using flex. Layout: Company (Founding, Platform, Testify), Mobile (Get Apple App, Get Google App), Contracts (Private Data, User Consent). Section headers should be uppercase, tracking-widest, text-sm, bold. Link items should be gray-500, font-medium, and hover to orange-600 with transition. Footer Content (Bottom Bar): Add a top border (border-gray-100) and use a solid white background (bg-white). Layout: flex, space between, aligning text to the left and social icons to the right. Text: \"© 2026 HAUL! All Rights Reserved\" (text-sm, gray-500, medium). Social Icons: Map through an array of icons imported from lucide-react: Facebook, Twitter, Instagram, Linkedin (w-5 h-5). Wrap them in a tags shaped as 40x40px circles with border-gray-100. On hover, they should turn bg-orange-500 with white text and an orange-500 border (transition all duration-300).\n\n5. Background Truck Parallax Layer: Add a motion.div placed absolutely at the bottom of the container (absolute inset-x-0 bottom-0 h-full). Add standard pointer-events-none and z-20. Ensure the y axis style is tied to the useTransform created in step 3 so it scrolls at a different speed than the background. Inside, place an image with the provided truck PNG URL. Image styling: w-full h-full object-contain object-bottom origin-bottom. Add scale responsive classes (scale-[1.5] mobile, scale-110 sm, scale-[2.0] md, scale-105 lg) to ensure the truck fits properly on various screen widths.",
     },
 
 ];

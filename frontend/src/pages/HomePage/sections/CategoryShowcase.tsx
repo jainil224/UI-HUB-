@@ -58,6 +58,12 @@ const cards = [
         desc: 'Cinematic headers and navigation bars that anchor the experience.',
         query: 'navbar',
     },
+    {
+        title: 'Footers',
+        eyebrow: 'END ON A HIGH NOTE',
+        desc: 'Signature footers that close the page and keep your brand top of mind.',
+        query: 'footer',
+    },
 ];
 
 // Hand-laid collage tilts (degrees)
