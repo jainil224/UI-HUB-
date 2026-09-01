@@ -11811,461 +11811,142 @@ export default function OmniflowFooter() {
     </div>
   );
 }`,
-        vibePrompt: `Recreate the uploaded reference image as an EXACT pixel-accurate website CTA + footer section.
-
-IMPORTANT:
-Use the uploaded image as the ONLY visual source of truth. Do not redesign, modernize, simplify, or reinterpret the design.
-
-The final implementation must visually match the reference in:
-- layout
-- dimensions
-- spacing
-- colors
-- typography
-- border radius
-- shadows
-- gradients
-- positioning
-- proportions
-- cropping
-- opacity
-
-Do not add anything that is not visible in the reference.
-
-========================================
-1. OVERALL PAGE
-========================================
-
-Create a clean, minimal page with a white/off-white background.
-
-The design consists of TWO major sections:
-
-1. A large promotional CTA card at the top.
-2. A footer section underneath separated by a thin horizontal divider.
-
-The entire design should feel like a premium SaaS/product website.
-
-========================================
-2. TOP CTA CARD
-========================================
-
-Create a large centered rectangular CTA card.
-
-Approximate desktop dimensions:
-- Width: 835px
-- Height: 290px
-- Center horizontally
-- Position approximately 78px from the top
-- Border radius: approximately 16px
-- Overflow: hidden
-
-The card should have a very subtle purple/lavender background.
-
-========================================
-3. CTA BACKGROUND
-========================================
-
-Recreate the background exactly like the reference.
-
-Use:
-- very light lavender
-- pale purple
-- white
-- extremely subtle vertical translucent stripes
-
-The card contains many narrow vertical rounded/soft gradient bands running from top to bottom.
-
-The stripes should be:
-- subtle
-- low contrast
-- alternating pale lavender and almost-white
-- slightly blurred/soft
-- evenly distributed
-- full height of the card
-
-There should also be extremely subtle purple glow areas toward the bottom/right portions.
-
-Do NOT use a strong gradient.
-
-The overall appearance should remain extremely soft and almost white.
-
-========================================
-4. CTA CONTENT
-========================================
-
-Position all CTA content on the LEFT side.
-
-Approximate left padding:
-55px.
-
-Approximate top padding:
-75px.
-
-----------------------------------------
-HEADING
-----------------------------------------
-
-Text:
-
-"It's time for you to upgrade
-to Omniflow"
-
-Exactly two lines.
-
-Typography:
-- dark navy/purple
-- bold
-- modern sans-serif
-- approximately 27px desktop
-- line-height around 34px
-- letter spacing slightly negative
-
-The first line:
-
-"It's time for you to upgrade"
-
-Second line:
-
-"to Omniflow"
-
-Match the reference line breaks exactly.
-
-----------------------------------------
-DESCRIPTION
-----------------------------------------
-
-Under the heading add:
-
-"It only takes minutes to set up your first project. Lets go!"
-
-Typography:
-- muted gray/purple
-- approximately 10–11px
-- regular weight
-- approximately 16px line height
-
-Keep the text subtle.
-
-----------------------------------------
-CTA BUTTON
-----------------------------------------
-
-Below the description add a small purple pill button.
-
-Text:
-
-"Try for Free →"
-
-Dimensions approximately:
-- Width: 103px
-- Height: 33px
-
-Style:
-- Purple/violet background
-- Slight purple gradient/glow
-- Fully rounded
-- White text
-- Font size approximately 11px
-- Medium/bold
-- Very subtle shadow/glow
-- Center vertically and horizontally
-
-Do not make the button large.
-
-========================================
-5. DIVIDER
-========================================
-
-Below the CTA card, create a large amount of white space.
-
-Then create a very thin horizontal divider across the entire viewport.
-
-Divider:
-- approximately 1px
-- extremely light gray/lavender
-- full width
-
-The divider separates the CTA section from the footer.
-
-========================================
-6. FOOTER
-========================================
-
-Below the divider create the footer.
-
-Footer background:
-- very light white/lavender
-- almost white
-- subtle extremely soft lavender glow near the bottom/center
-
-Do not use a dark footer.
-
-The footer should have a large amount of whitespace.
-
-========================================
-7. FOOTER LOGO
-========================================
-
-Position the logo on the LEFT side.
-
-Use a small rounded-square purple icon.
-
-Approximate:
-- 45px × 45px
-- border radius: 10px
-- purple/violet background
-- centered white circular/abstract Omniflow-style logo
-
-The logo should be positioned approximately:
-- 183px from the left
-- 55px below the divider
-
-If the exact logo asset exists in the project, use it.
-Otherwise recreate the simple white circular logo using SVG/CSS.
-
-========================================
-8. FOOTER NAVIGATION
-========================================
-
-Create navigation links in three areas.
-
-----------------------------------------
-COLUMN 1
-----------------------------------------
-
-Links:
-
-Services
-Blog
-Portfolio
-
-Position approximately center-left.
-
-Style:
-- dark navy/gray
-- approximately 11–12px
-- regular sans-serif
-- line-height around 28px
-
-----------------------------------------
-COLUMN 2
-----------------------------------------
-
-Links:
-
-Jobs
-Help centre
-
-Same styling.
-
-----------------------------------------
-COLUMN 3
-----------------------------------------
-
-Links:
-
-About us
-Contact
-
-Same styling.
-
-Keep the three columns horizontally aligned.
-
-========================================
-9. SOCIAL ICONS
-========================================
-
-On the RIGHT side create three circular social buttons.
-
-Icons:
-- Instagram
-- Facebook
-- YouTube
-
-Each should be:
-- approximately 30px × 30px
-- circular
-- very light/off-white background
-- thin pale gray border
-- subtle shadow
-- purple/gray icon
-- evenly spaced horizontally
-
-Keep them small and minimal.
-
-========================================
-10. GIANT FOOTER TYPOGRAPHY
-========================================
-
-THIS IS VERY IMPORTANT.
-
-At the bottom of the footer place enormous text:
-
-"Omniflow"
-
-The text should be:
-
-- extremely large
-- white
-- bold
-- modern sans-serif
-- approximately 180–220px+ depending on viewport
-- very low visual contrast against the background
-- centered horizontally
-- positioned so that only the upper portion is visible
-
-The bottom of the text MUST be cropped by the viewport/footer.
-
-The reference shows:
-
-"Omniflow"
-
-as huge background typography extending beyond the bottom of the screen.
-
-Do NOT display the full word at normal size.
-
-It should feel like oversized editorial typography sitting behind the footer.
-
-========================================
-11. COLORS
-========================================
-
-Match the reference closely.
-
-Page:
-#FFFFFF / #FCFCFF
-
-CTA background:
-#F5F3FF
-#EEEAFE
-#F8F7FF
-
-CTA heading:
-dark navy/purple approximately
-#34345F
-
-CTA description:
-#77758A
-
-CTA button:
-purple/violet approximately
-#6855E8
-with a subtle lighter purple highlight.
-
-Footer:
-#FFFFFF
-with extremely subtle lavender tint.
-
-Footer text:
-#34334F
-
-Giant Omniflow text:
-#FFFFFF
-
-Borders:
-very subtle #E7E6EF
-
-========================================
-12. SPACING AND PROPORTIONS
-========================================
-
-Pay extremely close attention to the reference.
-
-Match:
-
-- CTA card width
-- CTA card height
-- CTA card position
-- CTA card corner radius
-- CTA internal padding
-- Heading position
-- Heading line height
-- Description spacing
-- Button position
-- Space between CTA and divider
-- Divider position
-- Footer logo position
-- Navigation positions
-- Social icon position
-- Giant Omniflow position
-- Giant typography cropping
-
-Do not automatically distribute elements evenly.
-
-Use the reference image to determine their actual positions.
-
-========================================
-13. RESPONSIVE DESIGN
-========================================
-
-DESKTOP:
-Match the reference as closely as possible.
-
-TABLET:
-Scale the CTA and footer proportionally.
-
-MOBILE:
-- CTA card becomes responsive.
-- Maintain the same visual style.
-- Stack footer navigation columns if necessary.
-- Social icons remain accessible.
-- Keep the huge "Omniflow" typography partially cropped.
-- Do not introduce horizontal scrolling.
-
-========================================
-14. PIXEL-PERFECT REFINEMENT
-========================================
-
-After implementation, compare the browser rendering against the uploaded reference.
-
-Iteratively adjust:
-
-- exact card dimensions
-- card position
-- border radius
-- background stripe width
-- stripe opacity
-- purple glow
-- heading font size
-- heading line breaks
-- description size
-- button dimensions
-- button color
-- footer height
-- logo size
-- navigation spacing
-- social icon size
-- giant Omniflow font size
-- giant Omniflow vertical position
-- cropping
-- whitespace
-
-The final result should NOT look like a generic SaaS footer.
-
-It should look like the uploaded reference.
-
-========================================
-15. STRICT RESTRICTIONS
-========================================
-
-DO NOT add:
-
-- navbar
-- extra CTA buttons
-- extra text
-- cards
-- unnecessary icons
-- gradients that aren't visible
-- strong shadows
-- animations
-- decorative illustrations
-- additional footer sections
-
-Do not modify unrelated website sections.
-
-Use clean production-quality HTML/CSS/React code according to the existing project structure.
-
-The uploaded reference image must remain the source of truth throughout the implementation.`,
+        liveUrl: "https://ai.studio/apps/4f7021ef-bb05-48f4-a36b-29f42f454723",
+        vibePrompt: `Recreate an exact, pixel-accurate, premium minimalist SaaS website CTA card and footer section in React with Tailwind CSS and HTML/CSS.
+
+Follow every single specification, exact dimension, hex color, typography rule, and layout constraint listed below:
+
+================================================================================
+1. GLOBAL PAGE & CANVAS CONFIGURATION
+================================================================================
+- Page background: Clean off-white #FCFBFF.
+- Primary text color: Dark navy-purple #34334F / #34345F.
+- Global Typography: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif.
+- Selection styling: background rgba(104, 85, 232, 0.2), text #34345F.
+- Layout: Vertically stacked layout with a centered top CTA card section, a 1px full-width horizontal divider line, and an editorial footer section at the bottom. No extra navbar, banner, or promotional badges.
+
+================================================================================
+2. TOP CTA CARD SPECIFICATIONS
+================================================================================
+- Placement: Centered horizontally on the page.
+- Margin/Padding from Top: Exactly 78px (padding-top: 78px; padding-bottom: 88px).
+- Card Width: 835px (max-w-[835px], responsive with px-4 on mobile).
+- Card Height: 290px fixed desktop height (h-[290px]).
+- Card Border Radius: Exactly 18px (rounded-[18px]).
+- Card Overflow: hidden.
+- Card Border & Shadow:
+  * 1px border: rgba(231, 230, 239, 0.8) (#E7E6EF).
+  * Ambient drop shadow: box-shadow: 0 20px 50px -20px rgba(104, 85, 232, 0.12), 0 0 0 1px rgba(231, 230, 239, 0.8).
+- Card Background & Ribbed/Corrugated Texture:
+  * Base background color: #F8F7FD.
+  * Vertical Translucent Corrugated Stripes: A repeating 90-degree linear gradient running top-to-bottom across the full height of the card:
+    \`repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0px, rgba(255, 255, 255, 0.9) 10px, rgba(224, 218, 248, 0.4) 11px, rgba(202, 192, 245, 0.35) 18px, rgba(235, 230, 252, 0.6) 22px)\` with background-size: 22px 100%, opacity 0.40, and blend-mode: multiply.
+  * Atmospheric Glow:
+    - Bottom-right corner: 450px × 350px radial blur element (-right-16 -bottom-16) with gradient from #D4C8FA/70 via #E4DCFC/40 to transparent (blur-2xl).
+    - Top-right area: 300px × 200px radial blur element (right-12 top-0) from #EDE7FD/50 to transparent (blur-xl).
+    - Left text backing: A linear gradient from #FBFBFE/90 via #F8F7FD/60 to transparent across the left 60% of the card to ensure high text contrast.
+
+================================================================================
+3. CTA CARD INNER CONTENT & TYPOGRAPHY
+================================================================================
+- Inner Padding:
+  * Left padding: 55px (pl-[55px] on desktop, pl-8 on mobile).
+  * Top/Vertical alignment: Centered vertically within the 290px card.
+  * Max text container width: 480px.
+
+- Heading Typography:
+  * Text:
+    "It's time for you to upgrade
+    to Omniflow" (Must be exactly two lines with a forced <br />).
+  * Color: Deep slate navy #34345F.
+  * Font size: Exactly 27px (text-[27px] on desktop, 22px on mobile).
+  * Font weight: 700 (Bold).
+  * Line height: 34px (leading-[1.25]).
+  * Letter spacing: -0.025em (tracking-[-0.025em]).
+
+- Description Subtext Typography:
+  * Text: "It only takes minutes to set up your first project. Lets go!"
+  * Margin top: 12px (mt-3).
+  * Color: Muted purple-gray #77758A.
+  * Font size: 11px (text-[11px]).
+  * Font weight: 400 (Regular).
+  * Line height: 16px.
+  * Letter spacing: -0.01em.
+
+- CTA Pill Button:
+  * Text: "Try for Free ›" (or "Try for Free →").
+  * Margin top: 20px (mt-5).
+  * Dimensions: Width: 103px, Height: 33px (w-[103px] h-[33px]).
+  * Border radius: Full pill (rounded-full / 9999px).
+  * Background: Linear gradient from top #7360F2 to bottom #604CE2.
+  * Text color: Pure white #FFFFFF.
+  * Font size: 11px, font-weight 600 (Semi-bold).
+  * Shadow: 0 4px 12px rgba(104, 85, 232, 0.35), 0 1px 2px rgba(0, 0, 0, 0.1).
+  * Hover/Active states: hover:brightness-105 active:scale-[0.98] transition-all duration-150.
+
+================================================================================
+4. HORIZONTAL SECTION DIVIDER
+================================================================================
+- Placement: Immediately below the CTA section.
+- Dimensions: Full width (w-full), height: 1px (h-[1px]).
+- Color: #E7E6EF.
+
+================================================================================
+5. FOOTER SECTION & NAVIGATION LAYOUT
+================================================================================
+- Footer Container:
+  * Background: Vertical gradient from #FCFCFE (top) via #F3EDFD (middle) to #E5DBFA (bottom).
+  * Top padding: 55px (pt-[55px]).
+  * Overflow: hidden.
+  * Content container width: max-w-[835px] mx-auto, aligned with the CTA card width.
+
+- Footer Top Row (Flexbox row with justify-between and items-start):
+  1. Left Column - App Icon/Logo:
+     * Dimensions: 45px × 45px (w-[45px] h-[45px]).
+     * Border radius: 11px (rounded-[11px]).
+     * Background: Gradient from #6855E8 to #5944E4.
+     * Box shadow: 0 4px 12px rgba(104, 85, 232, 0.25).
+     * Inner Graphic: Centered white circular Omniflow swirling ring mark (24px × 24px SVG).
+
+  2. Center Columns - Navigation Links (3 Columns side by side, gap 80px / gap-20):
+     * Column 1 items: "Services", "Blog", "Portfolio".
+     * Column 2 items: "Jobs", "Help centre".
+     * Column 3 items: "About us", "Contact".
+     * Typography: Font size 11.5px (text-[11.5px]), font weight 400, line height 28px (leading-[28px]), color #34334F.
+     * Hover state: hover:text-[#6855E8] transition-colors duration-150.
+
+  3. Right Column - Social Icons (3 Circular action buttons):
+     * Icons: Instagram, Facebook, YouTube (from lucide-react or SVG, size 13px, stroke-width 1.75).
+     * Button dimensions: 30px × 30px circular (w-[30px] h-[30px] rounded-full).
+     * Button background: Pure white #FFFFFF.
+     * Button border: 1px solid #E7E6EF.
+     * Button shadow: 0 1px 3px rgba(0, 0, 0, 0.03).
+     * Icon color: Muted slate #55536D.
+     * Hover state: hover:text-[#6855E8], hover:border-[#D1CEE5], transition-all duration-150.
+     * Spacing: gap-2.5 (10px gap).
+
+================================================================================
+6. GIANT OVERSIZED CROPPED "Omniflow" BACKGROUND TYPOGRAPHY
+================================================================================
+- Placement: Placed at the very bottom of the footer, beneath the navigation row with mt-6 (24px margin top).
+- Container: Height 225px on desktop (h-[225px], responsive h-[145px] sm:h-[185px]), relative, overflow-hidden, flex justify-center items-end, pointer-events-none, user-select-none.
+- Lavender Atmospheric Backing:
+  * Full gradient overlay: linear gradient from bottom #DDD0F8 via #EAE1FB to transparent, opacity 90%.
+  * Radial purple glow: 900px × 280px blurred ellipse (blur-3xl) from #D5C6F7 via #E2D6FA/80 to transparent.
+- Typography Specs:
+  * Text: "Omniflow".
+  * Text color: Pure solid white #FFFFFF.
+  * Font weight: 800 (Extra Bold).
+  * Font size: 215px on desktop (text-[215px]), 165px on tablet, 115px on mobile.
+  * Letter spacing: -0.04em (tracking-[-0.04em]).
+  * Line height: 1.0 (leading-none), whitespace-nowrap.
+  * Drop shadow: drop-shadow: 0 2px 18px rgba(255, 255, 255, 0.7).
+  * Vertical Cropping Position: Positioned so that the baseline/bottom half is cropped below the viewport bottom (bottom: -8px / -bottom-8 on desktop, -bottom-6 on tablet, -bottom-4 on mobile). The top arches and letter stems (O, m, n, i, f, l, o, w) stand out against the soft lavender glow.
+
+================================================================================
+7. RESPONSIVENESS RULES
+================================================================================
+- Mobile (<640px): CTA card width scales to full width with 16px side padding; heading scales to 22px; footer columns wrap gracefully with full tap targets; giant typography scales to 115px with proportional cropping. No horizontal scrollbars.`,
     },
 
     {
