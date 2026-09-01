@@ -3127,6 +3127,171 @@ const HaulFooterPreview: React.FC = () => {
     );
 };
 
+const VizeFooterPreview: React.FC = () => {
+    const productLinks = ["Features", "Solutions", "Pricing", "Updates"];
+    const scienceLinks = ["Approach", "Identity", "Research", "Metrics"];
+    const companyLinks = ["About Us", "Partners", "Careers"];
+
+    const logoPaths = [
+        "M6.94 5a5 5 0 0 0-2.29 3.9c-.4 2.92.6 5.75 3.03 7.55 1.6 1.2 3.66 1.6 5.6 1.1.7-.2 1.4-.53 2-.9.6-.36 1.2-.8 1.2-1.53 0-.78-1.02-1.25-1.7-.9",
+        "M12 2c2.5 0 2.8 1 4 1s2-.5 4-1l1.5 4.5M12 22c-2.5 0-2.8-1-4-1s-2 .5-4 1l1.5-4.5M14 10a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"
+    ];
+
+    return (
+        <div style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: 820,
+            background: '#F0F1F3',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontFamily: "'Inter', system-ui, sans-serif",
+            padding: '2rem 1rem',
+        }}>
+            <style>{`
+                @keyframes vize-glass-in { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+                .vize-glass { animation: vize-glass-in 1.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+                @keyframes vize-fade { from { opacity: 0; } to { opacity: 1; } }
+                .vize-link { transition: color 0.2s ease; }
+                .vize-link:hover { color: #31A8FF; }
+                .vize-social { transition: all 0.2s ease; }
+                .vize-social:hover { background: #f1f5f9; }
+                .vize-social:active { transform: scale(0.95); }
+            `}</style>
+
+            {/* FooterCard */}
+            <div style={{ width: '100%', maxWidth: '72rem', margin: '0 auto' }}>
+                <div style={{
+                    background: '#E9EBEE',
+                    borderRadius: '48px',
+                    border: '1px solid #e2e8f0',
+                    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                    overflow: 'hidden',
+                }}>
+                    <div style={{
+                        background: '#ffffff',
+                        borderRadius: '40px',
+                        margin: '0.5rem',
+                        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                    }}>
+                        <div style={{
+                            padding: '2rem',
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(1, 1fr)',
+                            gap: '3rem',
+                        }}>
+                            {/* Brand Info */}
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                                    <div style={{
+                                        width: 32,
+                                        height: 32,
+                                        background: '#31A8FF',
+                                        borderRadius: '8px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        flexShrink: 0,
+                                    }}>
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4 20C4 20 4 14 10 10C16 6 20 4 20 4C20 4 18 8 14 14C10 20 4 20 4 20Z" fill="white" />
+                                            <path d="M4 20L10 14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+                                        </svg>
+                                    </div>
+                                    <span style={{ fontSize: 26, fontWeight: 700, letterSpacing: '-0.025em', color: '#0F172A' }}>vize</span>
+                                </div>
+                                <p style={{ color: '#64748B', lineHeight: 1.625, fontSize: 16, fontWeight: 400, maxWidth: 320, margin: 0 }}>
+                                    Premium strategic solutions designed to elevate your brand presence through advanced marketing.
+                                </p>
+                                {/* Socials */}
+                                <div style={{ display: 'flex', gap: 12 }}>
+                                    {logoPaths.map((d, i) => (
+                                        <button key={i} type="button" className="vize-social" style={{
+                                            width: 44,
+                                            height: 44,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            borderRadius: '12px',
+                                            border: '1px solid #f1f5f9',
+                                            background: '#ffffff',
+                                            boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+                                            cursor: 'pointer',
+                                        }}>
+                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#1e293b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d={d} />
+                                            </svg>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Bottom legal bar */}
+                    <div style={{
+                        padding: '1.25rem 2rem',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        gap: '1.5rem',
+                        fontSize: 15,
+                    }}>
+                        <p style={{ color: '#64748B', fontWeight: 500, margin: 0 }}>© 2025 Vize. All rights reserved.</p>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', color: '#64748B', fontWeight: 500 }}>
+                            <a href="#" className="vize-link" style={{ textDecoration: 'none', color: 'inherit' }}>Legal Center</a>
+                            <div style={{ width: 1, height: 16, background: '#cbd5e1' }} />
+                            <a href="#" className="vize-link" style={{ textDecoration: 'none', color: 'inherit' }}>User Agreement</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* GlassText */}
+            <div className="vize-glass" style={{ position: 'relative', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', userSelect: 'none', paddingTop: 0, marginTop: '-2rem' }}>
+                <svg className="absolute w-0 h-0" aria-hidden="true" focusable="false" style={{ position: 'absolute', width: 0, height: 0 }}>
+                    <defs>
+                        <filter id="glass-effect" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="#000000" floodOpacity="0.25" result="outer-shadow" />
+                            <feComponentTransfer in="SourceAlpha" result="alpha"><feFuncA type="linear" slope="1" /></feComponentTransfer>
+                            <feOffset in="alpha" dx="0" dy="4" result="offset-white" />
+                            <feGaussianBlur in="offset-white" stdDeviation="4" result="blur-white" />
+                            <feComposite in="alpha" in2="blur-white" operator="out" result="inner-white-mask" />
+                            <feFlood floodColor="#ffffff" floodOpacity="0.25" result="white-fill" />
+                            <feComposite in="white-fill" in2="inner-white-mask" operator="in" result="inner-white-final" />
+                            <feGaussianBlur in="alpha" stdDeviation="6" result="blur-black" />
+                            <feComposite in="alpha" in2="blur-black" operator="out" result="inner-black-mask" />
+                            <feFlood floodColor="#000000" floodOpacity="0.25" result="black-fill" />
+                            <feComposite in="black-fill" in2="inner-black-mask" operator="in" result="inner-black-final" />
+                            <feMerge>
+                                <feMergeNode in="outer-shadow" />
+                                <feMergeNode in="SourceGraphic" />
+                                <feMergeNode in="inner-white-final" />
+                                <feMergeNode in="inner-black-final" />
+                            </feMerge>
+                        </filter>
+                    </defs>
+                </svg>
+                <h1 style={{
+                    fontSize: 'min(25vw, 400px)',
+                    fontWeight: 700,
+                    letterSpacing: 'normal',
+                    lineHeight: 1,
+                    color: 'white',
+                    padding: '0 1rem',
+                    margin: 0,
+                    filter: 'url(#glass-effect)',
+                }}>vize</h1>
+            </div>
+        </div>
+    );
+};
+
 // Assuming these prompts apply as they were defined in VibeMeta
 export const componentList: ComponentItem[] = [
 
@@ -10061,6 +10226,56 @@ export default function HaulFooter() {
   );
 }`,
         vibePrompt: "Build a React functional component using Tailwind CSS, `motion/react` for animations, and `lucide-react` for icons.\n\n1. Typography & Setup: Import the \"Inter\" font from Google Fonts (weights 400, 500, 600, 700) and set it as the default sans-serif font in the Tailwind config/CSS. The overall background of the page should be #f8f9fa.\n\n2. Top Spacer Section: Create a section at the top of the page. Height should be 50vh (on mobile/lg) and 30vh (on md screens). Background color: #FDFDFD. Center a text element that says \"View Below\". The text should be text-gray-300, small font, bold, uppercase, with wide tracking-[0.5em]. Animate this text with Framer Motion to fade in from opacity: 0 to opacity: 1.\n\n3. Main Parallax Container: Below the spacer, create a main full-viewport-height (h-screen) section. Set its background image to the provided cloudfront/higgs.ai URL. Make sure the background covers the container (bg-cover bg-center) and set overflow-hidden with relative positioning. Set up a Framer Motion useScroll target on this container. Map the scrollYProgress from [0, 1] to [-50, 150] using useTransform. Apply this transformed y-value to the foreground truck image layer (described below).\n\n4. The Top-Aligned Footer Card: Position a container absolute top-0 w-full inside the main parallax section. Give it top padding (pt-12 mobile/lg, pt-24 tablet). Inside, create a card constrained to max-w-7xl mx-auto. Card Styling: bg-white/95, backdrop-blur-sm, shadow-xl, rounded corners (rounded-2xl mobile, rounded-3xl desktop), overflow-hidden. Animation: The card should slide down and fade in (initial={{ opacity: 0, y: -20 }}, animate={{ opacity: 1, y: 0 }}, duration 0.8s easeOut). Footer Content (Top Half): Use a flex row layout (flex-col on mobile, flex-row on md+) with spread space. Logo Area: Include an orange square (bg-orange-500, 40x40px mobile, 48x48px desktop, rounded-lg, shadow-inner, p-2). Inside the square, place an SVG with viewBox \"0 0 256 256\" and the exact white path provided (M 228 0 C 172.772 0 ... Z). Next to the logo block, add the text \"HAUL!\" (text-gray-900, 2xl/3xl, font-bold, tracking-tighter). Links Area: Display 3 columns of links using flex. Layout: Company (Founding, Platform, Testify), Mobile (Get Apple App, Get Google App), Contracts (Private Data, User Consent). Section headers should be uppercase, tracking-widest, text-sm, bold. Link items should be gray-500, font-medium, and hover to orange-600 with transition. Footer Content (Bottom Bar): Add a top border (border-gray-100) and use a solid white background (bg-white). Layout: flex, space between, aligning text to the left and social icons to the right. Text: \"© 2026 HAUL! All Rights Reserved\" (text-sm, gray-500, medium). Social Icons: Map through an array of icons imported from lucide-react: Facebook, Twitter, Instagram, Linkedin (w-5 h-5). Wrap them in a tags shaped as 40x40px circles with border-gray-100. On hover, they should turn bg-orange-500 with white text and an orange-500 border (transition all duration-300).\n\n5. Background Truck Parallax Layer: Add a motion.div placed absolutely at the bottom of the container (absolute inset-x-0 bottom-0 h-full). Add standard pointer-events-none and z-20. Ensure the y axis style is tied to the useTransform created in step 3 so it scrolls at a different speed than the background. Inside, place an image with the provided truck PNG URL. Image styling: w-full h-full object-contain object-bottom origin-bottom. Add scale responsive classes (scale-[1.5] mobile, scale-110 sm, scale-[2.0] md, scale-105 lg) to ensure the truck fits properly on various screen widths.",
+    },
+
+    {
+        id: "vize-footer",
+        title: "VIZE",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-01",
+        newBadgeDays: 120,
+        description: "A premium 'VIZE' footer with a layered glass-card layout, brand info, Product/Science/Company link columns, a legal bar, and a massive handcrafted-SVG glass-filter 'vize' text element.",
+        preview: () => (<VizeFooterPreview />),
+        code: `import Footer from './components/Footer';
+
+export default function App() {
+  return (
+    <div className="min-h-screen md:h-screen bg-[#F0F1F3] flex flex-col items-center justify-start md:justify-center overflow-y-auto md:overflow-hidden pt-8 md:pt-0 p-4">
+      <Footer />
+    </div>
+  );
+}`,
+        vibePrompt: `Build a highly polished, responsive VIZE footer using React, Vite, Tailwind CSS, lucide-react for icons, and motion/react for animations, with a premium layered-card aesthetic and a massive background-blended glass text element using a handcrafted SVG filter.
+
+STRUCTURE (src/components/Footer.tsx) with these inner components:
+
+1. LogoIcon: a square box w-8 h-8 bg-[#31A8FF] rounded-[8px] flex items-center justify-center containing this SVG: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 20C4 20 4 14 10 10C16 6 20 4 20 4C20 4 18 8 14 14C10 20 4 20 4 20Z" fill="white"/><path d="M4 20L10 14" stroke="white" strokeWidth="2" strokeLinecap="round"/></svg>.
+
+2. FooterCard: a massive layered card holding the footer directories:
+   - Main wrapper: w-full max-w-6xl mx-auto.
+   - Outer gray body: bg-[#E9EBEE] rounded-[48px] border border-slate-200 shadow-sm overflow-hidden.
+   - Inner white box: bg-white rounded-[40px] m-2 shadow-sm.
+   - Content grid inside white box: p-8 md:p-10 lg:p-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12.
+   - Brand Info column (lg:col-span-2 space-y-8): a row (flex items-center gap-2.5) with <LogoIcon /> and <span className="text-[26px] font-bold tracking-tight text-[#0F172A]">vize</span>; a description <p className="text-[#64748B] leading-relaxed text-[16px] font-normal max-w-[320px]">Premium strategic solutions designed to elevate your brand presence through advanced marketing.</p>; and a socials group mapping Linkedin, Twitter, Instagram from lucide-react into buttons w-[44px] h-[44px] flex items-center justify-center rounded-xl border border-slate-100 bg-white shadow-[0_1px_2px_rgba(0,0,0,0.05)] hover:bg-slate-50 transition-all active:scale-95 group, each containing its icon with className="w-5 h-5 text-slate-800".
+   - Product column (space-y-6): header <h4 className="text-[14px] font-medium text-[#94A3B8]">Product</h4> and a <ul className="space-y-4"> of links (Features, Solutions, Pricing, Updates) styled text-[15px] font-medium text-[#1E293B] hover:text-[#31A8FF] transition-colors.
+   - Science column (space-y-6): header Science; links Approach, Identity, Research, Metrics; same link styling.
+   - Company column (space-y-6): header Company; links About Us, Partners, Careers; same link styling.
+   - Bottom legal bar (inside the gray outer wrap, OUTSIDE the white box): container px-6 sm:px-12 md:px-16 lg:px-20 py-5 flex flex-col md:flex-row justify-between items-center gap-6 text-[15px]; left <p className="text-[#64748B] font-medium">© 2025 Vize. All rights reserved.</p>; right a flex row gap-8 text-[#64748B] font-medium items-center featuring a Legal Center link (hover:text-[#1E293B] transition-colors), a vertical separator <div className="w-[1px] h-4 bg-slate-300" />, and a User Agreement link.
+
+3. GlassText: a relative w-full flex items-center justify-center select-none pt-0 container holding an absolute hidden zero-size SVG (className="absolute w-0 h-0" aria-hidden focusable false) that defines a <filter id="glass-effect" x="-50%" y="-50%" width="200%" height="200%"> with feDropShadow (dx 0 dy 4 stdDeviation 6 floodColor #000000 0.25), feComponentTransfer/feFuncA slope 1 producing alpha, feOffset dy 4, feGaussianBlur stdDeviation 4, feComposite operator out, feFlood #ffffff 0.25, and matching black flood, all merged via feMerge in the order outer-shadow, SourceGraphic, inner-white-final, inner-black-final. Then a motion.div (initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }} className="relative") wrapping an <h1 className="text-[min(25vw,400px)] font-bold tracking-normal leading-none select-none text-white px-4" style={{ filter: 'url(#glass-effect)' }}>vize</h1>.
+
+FINAL EXPORT:
+export default function Footer() {
+  return (
+    <footer className="w-full flex flex-col items-center gap-0">
+      <FooterCard />
+      <GlassText />
+    </footer>
+  );
+}
+
+ALSO GLOBAL CSS (src/index.css): import the Inter font and 'tailwindcss'; in @theme set --font-sans to Inter; define utilities glass-card, text-glass, and liquid-glass (glass-card: rgba(255,255,255,0.4) background, blur 20px, 1px rgba(255,255,255,0.5) border, shadow 0 8px 32px rgba(31,38,135,0.05); text-glass: linear-gradient text with backdrop blur and background-clip text transparent color; liquid-glass: rgba(255,255,255,0.01) with luminosity blend, blur 4px, inset highlight shadow, relative overflow hidden, plus ::before gradient ring border using mask-composite). body: bg #F9F9FB text #141414 font-sans antialiased.`
     },
 
 ];
