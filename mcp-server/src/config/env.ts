@@ -40,7 +40,7 @@ function cleanPrivateKey(key: string | undefined): string | undefined {
 const config: AppConfig = {
   port: parseInt(process.env.PORT || process.env.MCP_PORT || '3001', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
-  mcpServerUrl: process.env.MCP_SERVER_URL || 'https://api.ui-hub-design.com',
+  mcpServerUrl: process.env.MCP_SERVER_URL || 'https://ui-hub-mcp.onrender.com',
   apiKeyPrefix: process.env.MCP_API_KEY_PREFIX || 'uh_live_',
   rateLimitFree: parseInt(process.env.MCP_RATE_LIMIT_FREE || '100', 10),
   rateLimitPro: parseInt(process.env.MCP_RATE_LIMIT_PRO || '10000', 10),

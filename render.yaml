@@ -16,7 +16,7 @@ services:
       - key: MONGODB_DB
         value: uihub
       - key: MCP_SERVER_URL
-        value: https://api.ui-hub-design.com
+        value: https://ui-hub-mcp.onrender.com
       - key: MCP_API_KEY_PREFIX
         value: uh_live_
       - key: MCP_RATE_LIMIT_FREE

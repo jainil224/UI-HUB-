@@ -400,7 +400,7 @@ Example configuration:
 {
 "mcpServers": {
 "ui-hub": {
-"url": "https://api.ui-hub-design.com/mcp",
+"url": "https://ui-hub-mcp.onrender.com/mcp",
 "headers": {
 "Authorization": "Bearer YOUR_UI_HUB_API_KEY"
 }
@@ -657,7 +657,7 @@ UI HUB frontend:
 https://ui-hub-design.vercel.app
 
 MCP API:
-https://api.ui-hub-design.com/mcp
+https://ui-hub-mcp.onrender.com/mcp
 
 Use a deployment platform appropriate for a long-running Node.js service.
 

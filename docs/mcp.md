@@ -30,7 +30,7 @@ API keys use the format: `uh_live_xxxxxxxxxxxxxxxxxxxxxxxxx`
 ### 2. MCP Endpoint
 
 ```
-https://api.ui-hub-design.com/mcp
+https://ui-hub-mcp.onrender.com/mcp
 ```
 
 Local development:
@@ -59,7 +59,7 @@ Add this JSON configuration (replacing `YOUR_UI_HUB_API_KEY`):
 {
   "mcpServers": {
     "ui-hub": {
-      "url": "https://api.ui-hub-design.com/mcp",
+      "url": "https://ui-hub-mcp.onrender.com/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_UI_HUB_API_KEY"
       }
@@ -77,7 +77,7 @@ Add this JSON configuration (replacing `YOUR_UI_HUB_API_KEY`):
 ### Claude Code
 
 ```
-claude mcp add ui-hub --transport http https://api.ui-hub-design.com/mcp --header "Authorization: Bearer YOUR_UI_HUB_API_KEY"
+claude mcp add ui-hub --transport http https://ui-hub-mcp.onrender.com/mcp --header "Authorization: Bearer YOUR_UI_HUB_API_KEY"
 ```
 
 ### VS Code / Copilot
@@ -89,7 +89,7 @@ Place the generic configuration in your project's `.vscode/mcp.json`:
   "servers": {
     "ui-hub": {
       "type": "http",
-      "url": "https://api.ui-hub-design.com/mcp",
+      "url": "https://ui-hub-mcp.onrender.com/mcp",
       "headers": {
         "Authorization": "Bearer YOUR_UI_HUB_API_KEY"
       }
