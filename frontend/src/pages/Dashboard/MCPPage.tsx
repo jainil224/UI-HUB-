@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
     Bot, KeyRound, Copy, Check, Plus, X, Trash2, Shield, Zap, Server,
     RefreshCw, AlertTriangle, Link2, ExternalLink, Fingerprint, LucideIcon,
-    Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles, Wifi
+    Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles, Wifi, ShieldCheck, ArrowUpRight
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMcpKeepAlive } from '../../hooks/useMcpKeepAlive';
 import { MCP_BASE_URL } from '../../utils/mcpConfig';
@@ -197,7 +198,8 @@ const MCPPage: React.FC = () => {
     }
 
     const tier = status?.tier || (isPro ? 'PRO' : 'FREE');
-    const isAdmin = tier === 'ADMIN' || tier === 'ELITE';
+    const isAdminEmail = user?.email?.toLowerCase() === 'jainil11199@gmail.com';
+    const isAdmin = tier === 'ADMIN' || tier === 'ELITE' || isAdminEmail;
 
     const featuredTools = status?.features
         ? Object.entries(status.features)
@@ -292,9 +294,17 @@ const MCPPage: React.FC = () => {
                                 </p>
                             </div>
                         </div>
-                        <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-green/40 bg-brand-green/10 text-brand-green text-[10px] font-black uppercase tracking-widest">
-                            <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" /> Live Telemetry
-                        </span>
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Link
+                                to="/admin/mcp"
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-brand-yellow bg-brand-yellow text-black text-[10px] font-black uppercase tracking-widest shadow-[2px_2px_0_0_#000] hover:brightness-110 transition-all cursor-pointer"
+                            >
+                                <ShieldCheck size={14} /> Admin Panel <ArrowUpRight size={13} />
+                            </Link>
+                            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-green/40 bg-brand-green/10 text-brand-green text-[10px] font-black uppercase tracking-widest">
+                                <span className="w-2 h-2 rounded-full bg-brand-green animate-pulse" /> Live Telemetry
+                            </span>
+                        </div>
                     </div>
 
                     {/* Admin KPI Stat Cards */}
