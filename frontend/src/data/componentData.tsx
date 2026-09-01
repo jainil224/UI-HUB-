@@ -2825,6 +2825,7 @@ export type ComponentItem = {
     imageUrl?: string;
     isPremium?: boolean;
     downloadUrl?: string;
+    liveUrl?: string;
     /** ISO date the component was added — drives the auto-expiring "NEW" badge. */
     addedAt?: string;
     /** Optional badge lifetime in days (default: 120 = 4 months). */
@@ -4004,6 +4005,281 @@ const NewsletterCardPreview: React.FC = () => {
                     </div>
                 </div>
             </div>
+        </div>
+    );
+};
+
+const FaizurPortfolioPreview: React.FC = () => {
+    const services = ["Website Design", "Mobile App Design", "Sass/Dashboard", "Consultant"];
+    const explore = ["All Projects", "Newsletter", "Contact"];
+
+    return (
+        <div style={{
+            width: "100%",
+            background: "#F8F8F8",
+            padding: "24px 12px",
+            fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif",
+            display: "flex",
+            justifyContent: "center",
+            overflow: "hidden",
+            boxSizing: "border-box",
+        }}>
+            <footer style={{
+                width: "100%",
+                maxWidth: 1240,
+                background: "#E7E7E7",
+                borderRadius: 40,
+                overflow: "hidden",
+                position: "relative",
+                padding: "40px 28px 0",
+                boxSizing: "border-box",
+            }}>
+                {/* Header row */}
+                <div style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "flex-start",
+                    gap: 16,
+                }}>
+                    <h2 style={{
+                        margin: 0,
+                        color: "#080808",
+                        fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif",
+                        fontWeight: 500,
+                        fontSize: 27,
+                        lineHeight: 1.12,
+                        letterSpacing: "-0.01em",
+                    }}>
+                        Your product<br />design partner
+                    </h2>
+
+                    <a
+                        href="https://ai.studio/apps/3a30febb-b24a-4b58-925a-0413fcf885cb"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="transition-colors duration-200"
+                        style={{
+                            width: 190,
+                            height: 64,
+                            maxWidth: "42%",
+                            flexShrink: 0,
+                            borderRadius: 999,
+                            border: "2px solid #080808",
+                            background: "transparent",
+                            color: "#080808",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: 36,
+                            fontWeight: 400,
+                            lineHeight: 1,
+                            textDecoration: "none",
+                            cursor: "pointer",
+                            userSelect: "none",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#080808";
+                            e.currentTarget.style.color = "#FFFFFF";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "transparent";
+                            e.currentTarget.style.color = "#080808";
+                        }}
+                    >
+                        Contact
+                    </a>
+                </div>
+
+                {/* 4-column navigation grid */}
+                <div style={{
+                    marginTop: 48,
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                    columnGap: 36,
+                    rowGap: 28,
+                    position: "relative",
+                    zIndex: 10,
+                }}>
+                    {/* Services */}
+                    <div>
+                        <h3 style={{
+                            margin: "0 0 12px",
+                            fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif",
+                            fontSize: 17.5,
+                            fontWeight: 500,
+                            color: "#080808",
+                        }}>
+                            Services
+                        </h3>
+                        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+                            {services.map((item) => (
+                                <li key={item}>
+                                    <a
+                                        href="#"
+                                        onClick={(e) => e.preventDefault()}
+                                        style={{ fontSize: 13.5, lineHeight: "24px", color: "#666666", textDecoration: "none", transition: "color 0.15s" }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.color = "#080808")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.color = "#666666")}
+                                    >
+                                        {item}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Explore */}
+                    <div>
+                        <h3 style={{
+                            margin: "0 0 12px",
+                            fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif",
+                            fontSize: 17.5,
+                            fontWeight: 500,
+                            color: "#080808",
+                        }}>
+                            Explore
+                        </h3>
+                        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: 6 }}>
+                            {explore.map((item) => (
+                                <li key={item}>
+                                    <a
+                                        href="#"
+                                        onClick={(e) => e.preventDefault()}
+                                        style={{ fontSize: 13.5, lineHeight: "24px", color: "#666666", textDecoration: "none", transition: "color 0.15s" }}
+                                        onMouseEnter={(e) => (e.currentTarget.style.color = "#080808")}
+                                        onMouseLeave={(e) => (e.currentTarget.style.color = "#666666")}
+                                    >
+                                        {item}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Say hello */}
+                    <div>
+                        <h3 style={{
+                            margin: "0 0 12px",
+                            fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif",
+                            fontSize: 17.5,
+                            fontWeight: 500,
+                            color: "#080808",
+                        }}>
+                            Say hello!
+                        </h3>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                                <a href="#" onClick={(e) => e.preventDefault()} style={{ height: 25, padding: "2px 10px", borderRadius: 999, background: "#F7F7F7", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, boxShadow: "0 1px 2px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#080808"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
+                                    <span style={{ fontSize: 11.5, fontWeight: 500, color: "#222222", whiteSpace: "nowrap" }}>@fazurrehman</span>
+                                </a>
+                                <a href="#" onClick={(e) => e.preventDefault()} style={{ height: 25, padding: "2px 10px", borderRadius: 999, background: "#F7F7F7", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, boxShadow: "0 1px 2px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E1306C" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+                                    <span style={{ fontSize: 11.5, fontWeight: 500, color: "#222222", whiteSpace: "nowrap" }}>@fazurrehman</span>
+                                </a>
+                            </div>
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                                <a href="#" onClick={(e) => e.preventDefault()} style={{ height: 25, padding: "2px 10px", borderRadius: 999, background: "#F7F7F7", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, boxShadow: "0 1px 2px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EA4C89" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M19.13 5.09C15.22 9.14 10 10.44 2.25 10.94" /><path d="M21.75 12.84c-6.62-1.41-12.14 1-16.38 6.32" /><path d="M8.56 2.75c4.37 6 6 9.42 8 17.72" /></svg>
+                                    <span style={{ fontSize: 11.5, fontWeight: 500, color: "#222222", whiteSpace: "nowrap" }}>@fazurrehman</span>
+                                </a>
+                                <a href="#" onClick={(e) => e.preventDefault()} style={{ height: 25, padding: "2px 10px", borderRadius: 999, background: "#F7F7F7", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, boxShadow: "0 1px 2px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" /></svg>
+                                    <span style={{ fontSize: 11.5, fontWeight: 500, color: "#222222", whiteSpace: "nowrap" }}>@faizurrehman</span>
+                                </a>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                <a href="#" onClick={(e) => e.preventDefault()} style={{ height: 25, padding: "2px 10px", borderRadius: 999, background: "#F7F7F7", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 6, boxShadow: "0 1px 2px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                                    <svg width="10" height="14" viewBox="0 0 38 57" fill="none"><path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE" /><path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83" /><path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262" /><path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E" /><path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF" /></svg>
+                                    <span style={{ fontSize: 11.5, fontWeight: 500, color: "#222222", whiteSpace: "nowrap" }}>@faizurrehman</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Creative Tools */}
+                    <div style={{ cursor: "pointer" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 12 }}>
+                            <h3 style={{
+                                margin: 0,
+                                fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif",
+                                fontSize: 17.5,
+                                fontWeight: 500,
+                                color: "#080808",
+                            }}>
+                                Creative tools
+                            </h3>
+                            <span style={{
+                                width: 16,
+                                height: 16,
+                                borderRadius: 999,
+                                background: "#080808",
+                                color: "#FFFFFF",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16" /></svg>
+                            </span>
+                        </div>
+
+                        {/* Miniature mockup */}
+                        <div style={{ width: 88, height: 64, position: "relative", marginTop: 8 }}>
+                            <div style={{ width: 56, height: 52, background: "#EAEAEA", border: "1px solid #D5D5D5", borderRadius: 8, transform: "rotate(6deg)", position: "absolute", right: 4, top: 4, padding: 4, display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+                                <div style={{ width: 16, height: 4, background: "rgba(245,158,11,0.6)", borderRadius: 1, margin: "-6px auto 0" }} />
+                                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 4, margin: "auto auto 2px", paddingBottom: 2 }}>
+                                    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#3B82F6" }} />
+                                    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#10B981" }} />
+                                    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#F59E0B" }} />
+                                    <span style={{ width: 6, height: 6, borderRadius: 999, background: "#EC4899" }} />
+                                </div>
+                            </div>
+                            <div style={{ width: 42, height: 58, background: "#1E1E1E", border: "1px solid #333333", borderRadius: 6, transform: "rotate(-10deg)", position: "absolute", left: 4, top: 0, padding: 4, display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: "0 4px 10px rgba(0,0,0,0.25)" }}>
+                                <div style={{ width: 12, height: 2, background: "#525252", borderRadius: 999, margin: "0 auto" }} />
+                                <div style={{ width: 16, height: 16, borderRadius: 999, background: "linear-gradient(135deg, #A855F7, #6366F1)", margin: "auto auto" }} />
+                                <div style={{ width: 16, height: 2, background: "#525252", borderRadius: 999, margin: "0 auto" }} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Giant Cropped Bottom Typography ("faizur") */}
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "flex-end",
+                    userSelect: "none",
+                    pointerEvents: "none",
+                    width: "100%",
+                    overflow: "hidden",
+                    marginTop: 32,
+                }}>
+                    <svg
+                        viewBox="0 0 1000 200"
+                        style={{
+                            width: "100%",
+                            height: "auto",
+                            display: "block",
+                            transform: "translateY(14%)",
+                        }}
+                    >
+                        <text
+                            x="50%"
+                            y="180"
+                            textAnchor="middle"
+                            style={{
+                                fontFamily: "'Outfit', 'Plus Jakarta Sans', 'Syne', system-ui, sans-serif",
+                                fontWeight: 900,
+                                fontSize: "235px",
+                                letterSpacing: "-0.045em",
+                                fill: "#080808",
+                            }}
+                        >
+                            faizur
+                        </text>
+                    </svg>
+                </div>
+            </footer>
         </div>
     );
 };
@@ -11520,6 +11796,571 @@ export default function CommunityNewsletter() {
 
 7. INTERACTIVITY & ANIMATIONS: Email State: handle form submit with a controlled state, briefly switching the button label to "Joined!" and clearing the input. Hover Transitions: smooth transition-all duration-200 across button active scale (active:scale-[0.98]), social icon hover zoom (hover:scale-110), and input focus rings. Responsiveness: fluid width scaling down seamlessly on mobile with vertical form stacking and preserved legibility. Non-navigating behavior: no buttons, links, or hover elements should redirect anywhere or leave the component; everything stays in place.`,
 
+    },
+
+    {
+        id: "faizur-portfolio",
+        title: "Faizur Portfolio",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-01",
+        newBadgeDays: 120,
+        liveUrl: "https://ai.studio/apps/3a30febb-b24a-4b58-925a-0413fcf885cb",
+        description: "A pixel-perfect, highly editorial website footer component in React and Tailwind CSS featuring an editorial serif brand tagline, a large outlined pill 'Contact' button, 4-column navigation with custom brand social pills, creative tools mockup, and giant cropped bottom typography 'faizur'.",
+        preview: () => (<FaizurPortfolioPreview />),
+        code: `import React from "react";
+import { ArrowUpRight } from "lucide-react";
+
+export default function FaizurPortfolio() {
+  const services = [
+    "Website Design",
+    "Mobile App Design",
+    "Sass/Dashboard",
+    "Consultant",
+  ];
+
+  const explore = ["All Projects", "Newsletter", "Contact"];
+
+  return (
+    <div className="w-full bg-[#F8F8F8] py-8 sm:py-12 md:py-16 px-4 sm:px-8 lg:px-12 flex justify-center font-sans antialiased select-text">
+      {/* Outer Footer Container */}
+      <footer className="w-full max-w-[1240px] bg-[#E7E7E7] rounded-[40px] overflow-hidden relative pt-12 sm:pt-16 px-6 sm:px-12 md:px-16 lg:px-20 pb-0">
+        {/* Top Header Row (Brand & Contact Button) */}
+        <div className="flex justify-between items-start gap-4">
+          <h2
+            className="text-[#080808] font-medium text-[26px] sm:text-[28px] leading-[1.12] tracking-[-0.01em]"
+            style={{ fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif" }}
+          >
+            Your product<br />design partner
+          </h2>
+
+          <a
+            href="https://ai.studio/apps/3a30febb-b24a-4b58-925a-0413fcf885cb"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-[170px] sm:w-[210px] md:w-[230px] h-[58px] sm:h-[68px] md:h-[76px] rounded-full border-[2px] border-[#080808] bg-transparent text-[#080808] hover:bg-[#080808] hover:text-white transition-colors duration-200 flex items-center justify-center text-[32px] sm:text-[38px] md:text-[44px] font-normal leading-none -translate-y-[1px] cursor-pointer no-underline select-none"
+            style={{ fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" }}
+          >
+            Contact
+          </a>
+        </div>
+
+        {/* Four-Column Navigation & Interaction Grid */}
+        <div className="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-x-8 lg:gap-x-10 gap-y-8 relative z-10">
+          {/* Column 1 — Services */}
+          <div>
+            <h3
+              className="text-[17px] font-medium text-[#080808] mb-3"
+              style={{ fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif" }}
+            >
+              Services
+            </h3>
+            <ul className="space-y-[4px]">
+              {services.map((item) => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="text-[13px] leading-[25px] text-[#666666] hover:text-[#080808] transition-colors duration-150 block"
+                    style={{ fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" }}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 2 — Explore */}
+          <div>
+            <h3
+              className="text-[17px] font-medium text-[#080808] mb-3"
+              style={{ fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif" }}
+            >
+              Explore
+            </h3>
+            <ul className="space-y-[4px]">
+              {explore.map((item) => (
+                <li key={item}>
+                  <a
+                    href="#"
+                    onClick={(e) => e.preventDefault()}
+                    className="text-[13px] leading-[25px] text-[#666666] hover:text-[#080808] transition-colors duration-150 block"
+                    style={{ fontFamily: "'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" }}
+                  >
+                    {item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3 — Say Hello! (Social Pills) */}
+          <div>
+            <h3
+              className="text-[17px] font-medium text-[#080808] mb-3"
+              style={{ fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif" }}
+            >
+              Say hello!
+            </h3>
+            <div className="flex flex-col gap-1.5">
+              {/* Row 1: 𝕏 & Instagram */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="rounded-full min-h-[25px] h-[25px] px-2.5 py-0.5 bg-[#F7F7F7] hover:bg-white transition-colors duration-150 shadow-[0_1px_2px_rgba(0,0,0,0.04)] inline-flex items-center gap-1.5 select-none no-underline cursor-pointer"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="#080808">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                  <span className="text-[11.5px] font-medium text-[#222222] whitespace-nowrap" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+                    @fazurrehman
+                  </span>
+                </a>
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="rounded-full min-h-[25px] h-[25px] px-2.5 py-0.5 bg-[#F7F7F7] hover:bg-white transition-colors duration-150 shadow-[0_1px_2px_rgba(0,0,0,0.04)] inline-flex items-center gap-1.5 select-none no-underline cursor-pointer"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#E1306C" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+                  </svg>
+                  <span className="text-[11.5px] font-medium text-[#222222] whitespace-nowrap" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+                    @fazurrehman
+                  </span>
+                </a>
+              </div>
+
+              {/* Row 2: Dribbble & YouTube */}
+              <div className="flex flex-wrap items-center gap-1.5">
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="rounded-full min-h-[25px] h-[25px] px-2.5 py-0.5 bg-[#F7F7F7] hover:bg-white transition-colors duration-150 shadow-[0_1px_2px_rgba(0,0,0,0.04)] inline-flex items-center gap-1.5 select-none no-underline cursor-pointer"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EA4C89" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M19.13 5.09C15.22 9.14 10 10.44 2.25 10.94" />
+                    <path d="M21.75 12.84c-6.62-1.41-12.14 1-16.38 6.32" />
+                    <path d="M8.56 2.75c4.37 6 6 9.42 8 17.72" />
+                  </svg>
+                  <span className="text-[11.5px] font-medium text-[#222222] whitespace-nowrap" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+                    @fazurrehman
+                  </span>
+                </a>
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="rounded-full min-h-[25px] h-[25px] px-2.5 py-0.5 bg-[#F7F7F7] hover:bg-white transition-colors duration-150 shadow-[0_1px_2px_rgba(0,0,0,0.04)] inline-flex items-center gap-1.5 select-none no-underline cursor-pointer"
+                >
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="#FF0000">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                  </svg>
+                  <span className="text-[11.5px] font-medium text-[#222222] whitespace-nowrap" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+                    @faizurrehman
+                  </span>
+                </a>
+              </div>
+
+              {/* Row 3: Figma */}
+              <div className="flex items-center gap-1.5">
+                <a
+                  href="#"
+                  onClick={(e) => e.preventDefault()}
+                  className="rounded-full min-h-[25px] h-[25px] px-2.5 py-0.5 bg-[#F7F7F7] hover:bg-white transition-colors duration-150 shadow-[0_1px_2px_rgba(0,0,0,0.04)] inline-flex items-center gap-1.5 select-none no-underline cursor-pointer"
+                >
+                  <svg width="10" height="14" viewBox="0 0 38 57" fill="none">
+                    <path d="M19 28.5C19 23.2533 23.2533 19 28.5 19C33.7467 19 38 23.2533 38 28.5C38 33.7467 33.7467 38 28.5 38C23.2533 38 19 33.7467 19 28.5Z" fill="#1ABCFE" />
+                    <path d="M0 47.5C0 42.2533 4.25329 38 9.5 38H19V47.5C19 52.7467 14.7467 57 9.5 57C4.25329 57 0 52.7467 0 47.5Z" fill="#0ACF83" />
+                    <path d="M19 0V19H28.5C33.7467 19 38 14.7467 38 9.5C38 4.25329 33.7467 0 28.5 0H19Z" fill="#FF7262" />
+                    <path d="M0 9.5C0 14.7467 4.25329 19 9.5 19H19V0H9.5C4.25329 0 0 4.25329 0 9.5Z" fill="#F24E1E" />
+                    <path d="M0 28.5C0 33.7467 4.25329 38 9.5 38H19V19H9.5C4.25329 19 0 23.2533 0 28.5Z" fill="#A259FF" />
+                  </svg>
+                  <span className="text-[11.5px] font-medium text-[#222222] whitespace-nowrap" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+                    @faizurrehman
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Column 4 — Creative Tools */}
+          <div className="group cursor-pointer">
+            <div className="flex items-center gap-1.5 mb-3">
+              <h3
+                className="text-[17px] font-medium text-[#080808]"
+                style={{ fontFamily: "'Newsreader', 'Playfair Display', 'Instrument Serif', Georgia, serif" }}
+              >
+                Creative tools
+              </h3>
+              <span className="w-4 h-4 rounded-full bg-[#080808] text-white flex items-center justify-center transition-transform group-hover:scale-110">
+                <ArrowUpRight size={10} strokeWidth={2.5} />
+              </span>
+            </div>
+
+            {/* Miniature Illustrated Mockup Artifact */}
+            <div className="w-[88px] h-[64px] relative mt-2 select-none pointer-events-none">
+              {/* Back Card: Light folder / sticker mockup */}
+              <div className="w-[56px] h-[52px] bg-[#EAEAEA] border border-[#D5D5D5] rounded-lg rotate-[6deg] absolute right-1 top-1 shadow-sm p-1.5 flex flex-col justify-between">
+                <div className="w-4 h-1 bg-[#F59E0B]/60 rounded-[1px] mx-auto -mt-2" />
+                <div className="grid grid-cols-2 gap-1 mt-auto mx-auto pb-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#3B82F6]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#EC4899]" />
+                </div>
+              </div>
+
+              {/* Front Card: Tilted dark mobile mockup */}
+              <div className="w-[42px] h-[58px] bg-[#1E1E1E] border border-[#333333] rounded-md -rotate-[10deg] absolute left-1 top-0 shadow-md p-1 flex flex-col justify-between">
+                <div className="w-3 h-0.5 bg-neutral-600 rounded-full mx-auto" />
+                <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-purple-500 to-indigo-400 mx-auto my-auto" />
+                <div className="w-4 h-0.5 bg-neutral-600 rounded-full mx-auto" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Giant Cropped Bottom Typography ("faizur") */}
+        <div className="w-full overflow-hidden flex justify-center items-end select-none pointer-events-none mt-8 sm:mt-12 lg:mt-16">
+          <span
+            className="text-[clamp(110px,19vw,280px)] font-black leading-[0.74] tracking-[-0.045em] text-[#080808] transform translate-y-[14%] whitespace-nowrap block"
+            style={{ fontFamily: "'Outfit', 'Plus Jakarta Sans', 'Syne', system-ui, sans-serif" }}
+          >
+            faizur
+          </span>
+        </div>
+      </footer>
+    </div>
+  );
+}`,
+        vibePrompt: `Recreate the uploaded reference image as a pixel-accurate website footer.
+
+IMPORTANT:
+The uploaded image is the ONLY visual reference. Reproduce the same design, layout, proportions, typography, spacing, colors, shapes, and positioning. Do NOT redesign or modernize it.
+
+========================
+OVERALL FOOTER
+========================
+
+Create a large centered footer container.
+
+- Background: #E7E7E7 approximately.
+- Page background: very light/off-white, approximately #F8F8F8.
+- Footer has large rounded corners: approximately 40px.
+- Footer width: approximately 85% of the viewport.
+- Footer is horizontally centered.
+- Footer should have a fixed visual proportion similar to the reference.
+- No shadow.
+- Overflow hidden.
+
+The bottom of the footer contains extremely large black typography that is intentionally cropped by the bottom edge.
+
+========================
+TOP LEFT BRAND
+========================
+
+At the upper-left area place:
+
+"Your product
+design partner"
+
+- Two lines.
+- Black text.
+- Serif font.
+- Approximately 26–28px.
+- Medium/bold weight.
+- Tight line-height.
+- Position approximately 130px from the left edge.
+- Position approximately 65px from the top.
+
+========================
+TOP RIGHT CONTACT BUTTON
+========================
+
+Create a very large outlined pill button:
+
+"Contact"
+
+- Position near the upper-right.
+- Width approximately 230px.
+- Height approximately 76px.
+- Border: 2px solid black.
+- Border-radius: 999px.
+- Background transparent.
+- Text black.
+- Font size approximately 44px.
+- Font weight: regular/medium.
+- Center the text perfectly.
+
+Do NOT use a filled button.
+
+========================
+MAIN NAVIGATION
+========================
+
+Below the top section create four columns.
+
+Keep the columns horizontally aligned exactly like the reference.
+
+COLUMN 1 — SERVICES
+
+Heading:
+"Services"
+
+Links:
+"Website Design"
+"Mobile App Design"
+"Sass/Dashboard"
+"Consultant"
+
+Style:
+- Heading: black serif font, approximately 17px.
+- Links: gray sans-serif font, approximately 13px.
+- Line height approximately 25px.
+- Links should have subtle vertical spacing.
+
+COLUMN 2 — EXPLORE
+
+Heading:
+"Explore"
+
+Links:
+"All Projects"
+"Newsletter"
+"Contact"
+
+Same typography and spacing as Services.
+
+COLUMN 3 — SAY HELLO!
+
+Heading:
+"Say hello!"
+
+Create small pill-shaped social buttons.
+
+Include:
+- X
+- Instagram
+- Dribbble
+- YouTube
+- Figma
+
+Each social item should look like a small white/off-white pill.
+
+- Rounded pill shape.
+- Small social icon on the left.
+- Small username text.
+- Very subtle/no border.
+- Approximately 90–100px wide depending on content.
+- Height approximately 25px.
+- Arrange the pills in multiple rows as shown in the reference.
+
+Use:
+"@fazurrehman"
+
+as the username.
+
+Keep the social buttons compact.
+
+COLUMN 4 — CREATIVE TOOLS
+
+Heading:
+"Creative tools"
+
+Place a small circular arrow icon next to the heading.
+
+Below it place the small creative-tools illustration/image shown in the reference.
+
+The illustration should appear approximately 80–100px wide.
+
+Position and scale it exactly like the reference.
+
+========================
+LARGE TYPOGRAPHY
+========================
+
+This is one of the MOST IMPORTANT parts.
+
+At the bottom of the footer place enormous black text:
+
+"faizur"
+
+The text must be extremely large and cropped by the bottom edge.
+
+The reference shows only the upper portion of the giant word.
+
+Requirements:
+
+- Black: approximately #080808.
+- Very large font size, approximately 300–360px depending on viewport.
+- Extremely bold.
+- Sans-serif.
+- Tight letter spacing.
+- Position horizontally so the word extends beyond both sides of the visible footer.
+- The letters must be partially hidden by the footer's bottom edge.
+- Do NOT allow the complete word to become visible.
+- It should look intentionally oversized and editorial.
+
+The giant typography is behind/under the upper footer content and should visually dominate the bottom section.
+
+========================
+EXACT VISUAL STRUCTURE
+========================
+
+The hierarchy should be:
+
+┌─────────────────────────────────────────────┐
+│ Brand                         CONTACT       │
+│                                             │
+│ Services   Explore   Say hello!  Creative   │
+│ links      links     social       tools     │
+│                                             │
+│                                             │
+│                                             │
+│        HUGE CROPPED "faizur"               │
+└─────────────────────────────────────────────┘
+
+Do not change this structure.
+
+========================
+COLORS
+========================
+
+Use only colors visually present in the reference:
+
+Page:
+#F8F8F8
+
+Footer:
+#E7E7E7
+
+Primary text:
+#080808
+
+Secondary text:
+#666666
+
+Social pill:
+#F7F7F7
+
+Avoid gradients.
+
+Avoid unnecessary accent colors.
+
+========================
+TYPOGRAPHY
+========================
+
+The reference combines:
+
+1. Serif typography for:
+- "Your product design partner"
+- Section headings
+
+2. Clean sans-serif typography for:
+- Navigation links
+- Social usernames
+- Contact button
+- Giant bottom typography
+
+Choose fonts that visually match the reference as closely as possible.
+
+If the project already contains suitable fonts, use those instead of introducing unnecessary external fonts.
+
+========================
+SPACING
+========================
+
+Match the reference carefully.
+
+Pay special attention to:
+
+- Footer outer margins
+- Footer corner radius
+- Top padding
+- Left/right padding
+- Distance between brand and Contact button
+- Distance between top area and navigation
+- Column spacing
+- Social pill spacing
+- Position of creative tools
+- Vertical position of giant typography
+
+Do not use arbitrary evenly spaced columns if they don't match the reference.
+
+========================
+RESPONSIVE
+========================
+
+DESKTOP:
+Reproduce the reference as closely as possible.
+
+TABLET:
+Scale the footer proportionally while maintaining the same hierarchy.
+
+MOBILE:
+Stack the navigation sections vertically.
+
+Keep:
+- Brand at top
+- Contact button below/near brand
+- Services
+- Explore
+- Say hello
+- Creative tools
+- Giant cropped typography at bottom
+
+The giant typography should remain intentionally oversized and cropped.
+
+========================
+PIXEL-PERFECT REQUIREMENT
+========================
+
+After implementing the footer, compare the rendered result against the uploaded reference image.
+
+Iteratively adjust:
+
+- Width
+- Height
+- Border radius
+- Background color
+- Brand position
+- Contact button dimensions
+- Contact font size
+- Column positions
+- Typography
+- Social pill dimensions
+- Creative-tools image size
+- Giant "faizur" font size
+- Giant typography position
+- Bottom cropping
+- All spacing
+
+Do not settle for a generic footer.
+
+The final result should visually look like the uploaded reference.
+
+IMPORTANT:
+Do NOT add:
+- gradients
+- shadows
+- extra sections
+- extra buttons
+- animations
+- decorative elements
+- cards
+- borders that aren't visible in the reference
+
+Only recreate what exists in the reference.
+
+Use clean production-quality HTML/CSS/React code according to the existing project.
+Do not modify unrelated parts of the website.
+
+Live Link: https://ai.studio/apps/3a30febb-b24a-4b58-925a-0413fcf885cb`,
     },
 
 ];
