@@ -3292,6 +3292,165 @@ const VizeFooterPreview: React.FC = () => {
     );
 };
 
+const AlpineFooterPreview: React.FC = () => {
+    const [modal, setModal] = useState<string | null>(null);
+
+    const metadataTags = ["Font: SF Pro", "Framework: Next.js", "Last Updated: Jul 23, 2026"];
+    const policyPills = ["Privacy Policy", "Manifesto", "Changelog"];
+
+    const modalContent: Record<string, { title: string; body: string }> = {
+        "Privacy Policy": {
+            title: "Privacy Policy",
+            body: "We respect your privacy. Information collected is used solely to improve the alpine-footer experience and is never sold to third parties. Your data stays yours.",
+        },
+        Manifesto: {
+            title: "Manifesto",
+            body: "Crafted for the love of craft. AlpineFooter celebrates the calm of mountain mornings, the precision of long-form design, and the belief that a footer can be a little landscape of its own.",
+        },
+        Changelog: {
+            title: "Changelog",
+            body: "v2.0 — Scenic alpine backdrop, vintage postage stamp cachet, system badges and policy pills. v1.0 — Initial release with attribution line and modal sheets.",
+        },
+    };
+
+    const stampImage = "https://res.cloudinary.com/chhwhdhk/image/upload/v1788246818/ChatGPT_Image_Sep_1_2026_12_43_09_PM_exqydf.png";
+
+    return (
+        <div style={{
+            position: "relative",
+            width: "100%",
+            minHeight: 900,
+            background: "#0f172a",
+            overflow: "hidden",
+            fontFamily: "'Inter', system-ui, sans-serif",
+            color: "#1f2937",
+        }}>
+            <style>{`
+                .alpine-pill { background: #e2e5e9; border-radius: 6px; padding: 4px 14px; font-size: 12px; color: #374151; cursor: pointer; transition: background 0.2s; border: none; }
+                .alpine-pill:hover { background: #d8dce1; }
+                .alpine-author { background: #dce7e1; color: #2c443b; border-radius: 5px; padding: 2px 10px; transition: background 0.2s; }
+                .alpine-author:hover { background: #ceddd6; }
+                .alpine-pretzel { display: inline-block; transition: transform 0.15s; }
+                .alpine-pretzel:hover { transform: scale(1.1); }
+                .alpine-modal { animation: alpine-in 0.25s cubic-bezier(0.16,1,0.3,1) both; }
+                @keyframes alpine-in { from { opacity: 0; transform: translateY(14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+                .alpine-backdrop { animation: alpine-fade 0.2s ease both; }
+                @keyframes alpine-fade { from { opacity: 0; } to { opacity: 1; } }
+            `}</style>
+
+            {/* Scenic background */}
+            <div style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `url(${stampImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center top",
+                backgroundRepeat: "no-repeat",
+            }} />
+
+            {/* Top card container */}
+            <div style={{
+                position: "relative",
+                zIndex: 20,
+                maxWidth: "80rem",
+                margin: "0 auto",
+                padding: "1.25rem 1rem 1rem",
+                minHeight: "100%",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "flex-start",
+            }}>
+                <div id="alpine-footer-main-card" style={{
+                    width: "100%",
+                    maxWidth: "72rem",
+                    background: "#C4C4C4",
+                    borderRadius: 24,
+                    border: "1px solid rgba(255,255,255,0.6)",
+                    boxShadow: "0 10px 35px rgba(0,0,0,0.09)",
+                    padding: "1.5rem",
+                }}>
+                    {/* Top: stamp + cachet */}
+                    <div style={{ position: "relative", marginBottom: "1.5rem" }}>
+                        <div style={{ background: "#e2e5e8", padding: "0.625rem", borderRadius: 2, boxShadow: "0 1px 2px rgba(0,0,0,0.05)", display: "inline-block", position: "relative" }}>
+                            {/* Inner artwork */}
+                            <div style={{
+                                width: 110,
+                                height: 78,
+                                border: "1px solid rgba(0,0,0,0.15)",
+                                backgroundImage: `url(${stampImage})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                filter: "saturate(1.1) contrast(1.05)",
+                            }} />
+                        </div>
+
+                        {/* Cachet sticker */}
+                        <div style={{
+                            position: "absolute",
+                            right: 4,
+                            top: 8,
+                            transform: "rotate(-8deg)",
+                            border: "1px solid rgba(117,149,136,0.8)",
+                            background: "rgba(232,240,236,0.4)",
+                            backdropFilter: "blur(0.5px)",
+                            padding: "2px 8px",
+                            borderRadius: 2,
+                            boxShadow: "0 1px 2px rgba(0,0,0,0.08)",
+                            textAlign: "center",
+                            whiteSpace: "nowrap",
+                        }}>
+                            <div style={{ fontFamily: "monospace", fontSize: 7, letterSpacing: "0.2em", color: "#5c7f71", textTransform: "uppercase" }}>PAR AVION</div>
+                            <div style={{ fontFamily: "monospace", fontSize: 9.5, letterSpacing: "0.15em", color: "#3d5c50", textTransform: "uppercase", fontWeight: 700, borderTop: "1px solid rgba(117,149,136,0.5)", borderBottom: "1px solid rgba(117,149,136,0.5)", padding: "1px 0" }}>LUFTPOST</div>
+                            <div style={{ fontFamily: "monospace", fontSize: 6.5, letterSpacing: "0.2em", color: "#5c7f71", textTransform: "uppercase" }}>PRIORITAIRE</div>
+                        </div>
+                    </div>
+
+                    {/* Middle: badges + policy pills */}
+                    <div style={{ maxWidth: "42rem", display: "flex", flexDirection: "column", gap: 8 }}>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                            {metadataTags.map((t) => (
+                                <span key={t} className="alpine-pill" style={{ pointerEvents: "none" }}>{t}</span>
+                            ))}
+                        </div>
+                        <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                            {policyPills.map((p) => (
+                                <button key={p} type="button" className="alpine-pill" onClick={() => setModal(p)}>{p}</button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Bottom: attribution */}
+                    <div style={{ marginTop: "1.5rem", fontSize: 13, color: "#374151", display: "flex", alignItems: "center", flexWrap: "wrap", gap: 4 }}>
+                        <span>Made with</span>
+                        <span className="alpine-pretzel" style={{ fontSize: 16, margin: "0 2px" }}>🥨</span>
+                        <span>By</span>
+                        <span className="alpine-author" style={{ margin: "0 2px", fontWeight: 500 }}>UI HUB</span>
+                        <span>in California.</span>
+                    </div>
+                </div>
+
+                {/* Lower scenic spacer */}
+                <div style={{ minHeight: 360, width: "100%" }} />
+            </div>
+
+            {/* Modal */}
+            {modal && (
+                <>
+                    <div className="alpine-backdrop" onClick={() => setModal(null)} style={{ position: "absolute", inset: 0, zIndex: 30, background: "rgba(10,20,30,0.45)", backdropFilter: "blur(4px)" }} />
+                    <div className="alpine-modal" style={{ position: "absolute", zIndex: 31, left: "50%", top: "42%", transform: "translate(-50%,-50%)", width: "min(92%, 420px)", background: "#ffffff", borderRadius: 18, boxShadow: "0 20px 50px rgba(0,0,0,0.3)", padding: "1.6rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.6rem" }}>
+                            <h3 style={{ fontSize: 18, fontWeight: 700, color: "#0f172a", margin: 0 }}>{modalContent[modal].title}</h3>
+                            <button type="button" onClick={() => setModal(null)} style={{ border: "none", background: "#eef1f5", width: 30, height: 30, borderRadius: 8, cursor: "pointer", fontSize: 15, color: "#374151" }}>✕</button>
+                        </div>
+                        <p style={{ fontSize: 14, color: "#4b5563", lineHeight: 1.6, margin: 0 }}>{modalContent[modal].body}</p>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
+
 // Assuming these prompts apply as they were defined in VibeMeta
 export const componentList: ComponentItem[] = [
 
@@ -10276,6 +10435,184 @@ export default function Footer() {
 }
 
 ALSO GLOBAL CSS (src/index.css): import the Inter font and 'tailwindcss'; in @theme set --font-sans to Inter; define utilities glass-card, text-glass, and liquid-glass (glass-card: rgba(255,255,255,0.4) background, blur 20px, 1px rgba(255,255,255,0.5) border, shadow 0 8px 32px rgba(31,38,135,0.05); text-glass: linear-gradient text with backdrop blur and background-clip text transparent color; liquid-glass: rgba(255,255,255,0.01) with luminosity blend, blur 4px, inset highlight shadow, relative overflow hidden, plus ::before gradient ring border using mask-composite). body: bg #F9F9FB text #141414 font-sans antialiased.`
+    },
+
+    {
+        id: "alpine-footer",
+        title: "AlpineFooter",
+        category: "footer",
+        isPremium: false,
+        addedAt: "2026-09-01",
+        newBadgeDays: 120,
+        description: "A scenic 'AlpineFooter' with a full-viewport alpine landscape background, a vintage postage stamp with an overlapping 'PAR AVION / LUFTPOST / PRIORITAIRE' cachet sticker, system metadata badges, policy pills with animated modal sheets, and a pretzel-attribution line.",
+        preview: () => (<AlpineFooterPreview />),
+        code: `import { useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+
+const ALPINE_BG = "https://res.cloudinary.com/chhwhdhk/image/upload/v1788246818/ChatGPT_Image_Sep_1_2026_12_43_09_PM_exqydf.png";
+
+const metadataTags = ["Font: SF Pro", "Framework: Next.js", "Last Updated: Jul 23, 2026"];
+const policyPills = ["Privacy Policy", "Manifesto", "Changelog"];
+
+const modalContent: Record<string, { title: string; body: string }> = {
+  "Privacy Policy": {
+    title: "Privacy Policy",
+    body: "We respect your privacy. Information collected is used solely to improve the alpine-footer experience and is never sold to third parties.",
+  },
+  Manifesto: {
+    title: "Manifesto",
+    body: "Crafted for the love of craft. AlpineFooter celebrates the calm of mountain mornings and the precision of long-form design.",
+  },
+  Changelog: {
+    title: "Changelog",
+    body: "v2.0 - Scenic alpine backdrop, vintage postage stamp cachet, system badges and policy pills. v1.0 - Initial release.",
+  },
+};
+
+export default function AlpineFooter() {
+  const [activeModal, setActiveModal] = useState<string | null>(null);
+
+  return (
+    <footer
+      id="alpine-footer"
+      className="relative w-full min-h-screen flex flex-col justify-start overflow-hidden font-sans select-text bg-[#0f172a]"
+    >
+      {/* Scenic background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: \`url(\${ALPINE_BG})\`,
+          backgroundSize: "cover",
+          backgroundPosition: "center top",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
+
+      {/* Top card container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 sm:pt-7 pb-4 z-20 w-full">
+        <div
+          id="alpine-footer-main-card"
+          className="relative bg-[#C4C4C4] rounded-[24px] sm:rounded-[32px] border border-white/60 shadow-[0_10px_35px_rgba(0,0,0,0.09)] p-6 sm:p-8 md:p-10"
+        >
+          {/* Top: vintage postage stamp + cachet */}
+          <div className="relative mb-6 sm:mb-8">
+            <div className="inline-block relative bg-[#e2e5e8] p-2.5 rounded-[2px] shadow-sm">
+              {/* Perforation teeth */}
+              <div className="absolute -top-1 left-0 right-0 flex justify-between px-1">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <span key={i} className="w-1.5 h-1.5 rounded-full bg-[#f1f3f5]" />
+                ))}
+              </div>
+              <div className="absolute -bottom-1 left-0 right-0 flex justify-between px-1">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <span key={i} className="w-1.5 h-1.5 rounded-full bg-[#f1f3f5]" />
+                ))}
+              </div>
+              {/* Stamp artwork */}
+              <div
+                className="w-[110px] sm:w-[124px] h-[78px] sm:h-[88px] border border-black/15 object-cover saturate-[1.1] contrast-[1.05]"
+                style={{ backgroundImage: \`url(\${ALPINE_BG})\`, backgroundSize: "cover", backgroundPosition: "center" }}
+              />
+            </div>
+
+            {/* Cachet / cancellation sticker */}
+            <div className="absolute right-1 top-2 rotate-[-8deg] border border-[#759588]/80 bg-[#e8f0ec]/40 backdrop-blur-[0.5px] px-2 py-0.5 rounded-[2px] shadow-xs text-center">
+              <div className="font-mono text-[7px] sm:text-[7.5px] tracking-widest text-[#5c7f71] uppercase">PAR AVION</div>
+              <div className="font-mono text-[9.5px] sm:text-[10.5px] tracking-wider text-[#3d5c50] uppercase font-bold border-y border-[#759588]/50 py-0.5">LUFTPOST</div>
+              <div className="font-mono text-[6.5px] sm:text-[7px] tracking-widest text-[#5c7f71] uppercase">PRIORITAIRE</div>
+            </div>
+          </div>
+
+          {/* Middle: badges + policy pills */}
+          <div className="space-y-2 sm:space-y-2.5 max-w-2xl">
+            <div className="flex flex-wrap gap-2">
+              {metadataTags.map((tag) => (
+                <span key={tag} className="bg-[#e2e5e9] hover:bg-[#d8dce1] rounded-[6px] px-3.5 py-1 text-[12px] sm:text-[13px] text-[#374151] font-normal">
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {policyPills.map((pill) => (
+                <button
+                  key={pill}
+                  type="button"
+                  onClick={() => setActiveModal(pill)}
+                  className="bg-[#e2e5e9] hover:bg-[#d8dce1] rounded-[6px] px-3.5 py-1 text-[12px] sm:text-[13px] text-[#374151] font-normal cursor-pointer"
+                >
+                  {pill}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Bottom: attribution */}
+          <div className="mt-6 sm:mt-8 text-[13px] text-[#374151] font-normal flex items-center flex-wrap gap-1">
+            <span>Made with</span>
+            <span className="mx-0.5 text-base sm:text-lg select-none hover:scale-110 transition-transform">🥨</span>
+            <span>By</span>
+            <span className="bg-[#dce7e1] hover:bg-[#ceddd6] text-[#2c443b] rounded-[5px] px-2.5 py-0.5 mx-0.5">UI HUB</span>
+            <span>in California.</span>
+          </div>
+        </div>
+
+        {/* Lower scenic spacer */}
+        <div className="min-h-[360px]" />
+      </div>
+
+      {/* Modal sheets */}
+      <AnimatePresence>
+        {activeModal && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div
+              className="absolute inset-0 bg-black/45 backdrop-blur-sm"
+              onClick={() => setActiveModal(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: 18, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 12, scale: 0.98 }}
+              transition={{ type: "spring", damping: 24, stiffness: 260 }}
+              className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-lg font-bold text-[#0f172a]">{modalContent[activeModal].title}</h3>
+                <button
+                  type="button"
+                  onClick={() => setActiveModal(null)}
+                  className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#eef1f5] text-[#374151] hover:bg-[#e2e5e9] cursor-pointer"
+                  aria-label="Close"
+                >
+                  ✕
+                </button>
+              </div>
+              <p className="text-sm text-[#4b5563] leading-relaxed">{modalContent[activeModal].body}</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </footer>
+  );
+}`,
+        vibePrompt: `Create a responsive React (TypeScript) + Tailwind CSS website footer component called 'AlpineFooter' that replicates a scenic alpine-landscape design.
+
+1. OVERALL LAYOUT & SCENIC BACKGROUND:
+Root element: <footer id="alpine-footer" class="relative w-full min-h-screen flex flex-col justify-start overflow-hidden font-sans select-text bg-[#0f172a]">. Background image URL: https://res.cloudinary.com/chhwhdhk/image/upload/v1788246818/ChatGPT_Image_Sep_1_2026_12_43_09_PM_exqydf.png, with background-size cover, background-position center top, background-repeat no-repeat. Top card container: max-w-7xl mx-auto with padding px-4 sm:px-6 pt-5 sm:pt-7 pb-4 z-20 (w-full). Below the card, a flexible spacer div with min-h-[360px] so the lower scenic alpine landscape, wildflower meadows, and chalet houses remain visible.
+
+2. MAIN FOREGROUND CARD: target id alpine-footer-main-card. Background #C4C4C4, border-radius rounded-[24px] (sm:rounded-[32px]), border 1px solid rgba(255,255,255,0.6), box-shadow 0 10px 35px rgba(0,0,0,0.09), padding p-6 sm:p-8 md:p-10.
+
+3. TOP SECTION - VINTAGE POSTAGE STAMP & CANCELLATION STICKER: margin-bottom mb-6 sm:mb-8. Postage stamp outer frame: background #e2e5e8, padding p-2.5, rounded-[2px], shadow-sm. Perforation teeth: top & bottom rows of 12 circles each (w-1.5 h-1.5 rounded-full bg-[#f1f3f5]); left & right 8 each. Stamp inner artwork container: w-[110px] sm:w-[124px], h-[78px] sm:h-[88px], alpine mountain lake photo (the background URL) with object-cover saturate-[1.1] contrast-[1.05], border 1px solid rgba(0,0,0,0.15). Postal cancellation/cachet sticker: absolute, rotated -8deg, positioned so it overlays the small stamp image on its right-side corner (right-1 top-2), sitting on top of the artwork rather than hanging off it; border 1px solid rgba(117,149,136,0.8), background rgba(232,240,236,0.4), backdrop-blur-[0.5px], padding px-2 py-0.5, rounded-[2px], shadow-xs, centered text. Lines: 'PAR AVION' (font-mono text-[7px] sm:text-[7.5px] tracking-widest #5c7f71), 'LUFTPOST' (font-mono text-[9.5px] sm:text-[10.5px] tracking-wider bold #3d5c50, border-y border-[#759588]/50 py-0.5), 'PRIORITAIRE' (font-mono text-[6.5px] sm:text-[7px] tracking-widest #5c7f71), all uppercase.
+
+4. MIDDLE SECTION - SYSTEM BADGES & POLICY PILLS: container space-y-2 sm:space-y-2.5 max-w-2xl. All pills: background #e2e5e9 hover #d8dce1, rounded-[6px], padding px-3.5 py-1, text-[12px] sm:text-[13px] text-[#374151] font-normal. Row 1 metadata tags: 'Font: SF Pro', 'Framework: Next.js', 'Last Updated: Jul 23, 2026'. Row 2 policy pills (buttons that open modals): 'Privacy Policy', 'Manifesto', 'Changelog'.
+
+5. BOTTOM SECTION - ATTRIBUTION LINE: margin-top mt-6 sm:mt-8, text-[13px] text-[#374151] font-normal flex items-center flex-wrap gap-1. 'Made with' + pretzel icon 🥨 (mx-0.5 text-base sm:text-lg select-none hover:scale-110 transition-transform) + 'By' + author pill badge 'UI HUB' (background #dce7e1 hover #ceddd6, text #2c443b, rounded-[5px], padding px-2.5 py-0.5 mx-0.5) + 'in California.'
+
+6. INTERACTIVE MODAL SHEETS: accessible popover/modal for Privacy Policy, Manifesto, and Changelog with a close button (✕), backdrop blur, and smooth entrance animation using motion/react (import { AnimatePresence, motion } from 'motion/react'). Use useState to track the active modal. Each modal shows a title and a short body. Use AnimatePresence for exit animations; backdrop is a clickable div that closes the modal. Ensure the footer root is min-h-screen with the scenic background filling it and the card stacked near the top.`
     },
 
 ];
