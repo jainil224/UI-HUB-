@@ -278,24 +278,10 @@ const BrandImage = ({
     />
 );
 
-const CursorSvg = ({ size, className }: { size: number; className?: string }) => (
-    <svg
-        style={{ width: size, height: size }}
-        className={`shrink-0 ${className || ''}`}
-        viewBox="0 0 24 24"
-        fill="#58A6FF"
-        fillRule="evenodd"
-        role="img"
-        aria-label="Cursor logo"
-    >
-        <title>Cursor logo</title>
-        <path d="M22.106 5.68L12.5.135a.998.998 0 00-.998 0L1.893 5.68a.84.84 0 00-.419.726v11.186c0 .3.16.577.42.727l9.607 5.547a.999.999 0 00.998 0l9.608-5.547a.84.84 0 00.42-.727V6.407a.84.84 0 00-.42-.726zm-.603 1.176L12.228 22.92c-.063.108-.228.064-.228-.061V12.34a.59.59 0 00-.295-.51l-9.11-5.26c-.107-.062-.063-.228.062-.228h18.55c.264 0 .428.286.296.514z" />
-    </svg>
-);
-
 const LOGO_SRC: Partial<Record<AISystem, string>> = {
     antigravity: '/logos/antigravity-color.svg',
     claude: '/logos/claude-color.svg',
+    cursor: '/logos/Cursor_Symbol_0.svg',
     lovable: '/logos/lovable-color.svg',
     advance: '/favicon.svg',
 };
@@ -303,6 +289,7 @@ const LOGO_SRC: Partial<Record<AISystem, string>> = {
 const LOGO_ALT: Partial<Record<AISystem, string>> = {
     antigravity: 'Antigravity logo',
     claude: 'Claude logo',
+    cursor: 'Cursor logo',
     lovable: 'Lovable logo',
     advance: 'UI HUB Logo',
 };
@@ -318,17 +305,17 @@ const PROMPT_OPTIONS: { system: AISystem; label: string }[] = [
 const ToolIcon = ({ tool, active, size = 20 }: { tool: AISystem; active: boolean; size?: number }) => {
     const src = LOGO_SRC[tool];
     if (src) {
+        const isCursor = tool === 'cursor';
         return (
             <BrandImage
                 src={src}
                 alt={LOGO_ALT[tool] || `${tool} logo`}
                 size={size}
-                className={active ? 'opacity-100 drop-shadow-[0_0_6px_rgba(255,255,255,0.15)]' : 'opacity-90'}
+                className={`${isCursor ? 'brightness-0 invert' : ''} ${
+                    active ? 'opacity-100 drop-shadow-[0_0_6px_rgba(255,255,255,0.15)]' : 'opacity-90'
+                }`}
             />
         );
-    }
-    if (tool === 'cursor') {
-        return <CursorSvg size={size} />;
     }
     return <Brain size={size} className={active ? 'text-brand-blue' : 'text-neutral-400'} />;
 };
@@ -1282,8 +1269,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                     <div className="relative" ref={promptMenuRef}>
                                         <button
                                             onClick={() => setPromptMenuOpen(o => !o)}
-                                            className={`px-3 py-1.5 rounded bg-neutral-900 border-2 border-neutral-600 text-neutral-100 hover:border-brand-yellow hover:text-brand-yellow transition-colors flex items-center gap-1.5 cursor-pointer ${
-                                                promptMenuOpen ? 'text-brand-yellow border-brand-yellow' : ''
+                                            className={`px-2.5 py-1.5 rounded bg-brand-red border-2 border-brand-red text-white hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer ${
+                                                promptMenuOpen ? 'brightness-110' : ''
                                             }`}
                                             title="Copy Prompt"
                                             aria-label="Copy Prompt"
@@ -1292,28 +1279,41 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         >
                                             <Copy size={14} strokeWidth={2.5} />
                                             <span className="text-[10px] font-black uppercase tracking-wider whitespace-nowrap">Copy Prompt</span>
-                                            <ChevronDown size={13} className={promptMenuOpen ? 'rotate-180' : ''} />
+                                            <ChevronDown size={13} className={`shrink-0 transition-transform ${promptMenuOpen ? 'rotate-180' : ''}`} />
                                         </button>
                                         {promptMenuOpen && (
-                                            <div className="absolute right-0 top-full mt-1.5 z-[60] w-52 rounded-lg border-2 border-neutral-700 bg-[#0A0A0E] shadow-[4px_4px_0px_0px_#000000] overflow-hidden">
-                                                <div className="px-2.5 py-1.5 border-b border-neutral-800 text-[8px] uppercase tracking-widest font-black text-neutral-500">
+                                            <div className="absolute right-0 top-full mt-1.5 z-[60] w-56 rounded-lg border border-neutral-700 bg-[#0A0A0E] shadow-[3px_3px_0px_0px_#000000] overflow-hidden">
+                                                <div className="px-3 pt-2.5 pb-2 border-b border-neutral-800 text-[9px] uppercase tracking-widest font-black text-neutral-400">
                                                     Copy Prompt
                                                 </div>
-                                                {PROMPT_OPTIONS.map(opt => (
-                                                    <button
-                                                        key={opt.system}
-                                                        onClick={() => copyPromptFromPreview(opt.system)}
-                                                        className="w-full flex items-center gap-2 px-2.5 py-2 text-left hover:bg-neutral-900 transition-colors"
-                                                    >
-                                                        <ToolIcon tool={opt.system} active={false} size={14} />
-                                                        <span className="text-[10px] font-mono font-black uppercase tracking-wider text-neutral-200 flex-1">
-                                                            {opt.label}
-                                                        </span>
-                                                        {promptCopied === opt.system && (
-                                                            <Check size={12} className="text-brand-yellow shrink-0" strokeWidth={3} />
-                                                        )}
-                                                    </button>
-                                                ))}
+                                                <div className="p-1.5 flex flex-col gap-0.5">
+                                                    {PROMPT_OPTIONS.map(opt => (
+                                                        <button
+                                                            key={opt.system}
+                                                            type="button"
+                                                            onClick={() => copyPromptFromPreview(opt.system)}
+                                                            className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors cursor-pointer ${
+                                                                promptCopied === opt.system
+                                                                    ? 'bg-brand-green/10 hover:bg-brand-green/10'
+                                                                    : 'hover:bg-neutral-900 active:bg-neutral-800'
+                                                            }`}
+                                                        >
+                                                            <span className="w-[18px] flex items-center justify-center shrink-0">
+                                                                <ToolIcon tool={opt.system} active={false} size={16} />
+                                                            </span>
+                                                            <span className={`text-[10.5px] font-mono font-black uppercase tracking-wider flex-1 ${
+                                                                promptCopied === opt.system ? 'text-brand-green' : 'text-neutral-300'
+                                                            }`}>
+                                                                {opt.label}
+                                                            </span>
+                                                            <span className="w-4 flex items-center justify-center shrink-0">
+                                                                {promptCopied === opt.system && (
+                                                                    <Check size={13} className="text-brand-green" strokeWidth={3} />
+                                                                )}
+                                                            </span>
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
                                         )}
                                     </div>
