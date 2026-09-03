@@ -10,9 +10,19 @@ interface ToastProps {
     image?: string;
     imageAlt?: string;
     logo?: React.ReactNode;
+    position?: 'bottom-center' | 'bottom-right';
 }
 
-const Toast = ({ message, isVisible, onClose, duration = 3000, image, imageAlt, logo }: ToastProps) => {
+const Toast = ({ 
+    message, 
+    isVisible, 
+    onClose, 
+    duration = 3000, 
+    image, 
+    imageAlt, 
+    logo,
+    position = 'bottom-right'
+}: ToastProps) => {
     React.useEffect(() => {
         if (isVisible) {
             const timer = setTimeout(() => {
@@ -23,11 +33,18 @@ const Toast = ({ message, isVisible, onClose, duration = 3000, image, imageAlt, 
     }, [isVisible, onClose, duration]);
 
     const hasRichContent = Boolean(image || logo);
+    const isCenter = position === 'bottom-center';
 
     return (
         <AnimatePresence>
             {isVisible && (
-                <div className="fixed bottom-6 inset-x-4 sm:inset-x-auto sm:right-8 z-[9999] pointer-events-none flex sm:justify-end justify-center">
+                <div 
+                    className={
+                        isCenter 
+                            ? "fixed bottom-8 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none flex justify-center items-center w-auto max-w-[92vw]"
+                            : "fixed bottom-6 inset-x-4 sm:inset-x-auto sm:right-8 z-[9999] pointer-events-none flex sm:justify-end justify-center"
+                    }
+                >
                     <motion.div
                         initial={{ opacity: 0, y: 20, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}

@@ -22,10 +22,12 @@ import HaosShowcase from '../../components/templates/HaosShowcase';
 import MentalityHero from '../../components/templates/MentalityHero';
 import LakeraHero from '../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../components/templates/InteriorDesignShowcase';
+import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
+import Toast from '../../components/ui/Toast';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
-const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath?: string }[] = [
+const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = [
     { system: 'advance', label: 'ADVANCE', iconPath: '/favicon.svg' },
     { system: 'antigravity', label: 'ANTIGRAVITY', iconPath: '/logos/antigravity-color.svg' },
     { system: 'claude', label: 'CLAUDE CODE', iconPath: '/logos/claude-color.svg' },
@@ -44,6 +46,9 @@ const TemplateDetailPage = () => {
     const [resetKey, setResetKey] = useState(0);
     const [deviceView, setDeviceView] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
     const [isLoadingIframe, setIsLoadingIframe] = useState(true);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+    const [toastToolLogo, setToastToolLogo] = useState<React.ReactNode | null>(null);
 
     const promptMenuRef = useRef<HTMLDivElement>(null);
 
@@ -61,25 +66,29 @@ const TemplateDetailPage = () => {
     }, [promptMenuOpen]);
 
     const handleCopyPrompt = (system: AISystem = 'cursor') => {
-        let text = template.toolPrompts?.[system] || template.promptPreview;
-        if (!template.toolPrompts?.[system]) {
-            if (system === 'cursor') {
-                text = `/* Cursor Rules & System Instructions */\nFramework: ${template.framework}\nStyling: ${template.styling}\nAnimation: ${template.animation}\n\nTask:\n${template.promptPreview}`;
-            } else if (system === 'claude') {
-                text = `[Claude Code Engineer Directive]\nTarget: ${template.framework} with ${template.styling}.\n\nInstructions:\n${template.promptPreview}`;
-            } else if (system === 'antigravity') {
-                text = `[Antigravity Agent Blueprint]\nBuild full production ${template.title}.\nStack: ${template.framework}, ${template.styling}, ${template.animation}.\nFeatures:\n${template.features.map(f => `- ${f}`).join('\n')}\n\nPrompt:\n${template.promptPreview}`;
-            } else if (system === 'lovable') {
-                text = `[Lovable Component Generator]\nCreate ${template.title} using ${template.framework} and ${template.styling}.\n\nInstructions:\n${template.promptPreview}`;
-            } else if (system === 'advance') {
-                text = `[Advance Architecture Specification & Source Code]\nSpecification for ${template.title}:\n\n${template.promptPreview}`;
-            }
-        }
-
+        const text = buildTemplatePrompt(template, system);
         navigator.clipboard.writeText(text);
         setPromptCopied(system);
         setTimeout(() => setPromptCopied(null), 2500);
         setPromptMenuOpen(false);
+
+        const selectedOption = PROMPT_OPTIONS.find(o => o.system === system);
+        const label = selectedOption?.label || system.toUpperCase();
+        setToastMessage(`${label} PROMPT COPIED TO CLIPBOARD`);
+        if (selectedOption) {
+            setToastToolLogo(
+                <img
+                    src={selectedOption.iconPath}
+                    alt={selectedOption.label}
+                    className={`w-4 h-4 shrink-0 object-contain ${
+                        system === 'cursor' ? 'brightness-0 invert' : ''
+                    }`}
+                />
+            );
+        } else {
+            setToastToolLogo(null);
+        }
+        setShowToast(true);
     };
 
     const deviceWidthClass = {
@@ -199,8 +208,14 @@ const TemplateDetailPage = () => {
                                                         onClick={() => handleCopyPrompt(opt.system)}
                                                         className="w-full flex items-center justify-between px-3 py-2 rounded text-left hover:bg-neutral-900 transition-colors cursor-pointer"
                                                     >
-                                                        <div className="flex items-center gap-2">
-                                                            <Sparkles size={13} className="text-[#FFC700]" />
+                                                        <div className="flex items-center gap-2.5">
+                                                            <img
+                                                                src={opt.iconPath}
+                                                                alt={`${opt.label} logo`}
+                                                                className={`w-4 h-4 shrink-0 object-contain ${
+                                                                    opt.system === 'cursor' ? 'brightness-0 invert' : ''
+                                                                }`}
+                                                            />
                                                             <span className="text-[11px] font-mono font-black uppercase tracking-wider text-white">
                                                                 {opt.label}
                                                             </span>
@@ -322,6 +337,15 @@ const TemplateDetailPage = () => {
                     </Link>
                 </div>
             </div>
+
+            {/* Bottom Center Toast Notification on Prompt Copy */}
+            <Toast
+                isVisible={showToast}
+                message={toastMessage}
+                logo={toastToolLogo}
+                position="bottom-center"
+                onClose={() => setShowToast(false)}
+            />
         </div>
     );
 };

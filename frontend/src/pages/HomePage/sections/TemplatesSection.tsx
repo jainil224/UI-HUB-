@@ -30,6 +30,8 @@ import HaosShowcase from '../../../components/templates/HaosShowcase';
 import MentalityHero from '../../../components/templates/MentalityHero';
 import LakeraHero from '../../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../../components/templates/InteriorDesignShowcase';
+import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
+import Toast from '../../../components/ui/Toast';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -37,6 +39,8 @@ const TemplatesSection = () => {
     const [activeTemplate, setActiveTemplate] = useState<TemplateItem | null>(null);
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
     const [showSubmitModal, setShowSubmitModal] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
 
     const categoryMatches = websiteTemplates.filter(t => t.category === selectedCategory);
     const filteredTemplates = (selectedCategory === 'All' || categoryMatches.length === 0)
@@ -45,8 +49,11 @@ const TemplatesSection = () => {
 
     const handleCopyPrompt = (template: TemplateItem, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
-        navigator.clipboard.writeText(template.promptPreview);
+        const text = buildTemplatePrompt(template, 'advance');
+        navigator.clipboard.writeText(text);
         setCopiedPromptId(template.id);
+        setToastMessage(`ADVANCE PROMPT COPIED TO CLIPBOARD`);
+        setShowToast(true);
         setTimeout(() => setCopiedPromptId(null), 2500);
     };
 
@@ -201,75 +208,28 @@ const TemplatesSection = () => {
                                 </div>
 
                                 {/* ── Template Details Body ── */}
-                                <div className="p-5 flex-1 flex flex-col justify-between">
-                                    <div>
-                                        <div className="flex items-start justify-between gap-2 mb-2">
-                                            <h3 
-                                                onClick={() => navigate(`/templates/${template.id}`)}
-                                                className="font-heading font-black text-lg text-white group-hover:text-[#1F4BFF] transition-colors cursor-pointer"
-                                            >
-                                                {template.title}
-                                            </h3>
-                                            <span 
-                                                className={`px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border shrink-0 ${
-                                                    template.isPro 
-                                                        ? 'bg-[#1F4BFF] text-white border-black shadow-[2px_2px_0px_0px_#000]'
-                                                        : 'bg-[#00E599] text-black border-black shadow-[2px_2px_0px_0px_#000]'
-                                                }`}
-                                            >
-                                                {template.isPro ? 'PRO' : 'FREE'}
-                                            </span>
-                                        </div>
-
-                                        <p className="text-xs text-neutral-400 font-medium line-clamp-2 mb-4 leading-relaxed">
-                                            {template.description}
-                                        </p>
-
-                                        {/* Key Feature Bullets */}
-                                        <div className="space-y-1.5 mb-5">
-                                            {template.features.slice(0, 2).map((feat, i) => (
-                                                <div key={i} className="flex items-center gap-2 text-[11px] text-neutral-300 font-mono">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-[#1F4BFF]" />
-                                                    <span className="truncate">{feat}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-                                    {/* ── Action Buttons ── */}
-                                    <div className="pt-3 border-t border-neutral-800/80 flex items-center gap-2">
-                                        <button
+                                <div className="p-5 flex-1 flex flex-col justify-start">
+                                    <div className="flex items-start justify-between gap-2 mb-2">
+                                        <h3 
                                             onClick={() => navigate(`/templates/${template.id}`)}
-                                            className="flex-1 py-2 px-3 bg-[#1F4BFF] text-white text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:bg-[#183ec9] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#000000] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                                            className="font-heading font-black text-lg text-white group-hover:text-[#1F4BFF] transition-colors cursor-pointer"
                                         >
-                                            <Code size={13} />
-                                            <span>Get Template</span>
-                                        </button>
-
-                                        <button
-                                            onClick={(e) => handleCopyPrompt(template, e)}
-                                            title="Copy AI Prompt"
-                                            className="p-2 bg-neutral-900 text-neutral-300 hover:text-white border-2 border-neutral-800 hover:border-white shadow-[2px_2px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer relative"
+                                            {template.title}
+                                        </h3>
+                                        <span 
+                                            className={`px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border shrink-0 ${
+                                                template.isPro 
+                                                    ? 'bg-[#1F4BFF] text-white border-black shadow-[2px_2px_0px_0px_#000]'
+                                                    : 'bg-[#00E599] text-black border-black shadow-[2px_2px_0px_0px_#000]'
+                                            }`}
                                         >
-                                            {copiedPromptId === template.id ? (
-                                                <Check size={14} className="text-[#00E599]" />
-                                            ) : (
-                                                <Copy size={14} />
-                                            )}
-                                        </button>
-
-                                        {template.githubUrl && (
-                                            <a
-                                                href={template.githubUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                title="View GitHub Repository"
-                                                className="p-2 bg-neutral-900 text-neutral-300 hover:text-white border-2 border-neutral-800 hover:border-white shadow-[2px_2px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all"
-                                            >
-                                                <Github size={14} />
-                                            </a>
-                                        )}
+                                            {template.isPro ? 'PRO' : 'FREE'}
+                                        </span>
                                     </div>
+
+                                    <p className="text-xs text-neutral-400 font-medium line-clamp-2 leading-relaxed">
+                                        {template.description}
+                                    </p>
                                 </div>
                             </motion.div>
                         ))}
@@ -401,8 +361,8 @@ const TemplatesSection = () => {
                                         )}
                                     </button>
                                 </div>
-                                <div className="p-4 bg-black border-2 border-neutral-800 rounded font-mono text-xs text-neutral-300 leading-relaxed max-h-40 overflow-y-auto select-all">
-                                    {activeTemplate.promptPreview}
+                                <div className="p-4 bg-black border-2 border-neutral-800 rounded font-mono text-xs text-neutral-300 leading-relaxed max-h-40 overflow-y-auto select-all whitespace-pre-wrap">
+                                    {buildTemplatePrompt(activeTemplate, 'advance')}
                                 </div>
                             </div>
 
@@ -518,6 +478,14 @@ const TemplatesSection = () => {
                     </div>
                 )}
             </AnimatePresence>
+
+            {/* Bottom Center Toast Notification on Prompt Copy */}
+            <Toast
+                isVisible={showToast}
+                message={toastMessage}
+                position="bottom-center"
+                onClose={() => setShowToast(false)}
+            />
         </section>
     );
 };
