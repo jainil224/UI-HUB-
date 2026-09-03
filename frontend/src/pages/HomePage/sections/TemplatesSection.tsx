@@ -28,6 +28,7 @@ import SplitFuzzyOrbHero from '../../../components/templates/SplitFuzzyOrbHero';
 import SegmintFooter from '../../../components/templates/SegmintFooter';
 import HaosShowcase from '../../../components/templates/HaosShowcase';
 import MentalityHero from '../../../components/templates/MentalityHero';
+import LakeraHero from '../../../components/templates/LakeraHero';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();

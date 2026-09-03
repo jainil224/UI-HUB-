@@ -23,6 +23,7 @@ const SplitOrbDemoPage = React.lazy(() => import('./pages/Components/SplitOrbDem
 const SegmintDemoPage = React.lazy(() => import('./pages/Components/SegmintDemoPage'));
 const HaosDemoPage = React.lazy(() => import('./pages/Components/HaosDemoPage'));
 const MentalityDemoPage = React.lazy(() => import('./pages/Components/MentalityDemoPage'));
+const LakeraDemoPage = React.lazy(() => import('./pages/Components/LakeraDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
 const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
@@ -123,6 +124,7 @@ const AppShell = () => {
             <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />
             <Route path="/demo/haos-tech-solutions" element={<HaosDemoPage />} />
             <Route path="/demo/mentality" element={<MentalityDemoPage />} />
+            <Route path="/demo/lakera-ai-security" element={<LakeraDemoPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/templates" element={<TemplatesPage />} />

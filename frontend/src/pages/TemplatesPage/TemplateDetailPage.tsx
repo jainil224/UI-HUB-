@@ -20,6 +20,7 @@ import SplitFuzzyOrbHero from '../../components/templates/SplitFuzzyOrbHero';
 import SegmintFooter from '../../components/templates/SegmintFooter';
 import HaosShowcase from '../../components/templates/HaosShowcase';
 import MentalityHero from '../../components/templates/MentalityHero';
+import LakeraHero from '../../components/templates/LakeraHero';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
@@ -248,6 +249,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'mentality' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#F0F0F0]">
                                     <MentalityHero key={`mentality-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'lakera-ai-security' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
+                                    <LakeraHero key={`lakera-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>
