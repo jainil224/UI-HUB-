@@ -4,6 +4,7 @@ import FAQ from './sections/FAQ';
 import ComponentGrid from './sections/ComponentGrid';
 import Stats from './sections/Stats';
 import CategoryShowcase from './sections/CategoryShowcase';
+import TemplatesSection from './sections/TemplatesSection';
 
 const HomePage = () => (
     <div className="flex flex-col bg-black">
@@ -11,6 +12,7 @@ const HomePage = () => (
         <Stats />
         <ComponentGrid />
         <CategoryShowcase />
+        <TemplatesSection />
         <FAQ />
     </div>
 );

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, User as UserIcon, Search } from 'lucide-react';
+import { Menu, X, LogOut, User as UserIcon, Search, Heart, Trash2, ArrowUpRight } from 'lucide-react';
 import logo from '../../Assets/webiste logo.svg';
 import PlanBadge, { PlanTier } from './PlanBadge';
 import { useAuth } from '../../context/AuthContext';
@@ -10,6 +10,7 @@ import { signOut } from 'firebase/auth';
 import Toast from './Toast';
 import { useSkeleton } from '../../context/SkeletonContext';
 import { NavbarSkeleton } from './Skeleton';
+import { getUserFavorites, removeFromFavorites, FavoriteItem } from '../../services/favorites';
 
 const Navbar = () => {
     const { user, isPro, loading } = useAuth();
@@ -18,7 +19,53 @@ const Navbar = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const isLibrary = location.pathname.startsWith('/library');
+    const isHomePage = location.pathname === '/';
     const [globalSearch, setGlobalSearch] = useState('');
+    const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+    const [showFavDropdown, setShowFavDropdown] = useState(false);
+    const favDropdownRef = useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        const unsub = getUserFavorites(user?.uid, (data) => {
+            setFavorites(data || []);
+        });
+        return () => {
+            if (typeof unsub === 'function') unsub();
+        };
+    }, [user?.uid]);
+
+    // Close favorites popover on click outside
+    React.useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (favDropdownRef.current && !favDropdownRef.current.contains(e.target as Node)) {
+                setShowFavDropdown(false);
+            }
+        };
+        if (showFavDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showFavDropdown]);
+
+    const navLinks = isLibrary
+        ? [
+            { to: '/', label: 'HOME', active: false },
+            { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
+            { to: '/#templates', label: 'TEMPLATES', active: false },
+            { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
+        ]
+        : isHomePage
+            ? [
+                { to: '/library', label: 'COMPONENTS', active: isLibrary },
+                { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
+                { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
+            ]
+            : [
+                { to: '/', label: 'HOME', active: false },
+                { to: '/library', label: 'COMPONENTS', active: isLibrary },
+                { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
+                { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
+            ];
     
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -95,13 +142,7 @@ const Navbar = () => {
 
                         {/* ── Center Navigation Links ── */}
                         <nav className="hidden md:flex items-center gap-2 lg:gap-3">
-                            {[
-                                { to: '/', label: 'HOME', active: location.pathname === '/' },
-                                { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                                { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
-                                { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
-                                { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-                            ].map(({ to, label, active }) => (
+                            {navLinks.map(({ to, label, active }) => (
                                 <Link
                                     key={to + label}
                                     to={to}
@@ -117,6 +158,121 @@ const Navbar = () => {
                                     )}
                                 </Link>
                             ))}
+
+                            {/* ── Heart Symbol (Visible on Components / Library Page) ── */}
+                            {isLibrary && (
+                                <div className="relative" ref={favDropdownRef}>
+                                    <button
+                                        onClick={() => setShowFavDropdown(prev => !prev)}
+                                        title="View Favorite Components"
+                                        aria-label="Favorite Components"
+                                        className={`relative p-2 border-2 border-black transition-all flex items-center justify-center cursor-pointer ${
+                                            showFavDropdown
+                                                ? 'bg-[#FF3B30] text-white shadow-[3px_3px_0px_0px_#000000] -translate-y-0.5'
+                                                : 'bg-white text-black hover:bg-neutral-100 hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#000000]'
+                                        }`}
+                                    >
+                                        <Heart 
+                                            size={17} 
+                                            className={favorites.length > 0 ? "fill-[#FF3B30] text-[#FF3B30]" : "text-black"} 
+                                        />
+                                        {favorites.length > 0 && (
+                                            <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#FF3B30] text-white text-[10px] font-mono font-black rounded-full border border-black flex items-center justify-center shadow-[1px_1px_0px_#000]">
+                                                {favorites.length}
+                                            </span>
+                                        )}
+                                    </button>
+
+                                    {/* Favorites Popover Dropdown */}
+                                    <AnimatePresence>
+                                        {showFavDropdown && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                                                transition={{ duration: 0.15 }}
+                                                className="absolute left-1/2 -translate-x-1/2 mt-2 w-80 bg-white border-4 border-black rounded-none shadow-[8px_8px_0px_0px_#000000] z-50 overflow-hidden"
+                                            >
+                                                {/* Dropdown Header */}
+                                                <div className="p-3 bg-[#1F4BFF] border-b-2 border-black flex items-center justify-between text-white">
+                                                    <div className="flex items-center gap-2 font-heading font-black text-xs uppercase tracking-wider">
+                                                        <Heart size={14} className="fill-[#FF3B30] text-white" />
+                                                        <span>FAVORITE ICONS & COMPS</span>
+                                                        <span className="px-1.5 py-0.2 bg-black text-white text-[10px] font-mono border border-white/40">
+                                                            {favorites.length}
+                                                        </span>
+                                                    </div>
+                                                    <button 
+                                                        onClick={() => setShowFavDropdown(false)}
+                                                        className="text-white hover:bg-black/20 p-1 cursor-pointer"
+                                                    >
+                                                        <X size={14} />
+                                                    </button>
+                                                </div>
+
+                                                {/* Dropdown List */}
+                                                <div className="max-h-64 overflow-y-auto divide-y divide-neutral-200">
+                                                    {favorites.length === 0 ? (
+                                                        <div className="p-6 text-center text-neutral-500">
+                                                            <Heart size={28} className="mx-auto mb-2 text-neutral-300 stroke-[1.5]" />
+                                                            <p className="text-xs font-bold font-mono uppercase text-black">NO FAVORITES YET</p>
+                                                            <p className="text-[11px] text-neutral-500 mt-1 font-sans">
+                                                                Click the heart icon on any component to save it here.
+                                                            </p>
+                                                        </div>
+                                                    ) : (
+                                                        favorites.map((fav) => (
+                                                            <div 
+                                                                key={fav.componentId}
+                                                                onClick={() => {
+                                                                    navigate(`/library?id=${fav.componentId}`);
+                                                                    setShowFavDropdown(false);
+                                                                }}
+                                                                className="p-3 flex items-center justify-between hover:bg-neutral-50 transition-colors cursor-pointer group"
+                                                            >
+                                                                <div className="min-w-0 flex-1 pr-2">
+                                                                    <p className="text-xs font-black uppercase text-black group-hover:text-[#1F4BFF] truncate">
+                                                                        {fav.componentName}
+                                                                    </p>
+                                                                    {fav.category && (
+                                                                        <span className="text-[10px] font-mono text-neutral-500 uppercase">
+                                                                            {fav.category}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                                <div className="flex items-center gap-1.5">
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            removeFromFavorites(user?.uid, fav.componentId);
+                                                                        }}
+                                                                        title="Remove from favorites"
+                                                                        className="p-1 text-neutral-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                                                                    >
+                                                                        <Trash2 size={13} />
+                                                                    </button>
+                                                                    <ArrowUpRight size={14} className="text-neutral-400 group-hover:text-black transition-colors" />
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    )}
+                                                </div>
+
+                                                {/* Dropdown Footer */}
+                                                <div className="p-2.5 bg-neutral-100 border-t-2 border-black flex items-center justify-between">
+                                                    <Link
+                                                        to="/favorites"
+                                                        onClick={() => setShowFavDropdown(false)}
+                                                        className="w-full py-1.5 bg-black text-white text-center text-xs font-black uppercase tracking-wider hover:bg-[#1F4BFF] transition-colors"
+                                                    >
+                                                        VIEW ALL IN FAVORITES PAGE
+                                                    </Link>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </div>
+                            )}
                         </nav>
 
                         {/* ── Right Actions ── */}
@@ -190,12 +346,32 @@ const Navbar = () => {
                                 </div>
                             )}
 
+                            {/* Mobile Heart Button (Visible on Components / Library Page) */}
+                            {isLibrary && (
+                                <button
+                                    onClick={() => navigate('/favorites')}
+                                    title="View Favorites"
+                                    aria-label="View Favorites"
+                                    className="md:hidden flex items-center justify-center w-11 h-11 bg-white border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] relative cursor-pointer"
+                                >
+                                    <Heart 
+                                        size={18} 
+                                        className={favorites.length > 0 ? "fill-[#FF3B30] text-[#FF3B30]" : "text-black"} 
+                                    />
+                                    {favorites.length > 0 && (
+                                        <span className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 bg-[#FF3B30] text-white text-[9px] font-mono font-black rounded-full border border-black flex items-center justify-center">
+                                            {favorites.length}
+                                        </span>
+                                    )}
+                                </button>
+                            )}
+
                             {/* Mobile Hamburger */}
                             <button
                                 onClick={() => setIsOpen(!isOpen)}
                                 aria-label={isOpen ? 'Close menu' : 'Open menu'}
                                 aria-expanded={isOpen}
-                                className="md:hidden flex items-center justify-center w-11 h-11 bg-white border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] hover:bg-black hover:text-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all"
+                                className="md:hidden flex items-center justify-center w-11 h-11 bg-white border-2 border-black text-black shadow-[2px_2px_0px_0px_#000000] hover:bg-black hover:text-white active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer"
                             >
                                 <AnimatePresence mode="wait" initial={false}>
                                     {isOpen ? (
@@ -248,13 +424,7 @@ const Navbar = () => {
 
                                 {/* Links */}
                                 <div className="flex flex-col gap-2">
-                                    {[
-                                        { to: '/', label: 'HOME', active: location.pathname === '/' },
-                                        { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                                        { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
-                                        { to: '/favorites', label: 'FAVORITES', active: location.pathname === '/favorites' },
-                                        { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-                                    ].map(({ to, label, active }) => (
+                                    {navLinks.map(({ to, label, active }) => (
                                         <Link
                                             key={'m-' + to + label}
                                             to={to}
@@ -268,6 +438,25 @@ const Navbar = () => {
                                             {label}
                                         </Link>
                                     ))}
+
+                                    {/* Mobile Favorites Link (When on Library page) */}
+                                    {isLibrary && (
+                                        <Link
+                                            to="/favorites"
+                                            onClick={() => setIsOpen(false)}
+                                            className="py-2.5 px-3 border-2 border-black text-xs font-black uppercase tracking-wider bg-rose-50 text-black flex items-center justify-between shadow-[2px_2px_0px_0px_#000000]"
+                                        >
+                                            <div className="flex items-center gap-2">
+                                                <Heart size={14} className="fill-[#FF3B30] text-[#FF3B30]" />
+                                                <span>FAVORITE COMPONENTS</span>
+                                            </div>
+                                            {favorites.length > 0 && (
+                                                <span className="px-1.5 py-0.5 bg-[#FF3B30] text-white text-[10px] font-mono font-black border border-black">
+                                                    {favorites.length}
+                                                </span>
+                                            )}
+                                        </Link>
+                                    )}
                                 </div>
 
                                 {/* Bottom Auth Action */}
