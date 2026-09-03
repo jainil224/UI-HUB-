@@ -33,9 +33,10 @@ const TemplatesSection = () => {
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
     const [showSubmitModal, setShowSubmitModal] = useState(false);
 
-    const filteredTemplates = (selectedCategory === 'All' || websiteTemplates.length <= 1)
+    const categoryMatches = websiteTemplates.filter(t => t.category === selectedCategory);
+    const filteredTemplates = (selectedCategory === 'All' || categoryMatches.length === 0)
         ? websiteTemplates
-        : websiteTemplates.filter(t => t.category === selectedCategory);
+        : categoryMatches;
 
     const handleCopyPrompt = (template: TemplateItem, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
