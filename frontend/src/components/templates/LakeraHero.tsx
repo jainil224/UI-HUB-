@@ -1,8 +1,94 @@
-import React from 'react';
-import { ArrowRight, ChevronDown } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 
 /* ─────────────────────────────────────────────────────────────
-   1. TrustLogos Component
+   1. Navbar Component
+   ───────────────────────────────────────────────────────────── */
+export const Navbar: React.FC = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <header className="relative w-full z-30 border-b border-neutral-100/80 bg-white">
+      <div className="w-full max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20 h-[68px] sm:h-[76px] flex items-center justify-between">
+        
+        {/* LOGO */}
+        <a href="#home" className="flex items-center gap-2 sm:gap-2.5 group select-none">
+          <div className="w-[24px] h-[24px] sm:w-[26px] sm:h-[26px] bg-black text-white rounded-[6px] flex items-center justify-center font-bold text-[13px] tracking-tighter">
+            L
+          </div>
+          <span className="text-[19px] sm:text-[21px] font-black tracking-[-0.04em] text-black">
+            lakera
+          </span>
+        </a>
+
+        {/* DESKTOP NAV LINKS */}
+        <nav className="hidden md:flex items-center gap-7 lg:gap-8 text-[14px] text-neutral-600 font-medium select-none">
+          <button type="button" className="flex items-center gap-1.5 hover:text-black transition-colors py-1 group cursor-pointer">
+            <span>Platform</span>
+            <ChevronDown className="w-3.5 h-3.5 text-neutral-400 group-hover:text-black transition-transform group-hover:translate-y-[1px]" />
+          </button>
+          <button type="button" className="flex items-center gap-1.5 hover:text-black transition-colors py-1 group cursor-pointer">
+            <span>Solutions</span>
+            <ChevronDown className="w-3.5 h-3.5 text-neutral-400 group-hover:text-black transition-transform group-hover:translate-y-[1px]" />
+          </button>
+          <a href="#pricing" className="hover:text-black transition-colors py-1">
+            Pricing
+          </a>
+          <button type="button" className="flex items-center gap-1.5 hover:text-black transition-colors py-1 group cursor-pointer">
+            <span>Company</span>
+            <ChevronDown className="w-3.5 h-3.5 text-neutral-400 group-hover:text-black transition-transform group-hover:translate-y-[1px]" />
+          </button>
+          <button type="button" className="flex items-center gap-1.5 hover:text-black transition-colors py-1 group cursor-pointer">
+            <span>Resources</span>
+            <ChevronDown className="w-3.5 h-3.5 text-neutral-400 group-hover:text-black transition-transform group-hover:translate-y-[1px]" />
+          </button>
+        </nav>
+
+        {/* RIGHT ACTIONS */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          <a
+            href="#login"
+            className="text-[13.5px] font-medium text-neutral-700 hover:text-black px-2 py-1 transition-colors select-none"
+          >
+            Log in
+          </a>
+          <a
+            href="#demo"
+            className="hidden sm:inline-flex items-center justify-center h-[36px] px-4 rounded-full border border-neutral-300 text-[13px] font-medium text-neutral-800 hover:bg-neutral-50 hover:border-neutral-400 transition-all select-none active:scale-[0.98]"
+          >
+            Book a demo
+          </a>
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="md:hidden p-2 text-neutral-700 hover:text-black focus:outline-none cursor-pointer"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* MOBILE MENU DROPDOWN */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t border-neutral-100 bg-white px-6 py-4 space-y-3">
+          <a href="#platform" className="block py-2 text-[14px] text-neutral-800 font-medium">Platform</a>
+          <a href="#solutions" className="block py-2 text-[14px] text-neutral-800 font-medium">Solutions</a>
+          <a href="#pricing" className="block py-2 text-[14px] text-neutral-800 font-medium">Pricing</a>
+          <a href="#company" className="block py-2 text-[14px] text-neutral-800 font-medium">Company</a>
+          <a href="#resources" className="block py-2 text-[14px] text-neutral-800 font-medium">Resources</a>
+          <div className="pt-2">
+            <a href="#demo" className="w-full inline-flex items-center justify-center h-[40px] rounded-full border border-neutral-300 text-[13px] font-medium text-neutral-800">
+              Book a demo
+            </a>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
+
+/* ─────────────────────────────────────────────────────────────
+   2. TrustLogos Component
    ───────────────────────────────────────────────────────────── */
 export const TrustLogos: React.FC = () => {
   return (
@@ -86,7 +172,7 @@ export const TrustLogos: React.FC = () => {
 };
 
 /* ─────────────────────────────────────────────────────────────
-   2. ChatButton Component
+   3. ChatButton Component
    ───────────────────────────────────────────────────────────── */
 export const ChatButton: React.FC = () => {
   return (
@@ -112,126 +198,99 @@ export const ChatButton: React.FC = () => {
 };
 
 /* ─────────────────────────────────────────────────────────────
-   3. Main LakeraHero Component
+   4. Main Composite Component: LakeraHero
    ───────────────────────────────────────────────────────────── */
 export default function LakeraHero() {
   return (
-    <div className="relative w-full min-h-screen bg-white text-black overflow-hidden flex flex-col justify-between select-none">
+    <div className="relative min-h-screen bg-white text-neutral-900 font-sans antialiased flex flex-col justify-between selection:bg-neutral-900 selection:text-white">
       
-      {/* ── TOP NAVIGATION BAR ── */}
-      <nav className="relative z-30 w-full max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20 py-4 sm:py-5 flex items-center justify-between">
-        {/* Brand Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-black text-white flex items-center justify-center font-bold text-lg tracking-tighter">
-            L
-          </div>
-          <span className="font-bold text-[19px] sm:text-[21px] tracking-tight text-black">
-            Lakera
-          </span>
+      {/* 1. TOP NAVBAR */}
+      <Navbar />
+
+      {/* 2. MAIN HERO SECTION */}
+      <main className="relative flex-1 w-full max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20 pt-2 sm:pt-6 md:pt-8 pb-12 sm:pb-16 md:pb-20 flex flex-col justify-between z-10 overflow-hidden md:overflow-visible">
+        
+        {/* DESKTOP CIRCULAR OBJECT IMAGE */}
+        <div 
+          aria-hidden="true"
+          className="pointer-events-none select-none z-0 absolute top-[65px] sm:top-[85px] md:top-[95px] lg:top-[105px] xl:top-[120px] right-[-12%] sm:right-[-10%] md:right-[-8%] lg:right-[-6%] xl:right-[-4%] w-[90vw] sm:w-[80vw] md:w-[74vw] lg:w-[70vw] xl:w-[66vw] max-w-[1100px] md:max-w-[1280px] lg:max-w-[1450px] xl:max-w-[1600px] min-w-[360px] hidden md:flex items-center justify-end overflow-visible"
+        >
+          <img
+            id="hero-portal-image"
+            src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788364280/ChatGPT_Image_Sep_2_2026_09_21_07_PM_te7wxd.png"
+            alt=""
+            referrerPolicy="no-referrer"
+            className="w-full h-auto max-h-[850px] md:max-h-[980px] lg:max-h-[1100px] xl:max-h-[1200px] object-contain object-right"
+          />
         </div>
 
-        {/* Desktop Links */}
-        <div className="hidden lg:flex items-center gap-8 text-[14px] font-medium text-neutral-700">
-          <div className="flex items-center gap-1 cursor-pointer hover:text-black transition-colors">
-            <span>Platform</span>
-            <ChevronDown size={14} className="opacity-60" />
-          </div>
-          <div className="flex items-center gap-1 cursor-pointer hover:text-black transition-colors">
-            <span>Solutions</span>
-            <ChevronDown size={14} className="opacity-60" />
-          </div>
-          <a href="#customers" className="hover:text-black transition-colors">Customers</a>
-          <a href="#resources" className="hover:text-black transition-colors">Resources</a>
-          <a href="#pricing" className="hover:text-black transition-colors">Pricing</a>
-        </div>
+        {/* HERO CONTENT (LEFT SIDE) */}
+        <div className="relative z-10 max-w-[580px] pt-1 sm:pt-2 md:pt-4 flex flex-col">
 
-        {/* Right CTA Actions */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <a 
-            href="#login" 
-            className="hidden sm:inline-block text-[13.5px] font-medium text-neutral-700 hover:text-black transition-colors px-2 py-1"
+          {/* Technical Monospace Label */}
+          <div className="flex items-center gap-2 mb-3.5 sm:mb-5">
+            <span 
+              id="hero-eyebrow-tag"
+              className="font-mono text-[11px] sm:text-[11.5px] font-medium tracking-[0.18em] text-[#557b97] uppercase select-none"
+            >
+              INTRODUCING LAKERA GUARD
+            </span>
+          </div>
+
+          {/* Main Headline */}
+          <h1 
+            id="hero-main-heading"
+            className="text-[38px] xs:text-[44px] sm:text-[54px] md:text-[62px] lg:text-[68px] font-normal leading-[1.04] tracking-[-0.04em] text-black font-serif mb-4 sm:mb-6 select-text"
           >
-            Log in
-          </a>
-          <a 
-            href="#get-started" 
-            className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full bg-black text-white hover:bg-neutral-800 text-[12.5px] sm:text-[13.5px] font-medium transition-all shadow-sm active:scale-95"
-          >
-            <span>Start for free</span>
-            <ArrowRight size={13} />
-          </a>
-        </div>
-      </nav>
-
-      {/* ── RIGHT-SIDE SLIT-SCAN CIRCULAR GRAPHIC ── */}
-      {/* Desktop Graphic */}
-      <div 
-        className="absolute top-[65px] sm:top-[85px] md:top-[95px] lg:top-[105px] xl:top-[120px] right-[-12%] sm:right-[-10%] md:right-[-8%] lg:right-[-6%] xl:right-[-4%] w-[90vw] sm:w-[80vw] md:w-[74vw] lg:w-[70vw] xl:w-[66vw] max-w-[1100px] md:max-w-[1280px] lg:max-w-[1450px] xl:max-w-[1600px] min-w-[360px] hidden md:flex items-center justify-end pointer-events-none select-none z-0 overflow-visible"
-        aria-hidden="true"
-      >
-        <img 
-          src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788364280/ChatGPT_Image_Sep_2_2026_09_21_07_PM_te7wxd.png"
-          alt="Lakera AI Slit Scan Core"
-          className="w-full h-auto max-h-[850px] md:max-h-[980px] lg:max-h-[1100px] xl:max-h-[1200px] object-contain object-right"
-        />
-      </div>
-
-      {/* Mobile Graphic */}
-      <div 
-        className="md:hidden pointer-events-none select-none -z-10 absolute top-[80%] -translate-y-1/2 right-[-26%] xs:right-[-20%] w-[98vw] xs:w-[88vw] max-w-[500px] min-w-[320px] flex items-center justify-end"
-        aria-hidden="true"
-      >
-        <img 
-          src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788364280/ChatGPT_Image_Sep_2_2026_09_21_07_PM_te7wxd.png"
-          alt="Lakera AI Slit Scan Core"
-          className="w-full h-auto max-h-[540px] object-contain object-right"
-        />
-      </div>
-
-      {/* ── HERO CONTENT STAGE ── */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20 pt-10 sm:pt-14 md:pt-20 pb-8 flex-1 flex flex-col justify-center">
-        <div className="max-w-[620px] lg:max-w-[680px]">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-neutral-800 text-[12px] sm:text-[13px] font-medium mb-5 sm:mb-6">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>GenAI Security Platform</span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-[36px] sm:text-[48px] md:text-[56px] lg:text-[62px] font-black tracking-[-0.03em] leading-[1.06] text-black">
-            Secure GenAI at the speed of innovation.
+            Protect your LLM applications against security threats, instantly.
           </h1>
 
-          {/* Subheading */}
-          <p className="mt-5 sm:mt-6 text-[15px] sm:text-[17px] md:text-[18px] text-neutral-600 leading-relaxed font-normal max-w-[540px]">
-            Comprehensive real-time protection against prompt injection, jailbreaks, data leakage, and toxic content for enterprise AI agents and LLM applications.
+          {/* Description Paragraph */}
+          <p 
+            id="hero-description"
+            className="text-[14px] sm:text-[15.5px] md:text-[16px] leading-[1.58] text-neutral-600 font-normal tracking-[-0.01em] max-w-[500px] mb-6 sm:mb-8 select-text"
+          >
+            Lakera Guard empowers organizations to build GenAI applications without worrying about prompt injections, data loss, harmful content, and other LLM risks. Powered by the world’s most advanced AI threat intelligence.
           </p>
 
-          {/* Action Buttons */}
-          <div className="mt-8 sm:mt-9 flex flex-wrap items-center gap-3 sm:gap-4">
-            <button 
-              type="button"
-              className="px-6 py-3.5 sm:px-7 sm:py-4 rounded-full bg-black hover:bg-neutral-800 text-white font-semibold text-[14px] sm:text-[15px] transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-2"
+          {/* CTA Buttons */}
+          <div id="hero-cta-buttons" className="relative flex items-center gap-[10px] sm:gap-[12px] mb-6 sm:mb-8 md:mb-10 z-20">
+            <a
+              id="cta-start-free"
+              href="#start"
+              className="inline-flex items-center justify-center min-w-[110px] sm:min-w-[105px] h-[42px] sm:h-[40px] px-5 rounded-full bg-black text-white text-[13px] font-medium hover:bg-neutral-800 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black active:scale-[0.98] z-10"
             >
-              <span>Start for free</span>
-              <ArrowRight size={15} />
-            </button>
-            <button 
-              type="button"
-              className="px-6 py-3.5 sm:px-7 sm:py-4 rounded-full bg-neutral-100 hover:bg-neutral-200 text-black font-semibold text-[14px] sm:text-[15px] transition-all active:scale-95 cursor-pointer border border-neutral-300"
+              Start for free
+            </a>
+
+            <a
+              id="cta-book-demo"
+              href="#demo"
+              className="inline-flex items-center justify-center min-w-[110px] sm:min-w-[108px] h-[42px] sm:h-[40px] px-5 rounded-full bg-white text-neutral-800 border border-neutral-300/90 text-[13px] font-medium hover:bg-neutral-50 hover:border-neutral-400 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-neutral-400 active:scale-[0.98] z-10"
             >
               Book a demo
-            </button>
+            </a>
+
+            {/* MOBILE ONLY CIRCULAR OBJECT IMAGE */}
+            <div 
+              aria-hidden="true" 
+              className="md:hidden pointer-events-none select-none -z-10 absolute top-[80%] -translate-y-1/2 right-[-26%] xs:right-[-20%] w-[98vw] xs:w-[88vw] max-w-[500px] min-w-[320px] flex items-center justify-end overflow-visible"
+            >
+              <img
+                src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788364280/ChatGPT_Image_Sep_2_2026_09_21_07_PM_te7wxd.png"
+                alt=""
+                referrerPolicy="no-referrer"
+                className="w-full h-auto max-h-[540px] object-contain object-right"
+              />
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ── FOOTER BRAND PROOF SECTION ── */}
-      <footer className="relative z-20 w-full max-w-[1440px] mx-auto px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20 pb-12 sm:pb-16 md:pb-20">
+        {/* 3. TRUSTED BY LOGO SECTION */}
         <TrustLogos />
-      </footer>
+      </main>
 
-      {/* ── FLOATING SUPPORT CHAT BUBBLE ── */}
+      {/* 4. FLOATING CHAT BUTTON (BOTTOM-RIGHT) */}
       <ChatButton />
     </div>
   );

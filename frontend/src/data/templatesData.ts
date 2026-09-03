@@ -1800,67 +1800,69 @@ Design System:
             'Floating support chat bubble with custom smiling avatar SVG',
             'Full enterprise navigation header with dropdowns and CTA'
         ],
-        promptPreview: `Act as a world-class Principal Frontend Engineer and Tailwind CSS Architect.
+        promptPreview: `Act as a Principal Design Technologist and Staff Frontend Engineer specializing in Tailwind CSS, React, and high-fidelity enterprise landing pages.
 
-Generate an exact replica of the Lakera AI "Trusted By" brand proof section and hero graphic footer with 100% pixel precision. The implementation must use React, TypeScript, and Tailwind CSS.
+Build an exact 1:1 pixel-perfect, responsive replica of the Lakera AI Hero landing page. Do not skip any detail. Every font size, weight, tracking value, exact hex color, SVG vector, hover transition, layout grid coordinate, and responsive behavior must match the specification below.
 
-### 1. SECTION SPECIFICATIONS & RHYTHM
-- Background: Clean pure white (#ffffff).
-- Vertical Position: Placed directly below the Hero action buttons ("Start for free" & "Book a demo"), elevated slightly upward with negative translation (\`-translate-y-3 sm:-translate-y-5 md:-translate-y-6\`) and generous bottom clearance (\`pb-12 sm:pb-16 md:pb-20\`).
-- Container Layout: Full width (\`w-full max-w-[1440px] mx-auto\`) with responsive padding: \`px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20\`.
+---
 
-### 2. TYPOGRAPHY SPECIFICATIONS
+### 1. GLOBAL ENVIRONMENT & CONTAINER RULES
+- **Page Canvas**: Pure white background (\`#ffffff\` / \`bg-white\`), \`min-h-screen text-neutral-900 font-sans antialiased flex flex-col justify-between selection:bg-neutral-900 selection:text-white\`.
+- **Horizontal Max Width**: \`max-w-[1440px] mx-auto w-full\`.
+- **Grid / Padding Math**:
+  - Navbar: \`h-[68px] sm:h-[76px] px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20\`.
+  - Hero Main: \`px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20 pt-2 sm:pt-6 md:pt-8 pb-12 sm:pb-16 md:pb-20\`.
+
+### 2. NAVBAR SPECIFICATIONS (HEADER)
+- Brand Logo: \`w-[24px] h-[24px] sm:w-[26px] sm:h-[26px] bg-black text-white rounded-[6px]\` + "lakera" lowercase (\`text-[19px] sm:text-[21px] font-black tracking-[-0.04em]\`).
+- Desktop Nav: Platform, Solutions, Pricing, Company, Resources with chevrons.
+- Actions: Log in + Book a demo pill button.
+
+### 3. HERO CONTENT & TYPOGRAPHY
+- Eyebrow: \`font-mono text-[11px] sm:text-[11.5px] font-medium tracking-[0.18em] text-[#557b97] uppercase\`: "INTRODUCING LAKERA GUARD".
+- H1 Headline: "Protect your LLM applications against security threats, instantly." (\`text-[38px] xs:text-[44px] sm:text-[54px] md:text-[62px] lg:text-[68px] font-normal leading-[1.04] tracking-[-0.04em] text-black font-serif mb-4 sm:mb-6\`).
+- Description: "Lakera Guard empowers organizations to build GenAI applications without worrying about prompt injections, data loss, harmful content, and other LLM risks. Powered by the world’s most advanced AI threat intelligence."
+- CTAs: "Start for free" (black pill) + "Book a demo" (white bordered pill).
+
+### 4. RIGHT-SIDE SLIT-SCAN CIRCULAR OBJECT
+- URL: \`https://res.cloudinary.com/chhwhdhk/image/upload/v1788364280/ChatGPT_Image_Sep_2_2026_09_21_07_PM_te7wxd.png\`
+
+### 5. TRUSTED BY LOGO SECTION
 - Subtitle: "Lakera is trusted by leading LLM providers, enterprises, and startups."
-  - Font Size: \`text-[12.5px] sm:text-[13px] md:text-[13.5px]\`
-  - Font Weight: \`font-normal\` (400)
-  - Color: Neutral 500 (\`text-neutral-500\` / \`#737373\`)
-  - Letter Spacing: \`tracking-[-0.01em]\`
-  - Margin Bottom: \`mb-3 sm:mb-4\`
+- 6 Partner Logos: Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, Juro.
 
-### 3. BRAND LOGOS & SVG VECTOR SPECIFICATIONS
-All 6 logos must sit in a single stretched row (\`flex items-center justify-between gap-4 xs:gap-6 sm:gap-8 md:gap-10 lg:gap-12 w-full overflow-x-auto no-scrollbar py-2 text-black\`):
-1. Cohere (Icon: Solid multi-circle Cohere mark, Wordmark: "cohere")
-2. Nexxiot (Wordmark: "nexxiot" with twin crossing arrowheads double-X)
-3. DEKRA (Icon: Outlined triangle, Wordmark: "DEKRA")
-4. ANYbotics (Connected Monogram: "ANV" + "botics")
-5. Protex AI (Icon: Crisp folded dual-column badge + "Protex AI")
-6. Juro (Wordmark: "juro" in all-lowercase)
-
-### 4. RIGHT-SIDE SLIT-SCAN CIRCULAR GRAPHIC SPECIFICATIONS
-- Image Asset URL: \`https://res.cloudinary.com/chhwhdhk/image/upload/v1788364280/ChatGPT_Image_Sep_2_2026_09_21_07_PM_te7wxd.png\`
-
-### 5. FLOATING SUPPORT CHAT BUBBLE (BOTTOM RIGHT)
-- Placement: \`fixed bottom-4 sm:bottom-[18px] right-4 sm:right-[20px] z-50\`
-- Dimensions: \`w-[42px] h-[42px] sm:w-[44px] sm:h-[44px] rounded-full bg-[#0d1b2e]\`
-- Icon: Smiling chat bubble SVG`,
+### 6. FLOATING SUPPORT CHAT BUTTON
+- Smiling chat bubble icon in fixed bottom-right corner (\`#0d1b2e\`).`,
         toolPrompts: {
             cursor: `/* .cursorrules - Lakera AI Security Hero Directive */
-Create an exact replica of the Lakera AI Security Hero and 'Trusted By' brand proof section in React, TypeScript, and Tailwind CSS.
+Build an exact 1:1 pixel-perfect, responsive replica of the Lakera AI Hero landing page in React, TypeScript, and Tailwind CSS.
 Include:
-1. Pure white (#ffffff) canvas with full-width responsive container (max-w-[1440px]).
-2. Right-side slit-scan circular graphic positioned with responsive offsets.
-3. Hero headline: 'Secure GenAI at the speed of innovation' + subtitle + CTAs ('Start for free', 'Book a demo').
-4. TrustLogos: 'Lakera is trusted by leading LLM providers, enterprises, and startups' + exact custom SVG vectors for Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, and Juro.
-5. ChatButton: Floating bottom-right support bubble with custom smiling speech bubble SVG.`,
-            claude: `You are Claude Code, an expert frontend architect.
-Rebuild the Lakera AI Security Hero page:
-- Clean white (#ffffff) canvas with enterprise navigation
-- Right-side slit-scan circular core illustration
-- High-contrast typography and pill CTA buttons
-- TrustLogos brand proof footer with Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, and Juro
-- Floating smiling chat bubble support button in bottom right`,
-            antigravity: `ANTIGRAVITY BLUEPRINT: LAKERA AI SECURITY HERO
-Visual Architecture:
-- Canvas: Pure white (#FFFFFF)
-- Ink: Pure black (#000000) & Neutral 600 (#525252)
-- Graphic: Right-side slit-scan circular core graphic
-- Brand Proof Section: 6 inline partner logos (Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, Juro) elevated with negative vertical margin
-- Micro-interactions: Floating chat bubble with smiling path stroke and spring scale-95`,
-            lovable: `Create the Lakera AI Security Hero landing page in React, TypeScript, and Tailwind CSS with right-side slit-scan graphic, high-contrast typography, TrustLogos partner bar, and floating chat bubble.`,
+1. Navbar: Black 'L' badge + 'lakera' lowercase wordmark, dropdown links (Platform, Solutions, Pricing, Company, Resources), 'Log in', and 'Book a demo'.
+2. Eyebrow: 'INTRODUCING LAKERA GUARD' in font-mono text-[11px] tracking-[0.18em] text-[#557b97].
+3. H1 Headline: 'Protect your LLM applications against security threats, instantly.' in editorial serif display weight.
+4. CTAs: 'Start for free' (black pill) and 'Book a demo' (white pill).
+5. Slit-scan circular portal graphic on right side.
+6. TrustLogos: 6 precision SVG vector logos (Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, Juro).
+7. ChatButton: Floating bottom-right support bubble with custom smiling avatar SVG.`,
+            claude: `You are Claude Code, an elite frontend engineer.
+Rebuild the Lakera AI Security Hero:
+- Pinned navbar with lowercase 'lakera' branding and mobile drawer
+- Technical monospace eyebrow 'INTRODUCING LAKERA GUARD'
+- Editorial serif headline 'Protect your LLM applications against security threats, instantly.'
+- Right-side slit-scan iridescent circular graphic
+- TrustLogos brand proof section and floating smiling chat bubble`,
+            antigravity: `ANTIGRAVITY DIRECTIVE: LAKERA AI SECURITY HERO
+Tokens & Layout:
+- Background: #FFFFFF
+- Display Font: Serif display with tracking-[-0.04em] and leading-[1.04]
+- Eyebrow: font-mono text-[#557b97] tracking-[0.18em]
+- Hero graphic: Slit-scan portal on right side (max-w-[1600px] desktop, max-w-[500px] mobile)
+- Brand Proof: Exact SVG vectors for Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, Juro`,
+            lovable: `Create the Lakera AI Security Hero landing page in React, TypeScript, and Tailwind CSS with 'lakera' navbar, 'INTRODUCING LAKERA GUARD' eyebrow, serif H1 headline, right-side slit-scan graphic, TrustLogos partner bar, and floating chat button.`,
             advance: `TECHNICAL SPECIFICATION: LAKERA AI SECURITY HERO
-1. Responsive Slit-Scan Anchor: Desktop right-[-12%] to right-[-4%] max-w-[1600px]; Mobile top-[80%] right-[-26%] max-w-[500px].
-2. Vector Geometry: Exact paths for Cohere multi-circle, Nexxiot twin arrowheads, DEKRA strokeWidth=2.6 triangle, ANYbotics ligature, and Protex AI glyph.
-3. Chat Bubble: Floating bottom-right action with smile path M8.5 11.2C8.5 12.8 10.07 14 12 14C13.93 14 15.5 12.8 15.5 11.2.`
+1. Typography: font-serif H1 leading-[1.04] tracking-[-0.04em] text-[38px] to text-[68px]; font-mono eyebrow text-[#557b97] tracking-[0.18em].
+2. Brand SVGs: Cohere circle centroid, Nexxiot twin arrowheads, DEKRA strokeWidth=2.6 triangle, ANYbotics monogram, Protex AI badge.
+3. Slit-Scan Alignment: absolute top-[65px] to top-[120px] right-[-12%] to right-[-4%] max-h-[1200px].`
         }
     }
 ];
