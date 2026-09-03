@@ -23,6 +23,7 @@ import {
     TemplateCategory, 
     TemplateItem 
 } from '../../../data/templatesData';
+import TarsHeroArena from '../../../components/templates/TarsHeroArena';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const TemplatesSection = () => {
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
     const [showSubmitModal, setShowSubmitModal] = useState(false);
 
-    const filteredTemplates = selectedCategory === 'All'
+    const filteredTemplates = (selectedCategory === 'All' || websiteTemplates.length <= 1)
         ? websiteTemplates
         : websiteTemplates.filter(t => t.category === selectedCategory);
 
@@ -128,68 +129,43 @@ const TemplatesSection = () => {
                                     )}
                                 </div>
 
-                                {/* ── Interactive Preview Window ── */}
+                                {/* ── Interactive Real Live Preview Window ── */}
                                 <div 
                                     onClick={() => navigate(`/templates/${template.id}`)}
-                                    className={`relative h-52 sm:h-56 w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden cursor-pointer group-hover:brightness-110 transition-all`}
+                                    className="relative h-60 sm:h-64 w-full bg-white overflow-hidden cursor-pointer group transition-all border-b-2 border-white flex items-center justify-center"
                                 >
-                                    {/* Mock UI Canvas Wireframe */}
-                                    <div className="relative z-10 w-full flex items-center justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 rounded bg-white/10 border border-white/20 flex items-center justify-center text-white text-xs font-black">
-                                                UI
+                                    <div className="relative w-full h-full overflow-hidden bg-white">
+                                        {template.id === 'tars-protocol' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white">
+                                                <TarsHeroArena />
                                             </div>
-                                            <div className="h-2 w-16 bg-white/20 rounded-full" />
-                                        </div>
-                                        <div className="flex gap-1.5">
-                                            <div className="h-2 w-8 bg-white/20 rounded-full" />
-                                            <div className="h-2 w-8 bg-white/20 rounded-full" />
-                                        </div>
-                                    </div>
+                                        ) : template.liveDemoUrl ? (
+                                            <iframe
+                                                src={template.liveDemoUrl}
+                                                title={template.title}
+                                                className="w-[1200px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none border-0 select-none bg-white"
+                                                sandbox="allow-scripts allow-same-origin"
+                                                loading="eager"
+                                            />
+                                        ) : (
+                                            <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden`}>
+                                                <span className="text-xl font-black text-white">{template.title}</span>
+                                            </div>
+                                        )}
 
-                                    {/* Center Graphic Showcase */}
-                                    <div className="relative z-10 my-auto text-center px-4 py-2">
-                                        <span className="inline-block text-xl sm:text-2xl font-black font-heading tracking-tight text-white uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-                                            {template.title}
-                                        </span>
-                                        <div className="flex items-center justify-center gap-2 mt-2">
-                                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/50 border border-white/10 text-white/90">
-                                                {template.framework}
-                                            </span>
-                                            <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-black/50 border border-white/10 text-white/90">
-                                                {template.animation}
-                                            </span>
+                                        {/* Hover Action Overlay */}
+                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] flex items-center justify-center gap-3 transition-opacity duration-200 z-20">
+                                            <button 
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(`/templates/${template.id}`);
+                                                }}
+                                                className="px-4 py-2.5 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer"
+                                            >
+                                                <Laptop size={15} />
+                                                <span>Open Preview & Prompt</span>
+                                            </button>
                                         </div>
-                                    </div>
-
-                                    {/* Bottom Mock Stats Bar */}
-                                    <div className="relative z-10 flex items-center justify-between text-[11px] font-mono text-white/80 bg-black/40 backdrop-blur-md rounded px-2.5 py-1 border border-white/10">
-                                        <div className="flex items-center gap-1">
-                                            <Layers size={12} className="text-[#FFC700]" />
-                                            <span>{template.stats.pages} Pages</span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Star size={12} className="text-[#FFC700] fill-[#FFC700]" />
-                                            <span>{template.stats.rating}</span>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                            <Download size={12} className="text-[#00E599]" />
-                                            <span>{template.stats.downloads}</span>
-                                        </div>
-                                    </div>
-
-                                    {/* Hover Action Overlay */}
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] flex items-center justify-center gap-3 transition-opacity duration-200 z-20">
-                                        <button 
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                navigate(`/templates/${template.id}`);
-                                            }}
-                                            className="px-3.5 py-2 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer"
-                                        >
-                                            <Laptop size={14} />
-                                            <span>View Details</span>
-                                        </button>
                                     </div>
                                 </div>
 

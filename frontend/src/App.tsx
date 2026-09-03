@@ -18,6 +18,7 @@ const TemplatesPage = React.lazy(() => import('./pages/TemplatesPage/TemplatesPa
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
 const CloudScrollPage = React.lazy(() => import('./pages/Components/CloudScrollPage'));
+const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
 const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
@@ -113,6 +114,7 @@ const AppShell = () => {
             <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
             <Route path="/demo/section-scroll" element={<SectionScrollPage />} />
             <Route path="/demo/cloud-scroll" element={<CloudScrollPage />} />
+            <Route path="/demo/tars-hero-arena" element={<TarsDemoPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/templates" element={<TemplatesPage />} />

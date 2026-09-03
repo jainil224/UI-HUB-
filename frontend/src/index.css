@@ -26,6 +26,19 @@
   font-size: clamp(34px, 11.5vw, 90px);
 }
 
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(-6px) rotate(-0.5deg);
+  }
+  50% {
+    transform: translateY(6px) rotate(0.5deg);
+  }
+}
+
+.animate-hero-float {
+  animation: heroFloat 7s ease-in-out infinite;
+}
+
 /* ── Global horizontal-overflow safety net (mobile) ── */
 html, body {
   overflow-x: clip;

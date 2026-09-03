@@ -15,6 +15,7 @@ import {
     Smartphone
 } from 'lucide-react';
 import { websiteTemplates, TemplateItem } from '../../data/templatesData';
+import TarsHeroArena from '../../components/templates/TarsHeroArena';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
@@ -54,13 +55,19 @@ const TemplateDetailPage = () => {
     }, [promptMenuOpen]);
 
     const handleCopyPrompt = (system: AISystem = 'cursor') => {
-        let text = template.promptPreview;
-        if (system === 'cursor') {
-            text = `[Cursor Rules & System Instructions]\nFramework: ${template.framework}\nStyling: ${template.styling}\nAnimation: ${template.animation}\n\nTask:\n${template.promptPreview}`;
-        } else if (system === 'claude') {
-            text = `[Claude Code Engineer Prompt]\nTarget: ${template.framework} with ${template.styling}.\n\nInstructions:\n${template.promptPreview}`;
-        } else if (system === 'antigravity') {
-            text = `[Antigravity Agent Blueprint]\nBuild full production ${template.title}.\nStack: ${template.framework}, ${template.styling}, ${template.animation}.\nFeatures:\n${template.features.map(f => `- ${f}`).join('\n')}\n\nPrompt:\n${template.promptPreview}`;
+        let text = template.toolPrompts?.[system] || template.promptPreview;
+        if (!template.toolPrompts?.[system]) {
+            if (system === 'cursor') {
+                text = `/* Cursor Rules & System Instructions */\nFramework: ${template.framework}\nStyling: ${template.styling}\nAnimation: ${template.animation}\n\nTask:\n${template.promptPreview}`;
+            } else if (system === 'claude') {
+                text = `[Claude Code Engineer Directive]\nTarget: ${template.framework} with ${template.styling}.\n\nInstructions:\n${template.promptPreview}`;
+            } else if (system === 'antigravity') {
+                text = `[Antigravity Agent Blueprint]\nBuild full production ${template.title}.\nStack: ${template.framework}, ${template.styling}, ${template.animation}.\nFeatures:\n${template.features.map(f => `- ${f}`).join('\n')}\n\nPrompt:\n${template.promptPreview}`;
+            } else if (system === 'lovable') {
+                text = `[Lovable Component Generator]\nCreate ${template.title} using ${template.framework} and ${template.styling}.\n\nInstructions:\n${template.promptPreview}`;
+            } else if (system === 'advance') {
+                text = `[Advance Architecture Specification & Source Code]\nSpecification for ${template.title}:\n\n${template.promptPreview}`;
+            }
         }
 
         navigator.clipboard.writeText(text);
@@ -216,9 +223,13 @@ const TemplateDetailPage = () => {
                             </div>
                         </div>
 
-                        {/* ── Live Preview Iframe Container ── */}
-                        <div className="relative h-[calc(100vh-175px)] min-h-[620px] w-full bg-[#0E0E12] overflow-hidden flex items-center justify-center">
-                            {template.liveDemoUrl ? (
+                        {/* ── Live Preview Container ── */}
+                        <div className="relative h-[calc(100vh-175px)] min-h-[620px] w-full bg-white overflow-hidden flex items-center justify-center">
+                            {template.id === 'tars-protocol' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
+                                    <TarsHeroArena key={`tars-render-${resetKey}`} />
+                                </div>
+                            ) : template.liveDemoUrl ? (
                                 <>
                                     {isLoadingIframe && (
                                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 gap-3">
