@@ -19,6 +19,7 @@ import TarsHeroArena from '../../components/templates/TarsHeroArena';
 import SplitFuzzyOrbHero from '../../components/templates/SplitFuzzyOrbHero';
 import SegmintFooter from '../../components/templates/SegmintFooter';
 import HaosShowcase from '../../components/templates/HaosShowcase';
+import MentalityHero from '../../components/templates/MentalityHero';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
@@ -243,6 +244,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'haos-tech-solutions' ? (
                                 <div className="w-full h-full overflow-hidden bg-[#020202]">
                                     <HaosShowcase key={`haos-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'mentality' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#F0F0F0]">
+                                    <MentalityHero key={`mentality-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

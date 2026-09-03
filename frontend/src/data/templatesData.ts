@@ -1693,5 +1693,84 @@ Canvas Mechanics:
 3. Geometric Vector Logo: Exact stroke geometry for N, A, O, S letters with rounded corners.
 4. Telemetry Bar: 4 ticks at 0%, 33.3%, 66.6%, 100% with neon green #98FF68 active track.`
         }
+    },
+    {
+        id: 'mentality',
+        title: 'mēntality',
+        description: 'Bauhaus-inspired minimalist healthcare & mental wellbeing landing page with technical blueprint geometry, inline SVG glyphs, and interactive AI search.',
+        category: 'Agency & Portfolio',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Interactive Blueprint SVG Canvas',
+        isPro: false,
+        liveDemoUrl: '/demo/mentality',
+        githubUrl: 'https://github.com/ui-hub/mentality',
+        previewGradient: 'from-[#F0F0F0] via-[#E2E2E2] to-[#B7B7B7]/30',
+        accentColor: '#111111',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '3.9k',
+        },
+        features: [
+            'Minimalist Bauhaus aesthetic on light warm-neutral gray (#F0F0F0)',
+            'Technical blueprint guidelines with concentric sweeping arcs and diamond markers',
+            '4-line typographic headline with inline geometric eye SVG glyph',
+            'Interactive AI prompt search input with instant query feedback',
+            'Clean vector character artwork with preserved aspect ratio',
+            'Lower-right interactive language toggle badge (pl - en / en - pl)'
+        ],
+        promptPreview: `Build a pixel-perfect, minimalist Bauhaus-inspired landing hero and interactive artwork section for "mēntality" in React, TypeScript, and Tailwind CSS. Ensure all font sizes, spacings, colors, mathematical layout dimensions, SVG vectors, animations, and image placements match the exact specification provided below.
+
+---
+
+### 1. DESIGN SPECIFICATIONS & TOKENS
+
+- **Canvas & Background Color**: \`#F0F0F0\` (light warm-neutral gray)
+- **Container**: Max width \`1100px\`, centered (\`mx-auto\`), full viewport height min (\`min-h-screen\`), flex column layout.
+- **Typography Font Family**: \`'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif\`
+- **Primary Text Colors**:
+  - Headings / Strong: \`#111111\`
+  - Subheadings / Faded lines: \`#666666\`
+  - Secondary / Links: \`#222222\` and \`#444444\`
+- **Technical Drawing Grid Lines**:
+  - Horizontal guideline: \`#B7B7B7\` (stroke-width: 0.8, dasharray: "2 3")
+  - Diagonal guidelines: \`#BFBFBF\` (stroke-width: 0.8) and \`#CECECE\` (dasharray: "3 3")
+  - Concentric curves: \`#C5C5C5\` and \`#B5B5B5\` (stroke-width: 0.8–0.9)
+- **Button Colors**:
+  - Black action button: Background \`#050505\`, hover \`#222222\`, text \`#FFFFFF\`
+- **Central Character Asset**:
+  - URL: \`https://res.cloudinary.com/chhwhdhk/image/upload/v1788400409/8edc532e-6a4a-463d-a224-b4da52b15c8e_rwv0s3.png\`
+  - No glow effect, rendered clean with SVG \`<image>\` preserveAspectRatio="xMidYMid meet"`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - mēntality Bauhaus Healthcare Landing Page Directive */
+Create a pixel-perfect, minimalist Bauhaus-inspired landing hero for mēntality in React, TypeScript, and Tailwind CSS.
+Include:
+1. Palette: #F0F0F0 background, #111111 text, #666666 subheadings, #050505 buttons.
+2. Header: Geometric cross logo + 'mēntality', navigation links (service/patient resources stacked, about us, education center), 'get started →' button.
+3. Hero: 4-line typography headline with inline geometric eye SVG glyph.
+4. AI Prompt Input: pill input + curved diagonal launch arrow button with simulated search state.
+5. Central Blueprint SVG: Technical dashed lines, anchor circles with diamond centers, concentric arcs, clean character image asset, and interactive language badge.`,
+            claude: `You are Claude Code, an expert frontend engineer.
+Build the mēntality Bauhaus-inspired mental wellbeing landing hero:
+- Warm-neutral gray (#F0F0F0) canvas
+- Geometric cross logo and stacked navigation links
+- 4-line headline with inline eye SVG icon
+- AI search prompt input with action button
+- Technical drawing blueprint SVG canvas with anchor circles, concentric arcs, and character artwork`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: MĒNTALITY HERO
+Design System:
+- Canvas: #F0F0F0 (warm-neutral gray)
+- Inks: #111111, #666666, #222222
+- Geometry: Mathematical grid lines, anchor circles (cx=50, cy=340 & cx=910, cy=340), concentric arcs at y=490
+- Typographic hierarchy: 4-line stacked text with inline eye icon (28x16)
+- Interactive prompt bar with live response indicator and pl/en toggle badge`,
+            lovable: `Create the mēntality Bauhaus mental wellbeing landing hero in React, TypeScript, and Tailwind CSS with warm gray #F0F0F0 background, 4-line headline with eye icon, AI prompt input, and technical blueprint artwork SVG with character illustration.`,
+            advance: `TECHNICAL SPECIFICATION: MĒNTALITY BAUHAUS HERO
+1. Blueprint Geometry: SVG viewBox 0 0 960 490 with horizontal guide at y=290, diagonal rays, dual r=92 anchor circles with diamond centroids, and 3 concentric sweeping arcs (r=420, 360, 300).
+2. Typographic Glyph: Eye icon vector inline in heading line 4 with pupil circle r=2.8.
+3. Character Layer: Crisp SVG image embed without drop-shadow or blur.`
+        }
     }
 ];

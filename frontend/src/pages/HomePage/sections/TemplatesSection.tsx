@@ -27,6 +27,7 @@ import TarsHeroArena from '../../../components/templates/TarsHeroArena';
 import SplitFuzzyOrbHero from '../../../components/templates/SplitFuzzyOrbHero';
 import SegmintFooter from '../../../components/templates/SegmintFooter';
 import HaosShowcase from '../../../components/templates/HaosShowcase';
+import MentalityHero from '../../../components/templates/MentalityHero';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -154,6 +155,10 @@ const TemplatesSection = () => {
                                         ) : template.id === 'haos-tech-solutions' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#020202] overflow-hidden">
                                                 <HaosShowcase />
+                                            </div>
+                                        ) : template.id === 'mentality' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F0F0F0] overflow-hidden">
+                                                <MentalityHero />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe
