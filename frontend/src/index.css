@@ -39,6 +39,28 @@
   animation: heroFloat 7s ease-in-out infinite;
 }
 
+@keyframes orbCircularMotion {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes orbCircularFloat {
+  0% { transform: translate(0px, 0px); }
+  25% { transform: translate(14px, -14px); }
+  50% { transform: translate(0px, -24px); }
+  75% { transform: translate(-14px, -14px); }
+  100% { transform: translate(0px, 0px); }
+}
+
+.animate-orb-spin {
+  animation: orbCircularMotion 45s linear infinite;
+  transform-origin: center center;
+}
+
+.animate-orb-orbit {
+  animation: orbCircularFloat 12s ease-in-out infinite;
+}
+
 /* ── Global horizontal-overflow safety net (mobile) ── */
 html, body {
   overflow-x: clip;

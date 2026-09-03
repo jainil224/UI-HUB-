@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { websiteTemplates, TemplateItem } from '../../data/templatesData';
 import TarsHeroArena from '../../components/templates/TarsHeroArena';
+import SplitFuzzyOrbHero from '../../components/templates/SplitFuzzyOrbHero';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
@@ -228,6 +229,10 @@ const TemplateDetailPage = () => {
                             {template.id === 'tars-protocol' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
                                     <TarsHeroArena key={`tars-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'split-fuzzy-orb' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#d6c0e3]">
+                                    <SplitFuzzyOrbHero key={`orb-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

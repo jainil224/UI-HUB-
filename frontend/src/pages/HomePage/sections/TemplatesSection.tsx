@@ -24,6 +24,7 @@ import {
     TemplateItem 
 } from '../../../data/templatesData';
 import TarsHeroArena from '../../../components/templates/TarsHeroArena';
+import SplitFuzzyOrbHero from '../../../components/templates/SplitFuzzyOrbHero';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -138,6 +139,10 @@ const TemplatesSection = () => {
                                         {template.id === 'tars-protocol' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white">
                                                 <TarsHeroArena />
+                                            </div>
+                                        ) : template.id === 'split-fuzzy-orb' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#d6c0e3]">
+                                                <SplitFuzzyOrbHero />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe
