@@ -25,6 +25,7 @@ import {
 } from '../../../data/templatesData';
 import TarsHeroArena from '../../../components/templates/TarsHeroArena';
 import SplitFuzzyOrbHero from '../../../components/templates/SplitFuzzyOrbHero';
+import SegmintFooter from '../../../components/templates/SegmintFooter';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -144,6 +145,10 @@ const TemplatesSection = () => {
                                         ) : template.id === 'split-fuzzy-orb' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#d6c0e3]">
                                                 <SplitFuzzyOrbHero />
+                                            </div>
+                                        ) : template.id === 'segmint-2026' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#0755CE] overflow-hidden">
+                                                <SegmintFooter />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe

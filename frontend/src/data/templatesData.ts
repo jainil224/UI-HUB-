@@ -1445,5 +1445,105 @@ SPLIT-CANVAS CREATIVE AGENCY HERO
 - Micro navigation chevrons (< and >) with nudge animation
 - 7x7 SVG diamond dot matrix logo`
         }
+    },
+    {
+        id: 'segmint-2026',
+        title: 'Segmint 2026',
+        description: 'Brutalist Web3 editorial metadata footer component inspired by Swiss brutalism, technical cryptographic ledger interfaces, and retro voxel typography.',
+        category: 'Web3 & FinTech',
+        badge: 'NEW',
+        framework: 'React + TS + Tailwind',
+        styling: 'Tailwind CSS',
+        animation: '5x5 SVG Voxel Engine',
+        isPro: false,
+        liveDemoUrl: '/demo/segmint-2026',
+        githubUrl: 'https://github.com/ui-hub/segmint-2026',
+        previewGradient: 'from-neutral-200 via-[#0755CE]/10 to-neutral-300',
+        accentColor: '#0755CE',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '3.1k',
+        },
+        features: [
+            'Disintegrating crypto pixel wave transition (#0755CE to #E8E9EE)',
+            'Mid-right brutalist marketing statement with 24px dash rule',
+            'Giant pixel-art typography for SEGMINT 2026 (5x5 SVG engine)',
+            'Full-width 1.5px hairline divider and 3-column brutalist legal footer'
+        ],
+        promptPreview: `Create a standalone, pixel-perfect brutalist Web3 editorial footer section in React 18+ with TypeScript and Tailwind CSS matching this exact layout:
+
+1. BACKGROUND & PALETTE:
+   - Top edge starts with an organic, disintegrating crypto pixel wave transitioning from cobalt blue (#0755CE) to concrete light gray (#E8E9EE).
+   - Section background: solid concrete light gray (#E8E9EE).
+   - Pixel typography and accent ink: vibrant cobalt blue (#0755CE).
+   - Text, divider rules, and dashes: pure black (#000000).
+
+2. MID-RIGHT STATEMENT BLOCK:
+   - Positioned in the middle right of the canvas.
+   - A bold black horizontal dash (width 24px, height 2px) preceding the text.
+   - Text in bold uppercase monospace (font-mono font-bold text-xs sm:text-sm tracking-widest text-black):
+     MARKETING
+     APPROACH
+     WEBSITE
+     DEVELOPMENT
+     WITH OUTSTANDING
+     DESIGN
+   - Slightly to the right of this block, the label: "IN"
+
+3. LOWER TYPOGRAPHIC & INQUIRY SECTION:
+   - Bottom-Left: Giant pixel-art typography rendered via crisp SVG bitmap matrices:
+     Line 1: "SEGMINT" (cobalt blue #0755CE)
+     Line 2: "2026" (cobalt blue #0755CE)
+     Rendered with shapeRendering="crispEdges" and zero external font dependencies.
+   - Bottom-Center / Right:
+     A small inquiry prompt in micro uppercase monospace (text-[9px] sm:text-[10px] tracking-wider text-black):
+     "INTERESTED TO START A PROJECT WITH US?"
+   - Far Bottom-Right:
+     Stacked micro copy (text-[8px] sm:text-[9px] font-mono tracking-widest uppercase text-right text-black):
+     LETS FIND OUT
+     WHAT WE CAN DO
+     FOR YOU.
+
+4. FULL-WIDTH HAIRLINE DIVIDER:
+   - A crisp 1.5px solid black divider line spanning the full width with horizontal padding.
+
+5. BOTTOM LEGAL FOOTER:
+   - Clean 3-column flex layout (text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-black pt-3 pb-4):
+     - Left: "© BY JAINIL PATEL"
+     - Center: "[ WEB 3 ] [ NFT ]"
+     - Right: "UI HUB 2026"`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - Segmint 2026 Brutalist Web3 Editorial Footer Directive */
+Create a standalone, pixel-perfect brutalist Web3 editorial footer section in React 18+ with TypeScript and Tailwind CSS.
+Include:
+1. PixelParticleTransition: organic disintegrating crypto pixel wave (cobalt blue #0755CE to concrete #E8E9EE).
+2. Mid-right statement block: 24px black dash preceding uppercase marketing statement + 'IN'.
+3. Lower section: 5x5 SVG pixel typography for SEGMINT 2026 (#0755CE) + project inquiry callouts.
+4. 1.5px solid black divider line.
+5. 3-Column legal footer: © BY JAINIL PATEL | [ WEB 3 ] [ NFT ] | UI HUB 2026.`,
+            claude: `You are Claude Code, an expert autonomous engineering agent.
+Rebuild the Segmint 2026 Brutalist Web3 editorial footer section with:
+- Disintegrating pixel wave transition (#0755CE to #E8E9EE)
+- Mid-right marketing statement with dash prefix
+- Bottom-left giant SVG pixel typography for SEGMINT 2026
+- Micro project inquiry callouts and 3-column legal footer`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: SEGMINT 2026 FOOTER
+Task: Build brutalist Web3 editorial footer with disintegrating crypto pixel wave and retro voxel typography.
+Palette:
+- Concrete Gray: #E8E9EE
+- Cobalt Blue: #0755CE
+- Black Ink: #000000 (1.5px divider, 2px dash)
+Components:
+- PixelParticleTransition (stepped organic columns)
+- Mid-right statement block with horizontal rule
+- PixelText SVG engine (5x5 glyph matrices with crispEdges)`,
+            lovable: `Create the Segmint 2026 brutalist Web3 editorial footer in React, TypeScript, and Tailwind CSS with disintegrating pixel wave transition, mid-right marketing statement, SEGMINT 2026 pixel typography, and legal footer.`,
+            advance: `ENGINEERING SPECIFICATION: SEGMINT 2026 EDITORIAL FOOTER
+1. Wave Transition: 55-column organic stepped bars with opacity-90 white overlay and #E8E9EE base
+2. Mid-right Statement: font-mono text-xs sm:text-sm font-bold uppercase with 24px dash rule
+3. SVG Pixel Engine: 5x5 character matrices rendered as SVG rects with crispEdges for SEGMINT 2026
+4. Legal Footer: 3-column responsive flex with 1.5px hairline divider`
+        }
     }
 ];

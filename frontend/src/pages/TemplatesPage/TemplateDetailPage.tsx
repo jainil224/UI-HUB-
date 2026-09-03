@@ -17,6 +17,7 @@ import {
 import { websiteTemplates, TemplateItem } from '../../data/templatesData';
 import TarsHeroArena from '../../components/templates/TarsHeroArena';
 import SplitFuzzyOrbHero from '../../components/templates/SplitFuzzyOrbHero';
+import SegmintFooter from '../../components/templates/SegmintFooter';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
@@ -233,6 +234,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'split-fuzzy-orb' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#d6c0e3]">
                                     <SplitFuzzyOrbHero key={`orb-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'segmint-2026' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#E8E9EE]">
+                                    <SegmintFooter key={`segmint-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

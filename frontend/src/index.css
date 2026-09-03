@@ -39,6 +39,19 @@
   animation: heroFloat 7s ease-in-out infinite;
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
 @keyframes orbCircularMotion {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
