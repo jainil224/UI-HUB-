@@ -21,6 +21,7 @@ import SegmintFooter from '../../components/templates/SegmintFooter';
 import HaosShowcase from '../../components/templates/HaosShowcase';
 import MentalityHero from '../../components/templates/MentalityHero';
 import LakeraHero from '../../components/templates/LakeraHero';
+import InteriorDesignShowcase from '../../components/templates/InteriorDesignShowcase';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
@@ -253,6 +254,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'lakera-ai-security' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
                                     <LakeraHero key={`lakera-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'interior-design' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
+                                    <InteriorDesignShowcase key={`interior-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

@@ -1,4 +1,4 @@
-import { getCollection } from './mongoService.js';
+import { getCollection, executeWithRetry } from './mongoService.js';
 
 const FAVORITES_COLLECTION = 'favorites';
 const COMPONENTS_COLLECTION = 'components';
@@ -24,9 +24,11 @@ const toComponentItem = (doc) => {
  * @returns {Promise<Array<object>>}
  */
 export const listCommunityComponents = async () => {
-  const components = await getCollection(COMPONENTS_COLLECTION);
-  const docs = await components.find({}).sort({ createdAt: -1 }).toArray();
-  return docs.map(toComponentItem);
+  return executeWithRetry(async (db) => {
+    const components = db.collection(COMPONENTS_COLLECTION);
+    const docs = await components.find({}).sort({ createdAt: -1 }).toArray();
+    return docs.map(toComponentItem);
+  });
 };
 
 /**
@@ -35,9 +37,11 @@ export const listCommunityComponents = async () => {
  * @returns {Promise<object|null>}
  */
 export const getCommunityComponent = async (id) => {
-  const components = await getCollection(COMPONENTS_COLLECTION);
-  const doc = await components.findOne({ _id: String(id) });
-  return doc ? toComponentItem(doc) : null;
+  return executeWithRetry(async (db) => {
+    const components = db.collection(COMPONENTS_COLLECTION);
+    const doc = await components.findOne({ _id: String(id) });
+    return doc ? toComponentItem(doc) : null;
+  });
 };
 
 /**
@@ -46,17 +50,19 @@ export const getCommunityComponent = async (id) => {
  * @returns {Promise<Array<object>>}
  */
 export const listUserFavorites = async (userId) => {
-  const favorites = await getCollection(FAVORITES_COLLECTION);
-  const docs = await favorites
-    .find({ $or: [{ userId }, { email: userId }] })
-    .sort({ createdAt: -1 })
-    .toArray();
+  return executeWithRetry(async (db) => {
+    const favorites = db.collection(FAVORITES_COLLECTION);
+    const docs = await favorites
+      .find({ $or: [{ userId }, { email: userId }] })
+      .sort({ createdAt: -1 })
+      .toArray();
 
-  return docs.map((doc) => ({
-    id: String(doc._id),
-    ...doc,
-    id: String(doc._id),
-  }));
+    return docs.map((doc) => ({
+      id: String(doc._id),
+      ...doc,
+      id: String(doc._id),
+    }));
+  });
 };
 
 /**
@@ -66,33 +72,35 @@ export const listUserFavorites = async (userId) => {
  * @returns {Promise<{ ok: boolean, overLimit: boolean, count: number }>}
  */
 export const addFavorite = async (userId, { id, title, category, code }) => {
-  const favorites = await getCollection(FAVORITES_COLLECTION);
-  const favId = `${userId}_${id}`;
-  const existing = await favorites.findOne({ _id: favId });
-  if (existing) return { ok: true, overLimit: false, count: (await favorites.countDocuments({ userId })) };
+  return executeWithRetry(async (db) => {
+    const favorites = db.collection(FAVORITES_COLLECTION);
+    const favId = `${userId}_${id}`;
+    const existing = await favorites.findOne({ _id: favId });
+    if (existing) return { ok: true, overLimit: false, count: (await favorites.countDocuments({ userId })) };
 
-  const count = await favorites.countDocuments({ userId });
-  if (count >= FREE_VAULT_LIMIT) {
-    return { ok: false, overLimit: true, count };
-  }
+    const count = await favorites.countDocuments({ userId });
+    if (count >= FREE_VAULT_LIMIT) {
+      return { ok: false, overLimit: true, count };
+    }
 
-  await favorites.updateOne(
-    { _id: favId },
-    {
-      $set: {
-        _id: favId,
-        userId,
-        componentId: id,
-        componentName: title || 'Untitled',
-        componentCode: code || '',
-        category: category || 'custom',
-        createdAt: new Date(),
+    await favorites.updateOne(
+      { _id: favId },
+      {
+        $set: {
+          _id: favId,
+          userId,
+          componentId: id,
+          componentName: title || 'Untitled',
+          componentCode: code || '',
+          category: category || 'custom',
+          createdAt: new Date(),
+        },
       },
-    },
-    { upsert: true }
-  );
+      { upsert: true }
+    );
 
-  return { ok: true, overLimit: false, count: (await favorites.countDocuments({ userId })) };
+    return { ok: true, overLimit: false, count: (await favorites.countDocuments({ userId })) };
+  });
 };
 
 /**
@@ -102,8 +110,10 @@ export const addFavorite = async (userId, { id, title, category, code }) => {
  * @returns {Promise<boolean>}
  */
 export const removeFavorite = async (userId, componentId) => {
-  const favorites = await getCollection(FAVORITES_COLLECTION);
-  const favId = `${userId}_${componentId}`;
-  const result = await favorites.deleteOne({ _id: favId, userId });
-  return result.deletedCount > 0;
+  return executeWithRetry(async (db) => {
+    const favorites = db.collection(FAVORITES_COLLECTION);
+    const favId = `${userId}_${componentId}`;
+    const result = await favorites.deleteOne({ _id: favId, userId });
+    return result.deletedCount > 0;
+  });
 };

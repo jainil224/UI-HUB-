@@ -1,4 +1,4 @@
-import { getCollection } from './mongoService.js';
+import { getCollection, executeWithRetry } from './mongoService.js';
 
 const USERS_COLLECTION = 'users';
 
@@ -25,18 +25,20 @@ const readTs = (value) => {
  * @returns {Promise<{ data: object|null }>}
  */
 const findUserData = async (uid, email) => {
-  const users = await getCollection(USERS_COLLECTION);
-  const emailKey = (email || '').trim().toLowerCase();
+  return executeWithRetry(async (db) => {
+    const users = db.collection(USERS_COLLECTION);
+    const emailKey = (email || '').trim().toLowerCase();
 
-  if (emailKey) {
-    const byEmail = await users.findOne({ $or: [{ _id: emailKey }, { email: emailKey }] });
-    if (byEmail) return { data: byEmail };
-  }
-  if (uid) {
-    const byUid = await users.findOne({ $or: [{ _id: uid }, { uid }] });
-    if (byUid) return { data: byUid };
-  }
-  return { data: null };
+    if (emailKey) {
+      const byEmail = await users.findOne({ $or: [{ _id: emailKey }, { email: emailKey }] });
+      if (byEmail) return { data: byEmail };
+    }
+    if (uid) {
+      const byUid = await users.findOne({ $or: [{ _id: uid }, { uid }] });
+      if (byUid) return { data: byUid };
+    }
+    return { data: null };
+  });
 };
 
 /**
@@ -57,8 +59,9 @@ export const checkEliteStatus = async (email) => {
   console.log(`[UserStatus] No hardcoded match for ${userEmail}`);
 
   try {
-    const users = await getCollection(USERS_COLLECTION);
-    const user = await users.findOne({ $or: [{ _id: userEmail }, { email: userEmail }] });
+    const user = await executeWithRetry(async (db) => {
+      return db.collection(USERS_COLLECTION).findOne({ $or: [{ _id: userEmail }, { email: userEmail }] });
+    });
     if (!user) return false;
     return user.status === 'ELITE';
   } catch (error) {
@@ -89,8 +92,9 @@ export const checkProStatus = async (email) => {
   console.log(`[UserStatus] No hardcoded Pro match for ${userEmail}`);
 
   try {
-    const users = await getCollection(USERS_COLLECTION);
-    const user = await users.findOne({ $or: [{ _id: userEmail }, { email: userEmail }] });
+    const user = await executeWithRetry(async (db) => {
+      return db.collection(USERS_COLLECTION).findOne({ $or: [{ _id: userEmail }, { email: userEmail }] });
+    });
 
     if (!user) {
       console.log(`[UserStatus] User ${userEmail} not found in MongoDB. Defaulting to free.`);

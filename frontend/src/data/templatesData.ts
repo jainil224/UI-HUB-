@@ -1864,5 +1864,95 @@ Tokens & Layout:
 2. Brand SVGs: Cohere circle centroid, Nexxiot twin arrowheads, DEKRA strokeWidth=2.6 triangle, ANYbotics monogram, Protex AI badge.
 3. Slit-Scan Alignment: absolute top-[65px] to top-[120px] right-[-12%] to right-[-4%] max-h-[1200px].`
         }
+    },
+    {
+        id: 'interior-design',
+        title: 'Interior Design Showcase',
+        description: 'Luxury editorial furniture hero showcase with an olive accent panel, overlapping modular armchair artwork, pill purchase control, and bottom feature cards.',
+        category: 'E-Commerce',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Micro-Interactions & Hover Glow',
+        isPro: false,
+        liveDemoUrl: '/demo/interior-design',
+        githubUrl: 'https://github.com/ui-hub/interior-design',
+        previewGradient: 'from-white via-[#B2C951]/20 to-[#EEEEEE]',
+        accentColor: '#B2C951',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '3.9k',
+        },
+        features: [
+            'Luxury editorial typography pairing Cormorant Garamond serif with Plus Jakarta Sans',
+            'Dynamic 3-line headline with custom italicized serif "Lives" glyph',
+            'Contrasting olive showcase panel (#B2C951) with overlapping armchair product cutout',
+            'Interactive pill purchase control with black "Shop now" button and $599 price tag',
+            'Four bottom feature cards (Handcrafted Quality, Timeless Design, Built to Last, Seamless Delivery)',
+            'Ultra-clean viewport-locking desktop layout with responsive mobile adaptability'
+        ],
+        promptPreview: `Build a luxury, editorial furniture hero showcase and bottom feature footer card section using React (TypeScript), Tailwind CSS, and Lucide React icons. Replicate all design specifications, exact dimensions, typography pairings, micro-interactions, responsive offsets, and the complete source code below.
+
+---
+
+### 1. Global Dimensions, Canvas & Color Palette
+- **Canvas Background:** Pure white (\`#FFFFFF\`) with dark neutral body text (\`#252525\`).
+- **Selection Color:** Olive tint \`selection:bg-[#B2C951]/30\`.
+- **Viewport Structure:** Fits cleanly in desktop viewports without vertical scrolling (\`min-h-screen lg:h-screen lg:max-h-screen w-full flex flex-col justify-between overflow-x-hidden\`).
+- **Main Container:** Centered flex container \`max-w-[1440px] 2xl:max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-14 xl:px-20 py-5 sm:py-6 lg:py-6 xl:py-8 flex-1 flex flex-col justify-between\`.
+- **Color Codes:**
+  - Olive Showcase Background: \`#B2C951\`
+  - Card & Pill Background: \`#EEEEEE\`
+  - Dark Action Button: \`#050505\` (Hover: \`#1a1a1a\`)
+  - Primary Dark Text: \`#222222\`
+  - Secondary Gray Text: \`#555555\`
+
+### 2. Typography Pairing
+- Top Label: "Elevate Your Home, Effortlessly" (Cormorant Garamond serif)
+- Hero Heading: "Design That" / "Lives With" (with "Lives" in Cormorant Garamond italic) / "You"
+- Hero Description: "Timeless pieces, crafted with care and built to elevate your everyday spaces..."
+
+### 3. CTA Pill Button & Pricing Badge
+- Pill Container: Height \`43px\`, \`rounded-full\`, background \`#EEEEEE\`
+- "Shop now" Button: Black pill with white arrow circle
+- Price Label: "$599"
+
+### 4. Right Product Showcase
+- Olive card container: \`#B2C951\` (\`w-[285px]\` to \`w-[355px]\`, \`h-[395px]\` to \`h-[475px]\`)
+- Overlapping modular chair asset: \`https://res.cloudinary.com/chhwhdhk/image/upload/v1788399032/013ede30-542d-4a45-a9f1-5a48fad37592_wvscrb.png\`
+
+### 5. Bottom Feature Footer Cards
+- 4 cards: Handcrafted Quality, Timeless Design, Built to Last, Seamless Delivery.`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - Interior Design Luxury Furniture Hero Directive */
+Create an exact luxury, editorial furniture hero showcase and bottom feature footer card section in React, TypeScript, and Tailwind CSS.
+Include:
+1. Palette: Pure white (#FFFFFF), Olive showcase (#B2C951), Card gray (#EEEEEE), Dark text (#222222), Accent button (#050505).
+2. Typography: Cormorant Garamond serif for label & italic 'Lives'; Plus Jakarta Sans for bold headline.
+3. Headline: 3 lines: 'Design That' / 'Lives With' ('Lives' in italic serif) / 'You'.
+4. CTA: Pill container (#EEEEEE) with 'Shop now' black button, white arrow icon, and '$599' price.
+5. Product Panel: Olive vertical panel (#B2C951) with overlapping modular armchair cutout.
+6. Footer Cards: 4 light gray cards (Handcrafted Quality, Timeless Design, Built to Last, Seamless Delivery).`,
+            claude: `You are Claude Code, an expert frontend designer.
+Build the Interior Design luxury furniture hero:
+- Editorial serif + bold sans headline pairing
+- 3-line headline with italic serif 'Lives'
+- Olive showcase container (#B2C951) with overlapping armchair image
+- Pill purchase button with '$599' price tag
+- 4 bottom feature cards in responsive grid`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: INTERIOR DESIGN SHOWCASE
+Aesthetic: Luxury Editorial E-Commerce
+- Canvas: #FFFFFF
+- Olive Tone: #B2C951
+- Typography: Cormorant Garamond serif + Plus Jakarta Sans 800
+- Overlapping asset: https://res.cloudinary.com/chhwhdhk/image/upload/v1788399032/013ede30-542d-4a45-a9f1-5a48fad37592_wvscrb.png
+- Feature footer: 4 mini cards with subtle hover shift`,
+            lovable: `Create the Interior Design luxury furniture showcase in React, TypeScript, and Tailwind CSS with olive showcase card, overlapping modular armchair image, 3-line mixed serif headline, '$599' pill purchase button, and 4 feature cards.`,
+            advance: `TECHNICAL SPECIFICATION: INTERIOR DESIGN HERO
+1. Headline Math: Leading 0.95, tracking -0.035em, font-extrabold with inline Cormorant Garamond italic 'Lives' glyph.
+2. Product Panel Math: w-[285px] to w-[355px], h-[395px] to h-[475px] in #B2C951; armchair image w-[400px] to w-[530px] with negative left offset.
+3. Grid: 4-column footer cards in #EEEEEE with hover:bg-[#EAEAEA].`
+        }
     }
 ];

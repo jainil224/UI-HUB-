@@ -29,6 +29,7 @@ import SegmintFooter from '../../../components/templates/SegmintFooter';
 import HaosShowcase from '../../../components/templates/HaosShowcase';
 import MentalityHero from '../../../components/templates/MentalityHero';
 import LakeraHero from '../../../components/templates/LakeraHero';
+import InteriorDesignShowcase from '../../../components/templates/InteriorDesignShowcase';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -164,6 +165,10 @@ const TemplatesSection = () => {
                                         ) : template.id === 'lakera-ai-security' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
                                                 <LakeraHero />
+                                            </div>
+                                        ) : template.id === 'interior-design' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
+                                                <InteriorDesignShowcase />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe
