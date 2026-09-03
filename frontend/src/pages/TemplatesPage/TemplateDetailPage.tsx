@@ -52,6 +52,11 @@ const TemplateDetailPage = () => {
 
     const promptMenuRef = useRef<HTMLDivElement>(null);
 
+    // Scroll window to top when template detail page opens or changes
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [id]);
+
     // Close dropdown on click outside
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {

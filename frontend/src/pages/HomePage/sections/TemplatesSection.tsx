@@ -57,6 +57,12 @@ const TemplatesSection = () => {
         setTimeout(() => setCopiedPromptId(null), 2500);
     };
 
+    const handleOpenTemplate = (templateId: string, e?: React.MouseEvent) => {
+        if (e) e.stopPropagation();
+        window.scrollTo(0, 0);
+        navigate(`/templates/${templateId}`);
+    };
+
     return (
         <section id="templates" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-black border-t-4 border-black overflow-hidden">
             {/* Ambient Cyber Grid Background */}
@@ -124,7 +130,8 @@ const TemplatesSection = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, scale: 0.96 }}
                                 transition={{ duration: 0.35, delay: idx * 0.05 }}
-                                className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0C0C0E] overflow-hidden select-none hover:border-white hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300"
+                                onClick={() => handleOpenTemplate(template.id)}
+                                className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0C0C0E] overflow-hidden select-none hover:border-white hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300 cursor-pointer"
                             >
                                 {/* ── Mockup Browser Top Bar ── */}
                                 <div className="h-9 px-3.5 bg-[#141418] border-b-2 border-neutral-800 flex items-center justify-between gap-3">
@@ -194,10 +201,7 @@ const TemplatesSection = () => {
                                         {/* Hover Action Overlay */}
                                         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] flex items-center justify-center gap-3 transition-opacity duration-200 z-20">
                                             <button 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    navigate(`/templates/${template.id}`);
-                                                }}
+                                                onClick={(e) => handleOpenTemplate(template.id, e)}
                                                 className="px-4 py-2.5 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer"
                                             >
                                                 <Laptop size={15} />
@@ -211,7 +215,7 @@ const TemplatesSection = () => {
                                 <div className="p-5 flex-1 flex flex-col justify-start">
                                     <div className="flex items-start justify-between gap-2 mb-2">
                                         <h3 
-                                            onClick={() => navigate(`/templates/${template.id}`)}
+                                            onClick={() => handleOpenTemplate(template.id)}
                                             className="font-heading font-black text-lg text-white group-hover:text-[#1F4BFF] transition-colors cursor-pointer"
                                         >
                                             {template.title}

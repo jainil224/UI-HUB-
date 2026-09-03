@@ -60,6 +60,10 @@ const AppShell = () => {
   React.useEffect(() => {
     triggerBackgroundComponentSync();
   }, []);
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
   const isLibrary = location.pathname.startsWith('/library');
   const isDashboard = location.pathname.startsWith('/dashboard');
   const isAdmin = location.pathname.startsWith('/admin');
