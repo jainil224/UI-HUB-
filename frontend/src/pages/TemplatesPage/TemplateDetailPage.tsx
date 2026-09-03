@@ -18,6 +18,7 @@ import { websiteTemplates, TemplateItem } from '../../data/templatesData';
 import TarsHeroArena from '../../components/templates/TarsHeroArena';
 import SplitFuzzyOrbHero from '../../components/templates/SplitFuzzyOrbHero';
 import SegmintFooter from '../../components/templates/SegmintFooter';
+import HaosShowcase from '../../components/templates/HaosShowcase';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
 
@@ -238,6 +239,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'segmint-2026' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#E8E9EE]">
                                     <SegmintFooter key={`segmint-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'haos-tech-solutions' ? (
+                                <div className="w-full h-full overflow-hidden bg-[#020202]">
+                                    <HaosShowcase key={`haos-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

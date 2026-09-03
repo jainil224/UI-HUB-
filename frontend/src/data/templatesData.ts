@@ -1545,5 +1545,153 @@ Components:
 3. SVG Pixel Engine: 5x5 character matrices rendered as SVG rects with crispEdges for SEGMINT 2026
 4. Legal Footer: 3-column responsive flex with 1.5px hairline divider`
         }
+    },
+    {
+        id: 'haos-tech-solutions',
+        title: 'HAOS Tech Solutions',
+        description: 'Pixel-perfect brutalist technical dark-mode showcase with split 3D volumetric glowing neon-green circle, sliced blurred glass louvers, and progress telemetry.',
+        category: 'Agency & Portfolio',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Split 3D Volumetric Canvas Bloom',
+        isPro: false,
+        liveDemoUrl: '/demo/haos-tech-solutions',
+        githubUrl: 'https://github.com/ui-hub/haos-tech-solutions',
+        previewGradient: 'from-black via-[#061B0B] to-[#98FF68]/30',
+        accentColor: '#98FF68',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '4.2k',
+        },
+        features: [
+            'Split 3D volumetric glowing neon-green circle on HTML5 Canvas',
+            'Left-side sliced slit-scan optical glass strips with harmonic displacement',
+            'Right-side 6-pass crystal-clear radiant bloom semicircle',
+            'Technical metadata header & High-Quality Development +2K metric bar',
+            'Precision custom SVG geometric NAOS vector logo',
+            'Glassmorphic action button with radial ambient glow and hover micro-interaction'
+        ],
+        promptPreview: `Create a pixel-perfect, ultra-clean brutalist/technical dark-mode showcase hero and footer section inspired by high-end design agencies (HAOS Tech Solutions / NAOS). The layout features a deep obsidian canvas (#020202), crisp white typography, an interactive technical progress indicator, a floating glassmorphic action button, and a real-time animated HTML5 Canvas artwork featuring a split 3D volumetric glowing neon-green circle (with sliced, blurred optical glass strips on the left and a pristine, crystal-clear radiant semicircle on the right).
+
+---
+
+### 1. Visual Identity, Spacing & Layout Architecture
+
+- **Canvas Background**: Pure deep black \`#020202\` spanning full viewport height (\`min-h-[100dvh]\`, \`h-[100dvh]\`, \`overflow-hidden\`, \`select-none\`).
+- **Layout Structure**: Vertical flex container (\`flex flex-col justify-between\`) split into 3 distinct layers:
+  1. **Top Metadata Header**: \`pt-6 sm:pt-[55px] lg:pt-[65px] px-6 sm:px-[60px] lg:px-[95px]\`.
+  2. **Middle Content Stage**: Full flex height, containing the main titles on the left and the centered/offset geometric vector logo.
+  3. **Bottom Footer Section**: \`pb-6 sm:pt-4 sm:pb-[55px] lg:pb-[65px] px-6 sm:px-[60px] lg:px-[95px] flex items-end justify-between\`.
+- **Z-Index Hierarchy**:
+  - Background Canvas + Gradient Masks: \`z-0\` & \`z-10\`
+  - Interactive & Typographic Layers: \`z-20\`
+
+---
+
+### 2. Typography & Text Placements
+
+- **Font Families**:
+  - Primary Display & Headings: \`Inter\`, sans-serif (weights: 300 Light, 700 Bold).
+  - Technical Data & Metadata Labels: \`Space Grotesk\`, sans-serif (weights: 500 Medium, 600 SemiBold, 700 Bold).
+
+- **Header Metadata (Top Bar)**:
+  - Mobile: 2-column responsive grid (\`grid grid-cols-2 gap-y-3 gap-x-6\`).
+  - Desktop: Horizontal aligned flex row (\`sm:flex sm:flex-row sm:items-start sm:gap-0\`).
+  - Column 1 (\`w-full sm:w-[29%]\`): Label \`"CATEGORY:"\` (\`text-[9px] sm:text-[10px] font-medium tracking-widest text-white/80\`), Value \`"BRANDING"\` (\`text-[10px] sm:text-[11px] font-bold tracking-widest text-white\`).
+  - Column 2 (\`w-full sm:w-[26%]\`): Label \`"YEAR"\` (\`text-[9px] sm:text-[10px] font-medium tracking-widest text-white/80\`), Value \`"2024"\` (\`text-[10px] sm:text-[11px] font-bold tracking-widest text-white\`).
+  - Column 3 (\`w-full sm:w-[45%]\`): Label \`"TECH SOLUTIONS"\` (\`text-[9px] sm:text-[10px] font-medium tracking-widest text-white/80\`), Value \`"AUTOMATION & ROBOTICS"\` (\`text-[10px] sm:text-[11px] font-bold tracking-widest text-white\`).
+
+- **Hero Headings (Middle Left Block)**:
+  - Container width constrained to \`max-w-[420px]\`.
+  - Main Title: \`"HAOS Tech\\nSolutions"\` (\`text-[25px] sm:text-[32px] lg:text-[34px] font-bold text-white tracking-[-0.02em] leading-[1.12]\`).
+  - Subtitle: \`"Brand Concept &\\nIdentity"\` (\`mt-5 sm:mt-7 lg:mt-9 text-[17px] sm:text-[22px] lg:text-[23px] font-bold text-white tracking-[-0.015em] leading-[1.2]\`).
+
+- **Geometric NAOS Logo**:
+  - Position on desktop: \`lg:absolute lg:left-[48%] lg:top-[38%] transform -translate-y-1/2\`.
+  - Precision custom SVG paths for letters \`N\`, \`A\`, \`O\`, \`S\` with rounded corners and consistent stroke width.
+  - Sizing: \`w-[102px] sm:w-[115px] lg:w-[128px]\`, \`drop-shadow-[0_0_8px_rgba(255,255,255,0.15)]\`.
+
+- **Lower-Left Technical Metric & Timeline**:
+  - Label: \`"HIGH-QUALITY\\nDEVELOPMENT"\` (\`text-[9px] sm:text-[10px] lg:text-[11px] font-semibold tracking-wider text-white/95 uppercase leading-[1.25] font-['Space_Grotesk']\`).
+  - Large Metric Counter: \`"+2K"\` (\`text-[32px] sm:text-[40px] lg:text-[46px] font-light text-white tracking-tight leading-none font-['Inter']\`).
+  - Timeline Width: \`w-[190px] sm:w-[230px] lg:w-[250px]\`.
+  - 4 Vertical Calibration Ticks: Height \`10px\`, width \`1px\`, background \`rgba(255,255,255,0.38)\` placed precisely at \`0%\`, \`33.3%\`, \`66.6%\`, and \`100%\`.
+  - Progress Track: Base background \`rgba(255,255,255,0.15)\`, active filled segment \`w-[66.6%]\` colored in radiant neon green \`#98FF68\` with \`box-shadow: 0 0 10px rgba(152,255,104,0.7)\`.
+
+- **Lower-Right Glass Action Button ("+")**:
+  - Sizing: \`w-[44px] h-[44px] sm:w-[50px] sm:h-[50px] lg:w-[54px] lg:h-[54px]\`.
+  - Styling: Rounded square (\`rounded-2xl\`), frosted glass backdrop blur (\`backdrop-blur-md\`), surface background \`rgba(255,255,255,0.04)\`.
+  - Border: Subtle gradient border (\`border border-white/10 hover:border-[#98FF68]/40\`).
+  - Subtle green interior ambient glow: \`radial-gradient(circle at center, rgba(152,255,104,0.14) 0%, transparent 70%)\`.
+  - Hover state: Spring animation \`scale(1.05)\` with neon green border glow.
+  - Center Icon: Minimalist \`+\` cross icon in crisp white.
+
+---
+
+### 3. Canvas Artwork Specification: Split 3D Neon Green Circle
+
+The background runs on an HTML5 \`<canvas>\` animated via \`requestAnimationFrame\`:
+1. **Coordinates**:
+   - Desktop: Center X \`cx = width * 0.75\`, Center Y \`cy = height * 0.48\`. Base radius \`baseRadius = max(min(width * 0.22, height * 0.36), 230)\`.
+   - Mobile: Center X \`cx = width * 0.82\`, Center Y \`cy = height * 0.46\`. Base radius \`baseRadius = max(min(width * 0.36, height * 0.22), 130)\`.
+   - Smooth subtle breathing pulse: \`curRadius = baseRadius * (1 + Math.sin(time * 0.6) * 0.016)\`.
+2. **Right Side (Perfectly Crisp Semicircle)**:
+   - Sliced strictly from \`cx\` to the right viewport edge (\`ctx.rect(cx - 0.5, 0, width - cx + 10, height)\`).
+   - Multi-layer volumetric bloom stack with 6 blur/stroke passes:
+     - Outer glow: \`blur: 95px, stroke: 230px, color: #103816, alpha: 0.72\`
+     - Mid glow: \`blur: 58px, stroke: 165px, color: #267e28, alpha: 0.82\`
+     - Lime body: \`blur: 32px, stroke: 112px, color: #5cd342, alpha: 0.90\`
+     - Core neon: \`blur: 16px, stroke: 64px, color: #98FF68, alpha: 0.98\`
+     - Intense rim: \`blur: 7px, stroke: 26px, color: #C6FF8E, alpha: 1.0\`
+     - Pure white focal wire: \`blur: 1.5px, stroke: 8px, color: #FFFFFF, alpha: 0.95\`
+   - Orbiting photon waves revolving continuously along the perimeter.
+   - Dark hollow center void: \`ctx.filter = 'blur(34px)'; ctx.fillStyle = '#020202'; ctx.arc(cx, cy, curRadius * 0.54, 0, Math.PI * 2)\`.
+3. **Left Side (Blurred Slit-Scan Glass Strips)**:
+   - 8 distinct vertical louvers on desktop (6 on mobile) occupying the left semicircle width (\`totalWidth = curRadius * 1.35\`).
+   - Vertical harmonic displacement: \`stepY = Math.sin(slicePhase) * 6 + ((i % 2 === 0) ? -3.5 : 3.5)\`.
+   - Frosted optical strip gradients, interior glow lines, and fine vertical glass divider lines.
+   - Atmospheric edge bleed and linear feathering so the leftmost edge fades smoothly into \`#020202\` without any hard boundary cuts.
+4. **Dividing Meridian**:
+   - Soft glow line (\`blur: 4px, stroke: 3px, color: rgba(152,255,104,0.35)\`) and hairline center tick (\`lineWidth: 1px, color: rgba(255,255,255,0.12)\`) at X = \`cx\`.
+5. **Film Grain & Legibility Overlay**:
+   - SVG noise overlay with \`opacity-[0.06] mix-blend-overlay\`.
+   - Dark horizontal gradient mask keeping all typography on the left 100% readable and pitch-black.`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - HAOS Tech Solutions Dark Brutalist Showcase Directive */
+Create a pixel-perfect, ultra-clean brutalist technical dark-mode showcase hero and footer in React 18+ with TypeScript and Tailwind CSS.
+Include:
+1. BackgroundArtwork: Animated split 3D volumetric glowing neon-green circle on HTML5 Canvas (#020202 base, #98FF68 core neon, 8 blurred glass louvers on left, pristine 6-pass bloom semicircle on right).
+2. TopMetadata: Responsive grid header (CATEGORY: BRANDING, YEAR: 2024, TECH SOLUTIONS: AUTOMATION & ROBOTICS).
+3. Hero title: 'HAOS Tech Solutions' + 'Brand Concept & Identity'.
+4. HaosLogo: Precision geometric vector NAOS logo with custom SVG paths.
+5. MetricProgress: 'HIGH-QUALITY DEVELOPMENT' + '+2K' with 4-tick calibration bar and neon-green progress track.
+6. TechIcon: Frosted glassmorphic action button with radial ambient glow and hover rotate-90.`,
+            claude: `You are Claude Code, an expert autonomous frontend engineer.
+Build the HAOS Tech Solutions dark-mode brutalist technical showcase hero:
+- Deep obsidian canvas (#020202) with noise overlay and dark gradient mask
+- Real-time animated HTML5 Canvas split 3D volumetric neon-green sphere (#98FF68)
+- Left side with 8 sliced optical blurred glass strips and harmonic displacement
+- Right side with 6-pass crystal-clear radiant bloom and revolving photon arcs
+- Top metadata bar, middle titles, geometric NAOS logo, and lower-left calibration timeline (+2K)`,
+            antigravity: `ANTIGRAVITY DIRECTIVE: HAOS TECH SOLUTIONS SHOWCASE
+Objective: Construct an ultra-clean brutalist technical dark-mode showcase inspired by high-end design agencies (HAOS Tech Solutions / NAOS).
+Visual Tokens:
+- Canvas: #020202 (pure deep obsidian)
+- Accent: #98FF68 (radiant neon green with 0 0 10px glow)
+- Secondary Accent: #C6FF8E & #5cd342
+Canvas Mechanics:
+- Split circle at X = 0.75 * width, Y = 0.48 * height
+- Sliced left half (8 optical frosted strips with vertical sine displacement)
+- 6-pass volumetric bloom right half with hollow center void
+- Geometric NAOS SVG logo and lower-left +2K timeline with 4 calibration ticks`,
+            lovable: `Create the HAOS Tech Solutions dark brutalist showcase in React, TypeScript, and Tailwind CSS with real-time animated split 3D volumetric neon-green circle canvas, top technical metadata header, geometric NAOS logo, and lower-left progress timeline.`,
+            advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: HAOS TECH SOLUTIONS
+1. Split Semicircle Bloom: Multi-pass canvas rendering with filters ranging from 95px down to 1.5px using colors #103816, #267e28, #5cd342, #98FF68, #C6FF8E, #FFFFFF.
+2. Slit-Scan Harmonic Louvers: 8 vertical slices with phase shift stepY = Math.sin(slicePhase) * 6 + ((i % 2 === 0) ? -3.5 : 3.5).
+3. Geometric Vector Logo: Exact stroke geometry for N, A, O, S letters with rounded corners.
+4. Telemetry Bar: 4 ticks at 0%, 33.3%, 66.6%, 100% with neon green #98FF68 active track.`
+        }
     }
 ];

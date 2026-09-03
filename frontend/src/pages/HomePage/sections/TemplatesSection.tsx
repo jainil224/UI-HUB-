@@ -26,6 +26,7 @@ import {
 import TarsHeroArena from '../../../components/templates/TarsHeroArena';
 import SplitFuzzyOrbHero from '../../../components/templates/SplitFuzzyOrbHero';
 import SegmintFooter from '../../../components/templates/SegmintFooter';
+import HaosShowcase from '../../../components/templates/HaosShowcase';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -149,6 +150,10 @@ const TemplatesSection = () => {
                                         ) : template.id === 'segmint-2026' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#0755CE] overflow-hidden">
                                                 <SegmintFooter />
+                                            </div>
+                                        ) : template.id === 'haos-tech-solutions' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#020202] overflow-hidden">
+                                                <HaosShowcase />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe
