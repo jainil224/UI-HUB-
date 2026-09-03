@@ -57,20 +57,19 @@ export default function MentalityHero() {
         </header>
 
         {/* HERO SECTION */}
-        <div className="w-full flex flex-col items-center text-center pt-4 sm:pt-6 md:pt-8 pb-3 z-10 relative">
-          <h1 className="max-w-[480px] sm:max-w-[580px] md:max-w-[660px] mx-auto text-[26px] sm:text-[32px] md:text-[38px] leading-[1.12] tracking-[-0.035em] text-center select-none">
-            <span className="font-bold text-[#111111]">Expert mental programs,</span>
+        <div className="w-full flex flex-col items-center text-center pt-6 sm:pt-10 md:pt-12 pb-3 z-10 relative">
+          <h1 className="max-w-[840px] mx-auto text-[26px] sm:text-[36px] md:text-[44px] lg:text-[48px] leading-[1.18] tracking-[-0.03em] text-center select-none">
+            <span className="font-bold text-[#111111]">Expert mental programs,</span>{' '}
+            <span className="font-light text-[#666666]">information</span>
             <br />
-            <span className="font-normal text-[#666666]">information</span>
+            <span className="font-light text-[#666666]">and resources to help you manage</span>
             <br />
-            <span className="font-normal text-[#666666]">and resources to help you manage</span>
-            <br />
-            <span className="font-normal text-[#666666]">
+            <span className="font-light text-[#666666]">
               your{' '}
-              <span className="inline-flex items-center mx-1.5 align-middle translate-y-[-2px]">
-                <svg width="28" height="16" viewBox="0 0 22 13" fill="none" className="inline-block text-[#444444]">
-                  <path d="M1 6.5C3.5 2 7.5 0.7 11 0.7C14.5 0.7 18.5 2 21 6.5C18.5 11 14.5 12.3 11 12.3C7.5 12.3 3.5 11 1 6.5Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
-                  <circle cx="11" cy="6.5" r="2.8" fill="currentColor" />
+              <span className="inline-flex items-center mx-1 sm:mx-1.5 align-middle translate-y-[-1px] sm:translate-y-[-2px]">
+                <svg width="32" height="18" viewBox="0 0 24 14" fill="none" className="inline-block text-[#333333]">
+                  <path d="M1 7C3.8 2.2 8 0.8 12 0.8C16 0.8 20.2 2.2 23 7C20.2 11.8 16 13.2 12 13.2C8 13.2 3.8 11.8 1 7Z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round" />
+                  <circle cx="12" cy="7" r="3" fill="currentColor" />
                 </svg>
               </span>{' '}
               mental wellbeing.
@@ -78,22 +77,22 @@ export default function MentalityHero() {
           </h1>
 
           {/* AI Prompt Input Bar */}
-          <div className="mt-5 sm:mt-6 flex flex-col items-center">
+          <div className="mt-6 sm:mt-8 flex flex-col items-center">
             <form onSubmit={handleSubmit} className="flex items-center gap-2">
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Ask me anything..."
-                className="w-[180px] sm:w-[220px] md:w-[240px] h-[34px] sm:h-[36px] px-3.5 text-[12px] sm:text-[13px] bg-[#FFFFFF] border border-[#D0D0D0] rounded-[6px] text-[#222222] placeholder-[#9E9E9E] focus:outline-none focus:border-[#666666] transition-all shadow-none"
+                className="w-[200px] sm:w-[260px] md:w-[280px] h-[36px] sm:h-[40px] px-4 text-[12.5px] sm:text-[13px] bg-[#FFFFFF] border border-[#D5D5D5] rounded-[6px] text-[#222222] placeholder-[#A0A0A0] focus:outline-none focus:border-[#444444] transition-all shadow-none"
               />
               <button
                 type="submit"
                 aria-label="Send prompt"
-                className="w-[34px] h-[34px] sm:w-[36px] sm:h-[36px] bg-[#050505] hover:bg-[#222222] active:scale-95 text-[#FFFFFF] rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer shrink-0"
+                className="w-[36px] h-[36px] sm:w-[40px] sm:h-[40px] bg-[#050505] hover:bg-[#222222] active:scale-95 text-[#FFFFFF] rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer shrink-0"
               >
-                <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
-                  <path d="M2.5 9.5C4 9.5 7 9.5 9.5 3M9.5 3H5.5M9.5 3V7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                <svg width="15" height="15" viewBox="0 0 12 12" fill="none">
+                  <path d="M3 9L9 3M9 3H4.5M9 3V7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             </form>

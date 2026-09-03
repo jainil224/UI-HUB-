@@ -161,6 +161,10 @@ const TemplatesSection = () => {
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F0F0F0] overflow-hidden">
                                                 <MentalityHero />
                                             </div>
+                                        ) : template.id === 'lakera-ai-security' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
+                                                <LakeraHero />
+                                            </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe
                                                 src={template.liveDemoUrl}
