@@ -47,25 +47,36 @@ const Navbar = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [showFavDropdown]);
 
+    const isTemplates = location.pathname.startsWith('/templates');
+
     const navLinks = isLibrary
         ? [
             { to: '/', label: 'HOME', active: false },
             { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-            { to: '/#templates', label: 'TEMPLATES', active: false },
+            { to: '/templates', label: 'TEMPLATES', active: false },
             { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
         ]
-        : isHomePage
+        : isTemplates
             ? [
-                { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-                { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
-            ]
-            : [
                 { to: '/', label: 'HOME', active: false },
-                { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-                { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
-            ];
+                { to: '/library', label: 'COMPONENTS', active: false },
+                { to: '/templates', label: 'TEMPLATES', active: true },
+                { to: '/dashboard/mcp', label: 'MCP', active: false },
+                { to: '/pricing', label: 'PRICING', active: false },
+            ]
+            : isHomePage
+                ? [
+                    { to: '/library', label: 'COMPONENTS', active: isLibrary },
+                    { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
+                    { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
+                ]
+                : [
+                    { to: '/', label: 'HOME', active: false },
+                    { to: '/library', label: 'COMPONENTS', active: isLibrary },
+                    { to: '/templates', label: 'TEMPLATES', active: false },
+                    { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
+                    { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
+                ];
     
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();

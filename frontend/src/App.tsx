@@ -14,6 +14,8 @@ const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
 const Scroll3DAnimationPage = React.lazy(() => import('./pages/Components/Scroll3DAnimationPage'));
 const ThreeDSliderPage = React.lazy(() => import('./pages/Components/ThreeDSliderPage'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
+const TemplatesPage = React.lazy(() => import('./pages/TemplatesPage/TemplatesPage'));
+const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
 const CloudScrollPage = React.lazy(() => import('./pages/Components/CloudScrollPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
@@ -113,6 +115,8 @@ const AppShell = () => {
             <Route path="/demo/cloud-scroll" element={<CloudScrollPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/templates" element={<TemplatesPage />} />
+            <Route path="/templates/:id" element={<TemplateDetailPage />} />
           </Routes>
         </React.Suspense>
       </main>

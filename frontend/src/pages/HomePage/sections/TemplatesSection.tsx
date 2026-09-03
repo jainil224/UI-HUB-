@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { 
     ExternalLink, 
     Copy, 
@@ -24,6 +25,7 @@ import {
 } from '../../../data/templatesData';
 
 const TemplatesSection = () => {
+    const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<TemplateCategory>('All');
     const [activeTemplate, setActiveTemplate] = useState<TemplateItem | null>(null);
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
@@ -128,7 +130,7 @@ const TemplatesSection = () => {
 
                                 {/* ── Interactive Preview Window ── */}
                                 <div 
-                                    onClick={() => setActiveTemplate(template)}
+                                    onClick={() => navigate(`/templates/${template.id}`)}
                                     className={`relative h-52 sm:h-56 w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden cursor-pointer group-hover:brightness-110 transition-all`}
                                 >
                                     {/* Mock UI Canvas Wireframe */}
@@ -181,9 +183,9 @@ const TemplatesSection = () => {
                                         <button 
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setActiveTemplate(template);
+                                                navigate(`/templates/${template.id}`);
                                             }}
-                                            className="px-3.5 py-2 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-1.5"
+                                            className="px-3.5 py-2 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer"
                                         >
                                             <Laptop size={14} />
                                             <span>View Details</span>
@@ -196,7 +198,7 @@ const TemplatesSection = () => {
                                     <div>
                                         <div className="flex items-start justify-between gap-2 mb-2">
                                             <h3 
-                                                onClick={() => setActiveTemplate(template)}
+                                                onClick={() => navigate(`/templates/${template.id}`)}
                                                 className="font-heading font-black text-lg text-white group-hover:text-[#1F4BFF] transition-colors cursor-pointer"
                                             >
                                                 {template.title}
@@ -230,7 +232,7 @@ const TemplatesSection = () => {
                                     {/* ── Action Buttons ── */}
                                     <div className="pt-3 border-t border-neutral-800/80 flex items-center gap-2">
                                         <button
-                                            onClick={() => setActiveTemplate(template)}
+                                            onClick={() => navigate(`/templates/${template.id}`)}
                                             className="flex-1 py-2 px-3 bg-[#1F4BFF] text-white text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:bg-[#183ec9] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#000000] transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                                         >
                                             <Code size={13} />

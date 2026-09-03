@@ -33,6 +33,33 @@ export type TemplateCategory = (typeof templateCategories)[number];
 
 export const websiteTemplates: TemplateItem[] = [
     {
+        id: 'toonhub',
+        title: 'ToonHub Creative Studio',
+        description: 'Vibrant, illustration-powered digital studio website with interactive playful animations and character showcases.',
+        category: 'Agency & Portfolio',
+        badge: 'FEATURED',
+        framework: 'Next.js 15',
+        styling: 'Tailwind CSS',
+        animation: 'Framer Motion',
+        isPro: false,
+        liveDemoUrl: 'https://toonhub.dev',
+        githubUrl: 'https://github.com/ui-hub/toonhub-template',
+        previewGradient: 'from-orange-500/30 via-amber-950 to-black',
+        accentColor: '#FF6B4A',
+        stats: {
+            pages: 6,
+            rating: 5.0,
+            downloads: '3.1k',
+        },
+        features: [
+            'Animated character illustration hero banner',
+            'Interactive hover sound effects and physics',
+            'Full responsive showcase portfolio grid',
+            'Contact form with animated feedback status'
+        ],
+        promptPreview: `Create a bold, vibrant illustration-first studio landing page named ToonHub in Next.js 15 and Tailwind CSS. Use warm coral/orange accents, playful typography, interactive animated badges, a showcase portfolio grid, and responsive pricing section.`
+    },
+    {
         id: 'nexus-ai-saas',
         title: 'Nexus AI Platform',
         description: 'Next-generation AI SaaS landing page with dark bento grids, interactive AI chat widget, and dynamic pricing tiers.',
