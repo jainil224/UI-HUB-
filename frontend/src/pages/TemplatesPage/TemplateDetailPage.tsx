@@ -27,6 +27,7 @@ import LoveAppHero from '../../components/templates/LoveAppHero';
 import HeyoAgencyCta from '../../components/templates/HeyoAgencyCta';
 import AuCabaretPoster from '../../components/templates/AuCabaretPoster';
 import DontBeGreedyFooter from '../../components/templates/DontBeGreedyFooter';
+import PaipaiKuaishou from '../../components/templates/PaipaiKuaishou';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -255,54 +256,61 @@ const TemplateDetailPage = () => {
                         </div>
 
                         {/* ── Live Preview Container ── */}
-                        <div className="relative h-[calc(100vh-175px)] min-h-[620px] w-full bg-white overflow-hidden flex flex-col">
+                        <div 
+                            data-lenis-prevent="true"
+                            className="relative h-[calc(100vh-175px)] min-h-[620px] w-full bg-white overflow-hidden flex flex-col"
+                        >
                             {template.id === 'tars-protocol' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
                                     <TarsHeroArena key={`tars-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'split-fuzzy-orb' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#d6c0e3]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#d6c0e3]">
                                     <SplitFuzzyOrbHero key={`orb-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'segmint-2026' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#E8E9EE]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#E8E9EE]">
                                     <SegmintFooter key={`segmint-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'haos-tech-solutions' ? (
-                                <div className="w-full h-full overflow-hidden bg-[#020202]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#020202]">
                                     <HaosShowcase key={`haos-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'mentality' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#F0F0F0]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F0F0F0]">
                                     <MentalityHero key={`mentality-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'lakera-ai-security' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
                                     <LakeraHero key={`lakera-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'interior-design' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
                                     <InteriorDesignShowcase key={`interior-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'lumos' ? (
-                                <div className="w-full h-full overflow-hidden bg-[#F1F1F0]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F1F1F0]">
                                     <LumosHero key={`lumos-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'loveapp-hero' ? (
-                                <div className="w-full h-full overflow-hidden bg-[#D8D2F8]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#D8D2F8]">
                                     <LoveAppHero key={`loveapp-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'heyo-agency-cta' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#F5F5F2]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F5F5F2]">
                                     <HeyoAgencyCta key={`heyo-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'me-019-au-cabaret' ? (
-                                <div className="w-full h-full overflow-hidden bg-[#EDEDED]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#EDEDED]">
                                     <AuCabaretPoster key={`aucabaret-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'dont-be-greedy' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#050505] scroll-smooth overscroll-contain [scrollbar-width:thin] [scrollbar-color:#333_#0a0a0a]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#050505]">
                                     <DontBeGreedyFooter key={`greedy-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'paipai-kuaishou' ? (
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-hidden bg-[#59D1EA]">
+                                    <PaipaiKuaishou key={`paipai-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

@@ -603,6 +603,64 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'paipai-kuaishou':
+            return (
+                <div 
+                    className="relative w-full h-full overflow-hidden flex flex-col justify-between p-3 select-none pointer-events-none"
+                    style={{
+                        background: 'linear-gradient(180deg, #4CCBE8 0%, #59D1EA 30%, #D4F4FA 80%, #F2FAFC 100%)',
+                    }}
+                >
+                    {/* Atmospheric Diffused Light */}
+                    <div className="absolute top-[10%] left-[20%] w-36 h-36 rounded-full bg-white/25 blur-xl pointer-events-none" />
+
+                    {/* Giant Ghost Watermark */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <span 
+                            className="text-white font-[900] uppercase tracking-tighter opacity-75 blur-[4px] select-none leading-none"
+                            style={{ fontSize: '72px' }}
+                        >
+                            PAIPAI
+                        </span>
+                    </div>
+
+                    {/* Top Bar Details */}
+                    <div className="relative z-20 flex items-center justify-between">
+                        <div className="flex items-center gap-1.5 px-2 py-0.5 bg-black/80 rounded-full border border-white/20">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#59D1EA] animate-pulse" />
+                            <span className="text-[7.5px] font-mono font-bold tracking-widest text-white uppercase">
+                                PAIPAI CULTURE
+                            </span>
+                        </div>
+                        <span className="px-1.5 py-0.5 rounded bg-white text-black font-black text-[7.5px] uppercase tracking-wider border border-black shadow-[1px_1px_0px_0px_#000]">
+                            #04
+                        </span>
+                    </div>
+
+                    {/* Center Artwork: Mascot & Platform */}
+                    <div className="relative z-10 flex flex-col items-center justify-center my-auto">
+                        <img
+                            src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788509773/4ede3e25-0ad7-46eb-95dd-06495341141b_zzgvpi.png"
+                            alt="PAIPAI Snowboard Mascot"
+                            className="w-32 h-auto object-contain filter drop-shadow-[0_8px_16px_rgba(15,45,70,0.2)] -mb-7 z-20"
+                            loading="lazy"
+                        />
+                        <img
+                            src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788509700/c0cfd993-d10d-4283-a9cf-6b3b2fbc29dd_j7ie6k.png"
+                            alt="Island Platform"
+                            className="w-28 h-auto object-contain filter drop-shadow-[0_6px_12px_rgba(10,50,75,0.2)] z-10"
+                            loading="lazy"
+                        />
+                    </div>
+
+                    {/* Bottom Editorial row */}
+                    <div className="relative z-20 flex items-center justify-between font-mono text-[7px] font-bold text-[#050505] bg-white/75 backdrop-blur-xs px-2 py-1 rounded border border-black/20">
+                        <span className="uppercase tracking-wider">KUAISHOU // 3D HERO</span>
+                        <span className="text-[#1A1A1A] font-black tracking-widest">KID DESIGN</span>
+                    </div>
+                </div>
+            );
+
         default:
             return (
                 <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden select-none pointer-events-none`}>

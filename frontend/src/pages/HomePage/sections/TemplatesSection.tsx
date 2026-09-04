@@ -11,7 +11,8 @@ import {
     Globe, 
     Github, 
     Laptop,
-    ArrowRight
+    ArrowRight,
+    X
 } from 'lucide-react';
 import { 
     websiteTemplates, 
@@ -31,6 +32,7 @@ import LoveAppHero from '../../../components/templates/LoveAppHero';
 import HeyoAgencyCta from '../../../components/templates/HeyoAgencyCta';
 import AuCabaretPoster from '../../../components/templates/AuCabaretPoster';
 import DontBeGreedyFooter from '../../../components/templates/DontBeGreedyFooter';
+import PaipaiKuaishou from '../../../components/templates/PaipaiKuaishou';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
@@ -143,8 +145,19 @@ const TemplatesSection = () => {
                                     onClick={() => navigate(`/templates/${template.id}`)}
                                     className="relative h-44 sm:h-52 lg:h-60 w-full overflow-hidden cursor-pointer"
                                 >
-                                    {/* Template preview — scale computed dynamically inside LazyTemplatePreview */}
-                                    {template.id === 'tars-protocol' ? (
+                                    {/* ── Preview renderer ──
+                                         Priority 1: static image (instant, zero CPU)
+                                         Priority 2: live React component (virtualized)
+                                         Priority 3: gradient fallback */}
+                                    {template.previewImage ? (
+                                        <img
+                                            src={template.previewImage}
+                                            alt={`${template.title} preview`}
+                                            className="w-full h-full object-cover object-top select-none"
+                                            loading="lazy"
+                                            decoding="async"
+                                        />
+                                    ) : template.id === 'tars-protocol' ? (
                                         <LazyTemplatePreview bgColor="#ffffff"><TarsHeroArena /></LazyTemplatePreview>
                                     ) : template.id === 'split-fuzzy-orb' ? (
                                         <LazyTemplatePreview bgColor="#d6c0e3"><SplitFuzzyOrbHero /></LazyTemplatePreview>
@@ -168,6 +181,8 @@ const TemplatesSection = () => {
                                         <LazyTemplatePreview bgColor="#EDEDED"><AuCabaretPoster /></LazyTemplatePreview>
                                     ) : template.id === 'dont-be-greedy' ? (
                                         <LazyTemplatePreview bgColor="#050505"><DontBeGreedyFooter /></LazyTemplatePreview>
+                                    ) : template.id === 'paipai-kuaishou' ? (
+                                        <LazyTemplatePreview bgColor="#59D1EA"><PaipaiKuaishou /></LazyTemplatePreview>
                                     ) : template.liveDemoUrl ? (
                                         <iframe
                                             src={template.liveDemoUrl}
@@ -379,90 +394,7 @@ const TemplatesSection = () => {
                 )}
             </AnimatePresence>
 
-            {/* ── Submit Template Modal ── */}
-            <AnimatePresence>
-                {showSubmitModal && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            className="relative w-full max-w-lg bg-[#0C0C0E] border-4 border-black rounded-xl shadow-[10px_10px_0px_0px_#FFC700] text-white p-6 sm:p-8"
-                        >
-                            <button
-                                onClick={() => setShowSubmitModal(false)}
-                                className="absolute top-4 right-4 p-2 bg-neutral-900 border-2 border-black hover:bg-red-600 text-white transition-colors cursor-pointer"
-                            >
-                                <X size={18} />
-                            </button>
 
-                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-[#FFC700] text-black text-xs font-black uppercase mb-3 border border-black shadow-[2px_2px_0px_0px_#000]">
-                                <Plus size={14} />
-                                <span>COMMUNITY SUBMISSION</span>
-                            </div>
-
-                            <h3 className="text-2xl font-black font-heading uppercase text-white tracking-tight">
-                                Add Your Website Template
-                            </h3>
-
-                            <p className="mt-2 text-neutral-400 text-xs font-medium leading-relaxed">
-                                You can add new templates directly into the codebase in <code className="text-[#1F4BFF]">src/data/templatesData.ts</code>, or submit your GitHub repo link to get it listed.
-                            </p>
-
-                            <div className="mt-6 space-y-4">
-                                <div>
-                                    <label className="block text-[11px] font-mono font-bold uppercase text-neutral-400 mb-1">
-                                        Template Name
-                                    </label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="e.g. Cyber SaaS Dashboard"
-                                        className="w-full bg-black border-2 border-neutral-800 p-2.5 text-xs font-mono text-white focus:border-[#1F4BFF] outline-none"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[11px] font-mono font-bold uppercase text-neutral-400 mb-1">
-                                        GitHub or Live Preview URL
-                                    </label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="https://github.com/..."
-                                        className="w-full bg-black border-2 border-neutral-800 p-2.5 text-xs font-mono text-white focus:border-[#1F4BFF] outline-none"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-[11px] font-mono font-bold uppercase text-neutral-400 mb-1">
-                                        Framework & Tech Stack
-                                    </label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="Next.js 15, Tailwind, Framer Motion"
-                                        className="w-full bg-black border-2 border-neutral-800 p-2.5 text-xs font-mono text-white focus:border-[#1F4BFF] outline-none"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="mt-6 pt-4 border-t border-neutral-800 flex justify-end gap-3">
-                                <button
-                                    onClick={() => setShowSubmitModal(false)}
-                                    className="px-4 py-2 bg-neutral-900 text-white font-black text-xs uppercase border border-neutral-700 hover:bg-neutral-800 cursor-pointer"
-                                >
-                                    Cancel
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        alert('Thank you! You can add your template directly in src/data/templatesData.ts or push a pull request.');
-                                        setShowSubmitModal(false);
-                                    }}
-                                    className="px-5 py-2 bg-[#FFC700] text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer"
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </motion.div>
-                    </div>
-                )}
-            </AnimatePresence>
 
             {/* Bottom Center Toast Notification on Prompt Copy */}
             <Toast

@@ -30,6 +30,7 @@ const LoveAppDemoPage = React.lazy(() => import('./pages/Components/LoveAppDemoP
 const HeyoDemoPage = React.lazy(() => import('./pages/Components/HeyoDemoPage'));
 const AuCabaretDemoPage = React.lazy(() => import('./pages/Components/AuCabaretDemoPage'));
 const DontBeGreedyDemoPage = React.lazy(() => import('./pages/Components/DontBeGreedyDemoPage'));
+const PaipaiDemoPage = React.lazy(() => import('./pages/Components/PaipaiDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
 const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
@@ -141,6 +142,7 @@ const AppShell = () => {
             <Route path="/demo/heyo-agency-cta" element={<HeyoDemoPage />} />
             <Route path="/demo/me-019-au-cabaret" element={<AuCabaretDemoPage />} />
             <Route path="/demo/dont-be-greedy" element={<DontBeGreedyDemoPage />} />
+            <Route path="/demo/paipai-kuaishou" element={<PaipaiDemoPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
