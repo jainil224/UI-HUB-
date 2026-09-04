@@ -173,26 +173,26 @@ const TemplateDetailPage = () => {
                         className={`transition-all duration-300 rounded-xl overflow-hidden flex flex-col bg-brand-surface border-2 border-white shadow-[8px_8px_0px_0px_#000000] ${deviceWidthClass}`}
                     >
                         {/* ── Browser Mockup Top Bar ── */}
-                        <div className="w-full px-4 py-2.5 bg-black border-b-2 border-white flex items-center justify-between z-40 shrink-0 select-none">
+                        <div className="w-full px-3 sm:px-4 py-2.5 bg-black border-b-2 border-white flex items-center justify-between z-40 shrink-0 select-none gap-2">
                             {/* Left: Traffic light dots & Title */}
-                            <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1.5">
+                            <div className="flex items-center gap-2 min-w-0">
+                                <div className="flex items-center gap-1.5 shrink-0">
                                     <div className="w-2.5 h-2.5 rounded-full bg-[#FF3B30] border border-black" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-[#FFC700] border border-black" />
                                     <div className="w-2.5 h-2.5 rounded-full bg-[#1F4BFF] border border-black" />
                                 </div>
-                                <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase tracking-wider ml-2">
+                                <span className="text-[10px] font-mono text-neutral-400 font-bold uppercase tracking-wider ml-1 sm:ml-2 truncate">
                                     PREVIEW // {template.id.toUpperCase()}
                                 </span>
                             </div>
 
                             {/* Right: Red Copy Prompt Button & Refresh Button */}
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 shrink-0">
                                 {/* Red COPY PROMPT Button with Dropdown */}
                                 <div className="relative" ref={promptMenuRef}>
                                     <button
                                         onClick={() => setPromptMenuOpen(o => !o)}
-                                        className={`px-3 py-1.5 rounded bg-[#FF3B30] hover:bg-[#e0342a] border-2 border-[#FF3B30] text-white hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer shadow-[2px_2px_0px_0px_#000] ${
+                                        className={`px-2.5 sm:px-3 py-1.5 rounded bg-[#FF3B30] hover:bg-[#e0342a] border-2 border-[#FF3B30] text-white hover:brightness-110 transition-all flex items-center gap-1.5 cursor-pointer shadow-[2px_2px_0px_0px_#000] ${
                                             promptMenuOpen ? 'brightness-110' : ''
                                         }`}
                                         title="Copy Prompt"
@@ -273,7 +273,7 @@ const TemplateDetailPage = () => {
                                     <SegmintFooter key={`segmint-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'haos-tech-solutions' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#020202]">
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-hidden bg-[#020202]">
                                     <HaosShowcase key={`haos-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'mentality' ? (

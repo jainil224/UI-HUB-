@@ -18,18 +18,36 @@ export const BackgroundArtwork: React.FC = () => {
     let height = 0;
     let time = 0;
 
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      width = window.innerWidth;
-      height = window.innerHeight;
+    const updateSize = () => {
+      const parent = canvas.parentElement;
+      const rect = parent?.getBoundingClientRect() || canvas.getBoundingClientRect();
+      const newWidth = Math.round(rect.width) || window.innerWidth;
+      const newHeight = Math.round(rect.height) || window.innerHeight;
 
-      canvas.width = Math.floor(width * dpr);
-      canvas.height = Math.floor(height * dpr);
+      if (newWidth <= 0 || newHeight <= 0) return;
+
+      width = newWidth;
+      height = newHeight;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
     };
 
-    resize();
-    window.addEventListener('resize', resize);
+    updateSize();
+
+    // Listen to window resize and parent resize
+    window.addEventListener('resize', updateSize);
+    let resizeObserver: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
+      resizeObserver = new ResizeObserver(() => updateSize());
+      resizeObserver.observe(canvas.parentElement);
+    }
 
     const render = () => {
       time += 0.015;
@@ -40,14 +58,28 @@ export const BackgroundArtwork: React.FC = () => {
       ctx.fillRect(0, 0, width, height);
 
       const isDesktop = width > 768;
-      const cx = isDesktop ? width * 0.75 : width * 0.82;
-      const cy = isDesktop ? height * 0.48 : height * 0.46;
-      const baseRadius = isDesktop
-        ? Math.max(Math.min(width * 0.22, height * 0.36), 230)
-        : Math.max(Math.min(width * 0.36, height * 0.22), 130);
+      const isMobile = width <= 640;
 
-      const visualScale = isDesktop ? 1.0 : Math.max(0.65, baseRadius / 230);
-      const NUM_LEFT_STRIPS = isDesktop ? 8 : 6;
+      // Base radius calculation:
+      // Perfectly circular on all viewports without stretching or oval distortion
+      const baseRadius = isDesktop
+        ? Math.min(Math.max(Math.min(width * 0.20, height * 0.35), 180), 260)
+        : Math.min(Math.max(width * 0.28, 90), height * 0.22, 115);
+
+      // Center coordinates:
+      // On desktop: ensure circle has balanced breathing room from the right border
+      const cx = isDesktop
+        ? Math.min(width * 0.72, width - baseRadius - 45)
+        : Math.min(width * 0.64, width - baseRadius - 18);
+
+      const cy = isDesktop
+        ? height * 0.50
+        : isMobile
+        ? height * 0.44
+        : height * 0.46;
+
+      const visualScale = isDesktop ? 1.0 : Math.max(0.55, baseRadius / 210);
+      const NUM_LEFT_STRIPS = isDesktop ? 8 : 5;
 
       const scalePulsing = 1 + Math.sin(time * 0.6) * 0.016;
       const curRadius = baseRadius * scalePulsing;
@@ -55,7 +87,7 @@ export const BackgroundArtwork: React.FC = () => {
       // Radial atmospheric glow
       const breathe = Math.sin(time * 0.8) * 0.04;
       const glowR = Math.max(width, height) * (0.62 + breathe);
-      const bgGlow = ctx.createRadialGradient(cx, cy, 30, cx, cy, glowR);
+      const bgGlow = ctx.createRadialGradient(cx, cy, 20, cx, cy, glowR);
       bgGlow.addColorStop(0, 'rgba(25, 75, 35, 0.44)');
       bgGlow.addColorStop(0.32, 'rgba(14, 45, 20, 0.24)');
       bgGlow.addColorStop(0.65, 'rgba(6, 20, 9, 0.09)');
@@ -133,22 +165,22 @@ export const BackgroundArtwork: React.FC = () => {
         const stripW = totalStripZoneWidth / NUM_LEFT_STRIPS;
 
         ctx.save();
-        ctx.filter = 'blur(55px)';
-        const leftBleedGrad = ctx.createRadialGradient(leftStartX + 40, cy, 20, leftStartX + 10, cy, curRadius * 1.15);
+        ctx.filter = 'blur(45px)';
+        const leftBleedGrad = ctx.createRadialGradient(leftStartX + 30, cy, 15, leftStartX + 10, cy, curRadius * 1.15);
         leftBleedGrad.addColorStop(0, 'rgba(45, 140, 46, 0.32)');
         leftBleedGrad.addColorStop(0.45, 'rgba(16, 56, 22, 0.18)');
         leftBleedGrad.addColorStop(0.85, 'rgba(6, 20, 9, 0.06)');
         leftBleedGrad.addColorStop(1, 'rgba(2, 2, 2, 0)');
         ctx.fillStyle = leftBleedGrad;
         ctx.beginPath();
-        ctx.ellipse(leftStartX + 30, cy, 150, curRadius * 1.1, 0, 0, Math.PI * 2);
+        ctx.ellipse(leftStartX + 25, cy, Math.min(140, totalStripZoneWidth * 0.8), curRadius * 1.1, 0, 0, Math.PI * 2);
         ctx.fill();
         ctx.restore();
 
         for (let i = 0; i < NUM_LEFT_STRIPS; i++) {
           const sliceX = leftStartX + i * stripW;
           const slicePhase = i * 0.45 - time * 0.35;
-          const stepY = Math.sin(slicePhase) * 6 + ((i % 2 === 0) ? -3.5 : 3.5);
+          const stepY = Math.sin(slicePhase) * (isMobile ? 3.5 : 6) + ((i % 2 === 0) ? -2.5 : 2.5);
           const blendWeight = Math.min(1, Math.max(0, (i + 0.4) / 2.6));
 
           ctx.save();
@@ -176,7 +208,7 @@ export const BackgroundArtwork: React.FC = () => {
           drawPassLeftStrip(10, 26, '#C6FF8E', 0.85);
 
           ctx.save();
-          ctx.filter = 'blur(12px)';
+          ctx.filter = 'blur(10px)';
           ctx.globalAlpha = 0.45 * blendWeight;
           ctx.fillStyle = i % 2 === 0 ? 'rgba(92, 211, 66, 0.08)' : 'rgba(152, 255, 104, 0.05)';
           ctx.fillRect(sliceX, 0, stripW, height);
@@ -199,9 +231,9 @@ export const BackgroundArtwork: React.FC = () => {
 
           if (i > 0) {
             ctx.save();
-            ctx.filter = 'blur(3px)';
+            ctx.filter = 'blur(2px)';
             ctx.strokeStyle = `rgba(152, 255, 104, ${0.16 * blendWeight})`;
-            ctx.lineWidth = 3;
+            ctx.lineWidth = isMobile ? 1.5 : 3;
             ctx.beginPath();
             ctx.moveTo(sliceX, 0);
             ctx.lineTo(sliceX, height);
@@ -217,7 +249,7 @@ export const BackgroundArtwork: React.FC = () => {
           }
 
           ctx.save();
-          ctx.filter = 'blur(38px)';
+          ctx.filter = `blur(${34 * visualScale}px)`;
           ctx.fillStyle = '#020202';
           ctx.beginPath();
           ctx.arc(cx, cy + stepY, curRadius * 0.52, 0, Math.PI * 2);
@@ -243,9 +275,9 @@ export const BackgroundArtwork: React.FC = () => {
 
       // Center Dividing Meridian
       ctx.save();
-      ctx.filter = 'blur(4px)';
+      ctx.filter = 'blur(3px)';
       ctx.strokeStyle = 'rgba(152, 255, 104, 0.35)';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = isMobile ? 2 : 3;
       ctx.beginPath();
       ctx.moveTo(cx, 0);
       ctx.lineTo(cx, height);
@@ -267,7 +299,8 @@ export const BackgroundArtwork: React.FC = () => {
     render();
 
     return () => {
-      window.removeEventListener('resize', resize);
+      window.removeEventListener('resize', updateSize);
+      resizeObserver?.disconnect();
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
@@ -293,19 +326,19 @@ export const TopMetadata: React.FC<{ className?: string }> = ({ className = '' }
   return (
     <div
       id="top-metadata-header"
-      className={`grid grid-cols-2 gap-y-3 gap-x-6 sm:flex sm:flex-row sm:items-start sm:justify-start sm:gap-0 w-full text-white text-[10px] sm:text-[11px] font-semibold tracking-wider font-mono ${className}`}
+      className={`flex flex-wrap items-center justify-between gap-y-2 gap-x-4 sm:flex-nowrap sm:items-start sm:justify-start sm:gap-0 w-full text-white text-[9px] xs:text-[10px] sm:text-[11px] font-semibold tracking-wider font-mono border-b border-white/10 pb-2.5 sm:border-b-0 sm:pb-0 ${className}`}
     >
-      <div className="w-full sm:w-[29%] flex flex-col leading-[1.3] opacity-95">
-        <span className="text-white/80 font-medium tracking-widest text-[9px] sm:text-[10px]">CATEGORY:</span>
-        <span className="text-white font-bold tracking-widest text-[10px] sm:text-[11px]">BRANDING</span>
+      <div className="w-auto sm:w-[29%] flex flex-col leading-[1.3] opacity-95">
+        <span className="text-white/60 font-medium tracking-widest text-[8px] xs:text-[9px] sm:text-[10px]">CATEGORY:</span>
+        <span className="text-white font-bold tracking-widest text-[9px] xs:text-[10px] sm:text-[11px]">BRANDING</span>
       </div>
-      <div className="w-full sm:w-[26%] flex flex-col leading-[1.3] opacity-95">
-        <span className="text-white/80 font-medium tracking-widest text-[9px] sm:text-[10px]">YEAR</span>
-        <span className="text-white font-bold tracking-widest text-[10px] sm:text-[11px]">2024</span>
+      <div className="w-auto sm:w-[26%] flex flex-col leading-[1.3] opacity-95">
+        <span className="text-white/60 font-medium tracking-widest text-[8px] xs:text-[9px] sm:text-[10px]">YEAR:</span>
+        <span className="text-white font-bold tracking-widest text-[9px] xs:text-[10px] sm:text-[11px]">2024</span>
       </div>
-      <div className="col-span-2 sm:col-span-1 w-full sm:w-[45%] flex flex-col leading-[1.3] opacity-95 pt-0.5 sm:pt-0">
-        <span className="text-white/80 font-medium tracking-widest text-[9px] sm:text-[10px]">TECH SOLUTIONS</span>
-        <span className="text-white font-bold tracking-widest text-[10px] sm:text-[11px]">AUTOMATION &amp; ROBOTICS</span>
+      <div className="w-auto sm:w-[45%] flex flex-col leading-[1.3] opacity-95 text-right sm:text-left">
+        <span className="text-white/60 font-medium tracking-widest text-[8px] xs:text-[9px] sm:text-[10px]">TECH SOLUTIONS:</span>
+        <span className="text-[#98FF68] font-bold tracking-widest text-[9px] xs:text-[10px] sm:text-[11px]">AUTOMATION &amp; ROBOTICS</span>
       </div>
     </div>
   );
@@ -316,24 +349,24 @@ export const TopMetadata: React.FC<{ className?: string }> = ({ className = '' }
    ───────────────────────────────────────────────────────────── */
 export const MetricProgress: React.FC<{ className?: string }> = ({ className = '' }) => {
   return (
-    <div id="metric-progress-section" className={`flex flex-col gap-4 sm:gap-6 ${className}`}>
-      <div className="flex items-center gap-8 sm:gap-14 lg:gap-16">
-        <div className="text-[9px] sm:text-[10px] lg:text-[11px] font-semibold tracking-wider text-white/95 uppercase leading-[1.25] font-mono">
+    <div id="metric-progress-section" className={`flex flex-col gap-2.5 xs:gap-4 sm:gap-6 ${className}`}>
+      <div className="flex items-center gap-4 xs:gap-8 sm:gap-14 lg:gap-16">
+        <div className="text-[8px] xs:text-[9px] sm:text-[10px] lg:text-[11px] font-semibold tracking-wider text-white/90 uppercase leading-[1.25] font-mono">
           <div>HIGH-QUALITY</div>
           <div>DEVELOPMENT</div>
         </div>
-        <div className="text-[32px] sm:text-[40px] lg:text-[46px] font-light text-white tracking-tight leading-none font-sans">
+        <div className="text-[26px] xs:text-[32px] sm:text-[40px] lg:text-[46px] font-light text-white tracking-tight leading-none font-sans">
           +2K
         </div>
       </div>
-      <div className="relative w-[190px] sm:w-[230px] lg:w-[250px] pt-3 pb-1" id="technical-timeline-bar">
-        <div className="absolute top-0 left-0 w-full h-[10px] pointer-events-none">
-          <div className="absolute left-[0%] top-0 w-[1px] h-[10px] bg-white/35" />
-          <div className="absolute left-[33.33%] top-0 w-[1px] h-[10px] bg-white/35" />
-          <div className="absolute left-[66.66%] top-0 w-[1px] h-[10px] bg-white/35" />
-          <div className="absolute left-[100%] top-0 w-[1px] h-[10px] bg-white/35" />
+      <div className="relative w-[150px] xs:w-[190px] sm:w-[230px] lg:w-[250px] pt-2 sm:pt-3 pb-1" id="technical-timeline-bar">
+        <div className="absolute top-0 left-0 w-full h-[8px] sm:h-[10px] pointer-events-none">
+          <div className="absolute left-[0%] top-0 w-[1px] h-full bg-white/35" />
+          <div className="absolute left-[33.33%] top-0 w-[1px] h-full bg-white/35" />
+          <div className="absolute left-[66.66%] top-0 w-[1px] h-full bg-white/35" />
+          <div className="absolute left-[100%] top-0 w-[1px] h-full bg-white/35" />
         </div>
-        <div className="relative w-full h-[2px] bg-white/15 rounded-full overflow-hidden mt-[4px]">
+        <div className="relative w-full h-[2px] bg-white/15 rounded-full overflow-hidden mt-[3px] sm:mt-[4px]">
           <div
             className="h-full bg-[#98FF68] rounded-full transition-all duration-700 ease-out"
             style={{
@@ -355,11 +388,11 @@ export const TechIcon: React.FC<{ className?: string }> = ({ className = '' }) =
     <button
       id="bottom-tech-action-btn"
       aria-label="Interactive Action"
-      className={`group relative flex items-center justify-center rounded-2xl bg-white/[0.04] border border-white/10 hover:border-[#98FF68]/40 backdrop-blur-md transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(152,255,104,0.3)] hover:scale-[1.05] active:scale-95 cursor-pointer overflow-hidden ${className || 'w-[54px] h-[54px]'}`}
+      className={`group relative flex items-center justify-center rounded-xl sm:rounded-2xl bg-white/[0.05] border border-white/10 hover:border-[#98FF68]/40 backdrop-blur-md transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.6)] hover:shadow-[0_0_24px_rgba(152,255,104,0.3)] hover:scale-[1.05] active:scale-95 cursor-pointer overflow-hidden ${className || 'w-[38px] h-[38px] xs:w-[44px] xs:h-[44px] sm:w-[50px] sm:h-[50px] lg:w-[54px] lg:h-[54px]'}`}
     >
       <div className="absolute inset-0 bg-radial from-[#98FF68]/15 via-transparent to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       <svg
-        className="w-4 h-4 text-white/90 group-hover:text-white group-hover:rotate-90 transition-all duration-300"
+        className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-white/90 group-hover:text-white group-hover:rotate-90 transition-all duration-300"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -439,21 +472,21 @@ export default function HaosShowcase() {
   return (
     <main
       id="haos-showcase-section"
-      className="relative w-full min-h-[100dvh] h-[100dvh] bg-[#020202] text-white flex flex-col justify-between overflow-hidden select-none font-sans"
+      className="relative w-full h-full min-h-full sm:min-h-[100dvh] sm:h-[100dvh] bg-[#020202] text-white flex flex-col justify-between overflow-hidden select-none font-sans"
     >
       <BackgroundArtwork />
 
-      <header className="relative z-20 w-full pt-6 sm:pt-[55px] lg:pt-[65px] px-6 sm:px-[60px] lg:px-[95px]">
+      <header className="relative z-20 w-full pt-4 xs:pt-5 sm:pt-[55px] lg:pt-[65px] px-4 xs:px-6 sm:px-[60px] lg:px-[95px]">
         <TopMetadata />
       </header>
 
-      <div className="relative z-20 w-full flex-1 flex flex-col lg:flex-row items-start justify-between px-6 sm:px-[60px] lg:px-[95px] py-2 sm:py-4 my-auto">
+      <div className="relative z-20 w-full flex-1 flex flex-col lg:flex-row items-start justify-between px-4 xs:px-6 sm:px-[60px] lg:px-[95px] py-2 xs:py-3 sm:py-4 my-auto">
         <div className="flex flex-col max-w-[420px]" id="hero-title-block">
-          <h1 className="text-[25px] sm:text-[32px] lg:text-[34px] font-bold text-white tracking-[-0.02em] leading-[1.12]">
+          <h1 className="text-[22px] xs:text-[26px] sm:text-[32px] lg:text-[34px] font-bold text-white tracking-[-0.02em] leading-[1.12]">
             HAOS Tech<br />
             Solutions
           </h1>
-          <h2 className="mt-5 sm:mt-7 lg:mt-9 text-[17px] sm:text-[22px] lg:text-[23px] font-bold text-white tracking-[-0.015em] leading-[1.2]">
+          <h2 className="mt-2.5 xs:mt-4 sm:mt-7 lg:mt-9 text-[14px] xs:text-[17px] sm:text-[22px] lg:text-[23px] font-bold text-white/90 tracking-[-0.015em] leading-[1.2]">
             Brand Concept &amp;<br />
             Identity
           </h2>
@@ -461,16 +494,16 @@ export default function HaosShowcase() {
 
         <div
           id="center-logo-container"
-          className="mt-6 sm:mt-8 lg:mt-2 lg:absolute lg:left-[48%] lg:top-[38%] transform -translate-y-1/2"
+          className="mt-3 xs:mt-5 sm:mt-8 lg:mt-2 lg:absolute lg:left-[48%] lg:top-[38%] transform lg:-translate-y-1/2"
         >
-          <HaosLogo className="w-[102px] sm:w-[115px] lg:w-[128px] h-auto text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.15)]" />
+          <HaosLogo className="w-[84px] xs:w-[98px] sm:w-[115px] lg:w-[128px] h-auto text-white drop-shadow-[0_0_10px_rgba(152,255,104,0.25)]" />
         </div>
       </div>
 
-      <footer className="relative z-20 w-full pb-6 sm:pt-4 sm:pb-[55px] lg:pb-[65px] px-6 sm:px-[60px] lg:px-[95px] flex items-end justify-between">
+      <footer className="relative z-20 w-full pb-4 xs:pb-5 sm:pt-4 sm:pb-[55px] lg:pb-[65px] px-4 xs:px-6 sm:px-[60px] lg:px-[95px] flex items-end justify-between">
         <MetricProgress />
-        <div className="pb-1">
-          <TechIcon className="w-[44px] h-[44px] sm:w-[50px] sm:h-[50px] lg:w-[54px] lg:h-[54px]" />
+        <div className="pb-0.5 sm:pb-1">
+          <TechIcon />
         </div>
       </footer>
     </main>
