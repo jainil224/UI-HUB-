@@ -7,13 +7,19 @@ interface LazyTemplatePreviewProps {
 }
 
 /**
- * Renders children only when the card enters the viewport.
- * Until then shows a lightweight skeleton placeholder.
- * This prevents all heavy template components from mounting at once.
+ * Virtualized template preview:
+ * - MOUNTS the heavy component when the card enters the viewport.
+ * - UNMOUNTS it when the card scrolls far out of view (saves memory & CPU).
+ * - Keeps a fixed-size placeholder so layout doesn't shift on unmount.
+ *
+ * rootMargin: 400px buffer above/below — prevents flicker during normal scrolling.
+ * The component only unmounts after the card is >400px outside the viewport.
  */
 const LazyTemplatePreview = memo(({ children, bgColor = '#0C0C0E', className = '' }: LazyTemplatePreviewProps) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [isVisible, setIsVisible] = useState(false);
+    // true = in viewport (or within buffer) → render children
+    // false = far off screen → render placeholder
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
         const el = ref.current;
@@ -21,12 +27,15 @@ const LazyTemplatePreview = memo(({ children, bgColor = '#0C0C0E', className = '
 
         const observer = new IntersectionObserver(
             ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsVisible(true);
-                    observer.disconnect(); // only mount once, never unmount
-                }
+                // Mount when entering buffer zone, unmount when fully outside it
+                setIsMounted(entry.isIntersecting);
             },
-            { rootMargin: '200px 0px', threshold: 0 }
+            {
+                // 400px buffer: card mounts 400px before entering view,
+                // unmounts 400px after leaving view — no flicker during normal scroll
+                rootMargin: '400px 0px',
+                threshold: 0,
+            }
         );
 
         observer.observe(el);
@@ -34,18 +43,18 @@ const LazyTemplatePreview = memo(({ children, bgColor = '#0C0C0E', className = '
     }, []);
 
     return (
-        <div ref={ref} className={`relative w-full h-full ${className}`} style={{ background: bgColor }}>
-            {isVisible ? (
+        <div
+            ref={ref}
+            className={`relative w-full h-full ${className}`}
+            style={{ background: bgColor }}
+        >
+            {isMounted ? (
                 children
             ) : (
-                /* Skeleton shimmer */
+                /* Placeholder — same bg color, no layout shift */
                 <div
-                    className="absolute inset-0 animate-pulse"
-                    style={{
-                        background: `linear-gradient(90deg, ${bgColor} 25%, color-mix(in srgb, ${bgColor} 80%, white) 50%, ${bgColor} 75%)`,
-                        backgroundSize: '200% 100%',
-                        animation: 'shimmer 1.4s infinite',
-                    }}
+                    className="absolute inset-0"
+                    style={{ background: bgColor }}
                 />
             )}
         </div>
