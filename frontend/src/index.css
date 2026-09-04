@@ -82,6 +82,32 @@
   animation: ribbonDrift 9s ease-in-out infinite;
 }
 
+@keyframes floatLeft {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes floatRight {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-float-left {
+  animation: floatLeft 5s ease-in-out infinite;
+}
+
+.animate-float-right {
+  animation: floatRight 4.2s ease-in-out infinite;
+}
+
 @keyframes orbCircularMotion {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

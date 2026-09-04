@@ -499,60 +499,106 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
 
         case 'dont-be-greedy':
             return (
-                <div className="relative w-full h-full bg-[#050505] overflow-hidden flex flex-col justify-between select-none pointer-events-none p-3 border border-[#161616] font-sans">
-                    {/* Ambient Neon Lime Reflection */}
-                    <div className="absolute top-1/3 left-1/4 w-36 h-36 rounded-full bg-[#B8F500]/15 blur-2xl pointer-events-none" />
+                <div className="relative w-full h-full bg-[#050505] overflow-hidden flex flex-col justify-between select-none pointer-events-none p-2 sm:p-3 border border-[#161616] font-sans">
+                    {/* Ambient Radial Spotlight */}
+                    <div
+                        className="absolute inset-0 pointer-events-none opacity-40"
+                        style={{
+                            background: 'radial-gradient(circle at 50% 35%, rgba(255,255,255,0.12) 0%, transparent 60%)',
+                        }}
+                    />
+                    {/* Ambient Neon Lime Glow */}
+                    <div className="absolute bottom-6 right-1/4 w-32 h-20 rounded-full bg-[#B8F500]/20 blur-2xl pointer-events-none" />
 
-                    {/* Top Eyebrow */}
-                    <div className="relative z-10 flex items-center justify-between text-[7.5px] font-mono text-neutral-400 tracking-wider">
-                        <div className="flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#B8F500]" />
-                            <span>OFFICIAL ARCHIVAL CATALOGUE</span>
+                    {/* Top Headline Typography: DON'T BE GREED */}
+                    <div className="relative z-10 flex justify-between items-start w-full leading-[0.82] px-1 pt-1">
+                        <div className="flex flex-col items-start">
+                            <span
+                                className="font-black tracking-[-0.035em] text-white uppercase text-[15px] sm:text-[18px]"
+                                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                            >
+                                DON'T
+                            </span>
+                            <span
+                                className="font-black tracking-[-0.02em] text-white uppercase text-[6px] sm:text-[7px] leading-tight"
+                                style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                            >
+                                FOR THE KID
+                            </span>
                         </div>
-                        <span className="text-[#B8F500]">SERIES 01</span>
+                        <span
+                            className="font-black tracking-[-0.035em] text-white uppercase text-[15px] sm:text-[18px]"
+                            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                        >
+                            BE
+                        </span>
+                        <span
+                            className="font-black tracking-[-0.035em] text-white uppercase text-[15px] sm:text-[18px]"
+                            style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+                        >
+                            GREED
+                        </span>
                     </div>
 
-                    {/* Middle Stage: Left Typography + Right Collectible Card */}
-                    <div className="relative z-10 flex-1 flex items-center justify-between gap-2 my-auto">
-                        {/* Monolithic Headlines */}
-                        <div className="flex flex-col leading-[0.82] tracking-tighter uppercase">
-                            <span className="text-xl sm:text-2xl font-black text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                                AKCB
-                            </span>
-                            <span className="text-lg sm:text-xl font-black text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                                COLLECTION
-                            </span>
-                            <span className="text-xl sm:text-2xl font-black text-[#B8F500] drop-shadow-[0_0_15px_rgba(184,245,0,0.7)]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                                HISTORY
-                            </span>
-                        </div>
+                    {/* Center Stage: Dual 3D Vinyl Mascots */}
+                    <div className="relative z-20 flex-1 flex items-end justify-center w-full min-h-0 -mb-2">
+                        {/* Floor Contact Shadow */}
+                        <div
+                            className="absolute bottom-1 w-[70%] h-4 rounded-full opacity-90 blur-[6px] pointer-events-none"
+                            style={{
+                                background: 'radial-gradient(ellipse 75% 35% at 50% 50%, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.7) 45%, transparent 75%)',
+                            }}
+                        />
 
-                        {/* Figurine Card Mini */}
-                        <div className="relative w-24 sm:w-28 h-28 bg-[#0D0D0D] border border-[#262626] rounded p-1.5 flex flex-col justify-between shadow-lg">
-                            <div className="flex items-center justify-between text-[6px] font-mono text-neutral-400">
-                                <span>AKCB // 001</span>
-                                <span className="text-[#B8F500]">500 ED</span>
-                            </div>
-                            <div className="relative flex-1 flex items-center justify-center overflow-visible">
-                                <div className="absolute bottom-0 w-16 h-2 rounded-full bg-black/80 blur-[1px]" />
-                                <img
-                                    src="https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png"
-                                    alt="AKCB Collectible Figurine"
-                                    className="h-16 w-auto object-contain object-bottom drop-shadow-md z-10"
-                                    loading="lazy"
-                                    decoding="async"
-                                />
-                            </div>
-                            <span className="text-[6px] font-mono text-white font-bold truncate">
-                                HORNED OVERLORD
-                            </span>
+                        {/* Mascots Group */}
+                        <div className="relative flex items-end justify-center h-full max-h-[145px]">
+                            {/* Left Mascot */}
+                            <img
+                                src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788466181/349937f6-856e-4cab-a0da-92f91b81728c_iqhncx.png"
+                                onError={(e) => {
+                                    (e.target as HTMLImageElement).src = '/assets/char_left.png';
+                                }}
+                                alt="Horned Mascot"
+                                className="h-[92%] w-auto object-contain object-bottom -mr-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)] z-10 filter contrast-[1.05]"
+                                loading="eager"
+                                decoding="async"
+                            />
+                            {/* Right Mascot */}
+                            <img
+                                src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788466146/7f8c6e5b-5b63-4aaf-8478-805e391b879c_ntow6a.png"
+                                onError={(e) => {
+                                    (e.target as HTMLImageElement).src = '/assets/char_right.png';
+                                }}
+                                alt="Streetwear Mascot"
+                                className="h-[80%] w-auto object-contain object-bottom drop-shadow-[0_10px_20px_rgba(0,0,0,0.9)] z-10 filter contrast-[1.05]"
+                                loading="eager"
+                                decoding="async"
+                            />
                         </div>
                     </div>
 
-                    {/* Bottom Web3 Strip */}
-                    <div className="relative z-10 flex items-center justify-between text-[7px] font-mono text-neutral-500 border-t border-[#1C1C1C] pt-1">
-                        <span>© 2026 AKUTAMI BUREAU</span>
-                        <span className="text-[#B8F500]">VERIFY CONTRACT</span>
+                    {/* Bottom Deckled Torn Paper Edge SVG */}
+                    <div className="relative z-30 -mx-3 -mb-3 overflow-hidden">
+                        <svg
+                            viewBox="0 0 1440 100"
+                            className="w-full h-5 filter drop-shadow-[0_-3px_6px_rgba(0,0,0,0.9)]"
+                            preserveAspectRatio="none"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M0,100 L1440,100 L1440,35 Q1380,55 1320,30 Q1260,10 1200,40 Q1140,65 1080,35 Q1020,8 960,30 Q900,55 840,40 Q780,20 720,45 Q660,65 600,35 Q540,10 480,30 Q420,55 360,35 Q300,15 240,40 Q180,65 120,30 Q60,8 0,35 Z"
+                                fill="#FFFFFF"
+                            />
+                        </svg>
+                        {/* Micro Footnote Below Torn Edge */}
+                        <div className="bg-[#FFFFFF] text-[#111111] px-2 py-0.5 flex items-center justify-between font-mono text-[6.5px] uppercase font-bold tracking-wider">
+                            <span className="flex items-center gap-1">
+                                <span className="w-1 h-1 rounded-full bg-[#B8F500] border border-black" />
+                                <span>AKCB // VINYL 01</span>
+                            </span>
+                            <span className="text-[#666666]">EXHIBITION 2026</span>
+                        </div>
                     </div>
                 </div>
             );

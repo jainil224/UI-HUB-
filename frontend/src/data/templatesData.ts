@@ -2619,12 +2619,12 @@ Aesthetic: Swiss Minimalist Poster / High-Fashion Brutalism
     {
         id: 'dont-be-greedy',
         title: "DON'T BE GREEDY",
-        description: 'High-impact brutalist streetwear art footer section showcasing a 3D collectible vinyl figurine card with mouse tilt alongside dark monolithic typography and electric neon lime accents.',
+        description: 'Full-screen brutalist streetwear art website for the 3D vinyl collectible art release "AKCB" featuring an interactive 1.62:1 Hero Banner poster with dual vinyl mascots, deckled torn paper bottom edge, and a monolithic AKCB Collection History archival section.',
         category: 'Web3 & FinTech',
         badge: 'NEW',
         framework: 'React 19 (TypeScript)',
         styling: 'Tailwind CSS',
-        animation: '3D Tilt Physics & Ambient Glow Parallax',
+        animation: '3D Parallax & Organic Idle Floating',
         isPro: false,
         liveDemoUrl: 'https://ai.studio/apps/7fe53a77-0050-400b-a0e1-2d17c202e5ee',
         githubUrl: 'https://github.com/ui-hub/dont-be-greedy',
@@ -2633,107 +2633,106 @@ Aesthetic: Swiss Minimalist Poster / High-Fashion Brutalism
         stats: {
             pages: 1,
             rating: 5.0,
-            downloads: '4.5k',
+            downloads: '4.8k',
         },
         features: [
-            'Monolithic Barlow Condensed typography stack (AKCB, COLLECTION, HISTORY)',
-            '3D interactive vinyl figurine card with mouse tracking tilt and floor shadow',
-            'Distressed electric neon lime (#B8F500) brush underline SVG vector',
-            'Giant low-contrast watermark lettering layer with mouse parallax',
-            'Technical archival metadata header and verified contract Web3 footer'
+            'Interactive 1.62:1 Hero Banner poster with multi-layer 3D mouse parallax',
+            'Dual 3D vinyl mascots (Horned Overlord & Streetwear Figurine) with floor shadow & idle floating animation',
+            'Heavy ultra-condensed typography stack ("DON\'T", "BE", "GREED" + "FOR THE KID")',
+            'Realistic deckled torn paper bottom border SVG divider with double-crease shadow',
+            'Monolithic "AKCB COLLECTION HISTORY" section with giant low-contrast ghost watermark letterforms',
+            'Electric neon lime (#B8F500) distressed brush underline SVG and technical archival specifications grid'
         ],
-        promptPreview: `Build a high-impact, brutalist streetwear art footer section in React with Tailwind CSS that showcases a 3D collectible vinyl figurine card alongside dark monolithic typography.
+        promptPreview: `Create a full-screen, brutalist streetwear art website for the 3D vinyl collectible art release "AKCB" (Akutami Character Bureau) using React, TypeScript, and Tailwind CSS. The design consists of:
+1. An interactive Hero Banner poster (1.62:1 ratio, multi-layer depth, dual 3D vinyl mascots, headline typography, torn paper divider, and technical UI buttons).
+2. A monolithic "AKCB COLLECTION HISTORY" section featuring massive low-contrast graphic ghost letterforms, pure white foreground text, and electric neon green accents.
 
 ---
 
 ### 1. ASSETS & IMAGE URLS
-- Left Horned Mascot (Baroque Coat + Green Glasses):
-  https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png
-- Right Mascot (Bandana + Neon Green Jacket):
-  https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782788/char_right_eb1iqq.png
-- Fallback Local Path: /assets/char_left.png and /assets/char_right.png
+- Left Mascot (Horned Overlord with green glasses, horns, and baroque coat):
+  https://res.cloudinary.com/chhwhdhk/image/upload/v1788466181/349937f6-856e-4cab-a0da-92f91b81728c_iqhncx.png
+- Right Mascot (Bandana figurine in neon lime streetwear blazer):
+  https://res.cloudinary.com/chhwhdhk/image/upload/v1788466146/7f8c6e5b-5b63-4aaf-8478-805e391b879c_ntow6a.png
+- Background Poster Pattern: High-resolution dark urban concrete texture with radial spotlight.
+- Local Asset Fallbacks: /assets/char_left.png and /assets/char_right.png
 
 ---
 
 ### 2. COLOR PALETTE & ATMOSPHERE
-- Canvas Base: Obsidian Black #050505
-- Section Border: 1px solid #161616 (border-t border-[#161616])
-- Card Background: #0D0D0D with inner subtle gradient from #1A1A1A (top-left) to #080808 (bottom-right)
-- Card Border: 1px solid #262626 with hover transition to #B8F500 (neon lime)
-- Primary Text: Stark Pure White #FFFFFF
-- Secondary Text: Muted Monospace Gray #777777 and #A0A0A0
-- Accent Color: Electric Neon Lime Green #B8F500
-- Neon Glow Filters:
-  - Dropshadow: drop-shadow-[0_0_24px_rgba(184,245,0,0.6)]
-  - Floor shadow: radial-gradient(ellipse 65% 25% at 50% 50%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 75%)
+- Canvas Base: Pure Obsidian #050505
+- Poster Interior: #0A0A0A to #111111
+- Primary Foreground Text: #FFFFFF (Bright Stark White)
+- Primary Accent: #B8F500 (Electric Neon Lime)
+- Secondary Accent: #FF3B30 (Crimson Red for tags/crosses)
+- Muted Elements: #555555, #777777, #2A2A2A
+- Torn Paper Bottom Border: Pure white torn paper silhouette (#FFFFFF) with realistic deckled edges, drop shadow, and halftone grain.
 
 ---
 
-### 3. TYPOGRAPHY SPECIFICATIONS
-- Display Font: Ultra-condensed sans-serif (font-family: 'Barlow Condensed', 'Impact', sans-serif, font-stretch: ultra-condensed, font-weight: 900, letter-spacing: -0.035em, line-height: 0.82).
-- Monospace Font: Technical tabular monospace (font-family: 'JetBrains Mono', 'Fira Code', monospace, letter-spacing: 0.18em to 0.25em).
-- Font Sizes:
-  - Watermark Background Letters: 15vw to 28vw (leading-[0.75], color: #101010 to #141414).
-  - Hero Display Headline (AKCB, COLLECTION): clamp(3.8rem, 11vw, 10.5rem).
-  - Hero Display Accent (HISTORY): clamp(4.2rem, 12vw, 11.5rem) in #B8F500.
-  - Card Title: clamp(1.4rem, 2.5vw, 2.2rem).
-  - Card Metadata & Labels: 10px to 12px monospace uppercase.
+### 3. TYPOGRAPHY SYSTEM
+- Display Typography (Hero Headlines):
+  - Font: Heavy Ultra-Condensed Sans-Serif ('Barlow Condensed', 'Impact', sans-serif).
+  - Hero Words: "DON'T", "BE", "GREED" across the top of the poster.
+  - Tracking: -0.03em to -0.04em with tight letter spacing.
+  - Sub-label: "FOR THE KID" stacked directly beneath "DON'T".
+- Monospace Technical Elements:
+  - Font: Tabular Code Monospace ('JetBrains Mono', 'Fira Code', monospace).
+  - Tracking: 0.18em to 0.25em.
+  - Specs: SHDR: TOY_VINYL_PBR, POLYGON: 842,019, COLOR: 050505 / B8F500.
 
 ---
 
-### 4. CARD DIMENSIONS & ANIMATION BEHAVIOR
-- Card Container:
-  - Size: w-full max-w-[380px] sm:max-w-[420px] md:max-w-[460px] h-[520px] sm:h-[560px] md:h-[600px].
-  - Aspect Ratio: approximately 3:4.
-  - Corner Radius: rounded-md (border-radius: 6px).
-  - Position: Right-aligned/centered alongside the monolithic typography stack.
-- Card Interactive Animation:
-  - 3D Tilt on mouse move: perspective: 1000px, transform: rotateX(...) rotateY(...) translateZ(10px).
-  - Floating idle animation: @keyframes cardFloat.
-  - Image Pop-out: Figurine image scale up scale-105 on card hover with neon rim glow reflection.
-- Card Internal Structure:
-  1. Top Header: Category badge [EDITION 01 // VINYL] with a flashing neon green pulse indicator dot.
-  2. Main Stage (Center): 3D vinyl character cut-out on transparent canvas, grounded with an elliptical radial floor shadow.
-  3. Bottom Footer Info: Figurine model name AKCB PROTO-01, barcode vector graphic, and serial pill badge #001/500.
-
----
-
-### 5. EXACT SVG CODE FOR DISTRESSED NEON GREEN BRUSH UNDERLINE
-<svg viewBox="0 0 400 24" className="w-[85%] sm:w-[92%] h-3 sm:h-5 mx-auto mt-1 overflow-visible" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M 4 12 Q 60 7, 130 14 Q 210 18, 290 9 Q 350 6, 396 13" stroke="#B8F500" strokeWidth="5" strokeLinecap="round" className="filter drop-shadow-[0_0_12px_rgba(184,245,0,0.85)]" />
-  <path d="M 25 16 Q 100 18, 190 14 Q 290 17, 375 12" stroke="#B8F500" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
-  <circle cx="50" cy="19" r="1.5" fill="#B8F500" />
-  <circle cx="210" cy="5" r="1.2" fill="#B8F500" />
-  <circle cx="340" cy="18" r="1.8" fill="#B8F500" />
-</svg>`,
+### 4. ANIMATION & INTERACTION SYSTEM
+1. Multi-Layer 3D Mouse Parallax:
+   - Tracking mouse coordinates relative to the poster center: (x, y) from -0.5 to +0.5.
+   - Dynamic translation on typography: translate3d(x * -4px, y * -2px, 0).
+   - Characters: translate3d(x * 5px, y * 3px, 0) rotateY(x * 1.5deg).
+   - Foreground badges and UI overlays: translate3d(x * 8px, y * 5px, 0).
+2. Idle Organic Floating Movement:
+   - Left character: translateY(0px) to translateY(-6px) oscillation over 5s.
+   - Right character: translateY(0px) to translateY(-5px) oscillation over 4.2s (phase-shifted).
+3. Sound Effect Audio FX:
+   - Web Audio API synthesizer for tactile mechanical click and neon-hum feedback on interactive buttons.`,
         toolPrompts: {
-            cursor: `/* .cursorrules - DON'T BE GREEDY Brutalist Streetwear Art Footer Directive */
-Recreate this exact high-impact brutalist streetwear art footer section in React, TypeScript, and Tailwind CSS.
-1. Palette: Obsidian black #050505 canvas, dark card #0D0D0D, pure white #FFFFFF, electric neon lime #B8F500.
-2. Typography: 'Barlow Condensed' 900 ultra-condensed for "AKCB", "COLLECTION", and "HISTORY" (leading-[0.82], tracking-[-0.035em]).
-3. Underline SVG: Distressed neon green vector stroke with quadratic bezier curves under "HISTORY".
-4. Collectible Card: 3D interactive card with mouse cursor tilt calculation (rotateX/rotateY), ambient lime glow, floor shadow, and figurine cutout (https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png).
-5. Background Parallax: Giant watermark lettering "AKCB ARCHIVE TOY DIVISION" / "HISTORY 01" shifting on mouse move.
-6. Technical Footer: Copyright 2026, OpenSea, Discord, Twitter/X, and Verify Contract links.`,
+            cursor: `/* .cursorrules - AKCB "DON'T BE GREEDY" Streetwear Art Website Directive */
+Create a full-screen, brutalist streetwear art website for the 3D vinyl collectible art release "AKCB" (Akutami Character Bureau) using React, TypeScript, and Tailwind CSS.
+1. Interactive Hero Banner Poster:
+   - Aspect ratio 1.62:1 (max-w-[1500px], min-h-[580px]), dark interior #0A0A0A, border #161616.
+   - Top typography: "DON'T", "BE", "GREED" with sub-label "FOR THE KID" in Barlow Condensed font-black (tracking-[-0.035em], leading-[0.82]).
+   - Dual 3D Vinyl Mascots:
+     * Left: Horned Overlord (https://res.cloudinary.com/chhwhdhk/image/upload/v1788466181/349937f6-856e-4cab-a0da-92f91b81728c_iqhncx.png)
+     * Right: Streetwear Figurine (https://res.cloudinary.com/chhwhdhk/image/upload/v1788466146/7f8c6e5b-5b63-4aaf-8478-805e391b879c_ntow6a.png)
+     * Contact floor shadow (radial-gradient ellipse) and ambient neon lime rim light (#B8F500).
+     * Idle floating animations and multi-layer 3D mouse parallax.
+   - Deckled torn paper bottom border SVG with realistic double-edge profile and drop shadow.
+2. Monolithic "AKCB COLLECTION HISTORY" Section:
+   - Massive low-contrast ghost watermark letterforms ("AKCB ARCHIVE COLLECTION EDITION 001", "AKCB VINYL 01", "HISTORY EXHIBITION TOY SERIES") in #101010 to #131313 with parallax.
+   - Monolithic stacked headings: "AKCB", "COLLECTION", "HISTORY" in Barlow Condensed font-black with electric neon lime (#B8F500) distressed brush underline SVG vector.
+   - 3-column archival technical specifications grid (Classification, Palette Profile, Archival Status).`,
             claude: `You are Claude Code, an expert design technologist.
-Implement the "DON'T BE GREEDY" brutalist streetwear art footer section in React, TypeScript, and Tailwind CSS:
-- Canvas: Obsidian black #050505 with giant low-contrast watermark lettering and neon green radial blur
-- Left stack: Monolithic headlines "AKCB", "COLLECTION", and "HISTORY" in Barlow Condensed font-black with distressed neon lime underline SVG
-- Right card: 3D interactive collectible figurine card with mouse tilt (rotateX/rotateY), pulsating green badge dot, contact floor shadow, and figurine asset
-- Bottom bar: Monospace technical links (OPENSEA, DISCORD, TWITTER / X, VERIFY CONTRACT)`,
-            antigravity: `ANTIGRAVITY BLUEPRINT: DON'T BE GREEDY STREETWEAR FOOTER
-Aesthetic: Dark Streetwear Neo-Brutalism / Vinyl Toy Art
-- Canvas: #050505 with 3-tier giant watermark parallax
-- Accent: #B8F500 (electric neon lime green)
-- Typography: Barlow Condensed 900, clamp(4rem, 11vw, 10.5rem)
-- Brush Underline: Multi-segment curved SVG with drop-shadow glow
-- Figurine Card: 3D perspective 1200px tilt, scale-108 hover pop-out, barcode and edition badge
-- Collectible Asset: https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png`,
-            lovable: `Build the "DON'T BE GREEDY" brutalist streetwear vinyl collectible footer section in React and Tailwind CSS with obsidian black canvas #050505, giant stacked headings AKCB, COLLECTION, HISTORY in Barlow Condensed with neon green distressed underline SVG, 3D mouse tilt collectible card, and technical Web3 footer.`,
-            advance: `TECHNICAL SPECIFICATION: DON'T BE GREEDY
-1. Tilt Physics: tiltX = ((y - centerY) / centerY) * -12; tiltY = ((x - centerX) / centerX) * 14; transformStyle: 'preserve-3d'.
-2. Typography Hierarchy: clamp(4rem, 11vw, 10.5rem) leading-[0.82] tracking-[-0.035em] in #FFFFFF & #B8F500.
-3. Card Shadow: radial-gradient(ellipse 65% 25% at 50% 50%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, transparent 75%).`
+Implement the full-screen brutalist streetwear art website "DON'T BE GREEDY" for the 3D vinyl collectible art release "AKCB" in React, TypeScript, and Tailwind CSS:
+- Dual sections: Hero Banner Poster (1.62:1) + Monolithic AKCB Collection History section
+- Palette: Pure obsidian #050505, dark poster #0A0A0A, bright white #FFFFFF, electric neon lime #B8F500, crimson red #FF3B30
+- Dual vinyl mascots: Horned Overlord (left) and Bandana Streetwear figurine (right) with contact floor shadow and idle floating animations
+- Top poster typography: DON'T, BE, GREED with stacked sub-label FOR THE KID in Barlow Condensed font-black
+- Bottom torn paper edge SVG divider
+- Collection history section with multi-tier giant low-contrast watermark lettering layer and distressed neon lime brush underline SVG`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: AKCB "DON'T BE GREEDY" COLLECTIBLE ART RELEASE
+Aesthetic: Brutalist Streetwear Neo-Noir / 3D Vinyl Toy Art
+- Framework: React 19 + TypeScript + Tailwind CSS
+- Poster Aspect: 1.62:1 frame with radial spotlight and 3D mouse parallax coordinates
+- Mascots:
+  * Left: https://res.cloudinary.com/chhwhdhk/image/upload/v1788466181/349937f6-856e-4cab-a0da-92f91b81728c_iqhncx.png
+  * Right: https://res.cloudinary.com/chhwhdhk/image/upload/v1788466146/7f8c6e5b-5b63-4aaf-8478-805e391b879c_ntow6a.png
+- Torn Paper Edge: SVG deckled edge path with white and subtle grey shadow layers
+- Monolithic History: Massive ghost letterforms (15vw - 30vw) + Barlow Condensed headlines (AKCB / COLLECTION / HISTORY) + curved neon lime stroke SVG
+- Archival Specs Grid: Classification, Palette Profile, Archival Status`,
+            lovable: `Build the full-screen brutalist streetwear art website for AKCB ("DON'T BE GREEDY") in React and Tailwind CSS. Include the 1.62:1 interactive hero poster with dual 3D vinyl mascots, DON'T BE GREED typography, deckled torn paper bottom edge, and the monolithic AKCB COLLECTION HISTORY section with giant ghost watermark lettering and neon lime brush underline.`,
+            advance: `TECHNICAL ARCHITECTURE SPECIFICATION: AKCB "DON'T BE GREEDY"
+1. Mouse Parallax Vector Math: x = (clientX - rect.left) / rect.width - 0.5; y = (clientY - rect.top) / rect.height - 0.5; Typography: translate3d(x * -4px, y * -2px, 0); Mascots: translate3d(x * 5px, y * 3px, 0) rotateY(x * 1.5deg).
+2. Torn Paper Silhouette: SVG path "M0,120 L1440,120 L1440,40 Q1380,60 1320,35..." with drop-shadow-[0_-8px_16px_rgba(0,0,0,0.95)].
+3. Watermark Shader Simulation: Three layered 140% width text spans at font-size 15vw to 22vw in #101010 / #131313 with translate3d(x * -0.5px, y * -0.5px, 0).`
         }
     }
 ];
