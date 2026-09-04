@@ -8,12 +8,8 @@ import {
     Sparkles, 
     Code, 
     Layers, 
-    Star, 
-    Download, 
     Globe, 
     Github, 
-    Plus,
-    X,
     Laptop,
     ArrowRight
 } from 'lucide-react';
@@ -44,7 +40,6 @@ const TemplatesSection = () => {
     const [selectedCategory, setSelectedCategory] = useState<TemplateCategory>('All');
     const [activeTemplate, setActiveTemplate] = useState<TemplateItem | null>(null);
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
-    const [showSubmitModal, setShowSubmitModal] = useState(false);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
@@ -246,31 +241,6 @@ const TemplatesSection = () => {
                                 </div>
                             </motion.div>
                         ))}
-
-                        {/* ── Submit / Add New Template Card ── */}
-                        <motion.div
-                            initial={{ opacity: 0, y: 16 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.25, delay: 0.2 }}
-                            onClick={() => setShowSubmitModal(true)}
-                            className="group relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-xl border-2 border-dashed border-neutral-800 bg-[#0B0B0D] hover:border-neutral-500 hover:bg-[#0f0f12] transition-all duration-200 cursor-pointer min-h-[240px] sm:min-h-[300px] text-center select-none"
-                        >
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-neutral-900 border-2 border-neutral-700 group-hover:border-neutral-500 flex items-center justify-center mb-4 transition-all">
-                                <Plus size={24} className="text-neutral-500 group-hover:text-neutral-300 transition-colors" />
-                            </div>
-
-                            <span className="text-sm sm:text-base font-black uppercase text-neutral-300 group-hover:text-white transition-colors mb-2 tracking-wide">
-                                Add Your Template
-                            </span>
-
-                            <p className="text-xs text-neutral-600 group-hover:text-neutral-500 max-w-[200px] mb-5 font-medium leading-relaxed transition-colors">
-                                Submit your landing page to get featured.
-                            </p>
-
-                            <span className="px-4 py-1.5 bg-neutral-900 text-neutral-400 group-hover:text-white font-black text-[10px] uppercase tracking-wider border border-neutral-700 group-hover:border-neutral-500 transition-all">
-                                Submit Template
-                            </span>
-                        </motion.div>
                     </AnimatePresence>
                 </div>
 
