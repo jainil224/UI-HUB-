@@ -2487,5 +2487,133 @@ Aesthetic: Modern Creative Agency / High-Contrast Editorial
 2. Typography Pairings: 'DM Serif Display' 400 (49px leading-[1.08]) + 'Plus Jakarta Sans' (15px-16px).
 3. Social Matrix: 5 SVG tiles 28px × 28px rounded-[5px] in #FFFFFF with #171719 glyphs.`
         }
+    },
+    {
+        id: 'me-019-au-cabaret',
+        title: 'ME.019 Au Cabaret',
+        description: 'Pixel-perfect, high-fashion Swiss-editorial electronic music concert poster landing page and footer matching the iconic 019 AU CABARET SAUVAGE aesthetic with airbrush neon smoke plume and artist navigator.',
+        category: 'Agency & Portfolio',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Canvas Airbrush Shaders & Micro-interactions',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/302f6714-303b-42fe-be37-36c6becd4224',
+        githubUrl: 'https://github.com/ui-hub/me-019-au-cabaret',
+        previewGradient: 'from-pink-500 via-purple-600 to-neutral-200',
+        accentColor: '#FF1CD6',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '4.7k',
+        },
+        features: [
+            'Static high-DPI airbrush neon smoke plume on HTML5 canvas with multi-lobe gradients',
+            'Monumental "019" headline typography with AU CABARET SAUVAGE venue subtitle',
+            'Fixed fine pencil sketch central model portrait with drop shadow',
+            'Right St. Andrew cross date matrix mark (MAI 0 x 2 2014) with hairline divider',
+            'Interactive 3-column bottom artist navigator (Carl Craig, Djebali, Nina Kraviz)'
+        ],
+        promptPreview: `Create a pixel-perfect, high-fashion Swiss-editorial electronic music concert poster landing page and footer matching the iconic "019 AU CABARET SAUVAGE" aesthetic in React (TypeScript) and Tailwind CSS.
+
+---
+
+### 1. LAYOUT & DESIGN SYSTEM SPECIFICATIONS
+
+#### Canvas & Background
+- Root Screen: Full viewport height and width (100vw, 100vh, overflow: hidden).
+- Base Canvas Color: Warm industrial editorial paper grey #EDEDED.
+- Primary Text Color: Monochromatic rich carbon black #111111.
+- Secondary Text Color: #777777 and #999999 for metadata and subtitles.
+- Accent Pink: High-voltage neon fluorescent magenta (#FF1CD6 / #FF24DC), electric violet (#B946F8), and warm soft rose (#FC5FAF).
+- Paper Grain Texture: Subtle SVG fractal noise overlay at opacity-[0.025] with mix-blend-overlay.
+
+---
+
+### 2. DETAILED SECTION BREAKDOWNS
+
+#### A. Top Navigation Bar (Header)
+- Container: Fixed at top (top-0 inset-x-0 h-16 sm:h-20 px-6 sm:px-12 md:px-16 lg:px-20 flex items-center justify-between z-40).
+- Left Brand Group:
+  - HERONDIR PRODUCTION: Stacked tiny uppercase text, font-bold tracking-widest text-[8px] sm:text-[9px] leading-tight text-[#111111].
+  - ME: Bold display block right next to it, text-base sm:text-lg font-black tracking-tight ml-2.5.
+  - Hamburger Menu Icon: 3 thin horizontal black bars spaced 3px apart, margin-left ml-8 sm:ml-12.
+- Center Navigation Links:
+  - HOME, ABOUT, CONTACT in text-[10px] sm:text-[11px] font-bold tracking-[0.25em] text-[#222222] uppercase hover:text-black transition-colors.
+  - Spacing between links: space-x-8 sm:space-x-12.
+- Right Utilities:
+  - Language indicator: ENG in text-[9px] sm:text-[10px] font-semibold tracking-wider text-[#666666].
+  - Search Icon: Minimalist search glass icon, size 15px, stroke width 2.
+
+#### B. Static Airbrush Neon Smoke Plume (Background Layer)
+- Placement: Absolutely positioned (inset-0 pointer-events-none z-10).
+- Behavior: Completely static (no motion or video loop), rendered via high-DPI HTML5 Canvas with radial gradient airbrush lobes:
+  - Bottom-Left Violet Lobe: (12% W, 67% H), radius (25% W, 28% H), rgba(185, 70, 248, 0.92).
+  - Lower-Left Edge: (3% W, 55% H), radius (20% W, 32% H), rgba(175, 58, 245, 0.88).
+  - Top-Left Soft Rose: (9% W, 22% H), radius (24% W, 23% H), rgba(252, 95, 175, 0.82).
+  - Core 019 Hot Magenta: (22% W, 44% H), radius (26% W, 27% H), rgba(255, 24, 218, 0.98).
+  - Upper Left Crest: (31% W, 25% H), radius (18% W, 17% H), rgba(255, 48, 210, 0.86).
+  - Neck & Cheek Bridge: (42% W, 40% H), radius (20% W, 16% H), rgba(255, 45, 215, 0.92).
+  - Right Plume Sweeping to MAI 0 x 2 2014:
+    - Neck exit: (55% W, 40.5% H), radius (19% W, 15% H), rgba(255, 70, 224, 0.88).
+    - Plume body around mark: (68% W, 41% H), radius (18% W, 13% H), rgba(255, 105, 232, 0.72).
+    - Plume tip taper: (77% W, 41% H), radius (11% W, 9% H), rgba(255, 145, 242, 0.48).
+
+#### C. Left Editorial Typography (Headline Block)
+- Position: absolute left-8 sm:left-14 md:left-20 lg:left-28 top-[24%] sm:top-[28%] md:top-[30%] lg:top-[32%] z-30 pointer-events-none.
+- Large Number "019": Heavy geometric sans font-black text-7xl sm:text-8xl md:text-[10rem] lg:text-[12rem] xl:text-[13.5rem] tracking-tighter leading-none text-[#0A0A0A].
+- Subtitle "AU CABARET SAUVAGE": font-bold tracking-[0.28em] text-[10px] sm:text-[12px] md:text-[14px] text-[#111111] uppercase mt-2 sm:mt-4 md:mt-5 ml-1 sm:ml-2.
+
+#### D. Central Fixed Character
+- Position: Exactly centered on canvas (absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 pointer-events-none).
+- Movement: 100% FIXED — zero floating, zero up-and-down oscillation, no cursor parallax.
+- Image: High-contrast monochrome fine pencil sketch bust of a woman with short pixie crop and painted neon eye mask.
+  - Image URL: "https://res.cloudinary.com/chhwhdhk/image/upload/v1788462734/fe3a66ef-196e-4220-acfd-7f5f170bdce9_y5ggt9.png"
+  - Max Height: h-[68vh] sm:h-[75vh] md:h-[82vh] lg:h-[88vh].
+  - Styling: object-contain object-bottom drop-shadow-[0_20px_45px_rgba(0,0,0,0.12)].
+
+#### E. Right Technical Notation (MAI 0 x 2 2014)
+- Position: absolute right-6 sm:right-12 md:right-16 lg:right-24 xl:right-32 top-[36%] sm:top-[38%] md:top-[40%] lg:top-[41%] z-30 flex items-center pointer-events-none.
+- Cross Mark (St. Andrew's Cross / Date Matrix): 44px x 44px sm:54px x 54px, 1.5px lines forming X in carbon #111111. Top: MAI, Left: 0, Right: 2, Bottom: 2014.
+- Horizontal Rule (Hairline): ml-6 sm:ml-8, width w-20 to w-56, h-[1.5px] bg-[#111111].
+
+#### F. Interactive Footer (Bottom Artist Selector & Controls)
+- Container: fixed bottom-0 inset-x-0 h-24 sm:h-28 px-4 sm:px-8 md:px-12 lg:px-16 flex items-end justify-between pb-6 sm:pb-8 z-40.
+- Left & Right Navigation Buttons: 32px x 32px sm:36px x 36px solid black rectangles bg-[#111111] text-white flex items-center justify-center hover:bg-black active:scale-95 transition-transform.
+- Artist Columns (3-Column Layout):
+  - CARL CRAIG: 01 in text-[9px] sm:text-[10px] font-bold tracking-widest text-[#777777] mt-0.5.
+  - DJEBALI: Social links (Fb Tw In), 02, set number 037.
+  - NINA KRAVIZ: 03 in text-[9px] sm:text-[10px] font-bold tracking-widest text-[#777777] mt-0.5.`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - ME.019 Au Cabaret Sauvage High-Fashion Concert Poster */
+Recreate this exact pixel-perfect Swiss-editorial electronic music concert poster landing page in React, TypeScript, and Tailwind CSS.
+1. Palette: Warm paper grey #EDEDED canvas, carbon black #111111, fluorescent magenta #FF1CD6, electric violet #B946F8.
+2. Background Canvas: High-DPI HTML5 canvas airbrush plume with 9 radial gradient lobes (violet, hot magenta, rose) + subtle fractal noise overlay.
+3. Left Headline: Giant "019" in text-[13.5rem] font-black tracking-tighter leading-none + "AU CABARET SAUVAGE".
+4. Central Model: Fixed sketch portrait (https://res.cloudinary.com/chhwhdhk/image/upload/v1788462734/fe3a66ef-196e-4220-acfd-7f5f170bdce9_y5ggt9.png) h-[88vh]. Zero parallax.
+5. Right Technical Mark: St. Andrew cross (MAI 0 x 2 2014) with horizontal rule.
+6. Footer: Interactive 3-column artist switcher (Carl Craig 01, Djebali 02/037, Nina Kraviz 03) with square nav buttons.`,
+            claude: `You are Claude Code, an expert design technologist.
+Implement the ME.019 Au Cabaret high-fashion electronic music poster in React, TypeScript, and Tailwind CSS:
+- Canvas: Industrial paper grey #EDEDED with full-viewport canvas airbrush neon cloud (radial magenta/violet gradients)
+- Left typography: Monumental "019" with "AU CABARET SAUVAGE" subtitle
+- Center artwork: High-contrast sketch bust (h-[88vh]) 100% fixed with drop-shadow
+- Right technical mark: St. Andrew cross date matrix (MAI 0 x 2 2014) with hairline rule
+- Top nav: HERONDIR PRODUCTION, ME, hamburger lines, HOME/ABOUT/CONTACT, search
+- Footer: 3-column interactive artist selector with previous/next controls`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: ME.019 AU CABARET SAUVAGE
+Aesthetic: Swiss Minimalist Poster / High-Fashion Brutalism
+- Canvas: #EDEDED paper tone with SVG feTurbulence grain
+- Airbrush Shader: 9-lobe procedural radial gradient airbrush on HTML5 canvas
+- Central Character: https://res.cloudinary.com/chhwhdhk/image/upload/v1788462734/fe3a66ef-196e-4220-acfd-7f5f170bdce9_y5ggt9.png
+- Headline: 019 in Inter 900 13.5rem + AU CABARET SAUVAGE 0.28em tracking
+- Date Matrix: Diagonal SVG cross with MAI 0 x 2 2014
+- Interactive Track: Carl Craig, Djebali, Nina Kraviz with active state toggle`,
+            lovable: `Build the ME.019 Au Cabaret high-fashion electronic concert poster landing page in React and Tailwind CSS with warm paper grey canvas #EDEDED, high-DPI airbrush magenta/violet neon smoke on canvas, giant 019 text with AU CABARET SAUVAGE, fixed center sketch character, technical date cross, and 3-column interactive artist footer.`,
+            advance: `TECHNICAL SPECIFICATION: ME.019 AU CABARET
+1. Airbrush Shader Pipeline: ctx.createRadialGradient with stops [0.0: peakAlpha, 0.35: 0.82, 0.65: 0.45, 0.85: 0.18, 1.0: 0.0] across 9 anatomical coordinates.
+2. Typography Matrix: "019" at 13.5rem font-black tracking-tighter leading-none; "AU CABARET SAUVAGE" at tracking-[0.28em].
+3. Matrix Cross: 54px × 54px St. Andrew diagonal lines with MAI 0 x 2 2014 notation.`
+        }
     }
 ];

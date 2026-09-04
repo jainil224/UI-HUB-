@@ -33,6 +33,7 @@ import InteriorDesignShowcase from '../../../components/templates/InteriorDesign
 import LumosHero from '../../../components/templates/LumosHero';
 import LoveAppHero from '../../../components/templates/LoveAppHero';
 import HeyoAgencyCta from '../../../components/templates/HeyoAgencyCta';
+import AuCabaretPoster from '../../../components/templates/AuCabaretPoster';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 
@@ -198,6 +199,10 @@ const TemplatesSection = () => {
                                         ) : template.id === 'heyo-agency-cta' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F5F5F2] overflow-hidden">
                                                 <HeyoAgencyCta />
+                                            </div>
+                                        ) : template.id === 'me-019-au-cabaret' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#EDEDED] overflow-hidden">
+                                                <AuCabaretPoster />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe

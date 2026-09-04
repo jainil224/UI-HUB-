@@ -433,6 +433,70 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'me-019-au-cabaret':
+            return (
+                <div className="relative w-full h-full bg-[#EDEDED] overflow-hidden flex flex-col justify-between select-none pointer-events-none p-3 border border-neutral-300 font-sans">
+                    {/* Airbrush Neon Glow */}
+                    <div
+                        className="absolute inset-0 pointer-events-none opacity-80"
+                        style={{
+                            background: 'radial-gradient(circle at 25% 45%, rgba(255, 24, 218, 0.75) 0%, rgba(185, 70, 248, 0.55) 35%, rgba(252, 95, 175, 0.3) 60%, transparent 75%)'
+                        }}
+                    />
+
+                    {/* Top Micro Nav */}
+                    <div className="relative z-10 flex items-center justify-between text-[8px] font-bold tracking-widest text-[#111111]">
+                        <span>HERONDIR PRODUCTION ME</span>
+                        <div className="flex items-center gap-3 text-neutral-600">
+                            <span>HOME</span>
+                            <span>ABOUT</span>
+                            <span>ENG</span>
+                        </div>
+                    </div>
+
+                    {/* Middle Stage: 019 + Central Model + Cross Mark */}
+                    <div className="relative z-10 flex-1 flex items-center justify-between my-auto">
+                        {/* 019 Headline */}
+                        <div className="flex flex-col">
+                            <span className="text-4xl sm:text-5xl font-black tracking-tighter text-[#0A0A0A] leading-none">
+                                019
+                            </span>
+                            <span className="text-[7px] font-bold tracking-[0.2em] text-[#111111] uppercase mt-0.5">
+                                AU CABARET SAUVAGE
+                            </span>
+                        </div>
+
+                        {/* Central Model */}
+                        <img
+                            src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788462734/fe3a66ef-196e-4220-acfd-7f5f170bdce9_y5ggt9.png"
+                            alt="Featured Artist Model"
+                            className="absolute left-1/2 -translate-x-1/2 bottom-0 h-28 w-auto object-contain object-bottom drop-shadow-md z-20 pointer-events-none"
+                            loading="lazy"
+                            decoding="async"
+                        />
+
+                        {/* Right Cross Mark */}
+                        <div className="relative w-8 h-8 flex items-center justify-center text-[7px] font-bold text-[#111111]">
+                            <svg className="absolute inset-0 w-full h-full text-[#111111]" viewBox="0 0 54 54" fill="none">
+                                <line x1="6" y1="6" x2="48" y2="48" stroke="currentColor" strokeWidth="2" />
+                                <line x1="48" y1="6" x2="6" y2="48" stroke="currentColor" strokeWidth="2" />
+                            </svg>
+                            <span className="absolute top-0 text-[6px]">MAI</span>
+                            <span className="absolute left-0.5 text-[8px] font-black">0</span>
+                            <span className="absolute right-0.5 text-[8px] font-black">2</span>
+                            <span className="absolute bottom-0 text-[6px]">2014</span>
+                        </div>
+                    </div>
+
+                    {/* Bottom Artist Strip */}
+                    <div className="relative z-10 flex items-center justify-between text-[8px] font-black tracking-tight text-[#111111] border-t border-neutral-300 pt-1.5 uppercase">
+                        <span>CARL CRAIG</span>
+                        <span className="text-[#FF1CD6]">DJEBALI</span>
+                        <span>NINA KRAVIZ</span>
+                    </div>
+                </div>
+            );
+
         default:
             return (
                 <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden select-none pointer-events-none`}>

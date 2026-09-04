@@ -25,6 +25,7 @@ import InteriorDesignShowcase from '../../components/templates/InteriorDesignSho
 import LumosHero from '../../components/templates/LumosHero';
 import LoveAppHero from '../../components/templates/LoveAppHero';
 import HeyoAgencyCta from '../../components/templates/HeyoAgencyCta';
+import AuCabaretPoster from '../../components/templates/AuCabaretPoster';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -293,6 +294,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'heyo-agency-cta' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#F5F5F2]">
                                     <HeyoAgencyCta key={`heyo-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'me-019-au-cabaret' ? (
+                                <div className="w-full h-full overflow-hidden bg-[#EDEDED]">
+                                    <AuCabaretPoster key={`aucabaret-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

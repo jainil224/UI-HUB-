@@ -8,6 +8,7 @@ import interiorDesignCode from '../components/templates/InteriorDesignShowcase.t
 import lumosCode from '../components/templates/LumosHero.tsx?raw';
 import loveAppHeroCode from '../components/templates/LoveAppHero.tsx?raw';
 import heyoAgencyCtaCode from '../components/templates/HeyoAgencyCta.tsx?raw';
+import auCabaretCode from '../components/templates/AuCabaretPoster.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'tars-protocol': tarsProtocolCode,
@@ -21,4 +22,5 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'lumos': lumosCode,
     'loveapp-hero': loveAppHeroCode,
     'heyo-agency-cta': heyoAgencyCtaCode,
+    'me-019-au-cabaret': auCabaretCode,
 };
