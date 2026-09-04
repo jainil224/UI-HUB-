@@ -422,7 +422,7 @@ const HistoryCollectionSection: React.FC = () => {
 // ── 6. MAIN COMPLETE TURNKEY EXPORT ─────────────────────────────────────────
 export const DontBeGreedyFooter: React.FC = () => {
   return (
-    <main className="w-full min-h-screen bg-[#050505] text-white flex flex-col items-center justify-start overflow-x-hidden selection:bg-[#B8F500] selection:text-black font-sans">
+    <main className="w-full min-h-full bg-[#050505] text-white flex flex-col items-center justify-start overflow-x-hidden selection:bg-[#B8F500] selection:text-black font-sans">
       <HeroBanner />
       <HistoryCollectionSection />
     </main>

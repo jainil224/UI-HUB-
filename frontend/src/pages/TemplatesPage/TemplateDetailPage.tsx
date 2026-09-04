@@ -255,7 +255,7 @@ const TemplateDetailPage = () => {
                         </div>
 
                         {/* ── Live Preview Container ── */}
-                        <div className="relative h-[calc(100vh-175px)] min-h-[620px] w-full bg-white overflow-hidden flex items-center justify-center">
+                        <div className="relative h-[calc(100vh-175px)] min-h-[620px] w-full bg-white overflow-hidden flex flex-col">
                             {template.id === 'tars-protocol' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
                                     <TarsHeroArena key={`tars-render-${resetKey}`} />
@@ -301,7 +301,7 @@ const TemplateDetailPage = () => {
                                     <AuCabaretPoster key={`aucabaret-render-${resetKey}`} />
                                 </div>
                             ) : template.id === 'dont-be-greedy' ? (
-                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#050505]">
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#050505] scroll-smooth overscroll-contain [scrollbar-width:thin] [scrollbar-color:#333_#0a0a0a]">
                                     <DontBeGreedyFooter key={`greedy-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
