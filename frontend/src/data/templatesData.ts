@@ -8,6 +8,7 @@ export interface TemplateItem {
     styling: string;
     animation: string;
     isPro: boolean;
+    thumbnailUrl?: string;
     liveDemoUrl?: string;
     githubUrl?: string;
     previewGradient: string;
@@ -1965,7 +1966,7 @@ Aesthetic: Luxury Editorial E-Commerce
         styling: 'Tailwind CSS',
         animation: '3D Parallax & Micro-interactions',
         isPro: false,
-        liveDemoUrl: 'https://ai.studio/apps/38c82aca-9711-49c6-a9f2-5177adb44886',
+        liveDemoUrl: '/demo/lumos',
         githubUrl: 'https://github.com/ui-hub/lumos-hero',
         previewGradient: 'from-neutral-300 via-neutral-100 to-white',
         accentColor: '#F54D92',

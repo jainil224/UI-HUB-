@@ -30,6 +30,7 @@ import HaosShowcase from '../../../components/templates/HaosShowcase';
 import MentalityHero from '../../../components/templates/MentalityHero';
 import LakeraHero from '../../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../../components/templates/InteriorDesignShowcase';
+import LumosHero from '../../../components/templates/LumosHero';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 
@@ -183,6 +184,10 @@ const TemplatesSection = () => {
                                         ) : template.id === 'interior-design' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
                                                 <InteriorDesignShowcase />
+                                            </div>
+                                        ) : template.id === 'lumos' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F1F1F0] overflow-hidden">
+                                                <LumosHero />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe
