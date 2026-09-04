@@ -2118,7 +2118,7 @@ Aesthetic: Futuristic Editorial Minimal
     },
     {
         id: 'loveapp-hero',
-        title: 'LoveApp Interactive 3D Heart Hero',
+        title: 'LoveApp Hero',
         description: 'Pastel lavender romance and social hero featuring central 3D glossy glass heart with smooth lerp parallax, iridescent flowing ribbons, giant LOVEAPP background typography, and feature pills.',
         category: 'SaaS & AI',
         badge: 'NEW',
@@ -2126,7 +2126,7 @@ Aesthetic: Futuristic Editorial Minimal
         styling: 'Tailwind CSS',
         animation: '3D Parallax & Micro-interactions',
         isPro: false,
-        liveDemoUrl: '/demo/loveapp-hero',
+        liveDemoUrl: 'https://ai.studio/apps/78fd1136-02e8-4ad7-b3ba-9544224b2675',
         githubUrl: 'https://github.com/ui-hub/loveapp-hero',
         previewGradient: 'from-purple-300 via-pink-100 to-indigo-200',
         accentColor: '#F34B83',
@@ -2284,7 +2284,15 @@ Color Constants:
   * Pill shape: \`rounded-full\`.
   * Color: Solid black background (#000000), crisp white text (#FFFFFF).
   * Typography: text-[11px] sm:text-[12px], font-medium.
-  * Interaction: Interactive click feedback ("Connected!"), scale hover [1.02], subtle white sheen transition (\`via-white/15\`) sweeping across on hover.`,
+  * Interaction: Interactive click feedback ("Connected!"), scale hover [1.02], subtle white sheen transition (\`via-white/15\`) sweeping across on hover.
+
+================================================================================
+10. LOWER DECORATIVE ACCENTS
+================================================================================
+- Bottom Corners:
+  * Bottom-left & bottom-right ambient soft glow orbs (w-36 h-36, opacity 0.4, blur 16px).
+- Bottom Frame Notch:
+  * Centered along bottom border: 180px to 240px wide tab, 7px height, border-t border-x border-[#CBC3EE]/70, rounded-t-[10px], subtle glass effect.`,
         toolPrompts: {
             cursor: `/* .cursorrules - LoveApp Interactive 3D Heart Hero Directive */
 Recreate this exact pixel-accurate, premium interactive landing page hero section in React, TypeScript, and Tailwind CSS.
