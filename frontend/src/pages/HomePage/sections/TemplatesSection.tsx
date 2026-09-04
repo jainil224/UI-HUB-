@@ -135,29 +135,14 @@ const TemplatesSection = () => {
                                 onClick={() => handleOpenTemplate(template.id)}
                                 className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0C0C0E] overflow-hidden select-none hover:border-white hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300 cursor-pointer will-change-transform"
                             >
-                                {/* ── Mockup Browser Top Bar ── */}
-                                <div className="h-9 px-3.5 bg-[#141418] border-b-2 border-neutral-800 flex items-center justify-between gap-3">
-                                    <div className="flex items-center gap-1.5">
-                                        <div className="w-2.5 h-2.5 rounded-full bg-[#FF3B30] border border-black/50" />
-                                        <div className="w-2.5 h-2.5 rounded-full bg-[#FFC700] border border-black/50" />
-                                        <div className="w-2.5 h-2.5 rounded-full bg-[#00E599] border border-black/50" />
-                                    </div>
-                                    <div className="flex-1 max-w-[180px] bg-black/60 border border-neutral-800 rounded px-2 py-0.5 text-[10px] font-mono text-neutral-400 truncate text-center">
-                                        uihub.dev/{template.id}
-                                    </div>
-                                    {template.badge && (
-                                        <span className="text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 bg-[#1F4BFF] text-white border border-black shadow-[1px_1px_0px_0px_#000]">
-                                            {template.badge}
-                                        </span>
-                                    )}
-                                </div>
 
                                 {/* ── Interactive Real Live Preview Window ── */}
                                 <div 
                                     onClick={() => navigate(`/templates/${template.id}`)}
-                                    className="relative h-60 sm:h-64 w-full overflow-hidden cursor-pointer group transition-all border-b-2 border-white"
+                                    className="relative h-60 sm:h-64 w-full overflow-hidden cursor-pointer group transition-all"
                                 >
                                     <div className="relative w-full h-full overflow-hidden">
+
                                         {template.id === 'tars-protocol' ? (
                                             <LazyTemplatePreview bgColor="#ffffff">
                                                 <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white">
