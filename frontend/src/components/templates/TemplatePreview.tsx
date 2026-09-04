@@ -497,6 +497,66 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'dont-be-greedy':
+            return (
+                <div className="relative w-full h-full bg-[#050505] overflow-hidden flex flex-col justify-between select-none pointer-events-none p-3 border border-[#161616] font-sans">
+                    {/* Ambient Neon Lime Reflection */}
+                    <div className="absolute top-1/3 left-1/4 w-36 h-36 rounded-full bg-[#B8F500]/15 blur-2xl pointer-events-none" />
+
+                    {/* Top Eyebrow */}
+                    <div className="relative z-10 flex items-center justify-between text-[7.5px] font-mono text-neutral-400 tracking-wider">
+                        <div className="flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#B8F500]" />
+                            <span>OFFICIAL ARCHIVAL CATALOGUE</span>
+                        </div>
+                        <span className="text-[#B8F500]">SERIES 01</span>
+                    </div>
+
+                    {/* Middle Stage: Left Typography + Right Collectible Card */}
+                    <div className="relative z-10 flex-1 flex items-center justify-between gap-2 my-auto">
+                        {/* Monolithic Headlines */}
+                        <div className="flex flex-col leading-[0.82] tracking-tighter uppercase">
+                            <span className="text-xl sm:text-2xl font-black text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                                AKCB
+                            </span>
+                            <span className="text-lg sm:text-xl font-black text-white" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                                COLLECTION
+                            </span>
+                            <span className="text-xl sm:text-2xl font-black text-[#B8F500] drop-shadow-[0_0_15px_rgba(184,245,0,0.7)]" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+                                HISTORY
+                            </span>
+                        </div>
+
+                        {/* Figurine Card Mini */}
+                        <div className="relative w-24 sm:w-28 h-28 bg-[#0D0D0D] border border-[#262626] rounded p-1.5 flex flex-col justify-between shadow-lg">
+                            <div className="flex items-center justify-between text-[6px] font-mono text-neutral-400">
+                                <span>AKCB // 001</span>
+                                <span className="text-[#B8F500]">500 ED</span>
+                            </div>
+                            <div className="relative flex-1 flex items-center justify-center overflow-visible">
+                                <div className="absolute bottom-0 w-16 h-2 rounded-full bg-black/80 blur-[1px]" />
+                                <img
+                                    src="https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png"
+                                    alt="AKCB Collectible Figurine"
+                                    className="h-16 w-auto object-contain object-bottom drop-shadow-md z-10"
+                                    loading="lazy"
+                                    decoding="async"
+                                />
+                            </div>
+                            <span className="text-[6px] font-mono text-white font-bold truncate">
+                                HORNED OVERLORD
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Bottom Web3 Strip */}
+                    <div className="relative z-10 flex items-center justify-between text-[7px] font-mono text-neutral-500 border-t border-[#1C1C1C] pt-1">
+                        <span>© 2026 AKUTAMI BUREAU</span>
+                        <span className="text-[#B8F500]">VERIFY CONTRACT</span>
+                    </div>
+                </div>
+            );
+
         default:
             return (
                 <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden select-none pointer-events-none`}>

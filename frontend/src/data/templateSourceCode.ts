@@ -9,6 +9,7 @@ import lumosCode from '../components/templates/LumosHero.tsx?raw';
 import loveAppHeroCode from '../components/templates/LoveAppHero.tsx?raw';
 import heyoAgencyCtaCode from '../components/templates/HeyoAgencyCta.tsx?raw';
 import auCabaretCode from '../components/templates/AuCabaretPoster.tsx?raw';
+import dontBeGreedyCode from '../components/templates/DontBeGreedyFooter.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'tars-protocol': tarsProtocolCode,
@@ -23,4 +24,5 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'loveapp-hero': loveAppHeroCode,
     'heyo-agency-cta': heyoAgencyCtaCode,
     'me-019-au-cabaret': auCabaretCode,
+    'dont-be-greedy': dontBeGreedyCode,
 };

@@ -2615,5 +2615,125 @@ Aesthetic: Swiss Minimalist Poster / High-Fashion Brutalism
 2. Typography Matrix: "019" at 13.5rem font-black tracking-tighter leading-none; "AU CABARET SAUVAGE" at tracking-[0.28em].
 3. Matrix Cross: 54px × 54px St. Andrew diagonal lines with MAI 0 x 2 2014 notation.`
         }
+    },
+    {
+        id: 'dont-be-greedy',
+        title: "DON'T BE GREEDY",
+        description: 'High-impact brutalist streetwear art footer section showcasing a 3D collectible vinyl figurine card with mouse tilt alongside dark monolithic typography and electric neon lime accents.',
+        category: 'Web3 & FinTech',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: '3D Tilt Physics & Ambient Glow Parallax',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/7fe53a77-0050-400b-a0e1-2d17c202e5ee',
+        githubUrl: 'https://github.com/ui-hub/dont-be-greedy',
+        previewGradient: 'from-lime-400 via-neutral-900 to-black',
+        accentColor: '#B8F500',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '4.5k',
+        },
+        features: [
+            'Monolithic Barlow Condensed typography stack (AKCB, COLLECTION, HISTORY)',
+            '3D interactive vinyl figurine card with mouse tracking tilt and floor shadow',
+            'Distressed electric neon lime (#B8F500) brush underline SVG vector',
+            'Giant low-contrast watermark lettering layer with mouse parallax',
+            'Technical archival metadata header and verified contract Web3 footer'
+        ],
+        promptPreview: `Build a high-impact, brutalist streetwear art footer section in React with Tailwind CSS that showcases a 3D collectible vinyl figurine card alongside dark monolithic typography.
+
+---
+
+### 1. ASSETS & IMAGE URLS
+- Left Horned Mascot (Baroque Coat + Green Glasses):
+  https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png
+- Right Mascot (Bandana + Neon Green Jacket):
+  https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782788/char_right_eb1iqq.png
+- Fallback Local Path: /assets/char_left.png and /assets/char_right.png
+
+---
+
+### 2. COLOR PALETTE & ATMOSPHERE
+- Canvas Base: Obsidian Black #050505
+- Section Border: 1px solid #161616 (border-t border-[#161616])
+- Card Background: #0D0D0D with inner subtle gradient from #1A1A1A (top-left) to #080808 (bottom-right)
+- Card Border: 1px solid #262626 with hover transition to #B8F500 (neon lime)
+- Primary Text: Stark Pure White #FFFFFF
+- Secondary Text: Muted Monospace Gray #777777 and #A0A0A0
+- Accent Color: Electric Neon Lime Green #B8F500
+- Neon Glow Filters:
+  - Dropshadow: drop-shadow-[0_0_24px_rgba(184,245,0,0.6)]
+  - Floor shadow: radial-gradient(ellipse 65% 25% at 50% 50%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 50%, transparent 75%)
+
+---
+
+### 3. TYPOGRAPHY SPECIFICATIONS
+- Display Font: Ultra-condensed sans-serif (font-family: 'Barlow Condensed', 'Impact', sans-serif, font-stretch: ultra-condensed, font-weight: 900, letter-spacing: -0.035em, line-height: 0.82).
+- Monospace Font: Technical tabular monospace (font-family: 'JetBrains Mono', 'Fira Code', monospace, letter-spacing: 0.18em to 0.25em).
+- Font Sizes:
+  - Watermark Background Letters: 15vw to 28vw (leading-[0.75], color: #101010 to #141414).
+  - Hero Display Headline (AKCB, COLLECTION): clamp(3.8rem, 11vw, 10.5rem).
+  - Hero Display Accent (HISTORY): clamp(4.2rem, 12vw, 11.5rem) in #B8F500.
+  - Card Title: clamp(1.4rem, 2.5vw, 2.2rem).
+  - Card Metadata & Labels: 10px to 12px monospace uppercase.
+
+---
+
+### 4. CARD DIMENSIONS & ANIMATION BEHAVIOR
+- Card Container:
+  - Size: w-full max-w-[380px] sm:max-w-[420px] md:max-w-[460px] h-[520px] sm:h-[560px] md:h-[600px].
+  - Aspect Ratio: approximately 3:4.
+  - Corner Radius: rounded-md (border-radius: 6px).
+  - Position: Right-aligned/centered alongside the monolithic typography stack.
+- Card Interactive Animation:
+  - 3D Tilt on mouse move: perspective: 1000px, transform: rotateX(...) rotateY(...) translateZ(10px).
+  - Floating idle animation: @keyframes cardFloat.
+  - Image Pop-out: Figurine image scale up scale-105 on card hover with neon rim glow reflection.
+- Card Internal Structure:
+  1. Top Header: Category badge [EDITION 01 // VINYL] with a flashing neon green pulse indicator dot.
+  2. Main Stage (Center): 3D vinyl character cut-out on transparent canvas, grounded with an elliptical radial floor shadow.
+  3. Bottom Footer Info: Figurine model name AKCB PROTO-01, barcode vector graphic, and serial pill badge #001/500.
+
+---
+
+### 5. EXACT SVG CODE FOR DISTRESSED NEON GREEN BRUSH UNDERLINE
+<svg viewBox="0 0 400 24" className="w-[85%] sm:w-[92%] h-3 sm:h-5 mx-auto mt-1 overflow-visible" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M 4 12 Q 60 7, 130 14 Q 210 18, 290 9 Q 350 6, 396 13" stroke="#B8F500" strokeWidth="5" strokeLinecap="round" className="filter drop-shadow-[0_0_12px_rgba(184,245,0,0.85)]" />
+  <path d="M 25 16 Q 100 18, 190 14 Q 290 17, 375 12" stroke="#B8F500" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+  <circle cx="50" cy="19" r="1.5" fill="#B8F500" />
+  <circle cx="210" cy="5" r="1.2" fill="#B8F500" />
+  <circle cx="340" cy="18" r="1.8" fill="#B8F500" />
+</svg>`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - DON'T BE GREEDY Brutalist Streetwear Art Footer Directive */
+Recreate this exact high-impact brutalist streetwear art footer section in React, TypeScript, and Tailwind CSS.
+1. Palette: Obsidian black #050505 canvas, dark card #0D0D0D, pure white #FFFFFF, electric neon lime #B8F500.
+2. Typography: 'Barlow Condensed' 900 ultra-condensed for "AKCB", "COLLECTION", and "HISTORY" (leading-[0.82], tracking-[-0.035em]).
+3. Underline SVG: Distressed neon green vector stroke with quadratic bezier curves under "HISTORY".
+4. Collectible Card: 3D interactive card with mouse cursor tilt calculation (rotateX/rotateY), ambient lime glow, floor shadow, and figurine cutout (https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png).
+5. Background Parallax: Giant watermark lettering "AKCB ARCHIVE TOY DIVISION" / "HISTORY 01" shifting on mouse move.
+6. Technical Footer: Copyright 2026, OpenSea, Discord, Twitter/X, and Verify Contract links.`,
+            claude: `You are Claude Code, an expert design technologist.
+Implement the "DON'T BE GREEDY" brutalist streetwear art footer section in React, TypeScript, and Tailwind CSS:
+- Canvas: Obsidian black #050505 with giant low-contrast watermark lettering and neon green radial blur
+- Left stack: Monolithic headlines "AKCB", "COLLECTION", and "HISTORY" in Barlow Condensed font-black with distressed neon lime underline SVG
+- Right card: 3D interactive collectible figurine card with mouse tilt (rotateX/rotateY), pulsating green badge dot, contact floor shadow, and figurine asset
+- Bottom bar: Monospace technical links (OPENSEA, DISCORD, TWITTER / X, VERIFY CONTRACT)`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: DON'T BE GREEDY STREETWEAR FOOTER
+Aesthetic: Dark Streetwear Neo-Brutalism / Vinyl Toy Art
+- Canvas: #050505 with 3-tier giant watermark parallax
+- Accent: #B8F500 (electric neon lime green)
+- Typography: Barlow Condensed 900, clamp(4rem, 11vw, 10.5rem)
+- Brush Underline: Multi-segment curved SVG with drop-shadow glow
+- Figurine Card: 3D perspective 1200px tilt, scale-108 hover pop-out, barcode and edition badge
+- Collectible Asset: https://res.cloudinary.com/dv9wtwmsf/image/upload/v1772782787/char_left_t9iqq1.png`,
+            lovable: `Build the "DON'T BE GREEDY" brutalist streetwear vinyl collectible footer section in React and Tailwind CSS with obsidian black canvas #050505, giant stacked headings AKCB, COLLECTION, HISTORY in Barlow Condensed with neon green distressed underline SVG, 3D mouse tilt collectible card, and technical Web3 footer.`,
+            advance: `TECHNICAL SPECIFICATION: DON'T BE GREEDY
+1. Tilt Physics: tiltX = ((y - centerY) / centerY) * -12; tiltY = ((x - centerX) / centerX) * 14; transformStyle: 'preserve-3d'.
+2. Typography Hierarchy: clamp(4rem, 11vw, 10.5rem) leading-[0.82] tracking-[-0.035em] in #FFFFFF & #B8F500.
+3. Card Shadow: radial-gradient(ellipse 65% 25% at 50% 50%, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 50%, transparent 75%).`
+        }
     }
 ];

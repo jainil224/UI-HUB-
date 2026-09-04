@@ -26,6 +26,7 @@ import LumosHero from '../../components/templates/LumosHero';
 import LoveAppHero from '../../components/templates/LoveAppHero';
 import HeyoAgencyCta from '../../components/templates/HeyoAgencyCta';
 import AuCabaretPoster from '../../components/templates/AuCabaretPoster';
+import DontBeGreedyFooter from '../../components/templates/DontBeGreedyFooter';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -298,6 +299,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'me-019-au-cabaret' ? (
                                 <div className="w-full h-full overflow-hidden bg-[#EDEDED]">
                                     <AuCabaretPoster key={`aucabaret-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'dont-be-greedy' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#050505]">
+                                    <DontBeGreedyFooter key={`greedy-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>
