@@ -48,35 +48,16 @@ const Navbar = () => {
     }, [showFavDropdown]);
 
     const isTemplates = location.pathname.startsWith('/templates');
+    const isMcp = location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp';
+    const isPricing = location.pathname === '/pricing';
 
-    const navLinks = isLibrary
-        ? [
-            { to: '/', label: 'HOME', active: false },
-            { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-            { to: '/templates', label: 'TEMPLATES', active: false },
-            { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
-        ]
-        : isTemplates
-            ? [
-                { to: '/', label: 'HOME', active: false },
-                { to: '/library', label: 'COMPONENTS', active: false },
-                { to: '/templates', label: 'TEMPLATES', active: true },
-                { to: '/dashboard/mcp', label: 'MCP', active: false },
-                { to: '/pricing', label: 'PRICING', active: false },
-            ]
-            : isHomePage
-                ? [
-                    { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                    { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-                    { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
-                ]
-                : [
-                    { to: '/', label: 'HOME', active: false },
-                    { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                    { to: '/templates', label: 'TEMPLATES', active: false },
-                    { to: '/dashboard/mcp', label: 'MCP', active: location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp' },
-                    { to: '/pricing', label: 'PRICING', active: location.pathname === '/pricing' },
-                ];
+    const navLinks = [
+        { to: '/', label: 'HOME', active: isHomePage },
+        { to: '/library', label: 'COMPONENTS', active: isLibrary },
+        { to: '/templates', label: 'TEMPLATES', active: isTemplates },
+        { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
+        { to: '/pricing', label: 'PRICING', active: isPricing },
+    ];
     
     const handleSearchSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -304,10 +285,11 @@ const Navbar = () => {
 
                             {/* User Profile / Auth Action Buttons */}
                             {user ? (
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-1.5 sm:gap-2">
                                     <Link 
                                         to="/favorites"
-                                        className="flex items-center gap-2 bg-white border-2 border-black py-1.5 px-2.5 shadow-[2px_2px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#000000] transition-all"
+                                        title="Favorites & Profile"
+                                        className="flex items-center gap-1.5 sm:gap-2 bg-white border-2 border-black py-1.5 px-2 sm:px-2.5 shadow-[2px_2px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[1px_1px_0px_0px_#000000] transition-all shrink-0"
                                     >
                                         <div className="w-6 h-6 rounded-none border border-black bg-[#1F4BFF] flex items-center justify-center overflow-hidden shrink-0">
                                             {user.photoURL ? (
@@ -316,11 +298,11 @@ const Navbar = () => {
                                                 <UserIcon size={12} className="text-white" />
                                             )}
                                         </div>
-                                        <span className="text-xs font-black uppercase tracking-tight text-black max-w-[80px] truncate">
+                                        <span className="hidden sm:inline text-xs font-black uppercase tracking-tight text-black max-w-[80px] truncate">
                                             {user.displayName?.split(' ')[0] || 'USER'}
                                         </span>
                                         <span
-                                            className={`px-1.5 py-0.5 border border-black text-[9px] font-black uppercase shadow-[1px_1px_0px_0px_#000] ${
+                                            className={`hidden sm:inline px-1.5 py-0.5 border border-black text-[9px] font-black uppercase shadow-[1px_1px_0px_0px_#000] ${
                                                 planTier === 'pro'
                                                     ? 'bg-[#1F4BFF] text-white'
                                                     : 'bg-neutral-200 text-black'
@@ -333,7 +315,7 @@ const Navbar = () => {
                                     <button
                                         onClick={() => signOut(auth)}
                                         aria-label="Sign out"
-                                        className="w-11 h-11 bg-white border-2 border-black flex items-center justify-center text-black hover:bg-[#E52520] hover:text-white shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all"
+                                        className="hidden sm:flex w-11 h-11 bg-white border-2 border-black items-center justify-center text-black hover:bg-[#E52520] hover:text-white shadow-[2px_2px_0px_0px_#000000] active:translate-x-0.5 active:translate-y-0.5 transition-all shrink-0"
                                         title="Sign Out"
                                     >
                                         <LogOut size={15} />

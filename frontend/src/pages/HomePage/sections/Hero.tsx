@@ -180,19 +180,26 @@ const Hero = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.5, delay: 0.4 }}
-                            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-10 w-full sm:w-auto"
+                            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center mb-10 w-full sm:w-auto"
                         >
                             <Link to="/library" className="w-full sm:w-auto">
-                                <button className="w-full sm:w-auto px-8 py-4 rounded-xl border-3 border-black bg-[#1F4BFF] text-white font-black text-xs uppercase tracking-widest shadow-[5px_5px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000000] transition-all flex items-center justify-center gap-3">
+                                <button className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl border-3 border-black bg-[#1F4BFF] text-white font-black text-xs uppercase tracking-widest shadow-[5px_5px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000000] transition-all flex items-center justify-center gap-2.5 cursor-pointer">
                                     <span className="w-2 h-2 rounded-full bg-white" />
-                                    <span>EXPLORE COMPONENTS</span>
-                                    <ArrowRight size={16} strokeWidth={3} />
+                                    <span>COMPONENTS</span>
+                                    <ArrowRight size={15} strokeWidth={3} />
+                                </button>
+                            </Link>
+
+                            <Link to="/templates" className="w-full sm:w-auto">
+                                <button className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl border-3 border-black bg-[#FFC700] text-black font-black text-xs uppercase tracking-widest shadow-[5px_5px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000000] transition-all flex items-center justify-center gap-2 cursor-pointer">
+                                    <Sparkles size={15} className="text-black fill-black" />
+                                    <span>TEMPLATES</span>
+                                    <span className="px-1.5 py-0.5 bg-black text-white text-[8px] font-mono rounded font-bold">NEW</span>
                                 </button>
                             </Link>
 
                             <Link to="/pricing" className="w-full sm:w-auto">
-                                <button className="w-full sm:w-auto px-8 py-4 rounded-xl border-3 border-black bg-white text-black font-black text-xs uppercase tracking-widest shadow-[5px_5px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000000] transition-all flex items-center justify-center gap-3">
-                                    <Sparkles size={16} className="text-[#FFC700] fill-[#FFC700]" />
+                                <button className="w-full sm:w-auto px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl border-3 border-black bg-white text-black font-black text-xs uppercase tracking-widest shadow-[5px_5px_0px_0px_#000000] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0px_0px_#000000] transition-all flex items-center justify-center gap-2 cursor-pointer">
                                     <span>VIEW PLANS</span>
                                 </button>
                             </Link>

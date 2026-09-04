@@ -192,15 +192,30 @@ const LibraryPage = () => {
 
             <div className="flex flex-col md:flex-row relative pt-16 bg-brand-bg text-white md:h-dvh md:overflow-hidden">
                 {/* ── Mobile top nav ── */}
-                <div className="md:hidden flex items-center justify-between px-4 py-3 border-b-2 border-white shrink-0 z-30 bg-brand-surface">
-                    <span className="font-bold text-sm uppercase">UI HUB</span>
+                <div className="md:hidden flex items-center justify-between px-3 sm:px-4 py-2.5 border-b-2 border-white shrink-0 z-30 bg-brand-surface">
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => setIsMobileMenuOpen(true)}
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border-2 border-brand-blue bg-brand-blue/20 text-brand-blue text-xs font-black uppercase tracking-wider active:translate-y-0.5 cursor-pointer"
+                        >
+                            <MenuIcon size={14} />
+                            <span>Components</span>
+                        </button>
+                        <Link
+                            to="/templates"
+                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border-2 border-[#FFC700] bg-[#FFC700]/15 text-white hover:bg-[#FFC700] hover:text-black text-xs font-black uppercase tracking-wider transition-colors shadow-[2px_2px_0px_0px_#000]"
+                        >
+                            <span>Templates</span>
+                            <span className="px-1 py-0.2 bg-[#FFC700] text-black text-[8px] font-black uppercase rounded-sm leading-none">NEW</span>
+                        </Link>
+                    </div>
                     <button
                         onClick={() => setIsMobileMenuOpen(true)}
                         aria-label="Open components menu"
                         aria-expanded={isMobileMenuOpen}
-                        className="w-11 h-11 -mr-2 flex items-center justify-center rounded-lg border-2 border-white bg-brand-surface text-white active:translate-y-0.5"
+                        className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-white bg-brand-surface text-white active:translate-y-0.5 cursor-pointer"
                     >
-                        <MenuIcon size={22} />
+                        <MenuIcon size={20} />
                     </button>
                 </div>
 
@@ -268,9 +283,18 @@ const LibraryPage = () => {
                                         </button>
                                     )}
                                 </div>
-                                <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 text-neutral-400 hover:text-white w-fit">
-                                    <Home size={12} /> <span className="text-[10px] font-black uppercase tracking-widest">Home</span>
-                                </Link>
+                                <div className="flex items-center gap-1.5 pt-1">
+                                    <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-md border border-neutral-700 bg-neutral-900 text-neutral-300 hover:text-white text-[10px] font-black uppercase tracking-wider">
+                                        <Home size={11} /> <span>Home</span>
+                                    </Link>
+                                    <Link to="/templates" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-1.5 px-3 py-1.5 rounded-md border-2 border-[#FFC700] bg-[#FFC700]/15 text-white hover:bg-[#FFC700] hover:text-black transition-colors text-[10px] font-black uppercase tracking-wider shadow-[2px_2px_0px_0px_#000]">
+                                        <span>🎨 Templates</span>
+                                        <span className="px-1 py-0.2 bg-[#FFC700] text-black text-[8px] font-black uppercase rounded-sm">NEW</span>
+                                    </Link>
+                                    <Link to="/dashboard/mcp" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-1 px-2.5 py-1.5 rounded-md border border-neutral-700 bg-neutral-900 text-neutral-300 hover:text-white text-[10px] font-black uppercase tracking-wider">
+                                        <span>MCP</span>
+                                    </Link>
+                                </div>
                             </div>
 
                             {/* Drawer Nav */}
