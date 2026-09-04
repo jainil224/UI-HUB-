@@ -286,6 +286,56 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'lumos':
+            return (
+                <div className="relative w-full h-full bg-[#F1F1F0] overflow-hidden flex flex-col justify-between p-4 select-none pointer-events-none text-[#111111]">
+                    {/* Top Bar */}
+                    <div className="relative z-10 flex items-center justify-between">
+                        <span className="text-[10px] font-black tracking-widest text-[#111111] uppercase">
+                            LUMOS
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                            <span className="w-5 h-5 bg-[#111111] text-white text-[8px] font-mono font-bold flex items-center justify-center">
+                                01+
+                            </span>
+                            <span className="px-2 py-0.5 bg-[#F54D92] text-white text-[8px] font-black uppercase tracking-wider">
+                                GET STARTED
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Center Artwork with Background Ghost Typography */}
+                    <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center">
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-30">
+                            <span className="text-5xl font-black text-[#E5E5E3] uppercase tracking-tighter">
+                                LUMOS
+                            </span>
+                        </div>
+                        <img
+                            src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788461532/964ef29e-b274-436f-8f56-dbff69f2a55d_rbp0io.png"
+                            alt="Lumos 3D Eye Artwork"
+                            className="h-20 w-auto object-contain relative z-10 drop-shadow-md"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                        <h4 className="mt-1 text-[11px] font-black uppercase tracking-tight text-[#111111] z-10">
+                            FUTURISTIC EDITORIAL HERO
+                        </h4>
+                    </div>
+
+                    {/* Bottom Barcode Strip */}
+                    <div className="relative z-10 flex items-center justify-between text-[8px] font-sans font-black tracking-wider text-[#111111] border-t border-neutral-300 pt-1.5 uppercase">
+                        <span>ILLUMINATE POTENTIAL</span>
+                        <div className="flex items-center gap-[1px] h-2.5 opacity-80">
+                            {[2, 1, 3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 3, 1, 2].map((w, i) => (
+                                <div key={i} className="h-full bg-[#111111]" style={{ width: `${w * 0.8}px` }} />
+                            ))}
+                        </div>
+                        <span>COMMERCIAL POWER</span>
+                    </div>
+                </div>
+            );
+
         default:
             return (
                 <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden select-none pointer-events-none`}>

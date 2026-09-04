@@ -1954,5 +1954,165 @@ Aesthetic: Luxury Editorial E-Commerce
 2. Product Panel Math: w-[285px] to w-[355px], h-[395px] to h-[475px] in #B2C951; armchair image w-[400px] to w-[530px] with negative left offset.
 3. Grid: 4-column footer cards in #EEEEEE with hover:bg-[#EAEAEA].`
         }
+    },
+    {
+        id: 'lumos',
+        title: 'LUMOS Futuristic Editorial Hero',
+        description: 'Futuristic editorial landing hero with 3D surreal eye artwork, interactive mouse parallax tilt, oversized background typography, and technical barcode footer.',
+        category: 'Agency & Portfolio',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: '3D Parallax & Micro-interactions',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/38c82aca-9711-49c6-a9f2-5177adb44886',
+        githubUrl: 'https://github.com/ui-hub/lumos-hero',
+        previewGradient: 'from-neutral-300 via-neutral-100 to-white',
+        accentColor: '#F54D92',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '3.6k',
+        },
+        features: [
+            'Interactive 3D surreal eye artwork with mouse parallax tilt',
+            'Oversized ghost background typography (LUMOS)',
+            'Technical 33-stripe barcode footer with brutalist labels',
+            'Micro-interaction navigation with expand rules and animated CTA',
+            'Paper grain dot matrix overlay (#F1F1F0 palette)'
+        ],
+        promptPreview: `Create an EXACT pixel-accurate, full-screen futuristic editorial landing and hero section with bottom footer strip in React, TypeScript, and Tailwind CSS based on the following specifications and provided production code.
+
+================================================================================
+1. COLOR PALETTE & ATMOSPHERE
+================================================================================
+- Canvas Background: #F1F1F0 (warm off-white / light concrete gray)
+- Primary Text / Inks: #111111 (deep typographic black)
+- Secondary Micro-text: #444444 and #555555
+- Accent / CTA Vivid Pink: #F54D92 (active hover: #ff3d8a)
+- Background Display Typo: #E5E5E3 (ghost low-contrast neutral)
+- Texture: 3px x 3px radial dot matrix paper grain overlay at 0.035 opacity with multiply blend mode.
+
+================================================================================
+2. COMPOSITION & SPATIAL LAYOUT
+================================================================================
+- Viewport: Full screen (w-screen h-screen min-h-[640px] overflow-hidden flex flex-col justify-between).
+- Main Canvas Padding: Horizontal px-4 sm:px-6 md:px-10 lg:px-14.
+- Z-Index Hierarchy:
+  - z-0: Paper grain texture overlay & oversized "LUMOS" background lettering
+  - z-10: Left typography block, central 3D artwork, right technical metadata
+  - z-20: Bottom editorial footer strip
+  - z-30: Top navigation bar
+  - z-50: Ephemeral toast feedback status
+
+================================================================================
+3. TOP NAVIGATION HEADER
+================================================================================
+- Top-Left: Text "LUMOS", font-weight 900 (black), tracking-widest, uppercase, font-size 10px–11px, color #111111.
+- Top-Center/Left: Technical micro-menu with 4 links:
+  - ["ABOUT", "OUR SERVICES", "CASES", "CONTACT US"]
+  - Typography: 8px, tracking-[0.14em], font-semibold, color #111111 with #F54D92 hover color.
+  - Preceded by a thin horizontal rule (h-[1px] bg-[#111111]) that expands from 10px to 16px on hover.
+- Top-Right Controls:
+  - Dark square button: 32px x 32px (w-8 h-8), background #111111, text white, label "01 +", font-mono, 9px bold, hover:bg-[#282828].
+  - CTA Button: Height 32px (h-8), px-4, background #F54D92, text white, uppercase, font-black, text 10px, tracking-wider, label "GET STARTED" followed by a 10px Plus icon (stroke-[3]) that rotates 90deg on hover.
+
+================================================================================
+4. CENTRAL ARTWORK OBJECT & 3D PARALLAX
+================================================================================
+- Asset URL: "https://res.cloudinary.com/chhwhdhk/image/upload/v1788461532/964ef29e-b274-436f-8f56-dbff69f2a55d_rbp0io.png"
+- Dimensions: Height responsive: h-[400px] sm:h-[480px] md:h-[540px] lg:h-[620px], max-h-[86vh], object-contain.
+- Placement: Perfectly centered in the viewport. The top stem reaches toward the top header; the long pink hanging drip extends down toward the bottom footer.
+- Shadows: Multi-layer drop-shadow (drop-shadow-[0_20px_35px_rgba(0,0,0,0.12)] with ambient ground shadow blur).
+- Interactions:
+  - Subtle mouse parallax tilt (perspective: 1000px, translate3d +/- 10px, rotateX +/- 5deg, rotateY +/- 6deg).
+  - Micro-scale click reaction (scale-95 on click).
+  - Respects prefers-reduced-motion media query.
+
+================================================================================
+5. LEFT HERO EDITORIAL TYPOGRAPHY & EMBLEM
+================================================================================
+- Left Headline Block:
+  - Max width: 360px.
+  - Font size: 24px sm:28px md:31px lg:33px.
+  - Line height: 1.08 (ultra-tight leading).
+  - Letter spacing: -0.03em.
+  - Exact 4-line text break:
+      "We believe"
+      "there's no bad"
+      "business, there's ba"
+      "marketing"
+  - The final word "marketing" has extra font-weight 900 (black).
+- Lower-Left Emblem:
+  - 18px x 18px circular minimal smiley wireframe emblem with 1.2px border in #111111, two tiny dot eyes, and a curved bottom smile line. Positioned at bottom-left above footer.
+
+================================================================================
+6. RIGHT HERO TYPOGRAPHY & TECHNICAL METADATA
+================================================================================
+- Top Tag: "[ LUMOS ]", font-mono, 8.5px, font-semibold, color #555555, tracking-widest.
+- Right Headline:
+  - 3-line text break:
+      "For"
+      "every"
+      "business"
+  - Font size: 24px sm:27px md:30px lg:32px, tracking-[-0.03em], line height 1.08, "business" rendered in font-black.
+- Lower Technical Metadata Block:
+  - Multi-line uppercase monospace text block:
+      "A QUICK AND"
+      "EFFECTIVE SOLUTION"
+      "CAN BE FOUND."
+      "CONTACT US & WE"
+      "WILL FIND THAT"
+      "SOLUTION FOR YOU"
+  - Font size: 8.5px, line-height 1.35, letter spacing 0.06em, color #444444.
+  - Underlined by a crisp horizontal rule: width 180px, height 1.2px, color #111111.
+
+================================================================================
+7. OVERSIZED BACKGROUND TYPOGRAPHY
+================================================================================
+- Text: "LUMOS"
+- Position: Absolute, pinned to the lower portion of the screen (bottom-7 sm:bottom-9 md:bottom-11), behind all content (z-0).
+- Typography: Font-black, 21.5vw, tracking-tight, leading-none, uppercase, color #E5E5E3, opacity 0.95, pointer-events none. Letters span edge-to-edge with the outer letters slightly translated beyond bounds.
+
+================================================================================
+8. BOTTOM EDITORIAL FOOTER STRIP
+================================================================================
+- Height/Placement: Absolute bottom-0 inset-x-0, px-3 md:px-5 py-2.5 md:py-3.5, z-20.
+- Left Label: "ILLUMINATE BUSINESS POTENTIAL", font-sans font-black uppercase text-[10.5px] md:text-[11px] tracking-wider text-[#111111].
+- Center Barcode Graphic: Realistic technical barcode constructed from 33 vertical stripes of variable widths (1px to 3px) in #111111, height 18px, opacity 0.9.
+  Pattern: [2, 1, 3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 3, 1, 2, 1, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1, 3, 1, 1, 2, 2, 1, 3]
+- Right Label: "ENHANCE COMMERCIAL POWER", font-sans font-black uppercase text-[10.5px] md:text-[11px] tracking-wider text-[#111111], text-right.`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - LUMOS Editorial Futuristic Hero Directive */
+Create the exact LUMOS full-screen editorial landing page in React, TypeScript, and Tailwind CSS.
+Include:
+1. Palette: Concrete warm off-white (#F1F1F0), deep black (#111111), accent pink (#F54D92), ghost lettering (#E5E5E3).
+2. Central 3D artwork: Surreal eye object (https://res.cloudinary.com/chhwhdhk/image/upload/v1788461532/964ef29e-b274-436f-8f56-dbff69f2a55d_rbp0io.png) with mouse parallax tilt.
+3. Left typography: 'We believe there's no bad business, there's ba marketing' with wireframe smiley icon.
+4. Right typography: '[ LUMOS ]', 'For every business', technical monospace metadata, horizontal rule.
+5. Bottom strip: 'ILLUMINATE BUSINESS POTENTIAL', 33-stripe barcode, 'ENHANCE COMMERCIAL POWER'.
+6. Background: Oversized 'LUMOS' (21.5vw) and 3x3px dot matrix paper grain.`,
+            claude: `You are Claude Code, an expert design technologist.
+Build the LUMOS futuristic editorial showcase in React, TypeScript, and Tailwind CSS:
+- Canvas: #F1F1F0 with radial dot paper grain overlay
+- Giant ghost 'LUMOS' background typography (21.5vw)
+- Centered 3D surreal eye artwork with subtle mouse parallax
+- Editorial typography on left and right columns
+- Technical micro-menu with expanding hover indicators
+- Full-width bottom barcode footer strip with brutalist captions`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: LUMOS EDITORIAL HERO
+Aesthetic: Futuristic Editorial Minimal
+- Canvas: #F1F1F0
+- Accent: #F54D92 (vivid pink)
+- Artwork: https://res.cloudinary.com/chhwhdhk/image/upload/v1788461532/964ef29e-b274-436f-8f56-dbff69f2a55d_rbp0io.png
+- Parallax: perspective 1000px, pointermove tilt +/-10px
+- Barcode: 33 vertical stripes pattern [2, 1, 3, 1, 1, 2, ...]
+- Top navigation: Micro-menu with 4 links & '#F54D92' button with rotating plus`,
+            lovable: `Build the LUMOS full-screen editorial landing page with warm off-white concrete background #F1F1F0, central 3D surreal eye artwork with interactive mouse parallax tilt, oversized ghost LUMOS background typography, editorial headlines, and technical barcode footer strip in React and Tailwind CSS.`,
+            advance: `TECHNICAL SPECIFICATION: LUMOS EDITORIAL HERO
+1. Parallax Matrix: translate3d(normX * 10px, normY * 8px, 0) rotateX(-normY * 5deg) rotateY(normX * 6deg).
+2. Background Typography: text-[21.5vw] font-black uppercase text-[#E5E5E3] leading-none absolute bottom-7 md:bottom-11.
+3. Barcode Array: [2, 1, 3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 3, 1, 2, 1, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1, 3, 1, 1, 2, 2, 1, 3] stripes at width * 0.9px in #111111.`
+        }
     }
 ];

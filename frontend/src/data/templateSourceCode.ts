@@ -5,6 +5,7 @@ import haosTechCode from '../components/templates/HaosShowcase.tsx?raw';
 import mentalityCode from '../components/templates/MentalityHero.tsx?raw';
 import lakeraHeroCode from '../components/templates/LakeraHero.tsx?raw';
 import interiorDesignCode from '../components/templates/InteriorDesignShowcase.tsx?raw';
+import lumosCode from '../components/templates/LumosHero.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'tars-protocol': tarsProtocolCode,
@@ -15,4 +16,5 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'mentality': mentalityCode,
     'lakera-ai-security': lakeraHeroCode,
     'interior-design': interiorDesignCode,
+    'lumos': lumosCode,
 };

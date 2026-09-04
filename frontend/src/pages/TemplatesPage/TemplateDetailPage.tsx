@@ -22,6 +22,7 @@ import HaosShowcase from '../../components/templates/HaosShowcase';
 import MentalityHero from '../../components/templates/MentalityHero';
 import LakeraHero from '../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../components/templates/InteriorDesignShowcase';
+import LumosHero from '../../components/templates/LumosHero';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -278,6 +279,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'interior-design' ? (
                                 <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-white">
                                     <InteriorDesignShowcase key={`interior-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'lumos' ? (
+                                <div className="w-full h-full overflow-hidden bg-[#F1F1F0]">
+                                    <LumosHero key={`lumos-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>
