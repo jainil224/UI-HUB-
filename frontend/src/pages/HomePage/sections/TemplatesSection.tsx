@@ -70,7 +70,7 @@ const TemplatesSection = () => {
     };
 
     return (
-        <section id="templates" className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-black border-t-4 border-black overflow-hidden">
+        <section id="templates" className="relative py-16 sm:py-24 lg:py-32 px-3 sm:px-6 lg:px-8 bg-black border-t-4 border-black overflow-hidden">
             {/* Ambient Cyber Grid Background */}
             <div 
                 className="absolute inset-0 pointer-events-none opacity-20"
@@ -123,7 +123,7 @@ const TemplatesSection = () => {
                 </div>
 
                 {/* ── Templates Grid ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                     <AnimatePresence mode="wait">
                         {filteredTemplates.map((template, idx) => (
                             <motion.div
@@ -137,123 +137,77 @@ const TemplatesSection = () => {
                             >
 
                                 {/* ── Interactive Real Live Preview Window ── */}
-                                <div 
+                                <div
                                     onClick={() => navigate(`/templates/${template.id}`)}
-                                    className="relative h-60 sm:h-64 w-full overflow-hidden cursor-pointer group transition-all"
+                                    className="relative h-44 sm:h-56 lg:h-64 w-full overflow-hidden cursor-pointer"
                                 >
-                                    <div className="relative w-full h-full overflow-hidden">
-
-                                        {template.id === 'tars-protocol' ? (
-                                            <LazyTemplatePreview bgColor="#ffffff">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white">
-                                                    <TarsHeroArena />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'split-fuzzy-orb' ? (
-                                            <LazyTemplatePreview bgColor="#d6c0e3">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#d6c0e3]">
-                                                    <SplitFuzzyOrbHero />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'segmint-2026' ? (
-                                            <LazyTemplatePreview bgColor="#0755CE">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#0755CE] overflow-hidden">
-                                                    <SegmintFooter />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'haos-tech-solutions' ? (
-                                            <LazyTemplatePreview bgColor="#020202">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#020202] overflow-hidden">
-                                                    <HaosShowcase />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'mentality' ? (
-                                            <LazyTemplatePreview bgColor="#F0F0F0">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F0F0F0] overflow-hidden">
-                                                    <MentalityHero />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'lakera-ai-security' ? (
-                                            <LazyTemplatePreview bgColor="#ffffff">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
-                                                    <LakeraHero />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'interior-design' ? (
-                                            <LazyTemplatePreview bgColor="#ffffff">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
-                                                    <InteriorDesignShowcase />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'lumos' ? (
-                                            <LazyTemplatePreview bgColor="#F1F1F0">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F1F1F0] overflow-hidden">
-                                                    <LumosHero />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'loveapp-hero' ? (
-                                            <LazyTemplatePreview bgColor="#D8D2F8">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#D8D2F8] overflow-hidden">
-                                                    <LoveAppHero />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'heyo-agency-cta' ? (
-                                            <LazyTemplatePreview bgColor="#F5F5F2">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F5F5F2] overflow-hidden">
-                                                    <HeyoAgencyCta />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'me-019-au-cabaret' ? (
-                                            <LazyTemplatePreview bgColor="#EDEDED">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#EDEDED] overflow-hidden">
-                                                    <AuCabaretPoster />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.id === 'dont-be-greedy' ? (
-                                            <LazyTemplatePreview bgColor="#050505">
-                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#050505] overflow-hidden">
-                                                    <DontBeGreedyFooter />
-                                                </div>
-                                            </LazyTemplatePreview>
-                                        ) : template.liveDemoUrl ? (
-                                            <iframe
-                                                src={template.liveDemoUrl}
-                                                title={template.title}
-                                                className="w-[1200px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none border-0 select-none bg-white"
-                                                sandbox="allow-scripts allow-same-origin"
-                                                loading="lazy"
-                                            />
-                                        ) : (
-                                            <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden`}>
-                                                <span className="text-xl font-black text-white">{template.title}</span>
-                                            </div>
-                                        )}
-
-                                        {/* Hover Action Overlay */}
-                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 backdrop-blur-[2px] flex items-center justify-center gap-3 transition-opacity duration-200 z-20">
-                                            <button 
-                                                onClick={(e) => handleOpenTemplate(template.id, e)}
-                                                className="px-4 py-2.5 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] hover:translate-x-0.5 hover:translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer"
-                                            >
-                                                <Laptop size={15} />
-                                                <span>Open Preview & Prompt</span>
-                                            </button>
+                                    {/* Template preview — scale computed dynamically inside LazyTemplatePreview */}
+                                    {template.id === 'tars-protocol' ? (
+                                        <LazyTemplatePreview bgColor="#ffffff"><TarsHeroArena /></LazyTemplatePreview>
+                                    ) : template.id === 'split-fuzzy-orb' ? (
+                                        <LazyTemplatePreview bgColor="#d6c0e3"><SplitFuzzyOrbHero /></LazyTemplatePreview>
+                                    ) : template.id === 'segmint-2026' ? (
+                                        <LazyTemplatePreview bgColor="#0755CE"><SegmintFooter /></LazyTemplatePreview>
+                                    ) : template.id === 'haos-tech-solutions' ? (
+                                        <LazyTemplatePreview bgColor="#020202"><HaosShowcase /></LazyTemplatePreview>
+                                    ) : template.id === 'mentality' ? (
+                                        <LazyTemplatePreview bgColor="#F0F0F0"><MentalityHero /></LazyTemplatePreview>
+                                    ) : template.id === 'lakera-ai-security' ? (
+                                        <LazyTemplatePreview bgColor="#ffffff"><LakeraHero /></LazyTemplatePreview>
+                                    ) : template.id === 'interior-design' ? (
+                                        <LazyTemplatePreview bgColor="#ffffff"><InteriorDesignShowcase /></LazyTemplatePreview>
+                                    ) : template.id === 'lumos' ? (
+                                        <LazyTemplatePreview bgColor="#F1F1F0"><LumosHero /></LazyTemplatePreview>
+                                    ) : template.id === 'loveapp-hero' ? (
+                                        <LazyTemplatePreview bgColor="#D8D2F8"><LoveAppHero /></LazyTemplatePreview>
+                                    ) : template.id === 'heyo-agency-cta' ? (
+                                        <LazyTemplatePreview bgColor="#F5F5F2"><HeyoAgencyCta /></LazyTemplatePreview>
+                                    ) : template.id === 'me-019-au-cabaret' ? (
+                                        <LazyTemplatePreview bgColor="#EDEDED"><AuCabaretPoster /></LazyTemplatePreview>
+                                    ) : template.id === 'dont-be-greedy' ? (
+                                        <LazyTemplatePreview bgColor="#050505"><DontBeGreedyFooter /></LazyTemplatePreview>
+                                    ) : template.liveDemoUrl ? (
+                                        <iframe
+                                            src={template.liveDemoUrl}
+                                            title={template.title}
+                                            className="w-full h-full border-0 select-none"
+                                            sandbox="allow-scripts allow-same-origin"
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden`}>
+                                            <span className="text-xl font-black text-white">{template.title}</span>
                                         </div>
+                                    )}
+
+                                    {/* Action overlay — always visible on mobile (touch), hover on desktop */}
+                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20
+                                        opacity-0 group-hover:opacity-100
+                                        sm:opacity-0 sm:group-hover:opacity-100
+                                        [@media(hover:none)]:opacity-100
+                                        transition-opacity duration-200">
+                                        <button
+                                            onClick={(e) => handleOpenTemplate(template.id, e)}
+                                            className="px-3 py-2 sm:px-4 sm:py-2.5 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] transition-all flex items-center gap-2 cursor-pointer"
+                                        >
+                                            <Laptop size={13} />
+                                            <span>Open Preview</span>
+                                        </button>
                                     </div>
                                 </div>
 
                                 {/* ── Template Details Body ── */}
-                                <div className="p-5 flex-1 flex flex-col justify-start">
-                                    <div className="flex items-start justify-between gap-2 mb-2">
-                                        <h3 
+                                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-start">
+                                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                                        <h3
                                             onClick={() => handleOpenTemplate(template.id)}
-                                            className="font-heading font-black text-lg text-white group-hover:text-[#1F4BFF] transition-colors cursor-pointer"
+                                            className="font-heading font-black text-base sm:text-lg text-white group-hover:text-[#1F4BFF] transition-colors cursor-pointer truncate"
                                         >
                                             {template.title}
                                         </h3>
-                                        <span 
+                                        <span
                                             className={`px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border shrink-0 ${
-                                                template.isPro 
+                                                template.isPro
                                                     ? 'bg-[#1F4BFF] text-white border-black shadow-[2px_2px_0px_0px_#000]'
                                                     : 'bg-[#00E599] text-black border-black shadow-[2px_2px_0px_0px_#000]'
                                             }`}
@@ -262,7 +216,7 @@ const TemplatesSection = () => {
                                         </span>
                                     </div>
 
-                                    <p className="text-xs text-neutral-400 font-medium line-clamp-2 leading-relaxed">
+                                    <p className="text-xs text-neutral-400 font-medium line-clamp-1 sm:line-clamp-2 leading-relaxed">
                                         {template.description}
                                     </p>
                                 </div>
