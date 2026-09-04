@@ -70,49 +70,57 @@ const TemplatesSection = () => {
     };
 
     return (
-        <section id="templates" className="relative py-16 sm:py-24 lg:py-32 px-3 sm:px-6 lg:px-8 bg-black border-t-4 border-black overflow-hidden">
-            {/* Ambient Cyber Grid Background */}
-            <div 
-                className="absolute inset-0 pointer-events-none opacity-20"
+        <section id="templates" className="relative py-16 sm:py-24 lg:py-32 px-3 sm:px-6 lg:px-8 bg-[#0A0A0A] border-t-4 border-black overflow-hidden">
+            {/* Graph-square grid backdrop — matches Hero & Footer */}
+            <div
+                className="absolute inset-0 pointer-events-none"
                 style={{
-                    backgroundImage: `radial-gradient(circle at 1px 1px, #3D5CFF 1px, transparent 0)`,
-                    backgroundSize: '36px 36px',
+                    backgroundImage:
+                        'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+                    backgroundSize: '32px 32px',
+                    maskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)',
                 }}
             />
-            
-            {/* Glowing Accent Orbs */}
-            <div className="absolute top-1/4 -left-40 w-96 h-96 bg-[#1F4BFF]/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-[#FFC700]/10 rounded-full blur-3xl pointer-events-none" />
+
+            {/* Subtle color accents */}
+            <div className="absolute top-0 left-1/4 w-72 h-72 bg-[#1F4BFF]/8 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-[#FFC700]/6 rounded-full blur-3xl pointer-events-none" />
 
             <div className="relative max-w-7xl mx-auto">
                 {/* ── Section Header ── */}
-                <div className="flex flex-col items-center text-center mb-14">
-                    {/* Eyebrow Pill */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-6 border-2 border-white bg-neutral-900 text-white rounded-md font-black text-xs uppercase tracking-widest shadow-[3px_3px_0px_0px_#1F4BFF]">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#1F4BFF] animate-pulse" />
-                        <span>PRODUCTION READY</span>
+                <div className="flex flex-col items-center text-center mb-10 sm:mb-14">
+                    {/* Live indicator */}
+                    <div className="flex items-center gap-2 mb-5">
+                        <span className="w-2 h-2 rounded-full bg-[#E52520] animate-pulse" />
+                        <span className="text-[10px] sm:text-[11px] font-mono font-black uppercase tracking-[0.25em] text-neutral-400">
+                            Production-Ready Templates
+                        </span>
+                        <Sparkles size={12} className="text-[#FFC700]" />
                     </div>
 
-                    <h2 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-white leading-none font-heading">
-                        CURATED WEBSITE <span className="text-[#1F4BFF]">TEMPLATES</span>
+                    <h2 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tight text-white leading-tight">
+                        Curated Website{' '}
+                        <span className="text-[#1F4BFF]">Templates.</span>
                     </h2>
 
-                    <p className="mt-5 text-neutral-400 font-medium text-base sm:text-lg max-w-2xl leading-relaxed">
-                        Complete, responsive landing pages and web apps ready to deploy or prompt into your favorite AI tool. Crafted with Next.js, React, and Tailwind CSS.
+                    <p className="mt-4 text-neutral-400 font-medium text-sm sm:text-base max-w-xl leading-relaxed">
+                        Full landing pages ready to deploy or paste into any AI tool.
+                        Built with React, Next.js &amp; Tailwind CSS.
                     </p>
 
                     {/* ── Filter Categories ── */}
-                    <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8 sm:mt-10 max-w-4xl">
+                    <div className="flex flex-wrap items-center justify-center gap-2 mt-7 sm:mt-9 max-w-3xl">
                         {templateCategories.map((category) => {
                             const isActive = selectedCategory === category;
                             return (
                                 <button
                                     key={category}
                                     onClick={() => setSelectedCategory(category)}
-                                    className={`px-4 py-2 text-xs sm:text-sm font-black uppercase tracking-wider border-2 transition-all cursor-pointer ${
+                                    className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-black uppercase tracking-wider border-2 transition-all duration-150 cursor-pointer ${
                                         isActive
-                                            ? 'bg-[#1F4BFF] text-white border-white shadow-[4px_4px_0px_0px_#FFFFFF] -translate-y-0.5'
-                                            : 'bg-[#111114] text-neutral-400 border-neutral-800 hover:border-neutral-500 hover:text-white hover:-translate-y-0.5'
+                                            ? 'bg-[#1F4BFF] text-white border-[#1F4BFF] shadow-[3px_3px_0px_0px_#FFFFFF] -translate-y-0.5'
+                                            : 'bg-transparent text-neutral-500 border-neutral-800 hover:border-neutral-500 hover:text-neutral-200'
                                     }`}
                                 >
                                     {category}
@@ -133,13 +141,12 @@ const TemplatesSection = () => {
                                 exit={{ opacity: 0 }}
                                 transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.2) }}
                                 onClick={() => handleOpenTemplate(template.id)}
-                                className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0C0C0E] overflow-hidden select-none hover:border-white hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300 cursor-pointer will-change-transform"
+                                className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] overflow-hidden select-none hover:border-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000] transition-all duration-200 cursor-pointer will-change-transform"
                             >
-
-                                {/* ── Interactive Real Live Preview Window ── */}
+                                {/* ── Preview Window ── */}
                                 <div
                                     onClick={() => navigate(`/templates/${template.id}`)}
-                                    className="relative h-44 sm:h-56 lg:h-64 w-full overflow-hidden cursor-pointer"
+                                    className="relative h-44 sm:h-52 lg:h-60 w-full overflow-hidden cursor-pointer"
                                 >
                                     {/* Template preview — scale computed dynamically inside LazyTemplatePreview */}
                                     {template.id === 'tars-protocol' ? (
@@ -180,93 +187,113 @@ const TemplatesSection = () => {
                                         </div>
                                     )}
 
-                                    {/* Action overlay — always visible on mobile (touch), hover on desktop */}
-                                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-20
+                                    {/* Floating category chip — top-left (matches ComponentGrid label) */}
+                                    <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
+                                        <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-sm border border-white/15 text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest text-white">
+                                            {template.category}
+                                        </span>
+                                        {template.isPro && (
+                                            <span className="px-1.5 py-0.5 bg-[#1F4BFF] text-white text-[8px] font-black uppercase leading-none rounded-sm border border-black/50 shadow-[1px_1px_0px_0px_#000000]">
+                                                PRO
+                                            </span>
+                                        )}
+                                    </div>
+
+                                    {/* Arrow icon top-right — appears on hover (matches ComponentGrid) */}
+                                    <div className="absolute top-2.5 right-2.5 z-20 w-6 h-6 rounded-md border border-white/15 bg-black/75 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                        <ArrowRight size={11} className="text-white" />
+                                    </div>
+
+                                    {/* Bottom readability gradient (matches ComponentGrid) */}
+                                    <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/70 to-transparent pointer-events-none z-10" />
+
+                                    {/* Hover overlay with CTA */}
+                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20
                                         opacity-0 group-hover:opacity-100
-                                        sm:opacity-0 sm:group-hover:opacity-100
                                         [@media(hover:none)]:opacity-100
                                         transition-opacity duration-200">
                                         <button
                                             onClick={(e) => handleOpenTemplate(template.id, e)}
-                                            className="px-3 py-2 sm:px-4 sm:py-2.5 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] transition-all flex items-center gap-2 cursor-pointer"
+                                            className="px-3.5 py-2 bg-white text-black font-black text-[11px] uppercase tracking-widest border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] transition-colors flex items-center gap-1.5 cursor-pointer"
                                         >
-                                            <Laptop size={13} />
+                                            <Laptop size={12} />
                                             <span>Open Preview</span>
                                         </button>
                                     </div>
                                 </div>
 
-                                {/* ── Template Details Body ── */}
-                                <div className="p-4 sm:p-5 flex-1 flex flex-col justify-start">
-                                    <div className="flex items-center justify-between gap-2 mb-1.5">
+                                {/* ── Card Footer ── */}
+                                <div className="px-4 py-3 sm:px-5 sm:py-4 flex items-center justify-between gap-3 border-t border-neutral-800">
+                                    <div className="min-w-0">
                                         <h3
-                                            onClick={() => handleOpenTemplate(template.id)}
-                                            className="font-heading font-black text-base sm:text-lg text-white group-hover:text-[#1F4BFF] transition-colors cursor-pointer truncate"
+                                            className="font-black text-sm sm:text-base text-white group-hover:text-[#1F4BFF] transition-colors truncate leading-tight"
                                         >
                                             {template.title}
                                         </h3>
-                                        <span
-                                            className={`px-2 py-0.5 text-[10px] font-black uppercase tracking-wider border shrink-0 ${
-                                                template.isPro
-                                                    ? 'bg-[#1F4BFF] text-white border-black shadow-[2px_2px_0px_0px_#000]'
-                                                    : 'bg-[#00E599] text-black border-black shadow-[2px_2px_0px_0px_#000]'
-                                            }`}
-                                        >
-                                            {template.isPro ? 'PRO' : 'FREE'}
-                                        </span>
+                                        <p className="text-[11px] text-neutral-500 font-mono mt-0.5 truncate">
+                                            {template.framework} · {template.styling}
+                                        </p>
                                     </div>
-
-                                    <p className="text-xs text-neutral-400 font-medium line-clamp-1 sm:line-clamp-2 leading-relaxed">
-                                        {template.description}
-                                    </p>
+                                    <span
+                                        className={`shrink-0 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border shadow-[2px_2px_0px_0px_#000] ${
+                                            template.isPro
+                                                ? 'bg-[#1F4BFF] text-white border-black'
+                                                : 'bg-[#00E599] text-black border-black'
+                                        }`}
+                                    >
+                                        {template.isPro ? 'PRO' : 'FREE'}
+                                    </span>
                                 </div>
                             </motion.div>
                         ))}
 
                         {/* ── Submit / Add New Template Card ── */}
                         <motion.div
+                            initial={{ opacity: 0, y: 16 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.25, delay: 0.2 }}
                             onClick={() => setShowSubmitModal(true)}
-                            className="group relative flex flex-col items-center justify-center p-8 rounded-xl border-2 border-dashed border-neutral-700 bg-neutral-950/50 hover:bg-[#111116] hover:border-[#1F4BFF] hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300 cursor-pointer min-h-[360px] text-center select-none"
+                            className="group relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-xl border-2 border-dashed border-neutral-800 bg-[#0B0B0D] hover:border-neutral-500 hover:bg-[#0f0f12] transition-all duration-200 cursor-pointer min-h-[240px] sm:min-h-[300px] text-center select-none"
                         >
-                            <div className="w-14 h-14 rounded-xl bg-neutral-900 border-2 border-neutral-700 group-hover:border-[#1F4BFF] group-hover:bg-[#1F4BFF]/20 flex items-center justify-center mb-4 transition-all group-hover:scale-110">
-                                <Plus size={28} className="text-neutral-400 group-hover:text-white transition-colors" />
+                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-neutral-900 border-2 border-neutral-700 group-hover:border-neutral-500 flex items-center justify-center mb-4 transition-all">
+                                <Plus size={24} className="text-neutral-500 group-hover:text-neutral-300 transition-colors" />
                             </div>
 
-                            <span className="text-lg font-black uppercase font-heading text-white group-hover:text-[#1F4BFF] transition-colors mb-2">
+                            <span className="text-sm sm:text-base font-black uppercase text-neutral-300 group-hover:text-white transition-colors mb-2 tracking-wide">
                                 Add Your Template
                             </span>
 
-                            <p className="text-xs text-neutral-400 max-w-xs mb-6 font-medium leading-relaxed">
-                                Built a stunning website or landing page? Add it to UI-HUB or submit it to get featured across our community.
+                            <p className="text-xs text-neutral-600 group-hover:text-neutral-500 max-w-[200px] mb-5 font-medium leading-relaxed transition-colors">
+                                Submit your landing page to get featured.
                             </p>
 
-                            <button className="px-4 py-2 bg-white text-black font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] group-hover:bg-[#FFC700] group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-all">
+                            <span className="px-4 py-1.5 bg-neutral-900 text-neutral-400 group-hover:text-white font-black text-[10px] uppercase tracking-wider border border-neutral-700 group-hover:border-neutral-500 transition-all">
                                 Submit Template
-                            </button>
+                            </span>
                         </motion.div>
                     </AnimatePresence>
                 </div>
 
-                {/* ── Bottom Section Banner / Callout ── */}
-                <div className="mt-16 sm:mt-20 p-6 sm:p-8 rounded-xl border-4 border-black bg-[#1F4BFF] shadow-[8px_8px_0px_0px_#000000] flex flex-col md:flex-row items-center justify-between gap-6">
-                    <div className="text-left">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-black text-white text-[10px] font-mono font-bold uppercase tracking-wider mb-2 border border-white/20">
-                            <Sparkles size={12} className="text-[#FFC700]" />
-                            <span>AI PROMPT READY</span>
+                {/* ── Bottom Callout Banner ── */}
+                <div className="mt-12 sm:mt-16 p-5 sm:p-8 rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 hover:border-neutral-600 transition-colors">
+                    <div>
+                        <div className="flex items-center gap-2 mb-2">
+                            <Sparkles size={13} className="text-[#FFC700]" />
+                            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-400">AI Prompt Ready</span>
                         </div>
-                        <h3 className="text-2xl sm:text-3xl font-black font-heading text-white uppercase tracking-tight">
+                        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
                             Build Entire Websites In 60 Seconds
                         </h3>
-                        <p className="text-white/90 text-sm font-medium mt-1 max-w-xl">
-                            All templates include pre-engineered prompts tailored for Claude, Cursor, ChatGPT, and Antigravity.
+                        <p className="text-neutral-500 text-xs sm:text-sm font-medium mt-1 max-w-md">
+                            All templates include pre-engineered prompts for Claude, Cursor, ChatGPT &amp; Antigravity.
                         </p>
                     </div>
                     <a
                         href="/dashboard/mcp"
-                        className="px-6 py-3.5 bg-black text-white font-black text-sm uppercase tracking-wider border-2 border-white hover:bg-white hover:text-black hover:border-black shadow-[4px_4px_0px_0px_#FFFFFF] hover:shadow-[4px_4px_0px_0px_#000000] transition-all shrink-0 flex items-center gap-2"
+                        className="shrink-0 px-5 py-2.5 bg-[#1F4BFF] text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_#000000] hover:bg-white hover:text-black transition-all flex items-center gap-2"
                     >
-                        <span>EXPLORE MCP INTEGRATION</span>
-                        <ArrowRight size={16} />
+                        <span>Explore MCP</span>
+                        <ArrowRight size={14} />
                     </a>
                 </div>
             </div>
