@@ -2327,5 +2327,165 @@ Aesthetic: Pastel Lavender Glassmorphic Romance / Social
 2. Display Typography: clamp(170px, 26.5vw, 370px) scaleY(1.36) font-bold uppercase in #050407.
 3. Canvas Particles: 20 drifting micro-dots with sine alpha pulsation over iridescent SVG ribbon vectors.`
         }
+    },
+    {
+        id: 'heyo-agency-cta',
+        title: 'Heyo Agency CTA',
+        description: 'Pixel-accurate, responsive agency CTA card + dark footer section featuring vibrant canary yellow canvas (#FFE83B), breakthrough 3D mascot illustration, DM Serif Display headline, and interactive social footer.',
+        category: 'Agency & Portfolio',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Micro-interactions & Responsive Layering',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/0a0da916-1649-4f10-9812-d1f981a51016',
+        githubUrl: 'https://github.com/ui-hub/heyo-agency-cta',
+        previewGradient: 'from-yellow-300 via-amber-400 to-neutral-900',
+        accentColor: '#FFE83B',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '3.9k',
+        },
+        features: [
+            'Canary yellow (#FFE83B) overlapping CTA card with DM Serif Display typography',
+            'Breakthrough 3D mascot character illustration overlapping card and footer',
+            'Charcoal black (#171719) dark footer with custom waving hand SVG brand logo',
+            'Navigation links ("Work", "About", "Careers", "Contact") and 5 social icon buttons',
+            'Full-screen desktop composition (1200px × 620px) with dedicated mobile layout'
+        ],
+        promptPreview: `Recreate an exact, pixel-accurate, responsive website CTA card + dark footer section using React, TypeScript, HTML, and Tailwind CSS.
+
+================================================================================
+1. VISUAL DESIGN & COLOR PALETTE
+================================================================================
+- Page background behind section: Light warm off-white #F5F5F2.
+- Dark Footer background: Charcoal black #171719 with rounded-t-[32px] on desktop.
+- CTA Card background: Vibrant canary yellow #FFE83B (or #FFF044), no border, no shadow, rounded-[28px].
+- Button background: #171719 with pure white text #FFFFFF.
+- Typography colors:
+  - CTA Heading: Deep black #111111.
+  - CTA Description: Dark olive/charcoal #4A4B3A.
+  - Footer Navigation links: Crisp off-white #E0E0E0 (hover: #FFFFFF).
+  - Legal copy (Copyright & Privacy): Muted gray #7E7E84.
+  - Social icon tiles: White #FFFFFF background with #171719 icons (hover: #FFE83B).
+
+================================================================================
+2. TYPOGRAPHY & FONT SPECIFICATIONS
+================================================================================
+Load Google Fonts:
+1. "DM Serif Display" (400 regular): Used exclusively for the CTA card heading.
+2. "Plus Jakarta Sans" (400, 500, 600): Used for all body text, descriptions, buttons, navigation, and legal links.
+
+Font Sizing & Leading:
+- CTA Heading:
+  - Text: "Let’s get started."
+  - Font: 'DM Serif Display', serif
+  - Desktop Size: 48px – 49px (mobile: 34px, tablet: 42px)
+  - Font weight: 400 regular
+  - Line-height: 1.08
+  - Letter-spacing: -0.02em (tight)
+  - Whitespace: nowrap (strictly one single line)
+- CTA Description:
+  - Text: "We want to hear from you to get an awesome project started!"
+  - Font: 'Plus Jakarta Sans', sans-serif
+  - Size: 16px (mobile: 15px)
+  - Line-height: 1.4
+  - Margin-top: 24px
+  - Max-width: 480px
+- CTA Button:
+  - Text: "Let's Chat"
+  - Font: 'Plus Jakarta Sans', sans-serif
+  - Size: 15px
+  - Font-weight: 500 medium
+  - Dimensions: exact 155px width × 54px height
+  - Shape: Full pill (rounded-full)
+  - Hover: scale-[1.03], bg-[#222225], transition 200ms ease-out
+- Footer Navigation Links:
+  - Items: "Work", "About", "Careers", "Contact"
+  - Size: 15px
+  - Font-weight: 400 regular
+  - Spacing between links: exact 28px gap
+- Footer Legal Links:
+  - Copyright: "© Copyright 2024 Heyo" at 13px regular
+  - Privacy Policy: "Privacy Policy" at 13px regular (hover: #FFFFFF)
+
+================================================================================
+3. EXACT DESKTOP DIMENSIONS, POSITIONING & Z-INDEX LAYERING
+================================================================================
+Container:
+- Max-width: 1200px, centered (mx-auto).
+- Desktop Stage Height: 620px (relative w-full h-[620px]).
+
+Layering Order (Bottom to Top):
+1. Layer 1 (z-10): Dark Footer Box
+   - Starts at top: 88px and spans to the bottom (bottom: 0, left: 0, right: 0).
+   - Background: #171719
+   - Border radius: rounded-t-[32px]
+2. Layer 2 (z-20): Yellow CTA Card
+   - Position: position: absolute, left: 82px, top: 34px.
+   - Dimensions: exact max-w-[620px], min-h-[292px].
+   - Border-radius: rounded-[28px].
+   - Internal padding: p-[54px] (mobile: px-8 py-10).
+   - Visually overlaps the top edge of the dark footer by 54px.
+3. Layer 3 (z-25): Dark Footer Content Overlay
+   - Position: position: absolute, inset-x-0, top: 88px, bottom: 0.
+   - Padding: px-[82px], pt-[260px], pb-[34px].
+   - Left-aligned content:
+     - Heyo abstract waving hand logo: 36px × 36px white SVG.
+     - 22px vertical gap down to the navigation links (gap-[28px] horizontally).
+     - 22px vertical gap down to social icons row.
+     - 5 social icon buttons: Dribbble, Twitter/X, Instagram, LinkedIn, Facebook.
+       - Each tile is exactly 28px × 28px, white background #FFFFFF, rounded 5px (rounded-[5px]), containing a 14-15px black SVG icon.
+       - Gap between icons: 7px.
+   - Bottom row (justified between):
+     - Left: "© Copyright 2024 Heyo"
+     - Right: "Privacy Policy"
+4. Layer 4 (z-30): Breakthrough Mascot Image
+   - Image URL: "https://res.cloudinary.com/chhwhdhk/image/upload/v1788463693/972ea88b-93ad-4bdc-93ae-2095741274ee_swtdmz.png"
+   - Position: position: absolute, right: 45px, top: 24px.
+   - Width: exact 550px (w-[550px]).
+   - Pointer-events: none, non-selectable.
+   - Visually overlaps both the right side of the yellow CTA card and the dark footer.
+
+================================================================================
+4. RESPONSIVE BREAKDOWN (MOBILE & TABLET <1024px)
+================================================================================
+- Yellow card stacks vertically at the top with negative bottom margin (-mb-16 sm:-mb-24).
+- Mascot image centers over the transition line (max-w-[460px], -mb-12 sm:-mb-16).
+- Dark footer starts underneath (pt-20 sm:pt-24 pb-10 px-6 sm:px-10 rounded-t-[28px]).
+- Footer logo, navigation, and social buttons stack with generous touch-friendly padding.
+- Horizontal rule divider separating content from legal links.`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - Heyo Agency CTA & Dark Footer Directive */
+Recreate this exact pixel-accurate, responsive website CTA card + dark footer section using React, TypeScript, and Tailwind CSS.
+1. Visual Palette: Warm off-white #F5F5F2 canvas, canary yellow #FFE83B CTA card (rounded-[28px]), charcoal black #171719 footer (rounded-t-[32px]).
+2. Mascot Image: "https://res.cloudinary.com/chhwhdhk/image/upload/v1788463693/972ea88b-93ad-4bdc-93ae-2095741274ee_swtdmz.png" breaking through from right: 45px, top: 24px (w-[550px]).
+3. Typography: "DM Serif Display" for heading "Let’s get started." (49px, line-height: 1.08, whitespace-nowrap). "Plus Jakarta Sans" for body & buttons.
+4. CTA Button: "Let's Chat" pill button (155px × 54px, bg-[#171719], rounded-full, text-white).
+5. Footer Navigation: "Work", "About", "Careers", "Contact" with 28px gap.
+6. Social Icons: 5 square tiles (28px × 28px, white bg, rounded-[5px], hover:bg-[#FFE83B]) for Dribbble, Twitter, Instagram, LinkedIn, Facebook.
+7. Responsive: Stack layout gracefully for mobile/tablet with centered mascot and padded footer.`,
+            claude: `You are Claude Code, an expert UI/UX engineer.
+Implement the Heyo Agency CTA card and dark footer section in React, TypeScript, and Tailwind CSS:
+- Canvas background: #F5F5F2
+- Canary yellow #FFE83B CTA card (max-w-[620px], min-h-[292px]) with DM Serif Display headline "Let’s get started."
+- 3D Mascot character (https://res.cloudinary.com/chhwhdhk/image/upload/v1788463693/972ea88b-93ad-4bdc-93ae-2095741274ee_swtdmz.png) positioned right: 45px overlapping card and footer
+- Charcoal black #171719 footer with waving hand SVG logo, navigation links, 5 white social icon tiles, and legal copyright/privacy policy links
+- Clean responsive layout for desktop (1200px × 620px relative stage) and mobile stack`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: HEYO AGENCY CTA
+Aesthetic: Modern Creative Agency / High-Contrast Editorial
+- Canvas: #F5F5F2
+- CTA Card: #FFE83B, rounded-[28px], DM Serif Display heading
+- Mascot: https://res.cloudinary.com/chhwhdhk/image/upload/v1788463693/972ea88b-93ad-4bdc-93ae-2095741274ee_swtdmz.png (550px)
+- Footer: #171719, rounded-t-[32px], waving hand vector icon
+- Social Tiles: 28px × 28px white cubes with black icons, hover: #FFE83B
+- Button: "Let's Chat" 155px × 54px pill button with active feedback toast`,
+            lovable: `Build the Heyo Agency CTA and dark footer section in React and Tailwind CSS with warm light background #F5F5F2, canary yellow CTA card #FFE83B with serif title "Let’s get started.", 3D mascot illustration breaking through the edge, and rounded-top charcoal black footer #171719 with navigation, social tiles, and "Let's Chat" button.`,
+            advance: `TECHNICAL SPECIFICATION: HEYO AGENCY CTA
+1. Desktop Stage: 1200px max-width, 620px fixed height container with z-10 footer (top: 88px, bottom: 0), z-20 CTA card (left: 82px, top: 34px), z-25 footer content overlay (pt: 260px), and z-30 mascot (right: 45px, top: 24px).
+2. Typography Pairings: 'DM Serif Display' 400 (49px leading-[1.08]) + 'Plus Jakarta Sans' (15px-16px).
+3. Social Matrix: 5 SVG tiles 28px × 28px rounded-[5px] in #FFFFFF with #171719 glyphs.`
+        }
     }
 ];

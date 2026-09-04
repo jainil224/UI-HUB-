@@ -385,6 +385,54 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'heyo-agency-cta':
+            return (
+                <div className="relative w-full h-full bg-[#F5F5F2] overflow-hidden flex flex-col justify-end select-none pointer-events-none p-2">
+                    {/* Dark Footer Bottom Strip */}
+                    <div className="relative w-full h-[55%] bg-[#171719] rounded-t-[16px] px-3 pt-6 pb-2 flex flex-col justify-between">
+                        {/* Waving Hand SVG Logo + Mini Nav */}
+                        <div className="flex items-center justify-between text-[8px] text-neutral-400">
+                            <span className="font-semibold text-white">HEYO AGENCY</span>
+                            <div className="flex items-center gap-1.5">
+                                <span>Work</span>
+                                <span>About</span>
+                                <span>Contact</span>
+                            </div>
+                        </div>
+
+                        {/* Bottom Copyright */}
+                        <div className="flex items-center justify-between text-[7px] text-neutral-500 border-t border-white/10 pt-1">
+                            <span>© 2024 Heyo</span>
+                            <span>Privacy</span>
+                        </div>
+                    </div>
+
+                    {/* Overlapping Canary Yellow Card */}
+                    <div className="absolute left-3 top-3 right-12 bg-[#FFE83B] rounded-[14px] p-3 shadow-sm z-20">
+                        <span className="text-[13px] font-serif font-normal text-[#111111] leading-tight block">
+                            Let’s get started.
+                        </span>
+                        <span className="text-[8px] text-[#4A4B3A] block mt-1 line-clamp-1">
+                            We want to hear from you to get an awesome project started!
+                        </span>
+                        <div className="mt-2">
+                            <span className="inline-block px-2.5 py-1 rounded-full bg-[#171719] text-white text-[7.5px] font-medium">
+                                Let's Chat
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Mascot Illustration Breakthrough */}
+                    <img
+                        src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788463693/972ea88b-93ad-4bdc-93ae-2095741274ee_swtdmz.png"
+                        alt="Heyo Mascot Character"
+                        className="absolute right-1 top-2 w-28 h-auto object-contain z-30 drop-shadow-md pointer-events-none"
+                        loading="lazy"
+                        decoding="async"
+                    />
+                </div>
+            );
+
         default:
             return (
                 <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden select-none pointer-events-none`}>

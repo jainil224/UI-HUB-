@@ -24,6 +24,7 @@ import LakeraHero from '../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../components/templates/InteriorDesignShowcase';
 import LumosHero from '../../components/templates/LumosHero';
 import LoveAppHero from '../../components/templates/LoveAppHero';
+import HeyoAgencyCta from '../../components/templates/HeyoAgencyCta';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -288,6 +289,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'loveapp-hero' ? (
                                 <div className="w-full h-full overflow-hidden bg-[#D8D2F8]">
                                     <LoveAppHero key={`loveapp-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'heyo-agency-cta' ? (
+                                <div className="w-full h-full overflow-y-auto overflow-x-hidden bg-[#F5F5F2]">
+                                    <HeyoAgencyCta key={`heyo-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

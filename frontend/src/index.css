@@ -18,6 +18,10 @@
   letter-spacing: -0.08em;
 }
 
+.font-serif-heading {
+  font-family: 'DM Serif Display', Georgia, serif;
+}
+
 .hero-title {
   font-family: 'Inter', sans-serif;
   font-weight: 600;
