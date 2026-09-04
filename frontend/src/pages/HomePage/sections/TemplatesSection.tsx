@@ -31,6 +31,7 @@ import MentalityHero from '../../../components/templates/MentalityHero';
 import LakeraHero from '../../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../../components/templates/InteriorDesignShowcase';
 import LumosHero from '../../../components/templates/LumosHero';
+import LoveAppHero from '../../../components/templates/LoveAppHero';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 
@@ -188,6 +189,10 @@ const TemplatesSection = () => {
                                         ) : template.id === 'lumos' ? (
                                             <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F1F1F0] overflow-hidden">
                                                 <LumosHero />
+                                            </div>
+                                        ) : template.id === 'loveapp-hero' ? (
+                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#D8D2F8] overflow-hidden">
+                                                <LoveAppHero />
                                             </div>
                                         ) : template.liveDemoUrl ? (
                                             <iframe

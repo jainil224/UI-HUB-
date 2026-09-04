@@ -23,6 +23,7 @@ import MentalityHero from '../../components/templates/MentalityHero';
 import LakeraHero from '../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../components/templates/InteriorDesignShowcase';
 import LumosHero from '../../components/templates/LumosHero';
+import LoveAppHero from '../../components/templates/LoveAppHero';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -283,6 +284,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'lumos' ? (
                                 <div className="w-full h-full overflow-hidden bg-[#F1F1F0]">
                                     <LumosHero key={`lumos-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'loveapp-hero' ? (
+                                <div className="w-full h-full overflow-hidden bg-[#D8D2F8]">
+                                    <LoveAppHero key={`loveapp-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

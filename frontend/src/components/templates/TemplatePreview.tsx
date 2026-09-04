@@ -336,6 +336,55 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'loveapp-hero':
+            return (
+                <div className="relative w-full h-full bg-[#E6E2FF] overflow-hidden flex flex-col justify-between p-3 select-none pointer-events-none border border-[#CBC4EC]">
+                    {/* Ambient Glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 bg-[#F34B83]/20 rounded-full blur-2xl pointer-events-none" />
+
+                    {/* Top Future™ Logo + Pills summary */}
+                    <div className="relative z-10 flex items-center justify-between">
+                        <span className="text-[9px] font-sans font-semibold tracking-[0.2em] text-neutral-500 uppercase">
+                            FUTURE™
+                        </span>
+                        <div className="flex items-center gap-1">
+                            <span className="px-2 py-0.5 rounded-full border border-neutral-400/40 text-[8px] text-neutral-800">
+                                Smart AI
+                            </span>
+                            <span className="px-2 py-0.5 rounded-full bg-black text-white text-[8px] font-medium">
+                                Log in →
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Center Artwork with LOVEAPP Giant Typography */}
+                    <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center">
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
+                            <span className="text-4xl sm:text-5xl font-black text-black/90 uppercase tracking-tight scale-y-125">
+                                LOVEAPP
+                            </span>
+                        </div>
+                        <img
+                            src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788462111/74ce5ea8-d47d-4de3-a636-7411198f4b28_hi8xrw.png"
+                            alt="LoveApp 3D Glass Heart"
+                            className="h-16 w-auto object-contain relative z-10 drop-shadow-[0_8px_16px_rgba(180,40,90,0.25)]"
+                            loading="lazy"
+                            decoding="async"
+                        />
+                        <p className="mt-1 text-[9px] text-[#1A1820] font-normal z-10">
+                            Find the love of your life in <span className="underline font-medium">one click</span>
+                        </p>
+                    </div>
+
+                    {/* Bottom CTA Pill */}
+                    <div className="relative z-10 flex items-center justify-center pt-1 border-t border-[#CBC3EE]/70">
+                        <span className="px-3.5 py-0.5 rounded-full bg-black text-white text-[9px] font-medium">
+                            Find love
+                        </span>
+                    </div>
+                </div>
+            );
+
         default:
             return (
                 <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden select-none pointer-events-none`}>

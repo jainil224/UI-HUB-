@@ -2115,5 +2115,209 @@ Aesthetic: Futuristic Editorial Minimal
 2. Background Typography: text-[21.5vw] font-black uppercase text-[#E5E5E3] leading-none absolute bottom-7 md:bottom-11.
 3. Barcode Array: [2, 1, 3, 1, 1, 2, 1, 3, 2, 1, 1, 2, 3, 1, 2, 1, 1, 3, 1, 2, 1, 3, 1, 2, 2, 1, 3, 1, 1, 2, 2, 1, 3] stripes at width * 0.9px in #111111.`
         }
+    },
+    {
+        id: 'loveapp-hero',
+        title: 'LoveApp Interactive 3D Heart Hero',
+        description: 'Pastel lavender romance and social hero featuring central 3D glossy glass heart with smooth lerp parallax, iridescent flowing ribbons, giant LOVEAPP background typography, and feature pills.',
+        category: 'SaaS & AI',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: '3D Parallax & Micro-interactions',
+        isPro: false,
+        liveDemoUrl: '/demo/loveapp-hero',
+        githubUrl: 'https://github.com/ui-hub/loveapp-hero',
+        previewGradient: 'from-purple-300 via-pink-100 to-indigo-200',
+        accentColor: '#F34B83',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '4.2k',
+        },
+        features: [
+            'Central 3D glossy glass heart with smooth lerp cursor parallax',
+            'Flowing iridescent SVG ribbons with dual-sided gradient glow',
+            'Giant condensed background display typography ("LOVEAPP")',
+            'Feature pill navigation bar with active toggle state',
+            'Pastel lavender canvas with SVG noise overlay and interactive CTA'
+        ],
+        promptPreview: `Recreate this exact pixel-accurate, premium interactive landing page hero section in React, TypeScript, HTML, and CSS (Tailwind CSS).
+
+================================================================================
+1. CORE ARCHITECTURE & VIEWPORT CONTAINER (PAGE FRAME)
+================================================================================
+- Viewport Wrapper:
+  * Width: 100vw, Height: 100vh (min-height: 600px), overflow: hidden.
+  * Outer background padding color: #D8D2F8 (deep muted lilac).
+  * Padding around inner card: 8px to 10px (\`p-1 sm:p-2 md:p-2.5\`).
+- Main App Frame Card:
+  * Width: 100%, Height: 100%.
+  * Border radius: 8px to 10px (\`rounded-[8px] sm:rounded-[10px]\`).
+  * Border: 1px solid #CBC4EC.
+  * Box shadow: 0 4px 30px rgba(140, 130, 190, 0.15).
+  * Background: #E6E2FF (pure pastel lavender canvas).
+  * Position: relative, overflow: hidden, user-select: none.
+  * Layout: Flex column (\`flex flex-col justify-between items-center\`).
+- Subtle Grain / Noise Overlay:
+  * SVG fractalNoise overlay (\`feTurbulence baseFrequency="0.8" numOctaves="3"\`).
+  * Mix-blend-mode: overlay, opacity: 0.04, pointer-events: none, z-index: 40.
+
+================================================================================
+2. TYPOGRAPHY & EXTERNAL FONTS
+================================================================================
+Load Google Fonts:
+- Display Condensed Font: 'Bebas Neue' or 'Oswald' (weights: 700).
+- Primary Body Font: 'Plus Jakarta Sans' (weights: 400, 500, 600).
+Color Constants:
+- Canvas Lavender: #E6E2FF
+- Dark Primary Text / Button: #050407 or #060608
+- Subtitle Text: #1A1820
+- Border Lines & Pills: #7A748E / #CBC4EC
+- Heart Glows: #F34B83, #B81954, #8D5AC5, #FFFFFF
+
+================================================================================
+3. TOP NAVIGATION (HEADER)
+================================================================================
+- Position: Relative, z-index: 30, width: 100%, flex justify-between items-center.
+- Padding: \`px-6 sm:px-8 pt-4 sm:pt-5 pb-2\`.
+- Top Left Brand Logo:
+  * Container position: left ~30px, top ~18px.
+  * Icon: 16px × 16px faceted geometric isometric cube/hexagon in solid black (#000000).
+  * Wordmark: "FUTURE™" in text-[10px], tracking-[0.24em], uppercase, font-medium, color: #9E9AA7 (subtle light gray). Trademark \`™\` rendered as 7px superscript.
+- Top Right Links:
+  * Gap: 24px to 28px (\`gap-6 sm:gap-7\`).
+  * Link 1: "Download App" (text-[10px] sm:text-[10.5px], font-medium, color: #111, tracking-tight).
+  * Link 2: "Log in →" with inline arrow (text-[10px] sm:text-[10.5px], font-medium, color: #111).
+  * Hover: smooth opacity transition to 0.75.
+
+================================================================================
+4. FEATURE PILLS NAVIGATION (SUB-HEADER)
+================================================================================
+- Position: Centered horizontally beneath top nav, z-index: 30.
+- Container: Flex wrap, justify-center, gap: 7px to 9px (\`gap-2 sm:gap-[9px]\`).
+- Pills (5 items):
+  1. "Large user base"
+  2. "Smart AI"
+  3. "Quality"
+  4. "Data reliability"
+  5. "Support"
+- Pill Styling:
+  * Height: 22px to 24px (\`py-[3px] sm:py-[4px] px-3 sm:px-3.5\`).
+  * Border radius: 9999px (full rounded pill).
+  * Border: 1px solid rgba(122, 116, 142, 0.4).
+  * Typography: text-[9px] sm:text-[10px], font-normal, text-neutral-800.
+  * Background: transparent (subtle white/20 on hover, active state: dark fill with white text).
+
+================================================================================
+5. GIANT BACKGROUND TYPOGRAPHY ("LOVEAPP")
+================================================================================
+- Layer Order: Behind heart, behind ribbons, above lavender background (z-index: 10).
+- Position: Absolute inset-0, flex items-center justify-center, pointer-events-none, overflow: hidden.
+- Word: "LOVEAPP"
+- Typography Specifications:
+  * Font family: 'Bebas Neue', 'Oswald', sans-serif.
+  * Font weight: 700 (ultra-bold / condensed poster display).
+  * Font size: \`clamp(170px, 26.5vw, 370px)\`.
+  * Vertical scaling: \`transform: scaleY(1.36)\` with \`transform-origin: center center\`.
+  * Letter spacing: \`clamp(0.02em, 0.6vw, 0.05em)\`.
+  * Text color: #050407.
+  * White-space: nowrap.
+  * Text shadow: 0 0 1px rgba(0, 0, 0, 0.5).
+
+================================================================================
+6. FROSTED GLASS REFRACTION HALO (BEHIND HEART)
+================================================================================
+- Layer Order: z-index: 15 (between giant text and ribbons/heart).
+- Dimensions: 320px to 420px oval halo.
+- Effects:
+  * Backdrop-filter: blur(10px) saturate(1.2) brightness(1.03).
+  * Mask: radial-gradient(ellipse 60% 55% at 50% 48%, black 40%, rgba(0,0,0,0.7) 65%, transparent 95%).
+  * Outer edge shadow: radial-gradient with subtle dark violet border (rgba(20, 10, 30, 0.28)) and blur(8px).
+  * Internal glow: radial-gradient with rgba(243, 75, 131, 0.18) blending into purple rgba(141, 90, 197, 0.12).
+
+================================================================================
+7. FLOWING IRIDESCENT RIBBONS & PARTICLES
+================================================================================
+- Layer Order: z-index: 18.
+- Left Flowing Ribbon:
+  * Curves from left viewport edge toward the center, curls in a pearlescent loop around the left lobe of the heart.
+  * SVG paths with layered multi-stop gradient stroke (White #FFF -> Pale Blue #DDF1FF -> Soft Lilac #E6DEFF -> Pink #FFCCE0).
+  * Core stroke-width: 32px with feGaussianBlur (stdDeviation=6), inner stroke: 16px, crisp white specular rim highlight: 4.5px.
+- Right Flowing Ribbon:
+  * Enters from right viewport edge, loops inward toward the right lobe of the heart.
+  * Reverse multi-stop gradient with highlight rim stroke.
+- Ribbon Animation:
+  * Drift animation (\`@keyframes ribbonDrift\` 9s infinite ease-in-out).
+- Stardust Particles:
+  * HTML5 Canvas with ~20 subtle drifting micro-particles (white, pink, lavender, cyan dots, radius 0.6px–2px, opacity 0.3–0.8, floating gently).
+
+================================================================================
+8. CENTRAL 3D GLASS HEART OBJECT
+================================================================================
+- Image Source:
+  \`https://res.cloudinary.com/chhwhdhk/image/upload/v1788462111/74ce5ea8-d47d-4de3-a636-7411198f4b28_hi8xrw.png\`
+  (With local fallback to \`/heart.png\`).
+- Dimensions:
+  * Mobile: ~280px width
+  * Tablet: ~330px to 370px width
+  * Desktop: ~410px width (\`w-[280px] sm:w-[330px] md:w-[370px] lg:w-[410px] h-auto\`).
+- Drop Shadow: \`drop-shadow-[0_12px_28px_rgba(180,40,90,0.18)]\`.
+- Floating Animation:
+  * \`@keyframes floatSlow\` (8s infinite ease-in-out: translateY 0px -> -8px, rotate 0deg -> 1deg).
+- Mouse Cursor Parallax:
+  * Smooth lerp interpolation (factor 0.08) tracking cursor (-1 to 1 normalized).
+  * Max displacement: 8px to 12px (\`translate3d(x, y, 0)\`).
+  * Micro rotation: \`rotate(parallaxX * 0.25deg)\`.
+  * Disabled on screens < 768px and when \`prefers-reduced-motion\` is active.
+
+================================================================================
+9. BOTTOM HERO CONTENT & CTA
+================================================================================
+- Position: Centered below the heart, z-index: 30, padding-bottom: 24px to 32px (\`pb-6 sm:pb-8\`).
+- Description Line:
+  * Text: "Your special way to find the love of your life in one click"
+  * Typography: text-[11.5px] sm:text-[12.5px] md:text-[13px], font-normal, color: #1A1820.
+  * Accent: The phrase "one click" is underlined (\`underline underline-offset-[3px] decoration-1 decoration-[#1A1820] font-medium\`).
+- Primary CTA Button ("Find love"):
+  * Width: 120px to 126px, Height: 32px to 35px.
+  * Pill shape: \`rounded-full\`.
+  * Color: Solid black background (#000000), crisp white text (#FFFFFF).
+  * Typography: text-[11px] sm:text-[12px], font-medium.
+  * Interaction: Interactive click feedback ("Connected!"), scale hover [1.02], subtle white sheen transition (\`via-white/15\`) sweeping across on hover.`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - LoveApp Interactive 3D Heart Hero Directive */
+Recreate this exact pixel-accurate, premium interactive landing page hero section in React, TypeScript, and Tailwind CSS.
+Include:
+1. Palette: Deep muted lilac frame (#D8D2F8), pastel lavender canvas (#E6E2FF), dark text (#050407), heart glows (#F34B83, #B81954).
+2. Central 3D heart object: (https://res.cloudinary.com/chhwhdhk/image/upload/v1788462111/74ce5ea8-d47d-4de3-a636-7411198f4b28_hi8xrw.png) with floating animation and smooth lerp mouse parallax.
+3. Giant typography: 'LOVEAPP' in Bebas Neue / Oswald condensed display font (clamp(170px, 26.5vw, 370px) scaleY(1.36)).
+4. Flowing iridescent ribbons: Left and right looping SVG ribbons with multi-stop pastel gradient strokes + stardust particles canvas.
+5. Frosted distortion halo: Frosted glass refraction with backdrop-blur and radial gradient glow.
+6. Top navigation: Future™ brand logo, 'Download App', 'Log in →'.
+7. Sub-navigation: 5 feature pills (Large user base, Smart AI, Quality, Data reliability, Support).
+8. Bottom hero: 'Your special way to find the love of your life in one click' with 'Find love' rounded pill CTA.`,
+            claude: `You are Claude Code, an expert design technologist.
+Build the LoveApp interactive 3D heart landing page hero in React, TypeScript, and Tailwind CSS:
+- Canvas: #E6E2FF within #D8D2F8 border frame with subtle noise overlay
+- Giant background typography: 'LOVEAPP' condensed display font scaleY(1.36)
+- Central 3D glass heart with smooth lerp cursor parallax and ambient radial glow
+- Flowing iridescent ribbons curving around the heart with drifting stardust particles
+- Feature pills navigation bar with active toggle state
+- Bottom CTA 'Find love' with interactive sheen effect and click feedback`,
+            antigravity: `ANTIGRAVITY BLUEPRINT: LOVEAPP 3D HEART HERO
+Aesthetic: Pastel Lavender Glassmorphic Romance / Social
+- Canvas: #E6E2FF, Outer frame: #D8D2F8
+- 3D Heart Asset: https://res.cloudinary.com/chhwhdhk/image/upload/v1788462111/74ce5ea8-d47d-4de3-a636-7411198f4b28_hi8xrw.png
+- Parallax: Smooth lerp tracking factor 0.08, max offset 10px
+- Display Typography: LOVEAPP, Bebas Neue 700, 26.5vw, scaleY(1.36)
+- Iridescent Ribbons: Left & right multi-stop SVG gradients with glow filters
+- Micro-interactions: Feature pills toggle, shine sweep on 'Find love' button`,
+            lovable: `Build the LoveApp interactive 3D heart hero landing page in React, TypeScript, and Tailwind CSS with pastel lavender canvas #E6E2FF, central 3D glossy glass heart with mouse parallax tilt, giant LOVEAPP condensed typography, flowing iridescent ribbons, feature pills nav, and 'Find love' button.`,
+            advance: `TECHNICAL SPECIFICATION: LOVEAPP 3D HEART HERO
+1. Parallax Lerp: currentPos.x += (target.x - currentPos.x) * 0.08; translate3d(x, y, 0) rotate(x * 0.25deg).
+2. Display Typography: clamp(170px, 26.5vw, 370px) scaleY(1.36) font-bold uppercase in #050407.
+3. Canvas Particles: 20 drifting micro-dots with sine alpha pulsation over iridescent SVG ribbon vectors.`
+        }
     }
 ];
