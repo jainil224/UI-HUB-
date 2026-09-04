@@ -37,6 +37,7 @@ import AuCabaretPoster from '../../../components/templates/AuCabaretPoster';
 import DontBeGreedyFooter from '../../../components/templates/DontBeGreedyFooter';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
+import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
@@ -122,21 +123,17 @@ const TemplatesSection = () => {
                 </div>
 
                 {/* ── Templates Grid ── */}
-                <motion.div 
-                    layout
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
-                >
-                    <AnimatePresence mode="popLayout">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                    <AnimatePresence mode="wait">
                         {filteredTemplates.map((template, idx) => (
                             <motion.div
                                 key={template.id}
-                                layout
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={{ opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.96 }}
-                                transition={{ duration: 0.35, delay: idx * 0.05 }}
+                                exit={{ opacity: 0 }}
+                                transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.2) }}
                                 onClick={() => handleOpenTemplate(template.id)}
-                                className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0C0C0E] overflow-hidden select-none hover:border-white hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300 cursor-pointer"
+                                className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0C0C0E] overflow-hidden select-none hover:border-white hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300 cursor-pointer will-change-transform"
                             >
                                 {/* ── Mockup Browser Top Bar ── */}
                                 <div className="h-9 px-3.5 bg-[#141418] border-b-2 border-neutral-800 flex items-center justify-between gap-3">
@@ -158,64 +155,88 @@ const TemplatesSection = () => {
                                 {/* ── Interactive Real Live Preview Window ── */}
                                 <div 
                                     onClick={() => navigate(`/templates/${template.id}`)}
-                                    className="relative h-60 sm:h-64 w-full bg-white overflow-hidden cursor-pointer group transition-all border-b-2 border-white flex items-center justify-center"
+                                    className="relative h-60 sm:h-64 w-full overflow-hidden cursor-pointer group transition-all border-b-2 border-white"
                                 >
-                                    <div className="relative w-full h-full overflow-hidden bg-white">
+                                    <div className="relative w-full h-full overflow-hidden">
                                         {template.id === 'tars-protocol' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white">
-                                                <TarsHeroArena />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#ffffff">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white">
+                                                    <TarsHeroArena />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'split-fuzzy-orb' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#d6c0e3]">
-                                                <SplitFuzzyOrbHero />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#d6c0e3">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#d6c0e3]">
+                                                    <SplitFuzzyOrbHero />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'segmint-2026' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#0755CE] overflow-hidden">
-                                                <SegmintFooter />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#0755CE">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#0755CE] overflow-hidden">
+                                                    <SegmintFooter />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'haos-tech-solutions' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#020202] overflow-hidden">
-                                                <HaosShowcase />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#020202">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#020202] overflow-hidden">
+                                                    <HaosShowcase />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'mentality' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F0F0F0] overflow-hidden">
-                                                <MentalityHero />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#F0F0F0">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F0F0F0] overflow-hidden">
+                                                    <MentalityHero />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'lakera-ai-security' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
-                                                <LakeraHero />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#ffffff">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
+                                                    <LakeraHero />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'interior-design' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
-                                                <InteriorDesignShowcase />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#ffffff">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-white overflow-hidden">
+                                                    <InteriorDesignShowcase />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'lumos' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F1F1F0] overflow-hidden">
-                                                <LumosHero />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#F1F1F0">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F1F1F0] overflow-hidden">
+                                                    <LumosHero />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'loveapp-hero' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#D8D2F8] overflow-hidden">
-                                                <LoveAppHero />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#D8D2F8">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#D8D2F8] overflow-hidden">
+                                                    <LoveAppHero />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'heyo-agency-cta' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F5F5F2] overflow-hidden">
-                                                <HeyoAgencyCta />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#F5F5F2">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#F5F5F2] overflow-hidden">
+                                                    <HeyoAgencyCta />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'me-019-au-cabaret' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#EDEDED] overflow-hidden">
-                                                <AuCabaretPoster />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#EDEDED">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#EDEDED] overflow-hidden">
+                                                    <AuCabaretPoster />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.id === 'dont-be-greedy' ? (
-                                            <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#050505] overflow-hidden">
-                                                <DontBeGreedyFooter />
-                                            </div>
+                                            <LazyTemplatePreview bgColor="#050505">
+                                                <div className="w-[1280px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none select-none bg-[#050505] overflow-hidden">
+                                                    <DontBeGreedyFooter />
+                                                </div>
+                                            </LazyTemplatePreview>
                                         ) : template.liveDemoUrl ? (
                                             <iframe
                                                 src={template.liveDemoUrl}
                                                 title={template.title}
                                                 className="w-[1200px] h-[720px] origin-top-left scale-[0.31] sm:scale-[0.34] pointer-events-none border-0 select-none bg-white"
                                                 sandbox="allow-scripts allow-same-origin"
-                                                loading="eager"
+                                                loading="lazy"
                                             />
                                         ) : (
                                             <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden`}>
@@ -265,7 +286,6 @@ const TemplatesSection = () => {
 
                         {/* ── Submit / Add New Template Card ── */}
                         <motion.div
-                            layout
                             onClick={() => setShowSubmitModal(true)}
                             className="group relative flex flex-col items-center justify-center p-8 rounded-xl border-2 border-dashed border-neutral-700 bg-neutral-950/50 hover:bg-[#111116] hover:border-[#1F4BFF] hover:shadow-[6px_6px_0px_0px_#1F4BFF] transition-all duration-300 cursor-pointer min-h-[360px] text-center select-none"
                         >
@@ -286,7 +306,7 @@ const TemplatesSection = () => {
                             </button>
                         </motion.div>
                     </AnimatePresence>
-                </motion.div>
+                </div>
 
                 {/* ── Bottom Section Banner / Callout ── */}
                 <div className="mt-16 sm:mt-20 p-6 sm:p-8 rounded-xl border-4 border-black bg-[#1F4BFF] shadow-[8px_8px_0px_0px_#000000] flex flex-col md:flex-row items-center justify-between gap-6">
