@@ -2922,6 +2922,125 @@ Key Specifications:
         }
     },
     {
+        id: 'sui-overflow',
+        previewImage: '/assets/template-previews/sui-overflow.png',
+        title: 'Sui Overflow',
+        description: 'Swiss international typographic style hero section with split blueprint grid, procedural paper noise, split register CTA, and floating 3D sticker artwork.',
+        category: 'Web3 & FinTech',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Micro-interactions & Technical Grid',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/35e5f01b-025a-48a4-9cff-a16f837fd62b',
+        githubUrl: 'https://github.com/ui-hub/sui-overflow-2025',
+        previewGradient: 'from-[#F2EFE6] via-[#F2EFE6] to-[#4798FF]',
+        accentColor: '#4798FF',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '3.1k',
+        },
+        features: [
+            'Swiss international typographic style with 3-line extra-bold title',
+            'Split-column architecture with technical blueprint grid and 1px dividing line',
+            'Procedural fractal paper noise overlay with mix-blend-multiply',
+            'Custom two-segment split CTA button with technical diagonal dotted arrow',
+            'High-resolution 3D sticker composition with soft ambient occlusion shadows'
+        ],
+        promptPreview: `Generate a pixel-perfect, fully responsive web section inspired by the Swiss international typographic style and the official "Sui Overflow 2025" design, featuring a split layout, procedural paper texture, blueprint technical grid, custom split CTA button, and floating 3D sticker artwork.
+
+---
+
+### 1. DESIGN SPECIFICATIONS & DESIGN TOKENS
+
+#### A. Color Palette
+- **Canvas / Background**: #F2EFE6 (warm matte editorial cream / sand).
+- **Primary Ink / Typography**: #07182A (deep obsidian midnight navy).
+- **Blueprint Grid Lines**: #66AFFF with a 1px solid left dividing line.
+- **Button Blue Segment**: #4798FF (hover: #3b82f6).
+- **Button Dark Segment**: #07182A (hover: #0c2238).
+- **Texture Overlay**: Pure procedural noise overlay with mix-blend-multiply at 3.5% opacity.
+
+#### B. Typography Hierarchy (Font Family: 'Plus Jakarta Sans', system-ui, sans-serif)
+1. **Hero Title (H1)**:
+   - Stacked into exactly 3 lines: "Sui", "Overflow", "2025".
+   - Font Weight: 800 (ExtraBold).
+   - Letter Spacing: -0.042em (ultra-tight optical tracking).
+   - Line Height: 0.89 (solid, compact editorial leading).
+   - Responsive Fluid Font Scale:
+     - Mobile (<640px): text-[46px] to text-[52px]
+     - Small Tablet / Phablet (640px–767px): text-[64px]
+     - Tablet Portrait / Compact Laptop (768px–1023px): text-[50px]
+     - Standard Laptop (1024px–1279px): text-[68px]
+     - Desktop (1280px–1535px): text-[84px]
+     - Ultra-Wide Screens (≥1536px): text-[92px]
+2. **Event Date Text**:
+   - String: "February-August, 2025"
+   - Font Weight: 500 (Medium).
+   - Size: 15px on mobile, 17px on tablet, 18px on desktop.
+   - Margin: mt-5 sm:mt-7.
+
+#### C. Custom Split CTA Button
+- **Architecture**: Single unified interactive button split into two flush segments with rounded-[1px] (sharp editorial radius).
+- **Left Segment**:
+  - Background: #07182A with white text.
+  - Padding: px-6 sm:px-7 py-3.5.
+  - Font Size & Weight: 14px (mobile) / 15px (desktop), font-semibold.
+  - State: Toggles between "Register" and "Registered" on click.
+- **Right Segment**:
+  - Background: #4798FF (hover: #3b82f6).
+  - Dimensions: Fixed square w-[48px] min-h-[48px].
+  - Icon: 18×18 custom SVG with a 45° corner arrow (strokeWidth="2.4" stroke="#07182A") and a diagonal dotted trail of 3 distinct 2.2×2.2px squares located at coordinates (10.5, 6.5), (7, 10), and (3.5, 13.5).
+- **Micro-interactions**:
+  - Click feedback: active:scale-[0.98]
+  - Icon hover animation: group-hover:translate-x-0.5 group-hover:-translate-y-0.5 with transition-transform duration-200.
+
+#### D. Technical Blueprint Grid
+- **Desktop/Laptop/Tablet (≥768px)**:
+  - Width: Aligned with the right column (w-[48%] lg:w-[46%] xl:w-[45%]).
+  - Position: absolute top-0 bottom-0 right-0.
+  - Border: 1px solid left dividing line border-l border-[#66AFFF].
+  - Pattern: linear-gradient in both axes with cell size 47px 47px.
+- **Mobile (<768px)**:
+  - Subtle background grid overlay underneath the artwork at opacity-15 with 40px 40px cell size to provide brand continuity without slicing headings.
+
+#### E. 3D Artwork Image Placement & Sizing
+- **Image URL**: https://res.cloudinary.com/chhwhdhk/image/upload/v1788586602/0eae34c2-b678-42d8-b9c2-2a73aee6fee1_utbpjf.png
+- **Drop Shadow**: Soft ambient occlusion shadow drop-shadow-[0_16px_32px_rgba(7,24,42,0.15)].
+- **Responsive Dimensions**:
+  - Mobile: max-w-[340px] sm:max-w-[420px], max-h-[48vh] sm:max-h-[54vh], centered below the CTA.
+  - Tablet (768px–1023px): max-w-[460px], max-h-[75vh], centered in the right column.
+  - Laptop (1024px–1439px): max-w-[540px], max-h-[82vh].
+  - Desktop (≥1440px): max-w-[600px], max-h-[82vh].`,
+        toolPrompts: {
+            cursor: `Generate a pixel-perfect, fully responsive web section inspired by Swiss typographic style and Sui Overflow 2025 using React and Tailwind CSS:
+1. Warm sand background #F2EFE6 with SVG fractalNoise paper grain overlay at 3.5% opacity.
+2. Left Column: 3-line stacked title "Sui / Overflow / 2025" in #07182A with leading-[0.89], letter spacing -0.042em, date "February-August, 2025", and custom two-part split Register button (#07182A text + #4798FF arrow badge with dotted diagonal trail).
+3. Right Column: Technical blueprint grid (47px x 47px) with #66AFFF left border, containing the high-res 3D sticker artwork with ambient drop shadow.`,
+            claude: `You are Claude Code, an expert design technologist.
+Build the Sui Overflow 2025 hero section in React, TypeScript, and Tailwind CSS:
+- Editorial layout: Sand background #F2EFE6 with subtle paper grain texture
+- Typography: 3-line stacked title "Sui", "Overflow", "2025" with ultra-tight -0.042em tracking and 0.89 line-height
+- Interactive Split CTA: Navy #07182A segment with "Register"/"Registered" toggle paired flush with a 48px square #4798FF segment featuring a custom SVG corner arrow with 3 diagonal square dots
+- Technical Blueprint Grid: Right 48% column overlay with border-l border-[#66AFFF] and 47px grid cells
+- Floating 3D Artwork: Floating 3D sticker composition with soft drop-shadow`,
+            antigravity: `ANTIGRAVITY DIRECTIVE: SUI OVERFLOW 2025 HERO SECTION
+Objective: Build a pixel-perfect Swiss typographic split hero section in React, TypeScript, and Tailwind CSS.
+Key Specifications:
+- Palette: #F2EFE6 (Sand), #07182A (Obsidian Navy), #4798FF (Sui Blue), #66AFFF (Grid)
+- Texture: feTurbulence fractalNoise paper grain at 3.5% opacity
+- Left: 3-line H1, date, and 2-segment sharp-cornered split Register button
+- Right: Technical blueprint grid with 47px spacing and floating 3D sticker composition`,
+            lovable: `Create the Sui Overflow 2025 hero section in React and Tailwind CSS featuring a warm sand background (#F2EFE6), 3-line extra-bold typography in deep navy (#07182A), a custom split Register button with technical dotted arrow, and a right-column blueprint grid with 3D sticker graphics.`,
+            advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: SUI OVERFLOW
+1. Layout Geometry: Left column 52-55% text stage; right column 45-48% technical blueprint stage with border-l #66AFFF.
+2. Grid Dimensions: 47px x 47px linear-gradient cells on desktop, 40px on mobile.
+3. Typography Math: tracking-[-0.042em], leading-[0.89], 800 weight in Plus Jakarta Sans.
+4. Custom SVG Arrow: corner arrow d="M7 3.5H14.5V11" stroke="#07182A" strokeWidth="2.4", dotted trail rects at (10.5,6.5), (7,10), (3.5,13.5).`
+        }
+    },
+    {
         id: 'partify',
         previewImage: '/assets/template-previews/Partify.png',
         title: 'Partify',

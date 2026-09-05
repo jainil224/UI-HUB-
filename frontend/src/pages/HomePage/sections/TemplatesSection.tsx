@@ -35,6 +35,7 @@ import DontBeGreedyFooter from '../../../components/templates/DontBeGreedyFooter
 import PaipaiKuaishou from '../../../components/templates/PaipaiKuaishou';
 import LogoHere from '../../../components/templates/LogoHere';
 import Partify from '../../../components/templates/Partify';
+import SuiOverflow from '../../../components/templates/SuiOverflow';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
@@ -189,6 +190,8 @@ const TemplatesSection = () => {
                                         <LazyTemplatePreview bgColor="#ffffff"><LogoHere /></LazyTemplatePreview>
                                     ) : template.id === 'partify' ? (
                                         <LazyTemplatePreview bgColor="#FBFBFB"><Partify /></LazyTemplatePreview>
+                                    ) : template.id === 'sui-overflow' ? (
+                                        <LazyTemplatePreview bgColor="#F2EFE6"><SuiOverflow /></LazyTemplatePreview>
                                     ) : template.liveDemoUrl ? (
                                         <iframe
                                             src={template.liveDemoUrl}

@@ -737,6 +737,54 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'sui-overflow':
+            return (
+                <div 
+                    className="relative w-full h-full overflow-hidden flex items-stretch justify-between select-none pointer-events-none border border-[#66AFFF]/30"
+                    style={{ backgroundColor: '#F2EFE6', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}
+                >
+                    {/* Left text column */}
+                    <div className="w-[52%] p-3 flex flex-col justify-between z-10">
+                        <div>
+                            <h4 className="text-[#07182A] font-extrabold tracking-[-0.04em] leading-[0.9] text-base">
+                                <span className="block">Sui</span>
+                                <span className="block">Overflow</span>
+                                <span className="block">2025</span>
+                            </h4>
+                            <p className="text-[#07182A] text-[7.5px] font-medium mt-1.5 opacity-85">
+                                February-August, 2025
+                            </p>
+                        </div>
+
+                        <div className="inline-flex items-stretch rounded-[1px] overflow-hidden shadow-xs mt-2 w-fit">
+                            <span className="bg-[#07182A] text-white px-2 py-1 text-[7.5px] font-semibold">
+                                Register
+                            </span>
+                            <span className="bg-[#4798FF] px-1.5 py-1 flex items-center justify-center">
+                                <svg width="8" height="8" viewBox="0 0 18 18" fill="none" stroke="#07182A" strokeWidth="2.4">
+                                    <path d="M7 3.5H14.5V11" strokeLinecap="square" />
+                                    <rect x="10.5" y="6.5" width="2.2" height="2.2" fill="#07182A" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Right blueprint column with 3D artwork */}
+                    <div 
+                        className="w-[48%] border-l border-[#66AFFF] flex items-center justify-center p-2 relative"
+                        style={{
+                            backgroundImage: `linear-gradient(to right, #66AFFF 1px, transparent 1px), linear-gradient(to bottom, #66AFFF 1px, transparent 1px)`,
+                            backgroundSize: '16px 16px',
+                        }}
+                    >
+                        <img
+                            src="https://res.cloudinary.com/chhwhdhk/image/upload/v1788586602/0eae34c2-b678-42d8-b9c2-2a73aee6fee1_utbpjf.png"
+                            alt="Sui Overflow 3D Stickers"
+                            className="w-full h-auto max-h-[85%] object-contain filter drop-shadow-[0_8px_16px_rgba(7,24,42,0.15)]"
+                        />
+                    </div>
+                </div>
+            );
 
         default:
             return (

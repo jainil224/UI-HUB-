@@ -13,6 +13,7 @@ import dontBeGreedyCode from '../components/templates/DontBeGreedyFooter.tsx?raw
 import paipaiCode from '../components/templates/PaipaiKuaishou.tsx?raw';
 import logoHereCode from '../components/templates/LogoHere.tsx?raw';
 import partifyCode from '../components/templates/Partify.tsx?raw';
+import suiOverflowCode from '../components/templates/SuiOverflow.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'tars-protocol': tarsProtocolCode,
@@ -31,5 +32,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'paipai-kuaishou': paipaiCode,
     'logo-here': logoHereCode,
     'partify': partifyCode,
+    'sui-overflow': suiOverflowCode,
 };
 

@@ -30,6 +30,7 @@ import DontBeGreedyFooter from '../../components/templates/DontBeGreedyFooter';
 import PaipaiKuaishou from '../../components/templates/PaipaiKuaishou';
 import LogoHere from '../../components/templates/LogoHere';
 import Partify from '../../components/templates/Partify';
+import SuiOverflow from '../../components/templates/SuiOverflow';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -321,6 +322,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'partify' ? (
                                 <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#FBFBFB]">
                                     <Partify key={`partify-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'sui-overflow' ? (
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F2EFE6]">
+                                    <SuiOverflow key={`sui-overflow-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>
