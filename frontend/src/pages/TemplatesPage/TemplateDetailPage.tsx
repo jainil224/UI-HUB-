@@ -28,6 +28,7 @@ import HeyoAgencyCta from '../../components/templates/HeyoAgencyCta';
 import AuCabaretPoster from '../../components/templates/AuCabaretPoster';
 import DontBeGreedyFooter from '../../components/templates/DontBeGreedyFooter';
 import PaipaiKuaishou from '../../components/templates/PaipaiKuaishou';
+import LogoHere from '../../components/templates/LogoHere';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -311,6 +312,10 @@ const TemplateDetailPage = () => {
                             ) : template.id === 'paipai-kuaishou' ? (
                                 <div data-lenis-prevent="true" className="w-full h-full overflow-hidden bg-[#59D1EA]">
                                     <PaipaiKuaishou key={`paipai-render-${resetKey}`} />
+                                </div>
+                            ) : template.id === 'logo-here' ? (
+                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
+                                    <LogoHere key={`logo-here-render-${resetKey}`} />
                                 </div>
                             ) : template.liveDemoUrl ? (
                                 <>

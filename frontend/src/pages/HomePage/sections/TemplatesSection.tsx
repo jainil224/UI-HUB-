@@ -33,6 +33,7 @@ import HeyoAgencyCta from '../../../components/templates/HeyoAgencyCta';
 import AuCabaretPoster from '../../../components/templates/AuCabaretPoster';
 import DontBeGreedyFooter from '../../../components/templates/DontBeGreedyFooter';
 import PaipaiKuaishou from '../../../components/templates/PaipaiKuaishou';
+import LogoHere from '../../../components/templates/LogoHere';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
@@ -183,6 +184,8 @@ const TemplatesSection = () => {
                                         <LazyTemplatePreview bgColor="#050505"><DontBeGreedyFooter /></LazyTemplatePreview>
                                     ) : template.id === 'paipai-kuaishou' ? (
                                         <LazyTemplatePreview bgColor="#59D1EA"><PaipaiKuaishou /></LazyTemplatePreview>
+                                    ) : template.id === 'logo-here' ? (
+                                        <LazyTemplatePreview bgColor="#ffffff"><LogoHere /></LazyTemplatePreview>
                                     ) : template.liveDemoUrl ? (
                                         <iframe
                                             src={template.liveDemoUrl}

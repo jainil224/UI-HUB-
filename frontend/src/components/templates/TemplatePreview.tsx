@@ -661,6 +661,42 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
+        case 'logo-here':
+            return (
+                <div className="relative w-full h-full bg-white overflow-hidden flex flex-col justify-between p-3 select-none pointer-events-none border border-slate-100">
+                    {/* Background curved gradient */}
+                    <div 
+                        className="absolute inset-0 z-0 pointer-events-none"
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(185,138,240,0.3) 0%, rgba(138,147,247,0.4) 45%, rgba(79,125,255,0.5) 100%)',
+                            clipPath: 'ellipse(120% 65% at 50% 100%)'
+                        }}
+                    />
+                    <div className="relative z-10 flex items-center justify-between">
+                        <span className="text-[10px] font-semibold text-slate-900 tracking-tight">LogoHere</span>
+                        <span className="text-[7.5px] font-medium bg-slate-900 text-white px-2 py-0.5 rounded-full">Sign Up</span>
+                    </div>
+                    <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center px-2">
+                        <span className="text-[7.5px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full border border-slate-200 mb-1">
+                            Hot: Launch websites in moments
+                        </span>
+                        <h4 className="text-xs font-bold text-slate-950 tracking-tight leading-tight">
+                            Design high-performance websites.
+                        </h4>
+                        <div className="mt-2 w-44 h-5 bg-white rounded-full border border-slate-200 flex items-center justify-between px-2 shadow-xs">
+                            <span className="text-[8px] text-slate-400">Email address</span>
+                            <span className="text-[7.5px] bg-slate-900 text-white px-1.5 py-0.2 rounded-full font-medium">Get Started</span>
+                        </div>
+                    </div>
+                    <div className="relative z-10 flex items-center justify-between text-[7px] font-semibold text-slate-700 px-1 opacity-75">
+                        <span>startup</span>
+                        <span>company</span>
+                        <span>incubator</span>
+                        <span>corporation</span>
+                    </div>
+                </div>
+            );
+
         default:
             return (
                 <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden select-none pointer-events-none`}>

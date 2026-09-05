@@ -2785,5 +2785,140 @@ Aesthetic: Brutalist Streetwear Neo-Noir / 3D Vinyl Toy Art
             lovable: "Create an exact pixel-accurate, full-viewport interactive campaign hero website for \"PAIPAI Kuaishou Culture\" using React 19, TypeScript, Tailwind CSS, Motion (framer-motion), Three.js, and the Web Audio API. \n\nThe application must be a 100vw x 100vh full-screen poster-style interactive editorial artwork that combines 3D collectible mascot visuals with high-end graphic design, smooth mouse parallax, interactive sound synthesis, and animated water ripples.\n\n================================================================================\n1. DESIGN SPECIFICATIONS & TOKENS\n================================================================================\n\nA. PALETTE & ATMOSPHERE:\n- Sky Top: #4CCBE8\n- Sky Mid-Upper: #59D1EA\n- Sky Middle: #65D9EF\n- Ground Transition: #D4F4FA fading down to #F2FAFC\n- Platform Water Tone: #23B8DB / #168FC5 / #0E6C9E\n- Platform Sand Tone: #E7C27B / #DDB77A / #F5DC9E\n- Text & Outlines: Primary Black #050505, Pure White #FFFFFF, Microcopy Charcoal #1F1F1F\n- Subtle background noise: 3.5% opacity SVG fractalNoise filter for authentic printed editorial poster texture.\n\nB. TYPOGRAPHY & GOOGLE FONTS:\n- Montserrat (Weights: 400, 600, 700, 800, 900)\n- Archivo Black (Weight: 400)\n- Space Mono (Weight: 400, 700)\n- Chakra Petch (Weight: 600, 700)\nEmbed link:\n<link href=\"https://fonts.googleapis.com/css2?family=Archivo+Black&family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Montserrat:wght@400;600;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap\" rel=\"stylesheet\">\n\nC. EXACT IMAGE ASSETS:\n1. 3D Character (PAIPAI on Snowboard + floating green monster companion):\n   URL: \"https://res.cloudinary.com/chhwhdhk/image/upload/v1788509773/4ede3e25-0ad7-46eb-95dd-06495341141b_zzgvpi.png\"\n2. Base Island Platform (Sand beach + turquoise sculpted ocean water cylinder):\n   URL: \"https://res.cloudinary.com/chhwhdhk/image/upload/v1788509700/c0cfd993-d10d-4283-a9cf-6b3b2fbc29dd_j7ie6k.png\"\n\nD. DEPTH & Z-INDEX LAYERING (BACK TO FRONT):\n1. z-[-20]: Atmospheric sky gradient & grain texture overlay.\n2. z-[0]: Giant white blurred background typography \"PAIPAI\" (with filter: blur(8px)), wide spaced subtitle \"K U A I S H O U   C U L T U R E\", and outlined top-right \"KUAISHOU\".\n3. z-[10]: Base island platform with ground ambient shadow.\n4. z-[15]: Three.js WebGL canvas providing soft directional lighting and water shimmer.\n5. z-[20]: Central 3D character and snowboard hovering slightly overlapping the platform top.\n6. z-[30]: Editorial microcopy, lower-left \"#04 /运动派*\", middle-right rotating circular \"KID\" stamp, and lower-right 3-angle orthographic blueprint illustrations.\n7. z-[40]: Top header with PAIPAI mascot face badge and three interactive circular utility controls.\n\n================================================================================\n2. ANIMATION & INTERACTION SPECIFICATIONS\n================================================================================\n\n1. MOUSE PARALLAX (Interactive Depth):\n   Tracks normalized cursor position (-1 to 1):\n   - Background giant text: subtle parallax factor (2px)\n   - Island platform: medium parallax factor (4px)\n   - Central character: strong parallax factor (8px)\n   - Three.js camera: responds smoothly with 0.05 lerp interpolation.\n   - Respects 'prefers-reduced-motion' by disabling all camera and object parallax when active.\n\n2. CHARACTER TRICK ANIMATION:\n   Clicking the character triggers a dynamic carve jump (y: [-22, 10, 0], rotate: [-4, 3, 0]) and plays an interactive audio pop.\n\n3. WATER RIPPLE:\n   Clicking the platform triggers an expanding wave ring animation and plays a synthesized water splash sound.\n\n4. WEB AUDIO SYNTHESIZER:\n   A zero-dependency Web Audio API synthesizer that produces:\n   - Pop tone (440Hz -> 880Hz sine ramp) on clicks.\n   - Water splash tone (320Hz -> 140Hz triangle ramp).\n   - Chime chords (C5, E5, G5, C6 arpeggio) when clicking badges or the sound toggle.\n\n5. ROTATING EDITORIAL STAMP:\n   The middle-right badge features text running around a circle (\"• KUAI INTERESTING DESIGN •\") spinning infinitely at 18 seconds per rotation, with a central faceted KID badge that scales on hover.\n\n================================================================================\n3. EXACT CODE IMPLEMENTATION\n================================================================================\n1. index.html\n2. src/utils/audio.ts\n3. src/components/Background.tsx\n4. src/components/Header.tsx\n5. src/components/CharacterArt.tsx\n6. src/components/IslandPlatform.tsx\n7. src/components/EditorialElements.tsx\n8. src/components/ThreeCanvas.tsx\n9. src/App.tsx",
             advance: "Create an exact pixel-accurate, full-viewport interactive campaign hero website for \"PAIPAI Kuaishou Culture\" using React 19, TypeScript, Tailwind CSS, Motion (framer-motion), Three.js, and the Web Audio API. \n\nThe application must be a 100vw x 100vh full-screen poster-style interactive editorial artwork that combines 3D collectible mascot visuals with high-end graphic design, smooth mouse parallax, interactive sound synthesis, and animated water ripples.\n\n================================================================================\n1. DESIGN SPECIFICATIONS & TOKENS\n================================================================================\n\nA. PALETTE & ATMOSPHERE:\n- Sky Top: #4CCBE8\n- Sky Mid-Upper: #59D1EA\n- Sky Middle: #65D9EF\n- Ground Transition: #D4F4FA fading down to #F2FAFC\n- Platform Water Tone: #23B8DB / #168FC5 / #0E6C9E\n- Platform Sand Tone: #E7C27B / #DDB77A / #F5DC9E\n- Text & Outlines: Primary Black #050505, Pure White #FFFFFF, Microcopy Charcoal #1F1F1F\n- Subtle background noise: 3.5% opacity SVG fractalNoise filter for authentic printed editorial poster texture.\n\nB. TYPOGRAPHY & GOOGLE FONTS:\n- Montserrat (Weights: 400, 600, 700, 800, 900)\n- Archivo Black (Weight: 400)\n- Space Mono (Weight: 400, 700)\n- Chakra Petch (Weight: 600, 700)\nEmbed link:\n<link href=\"https://fonts.googleapis.com/css2?family=Archivo+Black&family=Chakra+Petch:ital,wght@0,600;0,700;1,700&family=Montserrat:wght@400;600;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap\" rel=\"stylesheet\">\n\nC. EXACT IMAGE ASSETS:\n1. 3D Character (PAIPAI on Snowboard + floating green monster companion):\n   URL: \"https://res.cloudinary.com/chhwhdhk/image/upload/v1788509773/4ede3e25-0ad7-46eb-95dd-06495341141b_zzgvpi.png\"\n2. Base Island Platform (Sand beach + turquoise sculpted ocean water cylinder):\n   URL: \"https://res.cloudinary.com/chhwhdhk/image/upload/v1788509700/c0cfd993-d10d-4283-a9cf-6b3b2fbc29dd_j7ie6k.png\"\n\nD. DEPTH & Z-INDEX LAYERING (BACK TO FRONT):\n1. z-[-20]: Atmospheric sky gradient & grain texture overlay.\n2. z-[0]: Giant white blurred background typography \"PAIPAI\" (with filter: blur(8px)), wide spaced subtitle \"K U A I S H O U   C U L T U R E\", and outlined top-right \"KUAISHOU\".\n3. z-[10]: Base island platform with ground ambient shadow.\n4. z-[15]: Three.js WebGL canvas providing soft directional lighting and water shimmer.\n5. z-[20]: Central 3D character and snowboard hovering slightly overlapping the platform top.\n6. z-[30]: Editorial microcopy, lower-left \"#04 /运动派*\", middle-right rotating circular \"KID\" stamp, and lower-right 3-angle orthographic blueprint illustrations.\n7. z-[40]: Top header with PAIPAI mascot face badge and three interactive circular utility controls.\n\n================================================================================\n2. ANIMATION & INTERACTION SPECIFICATIONS\n================================================================================\n\n1. MOUSE PARALLAX (Interactive Depth):\n   Tracks normalized cursor position (-1 to 1):\n   - Background giant text: subtle parallax factor (2px)\n   - Island platform: medium parallax factor (4px)\n   - Central character: strong parallax factor (8px)\n   - Three.js camera: responds smoothly with 0.05 lerp interpolation.\n   - Respects 'prefers-reduced-motion' by disabling all camera and object parallax when active.\n\n2. CHARACTER TRICK ANIMATION:\n   Clicking the character triggers a dynamic carve jump (y: [-22, 10, 0], rotate: [-4, 3, 0]) and plays an interactive audio pop.\n\n3. WATER RIPPLE:\n   Clicking the platform triggers an expanding wave ring animation and plays a synthesized water splash sound.\n\n4. WEB AUDIO SYNTHESIZER:\n   A zero-dependency Web Audio API synthesizer that produces:\n   - Pop tone (440Hz -> 880Hz sine ramp) on clicks.\n   - Water splash tone (320Hz -> 140Hz triangle ramp).\n   - Chime chords (C5, E5, G5, C6 arpeggio) when clicking badges or the sound toggle.\n\n5. ROTATING EDITORIAL STAMP:\n   The middle-right badge features text running around a circle (\"• KUAI INTERESTING DESIGN •\") spinning infinitely at 18 seconds per rotation, with a central faceted KID badge that scales on hover.\n\n================================================================================\n3. EXACT CODE IMPLEMENTATION\n================================================================================\n1. index.html\n2. src/utils/audio.ts\n3. src/components/Background.tsx\n4. src/components/Header.tsx\n5. src/components/CharacterArt.tsx\n6. src/components/IslandPlatform.tsx\n7. src/components/EditorialElements.tsx\n8. src/components/ThreeCanvas.tsx\n9. src/App.tsx"
         }
+    },
+    {
+        id: 'logo-here',
+        previewImage: '/assets/template-previews/LogoHere.png',
+        title: 'LogoHere',
+        description: 'Pixel-perfect, high-end hero card section with a curved bottom aurora gradient, micro-stripes pattern, and seamlessly integrated UI elements.',
+        category: 'Hero & Landing',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Curved Bottom Aurora Gradient SVG',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/f7e2958a-6b23-48a4-bd88-3acff0fe2a8f',
+        githubUrl: 'https://github.com/ui-hub/logo-here',
+        previewGradient: 'from-[#b98af0] via-[#8a93f7] to-[#4f7dff]',
+        accentColor: '#4f7dff',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '2.8k',
+        },
+        features: [
+            'Curved bottom aurora gradient with diagonal micro-stripes',
+            'Gaussian feathered mask for seamless white-to-gradient blend',
+            'Responsive navigation bar with dropdown menus & pill buttons',
+            'Conversion-optimized email capture with interactive feedback',
+            'Monochrome SVG partner logo grid'
+        ],
+        promptPreview: `Create a pixel-perfect, high-end hero card section with a curved bottom aurora gradient and seamlessly integrated UI elements using modern React (TypeScript) and Tailwind CSS.
+
+### 1. Structural Architecture & Card Dimensions
+- **Canvas / Outer Page**:
+  - Full-screen centered viewport (\`min-h-screen\`, \`w-full\`, \`flex items-center justify-center\`).
+  - Solid pure white canvas: \`#FFFFFF\` (zero gray or cream background tint).
+- **Main Glass Card Container**:
+  - \`w-[94vw] sm:w-[90vw] md:w-[86vw] max-w-[1140px]\`.
+  - \`min-h-[460px] md:min-h-[500px] lg:min-h-[525px]\`.
+  - Corner radius: \`rounded-[16px]\`.
+  - Base background: Pure White \`#FFFFFF\`.
+  - Outer border & shadow: \`border border-slate-200/80 shadow-[0_16px_48px_-12px_rgba(79,125,255,0.14),inset_0_0_0_1px_rgba(0,0,0,0.12)]\`.
+  - Overflow: \`overflow-hidden relative flex flex-col justify-between\`.
+
+---
+
+### 2. The Color Gradient & Seamless Feathered Blend
+The bottom half of the card features a curved purple-to-blue aurora wash with diagonal micro-stripes that smoothly blends into the pure white top area without any visible cut lines, sharp ridges, or hard strokes.
+
+- **Color Stop Values**:
+  - Base 120° diagonal gradient wash:
+    - 0%: \`#b98af0\` (Vibrant Lilac / Lavender)
+    - 20%: \`#a48af5\` (Soft Violet)
+    - 45%: \`#8a93f7\` (Periwinkle Blue)
+    - 70%: \`#6f8ffa\` (Cornflower Indigo)
+    - 100%: \`#4f7dff\` (Electric Royal Blue)
+- **Diagonal Micro-Stripes Pattern**:
+  - 45° repeating pattern lines: \`stroke="rgba(255, 255, 255, 0.09)"\` with \`strokeWidth="2"\` at a 14px step interval.
+- **Feathered Mask & Seamless Mixing Math**:
+  - An absolute SVG overlay (\`viewBox="0 0 1000 500"\`, \`preserveAspectRatio="none"\`).
+  - Mask shape path starts high on the edges and dips down right underneath the input field:
+    \`d="M -60 130 C 160 170, 270 290, 410 355 C 465 380, 535 380, 590 355 C 730 290, 840 170, 1060 130 L 1060 560 L -60 560 Z"\`
+  - Broad Gaussian filter for seamless transition: \`<feGaussianBlur stdDeviation="55" />\`.
+  - Overlay radial light wash on \`z-[1]\`:
+    \`radial-gradient(ellipse 72% 64% at 50% -4%, #ffffff 0%, #ffffff 42%, rgba(255, 255, 255, 0.88) 60%, rgba(255, 255, 255, 0.45) 80%, rgba(255, 255, 255, 0) 100%)\`
+  - Zero stroked borders or hard lines along the curve.
+
+---
+
+### 3. Layout & Typography Specification
+
+#### A. Top Navigation Bar (\`h-[38px] md:h-[42px]\`, \`px-4 sm:px-8 md:px-11\`)
+- **Logo**: Text \`"LogoHere"\`, \`font-semibold\`, \`text-[12px] sm:text-[13px]\`, \`text-slate-900\`, \`tracking-tight\`.
+- **Center Navigation Links**:
+  - Font size: \`text-[10px] sm:text-[10.5px]\`, \`font-normal\`, \`text-slate-600 hover:text-slate-900\`.
+  - Links: \`Features\`, \`Solutions\`, \`Case Studies\`, \`Developers ▾\`, \`Company ▾\`, \`Plans\`.
+  - Gap: \`gap-3 sm:gap-4 md:gap-5.5\`.
+  - Dropdown arrows: 10px \`ChevronDown\` icons from \`lucide-react\`.
+- **Right Action Buttons**:
+  - \`"Start Free"\` link: \`text-[10px] sm:text-[10.5px]\`, \`text-slate-600 hover:text-slate-900\`.
+  - \`"Sign Up"\` button: Solid pill \`bg-slate-900 hover:bg-slate-800 text-white font-medium text-[10px] sm:text-[10.5px] px-3 py-1 rounded-full shadow-xs\`.
+
+#### B. Hero Section Center Content (\`max-w-[580px] mx-auto text-center pt-2 sm:pt-4 md:pt-6\`)
+- **Notification Pill Badge**:
+  - Text: \`"Hot: Launch websites in moments, not days"\`.
+  - Dimensions & styling: \`text-[9.5px] sm:text-[10.5px] text-slate-700 bg-slate-100/90 border border-slate-200/80 px-3 py-0.5 rounded-full inline-flex items-center shadow-xs font-normal mb-2.5 sm:mb-3.5\`.
+- **Main Heading (H1)**:
+  - Text: \`"Design high-performance websites."\`
+  - Font size: \`text-[26px] sm:text-[34px] md:text-[38px] lg:text-[41px]\`.
+  - Font weight: \`font-bold tracking-tight leading-[1.12] text-slate-950 mb-2 sm:mb-2.5\`.
+- **Subtitle**:
+  - Text: \`"Supercharge your business with AI-driven content and templates optimized for conversions."\`
+  - Font size: \`text-[10.5px] sm:text-[12px] md:text-[12.5px] text-slate-500 max-w-[430px] mx-auto leading-relaxed mb-4 sm:mb-5 font-normal\`.
+- **Email Input & CTA Form**:
+  - Floating pill container: \`w-full max-w-[340px] sm:max-w-[360px] h-[34px] sm:h-[36px] bg-white rounded-full border border-slate-200/90 shadow-[0_4px_16px_rgba(0,0,0,0.06)] pl-3.5 pr-1 flex items-center justify-between mx-auto\`.
+  - Input: Placeholder \`"Email address"\`, \`text-[11px] text-slate-800 placeholder:text-slate-400 bg-transparent outline-none flex-1 min-w-0 font-normal\`.
+  - CTA Button: \`"Get Started"\`, \`h-[26px] sm:h-[28px] px-3.5 bg-slate-900 hover:bg-slate-800 text-white text-[10px] sm:text-[10.5px] font-medium rounded-full shadow-xs whitespace-nowrap\`.
+
+#### C. Bottom Trust / Partner Logos Row (\`pt-10 pb-7 px-4 sm:px-8 md:px-14 max-w-[880px] mx-auto\`)
+- Displayed horizontally across the gradient with \`flex items-center justify-between gap-4 sm:gap-6 overflow-x-auto no-scrollbar\`.
+- Typography & icons: \`text-slate-800 font-semibold text-[11px] sm:text-[11.5px] tracking-tight\`, paired with crisp monochrome vector icons:
+  1. \`startup\`: Geometric upward chevron badge
+  2. \`company\`: Dual overlapping square blocks
+  3. \`incubator\`: 4-node circular cluster
+  4. \`corporation\`: Diamond with inner white circle
+  5. \`institute\`: Concentric double circle
+  6. \`associate\`: Radial open circle arc`,
+        toolPrompts: {
+            cursor: `Create a pixel-perfect, high-end hero card section with a curved bottom aurora gradient and seamlessly integrated UI elements using modern React (TypeScript) and Tailwind CSS.
+Include:
+1. Glass Container: rounded-[16px] white card with curved bottom aurora gradient (purple-to-blue #b98af0 -> #4f7dff), 45-degree micro-stripes, and feathered Gaussian blur mask (stdDeviation 55).
+2. Top Navbar: LogoHere brand, navigation links with Lucide ChevronDown dropdowns, Start Free link, and Sign Up solid pill button.
+3. Hero Content: Notification pill badge ("Hot: Launch websites in moments, not days"), H1 "Design high-performance websites.", subtitle, and pill email subscription form.
+4. Trust Logos: startup, company, incubator, corporation, institute, and associate monochrome vector logos.`,
+            claude: `You are Claude Code, an expert design technologist.
+Build the LogoHere high-end hero card section in React, TypeScript, and Tailwind CSS:
+- Centered white viewport with glass card container (max-w-[1140px], rounded-[16px])
+- Curved bottom aurora gradient (#b98af0 to #4f7dff) with diagonal micro-stripes SVG and feathered mask
+- Radial light overlay wash for seamless blending into the white upper area
+- Clean top navbar with LogoHere logo, dropdown menus, and pill CTA buttons
+- Central hero typography, pill notification badge, and rounded-full email input with Get Started button
+- Bottom partner logo strip featuring startup, company, incubator, corporation, institute, and associate`,
+            antigravity: `ANTIGRAVITY DIRECTIVE: LOGOHERE HERO CARD SECTION
+Objective: Build a pixel-perfect hero card section with a curved bottom aurora gradient and seamlessly integrated UI elements in React, TypeScript, and Tailwind CSS.
+Key Specifications:
+- Card: rounded-[16px], max-w-[1140px], white base, outer shadow-[0_16px_48px_-12px_rgba(79,125,255,0.14)]
+- Gradient: 120-deg wash from #b98af0 through #a48af5, #8a93f7, #6f8ffa to #4f7dff with 45-deg micro-stripes
+- Mask: SVG curve path with feGaussianBlur (stdDeviation=55) and radial-gradient white blend
+- Navbar: LogoHere logo, links (Features, Solutions, Case Studies, Developers, Company, Plans), Start Free, Sign Up
+- Hero: Notification pill, H1 "Design high-performance websites.", email capture form
+- Logos: 6 monochrome partner SVG badges across the gradient`,
+            lovable: `Create the LogoHere hero card section in React, TypeScript, and Tailwind CSS with curved bottom aurora purple-to-blue gradient, diagonal micro-stripes pattern, feathered mask, top navbar with LogoHere branding, H1 "Design high-performance websites.", rounded email form, and bottom trust logos.`,
+            advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: LOGOHERE HERO CARD
+1. Curved Mask Geometry: Path "M -60 130 C 160 170, 270 290, 410 355 C 465 380, 535 380, 590 355 C 730 290, 840 170, 1060 130 L 1060 560 L -60 560 Z" with feGaussianBlur stdDeviation="55".
+2. Radial Gradient Overlay: radial-gradient(ellipse 72% 64% at 50% -4%, #ffffff 0%, #ffffff 42%, rgba(255, 255, 255, 0.88) 60%, rgba(255, 255, 255, 0.45) 80%, rgba(255, 255, 255, 0) 100%).
+3. Micro-Stripes Pattern: 14px step interval at rotate(45 0 0) with stroke="rgba(255, 255, 255, 0.09)" and strokeWidth="2".`
+        }
     }
 ];
