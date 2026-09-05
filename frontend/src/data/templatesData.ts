@@ -2788,10 +2788,10 @@ Aesthetic: Brutalist Streetwear Neo-Noir / 3D Vinyl Toy Art
     },
     {
         id: 'logo-here',
-        previewImage: '/assets/template-previews/LogoHere.png',
+        previewImage: '/assets/template-previews/logo-here.png',
         title: 'LogoHere',
         description: 'Pixel-perfect, high-end hero card section with a curved bottom aurora gradient, micro-stripes pattern, and seamlessly integrated UI elements.',
-        category: 'Hero & Landing',
+        category: 'SaaS & AI',
         badge: 'NEW',
         framework: 'React 19 (TypeScript)',
         styling: 'Tailwind CSS',
@@ -2919,6 +2919,177 @@ Key Specifications:
 1. Curved Mask Geometry: Path "M -60 130 C 160 170, 270 290, 410 355 C 465 380, 535 380, 590 355 C 730 290, 840 170, 1060 130 L 1060 560 L -60 560 Z" with feGaussianBlur stdDeviation="55".
 2. Radial Gradient Overlay: radial-gradient(ellipse 72% 64% at 50% -4%, #ffffff 0%, #ffffff 42%, rgba(255, 255, 255, 0.88) 60%, rgba(255, 255, 255, 0.45) 80%, rgba(255, 255, 255, 0) 100%).
 3. Micro-Stripes Pattern: 14px step interval at rotate(45 0 0) with stroke="rgba(255, 255, 255, 0.09)" and strokeWidth="2".`
+        }
+    },
+    {
+        id: 'partify',
+        previewImage: '/assets/template-previews/Partify.png',
+        title: 'Partify',
+        description: 'Pixel-accurate, responsive 4-column industrial B2B bottom feature bar and footer component with CAD schematic vector icons and interactive micro-animations.',
+        category: 'SaaS & AI',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Micro-interactions + CAD Vectors',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/1532c87b-a2a0-428b-b4ae-1da5785e4489',
+        githubUrl: 'https://github.com/ui-hub/partify-footer',
+        previewGradient: 'from-[#FFFFFF] via-[#FAFAFA] to-[#EAEAEA]',
+        accentColor: '#0A0A0A',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '2.1k',
+        },
+        features: [
+            'Responsive 4-column B2B industrial feature bar / footer',
+            'Pixel-accurate CAD schematic vector icons with dashed reference frames',
+            'Micro-animations with smooth background transitions and interactive chevrons',
+            'Adaptive grid layout: 1-col mobile, 2x2 tablet, 4-col desktop',
+            'Clean geometric typography using Plus Jakarta Sans'
+        ],
+        promptPreview: `Role & Task:
+You are an expert Frontend Engineer and UI/UX Designer. Build an exact, pixel-accurate reproduction of the Partify industrial technology bottom feature bar / footer component using React 18+, TypeScript, and Tailwind CSS. Adhere strictly to the design system specifications, animations, layout metrics, and vector drawings outlined below.
+
+================================================================================
+1. DESIGN SYSTEM & COLOR SPECIFICATIONS
+================================================================================
+- Surface Color (Card/Footer): #FFFFFF (Pure White)
+- Primary Border & Divider Color: #EAEAEA
+- Subtle Icon Badge Border: #E5E5E5
+- Icon Border on Hover: #CCCCCC
+- Card Hover Background: #FAFAFA
+- Primary Text & Headings: #0A0A0A
+- Secondary / Description Text: #707070
+- Subtle Chevron Accent Color: #555555
+- Primary Button Fill: #0A0A0A (Hover: #262626 / neutral-800)
+- Primary Button Text: #FFFFFF
+- Typography Family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif
+
+================================================================================
+2. CONTAINER & RESPONSIVE GRID LAYOUT
+================================================================================
+- Outer Wrapper: Full-width footer (\`w-full bg-white border-t border-[#EAEAEA]\`).
+- Inner Content Boundary: \`max-w-7xl mx-auto\`.
+- Responsive Grid Breakdown:
+  * Mobile (<640px): 1 column stack (\`grid-cols-1\`). Each cell is separated by a 1px solid bottom divider (\`border-b border-[#EAEAEA]\`).
+  * Tablet (640px to 1023px): 2x2 grid (\`sm:grid-cols-2\`). Col 1 has bottom & right borders; Col 2 has bottom border; Col 3 has right border; Col 4 has no inner borders.
+  * Desktop (>=1024px): 4 columns in a single horizontal row (\`lg:grid-cols-4\`). Cols 1, 2, and 3 have 1px right dividers (\`lg:border-r border-[#EAEAEA]\`); all bottom borders are removed (\`lg:border-b-0\`).
+- Padding:
+  * Mobile/Tablet: \`p-3.5 sm:p-4\` (approx 14px to 16px).
+  * Desktop: \`p-4\` (16px).
+
+================================================================================
+3. COMPONENT BREAKDOWN & EXACT MEASUREMENTS
+================================================================================
+
+--- [COLUMN 1: GET STARTED CTA] ---
+- Placement: Centered horizontally and vertically (\`flex items-center justify-center\`).
+- Button Element:
+  * Shape: Full pill (\`rounded-full\`).
+  * Size:
+    - Mobile (<640px): Width 120px, Height 32px (\`w-[120px] h-[32px]\`).
+    - Tablet / Desktop (>=640px): Width 112px, Height 30px (\`sm:w-[112px] sm:h-[30px]\`).
+  * Colors: Background \`#0A0A0A\`, Text \`#FFFFFF\`.
+  * Typography:
+    - Font size: \`10px\` on mobile, \`9.5px\` on tablet/desktop.
+    - Weight: \`700\` (Bold).
+    - Tracking: \`0.08em\` (\`tracking-[0.08em]\`).
+    - Transform: All Caps (\`uppercase\`).
+  * Shadow: \`shadow-[0_1px_3px_rgba(0,0,0,0.12)]\`.
+  * Interactions & Animations:
+    - Hover: Background changes to \`neutral-800\` (\`hover:bg-neutral-800\`).
+    - Click / Active: Scale down to 95% (\`active:scale-95 transition-all\`).
+    - Cursor: \`cursor-pointer\`.
+
+--- [COLUMN 2: FEATURE CARD 1 - A WORLD OF POSSIBILITIES] ---
+- Layout: Horizontal flex row (\`flex items-center gap-3\`).
+- Icon Badge:
+  * Dimensions: Fixed 36px x 36px (\`w-9 h-9 shrink-0\`).
+  * Shape: Rounded square with 8px radius (\`rounded-[8px]\`).
+  * Background: \`#FFFFFF\`.
+  * Border: 1px solid \`#E5E5E5\`.
+  * Shadow: \`shadow-[0_1px_2px_rgba(0,0,0,0.02)]\`.
+  * CAD SVG Icon:
+    - ViewBox: \`0 0 24 24\`, stroke width \`1.2\`, stroke \`#0A0A0A\`.
+    - Graphics: Orthogonal 3-axis manufacturing manifold with 4 circular connection nodes (\`r=1.8\` and center hollow node \`r=2.2\`), connecting line segments, and a subtle dashed outer guide frame (\`stroke="#E5E5E5"\` with \`strokeDasharray="2 2"\`).
+- Text Column:
+  * Heading: \`A WORLD OF POSSIBILITIES >\`
+    - Font size: \`8.5px\` (desktop), \`9px\` (tablet).
+    - Weight: \`700\` (Bold).
+    - Color: \`#0A0A0A\`.
+    - Tracking: \`0.05em\`.
+    - Transform: \`uppercase\`.
+    - Chevron \`>\`: Font size \`7.5px\`, color \`#555555\`.
+  * Subtitle: \`Discover our advanced manufacturing materials and technologies.\`
+    - Font size: \`7.5px\` (desktop), \`8px\` (tablet).
+    - Weight: \`400\` (Regular).
+    - Line height: \`1.35\`.
+    - Color: \`#707070\`.
+    - Max width: \`220px\`.
+- Card Hover Animation:
+  * Background transitions smoothly to \`#FAFAFA\` (\`hover:bg-[#FAFAFA] transition-colors\`).
+  * Icon badge border darkens to \`#CCCCCC\` (\`group-hover:border-[#CCCCCC]\`).
+  * Chevron icon shifts 2px to the right (\`group-hover:translate-x-0.5 transition-transform\`).
+
+--- [COLUMN 3: FEATURE CARD 2 - QUALITY THAT YOU CAN TRUST] ---
+- Layout: Horizontal flex row (\`flex items-center gap-3\`).
+- Icon Badge: 36px x 36px (\`w-9 h-9 shrink-0\`), \`rounded-[8px]\`, \`#E5E5E5\` border, \`#FFFFFF\` background.
+- CAD SVG Icon:
+  * ViewBox: \`0 0 24 24\`, stroke width \`1.2\`, stroke \`#0A0A0A\`.
+  * Graphics: Industrial precision caliper / tolerance gauge. Features a 45-degree diagonal measurement track (\`M5 19L19 5\`), two end measurement nodes (\`r=1.8\`), center circular dial (\`r=2.2\`), crosshair alignment ticks (\`M12 9V15M9 12H15\`), and dashed CAD boundary square.
+- Text Column:
+  * Heading: \`QUALITY THAT YOU CAN TRUST >\` (same font specs, weight 700, 8.5px/9px, tracking 0.05em, uppercase).
+  * Subtitle: \`Explore our industrial-grade parts and advanced specification options.\` (weight 400, 7.5px/8px, color #707070, leading 1.35, max-w-[220px]).
+- Card Hover Animation: Same \`#FAFAFA\` background shift, icon border transition, and chevron translation.
+
+--- [COLUMN 4: FEATURE CARD 3 - GET YOUR PARTS FASTER] ---
+- Layout: Horizontal flex row (\`flex items-center gap-3\`).
+- Icon Badge: 36px x 36px (\`w-9 h-9 shrink-0\`), \`rounded-[8px]\`, \`#E5E5E5\` border, \`#FFFFFF\` background.
+- CAD SVG Icon:
+  * ViewBox: \`0 0 24 24\`, stroke width \`1.2\`, stroke \`#0A0A0A\`.
+  * Graphics: Rapid dispatch node schematic. Features angled branch routes (\`M6 18L12 12L18 6\` and \`M12 12L18 18\`), 4 black destination nodes, and dashed CAD guideline box.
+- Text Column:
+  * Heading: \`GET YOUR PARTS FASTER >\` (same font specs, weight 700, 8.5px/9px, tracking 0.05em, uppercase).
+  * Subtitle: \`Industrial-grade parts, fast delivery: 6 business days max.\` (weight 400, 7.5px/8px, color #707070, leading 1.35, max-w-[220px]).
+- Card Hover Animation: Same \`#FAFAFA\` background shift, icon border transition, and chevron translation.`,
+        toolPrompts: {
+            cursor: `Create an exact, pixel-accurate reproduction of the Partify industrial B2B bottom feature bar / footer component using React, TypeScript, and Tailwind CSS.
+Include:
+1. Container: Full-width #FFFFFF footer with top border #EAEAEA, max-w-7xl container, responsive grid (1-col mobile with bottom dividers, 2x2 tablet with orthogonal dividers, 4-col desktop with right dividers).
+2. Column 1: Rounded-full solid black (#0A0A0A) "GET STARTED" button (112px x 30px desktop, 120px x 32px mobile) with uppercase 9.5px bold typography and active:scale-95 click feedback.
+3. Column 2: "A WORLD OF POSSIBILITIES" with 36x36 rounded-[8px] CAD orthogonal connector SVG icon, bold 8.5px uppercase title with translating chevron '>', and #707070 description.
+4. Column 3: "QUALITY THAT YOU CAN TRUST" with caliper / tolerance dial CAD SVG icon and specs subtitle.
+5. Column 4: "GET YOUR PARTS FASTER" with rapid dispatch node schematic CAD SVG icon.
+Card hover: smooth #FAFAFA background shift, icon border shifts to #CCCCCC, and chevron translates +2px.`,
+            claude: `You are Claude Code, an expert design technologist.
+Build the Partify industrial B2B bottom feature bar / footer in React, TypeScript, and Tailwind CSS:
+- Full-width white surface with #EAEAEA borders and max-w-7xl inner container
+- Responsive grid: 1-col on mobile, 2x2 on tablet (sm), 4-col horizontal bar on desktop (lg)
+- Column 1: Centered pill button "GET STARTED" in solid #0A0A0A with tracking-[0.08em]
+- Columns 2-4: Three feature cards with 36x36px white rounded icon badges (#E5E5E5 border) containing custom CAD SVG schematics
+- Hover states: #FAFAFA card background, #CCCCCC icon border, chevron micro-shift
+- Clean geometric typography ('Plus Jakarta Sans') with high-contrast text tokens`,
+            antigravity: `ANTIGRAVITY DIRECTIVE: PARTIFY INDUSTRIAL B2B FEATURE BAR
+Objective: Build a pixel-accurate 4-column industrial B2B bottom feature bar / footer component in React, TypeScript, and Tailwind CSS.
+Key Specifications:
+- Layout: 4 columns (lg:grid-cols-4), 2x2 tablet (sm:grid-cols-2), 1-col mobile (grid-cols-1)
+- Dividers: #EAEAEA 1px solid borders matching layout responsive grid
+- Col 1: Full pill button (#0A0A0A, text-white, tracking-[0.08em], uppercase)
+- Col 2: "A WORLD OF POSSIBILITIES" + 3-way orthogonal CAD SVG icon
+- Col 3: "QUALITY THAT YOU CAN TRUST" + caliper dial CAD SVG icon
+- Col 4: "GET YOUR PARTS FASTER" + dispatch node CAD SVG icon
+- Hover: transition to #FAFAFA, icon border to #CCCCCC, chevron translateX(+2px)`,
+            lovable: `Create the Partify 4-column industrial B2B feature bar and footer in React, TypeScript, and Tailwind CSS with pure white background, #EAEAEA dividers, GET STARTED pill button, 3 CAD schematic SVG icons, and hover animations with chevron translation.`,
+            advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: PARTIFY FEATURE BAR
+1. Grid Architecture:
+   - Mobile: grid-cols-1 with border-b #EAEAEA per cell.
+   - Tablet (640-1023px): sm:grid-cols-2 with bottom & right interior borders.
+   - Desktop (>=1024px): lg:grid-cols-4 with lg:border-r on cols 1-3, lg:border-b-0.
+2. CAD SVG Math:
+   - 3-Way Connector: ViewBox 0 0 24 24, stroke 1.2, nodes cx=6/18 cy=12/18 r=1.8, center hollow r=2.2.
+   - Caliper Gauge: Diagonal track M5 19L19 5, dial center cx=12 cy=12 r=2.2, crosshair ticks.
+   - Dispatch Schematic: Angled branches M6 18L12 12L18 6 & M12 12L18 18, 4 destination nodes.`
         }
     }
 ];

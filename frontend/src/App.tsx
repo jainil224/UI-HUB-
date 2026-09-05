@@ -32,6 +32,7 @@ const AuCabaretDemoPage = React.lazy(() => import('./pages/Components/AuCabaretD
 const DontBeGreedyDemoPage = React.lazy(() => import('./pages/Components/DontBeGreedyDemoPage'));
 const PaipaiDemoPage = React.lazy(() => import('./pages/Components/PaipaiDemoPage'));
 const LogoHereDemoPage = React.lazy(() => import('./pages/Components/LogoHereDemoPage'));
+const PartifyDemoPage = React.lazy(() => import('./pages/Components/PartifyDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
 const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
@@ -145,6 +146,7 @@ const AppShell = () => {
             <Route path="/demo/dont-be-greedy" element={<DontBeGreedyDemoPage />} />
             <Route path="/demo/paipai-kuaishou" element={<PaipaiDemoPage />} />
             <Route path="/demo/logo-here" element={<LogoHereDemoPage />} />
+            <Route path="/demo/partify" element={<PartifyDemoPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/templates" element={<TemplatesPage />} />

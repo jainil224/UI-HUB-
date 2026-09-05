@@ -12,6 +12,7 @@ import auCabaretCode from '../components/templates/AuCabaretPoster.tsx?raw';
 import dontBeGreedyCode from '../components/templates/DontBeGreedyFooter.tsx?raw';
 import paipaiCode from '../components/templates/PaipaiKuaishou.tsx?raw';
 import logoHereCode from '../components/templates/LogoHere.tsx?raw';
+import partifyCode from '../components/templates/Partify.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'tars-protocol': tarsProtocolCode,
@@ -29,4 +30,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'dont-be-greedy': dontBeGreedyCode,
     'paipai-kuaishou': paipaiCode,
     'logo-here': logoHereCode,
+    'partify': partifyCode,
 };
+
