@@ -6,7 +6,7 @@ import { auth } from '../../lib/firebase';
 import { Mail, Lock, AlertCircle, Loader2, ArrowRight, Eye, EyeOff, User } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
 import { useAuth } from '../../context/AuthContext';
-import Logo from '../../components/ui/Logo';
+import AuthBrandPanel from '../../components/ui/AuthBrandPanel';
 import KineticGrid from '../../components/ui/KineticGrid';
 import { useIsMobile } from '../../hooks/use-mobile';
 
@@ -113,16 +113,14 @@ const SignupPage = () => {
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45),transparent_70%)] pointer-events-none" />
             </div>
 
-            <div className="relative z-10 w-full max-w-[440px]">
-                {/* Logo */}
-                <div className="flex justify-center mb-6">
-                    <Link to="/" className="hover:opacity-90 transition-opacity">
-                        <Logo showText={true} />
-                    </Link>
-                </div>
+            <div className="relative z-10 w-full max-w-4xl flex flex-col gap-6">
+                {/* Big Split Card */}
+                <div className="rounded-xl border-2 border-white bg-brand-surface brutal-shadow-black overflow-hidden flex flex-col md:flex-row">
+                    {/* Left: Brand Gradient Panel */}
+                    <AuthBrandPanel />
 
-                {/* Auth Card */}
-                <div className="rounded-lg border-2 border-white bg-brand-surface brutal-shadow-black p-6 sm:p-8">
+                    {/* Right: Sign Up Form Panel */}
+                    <div className="flex-1 p-6 sm:p-10 md:p-12">
                     {/* Header */}
                     <div className="text-center mb-6">
                         <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight mb-1.5 font-heading">
@@ -279,9 +277,10 @@ const SignupPage = () => {
                         </button>
                     </form>
                 </div>
+            </div>
 
                 {/* Footer Switch Link */}
-                <div className="mt-6 text-center">
+                <div className="text-center">
                     <p className="text-xs font-bold uppercase tracking-wider text-neutral-400">
                         ALREADY HAVE AN ACCOUNT?{' '}
                         <Link to="/login" className="text-brand-yellow hover:underline font-black">
