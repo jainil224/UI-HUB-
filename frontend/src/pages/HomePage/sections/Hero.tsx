@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, ArrowRight, Sparkles, Flame, Bot } from 'lucide-react';
 import { useSkeleton } from '../../../context/SkeletonContext';
 import { HeroSkeleton } from '../../../components/ui/Skeleton';
+import SearchBox from '../../../components/ui/SearchBox';
 
 // ─── Inline icon badge embedded inside headline text (scales with font via em) ──
 const InlineIcon: React.FC<{ children: React.ReactNode; bg: string }> = ({ children, bg }) => (
@@ -21,8 +22,8 @@ const Hero = () => {
     const [searchQuery, setSearchQuery] = useState('');
     const navigate = useNavigate();
 
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSearch = (e?: React.FormEvent | React.MouseEvent) => {
+        e?.preventDefault();
         if (searchQuery.trim()) {
             navigate(`/library?q=${encodeURIComponent(searchQuery)}`);
         }
@@ -154,25 +155,28 @@ const Hero = () => {
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.3 }}
                             onSubmit={handleSearch}
-                            className="w-full max-w-2xl mx-auto mb-10 flex items-center rounded-xl border-3 border-black bg-white shadow-[6px_6px_0px_0px_#000000] overflow-hidden transition-all"
+                            className="w-full max-w-2xl mx-auto mb-10 relative"
                         >
-                            <div className="flex-1 flex items-center px-4 py-1.5">
-                                <Search className="text-black/60 mr-3 shrink-0" size={20} strokeWidth={3} />
-                                <input
-                                    type="text"
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    placeholder="SEARCH 100+ COMPONENTS, 3D, ANIMATIONS..."
-                                    className="w-full py-3 bg-transparent text-black placeholder-neutral-500 focus:outline-none font-bold text-xs sm:text-sm uppercase tracking-wide"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                className="px-6 py-4 bg-[#1F4BFF] text-white font-black uppercase tracking-wider text-xs border-l-3 border-black hover:bg-blue-700 transition-colors flex items-center gap-2 shrink-0 cursor-pointer"
-                            >
-                                <span>SEARCH</span>
-                                <ArrowRight size={15} strokeWidth={3} />
-                            </button>
+                            <SearchBox
+                                value={searchQuery}
+                                onChange={setSearchQuery}
+                                onSubmit={() => handleSearch()}
+                                placeholder="SEARCH 100+ COMPONENTS, 3D, ANIMATIONS..."
+                                containerClassName="relative"
+                                inputWrapperClassName="group flex items-center rounded-xl border-3 border-black bg-white shadow-[6px_6px_0px_0px_#000000] overflow-hidden transition-all"
+                                iconClassName="pl-4 pr-3 flex items-center"
+                                icon={<Search size={20} strokeWidth={3} className="text-black/60" />}
+                                inputClassName="flex-1 w-full py-3 bg-transparent text-black placeholder-neutral-500 focus:outline-none font-bold text-xs sm:text-sm uppercase tracking-wide"
+                                action={
+                                    <button
+                                        type="submit"
+                                        className="px-6 py-4 bg-[#1F4BFF] text-white font-black uppercase tracking-wider text-xs border-l-3 border-black hover:bg-blue-700 transition-colors flex items-center gap-2 shrink-0 cursor-pointer"
+                                    >
+                                        <span>SEARCH</span>
+                                        <ArrowRight size={15} strokeWidth={3} />
+                                    </button>
+                                }
+                            />
                         </motion.form>
 
                         {/* Primary CTAs */}

@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, User as UserIcon, Search, Heart, Trash2, ArrowUpRight } from 'lucide-react';
+import { Menu, X, LogOut, User as UserIcon, Heart, Trash2, ArrowUpRight } from 'lucide-react';
 import logo from '../../Assets/webiste logo.svg';
 import PlanBadge, { PlanTier } from './PlanBadge';
+import SearchBox from './SearchBox';
 import { useAuth } from '../../context/AuthContext';
 import { auth } from '../../lib/firebase';
 import { signOut } from 'firebase/auth';
@@ -59,8 +60,7 @@ const Navbar = () => {
         { to: '/pricing', label: 'PRICING', active: isPricing },
     ];
     
-    const handleSearchSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
+    const submitSearch = () => {
         if (globalSearch.trim()) {
             navigate(`/library?q=${encodeURIComponent(globalSearch.trim())}`);
         }
@@ -269,19 +269,18 @@ const Navbar = () => {
 
                         {/* ── Right Actions ── */}
                         <div className="flex items-center gap-3">
-                            {/* Search (Desktop) */}
-                            <form onSubmit={handleSearchSubmit} className="hidden xl:flex relative mr-1 group">
-                                <div className="absolute inset-y-0 left-0 pl-2.5 flex items-center pointer-events-none">
-                                    <Search size={13} className="text-neutral-500 group-focus-within:text-[#1F4BFF] transition-colors" />
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="SEARCH..."
-                                    value={globalSearch}
-                                    onChange={(e) => setGlobalSearch(e.target.value)}
-                                    className="w-36 lg:w-48 bg-[#F5F5F5] border-2 border-black rounded-none py-1.5 pl-8 pr-2.5 text-xs font-mono font-bold text-black placeholder:text-neutral-400 focus:outline-none focus:bg-white focus:border-[#1F4BFF] focus:shadow-[3px_3px_0px_0px_#1F4BFF] transition-all uppercase"
-                                />
-                            </form>
+                            {/* Search (Desktop) with live suggestions */}
+                            <SearchBox
+                                value={globalSearch}
+                                onChange={setGlobalSearch}
+                                onSubmit={submitSearch}
+                                placeholder="SEARCH..."
+                                containerClassName="hidden xl:flex relative mr-1"
+                                inputWrapperClassName="group flex items-center w-40 lg:w-52 bg-[#F5F5F5] border-2 border-black rounded-none transition-all focus-within:bg-white focus-within:border-[#1F4BFF] focus-within:shadow-[3px_3px_0px_0px_#1F4BFF]"
+                                iconClassName="pl-2.5 pr-1.5 flex items-center text-neutral-500 group-focus-within:text-[#1F4BFF] transition-colors"
+                                inputClassName="flex-1 w-full bg-transparent py-1.5 pr-2.5 text-xs font-mono font-bold text-black placeholder:text-neutral-400 focus:outline-none uppercase"
+                                dropdownClassName="w-full min-w-[380px] right-0 left-auto"
+                            />
 
                             {/* User Profile / Auth Action Buttons */}
                             {user ? (
