@@ -18,6 +18,7 @@ export interface DocBlock {
     code?: { label?: string; lang?: string; content: string };
     bullets?: string[];
     steps?: DocStep[];
+    table?: { headers: string[]; rows: string[][] };
     cta?: DocCta;
 }
 

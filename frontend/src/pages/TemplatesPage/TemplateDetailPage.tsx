@@ -74,12 +74,71 @@ const PreviewScroller: React.FC<{ bg: string; children: React.ReactNode }> = ({ 
     );
 };
 
+// Desktop-only preview: renders the template on a fixed 1280px desktop canvas
+// and scales it down to fit the preview container, so the full desktop layout
+// is always visible (never tablet/mobile responsive variants, no raw overflow).
+const CANVAS_WIDTH = 1280;
+
+const ScaledTemplateScene: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const canvasRef = useRef<HTMLDivElement>(null);
+    const [scale, setScale] = useState(1);
+    const [canvasHeight, setCanvasHeight] = useState(0);
+
+    // Scale the 1280px canvas to the container width (never upscale beyond 1)
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const update = () => {
+            const w = el.clientWidth;
+            if (w > 0) setScale(Math.min(1, w / CANVAS_WIDTH));
+        };
+        update();
+        const ro = new ResizeObserver(update);
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+
+    // Track the template's natural (unscaled) height so the outer wrapper
+    // keeps the scroll container at the correct scaled height
+    useEffect(() => {
+        const el = canvasRef.current;
+        if (!el) return;
+        const update = () => {
+            if (el.clientHeight > 0) setCanvasHeight(el.clientHeight);
+        };
+        update();
+        const ro = new ResizeObserver(update);
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+
+    return (
+        <div
+            ref={containerRef}
+            className="relative w-full overflow-hidden"
+            style={{ height: canvasHeight * scale }}
+        >
+            <div
+                ref={canvasRef}
+                style={{
+                    width: CANVAS_WIDTH,
+                    transformOrigin: 'top left',
+                    transform: `scale(${scale})`,
+                }}
+            >
+                {children}
+            </div>
+        </div>
+    );
+};
+
 // Instant visual: shows the static template screenshot while the live component chunk loads.
 const PreviewImageFallback: React.FC<{ id: string }> = ({ id }) => {
     const t = websiteTemplates.find((x) => x.id === id);
     if (!t) return null;
     return (
-        <div className="relative w-full h-full overflow-hidden">
+        <div className="relative w-[1280px] h-[720px] overflow-hidden">
             {t.previewImage ? (
                 <img
                     src={t.previewImage}
@@ -294,7 +353,9 @@ const TemplateDetailPage = () => {
                         >
                             {TEMPLATE_PREVIEWS[template.id] ? (
                                 <PreviewScroller bg={TEMPLATE_PREVIEW_BGS[template.id]}>
-                                    <LazyTemplateRenderer id={template.id} resetKey={resetKey} />
+                                    <ScaledTemplateScene>
+                                        <LazyTemplateRenderer id={template.id} resetKey={resetKey} />
+                                    </ScaledTemplateScene>
                                 </PreviewScroller>
                             ) : template.liveDemoUrl ? (
                                 <>
