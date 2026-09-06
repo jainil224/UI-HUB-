@@ -14,7 +14,10 @@ import {
     ArrowRight,
     X,
     Bot,
-    Rocket
+    Rocket,
+    Download,
+    Star,
+    FileText
 } from 'lucide-react';
 import { SiClaude, SiCursor } from 'react-icons/si';
 import { 
@@ -104,6 +107,9 @@ const TemplatesSection = () => {
 
                     <h2 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tight text-white leading-tight">
                         Curated Website{' '}
+                        <span className="inline-flex items-center justify-center w-[0.8em] h-[0.8em] rounded-[22%] bg-[#1F4BFF] border-2 md:border-4 border-black shadow-[0.05em_0.07em_0px_#000000] align-middle mr-2 relative -top-[0.06em]">
+                            <Layers className="w-[0.5em] h-[0.5em] text-white" strokeWidth={2.5} />
+                        </span>
                         <span className="text-[#1F4BFF]">Templates.</span>
                     </h2>
 
@@ -112,24 +118,28 @@ const TemplatesSection = () => {
                         Built with React, Next.js &amp; Tailwind CSS.
                     </p>
 
-                    {/* ── Filter Categories ── */}
-                    <div className="flex flex-wrap items-center justify-center gap-2 mt-7 sm:mt-9 max-w-3xl">
-                        {templateCategories.map((category) => {
-                            const isActive = selectedCategory === category;
-                            return (
-                                <button
-                                    key={category}
-                                    onClick={() => setSelectedCategory(category)}
-                                    className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-black uppercase tracking-wider border-2 transition-all duration-150 cursor-pointer ${
-                                        isActive
-                                            ? 'bg-[#1F4BFF] text-white border-[#1F4BFF] shadow-[3px_3px_0px_0px_#FFFFFF] -translate-y-0.5'
-                                            : 'bg-transparent text-neutral-500 border-neutral-800 hover:border-neutral-500 hover:text-neutral-200'
-                                    }`}
-                                >
-                                    {category}
-                                </button>
-                            );
-                        })}
+                    {/* ── Filter Categories ──
+                         Mobile: horizontal snap rail (no stacking).
+                         Desktop: centered wrapping row. */}
+                    <div className="w-full max-w-3xl mt-7 sm:mt-9">
+                        <div className="flex items-center gap-2 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:justify-center sm:overflow-visible sm:pb-0 sm:snap-none">
+                            {templateCategories.map((category) => {
+                                const isActive = selectedCategory === category;
+                                return (
+                                    <button
+                                        key={category}
+                                        onClick={() => setSelectedCategory(category)}
+                                        className={`shrink-0 snap-center px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-black uppercase tracking-wider border-2 transition-all duration-150 cursor-pointer ${
+                                            isActive
+                                                ? 'bg-[#1F4BFF] text-white border-black shadow-[3px_3px_0px_0px_#FFFFFF] -translate-y-0.5'
+                                                : 'bg-transparent text-neutral-400 border-black hover:border-[#FFC700] hover:text-[#FFC700]'
+                                        }`}
+                                    >
+                                        {category}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
 
@@ -149,7 +159,7 @@ const TemplatesSection = () => {
                                 {/* ── Preview Window ── */}
                                 <div
                                     onClick={() => navigate(`/templates/${template.id}`)}
-                                    className="relative h-44 sm:h-52 lg:h-60 w-full overflow-hidden cursor-pointer"
+                                    className="relative h-48 sm:h-56 lg:h-64 w-full overflow-hidden cursor-pointer"
                                 >
                                     {/* ── Preview renderer ──
                                          Priority 1: static image (instant, zero CPU)
@@ -211,12 +221,21 @@ const TemplatesSection = () => {
 
                                     {/* Floating category chip — top-left (matches ComponentGrid label) */}
                                     <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
-                                        <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-sm border border-white/15 text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest text-white">
+                                        <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-sm border border-white/15 text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest text-white inline-flex items-center gap-1.5">
+                                            <span
+                                                className="w-1.5 h-1.5 rounded-full"
+                                                style={{ background: template.accentColor }}
+                                            />
                                             {template.category}
                                         </span>
                                         {template.isPro && (
                                             <span className="px-1.5 py-0.5 bg-[#1F4BFF] text-white text-[8px] font-black uppercase leading-none rounded-sm border border-black/50 shadow-[1px_1px_0px_0px_#000000]">
                                                 PRO
+                                            </span>
+                                        )}
+                                        {template.badge && (
+                                            <span className="px-1.5 py-0.5 bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black/50 shadow-[1px_1px_0px_0px_#000000]">
+                                                {template.badge}
                                             </span>
                                         )}
                                     </div>
@@ -229,10 +248,10 @@ const TemplatesSection = () => {
                                     {/* Bottom readability gradient (matches ComponentGrid) */}
                                     <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/70 to-transparent pointer-events-none z-10" />
 
-                                    {/* Hover overlay with CTA */}
+                                    {/* Hover overlay with CTA (hover-capable devices only — tap opens the card directly) */}
                                     <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20
                                         opacity-0 group-hover:opacity-100
-                                        [@media(hover:none)]:opacity-100
+                                        [@media(hover:none)]:hidden
                                         transition-opacity duration-200">
                                         <button
                                             onClick={(e) => handleOpenTemplate(template.id, e)}
@@ -245,26 +264,44 @@ const TemplatesSection = () => {
                                 </div>
 
                                 {/* ── Card Footer ── */}
-                                <div className="px-4 py-3 sm:px-5 sm:py-4 flex items-center justify-between gap-3 border-t border-neutral-800">
-                                    <div className="min-w-0">
-                                        <h3
-                                            className="font-black text-sm sm:text-base text-white group-hover:text-[#1F4BFF] transition-colors truncate leading-tight"
+                                <div className="px-4 py-3 sm:px-5 sm:py-4 border-t border-neutral-800">
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div className="min-w-0">
+                                            <h3
+                                                className="font-black text-sm sm:text-base text-white group-hover:text-[#1F4BFF] transition-colors truncate leading-tight"
+                                            >
+                                                {template.title}
+                                            </h3>
+                                            <p className="text-[11px] text-neutral-500 font-mono mt-0.5 truncate">
+                                                {template.framework} · {template.styling}
+                                            </p>
+                                        </div>
+                                        <span
+                                            className={`shrink-0 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border shadow-[2px_2px_0px_0px_#000] ${
+                                                template.isPro
+                                                    ? 'bg-[#1F4BFF] text-white border-black'
+                                                    : 'bg-[#00E599] text-black border-black'
+                                            }`}
                                         >
-                                            {template.title}
-                                        </h3>
-                                        <p className="text-[11px] text-neutral-500 font-mono mt-0.5 truncate">
-                                            {template.framework} · {template.styling}
-                                        </p>
+                                            {template.isPro ? 'PRO' : 'FREE'}
+                                        </span>
                                     </div>
-                                    <span
-                                        className={`shrink-0 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border shadow-[2px_2px_0px_0px_#000] ${
-                                            template.isPro
-                                                ? 'bg-[#1F4BFF] text-white border-black'
-                                                : 'bg-[#00E599] text-black border-black'
-                                        }`}
-                                    >
-                                        {template.isPro ? 'PRO' : 'FREE'}
-                                    </span>
+
+                                    {/* Stats row */}
+                                    <div className="mt-2.5 pt-2.5 border-t border-neutral-800/70 flex items-center gap-4 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
+                                        <span className="inline-flex items-center gap-1">
+                                            <Download size={10} className="text-[#00E599]" />
+                                            {template.stats.downloads}
+                                        </span>
+                                        <span className="inline-flex items-center gap-1">
+                                            <Star size={10} className="text-[#FFC700] fill-[#FFC700]" />
+                                            {template.stats.rating.toFixed(1)}
+                                        </span>
+                                        <span className="inline-flex items-center gap-1">
+                                            <FileText size={10} className="text-[#1F4BFF]" />
+                                            {template.stats.pages} pg
+                                        </span>
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}
