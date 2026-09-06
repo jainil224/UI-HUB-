@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
     Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown,
-    Maximize2, Minimize2, Sparkles, Bot
+    Maximize2, Minimize2, Sparkles, Bot, Loader2
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
@@ -816,22 +816,44 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [isFullscreen, setIsFullscreen] = React.useState(false);
     const [promptMenuOpen, setPromptMenuOpen] = React.useState(false);
     const [promptCopied, setPromptCopied] = React.useState<string | null>(null);
+    const [promptCopying, setPromptCopying] = React.useState<AISystem | null>(null);
     const promptMenuRef = React.useRef<HTMLDivElement>(null);
     const previewRef = React.useRef<HTMLDivElement>(null);
+    const { user, isPro: isProUser } = useAuth();
 
-    const copyPromptFromPreview = React.useCallback((system: AISystem) => {
-        const prompt = getFallbackVibePrompt(item.id, system, item);
-        navigator.clipboard.writeText(prompt).then(() => {
+    const copyPromptFromPreview = React.useCallback(async (system: AISystem) => {
+        if (promptCopying) return;
+        setPromptCopying(system);
+        const label = PROMPT_OPTIONS.find(o => o.system === system)?.label || system.toUpperCase();
+        try {
+            // Mirror the VIBE terminal exactly: server prompt first, local fallback otherwise.
+            const token = user && !user.isAnonymous ? await user.getIdToken() : undefined;
+            const result = await fetchVibePrompt(item.id, system, token, item);
+            const prompt = result.prompt || getFallbackVibePrompt(item.id, system, item);
+            await navigator.clipboard.writeText(prompt);
             setPromptCopied(system);
             setPromptMenuOpen(false);
-            const label = PROMPT_OPTIONS.find(o => o.system === system)?.label || system.toUpperCase();
             setToastTool(system);
             setToastImage(item.imageUrl);
             setToastMessage(`${label} PROMPT COPIED`);
             setShowToast(true);
             setTimeout(() => setPromptCopied(null), 2000);
-        });
-    }, [item.id, item]);
+        } catch (error) {
+            const prompt = getFallbackVibePrompt(item.id, system, item);
+            try {
+                await navigator.clipboard.writeText(prompt);
+            } catch (clipErr) {
+                /* ignore clipboard failures */
+            }
+            setPromptMenuOpen(false);
+            setToastTool(system);
+            setToastImage(item.imageUrl);
+            setToastMessage(`${label} PROMPT COPIED`);
+            setShowToast(true);
+        } finally {
+            setPromptCopying(null);
+        }
+    }, [item.id, item, user, promptCopying]);
 
     React.useEffect(() => {
         const handlePointerDown = (e: MouseEvent | TouchEvent) => {
@@ -876,7 +898,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [fetchedSource, setFetchedSource] = React.useState<string>('');
     const [isLoadingSource, setIsLoadingSource] = React.useState(false);
 
-    const { user, isPro: isProUser } = useAuth();
     const [trialsRemaining, setTrialsRemaining] = React.useState<number>(() => {
         const stored = localStorage.getItem('ui-hub-ai-trials-remaining');
         return stored !== null ? parseInt(stored, 10) : 2;
@@ -1368,10 +1389,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                             key={opt.system}
                                                             type="button"
                                                             onClick={() => copyPromptFromPreview(opt.system)}
+                                                            disabled={promptCopying === opt.system}
                                                             className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors cursor-pointer ${
-                                                                promptCopied === opt.system
-                                                                    ? 'bg-brand-green/10 hover:bg-brand-green/10'
-                                                                    : 'hover:bg-neutral-900 active:bg-neutral-800'
+                                                                promptCopying === opt.system
+                                                                    ? 'opacity-60 cursor-default'
+                                                                    : promptCopied === opt.system
+                                                                        ? 'bg-brand-green/10 hover:bg-brand-green/10'
+                                                                        : 'hover:bg-neutral-900 active:bg-neutral-800'
                                                             }`}
                                                         >
                                                             <span className="w-[18px] flex items-center justify-center shrink-0">
@@ -1383,8 +1407,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                                 {opt.label}
                                                             </span>
                                                             <span className="w-4 flex items-center justify-center shrink-0">
-                                                                {promptCopied === opt.system && (
-                                                                    <Check size={13} className="text-brand-green" strokeWidth={3} />
+                                                                {promptCopying === opt.system ? (
+                                                                    <Loader2 size={13} className="animate-spin text-brand-blue" />
+                                                                ) : (
+                                                                    promptCopied === opt.system && (
+                                                                        <Check size={13} className="text-brand-green" strokeWidth={3} />
+                                                                    )
                                                                 )}
                                                             </span>
                                                         </button>
