@@ -50,7 +50,7 @@ const LibraryPage = () => {
     const qFromUrl = queryParams.get('q') || '';
 
     const [optimisticId, setOptimisticId] = useState<string | null>(null);
-    const [activeDocId, setActiveDocId] = useState<string | null>(docFromUrl || null);
+    const [activeDocId, setActiveDocId] = useState<string | null>(idFromUrl ? null : docFromUrl || 'introduction');
     const allComponents = useMemo(() => componentList, []);
 
     const activeDoc = GET_STARTED_PAGES.find(p => p.id === activeDocId) || null;
@@ -81,8 +81,8 @@ const LibraryPage = () => {
     }, [idFromUrl]);
 
     useEffect(() => {
-        setActiveDocId(docFromUrl || null);
-    }, [docFromUrl]);
+        setActiveDocId(idFromUrl ? null : docFromUrl || 'introduction');
+    }, [idFromUrl, docFromUrl]);
 
     useEffect(() => {
         setSearchQuery(qFromUrl);

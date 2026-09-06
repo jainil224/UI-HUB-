@@ -41,6 +41,49 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
                 body: 'UI HUB 2.0 is not just another component library — it is a complete creative development platform for modern web engineers. It is a premium design system, an AI coding assistant, and a component showcase rolled into one. Whether you are building SaaS dashboards, portfolio sites, landing pages, or full-scale applications, UI HUB gives you battle-tested, beautiful, and highly interactive building blocks ready to drop into any React or Vite project.',
             },
             {
+                heading: 'Why we built UI HUB',
+                body: 'Every great landing page, portfolio or SaaS dashboard needs the same set of expensive-to-build pieces — cinematic 3D scenes, hover choreography, animated backgrounds, scroll stories. We kept rewriting them from scratch, and worse, the libraries that existed were static, the paid kits were generic, and AI assistants had almost nothing worth referencing to generate anything beyond a basic card. UI HUB is our answer: one living library where every component is production-grade, animated by default, fully documented, and shipped with an AI-readable prompt — so that both humans and AI agents can rebuild or remix it in seconds.',
+            },
+            {
+                heading: 'The problems UI HUB solves',
+                bullets: [
+                    'Blank-page syndrome — start from a proven, animated component instead of an empty file',
+                    'Copy-paste plumbing — dependencies, props and gotchas are documented before you ever import a file',
+                    'AI hallucination — every prompt is grounded in a concrete reference implementation with exact timing, easing and a dependency list, so the AI has something true to work from',
+                    'Inconsistent design language — one token system powers dark / light theming across every component',
+                    'Wasted hours on animation math — WebGL, physics and easing curves are done, tuned and legible',
+                    'Discovery dead-ends — search by name, category, framework, styling or tags, on the site and inside your AI tool via MCP',
+                ],
+            },
+            {
+                heading: 'UI HUB vs other platforms',
+                body: 'There are plenty of component libraries, but most solve only part of the problem. Here is how UI HUB stacks up against the usual go-tos.',
+                code: {
+                    lang: 'text',
+                    label: 'UI HUB vs the field',
+                    content: 'Platform       Style               Animations      AI workflow\nshadcn/ui      utility + copy      minimal         none\nAceternity UI  effect gallery      good (CSS)      no prompts / no MCP\nMagic UI       snippets + effects  good            no prompts / no MCP\nTailwind UI    paid static blocks  none            none\nMUI / Chakra   app design system   shallow         none\nUI HUB         100+ animated 3D    cinematic       vibe prompts + MCP + Vibe tab',
+                },
+                bullets: [
+                    'shadcn/ui — solid utility primitives, but nothing cinematic and no way for an AI to reconstruct a 3D scene',
+                    'Aceternity / Magic UI — beautiful effect galleries, mostly CSS-driven, with static snippets rather than a structured prompt',
+                    'Tailwind UI — paid, static building blocks; no interactive or 3D animation, no AI story',
+                    'MUI / Chakra — great for dense app UIs, shallow on the cinematic visuals that make marketing pages memorable',
+                    'UI HUB — the only one that ships animated source, a structured AI prompt and an MCP server for every component',
+                ],
+            },
+            {
+                heading: 'The advantages of UI HUB',
+                bullets: [
+                    '100% source transparency — clean, commented React / TypeScript for every component',
+                    'AI-ready everywhere — a universal blueprint plus system-specific prompts (Advance, Antigravity, Claude, Cursor, Lovable)',
+                    'One library for cinematic and utility — 3D heroes, cursors, backgrounds, buttons and navbars share one design language',
+                    'Works with your stack — React 19, TypeScript, Tailwind 4, Vite and Framer Motion, with HTML / CSS flavours ready to adapt',
+                    'Consistent theme system — dark / light tokens you can plug into any project',
+                    'Built-in Vibe engine — regenerate or remix a component right on its page, no external AI tool required',
+                    'Free tier to start, Pro for premium components, full source code and AI upgrades',
+                ],
+            },
+            {
                 heading: 'Key features at a glance',
                 bullets: [
                     '100+ cinematic, interactive UI components',
@@ -107,6 +150,57 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
                             content: 'npm install lucide-react framer-motion\nnpm install <extra-packages-the-ai-listed>',
                         },
                     },
+                ],
+            },
+            {
+                heading: 'Copying the prompt, step by step',
+                steps: [
+                    {
+                        title: 'Open any component',
+                        body: 'Open the Library sidebar and click any component — or use the search bar. It opens on the Preview tab so you can watch it behave before you copy a single thing.',
+                    },
+                    {
+                        title: 'Open the Copy Prompt menu',
+                        body: 'In the toolbar above the preview, click Copy Prompt and choose the AI system you are using — Advance, Antigravity, Claude, Cursor or Lovable. The prompt is regenerated in that tool\u2019s preferred style on the spot.',
+                    },
+                    {
+                        title: '...or open the Vibe Prompt tab',
+                        body: 'Switch to the Vibe Prompt tab to read the full prompt before copying. It is rendered as a live terminal block with a copy button in the toolbar — no scrolling, no partial selects.',
+                    },
+                    {
+                        title: 'Hit copy',
+                        body: 'Click Copy and the entire prompt lands on your clipboard in one click. Paste it anywhere without trimming a single line.',
+                    },
+                ],
+            },
+            {
+                heading: 'What a UI HUB prompt looks like',
+                body: 'Every prompt follows the same Universal Blueprint so any AI tool can rebuild the component faithfully. The two sections that matter most are at the bottom — the Reference Implementation and the Task — because those are what stop the AI from guessing.',
+                code: {
+                    lang: 'text',
+                    label: 'Universal Blueprint (condensed)',
+                    content: '===  UI HUB  •  UNIVERSAL BLUEPRINT  ===\n\n# COMPONENT BLUEPRINT: Aurora Cursor\n\n## Overview\nA cursor-following radial gradient orb that reacts to pointer\nspeed with a soft trailing light.\n\n## Category\nCursor Effects\n\n## Animation Engine & Techniques Used\n- Engine: Framer Motion\n- Techniques:\n  - spring physics\n  - pointer tracking\n\n## Interaction Triggers\npointermove\n\n## Dependencies\nframer-motion\n\n## Props\n- color: string (optional)\n\n## Known Gotchas\n- Wrap in a fixed, pointer-events-none container.\n\n## Reference Implementation (build a faithful equivalent)\n<the component source is inlined here>\n\n## Task\nRecreate this component in the current project, matching the\nanimation timing, easing and visual behavior exactly. Output\nthe complete 100% working single-file React component.',
+                },
+                bullets: [
+                    'Overview + Category — what the component is and where it lives in the library',
+                    'Animation Engine & Techniques — the motion model (Framer Motion, Three.js, GSAP) and the exact techniques used',
+                    'Interaction Triggers — pointermove, hover, scroll, click or mount',
+                    'Dependencies + Props — the install list and the component\u2019s public API up front',
+                    'Known Gotchas — the traps the AI should avoid',
+                    'Reference Implementation + Task — the real source plus the instruction to recreate it exactly',
+                    'Tailored wrappers — Antigravity prompts add explicit Do / Don\u2019t scoping around the reference code, and each system gets its own tuned format',
+                ],
+            },
+            {
+                heading: 'Where to paste it',
+                body: 'The prompt is tool-agnostic — paste it into any assistant. The whole block goes in, and the only thing you add is whatever extra requirement is specific to your project.',
+                bullets: [
+                    'Cursor — paste it into Composer or the Agent panel and press Enter',
+                    'Claude Code — paste it straight into the terminal as a normal message',
+                    'Claude.ai / ChatGPT — paste it into the chat and add any project-specific notes',
+                    'Lovable — paste it into the prompt box and let it scaffold the app around it',
+                    'GitHub Copilot — drop it into your agent request or pull it in from the docs',
+                    'Or skip external tools entirely — open the component\u2019s Vibe tab and let the built-in engine regenerate it right where you are',
                 ],
             },
             {
