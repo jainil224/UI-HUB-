@@ -67,32 +67,10 @@ const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
 };
 
 const PreviewScroller: React.FC<{ bg: string; children: React.ReactNode }> = ({ bg, children }) => {
-    const scrollRef = useRef<HTMLDivElement>(null);
-
-    // Block the main page from continuing to scroll once the preview reaches
-    // its own scroll boundary (no scroll chaining into the page underneath).
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el) return;
-
-        const onWheel = (e: WheelEvent) => {
-            if (el.scrollHeight <= el.clientHeight) return;
-            const atTop = el.scrollTop <= 0;
-            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
-            if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
-                e.preventDefault();
-            }
-        };
-
-        el.addEventListener('wheel', onWheel, { passive: false });
-        return () => el.removeEventListener('wheel', onWheel);
-    }, []);
-
     return (
         <div
-            ref={scrollRef}
             data-lenis-prevent="true"
-            className={`w-full h-full overflow-y-auto overflow-x-hidden overscroll-contain [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] ${bg}`}
+            className={`w-full h-full overflow-y-auto overflow-x-hidden overscroll-auto [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] ${bg}`}
         >
             {children}
         </div>
