@@ -12,8 +12,11 @@ import {
     Github, 
     Laptop,
     ArrowRight,
-    X
+    X,
+    Bot,
+    Rocket
 } from 'lucide-react';
+import { SiClaude, SiCursor } from 'react-icons/si';
 import { 
     websiteTemplates, 
     templateCategories, 
@@ -269,27 +272,85 @@ const TemplatesSection = () => {
                 </div>
 
                 {/* ── Bottom Callout Banner ── */}
-                <div className="mt-12 sm:mt-16 p-5 sm:p-8 rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 hover:border-neutral-600 transition-colors">
-                    <div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <Sparkles size={13} className="text-[#FFC700]" />
-                            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-400">AI Prompt Ready</span>
-                        </div>
-                        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-                            Build Entire Websites In 60 Seconds
-                        </h3>
-                        <p className="text-neutral-500 text-xs sm:text-sm font-medium mt-1 max-w-md">
-                            All templates include pre-engineered prompts for Claude, Cursor, ChatGPT &amp; Antigravity.
-                        </p>
+                <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                    className="relative mt-12 sm:mt-16 p-6 sm:p-10 rounded-xl border-3 border-black bg-[#0B0B0D] overflow-hidden shadow-[8px_8px_0px_0px_#000000] hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_#000000] transition-all duration-200"
+                >
+                    {/* Graph-square grid backdrop — matches section/Hero/Footer */}
+                    <div
+                        className="absolute inset-0 pointer-events-none"
+                        style={{
+                            backgroundImage:
+                                'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)',
+                            backgroundSize: '32px 32px',
+                            maskImage: 'linear-gradient(to bottom, transparent 0%, black 45%, black 100%)',
+                            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 45%, black 100%)',
+                        }}
+                    />
+
+                    {/* ── Bauhaus Geometric Accents (mirrors Hero) ── */}
+                    {/* Tilted yellow square */}
+                    <div className="hidden md:block absolute -top-7 -right-7 w-24 h-24 rotate-12 bg-[#FFC700] border-4 border-black shadow-[6px_6px_0px_0px_#000000] pointer-events-none" />
+                    {/* Crimson circle */}
+                    <div className="hidden md:block absolute top-10 right-32 w-4 h-4 rounded-full bg-[#E52520] border-2 border-black shadow-[2px_2px_0px_0px_#000000] pointer-events-none" />
+                    {/* Blue "60 SEC" pill */}
+                    <div className="hidden lg:flex absolute left-20 top-1/2 -translate-y-1/2 -rotate-6 px-3 py-1.5 rounded-full bg-[#1F4BFF] border-2 border-black shadow-[3px_3px_0px_0px_#000000] items-center gap-1.5 pointer-events-none">
+                        <Rocket size={11} className="text-white" />
+                        <span className="text-[9px] font-black text-white uppercase tracking-wider">60 Sec</span>
                     </div>
-                    <a
-                        href="/dashboard/mcp"
-                        className="shrink-0 px-5 py-2.5 bg-[#1F4BFF] text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[4px_4px_0px_0px_#000000] hover:bg-white hover:text-black transition-all flex items-center gap-2"
-                    >
-                        <span>Explore MCP</span>
-                        <ArrowRight size={14} />
-                    </a>
-                </div>
+
+                    <div className="relative flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 sm:gap-8">
+                        <div className="max-w-xl">
+                            {/* Eyebrow chip */}
+                            <div className="inline-flex items-center gap-2 px-2.5 py-1 mb-4 bg-neutral-900 border-2 border-black shadow-[2px_2px_0px_0px_#000000]">
+                                <Sparkles size={12} className="text-[#FFC700]" />
+                                <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-neutral-300">AI Prompt Ready</span>
+                            </div>
+
+                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
+                                Build Entire Websites{' '}
+                                <span className="serif-italic text-[#3D5CFF] drop-shadow-[0_0_30px_rgba(61,92,255,0.45)]">
+                                    In 60 Seconds
+                                </span>
+                            </h3>
+
+                            <p className="text-neutral-400 text-xs sm:text-sm font-medium mt-3 max-w-lg leading-relaxed">
+                                All templates include pre-engineered prompts for
+                            </p>
+
+                            {/* ── Tool chips (matches PRO/FREE/NEW chip pattern) ── */}
+                            <div className="flex flex-wrap items-center gap-2 mt-4">
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#D97757] text-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] font-mono font-bold text-[10px] uppercase tracking-wider">
+                                    <SiClaude size={12} />
+                                    Claude
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-white text-black border-2 border-black shadow-[2px_2px_0px_0px_#000000] font-mono font-bold text-[10px] uppercase tracking-wider">
+                                    <SiCursor size={12} />
+                                    Cursor
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#10A37F] text-white border-2 border-black shadow-[2px_2px_0px_0px_#000000] font-mono font-bold text-[10px] uppercase tracking-wider">
+                                    <Bot size={12} />
+                                    ChatGPT
+                                </span>
+                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#1F4BFF] text-white border-2 border-black shadow-[2px_2px_0px_0px_#000000] font-mono font-bold text-[10px] uppercase tracking-wider">
+                                    <Rocket size={12} />
+                                    Antigravity
+                                </span>
+                            </div>
+                        </div>
+
+                        <a
+                            href="/dashboard/mcp"
+                            className="shrink-0 inline-flex items-center gap-2 px-6 py-3.5 bg-[#1F4BFF] text-white font-black text-xs uppercase tracking-wider border-3 border-black shadow-[4px_4px_0px_0px_#000000] hover:bg-white hover:text-black hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#000000] transition-all"
+                        >
+                            <span>Explore MCP</span>
+                            <ArrowRight size={14} />
+                        </a>
+                    </div>
+                </motion.div>
             </div>
 
             {/* ── Template Details / AI Prompt Modal ── */}
