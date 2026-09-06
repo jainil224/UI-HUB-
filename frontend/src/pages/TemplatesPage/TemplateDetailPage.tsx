@@ -63,17 +63,6 @@ const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'sui-overflow': 'bg-[#F2EFE6]',
 };
 
-const PreviewScroller: React.FC<{ bg: string; children: React.ReactNode }> = ({ bg, children }) => {
-    return (
-        <div
-            data-lenis-prevent="true"
-            className={`w-full h-full overflow-y-auto overflow-x-hidden overscroll-auto [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] ${bg}`}
-        >
-            {children}
-        </div>
-    );
-};
-
 // Desktop-only preview: renders the template on a fixed 1280px desktop canvas
 // and scales it down to fit the preview container, so the full desktop layout
 // is always visible (never tablet/mobile responsive variants, no raw overflow).
@@ -347,18 +336,15 @@ const TemplateDetailPage = () => {
                         </div>
 
                         {/* ── Live Preview Container ── */}
-                        <div 
-                            data-lenis-prevent="true"
-                            className="relative h-[78dvh] sm:h-[calc(100dvh-200px)] min-h-[420px] sm:min-h-[480px] w-full bg-white overflow-hidden overscroll-none flex flex-col"
-                        >
+                        <div className="relative w-full flex flex-col bg-white">
                             {TEMPLATE_PREVIEWS[template.id] ? (
-                                <PreviewScroller bg={TEMPLATE_PREVIEW_BGS[template.id]}>
+                                <div className={`relative w-full flex flex-col ${TEMPLATE_PREVIEW_BGS[template.id]}`}>
                                     <ScaledTemplateScene>
                                         <LazyTemplateRenderer id={template.id} resetKey={resetKey} />
                                     </ScaledTemplateScene>
-                                </PreviewScroller>
+                                </div>
                             ) : template.liveDemoUrl ? (
-                                <>
+                                <div className="relative h-[78dvh] sm:h-[calc(100dvh-200px)] min-h-[420px] sm:min-h-[480px] w-full bg-white overscroll-none flex flex-col">
                                     {isLoadingIframe && (
                                         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/80 gap-3">
                                             <div className="w-8 h-8 rounded-full border-2 border-[#1F4BFF] border-t-transparent animate-spin" />
@@ -375,7 +361,7 @@ const TemplateDetailPage = () => {
                                         sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
                                         onLoad={() => setIsLoadingIframe(false)}
                                     />
-                                </>
+                                </div>
                             ) : (
                                 <div className={`w-full h-full bg-gradient-to-br ${template.previewGradient} flex flex-col items-center justify-center p-8 text-center`}>
                                     <span className="text-3xl font-black font-heading uppercase text-white mb-2">
