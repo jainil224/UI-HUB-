@@ -9,10 +9,7 @@ import {
     ArrowLeft, 
     ArrowRight,
     ExternalLink, 
-    Sparkles, 
-    Monitor, 
-    Tablet, 
-    Smartphone
+    Sparkles
 } from 'lucide-react';
 import { websiteTemplates, TemplateItem } from '../../data/templatesData';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
@@ -123,7 +120,6 @@ const TemplateDetailPage = () => {
     const [promptMenuOpen, setPromptMenuOpen] = useState(false);
     const [promptCopied, setPromptCopied] = useState<string | null>(null);
     const [resetKey, setResetKey] = useState(0);
-    const [deviceView, setDeviceView] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
     const [isLoadingIframe, setIsLoadingIframe] = useState(true);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
@@ -175,12 +171,6 @@ const TemplateDetailPage = () => {
         setShowToast(true);
     };
 
-    const deviceWidthClass = {
-        desktop: 'w-full',
-        tablet: 'w-[768px] max-w-full',
-        mobile: 'w-[375px] max-w-full',
-    }[deviceView];
-
     return (
         <div className="min-h-screen bg-black text-white pt-20 pb-28 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
@@ -195,37 +185,6 @@ const TemplateDetailPage = () => {
                     </button>
 
                     <div className="flex items-center gap-2">
-                        {/* Device Viewport Switcher */}
-                        <div className="hidden sm:flex items-center bg-[#111116] border-2 border-neutral-800 rounded-md p-1 gap-1">
-                            <button
-                                onClick={() => setDeviceView('desktop')}
-                                className={`p-1.5 rounded transition-all cursor-pointer ${
-                                    deviceView === 'desktop' ? 'bg-[#1F4BFF] text-white' : 'text-neutral-400 hover:text-white'
-                                }`}
-                                title="Desktop View (100%)"
-                            >
-                                <Monitor size={15} />
-                            </button>
-                            <button
-                                onClick={() => setDeviceView('tablet')}
-                                className={`p-1.5 rounded transition-all cursor-pointer ${
-                                    deviceView === 'tablet' ? 'bg-[#1F4BFF] text-white' : 'text-neutral-400 hover:text-white'
-                                }`}
-                                title="Tablet View (768px)"
-                            >
-                                <Tablet size={15} />
-                            </button>
-                            <button
-                                onClick={() => setDeviceView('mobile')}
-                                className={`p-1.5 rounded transition-all cursor-pointer ${
-                                    deviceView === 'mobile' ? 'bg-[#1F4BFF] text-white' : 'text-neutral-400 hover:text-white'
-                                }`}
-                                title="Mobile View (375px)"
-                            >
-                                <Smartphone size={15} />
-                            </button>
-                        </div>
-
                         {template.liveDemoUrl && (
                             <a
                                 href={template.liveDemoUrl}
@@ -243,7 +202,7 @@ const TemplateDetailPage = () => {
                 {/* ── Browser Mockup Frame (Matching user's image exactly) ── */}
                 <div className="w-full flex justify-center">
                     <div 
-                        className={`transition-all duration-300 rounded-xl overflow-hidden flex flex-col bg-brand-surface border-2 border-white shadow-[8px_8px_0px_0px_#000000] ${deviceWidthClass}`}
+                        className={`transition-all duration-300 rounded-xl overflow-hidden flex flex-col bg-brand-surface border-2 border-white shadow-[8px_8px_0px_0px_#000000]`}
                     >
                         {/* ── Browser Mockup Top Bar ── */}
                         <div className="w-full px-3 sm:px-4 py-2.5 bg-black border-b-2 border-white flex items-center justify-between z-40 shrink-0 select-none gap-2">
