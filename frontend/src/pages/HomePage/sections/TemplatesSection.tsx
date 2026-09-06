@@ -14,10 +14,7 @@ import {
     ArrowRight,
     X,
     Bot,
-    Rocket,
-    Download,
-    Star,
-    FileText
+    Rocket
 } from 'lucide-react';
 import { SiClaude, SiCursor } from 'react-icons/si';
 import { 
@@ -284,22 +281,6 @@ const TemplatesSection = () => {
                                             }`}
                                         >
                                             {template.isPro ? 'PRO' : 'FREE'}
-                                        </span>
-                                    </div>
-
-                                    {/* Stats row */}
-                                    <div className="mt-2.5 pt-2.5 border-t border-neutral-800/70 flex items-center gap-4 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500">
-                                        <span className="inline-flex items-center gap-1">
-                                            <Download size={10} className="text-[#00E599]" />
-                                            {template.stats.downloads}
-                                        </span>
-                                        <span className="inline-flex items-center gap-1">
-                                            <Star size={10} className="text-[#FFC700] fill-[#FFC700]" />
-                                            {template.stats.rating.toFixed(1)}
-                                        </span>
-                                        <span className="inline-flex items-center gap-1">
-                                            <FileText size={10} className="text-[#1F4BFF]" />
-                                            {template.stats.pages} pg
                                         </span>
                                     </div>
                                 </div>

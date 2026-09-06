@@ -44,6 +44,15 @@ const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = 
     { system: 'lovable', label: 'LOVABLE', iconPath: '/logos/lovable-color.svg' },
 ];
 
+const PreviewScroller: React.FC<{ bg: string; children: React.ReactNode }> = ({ bg, children }) => (
+    <div
+        data-lenis-prevent="true"
+        className={`w-full h-full overflow-y-auto overflow-x-hidden overscroll-contain [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] ${bg}`}
+    >
+        {children}
+    </div>
+);
+
 const TemplateDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
@@ -261,72 +270,72 @@ const TemplateDetailPage = () => {
                         {/* ── Live Preview Container ── */}
                         <div 
                             data-lenis-prevent="true"
-                            className="relative h-[calc(100vh-175px)] min-h-[620px] w-full bg-white overflow-hidden flex flex-col"
+                            className="relative h-[78dvh] sm:h-[calc(100dvh-200px)] min-h-[420px] sm:min-h-[480px] w-full bg-white overflow-hidden flex flex-col"
                         >
                             {template.id === 'tars-protocol' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
+                                <PreviewScroller bg="bg-white">
                                     <TarsHeroArena key={`tars-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'split-fuzzy-orb' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#d6c0e3]">
+                                <PreviewScroller bg="bg-[#d6c0e3]">
                                     <SplitFuzzyOrbHero key={`orb-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'segmint-2026' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#E8E9EE]">
+                                <PreviewScroller bg="bg-[#E8E9EE]">
                                     <SegmintFooter key={`segmint-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'haos-tech-solutions' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-hidden bg-[#020202]">
+                                <PreviewScroller bg="bg-[#020202]">
                                     <HaosShowcase key={`haos-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'mentality' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F0F0F0]">
+                                <PreviewScroller bg="bg-[#F0F0F0]">
                                     <MentalityHero key={`mentality-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'lakera-ai-security' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
+                                <PreviewScroller bg="bg-white">
                                     <LakeraHero key={`lakera-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'interior-design' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
+                                <PreviewScroller bg="bg-white">
                                     <InteriorDesignShowcase key={`interior-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'lumos' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F1F1F0]">
+                                <PreviewScroller bg="bg-[#F1F1F0]">
                                     <LumosHero key={`lumos-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'loveapp-hero' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#D8D2F8]">
+                                <PreviewScroller bg="bg-[#D8D2F8]">
                                     <LoveAppHero key={`loveapp-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'heyo-agency-cta' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F5F5F2]">
+                                <PreviewScroller bg="bg-[#F5F5F2]">
                                     <HeyoAgencyCta key={`heyo-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'me-019-au-cabaret' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#EDEDED]">
+                                <PreviewScroller bg="bg-[#EDEDED]">
                                     <AuCabaretPoster key={`aucabaret-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'dont-be-greedy' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#050505]">
+                                <PreviewScroller bg="bg-[#050505]">
                                     <DontBeGreedyFooter key={`greedy-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'paipai-kuaishou' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-hidden bg-[#59D1EA]">
+                                <PreviewScroller bg="bg-[#59D1EA]">
                                     <PaipaiKuaishou key={`paipai-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'logo-here' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-white">
+                                <PreviewScroller bg="bg-white">
                                     <LogoHere key={`logo-here-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'partify' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#FBFBFB]">
+                                <PreviewScroller bg="bg-[#FBFBFB]">
                                     <Partify key={`partify-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.id === 'sui-overflow' ? (
-                                <div data-lenis-prevent="true" className="w-full h-full overflow-y-auto overflow-x-hidden scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] bg-[#F2EFE6]">
+                                <PreviewScroller bg="bg-[#F2EFE6]">
                                     <SuiOverflow key={`sui-overflow-render-${resetKey}`} />
-                                </div>
+                                </PreviewScroller>
                             ) : template.liveDemoUrl ? (
                                 <>
                                     {isLoadingIframe && (
