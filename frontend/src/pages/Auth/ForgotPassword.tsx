@@ -6,7 +6,7 @@ import { auth } from '../../lib/firebase';
 import { Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
 import Logo from '../../components/ui/Logo';
-import TwinGalaxyRings from '../../components/ui/TwinGalaxyRings';
+import KineticGrid from '../../components/ui/KineticGrid';
 import { useIsMobile } from '../../hooks/use-mobile';
 
 const ForgotPassword = () => {
@@ -34,22 +34,18 @@ const ForgotPassword = () => {
     return (
         <main className="relative min-h-screen w-full pt-16 flex items-center justify-center bg-brand-black text-white font-sans overflow-x-hidden px-4 py-10">
             {/* Animated Background */}
-            <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-                <TwinGalaxyRings
+            <div className="absolute inset-0 z-0 overflow-hidden">
+                <KineticGrid
                     background="#050A14"
-                    colors={["#3D5CFF", "#C9D6E8"]}
-                    density={isMobile ? 45 : 85}
-                    dotSize={1.6}
-                    speed={45}
-                    hoverSpeed={70}
-                    direction="cw"
-                    distance={3540}
-                    innerVoid={12}
-                    armThickness={90}
-                    armCount={4}
-                    tilt={{ tilt: 26, sideTilt: -8 }}
+                    dotColor="#C9D6E8"
+                    lineColor="#3D5CFF"
+                    trailColor="#2664EB"
+                    spacing={isMobile ? 44 : 64}
+                    radius={isMobile ? 180 : 320}
+                    strength={4}
+                    trail
                 />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45),transparent_70%)]" />
+                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45),transparent_70%)] pointer-events-none" />
             </div>
 
             <div className="relative z-10 w-full max-w-[420px]">
