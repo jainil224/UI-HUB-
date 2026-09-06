@@ -117,22 +117,22 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
         blocks: [
             {
                 heading: 'How the workflow works',
-                body: 'UI HUB is built around a simple three-part loop: find a component, copy its prompt (and code), then let an AI assistant like Antigravity, Claude or Lovable generate or adapt it for you. The steps below walk you through the exact flow.',
+                body: 'UI HUB is built around a simple loop: find a component, copy its prompt (and code), then let an AI assistant like Antigravity, Claude or Lovable generate or adapt it for you. Here is the whole flow in a few steps.',
             },
             {
-                heading: 'The full workflow',
+                heading: 'The workflow',
                 steps: [
                     {
                         title: 'Pick a component in the Library',
-                        body: 'Open the Library sidebar and choose a category — Buttons / hover effects, Text Animations, Backgrounds, Loaders, 3D, Cursor, Scroll and more. Use the search bar to filter by title. Every component opens in the Preview tab first, so you can see exactly how it behaves before you copy anything.',
+                        body: 'Open the Library sidebar and choose a category — or use the search bar. Every component opens in the Preview tab first, so you can see how it behaves before you copy anything.',
                     },
                     {
-                        title: 'Copy the Vibe prompt (or the raw code)',
-                        body: 'Open the Vibe tab and hit copy on the AI prompt — it describes the component in plain English so any AI tool can rebuild or remix it. Prefer to work directly? Open the Code tab and copy the full source (React / TypeScript or HTML / CSS flavours).',
+                        title: 'Copy the vibe prompt (or the raw code)',
+                        body: 'Open the Vibe tab and copy the AI prompt — it describes the component in plain English so any AI tool can rebuild or remix it. Prefer to work directly? Open the Code tab and copy the full source.',
                     },
                     {
-                        title: 'Paste prompt + code into your AI tool',
-                        body: 'Drop the copied prompt into Antigravity, Claude Code, Claude.ai or Lovable. Include the copied source alongside it and the model produces a production-ready version for your exact stack and design language.',
+                        title: 'Paste it into your AI tool',
+                        body: 'Drop the copied prompt into Antigravity, Claude Code, Claude.ai or Lovable. Include the copied source alongside it and the model produces a production-ready version for your stack and design language.',
                         code: {
                             lang: 'text',
                             label: 'Sample AI prompt',
@@ -141,76 +141,28 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
                     },
                     {
                         title: 'Generate it, then copy the result back',
-                        body: 'Let the AI generate the variant — a landing hero, a loader, hover effects, whatever you asked for. Copy the generated component code and paste it into your project. The AI handles the scaffolding; you keep full control of the output.',
+                        body: 'Let the AI generate the variant. Copy the result into your project — the AI handles the scaffolding while you keep full control of the output.',
                     },
-                    {
-                        title: 'Install dependencies and go',
-                        body: 'Many components rely on lucide-react (icons) and framer-motion (animation). Install them once (plus anything the AI lists) and import the component. Use the built-in theme system for dark / light mode.',
-                        code: {
-                            lang: 'bash',
-                            content: 'npm install lucide-react framer-motion\nnpm install <extra-packages-the-ai-listed>',
-                        },
-                    },
-                ],
-            },
-            {
-                heading: 'Copying the prompt, step by step',
-                steps: [
-                    {
-                        title: 'Open any component',
-                        body: 'Open the Library sidebar and click any component — or use the search bar. It opens on the Preview tab so you can watch it behave before you copy a single thing.',
-                    },
-                    {
-                        title: 'Open the Copy Prompt menu',
-                        body: 'In the toolbar above the preview, click Copy Prompt and choose the AI system you are using — Advance, Antigravity, Claude, Cursor or Lovable. The prompt is regenerated in that tool\u2019s preferred style on the spot.',
-                    },
-                    {
-                        title: '...or open the Vibe Prompt tab',
-                        body: 'Switch to the Vibe Prompt tab to read the full prompt before copying. It is rendered as a live terminal block with a copy button in the toolbar — no scrolling, no partial selects.',
-                    },
-                    {
-                        title: 'Hit copy',
-                        body: 'Click Copy and the entire prompt lands on your clipboard in one click. Paste it anywhere without trimming a single line.',
-                    },
-                ],
-            },
-            {
-                heading: 'What a UI HUB prompt looks like',
-                body: 'Every prompt follows the same Universal Blueprint so any AI tool can rebuild the component faithfully. The two sections that matter most are at the bottom — the Reference Implementation and the Task — because those are what stop the AI from guessing.',
-                code: {
-                    lang: 'text',
-                    label: 'Universal Blueprint (condensed)',
-                    content: '===  UI HUB  •  UNIVERSAL BLUEPRINT  ===\n\n# COMPONENT BLUEPRINT: Aurora Cursor\n\n## Overview\nA cursor-following radial gradient orb that reacts to pointer\nspeed with a soft trailing light.\n\n## Category\nCursor Effects\n\n## Animation Engine & Techniques Used\n- Engine: Framer Motion\n- Techniques:\n  - spring physics\n  - pointer tracking\n\n## Interaction Triggers\npointermove\n\n## Dependencies\nframer-motion\n\n## Props\n- color: string (optional)\n\n## Known Gotchas\n- Wrap in a fixed, pointer-events-none container.\n\n## Reference Implementation (build a faithful equivalent)\n<the component source is inlined here>\n\n## Task\nRecreate this component in the current project, matching the\nanimation timing, easing and visual behavior exactly. Output\nthe complete 100% working single-file React component.',
-                },
-                bullets: [
-                    'Overview + Category — what the component is and where it lives in the library',
-                    'Animation Engine & Techniques — the motion model (Framer Motion, Three.js, GSAP) and the exact techniques used',
-                    'Interaction Triggers — pointermove, hover, scroll, click or mount',
-                    'Dependencies + Props — the install list and the component\u2019s public API up front',
-                    'Known Gotchas — the traps the AI should avoid',
-                    'Reference Implementation + Task — the real source plus the instruction to recreate it exactly',
-                    'Tailored wrappers — Antigravity prompts add explicit Do / Don\u2019t scoping around the reference code, and each system gets its own tuned format',
                 ],
             },
             {
                 heading: 'Where to paste it',
-                body: 'The prompt is tool-agnostic — paste it into any assistant. The whole block goes in, and the only thing you add is whatever extra requirement is specific to your project.',
+                body: 'The prompt is tool-agnostic. Paste it into any assistant and add whatever is specific to your project.',
                 bullets: [
                     'Cursor — paste it into Composer or the Agent panel and press Enter',
                     'Claude Code — paste it straight into the terminal as a normal message',
                     'Claude.ai / ChatGPT — paste it into the chat and add any project-specific notes',
                     'Lovable — paste it into the prompt box and let it scaffold the app around it',
                     'GitHub Copilot — drop it into your agent request or pull it in from the docs',
-                    'Or skip external tools entirely — open the component\u2019s Vibe tab and let the built-in engine regenerate it right where you are',
+                    'Or skip external tools entirely — open the component\u2019s Vibe tab and regenerate it right where you are',
                 ],
             },
             {
-                heading: 'Using the theme prop',
-                body: 'Reactive components accept a theme prop. UI HUB ships a ThemeContext for dark / light mode via useTheme(); set a per-component theme prop to override it locally.',
-            },
-            {
-                heading: 'Or use the built-in Vibe tab',
-                body: 'You do not even need an external tool — open the Vibe tab on any component and let the built-in AI assistants (Claude, Lovable, or the advanced engine) rewrite it on the spot. Perfect for quick iterations on sprawling sections like pricing pages and landing heroes.',
+                heading: 'Theme, dependencies & the built-in Vibe tab',
+                body: 'Reactive components accept a theme prop — UI HUB ships a ThemeContext for dark / light mode via useTheme(); pass a per-component theme prop to override it locally. Many components rely on lucide-react (icons) and framer-motion (animation); your AI tool will list the exact dependencies to install.',
+                bullets: [
+                    'No external tool needed — the Vibe tab on any component lets the built-in AI assistants rewrite it on the spot.',
+                ],
             },
         ],
     },
@@ -225,7 +177,7 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
                 body: 'MCP (Model Context Protocol) is an open standard that lets AI assistants — like Claude Code, Cursor, VS Code / Copilot and Antigravity — plug into external tools and data in real time. Instead of guessing, a connected AI can fetch live information and code from a server while you work. UI HUB exposes its entire library through MCP, so your AI coding tool becomes a direct window into every UI HUB component.',
             },
             {
-                heading: 'The power of UI HUB MCP',
+                heading: 'Power of UI MCP',
                 bullets: [
                     'Discover 100+ components from inside your AI tool — search by name, category, framework, styling or tags',
                     'Fetch full source code, dependencies and install notes instantly, copy-paste ready',
@@ -235,7 +187,7 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
                 ],
             },
             {
-                heading: 'How to use it',
+                heading: 'How to use MCP with AI',
                 steps: [
                     {
                         title: 'Create an API key',
@@ -287,7 +239,24 @@ export const GET_STARTED_PAGES: GetStartedDoc[] = [
             },
             {
                 heading: 'Free vs Pro',
-                body: 'Free accounts can search free components with a daily request limit. Pro unlocks premium components, templates, animations, full source code and higher usage. Admins get full access. All limits are enforced server-side by the MCP server.',
+                body: 'Free accounts can search UI HUB components via MCP with a daily request limit. Pro unlocks premium components, templates, animations, full source code and higher usage. All limits are enforced server-side by the MCP server.',
+                table: {
+                    headers: ['Feature', 'Free', 'Pro'],
+                    rows: [
+                        ['Component search', '✓ Free components', '✓ All components'],
+                        ['Templates', 'Limited', '✓ All templates'],
+                        ['Animations', 'Limited', '✓ All animations'],
+                        ['Full source code', '—', '✓ All source code'],
+                        ['Premium components', '—', '✓ Unlocked automatically'],
+                        ['Rate limit', 'Daily request limit', 'Higher usage limit'],
+                        ['AI tools (Cursor, Claude Code, VS Code / Copilot, Antigravity)', '✓', '✓ With extras'],
+                        ['Support', 'Standard', 'Priority'],
+                    ],
+                },
+                bullets: [
+                    'Every limit is enforced server-side — an API key tied to a Free account simply cannot read premium source.',
+                    'Admins and ELITE accounts get full access to everything.',
+                ],
             },
             {
                 heading: 'Manage it all',

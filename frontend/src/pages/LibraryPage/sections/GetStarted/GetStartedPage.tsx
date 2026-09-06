@@ -52,6 +52,41 @@ function CodeBlock({ lang, label, content }: { lang?: string; label?: string; co
     );
 }
 
+function TableBlock({ table }: { table: NonNullable<GetStartedDoc['blocks'][number]['table']> }) {
+    return (
+        <div className="mt-4 overflow-hidden rounded-lg border border-white/10">
+            <table className="w-full border-collapse text-sm">
+                <thead>
+                    <tr className="border-b border-white/15 bg-brand-blue/10">
+                        {table.headers.map((h, i) => (
+                            <th
+                                key={i}
+                                className={`px-3 py-2.5 text-left text-[10px] font-black uppercase tracking-widest text-white ${i === 0 ? '' : 'border-l border-white/10 text-brand-yellow'}`}
+                            >
+                                {h}
+                            </th>
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {table.rows.map((row, r) => (
+                        <tr key={r} className={`border-t border-white/5 ${r % 2 ? 'bg-black/30' : 'bg-black/10'}`}>
+                            {row.map((cell, c) => (
+                                <td
+                                    key={c}
+                                    className={`px-3 py-2.5 align-top text-[13px] leading-relaxed text-white/75 ${c === 0 ? 'font-bold text-white' : c === 1 ? 'border-l border-white/10' : 'border-l border-white/10'}`}
+                                >
+                                    {cell}
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+}
+
 function StepsBlock({ steps }: { steps: GetStartedDoc['blocks'][number]['steps'] }) {
     if (!steps) return null;
     return (
@@ -131,6 +166,8 @@ export default function GetStartedPage({ page, onBackToIntro, onBrowseLibrary, o
                         ) : null}
 
                         {block.steps && block.steps.length > 0 ? <StepsBlock steps={block.steps} /> : null}
+
+                        {block.table ? <TableBlock table={block.table} /> : null}
 
                         {block.code ? (
                             <CodeBlock
