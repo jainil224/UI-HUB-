@@ -6,11 +6,9 @@ import { auth } from '../../lib/firebase';
 import { Mail, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
 import AuthBrandPanel from '../../components/ui/AuthBrandPanel';
-import KineticGrid from '../../components/ui/KineticGrid';
-import { useIsMobile } from '../../hooks/use-mobile';
+import WaveBackground from '../../components/ui/WaveBackground';
 
 const ForgotPassword = () => {
-    const isMobile = useIsMobile();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -33,29 +31,18 @@ const ForgotPassword = () => {
 
     return (
         <main className="relative min-h-screen w-full pt-16 flex items-center justify-center bg-brand-black text-white font-sans overflow-x-hidden px-4 py-10">
-            {/* Animated Background */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-                <KineticGrid
-                    background="#050A14"
-                    dotColor="#C9D6E8"
-                    lineColor="#3D5CFF"
-                    trailColor="#2664EB"
-                    spacing={isMobile ? 44 : 64}
-                    radius={isMobile ? 180 : 320}
-                    strength={4}
-                    trail
-                />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45),transparent_70%)] pointer-events-none" />
-            </div>
+            {/* Animated Wave Background */}
+            <WaveBackground />
+            <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.5),transparent_70%)] pointer-events-none" />
 
             <div className="relative z-10 w-full max-w-4xl flex flex-col gap-6">
                 {/* Big Split Card */}
-                <div className="rounded-xl border-2 border-white bg-brand-surface brutal-shadow-black overflow-hidden flex flex-col md:flex-row">
+                <div className="w-full min-w-0 rounded-xl border-2 border-white/40 bg-brand-surface/60 backdrop-blur-xl brutal-shadow-black overflow-hidden flex flex-col md:flex-row">
                     {/* Left: Brand Gradient Panel */}
-                    <AuthBrandPanel />
+                    <AuthBrandPanel useWave />
 
                     {/* Right: Password Reset Panel */}
-                    <div className="flex-1 p-6 sm:p-10 md:p-12">
+                    <div className="flex-1 min-w-0 p-6 sm:p-10 md:p-12">
                     <AnimatePresence mode="wait">
                         {success ? (
                             <motion.div

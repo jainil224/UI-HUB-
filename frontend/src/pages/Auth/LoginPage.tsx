@@ -6,12 +6,10 @@ import { auth } from '../../lib/firebase';
 import { Mail, Lock, AlertCircle, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { formatAuthError } from '../../utils/authUtils';
 import { useAuth } from '../../context/AuthContext';
-import KineticGrid from '../../components/ui/KineticGrid';
 import AuthBrandPanel from '../../components/ui/AuthBrandPanel';
-import { useIsMobile } from '../../hooks/use-mobile';
+import WaveBackground from '../../components/ui/WaveBackground';
 
 const LoginPage = () => {
-    const isMobile = useIsMobile();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
@@ -82,29 +80,18 @@ const LoginPage = () => {
 
     return (
         <main className="relative min-h-screen w-full pt-16 flex items-center justify-center bg-brand-black text-white font-sans overflow-x-hidden px-4 py-10">
-            {/* Animated Background */}
-            <div className="absolute inset-0 z-0 overflow-hidden">
-                <KineticGrid
-                    background="#050A14"
-                    dotColor="#C9D6E8"
-                    lineColor="#3D5CFF"
-                    trailColor="#2664EB"
-                    spacing={isMobile ? 44 : 64}
-                    radius={isMobile ? 180 : 320}
-                    strength={4}
-                    trail
-                />
-                <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.45),transparent_70%)] pointer-events-none" />
-            </div>
+            {/* Animated Wave Background */}
+            <WaveBackground />
+            <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.5),transparent_70%)] pointer-events-none" />
 
             <div className="relative z-10 w-full max-w-4xl flex flex-col gap-6">
                 {/* Big Split Card */}
-                <div className="rounded-xl border-2 border-white bg-brand-surface brutal-shadow-black overflow-hidden flex flex-col md:flex-row">
-                    {/* Left: Brand Gradient Panel */}
-                    <AuthBrandPanel />
+                <div className="relative w-full min-w-0 rounded-xl border-2 border-white/40 bg-brand-surface/60 backdrop-blur-xl brutal-shadow-black overflow-hidden flex flex-col md:flex-row">
+                    {/* Left: Wave Brand Panel */}
+                    <AuthBrandPanel useWave />
 
                     {/* Right: Login Form Panel */}
-                    <div className="flex-1 p-6 sm:p-10 md:p-12">
+                    <div className="relative z-10 flex-1 min-w-0 p-6 sm:p-10 md:p-12 bg-brand-bg/40 backdrop-blur-sm">
                     {/* Header */}
                     <div className="text-center mb-6">
                         <h2 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight mb-1.5 font-heading">
@@ -200,7 +187,7 @@ const LoginPage = () => {
                         </div>
 
                         {/* Remember Me & Forgot Password */}
-                        <div className="flex items-center justify-between text-xs pt-1">
+                        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 text-xs pt-1">
                             <label className="flex items-center gap-2 cursor-pointer select-none">
                                 <input
                                     type="checkbox"
