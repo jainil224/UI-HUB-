@@ -303,7 +303,7 @@ const ResultRow: React.FC<{
                 isActive ? 'bg-[#1F4BFF]' : 'hover:bg-neutral-100'
             }`}
         >
-            <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.color }} />
+            <span className="w-2 h-2 shrink-0 -skew-x-12 border border-black shadow-[1.5px_1.5px_0px_0px_#000000]" style={{ background: s.color }} />
             <span className="min-w-0 flex-1">
                 <span
                     className={`block text-xs font-black uppercase tracking-wide truncate ${

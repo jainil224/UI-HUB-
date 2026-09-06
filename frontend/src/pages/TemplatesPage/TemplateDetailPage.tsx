@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -15,22 +15,6 @@ import {
     Smartphone
 } from 'lucide-react';
 import { websiteTemplates, TemplateItem } from '../../data/templatesData';
-import TarsHeroArena from '../../components/templates/TarsHeroArena';
-import SplitFuzzyOrbHero from '../../components/templates/SplitFuzzyOrbHero';
-import SegmintFooter from '../../components/templates/SegmintFooter';
-import HaosShowcase from '../../components/templates/HaosShowcase';
-import MentalityHero from '../../components/templates/MentalityHero';
-import LakeraHero from '../../components/templates/LakeraHero';
-import InteriorDesignShowcase from '../../components/templates/InteriorDesignShowcase';
-import LumosHero from '../../components/templates/LumosHero';
-import LoveAppHero from '../../components/templates/LoveAppHero';
-import HeyoAgencyCta from '../../components/templates/HeyoAgencyCta';
-import AuCabaretPoster from '../../components/templates/AuCabaretPoster';
-import DontBeGreedyFooter from '../../components/templates/DontBeGreedyFooter';
-import PaipaiKuaishou from '../../components/templates/PaipaiKuaishou';
-import LogoHere from '../../components/templates/LogoHere';
-import Partify from '../../components/templates/Partify';
-import SuiOverflow from '../../components/templates/SuiOverflow';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
 import Toast from '../../components/ui/Toast';
 
@@ -44,14 +28,113 @@ const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = 
     { system: 'lovable', label: 'LOVABLE', iconPath: '/logos/lovable-color.svg' },
 ];
 
-const PreviewScroller: React.FC<{ bg: string; children: React.ReactNode }> = ({ bg, children }) => (
-    <div
-        data-lenis-prevent="true"
-        className={`w-full h-full overflow-y-auto overflow-x-hidden overscroll-contain [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] ${bg}`}
-    >
-        {children}
-    </div>
-);
+const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.ComponentType }>> = {
+    'tars-protocol': () => import('../../components/templates/TarsHeroArena'),
+    'split-fuzzy-orb': () => import('../../components/templates/SplitFuzzyOrbHero'),
+    'segmint-2026': () => import('../../components/templates/SegmintFooter'),
+    'haos-tech-solutions': () => import('../../components/templates/HaosShowcase'),
+    'mentality': () => import('../../components/templates/MentalityHero'),
+    'lakera-ai-security': () => import('../../components/templates/LakeraHero'),
+    'interior-design': () => import('../../components/templates/InteriorDesignShowcase'),
+    'lumos': () => import('../../components/templates/LumosHero'),
+    'loveapp-hero': () => import('../../components/templates/LoveAppHero'),
+    'heyo-agency-cta': () => import('../../components/templates/HeyoAgencyCta'),
+    'me-019-au-cabaret': () => import('../../components/templates/AuCabaretPoster'),
+    'dont-be-greedy': () => import('../../components/templates/DontBeGreedyFooter'),
+    'paipai-kuaishou': () => import('../../components/templates/PaipaiKuaishou'),
+    'logo-here': () => import('../../components/templates/LogoHere'),
+    'partify': () => import('../../components/templates/Partify'),
+    'sui-overflow': () => import('../../components/templates/SuiOverflow'),
+};
+
+const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
+    'tars-protocol': 'bg-white',
+    'split-fuzzy-orb': 'bg-[#d6c0e3]',
+    'segmint-2026': 'bg-[#E8E9EE]',
+    'haos-tech-solutions': 'bg-[#020202]',
+    'mentality': 'bg-[#F0F0F0]',
+    'lakera-ai-security': 'bg-white',
+    'interior-design': 'bg-white',
+    'lumos': 'bg-[#F1F1F0]',
+    'loveapp-hero': 'bg-[#D8D2F8]',
+    'heyo-agency-cta': 'bg-[#F5F5F2]',
+    'me-019-au-cabaret': 'bg-[#EDEDED]',
+    'dont-be-greedy': 'bg-[#050505]',
+    'paipai-kuaishou': 'bg-[#59D1EA]',
+    'logo-here': 'bg-white',
+    'partify': 'bg-[#FBFBFB]',
+    'sui-overflow': 'bg-[#F2EFE6]',
+};
+
+const PreviewScroller: React.FC<{ bg: string; children: React.ReactNode }> = ({ bg, children }) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    // Block the main page from continuing to scroll once the preview reaches
+    // its own scroll boundary (no scroll chaining into the page underneath).
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+
+        const onWheel = (e: WheelEvent) => {
+            if (el.scrollHeight <= el.clientHeight) return;
+            const atTop = el.scrollTop <= 0;
+            const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
+            if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
+                e.preventDefault();
+            }
+        };
+
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
+    }, []);
+
+    return (
+        <div
+            ref={scrollRef}
+            data-lenis-prevent="true"
+            className={`w-full h-full overflow-y-auto overflow-x-hidden overscroll-contain [-webkit-overflow-scrolling:touch] scroll-smooth [scrollbar-width:thin] [scrollbar-color:#888_transparent] ${bg}`}
+        >
+            {children}
+        </div>
+    );
+};
+
+// Instant visual: shows the static template screenshot while the live component chunk loads.
+const PreviewImageFallback: React.FC<{ id: string }> = ({ id }) => {
+    const t = websiteTemplates.find((x) => x.id === id);
+    if (!t) return null;
+    return (
+        <div className="relative w-full h-full overflow-hidden">
+            {t.previewImage ? (
+                <img
+                    src={t.previewImage}
+                    alt={`${t.title} preview`}
+                    loading="eager"
+                    decoding="async"
+                    fetchPriority="high"
+                    className="w-full h-full object-cover object-top"
+                />
+            ) : (
+                <div className={`w-full h-full bg-gradient-to-br ${t.previewGradient}`} />
+            )}
+            <div className="absolute bottom-2 right-2 px-2 py-1 bg-black/85 border border-white/20 text-white text-[9px] font-mono font-bold uppercase tracking-widest flex items-center gap-1.5 select-none">
+                <span className="w-2 h-2 border-2 border-[#1F4BFF] border-t-transparent rounded-full animate-spin" />
+                <span>Loading preview...</span>
+            </div>
+        </div>
+    );
+};
+
+// Lazy-loads ONLY the selected template's component chunk (fast first paint,
+// no more loading all 16 previews + three.js before showing anything).
+const LazyTemplateRenderer: React.FC<{ id: string; resetKey: number }> = ({ id, resetKey }) => {
+    const Comp = useMemo(() => React.lazy(TEMPLATE_PREVIEWS[id]), [id]);
+    return (
+        <React.Suspense fallback={<PreviewImageFallback id={id} />}>
+            <Comp key={resetKey} />
+        </React.Suspense>
+    );
+};
 
 const TemplateDetailPage = () => {
     const { id } = useParams<{ id: string }>();
@@ -270,71 +353,11 @@ const TemplateDetailPage = () => {
                         {/* ── Live Preview Container ── */}
                         <div 
                             data-lenis-prevent="true"
-                            className="relative h-[78dvh] sm:h-[calc(100dvh-200px)] min-h-[420px] sm:min-h-[480px] w-full bg-white overflow-hidden flex flex-col"
+                            className="relative h-[78dvh] sm:h-[calc(100dvh-200px)] min-h-[420px] sm:min-h-[480px] w-full bg-white overflow-hidden overscroll-none flex flex-col"
                         >
-                            {template.id === 'tars-protocol' ? (
-                                <PreviewScroller bg="bg-white">
-                                    <TarsHeroArena key={`tars-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'split-fuzzy-orb' ? (
-                                <PreviewScroller bg="bg-[#d6c0e3]">
-                                    <SplitFuzzyOrbHero key={`orb-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'segmint-2026' ? (
-                                <PreviewScroller bg="bg-[#E8E9EE]">
-                                    <SegmintFooter key={`segmint-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'haos-tech-solutions' ? (
-                                <PreviewScroller bg="bg-[#020202]">
-                                    <HaosShowcase key={`haos-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'mentality' ? (
-                                <PreviewScroller bg="bg-[#F0F0F0]">
-                                    <MentalityHero key={`mentality-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'lakera-ai-security' ? (
-                                <PreviewScroller bg="bg-white">
-                                    <LakeraHero key={`lakera-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'interior-design' ? (
-                                <PreviewScroller bg="bg-white">
-                                    <InteriorDesignShowcase key={`interior-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'lumos' ? (
-                                <PreviewScroller bg="bg-[#F1F1F0]">
-                                    <LumosHero key={`lumos-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'loveapp-hero' ? (
-                                <PreviewScroller bg="bg-[#D8D2F8]">
-                                    <LoveAppHero key={`loveapp-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'heyo-agency-cta' ? (
-                                <PreviewScroller bg="bg-[#F5F5F2]">
-                                    <HeyoAgencyCta key={`heyo-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'me-019-au-cabaret' ? (
-                                <PreviewScroller bg="bg-[#EDEDED]">
-                                    <AuCabaretPoster key={`aucabaret-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'dont-be-greedy' ? (
-                                <PreviewScroller bg="bg-[#050505]">
-                                    <DontBeGreedyFooter key={`greedy-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'paipai-kuaishou' ? (
-                                <PreviewScroller bg="bg-[#59D1EA]">
-                                    <PaipaiKuaishou key={`paipai-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'logo-here' ? (
-                                <PreviewScroller bg="bg-white">
-                                    <LogoHere key={`logo-here-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'partify' ? (
-                                <PreviewScroller bg="bg-[#FBFBFB]">
-                                    <Partify key={`partify-render-${resetKey}`} />
-                                </PreviewScroller>
-                            ) : template.id === 'sui-overflow' ? (
-                                <PreviewScroller bg="bg-[#F2EFE6]">
-                                    <SuiOverflow key={`sui-overflow-render-${resetKey}`} />
+                            {TEMPLATE_PREVIEWS[template.id] ? (
+                                <PreviewScroller bg={TEMPLATE_PREVIEW_BGS[template.id]}>
+                                    <LazyTemplateRenderer id={template.id} resetKey={resetKey} />
                                 </PreviewScroller>
                             ) : template.liveDemoUrl ? (
                                 <>
