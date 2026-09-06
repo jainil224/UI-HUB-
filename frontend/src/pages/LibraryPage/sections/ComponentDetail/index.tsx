@@ -1072,6 +1072,30 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const sourceFileName = `${item.title.replace(/\s+/g, '')}.tsx`;
     const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);
 
+    const [codeCopied, setCodeCopied] = React.useState(false);
+
+    const copyCodeFromPreview = React.useCallback(() => {
+        if (item.isPremium && !isProUser) {
+            setPromptMenuOpen(false);
+            setToastMessage('UPGRADE TO PRO TO COPY CODE');
+            setShowToast(true);
+            navigate('/pricing');
+            return;
+        }
+        navigator.clipboard.writeText(sourceCode).then(() => {
+            setCodeCopied(true);
+            setPromptMenuOpen(false);
+            setToastImage(item.imageUrl);
+            setToastMessage('CODE COPIED');
+            setShowToast(true);
+            setTimeout(() => setCodeCopied(false), 2000);
+            logUserActivity({
+                type: 'component.copy_code',
+                metadata: { componentId: item.id, title: item.title, category: item.category, codeType: 'source' }
+            });
+        });
+    }, [item.id, item, isProUser, sourceCode, navigate]);
+
     const handleDownloadSource = () => {
         if (!isProUser) {
             setToastMessage('DOWNLOADS ARE A PRO FEATURE — UPGRADE TO PRO');
@@ -1306,9 +1330,37 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                             <ChevronDown size={13} className={`shrink-0 transition-transform ${promptMenuOpen ? 'rotate-180' : ''}`} />
                                         </button>
                                         {promptMenuOpen && (
-                                            <div className="absolute right-0 top-full mt-1.5 z-[60] w-56 rounded-lg border border-neutral-700 bg-[#0A0A0E] shadow-[3px_3px_0px_0px_#000000] overflow-hidden">
+                                            <div className="absolute right-0 top-full mt-1.5 z-[60] w-64 rounded-lg border border-neutral-700 bg-[#0A0A0E] shadow-[3px_3px_0px_0px_#000000] overflow-hidden">
                                                 <div className="px-3 pt-2.5 pb-2 border-b border-neutral-800 text-[9px] uppercase tracking-widest font-black text-neutral-400">
-                                                    Copy Prompt
+                                                    Copy Code
+                                                </div>
+                                                <div className="p-1.5 flex flex-col gap-0.5">
+                                                    <button
+                                                        type="button"
+                                                        onClick={copyCodeFromPreview}
+                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors cursor-pointer ${
+                                                            codeCopied
+                                                                ? 'bg-brand-green/10 hover:bg-brand-green/10'
+                                                                : 'hover:bg-neutral-900 active:bg-neutral-800'
+                                                        }`}
+                                                    >
+                                                        <span className="w-[18px] flex items-center justify-center shrink-0">
+                                                            <Code size={16} className={codeCopied ? 'text-brand-green' : 'text-white'} strokeWidth={2.5} />
+                                                        </span>
+                                                        <span className={`text-[10.5px] font-mono font-black uppercase tracking-wider flex-1 ${
+                                                            codeCopied ? 'text-brand-green' : 'text-neutral-300'
+                                                        }`}>
+                                                            EXACT CODE
+                                                        </span>
+                                                        <span className="w-4 flex items-center justify-center shrink-0">
+                                                            {codeCopied && (
+                                                                <Check size={13} className="text-brand-green" strokeWidth={3} />
+                                                            )}
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <div className="px-3 pt-2 pb-1 border-t border-neutral-800 text-[9px] uppercase tracking-widest font-black text-neutral-400">
+                                                    Copy Vibe Prompt
                                                 </div>
                                                 <div className="p-1.5 flex flex-col gap-0.5">
                                                     {PROMPT_OPTIONS.map(opt => (
