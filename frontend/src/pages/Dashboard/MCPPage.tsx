@@ -42,15 +42,15 @@ type ToolDef = {
     icon: LucideIcon;
     logo: string;
     logoClass?: string;
-    build: (url: string) => string;
+    build: (url: string, apiKey?: string) => string;
 };
 
-const JSON_CONFIG = (url: string) => `{
+const JSON_CONFIG = (url: string, apiKey?: string) => `{
   "mcpServers": {
     "ui-hub": {
       "url": "${url}",
       "headers": {
-        "Authorization": "Bearer YOUR_UI_HUB_API_KEY"
+        "Authorization": "Bearer ${apiKey || 'YOUR_UI_HUB_API_KEY'}"
       }
     }
   }
@@ -75,7 +75,7 @@ const TOOLS: ToolDef[] = [
         color: '#D97757',
         icon: Terminal,
         logo: '/logos/claude-color.svg',
-        build: (url) => `claude mcp add ui-hub --transport http ${url} --header "Authorization: Bearer YOUR_UI_HUB_API_KEY"`,
+        build: (url, apiKey) => `claude mcp add ui-hub --transport http ${url} --header "Authorization: Bearer ${apiKey || 'YOUR_UI_HUB_API_KEY'}"`,
     },
     {
         id: 'antigravity',
@@ -97,26 +97,35 @@ const TOOLS: ToolDef[] = [
     },
 ];
 
-const CopyButton: React.FC<{ text: string; label?: string; red?: boolean }> = ({ text, label = 'Copy', red = false }) => {
+const CopyButton: React.FC<{ text: string; label?: string; red?: boolean; warnsIfPlaceholder?: boolean }> = ({ text, label = 'Copy', red = false, warnsIfPlaceholder = false }) => {
     const [copied, setCopied] = useState(false);
+    const [warned, setWarned] = useState(false);
     const handleCopy = () => {
         navigator.clipboard.writeText(text).then(() => {
             setCopied(true);
+            setWarned(warnsIfPlaceholder && text.includes('YOUR_UI_HUB_API_KEY'));
             setTimeout(() => setCopied(false), 2000);
         });
     };
     return (
-        <button
-            onClick={handleCopy}
-            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-md border-2 text-[11px] font-black uppercase tracking-widest transition-colors cursor-pointer ${
-                red
-                    ? 'bg-brand-red border-brand-red text-white hover:brightness-110'
-                    : 'bg-black border-white text-white hover:bg-neutral-900'
-            }`}
-        >
-            {copied ? <Check size={14} className="text-brand-green" /> : <Copy size={14} />}
-            {copied ? 'Copied' : label}
-        </button>
+        <div className="inline-flex flex-col gap-1.5">
+            <button
+                onClick={handleCopy}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-md border-2 text-[11px] font-black uppercase tracking-widest transition-colors cursor-pointer ${
+                    red
+                        ? 'bg-brand-red border-brand-red text-white hover:brightness-110'
+                        : 'bg-black border-white text-white hover:bg-neutral-900'
+                }`}
+            >
+                {copied ? <Check size={14} className="text-brand-green" /> : <Copy size={14} />}
+                {copied ? 'Copied' : label}
+            </button>
+            {warned && (
+                <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-brand-yellow/60 bg-brand-yellow/10 text-[10px] font-bold uppercase tracking-wider text-brand-yellow">
+                    <AlertTriangle size={11} /> Replace YOUR_UI_HUB_API_KEY with your real key
+                </span>
+            )}
+        </div>
     );
 };
 
@@ -302,6 +311,13 @@ const MCPPage: React.FC = () => {
               .filter(([, enabled]) => !!enabled)
               .map(([name]) => name)
         : [];
+
+    // The plaintext key is only known right after creation (never stored), so the
+    // Connection Guide can only embed the real key while the "Key Created" banner
+    // is showing. Otherwise it falls back to the placeholder to replace.
+    const embeddedKey = showKey && showKey !== '__form__' ? showKey : undefined;
+    const guideConfigText = activeTool.build(status?.endpoint || `${MCP_SERVER_URL}/mcp`, embeddedKey);
+    const guideNeedsReplacement = !embeddedKey;
 
     return (
         <div className="flex flex-col gap-8">
@@ -737,7 +753,7 @@ const MCPPage: React.FC = () => {
                             )}
                         </div>
 
-                        <CopyButton red text={activeTool.build(status?.endpoint || `${MCP_SERVER_URL}/mcp`)} label="Copy Config" />
+                        <CopyButton red text={guideConfigText} label="Copy Config" warnsIfPlaceholder={guideNeedsReplacement} />
                     </div>
 
                     <div className="relative">
@@ -748,11 +764,30 @@ const MCPPage: React.FC = () => {
                             <span className="text-neutral-600">· {activeTool.hint}</span>
                         </div>
                     </div>
-                    <pre className="p-5 text-xs font-mono text-brand-green bg-black overflow-x-auto whitespace-pre">{activeTool.build(status?.endpoint || `${MCP_SERVER_URL}/mcp`)}</pre>
+                    <pre className={`p-5 text-xs font-mono bg-black overflow-x-auto whitespace-pre ${guideNeedsReplacement ? 'text-brand-yellow' : 'text-brand-green'}`}>{guideConfigText}</pre>
                 </div>
 
+                {guideNeedsReplacement ? (
+                    <div className="flex items-start gap-2.5 border-2 border-brand-red/60 bg-brand-red/10 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300 mb-3">
+                        <AlertTriangle size={15} className="text-brand-red shrink-0 mt-0.5" />
+                        <span>
+                            <strong className="text-white">This config contains a placeholder — it will NOT connect as-is.</strong>{' '}
+                            Replace <code className="font-mono text-brand-yellow bg-neutral-900 px-1 rounded">YOUR_UI_HUB_API_KEY</code> with a key from the list above, or{' '}
+                            <strong className="text-white">create a key</strong> and click <em>Copy Full MCP JSON</em> for a ready-to-paste config with your real key already embedded.
+                        </span>
+                    </div>
+                ) : (
+                    <div className="flex items-start gap-2.5 border-2 border-brand-green/70 bg-brand-green/10 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300 mb-3">
+                        <ShieldCheck size={15} className="text-brand-green shrink-0 mt-0.5" />
+                        <span>
+                            <strong className="text-white">Your key is embedded.</strong>{' '}
+                            This config is ready to paste into {activeTool.label} — it already contains your real <code className="font-mono text-brand-green bg-neutral-900 px-1 rounded">uh_live_...</code> key.
+                        </span>
+                    </div>
+                )}
+
                 <p className="text-xs text-neutral-500 font-medium leading-relaxed">
-                    Replace <code className="font-mono text-brand-yellow bg-neutral-900 px-1 rounded">YOUR_UI_HUB_API_KEY</code> with a key from above. You can copy any single tool config — it pastes the exact structure that tool expects.
+                    You can copy any single tool config — it pastes the exact structure that tool expects. The config above stays under the "Key Created" banner only; once you dismiss it, your key is hidden again for security and you'll need to replace the placeholder manually.
                 </p>
             </section>
         </div>

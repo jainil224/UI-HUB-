@@ -14,8 +14,31 @@ function withTimeout(promise, ms, label) {
     ]);
 }
 /**
+ * Build a human-actionable JSON-RPC error message for a rejected key.
+ * The generic message left users guessing why their key failed — now they get
+ * a reason-specific hint (wrong key / revoked / expired) plus what to do next.
+ */
+function authFailureMessage(reason, providedKey) {
+    const headerHint = 'Use the header `Authorization: Bearer uh_live_...` with a valid key. Generate a new key at ui-hub-design.com/mcp.';
+    switch (reason) {
+        case 'INVALID_PREFIX':
+            return `Unauthorized: the key you provided does not start with \`uh_live_\` (looks like: "${providedKey.slice(0, 24)}..."). You may have pasted the wrong value or only part of the key. ${headerHint}`;
+        case 'REVOKED':
+            return 'Unauthorized: this UI HUB API key has been revoked or deleted. Generate a new key at ui-hub-design.com/mcp.';
+        case 'EXPIRED':
+            return 'Unauthorized: this UI HUB API key has expired. Generate a new key at ui-hub-design.com/mcp.';
+        case 'DB_ERROR':
+            return 'Unauthorized: the key could not be verified right now (database error). Please retry in a moment — if the issue persists, generate a new key at ui-hub-design.com/mcp.';
+        case 'NOT_FOUND':
+        default:
+            return `Unauthorized: the key you provided is not recognized. Check that you copied the FULL key (it should start with \`uh_live_\`). ${headerHint}`;
+    }
+}
+/**
  * Middleware to authenticate MCP requests using a UI HUB API key.
  * Header: Authorization: Bearer uh_live_xxx
+ * Fallback: ?key=uh_live_xxx query param or x-api-key header (some MCP clients
+ * cannot send custom Authorization headers).
  *
  * IMPORTANT: This returns JSON-RPC error envelopes (not raw HTTP 401) so that
  * MCP clients (Antigravity, Cursor, Claude Code) can display a meaningful error
@@ -25,7 +48,20 @@ function withTimeout(promise, ms, label) {
  */
 export async function authenticateMcp(req, res, next) {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    let apiKey = '';
+    // 1. Preferred: Authorization: Bearer uh_live_xxx
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        apiKey = authHeader.slice(7).trim();
+    }
+    // 2. Fallback: some MCP tools/clients can't set a custom Authorization header.
+    //    Support ?key=uh_live_xxx (URL) and x-api-key (header) so those work too.
+    if (!apiKey && typeof req.query.key === 'string') {
+        apiKey = req.query.key.trim();
+    }
+    if (!apiKey && typeof req.headers['x-api-key'] === 'string') {
+        apiKey = req.headers['x-api-key'].trim();
+    }
+    if (!apiKey) {
         void analyticsService.track({
             event: 'auth_failure',
             timestamp: Date.now(),
@@ -40,25 +76,28 @@ export async function authenticateMcp(req, res, next) {
             },
         });
     }
-    const apiKey = authHeader.slice(7).trim();
     try {
         // Validate the key with a hard timeout to prevent cold-start DB hangs
-        const record = await withTimeout(apiKeyService.validateApiKey(apiKey), AUTH_TIMEOUT_MS, 'validateApiKey');
-        if (!record) {
+        const result = await withTimeout(apiKeyService.validateApiKey(apiKey), AUTH_TIMEOUT_MS, 'validateApiKey');
+        if (!result.record) {
+            const reason = result.reason || 'NOT_FOUND';
+            console.warn(`[Auth] Key rejected. Prefix: ${apiKey.slice(0, 14)}..., Reason: ${reason}`);
             void analyticsService.track({
                 event: 'auth_failure',
                 timestamp: Date.now(),
                 errorCode: 'INVALID_API_KEY',
+                keyPrefix: apiKey.slice(0, 14),
             });
             return res.status(200).json({
                 jsonrpc: '2.0',
                 id: req.body?.id ?? null,
                 error: {
                     code: -32001,
-                    message: 'Unauthorized: Invalid or revoked UI HUB API key. Use the header `Authorization: Bearer uh_live_...` with a valid key. Generate a new key at ui-hub-design.com/mcp.',
+                    message: authFailureMessage(reason, apiKey),
                 },
             });
         }
+        const record = result.record;
         // Touch last_used_at (async, fire-and-forget — never blocks the request)
         void apiKeyService.touchApiKey(record.id);
         // Get tier with timeout — fall back to FREE if Firebase is slow

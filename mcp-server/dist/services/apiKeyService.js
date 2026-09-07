@@ -78,23 +78,24 @@ export class ApiKeyService {
     }
     /**
      * Validate an API key against the stored hash.
-     * Returns the key record if valid, or null if invalid/revoked/expired.
+     * Returns the key record if valid (reason omitted), or a failure result with
+     * a machine-readable reason for the rejection.
      */
     async validateApiKey(apiKey) {
         if (!apiKey || !apiKey.startsWith(config.apiKeyPrefix)) {
-            return null;
+            return { record: null, reason: 'INVALID_PREFIX' };
         }
         const keyHash = this.hashApiKey(apiKey);
         try {
             const collection = await getCollection(API_KEYS_COLLECTION);
             const doc = await collection.findOne({ key_hash: keyHash });
             if (!doc)
-                return null;
+                return { record: null, reason: 'NOT_FOUND' };
             const data = doc;
             const record = { ...data, id: String(doc._id) };
             // Check revoked
             if (record.status === 'revoked' || record.revoked_at) {
-                return null;
+                return { record: null, reason: 'REVOKED' };
             }
             // Check expired
             if (record.expires_at) {
@@ -106,14 +107,14 @@ export class ApiKeyService {
                 if (Date.now() > expiryMs) {
                     // Mark as expired
                     await collection.updateOne({ _id: doc._id }, { $set: { status: 'expired' } });
-                    return null;
+                    return { record: null, reason: 'EXPIRED' };
                 }
             }
-            return record;
+            return { record, reason: undefined };
         }
         catch (error) {
             console.error('[ApiKeyService] Error validating API key:', error);
-            return null;
+            return { record: null, reason: 'DB_ERROR' };
         }
     }
     /**

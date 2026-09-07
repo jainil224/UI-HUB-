@@ -9,22 +9,25 @@ vi.mock('../src/services/apiKeyService.js', () => {
       validateApiKey: vi.fn(async (key: string) => {
         if (key === 'uh_live_validkey') {
           return {
-            id: 'key-1',
-            user_id: 'user-1',
-            key_hash: 'hash',
-            key_prefix: 'uh_live_abc',
-            name: 'Test',
-            created_at: Date.now(),
-            last_used_at: null,
-            expires_at: null,
-            revoked_at: null,
-            status: 'active',
+            record: {
+              id: 'key-1',
+              user_id: 'user-1',
+              key_hash: 'hash',
+              key_prefix: 'uh_live_abc',
+              name: 'Test',
+              created_at: Date.now(),
+              last_used_at: null,
+              expires_at: null,
+              revoked_at: null,
+              status: 'active',
+            },
+            reason: undefined,
           };
         }
         if (key === 'uh_live_revoked') {
-          return null; // simulate revoked
+          return { record: null, reason: 'REVOKED' }; // simulate revoked
         }
-        return null;
+        return { record: null, reason: 'NOT_FOUND' };
       }),
       touchApiKey: vi.fn().mockResolvedValue(undefined),
       getKeyPrefix: vi.fn((k: string) => k.slice(0, 14)),
@@ -72,13 +75,33 @@ describe('MCP HTTP endpoint', () => {
     expect(res.body.error.message).toContain('Authorization: Bearer uh_live_');
   });
 
-  it('rejects revoked keys (200 + JSON-RPC -32001)', async () => {
+  it('rejects revoked keys with a revoked-specific message', async () => {
     const res = await request(app)
       .post('/mcp')
       .set('Authorization', 'Bearer uh_live_revoked')
       .send({ jsonrpc: '2.0', method: 'tools/list', id: 1 });
     expect(res.status).toBe(200);
     expect(res.body.error.code).toBe(-32001);
+    expect(res.body.error.message).toContain('revoked');
+  });
+
+  it('accepts a key passed as a ?key= query param (fallback for URL-only clients)', async () => {
+    const res = await request(app)
+      .post('/mcp?key=uh_live_validkey')
+      .send({ jsonrpc: '2.0', method: 'tools/list', id: 2 });
+    expect(res.status).toBe(200);
+    const names = res.body.result.tools.map((t: any) => t.name);
+    expect(names).toContain('search_components');
+  });
+
+  it('accepts a key passed via the x-api-key header (fallback for header-less clients)', async () => {
+    const res = await request(app)
+      .post('/mcp')
+      .set('X-Api-Key', 'uh_live_validkey')
+      .send({ jsonrpc: '2.0', method: 'tools/list', id: 2 });
+    expect(res.status).toBe(200);
+    const names = res.body.result.tools.map((t: any) => t.name);
+    expect(names).toContain('search_components');
   });
 
   it('accepts a valid API key and initializes', async () => {

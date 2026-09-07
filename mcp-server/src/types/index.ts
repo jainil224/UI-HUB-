@@ -25,6 +25,19 @@ export interface ApiKeyRecord {
   status: 'active' | 'revoked' | 'expired';
 }
 
+/** Why an API key failed validation (or none if it is valid). */
+export type ApiKeyValidationReason =
+  | 'INVALID_PREFIX'
+  | 'NOT_FOUND'
+  | 'REVOKED'
+  | 'EXPIRED'
+  | 'DB_ERROR';
+
+export interface ApiKeyValidationResult {
+  record: ApiKeyRecord | null;
+  reason?: ApiKeyValidationReason;
+}
+
 export interface ComponentSummary {
   id: string;
   name: string;
