@@ -129,6 +129,14 @@ export interface McpOverview {
 const OVERVIEW_TTL_MS = 10000;
 const METRICS_TTL_MS = 20000;
 
+// Cold-start tolerant options for every dashboard call. Render's on-demand
+// service can sleep; these wait long enough for it to boot and retry.
+const COLD_START_OPTS: FetchWithRetryOptions = {
+    timeoutMs: COLD_START_TIMEOUT_MS,
+    retries: COLD_START_RETRIES,
+    retryDelaysMs: COLD_START_RETRY_DELAYS_MS,
+};
+
 let overviewCache: { value: McpOverview; expiresAt: number } | null = null;
 let metricsCache: { value: McpAdminMetrics; expiresAt: number } | null = null;
 
@@ -137,9 +145,7 @@ export async function getMcpOverview(refresh = false, onAttempt?: (attempt: numb
         return overviewCache.value;
     }
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/overview`, { headers: await authHeaders() }, {
-        timeoutMs: COLD_START_TIMEOUT_MS,
-        retries: COLD_START_RETRIES,
-        retryDelaysMs: COLD_START_RETRY_DELAYS_MS,
+        ...COLD_START_OPTS,
         onAttempt,
     });
     if (!res.ok) throw new Error(`Failed to fetch MCP overview: ${res.status}`);
@@ -149,23 +155,26 @@ export async function getMcpOverview(refresh = false, onAttempt?: (attempt: numb
 }
 
 export async function getMcpStatus(): Promise<McpStatus> {
-    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/status`, { headers: await authHeaders() });
+    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/status`, { headers: await authHeaders() }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to fetch MCP status: ${res.status}`);
     return res.json();
 }
 
 export async function listApiKeys(): Promise<McpApiKey[]> {
-    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys`, { headers: await authHeaders() });
+    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys`, { headers: await authHeaders() }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to list keys: ${res.status}`);
     const data = await res.json();
     return data.keys;
 }
 
-export async function createApiKey(name: string): Promise<{ key: string; record: McpApiKey }> {
+export async function createApiKey(name: string, onAttempt?: (attempt: number, error?: Error) => void): Promise<{ key: string; record: McpApiKey }> {
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys`, {
         method: 'POST',
         headers: await authHeaders(),
         body: JSON.stringify({ name }),
+    }, {
+        ...COLD_START_OPTS,
+        onAttempt,
     });
     if (!res.ok) throw new Error(`Failed to create key: ${res.status}`);
     return res.json();
@@ -175,7 +184,7 @@ export async function revokeApiKey(id: string): Promise<void> {
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys/${id}/revoke`, {
         method: 'POST',
         headers: await authHeaders(),
-    });
+    }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to revoke key: ${res.status}`);
 }
 
@@ -183,12 +192,12 @@ export async function deleteApiKey(id: string): Promise<void> {
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys/${id}`, {
         method: 'DELETE',
         headers: await authHeaders(),
-    });
+    }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to delete key: ${res.status}`);
 }
 
 export async function getMcpUsage(): Promise<McpUsage> {
-    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/usage`, { headers: await authHeaders() });
+    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/usage`, { headers: await authHeaders() }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to fetch usage: ${res.status}`);
     return res.json();
 }
@@ -220,9 +229,7 @@ export async function getAdminMetrics(refresh = false, onAttempt?: (attempt: num
             return metricsCache.value;
         }
         const res = await mcpFetch(`${BASE}/api/dashboard/mcp/admin/metrics`, { headers: await authHeaders() }, {
-            timeoutMs: COLD_START_TIMEOUT_MS,
-            retries: COLD_START_RETRIES,
-            retryDelaysMs: COLD_START_RETRY_DELAYS_MS,
+            ...COLD_START_OPTS,
             onAttempt,
         });
         if (!res.ok) return null;

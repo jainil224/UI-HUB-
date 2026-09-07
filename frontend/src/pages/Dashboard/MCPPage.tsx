@@ -149,6 +149,7 @@ const MCPPage: React.FC = () => {
     const [showKey, setShowKey] = useState<string | null>(null);
     const [keyName, setKeyName] = useState('');
     const [creating, setCreating] = useState(false);
+    const [revokingId, setRevokingId] = useState<string | null>(null);
 
     const load = useCallback(async (refresh = false) => {
         if (!hasLoadedRef.current) setLoading(true);
@@ -194,11 +195,16 @@ const MCPPage: React.FC = () => {
         if (!user) return;
         setCreating(true);
         setError(null);
+        setRetryAttempt(0);
         try {
-            const { key } = await createApiKey(keyName || 'MCP Key');
+            const onAttempt = (attempt: number) => setRetryAttempt(attempt);
+            const { key } = await createApiKey(keyName || 'MCP Key', onAttempt);
             setShowKey(key);
             setKeyName('');
-            await load(true);
+            setRetryAttempt(0);
+            // Refresh the key list in the background — never let a refresh
+            // failure hide the just-created key banner.
+            void load(true).catch(() => undefined);
         } catch (e: any) {
             setError(e?.message || 'Failed to create key');
         } finally {
@@ -207,8 +213,17 @@ const MCPPage: React.FC = () => {
     };
 
     const handleRevoke = async (id: string) => {
-        await revokeApiKey(id);
-        await load(true);
+        if (revokingId) return;
+        setRevokingId(id);
+        setError(null);
+        try {
+            await revokeApiKey(id);
+            await load(true);
+        } catch (e: any) {
+            setError(e?.message || 'Failed to revoke key');
+        } finally {
+            setRevokingId(null);
+        }
     };
 
     /* ── Loading ── */
@@ -520,9 +535,17 @@ const MCPPage: React.FC = () => {
                                     <Shield size={16} className="text-brand-green" />
                                     <h3 className="text-xs font-black uppercase tracking-widest text-brand-green">Key Created — Copy it now</h3>
                                 </div>
-                                <button onClick={() => setShowKey(null)} className="text-neutral-400 hover:text-white cursor-pointer p-1 rounded hover:bg-neutral-800 transition-colors">
-                                    <X size={18} />
-                                </button>
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => setShowKey('__form__')}
+                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border-2 border-brand-blue text-brand-blue hover:bg-brand-blue/10 text-[10px] font-black uppercase tracking-widest cursor-pointer"
+                                    >
+                                        <Plus size={12} /> Create Another
+                                    </button>
+                                    <button onClick={() => setShowKey(null)} className="text-neutral-400 hover:text-white cursor-pointer p-1 rounded hover:bg-neutral-800 transition-colors">
+                                        <X size={18} />
+                                    </button>
+                                </div>
                             </div>
 
                             <p className="text-xs text-neutral-400 mb-4">
@@ -602,9 +625,18 @@ const MCPPage: React.FC = () => {
                                         {isActive && (
                                             <button
                                                 onClick={() => handleRevoke(key.id)}
-                                                className="mt-2 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md border-2 border-brand-red/60 text-brand-red hover:bg-brand-red/10 text-[10px] font-black uppercase tracking-widest cursor-pointer"
+                                                disabled={revokingId === key.id}
+                                                className="mt-2 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md border-2 border-brand-red/60 text-brand-red hover:bg-brand-red/10 disabled:opacity-50 disabled:cursor-not-allowed text-[10px] font-black uppercase tracking-widest cursor-pointer"
                                             >
-                                                <Trash2 size={13} /> Revoke
+                                                {revokingId === key.id ? (
+                                                    <>
+                                                        <RefreshCw size={13} className="animate-spin" /> Revoking…
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Trash2 size={13} /> Revoke
+                                                    </>
+                                                )}
                                             </button>
                                         )}
                                     </div>
