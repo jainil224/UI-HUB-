@@ -78,6 +78,7 @@ const Chandelier = React.lazy(() => import('../components/ui/Chandelier'));
 const MorphingRings = React.lazy(() => import('../components/ui/MorphingRings'));
 const BlockDrift = React.lazy(() => import('../components/ui/BlockDrift'));
 const Lightfall = React.lazy(() => import('../components/ui/Lightfall'));
+const AsciiWater = React.lazy(() => import('../components/ui/AsciiWater'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
 const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
@@ -2945,6 +2946,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'morphing-rings': MorphingRings,
     'block-drift': BlockDrift,
     'lightfall': Lightfall,
+    'ascii-water': AsciiWater,
     'isometric-portal': IsometricPortal,
     'morphing-glow': MorphingGlow,
     'gear-system': GearSystem,
@@ -7304,6 +7306,43 @@ export function LightfallDemo() {
   );
 }`,
         vibePrompt: "Create a 'Lightfall' WebGL fullscreen-shader background in React + TypeScript (single GL context, one rAF loop, all live state via refs). A raymarched scene computes per-pixel polar coordinates from a 39-iteration sphere-intersection march, producing a curved coordinate field that wraps angularly around the vertical axis. Streaks are scattered across angular rings via a seeded hash, each streak a smooth elongated SDF with configurable width and length, palette-coloured by an up-to-8-entry colour array and twinkle-modulated. The colour palette is indexed per-streak by a fractal hash, with smooth banding across the angular ring count (density control). Background is a radial vignette tinted by a configurable glow colour, composited under the streaks. Tone mapping uses tanh with a configurable glow multiplier and subtractive offset before sqrt for filmic contrast. Controls for up to 8 colours, background colour, speed, streak count (max 16), streak width/length, glow, density (angular ring count), twinkle, zoom, background glow, and opacity. Single fullscreen-triangle draw call, premultiplied-alpha canvas over a CSS background."
+    },
+    {
+        id: "ascii-water",
+        title: "Ascii Water",
+        category: "interactive-background",
+        addedAt: "2026-09-08",
+        newBadgeDays: 21,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <AsciiWater />
+            </div>
+        ),
+        code: `import AsciiWater from "@/components/ui/AsciiWater";
+
+export function AsciiWaterDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <AsciiWater
+        ink="#00E8FF"
+        cell={9}
+        fill={10}
+        ripple={20}
+        push={20}
+        speed={8}
+        slosh={16}
+        clickIntensity={58}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create an 'Ascii Water' interactive background in React + TypeScript (DOM-based, monospace character rendering, single rAF loop, all live state via refs). A FLIP fluid simulation (after Matthias Mueller's ten-minute-physics solver) renders a pool of water as monospace characters on a hidden pre element. The fluid grid uses staggered pressure solve for incompressibility, particles carry velocity with FLIP ratio blending, and cell density maps to glyph weight ramps that interleave five letter ramps spelling 'FLUID' along diagonals. The cursor acts as a velocity brush: hovering blends nearby particle velocities toward the cursor direction (not a solid body) so the character field stays unbroken; clicking produces a radial splash with upward bias. Gravity pulls particles down, wall collisions pin boundaries, particle-particle push-apart prevents clumping. Density-to-brightness uses a fourfold triangle wave for contour bands. Props control ink color, cell size, water fill level, ripple brush radius, push strength, simulation speed, sloshiness (FLIP ratio), and click intensity. Single pre element with letter-spacing-matched monospace font, pointer events disabled on the text layer."
     },
     {
         id: "isometric-portal",
