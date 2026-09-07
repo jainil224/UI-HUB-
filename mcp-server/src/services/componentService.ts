@@ -1,5 +1,5 @@
 import { COMPONENT_METADATA, CATEGORY_LIST, ComponentMeta } from '../data/components.js';
-import type { AnimationDetail, AnimationSummary, ComponentDetail, ComponentSummary, TemplateDetail, TemplateSummary } from '../types/index.js';
+import type { AnimationDetail, AnimationSummary, AiPrompts, ComponentDetail, ComponentMetadata, ComponentSummary, TemplateDetail, TemplateSummary, TemplateCatalogItem } from '../types/index.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -17,18 +17,63 @@ import path from 'node:path';
 type SourceCodeMap = Record<string, string>;
 let sourceCodeMap: SourceCodeMap | null = null;
 
+type PromptSets = { claude?: Record<string, string>; antigravity?: Record<string, string>; lovable?: Record<string, string> };
+let promptSets: PromptSets | null = null;
+
+type MetadataMap = Record<string, { props: any[]; vibeMeta: any }>;
+let metadataMap: MetadataMap | null = null;
+
+type VibePromptMap = Record<string, string>;
+let vibePromptMap: VibePromptMap | null = null;
+
+interface TemplateStore {
+  catalog: TemplateCatalogItem[];
+  sources: Record<string, string>;
+}
+let templateStore: TemplateStore | null = null;
+
+const DATA_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data');
+
+function loadJson<T>(fileName: string): T {
+  try {
+    return JSON.parse(readFileSync(path.join(DATA_DIR, fileName), 'utf8')) as T;
+  } catch {
+    return {} as T;
+  }
+}
+
 function loadSourceCode(): SourceCodeMap {
   if (sourceCodeMap) return sourceCodeMap;
-  let map: SourceCodeMap = {};
-  try {
-    const __dirname = path.dirname(fileURLToPath(import.meta.url));
-    const jsonPath = path.join(__dirname, '..', 'data', 'sourceCode.json');
-    map = JSON.parse(readFileSync(jsonPath, 'utf8'));
-  } catch {
-    map = {};
-  }
-  sourceCodeMap = map;
-  return map;
+  sourceCodeMap = loadJson<SourceCodeMap>('sourceCode.json');
+  return sourceCodeMap;
+}
+
+function loadPromptSets(): PromptSets {
+  if (promptSets) return promptSets;
+  const raw = loadJson<{ claude: Record<string, string>; antigravity: Record<string, string>; lovable: Record<string, string> }>('aiPrompts.json');
+  promptSets = { claude: raw.claude || {}, antigravity: raw.antigravity || {}, lovable: raw.lovable || {} };
+  return promptSets;
+}
+
+function loadMetadataMap(): MetadataMap {
+  if (metadataMap) return metadataMap;
+  metadataMap = loadJson<MetadataMap>('componentMetadata.json');
+  return metadataMap;
+}
+
+function loadVibePrompts(): VibePromptMap {
+  if (vibePromptMap) return vibePromptMap;
+  vibePromptMap = loadJson<VibePromptMap>('componentVibePrompts.json');
+  return vibePromptMap;
+}
+
+function loadTemplates(): TemplateStore {
+  if (templateStore) return templateStore;
+  templateStore = {
+    catalog: loadJson<TemplateCatalogItem[]>('templates.json'),
+    sources: loadJson<Record<string, string>>('templateSourceCode.json'),
+  };
+  return templateStore;
 }
 
 export class ComponentService {
@@ -137,6 +182,82 @@ export class ComponentService {
 
   getComponentMeta(componentId: string): ComponentMeta | undefined {
     return COMPONENT_METADATA.find((c) => c.id === componentId);
+  }
+
+  /** Full AI prompts (claude/antigravity/lovable) for a component, if any exist. */
+  getAiPrompts(componentId: string): AiPrompts | null {
+    const prompts = loadPromptSets();
+    const out: AiPrompts = {};
+    for (const key of ['claude', 'antigravity', 'lovable'] as const) {
+      const source = prompts[key] || {};
+      if (source[componentId]) out[key] = source[componentId];
+    }
+    return Object.keys(out).length > 0 ? out : null;
+  }
+
+  /** Rich metadata (props + vibe) for a component, falling back to the vibe prompt. */
+  getComponentMetadata(componentId: string): ComponentMetadata | null {
+    const meta = COMPONENT_METADATA.find((c) => c.id === componentId);
+    if (!meta) return null;
+
+    const full = loadMetadataMap()[componentId];
+    const vibePrompt = loadVibePrompts()[componentId];
+
+    return {
+      id: meta.id,
+      name: meta.title,
+      props: full?.props || [],
+      vibe: full?.vibeMeta || {
+        behavior: vibePrompt || '',
+        states: { from: '', to: '' },
+        cssProperties: [],
+        description: vibePrompt || meta.description,
+      },
+      hasDetailedMetadata: !!full,
+      vibePrompt: vibePrompt || undefined,
+    };
+  }
+
+  /** Real website-template catalog (16 templates from templatesData.ts). */
+  getTemplateCatalog(): TemplateCatalogItem[] {
+    return loadTemplates().catalog;
+  }
+
+  /** Real website-template source code for a template id (or null). */
+  getTemplateSource(templateId: string): { template: TemplateCatalogItem; source: string | null } | null {
+    const { catalog, sources } = loadTemplates();
+    const template = catalog.find((t) => t.id === templateId);
+    if (!template) return null;
+    return { template, source: sources[templateId] || null };
+  }
+
+  /** Search components by behavior/vibe keywords (props+behavior metadata and vibe prompts). */
+  searchByBehavior(query: string): ComponentSummary[] {
+    const q = query.toLowerCase().trim();
+    if (!q) return [];
+    const metadata = loadMetadataMap();
+    const vibePrompts = loadVibePrompts();
+
+    const results: Array<ComponentSummary & { matchedOn?: string }> = [];
+    for (const comp of COMPONENT_METADATA) {
+      const full = metadata[comp.id];
+      const behavior = full?.vibeMeta?.behavior?.toLowerCase() || '';
+      const desc = full?.vibeMeta?.description?.toLowerCase() || '';
+      const requirements = (full?.vibeMeta?.requirements || []).join(' ').toLowerCase();
+      const vibePrompt = (vibePrompts[comp.id] || '').toLowerCase();
+
+      const matchedOn =
+        behavior.includes(q) ? 'behavior'
+        : desc.includes(q) ? 'description'
+        : requirements.includes(q) ? 'requirements'
+        : vibePrompt.includes(q) ? 'vibe'
+        : null;
+
+      if (matchedOn) {
+        results.push({ ...this.metaToSummary(comp), matchedOn });
+      }
+    }
+    return results.slice(0, 20);
   }
 
   listCategories(): Array<{ slug: string; label: string; count: number }> {

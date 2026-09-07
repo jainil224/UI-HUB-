@@ -8,8 +8,8 @@ export const search_components = createTool(
   'Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Returns structured component metadata.',
   z.object({
     query: z.string().optional().describe('Free-text search keyword, e.g. "pricing card"'),
-    category: z
-      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'image-interaction', 'interactive-background', 'scroll', 'text'])
+category: z
+      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'scroll', 'text'])
       .optional()
       .describe('Component category'),
     framework: z.enum(['react']).optional().describe('Component framework'),

@@ -5,14 +5,25 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, '..');
 
-const srcJson = path.join(root, 'src', 'data', 'sourceCode.json');
 const distDataDir = path.join(root, 'dist', 'data');
 
-if (!existsSync(srcJson)) {
-  console.error('[copy-data] Missing src/data/sourceCode.json');
-  process.exit(1);
-}
+const dataFiles = [
+  'sourceCode.json',
+  'aiPrompts.json',
+  'componentMetadata.json',
+  'componentVibePrompts.json',
+  'templates.json',
+  'templateSourceCode.json',
+];
 
 mkdirSync(distDataDir, { recursive: true });
-copyFileSync(srcJson, path.join(distDataDir, 'sourceCode.json'));
-console.log('[copy-data] Copied sourceCode.json to dist/data/');
+
+for (const file of dataFiles) {
+  const src = path.join(root, 'src', 'data', file);
+  if (!existsSync(src)) {
+    console.error(`[copy-data] Missing src/data/${file}`);
+    process.exit(1);
+  }
+  copyFileSync(src, path.join(distDataDir, file));
+  console.log(`[copy-data] Copied ${file} to dist/data/`);
+}

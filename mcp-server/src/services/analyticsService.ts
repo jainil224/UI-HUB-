@@ -9,7 +9,11 @@ export type McpEventType =
   | 'animation_fetch'
   | 'auth_failure'
   | 'rate_limit'
-  | 'premium_denied';
+  | 'premium_denied'
+  | 'metadata_fetch'
+  | 'ai_prompt_fetch'
+  | 'template_source_fetch'
+  | 'behavior_search';
 
 export interface McpEvent {
   event: McpEventType;

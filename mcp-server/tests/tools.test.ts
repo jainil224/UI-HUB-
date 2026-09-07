@@ -146,4 +146,95 @@ describe('MCP Tools', () => {
     const data = parse(result);
     expect(data.dependencies.length).toBeGreaterThan(0);
   });
+
+  it('get_component_metadata returns props and vibe for known component', async () => {
+    const result = await tool('get_component_metadata').handler({ componentId: 'target-cursor' }, { user: freeUser });
+    expect(result.isError).toBeFalsy();
+    const data = parse(result);
+    expect(data.id).toBe('target-cursor');
+    expect(Array.isArray(data.props)).toBe(true);
+    expect(data.hasDetailedMetadata).toBe(true);
+  });
+
+  it('get_component_metadata falls back to vibe prompt when no detailed metadata exists', async () => {
+    const result = await tool('get_component_metadata').handler({ componentId: 'mesh-text-hover' }, { user: freeUser });
+    expect(result.isError).toBeFalsy();
+    const data = parse(result);
+    expect(data.id).toBe('mesh-text-hover');
+    expect(data.hasDetailedMetadata).toBe(false);
+    expect(data.vibePrompt).toBeTruthy();
+  });
+
+  it('get_component_metadata returns not found', async () => {
+    const result = await tool('get_component_metadata').handler({ componentId: 'nope' }, { user: freeUser });
+    const data = parse(result);
+    expect(data.error).toBe('COMPONENT_NOT_FOUND');
+  });
+
+  it('search_by_behavior finds components by vibe keywords', async () => {
+    const result = await tool('search_by_behavior').handler({ query: 'magnetic' }, { user: freeUser });
+    expect(result.isError).toBeFalsy();
+    const data = parse(result);
+    expect(data.count).toBeGreaterThan(0);
+    expect(data.components.some((c: any) => c.id === 'magnetic-cursor')).toBe(true);
+  });
+
+  it('search_by_behavior supports category filter', async () => {
+    const result = await tool('search_by_behavior').handler({ query: 'particle', category: 'interactive-background' }, { user: freeUser });
+    expect(result.isError).toBeFalsy();
+    const data = parse(result);
+    expect(data.components.every((c: any) => c.category === 'interactive-background')).toBe(true);
+  });
+
+  it('get_ai_prompts returns premium error for free users', async () => {
+    const result = await tool('get_ai_prompts').handler({ componentId: 'target-cursor' }, { user: freeUser });
+    expect(result.isError).toBe(true);
+    const data = parse(result);
+    expect(data.error).toBe('PREMIUM_ACCESS_REQUIRED');
+  });
+
+  it('get_ai_prompts returns prompts for pro users', async () => {
+    const result = await tool('get_ai_prompts').handler({ componentId: 'target-cursor' }, { user: proUser });
+    expect(result.isError).toBeFalsy();
+    const data = parse(result);
+    expect(data.componentId).toBe('target-cursor');
+    expect(data.prompts.claude).toBeTruthy();
+  });
+
+  it('get_ai_prompts supports a single system filter', async () => {
+    const result = await tool('get_ai_prompts').handler({ componentId: 'target-cursor', system: 'claude' }, { user: proUser });
+    const data = parse(result);
+    expect(Object.keys(data.prompts)).toEqual(['claude']);
+  });
+
+  it('get_ai_prompts returns prompts-not-found for components without prompts', async () => {
+    const result = await tool('get_ai_prompts').handler({ componentId: 'alpine-footer' }, { user: proUser });
+    expect(result.isError).toBe(true);
+    const data = parse(result);
+    expect(data.error).toBe('PROMPTS_NOT_FOUND');
+  });
+
+  it('get_template_source returns premium error for free users', async () => {
+    const result = await tool('get_template_source').handler({ templateId: 'tars-protocol' }, { user: freeUser });
+    expect(result.isError).toBe(true);
+    const data = parse(result);
+    expect(data.error).toBe('PREMIUM_ACCESS_REQUIRED');
+  });
+
+  it('get_template_source returns full source for pro users', async () => {
+    const result = await tool('get_template_source').handler({ templateId: 'tars-protocol' }, { user: proUser });
+    expect(result.isError).toBeFalsy();
+    const data = parse(result);
+    expect(data.id).toBe('tars-protocol');
+    expect(data.hasSource).toBe(true);
+    expect(data.source).toBeTruthy();
+    expect(data.features.length).toBeGreaterThan(0);
+  });
+
+  it('get_template_source returns not found for unknown template', async () => {
+    const result = await tool('get_template_source').handler({ templateId: 'nope-template' }, { user: proUser });
+    expect(result.isError).toBe(true);
+    const data = parse(result);
+    expect(data.error).toBe('TEMPLATE_NOT_FOUND');
+  });
 });

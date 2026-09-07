@@ -89,6 +89,59 @@ export interface AnimationDetail extends AnimationSummary {
   usageExample?: string;
 }
 
+/** AI prompt sets available for a component, keyed by tool/model. */
+export interface AiPrompts {
+  claude?: string;
+  antigravity?: string;
+  lovable?: string;
+}
+
+export interface ComponentPropDefinition {
+  name: string;
+  type: string;
+  default: string;
+  description: string;
+}
+
+export interface ComponentVibeMeta {
+  behavior: string;
+  states: { from: string; to: string };
+  cssProperties: string[];
+  description?: string;
+  libraries?: string[];
+  requirements?: string[];
+}
+
+/** Full component metadata: props + vibe, mirrored from frontend componentConfig. */
+export interface ComponentMetadata {
+  id: string;
+  name: string;
+  props: ComponentPropDefinition[];
+  vibe: ComponentVibeMeta;
+  hasDetailedMetadata: boolean;
+  vibePrompt?: string;
+}
+
+export interface TemplateCatalogItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  badge?: string;
+  framework: string;
+  styling: string;
+  animation: string;
+  isPro: boolean;
+  previewImage?: string;
+  liveDemoUrl?: string;
+  githubUrl?: string;
+  previewGradient: string;
+  accentColor: string;
+  stats: { pages: number; rating: number; downloads: string };
+  features: string[];
+  promptPreview: string;
+}
+
 export interface McpRequestContext {
   user?: McpUser;
   ip?: string;

@@ -7,6 +7,10 @@ import { search_animations } from './searchAnimations.js';
 import { get_animation_code } from './getAnimationCode.js';
 import { list_categories } from './listCategories.js';
 import { get_dependencies } from './getDependencies.js';
+import { get_component_metadata } from './getComponentMetadata.js';
+import { search_by_behavior } from './searchByBehavior.js';
+import { get_ai_prompts } from './getAiPrompts.js';
+import { get_template_source } from './getTemplateSource.js';
 export const TOOLS = [
     search_components,
     get_component,
@@ -17,6 +21,10 @@ export const TOOLS = [
     get_animation_code,
     list_categories,
     get_dependencies,
+    get_component_metadata,
+    search_by_behavior,
+    get_ai_prompts,
+    get_template_source,
 ];
 export const TOOL_NAMES = TOOLS.map((t) => t.name);
 //# sourceMappingURL=index.js.map
