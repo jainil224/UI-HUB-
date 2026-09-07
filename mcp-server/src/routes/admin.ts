@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express';
+import { ObjectId } from 'mongodb';
 import { configService } from '../config/configService.js';
 import { requireAdmin } from '../middleware/requireAdmin.js';
 import { analyticsService, aggregateEvents, McpEvent, McpStats, ToolUsage } from '../services/analyticsService.js';
@@ -651,7 +652,14 @@ adminRouter.patch('/api-keys/:id', requireAdmin, async (req: Request, res: Respo
   const id = req.params.id;
   const action = String(req.body?.action || '');
   const col = await mongoCollection('mcp_api_keys');
-  const doc = await col.findOne({ _id: id }).catch(() => null);
+  const keyId: any = (() => {
+    try {
+      return new ObjectId(id);
+    } catch {
+      return id;
+    }
+  })();
+  const doc = await col.findOne({ _id: keyId }).catch(() => null);
   if (!doc) {
     return res.status(404).json({ error: 'NOT_FOUND', message: 'API key not found' });
   }
@@ -675,7 +683,7 @@ adminRouter.patch('/api-keys/:id', requireAdmin, async (req: Request, res: Respo
       return res.status(400).json({ error: 'BAD_REQUEST', message: 'action must be revoke|disable|enable|restore' });
   }
 
-  await col.updateOne({ _id: id }, { $set: patch });
+  await col.updateOne({ _id: keyId }, { $set: patch });
   await recordAudit({
     adminEmail: (req as any).email,
     action: `api_key.${action}`,

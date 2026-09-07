@@ -1,9 +1,22 @@
 import crypto from 'crypto';
+import { ObjectId } from 'mongodb';
 import { getCollection } from './mongo.js';
 import config from '../config/env.js';
 import type { ApiKeyRecord } from '../types/index.js';
 
 const API_KEYS_COLLECTION = 'mcp_api_keys';
+
+// The frontend sends ids as the string form of the Mongo ObjectId. Querying
+// with that raw string against an ObjectId _id never matches, which made
+// revoke/delete return 404. Convert to a real ObjectId when it is one.
+function toObjectId(id: string | undefined): any {
+  if (!id) return id;
+  try {
+    return new ObjectId(id);
+  } catch {
+    return id;
+  }
+}
 
 const LIST_CACHE_TTL_MS = 10_000;
 const listCache = new Map<string, { keys: Array<Omit<ApiKeyRecord, 'key_hash'>>; expiresAt: number }>();
@@ -129,7 +142,7 @@ export class ApiKeyService {
   async touchApiKey(keyId: string): Promise<void> {
     try {
       const collection = await getCollection(API_KEYS_COLLECTION);
-      await collection.updateOne({ _id: keyId }, { $set: { last_used_at: Date.now() } });
+      await collection.updateOne({ _id: toObjectId(keyId) }, { $set: { last_used_at: Date.now() } });
     } catch (error: any) {
       console.error('[ApiKeyService] Error touching API key:', error);
     }
@@ -167,7 +180,7 @@ export class ApiKeyService {
     try {
       const collection = await getCollection(API_KEYS_COLLECTION);
       const result = await collection.updateOne(
-        { _id: keyId, user_id: userId },
+        { _id: toObjectId(keyId), user_id: userId },
         {
           $set: {
             status: 'revoked',
@@ -190,7 +203,7 @@ export class ApiKeyService {
   async deleteApiKey(keyId: string, userId: string): Promise<boolean> {
     try {
       const collection = await getCollection(API_KEYS_COLLECTION);
-      const result = await collection.deleteOne({ _id: keyId, user_id: userId });
+      const result = await collection.deleteOne({ _id: toObjectId(keyId), user_id: userId });
       if (result.deletedCount === 0) return false;
       listCache.delete(userId);
       return true;
