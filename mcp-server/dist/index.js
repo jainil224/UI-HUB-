@@ -1,3 +1,4 @@
+import 'express-async-errors';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -11,7 +12,9 @@ import { analyticsService } from './services/analyticsService.js';
 const app = express();
 const PORT = config.port;
 // Security headers
-app.use(helmet({ crossOriginEmbedderPolicy: false }));
+// crossOriginResourcePolicy is disabled so cross-origin API responses (MCP
+// dashboard on ui-hub-design.vercel.app) are never blocked by CORP headers.
+app.use(helmet({ crossOriginEmbedderPolicy: false, crossOriginResourcePolicy: false }));
 // CORS with dynamic origin checking
 app.use(cors({
     origin: function (origin, callback) {
