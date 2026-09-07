@@ -14,10 +14,15 @@ const COLD_START_TIMEOUT_MS = 90000;
 const COLD_START_RETRIES = 2;
 const COLD_START_RETRY_DELAYS_MS = [2000, 5000];
 
-async function authHeaders(): Promise<Record<string, string>> {
-    const user = auth.currentUser;
-    if (!user) throw new Error('Not authenticated');
-    const idToken = await user.getIdToken();
+export const MCP_AUTH_REQUIRED = 'MCP_AUTH_REQUIRED';
+
+async function authHeaders(token?: string): Promise<Record<string, string>> {
+    let idToken = token;
+    if (!idToken) {
+        const user = auth.currentUser;
+        if (!user) throw new Error(MCP_AUTH_REQUIRED);
+        idToken = await user.getIdToken();
+    }
     return {
         'Authorization': `Bearer ${idToken}`,
         'Content-Type': 'application/json',
@@ -84,7 +89,12 @@ async function fetchWithRetry(url: string, init?: RequestInit, opts: FetchWithRe
 }
 
 async function mcpFetch(url: string, init?: RequestInit, opts?: FetchWithRetryOptions): Promise<Response> {
-    return fetchWithRetry(url, init, opts);
+    const res = await fetchWithRetry(url, init, opts);
+    if (res.status === 401) {
+        clearMcpCaches();
+        throw new Error(MCP_AUTH_REQUIRED);
+    }
+    return res;
 }
 
 export interface McpApiKey {
@@ -140,11 +150,16 @@ const COLD_START_OPTS: FetchWithRetryOptions = {
 let overviewCache: { value: McpOverview; expiresAt: number } | null = null;
 let metricsCache: { value: McpAdminMetrics; expiresAt: number } | null = null;
 
-export async function getMcpOverview(refresh = false, onAttempt?: (attempt: number, error?: Error) => void): Promise<McpOverview> {
+function clearMcpCaches() {
+    overviewCache = null;
+    metricsCache = null;
+}
+
+export async function getMcpOverview(refresh = false, onAttempt?: (attempt: number, error?: Error) => void, token?: string): Promise<McpOverview> {
     if (!refresh && overviewCache && Date.now() < overviewCache.expiresAt) {
         return overviewCache.value;
     }
-    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/overview`, { headers: await authHeaders() }, {
+    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/overview`, { headers: await authHeaders(token) }, {
         ...COLD_START_OPTS,
         onAttempt,
     });
@@ -154,23 +169,23 @@ export async function getMcpOverview(refresh = false, onAttempt?: (attempt: numb
     return data;
 }
 
-export async function getMcpStatus(): Promise<McpStatus> {
-    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/status`, { headers: await authHeaders() }, COLD_START_OPTS);
+export async function getMcpStatus(token?: string): Promise<McpStatus> {
+    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/status`, { headers: await authHeaders(token) }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to fetch MCP status: ${res.status}`);
     return res.json();
 }
 
-export async function listApiKeys(): Promise<McpApiKey[]> {
-    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys`, { headers: await authHeaders() }, COLD_START_OPTS);
+export async function listApiKeys(token?: string): Promise<McpApiKey[]> {
+    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys`, { headers: await authHeaders(token) }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to list keys: ${res.status}`);
     const data = await res.json();
     return data.keys;
 }
 
-export async function createApiKey(name: string, onAttempt?: (attempt: number, error?: Error) => void): Promise<{ key: string; record: McpApiKey }> {
+export async function createApiKey(name: string, onAttempt?: (attempt: number, error?: Error) => void, token?: string): Promise<{ key: string; record: McpApiKey }> {
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys`, {
         method: 'POST',
-        headers: await authHeaders(),
+        headers: await authHeaders(token),
         body: JSON.stringify({ name }),
     }, {
         ...COLD_START_OPTS,
@@ -180,24 +195,24 @@ export async function createApiKey(name: string, onAttempt?: (attempt: number, e
     return res.json();
 }
 
-export async function revokeApiKey(id: string): Promise<void> {
+export async function revokeApiKey(id: string, token?: string): Promise<void> {
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys/${id}/revoke`, {
         method: 'POST',
-        headers: await authHeaders(),
+        headers: await authHeaders(token),
     }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to revoke key: ${res.status}`);
 }
 
-export async function deleteApiKey(id: string): Promise<void> {
+export async function deleteApiKey(id: string, token?: string): Promise<void> {
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys/${id}`, {
         method: 'DELETE',
-        headers: await authHeaders(),
+        headers: await authHeaders(token),
     }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to delete key: ${res.status}`);
 }
 
-export async function getMcpUsage(): Promise<McpUsage> {
-    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/usage`, { headers: await authHeaders() }, COLD_START_OPTS);
+export async function getMcpUsage(token?: string): Promise<McpUsage> {
+    const res = await mcpFetch(`${BASE}/api/dashboard/mcp/usage`, { headers: await authHeaders(token) }, COLD_START_OPTS);
     if (!res.ok) throw new Error(`Failed to fetch usage: ${res.status}`);
     return res.json();
 }
@@ -223,12 +238,12 @@ export interface McpAdminMetrics {
     };
 }
 
-export async function getAdminMetrics(refresh = false, onAttempt?: (attempt: number, error?: Error) => void): Promise<McpAdminMetrics | null> {
+export async function getAdminMetrics(refresh = false, onAttempt?: (attempt: number, error?: Error) => void, token?: string): Promise<McpAdminMetrics | null> {
     try {
         if (!refresh && metricsCache && Date.now() < metricsCache.expiresAt) {
             return metricsCache.value;
         }
-        const res = await mcpFetch(`${BASE}/api/dashboard/mcp/admin/metrics`, { headers: await authHeaders() }, {
+        const res = await mcpFetch(`${BASE}/api/dashboard/mcp/admin/metrics`, { headers: await authHeaders(token) }, {
             ...COLD_START_OPTS,
             onAttempt,
         });

@@ -9,7 +9,7 @@ import { dashboardRouter } from './routes/dashboard.js';
 import { adminRouter } from './routes/admin.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { analyticsService } from './services/analyticsService.js';
-import { getDb } from './services/mongo.js';
+import { getDb, getClient } from './services/mongo.js';
 const app = express();
 const PORT = config.port;
 // Security headers
@@ -99,6 +99,11 @@ const isMain = process.argv[1] &&
         process.argv[1].replace(/\\/g, '/').endsWith('src/index.ts'));
 let started = null;
 if (isMain) {
+    // Kick a Mongo connection eagerly so the first dashboard request doesn't pay a
+    // cold connect. Failures are logged but never block startup.
+    getClient()
+        .then(() => console.log('[Mongo] Eager connection established'))
+        .catch((e) => console.warn(`[Mongo] Eager connection failed (will retry on demand): ${e?.message}`));
     started = app.listen(PORT, '0.0.0.0', () => {
         console.log(`[MCP Server] Running on http://0.0.0.0:${PORT}`);
         console.log(`[MCP Server] Health: http://localhost:${PORT}/health`);

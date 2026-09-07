@@ -21,6 +21,7 @@ const decodePayload = (token: string): any => {
 export async function verifyFirebaseToken(req: Request, res: Response, next: NextFunction) {
   const token = extractToken(req);
   if (!token) {
+    res.setHeader('WWW-Authenticate', 'Bearer');
     return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Missing auth token' });
   }
 

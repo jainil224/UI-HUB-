@@ -12,7 +12,7 @@ import { useMcpKeepAlive } from '../../hooks/useMcpKeepAlive';
 import { MCP_BASE_URL } from '../../utils/mcpConfig';
 import {
     getMcpOverview, createApiKey, revokeApiKey, getAdminMetrics,
-    McpApiKey, McpStatus, McpUsage, McpAdminMetrics
+    McpApiKey, McpStatus, McpUsage, McpAdminMetrics, MCP_AUTH_REQUIRED
 } from '../../services/mcp';
 
 /* ── Helpers ── */
@@ -150,14 +150,17 @@ const MCPPage: React.FC = () => {
     const [keyName, setKeyName] = useState('');
     const [creating, setCreating] = useState(false);
     const [revokingId, setRevokingId] = useState<string | null>(null);
+    const [authExpired, setAuthExpired] = useState(false);
 
     const load = useCallback(async (refresh = false) => {
         if (!hasLoadedRef.current) setLoading(true);
         setError(null);
+        setAuthExpired(false);
         setRetryAttempt(0);
         const onAttempt = (attempt: number) => setRetryAttempt(attempt);
         try {
-            const overview = await getMcpOverview(refresh, onAttempt);
+            const idToken = user ? await user.getIdToken() : undefined;
+            const overview = await getMcpOverview(refresh, onAttempt, idToken);
             setStatus({
                 endpoint: overview.endpoint,
                 headerAuth: overview.headerAuth,
@@ -170,17 +173,21 @@ const MCPPage: React.FC = () => {
             setUsage(overview.usage);
 
             if (overview.tier === 'ADMIN' || overview.tier === 'ELITE') {
-                const metrics = await getAdminMetrics(refresh, onAttempt);
+                const metrics = await getAdminMetrics(refresh, onAttempt, idToken);
                 if (metrics) setAdminMetrics(metrics);
             }
         } catch (e: any) {
-            setError(e?.message || 'Failed to load MCP data');
+            if (e?.message === MCP_AUTH_REQUIRED) {
+                setAuthExpired(true);
+            } else {
+                setError(e?.message || 'Failed to load MCP data');
+            }
         } finally {
             setLoading(false);
             setRetryAttempt(0);
             hasLoadedRef.current = true;
         }
-    }, []);
+    }, [user]);
 
     useEffect(() => {
         if (!authLoading && user) {
@@ -195,10 +202,12 @@ const MCPPage: React.FC = () => {
         if (!user) return;
         setCreating(true);
         setError(null);
+        setAuthExpired(false);
         setRetryAttempt(0);
         try {
             const onAttempt = (attempt: number) => setRetryAttempt(attempt);
-            const { key } = await createApiKey(keyName || 'MCP Key', onAttempt);
+            const idToken = await user.getIdToken();
+            const { key } = await createApiKey(keyName || 'MCP Key', onAttempt, idToken);
             setShowKey(key);
             setKeyName('');
             setRetryAttempt(0);
@@ -206,7 +215,11 @@ const MCPPage: React.FC = () => {
             // failure hide the just-created key banner.
             void load(true).catch(() => undefined);
         } catch (e: any) {
-            setError(e?.message || 'Failed to create key');
+            if (e?.message === MCP_AUTH_REQUIRED) {
+                setAuthExpired(true);
+            } else {
+                setError(e?.message || 'Failed to create key');
+            }
         } finally {
             setCreating(false);
         }
@@ -216,11 +229,17 @@ const MCPPage: React.FC = () => {
         if (revokingId) return;
         setRevokingId(id);
         setError(null);
+        setAuthExpired(false);
         try {
-            await revokeApiKey(id);
+            const idToken = await user!.getIdToken();
+            await revokeApiKey(id, idToken);
             await load(true);
         } catch (e: any) {
-            setError(e?.message || 'Failed to revoke key');
+            if (e?.message === MCP_AUTH_REQUIRED) {
+                setAuthExpired(true);
+            } else {
+                setError(e?.message || 'Failed to revoke key');
+            }
         } finally {
             setRevokingId(null);
         }
@@ -286,6 +305,25 @@ const MCPPage: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-8">
+            {/* ── Session expired banner ── */}
+            {authExpired && (
+                <div className="flex items-start gap-3 border-2 border-brand-yellow bg-brand-yellow/10 rounded-lg p-4">
+                    <AlertTriangle size={20} className="text-brand-yellow shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                        <p className="text-sm font-bold text-white">Your session has expired.</p>
+                        <p className="text-xs text-neutral-400 mt-1">
+                            Sign in again to manage your MCP keys, then come back here.
+                        </p>
+                    </div>
+                    <Link
+                        to="/login"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-brand-yellow bg-brand-yellow text-black text-[10px] font-black uppercase tracking-widest hover:brightness-110 transition-all cursor-pointer"
+                    >
+                        Sign in again
+                    </Link>
+                </div>
+            )}
+
             {/* ── Error banner ── */}
             {error && (
                 <div className="flex items-start gap-3 border-2 border-brand-red bg-brand-red/10 rounded-lg p-4">
