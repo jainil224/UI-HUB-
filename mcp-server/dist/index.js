@@ -9,6 +9,7 @@ import { dashboardRouter } from './routes/dashboard.js';
 import { adminRouter } from './routes/admin.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { analyticsService } from './services/analyticsService.js';
+import { getDb } from './services/mongo.js';
 const app = express();
 const PORT = config.port;
 // Security headers
@@ -61,9 +62,21 @@ app.use(async (req, res, next) => {
 app.use('/mcp', mcpRouter);
 app.use('/api/dashboard/mcp', dashboardRouter);
 app.use('/api/admin/mcp', adminRouter);
-// Health endpoint
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok', service: 'ui-hub-mcp' });
+// Health endpoint — includes a Mongo connectivity probe so deployed
+// instances can be diagnosed without hitting an authenticated route.
+app.get('/health', async (req, res) => {
+    let db = 'unknown';
+    let dbError = '';
+    try {
+        const handle = await getDb();
+        await handle.command({ ping: 1 });
+        db = 'connected';
+    }
+    catch (error) {
+        db = 'disconnected';
+        dbError = String(error?.message || error).slice(0, 200);
+    }
+    res.json({ status: 'ok', service: 'ui-hub-mcp', db, dbError: dbError || undefined });
 });
 app.get('/', (req, res) => {
     res.json({
