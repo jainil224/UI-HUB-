@@ -4,6 +4,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock, Crown, Check, Sparkles } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import GetStartedPage from './sections/GetStarted/GetStartedPage';
+import HoverPreviewPopover from './HoverPreviewPopover';
 import { GET_STARTED_PAGES } from './sections/GetStarted/getStartedData';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
@@ -74,6 +75,9 @@ const LibraryPage = () => {
 
     const [showGetStarted, setShowGetStarted] = useState(true);
 
+    const [hoverPreview, setHoverPreview] = useState<{ item: ComponentItem; rect: DOMRect } | null>(null);
+    const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
     const mainContainerRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
@@ -87,6 +91,19 @@ const LibraryPage = () => {
     useEffect(() => {
         setSearchQuery(qFromUrl);
     }, [qFromUrl]);
+
+    useEffect(() => {
+        if (!hoverPreview) return;
+        const onResize = () => closePreview();
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+    }, [hoverPreview]);
+
+    useEffect(() => {
+        return () => {
+            if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+        };
+    }, []);
 
     const baseCategories: Category[] = useMemo(() => [
         { name: "Buttons/hover effects", items: allComponents.filter(item => item.category === 'button') },
@@ -160,6 +177,7 @@ const LibraryPage = () => {
     ), [allComponents, drawerQuery]);
 
     const handleComponentSelect = (item: ComponentItem) => {
+        closePreview();
         setOptimisticId(item.id);
         setActiveDocId(null);
         setIsMobileMenuOpen(false);
@@ -175,6 +193,33 @@ const LibraryPage = () => {
         navigate(`/library?get-started=${docId}`, { replace: true });
         if (mainContainerRef.current) mainContainerRef.current.scrollTo({ top: 0, behavior: 'auto' });
         window.scrollTo({ top: 0, behavior: 'auto' });
+    };
+
+    const clearHoverTimer = () => {
+        if (hoverTimerRef.current) {
+            clearTimeout(hoverTimerRef.current);
+            hoverTimerRef.current = null;
+        }
+    };
+
+    const handlePreviewEnter = (item: ComponentItem, e: React.MouseEvent) => {
+        prefetchComponentChunk(item.id);
+        clearHoverTimer();
+        if (hoverPreview?.item.id === item.id) return;
+        const target = e.currentTarget as HTMLElement;
+        hoverTimerRef.current = setTimeout(() => {
+            setHoverPreview({ item, rect: target.getBoundingClientRect() });
+        }, 200);
+    };
+
+    const handlePreviewLeave = () => {
+        clearHoverTimer();
+        hoverTimerRef.current = setTimeout(() => setHoverPreview(null), 150);
+    };
+
+    const closePreview = () => {
+        clearHoverTimer();
+        setHoverPreview(null);
     };
 
     const totalComponents = allComponents.length;
@@ -442,7 +487,7 @@ const LibraryPage = () => {
                             <span className="text-2xl font-black text-brand-blue">{totalComponents}</span>
                         </div>
                     </div>
-                    <nav className="flex-1 overflow-y-auto sidebar-scroll px-3 py-4 space-y-3">
+                    <nav className="flex-1 overflow-y-auto sidebar-scroll px-3 py-4 space-y-3" onScroll={closePreview} onMouseLeave={closePreview}>
                         <div className="border border-neutral-800 rounded bg-brand-bg p-2.5">
                             <button onClick={() => setShowUpdates(!showUpdates)} className="w-full flex items-center justify-between text-[10px] uppercase font-black">
                                 <span>Follow Updates</span>
@@ -520,7 +565,8 @@ const LibraryPage = () => {
                                                             <button 
                                                                 key={item.id} 
                                                                 onClick={() => handleComponentSelect(item)} 
-                                                                onMouseEnter={() => prefetchComponentChunk(item.id)}
+                                                                onMouseEnter={(e) => handlePreviewEnter(item, e)}
+                                                                onMouseLeave={handlePreviewLeave}
                                                                 onFocus={() => prefetchComponentChunk(item.id)}
                                                                 className={`w-full flex items-center justify-between text-left px-2.5 py-1.5 rounded-md text-[11px] uppercase tracking-wider font-bold transition-all duration-150 group ${
                                                                     isActive 
@@ -649,6 +695,17 @@ const LibraryPage = () => {
                     </div>
                 </aside>
             </div>
+
+            <AnimatePresence>
+                {hoverPreview && (
+                    <HoverPreviewPopover
+                        key={hoverPreview.item.id}
+                        item={hoverPreview.item}
+                        rect={hoverPreview.rect}
+                        onClose={closePreview}
+                    />
+                )}
+            </AnimatePresence>
         </>
     );
 };
