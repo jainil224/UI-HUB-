@@ -1,5 +1,6 @@
 import { LOVABLE_PROMPTS } from './lovablePrompts';
 import { ANTIGRAVITY_PROMPTS } from './antigravityPrompts';
+import { COMPONENT_FULL_SOURCES } from './componentFullSources';
 import React, { useRef, useCallback, useState, useEffect, Suspense } from 'react';
 import uiHubLogo from '../Assets/webiste logo.svg';
 
@@ -79,6 +80,7 @@ const MorphingRings = React.lazy(() => import('../components/ui/MorphingRings'))
 const BlockDrift = React.lazy(() => import('../components/ui/BlockDrift'));
 const Lightfall = React.lazy(() => import('../components/ui/Lightfall'));
 const AsciiWater = React.lazy(() => import('../components/ui/AsciiWater'));
+const GlobeMesh = React.lazy(() => import('../components/ui/GlobeMesh'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
 const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
@@ -2947,6 +2949,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'block-drift': BlockDrift,
     'lightfall': Lightfall,
     'ascii-water': AsciiWater,
+    'globe-mesh': GlobeMesh,
     'isometric-portal': IsometricPortal,
     'morphing-glow': MorphingGlow,
     'gear-system': GearSystem,
@@ -7343,6 +7346,42 @@ export function AsciiWaterDemo() {
   );
 }`,
         vibePrompt: "Create an 'Ascii Water' interactive background in React + TypeScript (DOM-based, monospace character rendering, single rAF loop, all live state via refs). A FLIP fluid simulation (after Matthias Mueller's ten-minute-physics solver) renders a pool of water as monospace characters on a hidden pre element. The fluid grid uses staggered pressure solve for incompressibility, particles carry velocity with FLIP ratio blending, and cell density maps to glyph weight ramps that interleave five letter ramps spelling 'FLUID' along diagonals. The cursor acts as a velocity brush: hovering blends nearby particle velocities toward the cursor direction (not a solid body) so the character field stays unbroken; clicking produces a radial splash with upward bias. Gravity pulls particles down, wall collisions pin boundaries, particle-particle push-apart prevents clumping. Density-to-brightness uses a fourfold triangle wave for contour bands. Props control ink color, cell size, water fill level, ripple brush radius, push strength, simulation speed, sloshiness (FLIP ratio), and click intensity. Single pre element with letter-spacing-matched monospace font, pointer events disabled on the text layer."
+    },
+    {
+        id: "globe-mesh",
+        title: "Globe Mesh",
+        category: "interactive-background",
+        addedAt: "2026-09-08",
+        newBadgeDays: 21,
+        isPremium: false,
+        preview: () => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <GlobeMesh />
+            </div>
+        ),
+        code: `import GlobeMesh from "@/components/ui/GlobeMesh";
+
+export function GlobeMeshDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <GlobeMesh
+        dot="#FFFFFF"
+        net="#26FF00"
+        density={20}
+        spin={20}
+        spinDir="right"
+        hoverOn={true}
+        sizePercent={100}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: COMPONENT_FULL_SOURCES["globe-mesh"],
     },
     {
         id: "isometric-portal",
