@@ -4,9 +4,11 @@ import {
     sendWelcomeEmail as sendWelcomeEmailViaBrevoApi,
     sendFreeSubscriptionEmail as sendFreeSubscriptionEmailViaBrevoApi,
     sendProSubscriptionEmail as sendProSubscriptionEmailViaBrevoApi,
+    sendReengagementEmail as sendReengagementEmailViaBrevoApi,
     buildWelcomeEmailHtml,
     buildFreeSubscriptionEmailHtml,
     buildProSubscriptionEmailHtml,
+    buildReengagementEmailHtml,
 } from '../services/brevoService.js';
 import { generatePaymentReceiptPdf } from '../services/receiptService.js';
 
@@ -214,8 +216,64 @@ export async function sendProSubscriptionEmail({
   }
 }
 
+/**
+ * Sends the UI-HUB Re-Engagement / "We Miss You" email via Brevo HTTP API with SMTP fallback.
+ *
+ * @param {Object} params
+ * @param {string} params.email
+ * @param {string} [params.name]
+ * @param {string} [params.customSubject]
+ * @param {string} [params.customHeadline]
+ * @param {string} [params.customMessage]
+ * @param {Array} [params.featuredItems]
+ */
+export async function sendReengagementEmail({
+  email,
+  name,
+  customSubject,
+  customHeadline,
+  customMessage,
+  featuredItems,
+}) {
+  // 1. Primary method: Brevo HTTP API
+  const result = await sendReengagementEmailViaBrevoApi({
+    email,
+    name,
+    customSubject,
+    customHeadline,
+    customMessage,
+    featuredItems,
+  });
+
+  if (result.success) {
+    return result;
+  }
+
+  // 2. Fallback to SMTP
+  console.warn('[EmailService] Brevo HTTP API re-engagement send unfulfilled, attempting SMTP fallback...');
+  try {
+    const { transporter, fromAddress } = getTransporter();
+    const displayName = name || 'there';
+    const subject = customSubject || 'UI-HUB misses you! 🚀 New components dropped — come check what\'s new';
+    const mailOptions = {
+      from: `"UI-HUB" <${fromAddress}>`,
+      to: email,
+      replyTo: 'uihub.design@gmail.com',
+      subject,
+      html: buildReengagementEmailHtml({ name: displayName, customHeadline, customMessage, featuredItems }),
+    };
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[EmailService] ✅ Re-engagement email sent to ${email} via SMTP fallback — messageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[EmailService] ❌ SMTP fallback for re-engagement email failed:`, err.message);
+    return result;
+  }
+}
+
 export default {
   sendWelcomeEmail,
   sendFreeSubscriptionEmail,
   sendProSubscriptionEmail,
+  sendReengagementEmail,
 };

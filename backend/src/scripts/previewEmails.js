@@ -5,6 +5,7 @@ import {
     buildWelcomeEmailHtml,
     buildFreeSubscriptionEmailHtml,
     buildProSubscriptionEmailHtml,
+    buildReengagementEmailHtml,
 } from '../services/brevoService.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -36,6 +37,12 @@ const previews = [
             orderId: 'order_preview_123456',
             purchaseDate: new Date(),
             duration: '6 Months',
+        }),
+    },
+    {
+        file: 'reengagement-email.html',
+        html: buildReengagementEmailHtml({
+            name: 'Jainil Patel',
         }),
     },
 ];

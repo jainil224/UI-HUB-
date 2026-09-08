@@ -2,7 +2,7 @@ import express from 'express';
 import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
 import { verifyToken } from '../middleware/auth.js';
 import { checkProStatus, checkEliteStatus, evaluateAiTrial, MAX_FREE_AI_TRIALS } from '../services/userService.js';
-import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail } from '../utils/sendEmail.js';
+import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail, sendReengagementEmail } from '../utils/sendEmail.js';
 import { getCollection } from '../services/mongoService.js';
 import { logActivity } from '../services/activityLogService.js';
 
@@ -145,6 +145,131 @@ router.post('/pro-email-test', async (req, res) => {
             result
         });
     } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/reengagement-email-test
+ * @desc Test sending the 'UI-HUB misses you / new components' re-engagement email
+ * @access Public (with secret)
+ */
+router.post('/reengagement-email-test', async (req, res) => {
+    try {
+        const { email, name, secret, customSubject } = req.body;
+        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
+        if (secret !== testSecret) {
+            return res.status(403).json({ error: 'Forbidden: invalid test secret' });
+        }
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        console.log(`[ReengagementTest] Sending test re-engagement email to: ${email}`);
+        const result = await sendReengagementEmail({
+            email,
+            name: name || 'Creator',
+            customSubject,
+        });
+
+        res.json({
+            success: result.success,
+            message: result.success ? `Test re-engagement email sent to ${email}` : 'Failed to send re-engagement email',
+            result
+        });
+    } catch (error) {
+        console.error('[ReengagementTest] Error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/broadcast-reengagement
+ * @desc Broadcast 'UI-HUB misses you / new components' email to all MongoDB users
+ * @access Admin (with secret)
+ */
+router.post('/broadcast-reengagement', async (req, res) => {
+    try {
+        const { secret, dryRun = false, customSubject } = req.body;
+        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
+        if (secret !== testSecret) {
+            return res.status(403).json({ error: 'Forbidden: invalid secret key' });
+        }
+
+        const usersCol = await getCollection('users');
+        const rawUsers = await usersCol.find({}).toArray();
+
+        // Deduplicate and filter emails
+        const emailMap = new Map();
+        for (const u of rawUsers) {
+            const rawEmail = u.email || (typeof u._id === 'string' && u._id.includes('@') ? u._id : null);
+            if (!rawEmail) continue;
+
+            const email = rawEmail.trim().toLowerCase();
+            if (!email.includes('@') || email.length < 5) continue;
+
+            if (!emailMap.has(email)) {
+                emailMap.set(email, {
+                    email,
+                    name: u.displayName || u.name || (email.split('@')[0] || 'Creator'),
+                    status: u.status || 'FREE',
+                });
+            }
+        }
+
+        const uniqueUsers = Array.from(emailMap.values());
+
+        if (dryRun) {
+            return res.json({
+                success: true,
+                dryRun: true,
+                totalUsers: uniqueUsers.length,
+                recipients: uniqueUsers.map(u => ({ email: u.email, name: u.name, status: u.status })),
+            });
+        }
+
+        // Live broadcast asynchronously with throttling
+        const stats = {
+            total: uniqueUsers.length,
+            sent: 0,
+            failed: 0,
+            failures: [],
+        };
+
+        for (let i = 0; i < uniqueUsers.length; i++) {
+            const user = uniqueUsers[i];
+            try {
+                const sendResult = await sendReengagementEmail({
+                    email: user.email,
+                    name: user.name,
+                    customSubject,
+                });
+
+                if (sendResult.success) {
+                    stats.sent++;
+                } else {
+                    stats.failed++;
+                    stats.failures.push({ email: user.email, error: sendResult.error });
+                }
+            } catch (err) {
+                stats.failed++;
+                stats.failures.push({ email: user.email, error: err.message });
+            }
+
+            // Throttle between sends (600ms)
+            if (i < uniqueUsers.length - 1) {
+                await new Promise(r => setTimeout(r, 600));
+            }
+        }
+
+        res.json({
+            success: true,
+            message: `Broadcast completed. Sent ${stats.sent}/${stats.total} emails.`,
+            stats,
+        });
+    } catch (error) {
+        console.error('[BroadcastReengagement] Error:', error.message);
         res.status(500).json({ error: error.message });
     }
 });

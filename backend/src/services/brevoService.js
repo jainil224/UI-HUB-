@@ -625,11 +625,262 @@ export async function sendProSubscriptionEmail({
     }
 }
 
+/**
+ * Builds the UI-HUB Re-Engagement / "We Miss You & New Components" Email HTML
+ * with the Slotify-style high-contrast neo-brutalist layout.
+ *
+ * @param {Object} [params]
+ * @param {string} [params.name] Recipient name
+ * @param {string} [params.customHeadline] Optional custom headline
+ * @param {string} [params.customMessage] Optional custom message
+ * @param {Array<{tag: string, tagColor: string, title: string, desc: string}>} [params.featuredItems] Custom feature items
+ * @returns {string} HTML content
+ */
+export function buildReengagementEmailHtml({
+    name = '',
+    customHeadline = '',
+    customMessage = '',
+    featuredItems = []
+} = {}) {
+    const displayName = (name && name !== 'there') ? name : 'Creator';
+    const frontendUrl = process.env.FRONTEND_URL || 'https://ui-hub-design.vercel.app';
+    const libraryUrl = `${frontendUrl}/library`;
+
+    const defaultFeatures = [
+        {
+            tag: '3D & WEBGL',
+            tagColor: '#3D5CFF',
+            title: 'Gravitational Vortex & 3D Black Hole',
+            desc: 'Hyper-realistic logarithmic accretion discs, 3D spherical occlusion, and WebGL particle physics ready for your hero sections.'
+        },
+        {
+            tag: 'MICRO-INTERACTIONS',
+            tagColor: '#00A843',
+            title: 'Magnetic & Target Snap Cursors',
+            desc: 'Cinema-grade pointer trails, difference-blend target reticles, and elastic spring snaps on hover.'
+        },
+        {
+            tag: 'AI VIBE ENGINE',
+            tagColor: '#FF3B30',
+            title: 'Master AI Prompts (Sonnet 3.7 & Gemini 2.5)',
+            desc: '1-click system prompts to generate, customize, and integrate these components in seconds.'
+        }
+    ];
+
+    const itemsToRender = featuredItems && featuredItems.length > 0 ? featuredItems : defaultFeatures;
+
+    const featureRowsHtml = itemsToRender.map((item, idx) => {
+        const isLast = idx === itemsToRender.length - 1;
+        const borderBottom = isLast ? '' : 'border-bottom:1px solid #000000;';
+        return `
+          <tr>
+            <td style="padding:16px 18px; ${borderBottom} background-color:#FFFFFF;">
+              <span style="display:inline-block; background-color:${item.tagColor || '#3D5CFF'}; color:#FFFFFF; font-size:9px; font-weight:900; padding:3px 8px; border:1.5px solid #000000; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">
+                ${item.tag}
+              </span>
+              <div style="font-size:14px; font-weight:900; color:#000000; text-transform:uppercase; letter-spacing:0.3px; margin-bottom:4px;">
+                ${item.title}
+              </div>
+              <div style="font-size:12px; color:#444444; line-height:1.5; font-weight:500;">
+                ${item.desc}
+              </div>
+            </td>
+          </tr>
+        `;
+    }).join('');
+
+    return `
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="color-scheme" content="light"/>
+  <meta name="supported-color-schemes" content="light"/>
+  <title>UI-HUB Misses You — Fresh Components Inside</title>
+  <style>
+    :root { color-scheme: light; }
+  </style>
+</head>
+<body bgcolor="#FFFFFF" style="margin:0; padding:0; background-color:#FFFFFF !important; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color:#000000; -webkit-font-smoothing:antialiased;">
+  <div style="background-color:#FFFFFF !important; width:100%; margin:0; padding:0;">
+    <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important; padding:40px 16px; width:100%;">
+      <tr>
+        <td align="center" bgcolor="#FFFFFF" style="background-color:#FFFFFF !important;">
+          <!-- Main Card Container with Black Line Border -->
+          <table width="580" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="max-width:580px; width:100%; background-color:#FFFFFF !important; border:2px solid #000000; border-collapse:collapse;">
+
+            <!-- Top Header Bar -->
+            <tr>
+              <td bgcolor="#000000" style="background-color:#000000 !important; padding:26px 20px; text-align:center;">
+                <div style="font-size:26px; font-weight:900; color:#FFFFFF !important; letter-spacing:4px; text-transform:uppercase; font-family:-apple-system, BlinkMacSystemFont, sans-serif;">
+                  UI-HUB
+                </div>
+              </td>
+            </tr>
+
+            <!-- Signature Color Strip (White, Blue, Red) -->
+            ${buildColorStrip()}
+
+            <!-- Card Content Body -->
+            <tr>
+              <td bgcolor="#FFFFFF" style="padding:36px 32px 28px 32px; background-color:#FFFFFF !important; text-align:left;">
+
+                <!-- Badge -->
+                <div style="margin-bottom:20px;">
+                  <span style="display:inline-block; background-color:#FFC700; color:#000000; font-size:11px; font-weight:900; padding:6px 14px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px;">
+                    ⚡ WE MISS YOU • NEW DROPS INSIDE
+                  </span>
+                </div>
+
+                <!-- Main Title -->
+                <h1 style="font-size:26px; font-weight:900; color:#000000; text-transform:uppercase; letter-spacing:0.5px; margin:0 0 14px 0; line-height:1.2;">
+                  ${customHeadline || `WE'VE MISSED YOU, ${displayName.toUpperCase()}!`}
+                </h1>
+
+                <!-- Greeting & Copy -->
+                <p style="font-size:15px; color:#222222; line-height:1.6; margin:0 0 16px 0; font-weight:600;">
+                  Hi <strong>${displayName}</strong>, it's been a minute since your last build with UI-HUB!
+                </p>
+
+                <p style="font-size:14px; color:#444444; line-height:1.6; margin:0 0 24px 0;">
+                  ${customMessage || 'We’ve been hard at work shipping high-octane additions to our component catalog. From physics-driven WebGL canvases to fluid cursor interactions, your next project just got an instant upgrade.'}
+                </p>
+
+                <!-- What's New Section Header -->
+                <div style="font-size:12px; font-weight:900; color:#000000; letter-spacing:1px; text-transform:uppercase; margin-bottom:12px;">
+                  ✨ WHAT'S NEW IN THE REPOSITORY:
+                </div>
+
+                <!-- Featured Items Card -->
+                <table width="100%" cellpadding="0" cellspacing="0" style="width:100%; border:2px solid #000000; border-collapse:collapse; margin-bottom:24px;">
+                  ${featureRowsHtml}
+                </table>
+
+                <!-- Divided Detail Rows (Slotify Style) -->
+                ${buildDetailRows([
+                    { label: 'PLATFORM UPDATE', value: 'Fresh Component Drops' },
+                    { label: 'NEW ADDITIONS', value: '3D WebGL & Cursor Pack' },
+                    { label: 'YOUR ACCESS', value: 'Free Starter (Full Library)' },
+                    { label: 'COMMUNITY STATUS', value: '⚡ WAITING FOR YOU', highlight: true },
+                ])}
+
+                <!-- Slotify-Style Action Button -->
+                <div style="margin:26px 0 24px 0;">
+                  <a href="${libraryUrl}"
+                     style="display:block; width:100%; box-sizing:border-box; text-align:center; background-color:#1052D6; color:#FFFFFF; text-decoration:none; font-weight:900; font-size:13px; padding:16px 20px; border:2px solid #000000; text-transform:uppercase; letter-spacing:1.5px;">
+                    COME BACK &amp; EXPLORE NEW COMPONENTS →
+                  </a>
+                </div>
+
+                <!-- Link Fallback Box -->
+                <p style="font-size:12px; color:#666666; margin:0 0 8px 0;">
+                  Or copy and paste this link in your browser:
+                </p>
+                <div style="background-color:#F1F5F9; border:1.5px solid #000000; padding:12px 14px; font-family:monospace; font-size:12px; color:#2563EB; word-break:break-all; margin-bottom:24px;">
+                  <a href="${libraryUrl}" style="color:#2563EB; text-decoration:underline;">${libraryUrl}</a>
+                </div>
+
+                <!-- Sign-off -->
+                <p style="font-size:13px; color:#444444; margin:0 0 4px 0;">Best regards,</p>
+                <p style="font-size:14px; color:#000000; font-weight:900; margin:0;">The UI-HUB Engineering Team</p>
+
+              </td>
+            </tr>
+
+            <!-- Dark Footer -->
+            <tr>
+              <td bgcolor="#000000" style="background-color:#000000 !important; padding:24px 20px; text-align:center;">
+                <p style="color:#FFFFFF !important; font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; margin:0 0 6px 0;">
+                  © ${new Date().getFullYear()} UI-HUB COMPONENT PLATFORM
+                </p>
+                <p style="color:#71717A; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin:0;">
+                  CINEMA-GRADE UI • MASTER AI PROMPTS • ZERO BLOAT
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
+    `;
+}
+
+/**
+ * Sends the Re-Engagement / "We Miss You" Email via Brevo HTTP API (v3).
+ *
+ * @param {Object} params
+ * @param {string} params.email Recipient email address
+ * @param {string} [params.name] Recipient name
+ * @param {string} [params.customSubject] Optional custom email subject
+ * @param {string} [params.customHeadline] Optional custom headline
+ * @param {string} [params.customMessage] Optional custom message
+ * @param {Array} [params.featuredItems] Optional custom feature items
+ * @returns {Promise<{success: boolean, messageId?: string, error?: any}>}
+ */
+export async function sendReengagementEmail({
+    email,
+    name,
+    customSubject,
+    customHeadline,
+    customMessage,
+    featuredItems,
+}) {
+    if (!email) return { success: false, error: 'Recipient email is required' };
+
+    const apiKey = process.env.BREVO_API_KEY || process.env.BREVO_SMTP_PASS;
+    const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || process.env.BREVO_SMTP_USER;
+    const senderName = process.env.BREVO_SENDER_NAME || 'UI-HUB';
+
+    if (!apiKey || !senderEmail) return { success: false, error: 'Brevo credentials missing' };
+
+    const subject = customSubject || 'UI-HUB misses you! 🚀 New components dropped — come check what\'s new';
+    const frontendUrl = process.env.FRONTEND_URL || 'https://ui-hub-design.vercel.app';
+    const libraryUrl = `${frontendUrl}/library`;
+
+    const payload = {
+        sender: { name: senderName, email: senderEmail },
+        to: [{ email, name: name || 'there' }],
+        replyTo: { email: 'uihub.design@gmail.com', name: 'UI-HUB Support' },
+        subject,
+        htmlContent: buildReengagementEmailHtml({ name, customHeadline, customMessage, featuredItems }),
+        textContent: `Hi ${name || 'there'}!\n\nUI-HUB misses you! We've added fresh cinema-grade 3D components, interactive cursor packs, and master AI prompts.\n\nCome check out what's new: ${libraryUrl}\n\n© ${new Date().getFullYear()} UI-HUB`,
+    };
+
+    try {
+        console.log(`[BrevoService] Sending re-engagement email to: ${email} via HTTP API...`);
+        const response = await axios.post('https://api.brevo.com/v3/smtp/email', payload, {
+            headers: {
+                'api-key': apiKey,
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            timeout: 15000,
+        });
+
+        const messageId = response.data?.messageId || response.data?.messageIds?.[0] || 'sent';
+        console.log(`[BrevoService] ✅ Re-engagement email sent successfully to ${email} | messageId: ${messageId}`);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'reengagement', subject, status: 'sent', messageId });
+        return { success: true, messageId, data: response.data };
+    } catch (error) {
+        const brevoError = error.response?.data || error.message;
+        console.error(`[BrevoService] ❌ Failed to send re-engagement email to ${email}:`, brevoError);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'reengagement', subject, status: 'failed', error: brevoError });
+        return { success: false, error: typeof brevoError === 'object' ? JSON.stringify(brevoError) : brevoError };
+    }
+}
+
 export default {
     sendWelcomeEmail,
     sendFreeSubscriptionEmail,
     sendProSubscriptionEmail,
+    sendReengagementEmail,
     buildWelcomeEmailHtml,
     buildFreeSubscriptionEmailHtml,
     buildProSubscriptionEmailHtml,
+    buildReengagementEmailHtml,
 };
