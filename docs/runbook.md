@@ -5,8 +5,8 @@ Production topology:
 | Service | Platform | Source | URL |
 |---|---|---|---|
 | Frontend (Vite/React) | Vercel | repo root via `vercel.json` | https://ui-hub-design.vercel.app |
-| Backend + MCP data build (unified) | Render | `render.yaml` (repo root) | https://ui-hub-backend-mcp.onrender.com |
-| MCP server | Render | `mcp-server/render.yaml` (rootDir `mcp-server`) | https://ui-hub-mcp.onrender.com/mcp |
+| Backend REST API | Vercel serverless | `api/index.js` wraps `backend/src/server.js` | https://ui-hub-design.vercel.app/api |
+| MCP server | Render | **UI-HUB-MCP repo** (`render.yaml`, standalone) | https://ui-hub-mcp.onrender.com/mcp |
 
 All services auto-deploy on push to the default branch. Secrets (`MONGODB_URI`, `RAZORPAY_*`, `FIREBASE_*`, `BREVO_API_KEY`, `REDIS_URL`, `MCP_FIREBASE_*`) are `sync: false` and must be set once in the Render/Vercel dashboards.
 
@@ -43,9 +43,15 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 
 ## 2. Deploy
 
-1. Commit and push to the default branch (renders both Render services + Vercel).
-2. In Render dashboard confirm both services reach `Deploy succeeded` and healthy (`/health` returns 200).
-3. In Vercel confirm the frontend build succeeded and the site is live.
+1. Commit and push **UI-HUB repo** to `main` (autodeploys Vercel frontend + `api/` backend).
+2. Commit and push **UI-HUB-MCP repo** to `main` (autodeploys the standalone Render MCP service).
+3. In Render confirm the MCP service reaches `Deploy succeeded` and healthy (`/health` returns 200).
+4. In Vercel confirm the frontend build succeeded, the site is live, and `/api/health` returns 200.
+
+> Note: the MCP server has its own GitHub repo/service. The UI-HUB repo no longer deploys the
+> MCP service itself; the MCP is always consumed over HTTP at `https://ui-hub-mcp.onrender.com/mcp`.
+> Backend env vars (`MONGODB_URI`, `FIREBASE_*`, `RAZORPAY_*`, `BREVO_API_KEY`, `REDIS_URL`) are
+> set in the **Vercel** dashboard (the `api/` function), and MCP env vars in the **Render** dashboard.
 
 ## 3. Post-deploy QA checklist
 
@@ -57,8 +63,8 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
       endpoint for premium id returns 403 (not the code).
 - [ ] Logged-in as a **Pro** user (Stripe/Razorpay purchased): ZIP + source both 200 for premium ids.
 
-### 3.2 Backend REST (`https://ui-hub-backend-mcp.onrender.com`)
-- [ ] `GET /health` → 200.
+### 3.2 Backend REST (`https://ui-hub-design.vercel.app/api`)
+- [ ] `GET /api/health` → 200.
 - [ ] Free-token request for a premium id (`/api/.../source`) → `403 PREMIUM_ACCESS_REQUIRED`.
 - [ ] Pro-token request for same id → `200` with source.
 - [ ] Previously-broken ids now resolve: `black-hole`, `rubiks-cube`, `toonhub-hero`.
@@ -84,7 +90,7 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 | MCP returns not-found / empty source for a premium id | id missing from `sourceCode.json` | `cd mcp-server; npm run sync:data` (regenerates 124 entries), re-run `npm run build` guard, commit + deploy |
 | Backend can't resolve a premium id | id neither embedded nor resolvable on disk | `cd backend; npm run sync:premium` (embeds idempotently), rerun `npm test`, commit + deploy |
 | Deploy fails at `check-source-coverage` | canonical premium set has an id absent from data | run `npm run sync:data`; if the component file doesn't exist, fix the canonical list in `frontend/src/data/premiumComponents.ts` + `backend/src/config/premiumComponents.js` |
-| Vercel frontend can't fetch API | CORS / allowed origins | confirm `MCP_ALLOWED_ORIGINS` includes the prod origin on the unified backend service |
+| Vercel frontend can't fetch API | CORS / allowed origins | confirm `MCP_ALLOWED_ORIGINS` (Render MCP service) + backend CORS include the prod origin |
 
 ## 5. Keeping data in sync (routine component changes)
 
