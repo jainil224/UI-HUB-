@@ -1,11 +1,12 @@
 import React from 'react';
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Bot, Heart, ArrowLeft } from 'lucide-react';
+import { Bot, Heart, Folder, ArrowLeft } from 'lucide-react';
 import { useMcpKeepAlive, warmUpMcp } from '../../hooks/useMcpKeepAlive';
 
 const navItems = [
     { to: '/dashboard/mcp', label: 'MCP', icon: Bot, end: true },
+    { to: '/dashboard/collections', label: 'Collections', icon: Folder, end: true },
     { to: '/favorites', label: 'Saved Components', icon: Heart },
 ];
 

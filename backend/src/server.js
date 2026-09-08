@@ -7,6 +7,7 @@ import userRoutes from './routes/userRoutes.js';
 import configRoutes from './routes/configRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import favoritesRoutes from './routes/favoritesRoutes.js';
+import collectionsRoutes from './routes/collectionsRoutes.js';
 import { globalLimiter } from './middleware/rateLimiters.js';
 import { startUserSyncWorker } from './services/syncService.js';
 import { syncAllComponentsToMongo } from './services/componentSyncService.js';
@@ -102,6 +103,7 @@ router.use('/v1/users', userRoutes);
 router.use('/v1/config', configRoutes);
 router.use('/v1/payment', paymentRoutes);
 router.use('/v1', favoritesRoutes);
+router.use('/v1', collectionsRoutes);
 
 // 6. MCP Server Integration (Unified Deployment)
 try {

@@ -8,6 +8,7 @@ const LibraryPage = React.lazy(() => import('./pages/LibraryPage/LibraryPage'));
 const FavoritesPage = React.lazy(() => import('./pages/Dashboard/FavoritesPage'));
 const DashboardLayout = React.lazy(() => import('./pages/Dashboard/DashboardLayout'));
 const MCPPage = React.lazy(() => import('./pages/Dashboard/MCPPage'));
+const CollectionsPage = React.lazy(() => import('./pages/Dashboard/CollectionsPage'));
 const LoginPage = React.lazy(() => import('./pages/Auth/LoginPage'));
 const SignupPage = React.lazy(() => import('./pages/Auth/SignupPage'));
 const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
@@ -103,6 +104,7 @@ const AppShell = () => {
             <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route index element={<Navigate to="/dashboard/mcp" replace />} />
                 <Route path="mcp" element={<MCPPage />} />
+                <Route path="collections" element={<CollectionsPage />} />
             </Route>
             <Route path="/mcp" element={<Navigate to="/dashboard/mcp" replace />} />
             <Route path="/admin/mcp" element={<AdminGuard />}>

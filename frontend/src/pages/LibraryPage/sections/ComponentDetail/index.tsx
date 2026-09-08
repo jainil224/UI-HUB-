@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
     Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown,
-    Maximize2, Minimize2, Sparkles, Bot, Loader2
+    Maximize2, Minimize2, Sparkles, Bot, Loader2, FolderPlus, Folder
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
@@ -16,6 +16,7 @@ import { fetchVibePrompt, fetchComponentSource, getFallbackVibePrompt, AISystem,
 import { getApiBaseUrl } from '../../../../utils/apiConfig';
 import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
+import { listCollections, addToCollection, Collection } from '../../../../services/collections';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
 import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMetadata';
 import Toast from '../../../../components/ui/Toast';
@@ -948,6 +949,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [showAuthModal, setShowAuthModal] = React.useState(false);
     const [favoritesCount, setFavoritesCount] = React.useState(0);
+    const [collections, setCollections] = React.useState<Collection[]>([]);
+    const [collectionPopover, setCollectionPopover] = React.useState(false);
+    const [saveToCollectionBusy, setSaveToCollectionBusy] = React.useState(false);
 
     // Toast state for code copy
     const [showToast, setShowToast] = React.useState(false);
@@ -963,6 +967,54 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         });
         return unsubscribe;
     }, [user?.uid, item.id]);
+
+    React.useEffect(() => {
+        if (!user) { setCollections([]); return; }
+        let cancelled = false;
+        listCollections().then(data => {
+            if (!cancelled) setCollections(data);
+        }).catch(err => {
+            console.error('[ComponentDetail] Failed to load collections:', err);
+        });
+        return () => { cancelled = true; };
+    }, [user]);
+
+    const openSaveToCollection = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!user) {
+            setShowAuthModal(true);
+            return;
+        }
+        setCollectionPopover(o => !o);
+    };
+
+    const handleSaveToCollection = async (collectionId: string) => {
+        setSaveToCollectionBusy(true);
+        try {
+            await addToCollection(collectionId, {
+                id: item.id,
+                title: item.title || 'Untitled',
+                category: item.category || 'custom',
+                code: typeof item.code === 'string' ? item.code : '',
+            });
+            setCollectionPopover(false);
+            setToastMessage("SAVED TO COLLECTION ✓");
+            setShowToast(true);
+        } catch (err: any) {
+            if (err?.code === 'VAULT_LIMIT') {
+                setToastMessage("VAULT LIMIT REACHED — UPGRADE TO PRO");
+                setShowToast(true);
+                setCollectionPopover(false);
+                navigate('/pricing');
+            } else {
+                console.error('[ComponentDetail] Failed to save to collection:', err);
+                setToastMessage("FAILED TO SAVE TO COLLECTION");
+                setShowToast(true);
+            }
+        } finally {
+            setSaveToCollectionBusy(false);
+        }
+    };
 
     const toggleFavorite = async () => {
         if (isFavorited) {
@@ -1239,6 +1291,68 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 fill={isFavorited ? "currentColor" : "none"}
                             />
                         </button>
+
+                        {/* Save to collection */}
+                        <div className="relative">
+                            <button
+                                type="button"
+                                onClick={openSaveToCollection}
+                                title="Save to a Collection"
+                                aria-label="Save to a Collection"
+                                className="p-2.5 rounded-lg border-2 border-white bg-brand-surface text-neutral-400 hover:text-white hover:border-brand-yellow brutal-shadow-black hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer select-none active:scale-90"
+                            >
+                                <FolderPlus size={18} className="text-neutral-400 hover:text-brand-yellow" />
+                            </button>
+
+                            <AnimatePresence>
+                                {collectionPopover && (
+                                    <>
+                                        <div className="fixed inset-0 z-[60]" onClick={() => setCollectionPopover(false)} />
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -8 }}
+                                            className="absolute right-0 top-full mt-2 z-[61] w-72 max-h-80 overflow-y-auto rounded-lg border-2 border-white bg-brand-surface shadow-[4px_4px_0_0_#000] p-3"
+                                        >
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2 px-1">
+                                                Save to collection
+                                            </p>
+                                            {collections.length === 0 ? (
+                                                <div className="px-3 py-6 text-center">
+                                                    <Folder size={22} className="mx-auto mb-2 text-neutral-500" />
+                                                    <p className="text-xs text-neutral-400">
+                                                        No collections yet. Create one on your dashboard.
+                                                    </p>
+                                                    <Link
+                                                        to="/dashboard/collections"
+                                                        className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-md bg-brand-yellow text-black text-[10px] font-black uppercase tracking-widest cursor-pointer hover:brightness-110 transition-all"
+                                                    >
+                                                        <FolderPlus size={12} /> New Collection
+                                                    </Link>
+                                                </div>
+                                            ) : (
+                                                <div className="flex flex-col gap-1">
+                                                    {collections.map((c) => (
+                                                        <button
+                                                            key={c.id}
+                                                            disabled={saveToCollectionBusy}
+                                                            onClick={() => void handleSaveToCollection(c.id)}
+                                                            className="flex items-center gap-2.5 px-3 py-2.5 rounded-md border-2 border-neutral-800 hover:border-brand-yellow text-left transition-colors cursor-pointer disabled:opacity-50"
+                                                        >
+                                                            <span className="text-lg">{c.icon || '🗂️'}</span>
+                                                            <span className="flex-1 min-w-0">
+                                                                <span className="block text-xs font-black uppercase tracking-wider text-white truncate">{c.name}</span>
+                                                                <span className="block text-[10px] text-neutral-500">{c.itemCount} saved</span>
+                                                            </span>
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </motion.div>
+                                    </>
+                                )}
+                            </AnimatePresence>
+                        </div>
                     </div>
                 </div>
             </div>
