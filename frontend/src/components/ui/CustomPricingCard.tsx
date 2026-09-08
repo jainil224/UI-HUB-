@@ -22,6 +22,7 @@ interface CategoryInfo {
     count: number;
     icon: React.ReactNode;
     description: string;
+    premiumComponents: string[];
 }
 
 interface DurationOption {
@@ -44,6 +45,13 @@ export const CATEGORIES: CategoryInfo[] = [
         count: 11,
         icon: <Palette className="w-4 h-4" />,
         description: 'Interactive button components',
+        premiumComponents: [
+            'Galaxy Button',
+            'Orbit Button',
+            'Rainbow Button',
+            'Glow Button',
+            'Corner Border Button',
+        ],
     },
     {
         key: 'text',
@@ -55,6 +63,9 @@ export const CATEGORIES: CategoryInfo[] = [
         count: 15,
         icon: <Type className="w-4 h-4" />,
         description: 'Animated text effects',
+        premiumComponents: [
+            'Pixel Drift',
+        ],
     },
     // Tier 2 - Standard
     {
@@ -67,6 +78,11 @@ export const CATEGORIES: CategoryInfo[] = [
         count: 13,
         icon: <MousePointer className="w-4 h-4" />,
         description: 'Custom cursor animations',
+        premiumComponents: [
+            'Black Hole Cursor',
+            'Lizard Cursor',
+            'Aura Cursor',
+        ],
     },
     {
         key: 'image-interaction',
@@ -78,6 +94,12 @@ export const CATEGORIES: CategoryInfo[] = [
         count: 7,
         icon: <Image className="w-4 h-4" />,
         description: 'Image galleries & carousels',
+        premiumComponents: [
+            'Perspective Carousel',
+            'Diagonal Carousel',
+            'Image Collage',
+            'Image Trail',
+        ],
     },
     {
         key: 'miscellaneous',
@@ -89,6 +111,16 @@ export const CATEGORIES: CategoryInfo[] = [
         count: 18,
         icon: <Sparkles className="w-4 h-4" />,
         description: 'Cards, marquees, loaders & more',
+        premiumComponents: [
+            'Hell Background',
+            'Interactive Grid Background',
+            'Isometric Grid Background',
+            'Black Hole Background',
+            'Mouse Gravity Background',
+            'Spotlight Cards',
+            'Section Scroll',
+            'Cloud Scroll',
+        ],
     },
     // Tier 3 - Premium
     {
@@ -101,6 +133,15 @@ export const CATEGORIES: CategoryInfo[] = [
         count: 16,
         icon: <Layout className="w-4 h-4" />,
         description: 'Dynamic background effects',
+        premiumComponents: [
+            'Gravitational Vortex',
+            'Blooming Flower',
+            'Chandelier',
+            'Twin Galaxy Rings',
+            'Tornado',
+            'Morphing Rings',
+            'Lightfall',
+        ],
     },
     {
         key: '3d',
@@ -112,6 +153,14 @@ export const CATEGORIES: CategoryInfo[] = [
         count: 13,
         icon: <Box className="w-4 h-4" />,
         description: 'WebGL & Three.js components',
+        premiumComponents: [
+            '3D Hero',
+            '3D Scroll Animation',
+            '3D Slider',
+            '3D Rubiks Cube',
+            'Cards Beam',
+            'Solar System',
+        ],
     },
 ];
 
@@ -264,34 +313,58 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                                     {cats.map(cat => {
                                         const isSelected = selectedCategories.includes(cat.key);
                                         return (
-                                            <button
-                                                key={cat.key}
-                                                onClick={() => toggleCategory(cat.key)}
-                                                className={`w-full flex items-center justify-between px-3 py-2 rounded border transition-all text-left ${
-                                                    isSelected
-                                                        ? 'border-brand-blue bg-brand-blue/10'
-                                                        : 'border-neutral-700 bg-brand-bg hover:border-neutral-500'
-                                                }`}
-                                            >
-                                                <div className="flex items-center gap-2.5">
-                                                    <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
+                                            <div key={cat.key}>
+                                                <button
+                                                    onClick={() => toggleCategory(cat.key)}
+                                                    className={`w-full flex items-center justify-between px-3 py-2 rounded border transition-all text-left ${
                                                         isSelected
-                                                            ? 'bg-brand-blue border-brand-blue text-white'
-                                                            : 'border-neutral-600 bg-neutral-800'
-                                                    }`}>
-                                                        {isSelected && <Check size={10} strokeWidth={3} />}
+                                                            ? 'border-brand-blue bg-brand-blue/10'
+                                                            : 'border-neutral-700 bg-brand-bg hover:border-neutral-500'
+                                                    }`}
+                                                >
+                                                    <div className="flex items-center gap-2.5">
+                                                        <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
+                                                            isSelected
+                                                                ? 'bg-brand-blue border-brand-blue text-white'
+                                                                : 'border-neutral-600 bg-neutral-800'
+                                                        }`}>
+                                                            {isSelected && <Check size={10} strokeWidth={3} />}
+                                                        </div>
+                                                        <span className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-neutral-300'}`}>
+                                                            {cat.name}
+                                                        </span>
+                                                        <span className="text-[9px] text-neutral-500 font-medium">
+                                                            ({cat.count})
+                                                        </span>
                                                     </div>
-                                                    <span className={`text-xs font-bold ${isSelected ? 'text-white' : 'text-neutral-300'}`}>
-                                                        {cat.name}
+                                                    <span className="text-[10px] font-black text-neutral-400">
+                                                        {currency}{currencyMode === 'INR' ? cat.inr : cat.usd}/mo
                                                     </span>
-                                                    <span className="text-[9px] text-neutral-500 font-medium">
-                                                        ({cat.count})
-                                                    </span>
-                                                </div>
-                                                <span className="text-[10px] font-black text-neutral-400">
-                                                    {currency}{currencyMode === 'INR' ? cat.inr : cat.usd}/mo
-                                                </span>
-                                            </button>
+                                                </button>
+
+                                                {/* Premium component names */}
+                                                {cat.premiumComponents.length > 0 && (
+                                                    <div className="mt-1.5 pl-8 pr-2 pb-1">
+                                                        <p className="text-[9px] font-bold uppercase tracking-wider text-brand-yellow/70 mb-1">
+                                                            Includes Premium:
+                                                        </p>
+                                                        <div className="flex flex-wrap gap-1">
+                                                            {cat.premiumComponents.map(name => (
+                                                                <span
+                                                                    key={name}
+                                                                    className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${
+                                                                        isSelected
+                                                                            ? 'bg-brand-blue/15 border-brand-blue/30 text-brand-blue'
+                                                                            : 'bg-neutral-800/60 border-neutral-700 text-neutral-400'
+                                                                    }`}
+                                                                >
+                                                                    {name}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
                                         );
                                     })}
                                 </div>
@@ -344,21 +417,36 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                 <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">
                     YOUR SELECTION
                 </p>
-                <div className="flex flex-wrap gap-1.5">
+                <div className="space-y-1.5">
                     <AnimatePresence mode="popLayout">
                         {selectedCategories.map(catKey => {
                             const cat = CATEGORIES.find(c => c.key === catKey)!;
                             return (
-                                <motion.span
+                                <motion.div
                                     key={catKey}
                                     initial={{ opacity: 0, scale: 0.8 }}
                                     animate={{ opacity: 1, scale: 1 }}
                                     exit={{ opacity: 0, scale: 0.8 }}
-                                    className="inline-flex items-center gap-1 px-2 py-1 rounded bg-brand-blue/20 border border-brand-blue/30 text-[10px] font-bold text-brand-blue"
+                                    className="px-2.5 py-1.5 rounded bg-brand-blue/20 border border-brand-blue/30"
                                 >
-                                    {cat.icon}
-                                    {cat.name}
-                                </motion.span>
+                                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-brand-blue">
+                                        {cat.icon}
+                                        {cat.name}
+                                        <span className="text-neutral-400 font-medium">({cat.count})</span>
+                                    </div>
+                                    {cat.premiumComponents.length > 0 && (
+                                        <div className="flex flex-wrap gap-1 mt-1 pl-4">
+                                            {cat.premiumComponents.map(name => (
+                                                <span
+                                                    key={name}
+                                                    className="px-1 py-0.5 rounded bg-brand-blue/20 border border-brand-blue/20 text-[8px] font-bold text-brand-blue"
+                                                >
+                                                    {name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                </motion.div>
                             );
                         })}
                     </AnimatePresence>
