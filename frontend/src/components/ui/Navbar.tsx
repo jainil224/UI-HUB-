@@ -14,7 +14,7 @@ import { NavbarSkeleton } from './Skeleton';
 import { getUserFavorites, removeFromFavorites, FavoriteItem } from '../../services/favorites';
 
 const Navbar = () => {
-    const { user, isPro, loading } = useAuth();
+    const { user, isPro, loading, planType } = useAuth();
     const { isLoading } = useSkeleton();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
@@ -89,7 +89,7 @@ const Navbar = () => {
         prevUserRef.current = user;
     }, [user, loading]);
 
-    const planTier: PlanTier = isPro ? 'pro' : 'free';
+    const planTier: PlanTier = planType === 'custom' ? 'custom' : (isPro ? 'pro' : 'free');
 
     return (
         <AnimatePresence mode="wait">

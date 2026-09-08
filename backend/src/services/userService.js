@@ -104,6 +104,8 @@ export const checkProStatus = async (email) => {
     // Elite users are automatically Pro
     if (user.status === 'ELITE') return true;
     if (user.status === 'PRO') return true;
+    // Custom plan users are also considered Pro (have some paid access)
+    if (user.planType === 'custom' || user.planTier === 'custom') return true;
 
     // Check for premium access with expiry (legacy support)
     if (user.proExpiry) {

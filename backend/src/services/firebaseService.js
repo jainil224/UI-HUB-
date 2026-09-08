@@ -5,7 +5,7 @@ import { logActivity } from './activityLogService.js';
 const PAYMENTS_COLLECTION = 'payments';
 const USERS_COLLECTION = 'users';
 
-export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, amount, currency = 'USD', signature, displayName }) => {
+export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, amount, currency = 'USD', signature, displayName, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6 }) => {
   const payments = await getCollection(PAYMENTS_COLLECTION);
   const existing = await payments.findOne({ _id: paymentId });
 
@@ -27,6 +27,9 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
       status: 'SUCCESS',
       tier: tier || 'pro',
       signature: signature,
+      selectedCategories: Array.isArray(selectedCategories) ? selectedCategories : [],
+      duration: duration || '6 Months',
+      subscriptionMonths: Number(subscriptionMonths) || 6,
       proEmailSent: false,
       invoiceEmailSent: false,
       timestamp: new Date(),
@@ -42,6 +45,11 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
     const users = await getCollection(USERS_COLLECTION);
     const newStatus = (tier || 'pro').toUpperCase();
 
+    // Calculate plan expiry based on subscription months
+    const months = Number(subscriptionMonths) || (tier === 'custom' ? 6 : 6);
+    const planExpiry = new Date();
+    planExpiry.setMonth(planExpiry.getMonth() + months);
+
     await users.updateOne(
       { _id: email.toLowerCase() },
       {
@@ -49,6 +57,10 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
           email: email.toLowerCase(),
           planTier: tier || 'pro',
           status: newStatus,
+          planType: tier || 'pro',
+          selectedCategories: Array.isArray(selectedCategories) && selectedCategories.length > 0 ? selectedCategories : [],
+          planDuration: duration || '6 Months',
+          planExpiry: planExpiry,
           proActivatedAt: new Date(),
           updatedAt: new Date(),
         },
@@ -62,7 +74,7 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
       userId: undefined,
       email,
       level: 'success',
-      metadata: { paymentId, orderId, tier, amount: Number(amount), currency },
+      metadata: { paymentId, orderId, tier, amount: Number(amount), currency, selectedCategories, duration },
     });
   } catch (err) {
     console.error('[MongoService] Error updating user tier:', err);

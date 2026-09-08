@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Check, X, Zap, Crown, ArrowRight, Star, Download, Code2, Shield } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import PlanBadge from '../../components/ui/PlanBadge';
+import CustomPricingCard from '../../components/ui/CustomPricingCard';
 import { useAuth } from '../../context/AuthContext';
 import { loadRazorpayScript } from '../../utils/razorpayUtils';
 import CheckoutOverlay from '../../components/ui/CheckoutOverlay';
@@ -74,8 +75,7 @@ const PricingPage = () => {
             // 1. Resolve API URL
             const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
             
-            // 2. Fetch Razorpay Key ID from backend at runtime
-            // This prevents "Key Invalid" 401 errors caused by missing Vercel env vars
+            // Fetch Razorpay Key ID from backend at runtime
             let razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
             try {
                 const configRes = await fetch(`${apiUrl}/api/v1/config/razorpay-key`);
@@ -89,15 +89,22 @@ const PricingPage = () => {
                 console.warn('[Checkout] Background Key fetch failed:', configErr);
             }
 
-            // 3. Strict Guardrail: Stop if we still have a dummy key or no key
-            // This PREVENTS the Razorpay library from showing its own "Oops" generic browser alert
+            // Strict Guardrail: Stop if we still have a dummy key or no key
             if (!razorpayKey || razorpayKey.includes('dummy')) {
                 setStatus('error');
                 setCheckoutMessage('Configuration Error: Razorpay Key ID is missing. Please ensure your backend is deployed and VITE_API_URL is set in Vercel.');
                 return;
             }
 
-            // 4. Create Order
+            // Build body including custom plan metadata
+            const orderBody: any = { amount: plan.price, currency: currencyMode, planId: plan.badgeTier };
+            if (plan.badgeTier === 'custom') {
+                orderBody.selectedCategories = plan.selectedCategories || [];
+                orderBody.duration = plan.duration || '6 Months';
+                orderBody.subscriptionMonths = plan.months || 6;
+            }
+
+            // Create Order
             const idToken = await user.getIdToken();
             const createOrderRes = await fetch(`${apiUrl}/api/v1/payment/create-order`, {
                 method: 'POST',
@@ -105,7 +112,7 @@ const PricingPage = () => {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${idToken}`,
                 },
-                body: JSON.stringify({ amount: plan.price, currency: currencyMode, planId: plan.badgeTier })
+                body: JSON.stringify(orderBody)
             });
             
             if (!createOrderRes.ok) {
@@ -142,7 +149,10 @@ const PricingPage = () => {
                                 user_email: user.email,
                                 tier: plan.badgeTier,
                                 amount: plan.price,
-                                planId: plan.badgeTier
+                                planId: plan.badgeTier,
+                                selectedCategories: plan.selectedCategories || [],
+                                duration: plan.duration || '6 Months',
+                                subscriptionMonths: plan.months || 6,
                             })
                         });
                         
@@ -335,7 +345,7 @@ const PricingPage = () => {
                 </motion.div>
 
                 {/* ── Pricing Cards ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 mb-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 max-w-6xl mx-auto gap-8 mb-16 items-start">
                     {plans.map((plan, idx) => {
                         const Icon = plan.icon;
 
@@ -454,6 +464,12 @@ const PricingPage = () => {
                             </motion.div>
                         );
                     })}
+
+                    {/* Custom Plan Card */}
+                    <CustomPricingCard
+                        currencyMode={currencyMode}
+                        onCheckout={(data) => handleCheckout(data)}
+                    />
                 </div>
 
                 {/* ── Trust strip ── */}

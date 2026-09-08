@@ -1,6 +1,7 @@
 import Razorpay from 'razorpay';
 import { verifyRazorpaySignature } from '../utils/verifySignature.js';
 import { fulfillPayment, dispatchProSubscriptionReceipt } from '../services/firebaseService.js';
+import { DURATION_DISCOUNTS } from '../config/plans.js';
 
 // Initialize Razorpay
 const getRazorpayInstance = () => {
@@ -19,7 +20,7 @@ const getRazorpayInstance = () => {
  */
 export const createOrder = async (req, res) => {
   try {
-    const { amount, currency = 'USD', planId } = req.body;
+    const { amount, currency = 'USD', planId, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6 } = req.body;
 
     if (!amount) {
       return res.status(400).json({ success: false, error: 'Amount is required' });
@@ -33,6 +34,9 @@ export const createOrder = async (req, res) => {
         userId: req.user?.uid || 'unknown', 
         tier: planId || 'pro',
         displayName: req.user?.name || req.user?.email || 'Customer',
+        selectedCategories: JSON.stringify(selectedCategories || []),
+        duration: duration || '6 Months',
+        subscriptionMonths: String(subscriptionMonths || 6),
       }
     };
 
@@ -69,7 +73,10 @@ export const verifyPayment = async (req, res) => {
       tier = 'pro',
       amount = 0,
       currency = 'USD',
-      planId
+      planId,
+      selectedCategories = [],
+      duration = '6 Months',
+      subscriptionMonths = 6
     } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !user_email) {
@@ -103,6 +110,9 @@ export const verifyPayment = async (req, res) => {
             tier: tier,
             signature: razorpay_signature,
             displayName,
+            selectedCategories: Array.isArray(selectedCategories) ? selectedCategories : [],
+            duration: duration,
+            subscriptionMonths: Number(subscriptionMonths) || 6,
         });
 
         // 3. Dispatch PRO Subscription Email with attached PDF Receipt (idempotent)
@@ -113,7 +123,7 @@ export const verifyPayment = async (req, res) => {
             displayName,
             amount,
             currency,
-            duration: '6 Months',
+            duration: duration || '6 Months',
         }).catch((emailErr) => {
             console.error('[VerifyPayment] Background PRO email/receipt error:', emailErr);
         });
@@ -124,10 +134,13 @@ export const verifyPayment = async (req, res) => {
         }
 
         console.log(`[VerifyPayment] Payment verified & fulfilled for ${user_email}, paymentId: ${razorpay_payment_id}`);
+        const welcomeMsg = tier === 'custom'
+            ? 'Payment verified successfully. Your custom plan is now active!'
+            : 'Payment verified successfully. Welcome to PRO ACCESS! Your payment receipt has been sent to your email.';
         return res.json({
             success: true,
             tier: tier,
-            message: 'Payment verified successfully. Welcome to PRO ACCESS! Your payment receipt has been sent to your email.'
+            message: welcomeMsg
         });
 
     } catch (fbErr) {

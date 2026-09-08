@@ -485,6 +485,25 @@ router.get('/status', verifyToken, async (req, res) => {
         // Elite users are folded into Pro so the frontend only needs Free/Pro.
         const isPro = await checkProStatus(email) || await checkEliteStatus(email);
 
+        // Fetch custom plan info (selectedCategories, planType, etc.)
+        let planInfo = null;
+        try {
+            const usersCol = await getCollection('users');
+            const emailKey = (email || '').toLowerCase();
+            const userDoc = await usersCol.findOne({ $or: [{ _id: emailKey }, { email: emailKey }] });
+            if (userDoc) {
+                planInfo = {
+                    planType: userDoc.planType || (userDoc.planTier || 'free'),
+                    selectedCategories: Array.isArray(userDoc.selectedCategories) ? userDoc.selectedCategories : [],
+                    planDuration: userDoc.planDuration || null,
+                    planExpiry: userDoc.planExpiry instanceof Date ? userDoc.planExpiry.toISOString() : (userDoc.planExpiry || null),
+                    planTier: userDoc.planTier || 'free',
+                };
+            }
+        } catch (planErr) {
+            console.error('[Status] Error fetching plan info:', planErr.message);
+        }
+
         // Premium AI trial info for non-pro users (unlimited for pro).
         let trial = null;
         if (!isPro) {
@@ -508,7 +527,8 @@ router.get('/status', verifyToken, async (req, res) => {
             isPro,
             email,
             uid,
-            trial
+            trial,
+            plan: planInfo,
         });
     } catch (error) {
         console.error('Error in user status route:', error);

@@ -23,6 +23,9 @@ interface AuthContextType {
     isPro: boolean;
     loading: boolean;
     refreshProStatus: () => Promise<boolean | null>;
+    planType: string;
+    selectedCategories: string[];
+    hasCategoryAccess: (category: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -30,6 +33,9 @@ const AuthContext = createContext<AuthContextType>({
     isPro: false,
     loading: true,
     refreshProStatus: async () => null,
+    planType: 'free',
+    selectedCategories: [],
+    hasCategoryAccess: () => false,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -39,6 +45,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [isPro, setIsPro] = useState(() => (localStorage.getItem('ui-hub-pro') === 'true' || localStorage.getItem('ui-hub-elite') === 'true'));
     const [loading, setLoading] = useState(true);
     const [welcome, setWelcome] = useState<WelcomeEvent | null>(null);
+    const [planType, setPlanType] = useState('free');
+    const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
     const welcomeFiredForRef = useRef<string | null>(null);
 
     const fireWelcome = (u: User, alreadyShown: boolean | null) => {
@@ -129,14 +137,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 const flag = String(proStatus);
                 localStorage.setItem('ui-hub-pro', flag);
                 localStorage.setItem('ui-hub-elite', flag);
+
+                // Store plan type and selected categories from custom plans
+                if (data.plan) {
+                    setPlanType(data.plan.planType || 'free');
+                    setSelectedCategories(Array.isArray(data.plan.selectedCategories) ? data.plan.selectedCategories : []);
+                    localStorage.setItem('ui-hub-plan-type', data.plan.planType || 'free');
+                    localStorage.setItem('ui-hub-selected-categories', JSON.stringify(data.plan.selectedCategories || []));
+                }
+
                 console.log(`[Auth] Status Match: Pro=${proStatus}`);
                 return proStatus;
             } else {
                 const errorText = await response.text();
                 console.error(`[Auth] Failed: ${response.status} - Status endpoint returned error:`, errorText);
                 setIsPro(false);
+                setPlanType('free');
+                setSelectedCategories([]);
                 localStorage.setItem('ui-hub-pro', 'false');
                 localStorage.setItem('ui-hub-elite', 'false');
+                localStorage.setItem('ui-hub-plan-type', 'free');
+                localStorage.setItem('ui-hub-selected-categories', '[]');
                 return false;
             }
         } catch (error) {
@@ -200,6 +221,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             } else {
                 syncedThisSession = false; // reset when user signs out
                 setIsPro(false);
+                setPlanType('free');
+                setSelectedCategories([]);
                 setLoading(false);
             }
         });
@@ -208,6 +231,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [refreshProStatus]);
 
     const isSpecialUser = user?.email === 'jainil11199@gmail.com';
+
+    const hasCategoryAccess = useCallback((category: string): boolean => {
+        const isSpecial = user?.email === 'jainil11199@gmail.com' 
+            || user?.email === 'jainil224@gmail.com' 
+            || user?.email === 'jainilpatel2224@gmail.com';
+        if (isSpecial) return true; // Special users have full access
+        if (planType === 'pro' || isPro) return true; // Pro users have full access
+        if (planType === 'custom') {
+            return selectedCategories.includes(category);
+        }
+        return false; // Free plan
+    }, [user?.email, planType, isPro, selectedCategories]);
 
     // Auto-refresh Pro status when the tab regains focus (covers upgrades
     // completed in another tab or via external payment flows) without polling.
@@ -231,7 +266,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [refreshProStatus]);
 
     return (
-        <AuthContext.Provider value={{ user, isPro: isPro || isSpecialUser, loading, refreshProStatus }}>
+        <AuthContext.Provider value={{ user, isPro: isPro || isSpecialUser, loading, refreshProStatus, planType, selectedCategories, hasCategoryAccess }}>
             {/* Always render children immediately to unblock app mount */}
             {children}
 
