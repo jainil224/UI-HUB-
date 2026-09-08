@@ -9,7 +9,10 @@
     "postinstall": "cd ../mcp-server && npm install",
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
-    "sync:components": "node src/scripts/syncComponents.js"
+    "sync:components": "node src/scripts/syncComponents.js",
+    "sync:premium": "node src/scripts/embedPremiumSources.js",
+    "check:premium": "node src/scripts/checkPremiumCoverage.js",
+    "test": "npm run check:premium && node --test tests/"
   },
   "dependencies": {
     "@upstash/redis": "^1.37.0",

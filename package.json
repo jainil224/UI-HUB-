@@ -11,6 +11,10 @@
     "dev": "npx concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:all": "npx concurrently \"npm run dev:frontend\" \"npm run dev:backend\" \"npm run dev:mcp\"",
     "build": "cd frontend && npm install && npm run build",
+    "build:cli": "cd cli && npm install && npm run build",
+    "test:cli": "cd cli && npm test",
+    "ui-hub": "node cli/dist/cli.js",
+    "cli:dev": "cd cli && npm run dev",
     "start": "cd backend && npm start",
     "sync:components": "cd backend && npm run sync:components"
   },

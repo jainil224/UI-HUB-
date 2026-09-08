@@ -1,0 +1,5 @@
+# CLI is published from dist/ and ships its lockfile
+!dist/
+!dist/**
+!package-lock.json
+node_modules/

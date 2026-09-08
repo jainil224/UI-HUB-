@@ -87,18 +87,20 @@ const sessionStore = new Map();
 // ── Auth middleware ───────────────────────────────────────────────────────────
 /**
  * Honours the "authentication enabled" setting. When disabled, requests are
- * admitted in a dev/admin tier so the playground keeps working.
+ * admitted in a dev/admin tier so the playground keeps working — EXCEPT in
+ * production, where an anonymous caller must never get ADMIN privileges.
  * Returns a proper JSON-RPC error (not a raw HTTP 401) so MCP clients can parse it.
  */
 async function optionalAuth(req, res, next) {
     try {
         const cfg = await configService.get();
         if (!cfg.authEnabled) {
+            const inProduction = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
             req.user = {
                 userId: 'no-auth',
                 email: '',
-                name: 'Admin',
-                tier: 'ADMIN',
+                name: inProduction ? 'Anonymous' : 'Admin',
+                tier: inProduction ? 'FREE' : 'ADMIN',
                 keyId: 'no-auth',
                 keyPrefix: '',
                 keyStatus: 'active',

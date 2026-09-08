@@ -1,11 +1,11 @@
 import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources';
 import { EMBEDDED_SOURCE_CODE } from '../data/embeddedSourceCode';
-import { CARD_CASCADE_SOURCE } from '../data/cardCascadeSource';
 import { CINEMATIC_NAVBAR_SOURCE } from '../data/cinematicNavbarSource';
 import { SUI_FOUNDATION_SOURCE } from '../data/suiFoundationSource';
 import { HAUL_FOOTER_SOURCE } from '../data/haulFooterSource';
 import { OMNIFLOW_FOOTER_SOURCE } from '../data/omniflowFooterSource';
 import { SORA_FOOTER_SOURCE } from '../data/soraFooterSource';
+import { isPremiumComponentId } from '../data/premiumComponents';
 
 const UI_HUB_DISPLAY_NAME = (id: string) =>
     id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
@@ -42,14 +42,16 @@ export const withUiHubBranding = (code: string, id: string, html = false): strin
     return `${banner}\n\n${code}`;
 };
 
-export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'html', styling: 'tailwind' | 'css' }) => {
+export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'html', styling: 'tailwind' | 'css' }): string | null => {
   const { lang, styling } = options;
   const isTS = lang === 'ts';
   const isTailwind = styling === 'tailwind';
 
   // Full production source is preferred over the generated snippet when the
-  // real component file exists — keeps the exact code the component uses
-  // visible in production even where the deployed bundle has no filesystem.
+  // real component file exists and is bundled. Premium component sources are
+  // STRIPPED from the shipped bundle (free components remain), so this map only
+  // ever holds free components — entitled premium users fetch their source via
+  // the backend /source endpoint instead.
   const fullSource = COMPONENT_FULL_SOURCES[id] || EMBEDDED_SOURCE_CODE[id];
   if (isTS && isTailwind && fullSource) return withUiHubBranding(fullSource, id);
 
@@ -73,16 +75,17 @@ export const getComponentCode = (id: string, options: { lang: 'js' | 'ts' | 'htm
     return withUiHubBranding(SORA_FOOTER_SOURCE, id);
   }
 
-  // Card Cascade has no embedded key yet, so fall back to its dedicated
-  // pre-embedded production source (mirrors the backend resolveSourceCode).
-  if (isTS && isTailwind && id === 'card-cascade' && CARD_CASCADE_SOURCE) {
-    return withUiHubBranding(CARD_CASCADE_SOURCE, id);
-  }
-
   // Cinematic Navbar is a self-contained HTML/CSS/JS file (not a React component),
   // so always return the full source regardless of the requested lang/styling.
   if (id === 'cinematic-navbar') {
     return withUiHubBranding(CINEMATIC_NAVBAR_SOURCE, id, true);
+  }
+
+  // Premium components have no bundled source and no dedicated local bundle.
+  // The generated snippet below is a stripped placeholder; the real source is
+  // entitlement-gated on the backend /source endpoint.
+  if (isTS && isTailwind && isPremiumComponentId(id)) {
+    return null;
   }
 
   const vanillaBoilerplate = (html: string, css: string, js: string) => `

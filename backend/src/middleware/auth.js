@@ -1,5 +1,24 @@
 import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
 
+const IS_PRODUCTION = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+
+/**
+ * Decodes the JWT payload without verification. LOCAL DEV ONLY.
+ * Never runs in production — see guards below.
+ */
+const decodeDevToken = (token, req) => {
+  const parts = token.split('.');
+  if (parts.length !== 3) return null;
+  const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf8'));
+  req.user = {
+    uid: payload.user_id || payload.sub || payload.uid || 'dev-user',
+    email: payload.email || 'dev@ui-hub.com',
+    name: payload.name || payload.displayName || '',
+    ...payload,
+  };
+  return req.user;
+};
+
 export const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -8,19 +27,13 @@ export const verifyToken = async (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
-  // If Firebase Admin does not have credentials configured (e.g. local dev without service-account.json)
-  if (!hasCredentials) {
+  // If Firebase Admin does not have credentials configured (local dev without
+  // service-account.json). In production this path is FORBIDDEN — a token that
+  // cannot be verified must be rejected, never silently trusted.
+  if (!hasCredentials && !IS_PRODUCTION) {
     try {
-      // Decode JWT payload for local development
-      const parts = token.split('.');
-      if (parts.length === 3) {
-        const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf8'));
-        req.user = {
-          uid: payload.user_id || payload.sub || payload.uid || 'dev-user',
-          email: payload.email || 'dev@ui-hub.com',
-          name: payload.name || payload.displayName || '',
-          ...payload
-        };
+      const user = decodeDevToken(token, req);
+      if (user) {
         console.log(`[auth] Dev mode: decoded token for ${req.user.email} (${req.user.uid})`);
         return next();
       }
@@ -35,18 +48,15 @@ export const verifyToken = async (req, res, next) => {
     req.user = decodedToken;
     next();
   } catch (error) {
-    // If it failed because of default credentials in local development, fall back to decoding payload
-    if (error.message && error.message.includes('Could not load the default credentials')) {
+    // Fall back to decoding payload for local development ONLY (no production credentials).
+    if (
+      !IS_PRODUCTION &&
+      error.message &&
+      error.message.includes('Could not load the default credentials')
+    ) {
       try {
-        const parts = token.split('.');
-        if (parts.length === 3) {
-          const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf8'));
-          req.user = {
-            uid: payload.user_id || payload.sub || payload.uid || 'dev-user',
-            email: payload.email || 'dev@ui-hub.com',
-            name: payload.name || payload.displayName || '',
-            ...payload
-          };
+        const user = decodeDevToken(token, req);
+        if (user) {
           console.warn(`[auth] Dev mode fallback: decoded token for ${req.user.email} (${req.user.uid})`);
           return next();
         }

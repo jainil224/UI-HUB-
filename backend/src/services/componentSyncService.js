@@ -5,6 +5,7 @@ import { getCollection } from './mongoService.js';
 import { logActivity } from './activityLogService.js';
 import { EMBEDDED_SOURCE_CODE } from '../data/sourceCodeData.js';
 import { COMPONENT_FULL_SOURCES } from '../data/componentFullSources.js';
+import { PREMIUM_COMPONENT_IDS } from '../config/premiumComponents.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,40 +30,6 @@ const EXCLUDED_UI_FILES = new Set([
   'PlanBadge.tsx',
   'Logo.tsx',
   'button.tsx',
-]);
-
-const PREMIUM_COMPONENT_IDS = new Set([
-  'super-mario',
-  'rubiks-cube',
-  'black-hole-cursor',
-  '3d-scroll-animation',
-  '3d-slider',
-  'cards-beam',
-  'solar-system',
-  'toonhub-hero',
-  'fourier-flow',
-  'cloud-scroll',
-  'card-cascade',
-  'twin-galaxy-rings',
-  'point-dna-helix',
-  'tornado',
-  'particle-sphere',
-  'morphing-rings',
-  'hourglass',
-  'gear-system',
-  'isometric-portal',
-  'spiral-images',
-  'infinity-image',
-  'spider-web',
-  'generating-orb',
-  'morphing-glow',
-  'radial-glow-button',
-  'gravitational-vortex',
-  'black-hole',
-  'blooming-flower',
-  'chandelier',
-  'lightfall',
-  'pixel-drift',
 ]);
 
 export const inferCategory = (id) => {

@@ -1032,8 +1032,22 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             return;
         }
 
-        const reactCode = getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' });
+        let reactCode = getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' });
         const htmlCode = getComponentCode(item.id, { lang: 'html', styling: 'css' });
+
+        // Premium components have no bundled source, so fetch the authoritative
+        // copy from the entitlement-gated backend BEFORE zipping.
+        if (item.isPremium && user) {
+            try {
+                const token = await user.getIdToken();
+                const serverSource = await fetchComponentSource(item.id, token);
+                reactCode = serverSource;
+            } catch (sourceErr) {
+                console.error('Failed to fetch premium source for ZIP:', sourceErr);
+                alert('Could not load the premium source for this component. Please try again.');
+                return;
+            }
+        }
 
         let assets: { url: string; fileName: string }[] = [];
 
@@ -1064,7 +1078,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             );
         }
 
-        await downloadComponentZip(item.id, item.title, assets, reactCode, htmlCode);
+        await downloadComponentZip(item.id, item.title, assets, reactCode ?? '', htmlCode ?? '');
         logUserActivity({
             type: 'component.download_zip',
             metadata: { componentId: item.id, title: item.title, category: item.category }
@@ -1086,9 +1100,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     const sourceCode = React.useMemo(() => {
         const hasValidSource = fetchedSource && !fetchedSource.includes('Failed to load source code');
-        return hasValidSource
-            ? withUiHubBranding(fetchedSource, item.id)
-            : getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' });
+        if (hasValidSource) return withUiHubBranding(fetchedSource, item.id);
+        // Premium components are stripped from the bundle; the bundled fallback
+        // is null, and entitled users always receive it via the server fetch above.
+        return getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }) || '// Upgrade to Pro to access the full premium source code.';
     }, [fetchedSource, item.id]);
     const sourceFileName = `${item.title.replace(/\s+/g, '')}.tsx`;
     const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);

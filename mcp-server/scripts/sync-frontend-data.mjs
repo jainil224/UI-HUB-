@@ -270,7 +270,6 @@ try {
 
 // Dedicated single-component source files (id -> key)
 const dedicatedFiles = {
-  'card-cascade': ['cardCascadeSource.ts', 'CARD_CASCADE_SOURCE'],
   'cinematic-navbar': ['cinematicNavbarSource.ts', 'CINEMATIC_NAVBAR_SOURCE'],
   'omniflow-footer': ['omniflowFooterSource.ts', 'OMNIFLOW_FOOTER_SOURCE'],
   'sora-footer': ['soraFooterSource.ts', 'SORA_FOOTER_SOURCE'],
@@ -288,24 +287,51 @@ for (const [id, [file, key]] of Object.entries(dedicatedFiles)) {
 
 // Read remaining component source files directly from disk (frontend/src/components)
 const DISK_COMPONENT_DIR = path.join(ROOT, 'frontend', 'src', 'components');
-const diskIdMap = {
-  'ascii-cursor': ['ui', 'AsciiCursor.tsx'],
-  'aura-cursor': ['ui', 'AuraCursor.tsx'],
-  'kinetic-grid': ['ui', 'KineticGrid.tsx'],
-  'user-cursor': ['ui', 'UserCursor.tsx'],
-  'block-drift': ['ui', 'BlockDrift.tsx'],
-  'lightfall': ['ui', 'Lightfall.tsx'],
-  'morphing-rings': ['ui', 'MorphingRings.tsx'],
-  'particle-sphere': ['ui', 'ParticleSphere.tsx'],
-  'point-dna-helix': ['ui', 'PointDNAHelix.tsx'],
-  'tornado': ['ui', 'Tornado.tsx'],
-  'twin-galaxy-rings': ['ui', 'TwinGalaxyRings.tsx'],
+const DISK_UI_DIR = path.join(DISK_COMPONENT_DIR, 'ui');
+
+// Explicit overrides for ids whose PascalCase filename doesn't match a naive conversion
+const DISK_OVERRIDES = {
+  'ascii-cursor': 'AsciiCursor.tsx',
+  'aura-cursor': 'AuraCursor.tsx',
+  'kinetic-grid': 'KineticGrid.tsx',
+  'user-cursor': 'UserCursor.tsx',
+  'block-drift': 'BlockDrift.tsx',
+  'lightfall': 'Lightfall.tsx',
+  'morphing-rings': 'MorphingRings.tsx',
+  'particle-sphere': 'ParticleSphere.tsx',
+  'point-dna-helix': 'PointDNAHelix.tsx',
+  'tornado': 'Tornado.tsx',
+  'twin-galaxy-rings': 'TwinGalaxyRings.tsx',
 };
-for (const [id, [sub, file]] of Object.entries(diskIdMap)) {
+
+function kebabToPascal(id) {
+  return id.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join('');
+}
+
+for (const [id, file] of Object.entries(DISK_OVERRIDES)) {
   if (sourceCode[id]) continue;
-  const fp = path.join(DISK_COMPONENT_DIR, sub, file);
-  if (!fs.existsSync(fp)) continue;
-  sourceCode[id] = fs.readFileSync(fp, 'utf8');
+  const fp = path.join(DISK_UI_DIR, file);
+  if (fs.existsSync(fp)) sourceCode[id] = fs.readFileSync(fp, 'utf8');
+}
+
+// General resolver: any catalog id still missing gets a PascalCase scan of frontend/src/components/ui
+for (const comp of components) {
+  if (sourceCode[comp.id]) continue;
+  const pascal = kebabToPascal(comp.id);
+  const fp = path.join(DISK_UI_DIR, pascal + '.tsx');
+  if (fs.existsSync(fp)) sourceCode[comp.id] = fs.readFileSync(fp, 'utf8');
+}
+
+// Canonical premium IDs not in the catalog (premium-only components served by backend/MCP)
+let canonicalPremiumIds = [];
+try {
+  canonicalPremiumIds = [...(evalTs('frontend/src/data/premiumComponents.ts').PREMIUM_COMPONENT_IDS || [])];
+} catch (e) { console.error('  (skip premiumComponents.ts:', e.message + ')'); }
+for (const id of canonicalPremiumIds) {
+  if (sourceCode[id]) continue;
+  const pascal = kebabToPascal(id);
+  const fp = path.join(DISK_UI_DIR, pascal + '.tsx');
+  if (fs.existsSync(fp)) sourceCode[id] = fs.readFileSync(fp, 'utf8');
 }
 
 // Templates source: read ?raw template files from disk

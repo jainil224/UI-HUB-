@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { PREMIUM_COMPONENT_IDS } from '../src/config/premiumComponents.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -571,13 +572,21 @@ fs.writeFileSync(path.resolve(__dirname, '../src/data/sourceCodeData.js'), backe
 console.log('Updated backend/src/data/sourceCodeData.js with 100% complete dataset!');
 
 // Write to frontend
+// Premium sources are STRIPPED from the client bundle: the backend keeps the
+// full copy (served through the entitlement-gated /source endpoint) but the
+// frontend ships only free components, so premium code is never in the bundle.
+const frontendData = Object.fromEntries(
+  Object.entries(fullDataset).filter(([id]) => !PREMIUM_COMPONENT_IDS.has(id))
+);
 const frontendOut = `/**
- * PRODUCTION-SAFE 100% COMPLETE EMBEDDED SOURCE CODE
- * 100% COMPLETE COVERAGE (All 71 UI-HUB Components)
+ * BUNDLE-SAFE EMBEDDED SOURCE CODE (free components only)
+ * Premium components are intentionally excluded — their source is served
+ * server-side via the entitlement-gated /source endpoint. See
+ * backend/src/config/premiumComponents.js for the canonical premium list.
  */
 
-export const EMBEDDED_SOURCE_CODE: Record<string, string> = ${JSON.stringify(fullDataset, null, 2)};
+export const EMBEDDED_SOURCE_CODE: Record<string, string> = ${JSON.stringify(frontendData, null, 2)};
 `;
 
 fs.writeFileSync(path.resolve(FRONTEND_DIR, 'data/embeddedSourceCode.ts'), frontendOut, 'utf8');
-console.log('Updated frontend/src/data/embeddedSourceCode.ts with 100% complete dataset!');
+console.log(`Updated frontend/src/data/embeddedSourceCode.ts with free-only dataset (${Object.keys(frontendData).length} free; ${Object.keys(fullDataset).length - Object.keys(frontendData).length} premium excluded)`);

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { PREMIUM_COMPONENT_IDS } from '../src/config/premiumComponents.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -112,15 +113,23 @@ export const EMBEDDED_SOURCE_CODE = ${JSON.stringify(embeddedData, null, 2)};
 fs.writeFileSync(path.resolve(__dirname, '../src/data/sourceCodeData.js'), backendOut, 'utf8');
 console.log('Updated backend/src/data/sourceCodeData.js');
 
-// Write to frontend/src/data/embeddedSourceCode.ts
+// Write to frontend/src/data/embeddedSourceCode.ts.
+// Premium sources are STRIPPED from the client bundle: the backend keeps the
+// full copy (served through the entitlement-gated /source endpoint) but the
+// frontend ships only free components, so premium code is never in the bundle.
+const frontendData = Object.fromEntries(
+  Object.entries(embeddedData).filter(([id]) => !PREMIUM_COMPONENT_IDS.has(id))
+);
 const frontendOut = `/**
- * PRODUCTION-SAFE 100% COMPLETE EMBEDDED SOURCE CODE
+ * BUNDLE-SAFE EMBEDDED SOURCE CODE (free components only)
  * Generated automatically from UI-HUB component files.
- * Contains verbatim, self-contained implementations for every component.
+ * Premium components are intentionally excluded — their source is served
+ * server-side via the entitlement-gated /source endpoint. See
+ * backend/src/config/premiumComponents.js for the canonical premium list.
  */
 
-export const EMBEDDED_SOURCE_CODE: Record<string, string> = ${JSON.stringify(embeddedData, null, 2)};
+export const EMBEDDED_SOURCE_CODE: Record<string, string> = ${JSON.stringify(frontendData, null, 2)};
 `;
 
 fs.writeFileSync(path.resolve(FRONTEND_DIR, 'data/embeddedSourceCode.ts'), frontendOut, 'utf8');
-console.log('Updated frontend/src/data/embeddedSourceCode.ts');
+console.log(`Updated frontend/src/data/embeddedSourceCode.ts (${Object.keys(frontendData).length} free components; ${Object.keys(embeddedData).length - Object.keys(frontendData).length} premium excluded)`);

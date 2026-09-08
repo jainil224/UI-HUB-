@@ -5,6 +5,8 @@ import { checkProStatus, checkEliteStatus, evaluateAiTrial, recordPremiumTrialUs
 import { logActivity } from '../services/activityLogService.js';
 import { syncAllComponentsToMongo, inferCategory, formatTitle } from '../services/componentSyncService.js';
 import { getCollection } from '../services/mongoService.js';
+import { resolveComponentMeta, canAccessComponent } from '../services/accessService.js';
+import { sourceLimiter } from '../middleware/rateLimiters.js';
 
 const router = express.Router();
 
@@ -127,12 +129,32 @@ router.get('/:id/prompt/:system', optionalVerifyToken, async (req, res) => {
 
 /**
  * Endpoint to get the source code for a component.
- * Protected by Firebase ID Token.
+ * Protected by Firebase ID Token. Premium components are additionally gated
+ * by the user's plan/entitlements (accessService.canAccessComponent).
  */
-router.get('/:id/source', verifyToken, async (req, res) => {
+router.get('/:id/source', verifyToken, sourceLimiter, async (req, res) => {
   const { id } = req.params;
 
   try {
+    // Resolve premium metadata + enforce entitlements BEFORE serving source.
+    const meta = await resolveComponentMeta(id);
+    const access = await canAccessComponent(req.user, meta);
+
+    if (!access.allowed) {
+      logActivity({
+        type: 'component.source_denied',
+        userId: req.user?.uid,
+        email: req.user?.email,
+        level: 'warn',
+        metadata: { componentId: id, reason: access.reason, tier: access.tier },
+      });
+      return res.status(403).json({
+        error: 'Premium component. Upgrade to Pro to access the full source code.',
+        code: access.reason === 'AUTH_REQUIRED' ? 'AUTH_REQUIRED' : 'PREMIUM_REQUIRED',
+        reason: access.reason,
+      });
+    }
+
     const source = await getComponentSource(id);
     if (!source) {
       return res.status(404).json({ error: 'Source code not found' });
@@ -142,7 +164,7 @@ router.get('/:id/source', verifyToken, async (req, res) => {
       userId: req.user?.uid,
       email: req.user?.email,
       level: 'info',
-      metadata: { componentId: id },
+      metadata: { componentId: id, tier: access.tier },
     });
     res.json({ source });
   } catch (error) {

@@ -52,6 +52,7 @@
 - [🌐 Backend API](#-backend-api)
 - [🎭 Design System](#-design-system)
 - [🚦 Getting Started](#-getting-started)
+- [🖥️ CLI Tool](#️-cli-tool)
 - [📦 Deployment](#-deployment)
 - [💡 How It Can Help You](#-how-it-can-help-you)
 - [👤 Author](#-author)
@@ -611,6 +612,39 @@ Frontend: http://localhost:3000
 Backend:  http://localhost:5000
 Health:   http://localhost:5000/api/health
 ```
+
+---
+
+## 🖥️ CLI Tool
+
+Search, inspect, and pull components, templates, and animations straight from the terminal. The CLI is a thin MCP client that talks to the deployed UI HUB MCP server using your `uh_live_…` API key — no extra backend needed.
+
+```bash
+npm run build:cli      # build the CLI once
+npm run ui-hub -- --help
+npm run ui-hub -- login
+npm run ui-hub -- search "pricing card"
+npm run ui-hub -- code spotlight-cards -o src/components/
+```
+
+Full documentation: [`docs/cli.md`](docs/cli.md)
+
+### Command Overview
+
+| Command | Description |
+|:---|:---|
+| `ui-hub login` | Authenticate and store your `uh_live_…` API key |
+| `ui-hub search [query]` | Search components/templates/animations |
+| `ui-hub show <id>` | Full component info (code, deps, metadata) |
+| `ui-hub code <id> [-o file]` | Print or save component source |
+| `ui-hub deps <id>` / `categories` | Dependencies / category counts |
+| `ui-hub prompt <id>` | AI generation prompts (Pro) |
+| `ui-hub template` / `animation` | Template & animation tools |
+| `ui-hub behavior "<effect>"` | Search by visual behavior/vibe |
+| `ui-hub use <id> [dir]` | Save a component file + deps locally |
+| `ui-hub config` / `whoami` / `logout` | Manage connection & key |
+
+All commands support `--json` for scripting. Keys live in `~/.config/ui-hub/config.json` (0600).
 
 ---
 

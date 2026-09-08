@@ -72,3 +72,13 @@ export const webhookLimiter = rateLimit({
   message: { success: false, error: 'Webhook rate exceeded.' },
   ...(store && { store })
 });
+
+// ─── Tier 7: Component source fetch (protects premium content scraping) ────
+export const sourceLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 120, // premium source fetches per 15 min per IP (downloads/bundles go higher)
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Source fetch rate exceeded. Please try again later.' },
+  ...(store && { store })
+});

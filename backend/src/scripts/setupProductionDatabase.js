@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import Razorpay from 'razorpay';
 import { mongoService } from '../services/mongoService.js';
 import { EMBEDDED_SOURCE_CODE } from '../data/sourceCodeData.js';
+import { PREMIUM_COMPONENT_IDS } from '../config/premiumComponents.js';
 
 dotenv.config();
 
@@ -13,15 +14,6 @@ const SUPER_ADMINS = [
 const ADMINS = [
   'jainil224@gmail.com',
 ];
-
-const PREMIUM_COMPONENT_IDS = new Set([
-  'black-hole-cursor', 'pixel-drift', 'spotlight-cards', 'gravitational-vortex',
-  'blooming-flower', 'chandelier', 'hell-background', 'interactive-grid-background',
-  'isometric-grid-background', 'black-hole-background', 'mouse-gravity-background',
-  '3d-hero', '3d-scroll-animation', '3d-slider', '3d-rubiks-cube', 'cards-beam',
-  'solar-system', 'lizard-cursor', 'aura-cursor', 'section-scroll', 'cloud-scroll',
-  'twin-galaxy-rings', 'tornado', 'morphing-rings', 'lightfall',
-]);
 
 const inferCategory = (id) => {
   if (id.includes('cursor')) return 'cursor';

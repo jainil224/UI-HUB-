@@ -261,6 +261,26 @@ The MCP server returns structured JSON errors:
 
 - The MCP server is a standalone TypeScript + Express service in `/mcp-server`.
 - Component catalog metadata lives in `mcp-server/src/data/components.ts`.
-- Embedded source code is mirrored from the backend into `mcp-server/src/data/sourceCode.json`.
+- Embedded source code is mirrored from the frontend into `mcp-server/src/data/sourceCode.json`.
 - API keys are stored in the Firestore collection `mcp_api_keys`.
 - MCP analytics events are stored in the Firestore collection `mcp_analytics`.
+
+### Keeping the data in sync
+
+The MCP server is deployed with `rootDir: mcp-server`, so it has **no access** to
+`frontend/src/components` at runtime. All catalog/source data must be committed under
+`mcp-server/src/data/`. After any frontend data/component change, regenerate and rebuild:
+
+```bash
+cd mcp-server
+npm run sync:data   # regenerates src/data/* (components.ts, sourceCode.json, …) from the frontend
+npm run build       # tsc + coverage guard + copy data into dist
+```
+
+- `sync:data` merges source from frontend `embeddedSourceCode.ts`, backend data maps,
+  dedicated `*Source.ts` files, and a PascalCase disk scan of `frontend/src/components/ui`
+  (including canonical premium ids that aren't in the public catalog).
+- The build runs `scripts/check-source-coverage.mjs`, which **fails the build** if any
+  canonical premium id is missing from `sourceCode.json` — this catches premium components
+  (e.g. `black-hole`, `rubiks-cube`, `toonhub-hero`) that would otherwise 404 via MCP/CLI.
+

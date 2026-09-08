@@ -263,10 +263,10 @@ export const getFallbackVibePrompt = (componentId: string, system: AISystem, ite
         exactCode = comp?.code;
     }
     if (!exactCode || exactCode.trim() === '' || exactCode.includes('see the repo')) {
-        exactCode = getComponentCode(componentId, { lang: 'ts', styling: 'tailwind' });
+        exactCode = getComponentCode(componentId, { lang: 'ts', styling: 'tailwind' }) ?? '';
     }
     if (!exactCode || exactCode.trim() === '') {
-        exactCode = getComponentCode(componentId, { lang: 'js', styling: 'tailwind' });
+        exactCode = getComponentCode(componentId, { lang: 'js', styling: 'tailwind' }) ?? '';
     }
     if (!exactCode || exactCode.trim() === '') {
         exactCode = comp?.vibePrompt || `// ${title} Component Implementation\nimport React from 'react';\n\nexport const ${title.replace(/[^a-zA-Z0-9]/g, '')} = () => {\n  return <div className="text-white">${title}</div>;\n};`;

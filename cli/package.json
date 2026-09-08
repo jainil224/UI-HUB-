@@ -1,0 +1,25 @@
+{
+  "name": "ui-hub-cli",
+  "version": "0.1.0",
+  "description": "UI HUB CLI - search, inspect, and pull UI HUB components, templates, and animations from the terminal",
+  "type": "module",
+  "bin": {
+    "ui-hub": "./dist/cli.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18.18"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli.ts",
+    "test": "node --import tsx --test tests/config.test.ts tests/mcp.test.ts tests/args.test.ts tests/output.test.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
