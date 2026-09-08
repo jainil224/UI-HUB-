@@ -345,7 +345,7 @@ const PricingPage = () => {
                 </motion.div>
 
                 {/* ── Pricing Cards ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 max-w-6xl mx-auto gap-8 mb-16 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto gap-6 sm:gap-8 mb-16">
                     {plans.map((plan, idx) => {
                         const Icon = plan.icon;
 
@@ -355,7 +355,7 @@ const PricingPage = () => {
                                 initial={{ opacity: 0, y: 40 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                                className={`p-8 rounded-lg relative overflow-hidden flex flex-col border-2 border-white bg-brand-surface ${
+                                className={`p-5 sm:p-8 rounded-lg relative overflow-hidden flex flex-col h-full border-2 border-white bg-brand-surface ${
                                     plan.popular
                                         ? 'brutal-shadow-blue'
                                         : 'brutal-shadow-black'

@@ -254,7 +254,7 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="p-8 rounded-lg relative overflow-hidden flex flex-col border-2 border-brand-blue bg-brand-surface brutal-shadow-blue"
+            className="p-5 sm:p-8 rounded-lg relative overflow-hidden flex flex-col h-full border-2 border-brand-blue bg-brand-surface brutal-shadow-blue"
         >
             {/* Badge */}
             <div className="absolute top-4 right-4 z-20">
@@ -265,8 +265,8 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
             </div>
 
             {/* Header */}
-            <div className="mb-6">
-                <div className="flex items-center gap-3 mb-4">
+            <div className="mb-4">
+                <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 rounded border-2 border-white bg-brand-bg flex items-center justify-center text-brand-blue">
                         <Zap className="w-6 h-6" />
                     </div>
@@ -279,7 +279,7 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                 </div>
 
                 {/* Badge preview */}
-                <div className="flex items-center gap-2 mb-4 px-3 py-1.5 rounded border border-neutral-700 bg-brand-bg w-fit">
+                <div className="flex items-center gap-2 mb-2.5 px-3 py-1.5 rounded border border-neutral-700 bg-brand-bg w-fit">
                     <span className="text-[9px] font-black uppercase tracking-widest text-neutral-400">YOUR BADGE</span>
                     <span className="text-neutral-500 text-[9px]">→</span>
                     <PlanBadge tier="custom" size="sm" showIcon animated />
@@ -290,15 +290,15 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                 </p>
             </div>
 
-            <div className="h-0.5 bg-neutral-800 mb-6" />
+            <div className="h-0.5 bg-neutral-800 mb-4" />
 
             {/* Category Selection */}
-            <div className="flex-1 mb-6">
-                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">
+            <div className="flex-1 mb-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">
                     SELECT CATEGORIES (MIN 2)
                 </p>
 
-                <div className="space-y-4">
+                <div className="space-y-3">
                     {([1, 2, 3] as const).map(tier => {
                         const tierConf = TIER_CONFIG[tier];
                         const cats = groupedCategories[tier];
@@ -306,7 +306,7 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
 
                         return (
                             <div key={tier}>
-                                <p className={`text-[9px] font-black uppercase tracking-widest ${tierConf.color} mb-2`}>
+                                <p className={`text-[9px] font-black uppercase tracking-widest ${tierConf.color} mb-1.5`}>
                                     TIER {tier} — {tierConf.name}
                                 </p>
                                 <div className="space-y-1.5">
@@ -316,7 +316,7 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                                             <div key={cat.key}>
                                                 <button
                                                     onClick={() => toggleCategory(cat.key)}
-                                                    className={`w-full flex items-center justify-between px-3 py-2 rounded border transition-all text-left ${
+                                                    className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded border transition-all text-left ${
                                                         isSelected
                                                             ? 'border-brand-blue bg-brand-blue/10'
                                                             : 'border-neutral-700 bg-brand-bg hover:border-neutral-500'
@@ -344,15 +344,15 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
 
                                                 {/* Premium component names */}
                                                 {cat.premiumComponents.length > 0 && (
-                                                    <div className="mt-1.5 pl-8 pr-2 pb-1">
-                                                        <p className="text-[9px] font-bold uppercase tracking-wider text-brand-yellow/70 mb-1">
+                                                    <div className="mt-1 pl-7 pr-2 pb-1">
+                                                        <p className="text-[8px] font-bold uppercase tracking-wider text-brand-yellow/70 mb-0.5">
                                                             Includes Premium:
                                                         </p>
                                                         <div className="flex flex-wrap gap-1">
                                                             {cat.premiumComponents.map(name => (
                                                                 <span
                                                                     key={name}
-                                                                    className={`px-1.5 py-0.5 rounded text-[9px] font-bold border ${
+                                                                    className={`px-1 py-0.5 rounded text-[8px] font-bold border ${
                                                                         isSelected
                                                                             ? 'bg-brand-blue/15 border-brand-blue/30 text-brand-blue'
                                                                             : 'bg-neutral-800/60 border-neutral-700 text-neutral-400'
@@ -374,11 +374,11 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                 </div>
             </div>
 
-            <div className="h-0.5 bg-neutral-800 mb-6" />
+            <div className="h-0.5 bg-neutral-800 mb-4" />
 
             {/* Duration Selection */}
-            <div className="mb-6">
-                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-3">
+            <div className="mb-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">
                     CHOOSE DURATION
                 </p>
                 <div className="grid grid-cols-3 gap-2">
@@ -386,7 +386,7 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                         <button
                             key={dur.key}
                             onClick={() => setSelectedDuration(dur.key)}
-                            className={`relative p-3 rounded border text-center transition-all ${
+                            className={`relative p-2.5 rounded border text-center transition-all ${
                                 selectedDuration === dur.key
                                     ? 'border-brand-blue bg-brand-blue/10'
                                     : 'border-neutral-700 bg-brand-bg hover:border-neutral-500'
@@ -410,10 +410,10 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
                 </div>
             </div>
 
-            <div className="h-0.5 bg-neutral-800 mb-6" />
+            <div className="h-0.5 bg-neutral-800 mb-4" />
 
             {/* Selected Summary */}
-            <div className="mb-4">
+            <div className="mb-3">
                 <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2">
                     YOUR SELECTION
                 </p>
@@ -457,7 +457,7 @@ const CustomPricingCard: React.FC<CustomPricingCardProps> = ({ currencyMode, onC
             </div>
 
             {/* Price Display */}
-            <div className="bg-brand-bg rounded-lg p-4 border border-neutral-700 mb-4">
+            <div className="bg-brand-bg rounded-lg p-3 border border-neutral-700 mb-3">
                 <div className="flex items-baseline justify-between mb-2">
                     <span className="text-neutral-400 text-xs font-bold">Monthly</span>
                     <div className="flex items-baseline gap-1">
