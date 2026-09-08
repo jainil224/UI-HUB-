@@ -368,6 +368,11 @@ fs.writeFileSync(path.join(OUT, 'templateSourceCode.json'), JSON.stringify(templ
 console.log('sourceCode.json written with', Object.keys(sourceCode).length, 'entries');
 console.log('templateSourceCode.json written with', Object.keys(templateSource).length, 'entries');
 
+// Canonical premium ID list (MCP-local copy so the standalone repo build has no
+// dependency on the frontend source tree). read by scripts/check-source-coverage.mjs
+fs.writeFileSync(path.join(OUT, 'premiumComponents.json'), JSON.stringify(canonicalPremiumIds, null, 2), 'utf8');
+console.log('premiumComponents.json written with', canonicalPremiumIds.length, 'canonical premium ids');
+
 // ---------------------------------------------------------------------------
 // Summary report
 // ---------------------------------------------------------------------------
