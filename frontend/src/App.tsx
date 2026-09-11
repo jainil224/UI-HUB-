@@ -60,6 +60,8 @@ const AuditPage = React.lazy(() => import('./pages/Admin/AuditPage'));
 const ExportPage = React.lazy(() => import('./pages/Admin/ExportPage'));
 import ScrollToTop from './components/ui/ScrollToTop';
 import FourierFlow from './components/ui/FourierFlow';
+import CookieBanner from './components/ui/CookieBanner';
+import { CookieConsentProvider } from './context/CookieConsentContext';
 import { SkeletonProvider } from './context/SkeletonContext';
 import { HeroSkeleton } from './components/ui/Skeleton';
 import TopLoader from './components/ui/TopLoader';
@@ -169,6 +171,7 @@ const AppShell = () => {
 
       {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && <Footer />}
       <ScrollToTop />
+      <CookieBanner />
     </div>
   );
 };
@@ -180,15 +183,17 @@ import { ThemeProvider } from './context/ThemeContext';
 function App() {
   return (
     <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <SkeletonProvider>
-            <SmoothScroll>
-              <AppShell />
-            </SmoothScroll>
-          </SkeletonProvider>
-        </AuthProvider>
-      </ThemeProvider>
+      <CookieConsentProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <SkeletonProvider>
+              <SmoothScroll>
+                <AppShell />
+              </SmoothScroll>
+            </SkeletonProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </CookieConsentProvider>
     </BrowserRouter>
   );
 }

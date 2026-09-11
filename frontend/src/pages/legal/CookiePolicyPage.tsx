@@ -1,5 +1,7 @@
 import React from 'react';
 import LegalPage, { LegalContent, type LegalSection } from './LegalPage';
+import { useCookieConsent } from '../../context/CookieConsentContext';
+import { Cookie, RotateCcw } from 'lucide-react';
 
 const sections: LegalSection[] = [
     {
@@ -69,16 +71,49 @@ const sections: LegalSection[] = [
     },
 ];
 
-const CookiePolicyPage: React.FC = () => (
-    <LegalPage
-        eyebrow="Legal"
-        title="Cookie Settings"
-        subtitle="How UI HUB uses cookies to provide and improve the Service."
-        updatedLabel="Last updated"
-        updatedDate="September 11, 2026"
-    >
-        <LegalContent sections={sections} />
-    </LegalPage>
-);
+const CookiePolicyPage: React.FC = () => {
+    const { status, resetPreference } = useCookieConsent();
+
+    const statusLabel =
+        status === 'accepted'
+            ? 'You have accepted all cookies.'
+            : status === 'essential'
+                ? 'You have chosen essential cookies only.'
+                : 'You have not chosen a cookie preference yet.';
+
+    return (
+        <LegalPage
+            eyebrow="Legal"
+            title="Cookie Settings"
+            subtitle="How UI HUB uses cookies to provide and improve the Service."
+            updatedLabel="Last updated"
+            updatedDate="September 11, 2026"
+        >
+            <div className="bg-brand-surface border-2 border-white rounded-lg p-6 sm:p-8 brutal-shadow-black flex flex-col sm:flex-row sm:items-center gap-4">
+                <div className="flex-1">
+                    <h2 className="flex items-center gap-3 text-lg sm:text-xl font-black uppercase tracking-wider text-white mb-2">
+                        <span className="flex items-center justify-center w-8 h-8 shrink-0 bg-brand-yellow border-2 border-black rounded text-white">
+                            <Cookie size={16} className="text-black" strokeWidth={2.5} />
+                        </span>
+                        Your Consent Choice
+                    </h2>
+                    <p className="text-neutral-400 text-sm leading-relaxed font-medium">{statusLabel}</p>
+                </div>
+                <button
+                    onClick={() => {
+                        resetPreference();
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="group inline-flex items-center justify-center gap-2 shrink-0 px-5 py-2.5 bg-brand-blue text-white border-2 border-black text-[11px] font-black uppercase tracking-widest brutal-shadow-white hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-none transition-all"
+                >
+                    <RotateCcw size={13} className="group-hover:-rotate-90 transition-transform" />
+                    Reset Cookie Choice
+                </button>
+            </div>
+
+            <LegalContent sections={sections} />
+        </LegalPage>
+    );
+};
 
 export default CookiePolicyPage;

@@ -2,6 +2,7 @@ import { initializeApp, FirebaseApp } from "firebase/app";
 import { getAuth, Auth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getStorage, FirebaseStorage } from "firebase/storage";
 import { getAnalytics, Analytics } from "firebase/analytics";
+import { isAnalyticsAllowed } from "../utils/cookieUtils";
 
 let app: FirebaseApp;
 export let auth: Auth;
@@ -30,7 +31,7 @@ export const initFirebase = (config: any) => {
     if (typeof window !== 'undefined') {
         // Skip Analytics on mobile to avoid Android's "wants to access other apps" popup
         const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        if (!isMobile) {
+        if (!isMobile && isAnalyticsAllowed()) {
             try {
                 analytics = getAnalytics(app);
             } catch (e) {
@@ -42,3 +43,21 @@ export const initFirebase = (config: any) => {
 
 // For backward compatibility while we refactor main.tsx
 // It will be initialized correctly in main.tsx before rest of app runs
+
+/**
+ * Enables Firebase Analytics after the user grants cookie consent.
+ * Safely no-ops if already initialized or if consent was revoked.
+ */
+export const enableAnalytics = (): void => {
+    if (typeof window === 'undefined' || analytics) return;
+
+    const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile || !isAnalyticsAllowed()) return;
+
+    try {
+        analytics = getAnalytics(app);
+        console.log('[Analytics] Firebase Analytics enabled after consent.');
+    } catch (e) {
+        console.warn('Analytics initialization failed:', e);
+    }
+};
