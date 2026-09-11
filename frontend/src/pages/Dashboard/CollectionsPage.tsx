@@ -69,10 +69,8 @@ const CollectionsPage = () => {
     const [addOpen, setAddOpen] = useState(false);
     const [addQuery, setAddQuery] = useState('');
     const [addingBusy, setAddingBusy] = useState<string | null>(null);
-    const [toggledPreview, setToggledPreview] = useState<string | null>(null);
     const navigate = useNavigate();
     const [collectionFilter, setCollectionFilter] = useState('');
-    const [copiedItemId, setCopiedItemId] = useState<string | null>(null);
     const [copiedAll, setCopiedAll] = useState(false);
 
     const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
@@ -193,7 +191,6 @@ const CollectionsPage = () => {
     const handleSelect = async (id: string) => {
         setActiveId(id);
         setAddOpen(false);
-        setToggledPreview(null);
         try {
             const data = await getCollection(id);
             setActive(data);
@@ -262,16 +259,6 @@ const CollectionsPage = () => {
             setCollections(prev => prev.map(c => c.id === activeId ? { ...c, itemCount: updated.itemCount } : c));
         } catch (e: any) {
             setError(e?.message || 'Failed to remove component');
-        }
-    };
-
-    const handleCopyItem = async (componentId: string) => {
-        const item = active?.items.find(i => i.componentId === componentId);
-        if (!item || !item.code) return;
-        const ok = await copyText(item.code);
-        if (ok) {
-            setCopiedItemId(componentId);
-            window.setTimeout(() => setCopiedItemId(prev => (prev === componentId ? null : prev)), 1500);
         }
     };
 
@@ -694,24 +681,6 @@ const CollectionsPage = () => {
                                                 </div>
 
                                                 <div className="flex flex-wrap items-center gap-2">
-                                                    {hasCode && (
-                                                        <>
-                                                            <button
-                                                                onClick={() => void handleCopyItem(item.componentId)}
-                                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-brand-yellow bg-brand-yellow/10 text-brand-yellow text-[10px] font-black uppercase tracking-widest hover:bg-brand-yellow/20 cursor-pointer transition-colors"
-                                                                title="Copy code"
-                                                            >
-                                                                {copiedItemId === item.componentId ? <ClipboardCheck size={12} /> : <Copy size={12} />}
-                                                                {copiedItemId === item.componentId ? 'Copied' : 'Copy'}
-                                                            </button>
-                                                            <button
-                                                                onClick={() => setToggledPreview(t => (t === item.componentId ? null : item.componentId))}
-                                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-neutral-700 text-neutral-300 hover:text-white text-[10px] font-black uppercase tracking-widest cursor-pointer"
-                                                            >
-                                                                <Code2 size={12} /> {toggledPreview === item.componentId ? 'Hide Code' : 'View Code'}
-                                                            </button>
-                                                        </>
-                                                    )}
                                                     <button
                                                         onClick={() => void handleRemoveItem(item.componentId)}
                                                         className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-brand-red/50 text-brand-red hover:bg-brand-red/10 ml-auto text-[10px] font-black uppercase tracking-widest cursor-pointer"
@@ -719,12 +688,6 @@ const CollectionsPage = () => {
                                                         <Trash2 size={12} /> Remove
                                                     </button>
                                                 </div>
-
-                                                {toggledPreview === item.componentId && hasCode && (
-                                                    <pre className="text-[11px] font-mono text-brand-green/90 bg-black border border-neutral-800 rounded-md p-3 overflow-x-auto whitespace-pre max-h-52 overflow-y-auto">
-                                                        {item.code}
-                                                    </pre>
-                                                )}
                                             </div>
                                         </div>
                                     );
