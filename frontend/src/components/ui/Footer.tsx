@@ -20,8 +20,8 @@ const resourceLinks = [
 const utilityLinks = [
     { label: 'Privacy Policy', to: '/privacy' },
     { label: 'Terms & Conditions', to: '/terms' },
-    { label: 'Payment Policy', to: '/pricing' },
-    { label: 'Cookie Settings', to: '/privacy' },
+    { label: 'Payment Policy', to: '/payment-policy' },
+    { label: 'Cookie Settings', to: '/cookies' },
 ];
 
 const socials = [

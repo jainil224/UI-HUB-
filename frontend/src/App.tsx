@@ -15,6 +15,10 @@ const ForgotPassword = React.lazy(() => import('./pages/Auth/ForgotPassword'));
 const Scroll3DAnimationPage = React.lazy(() => import('./pages/Components/Scroll3DAnimationPage'));
 const ThreeDSliderPage = React.lazy(() => import('./pages/Components/ThreeDSliderPage'));
 const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
+const PrivacyPolicyPage = React.lazy(() => import('./pages/legal/PrivacyPolicyPage'));
+const TermsPage = React.lazy(() => import('./pages/legal/TermsPage'));
+const PaymentPolicyPage = React.lazy(() => import('./pages/legal/PaymentPolicyPage'));
+const CookiePolicyPage = React.lazy(() => import('./pages/legal/CookiePolicyPage'));
 const TemplatesPage = React.lazy(() => import('./pages/TemplatesPage/TemplatesPage'));
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
@@ -153,6 +157,10 @@ const AppShell = () => {
             <Route path="/demo/sui-overflow" element={<SuiOverflowDemoPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
+            <Route path="/privacy" element={<PrivacyPolicyPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/payment-policy" element={<PaymentPolicyPage />} />
+            <Route path="/cookies" element={<CookiePolicyPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/templates/:id" element={<TemplateDetailPage />} />
           </Routes>
