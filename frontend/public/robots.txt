@@ -1,0 +1,15 @@
+# Allow search engines and image bots to crawl all pages and brand assets
+User-agent: *
+Allow: /
+Allow: /favicon.svg
+Allow: /favicon.ico
+Allow: /*.png
+Allow: /site.webmanifest
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+Sitemap: https://ui-hub-design.vercel.app/sitemap.xml
