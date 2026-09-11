@@ -87,16 +87,14 @@ const AppShell = () => {
   const isDemo = location.pathname.startsWith('/demo');
 
   return (
-    <div className={`min-h-[100dvh] flex flex-col transition-colors duration-300 ${
+    <>
+    <div className={`min-h-[100dvh] flex flex-col overflow-x-clip transition-colors duration-300 ${
       isDemo
         ? 'bg-neutral-950 text-white'
         : theme === 'dark'
           ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black'
           : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
     }`}>
-      <TopLoader />
-      {!isDemo && !isAdmin && <Navbar />}
-
       <main className="flex-1 flex flex-col">
         <React.Suspense fallback={
           <div className="w-full flex-1 flex flex-col">
@@ -170,9 +168,13 @@ const AppShell = () => {
       </main>
 
       {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && <Footer />}
-      <ScrollToTop />
-      <CookieBanner />
     </div>
+
+    <TopLoader />
+    {!isDemo && !isAdmin && <Navbar />}
+    <ScrollToTop />
+    <CookieBanner />
+    </>
   );
 };
 

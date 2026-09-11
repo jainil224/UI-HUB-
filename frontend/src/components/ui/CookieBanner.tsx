@@ -18,9 +18,9 @@ const CookieBanner: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 120 }}
                     transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-                    className="fixed bottom-0 inset-x-0 z-[9990]"
+                    className="fixed bottom-0 inset-x-0 z-[10010]"
                 >
-                    <div className="border-t-4 border-black bg-brand-surface shadow-[0_-6px_0px_0px_#3D5CFF]">
+                    <div className="border-t-4 border-black bg-brand-surface shadow-[0_-6px_0px_0px_#3D5CFF] [padding-bottom:env(safe-area-inset-bottom)]">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col lg:flex-row items-start lg:items-center gap-4">
                             <div className="flex items-start gap-3 flex-1 min-w-0">
                                 <span className="flex items-center justify-center w-10 h-10 shrink-0 bg-brand-blue border-2 border-white rounded-sm brutal-shadow-black">

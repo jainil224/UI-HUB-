@@ -34,6 +34,7 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
             wheelMultiplier: 1,
             touchMultiplier: 2,
             infinite: false,
+            overscroll: false,
         });
 
         // Integrate with ScrollTrigger

@@ -131,9 +131,10 @@
 }
 
 /* ── Global horizontal-overflow safety net (mobile) ── */
-html, body {
-  overflow-x: clip;
-}
+/* overflow-x: clip removed from body — it forces overflow-y: auto per CSS spec,
+   which propagates to the viewport and breaks position: fixed elements when
+   combined with Lenis (html.lenis { height: auto }). Horizontal overflow is
+   now handled on the AppShell content wrapper div instead. */
 
 /* The footer is always dark — keep the document canvas dark too so no light
    theme background can peek out below the footer on mobile (URL-bar resizes,

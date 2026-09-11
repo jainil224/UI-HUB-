@@ -110,7 +110,7 @@ const Navbar = () => {
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black select-none"
+                    className="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black select-none [padding-top:env(safe-area-inset-top)]"
                 >
                     {/* Accent strip */}
                     <div className="h-1 w-full bg-gradient-to-r from-[#1F4BFF] via-[#FFC700] to-[#E52520]" />

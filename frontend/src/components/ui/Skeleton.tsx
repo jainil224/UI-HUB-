@@ -25,7 +25,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 // ── 1. Navbar Skeleton ──
 export const NavbarSkeleton: React.FC = () => {
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3 bg-brand-surface border-b-2 border-white pointer-events-none">
+        <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3 bg-brand-surface border-b-2 border-white pointer-events-none [padding-top:env(safe-area-inset-top)]">
             <div className="max-w-7xl mx-auto flex items-center justify-between">
                 {/* Logo Area */}
                 <div className="flex items-center gap-2.5">
