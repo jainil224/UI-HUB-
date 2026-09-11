@@ -117,7 +117,8 @@ export const addToCollection = async (
 
 export const removeFromCollection = async (collectionId: string, componentId: string): Promise<Collection> => {
     const data = await request<{ ok: boolean; collection: Collection }>(
-        `/api/v1/collections/${encodeURIComponent(collectionId)}/items/${encodeURIComponent(componentId)}`
+        `/api/v1/collections/${encodeURIComponent(collectionId)}/items/${encodeURIComponent(componentId)}`,
+        { method: 'DELETE' }
     );
     return data.collection;
 };

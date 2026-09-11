@@ -8,11 +8,12 @@ import {
 } from '../../services/collections';
 import { fetchCommunityComponents } from '../../services/community';
 import { componentList, ComponentItem } from '../../data/componentData';
+import ComponentPreviewTile from './components/ComponentPreviewTile';
 import {
     Folder, FolderPlus, Trash2, Search, ArrowUpRight, Pencil, Check, X,
-    Sparkles, Library, Plus, AlertTriangle, Code2, Globe
+    Sparkles, Library, Plus, AlertTriangle, Code2, Globe, Copy, ClipboardCheck, Lock, ExternalLink
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const shadowVariants = [
     'brutal-shadow-blue',
@@ -25,8 +26,30 @@ const ICONS = ['🗂️', '⭐', '🚀', '🎨', '🧩', '💎', '🔥', '📦']
 
 const FREE_LIMIT = 5;
 
+async function copyText(text: string): Promise<boolean> {
+    try {
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            return true;
+        }
+    } catch { /* fall through to legacy path */ }
+    try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        return ok;
+    } catch {
+        return false;
+    }
+}
+
 const CollectionsPage = () => {
-    const { user } = useAuth();
+    const { user, isPro } = useAuth();
     const [collections, setCollections] = useState<Collection[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -47,6 +70,10 @@ const CollectionsPage = () => {
     const [addQuery, setAddQuery] = useState('');
     const [addingBusy, setAddingBusy] = useState<string | null>(null);
     const [toggledPreview, setToggledPreview] = useState<string | null>(null);
+    const navigate = useNavigate();
+    const [collectionFilter, setCollectionFilter] = useState('');
+    const [copiedItemId, setCopiedItemId] = useState<string | null>(null);
+    const [copiedAll, setCopiedAll] = useState(false);
 
     const [firebaseComponents, setFirebaseComponents] = useState<ComponentItem[]>([]);
     const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -121,6 +148,29 @@ const CollectionsPage = () => {
     const totalAcrossSystem = useMemo(() => {
         return collections.reduce((sum, c) => sum + c.itemCount, 0);
     }, [collections]);
+
+    const componentById = useMemo(() => {
+        const map = new Map<string, ComponentItem>();
+        for (const c of componentList) map.set(c.id, c);
+        for (const c of firebaseComponents) if (!map.has(c.id)) map.set(c.id, c);
+        return map;
+    }, [firebaseComponents]);
+
+    const filteredItems = useMemo(() => {
+        if (!active) return [];
+        const q = collectionFilter.trim().toLowerCase();
+        if (!q) return active.items;
+        return active.items.filter(it =>
+            (it.title || '').toLowerCase().includes(q) ||
+            (it.componentId || '').toLowerCase().includes(q)
+        );
+    }, [active, collectionFilter]);
+
+    const resolveItem = (componentId: string): ComponentItem | undefined => componentById.get(componentId);
+
+    const openComponent = (id: string) => {
+        navigate(`/library?id=${encodeURIComponent(id)}`);
+    };
 
     const handleCreate = async () => {
         if (!newName.trim()) return;
@@ -212,6 +262,29 @@ const CollectionsPage = () => {
             setCollections(prev => prev.map(c => c.id === activeId ? { ...c, itemCount: updated.itemCount } : c));
         } catch (e: any) {
             setError(e?.message || 'Failed to remove component');
+        }
+    };
+
+    const handleCopyItem = async (componentId: string) => {
+        const item = active?.items.find(i => i.componentId === componentId);
+        if (!item || !item.code) return;
+        const ok = await copyText(item.code);
+        if (ok) {
+            setCopiedItemId(componentId);
+            window.setTimeout(() => setCopiedItemId(prev => (prev === componentId ? null : prev)), 1500);
+        }
+    };
+
+    const handleCopyAll = async () => {
+        if (!active) return;
+        const parts = active.items
+            .filter(it => !!it.code)
+            .map(it => `// ── ${it.title || it.componentId} ──\n${it.code}`);
+        if (parts.length === 0) return;
+        const ok = await copyText(parts.join('\n\n'));
+        if (ok) {
+            setCopiedAll(true);
+            window.setTimeout(() => setCopiedAll(false), 2000);
         }
     };
 
@@ -479,6 +552,36 @@ const CollectionsPage = () => {
                             </div>
                         </div>
 
+                        {/* Filter & actions toolbar */}
+                        <div className="flex flex-wrap items-center gap-3 px-5 py-3 border-b-2 border-neutral-800 bg-black/40">
+                            <div className="relative flex-1 min-w-40">
+                                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500 pointer-events-none" />
+                                <input
+                                    value={collectionFilter}
+                                    onChange={e => setCollectionFilter(e.target.value)}
+                                    placeholder="Filter components in this collection…"
+                                    className="w-full pl-9 pr-8 py-2 bg-neutral-900 border-2 border-neutral-700 rounded-md text-sm text-white placeholder-neutral-600 outline-none focus:border-brand-blue"
+                                />
+                                {collectionFilter && (
+                                    <button onClick={() => setCollectionFilter('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-white cursor-pointer" aria-label="Clear filter" title="Clear filter">
+                                        <X size={13} />
+                                    </button>
+                                )}
+                            </div>
+                            <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500 shrink-0">
+                                {filteredItems.length} of {active.items.length}
+                            </span>
+                            <button
+                                onClick={() => void handleCopyAll()}
+                                disabled={!active.items.some(it => !!it.code)}
+                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-brand-blue bg-brand-blue/15 text-brand-blue text-[10px] font-black uppercase tracking-widest hover:bg-brand-blue/25 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+                                title={active.items.some(it => !!it.code) ? 'Copy all component code to clipboard' : 'No copyable code in this collection'}
+                            >
+                                {copiedAll ? <ClipboardCheck size={13} /> : <Copy size={13} />}
+                                {copiedAll ? 'Copied!' : 'Copy All Code'}
+                            </button>
+                        </div>
+
                         {/* Add component picker */}
                         <AnimatePresence>
                             {addOpen && (
@@ -538,40 +641,94 @@ const CollectionsPage = () => {
                                 <Folder size={30} className="mx-auto mb-3 text-neutral-500" />
                                 <p className="text-neutral-400 font-medium text-sm">This collection is empty. Add components from the library.</p>
                             </div>
+                        ) : filteredItems.length === 0 ? (
+                            <div className="p-12 text-center">
+                                <Search size={30} className="mx-auto mb-3 text-neutral-500" />
+                                <p className="text-neutral-400 font-medium text-sm">No saved components match "{collectionFilter}".</p>
+                            </div>
                         ) : (
-                            <div className="flex flex-col divide-y divide-neutral-800">
-                                {active.items.map(item => (
-                                    <div key={item.componentId} className="px-5 py-4 flex flex-col sm:flex-row sm:items-center gap-3">
-                                        <div className="flex-1 min-w-0">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-xs font-black uppercase tracking-wider text-white truncate">{item.title}</span>
-                                                <span className="shrink-0 px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-black uppercase tracking-wider text-neutral-400">{item.category}</span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 p-5">
+                                {filteredItems.map(item => {
+                                    const resolved = resolveItem(item.componentId);
+                                    const hasCode = typeof item.code === 'string' && item.code.trim().length > 0;
+                                    const isPremiumLocked = !!resolved?.isPremium && !hasCode && !isPro;
+                                    const canOpen = !!resolved && typeof resolved.preview === 'function';
+                                    return (
+                                        <div key={item.componentId} className="flex flex-col bg-brand-surface border-2 border-white rounded-lg overflow-hidden transition-transform duration-150 hover:-translate-y-0.5">
+                                            {/* Preview / cover */}
+                                            <div className="relative">
+                                                {canOpen ? (
+                                                    <button
+                                                        onClick={() => openComponent(item.componentId)}
+                                                        className="group block w-full text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-yellow"
+                                                        title={`Open ${item.title || item.componentId} in the library`}
+                                                        aria-label={`Open ${item.title || item.componentId}`}
+                                                    >
+                                                        <div className="h-40 sm:h-44 overflow-hidden border-b-2 border-neutral-800 bg-neutral-950">
+                                                            <ComponentPreviewTile item={resolved} className="w-full h-full" />
+                                                        </div>
+                                                        <span className="absolute top-2 right-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-black/80 border border-white/30 text-white text-[9px] font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity">
+                                                            Open <ExternalLink size={10} />
+                                                        </span>
+                                                    </button>
+                                                ) : (
+                                                    <div className="h-40 sm:h-44 flex items-center justify-center bg-neutral-950 border-b-2 border-neutral-800">
+                                                        <Globe size={26} className="text-brand-yellow" />
+                                                    </div>
+                                                )}
+                                                {isPremiumLocked && (
+                                                    <span className="absolute top-2 left-2 inline-flex items-center gap-1 px-2 py-1 rounded bg-brand-blue/90 border border-black text-white text-[9px] font-black uppercase tracking-widest shadow-[2px_2px_0_0_#000]">
+                                                        <Lock size={10} /> Pro
+                                                    </span>
+                                                )}
                                             </div>
-                                            <code className="text-[11px] font-mono text-neutral-500 truncate block mt-0.5">{item.componentId}</code>
+
+                                            {/* Meta */}
+                                            <div className="px-4 py-3 flex-1 flex flex-col gap-2.5">
+                                                <div className="flex items-start justify-between gap-2 min-w-0">
+                                                    <div className="min-w-0">
+                                                        <p className="text-xs font-black uppercase tracking-wider text-white truncate">{item.title || item.componentId}</p>
+                                                        <p className="text-[10px] font-mono text-neutral-500 truncate mt-0.5">{item.componentId}</p>
+                                                    </div>
+                                                    <span className="shrink-0 px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-black uppercase tracking-wider text-neutral-400">{item.category}</span>
+                                                </div>
+
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    {hasCode && (
+                                                        <>
+                                                            <button
+                                                                onClick={() => void handleCopyItem(item.componentId)}
+                                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-brand-yellow bg-brand-yellow/10 text-brand-yellow text-[10px] font-black uppercase tracking-widest hover:bg-brand-yellow/20 cursor-pointer transition-colors"
+                                                                title="Copy code"
+                                                            >
+                                                                {copiedItemId === item.componentId ? <ClipboardCheck size={12} /> : <Copy size={12} />}
+                                                                {copiedItemId === item.componentId ? 'Copied' : 'Copy'}
+                                                            </button>
+                                                            <button
+                                                                onClick={() => setToggledPreview(t => (t === item.componentId ? null : item.componentId))}
+                                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-neutral-700 text-neutral-300 hover:text-white text-[10px] font-black uppercase tracking-widest cursor-pointer"
+                                                            >
+                                                                <Code2 size={12} /> {toggledPreview === item.componentId ? 'Hide Code' : 'View Code'}
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    <button
+                                                        onClick={() => void handleRemoveItem(item.componentId)}
+                                                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-brand-red/50 text-brand-red hover:bg-brand-red/10 ml-auto text-[10px] font-black uppercase tracking-widest cursor-pointer"
+                                                    >
+                                                        <Trash2 size={12} /> Remove
+                                                    </button>
+                                                </div>
+
+                                                {toggledPreview === item.componentId && hasCode && (
+                                                    <pre className="text-[11px] font-mono text-brand-green/90 bg-black border border-neutral-800 rounded-md p-3 overflow-x-auto whitespace-pre max-h-52 overflow-y-auto">
+                                                        {item.code}
+                                                    </pre>
+                                                )}
+                                            </div>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            {item.code && (
-                                                <button
-                                                    onClick={() => setToggledPreview(t => (t === item.componentId ? null : item.componentId))}
-                                                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-neutral-700 text-neutral-300 hover:text-white text-[10px] font-black uppercase tracking-widest cursor-pointer"
-                                                >
-                                                    <Code2 size={12} /> {toggledPreview === item.componentId ? 'Hide Code' : 'View Code'}
-                                                </button>
-                                            )}
-                                            <button
-                                                onClick={() => void handleRemoveItem(item.componentId)}
-                                                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border-2 border-brand-red/50 text-brand-red hover:bg-brand-red/10 text-[10px] font-black uppercase tracking-widest cursor-pointer"
-                                            >
-                                                <Trash2 size={12} /> Remove
-                                            </button>
-                                        </div>
-                                        {toggledPreview === item.componentId && (
-                                            <pre className="mt-3 w-full text-[11px] font-mono text-brand-green/90 bg-black border border-neutral-800 rounded-md p-3 overflow-x-auto whitespace-pre">
-                                                {item.code}
-                                            </pre>
-                                        )}
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         )}
                     </motion.section>
