@@ -3,6 +3,17 @@
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "framework": "vite",
+  "headers": [
+    {
+      "source": "/(favicon\\.svg|favicon\\.ico|favicon-32x32\\.png|favicon-16x16\\.png|apple-touch-icon\\.png|ui-hub-banner\\.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/__/auth/:path*",

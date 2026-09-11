@@ -21,6 +21,15 @@
           "value": "same-origin-allow-popups"
         }
       ]
+    },
+    {
+      "source": "/(favicon\\.svg|favicon\\.ico|favicon-32x32\\.png|apple-touch-icon\\.png|ui-hub-banner\\.png)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
     }
   ],
   "functions": {

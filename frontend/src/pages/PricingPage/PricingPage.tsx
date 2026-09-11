@@ -92,7 +92,7 @@ const PricingPage = () => {
             // Strict Guardrail: Stop if we still have a dummy key or no key
             if (!razorpayKey || razorpayKey.includes('dummy')) {
                 setStatus('error');
-                setCheckoutMessage('Configuration Error: Razorpay Key ID is missing. Please ensure your backend is deployed and VITE_API_URL is set in Vercel.');
+                setCheckoutMessage('Configuration Error: Razorpay Key ID is missing. Please ensure your backend is deployed and VITE_API_URL is configured correctly.');
                 return;
             }
 
