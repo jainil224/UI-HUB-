@@ -827,6 +827,11 @@ Search, inspect, and pull components, templates, and animations straight from th
 client** that talks to the deployed UI HUB MCP server using your `uh_live_…` API key — no extra backend needed.
 
 ```bash
+# Install from npm (recommended — no repo clone needed)
+npx ui-hub-cli --help            # run without installing (Node ≥ 18.18)
+npm install -g ui-hub-cli        # install globally → the `ui-hub` command
+
+# Or build/run from this repo
 npm run build:cli          # build the CLI once
 npm run ui-hub -- --help
 npm run ui-hub -- login

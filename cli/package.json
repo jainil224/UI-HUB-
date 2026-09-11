@@ -2,9 +2,33 @@
   "name": "ui-hub-cli",
   "version": "0.1.0",
   "description": "UI HUB CLI - search, inspect, and pull UI HUB components, templates, and animations from the terminal",
+  "keywords": [
+    "ui-hub",
+    "cli",
+    "components",
+    "ui",
+    "ui-library",
+    "code-generation",
+    "mcp",
+    "cursor",
+    "backgrounds",
+    "animations",
+    "templates"
+  ],
+  "author": "Jainil Patel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jainil224/UI-HUB-.git"
+  },
+  "homepage": "https://ui-hub-design.vercel.app",
+  "bugs": {
+    "url": "https://github.com/jainil224/UI-HUB-/issues"
+  },
   "type": "module",
   "bin": {
-    "ui-hub": "./dist/cli.js"
+    "ui-hub": "./dist/cli.js",
+    "ui-hub-cli": "./dist/cli.js"
   },
   "files": [
     "dist"
@@ -15,7 +39,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/cli.ts",
-    "test": "node --import tsx --test tests/config.test.ts tests/mcp.test.ts tests/args.test.ts tests/output.test.ts"
+    "test": "node --import tsx --test tests/config.test.ts tests/mcp.test.ts tests/args.test.ts tests/output.test.ts",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^22.5.0",

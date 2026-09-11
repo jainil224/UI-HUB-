@@ -44,9 +44,23 @@ server-side by the existing MCP server (`mcp-server/`).
 
 ## Install & Run
 
-The CLI lives in `cli/` and runs with **Node ≥ 18.18** (native `fetch`, zero runtime deps).
+The CLI is published to npm as **`ui-hub-cli`** and runs with **Node ≥ 18.18** (native `fetch`, zero runtime deps).
 
-### Build once
+### Install from npm (recommended)
+
+```bash
+npx ui-hub-cli --help              # run without installing
+npm install -g ui-hub-cli          # install globally → the `ui-hub` command
+ui-hub --help                      # available after global install
+```
+
+After a global install you get two commands (`ui-hub` and `ui-hub-cli`), which behave identically.
+
+### Run from the repository
+
+The CLI also ships in this repo under `cli/`. If you cloned the project instead of installing from npm:
+
+#### Build once
 
 ```bash
 npm run build:cli
@@ -54,7 +68,7 @@ npm run build:cli
 
 Compiles TypeScript → `cli/dist/cli.js`.
 
-### Run through the root script (recommended)
+#### Run through the root script (recommended)
 
 `npm run ui-hub` runs the compiled binary and passes everything after `--` straight to it:
 
@@ -64,20 +78,20 @@ npm run ui-hub -- login
 npm run ui-hub -- search "pricing card"
 ```
 
-### Run the binary directly
+#### Run the binary directly
 
 ```bash
 node cli/dist/cli.js login
 node cli/dist/cli.js search "cursor"
 ```
 
-### During development (runs from source with `tsx`)
+#### During development (runs from source with `tsx`)
 
 ```bash
 npm run cli:dev -- --help
 ```
 
-> Publishing to npm (`@ui-hub/cli` → `npx ui-hub@latest`) is planned as a follow-up once the command surface is stable.
+> The CLI is published on npm as `ui-hub-cli`. New versions ship automatically — `npx ui-hub-cli@latest` always gets the newest build.
 
 ---
 

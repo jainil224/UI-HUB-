@@ -1,6 +1,7 @@
 {
   "name": "ui-hub-root",
   "private": true,
+  "type": "module",
   "scripts": {
     "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ../mcp-server && npm install",
     "build:mcp": "cd mcp-server && npm install && npm run build",
