@@ -1,6 +1,265 @@
-import React, { useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { ArrowUpRight, X, RotateCcw } from 'lucide-react';
 
+// ============================================================================
+// 1. BOTTOM CURVED TYPOGRAPHY (Kinetic SVG TextPath Arc)
+// ============================================================================
+interface BottomCurvedTextProps {
+  parallaxX: number;
+}
+
+export const BottomCurvedText: React.FC<BottomCurvedTextProps> = ({ parallaxX }) => {
+  const shouldReduceMotion = useReducedMotion();
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    if (shouldReduceMotion) return;
+
+    let animId: number;
+    let start: number | null = null;
+    const speed = 0.015;
+
+    const animate = (timestamp: number) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+      setOffset((elapsed * speed) % 1000);
+      animId = requestAnimationFrame(animate);
+    };
+
+    animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
+  }, [shouldReduceMotion]);
+
+  return (
+    <div
+      className="w-full overflow-hidden pointer-events-none select-none relative -mt-4 sm:-mt-6 pb-2"
+      style={{
+        transform: `translate3d(${parallaxX * 1.5}px, 0, 0)`,
+      }}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 1440 220"
+        className="w-full h-[120px] sm:h-[160px] md:h-[190px] overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <path id="textArcCurve" d="M -300 240 Q 720 -30 1740 240" />
+        </defs>
+
+        <text
+          fill="#111111"
+          opacity="0.08"
+          style={{
+            fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
+            fontWeight: 800,
+            fontSize: '56px',
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+          }}
+        >
+          <textPath
+            href="#textArcCurve"
+            startOffset={shouldReduceMotion ? '10%' : `${15 - (offset % 800) / 16}%`}
+          >
+            PUT BACK GIVING BACK TO THE BUILDERS • 2586 LABS • DEFINITELY NOT A CULT • GO BACK AGAIN • PUT BACK GIVING
+          </textPath>
+        </text>
+      </svg>
+    </div>
+  );
+};
+
+// ============================================================================
+// 2. TWO-COLUMN BLACK SPLIT PANEL
+// ============================================================================
+interface SplitPanelProps {
+  parallaxX: number;
+  parallaxY: number;
+}
+
+export const SplitPanel: React.FC<SplitPanelProps> = ({ parallaxX, parallaxY }) => {
+  return (
+    <div
+      className="relative z-10 w-full max-w-[690px] mx-auto bg-[#111111] rounded-[10px] sm:rounded-[12px] border border-[#262626] shadow-[0_18px_40px_-15px_rgba(0,0,0,0.35)] overflow-hidden transition-transform duration-200"
+      style={{
+        transform: `translate3d(${parallaxX * 2}px, ${parallaxY * 1.5}px, 0)`,
+      }}
+    >
+      <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#ffffff_0.6px,transparent_0.6px)] [background-size:16px_16px]" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 relative">
+        {/* Column 01: Devfolio */}
+        <div className="p-6 sm:p-8 flex flex-col justify-between min-h-[330px] sm:min-h-[360px] relative border-b md:border-b-0 md:border-r border-[#2A2A2A]">
+          <div>
+            <span className="font-mono text-[10.5px] text-[#6A6A6A] font-semibold tracking-wider">
+              01.
+            </span>
+            <h2 className="mt-3.5 text-[#FAFAF8] text-[17.5px] sm:text-[19px] font-semibold leading-[1.3] tracking-tight max-w-[270px]">
+              We are creating a vibrant builder ecosystem with{' '}
+              <span className="text-white font-bold underline decoration-[#444444] underline-offset-4">
+                Devfolio.
+              </span>
+            </h2>
+
+            <div className="mt-4.5">
+              <a
+                href="https://devfolio.co"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 bg-[#FAFAF8] hover:bg-neutral-200 active:bg-neutral-300 text-[#111111] text-[10.5px] font-semibold px-3.5 py-1 rounded-full transition-all duration-150 shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <span className="tracking-tight">devfolio.co</span>
+                <ArrowUpRight className="w-2.5 h-2.5 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-4 flex justify-center items-center w-full h-[120px] sm:h-[135px] select-none pointer-events-none opacity-75 hover:opacity-100 transition-opacity">
+            <svg
+              viewBox="0 0 160 120"
+              className="w-[140px] h-[105px] overflow-visible"
+              fill="none"
+              stroke="#555555"
+              strokeWidth="0.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M 52 24 C 86 16, 120 40, 124 74 C 126 94, 110 106, 88 106 C 64 106, 44 94, 42 74 Z" stroke="#404040" />
+              <path d="M 52 24 C 66 40, 70 70, 48 98" stroke="#666666" strokeWidth="1.1" />
+              <path d="M 48 98 C 76 102, 110 96, 116 78 C 120 54, 94 32, 64 28" stroke="#4C4C4C" />
+              <path d="M 54 36 C 80 40, 102 56, 106 76" stroke="#383838" strokeWidth="0.75" />
+              <path d="M 56 46 C 78 50, 96 64, 100 80" stroke="#383838" strokeWidth="0.75" />
+              <path d="M 58 56 C 76 60, 90 72, 94 84" stroke="#383838" strokeWidth="0.75" />
+              <path d="M 44 98 L 48 102 L 56 104" stroke="#606060" />
+              <ellipse cx="80" cy="108" rx="42" ry="4" fill="#0A0A0A" opacity="0.6" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Column 02: Fold */}
+        <div className="p-6 sm:p-8 flex flex-col justify-between min-h-[330px] sm:min-h-[360px] relative">
+          <div>
+            <span className="font-mono text-[10.5px] text-[#6A6A6A] font-semibold tracking-wider">
+              02.
+            </span>
+            <h2 className="mt-3.5 text-[#FAFAF8] text-[17.5px] sm:text-[19px] font-semibold leading-[1.3] tracking-tight max-w-[270px]">
+              We are making personal finance delightful, simple and easy with{' '}
+              <span className="text-white font-bold underline decoration-[#444444] underline-offset-4">
+                Fold.
+              </span>
+            </h2>
+
+            <div className="mt-4.5">
+              <a
+                href="https://fold.money"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 bg-[#FAFAF8] hover:bg-neutral-200 active:bg-neutral-300 text-[#111111] text-[10.5px] font-semibold px-3.5 py-1 rounded-full transition-all duration-150 shadow-xs hover:shadow-sm group cursor-pointer"
+              >
+                <span className="tracking-tight">fold.money</span>
+                <ArrowUpRight className="w-2.5 h-2.5 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-4 flex justify-center items-center w-full h-[120px] sm:h-[135px] select-none pointer-events-none opacity-75 hover:opacity-100 transition-opacity">
+            <svg
+              viewBox="0 0 160 120"
+              className="w-[140px] h-[105px] overflow-visible"
+              fill="none"
+              stroke="#555555"
+              strokeWidth="0.9"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="80" cy="62" r="44" stroke="#4C4C4C" strokeWidth="1" />
+              <path d="M 80 18 C 102 18, 118 36, 118 58 C 118 78, 102 96, 88 102 C 76 96, 68 76, 76 54 C 80 42, 88 32, 80 18 Z" stroke="#666666" strokeWidth="1.1" />
+              <path d="M 84 32 C 96 42, 104 56, 104 70 C 104 82, 94 94, 84 98" stroke="#444444" strokeWidth="0.75" />
+              <path d="M 44 48 C 50 42, 60 40, 70 42" stroke="#363636" strokeWidth="0.6" />
+              <path d="M 40 58 C 48 52, 58 50, 68 52" stroke="#363636" strokeWidth="0.6" />
+              <ellipse cx="80" cy="110" rx="38" ry="4" fill="#0A0A0A" opacity="0.6" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// 3. FLOATING YELLOW ANNOUNCEMENT NOTE
+// ============================================================================
+interface YellowCardProps {
+  parallaxX: number;
+  parallaxY: number;
+}
+
+export const YellowCard: React.FC<YellowCardProps> = ({ parallaxX, parallaxY }) => {
+  const [isVisible, setIsVisible] = useState(true);
+
+  if (!isVisible) {
+    return (
+      <div className="relative z-20 flex justify-center -mb-3">
+        <button
+          type="button"
+          onClick={() => setIsVisible(true)}
+          className="flex items-center gap-1.5 bg-[#F6D238] hover:bg-[#ebcb35] text-[#111111] text-[9.5px] font-semibold px-2.5 py-1 rounded-full shadow-sm cursor-pointer transition-transform hover:scale-105"
+        >
+          <RotateCcw className="w-2.5 h-2.5" />
+          <span>Show announcement ($2.5M note)</span>
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 8, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: -8, scale: 0.95 }}
+        style={{
+          transform: `translate3d(${parallaxX * 4}px, ${parallaxY * 3}px, 0)`,
+        }}
+        transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+        className="relative z-20 w-full max-w-[325px] sm:max-w-[340px] mx-auto bg-[#F6D238] rounded-[7px] p-3 shadow-[0_8px_20px_-6px_rgba(0,0,0,0.18)] select-none border border-[#E5BE22]/60"
+      >
+        <div className="flex items-center justify-between text-[#111111] pb-1 mb-1.5 border-b border-[#111111]/10">
+          <div className="flex items-center gap-1.5 text-[8.5px] font-semibold tracking-wide">
+            <span className="inline-flex items-center gap-1 bg-[#111111] text-white px-1.5 py-[1px] rounded-[3px] text-[7.5px] font-mono uppercase tracking-wider">
+              <span className="w-1 h-1 rounded-full bg-[#F6D238] animate-pulse" />
+              NOTE
+            </span>
+            <span className="opacity-40">•</span>
+            <span className="font-mono text-[8px] opacity-75">MAY '23</span>
+            <span className="opacity-40">•</span>
+            <span className="uppercase text-[8px] tracking-wider opacity-85 font-mono">ANNOUNCEMENT</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsVisible(false)}
+            className="w-4 h-4 rounded-full flex items-center justify-center hover:bg-[#111111]/15 active:bg-[#111111]/25 text-[#111111] transition-colors cursor-pointer"
+            aria-label="Dismiss note"
+          >
+            <X className="w-2.5 h-2.5 stroke-[2.5]" />
+          </button>
+        </div>
+
+        <p className="text-[#111111] text-[11px] leading-[1.35] font-medium tracking-tight">
+          We have raised $2.5M to build stellar personal finance products for India
+        </p>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+// ============================================================================
+// 4. CENTER ISOMETRIC 3D OBJECT (THE HERO PIECE - 100% PRESERVED)
+// ============================================================================
 export interface IsometricBlockProps {
   mouseX?: number;
   mouseY?: number;
@@ -389,27 +648,124 @@ export const IsometricBlock: React.FC<IsometricBlockProps> = ({ mouseX = 0, mous
   );
 };
 
-export default function Labs2586({ className = '' }: { className?: string }) {
+// ============================================================================
+// 5. TOP TECHNICAL NAVBAR
+// ============================================================================
+export const Navbar: React.FC = () => {
+  return (
+    <header className="w-full max-w-5xl mx-auto px-6 sm:px-10 pt-6 pb-2 flex items-center justify-between z-20">
+      {/* Left Logo Mark */}
+      <div className="flex items-center gap-2.5">
+        <div className="w-[30px] h-[30px] rounded-[3px] bg-[#111111] flex flex-col items-center justify-center text-white select-none shadow-sm">
+          <span className="text-[11px] font-bold leading-none tracking-tight">25</span>
+          <span className="text-[11px] font-bold leading-none tracking-tight">86</span>
+        </div>
+        <div className="flex flex-col">
+          <span className="font-mono text-[6.5px] uppercase font-semibold tracking-[0.2em] text-[#6A665D]">
+            LABS, INC.
+          </span>
+        </div>
+      </div>
+
+      {/* Right Controls */}
+      <div className="flex items-center gap-2.5 sm:gap-3.5">
+        {/* Hiring Pill */}
+        <div className="inline-flex items-center gap-1.5 bg-[#F6D238] text-[#111111] text-[9.5px] font-semibold px-2.5 py-0.5 rounded-full shadow-xs">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#111111] animate-ping" />
+          <span>we're hiring</span>
+        </div>
+
+        {/* Status */}
+        <div className="hidden sm:inline-flex items-center gap-1.5 text-[9px] font-mono text-[#7A756C]">
+          <span className="w-1 h-1 rounded-full bg-emerald-500" />
+          <span>status: ok</span>
+        </div>
+
+        {/* Email Pill Button */}
+        <a
+          href="mailto:hello@2586labs.com"
+          className="inline-flex items-center gap-1 bg-[#111111] hover:bg-neutral-800 text-white text-[9.5px] font-medium px-3 py-1 rounded-full transition-colors group cursor-pointer"
+        >
+          <span>hello@2586labs.com</span>
+          <ArrowUpRight className="w-2.5 h-2.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </a>
+      </div>
+    </header>
+  );
+};
+
+// ============================================================================
+// 6. MAIN 2586 LABS LANDING PAGE COMPONENT
+// ============================================================================
+export interface Labs2586Props {
+  className?: string;
+}
+
+export default function Labs2586({ className = '' }: Labs2586Props) {
+  const shouldReduceMotion = useReducedMotion();
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    setMousePos({ x, y });
+    if (shouldReduceMotion || typeof window === 'undefined') return;
+    const deltaX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);
+    const deltaY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);
+    setMousePos({ x: deltaX, y: deltaY });
   };
 
   return (
     <div
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setMousePos({ x: 0, y: 0 })}
-      className={`relative min-h-[600px] h-full w-full bg-[#F8F3E5] flex items-center justify-center p-4 sm:p-8 overflow-hidden select-none font-['Inter',sans-serif] ${className}`}
+      className={`relative min-h-screen w-full bg-[#F8F3E5] text-[#111111] flex flex-col justify-between overflow-x-hidden font-['Inter',sans-serif] selection:bg-[#F6D238] selection:text-[#111111] ${className}`}
+      id="labs-2586-root"
       style={{
         backgroundImage: 'radial-gradient(rgba(0, 0, 0, 0.035) 1px, transparent 0)',
         backgroundSize: '24px 24px',
       }}
     >
-      <IsometricBlock mouseX={mousePos.x} mouseY={mousePos.y} />
+      {/* Top Technical Navbar */}
+      <Navbar />
+
+      {/* Main Content Area */}
+      <main className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 flex flex-col items-center pt-2 sm:pt-4">
+        {/* Isometric 3D Hero Piece (100% untouched) */}
+        <IsometricBlock mouseX={mousePos.x} mouseY={mousePos.y} />
+
+        {/* Editorial Heading & Description */}
+        <div className="text-center max-w-md mx-auto px-4 mt-2 mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-[29px] font-bold text-[#111111] tracking-tight leading-tight">
+            Definitely not a cult
+          </h1>
+          <p className="mt-2 text-[11px] sm:text-[11.5px] leading-[1.6] text-[#6B665C] font-normal">
+            2586 Labs, Inc. is the umbrella under which beautiful software &amp; thriving communities are built and encouraged. Scroll to learn more about everything that we are working on.
+          </p>
+
+          <div className="mt-4 flex justify-center">
+            <a
+              href="mailto:hello@2586labs.com"
+              className="inline-flex items-center gap-1.5 bg-[#111111] hover:bg-neutral-800 text-white text-[10px] font-medium px-4 py-1.5 rounded-full transition-all hover:scale-105 cursor-pointer shadow-xs"
+            >
+              <span>hello@2586labs.com</span>
+              <ArrowUpRight className="w-2.5 h-2.5" />
+            </a>
+          </div>
+        </div>
+
+        {/* Floating Yellow Announcement Note */}
+        <div className="w-full relative z-20 mb-[-14px]">
+          <YellowCard parallaxX={mousePos.x} parallaxY={mousePos.y} />
+        </div>
+
+        {/* Two-Column Black Split Panel */}
+        <div className="w-full relative z-10">
+          <SplitPanel parallaxX={mousePos.x} parallaxY={mousePos.y} />
+        </div>
+      </main>
+
+      {/* Bottom Kinetic Curved Typography */}
+      <footer className="relative w-full mt-4 sm:mt-6">
+        <BottomCurvedText parallaxX={mousePos.x} />
+      </footer>
     </div>
   );
 }
