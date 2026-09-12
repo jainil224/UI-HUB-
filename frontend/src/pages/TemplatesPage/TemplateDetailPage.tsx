@@ -26,6 +26,7 @@ const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = 
 ];
 
 const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.ComponentType }>> = {
+    '2586-labs': () => import('../../components/templates/Labs2586'),
     'mood-hero': () => import('../../components/templates/MoodHero'),
     'portfolio-closing': () => import('../../components/templates/PortfolioClosing'),
     'tars-protocol': () => import('../../components/templates/TarsHeroArena'),
@@ -48,6 +49,7 @@ const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Component
 };
 
 const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
+    '2586-labs': 'bg-[#F8F3E5]',
     'mood-hero': 'bg-[#EDE8DE]',
     'portfolio-closing': 'bg-[#0B1014]',
     'tars-protocol': 'bg-white',

@@ -42,6 +42,7 @@ import SuiOverflow from '../../../components/templates/SuiOverflow';
 import PortfolioClosing from '../../../components/templates/PortfolioClosing';
 import GraphicDesignerPortfolio from '../../../components/templates/GraphicDesignerPortfolio';
 import MoodHero from '../../../components/templates/MoodHero';
+import Labs2586 from '../../../components/templates/Labs2586';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
@@ -173,6 +174,8 @@ const TemplatesSection = () => {
                                             loading="lazy"
                                             decoding="async"
                                         />
+                                    ) : template.id === '2586-labs' ? (
+                                        <LazyTemplatePreview bgColor="#F8F3E5"><Labs2586 /></LazyTemplatePreview>
                                     ) : template.id === 'mood-hero' ? (
                                         <LazyTemplatePreview bgColor="#EDE8DE"><MoodHero /></LazyTemplatePreview>
                                     ) : template.id === 'portfolio-closing' ? (

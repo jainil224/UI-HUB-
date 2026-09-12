@@ -27,6 +27,38 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
 
     // 2. High-performance static visual representations for each template
     switch (template.id) {
+        case '2586-labs':
+            return (
+                <div className="relative w-full h-full bg-[#F8F3E5] overflow-hidden flex flex-col justify-between p-3 select-none pointer-events-none" style={{ backgroundImage: 'radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 0)', backgroundSize: '16px 16px' }}>
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                        <div className="w-5 h-5 rounded-[2px] bg-[#111111] flex flex-col items-center justify-center text-white text-[7px] font-bold leading-none">
+                            <span>25</span>
+                            <span>86</span>
+                        </div>
+                        <span className="bg-[#F6D238] text-[#111111] text-[6.5px] font-bold px-1.5 py-0.5 rounded-full">hiring</span>
+                    </div>
+
+                    {/* Center Isometric Cube Preview */}
+                    <div className="my-auto flex justify-center items-center">
+                        <div className="w-20 h-20 relative flex items-center justify-center">
+                            <div className="w-14 h-14 bg-[#FED536] rounded-xl border border-[#111111] transform rotate-45 skew-x-6 flex items-center justify-center shadow-md">
+                                <div className="w-11 h-11 bg-[#111111] rounded-lg border border-[#FED536]/40 flex flex-col items-center justify-center text-white text-[10px] font-black">
+                                    <span>25</span>
+                                    <span>86</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Bottom Split Preview */}
+                    <div className="bg-[#111111] text-white rounded-lg p-2 flex justify-between items-center text-[7px] border border-neutral-800">
+                        <span className="font-mono text-neutral-400">01. Devfolio</span>
+                        <span className="font-mono text-neutral-400">02. Fold</span>
+                    </div>
+                </div>
+            );
+
         case 'mood-hero':
             return (
                 <div className="relative w-full h-full bg-[#EDE8DE] overflow-hidden flex items-center justify-center p-3 select-none pointer-events-none">

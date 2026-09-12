@@ -17,8 +17,10 @@ import suiOverflowCode from '../components/templates/SuiOverflow.tsx?raw';
 import graphicDesignerPortfolioCode from '../components/templates/GraphicDesignerPortfolio.tsx?raw';
 import portfolioClosingCode from '../components/templates/PortfolioClosing.tsx?raw';
 import moodHeroCode from '../components/templates/MoodHero.tsx?raw';
+import labs2586Code from '../components/templates/Labs2586.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
+    '2586-labs': labs2586Code,
     'mood-hero': moodHeroCode,
     'portfolio-closing': portfolioClosingCode,
     'tars-protocol': tarsProtocolCode,
