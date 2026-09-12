@@ -39,6 +39,9 @@ import PaipaiKuaishou from '../../../components/templates/PaipaiKuaishou';
 import LogoHere from '../../../components/templates/LogoHere';
 import Partify from '../../../components/templates/Partify';
 import SuiOverflow from '../../../components/templates/SuiOverflow';
+import PortfolioClosing from '../../../components/templates/PortfolioClosing';
+import GraphicDesignerPortfolio from '../../../components/templates/GraphicDesignerPortfolio';
+import MoodHero from '../../../components/templates/MoodHero';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
@@ -170,6 +173,10 @@ const TemplatesSection = () => {
                                             loading="lazy"
                                             decoding="async"
                                         />
+                                    ) : template.id === 'mood-hero' ? (
+                                        <LazyTemplatePreview bgColor="#EDE8DE"><MoodHero /></LazyTemplatePreview>
+                                    ) : template.id === 'portfolio-closing' ? (
+                                        <LazyTemplatePreview bgColor="#0B1014"><PortfolioClosing /></LazyTemplatePreview>
                                     ) : template.id === 'tars-protocol' ? (
                                         <LazyTemplatePreview bgColor="#ffffff"><TarsHeroArena /></LazyTemplatePreview>
                                     ) : template.id === 'split-fuzzy-orb' ? (
@@ -202,6 +209,8 @@ const TemplatesSection = () => {
                                         <LazyTemplatePreview bgColor="#FBFBFB"><Partify /></LazyTemplatePreview>
                                     ) : template.id === 'sui-overflow' ? (
                                         <LazyTemplatePreview bgColor="#F2EFE6"><SuiOverflow /></LazyTemplatePreview>
+                                    ) : template.id === 'graphic-designer-portfolio' ? (
+                                        <LazyTemplatePreview bgColor="#F7F6F2"><GraphicDesignerPortfolio /></LazyTemplatePreview>
                                     ) : template.liveDemoUrl ? (
                                         <iframe
                                             src={template.liveDemoUrl}

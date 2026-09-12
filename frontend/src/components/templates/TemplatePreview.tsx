@@ -27,6 +27,116 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
 
     // 2. High-performance static visual representations for each template
     switch (template.id) {
+        case 'mood-hero':
+            return (
+                <div className="relative w-full h-full bg-[#EDE8DE] overflow-hidden flex items-center justify-center p-3 select-none pointer-events-none">
+                    {/* Top Golden Sun Crest */}
+                    <div className="absolute left-1/2 -translate-x-1/2 -top-12 w-48 h-36 rounded-full bg-gradient-to-b from-[#E7A635] via-[#E29A28] to-[#D98E1F] blur-sm opacity-90 shadow-[0_0_40px_rgba(231,166,53,0.4)]" />
+
+                    {/* Main Inner Cream Card */}
+                    <div className="relative z-10 w-full h-full rounded-2xl bg-[#FFFDF4] border border-neutral-300/40 shadow-md flex flex-col justify-between p-3 overflow-hidden">
+                        {/* Pill Nav */}
+                        <div className="flex items-center justify-between px-2 py-0.5 rounded-full bg-white/80 border border-neutral-200/60 mx-auto w-fit gap-2">
+                            <span className="w-2 h-2 rounded-full bg-neutral-900" />
+                            <span className="text-[7px] font-medium text-neutral-600">Projects • Pricing</span>
+                            <span className="text-[6.5px] bg-[#111111] text-white px-1.5 py-0.5 rounded-full">Free</span>
+                        </div>
+
+                        {/* Title & Tagline */}
+                        <div className="text-center my-auto">
+                            <div className="text-[7px] text-neutral-400 mb-0.5">Over 1k happy users</div>
+                            <h3 className="text-sm font-bold text-neutral-900 leading-tight">
+                                Regulate your mood<br />with our videos
+                            </h3>
+                            <div className="mt-1.5 flex justify-center gap-1">
+                                <span className="bg-[#111111] text-white text-[7px] px-2 py-0.5 rounded-full">Play ⚡</span>
+                                <span className="bg-white border border-neutral-200 text-neutral-700 text-[7px] px-2 py-0.5 rounded-full">Learn</span>
+                            </div>
+                        </div>
+
+                        {/* Mini 3 Cards Row */}
+                        <div className="flex justify-center -space-x-2 translate-y-3">
+                            <div className="w-12 h-14 rounded-t-lg bg-[#24B9E7] shadow-sm border border-neutral-900/10" />
+                            <div className="w-14 h-16 rounded-t-lg bg-[#F59CC7] z-10 shadow-md -translate-y-1 border border-neutral-900/10" />
+                            <div className="w-12 h-14 rounded-t-lg bg-[#F87162] shadow-sm border border-neutral-900/10" />
+                        </div>
+                    </div>
+                </div>
+            );
+
+        case 'graphic-designer-portfolio':
+            return (
+                <div className="relative w-full h-full bg-[#F7F6F2] overflow-hidden flex flex-col justify-between p-4 select-none pointer-events-none">
+                    {/* Top Right Atmospheric Gradient */}
+                    <div className="absolute -top-6 -right-6 w-36 h-36 rounded-full bg-[radial-gradient(circle_at_88%_12%,rgba(2,20,61,0.96)_0%,rgba(16,70,180,0.58)_52%,transparent_78%)] blur-xl pointer-events-none" />
+
+                    {/* Metadata Header */}
+                    <div className="relative z-10 flex items-center gap-2">
+                        <span className="border border-[#111111] rounded px-1 text-[8px] font-mono text-[#111111]">2025</span>
+                        <span className="text-[8px] text-[#111111] uppercase tracking-wider">Graphic Designer</span>
+                    </div>
+
+                    {/* Center Title Lockup */}
+                    <div className="relative z-10 my-auto text-center">
+                        <div className="relative inline-block text-4xl font-bold font-sans tracking-tighter text-[#111111]">
+                            <span className="text-[#1673E6] italic font-serif -ml-1 mr-0.5">P</span>ortfolio
+                            <span className="absolute -bottom-2 -right-4 text-[#1673E6] text-[11px] font-serif italic whitespace-nowrap">
+                                Sony palli
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Bottom Category Row */}
+                    <div className="relative z-10 flex justify-between items-center text-[7.5px] font-mono text-[#111111] border-t border-[#111111]/20 pt-2">
+                        <span>↗ LOGOS</span>
+                        <span>↗ BRANDING</span>
+                        <span>↗ SOCIAL</span>
+                        <span>↗ PRINT</span>
+                    </div>
+                </div>
+            );
+
+        case 'portfolio-closing':
+            return (
+                <div className="relative w-full h-full bg-[#0B1014] overflow-hidden flex flex-col justify-between p-4 select-none pointer-events-none">
+                    {/* Upper White Card Preview */}
+                    <div className="relative w-full bg-[#FAFAF7] rounded-b-2xl pt-2 pb-5 px-3 text-center shadow-md">
+                        <div className="flex justify-between text-[7px] text-[#181D22] font-mono">
+                            <span>(Creative)</span>
+                            <span>(2023–2025)</span>
+                            <span>(Design)</span>
+                        </div>
+                        <div className="text-xl font-serif text-[#0A0D10] mt-1 font-normal tracking-tight">
+                            Thank <span className="italic">You</span>
+                        </div>
+                        <div className="flex flex-col items-center mt-1">
+                            <span className="inline-block bg-[#087CCB] text-white text-[8px] font-serif px-2 py-0.5 -rotate-[0.6deg]">
+                                Looking Forward to
+                            </span>
+                            <span className="inline-block bg-[#06080A] text-white text-[8px] font-serif px-2.5 py-0.5 -mt-1">
+                                Connect with You!
+                            </span>
+                        </div>
+                    </div>
+                    {/* Center Spool Graphic */}
+                    <div className="relative flex justify-center -my-3 z-10">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#1B87DE] to-[#025CA8] border border-blue-400/50 flex items-center justify-center shadow-lg">
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#030609] border border-neutral-400" />
+                        </div>
+                    </div>
+                    {/* Bottom Contact preview */}
+                    <div className="flex justify-between items-end text-[8px] text-neutral-400 font-mono px-2">
+                        <div>
+                            <div className="text-[#F8F8F5]">uihub.design@gmail.com</div>
+                            <div className="text-neutral-500">+62 895 1892 4877</div>
+                        </div>
+                        <div className="text-right font-serif italic text-neutral-300 text-[10px]">
+                            Warm Regards, Jainil
+                        </div>
+                    </div>
+                </div>
+            );
+
         case 'tars-protocol':
             return (
                 <div className="relative w-full h-full bg-[#080511] overflow-hidden flex flex-col justify-between p-4 select-none pointer-events-none">

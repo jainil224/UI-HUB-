@@ -22,6 +22,14 @@
   font-family: 'DM Serif Display', Georgia, serif;
 }
 
+.font-serif-display {
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-sans-clean {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
 .hero-title {
   font-family: 'Inter', sans-serif;
   font-weight: 600;

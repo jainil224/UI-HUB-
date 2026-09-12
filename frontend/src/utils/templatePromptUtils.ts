@@ -16,6 +16,10 @@ import {
  * and embeds the exact production code used to build the website/template.
  */
 export function buildTemplatePrompt(template: TemplateItem, system: AISystem): string {
+    if (template.toolPrompts && template.toolPrompts[system]) {
+        return template.toolPrompts[system]!;
+    }
+
     const exactCode = TEMPLATE_SOURCE_CODE[template.id] || template.promptPreview;
 
     const manifest: ComponentManifest = {

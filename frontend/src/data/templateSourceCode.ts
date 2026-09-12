@@ -14,8 +14,13 @@ import paipaiCode from '../components/templates/PaipaiKuaishou.tsx?raw';
 import logoHereCode from '../components/templates/LogoHere.tsx?raw';
 import partifyCode from '../components/templates/Partify.tsx?raw';
 import suiOverflowCode from '../components/templates/SuiOverflow.tsx?raw';
+import graphicDesignerPortfolioCode from '../components/templates/GraphicDesignerPortfolio.tsx?raw';
+import portfolioClosingCode from '../components/templates/PortfolioClosing.tsx?raw';
+import moodHeroCode from '../components/templates/MoodHero.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
+    'mood-hero': moodHeroCode,
+    'portfolio-closing': portfolioClosingCode,
     'tars-protocol': tarsProtocolCode,
     'tars-hero-arena': tarsProtocolCode,
     'split-fuzzy-orb': splitFuzzyOrbCode,
@@ -33,5 +38,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'logo-here': logoHereCode,
     'partify': partifyCode,
     'sui-overflow': suiOverflowCode,
+    'graphic-designer-portfolio': graphicDesignerPortfolioCode,
 };
 

@@ -45,6 +45,3800 @@ export type TemplateCategory = (typeof templateCategories)[number];
 
 export const websiteTemplates: TemplateItem[] = [
     {
+        id: 'mood-hero',
+        previewImage: '/assets/template-previews/Mood Hero.png',
+        title: 'Mood Hero',
+        description: 'Playful wellness editorial hero section featuring warm amber sun crest, organic shadow foliage, 3D perspective floor grid, and trio of illustrated cards (Sun, Peace Hand, Sunflower).',
+        category: 'Agency & Portfolio',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Web Audio Synth + Interactive Mouse Parallax',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2',
+        githubUrl: 'https://github.com/ui-hub/mood-hero',
+        previewGradient: 'from-[#EDE8DE] via-[#FFFDF4] to-[#E7A635]',
+        accentColor: '#E7A635',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '4.8k',
+        },
+        features: [
+            'Warm ambient canvas (#EDE8DE) with massive glowing amber sun crest and animated foliage shadows',
+            'Floating pill navigation with minimalist zen-timer dial icon and smooth backdrop blur',
+            'Social proof badge with overlapping user avatars and hand-drawn celebratory burst marks',
+            'Editorial typography ("Regulate your mood with our videos") with hand-drawn sparkle & telephone coil doodles',
+            'Mathematically foreshortened 3D perspective floor grid receding to a vanishing point',
+            'Trio of illustrated character cards: Happy Sun, White Glove Peace Hand, and Glance Sunflower',
+            'Interactive video session drawer modal with calming breathing animation, audio toggle, and mood tabs'
+        ],
+        promptPreview: "Recreate an exact, pixel-accurate, interactive React + Tailwind CSS + TypeScript hero section matching this high-end playful wellness editorial aesthetic.\n\n### 1. CORE VISUAL SPECIFICATIONS & PALETTE\n- **Outer Canvas Background**: `#EDE8DE` with a warm subtle gradient `linear-gradient(to bottom, #F2EEE4, #ECE7DD, #E6E0D4)`.\n- **Top Golden Sun Crest**: An enormous circular warm amber glow element positioned behind the main panel:\n  - Width: `w-[600px] sm:w-[850px] md:w-[1100px]`, Height: `h-[550px] sm:h-[750px] md:h-[900px]`.\n  - Position: `left: 50%; transform: translateX(-50%); top: -180px` (peaking out from behind the top center of the main panel).\n  - Background: `linear-gradient(to bottom, #E7A635, #E29A28, #D98E1F)`.\n  - Shadow: `box-shadow: 0 0 120px 40px rgba(231, 166, 53, 0.35)`.\n- **Dappled Foliage Shadows**: Organic botanical shadow shapes drifting slowly with low opacity (`22% - 28%`) and soft Gaussian blur (`blur-[28px]` to `blur-[36px]`) in the top-left, top-right, and side margins.\n- **Main Website Container Panel**:\n  - Max Width: `1180px`, Width: `90% - 94%` of viewport.\n  - Min Height: `780px - 850px`.\n  - Background: Crisp ivory cream `#FFFDF4`.\n  - Border Radius: `rounded-[28px] sm:rounded-[32px] md:rounded-[36px]`.\n  - Border: `1px solid rgba(120, 110, 90, 0.14)`.\n  - Shadow: `box-shadow: 0 24px 70px -15px rgba(80, 70, 50, 0.14), 0 0 1px rgba(0, 0, 0, 0.06)`.\n  - Inner Sheen: 1px subtle white inset border overlay.\n  - Overflow: `overflow: hidden` (ensures the three cards are clipped naturally across their lower edges).\n\n---\n\n### 2. TOP FLOATING NAVBAR SPECIFICATION\n- **Container**: Centered floating pill navbar (`top: 20px;`).\n  - Styling: `rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-3 py-1.5`.\n- **Logo Mark (Left)**:\n  - 24px × 24px circular dark badge (`bg-neutral-900`) containing a 14px minimalist zen-timer dial icon (dark circle with a crisp white quarter-circle wedge cutout).\n- **Navigation Links (Center)**:\n  - Items: `Projects`, `Solutions`, `Pricing`, `Company`, `Support`.\n  - Font: Plus Jakarta Sans / Inter, `11.5px` (`text-[11.5px]`), `font-medium`, color `#4B5563`, hover `#111111`, gap `18px - 20px`.\n- **CTA Button (Right)**:\n  - \"Try for free\": Rounded black pill (`bg-[#111111] text-white text-[11px] font-medium px-3 py-1 rounded-full`).\n\n---\n\n### 3. HERO CONTENT SPECIFICATION\n- **Social Proof Stack**:\n  - Placed centered above the heading with `pt-9 sm:pt-11 mb-3.5`.\n  - Top: Hand-drawn 3-ray celebration burst marks (\\|/) in black line stroke (`stroke-width: 2.2px; stroke-linecap: round;`).\n  - Stack: 4 overlapping circular portrait avatars (`22px` diameter, `1.5px` white border, `-space-x-2`).\n  - Label: `\"Over 1k happy users\"` in `11.5px`, regular weight, color `#6B7280`.\n- **Hero Main Heading**:\n  - Exact Text (2 lines):\n    Regulate your mood\n    with our videos\n  - Typography: Plus Jakarta Sans / Inter Bold, `text-3xl sm:text-4xl md:text-5xl lg:text-[54px]`, color `#111111`, line-height `1.02 - 1.04`, tracking `tracking-[-0.035em]`.\n  - **Left Framing Doodle**: Hand-drawn 4-pointed sparkle star with a smaller companion sparkle star to its lower-left (`stroke: #111111; stroke-width: 2.2px;`).\n  - **Right Framing Doodle**: Hand-drawn spiral/curly loop telephone coil doodle with a downward tail (`stroke: #111111; stroke-width: 2.2px;`).\n- **Description**:\n  - Text:\n    Our pre recorded sessions contain all the essentials\n    to help you fix your mood in few sessions\n  - Typography: `13px - 13.5px`, regular, color `#6B7280`, max-width `440px`, centered, line-height `1.45`.\n- **Action Buttons**:\n  - Button 1 (\"Play Video\"): Black pill (`bg-[#111111] text-white px-5 py-2.5 rounded-full text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] flex items-center gap-1.5`) featuring a small white lightning bolt icon (⚡ / Zap).\n  - Button 2 (\"Learn More\"): White pill (`bg-white border border-neutral-200/90 text-neutral-800 px-5 py-2.5 rounded-full text-[12.5px] font-medium tracking-tight shadow-[0_1px_4px_rgba(0,0,0,0.04)]`).\n  - Spacing: `gap-3`, centered, `mt-5 sm:mt-6`.\n\n---\n\n### 4. 3D PERSPECTIVE FLOOR GRID\n- Positioned directly below the CTA buttons (starting around `top: 310px`) and receding towards the bottom.\n- Radiating perspective lines emanating from a central vanishing point `(600, 30)` to the bottom width.\n- Transverse horizontal lines calculated via power curve `y = vpY + (height - vpY) * Math.pow(i / total, 1.7)` to create authentic 3D spatial perspective foreshortening.\n- Line Color: Warm sandy cream `#E2D8C6`, stroke-width `1.15px`.\n- Gradient Fade: Masked with `linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)` so it fades smoothly into the cream panel background below the CTA buttons.\n\n---\n\n### 5. THE THREE ILLUSTRATED VIDEO CARDS\nArranged in an overlapping horizontal row, emerging from the bottom edge and translated downward (`translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20`) so their lower bodies are cropped:\n\n1. **Left Blue Card (`#24B9E7`)**:\n   - Width: `240px sm:280px md:320px lg:350px`, Height: `340px sm:400px md:460px`.\n   - Top Radius: `rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px]`.\n   - Artwork:\n     - Golden Sun Character (`#FFC74A`) with bold black outlines (`stroke-width: 3.4px`).\n     - Radiating triangular zigzag rays around the circular body.\n     - Facial features: Closed happy smiling eyes (`^ ^`) with eyelash ticks, button pink nose (`#FF8595`), joyful mouth with dimples, cheek freckles.\n     - Puffy white cloud at the bottom in front of the sun with bubbly curves and inner crease lines.\n     - Floating confetti: Purple pill capsule (`#A47AE8`) at top right, green 4-petal clover cross (`#67C85A`) at top left, magenta blossom (`#F43F5E`), and scattered dots.\n\n2. **Center Pink Card (`#F59CC7`)**:\n   - Width: `260px sm:310px md:360px lg:390px`, Height: `370px sm:430px md:500px`.\n   - Top Radius: `rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px]`.\n   - Dominant foreground layer (`z-index: 20`, overlapping both left and right cards with negative margins `-space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22` and elevated `-translate-y-3 sm:-translate-y-5 md:-translate-y-7`).\n   - Artwork:\n     - Large white glove Peace Hand (✌️) with thick black outlines (`stroke-width: 3.8px`).\n     - Index and middle fingers pointing up, ring and pinky curled down, thumb folded across.\n     - Detailed knuckle and palm crease lines.\n     - White glove wrist cuff band, green wrist sleeve (`#56B864`) below the cuff.\n     - Bright cyan blue label (`#24B9E7`) with white bold text `\"IT'S\"` extending into the lower crop.\n     - Floating elements: Two green daisies with yellow centers on either side, yellow 4-pointed sparkle stars, and scattered dots.\n\n3. **Right Coral Card (`#F87162`)**:\n   - Width: `240px sm:280px md:320px lg:350px`, Height: `340px sm:400px md:460px`.\n   - Top Radius: `rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px]`.\n   - Artwork:\n     - Sunflower character with an emerald/mint green circular face (`#67C85A`) and rounded golden-yellow petals (`#FFD147`) all around.\n     - Big cartoon eyes glancing toward the upper-left with cyan iris, black pupils, white reflection glints, eyelids, and arched black eyebrows.\n     - Pink button nose and side smirk smile with dimple.\n     - Top right accent: Electric cyan 8-pointed star burst (`#15C0F6`) with bold black outline.\n\n---\n\n### 6. INTERACTIVITY, AUDIO & PARALLAX\n- **Desktop Mouse Parallax**: Soft mouse movement interpolation shifting the background sun by 2px, floor grid by 3px, and cards by 5-7px.\n- **Web Audio Synthesizer**: Organic synthesized bubble pop sound on button clicks / card hover (`440Hz - 600Hz`), and a soothing 4-note chime for \"Play Video\" and featured card interactions.\n- **Interactive Video Modal**: Opens an editorial session preview drawer with calming breathing animation, audio toggle, play/pause controls, and mood selector tabs (\"Sunny Morning Routine\", \"Peace & Inner Calm\", \"Mood Bloom Harmony\").\n- **Accessibility**: Complete keyboard navigation and full `prefers-reduced-motion` compliance.\n\n---\n\nLive Demo Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2",
+        toolPrompts: {
+            advance: "MATHEMATICAL & TECHNICAL SPECIFICATION: MOOD HERO\n1. Canvas Geometry: Outer canvas (#EDE8DE) with background gradient linear-gradient(to bottom, #F2EEE4, #ECE7DD, #E6E0D4).\n2. Amber Sun Crest: Positioned top center left:50% -translate-x-1/2 top: -180px, w: 600px-1100px, h: 550px-900px, radial glow 0 0 120px 40px rgba(231,166,53,0.35).\n3. 3D Perspective Floor Grid: Radiating lines from vanishing point (600, 30) and power curve transverse lines: y = vpY + (height - vpY) * Math.pow(i/total, 1.7).\n4. Illustrated Video Cards: Left Cyan Sun (#24B9E7), Center Pink Peace Hand (#F59CC7), Right Coral Sunflower (#F87162).\n5. Audio Synthesizer: SoundManager with custom Web Audio Oscillator bubble pop and 4-note arpeggio chime.\n6. Live Demo Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2\n\n```tsx\nimport React, { useState, useEffect } from 'react';\nimport { Zap, Play, Pause, Volume2, VolumeX, X, Sparkles, Heart } from 'lucide-react';\n\n// ============================================================================\n// 1. WEB AUDIO SYNTHESIZER\n// ============================================================================\nclass SoundManager {\n  private ctx: AudioContext | null = null;\n  public enabled: boolean = true;\n\n  private getContext(): AudioContext | null {\n    if (typeof window === 'undefined') return null;\n    if (!this.ctx) {\n      const AudioCtx =\n        window.AudioContext ||\n        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;\n      if (AudioCtx) this.ctx = new AudioCtx();\n    }\n    if (this.ctx && this.ctx.state === 'suspended') {\n      this.ctx.resume().catch(() => {});\n    }\n    return this.ctx;\n  }\n\n  public playBubble(freq: number = 440, duration: number = 0.08) {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const osc = ctx.createOscillator();\n      const gain = ctx.createGain();\n      osc.type = 'sine';\n      const now = ctx.currentTime;\n      osc.frequency.setValueAtTime(freq, now);\n      osc.frequency.exponentialRampToValueAtTime(freq * 1.4, now + duration);\n      gain.gain.setValueAtTime(0.04, now);\n      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);\n      osc.connect(gain);\n      gain.connect(ctx.destination);\n      osc.start(now);\n      osc.stop(now + duration);\n    } catch {}\n  }\n\n  public playChime() {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const now = ctx.currentTime;\n      const notes = [523.25, 659.25, 783.99, 1046.5];\n      notes.forEach((freq, idx) => {\n        const osc = ctx.createOscillator();\n        const gain = ctx.createGain();\n        osc.type = 'triangle';\n        const startTime = now + idx * 0.06;\n        osc.frequency.setValueAtTime(freq, startTime);\n        gain.gain.setValueAtTime(0.03, startTime);\n        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.6);\n        osc.connect(gain);\n        gain.connect(ctx.destination);\n        osc.start(startTime);\n        osc.stop(startTime + 0.65);\n      });\n    } catch {}\n  }\n}\n\nexport const soundManager = new SoundManager();\n\n// ============================================================================\n// 2. BACKGROUND ATMOSPHERE & ORGANIC FOLIAGE SHADOWS\n// ============================================================================\nexport const BackgroundAtmosphere: React.FC = () => {\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"pointer-events-none fixed inset-0 z-0 overflow-hidden select-none bg-[#EDE8DE]\"\n    >\n      <div className=\"absolute inset-0 bg-gradient-to-b from-[#F2EEE4] via-[#ECE7DD] to-[#E6E0D4] opacity-90\" />\n\n      {/* Top Golden Sun Crest */}\n      <div\n        className=\"absolute left-1/2 -translate-x-1/2 top-[-140px] sm:top-[-180px] md:top-[-220px] w-[600px] sm:w-[850px] md:w-[1100px] h-[550px] sm:h-[750px] md:h-[900px] rounded-full bg-gradient-to-b from-[#E7A635] via-[#E29A28] to-[#D98E1F] opacity-95 blur-[1px] shadow-2xl transition-transform duration-1000\"\n        style={{ boxShadow: '0 0 120px 40px rgba(231, 166, 53, 0.35)' }}\n      />\n      <div className=\"absolute top-[10%] left-[20%] w-[500px] h-[400px] rounded-full bg-white/25 blur-[120px]\" />\n      <div className=\"absolute top-[30%] right-[15%] w-[450px] h-[450px] rounded-full bg-[#FFE4A0]/20 blur-[130px]\" />\n\n      {/* Top Left Leaf Shadow */}\n      <div className=\"absolute -top-12 -left-16 w-[480px] h-[480px] opacity-[0.28] blur-[28px] animate-[pulse_14s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 60 40 Q 120 70 170 140 Q 120 180 80 150 Q 50 110 60 40 Z\" />\n          <path d=\"M 140 30 Q 230 50 260 120 Q 200 160 160 110 Q 130 70 140 30 Z\" />\n          <path d=\"M 90 150 Q 160 210 200 300 Q 140 310 110 240 Q 80 190 90 150 Z\" />\n          <path d=\"M 190 130 Q 280 190 320 270 Q 270 300 220 230 Q 180 170 190 130 Z\" />\n          <circle cx=\"110\" cy=\"90\" r=\"45\" />\n          <circle cx=\"200\" cy=\"110\" r=\"55\" />\n        </svg>\n      </div>\n\n      {/* Top Right Leaf Shadow */}\n      <div className=\"absolute -top-16 -right-16 w-[560px] h-[560px] opacity-[0.25] blur-[32px] animate-[pulse_16s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 340 30 Q 280 70 230 140 Q 280 180 320 150 Q 350 110 340 30 Z\" />\n          <path d=\"M 260 20 Q 170 50 140 120 Q 200 160 240 110 Q 270 70 260 20 Z\" />\n          <circle cx=\"280\" cy=\"80\" r=\"50\" />\n          <circle cx=\"190\" cy=\"100\" r=\"60\" />\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 3. TOP FLOATING NAVBAR\n// ============================================================================\ninterface NavbarProps {\n  onActionClick?: (action: string) => void;\n}\n\nexport const Navbar: React.FC<NavbarProps> = ({ onActionClick }) => {\n  const links = ['Projects', 'Solutions', 'Pricing', 'Company', 'Support'];\n\n  const handleLinkClick = (e: React.MouseEvent, link: string) => {\n    e.preventDefault();\n    soundManager.playBubble(520, 0.05);\n    onActionClick?.(link);\n  };\n\n  const handleTryClick = (e: React.MouseEvent) => {\n    e.preventDefault();\n    soundManager.playBubble(620, 0.08);\n    onActionClick?.('Try for free');\n  };\n\n  return (\n    <header className=\"relative w-full pt-4 sm:pt-6 flex justify-center items-center z-30 px-4\">\n      <nav\n        aria-label=\"Main Navigation\"\n        className=\"inline-flex items-center gap-2 sm:gap-4 md:gap-5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)]\"\n      >\n        <button\n          type=\"button\"\n          onClick={(e) => handleLinkClick(e, 'Home')}\n          className=\"flex items-center justify-center w-6 h-6 rounded-full bg-neutral-900 text-white cursor-pointer focus:outline-hidden\"\n          title=\"Mood Hero\"\n        >\n          <svg viewBox=\"0 0 24 24\" className=\"w-3.5 h-3.5 fill-current\">\n            <circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#1C1C1E\" />\n            <path d=\"M 12 4 A 8 8 0 0 1 20 12 L 12 12 Z\" fill=\"#FFFFFF\" />\n            <circle cx=\"12\" cy=\"12\" r=\"3.5\" fill=\"#1C1C1E\" />\n          </svg>\n        </button>\n\n        <div className=\"hidden sm:flex items-center gap-3.5 md:gap-5 text-[11px] md:text-[12px] font-medium text-neutral-600\">\n          {links.map((link) => (\n            <a\n              key={link}\n              href={`#${link.toLowerCase()}`}\n              onClick={(e) => handleLinkClick(e, link)}\n              className=\"transition-colors hover:text-neutral-950 focus:outline-hidden\"\n            >\n              {link}\n            </a>\n          ))}\n        </div>\n\n        <button\n          type=\"button\"\n          onClick={handleTryClick}\n          className=\"inline-flex items-center justify-center px-3 py-1 rounded-full bg-[#111111] text-white text-[10.5px] sm:text-[11px] font-medium tracking-tight hover:bg-neutral-800 transition-all cursor-pointer\"\n        >\n          Try for free\n        </button>\n      </nav>\n    </header>\n  );\n};\n\n// ============================================================================\n// 4. SOCIAL PROOF STACK\n// ============================================================================\nexport const SocialProof: React.FC = () => {\n  const avatars = [\n    { id: '1', name: 'Elena', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80' },\n    { id: '2', name: 'Marcus', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80' },\n    { id: '3', name: 'Aisha', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80' },\n    { id: '4', name: 'Kai', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80' },\n  ];\n\n  return (\n    <div className=\"flex flex-col items-center justify-center select-none pt-7 sm:pt-9 md:pt-11 mb-3 sm:mb-4\">\n      <div className=\"mb-1 w-6 h-4 text-neutral-900 flex justify-center\">\n        <svg viewBox=\"0 0 24 16\" className=\"w-5 h-3.5 fill-none stroke-current stroke-[2.2] stroke-linecap-round\">\n          <path d=\"M 6 13 L 2 3\" />\n          <path d=\"M 12 14 L 12 1\" />\n          <path d=\"M 18 13 L 22 3\" />\n        </svg>\n      </div>\n\n      <div className=\"inline-flex items-center gap-2\">\n        <div className=\"flex items-center -space-x-2\">\n          {avatars.map((avatar, idx) => (\n            <div\n              key={avatar.id}\n              className=\"relative w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full overflow-hidden border-[1.5px] border-white shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-neutral-200\"\n              style={{ zIndex: avatars.length - idx }}\n            >\n              <img src={avatar.url} alt={avatar.name} className=\"w-full h-full object-cover\" />\n            </div>\n          ))}\n        </div>\n        <span className=\"text-[11px] sm:text-[11.5px] font-normal text-neutral-500 tracking-tight\">\n          Over 1k happy users\n        </span>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 5. HERO DOODLES\n// ============================================================================\nexport const SparkleDoodleLeft: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -left-8 sm:-left-11 md:-left-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 44 48\"\n      className=\"w-7 h-8 sm:w-8 sm:h-9 md:w-9 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 24 4 C 24.5 14 26 18 36 19 C 26 20 24.5 24 24 34 C 23.5 24 22 20 12 19 C 22 18 23.5 14 24 4 Z\" />\n      <path d=\"M 10 32 C 10.3 36.5 11 38 16 38.5 C 11 39 10.3 40.5 10 45 C 9.7 40.5 9 39 4 38.5 C 9 38 9.7 36.5 10 32 Z\" />\n    </svg>\n  </div>\n);\n\nexport const CurlyDoodleRight: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -right-8 sm:-right-11 md:-right-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 36 48\"\n      className=\"w-6 h-8 sm:w-7 sm:h-9 md:w-8 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 12 6 C 18 4, 25 7, 26 12 C 27 18, 17 21, 14 23 C 10 25, 12 31, 18 32 C 24 33, 27 29, 28 36 C 29 41, 23 44, 20 44\" />\n    </svg>\n  </div>\n);\n\n// ============================================================================\n// 6. 3D PERSPECTIVE FLOOR GRID\n// ============================================================================\nexport const PerspectiveFloorGrid: React.FC = () => {\n  const width = 1200;\n  const height = 500;\n  const vpX = 600;\n  const vpY = 30;\n\n  const rays: { x1: number; y1: number; x2: number; y2: number }[] = [];\n  for (let i = -16; i <= 16; i++) {\n    rays.push({ x1: vpX, y1: vpY, x2: vpX + i * 58, y2: height });\n  }\n\n  const horizLines: number[] = [];\n  const totalHoriz = 22;\n  for (let i = 1; i <= totalHoriz; i++) {\n    const progress = Math.pow(i / totalHoriz, 1.7);\n    horizLines.push(vpY + (height - vpY) * progress);\n  }\n\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"absolute inset-x-0 bottom-0 top-[285px] sm:top-[305px] md:top-[320px] pointer-events-none select-none z-10 overflow-hidden\"\n      style={{\n        maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n        WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n      }}\n    >\n      <svg\n        viewBox={`0 0 ${width} ${height}`}\n        preserveAspectRatio=\"none\"\n        className=\"w-full h-full stroke-[#E2D8C6] opacity-85\"\n        strokeWidth=\"1.15\"\n      >\n        {rays.map((ray, i) => (\n          <line key={`ray-${i}`} x1={ray.x1} y1={ray.y1} x2={ray.x2} y2={ray.y2} />\n        ))}\n        {horizLines.map((y, i) => (\n          <line key={`horiz-${i}`} x1={0} y1={y} x2={width} y2={y} />\n        ))}\n      </svg>\n    </div>\n  );\n};\n\n// ============================================================================\n// 7. THE THREE ILLUSTRATED VIDEO CARDS\n// ============================================================================\n\n// Left Blue Card: Golden Sun Character\nexport const SunCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(480, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(440, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(-1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(36,185,231,0.22)]\"\n        style={{ backgroundColor: '#24B9E7' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Purple Pill (Top Right) */}\n          <g transform=\"translate(245, 110) rotate(35)\">\n            <rect x=\"-16\" y=\"-8\" width=\"32\" height=\"16\" rx=\"8\" fill=\"#A47AE8\" stroke=\"#111111\" strokeWidth=\"2.8\" />\n          </g>\n          {/* Green Cross (Top Left) */}\n          <g transform=\"translate(68, 140) rotate(15)\">\n            <path\n              d=\"M -3 -12 L 3 -12 L 3 -3 L 12 -3 L 12 3 L 3 3 L 3 12 L -3 12 L -3 3 L -12 3 L -12 -3 L -3 -3 Z\"\n              fill=\"#67C85A\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.4\"\n            />\n          </g>\n          {/* Sun Body & Face */}\n          <g transform=\"translate(195, 335)\">\n            {[-135, -115, -95, -75, -55, -35, -15, 5, 25, 45, 65, 85, 105, 125, 145, 165, 185, 205].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -16 -88 L 0 -124 L 16 -88 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFC74A\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n                strokeLinejoin=\"round\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"92\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Happy eyes & smile */}\n            <path d=\"M -44 -14 Q -32 -26 -20 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <path d=\"M 20 -14 Q 32 -26 44 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <circle cx=\"0\" cy=\"-2\" r=\"7\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -30 18 Q 0 46 30 18\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n          {/* Fluffy Cloud */}\n          <g transform=\"translate(180, 420)\">\n            <path\n              d=\"M -110 30 C -125 15, -120 -10, -95 -15 C -90 -45, -50 -55, -25 -35 C -5 -65, 45 -65, 65 -35 C 95 -45, 125 -15, 120 15 C 135 30, 120 60, 95 65 L -95 65 C -115 60, -125 45, -110 30 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.6\"\n            />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Center Pink Card: Peace Hand Character\nexport const PeaceHandCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playChime();\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(520, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative z-20 cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-16px) scale(1.025)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[260px] sm:w-[310px] md:w-[360px] lg:w-[390px] h-[370px] sm:h-[430px] md:h-[500px] rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px] overflow-hidden shadow-[0_20px_50px_rgba(245,156,199,0.35)]\"\n        style={{ backgroundColor: '#F59CC7' }}\n      >\n        <svg viewBox=\"0 0 380 500\" className=\"w-full h-full pointer-events-none\">\n          {/* Sparkles */}\n          <g transform=\"translate(268, 120)\">\n            <path\n              d=\"M 0 -22 C 1 -8, 8 -1, 22 0 C 8 1, 1 8, 0 22 C -1 8, -8 1, -22 0 C -8 -1, -1 -8, 0 -22 Z\"\n              fill=\"#FFD242\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Green Daisy Flower */}\n          <g transform=\"translate(280, 185) scale(1.15)\">\n            {[0, 72, 144, 216, 288].map((angle, i) => (\n              <ellipse\n                key={i}\n                cx=\"0\"\n                cy=\"-16\"\n                rx=\"8\"\n                ry=\"12\"\n                transform={`rotate(${angle})`}\n                fill=\"#94DC78\"\n                stroke=\"#111111\"\n                strokeWidth=\"2.6\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"9\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"2.6\" />\n          </g>\n          {/* White Peace Hand Glove */}\n          <g transform=\"translate(190, 290)\">\n            {/* Index Finger */}\n            <path\n              d=\"M -24 -15 L -22 -145 C -22 -162, 2 -162, 2 -145 L 2 -40\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Middle Finger */}\n            <path\n              d=\"M 2 -40 L 4 -148 C 4 -165, 28 -165, 28 -148 L 28 -15\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Ring & Palm */}\n            <path\n              d=\"M 27 -20 C 38 -25, 48 -15, 46 8 C 44 26, 30 35, 12 35\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            <path\n              d=\"M -42 10 C -48 35, -42 65, -30 82 L 30 82 C 42 65, 46 35, 42 10 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Thumb */}\n            <path\n              d=\"M -42 12 C -45 -10, -32 -25, -12 -18 C 4 -12, 10 2, 4 20 C -2 36, -20 40, -38 35 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Glove Cuff & Sleeve */}\n            <g transform=\"translate(0, 84)\">\n              <rect x=\"-36\" y=\"0\" width=\"72\" height=\"16\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            <g transform=\"translate(0, 100)\">\n              <path d=\"M -32 0 L 32 0 L 30 35 L -30 35 Z\" fill=\"#56B864\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            {/* \"IT'S\" Banner */}\n            <g transform=\"translate(0, 135)\">\n              <rect x=\"-42\" y=\"0\" width=\"84\" height=\"45\" rx=\"10\" fill=\"#24B9E7\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n              <text x=\"0\" y=\"26\" fill=\"#FFFFFF\" fontSize=\"20\" fontWeight=\"800\" textAnchor=\"middle\">\n                IT'S\n              </text>\n            </g>\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Right Coral Card: Sunflower Character\nexport const FlowerCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(640, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(600, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(248,113,98,0.22)]\"\n        style={{ backgroundColor: '#F87162' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Cyan Star Burst (Top Right) */}\n          <g transform=\"translate(262, 105)\">\n            <path\n              d=\"M 0 -24 L 6 -8 L 22 -15 L 14 0 L 28 8 L 11 12 L 16 28 L 2 17 L -6 30 L -8 14 L -24 18 L -14 3 L -28 -6 L -12 -11 L -15 -26 L -2 -14 Z\"\n              fill=\"#15C0F6\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Flower Body */}\n          <g transform=\"translate(160, 345)\">\n            {[-130, -100, -70, -40, -10, 20, 50, 80, 110, 140, 170, 200].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -18 -85 C -22 -115, -15 -138, 0 -140 C 15 -138, 22 -115, 18 -85 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFD147\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"88\" fill=\"#67C85A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Side-Glance Eyes */}\n            <g transform=\"translate(-32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            <g transform=\"translate(32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            {/* Nose & Smirk */}\n            <circle cx=\"0\" cy=\"10\" r=\"7.5\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -16 28 Q 0 42 22 26\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Video Cards Row\nexport const VideoCards: React.FC<{ onCardClick: (cardName: string) => void }> = ({ onCardClick }) => {\n  return (\n    <div className=\"relative w-full flex justify-center items-end select-none pointer-events-auto z-20\">\n      <div className=\"relative flex items-end justify-center -space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22 translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20\">\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <SunCard onClick={() => onCardClick('Sunny Morning Routine')} />\n        </div>\n        <div className=\"z-20 transition-transform duration-500 hover:z-30 -translate-y-3 sm:-translate-y-5 md:-translate-y-7\">\n          <PeaceHandCard onClick={() => onCardClick('Peace & Calm Essentials')} />\n        </div>\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <FlowerCard onClick={() => onCardClick('Mood Bloom Focus')} />\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 8. INTERACTIVE VIDEO MODAL (EDITORIAL SESSION DRAWER)\n// ============================================================================\ninterface VideoModalProps {\n  isOpen: boolean;\n  onClose: () => void;\n  initialSession: string;\n}\n\nexport const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, initialSession }) => {\n  const [activeSession, setActiveSession] = useState(initialSession);\n  const [isPlaying, setIsPlaying] = useState(true);\n  const [audioEnabled, setAudioEnabled] = useState(true);\n  const [progress, setProgress] = useState(38);\n\n  useEffect(() => {\n    setActiveSession(initialSession);\n    setIsPlaying(true);\n  }, [initialSession, isOpen]);\n\n  useEffect(() => {\n    if (!isPlaying || !isOpen) return;\n    const interval = setInterval(() => {\n      setProgress((p) => (p >= 100 ? 0 : p + 0.4));\n    }, 100);\n    return () => clearInterval(interval);\n  }, [isPlaying, isOpen]);\n\n  if (!isOpen) return null;\n\n  const sessions = [\n    { name: 'Sunny Morning Routine', time: '12 min', mood: 'Vibrant & Energized', color: '#24B9E7' },\n    { name: 'Peace & Calm Essentials', time: '18 min', mood: 'Deep Serenity & Focus', color: '#F59CC7' },\n    { name: 'Mood Bloom Focus', time: '15 min', mood: 'Joyful Growth & Bloom', color: '#F87162' },\n  ];\n\n  return (\n    <div\n      role=\"dialog\"\n      aria-modal=\"true\"\n      className=\"fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md animate-fadeIn\"\n      onClick={onClose}\n    >\n      <div\n        className=\"relative w-full max-w-2xl rounded-[32px] bg-[#FFFDF4] border border-[#111111]/10 shadow-[0_32px_80px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col p-6 sm:p-8\"\n        onClick={(e) => e.stopPropagation()}\n      >\n        {/* Header bar */}\n        <div className=\"flex items-center justify-between pb-5 border-b border-neutral-200\">\n          <div className=\"flex items-center gap-2\">\n            <span className=\"w-2.5 h-2.5 rounded-full bg-[#56B864] animate-ping\" />\n            <span className=\"text-xs font-semibold uppercase tracking-wider text-neutral-500\">\n              Editorial Mood Session\n            </span>\n          </div>\n          <button\n            type=\"button\"\n            onClick={onClose}\n            className=\"p-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors cursor-pointer\"\n          >\n            <X size={16} />\n          </button>\n        </div>\n\n        {/* Video simulation screen */}\n        <div className=\"relative mt-5 rounded-2xl overflow-hidden aspect-video bg-gradient-to-br from-[#1A1A1E] to-[#2C2D35] flex items-center justify-center text-white shadow-inner\">\n          {/* Calming animated breathing aura */}\n          <div\n            className=\"absolute w-48 h-48 rounded-full opacity-40 blur-2xl animate-[pulse_6s_ease-in-out_infinite]\"\n            style={{\n              backgroundColor: sessions.find((s) => s.name === activeSession)?.color || '#F59CC7',\n            }}\n          />\n\n          {/* Calming center illustration */}\n          <div className=\"relative z-10 flex flex-col items-center text-center px-4\">\n            <div className=\"w-16 h-16 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center mb-3\">\n              <Sparkles className=\"w-8 h-8 text-[#FFD242] animate-bounce\" />\n            </div>\n            <h3 className=\"text-xl sm:text-2xl font-bold tracking-tight text-white mb-1\">\n              {activeSession}\n            </h3>\n            <p className=\"text-xs sm:text-sm text-neutral-300 font-normal\">\n              Breathing Inhale (4s) • Hold (4s) • Exhale (6s)\n            </p>\n          </div>\n\n          {/* Progress bar */}\n          <div className=\"absolute bottom-0 inset-x-0 h-1.5 bg-white/20\">\n            <div\n              className=\"h-full bg-[#24B9E7] transition-all duration-100 ease-linear\"\n              style={{ width: `${progress}%` }}\n            />\n          </div>\n        </div>\n\n        {/* Media Controls */}\n        <div className=\"flex items-center justify-between mt-4 px-1\">\n          <div className=\"flex items-center gap-3\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(isPlaying ? 380 : 540, 0.05);\n                setIsPlaying(!isPlaying);\n              }}\n              className=\"w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center hover:bg-neutral-800 transition-colors cursor-pointer\"\n            >\n              {isPlaying ? <Pause size={16} /> : <Play size={16} className=\"ml-0.5\" />}\n            </button>\n            <button\n              type=\"button\"\n              onClick={() => {\n                setAudioEnabled(!audioEnabled);\n                soundManager.enabled = !audioEnabled;\n                soundManager.playBubble(500, 0.05);\n              }}\n              className=\"w-10 h-10 rounded-full bg-white border border-neutral-200 text-neutral-800 flex items-center justify-center hover:bg-neutral-50 transition-colors cursor-pointer\"\n            >\n              {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}\n            </button>\n          </div>\n\n          <div className=\"inline-flex items-center gap-1.5 text-xs text-neutral-500\">\n            <Heart size={14} className=\"text-rose-500 fill-rose-500\" />\n            <span>Guided Session Active</span>\n          </div>\n        </div>\n\n        {/* Mood Selector Tabs */}\n        <div className=\"mt-5 pt-4 border-t border-neutral-200\">\n          <span className=\"text-[11px] font-semibold text-neutral-400 uppercase tracking-wider block mb-2.5\">\n            Switch Guided Routine\n          </span>\n          <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-2\">\n            {sessions.map((sess) => (\n              <button\n                type=\"button\"\n                key={sess.name}\n                onClick={() => {\n                  soundManager.playChime();\n                  setActiveSession(sess.name);\n                }}\n                className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${\n                  activeSession === sess.name\n                    ? 'bg-neutral-900 text-white border-neutral-900 shadow-md'\n                    : 'bg-white hover:bg-neutral-50 text-neutral-700 border-neutral-200'\n                }`}\n              >\n                <div className=\"text-xs font-bold truncate\">{sess.name}</div>\n                <div\n                  className={`text-[10px] ${\n                    activeSession === sess.name ? 'text-neutral-300' : 'text-neutral-400'\n                  }`}\n                >\n                  {sess.time} • {sess.mood}\n                </div>\n              </button>\n            ))}\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 9. MAIN MOOD HERO COMPONENT\n// ============================================================================\nexport interface MoodHeroProps {\n  className?: string;\n}\n\nexport default function MoodHero({ className = '' }: MoodHeroProps) {\n  const [isModalOpen, setIsModalOpen] = useState(false);\n  const [selectedSession, setSelectedSession] = useState('Peace & Calm Essentials');\n  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    if (typeof window !== 'undefined') {\n      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');\n      setPrefersReducedMotion(mediaQuery.matches);\n    }\n  }, []);\n\n  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {\n    if (prefersReducedMotion || typeof window === 'undefined') return;\n    const deltaX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);\n    const deltaY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);\n    setMousePos({ x: deltaX, y: deltaY });\n  };\n\n  return (\n    <div\n      onMouseMove={handleMouseMove}\n      onMouseLeave={() => setMousePos({ x: 0, y: 0 })}\n      className={`relative min-h-screen w-full flex items-center justify-center p-3 sm:p-6 md:p-10 lg:p-12 overflow-x-hidden font-['Plus_Jakarta_Sans',sans-serif] ${className}`}\n      id=\"mood-hero-root\"\n    >\n      <BackgroundAtmosphere />\n\n      {/* Main Website Container Panel */}\n      <main\n        className=\"relative w-full max-w-[1180px] min-h-[720px] sm:min-h-[780px] md:min-h-[820px] lg:min-h-[850px] rounded-[24px] sm:rounded-[30px] md:rounded-[36px] bg-[#FFFDF4] border border-[rgba(120,110,90,0.14)] shadow-[0_24px_70px_-15px_rgba(80,70,50,0.14),0_0_1px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden z-10 transition-transform duration-300 ease-out\"\n        style={{\n          transform: prefersReducedMotion ? 'none' : `translate3d(${mousePos.x * 2}px, ${mousePos.y * 2}px, 0)`,\n        }}\n      >\n        {/* Subtle white inner sheen */}\n        <div className=\"absolute inset-0 rounded-[inherit] pointer-events-none border border-white/60 z-30\" />\n\n        {/* Top Navbar */}\n        <Navbar\n          onActionClick={(action) => {\n            if (action === 'Try for free') {\n              soundManager.playChime();\n              setIsModalOpen(true);\n            }\n          }}\n        />\n\n        {/* Center Hero Content */}\n        <div className=\"relative z-20 flex flex-col items-center text-center px-4 sm:px-6\">\n          <SocialProof />\n\n          <div className=\"relative inline-block mt-1 sm:mt-2\">\n            <SparkleDoodleLeft />\n            <h1 className=\"text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.04] sm:leading-[1.02] max-w-[680px] mx-auto select-none\">\n              Regulate your mood\n              <br />\n              with our videos\n            </h1>\n            <CurlyDoodleRight />\n          </div>\n\n          <p className=\"mt-3.5 sm:mt-4 text-[12px] sm:text-[13px] md:text-[13.5px] text-neutral-500 font-normal leading-[1.45] max-w-sm sm:max-w-md mx-auto select-none tracking-tight\">\n            Our pre recorded sessions contain all the essentials\n            <br className=\"hidden sm:inline\" /> to help you fix your mood in few sessions\n          </p>\n\n          <div className=\"mt-5 sm:mt-6 flex items-center justify-center gap-2.5 sm:gap-3 z-30\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playChime();\n                setIsModalOpen(true);\n              }}\n              className=\"group inline-flex items-center justify-center gap-1.5 px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#111111] text-white text-[12px] sm:text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-neutral-800 transition-all cursor-pointer\"\n            >\n              <span>Play Video</span>\n              <Zap className=\"w-3.5 h-3.5 fill-white text-white group-hover:scale-110 transition-transform\" />\n            </button>\n\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(460, 0.06);\n                setIsModalOpen(true);\n              }}\n              className=\"inline-flex items-center justify-center px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white text-neutral-800 text-[12px] sm:text-[12.5px] font-medium tracking-tight border border-neutral-200/90 shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:bg-neutral-50 transition-all cursor-pointer\"\n            >\n              Learn More\n            </button>\n          </div>\n        </div>\n\n        {/* 3D Perspective Floor Grid */}\n        <PerspectiveFloorGrid />\n\n        {/* Lower cropped illustrated character cards */}\n        <div className=\"relative mt-auto w-full\">\n          <VideoCards\n            onCardClick={(name) => {\n              soundManager.playChime();\n              setSelectedSession(name);\n              setIsModalOpen(true);\n            }}\n          />\n        </div>\n      </main>\n\n      {/* Video Modal Drawer */}\n      <VideoModal\n        isOpen={isModalOpen}\n        onClose={() => setIsModalOpen(false)}\n        initialSession={selectedSession}\n      />\n    </div>\n  );\n}\n\n```",
+            antigravity: "[Antigravity Agent Blueprint]\nTask: Deploy production Mood Hero playful wellness editorial hero section.\nTech Stack: React 19, TypeScript, Tailwind CSS, Lucide Icons, Web Audio API.\nLive Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2\n\nProduction Implementation:\n```tsx\nimport React, { useState, useEffect } from 'react';\nimport { Zap, Play, Pause, Volume2, VolumeX, X, Sparkles, Heart } from 'lucide-react';\n\n// ============================================================================\n// 1. WEB AUDIO SYNTHESIZER\n// ============================================================================\nclass SoundManager {\n  private ctx: AudioContext | null = null;\n  public enabled: boolean = true;\n\n  private getContext(): AudioContext | null {\n    if (typeof window === 'undefined') return null;\n    if (!this.ctx) {\n      const AudioCtx =\n        window.AudioContext ||\n        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;\n      if (AudioCtx) this.ctx = new AudioCtx();\n    }\n    if (this.ctx && this.ctx.state === 'suspended') {\n      this.ctx.resume().catch(() => {});\n    }\n    return this.ctx;\n  }\n\n  public playBubble(freq: number = 440, duration: number = 0.08) {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const osc = ctx.createOscillator();\n      const gain = ctx.createGain();\n      osc.type = 'sine';\n      const now = ctx.currentTime;\n      osc.frequency.setValueAtTime(freq, now);\n      osc.frequency.exponentialRampToValueAtTime(freq * 1.4, now + duration);\n      gain.gain.setValueAtTime(0.04, now);\n      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);\n      osc.connect(gain);\n      gain.connect(ctx.destination);\n      osc.start(now);\n      osc.stop(now + duration);\n    } catch {}\n  }\n\n  public playChime() {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const now = ctx.currentTime;\n      const notes = [523.25, 659.25, 783.99, 1046.5];\n      notes.forEach((freq, idx) => {\n        const osc = ctx.createOscillator();\n        const gain = ctx.createGain();\n        osc.type = 'triangle';\n        const startTime = now + idx * 0.06;\n        osc.frequency.setValueAtTime(freq, startTime);\n        gain.gain.setValueAtTime(0.03, startTime);\n        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.6);\n        osc.connect(gain);\n        gain.connect(ctx.destination);\n        osc.start(startTime);\n        osc.stop(startTime + 0.65);\n      });\n    } catch {}\n  }\n}\n\nexport const soundManager = new SoundManager();\n\n// ============================================================================\n// 2. BACKGROUND ATMOSPHERE & ORGANIC FOLIAGE SHADOWS\n// ============================================================================\nexport const BackgroundAtmosphere: React.FC = () => {\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"pointer-events-none fixed inset-0 z-0 overflow-hidden select-none bg-[#EDE8DE]\"\n    >\n      <div className=\"absolute inset-0 bg-gradient-to-b from-[#F2EEE4] via-[#ECE7DD] to-[#E6E0D4] opacity-90\" />\n\n      {/* Top Golden Sun Crest */}\n      <div\n        className=\"absolute left-1/2 -translate-x-1/2 top-[-140px] sm:top-[-180px] md:top-[-220px] w-[600px] sm:w-[850px] md:w-[1100px] h-[550px] sm:h-[750px] md:h-[900px] rounded-full bg-gradient-to-b from-[#E7A635] via-[#E29A28] to-[#D98E1F] opacity-95 blur-[1px] shadow-2xl transition-transform duration-1000\"\n        style={{ boxShadow: '0 0 120px 40px rgba(231, 166, 53, 0.35)' }}\n      />\n      <div className=\"absolute top-[10%] left-[20%] w-[500px] h-[400px] rounded-full bg-white/25 blur-[120px]\" />\n      <div className=\"absolute top-[30%] right-[15%] w-[450px] h-[450px] rounded-full bg-[#FFE4A0]/20 blur-[130px]\" />\n\n      {/* Top Left Leaf Shadow */}\n      <div className=\"absolute -top-12 -left-16 w-[480px] h-[480px] opacity-[0.28] blur-[28px] animate-[pulse_14s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 60 40 Q 120 70 170 140 Q 120 180 80 150 Q 50 110 60 40 Z\" />\n          <path d=\"M 140 30 Q 230 50 260 120 Q 200 160 160 110 Q 130 70 140 30 Z\" />\n          <path d=\"M 90 150 Q 160 210 200 300 Q 140 310 110 240 Q 80 190 90 150 Z\" />\n          <path d=\"M 190 130 Q 280 190 320 270 Q 270 300 220 230 Q 180 170 190 130 Z\" />\n          <circle cx=\"110\" cy=\"90\" r=\"45\" />\n          <circle cx=\"200\" cy=\"110\" r=\"55\" />\n        </svg>\n      </div>\n\n      {/* Top Right Leaf Shadow */}\n      <div className=\"absolute -top-16 -right-16 w-[560px] h-[560px] opacity-[0.25] blur-[32px] animate-[pulse_16s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 340 30 Q 280 70 230 140 Q 280 180 320 150 Q 350 110 340 30 Z\" />\n          <path d=\"M 260 20 Q 170 50 140 120 Q 200 160 240 110 Q 270 70 260 20 Z\" />\n          <circle cx=\"280\" cy=\"80\" r=\"50\" />\n          <circle cx=\"190\" cy=\"100\" r=\"60\" />\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 3. TOP FLOATING NAVBAR\n// ============================================================================\ninterface NavbarProps {\n  onActionClick?: (action: string) => void;\n}\n\nexport const Navbar: React.FC<NavbarProps> = ({ onActionClick }) => {\n  const links = ['Projects', 'Solutions', 'Pricing', 'Company', 'Support'];\n\n  const handleLinkClick = (e: React.MouseEvent, link: string) => {\n    e.preventDefault();\n    soundManager.playBubble(520, 0.05);\n    onActionClick?.(link);\n  };\n\n  const handleTryClick = (e: React.MouseEvent) => {\n    e.preventDefault();\n    soundManager.playBubble(620, 0.08);\n    onActionClick?.('Try for free');\n  };\n\n  return (\n    <header className=\"relative w-full pt-4 sm:pt-6 flex justify-center items-center z-30 px-4\">\n      <nav\n        aria-label=\"Main Navigation\"\n        className=\"inline-flex items-center gap-2 sm:gap-4 md:gap-5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)]\"\n      >\n        <button\n          type=\"button\"\n          onClick={(e) => handleLinkClick(e, 'Home')}\n          className=\"flex items-center justify-center w-6 h-6 rounded-full bg-neutral-900 text-white cursor-pointer focus:outline-hidden\"\n          title=\"Mood Hero\"\n        >\n          <svg viewBox=\"0 0 24 24\" className=\"w-3.5 h-3.5 fill-current\">\n            <circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#1C1C1E\" />\n            <path d=\"M 12 4 A 8 8 0 0 1 20 12 L 12 12 Z\" fill=\"#FFFFFF\" />\n            <circle cx=\"12\" cy=\"12\" r=\"3.5\" fill=\"#1C1C1E\" />\n          </svg>\n        </button>\n\n        <div className=\"hidden sm:flex items-center gap-3.5 md:gap-5 text-[11px] md:text-[12px] font-medium text-neutral-600\">\n          {links.map((link) => (\n            <a\n              key={link}\n              href={`#${link.toLowerCase()}`}\n              onClick={(e) => handleLinkClick(e, link)}\n              className=\"transition-colors hover:text-neutral-950 focus:outline-hidden\"\n            >\n              {link}\n            </a>\n          ))}\n        </div>\n\n        <button\n          type=\"button\"\n          onClick={handleTryClick}\n          className=\"inline-flex items-center justify-center px-3 py-1 rounded-full bg-[#111111] text-white text-[10.5px] sm:text-[11px] font-medium tracking-tight hover:bg-neutral-800 transition-all cursor-pointer\"\n        >\n          Try for free\n        </button>\n      </nav>\n    </header>\n  );\n};\n\n// ============================================================================\n// 4. SOCIAL PROOF STACK\n// ============================================================================\nexport const SocialProof: React.FC = () => {\n  const avatars = [\n    { id: '1', name: 'Elena', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80' },\n    { id: '2', name: 'Marcus', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80' },\n    { id: '3', name: 'Aisha', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80' },\n    { id: '4', name: 'Kai', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80' },\n  ];\n\n  return (\n    <div className=\"flex flex-col items-center justify-center select-none pt-7 sm:pt-9 md:pt-11 mb-3 sm:mb-4\">\n      <div className=\"mb-1 w-6 h-4 text-neutral-900 flex justify-center\">\n        <svg viewBox=\"0 0 24 16\" className=\"w-5 h-3.5 fill-none stroke-current stroke-[2.2] stroke-linecap-round\">\n          <path d=\"M 6 13 L 2 3\" />\n          <path d=\"M 12 14 L 12 1\" />\n          <path d=\"M 18 13 L 22 3\" />\n        </svg>\n      </div>\n\n      <div className=\"inline-flex items-center gap-2\">\n        <div className=\"flex items-center -space-x-2\">\n          {avatars.map((avatar, idx) => (\n            <div\n              key={avatar.id}\n              className=\"relative w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full overflow-hidden border-[1.5px] border-white shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-neutral-200\"\n              style={{ zIndex: avatars.length - idx }}\n            >\n              <img src={avatar.url} alt={avatar.name} className=\"w-full h-full object-cover\" />\n            </div>\n          ))}\n        </div>\n        <span className=\"text-[11px] sm:text-[11.5px] font-normal text-neutral-500 tracking-tight\">\n          Over 1k happy users\n        </span>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 5. HERO DOODLES\n// ============================================================================\nexport const SparkleDoodleLeft: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -left-8 sm:-left-11 md:-left-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 44 48\"\n      className=\"w-7 h-8 sm:w-8 sm:h-9 md:w-9 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 24 4 C 24.5 14 26 18 36 19 C 26 20 24.5 24 24 34 C 23.5 24 22 20 12 19 C 22 18 23.5 14 24 4 Z\" />\n      <path d=\"M 10 32 C 10.3 36.5 11 38 16 38.5 C 11 39 10.3 40.5 10 45 C 9.7 40.5 9 39 4 38.5 C 9 38 9.7 36.5 10 32 Z\" />\n    </svg>\n  </div>\n);\n\nexport const CurlyDoodleRight: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -right-8 sm:-right-11 md:-right-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 36 48\"\n      className=\"w-6 h-8 sm:w-7 sm:h-9 md:w-8 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 12 6 C 18 4, 25 7, 26 12 C 27 18, 17 21, 14 23 C 10 25, 12 31, 18 32 C 24 33, 27 29, 28 36 C 29 41, 23 44, 20 44\" />\n    </svg>\n  </div>\n);\n\n// ============================================================================\n// 6. 3D PERSPECTIVE FLOOR GRID\n// ============================================================================\nexport const PerspectiveFloorGrid: React.FC = () => {\n  const width = 1200;\n  const height = 500;\n  const vpX = 600;\n  const vpY = 30;\n\n  const rays: { x1: number; y1: number; x2: number; y2: number }[] = [];\n  for (let i = -16; i <= 16; i++) {\n    rays.push({ x1: vpX, y1: vpY, x2: vpX + i * 58, y2: height });\n  }\n\n  const horizLines: number[] = [];\n  const totalHoriz = 22;\n  for (let i = 1; i <= totalHoriz; i++) {\n    const progress = Math.pow(i / totalHoriz, 1.7);\n    horizLines.push(vpY + (height - vpY) * progress);\n  }\n\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"absolute inset-x-0 bottom-0 top-[285px] sm:top-[305px] md:top-[320px] pointer-events-none select-none z-10 overflow-hidden\"\n      style={{\n        maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n        WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n      }}\n    >\n      <svg\n        viewBox={`0 0 ${width} ${height}`}\n        preserveAspectRatio=\"none\"\n        className=\"w-full h-full stroke-[#E2D8C6] opacity-85\"\n        strokeWidth=\"1.15\"\n      >\n        {rays.map((ray, i) => (\n          <line key={`ray-${i}`} x1={ray.x1} y1={ray.y1} x2={ray.x2} y2={ray.y2} />\n        ))}\n        {horizLines.map((y, i) => (\n          <line key={`horiz-${i}`} x1={0} y1={y} x2={width} y2={y} />\n        ))}\n      </svg>\n    </div>\n  );\n};\n\n// ============================================================================\n// 7. THE THREE ILLUSTRATED VIDEO CARDS\n// ============================================================================\n\n// Left Blue Card: Golden Sun Character\nexport const SunCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(480, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(440, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(-1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(36,185,231,0.22)]\"\n        style={{ backgroundColor: '#24B9E7' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Purple Pill (Top Right) */}\n          <g transform=\"translate(245, 110) rotate(35)\">\n            <rect x=\"-16\" y=\"-8\" width=\"32\" height=\"16\" rx=\"8\" fill=\"#A47AE8\" stroke=\"#111111\" strokeWidth=\"2.8\" />\n          </g>\n          {/* Green Cross (Top Left) */}\n          <g transform=\"translate(68, 140) rotate(15)\">\n            <path\n              d=\"M -3 -12 L 3 -12 L 3 -3 L 12 -3 L 12 3 L 3 3 L 3 12 L -3 12 L -3 3 L -12 3 L -12 -3 L -3 -3 Z\"\n              fill=\"#67C85A\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.4\"\n            />\n          </g>\n          {/* Sun Body & Face */}\n          <g transform=\"translate(195, 335)\">\n            {[-135, -115, -95, -75, -55, -35, -15, 5, 25, 45, 65, 85, 105, 125, 145, 165, 185, 205].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -16 -88 L 0 -124 L 16 -88 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFC74A\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n                strokeLinejoin=\"round\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"92\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Happy eyes & smile */}\n            <path d=\"M -44 -14 Q -32 -26 -20 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <path d=\"M 20 -14 Q 32 -26 44 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <circle cx=\"0\" cy=\"-2\" r=\"7\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -30 18 Q 0 46 30 18\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n          {/* Fluffy Cloud */}\n          <g transform=\"translate(180, 420)\">\n            <path\n              d=\"M -110 30 C -125 15, -120 -10, -95 -15 C -90 -45, -50 -55, -25 -35 C -5 -65, 45 -65, 65 -35 C 95 -45, 125 -15, 120 15 C 135 30, 120 60, 95 65 L -95 65 C -115 60, -125 45, -110 30 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.6\"\n            />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Center Pink Card: Peace Hand Character\nexport const PeaceHandCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playChime();\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(520, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative z-20 cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-16px) scale(1.025)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[260px] sm:w-[310px] md:w-[360px] lg:w-[390px] h-[370px] sm:h-[430px] md:h-[500px] rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px] overflow-hidden shadow-[0_20px_50px_rgba(245,156,199,0.35)]\"\n        style={{ backgroundColor: '#F59CC7' }}\n      >\n        <svg viewBox=\"0 0 380 500\" className=\"w-full h-full pointer-events-none\">\n          {/* Sparkles */}\n          <g transform=\"translate(268, 120)\">\n            <path\n              d=\"M 0 -22 C 1 -8, 8 -1, 22 0 C 8 1, 1 8, 0 22 C -1 8, -8 1, -22 0 C -8 -1, -1 -8, 0 -22 Z\"\n              fill=\"#FFD242\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Green Daisy Flower */}\n          <g transform=\"translate(280, 185) scale(1.15)\">\n            {[0, 72, 144, 216, 288].map((angle, i) => (\n              <ellipse\n                key={i}\n                cx=\"0\"\n                cy=\"-16\"\n                rx=\"8\"\n                ry=\"12\"\n                transform={`rotate(${angle})`}\n                fill=\"#94DC78\"\n                stroke=\"#111111\"\n                strokeWidth=\"2.6\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"9\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"2.6\" />\n          </g>\n          {/* White Peace Hand Glove */}\n          <g transform=\"translate(190, 290)\">\n            {/* Index Finger */}\n            <path\n              d=\"M -24 -15 L -22 -145 C -22 -162, 2 -162, 2 -145 L 2 -40\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Middle Finger */}\n            <path\n              d=\"M 2 -40 L 4 -148 C 4 -165, 28 -165, 28 -148 L 28 -15\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Ring & Palm */}\n            <path\n              d=\"M 27 -20 C 38 -25, 48 -15, 46 8 C 44 26, 30 35, 12 35\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            <path\n              d=\"M -42 10 C -48 35, -42 65, -30 82 L 30 82 C 42 65, 46 35, 42 10 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Thumb */}\n            <path\n              d=\"M -42 12 C -45 -10, -32 -25, -12 -18 C 4 -12, 10 2, 4 20 C -2 36, -20 40, -38 35 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Glove Cuff & Sleeve */}\n            <g transform=\"translate(0, 84)\">\n              <rect x=\"-36\" y=\"0\" width=\"72\" height=\"16\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            <g transform=\"translate(0, 100)\">\n              <path d=\"M -32 0 L 32 0 L 30 35 L -30 35 Z\" fill=\"#56B864\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            {/* \"IT'S\" Banner */}\n            <g transform=\"translate(0, 135)\">\n              <rect x=\"-42\" y=\"0\" width=\"84\" height=\"45\" rx=\"10\" fill=\"#24B9E7\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n              <text x=\"0\" y=\"26\" fill=\"#FFFFFF\" fontSize=\"20\" fontWeight=\"800\" textAnchor=\"middle\">\n                IT'S\n              </text>\n            </g>\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Right Coral Card: Sunflower Character\nexport const FlowerCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(640, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(600, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(248,113,98,0.22)]\"\n        style={{ backgroundColor: '#F87162' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Cyan Star Burst (Top Right) */}\n          <g transform=\"translate(262, 105)\">\n            <path\n              d=\"M 0 -24 L 6 -8 L 22 -15 L 14 0 L 28 8 L 11 12 L 16 28 L 2 17 L -6 30 L -8 14 L -24 18 L -14 3 L -28 -6 L -12 -11 L -15 -26 L -2 -14 Z\"\n              fill=\"#15C0F6\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Flower Body */}\n          <g transform=\"translate(160, 345)\">\n            {[-130, -100, -70, -40, -10, 20, 50, 80, 110, 140, 170, 200].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -18 -85 C -22 -115, -15 -138, 0 -140 C 15 -138, 22 -115, 18 -85 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFD147\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"88\" fill=\"#67C85A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Side-Glance Eyes */}\n            <g transform=\"translate(-32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            <g transform=\"translate(32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            {/* Nose & Smirk */}\n            <circle cx=\"0\" cy=\"10\" r=\"7.5\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -16 28 Q 0 42 22 26\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Video Cards Row\nexport const VideoCards: React.FC<{ onCardClick: (cardName: string) => void }> = ({ onCardClick }) => {\n  return (\n    <div className=\"relative w-full flex justify-center items-end select-none pointer-events-auto z-20\">\n      <div className=\"relative flex items-end justify-center -space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22 translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20\">\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <SunCard onClick={() => onCardClick('Sunny Morning Routine')} />\n        </div>\n        <div className=\"z-20 transition-transform duration-500 hover:z-30 -translate-y-3 sm:-translate-y-5 md:-translate-y-7\">\n          <PeaceHandCard onClick={() => onCardClick('Peace & Calm Essentials')} />\n        </div>\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <FlowerCard onClick={() => onCardClick('Mood Bloom Focus')} />\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 8. INTERACTIVE VIDEO MODAL (EDITORIAL SESSION DRAWER)\n// ============================================================================\ninterface VideoModalProps {\n  isOpen: boolean;\n  onClose: () => void;\n  initialSession: string;\n}\n\nexport const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, initialSession }) => {\n  const [activeSession, setActiveSession] = useState(initialSession);\n  const [isPlaying, setIsPlaying] = useState(true);\n  const [audioEnabled, setAudioEnabled] = useState(true);\n  const [progress, setProgress] = useState(38);\n\n  useEffect(() => {\n    setActiveSession(initialSession);\n    setIsPlaying(true);\n  }, [initialSession, isOpen]);\n\n  useEffect(() => {\n    if (!isPlaying || !isOpen) return;\n    const interval = setInterval(() => {\n      setProgress((p) => (p >= 100 ? 0 : p + 0.4));\n    }, 100);\n    return () => clearInterval(interval);\n  }, [isPlaying, isOpen]);\n\n  if (!isOpen) return null;\n\n  const sessions = [\n    { name: 'Sunny Morning Routine', time: '12 min', mood: 'Vibrant & Energized', color: '#24B9E7' },\n    { name: 'Peace & Calm Essentials', time: '18 min', mood: 'Deep Serenity & Focus', color: '#F59CC7' },\n    { name: 'Mood Bloom Focus', time: '15 min', mood: 'Joyful Growth & Bloom', color: '#F87162' },\n  ];\n\n  return (\n    <div\n      role=\"dialog\"\n      aria-modal=\"true\"\n      className=\"fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md animate-fadeIn\"\n      onClick={onClose}\n    >\n      <div\n        className=\"relative w-full max-w-2xl rounded-[32px] bg-[#FFFDF4] border border-[#111111]/10 shadow-[0_32px_80px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col p-6 sm:p-8\"\n        onClick={(e) => e.stopPropagation()}\n      >\n        {/* Header bar */}\n        <div className=\"flex items-center justify-between pb-5 border-b border-neutral-200\">\n          <div className=\"flex items-center gap-2\">\n            <span className=\"w-2.5 h-2.5 rounded-full bg-[#56B864] animate-ping\" />\n            <span className=\"text-xs font-semibold uppercase tracking-wider text-neutral-500\">\n              Editorial Mood Session\n            </span>\n          </div>\n          <button\n            type=\"button\"\n            onClick={onClose}\n            className=\"p-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors cursor-pointer\"\n          >\n            <X size={16} />\n          </button>\n        </div>\n\n        {/* Video simulation screen */}\n        <div className=\"relative mt-5 rounded-2xl overflow-hidden aspect-video bg-gradient-to-br from-[#1A1A1E] to-[#2C2D35] flex items-center justify-center text-white shadow-inner\">\n          {/* Calming animated breathing aura */}\n          <div\n            className=\"absolute w-48 h-48 rounded-full opacity-40 blur-2xl animate-[pulse_6s_ease-in-out_infinite]\"\n            style={{\n              backgroundColor: sessions.find((s) => s.name === activeSession)?.color || '#F59CC7',\n            }}\n          />\n\n          {/* Calming center illustration */}\n          <div className=\"relative z-10 flex flex-col items-center text-center px-4\">\n            <div className=\"w-16 h-16 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center mb-3\">\n              <Sparkles className=\"w-8 h-8 text-[#FFD242] animate-bounce\" />\n            </div>\n            <h3 className=\"text-xl sm:text-2xl font-bold tracking-tight text-white mb-1\">\n              {activeSession}\n            </h3>\n            <p className=\"text-xs sm:text-sm text-neutral-300 font-normal\">\n              Breathing Inhale (4s) • Hold (4s) • Exhale (6s)\n            </p>\n          </div>\n\n          {/* Progress bar */}\n          <div className=\"absolute bottom-0 inset-x-0 h-1.5 bg-white/20\">\n            <div\n              className=\"h-full bg-[#24B9E7] transition-all duration-100 ease-linear\"\n              style={{ width: `${progress}%` }}\n            />\n          </div>\n        </div>\n\n        {/* Media Controls */}\n        <div className=\"flex items-center justify-between mt-4 px-1\">\n          <div className=\"flex items-center gap-3\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(isPlaying ? 380 : 540, 0.05);\n                setIsPlaying(!isPlaying);\n              }}\n              className=\"w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center hover:bg-neutral-800 transition-colors cursor-pointer\"\n            >\n              {isPlaying ? <Pause size={16} /> : <Play size={16} className=\"ml-0.5\" />}\n            </button>\n            <button\n              type=\"button\"\n              onClick={() => {\n                setAudioEnabled(!audioEnabled);\n                soundManager.enabled = !audioEnabled;\n                soundManager.playBubble(500, 0.05);\n              }}\n              className=\"w-10 h-10 rounded-full bg-white border border-neutral-200 text-neutral-800 flex items-center justify-center hover:bg-neutral-50 transition-colors cursor-pointer\"\n            >\n              {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}\n            </button>\n          </div>\n\n          <div className=\"inline-flex items-center gap-1.5 text-xs text-neutral-500\">\n            <Heart size={14} className=\"text-rose-500 fill-rose-500\" />\n            <span>Guided Session Active</span>\n          </div>\n        </div>\n\n        {/* Mood Selector Tabs */}\n        <div className=\"mt-5 pt-4 border-t border-neutral-200\">\n          <span className=\"text-[11px] font-semibold text-neutral-400 uppercase tracking-wider block mb-2.5\">\n            Switch Guided Routine\n          </span>\n          <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-2\">\n            {sessions.map((sess) => (\n              <button\n                type=\"button\"\n                key={sess.name}\n                onClick={() => {\n                  soundManager.playChime();\n                  setActiveSession(sess.name);\n                }}\n                className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${\n                  activeSession === sess.name\n                    ? 'bg-neutral-900 text-white border-neutral-900 shadow-md'\n                    : 'bg-white hover:bg-neutral-50 text-neutral-700 border-neutral-200'\n                }`}\n              >\n                <div className=\"text-xs font-bold truncate\">{sess.name}</div>\n                <div\n                  className={`text-[10px] ${\n                    activeSession === sess.name ? 'text-neutral-300' : 'text-neutral-400'\n                  }`}\n                >\n                  {sess.time} • {sess.mood}\n                </div>\n              </button>\n            ))}\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 9. MAIN MOOD HERO COMPONENT\n// ============================================================================\nexport interface MoodHeroProps {\n  className?: string;\n}\n\nexport default function MoodHero({ className = '' }: MoodHeroProps) {\n  const [isModalOpen, setIsModalOpen] = useState(false);\n  const [selectedSession, setSelectedSession] = useState('Peace & Calm Essentials');\n  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    if (typeof window !== 'undefined') {\n      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');\n      setPrefersReducedMotion(mediaQuery.matches);\n    }\n  }, []);\n\n  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {\n    if (prefersReducedMotion || typeof window === 'undefined') return;\n    const deltaX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);\n    const deltaY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);\n    setMousePos({ x: deltaX, y: deltaY });\n  };\n\n  return (\n    <div\n      onMouseMove={handleMouseMove}\n      onMouseLeave={() => setMousePos({ x: 0, y: 0 })}\n      className={`relative min-h-screen w-full flex items-center justify-center p-3 sm:p-6 md:p-10 lg:p-12 overflow-x-hidden font-['Plus_Jakarta_Sans',sans-serif] ${className}`}\n      id=\"mood-hero-root\"\n    >\n      <BackgroundAtmosphere />\n\n      {/* Main Website Container Panel */}\n      <main\n        className=\"relative w-full max-w-[1180px] min-h-[720px] sm:min-h-[780px] md:min-h-[820px] lg:min-h-[850px] rounded-[24px] sm:rounded-[30px] md:rounded-[36px] bg-[#FFFDF4] border border-[rgba(120,110,90,0.14)] shadow-[0_24px_70px_-15px_rgba(80,70,50,0.14),0_0_1px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden z-10 transition-transform duration-300 ease-out\"\n        style={{\n          transform: prefersReducedMotion ? 'none' : `translate3d(${mousePos.x * 2}px, ${mousePos.y * 2}px, 0)`,\n        }}\n      >\n        {/* Subtle white inner sheen */}\n        <div className=\"absolute inset-0 rounded-[inherit] pointer-events-none border border-white/60 z-30\" />\n\n        {/* Top Navbar */}\n        <Navbar\n          onActionClick={(action) => {\n            if (action === 'Try for free') {\n              soundManager.playChime();\n              setIsModalOpen(true);\n            }\n          }}\n        />\n\n        {/* Center Hero Content */}\n        <div className=\"relative z-20 flex flex-col items-center text-center px-4 sm:px-6\">\n          <SocialProof />\n\n          <div className=\"relative inline-block mt-1 sm:mt-2\">\n            <SparkleDoodleLeft />\n            <h1 className=\"text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.04] sm:leading-[1.02] max-w-[680px] mx-auto select-none\">\n              Regulate your mood\n              <br />\n              with our videos\n            </h1>\n            <CurlyDoodleRight />\n          </div>\n\n          <p className=\"mt-3.5 sm:mt-4 text-[12px] sm:text-[13px] md:text-[13.5px] text-neutral-500 font-normal leading-[1.45] max-w-sm sm:max-w-md mx-auto select-none tracking-tight\">\n            Our pre recorded sessions contain all the essentials\n            <br className=\"hidden sm:inline\" /> to help you fix your mood in few sessions\n          </p>\n\n          <div className=\"mt-5 sm:mt-6 flex items-center justify-center gap-2.5 sm:gap-3 z-30\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playChime();\n                setIsModalOpen(true);\n              }}\n              className=\"group inline-flex items-center justify-center gap-1.5 px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#111111] text-white text-[12px] sm:text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-neutral-800 transition-all cursor-pointer\"\n            >\n              <span>Play Video</span>\n              <Zap className=\"w-3.5 h-3.5 fill-white text-white group-hover:scale-110 transition-transform\" />\n            </button>\n\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(460, 0.06);\n                setIsModalOpen(true);\n              }}\n              className=\"inline-flex items-center justify-center px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white text-neutral-800 text-[12px] sm:text-[12.5px] font-medium tracking-tight border border-neutral-200/90 shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:bg-neutral-50 transition-all cursor-pointer\"\n            >\n              Learn More\n            </button>\n          </div>\n        </div>\n\n        {/* 3D Perspective Floor Grid */}\n        <PerspectiveFloorGrid />\n\n        {/* Lower cropped illustrated character cards */}\n        <div className=\"relative mt-auto w-full\">\n          <VideoCards\n            onCardClick={(name) => {\n              soundManager.playChime();\n              setSelectedSession(name);\n              setIsModalOpen(true);\n            }}\n          />\n        </div>\n      </main>\n\n      {/* Video Modal Drawer */}\n      <VideoModal\n        isOpen={isModalOpen}\n        onClose={() => setIsModalOpen(false)}\n        initialSession={selectedSession}\n      />\n    </div>\n  );\n}\n\n```",
+            claude: "Build an exact, pixel-accurate, interactive React + Tailwind CSS + TypeScript hero section matching this high-end playful wellness editorial aesthetic.\n\nLive Demo Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2\n\nRecreate an exact, pixel-accurate, interactive React + Tailwind CSS + TypeScript hero section matching this high-end playful wellness editorial aesthetic.\n\n### 1. CORE VISUAL SPECIFICATIONS & PALETTE\n- **Outer Canvas Background**: `#EDE8DE` with a warm subtle gradient `linear-gradient(to bottom, #F2EEE4, #ECE7DD, #E6E0D4)`.\n- **Top Golden Sun Crest**: An enormous circular warm amber glow element positioned behind the main panel:\n  - Width: `w-[600px] sm:w-[850px] md:w-[1100px]`, Height: `h-[550px] sm:h-[750px] md:h-[900px]`.\n  - Position: `left: 50%; transform: translateX(-50%); top: -180px` (peaking out from behind the top center of the main panel).\n  - Background: `linear-gradient(to bottom, #E7A635, #E29A28, #D98E1F)`.\n  - Shadow: `box-shadow: 0 0 120px 40px rgba(231, 166, 53, 0.35)`.\n- **Dappled Foliage Shadows**: Organic botanical shadow shapes drifting slowly with low opacity (`22% - 28%`) and soft Gaussian blur (`blur-[28px]` to `blur-[36px]`) in the top-left, top-right, and side margins.\n- **Main Website Container Panel**:\n  - Max Width: `1180px`, Width: `90% - 94%` of viewport.\n  - Min Height: `780px - 850px`.\n  - Background: Crisp ivory cream `#FFFDF4`.\n  - Border Radius: `rounded-[28px] sm:rounded-[32px] md:rounded-[36px]`.\n  - Border: `1px solid rgba(120, 110, 90, 0.14)`.\n  - Shadow: `box-shadow: 0 24px 70px -15px rgba(80, 70, 50, 0.14), 0 0 1px rgba(0, 0, 0, 0.06)`.\n  - Inner Sheen: 1px subtle white inset border overlay.\n  - Overflow: `overflow: hidden` (ensures the three cards are clipped naturally across their lower edges).\n\n---\n\n### 2. TOP FLOATING NAVBAR SPECIFICATION\n- **Container**: Centered floating pill navbar (`top: 20px;`).\n  - Styling: `rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-3 py-1.5`.\n- **Logo Mark (Left)**:\n  - 24px × 24px circular dark badge (`bg-neutral-900`) containing a 14px minimalist zen-timer dial icon (dark circle with a crisp white quarter-circle wedge cutout).\n- **Navigation Links (Center)**:\n  - Items: `Projects`, `Solutions`, `Pricing`, `Company`, `Support`.\n  - Font: Plus Jakarta Sans / Inter, `11.5px` (`text-[11.5px]`), `font-medium`, color `#4B5563`, hover `#111111`, gap `18px - 20px`.\n- **CTA Button (Right)**:\n  - \"Try for free\": Rounded black pill (`bg-[#111111] text-white text-[11px] font-medium px-3 py-1 rounded-full`).\n\n---\n\n### 3. HERO CONTENT SPECIFICATION\n- **Social Proof Stack**:\n  - Placed centered above the heading with `pt-9 sm:pt-11 mb-3.5`.\n  - Top: Hand-drawn 3-ray celebration burst marks (\\|/) in black line stroke (`stroke-width: 2.2px; stroke-linecap: round;`).\n  - Stack: 4 overlapping circular portrait avatars (`22px` diameter, `1.5px` white border, `-space-x-2`).\n  - Label: `\"Over 1k happy users\"` in `11.5px`, regular weight, color `#6B7280`.\n- **Hero Main Heading**:\n  - Exact Text (2 lines):\n    Regulate your mood\n    with our videos\n  - Typography: Plus Jakarta Sans / Inter Bold, `text-3xl sm:text-4xl md:text-5xl lg:text-[54px]`, color `#111111`, line-height `1.02 - 1.04`, tracking `tracking-[-0.035em]`.\n  - **Left Framing Doodle**: Hand-drawn 4-pointed sparkle star with a smaller companion sparkle star to its lower-left (`stroke: #111111; stroke-width: 2.2px;`).\n  - **Right Framing Doodle**: Hand-drawn spiral/curly loop telephone coil doodle with a downward tail (`stroke: #111111; stroke-width: 2.2px;`).\n- **Description**:\n  - Text:\n    Our pre recorded sessions contain all the essentials\n    to help you fix your mood in few sessions\n  - Typography: `13px - 13.5px`, regular, color `#6B7280`, max-width `440px`, centered, line-height `1.45`.\n- **Action Buttons**:\n  - Button 1 (\"Play Video\"): Black pill (`bg-[#111111] text-white px-5 py-2.5 rounded-full text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] flex items-center gap-1.5`) featuring a small white lightning bolt icon (⚡ / Zap).\n  - Button 2 (\"Learn More\"): White pill (`bg-white border border-neutral-200/90 text-neutral-800 px-5 py-2.5 rounded-full text-[12.5px] font-medium tracking-tight shadow-[0_1px_4px_rgba(0,0,0,0.04)]`).\n  - Spacing: `gap-3`, centered, `mt-5 sm:mt-6`.\n\n---\n\n### 4. 3D PERSPECTIVE FLOOR GRID\n- Positioned directly below the CTA buttons (starting around `top: 310px`) and receding towards the bottom.\n- Radiating perspective lines emanating from a central vanishing point `(600, 30)` to the bottom width.\n- Transverse horizontal lines calculated via power curve `y = vpY + (height - vpY) * Math.pow(i / total, 1.7)` to create authentic 3D spatial perspective foreshortening.\n- Line Color: Warm sandy cream `#E2D8C6`, stroke-width `1.15px`.\n- Gradient Fade: Masked with `linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)` so it fades smoothly into the cream panel background below the CTA buttons.\n\n---\n\n### 5. THE THREE ILLUSTRATED VIDEO CARDS\nArranged in an overlapping horizontal row, emerging from the bottom edge and translated downward (`translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20`) so their lower bodies are cropped:\n\n1. **Left Blue Card (`#24B9E7`)**:\n   - Width: `240px sm:280px md:320px lg:350px`, Height: `340px sm:400px md:460px`.\n   - Top Radius: `rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px]`.\n   - Artwork:\n     - Golden Sun Character (`#FFC74A`) with bold black outlines (`stroke-width: 3.4px`).\n     - Radiating triangular zigzag rays around the circular body.\n     - Facial features: Closed happy smiling eyes (`^ ^`) with eyelash ticks, button pink nose (`#FF8595`), joyful mouth with dimples, cheek freckles.\n     - Puffy white cloud at the bottom in front of the sun with bubbly curves and inner crease lines.\n     - Floating confetti: Purple pill capsule (`#A47AE8`) at top right, green 4-petal clover cross (`#67C85A`) at top left, magenta blossom (`#F43F5E`), and scattered dots.\n\n2. **Center Pink Card (`#F59CC7`)**:\n   - Width: `260px sm:310px md:360px lg:390px`, Height: `370px sm:430px md:500px`.\n   - Top Radius: `rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px]`.\n   - Dominant foreground layer (`z-index: 20`, overlapping both left and right cards with negative margins `-space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22` and elevated `-translate-y-3 sm:-translate-y-5 md:-translate-y-7`).\n   - Artwork:\n     - Large white glove Peace Hand (✌️) with thick black outlines (`stroke-width: 3.8px`).\n     - Index and middle fingers pointing up, ring and pinky curled down, thumb folded across.\n     - Detailed knuckle and palm crease lines.\n     - White glove wrist cuff band, green wrist sleeve (`#56B864`) below the cuff.\n     - Bright cyan blue label (`#24B9E7`) with white bold text `\"IT'S\"` extending into the lower crop.\n     - Floating elements: Two green daisies with yellow centers on either side, yellow 4-pointed sparkle stars, and scattered dots.\n\n3. **Right Coral Card (`#F87162`)**:\n   - Width: `240px sm:280px md:320px lg:350px`, Height: `340px sm:400px md:460px`.\n   - Top Radius: `rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px]`.\n   - Artwork:\n     - Sunflower character with an emerald/mint green circular face (`#67C85A`) and rounded golden-yellow petals (`#FFD147`) all around.\n     - Big cartoon eyes glancing toward the upper-left with cyan iris, black pupils, white reflection glints, eyelids, and arched black eyebrows.\n     - Pink button nose and side smirk smile with dimple.\n     - Top right accent: Electric cyan 8-pointed star burst (`#15C0F6`) with bold black outline.\n\n---\n\n### 6. INTERACTIVITY, AUDIO & PARALLAX\n- **Desktop Mouse Parallax**: Soft mouse movement interpolation shifting the background sun by 2px, floor grid by 3px, and cards by 5-7px.\n- **Web Audio Synthesizer**: Organic synthesized bubble pop sound on button clicks / card hover (`440Hz - 600Hz`), and a soothing 4-note chime for \"Play Video\" and featured card interactions.\n- **Interactive Video Modal**: Opens an editorial session preview drawer with calming breathing animation, audio toggle, play/pause controls, and mood selector tabs (\"Sunny Morning Routine\", \"Peace & Inner Calm\", \"Mood Bloom Harmony\").\n- **Accessibility**: Complete keyboard navigation and full `prefers-reduced-motion` compliance.\n\n---\n\nLive Demo Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2\n\n```tsx\nimport React, { useState, useEffect } from 'react';\nimport { Zap, Play, Pause, Volume2, VolumeX, X, Sparkles, Heart } from 'lucide-react';\n\n// ============================================================================\n// 1. WEB AUDIO SYNTHESIZER\n// ============================================================================\nclass SoundManager {\n  private ctx: AudioContext | null = null;\n  public enabled: boolean = true;\n\n  private getContext(): AudioContext | null {\n    if (typeof window === 'undefined') return null;\n    if (!this.ctx) {\n      const AudioCtx =\n        window.AudioContext ||\n        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;\n      if (AudioCtx) this.ctx = new AudioCtx();\n    }\n    if (this.ctx && this.ctx.state === 'suspended') {\n      this.ctx.resume().catch(() => {});\n    }\n    return this.ctx;\n  }\n\n  public playBubble(freq: number = 440, duration: number = 0.08) {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const osc = ctx.createOscillator();\n      const gain = ctx.createGain();\n      osc.type = 'sine';\n      const now = ctx.currentTime;\n      osc.frequency.setValueAtTime(freq, now);\n      osc.frequency.exponentialRampToValueAtTime(freq * 1.4, now + duration);\n      gain.gain.setValueAtTime(0.04, now);\n      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);\n      osc.connect(gain);\n      gain.connect(ctx.destination);\n      osc.start(now);\n      osc.stop(now + duration);\n    } catch {}\n  }\n\n  public playChime() {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const now = ctx.currentTime;\n      const notes = [523.25, 659.25, 783.99, 1046.5];\n      notes.forEach((freq, idx) => {\n        const osc = ctx.createOscillator();\n        const gain = ctx.createGain();\n        osc.type = 'triangle';\n        const startTime = now + idx * 0.06;\n        osc.frequency.setValueAtTime(freq, startTime);\n        gain.gain.setValueAtTime(0.03, startTime);\n        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.6);\n        osc.connect(gain);\n        gain.connect(ctx.destination);\n        osc.start(startTime);\n        osc.stop(startTime + 0.65);\n      });\n    } catch {}\n  }\n}\n\nexport const soundManager = new SoundManager();\n\n// ============================================================================\n// 2. BACKGROUND ATMOSPHERE & ORGANIC FOLIAGE SHADOWS\n// ============================================================================\nexport const BackgroundAtmosphere: React.FC = () => {\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"pointer-events-none fixed inset-0 z-0 overflow-hidden select-none bg-[#EDE8DE]\"\n    >\n      <div className=\"absolute inset-0 bg-gradient-to-b from-[#F2EEE4] via-[#ECE7DD] to-[#E6E0D4] opacity-90\" />\n\n      {/* Top Golden Sun Crest */}\n      <div\n        className=\"absolute left-1/2 -translate-x-1/2 top-[-140px] sm:top-[-180px] md:top-[-220px] w-[600px] sm:w-[850px] md:w-[1100px] h-[550px] sm:h-[750px] md:h-[900px] rounded-full bg-gradient-to-b from-[#E7A635] via-[#E29A28] to-[#D98E1F] opacity-95 blur-[1px] shadow-2xl transition-transform duration-1000\"\n        style={{ boxShadow: '0 0 120px 40px rgba(231, 166, 53, 0.35)' }}\n      />\n      <div className=\"absolute top-[10%] left-[20%] w-[500px] h-[400px] rounded-full bg-white/25 blur-[120px]\" />\n      <div className=\"absolute top-[30%] right-[15%] w-[450px] h-[450px] rounded-full bg-[#FFE4A0]/20 blur-[130px]\" />\n\n      {/* Top Left Leaf Shadow */}\n      <div className=\"absolute -top-12 -left-16 w-[480px] h-[480px] opacity-[0.28] blur-[28px] animate-[pulse_14s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 60 40 Q 120 70 170 140 Q 120 180 80 150 Q 50 110 60 40 Z\" />\n          <path d=\"M 140 30 Q 230 50 260 120 Q 200 160 160 110 Q 130 70 140 30 Z\" />\n          <path d=\"M 90 150 Q 160 210 200 300 Q 140 310 110 240 Q 80 190 90 150 Z\" />\n          <path d=\"M 190 130 Q 280 190 320 270 Q 270 300 220 230 Q 180 170 190 130 Z\" />\n          <circle cx=\"110\" cy=\"90\" r=\"45\" />\n          <circle cx=\"200\" cy=\"110\" r=\"55\" />\n        </svg>\n      </div>\n\n      {/* Top Right Leaf Shadow */}\n      <div className=\"absolute -top-16 -right-16 w-[560px] h-[560px] opacity-[0.25] blur-[32px] animate-[pulse_16s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 340 30 Q 280 70 230 140 Q 280 180 320 150 Q 350 110 340 30 Z\" />\n          <path d=\"M 260 20 Q 170 50 140 120 Q 200 160 240 110 Q 270 70 260 20 Z\" />\n          <circle cx=\"280\" cy=\"80\" r=\"50\" />\n          <circle cx=\"190\" cy=\"100\" r=\"60\" />\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 3. TOP FLOATING NAVBAR\n// ============================================================================\ninterface NavbarProps {\n  onActionClick?: (action: string) => void;\n}\n\nexport const Navbar: React.FC<NavbarProps> = ({ onActionClick }) => {\n  const links = ['Projects', 'Solutions', 'Pricing', 'Company', 'Support'];\n\n  const handleLinkClick = (e: React.MouseEvent, link: string) => {\n    e.preventDefault();\n    soundManager.playBubble(520, 0.05);\n    onActionClick?.(link);\n  };\n\n  const handleTryClick = (e: React.MouseEvent) => {\n    e.preventDefault();\n    soundManager.playBubble(620, 0.08);\n    onActionClick?.('Try for free');\n  };\n\n  return (\n    <header className=\"relative w-full pt-4 sm:pt-6 flex justify-center items-center z-30 px-4\">\n      <nav\n        aria-label=\"Main Navigation\"\n        className=\"inline-flex items-center gap-2 sm:gap-4 md:gap-5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)]\"\n      >\n        <button\n          type=\"button\"\n          onClick={(e) => handleLinkClick(e, 'Home')}\n          className=\"flex items-center justify-center w-6 h-6 rounded-full bg-neutral-900 text-white cursor-pointer focus:outline-hidden\"\n          title=\"Mood Hero\"\n        >\n          <svg viewBox=\"0 0 24 24\" className=\"w-3.5 h-3.5 fill-current\">\n            <circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#1C1C1E\" />\n            <path d=\"M 12 4 A 8 8 0 0 1 20 12 L 12 12 Z\" fill=\"#FFFFFF\" />\n            <circle cx=\"12\" cy=\"12\" r=\"3.5\" fill=\"#1C1C1E\" />\n          </svg>\n        </button>\n\n        <div className=\"hidden sm:flex items-center gap-3.5 md:gap-5 text-[11px] md:text-[12px] font-medium text-neutral-600\">\n          {links.map((link) => (\n            <a\n              key={link}\n              href={`#${link.toLowerCase()}`}\n              onClick={(e) => handleLinkClick(e, link)}\n              className=\"transition-colors hover:text-neutral-950 focus:outline-hidden\"\n            >\n              {link}\n            </a>\n          ))}\n        </div>\n\n        <button\n          type=\"button\"\n          onClick={handleTryClick}\n          className=\"inline-flex items-center justify-center px-3 py-1 rounded-full bg-[#111111] text-white text-[10.5px] sm:text-[11px] font-medium tracking-tight hover:bg-neutral-800 transition-all cursor-pointer\"\n        >\n          Try for free\n        </button>\n      </nav>\n    </header>\n  );\n};\n\n// ============================================================================\n// 4. SOCIAL PROOF STACK\n// ============================================================================\nexport const SocialProof: React.FC = () => {\n  const avatars = [\n    { id: '1', name: 'Elena', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80' },\n    { id: '2', name: 'Marcus', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80' },\n    { id: '3', name: 'Aisha', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80' },\n    { id: '4', name: 'Kai', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80' },\n  ];\n\n  return (\n    <div className=\"flex flex-col items-center justify-center select-none pt-7 sm:pt-9 md:pt-11 mb-3 sm:mb-4\">\n      <div className=\"mb-1 w-6 h-4 text-neutral-900 flex justify-center\">\n        <svg viewBox=\"0 0 24 16\" className=\"w-5 h-3.5 fill-none stroke-current stroke-[2.2] stroke-linecap-round\">\n          <path d=\"M 6 13 L 2 3\" />\n          <path d=\"M 12 14 L 12 1\" />\n          <path d=\"M 18 13 L 22 3\" />\n        </svg>\n      </div>\n\n      <div className=\"inline-flex items-center gap-2\">\n        <div className=\"flex items-center -space-x-2\">\n          {avatars.map((avatar, idx) => (\n            <div\n              key={avatar.id}\n              className=\"relative w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full overflow-hidden border-[1.5px] border-white shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-neutral-200\"\n              style={{ zIndex: avatars.length - idx }}\n            >\n              <img src={avatar.url} alt={avatar.name} className=\"w-full h-full object-cover\" />\n            </div>\n          ))}\n        </div>\n        <span className=\"text-[11px] sm:text-[11.5px] font-normal text-neutral-500 tracking-tight\">\n          Over 1k happy users\n        </span>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 5. HERO DOODLES\n// ============================================================================\nexport const SparkleDoodleLeft: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -left-8 sm:-left-11 md:-left-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 44 48\"\n      className=\"w-7 h-8 sm:w-8 sm:h-9 md:w-9 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 24 4 C 24.5 14 26 18 36 19 C 26 20 24.5 24 24 34 C 23.5 24 22 20 12 19 C 22 18 23.5 14 24 4 Z\" />\n      <path d=\"M 10 32 C 10.3 36.5 11 38 16 38.5 C 11 39 10.3 40.5 10 45 C 9.7 40.5 9 39 4 38.5 C 9 38 9.7 36.5 10 32 Z\" />\n    </svg>\n  </div>\n);\n\nexport const CurlyDoodleRight: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -right-8 sm:-right-11 md:-right-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 36 48\"\n      className=\"w-6 h-8 sm:w-7 sm:h-9 md:w-8 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 12 6 C 18 4, 25 7, 26 12 C 27 18, 17 21, 14 23 C 10 25, 12 31, 18 32 C 24 33, 27 29, 28 36 C 29 41, 23 44, 20 44\" />\n    </svg>\n  </div>\n);\n\n// ============================================================================\n// 6. 3D PERSPECTIVE FLOOR GRID\n// ============================================================================\nexport const PerspectiveFloorGrid: React.FC = () => {\n  const width = 1200;\n  const height = 500;\n  const vpX = 600;\n  const vpY = 30;\n\n  const rays: { x1: number; y1: number; x2: number; y2: number }[] = [];\n  for (let i = -16; i <= 16; i++) {\n    rays.push({ x1: vpX, y1: vpY, x2: vpX + i * 58, y2: height });\n  }\n\n  const horizLines: number[] = [];\n  const totalHoriz = 22;\n  for (let i = 1; i <= totalHoriz; i++) {\n    const progress = Math.pow(i / totalHoriz, 1.7);\n    horizLines.push(vpY + (height - vpY) * progress);\n  }\n\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"absolute inset-x-0 bottom-0 top-[285px] sm:top-[305px] md:top-[320px] pointer-events-none select-none z-10 overflow-hidden\"\n      style={{\n        maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n        WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n      }}\n    >\n      <svg\n        viewBox={`0 0 ${width} ${height}`}\n        preserveAspectRatio=\"none\"\n        className=\"w-full h-full stroke-[#E2D8C6] opacity-85\"\n        strokeWidth=\"1.15\"\n      >\n        {rays.map((ray, i) => (\n          <line key={`ray-${i}`} x1={ray.x1} y1={ray.y1} x2={ray.x2} y2={ray.y2} />\n        ))}\n        {horizLines.map((y, i) => (\n          <line key={`horiz-${i}`} x1={0} y1={y} x2={width} y2={y} />\n        ))}\n      </svg>\n    </div>\n  );\n};\n\n// ============================================================================\n// 7. THE THREE ILLUSTRATED VIDEO CARDS\n// ============================================================================\n\n// Left Blue Card: Golden Sun Character\nexport const SunCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(480, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(440, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(-1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(36,185,231,0.22)]\"\n        style={{ backgroundColor: '#24B9E7' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Purple Pill (Top Right) */}\n          <g transform=\"translate(245, 110) rotate(35)\">\n            <rect x=\"-16\" y=\"-8\" width=\"32\" height=\"16\" rx=\"8\" fill=\"#A47AE8\" stroke=\"#111111\" strokeWidth=\"2.8\" />\n          </g>\n          {/* Green Cross (Top Left) */}\n          <g transform=\"translate(68, 140) rotate(15)\">\n            <path\n              d=\"M -3 -12 L 3 -12 L 3 -3 L 12 -3 L 12 3 L 3 3 L 3 12 L -3 12 L -3 3 L -12 3 L -12 -3 L -3 -3 Z\"\n              fill=\"#67C85A\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.4\"\n            />\n          </g>\n          {/* Sun Body & Face */}\n          <g transform=\"translate(195, 335)\">\n            {[-135, -115, -95, -75, -55, -35, -15, 5, 25, 45, 65, 85, 105, 125, 145, 165, 185, 205].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -16 -88 L 0 -124 L 16 -88 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFC74A\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n                strokeLinejoin=\"round\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"92\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Happy eyes & smile */}\n            <path d=\"M -44 -14 Q -32 -26 -20 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <path d=\"M 20 -14 Q 32 -26 44 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <circle cx=\"0\" cy=\"-2\" r=\"7\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -30 18 Q 0 46 30 18\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n          {/* Fluffy Cloud */}\n          <g transform=\"translate(180, 420)\">\n            <path\n              d=\"M -110 30 C -125 15, -120 -10, -95 -15 C -90 -45, -50 -55, -25 -35 C -5 -65, 45 -65, 65 -35 C 95 -45, 125 -15, 120 15 C 135 30, 120 60, 95 65 L -95 65 C -115 60, -125 45, -110 30 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.6\"\n            />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Center Pink Card: Peace Hand Character\nexport const PeaceHandCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playChime();\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(520, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative z-20 cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-16px) scale(1.025)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[260px] sm:w-[310px] md:w-[360px] lg:w-[390px] h-[370px] sm:h-[430px] md:h-[500px] rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px] overflow-hidden shadow-[0_20px_50px_rgba(245,156,199,0.35)]\"\n        style={{ backgroundColor: '#F59CC7' }}\n      >\n        <svg viewBox=\"0 0 380 500\" className=\"w-full h-full pointer-events-none\">\n          {/* Sparkles */}\n          <g transform=\"translate(268, 120)\">\n            <path\n              d=\"M 0 -22 C 1 -8, 8 -1, 22 0 C 8 1, 1 8, 0 22 C -1 8, -8 1, -22 0 C -8 -1, -1 -8, 0 -22 Z\"\n              fill=\"#FFD242\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Green Daisy Flower */}\n          <g transform=\"translate(280, 185) scale(1.15)\">\n            {[0, 72, 144, 216, 288].map((angle, i) => (\n              <ellipse\n                key={i}\n                cx=\"0\"\n                cy=\"-16\"\n                rx=\"8\"\n                ry=\"12\"\n                transform={`rotate(${angle})`}\n                fill=\"#94DC78\"\n                stroke=\"#111111\"\n                strokeWidth=\"2.6\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"9\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"2.6\" />\n          </g>\n          {/* White Peace Hand Glove */}\n          <g transform=\"translate(190, 290)\">\n            {/* Index Finger */}\n            <path\n              d=\"M -24 -15 L -22 -145 C -22 -162, 2 -162, 2 -145 L 2 -40\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Middle Finger */}\n            <path\n              d=\"M 2 -40 L 4 -148 C 4 -165, 28 -165, 28 -148 L 28 -15\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Ring & Palm */}\n            <path\n              d=\"M 27 -20 C 38 -25, 48 -15, 46 8 C 44 26, 30 35, 12 35\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            <path\n              d=\"M -42 10 C -48 35, -42 65, -30 82 L 30 82 C 42 65, 46 35, 42 10 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Thumb */}\n            <path\n              d=\"M -42 12 C -45 -10, -32 -25, -12 -18 C 4 -12, 10 2, 4 20 C -2 36, -20 40, -38 35 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Glove Cuff & Sleeve */}\n            <g transform=\"translate(0, 84)\">\n              <rect x=\"-36\" y=\"0\" width=\"72\" height=\"16\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            <g transform=\"translate(0, 100)\">\n              <path d=\"M -32 0 L 32 0 L 30 35 L -30 35 Z\" fill=\"#56B864\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            {/* \"IT'S\" Banner */}\n            <g transform=\"translate(0, 135)\">\n              <rect x=\"-42\" y=\"0\" width=\"84\" height=\"45\" rx=\"10\" fill=\"#24B9E7\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n              <text x=\"0\" y=\"26\" fill=\"#FFFFFF\" fontSize=\"20\" fontWeight=\"800\" textAnchor=\"middle\">\n                IT'S\n              </text>\n            </g>\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Right Coral Card: Sunflower Character\nexport const FlowerCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(640, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(600, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(248,113,98,0.22)]\"\n        style={{ backgroundColor: '#F87162' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Cyan Star Burst (Top Right) */}\n          <g transform=\"translate(262, 105)\">\n            <path\n              d=\"M 0 -24 L 6 -8 L 22 -15 L 14 0 L 28 8 L 11 12 L 16 28 L 2 17 L -6 30 L -8 14 L -24 18 L -14 3 L -28 -6 L -12 -11 L -15 -26 L -2 -14 Z\"\n              fill=\"#15C0F6\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Flower Body */}\n          <g transform=\"translate(160, 345)\">\n            {[-130, -100, -70, -40, -10, 20, 50, 80, 110, 140, 170, 200].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -18 -85 C -22 -115, -15 -138, 0 -140 C 15 -138, 22 -115, 18 -85 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFD147\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"88\" fill=\"#67C85A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Side-Glance Eyes */}\n            <g transform=\"translate(-32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            <g transform=\"translate(32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            {/* Nose & Smirk */}\n            <circle cx=\"0\" cy=\"10\" r=\"7.5\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -16 28 Q 0 42 22 26\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Video Cards Row\nexport const VideoCards: React.FC<{ onCardClick: (cardName: string) => void }> = ({ onCardClick }) => {\n  return (\n    <div className=\"relative w-full flex justify-center items-end select-none pointer-events-auto z-20\">\n      <div className=\"relative flex items-end justify-center -space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22 translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20\">\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <SunCard onClick={() => onCardClick('Sunny Morning Routine')} />\n        </div>\n        <div className=\"z-20 transition-transform duration-500 hover:z-30 -translate-y-3 sm:-translate-y-5 md:-translate-y-7\">\n          <PeaceHandCard onClick={() => onCardClick('Peace & Calm Essentials')} />\n        </div>\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <FlowerCard onClick={() => onCardClick('Mood Bloom Focus')} />\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 8. INTERACTIVE VIDEO MODAL (EDITORIAL SESSION DRAWER)\n// ============================================================================\ninterface VideoModalProps {\n  isOpen: boolean;\n  onClose: () => void;\n  initialSession: string;\n}\n\nexport const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, initialSession }) => {\n  const [activeSession, setActiveSession] = useState(initialSession);\n  const [isPlaying, setIsPlaying] = useState(true);\n  const [audioEnabled, setAudioEnabled] = useState(true);\n  const [progress, setProgress] = useState(38);\n\n  useEffect(() => {\n    setActiveSession(initialSession);\n    setIsPlaying(true);\n  }, [initialSession, isOpen]);\n\n  useEffect(() => {\n    if (!isPlaying || !isOpen) return;\n    const interval = setInterval(() => {\n      setProgress((p) => (p >= 100 ? 0 : p + 0.4));\n    }, 100);\n    return () => clearInterval(interval);\n  }, [isPlaying, isOpen]);\n\n  if (!isOpen) return null;\n\n  const sessions = [\n    { name: 'Sunny Morning Routine', time: '12 min', mood: 'Vibrant & Energized', color: '#24B9E7' },\n    { name: 'Peace & Calm Essentials', time: '18 min', mood: 'Deep Serenity & Focus', color: '#F59CC7' },\n    { name: 'Mood Bloom Focus', time: '15 min', mood: 'Joyful Growth & Bloom', color: '#F87162' },\n  ];\n\n  return (\n    <div\n      role=\"dialog\"\n      aria-modal=\"true\"\n      className=\"fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md animate-fadeIn\"\n      onClick={onClose}\n    >\n      <div\n        className=\"relative w-full max-w-2xl rounded-[32px] bg-[#FFFDF4] border border-[#111111]/10 shadow-[0_32px_80px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col p-6 sm:p-8\"\n        onClick={(e) => e.stopPropagation()}\n      >\n        {/* Header bar */}\n        <div className=\"flex items-center justify-between pb-5 border-b border-neutral-200\">\n          <div className=\"flex items-center gap-2\">\n            <span className=\"w-2.5 h-2.5 rounded-full bg-[#56B864] animate-ping\" />\n            <span className=\"text-xs font-semibold uppercase tracking-wider text-neutral-500\">\n              Editorial Mood Session\n            </span>\n          </div>\n          <button\n            type=\"button\"\n            onClick={onClose}\n            className=\"p-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors cursor-pointer\"\n          >\n            <X size={16} />\n          </button>\n        </div>\n\n        {/* Video simulation screen */}\n        <div className=\"relative mt-5 rounded-2xl overflow-hidden aspect-video bg-gradient-to-br from-[#1A1A1E] to-[#2C2D35] flex items-center justify-center text-white shadow-inner\">\n          {/* Calming animated breathing aura */}\n          <div\n            className=\"absolute w-48 h-48 rounded-full opacity-40 blur-2xl animate-[pulse_6s_ease-in-out_infinite]\"\n            style={{\n              backgroundColor: sessions.find((s) => s.name === activeSession)?.color || '#F59CC7',\n            }}\n          />\n\n          {/* Calming center illustration */}\n          <div className=\"relative z-10 flex flex-col items-center text-center px-4\">\n            <div className=\"w-16 h-16 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center mb-3\">\n              <Sparkles className=\"w-8 h-8 text-[#FFD242] animate-bounce\" />\n            </div>\n            <h3 className=\"text-xl sm:text-2xl font-bold tracking-tight text-white mb-1\">\n              {activeSession}\n            </h3>\n            <p className=\"text-xs sm:text-sm text-neutral-300 font-normal\">\n              Breathing Inhale (4s) • Hold (4s) • Exhale (6s)\n            </p>\n          </div>\n\n          {/* Progress bar */}\n          <div className=\"absolute bottom-0 inset-x-0 h-1.5 bg-white/20\">\n            <div\n              className=\"h-full bg-[#24B9E7] transition-all duration-100 ease-linear\"\n              style={{ width: `${progress}%` }}\n            />\n          </div>\n        </div>\n\n        {/* Media Controls */}\n        <div className=\"flex items-center justify-between mt-4 px-1\">\n          <div className=\"flex items-center gap-3\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(isPlaying ? 380 : 540, 0.05);\n                setIsPlaying(!isPlaying);\n              }}\n              className=\"w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center hover:bg-neutral-800 transition-colors cursor-pointer\"\n            >\n              {isPlaying ? <Pause size={16} /> : <Play size={16} className=\"ml-0.5\" />}\n            </button>\n            <button\n              type=\"button\"\n              onClick={() => {\n                setAudioEnabled(!audioEnabled);\n                soundManager.enabled = !audioEnabled;\n                soundManager.playBubble(500, 0.05);\n              }}\n              className=\"w-10 h-10 rounded-full bg-white border border-neutral-200 text-neutral-800 flex items-center justify-center hover:bg-neutral-50 transition-colors cursor-pointer\"\n            >\n              {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}\n            </button>\n          </div>\n\n          <div className=\"inline-flex items-center gap-1.5 text-xs text-neutral-500\">\n            <Heart size={14} className=\"text-rose-500 fill-rose-500\" />\n            <span>Guided Session Active</span>\n          </div>\n        </div>\n\n        {/* Mood Selector Tabs */}\n        <div className=\"mt-5 pt-4 border-t border-neutral-200\">\n          <span className=\"text-[11px] font-semibold text-neutral-400 uppercase tracking-wider block mb-2.5\">\n            Switch Guided Routine\n          </span>\n          <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-2\">\n            {sessions.map((sess) => (\n              <button\n                type=\"button\"\n                key={sess.name}\n                onClick={() => {\n                  soundManager.playChime();\n                  setActiveSession(sess.name);\n                }}\n                className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${\n                  activeSession === sess.name\n                    ? 'bg-neutral-900 text-white border-neutral-900 shadow-md'\n                    : 'bg-white hover:bg-neutral-50 text-neutral-700 border-neutral-200'\n                }`}\n              >\n                <div className=\"text-xs font-bold truncate\">{sess.name}</div>\n                <div\n                  className={`text-[10px] ${\n                    activeSession === sess.name ? 'text-neutral-300' : 'text-neutral-400'\n                  }`}\n                >\n                  {sess.time} • {sess.mood}\n                </div>\n              </button>\n            ))}\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 9. MAIN MOOD HERO COMPONENT\n// ============================================================================\nexport interface MoodHeroProps {\n  className?: string;\n}\n\nexport default function MoodHero({ className = '' }: MoodHeroProps) {\n  const [isModalOpen, setIsModalOpen] = useState(false);\n  const [selectedSession, setSelectedSession] = useState('Peace & Calm Essentials');\n  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    if (typeof window !== 'undefined') {\n      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');\n      setPrefersReducedMotion(mediaQuery.matches);\n    }\n  }, []);\n\n  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {\n    if (prefersReducedMotion || typeof window === 'undefined') return;\n    const deltaX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);\n    const deltaY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);\n    setMousePos({ x: deltaX, y: deltaY });\n  };\n\n  return (\n    <div\n      onMouseMove={handleMouseMove}\n      onMouseLeave={() => setMousePos({ x: 0, y: 0 })}\n      className={`relative min-h-screen w-full flex items-center justify-center p-3 sm:p-6 md:p-10 lg:p-12 overflow-x-hidden font-['Plus_Jakarta_Sans',sans-serif] ${className}`}\n      id=\"mood-hero-root\"\n    >\n      <BackgroundAtmosphere />\n\n      {/* Main Website Container Panel */}\n      <main\n        className=\"relative w-full max-w-[1180px] min-h-[720px] sm:min-h-[780px] md:min-h-[820px] lg:min-h-[850px] rounded-[24px] sm:rounded-[30px] md:rounded-[36px] bg-[#FFFDF4] border border-[rgba(120,110,90,0.14)] shadow-[0_24px_70px_-15px_rgba(80,70,50,0.14),0_0_1px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden z-10 transition-transform duration-300 ease-out\"\n        style={{\n          transform: prefersReducedMotion ? 'none' : `translate3d(${mousePos.x * 2}px, ${mousePos.y * 2}px, 0)`,\n        }}\n      >\n        {/* Subtle white inner sheen */}\n        <div className=\"absolute inset-0 rounded-[inherit] pointer-events-none border border-white/60 z-30\" />\n\n        {/* Top Navbar */}\n        <Navbar\n          onActionClick={(action) => {\n            if (action === 'Try for free') {\n              soundManager.playChime();\n              setIsModalOpen(true);\n            }\n          }}\n        />\n\n        {/* Center Hero Content */}\n        <div className=\"relative z-20 flex flex-col items-center text-center px-4 sm:px-6\">\n          <SocialProof />\n\n          <div className=\"relative inline-block mt-1 sm:mt-2\">\n            <SparkleDoodleLeft />\n            <h1 className=\"text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.04] sm:leading-[1.02] max-w-[680px] mx-auto select-none\">\n              Regulate your mood\n              <br />\n              with our videos\n            </h1>\n            <CurlyDoodleRight />\n          </div>\n\n          <p className=\"mt-3.5 sm:mt-4 text-[12px] sm:text-[13px] md:text-[13.5px] text-neutral-500 font-normal leading-[1.45] max-w-sm sm:max-w-md mx-auto select-none tracking-tight\">\n            Our pre recorded sessions contain all the essentials\n            <br className=\"hidden sm:inline\" /> to help you fix your mood in few sessions\n          </p>\n\n          <div className=\"mt-5 sm:mt-6 flex items-center justify-center gap-2.5 sm:gap-3 z-30\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playChime();\n                setIsModalOpen(true);\n              }}\n              className=\"group inline-flex items-center justify-center gap-1.5 px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#111111] text-white text-[12px] sm:text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-neutral-800 transition-all cursor-pointer\"\n            >\n              <span>Play Video</span>\n              <Zap className=\"w-3.5 h-3.5 fill-white text-white group-hover:scale-110 transition-transform\" />\n            </button>\n\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(460, 0.06);\n                setIsModalOpen(true);\n              }}\n              className=\"inline-flex items-center justify-center px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white text-neutral-800 text-[12px] sm:text-[12.5px] font-medium tracking-tight border border-neutral-200/90 shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:bg-neutral-50 transition-all cursor-pointer\"\n            >\n              Learn More\n            </button>\n          </div>\n        </div>\n\n        {/* 3D Perspective Floor Grid */}\n        <PerspectiveFloorGrid />\n\n        {/* Lower cropped illustrated character cards */}\n        <div className=\"relative mt-auto w-full\">\n          <VideoCards\n            onCardClick={(name) => {\n              soundManager.playChime();\n              setSelectedSession(name);\n              setIsModalOpen(true);\n            }}\n          />\n        </div>\n      </main>\n\n      {/* Video Modal Drawer */}\n      <VideoModal\n        isOpen={isModalOpen}\n        onClose={() => setIsModalOpen(false)}\n        initialSession={selectedSession}\n      />\n    </div>\n  );\n}\n\n```",
+            lovable: "[Lovable Component Generator]\nCreate an exact, pixel-accurate playful wellness editorial hero section in React, TypeScript, and Tailwind CSS.\nLive Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2\n\n```tsx\nimport React, { useState, useEffect } from 'react';\nimport { Zap, Play, Pause, Volume2, VolumeX, X, Sparkles, Heart } from 'lucide-react';\n\n// ============================================================================\n// 1. WEB AUDIO SYNTHESIZER\n// ============================================================================\nclass SoundManager {\n  private ctx: AudioContext | null = null;\n  public enabled: boolean = true;\n\n  private getContext(): AudioContext | null {\n    if (typeof window === 'undefined') return null;\n    if (!this.ctx) {\n      const AudioCtx =\n        window.AudioContext ||\n        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;\n      if (AudioCtx) this.ctx = new AudioCtx();\n    }\n    if (this.ctx && this.ctx.state === 'suspended') {\n      this.ctx.resume().catch(() => {});\n    }\n    return this.ctx;\n  }\n\n  public playBubble(freq: number = 440, duration: number = 0.08) {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const osc = ctx.createOscillator();\n      const gain = ctx.createGain();\n      osc.type = 'sine';\n      const now = ctx.currentTime;\n      osc.frequency.setValueAtTime(freq, now);\n      osc.frequency.exponentialRampToValueAtTime(freq * 1.4, now + duration);\n      gain.gain.setValueAtTime(0.04, now);\n      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);\n      osc.connect(gain);\n      gain.connect(ctx.destination);\n      osc.start(now);\n      osc.stop(now + duration);\n    } catch {}\n  }\n\n  public playChime() {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const now = ctx.currentTime;\n      const notes = [523.25, 659.25, 783.99, 1046.5];\n      notes.forEach((freq, idx) => {\n        const osc = ctx.createOscillator();\n        const gain = ctx.createGain();\n        osc.type = 'triangle';\n        const startTime = now + idx * 0.06;\n        osc.frequency.setValueAtTime(freq, startTime);\n        gain.gain.setValueAtTime(0.03, startTime);\n        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.6);\n        osc.connect(gain);\n        gain.connect(ctx.destination);\n        osc.start(startTime);\n        osc.stop(startTime + 0.65);\n      });\n    } catch {}\n  }\n}\n\nexport const soundManager = new SoundManager();\n\n// ============================================================================\n// 2. BACKGROUND ATMOSPHERE & ORGANIC FOLIAGE SHADOWS\n// ============================================================================\nexport const BackgroundAtmosphere: React.FC = () => {\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"pointer-events-none fixed inset-0 z-0 overflow-hidden select-none bg-[#EDE8DE]\"\n    >\n      <div className=\"absolute inset-0 bg-gradient-to-b from-[#F2EEE4] via-[#ECE7DD] to-[#E6E0D4] opacity-90\" />\n\n      {/* Top Golden Sun Crest */}\n      <div\n        className=\"absolute left-1/2 -translate-x-1/2 top-[-140px] sm:top-[-180px] md:top-[-220px] w-[600px] sm:w-[850px] md:w-[1100px] h-[550px] sm:h-[750px] md:h-[900px] rounded-full bg-gradient-to-b from-[#E7A635] via-[#E29A28] to-[#D98E1F] opacity-95 blur-[1px] shadow-2xl transition-transform duration-1000\"\n        style={{ boxShadow: '0 0 120px 40px rgba(231, 166, 53, 0.35)' }}\n      />\n      <div className=\"absolute top-[10%] left-[20%] w-[500px] h-[400px] rounded-full bg-white/25 blur-[120px]\" />\n      <div className=\"absolute top-[30%] right-[15%] w-[450px] h-[450px] rounded-full bg-[#FFE4A0]/20 blur-[130px]\" />\n\n      {/* Top Left Leaf Shadow */}\n      <div className=\"absolute -top-12 -left-16 w-[480px] h-[480px] opacity-[0.28] blur-[28px] animate-[pulse_14s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 60 40 Q 120 70 170 140 Q 120 180 80 150 Q 50 110 60 40 Z\" />\n          <path d=\"M 140 30 Q 230 50 260 120 Q 200 160 160 110 Q 130 70 140 30 Z\" />\n          <path d=\"M 90 150 Q 160 210 200 300 Q 140 310 110 240 Q 80 190 90 150 Z\" />\n          <path d=\"M 190 130 Q 280 190 320 270 Q 270 300 220 230 Q 180 170 190 130 Z\" />\n          <circle cx=\"110\" cy=\"90\" r=\"45\" />\n          <circle cx=\"200\" cy=\"110\" r=\"55\" />\n        </svg>\n      </div>\n\n      {/* Top Right Leaf Shadow */}\n      <div className=\"absolute -top-16 -right-16 w-[560px] h-[560px] opacity-[0.25] blur-[32px] animate-[pulse_16s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 340 30 Q 280 70 230 140 Q 280 180 320 150 Q 350 110 340 30 Z\" />\n          <path d=\"M 260 20 Q 170 50 140 120 Q 200 160 240 110 Q 270 70 260 20 Z\" />\n          <circle cx=\"280\" cy=\"80\" r=\"50\" />\n          <circle cx=\"190\" cy=\"100\" r=\"60\" />\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 3. TOP FLOATING NAVBAR\n// ============================================================================\ninterface NavbarProps {\n  onActionClick?: (action: string) => void;\n}\n\nexport const Navbar: React.FC<NavbarProps> = ({ onActionClick }) => {\n  const links = ['Projects', 'Solutions', 'Pricing', 'Company', 'Support'];\n\n  const handleLinkClick = (e: React.MouseEvent, link: string) => {\n    e.preventDefault();\n    soundManager.playBubble(520, 0.05);\n    onActionClick?.(link);\n  };\n\n  const handleTryClick = (e: React.MouseEvent) => {\n    e.preventDefault();\n    soundManager.playBubble(620, 0.08);\n    onActionClick?.('Try for free');\n  };\n\n  return (\n    <header className=\"relative w-full pt-4 sm:pt-6 flex justify-center items-center z-30 px-4\">\n      <nav\n        aria-label=\"Main Navigation\"\n        className=\"inline-flex items-center gap-2 sm:gap-4 md:gap-5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)]\"\n      >\n        <button\n          type=\"button\"\n          onClick={(e) => handleLinkClick(e, 'Home')}\n          className=\"flex items-center justify-center w-6 h-6 rounded-full bg-neutral-900 text-white cursor-pointer focus:outline-hidden\"\n          title=\"Mood Hero\"\n        >\n          <svg viewBox=\"0 0 24 24\" className=\"w-3.5 h-3.5 fill-current\">\n            <circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#1C1C1E\" />\n            <path d=\"M 12 4 A 8 8 0 0 1 20 12 L 12 12 Z\" fill=\"#FFFFFF\" />\n            <circle cx=\"12\" cy=\"12\" r=\"3.5\" fill=\"#1C1C1E\" />\n          </svg>\n        </button>\n\n        <div className=\"hidden sm:flex items-center gap-3.5 md:gap-5 text-[11px] md:text-[12px] font-medium text-neutral-600\">\n          {links.map((link) => (\n            <a\n              key={link}\n              href={`#${link.toLowerCase()}`}\n              onClick={(e) => handleLinkClick(e, link)}\n              className=\"transition-colors hover:text-neutral-950 focus:outline-hidden\"\n            >\n              {link}\n            </a>\n          ))}\n        </div>\n\n        <button\n          type=\"button\"\n          onClick={handleTryClick}\n          className=\"inline-flex items-center justify-center px-3 py-1 rounded-full bg-[#111111] text-white text-[10.5px] sm:text-[11px] font-medium tracking-tight hover:bg-neutral-800 transition-all cursor-pointer\"\n        >\n          Try for free\n        </button>\n      </nav>\n    </header>\n  );\n};\n\n// ============================================================================\n// 4. SOCIAL PROOF STACK\n// ============================================================================\nexport const SocialProof: React.FC = () => {\n  const avatars = [\n    { id: '1', name: 'Elena', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80' },\n    { id: '2', name: 'Marcus', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80' },\n    { id: '3', name: 'Aisha', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80' },\n    { id: '4', name: 'Kai', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80' },\n  ];\n\n  return (\n    <div className=\"flex flex-col items-center justify-center select-none pt-7 sm:pt-9 md:pt-11 mb-3 sm:mb-4\">\n      <div className=\"mb-1 w-6 h-4 text-neutral-900 flex justify-center\">\n        <svg viewBox=\"0 0 24 16\" className=\"w-5 h-3.5 fill-none stroke-current stroke-[2.2] stroke-linecap-round\">\n          <path d=\"M 6 13 L 2 3\" />\n          <path d=\"M 12 14 L 12 1\" />\n          <path d=\"M 18 13 L 22 3\" />\n        </svg>\n      </div>\n\n      <div className=\"inline-flex items-center gap-2\">\n        <div className=\"flex items-center -space-x-2\">\n          {avatars.map((avatar, idx) => (\n            <div\n              key={avatar.id}\n              className=\"relative w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full overflow-hidden border-[1.5px] border-white shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-neutral-200\"\n              style={{ zIndex: avatars.length - idx }}\n            >\n              <img src={avatar.url} alt={avatar.name} className=\"w-full h-full object-cover\" />\n            </div>\n          ))}\n        </div>\n        <span className=\"text-[11px] sm:text-[11.5px] font-normal text-neutral-500 tracking-tight\">\n          Over 1k happy users\n        </span>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 5. HERO DOODLES\n// ============================================================================\nexport const SparkleDoodleLeft: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -left-8 sm:-left-11 md:-left-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 44 48\"\n      className=\"w-7 h-8 sm:w-8 sm:h-9 md:w-9 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 24 4 C 24.5 14 26 18 36 19 C 26 20 24.5 24 24 34 C 23.5 24 22 20 12 19 C 22 18 23.5 14 24 4 Z\" />\n      <path d=\"M 10 32 C 10.3 36.5 11 38 16 38.5 C 11 39 10.3 40.5 10 45 C 9.7 40.5 9 39 4 38.5 C 9 38 9.7 36.5 10 32 Z\" />\n    </svg>\n  </div>\n);\n\nexport const CurlyDoodleRight: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -right-8 sm:-right-11 md:-right-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 36 48\"\n      className=\"w-6 h-8 sm:w-7 sm:h-9 md:w-8 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 12 6 C 18 4, 25 7, 26 12 C 27 18, 17 21, 14 23 C 10 25, 12 31, 18 32 C 24 33, 27 29, 28 36 C 29 41, 23 44, 20 44\" />\n    </svg>\n  </div>\n);\n\n// ============================================================================\n// 6. 3D PERSPECTIVE FLOOR GRID\n// ============================================================================\nexport const PerspectiveFloorGrid: React.FC = () => {\n  const width = 1200;\n  const height = 500;\n  const vpX = 600;\n  const vpY = 30;\n\n  const rays: { x1: number; y1: number; x2: number; y2: number }[] = [];\n  for (let i = -16; i <= 16; i++) {\n    rays.push({ x1: vpX, y1: vpY, x2: vpX + i * 58, y2: height });\n  }\n\n  const horizLines: number[] = [];\n  const totalHoriz = 22;\n  for (let i = 1; i <= totalHoriz; i++) {\n    const progress = Math.pow(i / totalHoriz, 1.7);\n    horizLines.push(vpY + (height - vpY) * progress);\n  }\n\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"absolute inset-x-0 bottom-0 top-[285px] sm:top-[305px] md:top-[320px] pointer-events-none select-none z-10 overflow-hidden\"\n      style={{\n        maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n        WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n      }}\n    >\n      <svg\n        viewBox={`0 0 ${width} ${height}`}\n        preserveAspectRatio=\"none\"\n        className=\"w-full h-full stroke-[#E2D8C6] opacity-85\"\n        strokeWidth=\"1.15\"\n      >\n        {rays.map((ray, i) => (\n          <line key={`ray-${i}`} x1={ray.x1} y1={ray.y1} x2={ray.x2} y2={ray.y2} />\n        ))}\n        {horizLines.map((y, i) => (\n          <line key={`horiz-${i}`} x1={0} y1={y} x2={width} y2={y} />\n        ))}\n      </svg>\n    </div>\n  );\n};\n\n// ============================================================================\n// 7. THE THREE ILLUSTRATED VIDEO CARDS\n// ============================================================================\n\n// Left Blue Card: Golden Sun Character\nexport const SunCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(480, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(440, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(-1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(36,185,231,0.22)]\"\n        style={{ backgroundColor: '#24B9E7' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Purple Pill (Top Right) */}\n          <g transform=\"translate(245, 110) rotate(35)\">\n            <rect x=\"-16\" y=\"-8\" width=\"32\" height=\"16\" rx=\"8\" fill=\"#A47AE8\" stroke=\"#111111\" strokeWidth=\"2.8\" />\n          </g>\n          {/* Green Cross (Top Left) */}\n          <g transform=\"translate(68, 140) rotate(15)\">\n            <path\n              d=\"M -3 -12 L 3 -12 L 3 -3 L 12 -3 L 12 3 L 3 3 L 3 12 L -3 12 L -3 3 L -12 3 L -12 -3 L -3 -3 Z\"\n              fill=\"#67C85A\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.4\"\n            />\n          </g>\n          {/* Sun Body & Face */}\n          <g transform=\"translate(195, 335)\">\n            {[-135, -115, -95, -75, -55, -35, -15, 5, 25, 45, 65, 85, 105, 125, 145, 165, 185, 205].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -16 -88 L 0 -124 L 16 -88 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFC74A\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n                strokeLinejoin=\"round\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"92\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Happy eyes & smile */}\n            <path d=\"M -44 -14 Q -32 -26 -20 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <path d=\"M 20 -14 Q 32 -26 44 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <circle cx=\"0\" cy=\"-2\" r=\"7\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -30 18 Q 0 46 30 18\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n          {/* Fluffy Cloud */}\n          <g transform=\"translate(180, 420)\">\n            <path\n              d=\"M -110 30 C -125 15, -120 -10, -95 -15 C -90 -45, -50 -55, -25 -35 C -5 -65, 45 -65, 65 -35 C 95 -45, 125 -15, 120 15 C 135 30, 120 60, 95 65 L -95 65 C -115 60, -125 45, -110 30 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.6\"\n            />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Center Pink Card: Peace Hand Character\nexport const PeaceHandCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playChime();\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(520, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative z-20 cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-16px) scale(1.025)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[260px] sm:w-[310px] md:w-[360px] lg:w-[390px] h-[370px] sm:h-[430px] md:h-[500px] rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px] overflow-hidden shadow-[0_20px_50px_rgba(245,156,199,0.35)]\"\n        style={{ backgroundColor: '#F59CC7' }}\n      >\n        <svg viewBox=\"0 0 380 500\" className=\"w-full h-full pointer-events-none\">\n          {/* Sparkles */}\n          <g transform=\"translate(268, 120)\">\n            <path\n              d=\"M 0 -22 C 1 -8, 8 -1, 22 0 C 8 1, 1 8, 0 22 C -1 8, -8 1, -22 0 C -8 -1, -1 -8, 0 -22 Z\"\n              fill=\"#FFD242\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Green Daisy Flower */}\n          <g transform=\"translate(280, 185) scale(1.15)\">\n            {[0, 72, 144, 216, 288].map((angle, i) => (\n              <ellipse\n                key={i}\n                cx=\"0\"\n                cy=\"-16\"\n                rx=\"8\"\n                ry=\"12\"\n                transform={`rotate(${angle})`}\n                fill=\"#94DC78\"\n                stroke=\"#111111\"\n                strokeWidth=\"2.6\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"9\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"2.6\" />\n          </g>\n          {/* White Peace Hand Glove */}\n          <g transform=\"translate(190, 290)\">\n            {/* Index Finger */}\n            <path\n              d=\"M -24 -15 L -22 -145 C -22 -162, 2 -162, 2 -145 L 2 -40\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Middle Finger */}\n            <path\n              d=\"M 2 -40 L 4 -148 C 4 -165, 28 -165, 28 -148 L 28 -15\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Ring & Palm */}\n            <path\n              d=\"M 27 -20 C 38 -25, 48 -15, 46 8 C 44 26, 30 35, 12 35\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            <path\n              d=\"M -42 10 C -48 35, -42 65, -30 82 L 30 82 C 42 65, 46 35, 42 10 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Thumb */}\n            <path\n              d=\"M -42 12 C -45 -10, -32 -25, -12 -18 C 4 -12, 10 2, 4 20 C -2 36, -20 40, -38 35 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Glove Cuff & Sleeve */}\n            <g transform=\"translate(0, 84)\">\n              <rect x=\"-36\" y=\"0\" width=\"72\" height=\"16\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            <g transform=\"translate(0, 100)\">\n              <path d=\"M -32 0 L 32 0 L 30 35 L -30 35 Z\" fill=\"#56B864\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            {/* \"IT'S\" Banner */}\n            <g transform=\"translate(0, 135)\">\n              <rect x=\"-42\" y=\"0\" width=\"84\" height=\"45\" rx=\"10\" fill=\"#24B9E7\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n              <text x=\"0\" y=\"26\" fill=\"#FFFFFF\" fontSize=\"20\" fontWeight=\"800\" textAnchor=\"middle\">\n                IT'S\n              </text>\n            </g>\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Right Coral Card: Sunflower Character\nexport const FlowerCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(640, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(600, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(248,113,98,0.22)]\"\n        style={{ backgroundColor: '#F87162' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Cyan Star Burst (Top Right) */}\n          <g transform=\"translate(262, 105)\">\n            <path\n              d=\"M 0 -24 L 6 -8 L 22 -15 L 14 0 L 28 8 L 11 12 L 16 28 L 2 17 L -6 30 L -8 14 L -24 18 L -14 3 L -28 -6 L -12 -11 L -15 -26 L -2 -14 Z\"\n              fill=\"#15C0F6\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Flower Body */}\n          <g transform=\"translate(160, 345)\">\n            {[-130, -100, -70, -40, -10, 20, 50, 80, 110, 140, 170, 200].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -18 -85 C -22 -115, -15 -138, 0 -140 C 15 -138, 22 -115, 18 -85 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFD147\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"88\" fill=\"#67C85A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Side-Glance Eyes */}\n            <g transform=\"translate(-32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            <g transform=\"translate(32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            {/* Nose & Smirk */}\n            <circle cx=\"0\" cy=\"10\" r=\"7.5\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -16 28 Q 0 42 22 26\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Video Cards Row\nexport const VideoCards: React.FC<{ onCardClick: (cardName: string) => void }> = ({ onCardClick }) => {\n  return (\n    <div className=\"relative w-full flex justify-center items-end select-none pointer-events-auto z-20\">\n      <div className=\"relative flex items-end justify-center -space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22 translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20\">\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <SunCard onClick={() => onCardClick('Sunny Morning Routine')} />\n        </div>\n        <div className=\"z-20 transition-transform duration-500 hover:z-30 -translate-y-3 sm:-translate-y-5 md:-translate-y-7\">\n          <PeaceHandCard onClick={() => onCardClick('Peace & Calm Essentials')} />\n        </div>\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <FlowerCard onClick={() => onCardClick('Mood Bloom Focus')} />\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 8. INTERACTIVE VIDEO MODAL (EDITORIAL SESSION DRAWER)\n// ============================================================================\ninterface VideoModalProps {\n  isOpen: boolean;\n  onClose: () => void;\n  initialSession: string;\n}\n\nexport const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, initialSession }) => {\n  const [activeSession, setActiveSession] = useState(initialSession);\n  const [isPlaying, setIsPlaying] = useState(true);\n  const [audioEnabled, setAudioEnabled] = useState(true);\n  const [progress, setProgress] = useState(38);\n\n  useEffect(() => {\n    setActiveSession(initialSession);\n    setIsPlaying(true);\n  }, [initialSession, isOpen]);\n\n  useEffect(() => {\n    if (!isPlaying || !isOpen) return;\n    const interval = setInterval(() => {\n      setProgress((p) => (p >= 100 ? 0 : p + 0.4));\n    }, 100);\n    return () => clearInterval(interval);\n  }, [isPlaying, isOpen]);\n\n  if (!isOpen) return null;\n\n  const sessions = [\n    { name: 'Sunny Morning Routine', time: '12 min', mood: 'Vibrant & Energized', color: '#24B9E7' },\n    { name: 'Peace & Calm Essentials', time: '18 min', mood: 'Deep Serenity & Focus', color: '#F59CC7' },\n    { name: 'Mood Bloom Focus', time: '15 min', mood: 'Joyful Growth & Bloom', color: '#F87162' },\n  ];\n\n  return (\n    <div\n      role=\"dialog\"\n      aria-modal=\"true\"\n      className=\"fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md animate-fadeIn\"\n      onClick={onClose}\n    >\n      <div\n        className=\"relative w-full max-w-2xl rounded-[32px] bg-[#FFFDF4] border border-[#111111]/10 shadow-[0_32px_80px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col p-6 sm:p-8\"\n        onClick={(e) => e.stopPropagation()}\n      >\n        {/* Header bar */}\n        <div className=\"flex items-center justify-between pb-5 border-b border-neutral-200\">\n          <div className=\"flex items-center gap-2\">\n            <span className=\"w-2.5 h-2.5 rounded-full bg-[#56B864] animate-ping\" />\n            <span className=\"text-xs font-semibold uppercase tracking-wider text-neutral-500\">\n              Editorial Mood Session\n            </span>\n          </div>\n          <button\n            type=\"button\"\n            onClick={onClose}\n            className=\"p-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors cursor-pointer\"\n          >\n            <X size={16} />\n          </button>\n        </div>\n\n        {/* Video simulation screen */}\n        <div className=\"relative mt-5 rounded-2xl overflow-hidden aspect-video bg-gradient-to-br from-[#1A1A1E] to-[#2C2D35] flex items-center justify-center text-white shadow-inner\">\n          {/* Calming animated breathing aura */}\n          <div\n            className=\"absolute w-48 h-48 rounded-full opacity-40 blur-2xl animate-[pulse_6s_ease-in-out_infinite]\"\n            style={{\n              backgroundColor: sessions.find((s) => s.name === activeSession)?.color || '#F59CC7',\n            }}\n          />\n\n          {/* Calming center illustration */}\n          <div className=\"relative z-10 flex flex-col items-center text-center px-4\">\n            <div className=\"w-16 h-16 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center mb-3\">\n              <Sparkles className=\"w-8 h-8 text-[#FFD242] animate-bounce\" />\n            </div>\n            <h3 className=\"text-xl sm:text-2xl font-bold tracking-tight text-white mb-1\">\n              {activeSession}\n            </h3>\n            <p className=\"text-xs sm:text-sm text-neutral-300 font-normal\">\n              Breathing Inhale (4s) • Hold (4s) • Exhale (6s)\n            </p>\n          </div>\n\n          {/* Progress bar */}\n          <div className=\"absolute bottom-0 inset-x-0 h-1.5 bg-white/20\">\n            <div\n              className=\"h-full bg-[#24B9E7] transition-all duration-100 ease-linear\"\n              style={{ width: `${progress}%` }}\n            />\n          </div>\n        </div>\n\n        {/* Media Controls */}\n        <div className=\"flex items-center justify-between mt-4 px-1\">\n          <div className=\"flex items-center gap-3\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(isPlaying ? 380 : 540, 0.05);\n                setIsPlaying(!isPlaying);\n              }}\n              className=\"w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center hover:bg-neutral-800 transition-colors cursor-pointer\"\n            >\n              {isPlaying ? <Pause size={16} /> : <Play size={16} className=\"ml-0.5\" />}\n            </button>\n            <button\n              type=\"button\"\n              onClick={() => {\n                setAudioEnabled(!audioEnabled);\n                soundManager.enabled = !audioEnabled;\n                soundManager.playBubble(500, 0.05);\n              }}\n              className=\"w-10 h-10 rounded-full bg-white border border-neutral-200 text-neutral-800 flex items-center justify-center hover:bg-neutral-50 transition-colors cursor-pointer\"\n            >\n              {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}\n            </button>\n          </div>\n\n          <div className=\"inline-flex items-center gap-1.5 text-xs text-neutral-500\">\n            <Heart size={14} className=\"text-rose-500 fill-rose-500\" />\n            <span>Guided Session Active</span>\n          </div>\n        </div>\n\n        {/* Mood Selector Tabs */}\n        <div className=\"mt-5 pt-4 border-t border-neutral-200\">\n          <span className=\"text-[11px] font-semibold text-neutral-400 uppercase tracking-wider block mb-2.5\">\n            Switch Guided Routine\n          </span>\n          <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-2\">\n            {sessions.map((sess) => (\n              <button\n                type=\"button\"\n                key={sess.name}\n                onClick={() => {\n                  soundManager.playChime();\n                  setActiveSession(sess.name);\n                }}\n                className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${\n                  activeSession === sess.name\n                    ? 'bg-neutral-900 text-white border-neutral-900 shadow-md'\n                    : 'bg-white hover:bg-neutral-50 text-neutral-700 border-neutral-200'\n                }`}\n              >\n                <div className=\"text-xs font-bold truncate\">{sess.name}</div>\n                <div\n                  className={`text-[10px] ${\n                    activeSession === sess.name ? 'text-neutral-300' : 'text-neutral-400'\n                  }`}\n                >\n                  {sess.time} • {sess.mood}\n                </div>\n              </button>\n            ))}\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 9. MAIN MOOD HERO COMPONENT\n// ============================================================================\nexport interface MoodHeroProps {\n  className?: string;\n}\n\nexport default function MoodHero({ className = '' }: MoodHeroProps) {\n  const [isModalOpen, setIsModalOpen] = useState(false);\n  const [selectedSession, setSelectedSession] = useState('Peace & Calm Essentials');\n  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    if (typeof window !== 'undefined') {\n      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');\n      setPrefersReducedMotion(mediaQuery.matches);\n    }\n  }, []);\n\n  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {\n    if (prefersReducedMotion || typeof window === 'undefined') return;\n    const deltaX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);\n    const deltaY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);\n    setMousePos({ x: deltaX, y: deltaY });\n  };\n\n  return (\n    <div\n      onMouseMove={handleMouseMove}\n      onMouseLeave={() => setMousePos({ x: 0, y: 0 })}\n      className={`relative min-h-screen w-full flex items-center justify-center p-3 sm:p-6 md:p-10 lg:p-12 overflow-x-hidden font-['Plus_Jakarta_Sans',sans-serif] ${className}`}\n      id=\"mood-hero-root\"\n    >\n      <BackgroundAtmosphere />\n\n      {/* Main Website Container Panel */}\n      <main\n        className=\"relative w-full max-w-[1180px] min-h-[720px] sm:min-h-[780px] md:min-h-[820px] lg:min-h-[850px] rounded-[24px] sm:rounded-[30px] md:rounded-[36px] bg-[#FFFDF4] border border-[rgba(120,110,90,0.14)] shadow-[0_24px_70px_-15px_rgba(80,70,50,0.14),0_0_1px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden z-10 transition-transform duration-300 ease-out\"\n        style={{\n          transform: prefersReducedMotion ? 'none' : `translate3d(${mousePos.x * 2}px, ${mousePos.y * 2}px, 0)`,\n        }}\n      >\n        {/* Subtle white inner sheen */}\n        <div className=\"absolute inset-0 rounded-[inherit] pointer-events-none border border-white/60 z-30\" />\n\n        {/* Top Navbar */}\n        <Navbar\n          onActionClick={(action) => {\n            if (action === 'Try for free') {\n              soundManager.playChime();\n              setIsModalOpen(true);\n            }\n          }}\n        />\n\n        {/* Center Hero Content */}\n        <div className=\"relative z-20 flex flex-col items-center text-center px-4 sm:px-6\">\n          <SocialProof />\n\n          <div className=\"relative inline-block mt-1 sm:mt-2\">\n            <SparkleDoodleLeft />\n            <h1 className=\"text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.04] sm:leading-[1.02] max-w-[680px] mx-auto select-none\">\n              Regulate your mood\n              <br />\n              with our videos\n            </h1>\n            <CurlyDoodleRight />\n          </div>\n\n          <p className=\"mt-3.5 sm:mt-4 text-[12px] sm:text-[13px] md:text-[13.5px] text-neutral-500 font-normal leading-[1.45] max-w-sm sm:max-w-md mx-auto select-none tracking-tight\">\n            Our pre recorded sessions contain all the essentials\n            <br className=\"hidden sm:inline\" /> to help you fix your mood in few sessions\n          </p>\n\n          <div className=\"mt-5 sm:mt-6 flex items-center justify-center gap-2.5 sm:gap-3 z-30\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playChime();\n                setIsModalOpen(true);\n              }}\n              className=\"group inline-flex items-center justify-center gap-1.5 px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#111111] text-white text-[12px] sm:text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-neutral-800 transition-all cursor-pointer\"\n            >\n              <span>Play Video</span>\n              <Zap className=\"w-3.5 h-3.5 fill-white text-white group-hover:scale-110 transition-transform\" />\n            </button>\n\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(460, 0.06);\n                setIsModalOpen(true);\n              }}\n              className=\"inline-flex items-center justify-center px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white text-neutral-800 text-[12px] sm:text-[12.5px] font-medium tracking-tight border border-neutral-200/90 shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:bg-neutral-50 transition-all cursor-pointer\"\n            >\n              Learn More\n            </button>\n          </div>\n        </div>\n\n        {/* 3D Perspective Floor Grid */}\n        <PerspectiveFloorGrid />\n\n        {/* Lower cropped illustrated character cards */}\n        <div className=\"relative mt-auto w-full\">\n          <VideoCards\n            onCardClick={(name) => {\n              soundManager.playChime();\n              setSelectedSession(name);\n              setIsModalOpen(true);\n            }}\n          />\n        </div>\n      </main>\n\n      {/* Video Modal Drawer */}\n      <VideoModal\n        isOpen={isModalOpen}\n        onClose={() => setIsModalOpen(false)}\n        initialSession={selectedSession}\n      />\n    </div>\n  );\n}\n\n```",
+            cursor: "# Mood Hero Playful Wellness Editorial Section\nExact pixel-accurate React 19, TypeScript, and Tailwind CSS hero component.\nLive Demo Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2\n\nRecreate an exact, pixel-accurate, interactive React + Tailwind CSS + TypeScript hero section matching this high-end playful wellness editorial aesthetic.\n\n### 1. CORE VISUAL SPECIFICATIONS & PALETTE\n- **Outer Canvas Background**: `#EDE8DE` with a warm subtle gradient `linear-gradient(to bottom, #F2EEE4, #ECE7DD, #E6E0D4)`.\n- **Top Golden Sun Crest**: An enormous circular warm amber glow element positioned behind the main panel:\n  - Width: `w-[600px] sm:w-[850px] md:w-[1100px]`, Height: `h-[550px] sm:h-[750px] md:h-[900px]`.\n  - Position: `left: 50%; transform: translateX(-50%); top: -180px` (peaking out from behind the top center of the main panel).\n  - Background: `linear-gradient(to bottom, #E7A635, #E29A28, #D98E1F)`.\n  - Shadow: `box-shadow: 0 0 120px 40px rgba(231, 166, 53, 0.35)`.\n- **Dappled Foliage Shadows**: Organic botanical shadow shapes drifting slowly with low opacity (`22% - 28%`) and soft Gaussian blur (`blur-[28px]` to `blur-[36px]`) in the top-left, top-right, and side margins.\n- **Main Website Container Panel**:\n  - Max Width: `1180px`, Width: `90% - 94%` of viewport.\n  - Min Height: `780px - 850px`.\n  - Background: Crisp ivory cream `#FFFDF4`.\n  - Border Radius: `rounded-[28px] sm:rounded-[32px] md:rounded-[36px]`.\n  - Border: `1px solid rgba(120, 110, 90, 0.14)`.\n  - Shadow: `box-shadow: 0 24px 70px -15px rgba(80, 70, 50, 0.14), 0 0 1px rgba(0, 0, 0, 0.06)`.\n  - Inner Sheen: 1px subtle white inset border overlay.\n  - Overflow: `overflow: hidden` (ensures the three cards are clipped naturally across their lower edges).\n\n---\n\n### 2. TOP FLOATING NAVBAR SPECIFICATION\n- **Container**: Centered floating pill navbar (`top: 20px;`).\n  - Styling: `rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)] px-3 py-1.5`.\n- **Logo Mark (Left)**:\n  - 24px × 24px circular dark badge (`bg-neutral-900`) containing a 14px minimalist zen-timer dial icon (dark circle with a crisp white quarter-circle wedge cutout).\n- **Navigation Links (Center)**:\n  - Items: `Projects`, `Solutions`, `Pricing`, `Company`, `Support`.\n  - Font: Plus Jakarta Sans / Inter, `11.5px` (`text-[11.5px]`), `font-medium`, color `#4B5563`, hover `#111111`, gap `18px - 20px`.\n- **CTA Button (Right)**:\n  - \"Try for free\": Rounded black pill (`bg-[#111111] text-white text-[11px] font-medium px-3 py-1 rounded-full`).\n\n---\n\n### 3. HERO CONTENT SPECIFICATION\n- **Social Proof Stack**:\n  - Placed centered above the heading with `pt-9 sm:pt-11 mb-3.5`.\n  - Top: Hand-drawn 3-ray celebration burst marks (\\|/) in black line stroke (`stroke-width: 2.2px; stroke-linecap: round;`).\n  - Stack: 4 overlapping circular portrait avatars (`22px` diameter, `1.5px` white border, `-space-x-2`).\n  - Label: `\"Over 1k happy users\"` in `11.5px`, regular weight, color `#6B7280`.\n- **Hero Main Heading**:\n  - Exact Text (2 lines):\n    Regulate your mood\n    with our videos\n  - Typography: Plus Jakarta Sans / Inter Bold, `text-3xl sm:text-4xl md:text-5xl lg:text-[54px]`, color `#111111`, line-height `1.02 - 1.04`, tracking `tracking-[-0.035em]`.\n  - **Left Framing Doodle**: Hand-drawn 4-pointed sparkle star with a smaller companion sparkle star to its lower-left (`stroke: #111111; stroke-width: 2.2px;`).\n  - **Right Framing Doodle**: Hand-drawn spiral/curly loop telephone coil doodle with a downward tail (`stroke: #111111; stroke-width: 2.2px;`).\n- **Description**:\n  - Text:\n    Our pre recorded sessions contain all the essentials\n    to help you fix your mood in few sessions\n  - Typography: `13px - 13.5px`, regular, color `#6B7280`, max-width `440px`, centered, line-height `1.45`.\n- **Action Buttons**:\n  - Button 1 (\"Play Video\"): Black pill (`bg-[#111111] text-white px-5 py-2.5 rounded-full text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] flex items-center gap-1.5`) featuring a small white lightning bolt icon (⚡ / Zap).\n  - Button 2 (\"Learn More\"): White pill (`bg-white border border-neutral-200/90 text-neutral-800 px-5 py-2.5 rounded-full text-[12.5px] font-medium tracking-tight shadow-[0_1px_4px_rgba(0,0,0,0.04)]`).\n  - Spacing: `gap-3`, centered, `mt-5 sm:mt-6`.\n\n---\n\n### 4. 3D PERSPECTIVE FLOOR GRID\n- Positioned directly below the CTA buttons (starting around `top: 310px`) and receding towards the bottom.\n- Radiating perspective lines emanating from a central vanishing point `(600, 30)` to the bottom width.\n- Transverse horizontal lines calculated via power curve `y = vpY + (height - vpY) * Math.pow(i / total, 1.7)` to create authentic 3D spatial perspective foreshortening.\n- Line Color: Warm sandy cream `#E2D8C6`, stroke-width `1.15px`.\n- Gradient Fade: Masked with `linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)` so it fades smoothly into the cream panel background below the CTA buttons.\n\n---\n\n### 5. THE THREE ILLUSTRATED VIDEO CARDS\nArranged in an overlapping horizontal row, emerging from the bottom edge and translated downward (`translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20`) so their lower bodies are cropped:\n\n1. **Left Blue Card (`#24B9E7`)**:\n   - Width: `240px sm:280px md:320px lg:350px`, Height: `340px sm:400px md:460px`.\n   - Top Radius: `rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px]`.\n   - Artwork:\n     - Golden Sun Character (`#FFC74A`) with bold black outlines (`stroke-width: 3.4px`).\n     - Radiating triangular zigzag rays around the circular body.\n     - Facial features: Closed happy smiling eyes (`^ ^`) with eyelash ticks, button pink nose (`#FF8595`), joyful mouth with dimples, cheek freckles.\n     - Puffy white cloud at the bottom in front of the sun with bubbly curves and inner crease lines.\n     - Floating confetti: Purple pill capsule (`#A47AE8`) at top right, green 4-petal clover cross (`#67C85A`) at top left, magenta blossom (`#F43F5E`), and scattered dots.\n\n2. **Center Pink Card (`#F59CC7`)**:\n   - Width: `260px sm:310px md:360px lg:390px`, Height: `370px sm:430px md:500px`.\n   - Top Radius: `rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px]`.\n   - Dominant foreground layer (`z-index: 20`, overlapping both left and right cards with negative margins `-space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22` and elevated `-translate-y-3 sm:-translate-y-5 md:-translate-y-7`).\n   - Artwork:\n     - Large white glove Peace Hand (✌️) with thick black outlines (`stroke-width: 3.8px`).\n     - Index and middle fingers pointing up, ring and pinky curled down, thumb folded across.\n     - Detailed knuckle and palm crease lines.\n     - White glove wrist cuff band, green wrist sleeve (`#56B864`) below the cuff.\n     - Bright cyan blue label (`#24B9E7`) with white bold text `\"IT'S\"` extending into the lower crop.\n     - Floating elements: Two green daisies with yellow centers on either side, yellow 4-pointed sparkle stars, and scattered dots.\n\n3. **Right Coral Card (`#F87162`)**:\n   - Width: `240px sm:280px md:320px lg:350px`, Height: `340px sm:400px md:460px`.\n   - Top Radius: `rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px]`.\n   - Artwork:\n     - Sunflower character with an emerald/mint green circular face (`#67C85A`) and rounded golden-yellow petals (`#FFD147`) all around.\n     - Big cartoon eyes glancing toward the upper-left with cyan iris, black pupils, white reflection glints, eyelids, and arched black eyebrows.\n     - Pink button nose and side smirk smile with dimple.\n     - Top right accent: Electric cyan 8-pointed star burst (`#15C0F6`) with bold black outline.\n\n---\n\n### 6. INTERACTIVITY, AUDIO & PARALLAX\n- **Desktop Mouse Parallax**: Soft mouse movement interpolation shifting the background sun by 2px, floor grid by 3px, and cards by 5-7px.\n- **Web Audio Synthesizer**: Organic synthesized bubble pop sound on button clicks / card hover (`440Hz - 600Hz`), and a soothing 4-note chime for \"Play Video\" and featured card interactions.\n- **Interactive Video Modal**: Opens an editorial session preview drawer with calming breathing animation, audio toggle, play/pause controls, and mood selector tabs (\"Sunny Morning Routine\", \"Peace & Inner Calm\", \"Mood Bloom Harmony\").\n- **Accessibility**: Complete keyboard navigation and full `prefers-reduced-motion` compliance.\n\n---\n\nLive Demo Reference: https://ai.studio/apps/5d941797-a035-4c39-9b8b-81af51fccef2\n\n```tsx\nimport React, { useState, useEffect } from 'react';\nimport { Zap, Play, Pause, Volume2, VolumeX, X, Sparkles, Heart } from 'lucide-react';\n\n// ============================================================================\n// 1. WEB AUDIO SYNTHESIZER\n// ============================================================================\nclass SoundManager {\n  private ctx: AudioContext | null = null;\n  public enabled: boolean = true;\n\n  private getContext(): AudioContext | null {\n    if (typeof window === 'undefined') return null;\n    if (!this.ctx) {\n      const AudioCtx =\n        window.AudioContext ||\n        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;\n      if (AudioCtx) this.ctx = new AudioCtx();\n    }\n    if (this.ctx && this.ctx.state === 'suspended') {\n      this.ctx.resume().catch(() => {});\n    }\n    return this.ctx;\n  }\n\n  public playBubble(freq: number = 440, duration: number = 0.08) {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const osc = ctx.createOscillator();\n      const gain = ctx.createGain();\n      osc.type = 'sine';\n      const now = ctx.currentTime;\n      osc.frequency.setValueAtTime(freq, now);\n      osc.frequency.exponentialRampToValueAtTime(freq * 1.4, now + duration);\n      gain.gain.setValueAtTime(0.04, now);\n      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);\n      osc.connect(gain);\n      gain.connect(ctx.destination);\n      osc.start(now);\n      osc.stop(now + duration);\n    } catch {}\n  }\n\n  public playChime() {\n    if (!this.enabled) return;\n    try {\n      const ctx = this.getContext();\n      if (!ctx) return;\n      const now = ctx.currentTime;\n      const notes = [523.25, 659.25, 783.99, 1046.5];\n      notes.forEach((freq, idx) => {\n        const osc = ctx.createOscillator();\n        const gain = ctx.createGain();\n        osc.type = 'triangle';\n        const startTime = now + idx * 0.06;\n        osc.frequency.setValueAtTime(freq, startTime);\n        gain.gain.setValueAtTime(0.03, startTime);\n        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.6);\n        osc.connect(gain);\n        gain.connect(ctx.destination);\n        osc.start(startTime);\n        osc.stop(startTime + 0.65);\n      });\n    } catch {}\n  }\n}\n\nexport const soundManager = new SoundManager();\n\n// ============================================================================\n// 2. BACKGROUND ATMOSPHERE & ORGANIC FOLIAGE SHADOWS\n// ============================================================================\nexport const BackgroundAtmosphere: React.FC = () => {\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"pointer-events-none fixed inset-0 z-0 overflow-hidden select-none bg-[#EDE8DE]\"\n    >\n      <div className=\"absolute inset-0 bg-gradient-to-b from-[#F2EEE4] via-[#ECE7DD] to-[#E6E0D4] opacity-90\" />\n\n      {/* Top Golden Sun Crest */}\n      <div\n        className=\"absolute left-1/2 -translate-x-1/2 top-[-140px] sm:top-[-180px] md:top-[-220px] w-[600px] sm:w-[850px] md:w-[1100px] h-[550px] sm:h-[750px] md:h-[900px] rounded-full bg-gradient-to-b from-[#E7A635] via-[#E29A28] to-[#D98E1F] opacity-95 blur-[1px] shadow-2xl transition-transform duration-1000\"\n        style={{ boxShadow: '0 0 120px 40px rgba(231, 166, 53, 0.35)' }}\n      />\n      <div className=\"absolute top-[10%] left-[20%] w-[500px] h-[400px] rounded-full bg-white/25 blur-[120px]\" />\n      <div className=\"absolute top-[30%] right-[15%] w-[450px] h-[450px] rounded-full bg-[#FFE4A0]/20 blur-[130px]\" />\n\n      {/* Top Left Leaf Shadow */}\n      <div className=\"absolute -top-12 -left-16 w-[480px] h-[480px] opacity-[0.28] blur-[28px] animate-[pulse_14s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 60 40 Q 120 70 170 140 Q 120 180 80 150 Q 50 110 60 40 Z\" />\n          <path d=\"M 140 30 Q 230 50 260 120 Q 200 160 160 110 Q 130 70 140 30 Z\" />\n          <path d=\"M 90 150 Q 160 210 200 300 Q 140 310 110 240 Q 80 190 90 150 Z\" />\n          <path d=\"M 190 130 Q 280 190 320 270 Q 270 300 220 230 Q 180 170 190 130 Z\" />\n          <circle cx=\"110\" cy=\"90\" r=\"45\" />\n          <circle cx=\"200\" cy=\"110\" r=\"55\" />\n        </svg>\n      </div>\n\n      {/* Top Right Leaf Shadow */}\n      <div className=\"absolute -top-16 -right-16 w-[560px] h-[560px] opacity-[0.25] blur-[32px] animate-[pulse_16s_ease-in-out_infinite]\">\n        <svg viewBox=\"0 0 400 400\" className=\"w-full h-full fill-[#423C32]\">\n          <path d=\"M 340 30 Q 280 70 230 140 Q 280 180 320 150 Q 350 110 340 30 Z\" />\n          <path d=\"M 260 20 Q 170 50 140 120 Q 200 160 240 110 Q 270 70 260 20 Z\" />\n          <circle cx=\"280\" cy=\"80\" r=\"50\" />\n          <circle cx=\"190\" cy=\"100\" r=\"60\" />\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 3. TOP FLOATING NAVBAR\n// ============================================================================\ninterface NavbarProps {\n  onActionClick?: (action: string) => void;\n}\n\nexport const Navbar: React.FC<NavbarProps> = ({ onActionClick }) => {\n  const links = ['Projects', 'Solutions', 'Pricing', 'Company', 'Support'];\n\n  const handleLinkClick = (e: React.MouseEvent, link: string) => {\n    e.preventDefault();\n    soundManager.playBubble(520, 0.05);\n    onActionClick?.(link);\n  };\n\n  const handleTryClick = (e: React.MouseEvent) => {\n    e.preventDefault();\n    soundManager.playBubble(620, 0.08);\n    onActionClick?.('Try for free');\n  };\n\n  return (\n    <header className=\"relative w-full pt-4 sm:pt-6 flex justify-center items-center z-30 px-4\">\n      <nav\n        aria-label=\"Main Navigation\"\n        className=\"inline-flex items-center gap-2 sm:gap-4 md:gap-5 px-2.5 sm:px-3 py-1.5 rounded-full bg-white/75 backdrop-blur-md border border-neutral-200/70 shadow-[0_2px_12px_rgba(0,0,0,0.04)]\"\n      >\n        <button\n          type=\"button\"\n          onClick={(e) => handleLinkClick(e, 'Home')}\n          className=\"flex items-center justify-center w-6 h-6 rounded-full bg-neutral-900 text-white cursor-pointer focus:outline-hidden\"\n          title=\"Mood Hero\"\n        >\n          <svg viewBox=\"0 0 24 24\" className=\"w-3.5 h-3.5 fill-current\">\n            <circle cx=\"12\" cy=\"12\" r=\"10\" fill=\"#1C1C1E\" />\n            <path d=\"M 12 4 A 8 8 0 0 1 20 12 L 12 12 Z\" fill=\"#FFFFFF\" />\n            <circle cx=\"12\" cy=\"12\" r=\"3.5\" fill=\"#1C1C1E\" />\n          </svg>\n        </button>\n\n        <div className=\"hidden sm:flex items-center gap-3.5 md:gap-5 text-[11px] md:text-[12px] font-medium text-neutral-600\">\n          {links.map((link) => (\n            <a\n              key={link}\n              href={`#${link.toLowerCase()}`}\n              onClick={(e) => handleLinkClick(e, link)}\n              className=\"transition-colors hover:text-neutral-950 focus:outline-hidden\"\n            >\n              {link}\n            </a>\n          ))}\n        </div>\n\n        <button\n          type=\"button\"\n          onClick={handleTryClick}\n          className=\"inline-flex items-center justify-center px-3 py-1 rounded-full bg-[#111111] text-white text-[10.5px] sm:text-[11px] font-medium tracking-tight hover:bg-neutral-800 transition-all cursor-pointer\"\n        >\n          Try for free\n        </button>\n      </nav>\n    </header>\n  );\n};\n\n// ============================================================================\n// 4. SOCIAL PROOF STACK\n// ============================================================================\nexport const SocialProof: React.FC = () => {\n  const avatars = [\n    { id: '1', name: 'Elena', url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80' },\n    { id: '2', name: 'Marcus', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80' },\n    { id: '3', name: 'Aisha', url: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80' },\n    { id: '4', name: 'Kai', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80' },\n  ];\n\n  return (\n    <div className=\"flex flex-col items-center justify-center select-none pt-7 sm:pt-9 md:pt-11 mb-3 sm:mb-4\">\n      <div className=\"mb-1 w-6 h-4 text-neutral-900 flex justify-center\">\n        <svg viewBox=\"0 0 24 16\" className=\"w-5 h-3.5 fill-none stroke-current stroke-[2.2] stroke-linecap-round\">\n          <path d=\"M 6 13 L 2 3\" />\n          <path d=\"M 12 14 L 12 1\" />\n          <path d=\"M 18 13 L 22 3\" />\n        </svg>\n      </div>\n\n      <div className=\"inline-flex items-center gap-2\">\n        <div className=\"flex items-center -space-x-2\">\n          {avatars.map((avatar, idx) => (\n            <div\n              key={avatar.id}\n              className=\"relative w-5 h-5 sm:w-5.5 sm:h-5.5 rounded-full overflow-hidden border-[1.5px] border-white shadow-[0_1px_3px_rgba(0,0,0,0.1)] bg-neutral-200\"\n              style={{ zIndex: avatars.length - idx }}\n            >\n              <img src={avatar.url} alt={avatar.name} className=\"w-full h-full object-cover\" />\n            </div>\n          ))}\n        </div>\n        <span className=\"text-[11px] sm:text-[11.5px] font-normal text-neutral-500 tracking-tight\">\n          Over 1k happy users\n        </span>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 5. HERO DOODLES\n// ============================================================================\nexport const SparkleDoodleLeft: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -left-8 sm:-left-11 md:-left-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 44 48\"\n      className=\"w-7 h-8 sm:w-8 sm:h-9 md:w-9 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 24 4 C 24.5 14 26 18 36 19 C 26 20 24.5 24 24 34 C 23.5 24 22 20 12 19 C 22 18 23.5 14 24 4 Z\" />\n      <path d=\"M 10 32 C 10.3 36.5 11 38 16 38.5 C 11 39 10.3 40.5 10 45 C 9.7 40.5 9 39 4 38.5 C 9 38 9.7 36.5 10 32 Z\" />\n    </svg>\n  </div>\n);\n\nexport const CurlyDoodleRight: React.FC = () => (\n  <div\n    aria-hidden=\"true\"\n    className=\"absolute -right-8 sm:-right-11 md:-right-14 top-1 sm:top-2 select-none pointer-events-none text-neutral-900\"\n  >\n    <svg\n      viewBox=\"0 0 36 48\"\n      className=\"w-6 h-8 sm:w-7 sm:h-9 md:w-8 md:h-10 fill-none stroke-current stroke-[2.2] stroke-linecap-round stroke-linejoin-round\"\n    >\n      <path d=\"M 12 6 C 18 4, 25 7, 26 12 C 27 18, 17 21, 14 23 C 10 25, 12 31, 18 32 C 24 33, 27 29, 28 36 C 29 41, 23 44, 20 44\" />\n    </svg>\n  </div>\n);\n\n// ============================================================================\n// 6. 3D PERSPECTIVE FLOOR GRID\n// ============================================================================\nexport const PerspectiveFloorGrid: React.FC = () => {\n  const width = 1200;\n  const height = 500;\n  const vpX = 600;\n  const vpY = 30;\n\n  const rays: { x1: number; y1: number; x2: number; y2: number }[] = [];\n  for (let i = -16; i <= 16; i++) {\n    rays.push({ x1: vpX, y1: vpY, x2: vpX + i * 58, y2: height });\n  }\n\n  const horizLines: number[] = [];\n  const totalHoriz = 22;\n  for (let i = 1; i <= totalHoriz; i++) {\n    const progress = Math.pow(i / totalHoriz, 1.7);\n    horizLines.push(vpY + (height - vpY) * progress);\n  }\n\n  return (\n    <div\n      aria-hidden=\"true\"\n      className=\"absolute inset-x-0 bottom-0 top-[285px] sm:top-[305px] md:top-[320px] pointer-events-none select-none z-10 overflow-hidden\"\n      style={{\n        maskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n        WebkitMaskImage: 'linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.85) 60%, rgba(0,0,0,0) 95%)',\n      }}\n    >\n      <svg\n        viewBox={`0 0 ${width} ${height}`}\n        preserveAspectRatio=\"none\"\n        className=\"w-full h-full stroke-[#E2D8C6] opacity-85\"\n        strokeWidth=\"1.15\"\n      >\n        {rays.map((ray, i) => (\n          <line key={`ray-${i}`} x1={ray.x1} y1={ray.y1} x2={ray.x2} y2={ray.y2} />\n        ))}\n        {horizLines.map((y, i) => (\n          <line key={`horiz-${i}`} x1={0} y1={y} x2={width} y2={y} />\n        ))}\n      </svg>\n    </div>\n  );\n};\n\n// ============================================================================\n// 7. THE THREE ILLUSTRATED VIDEO CARDS\n// ============================================================================\n\n// Left Blue Card: Golden Sun Character\nexport const SunCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(480, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(440, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(-1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(36,185,231,0.22)]\"\n        style={{ backgroundColor: '#24B9E7' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Purple Pill (Top Right) */}\n          <g transform=\"translate(245, 110) rotate(35)\">\n            <rect x=\"-16\" y=\"-8\" width=\"32\" height=\"16\" rx=\"8\" fill=\"#A47AE8\" stroke=\"#111111\" strokeWidth=\"2.8\" />\n          </g>\n          {/* Green Cross (Top Left) */}\n          <g transform=\"translate(68, 140) rotate(15)\">\n            <path\n              d=\"M -3 -12 L 3 -12 L 3 -3 L 12 -3 L 12 3 L 3 3 L 3 12 L -3 12 L -3 3 L -12 3 L -12 -3 L -3 -3 Z\"\n              fill=\"#67C85A\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.4\"\n            />\n          </g>\n          {/* Sun Body & Face */}\n          <g transform=\"translate(195, 335)\">\n            {[-135, -115, -95, -75, -55, -35, -15, 5, 25, 45, 65, 85, 105, 125, 145, 165, 185, 205].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -16 -88 L 0 -124 L 16 -88 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFC74A\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n                strokeLinejoin=\"round\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"92\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Happy eyes & smile */}\n            <path d=\"M -44 -14 Q -32 -26 -20 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <path d=\"M 20 -14 Q 32 -26 44 -14\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n            <circle cx=\"0\" cy=\"-2\" r=\"7\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -30 18 Q 0 46 30 18\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n          {/* Fluffy Cloud */}\n          <g transform=\"translate(180, 420)\">\n            <path\n              d=\"M -110 30 C -125 15, -120 -10, -95 -15 C -90 -45, -50 -55, -25 -35 C -5 -65, 45 -65, 65 -35 C 95 -45, 125 -15, 120 15 C 135 30, 120 60, 95 65 L -95 65 C -115 60, -125 45, -110 30 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.6\"\n            />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Center Pink Card: Peace Hand Character\nexport const PeaceHandCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playChime();\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(520, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative z-20 cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-16px) scale(1.025)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[260px] sm:w-[310px] md:w-[360px] lg:w-[390px] h-[370px] sm:h-[430px] md:h-[500px] rounded-t-[36px] sm:rounded-t-[42px] md:rounded-t-[48px] overflow-hidden shadow-[0_20px_50px_rgba(245,156,199,0.35)]\"\n        style={{ backgroundColor: '#F59CC7' }}\n      >\n        <svg viewBox=\"0 0 380 500\" className=\"w-full h-full pointer-events-none\">\n          {/* Sparkles */}\n          <g transform=\"translate(268, 120)\">\n            <path\n              d=\"M 0 -22 C 1 -8, 8 -1, 22 0 C 8 1, 1 8, 0 22 C -1 8, -8 1, -22 0 C -8 -1, -1 -8, 0 -22 Z\"\n              fill=\"#FFD242\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Green Daisy Flower */}\n          <g transform=\"translate(280, 185) scale(1.15)\">\n            {[0, 72, 144, 216, 288].map((angle, i) => (\n              <ellipse\n                key={i}\n                cx=\"0\"\n                cy=\"-16\"\n                rx=\"8\"\n                ry=\"12\"\n                transform={`rotate(${angle})`}\n                fill=\"#94DC78\"\n                stroke=\"#111111\"\n                strokeWidth=\"2.6\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"9\" fill=\"#FFC74A\" stroke=\"#111111\" strokeWidth=\"2.6\" />\n          </g>\n          {/* White Peace Hand Glove */}\n          <g transform=\"translate(190, 290)\">\n            {/* Index Finger */}\n            <path\n              d=\"M -24 -15 L -22 -145 C -22 -162, 2 -162, 2 -145 L 2 -40\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Middle Finger */}\n            <path\n              d=\"M 2 -40 L 4 -148 C 4 -165, 28 -165, 28 -148 L 28 -15\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Ring & Palm */}\n            <path\n              d=\"M 27 -20 C 38 -25, 48 -15, 46 8 C 44 26, 30 35, 12 35\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            <path\n              d=\"M -42 10 C -48 35, -42 65, -30 82 L 30 82 C 42 65, 46 35, 42 10 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Thumb */}\n            <path\n              d=\"M -42 12 C -45 -10, -32 -25, -12 -18 C 4 -12, 10 2, 4 20 C -2 36, -20 40, -38 35 Z\"\n              fill=\"#FFFFFF\"\n              stroke=\"#111111\"\n              strokeWidth=\"3.8\"\n            />\n            {/* Glove Cuff & Sleeve */}\n            <g transform=\"translate(0, 84)\">\n              <rect x=\"-36\" y=\"0\" width=\"72\" height=\"16\" rx=\"8\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            <g transform=\"translate(0, 100)\">\n              <path d=\"M -32 0 L 32 0 L 30 35 L -30 35 Z\" fill=\"#56B864\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n            </g>\n            {/* \"IT'S\" Banner */}\n            <g transform=\"translate(0, 135)\">\n              <rect x=\"-42\" y=\"0\" width=\"84\" height=\"45\" rx=\"10\" fill=\"#24B9E7\" stroke=\"#111111\" strokeWidth=\"3.8\" />\n              <text x=\"0\" y=\"26\" fill=\"#FFFFFF\" fontSize=\"20\" fontWeight=\"800\" textAnchor=\"middle\">\n                IT'S\n              </text>\n            </g>\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Right Coral Card: Sunflower Character\nexport const FlowerCard: React.FC<{ onClick?: () => void }> = ({ onClick }) => {\n  const [isHovered, setIsHovered] = useState(false);\n\n  return (\n    <div\n      onClick={() => {\n        soundManager.playBubble(640, 0.08);\n        onClick?.();\n      }}\n      onMouseEnter={() => {\n        setIsHovered(true);\n        soundManager.playBubble(600, 0.06);\n      }}\n      onMouseLeave={() => setIsHovered(false)}\n      role=\"button\"\n      tabIndex={0}\n      className=\"group relative cursor-pointer select-none transition-transform duration-700 ease-out focus:outline-hidden\"\n      style={{ transform: isHovered ? 'translateY(-12px) rotate(1deg) scale(1.02)' : 'none' }}\n    >\n      <div\n        className=\"relative w-[240px] sm:w-[280px] md:w-[320px] lg:w-[350px] h-[340px] sm:h-[400px] md:h-[460px] rounded-t-[34px] sm:rounded-t-[38px] md:rounded-t-[44px] overflow-hidden shadow-[0_12px_36px_rgba(248,113,98,0.22)]\"\n        style={{ backgroundColor: '#F87162' }}\n      >\n        <svg viewBox=\"0 0 350 460\" className=\"w-full h-full pointer-events-none\">\n          {/* Cyan Star Burst (Top Right) */}\n          <g transform=\"translate(262, 105)\">\n            <path\n              d=\"M 0 -24 L 6 -8 L 22 -15 L 14 0 L 28 8 L 11 12 L 16 28 L 2 17 L -6 30 L -8 14 L -24 18 L -14 3 L -28 -6 L -12 -11 L -15 -26 L -2 -14 Z\"\n              fill=\"#15C0F6\"\n              stroke=\"#111111\"\n              strokeWidth=\"2.8\"\n            />\n          </g>\n          {/* Flower Body */}\n          <g transform=\"translate(160, 345)\">\n            {[-130, -100, -70, -40, -10, 20, 50, 80, 110, 140, 170, 200].map((angle, idx) => (\n              <path\n                key={idx}\n                d=\"M -18 -85 C -22 -115, -15 -138, 0 -140 C 15 -138, 22 -115, 18 -85 Z\"\n                transform={`rotate(${angle})`}\n                fill=\"#FFD147\"\n                stroke=\"#111111\"\n                strokeWidth=\"3.2\"\n              />\n            ))}\n            <circle cx=\"0\" cy=\"0\" r=\"88\" fill=\"#67C85A\" stroke=\"#111111\" strokeWidth=\"3.4\" />\n            {/* Side-Glance Eyes */}\n            <g transform=\"translate(-32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            <g transform=\"translate(32, -18)\">\n              <ellipse cx=\"0\" cy=\"0\" rx=\"20\" ry=\"23\" fill=\"#FFFFFF\" stroke=\"#111111\" strokeWidth=\"3.2\" />\n              <circle cx=\"-5\" cy=\"-3\" r=\"12\" fill=\"#24B9E7\" />\n              <circle cx=\"-6\" cy=\"-4\" r=\"8\" fill=\"#111111\" />\n              <circle cx=\"-9\" cy=\"-7\" r=\"3\" fill=\"#FFFFFF\" />\n            </g>\n            {/* Nose & Smirk */}\n            <circle cx=\"0\" cy=\"10\" r=\"7.5\" fill=\"#FF8595\" stroke=\"#111111\" strokeWidth=\"3\" />\n            <path d=\"M -16 28 Q 0 42 22 26\" fill=\"none\" stroke=\"#111111\" strokeWidth=\"3.4\" strokeLinecap=\"round\" />\n          </g>\n        </svg>\n      </div>\n    </div>\n  );\n};\n\n// Video Cards Row\nexport const VideoCards: React.FC<{ onCardClick: (cardName: string) => void }> = ({ onCardClick }) => {\n  return (\n    <div className=\"relative w-full flex justify-center items-end select-none pointer-events-auto z-20\">\n      <div className=\"relative flex items-end justify-center -space-x-8 sm:-space-x-14 md:-space-x-18 lg:-space-x-22 translate-y-8 sm:translate-y-12 md:translate-y-16 lg:translate-y-20\">\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <SunCard onClick={() => onCardClick('Sunny Morning Routine')} />\n        </div>\n        <div className=\"z-20 transition-transform duration-500 hover:z-30 -translate-y-3 sm:-translate-y-5 md:-translate-y-7\">\n          <PeaceHandCard onClick={() => onCardClick('Peace & Calm Essentials')} />\n        </div>\n        <div className=\"z-10 transition-transform duration-500 hover:z-30\">\n          <FlowerCard onClick={() => onCardClick('Mood Bloom Focus')} />\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 8. INTERACTIVE VIDEO MODAL (EDITORIAL SESSION DRAWER)\n// ============================================================================\ninterface VideoModalProps {\n  isOpen: boolean;\n  onClose: () => void;\n  initialSession: string;\n}\n\nexport const VideoModal: React.FC<VideoModalProps> = ({ isOpen, onClose, initialSession }) => {\n  const [activeSession, setActiveSession] = useState(initialSession);\n  const [isPlaying, setIsPlaying] = useState(true);\n  const [audioEnabled, setAudioEnabled] = useState(true);\n  const [progress, setProgress] = useState(38);\n\n  useEffect(() => {\n    setActiveSession(initialSession);\n    setIsPlaying(true);\n  }, [initialSession, isOpen]);\n\n  useEffect(() => {\n    if (!isPlaying || !isOpen) return;\n    const interval = setInterval(() => {\n      setProgress((p) => (p >= 100 ? 0 : p + 0.4));\n    }, 100);\n    return () => clearInterval(interval);\n  }, [isPlaying, isOpen]);\n\n  if (!isOpen) return null;\n\n  const sessions = [\n    { name: 'Sunny Morning Routine', time: '12 min', mood: 'Vibrant & Energized', color: '#24B9E7' },\n    { name: 'Peace & Calm Essentials', time: '18 min', mood: 'Deep Serenity & Focus', color: '#F59CC7' },\n    { name: 'Mood Bloom Focus', time: '15 min', mood: 'Joyful Growth & Bloom', color: '#F87162' },\n  ];\n\n  return (\n    <div\n      role=\"dialog\"\n      aria-modal=\"true\"\n      className=\"fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-md animate-fadeIn\"\n      onClick={onClose}\n    >\n      <div\n        className=\"relative w-full max-w-2xl rounded-[32px] bg-[#FFFDF4] border border-[#111111]/10 shadow-[0_32px_80px_rgba(0,0,0,0.3)] overflow-hidden flex flex-col p-6 sm:p-8\"\n        onClick={(e) => e.stopPropagation()}\n      >\n        {/* Header bar */}\n        <div className=\"flex items-center justify-between pb-5 border-b border-neutral-200\">\n          <div className=\"flex items-center gap-2\">\n            <span className=\"w-2.5 h-2.5 rounded-full bg-[#56B864] animate-ping\" />\n            <span className=\"text-xs font-semibold uppercase tracking-wider text-neutral-500\">\n              Editorial Mood Session\n            </span>\n          </div>\n          <button\n            type=\"button\"\n            onClick={onClose}\n            className=\"p-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-neutral-700 transition-colors cursor-pointer\"\n          >\n            <X size={16} />\n          </button>\n        </div>\n\n        {/* Video simulation screen */}\n        <div className=\"relative mt-5 rounded-2xl overflow-hidden aspect-video bg-gradient-to-br from-[#1A1A1E] to-[#2C2D35] flex items-center justify-center text-white shadow-inner\">\n          {/* Calming animated breathing aura */}\n          <div\n            className=\"absolute w-48 h-48 rounded-full opacity-40 blur-2xl animate-[pulse_6s_ease-in-out_infinite]\"\n            style={{\n              backgroundColor: sessions.find((s) => s.name === activeSession)?.color || '#F59CC7',\n            }}\n          />\n\n          {/* Calming center illustration */}\n          <div className=\"relative z-10 flex flex-col items-center text-center px-4\">\n            <div className=\"w-16 h-16 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center mb-3\">\n              <Sparkles className=\"w-8 h-8 text-[#FFD242] animate-bounce\" />\n            </div>\n            <h3 className=\"text-xl sm:text-2xl font-bold tracking-tight text-white mb-1\">\n              {activeSession}\n            </h3>\n            <p className=\"text-xs sm:text-sm text-neutral-300 font-normal\">\n              Breathing Inhale (4s) • Hold (4s) • Exhale (6s)\n            </p>\n          </div>\n\n          {/* Progress bar */}\n          <div className=\"absolute bottom-0 inset-x-0 h-1.5 bg-white/20\">\n            <div\n              className=\"h-full bg-[#24B9E7] transition-all duration-100 ease-linear\"\n              style={{ width: `${progress}%` }}\n            />\n          </div>\n        </div>\n\n        {/* Media Controls */}\n        <div className=\"flex items-center justify-between mt-4 px-1\">\n          <div className=\"flex items-center gap-3\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(isPlaying ? 380 : 540, 0.05);\n                setIsPlaying(!isPlaying);\n              }}\n              className=\"w-10 h-10 rounded-full bg-[#111111] text-white flex items-center justify-center hover:bg-neutral-800 transition-colors cursor-pointer\"\n            >\n              {isPlaying ? <Pause size={16} /> : <Play size={16} className=\"ml-0.5\" />}\n            </button>\n            <button\n              type=\"button\"\n              onClick={() => {\n                setAudioEnabled(!audioEnabled);\n                soundManager.enabled = !audioEnabled;\n                soundManager.playBubble(500, 0.05);\n              }}\n              className=\"w-10 h-10 rounded-full bg-white border border-neutral-200 text-neutral-800 flex items-center justify-center hover:bg-neutral-50 transition-colors cursor-pointer\"\n            >\n              {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}\n            </button>\n          </div>\n\n          <div className=\"inline-flex items-center gap-1.5 text-xs text-neutral-500\">\n            <Heart size={14} className=\"text-rose-500 fill-rose-500\" />\n            <span>Guided Session Active</span>\n          </div>\n        </div>\n\n        {/* Mood Selector Tabs */}\n        <div className=\"mt-5 pt-4 border-t border-neutral-200\">\n          <span className=\"text-[11px] font-semibold text-neutral-400 uppercase tracking-wider block mb-2.5\">\n            Switch Guided Routine\n          </span>\n          <div className=\"grid grid-cols-1 sm:grid-cols-3 gap-2\">\n            {sessions.map((sess) => (\n              <button\n                type=\"button\"\n                key={sess.name}\n                onClick={() => {\n                  soundManager.playChime();\n                  setActiveSession(sess.name);\n                }}\n                className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer ${\n                  activeSession === sess.name\n                    ? 'bg-neutral-900 text-white border-neutral-900 shadow-md'\n                    : 'bg-white hover:bg-neutral-50 text-neutral-700 border-neutral-200'\n                }`}\n              >\n                <div className=\"text-xs font-bold truncate\">{sess.name}</div>\n                <div\n                  className={`text-[10px] ${\n                    activeSession === sess.name ? 'text-neutral-300' : 'text-neutral-400'\n                  }`}\n                >\n                  {sess.time} • {sess.mood}\n                </div>\n              </button>\n            ))}\n          </div>\n        </div>\n      </div>\n    </div>\n  );\n};\n\n// ============================================================================\n// 9. MAIN MOOD HERO COMPONENT\n// ============================================================================\nexport interface MoodHeroProps {\n  className?: string;\n}\n\nexport default function MoodHero({ className = '' }: MoodHeroProps) {\n  const [isModalOpen, setIsModalOpen] = useState(false);\n  const [selectedSession, setSelectedSession] = useState('Peace & Calm Essentials');\n  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });\n  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);\n\n  useEffect(() => {\n    if (typeof window !== 'undefined') {\n      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');\n      setPrefersReducedMotion(mediaQuery.matches);\n    }\n  }, []);\n\n  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {\n    if (prefersReducedMotion || typeof window === 'undefined') return;\n    const deltaX = (e.clientX - window.innerWidth / 2) / (window.innerWidth / 2);\n    const deltaY = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2);\n    setMousePos({ x: deltaX, y: deltaY });\n  };\n\n  return (\n    <div\n      onMouseMove={handleMouseMove}\n      onMouseLeave={() => setMousePos({ x: 0, y: 0 })}\n      className={`relative min-h-screen w-full flex items-center justify-center p-3 sm:p-6 md:p-10 lg:p-12 overflow-x-hidden font-['Plus_Jakarta_Sans',sans-serif] ${className}`}\n      id=\"mood-hero-root\"\n    >\n      <BackgroundAtmosphere />\n\n      {/* Main Website Container Panel */}\n      <main\n        className=\"relative w-full max-w-[1180px] min-h-[720px] sm:min-h-[780px] md:min-h-[820px] lg:min-h-[850px] rounded-[24px] sm:rounded-[30px] md:rounded-[36px] bg-[#FFFDF4] border border-[rgba(120,110,90,0.14)] shadow-[0_24px_70px_-15px_rgba(80,70,50,0.14),0_0_1px_rgba(0,0,0,0.06)] flex flex-col justify-between overflow-hidden z-10 transition-transform duration-300 ease-out\"\n        style={{\n          transform: prefersReducedMotion ? 'none' : `translate3d(${mousePos.x * 2}px, ${mousePos.y * 2}px, 0)`,\n        }}\n      >\n        {/* Subtle white inner sheen */}\n        <div className=\"absolute inset-0 rounded-[inherit] pointer-events-none border border-white/60 z-30\" />\n\n        {/* Top Navbar */}\n        <Navbar\n          onActionClick={(action) => {\n            if (action === 'Try for free') {\n              soundManager.playChime();\n              setIsModalOpen(true);\n            }\n          }}\n        />\n\n        {/* Center Hero Content */}\n        <div className=\"relative z-20 flex flex-col items-center text-center px-4 sm:px-6\">\n          <SocialProof />\n\n          <div className=\"relative inline-block mt-1 sm:mt-2\">\n            <SparkleDoodleLeft />\n            <h1 className=\"text-3xl sm:text-4xl md:text-5xl lg:text-[54px] font-bold text-[#111111] tracking-[-0.035em] leading-[1.04] sm:leading-[1.02] max-w-[680px] mx-auto select-none\">\n              Regulate your mood\n              <br />\n              with our videos\n            </h1>\n            <CurlyDoodleRight />\n          </div>\n\n          <p className=\"mt-3.5 sm:mt-4 text-[12px] sm:text-[13px] md:text-[13.5px] text-neutral-500 font-normal leading-[1.45] max-w-sm sm:max-w-md mx-auto select-none tracking-tight\">\n            Our pre recorded sessions contain all the essentials\n            <br className=\"hidden sm:inline\" /> to help you fix your mood in few sessions\n          </p>\n\n          <div className=\"mt-5 sm:mt-6 flex items-center justify-center gap-2.5 sm:gap-3 z-30\">\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playChime();\n                setIsModalOpen(true);\n              }}\n              className=\"group inline-flex items-center justify-center gap-1.5 px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-[#111111] text-white text-[12px] sm:text-[12.5px] font-medium tracking-tight shadow-[0_2px_8px_rgba(0,0,0,0.15)] hover:bg-neutral-800 transition-all cursor-pointer\"\n            >\n              <span>Play Video</span>\n              <Zap className=\"w-3.5 h-3.5 fill-white text-white group-hover:scale-110 transition-transform\" />\n            </button>\n\n            <button\n              type=\"button\"\n              onClick={() => {\n                soundManager.playBubble(460, 0.06);\n                setIsModalOpen(true);\n              }}\n              className=\"inline-flex items-center justify-center px-4.5 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white text-neutral-800 text-[12px] sm:text-[12.5px] font-medium tracking-tight border border-neutral-200/90 shadow-[0_1px_4px_rgba(0,0,0,0.04)] hover:bg-neutral-50 transition-all cursor-pointer\"\n            >\n              Learn More\n            </button>\n          </div>\n        </div>\n\n        {/* 3D Perspective Floor Grid */}\n        <PerspectiveFloorGrid />\n\n        {/* Lower cropped illustrated character cards */}\n        <div className=\"relative mt-auto w-full\">\n          <VideoCards\n            onCardClick={(name) => {\n              soundManager.playChime();\n              setSelectedSession(name);\n              setIsModalOpen(true);\n            }}\n          />\n        </div>\n      </main>\n\n      {/* Video Modal Drawer */}\n      <VideoModal\n        isOpen={isModalOpen}\n        onClose={() => setIsModalOpen(false)}\n        initialSession={selectedSession}\n      />\n    </div>\n  );\n}\n\n```"
+        }
+    },
+    {
+        id: 'portfolio-closing',
+        previewImage: '/assets/template-previews/Portfolio Closing .png',
+        title: 'Portfolio Closing',
+        description: 'Editorial portfolio closing and contact footer section with dual mechanical spool reels, ambient parallax, and animated handwritten vector signature.',
+        category: 'Agency & Portfolio',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Motion Physics & SVG Spring Parallax',
+        isPro: false,
+        liveDemoUrl: 'https://ai.studio/apps/b7c2bb3d-39cd-4d53-8887-1eb76db0fc73',
+        githubUrl: 'https://github.com/ui-hub/portfolio-closing',
+        previewGradient: 'from-blue-900/40 via-neutral-950 to-black',
+        accentColor: '#087CCB',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '4.2k',
+        },
+        features: [
+            'Mechanical dual-spool reel assembly with interactive mouse spring physics',
+            'Layered editorial typography ("Thank You") with floating badges',
+            'Organic curved top card (rounded-b ~115px) with dark canvas wrap',
+            'Animated vector cursive signature of Jainil with glow filter',
+            'Asymmetrical 12-column responsive contact grid with email, phone, and socials'
+        ],
+        promptPreview: `# Comprehensive Prompt: Editorial Portfolio Closing & Contact Section with Interactive Mechanical Spool Bridging Two Worlds
+
+Build a full-screen, ultra-premium editorial portfolio closing and contact footer section using React (with TypeScript), Tailwind CSS, Lucide icons, and Motion (\`motion/react\` or \`framer-motion\`). Recreate this layout with 1:1 mathematical precision, exact typography pairings, physical object aesthetics, and responsive layout behavior.
+
+---
+
+## 1. Visual Identity, Color Palette & Design Tokens
+
+- **Top Panel Background**: \`#FAFAF7\` (warm architectural off-white / premium paper stock).
+- **Lower Section Background**: \`#0B1014\` (ultra-deep matte navy/charcoal).
+- **Text & Accent Colors**:
+  - Primary Dark Text (Top Panel): \`#0A0D10\`
+  - Metadata Gray Text: \`#181D22\` (light zone) and \`#99A2AD\` (dark zone)
+  - Cobalt Blue Primary (Banners & Reels): \`#087CCB\` / \`#0570CA\` with gradient highlights \`#2692ED\` and deep rim \`#023B6E\`
+  - Deep Black Banner: \`#06080A\` / \`#000000\`
+  - White Text / Signatures / Underlines: \`#F8F8F5\` / \`#FFFFFF\`
+  - Underline Border Inactive: \`#6C7784\`
+- **Typography Pairing**:
+  - Display Serif: \`'Playfair Display'\`, \`'Cormorant Garamond'\`, Georgia, serif.
+  - Sans-Serif Clean Body: \`'Plus Jakarta Sans'\`, \`'Inter'\`, -apple-system, sans-serif.
+- **Micro-Texture**:
+  - Subtle analog grain/noise texture overlay on the lower dark section using an inline SVG noise filter (\`feTurbulence baseFrequency="0.75"\`).
+
+---
+
+## 2. Structural Layout & Geometry
+
+1. **Top White Card (\`TopPanel\`)**:
+   - Width: \`100%\`, max-width \`1440px\`, centered with \`mx-auto\`.
+   - Top edge: Sits flush with top of section (\`rounded-t-none\`).
+   - Bottom-left and bottom-right corners: Extreme organic curvature of \`rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px]\` (\`~110px-115px\`).
+   - Padding: \`pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24 px-6 sm:px-12 md:px-20\`.
+   - The dark background of the page wraps seamlessly up around the bottom rounded corners.
+
+2. **Top Metadata Bar**:
+   - Spanning horizontally with \`justify-between items-center text-center font-sans\`.
+   - Left: \`(Creative)\`
+   - Center: \`(2023–2025)\` (with en-dash)
+   - Right: \`(Design)\`
+   - Typography: Clean regular sans-serif, \`15px sm:17px md:18px\`, tracking \`tight\`, color \`#181D22\`.
+
+3. **Center Main Headline ("Thank You")**:
+   - Giant editorial serif heading: \`text-[68px] sm:text-[98px] md:text-[128px] lg:text-[144px] xl:text-[152px]\`, leading \`[0.92]\`, tracking \`[-0.035em]\`, color \`#0A0D10\`.
+   - "Thank" is Roman regular; "You" is italic serif (\`font-normal italic font-serif-display ml-1 sm:ml-2\`).
+
+4. **Layered Typographic Banners**:
+   - **Blue Banner ("Looking Forward to")**:
+     - Background \`#087CCB\`, text \`#FFFFFF\`, serif display font, size \`22px sm:32px md:40px lg:45px\`.
+     - Padding: \`px-4 sm:px-6 md:px-7 py-1.5 sm:py-2\`.
+     - Shape: Sharp 90-degree corners (no border-radius), slight rotation \`-0.6deg\`, offset \`-translate-x-2 sm:-translate-x-4\`.
+     - Ambient motion: subtle horizontal floating drift (\`x: [0, 1.2, 0, -1.2, 0]\`, 7s loop).
+   - **Black Banner ("Connect with You!")**:
+     - Background \`#06080A\`, text \`#FFFFFF\`, serif display font, size \`22px sm:32px md:38px lg:43px\`.
+     - Padding: \`px-5 sm:px-7 md:px-8 py-1.5 sm:py-2\`.
+     - Shape: Sharp 90-degree corners, overlaps the bottom edge of the blue banner with \`-mt-2 sm:-mt-2.5 translate-x-2 sm:translate-x-4\`.
+     - Ambient motion: subtle vertical floating drift (\`y: [0, -1.2, 0, 1.2, 0]\`, 6s loop).
+
+5. **Central Mechanical Washer/Reel Spool Assembly (\`ReelAssembly\`)**:
+   - Position: Placed with \`position: absolute; left: 50%; transform: translateX(-50%) translateY(58% to 62%)\` relative to the bottom edge of the top white card.
+   - Sizing: \`w-[210px] sm:w-[260px] md:w-[305px]\` with height \`336px sm:416px md:488px\`. In SVG coordinates (\`viewBox="0 0 300 480"\`), each spool disk has a radius of \`r=68\` (rendered diameter of \`~138px\` on desktop).
+   - **Upper Blue Reel**: Center at \`(150, 105)\`. Straddles the boundary line between the white panel and dark section.
+     - Multi-layer radial gradient (\`#0A77D1\` core to \`#0473D1\` rim).
+     - Paper grain noise filter overlay and deep rim stroke (\`#023B6E\`).
+     - Central grommet/eyelet: Outer dark ring (\`r=23\`), metallic bevel ring (\`r=21\`) with silver specular crescent highlight on top-left (\`strokeWidth="2.2"\`), and punched deep black center hole (\`r=12.5\`).
+   - **Lower Blue Reel**: Center at \`(150, 355)\`. Suspended completely inside the dark section.
+     - Matches the upper spool styling with multi-layer radial gradient and central grommet.
+   - **Connecting Strings**:
+     - 4 blue cords (\`strokeWidth="2.6" to "3.0"\`, color \`#0570CA\` with top highlight line \`#2692ED\` and SVG drop shadow filter).
+     - String 1: \`M 141 155 C 139 210, 140 250, 142 305\`
+     - String 2: \`M 147 155 C 151 205, 153 255, 149 305\` (crosses diagonally)
+     - String 3: \`M 153 155 C 146 200, 145 260, 154 305\` (crosses diagonally)
+     - String 4: \`M 159 155 C 162 215, 160 250, 158 305\`
+   - **Interactive Parallax & Physics**:
+     - Mouse movement applies responsive spring tilting and translation to the reels, with the lower reel following with a slight lag/pendulum effect.
+
+6. **Lower Contact Section (\`ContactSection\`)**:
+   - Max width \`1440px\`, centered with \`px-6 sm:px-12 md:px-20 lg:px-28 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28\`.
+   - 12-Column Responsive Grid:
+     - **Left Column (\`md:col-span-5\`)**:
+       - Email block: Label \`Email\` (\`#99A2AD\`, \`14px\`), clickable \`mailto:uihub.design@gmail.com\` (\`#F8F8F5\`, \`18px-21px\`).
+       - Phone block: Label \`Phone\` (\`#99A2AD\`, \`14px\`), clickable \`tel:+6289518924877\` (\`#F8F8F5\`, \`18px-21px\`).
+       - Socials block:
+         - \`linkedin.com/in/jainil-patel2224/\` (underlined \`#6C7784\`, hover brightness & -2px upward lift).
+         - \`github.com/jainil224\` (underlined \`#6C7784\`, hover brightness & -2px upward lift).
+     - **Center Corridor (\`hidden md:block md:col-span-2\`)**: Empty clearance column so the hanging blue reels never collide with text.
+     - **Right Column (\`md:col-span-5\`)**:
+       - "Warm Regards," heading in serif display (\`#F8F8F5\`, \`26px sm:30px md:32px\`).
+       - Bespoke cursive handwritten signature for **Jainil** (\`Signature\` component) with looping capital *J*, cursive *ain*, tall looping *l*, dynamic backward underline flourish, and terminal dot. Rendered in \`#F8F8F5\` SVG strokes with subtle glow filter and animated stroke-draw reveal.
+
+---
+
+## 3. Complete Source Code Implementation
+
+\`\`\`tsx
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+
+// ============================================================================
+// 1. SIGNATURE COMPONENT (Handwritten cursive vector signature of "Jainil")
+// ============================================================================
+export function Signature() {
+  return (
+    <div className="relative flex items-center justify-start select-none" id="signature-container">
+      <svg
+        viewBox="0 0 320 150"
+        className="w-[200px] sm:w-[240px] md:w-[270px] h-auto overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Handwritten signature of Jainil"
+      >
+        <defs>
+          <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#FFFFFF" floodOpacity="0.15" />
+          </filter>
+        </defs>
+
+        {/* Main signature strokes */}
+        <g stroke="#F8F8F5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#subtleGlow)">
+          {/* Capital 'J' top loop and downward flourish */}
+          <motion.path
+            d="M 44 46 C 36 34 50 18 68 18 C 84 18 88 28 84 40 C 78 58 68 96 64 118"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Capital 'J' bottom descender loop sweeping into baseline */}
+          <motion.path
+            d="M 64 118 C 60 138 46 146 36 140 C 24 132 26 116 40 102 C 54 88 84 78 112 74"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: 'easeInOut' }}
+          />
+
+          {/* 'a' cursive oval and down-stem */}
+          <motion.path
+            d="M 126 73 C 120 74 114 80 115 86 C 117 92 125 94 133 91 C 139 88 142 82 142 74 L 142 88 C 142 93 147 93 152 89"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' stroke */}
+          <motion.path
+            d="M 152 89 C 156 82 161 68 163 65 L 164 88 C 165 92 169 92 174 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.1, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' dot */}
+          <motion.circle
+            cx="162"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.25 }}
+          />
+
+          {/* 'n' double arches */}
+          <motion.path
+            d="M 174 88 C 177 78 182 68 187 68 C 192 68 193 76 193 86 C 196 76 201 68 206 68 C 211 68 213 77 214 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.25, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' stroke */}
+          <motion.path
+            d="M 214 88 C 218 82 223 68 225 65 L 226 88 C 227 92 231 92 235 86"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.45, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' dot */}
+          <motion.circle
+            cx="224"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.6 }}
+          />
+
+          {/* 'l' tall graceful loop */}
+          <motion.path
+            d="M 235 86 C 240 74 248 38 254 22 C 257 14 262 16 262 26 C 261 42 255 76 254 92"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Sweeping underline flourish looping back under "Jainil" */}
+          <motion.path
+            d="M 254 92 C 255 106 248 116 234 121 C 198 132 122 133 48 130 C 34 129 25 123 32 115 C 40 105 74 98 122 90 C 176 82 238 80 284 82"
+            strokeWidth="2.4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.1, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Terminal flourish mark */}
+          <motion.circle
+            cx="292"
+            cy="82"
+            r="1.6"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 2.1 }}
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// 2. TOP PANEL COMPONENT (Editorial Headline & Floating Typographic Banners)
+// ============================================================================
+export function TopPanel() {
+  return (
+    <section
+      className="relative w-full max-w-[1440px] mx-auto bg-[#FAFAF7] text-[#0A0D10] rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px] pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24 px-6 sm:px-12 md:px-20 select-none overflow-hidden"
+      id="top-white-panel"
+    >
+      {/* Top Metadata Navigation */}
+      <header
+        className="w-full flex items-center justify-between text-[15px] sm:text-[17px] md:text-[18px] text-[#181D22] font-sans font-normal tracking-tight mb-12 sm:mb-16 md:mb-20"
+        id="top-metadata-header"
+      >
+        <span className="w-1/3 text-left pl-1 sm:pl-2" id="meta-creative">
+          (Creative)
+        </span>
+        <span className="w-1/3 text-center" id="meta-years">
+          (2023–2025)
+        </span>
+        <span className="w-1/3 text-right pr-1 sm:pr-2" id="meta-design">
+          (Design)
+        </span>
+      </header>
+
+      {/* Main Headline & Banners */}
+      <div className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-16 md:pb-20">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif-display text-[68px] sm:text-[98px] md:text-[128px] lg:text-[144px] xl:text-[152px] leading-[0.92] tracking-[-0.035em] text-[#0A0D10] font-normal mb-5 sm:mb-6"
+          id="main-headline"
+        >
+          <span>Thank </span>
+          <span className="italic font-normal font-serif-display ml-1 sm:ml-2">You</span>
+        </motion.h1>
+
+        {/* Stacked Typographic Banners */}
+        <div className="relative flex flex-col items-center mt-1">
+          {/* Blue Text Banner: "Looking Forward to" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: [0, 1.2, 0, -1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.35 },
+              scale: { duration: 0.8, delay: 0.35 },
+              x: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-10 bg-[#087CCB] text-[#FFFFFF] font-serif-display px-4 sm:px-6 md:px-7 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[40px] lg:text-[45px] leading-tight font-normal tracking-[-0.015em] shadow-[0_4px_16px_rgba(8,124,203,0.18)] -rotate-[0.6deg] -translate-x-2 sm:-translate-x-4"
+            id="blue-text-banner"
+          >
+            Looking Forward to
+          </motion.div>
+
+          {/* Black Text Banner: "Connect with You!" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -1.2, 0, 1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.45 },
+              scale: { duration: 0.8, delay: 0.45 },
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-20 bg-[#06080A] text-[#FFFFFF] font-serif-display px-5 sm:px-7 md:px-8 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[38px] lg:text-[43px] leading-tight font-normal tracking-[-0.015em] shadow-[0_6px_20px_rgba(0,0,0,0.35)] -mt-2 sm:-mt-2.5 translate-x-2 sm:translate-x-4"
+            id="black-text-banner"
+          >
+            Connect with You!
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// 3. REEL ASSEMBLY (Interactive Mechanical Dual Spool with Parallax Springs)
+// ============================================================================
+export interface ReelAssemblyProps {
+  mousePos: { x: number; y: number };
+  className?: string;
+}
+
+export function ReelAssembly({ mousePos, className = '' }: ReelAssemblyProps) {
+  const upperTilt = {
+    rotate: mousePos.x * 3.5,
+    x: mousePos.x * 4,
+    y: mousePos.y * 3,
+  };
+
+  const lowerTilt = {
+    rotate: mousePos.x * 6,
+    x: mousePos.x * 8,
+    y: mousePos.y * 5,
+  };
+
+  return (
+    <div
+      className={\`relative flex items-center justify-center select-none pointer-events-none \${className}\`}
+      id="reel-assembly"
+    >
+      <div className="relative w-[210px] sm:w-[260px] md:w-[305px] h-[336px] sm:h-[416px] md:h-[488px]">
+        <svg
+          viewBox="0 0 300 480"
+          className="w-full h-full overflow-visible"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <radialGradient id="spoolGradLight" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1B87DE" />
+              <stop offset="55%" stopColor="#0A77D1" />
+              <stop offset="85%" stopColor="#0473D1" />
+              <stop offset="100%" stopColor="#025CA8" />
+            </radialGradient>
+
+            <radialGradient id="spoolGradDark" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1280DC" />
+              <stop offset="55%" stopColor="#0773CF" />
+              <stop offset="88%" stopColor="#0368C0" />
+              <stop offset="100%" stopColor="#024D94" />
+            </radialGradient>
+
+            <linearGradient id="metalRingGrad" x1="20%" y1="15%" x2="80%" y2="85%">
+              <stop offset="0%" stopColor="#D9DFE6" />
+              <stop offset="35%" stopColor="#7E8A96" />
+              <stop offset="70%" stopColor="#2E3740" />
+              <stop offset="100%" stopColor="#151C24" />
+            </linearGradient>
+
+            <filter id="reelDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.45" />
+            </filter>
+
+            <filter id="stringShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1.5" dy="3" stdDeviation="3" floodColor="#000000" floodOpacity="0.3" />
+            </filter>
+
+            <filter id="spoolNoise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={3} result="noise" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" />
+              <feComposite in2="SourceGraphic" in="gl" operator="in" />
+            </filter>
+          </defs>
+
+          {/* 4 Central Hanging Strings */}
+          <motion.g
+            animate={{
+              x: mousePos.x * 5,
+              rotate: mousePos.x * 1.5,
+            }}
+            transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+          >
+            <path
+              d="M 141 155 C 139 210, 140 250, 142 305"
+              stroke="#0570ca"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 147 155 C 151 205, 153 255, 149 305"
+              stroke="#0462b3"
+              strokeWidth="3.0"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 153 155 C 146 200, 145 260, 154 305"
+              stroke="#0678d8"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 159 155 C 162 215, 160 250, 158 305"
+              stroke="#056fc8"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+          </motion.g>
+
+          {/* UPPER BLUE REEL */}
+          <motion.g
+            animate={upperTilt}
+            transition={{ type: 'spring', damping: 28, stiffness: 140 }}
+            style={{ transformOrigin: '150px 105px' }}
+          >
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolGradLight)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.5"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="67.5"
+              stroke="#023b6e"
+              strokeWidth="1.2"
+              fill="none"
+              opacity="0.75"
+            />
+
+            {/* Central Grommet / Eyelet */}
+            <circle cx="150" cy="105" r="23" fill="#09131e" opacity="0.6" />
+            <circle cx="150" cy="105" r="21" fill="url(#metalRingGrad)" />
+
+            <path
+              d="M 132 98 A 20 20 0 0 1 168 98"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <path
+              d="M 134 113 A 19 19 0 0 0 166 113"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="105" r="12.5" fill="#030609" />
+          </motion.g>
+
+          {/* LOWER BLUE REEL */}
+          <motion.g
+            animate={lowerTilt}
+            transition={{ type: 'spring', damping: 22, stiffness: 90 }}
+            style={{ transformOrigin: '150px 355px' }}
+          >
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolGradDark)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.55"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="67.5"
+              stroke="#02325c"
+              strokeWidth="1.4"
+              fill="none"
+              opacity="0.8"
+            />
+
+            {/* Central Grommet */}
+            <circle cx="150" cy="355" r="23" fill="#050a10" opacity="0.7" />
+            <circle cx="150" cy="355" r="21" fill="url(#metalRingGrad)" />
+            <path
+              d="M 132 348 A 20 20 0 0 1 168 348"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.85"
+            />
+            <path
+              d="M 134 363 A 19 19 0 0 0 166 363"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="355" r="12.5" fill="#030609" />
+          </motion.g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 4. CONTACT SECTION COMPONENT (Asymmetrical Responsive Contact Grid)
+// ============================================================================
+export function ContactSection() {
+  return (
+    <footer
+      className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-28 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28 select-text"
+      id="contact-section"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 sm:gap-14 items-start">
+        {/* Left Column: Contact Information */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col space-y-7 sm:space-y-8 text-left font-sans-clean"
+          id="contact-info-col"
+        >
+          {/* Email Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-email-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Email
+            </span>
+            <a
+              href="mailto:uihub.design@gmail.com"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-email-link"
+            >
+              uihub.design@gmail.com
+            </a>
+          </div>
+
+          {/* Phone Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-phone-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Phone
+            </span>
+            <a
+              href="tel:+6289518924877"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-phone-link"
+            >
+              +62 895 1892 4877
+            </a>
+          </div>
+
+          {/* Social Links Block */}
+          <div className="flex flex-col space-y-2.5 pt-2" id="contact-socials-block">
+            <a
+              href="https://www.linkedin.com/in/jainil-patel2224/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-linkedin"
+            >
+              linkedin.com/in/jainil-patel2224/
+            </a>
+
+            <a
+              href="https://github.com/jainil224"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-github"
+            >
+              github.com/jainil224
+            </a>
+          </div>
+        </div>
+
+        {/* Center Clearance Column for central reels */}
+        <div className="hidden md:block md:col-span-2 lg:col-span-2 pointer-events-none" aria-hidden="true" />
+
+        {/* Right Column: Signature / Closing */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col items-start md:items-end justify-start pt-2 sm:pt-4"
+          id="signature-col"
+        >
+          <div className="flex flex-col items-start space-y-4 sm:space-y-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-serif-display text-[26px] sm:text-[30px] md:text-[32px] text-[#F8F8F5] font-normal tracking-[-0.01em]"
+              id="warm-regards-heading"
+            >
+              Warm Regards,
+            </motion.h2>
+
+            <div className="pt-1">
+              <Signature />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============================================================================
+// 5. MAIN PORTFOLIO CLOSING COMPONENT
+// ============================================================================
+export interface PortfolioClosingProps {
+  className?: string;
+}
+
+export default function PortfolioClosing({ className = '' }: PortfolioClosingProps) {
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const normX = (e.clientX / innerWidth - 0.5) * 2;
+      const normY = (e.clientY / innerHeight - 0.5) * 2;
+      setMouseOffset({ x: normX, y: normY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [prefersReducedMotion]);
+
+  return (
+    <main
+      className={\`relative w-full min-h-screen bg-[#0B1014] text-[#F8F8F5] overflow-x-hidden flex flex-col justify-between selection:bg-[#087CCB] selection:text-white \${className}\`}
+      id="portfolio-closing-section"
+    >
+      {/* Background analog noise texture */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.035] mix-blend-overlay z-50"
+        style={{
+          backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\`,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* TOP ZONE: Rounded white card */}
+      <div className="relative w-full z-10 flex flex-col items-center">
+        <TopPanel />
+
+        {/* Central Spool Reel Assembly bridging both sections */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[62%] sm:translate-y-[60%] md:translate-y-[58%] z-30"
+          id="central-reel-container"
+        >
+          <ReelAssembly
+            mousePos={prefersReducedMotion ? { x: 0, y: 0 } : mouseOffset}
+          />
+        </div>
+      </div>
+
+      {/* BOTTOM ZONE: Contact information and signature */}
+      <div className="relative w-full z-20 flex-1 flex flex-col justify-between pt-24 sm:pt-32 md:pt-36">
+        <ContactSection />
+      </div>
+    </main>
+  );
+}
+
+\`\`\`
+
+---
+
+## 4. Acceptance Criteria & Verification Checklist
+- Pixel-Perfect Geometry: The top card is #FAFAF7 with bottom-left and bottom-right border radii of ~115px, allowing the #0B1014 dark page background to wrap upward around the corners.
+- Layered Headline & Rectangular Badges: "Thank You" with Roman "Thank" and Italic "You" at ~150px; Rectangular cobalt blue badge "Looking Forward to" with sharp 90-degree corners; Rectangular pure black badge "Connect with You!" overlapping underneath.
+- Mechanical Dual-Spool Assembly: Two textured blue disks of diameter ~138px connected by 4 thin vertical/diagonal crossing blue cords; Metallic central eyelets with specular highlights; Mouse spring parallax with gentle pendulum sway.
+- Asymmetrical Contact Grid: Left: Email (uihub.design@gmail.com), Phone (+62 895 1892 4877), and underlined links for LinkedIn and GitHub; Center: Dedicated clearance corridor; Right: "Warm Regards," and animated handwritten cursive vector signature for Jainil.`,
+        toolPrompts: {
+            cursor: `/* .cursorrules - Portfolio Closing & Contact Section */
+You are an expert Frontend Systems Architect. Implement the production-ready editorial Portfolio Closing & Contact Footer Section in React (TypeScript), Tailwind CSS, Lucide icons, and Motion (motion/react or framer-motion) with 1:1 mathematical precision, mechanical spool reel physics, and animated cursive signature for Jainil.
+Live Reference: https://ai.studio/apps/b7c2bb3d-39cd-4d53-8887-1eb76db0fc73
+
+Exact Production Component Code:
+\`\`\`tsx
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+
+// ============================================================================
+// 1. SIGNATURE COMPONENT (Handwritten cursive vector signature of "Jainil")
+// ============================================================================
+export function Signature() {
+  return (
+    <div className="relative flex items-center justify-start select-none" id="signature-container">
+      <svg
+        viewBox="0 0 320 150"
+        className="w-[200px] sm:w-[240px] md:w-[270px] h-auto overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Handwritten signature of Jainil"
+      >
+        <defs>
+          <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#FFFFFF" floodOpacity="0.15" />
+          </filter>
+        </defs>
+
+        {/* Main signature strokes */}
+        <g stroke="#F8F8F5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#subtleGlow)">
+          {/* Capital 'J' top loop and downward flourish */}
+          <motion.path
+            d="M 44 46 C 36 34 50 18 68 18 C 84 18 88 28 84 40 C 78 58 68 96 64 118"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Capital 'J' bottom descender loop sweeping into baseline */}
+          <motion.path
+            d="M 64 118 C 60 138 46 146 36 140 C 24 132 26 116 40 102 C 54 88 84 78 112 74"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: 'easeInOut' }}
+          />
+
+          {/* 'a' cursive oval and down-stem */}
+          <motion.path
+            d="M 126 73 C 120 74 114 80 115 86 C 117 92 125 94 133 91 C 139 88 142 82 142 74 L 142 88 C 142 93 147 93 152 89"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' stroke */}
+          <motion.path
+            d="M 152 89 C 156 82 161 68 163 65 L 164 88 C 165 92 169 92 174 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.1, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' dot */}
+          <motion.circle
+            cx="162"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.25 }}
+          />
+
+          {/* 'n' double arches */}
+          <motion.path
+            d="M 174 88 C 177 78 182 68 187 68 C 192 68 193 76 193 86 C 196 76 201 68 206 68 C 211 68 213 77 214 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.25, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' stroke */}
+          <motion.path
+            d="M 214 88 C 218 82 223 68 225 65 L 226 88 C 227 92 231 92 235 86"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.45, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' dot */}
+          <motion.circle
+            cx="224"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.6 }}
+          />
+
+          {/* 'l' tall graceful loop */}
+          <motion.path
+            d="M 235 86 C 240 74 248 38 254 22 C 257 14 262 16 262 26 C 261 42 255 76 254 92"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Sweeping underline flourish looping back under "Jainil" */}
+          <motion.path
+            d="M 254 92 C 255 106 248 116 234 121 C 198 132 122 133 48 130 C 34 129 25 123 32 115 C 40 105 74 98 122 90 C 176 82 238 80 284 82"
+            strokeWidth="2.4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.1, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Terminal flourish mark */}
+          <motion.circle
+            cx="292"
+            cy="82"
+            r="1.6"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 2.1 }}
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// 2. TOP PANEL COMPONENT (Editorial Headline & Floating Typographic Banners)
+// ============================================================================
+export function TopPanel() {
+  return (
+    <section
+      className="relative w-full max-w-[1440px] mx-auto bg-[#FAFAF7] text-[#0A0D10] rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px] pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24 px-6 sm:px-12 md:px-20 select-none overflow-hidden"
+      id="top-white-panel"
+    >
+      {/* Top Metadata Navigation */}
+      <header
+        className="w-full flex items-center justify-between text-[15px] sm:text-[17px] md:text-[18px] text-[#181D22] font-sans font-normal tracking-tight mb-12 sm:mb-16 md:mb-20"
+        id="top-metadata-header"
+      >
+        <span className="w-1/3 text-left pl-1 sm:pl-2" id="meta-creative">
+          (Creative)
+        </span>
+        <span className="w-1/3 text-center" id="meta-years">
+          (2023–2025)
+        </span>
+        <span className="w-1/3 text-right pr-1 sm:pr-2" id="meta-design">
+          (Design)
+        </span>
+      </header>
+
+      {/* Main Headline & Banners */}
+      <div className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-16 md:pb-20">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif-display text-[68px] sm:text-[98px] md:text-[128px] lg:text-[144px] xl:text-[152px] leading-[0.92] tracking-[-0.035em] text-[#0A0D10] font-normal mb-5 sm:mb-6"
+          id="main-headline"
+        >
+          <span>Thank </span>
+          <span className="italic font-normal font-serif-display ml-1 sm:ml-2">You</span>
+        </motion.h1>
+
+        {/* Stacked Typographic Banners */}
+        <div className="relative flex flex-col items-center mt-1">
+          {/* Blue Text Banner: "Looking Forward to" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: [0, 1.2, 0, -1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.35 },
+              scale: { duration: 0.8, delay: 0.35 },
+              x: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-10 bg-[#087CCB] text-[#FFFFFF] font-serif-display px-4 sm:px-6 md:px-7 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[40px] lg:text-[45px] leading-tight font-normal tracking-[-0.015em] shadow-[0_4px_16px_rgba(8,124,203,0.18)] -rotate-[0.6deg] -translate-x-2 sm:-translate-x-4"
+            id="blue-text-banner"
+          >
+            Looking Forward to
+          </motion.div>
+
+          {/* Black Text Banner: "Connect with You!" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -1.2, 0, 1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.45 },
+              scale: { duration: 0.8, delay: 0.45 },
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-20 bg-[#06080A] text-[#FFFFFF] font-serif-display px-5 sm:px-7 md:px-8 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[38px] lg:text-[43px] leading-tight font-normal tracking-[-0.015em] shadow-[0_6px_20px_rgba(0,0,0,0.35)] -mt-2 sm:-mt-2.5 translate-x-2 sm:translate-x-4"
+            id="black-text-banner"
+          >
+            Connect with You!
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// 3. REEL ASSEMBLY (Interactive Mechanical Dual Spool with Parallax Springs)
+// ============================================================================
+export interface ReelAssemblyProps {
+  mousePos: { x: number; y: number };
+  className?: string;
+}
+
+export function ReelAssembly({ mousePos, className = '' }: ReelAssemblyProps) {
+  const upperTilt = {
+    rotate: mousePos.x * 3.5,
+    x: mousePos.x * 4,
+    y: mousePos.y * 3,
+  };
+
+  const lowerTilt = {
+    rotate: mousePos.x * 6,
+    x: mousePos.x * 8,
+    y: mousePos.y * 5,
+  };
+
+  return (
+    <div
+      className={\`relative flex items-center justify-center select-none pointer-events-none \${className}\`}
+      id="reel-assembly"
+    >
+      <div className="relative w-[210px] sm:w-[260px] md:w-[305px] h-[336px] sm:h-[416px] md:h-[488px]">
+        <svg
+          viewBox="0 0 300 480"
+          className="w-full h-full overflow-visible"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <radialGradient id="spoolGradLight" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1B87DE" />
+              <stop offset="55%" stopColor="#0A77D1" />
+              <stop offset="85%" stopColor="#0473D1" />
+              <stop offset="100%" stopColor="#025CA8" />
+            </radialGradient>
+
+            <radialGradient id="spoolGradDark" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1280DC" />
+              <stop offset="55%" stopColor="#0773CF" />
+              <stop offset="88%" stopColor="#0368C0" />
+              <stop offset="100%" stopColor="#024D94" />
+            </radialGradient>
+
+            <linearGradient id="metalRingGrad" x1="20%" y1="15%" x2="80%" y2="85%">
+              <stop offset="0%" stopColor="#D9DFE6" />
+              <stop offset="35%" stopColor="#7E8A96" />
+              <stop offset="70%" stopColor="#2E3740" />
+              <stop offset="100%" stopColor="#151C24" />
+            </linearGradient>
+
+            <filter id="reelDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.45" />
+            </filter>
+
+            <filter id="stringShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1.5" dy="3" stdDeviation="3" floodColor="#000000" floodOpacity="0.3" />
+            </filter>
+
+            <filter id="spoolNoise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={3} result="noise" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" />
+              <feComposite in2="SourceGraphic" in="gl" operator="in" />
+            </filter>
+          </defs>
+
+          {/* 4 Central Hanging Strings */}
+          <motion.g
+            animate={{
+              x: mousePos.x * 5,
+              rotate: mousePos.x * 1.5,
+            }}
+            transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+          >
+            <path
+              d="M 141 155 C 139 210, 140 250, 142 305"
+              stroke="#0570ca"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 147 155 C 151 205, 153 255, 149 305"
+              stroke="#0462b3"
+              strokeWidth="3.0"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 153 155 C 146 200, 145 260, 154 305"
+              stroke="#0678d8"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 159 155 C 162 215, 160 250, 158 305"
+              stroke="#056fc8"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+          </motion.g>
+
+          {/* UPPER BLUE REEL */}
+          <motion.g
+            animate={upperTilt}
+            transition={{ type: 'spring', damping: 28, stiffness: 140 }}
+            style={{ transformOrigin: '150px 105px' }}
+          >
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolGradLight)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.5"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="67.5"
+              stroke="#023b6e"
+              strokeWidth="1.2"
+              fill="none"
+              opacity="0.75"
+            />
+
+            {/* Central Grommet / Eyelet */}
+            <circle cx="150" cy="105" r="23" fill="#09131e" opacity="0.6" />
+            <circle cx="150" cy="105" r="21" fill="url(#metalRingGrad)" />
+
+            <path
+              d="M 132 98 A 20 20 0 0 1 168 98"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <path
+              d="M 134 113 A 19 19 0 0 0 166 113"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="105" r="12.5" fill="#030609" />
+          </motion.g>
+
+          {/* LOWER BLUE REEL */}
+          <motion.g
+            animate={lowerTilt}
+            transition={{ type: 'spring', damping: 22, stiffness: 90 }}
+            style={{ transformOrigin: '150px 355px' }}
+          >
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolGradDark)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.55"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="67.5"
+              stroke="#02325c"
+              strokeWidth="1.4"
+              fill="none"
+              opacity="0.8"
+            />
+
+            {/* Central Grommet */}
+            <circle cx="150" cy="355" r="23" fill="#050a10" opacity="0.7" />
+            <circle cx="150" cy="355" r="21" fill="url(#metalRingGrad)" />
+            <path
+              d="M 132 348 A 20 20 0 0 1 168 348"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.85"
+            />
+            <path
+              d="M 134 363 A 19 19 0 0 0 166 363"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="355" r="12.5" fill="#030609" />
+          </motion.g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 4. CONTACT SECTION COMPONENT (Asymmetrical Responsive Contact Grid)
+// ============================================================================
+export function ContactSection() {
+  return (
+    <footer
+      className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-28 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28 select-text"
+      id="contact-section"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 sm:gap-14 items-start">
+        {/* Left Column: Contact Information */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col space-y-7 sm:space-y-8 text-left font-sans-clean"
+          id="contact-info-col"
+        >
+          {/* Email Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-email-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Email
+            </span>
+            <a
+              href="mailto:uihub.design@gmail.com"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-email-link"
+            >
+              uihub.design@gmail.com
+            </a>
+          </div>
+
+          {/* Phone Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-phone-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Phone
+            </span>
+            <a
+              href="tel:+6289518924877"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-phone-link"
+            >
+              +62 895 1892 4877
+            </a>
+          </div>
+
+          {/* Social Links Block */}
+          <div className="flex flex-col space-y-2.5 pt-2" id="contact-socials-block">
+            <a
+              href="https://www.linkedin.com/in/jainil-patel2224/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-linkedin"
+            >
+              linkedin.com/in/jainil-patel2224/
+            </a>
+
+            <a
+              href="https://github.com/jainil224"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-github"
+            >
+              github.com/jainil224
+            </a>
+          </div>
+        </div>
+
+        {/* Center Clearance Column for central reels */}
+        <div className="hidden md:block md:col-span-2 lg:col-span-2 pointer-events-none" aria-hidden="true" />
+
+        {/* Right Column: Signature / Closing */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col items-start md:items-end justify-start pt-2 sm:pt-4"
+          id="signature-col"
+        >
+          <div className="flex flex-col items-start space-y-4 sm:space-y-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-serif-display text-[26px] sm:text-[30px] md:text-[32px] text-[#F8F8F5] font-normal tracking-[-0.01em]"
+              id="warm-regards-heading"
+            >
+              Warm Regards,
+            </motion.h2>
+
+            <div className="pt-1">
+              <Signature />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============================================================================
+// 5. MAIN PORTFOLIO CLOSING COMPONENT
+// ============================================================================
+export interface PortfolioClosingProps {
+  className?: string;
+}
+
+export default function PortfolioClosing({ className = '' }: PortfolioClosingProps) {
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const normX = (e.clientX / innerWidth - 0.5) * 2;
+      const normY = (e.clientY / innerHeight - 0.5) * 2;
+      setMouseOffset({ x: normX, y: normY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [prefersReducedMotion]);
+
+  return (
+    <main
+      className={\`relative w-full min-h-screen bg-[#0B1014] text-[#F8F8F5] overflow-x-hidden flex flex-col justify-between selection:bg-[#087CCB] selection:text-white \${className}\`}
+      id="portfolio-closing-section"
+    >
+      {/* Background analog noise texture */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.035] mix-blend-overlay z-50"
+        style={{
+          backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\`,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* TOP ZONE: Rounded white card */}
+      <div className="relative w-full z-10 flex flex-col items-center">
+        <TopPanel />
+
+        {/* Central Spool Reel Assembly bridging both sections */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[62%] sm:translate-y-[60%] md:translate-y-[58%] z-30"
+          id="central-reel-container"
+        >
+          <ReelAssembly
+            mousePos={prefersReducedMotion ? { x: 0, y: 0 } : mouseOffset}
+          />
+        </div>
+      </div>
+
+      {/* BOTTOM ZONE: Contact information and signature */}
+      <div className="relative w-full z-20 flex-1 flex flex-col justify-between pt-24 sm:pt-32 md:pt-36">
+        <ContactSection />
+      </div>
+    </main>
+  );
+}
+
+\`\`\``,
+            claude: `[Claude Code Engineer Directive]
+Build the editorial Portfolio Closing & Contact Footer section with interactive mechanical spool reels and animated handwritten signature.
+Stack: React 19, TypeScript, Tailwind CSS, motion/react (or framer-motion), Lucide Icons.
+Live Reference: https://ai.studio/apps/b7c2bb3d-39cd-4d53-8887-1eb76db0fc73
+
+Key Specifications:
+- Top panel #FAFAF7 with rounded-b-[115px] and metadata header: (Creative) | (2023–2025) | (Design)
+- Headline: "Thank You" (editorial serif 150px, italic "You") with floating blue and black rectangular typographic badges
+- Central mechanical dual-spool reel assembly with 4 crossing blue cords and spring mouse tilt physics
+- Lower dark canvas #0B1014 with analog SVG noise filter
+- Asymmetrical contact grid with email (uihub.design@gmail.com), phone (+62 895 1892 4877), LinkedIn, GitHub, "Warm Regards," and SVG animated handwritten cursive signature of "Jainil"
+
+Implementation Code:
+\`\`\`tsx
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+
+// ============================================================================
+// 1. SIGNATURE COMPONENT (Handwritten cursive vector signature of "Jainil")
+// ============================================================================
+export function Signature() {
+  return (
+    <div className="relative flex items-center justify-start select-none" id="signature-container">
+      <svg
+        viewBox="0 0 320 150"
+        className="w-[200px] sm:w-[240px] md:w-[270px] h-auto overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Handwritten signature of Jainil"
+      >
+        <defs>
+          <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#FFFFFF" floodOpacity="0.15" />
+          </filter>
+        </defs>
+
+        {/* Main signature strokes */}
+        <g stroke="#F8F8F5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#subtleGlow)">
+          {/* Capital 'J' top loop and downward flourish */}
+          <motion.path
+            d="M 44 46 C 36 34 50 18 68 18 C 84 18 88 28 84 40 C 78 58 68 96 64 118"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Capital 'J' bottom descender loop sweeping into baseline */}
+          <motion.path
+            d="M 64 118 C 60 138 46 146 36 140 C 24 132 26 116 40 102 C 54 88 84 78 112 74"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: 'easeInOut' }}
+          />
+
+          {/* 'a' cursive oval and down-stem */}
+          <motion.path
+            d="M 126 73 C 120 74 114 80 115 86 C 117 92 125 94 133 91 C 139 88 142 82 142 74 L 142 88 C 142 93 147 93 152 89"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' stroke */}
+          <motion.path
+            d="M 152 89 C 156 82 161 68 163 65 L 164 88 C 165 92 169 92 174 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.1, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' dot */}
+          <motion.circle
+            cx="162"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.25 }}
+          />
+
+          {/* 'n' double arches */}
+          <motion.path
+            d="M 174 88 C 177 78 182 68 187 68 C 192 68 193 76 193 86 C 196 76 201 68 206 68 C 211 68 213 77 214 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.25, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' stroke */}
+          <motion.path
+            d="M 214 88 C 218 82 223 68 225 65 L 226 88 C 227 92 231 92 235 86"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.45, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' dot */}
+          <motion.circle
+            cx="224"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.6 }}
+          />
+
+          {/* 'l' tall graceful loop */}
+          <motion.path
+            d="M 235 86 C 240 74 248 38 254 22 C 257 14 262 16 262 26 C 261 42 255 76 254 92"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Sweeping underline flourish looping back under "Jainil" */}
+          <motion.path
+            d="M 254 92 C 255 106 248 116 234 121 C 198 132 122 133 48 130 C 34 129 25 123 32 115 C 40 105 74 98 122 90 C 176 82 238 80 284 82"
+            strokeWidth="2.4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.1, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Terminal flourish mark */}
+          <motion.circle
+            cx="292"
+            cy="82"
+            r="1.6"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 2.1 }}
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// 2. TOP PANEL COMPONENT (Editorial Headline & Floating Typographic Banners)
+// ============================================================================
+export function TopPanel() {
+  return (
+    <section
+      className="relative w-full max-w-[1440px] mx-auto bg-[#FAFAF7] text-[#0A0D10] rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px] pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24 px-6 sm:px-12 md:px-20 select-none overflow-hidden"
+      id="top-white-panel"
+    >
+      {/* Top Metadata Navigation */}
+      <header
+        className="w-full flex items-center justify-between text-[15px] sm:text-[17px] md:text-[18px] text-[#181D22] font-sans font-normal tracking-tight mb-12 sm:mb-16 md:mb-20"
+        id="top-metadata-header"
+      >
+        <span className="w-1/3 text-left pl-1 sm:pl-2" id="meta-creative">
+          (Creative)
+        </span>
+        <span className="w-1/3 text-center" id="meta-years">
+          (2023–2025)
+        </span>
+        <span className="w-1/3 text-right pr-1 sm:pr-2" id="meta-design">
+          (Design)
+        </span>
+      </header>
+
+      {/* Main Headline & Banners */}
+      <div className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-16 md:pb-20">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif-display text-[68px] sm:text-[98px] md:text-[128px] lg:text-[144px] xl:text-[152px] leading-[0.92] tracking-[-0.035em] text-[#0A0D10] font-normal mb-5 sm:mb-6"
+          id="main-headline"
+        >
+          <span>Thank </span>
+          <span className="italic font-normal font-serif-display ml-1 sm:ml-2">You</span>
+        </motion.h1>
+
+        {/* Stacked Typographic Banners */}
+        <div className="relative flex flex-col items-center mt-1">
+          {/* Blue Text Banner: "Looking Forward to" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: [0, 1.2, 0, -1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.35 },
+              scale: { duration: 0.8, delay: 0.35 },
+              x: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-10 bg-[#087CCB] text-[#FFFFFF] font-serif-display px-4 sm:px-6 md:px-7 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[40px] lg:text-[45px] leading-tight font-normal tracking-[-0.015em] shadow-[0_4px_16px_rgba(8,124,203,0.18)] -rotate-[0.6deg] -translate-x-2 sm:-translate-x-4"
+            id="blue-text-banner"
+          >
+            Looking Forward to
+          </motion.div>
+
+          {/* Black Text Banner: "Connect with You!" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -1.2, 0, 1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.45 },
+              scale: { duration: 0.8, delay: 0.45 },
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-20 bg-[#06080A] text-[#FFFFFF] font-serif-display px-5 sm:px-7 md:px-8 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[38px] lg:text-[43px] leading-tight font-normal tracking-[-0.015em] shadow-[0_6px_20px_rgba(0,0,0,0.35)] -mt-2 sm:-mt-2.5 translate-x-2 sm:translate-x-4"
+            id="black-text-banner"
+          >
+            Connect with You!
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// 3. REEL ASSEMBLY (Interactive Mechanical Dual Spool with Parallax Springs)
+// ============================================================================
+export interface ReelAssemblyProps {
+  mousePos: { x: number; y: number };
+  className?: string;
+}
+
+export function ReelAssembly({ mousePos, className = '' }: ReelAssemblyProps) {
+  const upperTilt = {
+    rotate: mousePos.x * 3.5,
+    x: mousePos.x * 4,
+    y: mousePos.y * 3,
+  };
+
+  const lowerTilt = {
+    rotate: mousePos.x * 6,
+    x: mousePos.x * 8,
+    y: mousePos.y * 5,
+  };
+
+  return (
+    <div
+      className={\`relative flex items-center justify-center select-none pointer-events-none \${className}\`}
+      id="reel-assembly"
+    >
+      <div className="relative w-[210px] sm:w-[260px] md:w-[305px] h-[336px] sm:h-[416px] md:h-[488px]">
+        <svg
+          viewBox="0 0 300 480"
+          className="w-full h-full overflow-visible"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <radialGradient id="spoolGradLight" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1B87DE" />
+              <stop offset="55%" stopColor="#0A77D1" />
+              <stop offset="85%" stopColor="#0473D1" />
+              <stop offset="100%" stopColor="#025CA8" />
+            </radialGradient>
+
+            <radialGradient id="spoolGradDark" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1280DC" />
+              <stop offset="55%" stopColor="#0773CF" />
+              <stop offset="88%" stopColor="#0368C0" />
+              <stop offset="100%" stopColor="#024D94" />
+            </radialGradient>
+
+            <linearGradient id="metalRingGrad" x1="20%" y1="15%" x2="80%" y2="85%">
+              <stop offset="0%" stopColor="#D9DFE6" />
+              <stop offset="35%" stopColor="#7E8A96" />
+              <stop offset="70%" stopColor="#2E3740" />
+              <stop offset="100%" stopColor="#151C24" />
+            </linearGradient>
+
+            <filter id="reelDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.45" />
+            </filter>
+
+            <filter id="stringShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1.5" dy="3" stdDeviation="3" floodColor="#000000" floodOpacity="0.3" />
+            </filter>
+
+            <filter id="spoolNoise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={3} result="noise" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" />
+              <feComposite in2="SourceGraphic" in="gl" operator="in" />
+            </filter>
+          </defs>
+
+          {/* 4 Central Hanging Strings */}
+          <motion.g
+            animate={{
+              x: mousePos.x * 5,
+              rotate: mousePos.x * 1.5,
+            }}
+            transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+          >
+            <path
+              d="M 141 155 C 139 210, 140 250, 142 305"
+              stroke="#0570ca"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 147 155 C 151 205, 153 255, 149 305"
+              stroke="#0462b3"
+              strokeWidth="3.0"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 153 155 C 146 200, 145 260, 154 305"
+              stroke="#0678d8"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 159 155 C 162 215, 160 250, 158 305"
+              stroke="#056fc8"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+          </motion.g>
+
+          {/* UPPER BLUE REEL */}
+          <motion.g
+            animate={upperTilt}
+            transition={{ type: 'spring', damping: 28, stiffness: 140 }}
+            style={{ transformOrigin: '150px 105px' }}
+          >
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolGradLight)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.5"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="67.5"
+              stroke="#023b6e"
+              strokeWidth="1.2"
+              fill="none"
+              opacity="0.75"
+            />
+
+            {/* Central Grommet / Eyelet */}
+            <circle cx="150" cy="105" r="23" fill="#09131e" opacity="0.6" />
+            <circle cx="150" cy="105" r="21" fill="url(#metalRingGrad)" />
+
+            <path
+              d="M 132 98 A 20 20 0 0 1 168 98"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <path
+              d="M 134 113 A 19 19 0 0 0 166 113"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="105" r="12.5" fill="#030609" />
+          </motion.g>
+
+          {/* LOWER BLUE REEL */}
+          <motion.g
+            animate={lowerTilt}
+            transition={{ type: 'spring', damping: 22, stiffness: 90 }}
+            style={{ transformOrigin: '150px 355px' }}
+          >
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolGradDark)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.55"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="67.5"
+              stroke="#02325c"
+              strokeWidth="1.4"
+              fill="none"
+              opacity="0.8"
+            />
+
+            {/* Central Grommet */}
+            <circle cx="150" cy="355" r="23" fill="#050a10" opacity="0.7" />
+            <circle cx="150" cy="355" r="21" fill="url(#metalRingGrad)" />
+            <path
+              d="M 132 348 A 20 20 0 0 1 168 348"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.85"
+            />
+            <path
+              d="M 134 363 A 19 19 0 0 0 166 363"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="355" r="12.5" fill="#030609" />
+          </motion.g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 4. CONTACT SECTION COMPONENT (Asymmetrical Responsive Contact Grid)
+// ============================================================================
+export function ContactSection() {
+  return (
+    <footer
+      className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-28 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28 select-text"
+      id="contact-section"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 sm:gap-14 items-start">
+        {/* Left Column: Contact Information */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col space-y-7 sm:space-y-8 text-left font-sans-clean"
+          id="contact-info-col"
+        >
+          {/* Email Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-email-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Email
+            </span>
+            <a
+              href="mailto:uihub.design@gmail.com"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-email-link"
+            >
+              uihub.design@gmail.com
+            </a>
+          </div>
+
+          {/* Phone Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-phone-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Phone
+            </span>
+            <a
+              href="tel:+6289518924877"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-phone-link"
+            >
+              +62 895 1892 4877
+            </a>
+          </div>
+
+          {/* Social Links Block */}
+          <div className="flex flex-col space-y-2.5 pt-2" id="contact-socials-block">
+            <a
+              href="https://www.linkedin.com/in/jainil-patel2224/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-linkedin"
+            >
+              linkedin.com/in/jainil-patel2224/
+            </a>
+
+            <a
+              href="https://github.com/jainil224"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-github"
+            >
+              github.com/jainil224
+            </a>
+          </div>
+        </div>
+
+        {/* Center Clearance Column for central reels */}
+        <div className="hidden md:block md:col-span-2 lg:col-span-2 pointer-events-none" aria-hidden="true" />
+
+        {/* Right Column: Signature / Closing */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col items-start md:items-end justify-start pt-2 sm:pt-4"
+          id="signature-col"
+        >
+          <div className="flex flex-col items-start space-y-4 sm:space-y-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-serif-display text-[26px] sm:text-[30px] md:text-[32px] text-[#F8F8F5] font-normal tracking-[-0.01em]"
+              id="warm-regards-heading"
+            >
+              Warm Regards,
+            </motion.h2>
+
+            <div className="pt-1">
+              <Signature />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============================================================================
+// 5. MAIN PORTFOLIO CLOSING COMPONENT
+// ============================================================================
+export interface PortfolioClosingProps {
+  className?: string;
+}
+
+export default function PortfolioClosing({ className = '' }: PortfolioClosingProps) {
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const normX = (e.clientX / innerWidth - 0.5) * 2;
+      const normY = (e.clientY / innerHeight - 0.5) * 2;
+      setMouseOffset({ x: normX, y: normY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [prefersReducedMotion]);
+
+  return (
+    <main
+      className={\`relative w-full min-h-screen bg-[#0B1014] text-[#F8F8F5] overflow-x-hidden flex flex-col justify-between selection:bg-[#087CCB] selection:text-white \${className}\`}
+      id="portfolio-closing-section"
+    >
+      {/* Background analog noise texture */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.035] mix-blend-overlay z-50"
+        style={{
+          backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\`,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* TOP ZONE: Rounded white card */}
+      <div className="relative w-full z-10 flex flex-col items-center">
+        <TopPanel />
+
+        {/* Central Spool Reel Assembly bridging both sections */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[62%] sm:translate-y-[60%] md:translate-y-[58%] z-30"
+          id="central-reel-container"
+        >
+          <ReelAssembly
+            mousePos={prefersReducedMotion ? { x: 0, y: 0 } : mouseOffset}
+          />
+        </div>
+      </div>
+
+      {/* BOTTOM ZONE: Contact information and signature */}
+      <div className="relative w-full z-20 flex-1 flex flex-col justify-between pt-24 sm:pt-32 md:pt-36">
+        <ContactSection />
+      </div>
+    </main>
+  );
+}
+
+\`\`\``,
+            antigravity: `[Antigravity Agent Blueprint]
+Task: Deploy production Portfolio Closing & Contact Footer Section.
+Tech Stack: React 19, TypeScript, Tailwind CSS, motion/react, Lucide Icons.
+Live Reference: https://ai.studio/apps/b7c2bb3d-39cd-4d53-8887-1eb76db0fc73
+
+Production Component:
+\`\`\`tsx
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+
+// ============================================================================
+// 1. SIGNATURE COMPONENT (Handwritten cursive vector signature of "Jainil")
+// ============================================================================
+export function Signature() {
+  return (
+    <div className="relative flex items-center justify-start select-none" id="signature-container">
+      <svg
+        viewBox="0 0 320 150"
+        className="w-[200px] sm:w-[240px] md:w-[270px] h-auto overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Handwritten signature of Jainil"
+      >
+        <defs>
+          <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#FFFFFF" floodOpacity="0.15" />
+          </filter>
+        </defs>
+
+        {/* Main signature strokes */}
+        <g stroke="#F8F8F5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#subtleGlow)">
+          {/* Capital 'J' top loop and downward flourish */}
+          <motion.path
+            d="M 44 46 C 36 34 50 18 68 18 C 84 18 88 28 84 40 C 78 58 68 96 64 118"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Capital 'J' bottom descender loop sweeping into baseline */}
+          <motion.path
+            d="M 64 118 C 60 138 46 146 36 140 C 24 132 26 116 40 102 C 54 88 84 78 112 74"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: 'easeInOut' }}
+          />
+
+          {/* 'a' cursive oval and down-stem */}
+          <motion.path
+            d="M 126 73 C 120 74 114 80 115 86 C 117 92 125 94 133 91 C 139 88 142 82 142 74 L 142 88 C 142 93 147 93 152 89"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' stroke */}
+          <motion.path
+            d="M 152 89 C 156 82 161 68 163 65 L 164 88 C 165 92 169 92 174 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.1, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' dot */}
+          <motion.circle
+            cx="162"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.25 }}
+          />
+
+          {/* 'n' double arches */}
+          <motion.path
+            d="M 174 88 C 177 78 182 68 187 68 C 192 68 193 76 193 86 C 196 76 201 68 206 68 C 211 68 213 77 214 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.25, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' stroke */}
+          <motion.path
+            d="M 214 88 C 218 82 223 68 225 65 L 226 88 C 227 92 231 92 235 86"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.45, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' dot */}
+          <motion.circle
+            cx="224"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.6 }}
+          />
+
+          {/* 'l' tall graceful loop */}
+          <motion.path
+            d="M 235 86 C 240 74 248 38 254 22 C 257 14 262 16 262 26 C 261 42 255 76 254 92"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Sweeping underline flourish looping back under "Jainil" */}
+          <motion.path
+            d="M 254 92 C 255 106 248 116 234 121 C 198 132 122 133 48 130 C 34 129 25 123 32 115 C 40 105 74 98 122 90 C 176 82 238 80 284 82"
+            strokeWidth="2.4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.1, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Terminal flourish mark */}
+          <motion.circle
+            cx="292"
+            cy="82"
+            r="1.6"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 2.1 }}
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// 2. TOP PANEL COMPONENT (Editorial Headline & Floating Typographic Banners)
+// ============================================================================
+export function TopPanel() {
+  return (
+    <section
+      className="relative w-full max-w-[1440px] mx-auto bg-[#FAFAF7] text-[#0A0D10] rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px] pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24 px-6 sm:px-12 md:px-20 select-none overflow-hidden"
+      id="top-white-panel"
+    >
+      {/* Top Metadata Navigation */}
+      <header
+        className="w-full flex items-center justify-between text-[15px] sm:text-[17px] md:text-[18px] text-[#181D22] font-sans font-normal tracking-tight mb-12 sm:mb-16 md:mb-20"
+        id="top-metadata-header"
+      >
+        <span className="w-1/3 text-left pl-1 sm:pl-2" id="meta-creative">
+          (Creative)
+        </span>
+        <span className="w-1/3 text-center" id="meta-years">
+          (2023–2025)
+        </span>
+        <span className="w-1/3 text-right pr-1 sm:pr-2" id="meta-design">
+          (Design)
+        </span>
+      </header>
+
+      {/* Main Headline & Banners */}
+      <div className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-16 md:pb-20">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif-display text-[68px] sm:text-[98px] md:text-[128px] lg:text-[144px] xl:text-[152px] leading-[0.92] tracking-[-0.035em] text-[#0A0D10] font-normal mb-5 sm:mb-6"
+          id="main-headline"
+        >
+          <span>Thank </span>
+          <span className="italic font-normal font-serif-display ml-1 sm:ml-2">You</span>
+        </motion.h1>
+
+        {/* Stacked Typographic Banners */}
+        <div className="relative flex flex-col items-center mt-1">
+          {/* Blue Text Banner: "Looking Forward to" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: [0, 1.2, 0, -1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.35 },
+              scale: { duration: 0.8, delay: 0.35 },
+              x: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-10 bg-[#087CCB] text-[#FFFFFF] font-serif-display px-4 sm:px-6 md:px-7 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[40px] lg:text-[45px] leading-tight font-normal tracking-[-0.015em] shadow-[0_4px_16px_rgba(8,124,203,0.18)] -rotate-[0.6deg] -translate-x-2 sm:-translate-x-4"
+            id="blue-text-banner"
+          >
+            Looking Forward to
+          </motion.div>
+
+          {/* Black Text Banner: "Connect with You!" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -1.2, 0, 1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.45 },
+              scale: { duration: 0.8, delay: 0.45 },
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-20 bg-[#06080A] text-[#FFFFFF] font-serif-display px-5 sm:px-7 md:px-8 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[38px] lg:text-[43px] leading-tight font-normal tracking-[-0.015em] shadow-[0_6px_20px_rgba(0,0,0,0.35)] -mt-2 sm:-mt-2.5 translate-x-2 sm:translate-x-4"
+            id="black-text-banner"
+          >
+            Connect with You!
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// 3. REEL ASSEMBLY (Interactive Mechanical Dual Spool with Parallax Springs)
+// ============================================================================
+export interface ReelAssemblyProps {
+  mousePos: { x: number; y: number };
+  className?: string;
+}
+
+export function ReelAssembly({ mousePos, className = '' }: ReelAssemblyProps) {
+  const upperTilt = {
+    rotate: mousePos.x * 3.5,
+    x: mousePos.x * 4,
+    y: mousePos.y * 3,
+  };
+
+  const lowerTilt = {
+    rotate: mousePos.x * 6,
+    x: mousePos.x * 8,
+    y: mousePos.y * 5,
+  };
+
+  return (
+    <div
+      className={\`relative flex items-center justify-center select-none pointer-events-none \${className}\`}
+      id="reel-assembly"
+    >
+      <div className="relative w-[210px] sm:w-[260px] md:w-[305px] h-[336px] sm:h-[416px] md:h-[488px]">
+        <svg
+          viewBox="0 0 300 480"
+          className="w-full h-full overflow-visible"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <radialGradient id="spoolGradLight" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1B87DE" />
+              <stop offset="55%" stopColor="#0A77D1" />
+              <stop offset="85%" stopColor="#0473D1" />
+              <stop offset="100%" stopColor="#025CA8" />
+            </radialGradient>
+
+            <radialGradient id="spoolGradDark" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1280DC" />
+              <stop offset="55%" stopColor="#0773CF" />
+              <stop offset="88%" stopColor="#0368C0" />
+              <stop offset="100%" stopColor="#024D94" />
+            </radialGradient>
+
+            <linearGradient id="metalRingGrad" x1="20%" y1="15%" x2="80%" y2="85%">
+              <stop offset="0%" stopColor="#D9DFE6" />
+              <stop offset="35%" stopColor="#7E8A96" />
+              <stop offset="70%" stopColor="#2E3740" />
+              <stop offset="100%" stopColor="#151C24" />
+            </linearGradient>
+
+            <filter id="reelDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.45" />
+            </filter>
+
+            <filter id="stringShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1.5" dy="3" stdDeviation="3" floodColor="#000000" floodOpacity="0.3" />
+            </filter>
+
+            <filter id="spoolNoise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={3} result="noise" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" />
+              <feComposite in2="SourceGraphic" in="gl" operator="in" />
+            </filter>
+          </defs>
+
+          {/* 4 Central Hanging Strings */}
+          <motion.g
+            animate={{
+              x: mousePos.x * 5,
+              rotate: mousePos.x * 1.5,
+            }}
+            transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+          >
+            <path
+              d="M 141 155 C 139 210, 140 250, 142 305"
+              stroke="#0570ca"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 147 155 C 151 205, 153 255, 149 305"
+              stroke="#0462b3"
+              strokeWidth="3.0"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 153 155 C 146 200, 145 260, 154 305"
+              stroke="#0678d8"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 159 155 C 162 215, 160 250, 158 305"
+              stroke="#056fc8"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+          </motion.g>
+
+          {/* UPPER BLUE REEL */}
+          <motion.g
+            animate={upperTilt}
+            transition={{ type: 'spring', damping: 28, stiffness: 140 }}
+            style={{ transformOrigin: '150px 105px' }}
+          >
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolGradLight)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.5"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="67.5"
+              stroke="#023b6e"
+              strokeWidth="1.2"
+              fill="none"
+              opacity="0.75"
+            />
+
+            {/* Central Grommet / Eyelet */}
+            <circle cx="150" cy="105" r="23" fill="#09131e" opacity="0.6" />
+            <circle cx="150" cy="105" r="21" fill="url(#metalRingGrad)" />
+
+            <path
+              d="M 132 98 A 20 20 0 0 1 168 98"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <path
+              d="M 134 113 A 19 19 0 0 0 166 113"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="105" r="12.5" fill="#030609" />
+          </motion.g>
+
+          {/* LOWER BLUE REEL */}
+          <motion.g
+            animate={lowerTilt}
+            transition={{ type: 'spring', damping: 22, stiffness: 90 }}
+            style={{ transformOrigin: '150px 355px' }}
+          >
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolGradDark)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.55"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="67.5"
+              stroke="#02325c"
+              strokeWidth="1.4"
+              fill="none"
+              opacity="0.8"
+            />
+
+            {/* Central Grommet */}
+            <circle cx="150" cy="355" r="23" fill="#050a10" opacity="0.7" />
+            <circle cx="150" cy="355" r="21" fill="url(#metalRingGrad)" />
+            <path
+              d="M 132 348 A 20 20 0 0 1 168 348"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.85"
+            />
+            <path
+              d="M 134 363 A 19 19 0 0 0 166 363"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="355" r="12.5" fill="#030609" />
+          </motion.g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 4. CONTACT SECTION COMPONENT (Asymmetrical Responsive Contact Grid)
+// ============================================================================
+export function ContactSection() {
+  return (
+    <footer
+      className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-28 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28 select-text"
+      id="contact-section"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 sm:gap-14 items-start">
+        {/* Left Column: Contact Information */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col space-y-7 sm:space-y-8 text-left font-sans-clean"
+          id="contact-info-col"
+        >
+          {/* Email Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-email-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Email
+            </span>
+            <a
+              href="mailto:uihub.design@gmail.com"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-email-link"
+            >
+              uihub.design@gmail.com
+            </a>
+          </div>
+
+          {/* Phone Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-phone-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Phone
+            </span>
+            <a
+              href="tel:+6289518924877"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-phone-link"
+            >
+              +62 895 1892 4877
+            </a>
+          </div>
+
+          {/* Social Links Block */}
+          <div className="flex flex-col space-y-2.5 pt-2" id="contact-socials-block">
+            <a
+              href="https://www.linkedin.com/in/jainil-patel2224/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-linkedin"
+            >
+              linkedin.com/in/jainil-patel2224/
+            </a>
+
+            <a
+              href="https://github.com/jainil224"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-github"
+            >
+              github.com/jainil224
+            </a>
+          </div>
+        </div>
+
+        {/* Center Clearance Column for central reels */}
+        <div className="hidden md:block md:col-span-2 lg:col-span-2 pointer-events-none" aria-hidden="true" />
+
+        {/* Right Column: Signature / Closing */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col items-start md:items-end justify-start pt-2 sm:pt-4"
+          id="signature-col"
+        >
+          <div className="flex flex-col items-start space-y-4 sm:space-y-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-serif-display text-[26px] sm:text-[30px] md:text-[32px] text-[#F8F8F5] font-normal tracking-[-0.01em]"
+              id="warm-regards-heading"
+            >
+              Warm Regards,
+            </motion.h2>
+
+            <div className="pt-1">
+              <Signature />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============================================================================
+// 5. MAIN PORTFOLIO CLOSING COMPONENT
+// ============================================================================
+export interface PortfolioClosingProps {
+  className?: string;
+}
+
+export default function PortfolioClosing({ className = '' }: PortfolioClosingProps) {
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const normX = (e.clientX / innerWidth - 0.5) * 2;
+      const normY = (e.clientY / innerHeight - 0.5) * 2;
+      setMouseOffset({ x: normX, y: normY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [prefersReducedMotion]);
+
+  return (
+    <main
+      className={\`relative w-full min-h-screen bg-[#0B1014] text-[#F8F8F5] overflow-x-hidden flex flex-col justify-between selection:bg-[#087CCB] selection:text-white \${className}\`}
+      id="portfolio-closing-section"
+    >
+      {/* Background analog noise texture */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.035] mix-blend-overlay z-50"
+        style={{
+          backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\`,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* TOP ZONE: Rounded white card */}
+      <div className="relative w-full z-10 flex flex-col items-center">
+        <TopPanel />
+
+        {/* Central Spool Reel Assembly bridging both sections */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[62%] sm:translate-y-[60%] md:translate-y-[58%] z-30"
+          id="central-reel-container"
+        >
+          <ReelAssembly
+            mousePos={prefersReducedMotion ? { x: 0, y: 0 } : mouseOffset}
+          />
+        </div>
+      </div>
+
+      {/* BOTTOM ZONE: Contact information and signature */}
+      <div className="relative w-full z-20 flex-1 flex flex-col justify-between pt-24 sm:pt-32 md:pt-36">
+        <ContactSection />
+      </div>
+    </main>
+  );
+}
+
+\`\`\``,
+            lovable: `[Lovable Component Generator]
+Create an ultra-premium editorial Portfolio Closing and Contact Footer Section with interactive mechanical spool reels bridging two worlds and an animated vector cursive signature of Jainil.
+Live Reference: https://ai.studio/apps/b7c2bb3d-39cd-4d53-8887-1eb76db0fc73
+
+Code:
+\`\`\`tsx
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+
+// ============================================================================
+// 1. SIGNATURE COMPONENT (Handwritten cursive vector signature of "Jainil")
+// ============================================================================
+export function Signature() {
+  return (
+    <div className="relative flex items-center justify-start select-none" id="signature-container">
+      <svg
+        viewBox="0 0 320 150"
+        className="w-[200px] sm:w-[240px] md:w-[270px] h-auto overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Handwritten signature of Jainil"
+      >
+        <defs>
+          <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#FFFFFF" floodOpacity="0.15" />
+          </filter>
+        </defs>
+
+        {/* Main signature strokes */}
+        <g stroke="#F8F8F5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#subtleGlow)">
+          {/* Capital 'J' top loop and downward flourish */}
+          <motion.path
+            d="M 44 46 C 36 34 50 18 68 18 C 84 18 88 28 84 40 C 78 58 68 96 64 118"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Capital 'J' bottom descender loop sweeping into baseline */}
+          <motion.path
+            d="M 64 118 C 60 138 46 146 36 140 C 24 132 26 116 40 102 C 54 88 84 78 112 74"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: 'easeInOut' }}
+          />
+
+          {/* 'a' cursive oval and down-stem */}
+          <motion.path
+            d="M 126 73 C 120 74 114 80 115 86 C 117 92 125 94 133 91 C 139 88 142 82 142 74 L 142 88 C 142 93 147 93 152 89"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' stroke */}
+          <motion.path
+            d="M 152 89 C 156 82 161 68 163 65 L 164 88 C 165 92 169 92 174 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.1, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' dot */}
+          <motion.circle
+            cx="162"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.25 }}
+          />
+
+          {/* 'n' double arches */}
+          <motion.path
+            d="M 174 88 C 177 78 182 68 187 68 C 192 68 193 76 193 86 C 196 76 201 68 206 68 C 211 68 213 77 214 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.25, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' stroke */}
+          <motion.path
+            d="M 214 88 C 218 82 223 68 225 65 L 226 88 C 227 92 231 92 235 86"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.45, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' dot */}
+          <motion.circle
+            cx="224"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.6 }}
+          />
+
+          {/* 'l' tall graceful loop */}
+          <motion.path
+            d="M 235 86 C 240 74 248 38 254 22 C 257 14 262 16 262 26 C 261 42 255 76 254 92"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Sweeping underline flourish looping back under "Jainil" */}
+          <motion.path
+            d="M 254 92 C 255 106 248 116 234 121 C 198 132 122 133 48 130 C 34 129 25 123 32 115 C 40 105 74 98 122 90 C 176 82 238 80 284 82"
+            strokeWidth="2.4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.1, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Terminal flourish mark */}
+          <motion.circle
+            cx="292"
+            cy="82"
+            r="1.6"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 2.1 }}
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// 2. TOP PANEL COMPONENT (Editorial Headline & Floating Typographic Banners)
+// ============================================================================
+export function TopPanel() {
+  return (
+    <section
+      className="relative w-full max-w-[1440px] mx-auto bg-[#FAFAF7] text-[#0A0D10] rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px] pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24 px-6 sm:px-12 md:px-20 select-none overflow-hidden"
+      id="top-white-panel"
+    >
+      {/* Top Metadata Navigation */}
+      <header
+        className="w-full flex items-center justify-between text-[15px] sm:text-[17px] md:text-[18px] text-[#181D22] font-sans font-normal tracking-tight mb-12 sm:mb-16 md:mb-20"
+        id="top-metadata-header"
+      >
+        <span className="w-1/3 text-left pl-1 sm:pl-2" id="meta-creative">
+          (Creative)
+        </span>
+        <span className="w-1/3 text-center" id="meta-years">
+          (2023–2025)
+        </span>
+        <span className="w-1/3 text-right pr-1 sm:pr-2" id="meta-design">
+          (Design)
+        </span>
+      </header>
+
+      {/* Main Headline & Banners */}
+      <div className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-16 md:pb-20">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif-display text-[68px] sm:text-[98px] md:text-[128px] lg:text-[144px] xl:text-[152px] leading-[0.92] tracking-[-0.035em] text-[#0A0D10] font-normal mb-5 sm:mb-6"
+          id="main-headline"
+        >
+          <span>Thank </span>
+          <span className="italic font-normal font-serif-display ml-1 sm:ml-2">You</span>
+        </motion.h1>
+
+        {/* Stacked Typographic Banners */}
+        <div className="relative flex flex-col items-center mt-1">
+          {/* Blue Text Banner: "Looking Forward to" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: [0, 1.2, 0, -1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.35 },
+              scale: { duration: 0.8, delay: 0.35 },
+              x: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-10 bg-[#087CCB] text-[#FFFFFF] font-serif-display px-4 sm:px-6 md:px-7 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[40px] lg:text-[45px] leading-tight font-normal tracking-[-0.015em] shadow-[0_4px_16px_rgba(8,124,203,0.18)] -rotate-[0.6deg] -translate-x-2 sm:-translate-x-4"
+            id="blue-text-banner"
+          >
+            Looking Forward to
+          </motion.div>
+
+          {/* Black Text Banner: "Connect with You!" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -1.2, 0, 1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.45 },
+              scale: { duration: 0.8, delay: 0.45 },
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-20 bg-[#06080A] text-[#FFFFFF] font-serif-display px-5 sm:px-7 md:px-8 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[38px] lg:text-[43px] leading-tight font-normal tracking-[-0.015em] shadow-[0_6px_20px_rgba(0,0,0,0.35)] -mt-2 sm:-mt-2.5 translate-x-2 sm:translate-x-4"
+            id="black-text-banner"
+          >
+            Connect with You!
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// 3. REEL ASSEMBLY (Interactive Mechanical Dual Spool with Parallax Springs)
+// ============================================================================
+export interface ReelAssemblyProps {
+  mousePos: { x: number; y: number };
+  className?: string;
+}
+
+export function ReelAssembly({ mousePos, className = '' }: ReelAssemblyProps) {
+  const upperTilt = {
+    rotate: mousePos.x * 3.5,
+    x: mousePos.x * 4,
+    y: mousePos.y * 3,
+  };
+
+  const lowerTilt = {
+    rotate: mousePos.x * 6,
+    x: mousePos.x * 8,
+    y: mousePos.y * 5,
+  };
+
+  return (
+    <div
+      className={\`relative flex items-center justify-center select-none pointer-events-none \${className}\`}
+      id="reel-assembly"
+    >
+      <div className="relative w-[210px] sm:w-[260px] md:w-[305px] h-[336px] sm:h-[416px] md:h-[488px]">
+        <svg
+          viewBox="0 0 300 480"
+          className="w-full h-full overflow-visible"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <radialGradient id="spoolGradLight" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1B87DE" />
+              <stop offset="55%" stopColor="#0A77D1" />
+              <stop offset="85%" stopColor="#0473D1" />
+              <stop offset="100%" stopColor="#025CA8" />
+            </radialGradient>
+
+            <radialGradient id="spoolGradDark" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1280DC" />
+              <stop offset="55%" stopColor="#0773CF" />
+              <stop offset="88%" stopColor="#0368C0" />
+              <stop offset="100%" stopColor="#024D94" />
+            </radialGradient>
+
+            <linearGradient id="metalRingGrad" x1="20%" y1="15%" x2="80%" y2="85%">
+              <stop offset="0%" stopColor="#D9DFE6" />
+              <stop offset="35%" stopColor="#7E8A96" />
+              <stop offset="70%" stopColor="#2E3740" />
+              <stop offset="100%" stopColor="#151C24" />
+            </linearGradient>
+
+            <filter id="reelDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.45" />
+            </filter>
+
+            <filter id="stringShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1.5" dy="3" stdDeviation="3" floodColor="#000000" floodOpacity="0.3" />
+            </filter>
+
+            <filter id="spoolNoise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={3} result="noise" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" />
+              <feComposite in2="SourceGraphic" in="gl" operator="in" />
+            </filter>
+          </defs>
+
+          {/* 4 Central Hanging Strings */}
+          <motion.g
+            animate={{
+              x: mousePos.x * 5,
+              rotate: mousePos.x * 1.5,
+            }}
+            transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+          >
+            <path
+              d="M 141 155 C 139 210, 140 250, 142 305"
+              stroke="#0570ca"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 147 155 C 151 205, 153 255, 149 305"
+              stroke="#0462b3"
+              strokeWidth="3.0"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 153 155 C 146 200, 145 260, 154 305"
+              stroke="#0678d8"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 159 155 C 162 215, 160 250, 158 305"
+              stroke="#056fc8"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+          </motion.g>
+
+          {/* UPPER BLUE REEL */}
+          <motion.g
+            animate={upperTilt}
+            transition={{ type: 'spring', damping: 28, stiffness: 140 }}
+            style={{ transformOrigin: '150px 105px' }}
+          >
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolGradLight)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.5"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="67.5"
+              stroke="#023b6e"
+              strokeWidth="1.2"
+              fill="none"
+              opacity="0.75"
+            />
+
+            {/* Central Grommet / Eyelet */}
+            <circle cx="150" cy="105" r="23" fill="#09131e" opacity="0.6" />
+            <circle cx="150" cy="105" r="21" fill="url(#metalRingGrad)" />
+
+            <path
+              d="M 132 98 A 20 20 0 0 1 168 98"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <path
+              d="M 134 113 A 19 19 0 0 0 166 113"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="105" r="12.5" fill="#030609" />
+          </motion.g>
+
+          {/* LOWER BLUE REEL */}
+          <motion.g
+            animate={lowerTilt}
+            transition={{ type: 'spring', damping: 22, stiffness: 90 }}
+            style={{ transformOrigin: '150px 355px' }}
+          >
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolGradDark)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.55"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="67.5"
+              stroke="#02325c"
+              strokeWidth="1.4"
+              fill="none"
+              opacity="0.8"
+            />
+
+            {/* Central Grommet */}
+            <circle cx="150" cy="355" r="23" fill="#050a10" opacity="0.7" />
+            <circle cx="150" cy="355" r="21" fill="url(#metalRingGrad)" />
+            <path
+              d="M 132 348 A 20 20 0 0 1 168 348"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.85"
+            />
+            <path
+              d="M 134 363 A 19 19 0 0 0 166 363"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="355" r="12.5" fill="#030609" />
+          </motion.g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 4. CONTACT SECTION COMPONENT (Asymmetrical Responsive Contact Grid)
+// ============================================================================
+export function ContactSection() {
+  return (
+    <footer
+      className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-28 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28 select-text"
+      id="contact-section"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 sm:gap-14 items-start">
+        {/* Left Column: Contact Information */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col space-y-7 sm:space-y-8 text-left font-sans-clean"
+          id="contact-info-col"
+        >
+          {/* Email Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-email-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Email
+            </span>
+            <a
+              href="mailto:uihub.design@gmail.com"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-email-link"
+            >
+              uihub.design@gmail.com
+            </a>
+          </div>
+
+          {/* Phone Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-phone-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Phone
+            </span>
+            <a
+              href="tel:+6289518924877"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-phone-link"
+            >
+              +62 895 1892 4877
+            </a>
+          </div>
+
+          {/* Social Links Block */}
+          <div className="flex flex-col space-y-2.5 pt-2" id="contact-socials-block">
+            <a
+              href="https://www.linkedin.com/in/jainil-patel2224/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-linkedin"
+            >
+              linkedin.com/in/jainil-patel2224/
+            </a>
+
+            <a
+              href="https://github.com/jainil224"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-github"
+            >
+              github.com/jainil224
+            </a>
+          </div>
+        </div>
+
+        {/* Center Clearance Column for central reels */}
+        <div className="hidden md:block md:col-span-2 lg:col-span-2 pointer-events-none" aria-hidden="true" />
+
+        {/* Right Column: Signature / Closing */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col items-start md:items-end justify-start pt-2 sm:pt-4"
+          id="signature-col"
+        >
+          <div className="flex flex-col items-start space-y-4 sm:space-y-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-serif-display text-[26px] sm:text-[30px] md:text-[32px] text-[#F8F8F5] font-normal tracking-[-0.01em]"
+              id="warm-regards-heading"
+            >
+              Warm Regards,
+            </motion.h2>
+
+            <div className="pt-1">
+              <Signature />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============================================================================
+// 5. MAIN PORTFOLIO CLOSING COMPONENT
+// ============================================================================
+export interface PortfolioClosingProps {
+  className?: string;
+}
+
+export default function PortfolioClosing({ className = '' }: PortfolioClosingProps) {
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const normX = (e.clientX / innerWidth - 0.5) * 2;
+      const normY = (e.clientY / innerHeight - 0.5) * 2;
+      setMouseOffset({ x: normX, y: normY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [prefersReducedMotion]);
+
+  return (
+    <main
+      className={\`relative w-full min-h-screen bg-[#0B1014] text-[#F8F8F5] overflow-x-hidden flex flex-col justify-between selection:bg-[#087CCB] selection:text-white \${className}\`}
+      id="portfolio-closing-section"
+    >
+      {/* Background analog noise texture */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.035] mix-blend-overlay z-50"
+        style={{
+          backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\`,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* TOP ZONE: Rounded white card */}
+      <div className="relative w-full z-10 flex flex-col items-center">
+        <TopPanel />
+
+        {/* Central Spool Reel Assembly bridging both sections */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[62%] sm:translate-y-[60%] md:translate-y-[58%] z-30"
+          id="central-reel-container"
+        >
+          <ReelAssembly
+            mousePos={prefersReducedMotion ? { x: 0, y: 0 } : mouseOffset}
+          />
+        </div>
+      </div>
+
+      {/* BOTTOM ZONE: Contact information and signature */}
+      <div className="relative w-full z-20 flex-1 flex flex-col justify-between pt-24 sm:pt-32 md:pt-36">
+        <ContactSection />
+      </div>
+    </main>
+  );
+}
+
+\`\`\``,
+            advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: PORTFOLIO CLOSING & CONTACT SECTION
+1. Architecture: Full-viewport dual-zone layout. Top card is architectural ivory #FAFAF7 with rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px]. Lower zone is ultra-deep matte #0B1014 with feTurbulence SVG analog paper noise overlay.
+2. Typography: Playfair Display / Cormorant Garamond serif paired with Plus Jakarta Sans / Inter. Headline "Thank You" at 68px-152px with Roman "Thank" and italic "You". Floating badges at -0.6deg rotation with subtle ambient floating motion.
+3. Central Spool Assembly: Dual blue reels (radius 68 in 300x480 SVG coordinate space) with multi-stop radial gradients, metallic grommets, specular crescent highlights, 4 crossing blue cords with SVG drop shadows, and spring mouse parallax tracking.
+4. Signature: Animated handwritten cursive vector strokes for "Jainil" with looping capital J, descender loop, fluid connecting letterforms, dramatic sweeping underline flourish, and terminal dot.
+5. Live Demo Reference: https://ai.studio/apps/b7c2bb3d-39cd-4d53-8887-1eb76db0fc73
+
+Executable Code:
+\`\`\`tsx
+import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+
+// ============================================================================
+// 1. SIGNATURE COMPONENT (Handwritten cursive vector signature of "Jainil")
+// ============================================================================
+export function Signature() {
+  return (
+    <div className="relative flex items-center justify-start select-none" id="signature-container">
+      <svg
+        viewBox="0 0 320 150"
+        className="w-[200px] sm:w-[240px] md:w-[270px] h-auto overflow-visible"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-label="Handwritten signature of Jainil"
+      >
+        <defs>
+          <filter id="subtleGlow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="1" stdDeviation="1.5" floodColor="#FFFFFF" floodOpacity="0.15" />
+          </filter>
+        </defs>
+
+        {/* Main signature strokes */}
+        <g stroke="#F8F8F5" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#subtleGlow)">
+          {/* Capital 'J' top loop and downward flourish */}
+          <motion.path
+            d="M 44 46 C 36 34 50 18 68 18 C 84 18 88 28 84 40 C 78 58 68 96 64 118"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Capital 'J' bottom descender loop sweeping into baseline */}
+          <motion.path
+            d="M 64 118 C 60 138 46 146 36 140 C 24 132 26 116 40 102 C 54 88 84 78 112 74"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 0.65, ease: 'easeInOut' }}
+          />
+
+          {/* 'a' cursive oval and down-stem */}
+          <motion.path
+            d="M 126 73 C 120 74 114 80 115 86 C 117 92 125 94 133 91 C 139 88 142 82 142 74 L 142 88 C 142 93 147 93 152 89"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.9, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' stroke */}
+          <motion.path
+            d="M 152 89 C 156 82 161 68 163 65 L 164 88 C 165 92 169 92 174 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.1, ease: 'easeOut' }}
+          />
+
+          {/* First 'i' dot */}
+          <motion.circle
+            cx="162"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.25 }}
+          />
+
+          {/* 'n' double arches */}
+          <motion.path
+            d="M 174 88 C 177 78 182 68 187 68 C 192 68 193 76 193 86 C 196 76 201 68 206 68 C 211 68 213 77 214 88"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 1.25, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' stroke */}
+          <motion.path
+            d="M 214 88 C 218 82 223 68 225 65 L 226 88 C 227 92 231 92 235 86"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 1.45, ease: 'easeOut' }}
+          />
+
+          {/* Second 'i' dot */}
+          <motion.circle
+            cx="224"
+            cy="52"
+            r="1.5"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.25, delay: 1.6 }}
+          />
+
+          {/* 'l' tall graceful loop */}
+          <motion.path
+            d="M 235 86 C 240 74 248 38 254 22 C 257 14 262 16 262 26 C 261 42 255 76 254 92"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Sweeping underline flourish looping back under "Jainil" */}
+          <motion.path
+            d="M 254 92 C 255 106 248 116 234 121 C 198 132 122 133 48 130 C 34 129 25 123 32 115 C 40 105 74 98 122 90 C 176 82 238 80 284 82"
+            strokeWidth="2.4"
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 1.1, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+          />
+
+          {/* Terminal flourish mark */}
+          <motion.circle
+            cx="292"
+            cy="82"
+            r="1.6"
+            fill="#F8F8F5"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.3, delay: 2.1 }}
+          />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+// ============================================================================
+// 2. TOP PANEL COMPONENT (Editorial Headline & Floating Typographic Banners)
+// ============================================================================
+export function TopPanel() {
+  return (
+    <section
+      className="relative w-full max-w-[1440px] mx-auto bg-[#FAFAF7] text-[#0A0D10] rounded-b-[70px] sm:rounded-b-[95px] md:rounded-b-[115px] pt-10 sm:pt-14 md:pt-16 pb-16 sm:pb-20 md:pb-24 px-6 sm:px-12 md:px-20 select-none overflow-hidden"
+      id="top-white-panel"
+    >
+      {/* Top Metadata Navigation */}
+      <header
+        className="w-full flex items-center justify-between text-[15px] sm:text-[17px] md:text-[18px] text-[#181D22] font-sans font-normal tracking-tight mb-12 sm:mb-16 md:mb-20"
+        id="top-metadata-header"
+      >
+        <span className="w-1/3 text-left pl-1 sm:pl-2" id="meta-creative">
+          (Creative)
+        </span>
+        <span className="w-1/3 text-center" id="meta-years">
+          (2023–2025)
+        </span>
+        <span className="w-1/3 text-right pr-1 sm:pr-2" id="meta-design">
+          (Design)
+        </span>
+      </header>
+
+      {/* Main Headline & Banners */}
+      <div className="relative flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-2 sm:pt-4 pb-12 sm:pb-16 md:pb-20">
+        <motion.h1
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="font-serif-display text-[68px] sm:text-[98px] md:text-[128px] lg:text-[144px] xl:text-[152px] leading-[0.92] tracking-[-0.035em] text-[#0A0D10] font-normal mb-5 sm:mb-6"
+          id="main-headline"
+        >
+          <span>Thank </span>
+          <span className="italic font-normal font-serif-display ml-1 sm:ml-2">You</span>
+        </motion.h1>
+
+        {/* Stacked Typographic Banners */}
+        <div className="relative flex flex-col items-center mt-1">
+          {/* Blue Text Banner: "Looking Forward to" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              x: [0, 1.2, 0, -1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.35 },
+              scale: { duration: 0.8, delay: 0.35 },
+              x: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-10 bg-[#087CCB] text-[#FFFFFF] font-serif-display px-4 sm:px-6 md:px-7 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[40px] lg:text-[45px] leading-tight font-normal tracking-[-0.015em] shadow-[0_4px_16px_rgba(8,124,203,0.18)] -rotate-[0.6deg] -translate-x-2 sm:-translate-x-4"
+            id="blue-text-banner"
+          >
+            Looking Forward to
+          </motion.div>
+
+          {/* Black Text Banner: "Connect with You!" */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: [0, -1.2, 0, 1.2, 0],
+            }}
+            transition={{
+              opacity: { duration: 0.8, delay: 0.45 },
+              scale: { duration: 0.8, delay: 0.45 },
+              y: { duration: 6, repeat: Infinity, ease: 'easeInOut' },
+            }}
+            className="relative z-20 bg-[#06080A] text-[#FFFFFF] font-serif-display px-5 sm:px-7 md:px-8 py-1.5 sm:py-2 text-[22px] sm:text-[32px] md:text-[38px] lg:text-[43px] leading-tight font-normal tracking-[-0.015em] shadow-[0_6px_20px_rgba(0,0,0,0.35)] -mt-2 sm:-mt-2.5 translate-x-2 sm:translate-x-4"
+            id="black-text-banner"
+          >
+            Connect with You!
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// 3. REEL ASSEMBLY (Interactive Mechanical Dual Spool with Parallax Springs)
+// ============================================================================
+export interface ReelAssemblyProps {
+  mousePos: { x: number; y: number };
+  className?: string;
+}
+
+export function ReelAssembly({ mousePos, className = '' }: ReelAssemblyProps) {
+  const upperTilt = {
+    rotate: mousePos.x * 3.5,
+    x: mousePos.x * 4,
+    y: mousePos.y * 3,
+  };
+
+  const lowerTilt = {
+    rotate: mousePos.x * 6,
+    x: mousePos.x * 8,
+    y: mousePos.y * 5,
+  };
+
+  return (
+    <div
+      className={\`relative flex items-center justify-center select-none pointer-events-none \${className}\`}
+      id="reel-assembly"
+    >
+      <div className="relative w-[210px] sm:w-[260px] md:w-[305px] h-[336px] sm:h-[416px] md:h-[488px]">
+        <svg
+          viewBox="0 0 300 480"
+          className="w-full h-full overflow-visible"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <radialGradient id="spoolGradLight" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1B87DE" />
+              <stop offset="55%" stopColor="#0A77D1" />
+              <stop offset="85%" stopColor="#0473D1" />
+              <stop offset="100%" stopColor="#025CA8" />
+            </radialGradient>
+
+            <radialGradient id="spoolGradDark" cx="42%" cy="38%" r="62%">
+              <stop offset="0%" stopColor="#1280DC" />
+              <stop offset="55%" stopColor="#0773CF" />
+              <stop offset="88%" stopColor="#0368C0" />
+              <stop offset="100%" stopColor="#024D94" />
+            </radialGradient>
+
+            <linearGradient id="metalRingGrad" x1="20%" y1="15%" x2="80%" y2="85%">
+              <stop offset="0%" stopColor="#D9DFE6" />
+              <stop offset="35%" stopColor="#7E8A96" />
+              <stop offset="70%" stopColor="#2E3740" />
+              <stop offset="100%" stopColor="#151C24" />
+            </linearGradient>
+
+            <filter id="reelDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+              <feDropShadow dx="0" dy="8" stdDeviation="12" floodColor="#000000" floodOpacity="0.45" />
+            </filter>
+
+            <filter id="stringShadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="1.5" dy="3" stdDeviation="3" floodColor="#000000" floodOpacity="0.3" />
+            </filter>
+
+            <filter id="spoolNoise">
+              <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves={3} result="noise" />
+              <feColorMatrix type="matrix" values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.12 0" />
+              <feComposite in2="SourceGraphic" in="gl" operator="in" />
+            </filter>
+          </defs>
+
+          {/* 4 Central Hanging Strings */}
+          <motion.g
+            animate={{
+              x: mousePos.x * 5,
+              rotate: mousePos.x * 1.5,
+            }}
+            transition={{ type: 'spring', damping: 25, stiffness: 120 }}
+          >
+            <path
+              d="M 141 155 C 139 210, 140 250, 142 305"
+              stroke="#0570ca"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 147 155 C 151 205, 153 255, 149 305"
+              stroke="#0462b3"
+              strokeWidth="3.0"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 153 155 C 146 200, 145 260, 154 305"
+              stroke="#0678d8"
+              strokeWidth="2.8"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+            <path
+              d="M 159 155 C 162 215, 160 250, 158 305"
+              stroke="#056fc8"
+              strokeWidth="2.6"
+              strokeLinecap="round"
+              fill="none"
+              filter="url(#stringShadow)"
+            />
+          </motion.g>
+
+          {/* UPPER BLUE REEL */}
+          <motion.g
+            animate={upperTilt}
+            transition={{ type: 'spring', damping: 28, stiffness: 140 }}
+            style={{ transformOrigin: '150px 105px' }}
+          >
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolGradLight)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.5"
+            />
+            <circle
+              cx="150"
+              cy="105"
+              r="67.5"
+              stroke="#023b6e"
+              strokeWidth="1.2"
+              fill="none"
+              opacity="0.75"
+            />
+
+            {/* Central Grommet / Eyelet */}
+            <circle cx="150" cy="105" r="23" fill="#09131e" opacity="0.6" />
+            <circle cx="150" cy="105" r="21" fill="url(#metalRingGrad)" />
+
+            <path
+              d="M 132 98 A 20 20 0 0 1 168 98"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <path
+              d="M 134 113 A 19 19 0 0 0 166 113"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="105" r="12.5" fill="#030609" />
+          </motion.g>
+
+          {/* LOWER BLUE REEL */}
+          <motion.g
+            animate={lowerTilt}
+            transition={{ type: 'spring', damping: 22, stiffness: 90 }}
+            style={{ transformOrigin: '150px 355px' }}
+          >
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolGradDark)"
+              filter="url(#reelDropShadow)"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="68"
+              fill="url(#spoolNoise)"
+              opacity="0.55"
+            />
+            <circle
+              cx="150"
+              cy="355"
+              r="67.5"
+              stroke="#02325c"
+              strokeWidth="1.4"
+              fill="none"
+              opacity="0.8"
+            />
+
+            {/* Central Grommet */}
+            <circle cx="150" cy="355" r="23" fill="#050a10" opacity="0.7" />
+            <circle cx="150" cy="355" r="21" fill="url(#metalRingGrad)" />
+            <path
+              d="M 132 348 A 20 20 0 0 1 168 348"
+              stroke="#ffffff"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.85"
+            />
+            <path
+              d="M 134 363 A 19 19 0 0 0 166 363"
+              stroke="#070c12"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              fill="none"
+              opacity="0.9"
+            />
+            <circle cx="150" cy="355" r="12.5" fill="#030609" />
+          </motion.g>
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// 4. CONTACT SECTION COMPONENT (Asymmetrical Responsive Contact Grid)
+// ============================================================================
+export function ContactSection() {
+  return (
+    <footer
+      className="relative w-full max-w-[1440px] mx-auto px-6 sm:px-12 md:px-20 lg:px-28 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28 select-text"
+      id="contact-section"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-12 sm:gap-14 items-start">
+        {/* Left Column: Contact Information */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col space-y-7 sm:space-y-8 text-left font-sans-clean"
+          id="contact-info-col"
+        >
+          {/* Email Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-email-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Email
+            </span>
+            <a
+              href="mailto:uihub.design@gmail.com"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-email-link"
+            >
+              uihub.design@gmail.com
+            </a>
+          </div>
+
+          {/* Phone Block */}
+          <div className="flex flex-col space-y-1.5" id="contact-phone-block">
+            <span className="text-[#99A2AD] text-[14px] sm:text-[15px] font-normal tracking-wide">
+              Phone
+            </span>
+            <a
+              href="tel:+6289518924877"
+              className="text-[#F8F8F5] text-[18px] sm:text-[20px] md:text-[21px] font-normal tracking-[-0.01em] hover:text-[#FFFFFF] transition-colors inline-block focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-phone-link"
+            >
+              +62 895 1892 4877
+            </a>
+          </div>
+
+          {/* Social Links Block */}
+          <div className="flex flex-col space-y-2.5 pt-2" id="contact-socials-block">
+            <a
+              href="https://www.linkedin.com/in/jainil-patel2224/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-linkedin"
+            >
+              linkedin.com/in/jainil-patel2224/
+            </a>
+
+            <a
+              href="https://github.com/jainil224"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center text-[#F8F8F5] text-[16px] sm:text-[17px] md:text-[18px] font-normal underline underline-offset-4 decoration-[#6c7784] hover:decoration-[#FFFFFF] hover:-translate-y-0.5 transition-all duration-200 w-fit focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-400"
+              id="contact-social-github"
+            >
+              github.com/jainil224
+            </a>
+          </div>
+        </div>
+
+        {/* Center Clearance Column for central reels */}
+        <div className="hidden md:block md:col-span-2 lg:col-span-2 pointer-events-none" aria-hidden="true" />
+
+        {/* Right Column: Signature / Closing */}
+        <div
+          className="md:col-span-5 lg:col-span-5 flex flex-col items-start md:items-end justify-start pt-2 sm:pt-4"
+          id="signature-col"
+        >
+          <div className="flex flex-col items-start space-y-4 sm:space-y-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="font-serif-display text-[26px] sm:text-[30px] md:text-[32px] text-[#F8F8F5] font-normal tracking-[-0.01em]"
+              id="warm-regards-heading"
+            >
+              Warm Regards,
+            </motion.h2>
+
+            <div className="pt-1">
+              <Signature />
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ============================================================================
+// 5. MAIN PORTFOLIO CLOSING COMPONENT
+// ============================================================================
+export interface PortfolioClosingProps {
+  className?: string;
+}
+
+export default function PortfolioClosing({ className = '' }: PortfolioClosingProps) {
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    const handler = (e: MediaQueryListEvent) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
+
+  useEffect(() => {
+    if (prefersReducedMotion) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const normX = (e.clientX / innerWidth - 0.5) * 2;
+      const normY = (e.clientY / innerHeight - 0.5) * 2;
+      setMouseOffset({ x: normX, y: normY });
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, [prefersReducedMotion]);
+
+  return (
+    <main
+      className={\`relative w-full min-h-screen bg-[#0B1014] text-[#F8F8F5] overflow-x-hidden flex flex-col justify-between selection:bg-[#087CCB] selection:text-white \${className}\`}
+      id="portfolio-closing-section"
+    >
+      {/* Background analog noise texture */}
+      <div
+        className="pointer-events-none fixed inset-0 opacity-[0.035] mix-blend-overlay z-50"
+        style={{
+          backgroundImage: \`url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")\`,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* TOP ZONE: Rounded white card */}
+      <div className="relative w-full z-10 flex flex-col items-center">
+        <TopPanel />
+
+        {/* Central Spool Reel Assembly bridging both sections */}
+        <div
+          className="absolute left-1/2 -translate-x-1/2 bottom-0 translate-y-[62%] sm:translate-y-[60%] md:translate-y-[58%] z-30"
+          id="central-reel-container"
+        >
+          <ReelAssembly
+            mousePos={prefersReducedMotion ? { x: 0, y: 0 } : mouseOffset}
+          />
+        </div>
+      </div>
+
+      {/* BOTTOM ZONE: Contact information and signature */}
+      <div className="relative w-full z-20 flex-1 flex flex-col justify-between pt-24 sm:pt-32 md:pt-36">
+        <ContactSection />
+      </div>
+    </main>
+  );
+}
+
+\`\`\``
+        }
+    },
+    {
         id: 'tars-protocol',
         previewImage: '/assets/template-previews/tars-protocol.png',
         title: 'TARS Protocol Hero & Arena',
@@ -3200,7 +6994,7 @@ Key Specifications:
 - Col 4: "GET YOUR PARTS FASTER" + dispatch node CAD SVG icon
 - Hover: transition to #FAFAFA, icon border to #CCCCCC, chevron translateX(+2px)`,
             lovable: `Create the Partify 4-column industrial B2B feature bar and footer in React, TypeScript, and Tailwind CSS with pure white background, #EAEAEA dividers, GET STARTED pill button, 3 CAD schematic SVG icons, and hover animations with chevron translation.`,
-            advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: PARTIFY FEATURE BAR
+advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: PARTIFY FEATURE BAR
 1. Grid Architecture:
    - Mobile: grid-cols-1 with border-b #EAEAEA per cell.
    - Tablet (640-1023px): sm:grid-cols-2 with bottom & right interior borders.

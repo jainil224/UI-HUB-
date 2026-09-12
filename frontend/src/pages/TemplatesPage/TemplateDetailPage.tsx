@@ -26,6 +26,8 @@ const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = 
 ];
 
 const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.ComponentType }>> = {
+    'mood-hero': () => import('../../components/templates/MoodHero'),
+    'portfolio-closing': () => import('../../components/templates/PortfolioClosing'),
     'tars-protocol': () => import('../../components/templates/TarsHeroArena'),
     'split-fuzzy-orb': () => import('../../components/templates/SplitFuzzyOrbHero'),
     'segmint-2026': () => import('../../components/templates/SegmintFooter'),
@@ -42,9 +44,12 @@ const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Component
     'logo-here': () => import('../../components/templates/LogoHere'),
     'partify': () => import('../../components/templates/Partify'),
     'sui-overflow': () => import('../../components/templates/SuiOverflow'),
+    'graphic-designer-portfolio': () => import('../../components/templates/GraphicDesignerPortfolio'),
 };
 
 const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
+    'mood-hero': 'bg-[#EDE8DE]',
+    'portfolio-closing': 'bg-[#0B1014]',
     'tars-protocol': 'bg-white',
     'split-fuzzy-orb': 'bg-[#d6c0e3]',
     'segmint-2026': 'bg-[#E8E9EE]',
@@ -61,6 +66,7 @@ const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'logo-here': 'bg-white',
     'partify': 'bg-[#FBFBFB]',
     'sui-overflow': 'bg-[#F2EFE6]',
+    'graphic-designer-portfolio': 'bg-[#F7F6F2]',
 };
 
 // Desktop-only preview: renders the template on a fixed 1280px desktop canvas
