@@ -18,7 +18,7 @@ const PricingPage = React.lazy(() => import('./pages/PricingPage/PricingPage'));
 const PrivacyPolicyPage = React.lazy(() => import('./pages/legal/PrivacyPolicyPage'));
 const TermsPage = React.lazy(() => import('./pages/legal/TermsPage'));
 const PaymentPolicyPage = React.lazy(() => import('./pages/legal/PaymentPolicyPage'));
-const CookiePolicyPage = React.lazy(() => import('./pages/legal/CookiePolicyPage'));
+const CookieSettingsPage = React.lazy(() => import('./pages/legal/CookieSettingsPage'));
 const TemplatesPage = React.lazy(() => import('./pages/TemplatesPage/TemplatesPage'));
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
@@ -160,7 +160,7 @@ const AppShell = () => {
             <Route path="/privacy" element={<PrivacyPolicyPage />} />
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/payment-policy" element={<PaymentPolicyPage />} />
-            <Route path="/cookies" element={<CookiePolicyPage />} />
+            <Route path="/cookies" element={<CookieSettingsPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/templates/:id" element={<TemplateDetailPage />} />
           </Routes>

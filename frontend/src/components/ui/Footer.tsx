@@ -18,10 +18,10 @@ const resourceLinks = [
 ];
 
 const utilityLinks = [
-    { label: 'Privacy Policy', to: '/privacy' },
-    { label: 'Terms & Conditions', to: '/terms' },
-    { label: 'Payment Policy', to: '/payment-policy' },
-    { label: 'Cookie Settings', to: '/cookies' },
+    { label: 'Privacy Policy', to: '/privacy', dot: 'bg-brand-blue' },
+    { label: 'Terms & Conditions', to: '/terms', dot: 'bg-brand-yellow' },
+    { label: 'Payment Policy', to: '/payment-policy', dot: 'bg-brand-red' },
+    { label: 'Cookie Settings', to: '/cookies', dot: 'bg-[#00FF88]' },
 ];
 
 const socials = [
@@ -100,10 +100,18 @@ const Footer = () => (
                         Explore 100+ Components
                         <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                     </Link>
+
+                    {/* Attribution */}
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-neutral-800/60 pt-5 mt-1">
+                        <p className="flex items-center gap-2 text-[11px] font-mono font-bold tracking-wider text-neutral-400">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#00FF88] animate-pulse" />
+                            © 2026 UI HUB — BUILT FOR VIBE CODERS.
+                        </p>
+                    </div>
                 </div>
 
                 {/* Link columns */}
-                <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-10 lg:pl-12">
+                <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:pl-12">
                     {/* Navigate */}
                     <div className="flex flex-col gap-4">
                         <h4 className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white border-b border-neutral-800 pb-3">
@@ -149,6 +157,40 @@ const Footer = () => (
                             ))}
                         </ul>
                     </div>
+
+                    {/* Legal */}
+                    <div className="flex flex-col gap-4">
+                        <h4 className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-white border-b border-neutral-800 pb-3">
+                            <span className="w-2 h-2 rounded-full bg-[#00FF88] border border-black" />
+                            Legal
+                        </h4>
+                        <ul className="flex flex-col gap-2.5">
+                            {utilityLinks.map(({ label, to, dot }) => (
+                                <li key={to}>
+                                    <Link
+                                        to={to}
+                                        className="group flex items-center gap-1.5 w-fit text-sm font-bold text-neutral-400 hover:text-white hover:translate-x-1 transition-all"
+                                    >
+                                        <span className={`w-0 group-hover:w-2 h-px ${dot} transition-all`} />
+                                        {label}
+                                        <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                        <span className="mt-2 flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-400">
+                            <Zap size={10} className="text-brand-yellow" fill="currentColor" />
+                            Made by
+                            <a
+                                href="https://github.com/jainil224"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-white hover:text-brand-blue transition-colors"
+                            >
+                                Jainil Patel
+                            </a>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -186,38 +228,6 @@ const Footer = () => (
             <span className="absolute top-3 right-4 w-3 h-3 border-t-2 border-r-2 border-neutral-700 pointer-events-none" />
             <span className="absolute bottom-3 left-4 w-3 h-3 border-b-2 border-l-2 border-neutral-700 pointer-events-none" />
             <span className="absolute bottom-3 right-4 w-3 h-3 border-b-2 border-r-2 border-neutral-700 pointer-events-none" />
-
-            {/* Legal row — overlaid on the wordmark so it reads as one block */}
-            <div className="lg:absolute lg:bottom-0 lg:inset-x-0 z-20 bg-gradient-to-t from-brand-bg via-brand-bg/90 to-transparent">
-                <div className="max-w-7xl mx-auto px-6 pt-6 pb-4 flex flex-wrap items-center justify-center lg:justify-between gap-x-6 gap-y-2">
-                    <p className="text-neutral-500 text-[11px] font-mono tracking-wider">
-                        © 2026 UI HUB — BUILT FOR VIBE CODERS.
-                    </p>
-                    <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2" aria-label="Legal">
-                        {utilityLinks.map(({ label, to }) => (
-                            <Link
-                                key={label}
-                                to={to}
-                                className="text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500 hover:text-white underline-offset-2 hover:underline transition-colors"
-                            >
-                                {label}
-                            </Link>
-                        ))}
-                        <span className="flex items-center gap-1.5 text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500">
-                            <Zap size={10} className="text-brand-blue" fill="currentColor" />
-                            Made by
-                            <a
-                                href="https://github.com/jainil224"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-white hover:text-brand-blue transition-colors"
-                            >
-                                Jainil Patel
-                            </a>
-                        </span>
-                    </nav>
-                </div>
-            </div>
         </div>
     </footer>
 );

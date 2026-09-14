@@ -1,7 +1,7 @@
 import { initializeApp, FirebaseApp } from "firebase/app";
 import { getAuth, Auth, setPersistence, browserLocalPersistence } from "firebase/auth";
 import { getStorage, FirebaseStorage } from "firebase/storage";
-import { getAnalytics, Analytics } from "firebase/analytics";
+import { getAnalytics, setAnalyticsCollectionEnabled, Analytics } from "firebase/analytics";
 import { isAnalyticsAllowed } from "../utils/cookieUtils";
 
 let app: FirebaseApp;
@@ -59,5 +59,19 @@ export const enableAnalytics = (): void => {
         console.log('[Analytics] Firebase Analytics enabled after consent.');
     } catch (e) {
         console.warn('Analytics initialization failed:', e);
+    }
+};
+
+/**
+ * Disables Firebase Analytics collection when consent is revoked or not granted.
+ * Safely no-ops if analytics was never initialized.
+ */
+export const disableAnalytics = (): void => {
+    if (typeof window === 'undefined' || !analytics) return;
+    try {
+        setAnalyticsCollectionEnabled(analytics, false);
+        console.log('[Analytics] Firebase Analytics disabled after consent revoked.');
+    } catch (e) {
+        console.warn('Analytics disable failed:', e);
     }
 };
