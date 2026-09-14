@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import LegalPage, { LegalContent, type LegalSection } from './LegalPage';
 import { useCookieConsent } from '../../context/CookieConsentContext';
 import type { CookiePreferences } from '../../utils/cookieUtils';
@@ -127,10 +127,23 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ icon: Icon, dot, title, des
 );
 
 const CookieSettingsPage: React.FC = () => {
-    const { status, prefs, showBanner, acceptAll, rejectNonEssential, savePreference, resetPreference } = useCookieConsent();
+    const { status, prefs, acceptAll, rejectNonEssential, savePreference, resetPreference } = useCookieConsent();
     const [draft, setDraft] = useState<CookiePreferences>({ ...prefs });
     const [showPolicy, setShowPolicy] = useState(false);
     const [saved, setSaved] = useState(false);
+    const savedTimerRef = useRef<number | null>(null);
+
+    useEffect(() => {
+        setDraft({ ...prefs });
+    }, [prefs]);
+
+    useEffect(() => {
+        return () => {
+            if (savedTimerRef.current !== null) {
+                clearTimeout(savedTimerRef.current);
+            }
+        };
+    }, []);
 
     const hasChanges =
         draft.analytics !== prefs.analytics ||
@@ -159,7 +172,10 @@ const CookieSettingsPage: React.FC = () => {
     const handleSave = () => {
         savePreference(draft);
         setSaved(true);
-        setTimeout(() => setSaved(false), 2000);
+        if (savedTimerRef.current !== null) {
+            clearTimeout(savedTimerRef.current);
+        }
+        savedTimerRef.current = window.setTimeout(() => setSaved(false), 2000);
     };
 
     const handleReset = () => {

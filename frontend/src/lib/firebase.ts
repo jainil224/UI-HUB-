@@ -49,13 +49,24 @@ export const initFirebase = (config: any) => {
  * Safely no-ops if already initialized or if consent was revoked.
  */
 export const enableAnalytics = (): void => {
-    if (typeof window === 'undefined' || analytics) return;
+    if (typeof window === 'undefined') return;
 
     const isMobile = /Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     if (isMobile || !isAnalyticsAllowed()) return;
 
+    if (analytics) {
+        try {
+            setAnalyticsCollectionEnabled(analytics, true);
+            console.log('[Analytics] Firebase Analytics re-enabled after consent.');
+        } catch (e) {
+            console.warn('Analytics enable failed:', e);
+        }
+        return;
+    }
+
     try {
         analytics = getAnalytics(app);
+        setAnalyticsCollectionEnabled(analytics, true);
         console.log('[Analytics] Firebase Analytics enabled after consent.');
     } catch (e) {
         console.warn('Analytics initialization failed:', e);

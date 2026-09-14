@@ -72,8 +72,8 @@ const applyAnalytics = (analyticsAllowed: boolean) => {
 };
 
 export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [status, setStatus] = useState<CookieConsentStatus>('unknown');
-    const [prefs, setPrefs] = useState<CookiePreferences>({ ...ESSENTIAL_ONLY });
+    const [status, setStatus] = useState<CookieConsentStatus>(() => getConsent());
+    const [prefs, setPrefs] = useState<CookiePreferences>(() => getPreferences());
     const [showBanner, setShowBanner] = useState(false);
 
     useEffect(() => {
