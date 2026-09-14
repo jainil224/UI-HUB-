@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Home, ShieldCheck, FileText, CreditCard, Cookie } from 'lucide-react';
 
 export interface LegalSection {
@@ -59,6 +59,8 @@ const navLinks = [
 ];
 
 const LegalPage: React.FC<LegalPageProps> = ({ eyebrow, title, subtitle, updatedLabel, updatedDate, children }) => {
+    const { pathname } = useLocation();
+
     return (
         <section className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden bg-brand-bg">
             <div className="max-w-4xl mx-auto">
@@ -104,18 +106,27 @@ const LegalPage: React.FC<LegalPageProps> = ({ eyebrow, title, subtitle, updated
                     </motion.p>
                 </div>
 
-                <div className="flex flex-wrap gap-2 mb-12">
-                    {navLinks.map(({ to, label, icon: Icon }) => (
-                        <Link
-                            key={to}
-                            to={to}
-                            className="group inline-flex items-center gap-2 px-4 py-2 border-2 border-white bg-brand-surface text-white rounded-md font-black text-[11px] uppercase tracking-widest brutal-shadow-black hover:bg-brand-blue hover:border-black hover:-translate-x-0.5 hover:-translate-y-0.5 transition-all"
-                        >
-                            <Icon size={13} className="group-hover:rotate-12 transition-transform" />
-                            {label}
-                        </Link>
-                    ))}
-                </div>
+                <nav className="flex flex-wrap gap-2 mb-12" aria-label="Legal pages">
+                    {navLinks.map(({ to, label, icon: Icon }) => {
+                        const isActive = pathname === to;
+                        return (
+                            <Link
+                                key={to}
+                                to={to}
+                                aria-current={isActive ? 'page' : undefined}
+                                className={`group inline-flex items-center gap-2 px-4 py-2 border-2 rounded-md font-black text-[11px] uppercase tracking-widest transition-all ${
+                                    isActive
+                                        ? 'bg-brand-yellow text-black border-black brutal-shadow-blue -translate-y-0.5'
+                                        : 'bg-brand-surface text-white border-white brutal-shadow-black hover:bg-brand-blue hover:border-black hover:-translate-x-0.5 hover:-translate-y-0.5'
+                                }`}
+                            >
+                                <Icon size={13} className={isActive ? 'text-black' : 'group-hover:rotate-12 transition-transform'} />
+                                {label}
+                                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />}
+                            </Link>
+                        );
+                    })}
+                </nav>
 
                 <div className="flex flex-col gap-6">
                     {children}
