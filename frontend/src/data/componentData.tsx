@@ -37,6 +37,7 @@ const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTrans
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
 const ScrollExpand = React.lazy(() => import('../components/ui/ScrollExpand'));
+const OptionWheel = React.lazy(() => import('../components/ui/OptionWheel'));
 const HackerBackground = React.lazy(() => import('../components/ui/HackerBackground'));
 const BeamGridBackground = React.lazy(() => import('../components/ui/BeamGridBackground'));
 const FallBeamBackground = React.lazy(() => import('../components/ui/FallBeamBackground'));
@@ -2896,6 +2897,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'section-scroll': SectionScroll,
     'infinite-marquee': InfiniteMarquee,
     'scroll-expand': ScrollExpand,
+    'option-wheel': OptionWheel,
     'hacker-background': HackerBackground,
 
     'beam-grid-background': BeamGridBackground,
@@ -6819,6 +6821,31 @@ UI HUB premium component.`
         }),
         code: `import ScrollExpand from '@/components/ui/ScrollExpand';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <ScrollExpand\n        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80"\n        alt="Mountain landscape"\n        title="Built to scale"\n        scrollHint="Scroll to expand"\n        mediaZoom={1.35}\n      >\n        <h2 className="text-4xl font-bold mb-4">Every pixel, everywhere</h2>\n        <p className="text-lg opacity-90">The frame opens up as you scroll and hands the whole stage to your media.</p>\n      </ScrollExpand>\n    </div>\n  );\n}`,
         vibePrompt: "Create a smooth scroll-triggered image expansion effect. A centered image frame starts small with rounded corners and a title overlay. As you scroll, the frame expands to full bleed, corners sharpen, the title fades out, and overlay content fades in. Features smooth easing, configurable dimensions, optional video support, and reduced motion support."
+    },
+    {
+        id: "option-wheel",
+        title: "Option Wheel",
+        category: "scroll",
+        isPremium: false,
+        preview: renderComponent("option-wheel", "OptionWheel", {
+            items: ['Ambient', 'House', 'Techno', 'Jazz', 'Lo-Fi', 'Synthwave', 'Trance', 'Funk'],
+            defaultSelected: 2,
+            textColor: '#94a3b8',
+            activeColor: '#2563eb',
+            side: 'left',
+            fontSize: 2.5,
+            spacing: 1.4,
+            curve: 1,
+            tilt: 6,
+            blur: 2,
+            fade: 0.25,
+            smoothing: 200,
+            inset: 80,
+            loop: true,
+            draggable: true
+        }),
+        code: `import OptionWheel from '@/components/ui/OptionWheel';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <OptionWheel\n        items={['Ambient', 'House', 'Techno', 'Jazz', 'Lo-Fi', 'Synthwave', 'Trance', 'Funk']}\n        defaultSelected={2}\n        textColor="#94a3b8"\n        activeColor="#2563eb"\n        side="left"\n        fontSize={2.5}\n        spacing={1.4}\n        curve={1}\n        tilt={6}\n        blur={2}\n        fade={0.25}\n        smoothing={200}\n        inset={80}\n        loop\n        draggable\n        onChange={(index, item) => console.log(index, item)}\n      />\n    </div>\n  );\n}`,
+        vibePrompt: "Create a curved, smooth option picker wheel. Options arc around a tilt axis with rotation, blur, and fade as they recede from center. Supports wheel, touchpad, pointer drag, and arrow-key navigation with click-to-select, frame-rate-independent exponential smoothing, optional loop mode, and an optional tick sound. Fully keyboard accessible with aria roles."
     },
 
     {

@@ -860,6 +860,39 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react"],
             requirements: ["ResizeObserver", "requestAnimationFrame", "smoothstep easing", "scroll progress tracking", "reduced motion support"]
         }
+    },
+
+    "option-wheel": {
+        props: [
+            { name: "items", type: "string[]", default: "DEFAULT_ITEMS", description: "Array of option labels rendered on the wheel." },
+            { name: "defaultSelected", type: "number", default: "3", description: "Index of the option selected on mount." },
+            { name: "onChange", type: "(index: number, item: string) => void", default: "undefined", description: "Called with the new index and label when the selection changes." },
+            { name: "textColor", type: "string", default: '"#a6a6a6"', description: "Color of idle options." },
+            { name: "activeColor", type: "string", default: '"#ffffff"', description: "Color of the centered (active) option; blended by proximity." },
+            { name: "side", type: '"left" | "right"', default: '"left"', description: "Which side of the container the wheel is anchored to." },
+            { name: "fontSize", type: "number", default: "3", description: "Font size of the options, in rem." },
+            { name: "spacing", type: "number", default: "1.4", description: "Vertical rhythm between options, as a multiplier of font size." },
+            { name: "curve", type: "number", default: "1", description: "Strength of the horizontal curl as options recede." },
+            { name: "tilt", type: "number", default: "6", description: "Arc tightness in degrees; controls how tightly the wheel curls." },
+            { name: "blur", type: "number", default: "2", description: "Blur applied per row of distance from the center, in px." },
+            { name: "fade", type: "number", default: "0.25", description: "Opacity falloff per row of distance from the center." },
+            { name: "minOpacity", type: "number", default: "0.05", description: "Floor opacity for the farthest options." },
+            { name: "smoothing", type: "number", default: "200", description: "Exponential smoothing time in ms. Lower is snappier." },
+            { name: "inset", type: "number", default: "80", description: "Horizontal inset of the anchored edge, in px." },
+            { name: "loop", type: "boolean", default: "false", description: "Wrap around when scrolling past the ends." },
+            { name: "draggable", type: "boolean", default: "true", description: "Allow dragging the wheel with pointer input." },
+            { name: "soundUrl", type: "string", default: '""', description: "URL of a short click sound played on selection change. Empty disables sound." },
+            { name: "soundVolume", type: "number", default: "0.5", description: "Volume for the selection tick, from 0 to 1." },
+            { name: "className", type: "string", default: '""', description: "Additional class names for the root container." }
+        ],
+        vibeMeta: {
+            behavior: "A curved option picker wheel. Options arc around a tilt axis with rotation, blur, and fade as they recede from the center row. Direct manipulation via wheel, touchpad, or pointer drag, plus keyboard arrows and click-to-select, all eased with frame-rate-independent exponential smoothing.",
+            states: { from: "neutral stacked options", to: "selected centered option with optional tick sound" },
+            cssProperties: ["transform", "opacity", "filter", "color-mix", "CSS custom properties", "requestAnimationFrame"],
+            description: "Scrollable curved option wheel with smoothed motion, blur/fade depth cueing, pointer drag, keyboard navigation, optional looping, and an optional selection tick sound.",
+            libraries: ["react"],
+            requirements: ["requestAnimationFrame", "exponential smoothing", "pointer events and pointer capture", "non-passive wheel listener", "keyboard navigation", "aria listbox roles"]
+        }
     }
 };
 

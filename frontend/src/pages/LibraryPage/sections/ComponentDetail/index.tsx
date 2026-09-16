@@ -3,11 +3,12 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
-    Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown,
+    Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown, ChevronUp,
     Maximize2, Minimize2, Sparkles, Bot, Loader2, FolderPlus, Folder
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
+import { useIsMobile } from '../../../../hooks/use-mobile';
 import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
 import { getComponentCode, withUiHubBranding } from '../../../../utils/codeUtils';
@@ -96,13 +97,19 @@ const ProBlurGate = ({
 const CodeViewer = ({
     sourceFileName,
     sourceLineCount,
+    gutterLineCount,
+    previewLineCount,
     isLoadingSource,
     sourceCode,
+    compact = false,
 }: {
     sourceFileName: string;
     sourceLineCount: number;
+    gutterLineCount?: number;
+    previewLineCount?: number;
     isLoadingSource: boolean;
     sourceCode: string;
+    compact?: boolean;
 }) => (
     <>
         {/* IDE-style File Header */}
@@ -114,12 +121,14 @@ const CodeViewer = ({
                 <span className="ml-2 font-mono text-[11px] font-bold text-white truncate min-w-0">{sourceFileName}</span>
             </div>
             <span className="px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-mono font-black uppercase tracking-widest text-neutral-400 shrink-0">
-                {sourceLineCount} Lines
+                {previewLineCount && previewLineCount < sourceLineCount
+                    ? `${previewLineCount} / ${sourceLineCount} Lines`
+                    : `${sourceLineCount} Lines`}
             </span>
         </div>
 
         {/* Code Viewer with Line Numbers */}
-        <div className="text-xs leading-relaxed min-h-[400px] max-h-[600px] overflow-auto custom-scrollbar bg-brand-surface">
+        <div className={`text-xs leading-relaxed overflow-auto custom-scrollbar bg-brand-surface ${compact ? 'min-h-[120px] max-h-[300px]' : 'min-h-[400px] max-h-[600px]'}`}>
             {isLoadingSource ? (
                 <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
                     <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />
@@ -128,7 +137,7 @@ const CodeViewer = ({
             ) : (
                 <div className="flex min-w-full w-max">
                     <div aria-hidden="true" className="sticky left-0 z-10 select-none text-right px-2.5 sm:px-3 py-4 md:py-6 font-mono text-xs leading-relaxed text-neutral-600 bg-brand-bg border-r-2 border-neutral-800">
-                        {Array.from({ length: sourceLineCount }, (_, i) => (
+                        {Array.from({ length: gutterLineCount ?? sourceLineCount }, (_, i) => (
                             <div key={i}>{i + 1}</div>
                         ))}
                     </div>
@@ -1150,7 +1159,24 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         return getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }) || '// Upgrade to Pro to access the full premium source code.';
     }, [fetchedSource, item.id]);
     const sourceFileName = `${item.title.replace(/\s+/g, '')}.tsx`;
-    const sourceLineCount = React.useMemo(() => sourceCode.split('\n').length, [sourceCode]);
+    const [snippetExpanded, setSnippetExpanded] = React.useState(false);
+    const isMobile = useIsMobile();
+
+    const sourceLines = React.useMemo(() => sourceCode.split('\n'), [sourceCode]);
+    const sourceLineCount = sourceLines.length;
+    const previewLineCount = React.useMemo(
+        () => Math.min(Math.max(1, isMobile ? 8 : 12), sourceLineCount),
+        [isMobile, sourceLineCount]
+    );
+    const canExpand = sourceLineCount > previewLineCount;
+    const displaySource = React.useMemo(
+        () => (snippetExpanded || !canExpand ? sourceCode : sourceLines.slice(0, previewLineCount).join('\n')),
+        [snippetExpanded, canExpand, sourceCode, sourceLines, previewLineCount]
+    );
+
+    React.useEffect(() => {
+        setSnippetExpanded(false);
+    }, [item.id]);
 
     const [codeCopied, setCodeCopied] = React.useState(false);
 
@@ -1634,22 +1660,64 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
 
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
-                                {item.isPremium && !isProUser ? (
-                                    <ProBlurGate message="Upgrade to Pro to view and copy the full source code.">
-                                        <CodeViewer
-                                            sourceFileName={sourceFileName}
-                                            sourceLineCount={sourceLineCount}
-                                            isLoadingSource={isLoadingSource}
-                                            sourceCode={sourceCode}
-                                        />
-                                    </ProBlurGate>
+                                {snippetExpanded ? (
+                                    <>
+                                        {item.isPremium && !isProUser ? (
+                                            <ProBlurGate message="Upgrade to Pro to view and copy the full source code.">
+                                                <CodeViewer
+                                                    sourceFileName={sourceFileName}
+                                                    sourceLineCount={sourceLineCount}
+                                                    isLoadingSource={isLoadingSource}
+                                                    sourceCode={sourceCode}
+                                                />
+                                            </ProBlurGate>
+                                        ) : (
+                                            <CodeViewer
+                                                sourceFileName={sourceFileName}
+                                                sourceLineCount={sourceLineCount}
+                                                isLoadingSource={isLoadingSource}
+                                                sourceCode={sourceCode}
+                                            />
+                                        )}
+                                        <button
+                                            onClick={() => setSnippetExpanded(false)}
+                                            className="group w-full flex items-center justify-center gap-2 px-4 py-3 bg-black border-t-2 border-neutral-800 text-xs font-black uppercase tracking-widest text-neutral-300 hover:text-brand-blue hover:bg-brand-surface transition-colors cursor-pointer"
+                                        >
+                                            <ChevronUp size={14} strokeWidth={2.5} className="group-hover:-translate-y-0.5 transition-transform" />
+                                            <span>Collapse Snippet</span>
+                                            <span className="hidden sm:inline text-[10px] font-mono tracking-widest text-neutral-500 normal-case">— hide the full source</span>
+                                        </button>
+                                    </>
                                 ) : (
-                                    <CodeViewer
-                                        sourceFileName={sourceFileName}
-                                        sourceLineCount={sourceLineCount}
-                                        isLoadingSource={isLoadingSource}
-                                        sourceCode={sourceCode}
-                                    />
+                                    <>
+                                        <div className="relative">
+                                            <div onClick={() => setSnippetExpanded(true)} className="cursor-pointer">
+                                                <CodeViewer
+                                                    sourceFileName={sourceFileName}
+                                                    sourceLineCount={sourceLineCount}
+                                                    gutterLineCount={previewLineCount}
+                                                    previewLineCount={previewLineCount}
+                                                    isLoadingSource={isLoadingSource}
+                                                    sourceCode={displaySource}
+                                                    compact
+                                                />
+                                            </div>
+                                            <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-brand-surface via-brand-surface/80 to-transparent" />
+                                        </div>
+                                        <div className="flex flex-col items-center gap-3 px-4 py-4 sm:py-5 bg-brand-surface border-t-2 border-neutral-800">
+                                            <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-500 text-center leading-relaxed">
+                                                Previewing {previewLineCount} of {sourceLineCount} lines — click to reveal the full {sourceFileName}
+                                            </p>
+                                            <button
+                                                onClick={() => setSnippetExpanded(true)}
+                                                className="group flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-black uppercase tracking-wider bg-brand-blue text-black border-2 border-black rounded-md hover:bg-white hover:shadow-[4px_4px_0px_0px_#2563eb] transition-all cursor-pointer w-full sm:w-auto"
+                                            >
+                                                <Code size={15} strokeWidth={2.5} />
+                                                <span>Expand Snippet</span>
+                                                <ChevronDown size={14} strokeWidth={3} className="group-hover:translate-y-0.5 transition-transform" />
+                                            </button>
+                                        </div>
+                                    </>
                                 )}
                             </div>
                         </section>
