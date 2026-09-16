@@ -860,38 +860,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react"],
             requirements: ["ResizeObserver", "requestAnimationFrame", "smoothstep easing", "scroll progress tracking", "reduced motion support"]
         }
-    },
-
-    "gradual-blur": {
-        props: [
-            { name: "position", type: '"top" | "bottom" | "left" | "right"', default: '"bottom"', description: "Edge of the container the blur overlay attaches to." },
-            { name: "strength", type: "number", default: "2", description: "Base blur strength multiplier applied to each stacked layer." },
-            { name: "height", type: "string", default: '"6rem"', description: "Height of the overlay for top / bottom positions." },
-            { name: "width", type: "string", default: "undefined", description: "Custom width. Defaults to 100% for vertical positions or matches the height for horizontal positions." },
-            { name: "divCount", type: "number", default: "5", description: "Number of stacked blur layers (higher = smoother gradient)." },
-            { name: "exponential", type: "boolean", default: "false", description: "Use exponential progression for a stronger blur toward the edge." },
-            { name: "curve", type: '"linear" | "bezier" | "ease-in" | "ease-out" | "ease-in-out"', default: '"linear"', description: "Distribution curve applied to the layer progression." },
-            { name: "opacity", type: "number", default: "1", description: "Opacity applied to each blur layer." },
-            { name: "animated", type: '"boolean" | "scroll"', default: "false", description: 'Fade in (true) or reveal on scroll ("scroll").' },
-            { name: "duration", type: "string", default: '"0.3s"', description: "Animation duration (when animated)." },
-            { name: "easing", type: "string", default: '"ease-out"', description: "Animation easing for opacity / backdrop-filter transitions." },
-            { name: "hoverIntensity", type: "number", default: "undefined", description: "Multiplier applied to strength while hovered." },
-            { name: "target", type: '"parent" | "page"', default: '"parent"', description: "Blur relative to the parent container or the entire page (fixed)." },
-            { name: "preset", type: '"subtle" | "intense" | "smooth" | "sharp" | "header" | "footer" | "sidebar" | "page-header" | "page-footer" | "top" | "bottom" | "left" | "right"', default: "undefined", description: "Apply a predefined configuration bundle." },
-            { name: "responsive", type: "boolean", default: "false", description: "Enable internal responsive recalculation (experimental)." },
-            { name: "zIndex", type: "number", default: "1000", description: "Base z-index (page target adds +100)." },
-            { name: "onAnimationComplete", type: "() => void", default: "undefined", description: "Callback fired when a scroll-reveal animation completes." },
-            { name: "className", type: "string", default: '""', description: "Additional CSS classes on the overlay container." },
-            { name: "style", type: "object", default: "{}", description: "Inline styles merged into the overlay container." }
-        ],
-        vibeMeta: {
-            behavior: "A scroll/edge blur overlay built from stacked backdrop-filter layers masked with gradient stops. Each layer progressively blurs content toward the container edge, producing a smooth fade-to-blur that works on images and live content.",
-            states: { from: "content fully sharp at the container edge", to: "content progressively blurred toward the edge via stacked masked backdrop-filter layers" },
-            cssProperties: ["backdrop-filter", "-webkit-backdrop-filter", "mask-image", "opacity", "transition"],
-            description: "GradualBlur layers masked backdrop-filter divs along any container edge (top / bottom / left / right) or the full page, with configurable strength, curve, exponential progression, presets, and optional scroll-triggered reveal.",
-            libraries: ["react"],
-            requirements: ["backdrop-filter + -webkit-backdrop-filter support", "-webkit-mask-image for Safari", "Relative-positioned parent container with overflow hidden", "Optional IntersectionObserver for scroll reveal"]
-        }
     }
 };
 

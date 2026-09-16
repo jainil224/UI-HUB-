@@ -37,7 +37,6 @@ const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTrans
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
 const ScrollExpand = React.lazy(() => import('../components/ui/ScrollExpand'));
-const GradualBlur = React.lazy(() => import('../components/ui/GradualBlur'));
 const HackerBackground = React.lazy(() => import('../components/ui/HackerBackground'));
 const BeamGridBackground = React.lazy(() => import('../components/ui/BeamGridBackground'));
 const FallBeamBackground = React.lazy(() => import('../components/ui/FallBeamBackground'));
@@ -2897,7 +2896,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'section-scroll': SectionScroll,
     'infinite-marquee': InfiniteMarquee,
     'scroll-expand': ScrollExpand,
-    'gradual-blur': GradualBlur,
     'hacker-background': HackerBackground,
 
     'beam-grid-background': BeamGridBackground,
@@ -6821,20 +6819,6 @@ UI HUB premium component.`
         }),
         code: `import ScrollExpand from '@/components/ui/ScrollExpand';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <ScrollExpand\n        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80"\n        alt="Mountain landscape"\n        title="Built to scale"\n        scrollHint="Scroll to expand"\n        mediaZoom={1.35}\n      >\n        <h2 className="text-4xl font-bold mb-4">Every pixel, everywhere</h2>\n        <p className="text-lg opacity-90">The frame opens up as you scroll and hands the whole stage to your media.</p>\n      </ScrollExpand>\n    </div>\n  );\n}`,
         vibePrompt: "Create a smooth scroll-triggered image expansion effect. A centered image frame starts small with rounded corners and a title overlay. As you scroll, the frame expands to full bleed, corners sharpen, the title fades out, and overlay content fades in. Features smooth easing, configurable dimensions, optional video support, and reduced motion support."
-    },
-    {
-        id: "gradual-blur",
-        title: "Gradual Blur",
-        category: "scroll",
-        isPremium: false,
-        preview: renderComponent("gradual-blur", "GradualBlur", {
-            position: "bottom",
-            strength: 2,
-            height: "6rem",
-            divCount: 5
-        }),
-        code: `import GradualBlur from '@/components/ui/GradualBlur';\n\nexport default function Demo() {\n  return (\n    <section style={{position: 'relative', height: 500, overflow: 'hidden'}}>\n      <div style={{ height: '100%', overflowY: 'auto', padding: '6rem 2rem' }}>\n        <h1 className="text-4xl font-bold mb-4">Scroll to see the blur</h1>\n        <p className="text-lg mb-4">This content demonstrates the gradual blur overlay at the bottom.</p>\n        <p className="text-base opacity-80">Keep scrolling to see how the blur fades in smoothly as you approach the edge of the container.</p>\n      </div>\n      <GradualBlur\n        target="parent"\n        position="bottom"\n        height="6rem"\n        strength={2}\n        divCount={5}\n        curve="bezier"\n        exponential={true}\n        opacity={1}\n      />\n    </section>\n  );\n}`,
-        vibePrompt: "Create a gradual blur overlay component that creates a smooth fade-to-blur effect at container edges. Supports top/bottom/left/right positioning, configurable blur strength with exponential or linear progression, multiple curve types (linear, bezier, ease-in/out), and optional scroll-triggered animations. Built with stacked blur layers using backdrop-filter and gradient masks."
     },
 
     {
