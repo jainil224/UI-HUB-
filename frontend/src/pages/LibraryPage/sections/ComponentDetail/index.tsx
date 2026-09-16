@@ -426,6 +426,8 @@ const VibeSystemSection = React.memo(({
     const [fetchedPrompt, setFetchedPrompt] = React.useState<string>(() => getFallbackVibePrompt(item.id, defaultSystem, item));
     const [isLoadingPrompt, setIsLoadingPrompt] = React.useState(false);
     const [prevProStatus, setPrevProStatus] = React.useState(isProUser);
+    const [vibeExpanded, setVibeExpanded] = React.useState(false);
+    const isMobile = useIsMobile();
 
     // Toast state
     const [showToast, setShowToast] = React.useState(false);
@@ -523,11 +525,34 @@ const VibeSystemSection = React.memo(({
         loadPrompt();
     }, [loadPrompt]);
 
+    React.useEffect(() => {
+        setVibeExpanded(false);
+    }, [aiSystem]);
+
     const deferredVibePrompt = React.useDeferredValue(fetchedPrompt);
+
+    const vibeLines = React.useMemo(() => (deferredVibePrompt || '').split('\n'), [deferredVibePrompt]);
+    const vibeLineCount = vibeLines.length;
+    const vibePreviewLineCount = React.useMemo(
+        () => Math.min(Math.max(1, isMobile ? 8 : 12), vibeLineCount),
+        [isMobile, vibeLineCount]
+    );
+    const vibeCanExpand = vibeLineCount > vibePreviewLineCount;
+    const vibeDisplayPrompt = React.useMemo(
+        () => (vibeExpanded || !vibeCanExpand ? deferredVibePrompt : vibeLines.slice(0, vibePreviewLineCount).join('\n')),
+        [vibeExpanded, vibeCanExpand, deferredVibePrompt, vibeLines, vibePreviewLineCount]
+    );
+
+    // Terminal overlay states — when locked, render the full native lock screen (no collapse footer).
+    const showAuthOverlay = (!user || user.isAnonymous) && !['lovable', 'cursor'].includes(aiSystem);
+    const showProOverlay = !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked));
+    const showTerminalOverlay = showAuthOverlay || showProOverlay;
+    const showVibeCollapsed = !showTerminalOverlay && !isLoadingPrompt && !vibeExpanded && vibeCanExpand;
 
     // Reset server block state when switching tools outside the trial-flow.
     React.useEffect(() => {
         setTrialBlocked({ blocked: false });
+        setVibeExpanded(false);
     }, [item.id]);
 
     // Copy to clipboard with authentication + premium/pro access check
@@ -644,7 +669,7 @@ const VibeSystemSection = React.memo(({
                         </div>
                     </div>
                     <span className="hidden sm:inline px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-mono font-black uppercase tracking-widest text-neutral-400 shrink-0">
-                        {(deferredVibePrompt || '').split('\n').length} Lines
+                        {showVibeCollapsed ? `${vibePreviewLineCount} / ${vibeLineCount} Lines` : `${vibeLineCount} Lines`}
                     </span>
                 </div>
 
@@ -686,56 +711,68 @@ const VibeSystemSection = React.memo(({
                         </div>
 
                         {/* Terminal Content */}
-                        <div className="p-4 sm:p-6 md:p-10 text-xs md:text-sm leading-relaxed max-h-[500px] md:max-h-[700px] overflow-auto custom-scrollbar relative z-20 min-h-[300px]">
-                            {(!user || user.isAnonymous) && !['lovable', 'cursor'].includes(aiSystem) ? (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
-                                    <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
-                                        <Lock className="text-black" size={26} />
-                                    </div>
-                                    <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Authentication Required</h4>
-                                    <p className="text-neutral-400 max-w-sm mb-8 font-sans text-sm font-medium">
-                                        Please log in to your account to establish a secure link and access the UI HUB generation blueprints.
-                                    </p>
-                                    <button
-                                        onClick={() => setShowAuthModal(true)}
-                                        className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest"
-                                    >
-                                        Log In to Access
-                                    </button>
-                                </div>
-                            ) : !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked)) ? (
-                                <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
-                                    <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
-                                        <Lock className="text-black" size={26} />
-                                    </div>
-                                    <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Pro Access Required</h4>
-                                    <p className="text-neutral-400 max-w-sm mb-8 font-sans text-sm font-medium">
-                                        {item.isPremium
-                                            ? "The specialized AI prompts for this premium component are available only to Pro members."
-                                            : trialBlocked.reason === 'EXPIRY'
-                                                ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial window has ended. Upgrade to Pro for unlimited elite prompts.`
-                                                : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial has been used up. Upgrade to Pro for unlimited elite prompts.`
-                                        }
-                                    </p>
-                                    <Link to="/pricing">
-                                        <button className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest">
-                                            Upgrade for Pro Access
-                                        </button>
-                                    </Link>
-                                </div>
-                            ) : (
-                                <pre
-                                    className="font-mono whitespace-pre-wrap select-none selection:bg-brand-blue selection:text-white"
-                                >
-                                    {isLoadingPrompt ? (
-                                        <div className="flex flex-col items-center justify-center h-full py-20 text-brand-blue">
-                                            <div className="w-8 h-8 rounded-full border-2 border-brand-blue/20 border-t-brand-blue animate-spin mb-4" />
-                                            <p className="text-[10px] uppercase tracking-[0.2em] font-black animate-pulse text-neutral-400">Establishing Secure Link...</p>
+                        <div className="relative">
+                            <div
+                                onClick={showVibeCollapsed ? () => setVibeExpanded(true) : undefined}
+                                className={`p-4 sm:p-6 md:p-10 text-xs md:text-sm leading-relaxed overflow-auto custom-scrollbar ${
+                                    showVibeCollapsed
+                                        ? 'min-h-[140px] max-h-[280px] md:max-h-[320px] cursor-pointer'
+                                        : 'min-h-[300px] max-h-[500px] md:max-h-[700px] relative z-20'
+                                }`}
+                            >
+                                {(!user || user.isAnonymous) && !['lovable', 'cursor'].includes(aiSystem) ? (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
+                                        <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
+                                            <Lock className="text-black" size={26} />
                                         </div>
-                                    ) : (
-                                        <CodeHighlighter code={deferredVibePrompt} />
-                                    )}
-                                </pre>
+                                        <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Authentication Required</h4>
+                                        <p className="text-neutral-400 max-w-sm mb-8 font-sans text-sm font-medium">
+                                            Please log in to your account to establish a secure link and access the UI HUB generation blueprints.
+                                        </p>
+                                        <button
+                                            onClick={() => setShowAuthModal(true)}
+                                            className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest"
+                                        >
+                                            Log In to Access
+                                        </button>
+                                    </div>
+                                ) : !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked)) ? (
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
+                                        <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
+                                            <Lock className="text-black" size={26} />
+                                        </div>
+                                        <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Pro Access Required</h4>
+                                        <p className="text-neutral-400 max-w-sm mb-8 font-sans text-sm font-medium">
+                                            {item.isPremium
+                                                ? "The specialized AI prompts for this premium component are available only to Pro members."
+                                                : trialBlocked.reason === 'EXPIRY'
+                                                    ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial window has ended. Upgrade to Pro for unlimited elite prompts.`
+                                                    : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial has been used up. Upgrade to Pro for unlimited elite prompts.`
+                                            }
+                                        </p>
+                                        <Link to="/pricing">
+                                            <button className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest">
+                                                Upgrade for Pro Access
+                                            </button>
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <pre
+                                        className="font-mono whitespace-pre-wrap select-none selection:bg-brand-blue selection:text-white"
+                                    >
+                                        {isLoadingPrompt ? (
+                                            <div className="flex flex-col items-center justify-center h-full py-20 text-brand-blue">
+                                                <div className="w-8 h-8 rounded-full border-2 border-brand-blue/20 border-t-brand-blue animate-spin mb-4" />
+                                                <p className="text-[10px] uppercase tracking-[0.2em] font-black animate-pulse text-neutral-400">Establishing Secure Link...</p>
+                                            </div>
+                                        ) : (
+                                            <CodeHighlighter code={showVibeCollapsed ? vibeDisplayPrompt : deferredVibePrompt} />
+                                        )}
+                                    </pre>
+                                )}
+                            </div>
+                            {showVibeCollapsed && (
+                                <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-brand-surface via-brand-surface/80 to-transparent" />
                             )}
                         </div>
 
@@ -748,8 +785,36 @@ const VibeSystemSection = React.memo(({
                             <div className="hidden sm:flex absolute left-1/2 -translate-x-1/2 items-center gap-1.5">
                                 <span className={`text-[10px] uppercase tracking-widest font-black ${TOOL_THEMES[aiSystem]?.accentColor || 'text-brand-blue'}`}>UI HUB</span>
                             </div>
-                            <span className="hidden md:inline text-[10px] uppercase tracking-widest text-neutral-500 font-mono whitespace-nowrap">UTF-8 // LN: {(deferredVibePrompt || '').split('\n').length}</span>
+                            <span className="hidden md:inline text-[10px] uppercase tracking-widest text-neutral-500 font-mono whitespace-nowrap">UTF-8 // LN: {vibeLineCount}</span>
                         </div>
+
+                        {/* Collapse / Expand Blueprint footer */}
+                        {!showTerminalOverlay && !isLoadingPrompt && (showVibeCollapsed || vibeExpanded) && (
+                            showVibeCollapsed ? (
+                                <div className="flex flex-col items-center gap-3 px-4 py-4 sm:py-5 bg-brand-surface border-t-2 border-neutral-800">
+                                    <p className="text-[10px] font-mono uppercase tracking-widest text-neutral-500 text-center leading-relaxed">
+                                        Previewing {vibePreviewLineCount} of {vibeLineCount} lines — click to reveal the full AI blueprint
+                                    </p>
+                                    <button
+                                        onClick={() => setVibeExpanded(true)}
+                                        className="group flex items-center justify-center gap-2 px-6 py-3 text-xs font-black uppercase tracking-wider bg-brand-blue text-black border-2 border-black rounded-md hover:bg-white hover:shadow-[4px_4px_0px_0px_#2563eb] transition-all cursor-pointer w-full sm:w-auto"
+                                    >
+                                        <Code size={15} strokeWidth={2.5} />
+                                        <span>Expand Blueprint</span>
+                                        <ChevronDown size={14} strokeWidth={3} className="group-hover:translate-y-0.5 transition-transform" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    onClick={() => setVibeExpanded(false)}
+                                    className="group w-full flex items-center justify-center gap-2 px-4 py-3 bg-black border-t-2 border-neutral-800 text-xs font-black uppercase tracking-widest text-neutral-300 hover:text-brand-blue hover:bg-brand-surface transition-colors cursor-pointer"
+                                >
+                                    <ChevronUp size={14} strokeWidth={2.5} className="group-hover:-translate-y-0.5 transition-transform" />
+                                    <span>Collapse Blueprint</span>
+                                    <span className="hidden sm:inline text-[10px] font-mono tracking-widest text-neutral-500 normal-case">— hide the full blueprint</span>
+                                </button>
+                            )
+                        )}
                     </div>
                 </div>
             </section>
