@@ -871,7 +871,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         if (item.id === '3d-scroll-animation') demoUrl = '/demo/3d-scroll-animation';
         else if (item.id === '3d-slider') demoUrl = '/demo/3d-slider';
         else if (item.id === 'section-scroll') demoUrl = '/demo/section-scroll';
-        else if (item.id === 'cloud-scroll') demoUrl = '/demo/cloud-scroll';
 
         window.open(demoUrl, '_blank');
     };
@@ -1121,13 +1120,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             sliderImages.forEach((url, i) => {
                 assets.push({ url, fileName: `assets/slide${i + 1}.jpg` });
             });
-        } else if (item.id === 'cloud-scroll') {
-            assets.push(
-                { url: '/models/dalithe_persistence_of_memory.glb', fileName: 'models/dalithe_persistence_of_memory.glb' },
-                { url: '/models/wanderer_above_the_sea_of_fog.glb', fileName: 'models/wanderer_above_the_sea_of_fog.glb' },
-                { url: '/models/window.glb', fileName: 'models/window.glb' },
-                { url: '/soria-font.ttf', fileName: 'soria-font.ttf' }
-            );
         }
 
         await downloadComponentZip(item.id, item.title, assets, reactCode ?? '', htmlCode ?? '');

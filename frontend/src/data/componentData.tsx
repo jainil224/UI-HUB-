@@ -35,8 +35,8 @@ const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
-const CloudScroll = React.lazy(() => import('../components/ui/CloudScroll/CloudScroll'));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
+const ScrollExpand = React.lazy(() => import('../components/ui/ScrollExpand'));
 const HackerBackground = React.lazy(() => import('../components/ui/HackerBackground'));
 const BeamGridBackground = React.lazy(() => import('../components/ui/BeamGridBackground'));
 const FallBeamBackground = React.lazy(() => import('../components/ui/FallBeamBackground'));
@@ -2894,8 +2894,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'fourier-flow': FourierFlow,
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
-    'cloud-scroll': CloudScroll,
     'infinite-marquee': InfiniteMarquee,
+    'scroll-expand': ScrollExpand,
     'hacker-background': HackerBackground,
 
     'beam-grid-background': BeamGridBackground,
@@ -6797,15 +6797,6 @@ UI HUB premium component.`
         vibePrompt: "Create an immersive, full-screen vertical panel scroll experience in React + TSX with GSAP. It features a stable preview timeline linked to the main page scroll (preventing React-crashing pin-spacers), dynamic absolute panel stacking to avoid layout collapse, a premium floating UI HUB brand badge, and cohesive panel technical subheadings."
     },
     {
-        id: "cloud-scroll",
-        title: "Cloud Scroll",
-        category: "scroll",
-        isPremium: true,
-        preview: renderComponent("cloud-scroll", "CloudScroll"),
-        code: `import CloudScroll from '@/components/ui/CloudScroll/CloudScroll';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <CloudScroll />\n    </div>\n  );\n}`,
-        vibePrompt: "An immersive 3D cloud scrolling experience featuring floating clouds, interactive portals to work/education and side projects, integrated timeline and projects carousel, ambient music/theme switching, and smooth scroll animations."
-    },
-    {
         id: "infinite-marquee",
         title: "Infinite Marquee",
         category: "scroll",
@@ -6813,6 +6804,21 @@ UI HUB premium component.`
         preview: renderComponent("infinite-marquee", "InfiniteMarquee"),
         code: `import { InfiniteMarquee } from '@/components/ui/InfiniteMarquee';\n\nexport default function Demo() {\n  const items = [\n    { text: "UI Hub", link: "#", image: "https://picsum.photos/600/400?random=1" },\n    { text: "UI Components", link: "#", image: "https://picsum.photos/600/400?random=2" },\n    { text: "Design Systems", link: "#", image: "https://picsum.photos/600/400?random=3" },\n    { text: "Web Animations", link: "#", image: "https://picsum.photos/600/400?random=4" }\n  ];\n\n  return (\n    <div className="w-full h-[500px] rounded-3xl overflow-hidden border border-white/5">\n      <InfiniteMarquee \n        items={items} \n        speed={15} \n        textColor="#ffffff"\n        bgColor="#060010"\n        marqueeTextColor="#060010"\n        marqueeBgColor="#ffffff"\n      />\n    </div>\n  );\n}`,
         vibePrompt: "A premium infinite scrolling marquee menu component with direction-aware hover animation. Hovering an item slides in a custom marquee overlay (from the top or bottom based on cursor position) containing repeated scrolling texts and images."
+    },
+    {
+        id: "scroll-expand",
+        title: "Scroll Expand",
+        category: "scroll",
+        isPremium: false,
+        preview: renderComponent("scroll-expand", "ScrollExpand", {
+            src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
+            alt: "Mountain landscape",
+            title: "Built to scale",
+            scrollHint: "Scroll",
+            mediaZoom: 1.35
+        }),
+        code: `import ScrollExpand from '@/components/ui/ScrollExpand';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <ScrollExpand\n        src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80"\n        alt="Mountain landscape"\n        title="Built to scale"\n        scrollHint="Scroll to expand"\n        mediaZoom={1.35}\n      >\n        <h2 className="text-4xl font-bold mb-4">Every pixel, everywhere</h2>\n        <p className="text-lg opacity-90">The frame opens up as you scroll and hands the whole stage to your media.</p>\n      </ScrollExpand>\n    </div>\n  );\n}`,
+        vibePrompt: "Create a smooth scroll-triggered image expansion effect. A centered image frame starts small with rounded corners and a title overlay. As you scroll, the frame expands to full bleed, corners sharpen, the title fades out, and overlay content fades in. Features smooth easing, configurable dimensions, optional video support, and reduced motion support."
     },
 
     {

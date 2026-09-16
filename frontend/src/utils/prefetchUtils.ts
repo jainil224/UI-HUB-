@@ -13,7 +13,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     '3d-hero': () => import('../components/ui/ToonhubHero'),
     'solar-system': () => import('../components/ui/SolarSystem'),
     'fourier-flow': () => import('../components/ui/FourierFlow'),
-    'cloud-scroll': () => import('../components/ui/CloudScroll/CloudScroll'),
+    'scroll-expand': () => import('../components/ui/ScrollExpand'),
     'cards-beam': () => import('../components/ui/CardsBeam'),
     'toonhub-hero': () => import('../components/ui/ToonhubHero'),
 

@@ -22,7 +22,6 @@ const CookieSettingsPage = React.lazy(() => import('./pages/legal/CookieSettings
 const TemplatesPage = React.lazy(() => import('./pages/TemplatesPage/TemplatesPage'));
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
-const CloudScrollPage = React.lazy(() => import('./pages/Components/CloudScrollPage'));
 const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
 const SplitOrbDemoPage = React.lazy(() => import('./pages/Components/SplitOrbDemoPage'));
 const SegmintDemoPage = React.lazy(() => import('./pages/Components/SegmintDemoPage'));
@@ -138,7 +137,6 @@ const AppShell = () => {
             <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
             <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
             <Route path="/demo/section-scroll" element={<SectionScrollPage />} />
-            <Route path="/demo/cloud-scroll" element={<CloudScrollPage />} />
             <Route path="/demo/tars-hero-arena" element={<TarsDemoPage />} />
             <Route path="/demo/split-fuzzy-orb" element={<SplitOrbDemoPage />} />
             <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />
