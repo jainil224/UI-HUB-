@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
     Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown, ChevronUp,
-    Maximize2, Minimize2, Sparkles, Bot, Loader2, FolderPlus, Folder
+    Maximize2, Minimize2, Sparkles, Bot, Loader2, FolderPlus, Folder, Share2, Link2
 } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import CodeHighlighter from '../../../../components/ui/CodeHighlighter';
@@ -1025,6 +1025,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [collections, setCollections] = React.useState<Collection[]>([]);
     const [collectionPopover, setCollectionPopover] = React.useState(false);
     const [saveToCollectionBusy, setSaveToCollectionBusy] = React.useState(false);
+    const [sharePopover, setSharePopover] = React.useState(false);
 
     // Toast state for code copy
     const [showToast, setShowToast] = React.useState(false);
@@ -1105,6 +1106,58 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             await saveToFavorites(user?.uid, item);
             setToastMessage("SAVED TO FAVORITES ❤️");
             setShowToast(true);
+        }
+    };
+
+    const componentShareUrl = `${window.location.origin}/library?id=${item.id}`;
+
+    const copyShareLink = async () => {
+        try {
+            await navigator.clipboard.writeText(componentShareUrl);
+        } catch {
+            const ta = document.createElement('textarea');
+            ta.value = componentShareUrl;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+        }
+        setSharePopover(false);
+        setToastImage(item.imageUrl);
+        setToastMessage('SHARE LINK COPIED ✓');
+        setShowToast(true);
+        logUserActivity({
+            type: 'component.share',
+            metadata: { componentId: item.id, title: item.title, category: item.category, method: 'copy-link' }
+        });
+    };
+
+    const toggleSharePopover = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setSharePopover(o => !o);
+    };
+
+    const handleComponentShare = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `${item.title} — UI HUB`,
+                    text: item.description || `Check out ${item.title} from UI HUB`,
+                    url: componentShareUrl,
+                });
+                setSharePopover(false);
+                logUserActivity({
+                    type: 'component.share',
+                    metadata: { componentId: item.id, title: item.title, category: item.category, method: 'native-share' }
+                });
+            } catch (err: any) {
+                if (err?.name === 'AbortError') return;
+            }
+        } else {
+            await copyShareLink();
         }
     };
     React.useEffect(() => {
@@ -1431,6 +1484,63 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     ))}
                                                 </div>
                                             )}
+                                        </motion.div>
+                                    </>
+                                )}
+                            </AnimatePresence>
+                        </div>
+
+                        {/* ── Share component ── */}
+                        <div className="relative">
+                            <button
+                                type="button"
+                                onClick={toggleSharePopover}
+                                title="Share Component"
+                                aria-label="Share Component"
+                                className="p-2.5 rounded-lg border-2 border-white bg-brand-surface text-neutral-400 hover:text-white hover:border-brand-blue brutal-shadow-black hover:translate-x-0.5 hover:translate-y-0.5 transition-all cursor-pointer select-none active:scale-90"
+                            >
+                                <Share2 size={18} className="text-neutral-400 hover:text-brand-blue" />
+                            </button>
+
+                            <AnimatePresence>
+                                {sharePopover && (
+                                    <>
+                                        <div className="fixed inset-0 z-[60]" onClick={() => setSharePopover(false)} />
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -8 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -8 }}
+                                            className="absolute right-0 top-full mt-2 z-[61] w-64 rounded-lg border-2 border-white bg-brand-surface shadow-[4px_4px_0_0_#000] p-3"
+                                        >
+                                            <p className="text-[10px] font-black uppercase tracking-widest text-neutral-400 mb-2 px-1">
+                                                Share component
+                                            </p>
+                                            <div className="flex flex-col gap-1">
+                                                {navigator.share && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={handleComponentShare}
+                                                        className="flex items-center gap-2.5 px-3 py-2.5 rounded-md border-2 border-brand-blue hover:border-white text-left transition-colors cursor-pointer"
+                                                    >
+                                                        <Share2 size={15} className="text-brand-blue shrink-0" />
+                                                        <span className="flex-1 min-w-0">
+                                                            <span className="block text-xs font-black uppercase tracking-wider text-white">Share via device</span>
+                                                            <span className="block text-[10px] text-neutral-500">WhatsApp, email, link, and more</span>
+                                                        </span>
+                                                    </button>
+                                                )}
+                                                <button
+                                                    type="button"
+                                                    onClick={copyShareLink}
+                                                    className="flex items-center gap-2.5 px-3 py-2.5 rounded-md border-2 border-neutral-800 hover:border-brand-yellow text-left transition-colors cursor-pointer"
+                                                >
+                                                    <Link2 size={15} className="text-brand-yellow shrink-0" />
+                                                    <span className="flex-1 min-w-0">
+                                                        <span className="block text-xs font-black uppercase tracking-wider text-white">Copy link</span>
+                                                        <span className="block text-[10px] text-neutral-500">{`${window.location.host}/library?id=…`}</span>
+                                                    </span>
+                                                </button>
+                                            </div>
                                         </motion.div>
                                     </>
                                 )}
