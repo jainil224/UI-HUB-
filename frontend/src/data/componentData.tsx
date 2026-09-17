@@ -5,7 +5,6 @@ import React, { useRef, useCallback, useState, useEffect, Suspense } from 'react
 import uiHubLogo from '../Assets/webiste logo.svg';
 
 // ── Lazy Loaded UI Components ──────────────────
-const AuroraCursor = React.lazy(() => import('../components/ui/AuroraCursor').then(m => ({ default: m.AuroraCursor })));
 const MagneticCursor = React.lazy(() => import('../components/ui/MagneticCursor').then(m => ({ default: m.MagneticCursor })));
 const MagneticBackground = React.lazy(() => import('../components/ui/MagneticBackground').then(m => ({ default: m.MagneticBackground })));
 const BlackHoleCursor = React.lazy(() => import('../components/ui/BlackHoleCursor').then(m => ({ default: m.BlackHoleCursor })));
@@ -92,8 +91,6 @@ const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
 const GradientOrb = React.lazy(() => import('../components/ui/GradientOrb'));
 const SuperMario = React.lazy(() => import('../components/ui/SuperMario'));
 
-const InkSplatterCursor = React.lazy(() => import('../components/ui/InkSplatterCursor').then(m => ({ default: m.InkSplatterCursor })));
-const GhostTrailCursor = React.lazy(() => import('../components/ui/GhostTrailCursor').then(m => ({ default: m.GhostTrailCursor })));
 const OtpCodeInput = React.lazy(() => import('../components/ui/OtpCodeInput').then(m => ({ default: m.OtpCodeInput })));
 const PasswordStrengthMeter = React.lazy(() => import('../components/ui/PasswordStrengthMeter').then(m => ({ default: m.PasswordStrengthMeter })));
 const SignaturePad = React.lazy(() => import('../components/ui/SignaturePad').then(m => ({ default: m.SignaturePad })));
@@ -886,203 +883,6 @@ const BlackHoleCursorPreview: React.FC = () => {
         </div>
     );
 };
-
-// ── stable star positions (deterministic, no per-render Math.random) ─────────
-const AURORA_DOTS = Array.from({ length: 40 }, (_, i) => ({
-    top: ((i * 73 + 17) % 97).toFixed(1),
-    left: ((i * 53 + 31) % 97).toFixed(1),
-    size: i % 4 === 0 ? 3 : 2,
-    opacity: i % 5 === 0 ? 0.28 : 0.10,
-    dur: 3 + (i % 4),
-    delay: (i * 0.27) % 3,
-}));
-
-// ── Aurora Cursor scoped preview (blob tracks mouse inside card) ────────────
-const AuroraCursorPreview: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const blobRef = useRef<HTMLDivElement>(null);
-    const pos = useRef({ x: -999, y: -999 });
-    const target = useRef({ x: -999, y: -999 });
-    const vel = useRef({ x: 0, y: 0 });
-    const rafId = useRef<number>(0);
-    const [activeNav, setActiveNav] = React.useState(0);
-    const BLOB_SIZE = 160;
-    const HALF = BLOB_SIZE / 2;
-
-    const animate = useCallback(() => {
-        vel.current.x += (target.current.x - pos.current.x) * 0.07;
-        vel.current.y += (target.current.y - pos.current.y) * 0.07;
-        vel.current.x *= 0.80;
-        vel.current.y *= 0.80;
-        pos.current.x += vel.current.x;
-        pos.current.y += vel.current.y;
-        if (blobRef.current) {
-            blobRef.current.style.transform =
-                `translate(${pos.current.x - HALF}px, ${pos.current.y - HALF}px)`;
-        }
-        rafId.current = requestAnimationFrame(animate);
-    }, [HALF]);
-
-    const onEnter = useCallback(() => { rafId.current = requestAnimationFrame(animate); }, [animate]);
-    const onLeave = useCallback(() => { cancelAnimationFrame(rafId.current); }, []);
-    const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (!rect) return;
-        target.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }, []);
-    const onTouch = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (!rect || e.touches.length === 0) return;
-        const t = e.touches[0];
-        target.current = { x: t.clientX - rect.left, y: t.clientY - rect.top };
-    }, []);
-
-    // Park the blob at the center and keep the loop running so it is always
-    // visible — including on touch devices with no mouse events
-    useEffect(() => {
-        const rect = containerRef.current?.getBoundingClientRect();
-        if (rect && rect.width > 0) {
-            const c = { x: rect.width / 2, y: rect.height / 2 };
-            pos.current = { ...c };
-            target.current = { ...c };
-        }
-        onEnter();
-        return onLeave;
-    }, [onEnter, onLeave]);
-
-    return (
-        <div
-            ref={containerRef}
-            onMouseMove={onMove}
-            onMouseEnter={onEnter}
-            onMouseLeave={onLeave}
-            onTouchStart={onTouch}
-            onTouchMove={onTouch}
-            style={{
-                position: 'relative',
-                width: '100%', height: '100%', minHeight: '100%',
-                background: 'radial-gradient(ellipse at 50% 55%, #080618 0%, #020208 100%)',
-                overflow: 'hidden',
-                cursor: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'column',
-            }}
-        >
-            <style>{`
-                @keyframes ac-shift  { 0%{background-position:0% 50%}  50%{background-position:100% 50%} 100%{background-position:0% 50%} }
-                @keyframes ac-morph  {
-                    0%  {border-radius:60% 40% 30% 70%/60% 30% 70% 40%}
-                    25% {border-radius:40% 60% 70% 30%/40% 70% 30% 60%}
-                    50% {border-radius:50% 50% 40% 60%/30% 60% 40% 70%}
-                    75% {border-radius:30% 70% 60% 40%/70% 40% 60% 30%}
-                    100%{border-radius:60% 40% 30% 70%/60% 30% 70% 40%}
-                }
-                @keyframes ac-pulse   { 0%,100%{opacity:.60} 50%{opacity:.90} }
-                @keyframes ac-twinkle { 0%,100%{opacity:.06} 50%{opacity:.30} }
-                .ac-nav-btn { transition: background 0.22s, color 0.22s, box-shadow 0.22s; }
-                .ac-nav-btn:hover { background: rgba(255,255,255,0.10) !important; color: rgba(255,255,255,0.9) !important; }
-            `}</style>
-
-            {/* ── Aurora blob ── */}
-            <div ref={blobRef} style={{
-                position: 'absolute', top: 0, left: 0,
-                width: BLOB_SIZE, height: BLOB_SIZE,
-                pointerEvents: 'none', willChange: 'transform', zIndex: 1,
-            }}>
-                <div style={{
-                    width: '100%', height: '100%',
-                    background: [
-                        'radial-gradient(circle at 30% 30%,rgba(139,92,246,.95) 0%,transparent 55%)',
-                        'radial-gradient(circle at 70% 60%,rgba(6,182,212,.90)  0%,transparent 55%)',
-                        'radial-gradient(circle at 50% 80%,rgba(236,72,153,.80) 0%,transparent 50%)',
-                        'radial-gradient(circle at 20% 70%,rgba(99,102,241,.85) 0%,transparent 50%)',
-                        'radial-gradient(circle at 80% 20%,rgba(34,211,238,.70) 0%,transparent 50%)',
-                    ].join(','),
-                    backgroundSize: '400% 400%',
-                    filter: `blur(${BLOB_SIZE * 0.24}px)`,
-                    mixBlendMode: 'screen',
-                    animation: 'ac-shift 8s ease infinite, ac-morph 12s ease-in-out infinite, ac-pulse 4s ease-in-out infinite',
-                }} />
-            </div>
-
-            {/* ── Star field ── */}
-            {AURORA_DOTS.map((d, i) => (
-                <div key={i} style={{
-                    position: 'absolute',
-                    width: d.size, height: d.size,
-                    borderRadius: '50%',
-                    background: `rgba(200,180,255,${d.opacity})`,
-                    top: `${d.top}%`, left: `${d.left}%`,
-                    animation: `ac-twinkle ${d.dur}s ease-in-out infinite`,
-                    animationDelay: `${d.delay}s`,
-                }} />
-            ))}
-
-            {/* ── Navbar — pinned to top ── */}
-            <div style={{
-                position: 'absolute', top: 20, left: '50%',
-                transform: 'translateX(-50%)',
-                zIndex: 10,
-                display: 'flex', alignItems: 'center',
-                background: 'rgba(10,8,24,0.70)',
-                border: '1px solid rgba(255,255,255,0.10)',
-                borderRadius: 999,
-                padding: '5px 6px',
-                backdropFilter: 'blur(16px)',
-                boxShadow: '0 4px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06)',
-                whiteSpace: 'nowrap',
-            }}>
-                {['Home', 'About', 'Services'].map((label, i) => (
-                    <button
-                        key={i}
-                        className="ac-nav-btn"
-                        onClick={() => setActiveNav(i)}
-                        style={{
-                            padding: '8px 22px',
-                            fontSize: 13,
-                            fontWeight: 600,
-                            color: activeNav === i ? 'rgba(255,255,255,0.97)' : 'rgba(255,255,255,0.45)',
-                            borderRadius: 999,
-                            background: activeNav === i ? 'rgba(255,255,255,0.09)' : 'transparent',
-                            border: 'none',
-                            cursor: 'pointer',
-                            letterSpacing: '0.02em',
-                            outline: 'none',
-                            boxShadow: activeNav === i ? 'inset 0 1px 0 rgba(255,255,255,0.08)' : 'none',
-                        }}
-                    >
-                        {label}
-                    </button>
-                ))}
-            </div>
-
-            {/* ── Center title ── */}
-            <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', pointerEvents: 'none', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.3em', color: 'rgba(255,255,255,0.32)', textTransform: 'uppercase' }}>
-                    Move your cursor
-                </div>
-                <div style={{
-                    fontSize: 36, fontWeight: 900, letterSpacing: '-0.03em',
-                    background: 'linear-gradient(135deg,#c084fc 0%,#67e8f9 50%,#f472b6 100%)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-                    filter: 'drop-shadow(0 0 24px rgba(139,92,246,0.5))',
-                }}>
-                    Aurora Cursor
-                </div>
-                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.14)', letterSpacing: '0.18em', textTransform: 'uppercase', marginTop: 4 }}>
-                    Northern lights · CSS blur · Spring physics
-                </div>
-            </div>
-        </div>
-    );
-};
-
-
-
-
-
 
 // ── Heart Cursor scoped preview ────────────
 const HeartCursorPreview: React.FC = () => {
@@ -2870,7 +2670,6 @@ const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawNa
 
 // Map of UI components for direct lazy loading
 const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
-    'aurora-cursor': AuroraCursor,
     'magnetic-cursor': MagneticCursor,
     'magnetic-background': MagneticBackground,
     'black-hole-cursor': BlackHoleCursor,
@@ -2970,8 +2769,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'gradient-orb': GradientOrb,
     'super-mario': SuperMario,
 
-    'ink-splatter-cursor': InkSplatterCursor,
-    'ghost-trail-cursor': GhostTrailCursor,
     'otp-code-input': OtpCodeInput,
     'password-strength-meter': PasswordStrengthMeter,
     'signature-pad': SignaturePad,
@@ -5009,36 +4806,6 @@ export const SuiFoundationPreview = () => {
 
 // Assuming these prompts apply as they were defined in VibeMeta
 
-// ── Ink Splatter Cursor scoped preview ──
-const InkSplatterCursorPreview: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    return (
-        <CursorPreviewShell
-            containerRef={containerRef}
-            background="radial-gradient(120% 120% at 50% 0%, #1c1c1e 0%, #0d0d0f 50%, #050505 100%)"
-        >
-            <Suspense fallback={null}>
-                <InkSplatterCursor inkColor="#0a0a0a" />
-            </Suspense>
-        </CursorPreviewShell>
-    );
-};
-
-// ── Ghost Trail scoped preview ──
-const GhostTrailCursorPreview: React.FC = () => {
-    const containerRef = useRef<HTMLDivElement>(null);
-    return (
-        <CursorPreviewShell
-            containerRef={containerRef}
-            background="linear-gradient(160deg, #0e1117 0%, #0a0d12 50%, #06080c 100%)"
-        >
-            <Suspense fallback={null}>
-                <GhostTrailCursor ghostCount={6} />
-            </Suspense>
-        </CursorPreviewShell>
-    );
-};
-
 // ── OTP Code Input preview ──
 const OtpCodeInputPreview: React.FC = () => {
     return (
@@ -6444,26 +6211,6 @@ export const Demo = () => (
   </div>
 );`,
         vibePrompt: "Create a highly-customizable 'InteractiveHoverButton' React component using Framer Motion and Tailwind CSS. The button features an expanding background-dot hover animation where a small circular dot scales up smoothly by 300x to fill the container. Text shifts, scales, and fades using spring physics to reveal centered text and an action icon. Support multiple premium style variants: a 'neon' variant (neon green background, black text/dot, black hover state with neon text/arrow icon) and a 'dark' variant (black background, thin white border, white text/dot, white hover state with black text/GitHub icon). The component dynamically supports rendering as either a standard button or a semantic anchor tag when an href is supplied, and includes proper micro-animations for async task states (idle, loading spinner, and success checkmark)."
-    },
-    {
-        id: "aurora-cursor",
-        title: "Aurora Cursor",
-        category: "cursor",
-        preview: () => <AuroraCursorPreview />,
-        code: `import { AuroraCursor } from '@/components/ui/AuroraCursor';
-
-// Drop <AuroraCursor /> anywhere in your app (e.g. App.tsx or a layout root).
-// It attaches to the window and follows the mouse at the page level.
-export const Demo = () => (
-  <div className="relative w-full h-[400px] bg-[#050510] rounded-2xl overflow-hidden flex items-center justify-center">
-    {/* Aurora follows the real mouse — works globally */}
-    <AuroraCursor size={320} />
-    <p className="text-white/40 text-sm tracking-widest uppercase font-bold">
-      Move your cursor around
-    </p>
-  </div>
-);`,
-        vibePrompt: ""
     },
     {
         id: "space-background",
@@ -14862,32 +14609,6 @@ Do not modify unrelated parts of the website.
 The uploaded reference image is the absolute source of truth.
 
 Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
-    },
-
-    // ── Ink Splatter Cursor ─────────────────────────────
-    {
-        id: "ink-splatter-cursor",
-        title: "Ink Splatter Cursor",
-        category: "cursor",
-        addedAt: "2026-09-17",
-        newBadgeDays: 120,
-        description: "A cursor that leaves wet-ink blotches which bleed, then dry and settle; clicking bursts a splatter.",
-        preview: () => <InkSplatterCursorPreview />,
-        code: "",
-        vibePrompt: "",
-    },
-
-    // ── Ghost Trail ─────────────────────────────────────
-    {
-        id: "ghost-trail-cursor",
-        title: "Ghost Trail",
-        category: "cursor",
-        addedAt: "2026-09-17",
-        newBadgeDays: 120,
-        description: "Half-transparent phased echo rings that lag behind the cursor like a fading ghost trail.",
-        preview: () => <GhostTrailCursorPreview />,
-        code: "",
-        vibePrompt: "",
     },
 
     // ── OTP Code Input ──────────────────────────────────

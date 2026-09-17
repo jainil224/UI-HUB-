@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useState } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 interface HeartCursorProps {
     /** Cursor size in pixels */
@@ -32,7 +32,7 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const cursorRef = useRef<HTMLDivElement>(null);
-    const [isHovered, setIsHovered] = useState(false);
+    const hoverRef = useRef(false);
 
     // Physics/Position refs (no re-renders)
     const mouse = useRef({ x: -999, y: -999, active: false });
@@ -57,32 +57,38 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
     const onMouseOver = useCallback((e: MouseEvent) => {
         const target = e.target as HTMLElement;
         if (target.closest('button, a, [role="button"], .interactive')) {
-            setIsHovered(true);
+            hoverRef.current = true;
         }
     }, []);
 
     const onMouseOut = useCallback((e: MouseEvent) => {
         const target = e.target as HTMLElement;
         if (target.closest('button, a, [role="button"], .interactive')) {
-            setIsHovered(false);
+            hoverRef.current = false;
         }
     }, []);
 
-    const drawHeart = (ctx: CanvasRenderingContext2D, x: number, y: number, s: number, opacity: number) => {
+    const drawHeart = (
+        ctx: CanvasRenderingContext2D,
+        x: number,
+        y: number,
+        s: number,
+        opacity: number,
+        glow: number,
+    ) => {
+        const d = s / 2;
         ctx.save();
         ctx.translate(x, y);
         ctx.beginPath();
-        // Simple heart path
-        const d = s / 2;
-        ctx.moveTo(0, d / 2);
-        ctx.bezierCurveTo(0, 0, -d, 0, -d, d / 2);
-        ctx.bezierCurveTo(-d, d, 0, d * 1.5, 0, d * 2);
-        ctx.bezierCurveTo(0, d * 1.5, d, d, d, d / 2);
-        ctx.bezierCurveTo(d, 0, 0, 0, 0, d / 2);
-
-        ctx.fillStyle = `rgba(168, 85, 247, ${opacity})`; // Purple-500
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = 'rgba(139, 92, 246, 0.5)';
+        ctx.moveTo(0, 0.35 * d);
+        ctx.bezierCurveTo(0, -0.25 * d, -d, -0.25 * d, -d, 0.35 * d);
+        ctx.bezierCurveTo(-d, 0.95 * d, -0.1 * d, 1.45 * d, 0, 1.9 * d);
+        ctx.bezierCurveTo(0.1 * d, 1.45 * d, d, 0.95 * d, d, 0.35 * d);
+        ctx.bezierCurveTo(d, -0.25 * d, 0, -0.25 * d, 0, 0.35 * d);
+        ctx.closePath();
+        ctx.shadowColor = `rgba(139, 92, 246, ${opacity * 0.9})`;
+        ctx.shadowBlur = glow;
+        ctx.fillStyle = `rgba(180, 105, 250, ${opacity})`;
         ctx.fill();
         ctx.restore();
     };
@@ -102,8 +108,8 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Update cursor position with easing
-        const easing = 0.15;
+        // Follow easing picks up speed with trailSpeed (higher = snappier trailing)
+        const easing = 0.12 + trailSpeed * 0.3;
         if (cursor.current.x === -999) {
             cursor.current.x = mouse.current.x;
             cursor.current.y = mouse.current.y;
@@ -112,11 +118,15 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
             cursor.current.y += (mouse.current.y - cursor.current.y) * easing;
         }
 
-        // Apply cursor style
-        cursorRef.current.style.transform = `translate(${cursor.current.x}px, ${cursor.current.y}px) scale(${isHovered ? hoverScale : 1})`;
+        // Apply cursor style — hover scale eased smoothly each frame
+        const targetScale = hoverRef.current ? hoverScale : 1;
+        const curScale = parseFloat(cursorRef.current.dataset.scale || '1');
+        const easedScale = curScale + (targetScale - curScale) * easing;
+        cursorRef.current.dataset.scale = easedScale.toFixed(4);
+        cursorRef.current.style.transform = `translate(${cursor.current.x}px, ${cursor.current.y}px) scale(${easedScale})`;
         cursorRef.current.style.opacity = mouse.current.active ? '1' : '0';
 
-        // Add periodic ripples
+        // Periodic heart-shaped ripple while moving
         const now = Date.now();
         if (mouse.current.active && now - lastRippleTime.current > 100 &&
             Math.abs(mouse.current.x - cursor.current.x) > 2) {
@@ -124,39 +134,28 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
                 x: cursor.current.x,
                 y: cursor.current.y,
                 size: size * 1.2,
-                opacity: 0.4,
+                opacity: 0.35 + glowIntensity * 0.25,
                 scale: 0.5
             });
             lastRippleTime.current = now;
         }
 
-        // Update and draw ripples
+        // Update and draw ripples — fade/expand speed driven by trailSpeed
         for (let i = ripples.current.length - 1; i >= 0; i--) {
             const r = ripples.current[i];
-            r.opacity -= 0.01;
-            r.scale += 0.02;
+            r.opacity -= 0.008 + trailSpeed * 0.03;
+            r.scale += 0.015 + trailSpeed * 0.04;
 
             if (r.opacity <= 0) {
                 ripples.current.splice(i, 1);
                 continue;
             }
 
-            // Bloom/Blur effect via radial gradient
-            const gradient = ctx.createRadialGradient(r.x, r.y + r.size / 2, 0, r.x, r.y + r.size / 2, r.size * r.scale * 2);
-            gradient.addColorStop(0, `rgba(139, 92, 246, ${r.opacity})`);
-            gradient.addColorStop(0.4, `rgba(124, 58, 237, ${r.opacity * 0.4})`);
-            gradient.addColorStop(1, 'rgba(124, 58, 237, 0)');
-
-            ctx.beginPath();
-            ctx.arc(r.x, r.y + r.size / 2, r.size * r.scale * 2, 0, Math.PI * 2);
-            ctx.fillStyle = gradient;
-            ctx.filter = 'blur(8px)';
-            ctx.fill();
-            ctx.filter = 'none';
+            drawHeart(ctx, r.x, r.y, r.size * r.scale, r.opacity, 6 + glowIntensity * 14);
         }
 
         rafId.current = requestAnimationFrame(animate);
-    }, [isHovered, hoverScale, size]);
+    }, [glowIntensity, trailSpeed, size, hoverScale]);
 
     useEffect(() => {
         window.addEventListener('mousemove', onMouseMove, { passive: true });
@@ -172,6 +171,9 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
         };
     }, [onMouseMove, onMouseOver, onMouseOut, animate]);
 
+    const glowBlur = 8 + glowIntensity * 14;
+    const glowAlpha = 0.5 + glowIntensity * 0.4;
+
     return (
         <div
             className={`pointer-events-none z-[10000] overflow-hidden ${className}`}
@@ -185,14 +187,24 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
             <style>{`
                 ${containerRef ? '' : 'body { cursor: none !important; }'}
                 ${containerRef ? '' : 'a, button, [role="button"], .interactive { cursor: none !important; }'}
-                
+
                 @keyframes heart-pulse {
-                    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6)); }
-                    50% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(168, 85, 247, 0.9)); }
+                    0%, 100% { transform: scale(0.94); }
+                    50% { transform: scale(1.06); }
                 }
-                
+
                 .heart-main {
-                    animation: heart-pulse 1.5s ease-in-out infinite;
+                    animation: heart-pulse 1.6s ease-in-out infinite;
+                }
+
+                .heart-main::after {
+                    content: '';
+                    position: absolute;
+                    inset: -35%;
+                    background: radial-gradient(circle, rgba(168, 85, 247, 0.5) 0%, rgba(168, 85, 247, 0) 70%);
+                    filter: blur(12px);
+                    opacity: 0.7;
+                    pointer-events: none;
                 }
             `}</style>
 
@@ -203,6 +215,7 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
 
             <div
                 ref={cursorRef}
+                data-scale="1"
                 className="pointer-events-none"
                 style={{
                     position: 'absolute',
@@ -213,7 +226,7 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
                     marginLeft: -size / 2,
                     marginTop: -size / 2,
                     willChange: 'transform, opacity',
-                    transition: 'transform 0.2s cubic-bezier(0.17, 0.67, 0.83, 0.67)',
+                    transition: 'opacity 0.25s ease',
                     zIndex: 2,
                     display: mouse.current.active ? 'block' : 'none'
                 }}
@@ -221,7 +234,8 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
                 <div className="heart-main relative w-full h-full">
                     <svg
                         viewBox="0 0 32 32"
-                        className="w-full h-full drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]"
+                        className="w-full h-full"
+                        style={{ filter: `drop-shadow(0 0 ${glowBlur}px rgba(168, 85, 247, ${glowAlpha}))` }}
                         fill="none"
                         xmlns="http://www.w3.org/2000/svg"
                     >
@@ -236,9 +250,6 @@ export const HeartCursor: React.FC<HeartCursorProps> = ({
                             </linearGradient>
                         </defs>
                     </svg>
-
-                    {/* Inner Glow Bloom */}
-                    <div className="absolute inset-0 rounded-full bg-purple-500/20 blur-xl scale-150 -z-10" />
                 </div>
             </div>
         </div>

@@ -18,7 +18,6 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'toonhub-hero': () => import('../components/ui/ToonhubHero'),
 
     // Cursors
-    'aurora-cursor': () => import('../components/ui/AuroraCursor'),
     'magnetic-cursor': () => import('../components/ui/MagneticCursor'),
     'black-hole-cursor': () => import('../components/ui/BlackHoleCursor'),
     'target-cursor': () => import('../components/ui/TargetCursor'),

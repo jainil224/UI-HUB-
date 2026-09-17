@@ -1252,42 +1252,6 @@ CRITICAL RULES:
 
 Provide the complete, single-file, production-ready React TypeScript component.`,
 
-    'aurora-cursor': `Create a premium "Aurora Cursor" component using React, TypeScript, and CSS.
-
-COMPONENT NAME: AuroraCursor
-
-PROPS (with defaults):
-- size: number = 150 — size of the aurora blob in px
-- colors: string[] = ['#06b6d4', '#8b5cf6', '#ec4899'] — aurora gradient colors
-- blur: number = 40 — blur amount in px
-- className: string = '' — additional CSS classes
-
-VISUAL REQUIREMENTS:
-1. A large (150px), soft, morphing blob of light that follows the mouse.
-2. The blob has a shifting gradient background cycling through the aurora colors.
-3. CSS animations for: background color shift (8s), border-radius morphing (20s), and opacity pulsing (4s).
-4. Heavy blur filter (40px) creating a diffused glow effect.
-5. On hover over interactive elements: Blob scales down to 50px and changes to a solid warm color (orange).
-6. An inner blob (smaller, brighter) appears on hover.
-
-TECHNICAL IMPLEMENTATION:
-1. Single div element, fixed position, pointer-events: none.
-2. Position: smooth follow with spring physics (stiffness: 0.1, damping: 0.9).
-3. CSS animations (infinite, running simultaneously):
-   - @keyframes auroraShift: background-position shifts through gradient stops.
-   - @keyframes auroraMorph: border-radius alternates between organic blob shapes (e.g., 60% 40% 70% 30% / 50% 50% 60% 40%).
-   - @keyframes auroraPulse: opacity: 0.6 to 0.9 oscillation.
-4. Transition: transform scale and background-color on hover state change.
-5. Use mix-blend-mode: screen for integration with page content.
-
-CRITICAL RULES:
-- Use CSS animations for the morphing effects (NOT JavaScript).
-- Use JavaScript only for position tracking.
-- The blur filter must be on the blob element, not backdrop-filter.
-- Export as both named and default export.
-
-Provide the complete, single-file, production-ready React TypeScript component.`,
-
     'heart-cursor': `Create a premium "Heart Cursor" component using React, TypeScript, SVG, and Canvas.
 
 COMPONENT NAME: HeartCursor

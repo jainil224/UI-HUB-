@@ -487,30 +487,45 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                             <stop offset="100%" stopColor="#000"    stopOpacity="0.0" />
                         </radialGradient>
 
-                        {/* Accretion disk outer halo – warm orange/amber */}
-                        <radialGradient id="diskOuter" cx="50%" cy="50%" r="50%" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%"   stopColor="#ff6600" stopOpacity="0.0" />
-                            <stop offset="40%"  stopColor="#ff8800" stopOpacity="0.55" />
-                            <stop offset="70%"  stopColor="#ffaa00" stopOpacity="0.35" />
-                            <stop offset="100%" stopColor="#ff4400" stopOpacity="0.0" />
-                        </radialGradient>
-
-                        {/* Disk inner hot streak – white-orange */}
-                        <linearGradient id="diskHot" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%"   stopColor="#fff" stopOpacity="0.0" />
-                            <stop offset="20%"  stopColor="#ffe0a0" stopOpacity="0.7" />
-                            <stop offset="50%"  stopColor="#fffaf0" stopOpacity="1.0" />
-                            <stop offset="80%"  stopColor="#ffcc44" stopOpacity="0.7" />
-                            <stop offset="100%" stopColor="#fff" stopOpacity="0.0" />
+                        {/* Accretion disk outer halo – warm amber, Doppler-beamed (approaching side LEFT brightest) */}
+                        <linearGradient id="diskOuter" x1="-58" y1="14" x2="58" y2="14" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%"   stopColor="#fff3dd" stopOpacity="0.0" />
+                            <stop offset="12%"  stopColor="#ffe0a0" stopOpacity="0.95" />
+                            <stop offset="35%"  stopColor="#ffb347" stopOpacity="0.6" />
+                            <stop offset="60%"  stopColor="#ff7722" stopOpacity="0.42" />
+                            <stop offset="88%"  stopColor="#8a3a00" stopOpacity="0.22" />
+                            <stop offset="100%" stopColor="#5a2000" stopOpacity="0.0" />
                         </linearGradient>
 
-                        {/* Photon ring glow */}
-                        <radialGradient id="photonRing" cx="50%" cy="50%" r="50%">
-                            <stop offset="70%"  stopColor="#fff"    stopOpacity="0.0" />
-                            <stop offset="85%"  stopColor="#a5f3fc" stopOpacity="0.9" />
-                            <stop offset="92%"  stopColor="#ffffff" stopOpacity="1.0" />
-                            <stop offset="100%" stopColor="#a5f3fc" stopOpacity="0.0" />
-                        </radialGradient>
+                        {/* Mid disk band – beamed, warm white near approaching edge */}
+                        <linearGradient id="diskMid" x1="-46" y1="10" x2="46" y2="10" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%"   stopColor="#fffaf0" stopOpacity="0.0" />
+                            <stop offset="14%"  stopColor="#ffffff" stopOpacity="0.95" />
+                            <stop offset="40%"  stopColor="#ffcc66" stopOpacity="0.7" />
+                            <stop offset="65%"  stopColor="#ff9922" stopOpacity="0.5" />
+                            <stop offset="95%"  stopColor="#7a3000" stopOpacity="0.22" />
+                            <stop offset="100%" stopColor="#4d1a00" stopOpacity="0.0" />
+                        </linearGradient>
+
+                        {/* Disk inner hot streak – white-hot approaching side, dim red receding */}
+                        <linearGradient id="diskHot" x1="-34" y1="8" x2="34" y2="8" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.0" />
+                            <stop offset="15%"  stopColor="#ffffff" stopOpacity="1.0" />
+                            <stop offset="38%"  stopColor="#fff1d6" stopOpacity="0.9" />
+                            <stop offset="62%"  stopColor="#ffb347" stopOpacity="0.6" />
+                            <stop offset="90%"  stopColor="#ff5a00" stopOpacity="0.35" />
+                            <stop offset="100%" stopColor="#b04000" stopOpacity="0.0" />
+                        </linearGradient>
+
+                        {/* Photon ring – white-hot approaching wrap, cyan receding */}
+                        <linearGradient id="photonRing" x1="-18" y1="0" x2="18" y2="0" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.0" />
+                            <stop offset="14%"  stopColor="#ffffff" stopOpacity="1.0" />
+                            <stop offset="38%"  stopColor="#c8f4ff" stopOpacity="0.7" />
+                            <stop offset="62%"  stopColor="#a5f3fc" stopOpacity="0.5" />
+                            <stop offset="88%"  stopColor="#7cc8ee" stopOpacity="0.35" />
+                            <stop offset="100%" stopColor="#5aa8d8" stopOpacity="0.0" />
+                        </linearGradient>
 
                         {/* Shadow lensing mask - cuts out behind the event horizon */}
                         <radialGradient id="shadowGrad" cx="50%" cy="50%" r="50%">
@@ -564,54 +579,56 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                         <ellipse cx="0" cy="20" rx="2" ry="50"  fill="url(#jetBot)" opacity="0.9" />
                     </g>
 
-                    {/* ── 4. Outer accretion disk band (tilted ellipse) ── */}
-                    <g className="bh-disk-outer" filter="url(#diskBlurOuter)">
-                        <ellipse cx="0" cy="0" rx="58" ry="14" fill="url(#diskOuter)" opacity="0.85" />
+                    {/* ── 4. BACK half of the tilted accretion disk (far side, behind the shadow) ── */}
+                    <g className="bh-disk-back" filter="url(#diskBlurOuter)">
+                        <ellipse cx="-12" cy="6" rx="52" ry="12" fill="none"
+                            stroke="url(#diskOuter)" strokeWidth="9" strokeOpacity="0.55" />
+                        <ellipse cx="0" cy="0" rx="40" ry="8" fill="none"
+                            stroke="url(#diskMid)" strokeWidth="4" strokeOpacity="0.45" />
                     </g>
 
-                    {/* ── 5. Mid accretion band ── */}
-                    <g className="bh-disk-mid" filter="url(#diskBlur)">
-                        <ellipse cx="0" cy="0" rx="44" ry="9" fill="none"
-                            stroke="#ff7700" strokeWidth="5" strokeOpacity="0.6" />
-                        <ellipse cx="0" cy="0" rx="38" ry="7" fill="none"
-                            stroke="#ffaa00" strokeWidth="3" strokeOpacity="0.5" />
-                    </g>
-
-                    {/* ── 6. Hot inner disk streak (brightest, near event horizon) ── */}
-                    <g className="bh-disk-hot">
-                        <ellipse cx="0" cy="0" rx="28" ry="5.5" fill="none"
-                            stroke="url(#diskHot)" strokeWidth="4" strokeOpacity="0.95" />
-                        <ellipse cx="0" cy="0" rx="22" ry="4" fill="none"
-                            stroke="#fffaf0" strokeWidth="2" strokeOpacity="0.8" />
-                    </g>
-
-                    {/* ── 7. Gravitational lensing arcs (thin bright arcs) ── */}
-                    <g className="bh-lensing" opacity="0.55">
+                    {/* ── 5. Gravitational lensing arcs (thin bright arcs above the shadow) ── */}
+                    <g className="bh-lensing" opacity="0.6">
                         {/* Top arc (lensed image of the far disk) */}
-                        <path d="M -32,-18 Q 0,-32 32,-18" fill="none"
+                        <path d="M -40,-20 Q 0,-38 40,-20" fill="none"
                             stroke="#ffcc66" strokeWidth="2" strokeLinecap="round" />
-                        {/* Bottom arc */}
-                        <path d="M -32,18 Q 0,32 32,18" fill="none"
-                            stroke="#ffcc66" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+                        <path d="M -24,-12 Q 0,-24 24,-12" fill="none"
+                            stroke="#fffaf0" strokeWidth="1.2" strokeLinecap="round" opacity="0.7" />
                     </g>
 
-                    {/* ── 8. Photon ring (bright ring just outside shadow) ── */}
-                    <g filter="url(#photonBlur)" className="bh-photon">
-                        <circle cx="0" cy="0" r="18" fill="none"
-                            stroke="#a5f3fc" strokeWidth="2.2" strokeOpacity="0.95" />
-                        <circle cx="0" cy="0" r="18" fill="none"
-                            stroke="#ffffff" strokeWidth="0.8" strokeOpacity="0.7" />
-                    </g>
-
-                    {/* ── 9. Schwarzschild shadow (true event horizon) ── */}
+                    {/* ── 6. Schwarzschild shadow (true event horizon) ── */}
                     {/* The black hole shadow is ~2.6× the Schwarzschild radius → r=16 ≈ photon sphere */}
                     <circle cx="0" cy="0" r="15.5"
                         fill="#000"
                         style={{ filter: 'drop-shadow(0 0 6px #7c3aed)' }} />
 
+                    {/* ── 7. FRONT half of the tilted accretion disk (near side, in front of the shadow, larger) ── */}
+                    <g className="bh-disk-front" filter="url(#diskBlur)">
+                        <ellipse cx="0" cy="6" rx="60" ry="15" fill="none"
+                            stroke="url(#diskOuter)" strokeWidth="11" strokeOpacity="0.9" />
+                        <ellipse cx="0" cy="3" rx="46" ry="10" fill="none"
+                            stroke="url(#diskMid)" strokeWidth="5" strokeOpacity="0.8" />
+                    </g>
+
+                    {/* ── 8. Hot inner disk streak (white-hot approaching side, doppler-beamed) ── */}
+                    <g className="bh-disk-hot" filter="url(#photonBlur)">
+                        <ellipse cx="0" cy="2" rx="30" ry="6" fill="none"
+                            stroke="url(#diskHot)" strokeWidth="4" strokeOpacity="0.95" />
+                        <ellipse cx="0" cy="2" rx="23" ry="4.5" fill="none"
+                            stroke="#fffaf0" strokeWidth="1.6" strokeOpacity="0.75" />
+                    </g>
+
+                    {/* ── 9. Photon ring — bright thin ring hugging the shadow, doppler-beamed ── */}
+                    <g filter="url(#photonBlur)" className="bh-photon">
+                        <circle cx="0" cy="0" r="17.5" fill="none"
+                            stroke="url(#photonRing)" strokeWidth="2.2" strokeOpacity="0.95" />
+                        <circle cx="0" cy="0" r="16.3" fill="none"
+                            stroke="#ffffff" strokeWidth="0.7" strokeOpacity="0.55" />
+                    </g>
+
                     {/* Subtle inner lensing highlight on the rim (bright crescent from disk behind) */}
-                    <path d="M -10,-12 Q 0,-17 10,-12" fill="none"
-                        stroke="#ffe0a0" strokeWidth="1.2" strokeOpacity="0.4" strokeLinecap="round" />
+                    <path d="M -12,-12 Q 0,-18 12,-12" fill="none"
+                        stroke="#ffe0a0" strokeWidth="1.3" strokeOpacity="0.45" strokeLinecap="round" />
                 </svg>
             </div>
 
@@ -637,8 +654,8 @@ export const BlackHoleCursor: React.FC<BlackHoleCursorProps> = ({
                     0%,100% { opacity: 0.45; }
                     50%     { opacity: 0.75; }
                 }
-                .bh-disk-outer { animation: bh-disk-outer-rot 18s linear infinite; transform-origin: 0 0; }
-                .bh-disk-mid   { animation: bh-disk-outer-rot 12s linear infinite; transform-origin: 0 0; }
+                .bh-disk-back  { animation: bh-disk-outer-rot 20s linear infinite; transform-origin: 0 0; }
+                .bh-disk-front { animation: bh-disk-outer-rot 20s linear infinite; transform-origin: 0 0; }
                 .bh-disk-hot   { animation: bh-disk-hot-rot 5s linear infinite; transform-origin: 0 0; }
                 .bh-photon     { animation: bh-photon-pulse 2.5s ease-in-out infinite; }
                 .bh-jet-top    { animation: bh-jet-flicker 3.5s ease-in-out infinite; }

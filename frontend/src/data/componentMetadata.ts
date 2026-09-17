@@ -321,21 +321,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["requestAnimationFrame spring physics loop", "Dual spring constants (dot vs halo)", "data-magnetic attribute element scanning", "Element transform application on proximity", "Default cursor hiding and cleanup on unmount"]
         }
     },
-    "aurora-cursor": {
-        props: [
-            { name: "size", type: "number", default: "150", description: "Size of the aurora blob in pixels." },
-            { name: "blur", type: "number", default: "40", description: "Blur filter amount in pixels." },
-            { name: "colors", type: "string[]", default: '["#06b6d4", "#8b5cf6", "#ec4899"]', description: "Aurora gradient colors for the morphing blob." }
-        ],
-        vibeMeta: {
-            behavior: "A large, morphing blob of colorful light that follows the mouse with spring physics. CSS animations drive background shifting, border-radius morphing, and opacity pulsing simultaneously. Scales down on interactive element hover.",
-            states: { from: "large diffused aurora blob", to: "compact focused blob on interactive hover" },
-            cssProperties: ["filter: blur", "border-radius", "background", "mix-blend-mode", "transform"],
-            description: "Fluid aurora light cursor with organic CSS morphing animations.",
-            libraries: ["react"],
-            requirements: ["Spring physics position following", "CSS @keyframes for background-position shift (8s)", "CSS @keyframes for border-radius morphing (20s)", "CSS @keyframes for opacity pulsing (4s)", "Interactive element hover detection with scale change"]
-        }
-    },
     "heart-cursor": {
         props: [
             { name: "color", type: "string", default: '"#ff4d6a"', description: "Color of the heart cursor." },
@@ -895,47 +880,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
-    "ink-splatter-cursor": {
-        props: [
-            { name: "inkColor", type: "string", default: '"#050505"', description: "Color of the ink (hex)." },
-            { name: "burstOnClick", type: "boolean", default: "true", description: "Emit an ink burst on click." },
-            { name: "dropletSize", type: "number", default: "3", description: "Base droplet radius in px." },
-            { name: "perMove", type: "number", default: "2", description: "Max droplets spawned per movement sample." },
-            { name: "wetOpacity", type: "number", default: "0.7", description: "Ink opacity while wet (0-1)." },
-            { name: "settleTime", type: "number", default: "0.8", description: "Seconds a droplet stays wet/bleeding before it settles." },
-            { name: "containerRef", type: "RefObject<HTMLElement>", default: "undefined", description: "Container to track pointer within (optional, global when omitted)." },
-            { name: "hideDefaultCursor", type: "boolean", default: "true", description: "Hide the default browser cursor while over the frame." },
-            { name: "className", type: "string", default: '""', description: "Extra class names for the overlay frame." }
-        ],
-        vibeMeta: {
-            behavior: "A canvas ink cursor that drips realistic droplets that bleed into the surface, settle, and stay behind. A click fires an 18-28 droplet burst with a glossy central splat.",
-            states: { from: "dry canvas", to: "settled ink splatters persisting on the surface" },
-            cssProperties: ["canvas", "requestAnimationFrame", "radial droplets", "globalAlpha", "settle curves"],
-            description: "Ink-pool cursor that drips, bleeds, and permanently splatters dark ink under the pointer.",
-            libraries: ["react"],
-            requirements: ["canvas 2d rendering", "pointer events on window or container", "requestAnimationFrame", "droplet lifecycle states (wet/bleed/settled)", "pointer-events-none overlay"]
-        }
-    },
-    "ghost-trail-cursor": {
-        props: [
-            { name: "ghostCount", type: "number", default: "6", description: "Number of echoing ghosts behind the live dot." },
-            { name: "trailIntensity", type: "number", default: "0.85", description: "How tightly the chain is drawn toward the pointer (0-1, higher = tighter)." },
-            { name: "size", type: "number", default: "14", description: "Diameter of the live cursor dot in px." },
-            { name: "color", type: "string", default: '"#3D5CFF"', description: "Accent color of the live dot." },
-            { name: "ghostColor", type: "string", default: '"rgba(255, 255, 255, 0.6)"', description: "Echo ghost fill color." },
-            { name: "containerRef", type: "RefObject<HTMLElement>", default: "undefined", description: "Container to track pointer within (optional, global when omitted)." },
-            { name: "hideDefaultCursor", type: "boolean", default: "true", description: "Hide the default browser cursor while over the frame." },
-            { name: "className", type: "string", default: '""', description: "Extra class names for the overlay frame." }
-        ],
-        vibeMeta: {
-            behavior: "A velocity-reactive cursor: a live brand-blue dot is chased by a chain of white ghosts that follow with progressively looser per-link easing, fading and shrinking with depth. The whole overlay uses mix-blend-mode difference.",
-            states: { from: "invisible while pointer is outside", to: "live dot plus ghost chain following the pointer" },
-            cssProperties: ["transform", "mixBlendMode: difference", "per-link ease factors", "requestAnimationFrame"],
-            description: "Ghost trail cursor where a chain of fading echoes chases a brand-blue dot across the page.",
-            libraries: ["react"],
-            requirements: ["requestAnimationFrame", "pointerenter/leave/move on the frame", "per-index ease factors", "transform-based dot positioning"]
-        }
-    },
     "otp-code-input": {
         props: [
             { name: "length", type: "number", default: "6", description: "Number of digit boxes." },

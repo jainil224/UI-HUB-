@@ -351,7 +351,7 @@ export const fetchVibePrompt = async (
     // Locally-defined components have no backend vault entry, so the backend
     // returns a generic code-less prompt. Force the local source (which embeds
     // the exact component code) for those components.
-    const LOCAL_ONLY_COMPONENTS = ['cinematic-navbar', 'floating-dark-capsule', 'minimal-ai-capsule', 'pill-navbar', 'modern-dark', 'split-navigation-nav', 'awwwards-nav', 'haul-footer', 'omniflow-footer', 'sora-footer', 'alpine-footer', 'leeuwarder-golfclub', 'community-newsletter', 'faizur-portfolio', 'sui-foundation', 'option-wheel', 'ink-splatter-cursor', 'ghost-trail-cursor', 'otp-code-input', 'password-strength-meter', 'signature-pad', 'drag-drop-upload', 'tick-range-slider'];
+    const LOCAL_ONLY_COMPONENTS = ['cinematic-navbar', 'floating-dark-capsule', 'minimal-ai-capsule', 'pill-navbar', 'modern-dark', 'split-navigation-nav', 'awwwards-nav', 'haul-footer', 'omniflow-footer', 'sora-footer', 'alpine-footer', 'leeuwarder-golfclub', 'community-newsletter', 'faizur-portfolio', 'sui-foundation', 'option-wheel', 'otp-code-input', 'password-strength-meter', 'signature-pad', 'drag-drop-upload', 'tick-range-slider'];
     if (LOCAL_ONLY_COMPONENTS.includes(componentId)) {
         return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item) };
     }
