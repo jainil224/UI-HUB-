@@ -118,6 +118,7 @@ const LibraryPage = () => {
         { name: "Loaders", items: allComponents.filter(item => item.category === 'loader') },
         { name: "Navbars", items: allComponents.filter(item => item.category === 'navbar') },
         { name: "Footers", items: allComponents.filter(item => item.category === 'footer') },
+        { name: "Forms & Inputs", items: allComponents.filter(item => item.category === 'form') },
     ], [allComponents]);
 
     const categories = useMemo(() => baseCategories

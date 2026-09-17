@@ -12,7 +12,7 @@ const GAP = 12;
 // These categories contain content-sized elements (buttons, marquees, images)
 // that would look tiny if forced to fill the card. Render them at near-natural
 // scale instead, centered.
-const NATURAL_SIZE_CATEGORIES = new Set(['button', 'text', 'effect', 'image-interaction']);
+const NATURAL_SIZE_CATEGORIES = new Set(['button', 'text', 'effect', 'image-interaction', 'form']);
 
 // Full-screen designs (WebGL/particle/canvas backgrounds, 3D scenes) are much
 // cheaper to render at the card's own small size than at their hard-coded

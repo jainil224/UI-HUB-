@@ -893,6 +893,149 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react"],
             requirements: ["requestAnimationFrame", "exponential smoothing", "pointer events and pointer capture", "non-passive wheel listener", "keyboard navigation", "aria listbox roles"]
         }
+    },
+
+    "ink-splatter-cursor": {
+        props: [
+            { name: "inkColor", type: "string", default: '"#050505"', description: "Color of the ink (hex)." },
+            { name: "burstOnClick", type: "boolean", default: "true", description: "Emit an ink burst on click." },
+            { name: "dropletSize", type: "number", default: "3", description: "Base droplet radius in px." },
+            { name: "perMove", type: "number", default: "2", description: "Max droplets spawned per movement sample." },
+            { name: "wetOpacity", type: "number", default: "0.7", description: "Ink opacity while wet (0-1)." },
+            { name: "settleTime", type: "number", default: "0.8", description: "Seconds a droplet stays wet/bleeding before it settles." },
+            { name: "containerRef", type: "RefObject<HTMLElement>", default: "undefined", description: "Container to track pointer within (optional, global when omitted)." },
+            { name: "hideDefaultCursor", type: "boolean", default: "true", description: "Hide the default browser cursor while over the frame." },
+            { name: "className", type: "string", default: '""', description: "Extra class names for the overlay frame." }
+        ],
+        vibeMeta: {
+            behavior: "A canvas ink cursor that drips realistic droplets that bleed into the surface, settle, and stay behind. A click fires an 18-28 droplet burst with a glossy central splat.",
+            states: { from: "dry canvas", to: "settled ink splatters persisting on the surface" },
+            cssProperties: ["canvas", "requestAnimationFrame", "radial droplets", "globalAlpha", "settle curves"],
+            description: "Ink-pool cursor that drips, bleeds, and permanently splatters dark ink under the pointer.",
+            libraries: ["react"],
+            requirements: ["canvas 2d rendering", "pointer events on window or container", "requestAnimationFrame", "droplet lifecycle states (wet/bleed/settled)", "pointer-events-none overlay"]
+        }
+    },
+    "ghost-trail-cursor": {
+        props: [
+            { name: "ghostCount", type: "number", default: "6", description: "Number of echoing ghosts behind the live dot." },
+            { name: "trailIntensity", type: "number", default: "0.85", description: "How tightly the chain is drawn toward the pointer (0-1, higher = tighter)." },
+            { name: "size", type: "number", default: "14", description: "Diameter of the live cursor dot in px." },
+            { name: "color", type: "string", default: '"#3D5CFF"', description: "Accent color of the live dot." },
+            { name: "ghostColor", type: "string", default: '"rgba(255, 255, 255, 0.6)"', description: "Echo ghost fill color." },
+            { name: "containerRef", type: "RefObject<HTMLElement>", default: "undefined", description: "Container to track pointer within (optional, global when omitted)." },
+            { name: "hideDefaultCursor", type: "boolean", default: "true", description: "Hide the default browser cursor while over the frame." },
+            { name: "className", type: "string", default: '""', description: "Extra class names for the overlay frame." }
+        ],
+        vibeMeta: {
+            behavior: "A velocity-reactive cursor: a live brand-blue dot is chased by a chain of white ghosts that follow with progressively looser per-link easing, fading and shrinking with depth. The whole overlay uses mix-blend-mode difference.",
+            states: { from: "invisible while pointer is outside", to: "live dot plus ghost chain following the pointer" },
+            cssProperties: ["transform", "mixBlendMode: difference", "per-link ease factors", "requestAnimationFrame"],
+            description: "Ghost trail cursor where a chain of fading echoes chases a brand-blue dot across the page.",
+            libraries: ["react"],
+            requirements: ["requestAnimationFrame", "pointerenter/leave/move on the frame", "per-index ease factors", "transform-based dot positioning"]
+        }
+    },
+    "otp-code-input": {
+        props: [
+            { name: "length", type: "number", default: "6", description: "Number of digit boxes." },
+            { name: "value", type: "string", default: "undefined", description: "Controlled value (string of digits)." },
+            { name: "onChange", type: "(value: string) => void", default: "undefined", description: "Called with the new digit string." },
+            { name: "autoFocus", type: "boolean", default: "false", description: "Focus the first box on mount." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disable all inputs." },
+            { name: "ariaLabel", type: "string", default: '"One-time code"', description: "ARIA label for the group." },
+            { name: "className", type: "string", default: '""', description: "Extra class names for the group row." }
+        ],
+        vibeMeta: {
+            behavior: "A segmented OTP input. Users type digits that auto-advance focus to the next box; Backspace on an empty box clears and re-focuses the previous, arrows move focus, and pasting a code fills boxes left-to-right.",
+            states: { from: "empty brand-blue next box", to: "filled boxes auto-advancing and glowing" },
+            cssProperties: ["border-color", "focus ring", "glow shadow", "font-mono digits"],
+            description: "Six-box OTP entry with auto-advance, backspace traversal, arrow keys, and paste support.",
+            libraries: ["react"],
+            requirements: ["per-digit refs", "keyboard navigation", "clipboard paste handling", "controlled/uncontrolled value", "aria labels per box"]
+        }
+    },
+    "password-strength-meter": {
+        props: [
+            { name: "value", type: "string", default: "undefined", description: "Controlled password value (empty string hides the bar until typed)." },
+            { name: "onChange", type: "(value: string) => void", default: "undefined", description: "Uncontrolled input callback." },
+            { name: "showChecklist", type: "boolean", default: "true", description: "Show the live checklist under the bar." },
+            { name: "label", type: "string", default: '"Password"', description: "Label rendered above the input." },
+            { name: "placeholder", type: "string", default: '"Enter a password"', description: "Placeholder text." },
+            { name: "criteria", type: "PasswordCriterion[]", default: "DEFAULT_CRITERIA", description: "Custom criteria; defaults to the standard 5-point rule set." },
+            { name: "showStrengthLabel", type: "boolean", default: "true", description: "Show the strength label (Weak / Fair / Good / Strong)." },
+            { name: "className", type: "string", default: '""', description: "Extra class names for the wrapper." }
+        ],
+        vibeMeta: {
+            behavior: "A password input with a show/hide toggle plus a 5-segment strength bar that fills and recolors with standard semantic colors (red to emerald) as criteria pass, alongside a live checklist with check/cross icons.",
+            states: { from: "empty gray segments", to: "colored segments and checklist per passed criterion" },
+            cssProperties: ["segmented progress bar", "semantic color tiers", "transition-colors", "custom properties"],
+            description: "Password field with segmented strength meter and a live criteria checklist.",
+            libraries: ["react", "lucide-react"],
+            requirements: ["criteria scoring", "controlled/uncontrolled value", "semantic status colors", "show/hide password toggle"]
+        }
+    },
+    "signature-pad": {
+        props: [
+            { name: "onChange", type: "(dataUrl: string) => void", default: "undefined", description: "Called with the signature data URL whenever a stroke ends (or cleared)." },
+            { name: "penColor", type: "string", default: '"#f5f5f5"', description: "Pen color." },
+            { name: "minWidth", type: "number", default: "1", description: "Minimum stroke width in px (slow drawing)." },
+            { name: "maxWidth", type: "number", default: "4", description: "Maximum stroke width in px (fast drawing)." },
+            { name: "clearOnResize", type: "boolean", default: "false", description: "Clear the canvas when it is resized (e.g. orientation change)." },
+            { name: "hint", type: "string", default: '"Sign above"', description: "Hint text shown along the baseline." },
+            { name: "className", type: "string", default: '""', description: "Extra class names for the wrapper." }
+        ],
+        vibeMeta: {
+            behavior: "A hand-drawn signature pad on canvas with variable ink weight sized by pointer speed. Undo pops the last stroke, Clear wipes all, and every stroke end exports a PNG data URL through onChange.",
+            states: { from: "empty dashed canvas with baseline hint", to: "captured ink strokes with Undo/Clear enabled" },
+            cssProperties: ["canvas", "devicePixelRatio scaling", "variable stroke width", "pointer capture"],
+            description: "Signature pad with variable-pressure rendering, undo/clear controls, and PNG data-URL export.",
+            libraries: ["react", "lucide-react"],
+            requirements: ["canvas 2d", "ResizeObserver", "pointer capture", "stroke history for undo", "devicePixelRatio handling"]
+        }
+    },
+    "drag-drop-upload": {
+        props: [
+            { name: "onFilesChange", type: "(files: UploadedFile[]) => void", default: "undefined", description: "Called when files are added or removed (current in-memory list)." },
+            { name: "accept", type: "string", default: "undefined", description: "Optional accepted MIME types / extensions (e.g. image/*,.pdf)." },
+            { name: "multiple", type: "boolean", default: "true", description: "Allow multiple files." },
+            { name: "maxSizeMB", type: "number", default: "0", description: "Per-file size limit in MB (0 = unlimited)." },
+            { name: "progress", type: "number", default: "undefined", description: "Upload progress 0-100. When provided the orbit ring reflects it." },
+            { name: "simulateProgress", type: "boolean", default: "true", description: "Show a simulated progress animation when files are added." },
+            { name: "title", type: "string", default: '"Drag & drop files"', description: "Headline text in the drop zone." },
+            { name: "subtitle", type: "string", default: '"or browse from your device"', description: "Subtitle / helper text in the drop zone." },
+            { name: "className", type: "string", default: '""', description: "Extra class names for the wrapper." }
+        ],
+        vibeMeta: {
+            behavior: "A drag-and-drop upload zone with keyboard/click fallback, per-file size validation, a progress ring that orbits the cloud icon while uploading, and removable file chips listing name and size.",
+            states: { from: "idle dashed zone", to: "drag-hover highlight, progress ring, and queued file chips" },
+            cssProperties: ["border-dashed", "orbit ring svg", "stroke-dashoffset progress", "transition-colors"],
+            description: "Drag-and-drop upload zone with a live progress ring, file chips, validation, and simulated progress.",
+            libraries: ["react", "lucide-react"],
+            requirements: ["drag/drop events", "hidden file input fallback", "max size validation", "progress ring via SVG stroke-dashoffset", "controlled/uncontrolled progress"]
+        }
+    },
+    "tick-range-slider": {
+        props: [
+            { name: "min", type: "number", default: "0", description: "Minimum value." },
+            { name: "max", type: "number", default: "100", description: "Maximum value." },
+            { name: "step", type: "number", default: "10", description: "Step between values (defines the magnetic stops)." },
+            { name: "value", type: "number", default: "undefined", description: "Controlled value." },
+            { name: "onChange", type: "(value: number) => void", default: "undefined", description: "Called with the new value while dragging (and on release snap)." },
+            { name: "labelFor", type: "(value: number) => string | undefined", default: "undefined", description: "Custom labels rendered under tick marks (map from value to label)." },
+            { name: "magnetRadius", type: "number", default: "8", description: "Magnetic snap distance in px around each stop." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disable the slider." },
+            { name: "ariaLabel", type: "string", default: '"Range slider"', description: "ARIA label for the range control." },
+            { name: "className", type: "string", default: '""', description: "Extra class names for the wrapper." }
+        ],
+        vibeMeta: {
+            behavior: "An audio-style stepped slider with tick marks. Each stop acts as a magnet so the thumb snaps value to tick positions, while labels can render under ticks. Keyboard arrows, Home/End, and pointer dragging are supported.",
+            states: { from: "thumb at start of gradient track", to: "thumb snapped to a magnetic tick with optional label" },
+            cssProperties: ["gradient fill", "tick marks", "transform thumb", "custom properties"],
+            description: "Stepped tick slider with magnetic snap stops, gradient fill, tick labels, and keyboard support.",
+            libraries: ["react"],
+            requirements: ["pointer capture", "magnetic stop snapping", "keyboard navigation", "tick label rendering", "controlled/uncontrolled value"]
+        }
     }
 };
 

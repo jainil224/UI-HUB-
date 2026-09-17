@@ -92,6 +92,14 @@ const PixelBounce = React.lazy(() => import('../components/ui/PixelBounce'));
 const GradientOrb = React.lazy(() => import('../components/ui/GradientOrb'));
 const SuperMario = React.lazy(() => import('../components/ui/SuperMario'));
 
+const InkSplatterCursor = React.lazy(() => import('../components/ui/InkSplatterCursor').then(m => ({ default: m.InkSplatterCursor })));
+const GhostTrailCursor = React.lazy(() => import('../components/ui/GhostTrailCursor').then(m => ({ default: m.GhostTrailCursor })));
+const OtpCodeInput = React.lazy(() => import('../components/ui/OtpCodeInput').then(m => ({ default: m.OtpCodeInput })));
+const PasswordStrengthMeter = React.lazy(() => import('../components/ui/PasswordStrengthMeter').then(m => ({ default: m.PasswordStrengthMeter })));
+const SignaturePad = React.lazy(() => import('../components/ui/SignaturePad').then(m => ({ default: m.SignaturePad })));
+const DragDropUpload = React.lazy(() => import('../components/ui/DragDropUpload').then(m => ({ default: m.DragDropUpload })));
+const TickRangeSlider = React.lazy(() => import('../components/ui/TickRangeSlider').then(m => ({ default: m.TickRangeSlider })));
+
 
 
 
@@ -2813,7 +2821,7 @@ const AwwwardsNavPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "loader" | "navbar" | "footer";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "loader" | "navbar" | "footer" | "form";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -2961,6 +2969,14 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'pixel-bounce': PixelBounce,
     'gradient-orb': GradientOrb,
     'super-mario': SuperMario,
+
+    'ink-splatter-cursor': InkSplatterCursor,
+    'ghost-trail-cursor': GhostTrailCursor,
+    'otp-code-input': OtpCodeInput,
+    'password-strength-meter': PasswordStrengthMeter,
+    'signature-pad': SignaturePad,
+    'drag-drop-upload': DragDropUpload,
+    'tick-range-slider': TickRangeSlider,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -4992,6 +5008,155 @@ export const SuiFoundationPreview = () => {
 };
 
 // Assuming these prompts apply as they were defined in VibeMeta
+
+// ── Ink Splatter Cursor scoped preview ──
+const InkSplatterCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    return (
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="radial-gradient(120% 120% at 50% 0%, #1c1c1e 0%, #0d0d0f 50%, #050505 100%)"
+        >
+            <Suspense fallback={null}>
+                <InkSplatterCursor inkColor="#0a0a0a" />
+            </Suspense>
+        </CursorPreviewShell>
+    );
+};
+
+// ── Ghost Trail scoped preview ──
+const GhostTrailCursorPreview: React.FC = () => {
+    const containerRef = useRef<HTMLDivElement>(null);
+    return (
+        <CursorPreviewShell
+            containerRef={containerRef}
+            background="linear-gradient(160deg, #0e1117 0%, #0a0d12 50%, #06080c 100%)"
+        >
+            <Suspense fallback={null}>
+                <GhostTrailCursor ghostCount={6} />
+            </Suspense>
+        </CursorPreviewShell>
+    );
+};
+
+// ── OTP Code Input preview ──
+const OtpCodeInputPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #16181d 0%, #0b0c10 60%, #06070a 100%)',
+            padding: 24,
+        }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, alignItems: 'center' }}>
+                <span style={{ fontSize: 11, textTransform: 'uppercase', letterSpacing: 2, color: '#8a8a8a', fontWeight: 700 }}>
+                    Enter verification code
+                </span>
+                <Suspense fallback={null}>
+                    <OtpCodeInput length={6} autoFocus />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Password Strength Meter preview ──
+const PasswordStrengthMeterPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #16181d 0%, #0b0c10 60%, #06070a 100%)',
+            padding: 28,
+        }}>
+            <div style={{ width: '100%', maxWidth: 340 }}>
+                <Suspense fallback={null}>
+                    <PasswordStrengthMeter />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Signature Pad preview ──
+const SignaturePadPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #16181d 0%, #0b0c10 60%, #06070a 100%)',
+            padding: 24,
+        }}>
+            <div style={{ width: '100%', maxWidth: 420 }}>
+                <Suspense fallback={null}>
+                    <SignaturePad />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Drag-Drop Upload Zone preview ──
+const DragDropUploadPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #16181d 0%, #0b0c10 60%, #06070a 100%)',
+            padding: 24,
+        }}>
+            <div style={{ width: '100%', maxWidth: 420 }}>
+                <Suspense fallback={null}>
+                    <DragDropUpload multiple maxSizeMB={5} />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Tick Range Slider preview ──
+const TickRangeSliderPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #16181d 0%, #0b0c10 60%, #06070a 100%)',
+            padding: 32,
+        }}>
+            <div style={{ width: '100%', maxWidth: 360 }}>
+                <Suspense fallback={null}>
+                    <TickRangeSlider
+                        min={0}
+                        max={100}
+                        step={10}
+                        labelFor={(v) => (v % 50 === 0 ? String(v) : undefined)}
+                    />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
 export const componentList: ComponentItem[] = [
 
     {
@@ -14697,6 +14862,97 @@ Do not modify unrelated parts of the website.
 The uploaded reference image is the absolute source of truth.
 
 Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
+    },
+
+    // ── Ink Splatter Cursor ─────────────────────────────
+    {
+        id: "ink-splatter-cursor",
+        title: "Ink Splatter Cursor",
+        category: "cursor",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "A cursor that leaves wet-ink blotches which bleed, then dry and settle; clicking bursts a splatter.",
+        preview: () => <InkSplatterCursorPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Ghost Trail ─────────────────────────────────────
+    {
+        id: "ghost-trail-cursor",
+        title: "Ghost Trail",
+        category: "cursor",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "Half-transparent phased echo rings that lag behind the cursor like a fading ghost trail.",
+        preview: () => <GhostTrailCursorPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── OTP Code Input ──────────────────────────────────
+    {
+        id: "otp-code-input",
+        title: "OTP Code Input",
+        category: "form",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "Digit boxes that auto-advance, auto-backspace, navigate with arrows, and split pasted codes across the boxes.",
+        preview: () => <OtpCodeInputPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Password Strength Meter ─────────────────────────
+    {
+        id: "password-strength-meter",
+        title: "Password Strength Meter",
+        category: "form",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "A password input with a live segmented strength bar (weak red → strong green) and a real-time criteria checklist.",
+        preview: () => <PasswordStrengthMeterPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Signature Pad ───────────────────────────────────
+    {
+        id: "signature-pad",
+        title: "Signature Pad",
+        category: "form",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "A smooth canvas signature pad with variable ink weight based on stroke speed, plus undo and clear.",
+        preview: () => <SignaturePadPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Drag-Drop Upload Zone ───────────────────────────
+    {
+        id: "drag-drop-upload",
+        title: "Drag Drop Upload Zone",
+        category: "form",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "A dropzone with an orbit progress ring around the upload icon and a removable file chip list.",
+        preview: () => <DragDropUploadPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Tick Range Slider ───────────────────────────────
+    {
+        id: "tick-range-slider",
+        title: "Tick Range Slider",
+        category: "form",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "An audio-style slider with labeled tick marks and magnetic stops that snap the thumb to each step.",
+        preview: () => <TickRangeSliderPreview />,
+        code: "",
+        vibePrompt: "",
     },
 
 ];

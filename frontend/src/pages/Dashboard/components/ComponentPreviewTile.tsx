@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentItem } from '../../../data/componentData';
 
-const NATURAL_SIZE_CATEGORIES = new Set(['button', 'text', 'effect', 'image-interaction']);
+const NATURAL_SIZE_CATEGORIES = new Set(['button', 'text', 'effect', 'image-interaction', 'form']);
 
 const FIT_STYLE: React.CSSProperties = { minWidth: 0, minHeight: 0, width: '100%', height: '100%' };
 
