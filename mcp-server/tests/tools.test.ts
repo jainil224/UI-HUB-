@@ -238,3 +238,121 @@ describe('MCP Tools', () => {
     expect(data.error).toBe('TEMPLATE_NOT_FOUND');
   });
 });
+
+describe('MCP Tools — premium isolation for free keys', () => {
+  it('search_components hides all premium components from free keys', async () => {
+    const result = await tool('search_components').handler({ query: '' }, { user: freeUser });
+    const data = parse(result);
+    expect(data.count).toBeGreaterThan(0);
+    expect(data.components.every((c: any) => c.isPremium === false)).toBe(true);
+    expect(data.components.every((c: any) => c.access === 'free')).toBe(true);
+  });
+
+  it('search_components isPremium:true returns nothing for free keys', async () => {
+    const result = await tool('search_components').handler({ isPremium: true }, { user: freeUser });
+    const data = parse(result);
+    expect(data.count).toBe(0);
+  });
+
+  it('search_components exposes premium components to pro keys', async () => {
+    const result = await tool('search_components').handler({ isPremium: true }, { user: proUser });
+    const data = parse(result);
+    expect(data.count).toBeGreaterThan(0);
+    expect(data.components.every((c: any) => c.isPremium === true)).toBe(true);
+    expect(data.components.every((c: any) => c.access === 'premium-available')).toBe(true);
+  });
+
+  it('search_by_behavior hides all premium components from free keys', async () => {
+    const result = await tool('search_by_behavior').handler({ query: 'particle' }, { user: freeUser });
+    const data = parse(result);
+    expect(data.components.every((c: any) => c.isPremium === false)).toBe(true);
+  });
+
+  it('search_templates hides premium templates from free keys', async () => {
+    const result = await tool('search_templates').handler({ isPremium: true }, { user: freeUser });
+    const data = parse(result);
+    expect(data.count).toBe(0);
+  });
+
+  it('search_animations hides premium animations from free keys', async () => {
+    const result = await tool('search_animations').handler({ isPremium: true }, { user: freeUser });
+    const data = parse(result);
+    expect(data.count).toBe(0);
+  });
+
+  it('search_animations returns premium animations for pro keys', async () => {
+    const result = await tool('search_animations').handler({ isPremium: true }, { user: proUser });
+    const data = parse(result);
+    expect(data.count).toBeGreaterThan(0);
+  });
+
+  it('list_all_components returns only free components for free keys', async () => {
+    const result = await tool('list_all_components').handler({ limit: 200 }, { user: freeUser });
+    const data = parse(result);
+    expect(data.total).toBeGreaterThan(0);
+    expect(data.count).toBe(data.total);
+    expect(data.components.every((c: any) => c.isPremium === false)).toBe(true);
+    expect(data.components.some((c: any) => c.id === 'black-hole')).toBe(false);
+    expect(data.components.some((c: any) => c.id === 'rubiks-cube')).toBe(false);
+    expect(data.components.some((c: any) => c.id === 'toonhub-hero')).toBe(false);
+  });
+
+  it('list_all_components includes premium + premium-only ids for pro keys', async () => {
+    const free = parse(await tool('list_all_components').handler({ limit: 200 }, { user: freeUser }));
+    const result = await tool('list_all_components').handler({ limit: 200 }, { user: proUser });
+    const data = parse(result);
+    expect(data.total).toBeGreaterThan(free.total);
+    expect(data.components.some((c: any) => c.isPremium === true)).toBe(true);
+    expect(data.components.some((c: any) => c.id === 'black-hole')).toBe(true);
+    expect(data.components.some((c: any) => c.id === 'rubiks-cube')).toBe(true);
+    expect(data.components.some((c: any) => c.id === 'toonhub-hero')).toBe(true);
+  });
+
+  it('list_all_components supports category + pagination', async () => {
+    const result = await tool('list_all_components').handler({ category: 'form', limit: 10, offset: 0 }, { user: freeUser });
+    const data = parse(result);
+    expect(data.components.length).toBeGreaterThan(0);
+    expect(data.components.every((c: any) => c.category === 'form')).toBe(true);
+    expect(data.components.every((c: any) => c.isPremium === false)).toBe(true);
+  });
+
+  it('get_component_metadata denies premium metadata to free keys (was previously leaked)', async () => {
+    const result = await tool('get_component_metadata').handler({ componentId: 'black-hole-3d' }, { user: freeUser });
+    expect(result.isError).toBe(true);
+    const data = parse(result);
+    expect(data.error).toBe('PREMIUM_ACCESS_REQUIRED');
+  });
+
+  it('get_dependencies denies premium deps to free keys (was previously leaked)', async () => {
+    const result = await tool('get_dependencies').handler({ componentId: 'black-hole-3d' }, { user: freeUser });
+    expect(result.isError).toBe(true);
+    const data = parse(result);
+    expect(data.error).toBe('PREMIUM_ACCESS_REQUIRED');
+  });
+
+  it('regression: previously-leaked premium ids now deny source to free keys', async () => {
+    const leaked = [
+      'black-hole-3d', 'card-cascade', 'fourier-flow', 'generating-orb', 'gear-system',
+      'hourglass', 'infinity-image', 'isometric-portal', 'morphing-glow', 'particle-sphere',
+      'point-dna-helix', 'radial-glow-button', 'spider-web', 'spiral-images', 'super-mario',
+    ];
+    for (const id of leaked) {
+      const result = await tool('get_component_code').handler({ componentId: id }, { user: freeUser });
+      const data = parse(result);
+      expect(data.error, `expected PREMIUM_ACCESS_REQUIRED for ${id}`).toBe('PREMIUM_ACCESS_REQUIRED');
+    }
+  });
+
+  it('free keys get premium code only for premium-flagged components', async () => {
+    const result = await tool('get_component_code').handler({ componentId: 'target-cursor' }, { user: freeUser });
+    expect(result.isError).toBeFalsy();
+    const data = parse(result);
+    expect(data.code).toBeTruthy();
+  });
+
+  it('list_categories counts exclude premium for free keys', async () => {
+    const free = parse(await tool('list_categories').handler({}, { user: freeUser }));
+    const pro = parse(await tool('list_categories').handler({}, { user: proUser }));
+    expect(free.total).toBeLessThan(pro.total);
+  });
+});

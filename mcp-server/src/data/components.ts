@@ -23,6 +23,7 @@ const CATEGORY_DESCRIPTIONS: Record<string, string> = {
   "cursor": "Custom cursor and pointer effects",
   "effect": "Visual effects and transitions",
   "footer": "Website footer layouts",
+  "form": "Form and input components",
   "image-interaction": "Image interactions and galleries",
   "interactive-background": "Interactive canvas/WebGL backgrounds",
   "loader": "Loading and preloader animations",
@@ -52,11 +53,25 @@ const PREMIUM_IDS = new Set([
   "lizard-cursor",
   "aura-cursor",
   "section-scroll",
-  "cloud-scroll",
   "twin-galaxy-rings",
   "tornado",
   "morphing-rings",
-  "lightfall"
+  "lightfall",
+  "black-hole-3d",
+  "card-cascade",
+  "fourier-flow",
+  "generating-orb",
+  "gear-system",
+  "hourglass",
+  "infinity-image",
+  "isometric-portal",
+  "morphing-glow",
+  "particle-sphere",
+  "point-dna-helix",
+  "radial-glow-button",
+  "spider-web",
+  "spiral-images",
+  "super-mario"
 ]);
 
 // id -> category (from frontend componentData.tsx)
@@ -112,7 +127,6 @@ const CATEGORY_MAP: Record<string, string> = {
   "orbit-button": "button",
   "galaxy-button": "button",
   "interactive-hover-button": "button",
-  "aurora-cursor": "cursor",
   "space-background": "background",
   "black-hole-background": "background",
   "mouse-gravity-background": "background",
@@ -136,8 +150,9 @@ const CATEGORY_MAP: Record<string, string> = {
   "fourier-flow": "effect",
   "svg-page-transition": "scroll",
   "section-scroll": "scroll",
-  "cloud-scroll": "scroll",
   "infinite-marquee": "scroll",
+  "scroll-expand": "scroll",
+  "option-wheel": "scroll",
   "image-trail": "image-interaction",
   "perspective-carousel": "image-interaction",
   "diagonal-carousel": "image-interaction",
@@ -175,7 +190,15 @@ const CATEGORY_MAP: Record<string, string> = {
   "leeuwarder-golfclub": "footer",
   "community-newsletter": "footer",
   "faizur-portfolio": "footer",
-  "sui-foundation": "footer"
+  "sui-foundation": "footer",
+  "otp-code-input": "form",
+  "password-strength-meter": "form",
+  "signature-pad": "form",
+  "drag-drop-upload": "form",
+  "aurora-bpm-loader": "loader",
+  "ripple-signature-ledger": "image-interaction",
+  "crossfade-typewriter": "text",
+  "driftwood-gallery": "image-interaction"
 };
 
 // id -> common dependencies
@@ -231,7 +254,6 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'orbit-button': ["react"],
   'galaxy-button': ["react"],
   'interactive-hover-button': ["react"],
-  'aurora-cursor': ["react"],
   'space-background': ["react"],
   'black-hole-background': ["react"],
   'mouse-gravity-background': ["react"],
@@ -255,8 +277,9 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'fourier-flow': ["react","framer-motion"],
   'svg-page-transition': ["react","framer-motion"],
   'section-scroll': ["react","framer-motion"],
-  'cloud-scroll': ["react","framer-motion"],
   'infinite-marquee': ["react","framer-motion"],
+  'scroll-expand': ["react","framer-motion"],
+  'option-wheel': ["react","framer-motion"],
   'image-trail': ["react","framer-motion"],
   'perspective-carousel': ["react","framer-motion"],
   'diagonal-carousel': ["react","framer-motion"],
@@ -295,6 +318,14 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'community-newsletter': ["react"],
   'faizur-portfolio': ["react"],
   'sui-foundation': ["react"],
+  'otp-code-input': ["react"],
+  'password-strength-meter': ["react"],
+  'signature-pad': ["react"],
+  'drag-drop-upload': ["react"],
+  'aurora-bpm-loader': ["react"],
+  'ripple-signature-ledger': ["react","framer-motion"],
+  'crossfade-typewriter': ["react","framer-motion"],
+  'driftwood-gallery': ["react","framer-motion"],
 };
 
 function humanizeId(id: string): string {

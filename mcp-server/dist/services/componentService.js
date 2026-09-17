@@ -74,8 +74,41 @@ export class ComponentService {
     getAllComponents() {
         return COMPONENT_METADATA.map((c) => this.metaToSummary(c));
     }
+    /**
+     * The COMPLETE catalog: public catalog entries PLUS canonical premium-only
+     * components (from premiumComponents.json, e.g. black-hole, rubiks-cube,
+     * toonhub-hero) that live only in sourceCode.json. Kept separate from
+     * getAllComponents() so premium-only ids remain invisible to free keys via
+     * the tier filter. Obsolete/renamed source entries that are NOT canonical
+     * premium ids are deliberately excluded.
+     */
+    getFullCatalog() {
+        const catalog = this.getAllComponents();
+        const catalogIds = new Set(catalog.map((c) => c.id));
+        const premiumIds = loadJson('premiumComponents.json') || [];
+        const premiumOnly = premiumIds
+            .filter((id) => !catalogIds.has(id))
+            .map((id) => ({
+            id,
+            name: id
+                .split('-')
+                .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                .join(' '),
+            description: `Premium ${id
+                .split('-')
+                .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                .join(' ')} — premium-only UI HUB component`,
+            category: 'premium',
+            framework: 'react',
+            styling: 'tailwind',
+            tags: ['premium'],
+            previewUrl: `https://ui-hub-design.vercel.app/demo/${id}`,
+            isPremium: true,
+        }));
+        return [...catalog, ...premiumOnly];
+    }
     searchComponents(params) {
-        let results = this.getAllComponents();
+        let results = this.getFullCatalog();
         if (params.query) {
             const q = params.query.toLowerCase().trim();
             results = results.filter((c) => c.name.toLowerCase().includes(q) ||
@@ -200,11 +233,12 @@ export class ComponentService {
         }
         return results.slice(0, 20);
     }
-    listCategories() {
+    listCategories(excludePremium = false) {
+        const pool = excludePremium ? this.getAllComponents().filter((c) => !c.isPremium) : this.getAllComponents();
         return CATEGORY_LIST.map((cat) => ({
             slug: cat.slug,
             label: cat.label,
-            count: COMPONENT_METADATA.filter((c) => c.category === cat.slug).length,
+            count: pool.filter((c) => c.category === cat.slug).length,
         })).filter((c) => c.count > 0);
     }
     searchTemplates(params) {

@@ -50,6 +50,16 @@ export class PermissionService {
         }
         return { allowed: true };
     }
+    /**
+     * Drop premium entries from a list for users without a Pro subscription.
+     * This guarantees free-tier keys never even see premium components in
+     * search/list results — they are completely hidden, not just marked.
+     */
+    filterVisibleByTier(items, user) {
+        if (this.canAccessPremium(user))
+            return items;
+        return items.filter((item) => !item.isPremium);
+    }
 }
 export const permissionService = PermissionService.getInstance();
 //# sourceMappingURL=permissionService.js.map

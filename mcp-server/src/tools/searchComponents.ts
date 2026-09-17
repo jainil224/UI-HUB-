@@ -2,14 +2,15 @@
 import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
+import { permissionService } from '../services/permissionService.js';
 
 export const search_components = createTool(
   'search_components',
-  'Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Returns structured component metadata.',
+  'Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Returns structured component metadata. Premium components are hidden completely for free-tier keys.',
   z.object({
     query: z.string().optional().describe('Free-text search keyword, e.g. "pricing card"'),
 category: z
-      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'scroll', 'text'])
+      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'scroll', 'text'])
       .optional()
       .describe('Component category'),
     framework: z.enum(['react']).optional().describe('Component framework'),
@@ -19,7 +20,11 @@ category: z
   }),
   { requiresPremium: false },
   async (args, user) => {
-    const results = componentService.searchComponents(args as any);
+    let results = componentService.searchComponents(args as any);
+
+    // Free-tier keys: premium components are completely hidden from search.
+    const canPremium = permissionService.canAccessPremium(user);
+    results = permissionService.filterVisibleByTier(results, user);
 
     await analyticsService.track({
       event: 'component_search',
@@ -33,11 +38,9 @@ category: z
       success: results.length > 0,
     });
 
-    // Free users: strip premium components or mark them but limit access
-    const visible = results.map((c, i) => ({
+    const visible = results.map((c) => ({
       ...c,
-      // For free users, mask premium code access (they can still see metadata)
-      access: permissionAwareNote(c.isPremium, user),
+      access: c.isPremium ? (canPremium ? 'premium-available' : 'premium-required') : 'free',
     }));
 
     return {
@@ -46,10 +49,4 @@ category: z
     };
   }
 );
-
-function permissionAwareNote(isPremium: boolean, user: any): string {
-  if (!isPremium) return 'free';
-  if (['PRO', 'ELITE', 'ADMIN'].includes(user.tier)) return 'premium-available';
-  return 'premium-required';
-}
 

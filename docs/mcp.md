@@ -111,13 +111,24 @@ Search UI HUB components by name, category, framework, styling, tags, or premium
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `query` | string (optional) | Free-text keyword, e.g. `"pricing card"` |
-| `category` | string (optional) | `3d`, `background`, `button`, `cursor`, `effect`, `image-interaction`, `interactive-background`, `scroll`, `text` |
+| `category` | string (optional) | `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `form`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `scroll`, `text` |
 | `framework` | string (optional) | `react` |
 | `styling` | string (optional) | `tailwind`, `css`, `scss` |
 | `tags` | string[] (optional) | Tags to filter by |
 | `isPremium` | boolean (optional) | `true` = premium only |
 
 **Response:** array of `{ id, name, description, category, framework, styling, tags, previewUrl, isPremium, access }`.
+
+Premium components are **completely hidden** from free-tier keys — they never appear in search results, so an AI on a
+free key cannot discover pro content at all. Pro/Elite keys see premium items marked `premium-available`.
+
+### `list_all_components`
+
+Enumerate the entire UI HUB catalog with pagination (tier-aware — free keys get only free components).
+
+**Parameters:** `category` (optional), `limit` (optional, 1–200, default 100), `offset` (optional, 0-based)
+
+**Response:** `{ total, count, offset, components: [{ id, name, category, isPremium, access }] }`
 
 ### `get_component`
 

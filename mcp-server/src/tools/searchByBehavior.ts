@@ -2,10 +2,11 @@ import { z } from 'zod';
 import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
+import { permissionService } from '../services/permissionService.js';
 
 export const search_by_behavior = createTool(
   'search_by_behavior',
-  'Search UI HUB components by visual BEHAVIOR or vibe descriptions (e.g. "magnetic pull", "scroll reveal parallax", "accretion disk", "glow on hover"). Matches behavior descriptions, requirements, and AI vibe prompts.',
+  'Search UI HUB components by visual BEHAVIOR or vibe descriptions (e.g. "magnetic pull", "scroll reveal parallax", "accretion disk", "glow on hover"). Matches behavior descriptions, requirements, and AI vibe prompts. Premium components are hidden completely for free-tier keys.',
   z.object({
     query: z.string().min(2).describe('Behavior or vibe keyword to search for, e.g. "particle swirl"'),
     category: z.string().optional().describe('Optionally restrict results to a single category (e.g. "cursor")'),
@@ -19,6 +20,10 @@ export const search_by_behavior = createTool(
       const category = args.category.toLowerCase();
       results = results.filter((c) => c.category === category);
     }
+
+    // Free-tier keys: premium components are completely hidden.
+    results = permissionService.filterVisibleByTier(results, user);
+
     const limit = args.limit || 20;
     results = results.slice(0, limit);
 

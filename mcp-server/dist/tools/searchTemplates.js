@@ -2,12 +2,15 @@ import { z } from 'zod';
 import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
-export const search_templates = createTool('search_templates', 'Search UI HUB templates (full-page/hero layouts built from components).', z.object({
+import { permissionService } from '../services/permissionService.js';
+export const search_templates = createTool('search_templates', 'Search UI HUB templates (full-page/hero layouts built from components). Premium templates are hidden completely for free-tier keys.', z.object({
     query: z.string().optional().describe('Free-text search keyword, e.g. "SaaS dashboard"'),
     category: z.string().optional().describe('Category to filter templates by'),
     isPremium: z.boolean().optional().describe('Filter by premium status'),
 }), { requiresPremium: false }, async (args, user) => {
-    const results = componentService.searchTemplates(args);
+    let results = componentService.searchTemplates(args);
+    // Free-tier keys: premium templates are completely hidden.
+    results = permissionService.filterVisibleByTier(results, user);
     await analyticsService.track({
         event: 'template_fetch',
         userId: user.userId,

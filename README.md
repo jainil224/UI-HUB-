@@ -115,7 +115,7 @@ Most component libraries give you grey buttons and plain cards. UI HUB provides:
 | 📱 **Fully Responsive** | Pixel-perfect layout from ultra-wide monitors down to mobile phones |
 | 🚀 **Blazing Fast** | Lazy-loaded components, code splitting, Vite 6 HMR |
 | 🌍 **Community Uploads** | MongoDB/Firestore powered community section for user-submitted components |
-| 🧩 **MCP Server** | Model Context Protocol endpoint (Streamable HTTP + local stdio) with 13 tools for AI assistants |
+| 🧩 **MCP Server** | Model Context Protocol endpoint (Streamable HTTP + local stdio) with 14 tools for AI assistants |
 | ⌨️ **CLI Tool** | Search, inspect, and pull components/templates/animations straight from the terminal |
 
 ---
@@ -195,7 +195,7 @@ UI-HUB-/                          ← Root monorepo
 │   └── src/
 │       ├── index.ts              ← Express app: /mcp, /api/dashboard/mcp, /api/admin/mcp
 │       ├── stdio.ts              ← Local stdio transport (admin access, zero latency)
-│       ├── tools/                ← 13 MCP tools (search, get, list, behavior, prompts…)
+│       ├── tools/                ← 14 MCP tools (search, get, list, behavior, prompts…)
 │       ├── routes/               ← mcp.ts, dashboard.ts, admin.ts
 │       ├── services/             ← componentService, apiKeyService, permissionService,
 │       │                            analyticsService, auditService, mongo, firebase

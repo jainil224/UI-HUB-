@@ -12,6 +12,7 @@ import { get_component_metadata } from './getComponentMetadata.js';
 import { search_by_behavior } from './searchByBehavior.js';
 import { get_ai_prompts } from './getAiPrompts.js';
 import { get_template_source } from './getTemplateSource.js';
+import { list_all_components } from './listAllComponents.js';
 
 export const TOOLS: McpTool[] = [
   search_components,
@@ -27,6 +28,7 @@ export const TOOLS: McpTool[] = [
   search_by_behavior,
   get_ai_prompts,
   get_template_source,
+  list_all_components,
 ];
 
 export const TOOL_NAMES: string[] = TOOLS.map((t) => t.name);

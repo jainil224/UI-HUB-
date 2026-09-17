@@ -61,7 +61,7 @@ cd mcp-server
 npm run stdio
 ```
 
-`src/stdio.ts` serves the **same 13 tools** over standard input/output with an implicit **ADMIN** user
+`src/stdio.ts` serves the **same 14 tools** over standard input/output with an implicit **ADMIN** user
 (`uh_local` prefix) — perfect for local `claude mcp add --transport stdio`, Cursor local mode, or CI scripts that
 should not depend on the network.
 
@@ -182,7 +182,7 @@ The CLI is a thin client of this exact server — no separate backend. After `lo
 
 ## Available MCP Tools
 
-The server registers **13 tools**. Every tool validates its arguments with **Zod** schemas, returns structured JSON,
+The server registers **14 tools**. Every tool validates its arguments with **Zod** schemas, returns structured JSON,
 and records an analytics event.
 
 ### `search_components`
@@ -194,7 +194,7 @@ Search UI HUB components by name, category, framework, styling, tags, keyword, o
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `query` | string (optional) | Free-text keyword, e.g. `"pricing card"` |
-| `category` | string (optional) | One of `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `scroll`, `text` |
+| `category` | string (optional) | One of `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `form`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `scroll`, `text` |
 | `framework` | string (optional) | `react` |
 | `styling` | string (optional) | `tailwind`, `css`, `scss` |
 | `tags` | string[] (optional) | Tags to filter by |
@@ -202,7 +202,28 @@ Search UI HUB components by name, category, framework, styling, tags, keyword, o
 
 **Response:** `{ count, components: [{ id, name, description, category, framework, styling, tags, previewUrl, isPremium, access }] }`
 
-`access` is permission-aware: `free`, `premium-available` (your key can fetch it), or `premium-required`.
+`access` is permission-aware: `free` for free components, or `premium-available` for premium components visible to a Pro/Elite key.
+**Premium components are completely hidden from free-tier keys** — they do not appear in results at all, so an AI using a
+free key can neither see nor discover pro content through search.
+
+### `list_all_components`
+
+Enumerate the **entire** UI HUB component catalog with pagination — whatever a key is entitled to see, an AI can now list wholesale
+(not just keyword-match). This is the tool to call when you want to know "everything available" rather than searching for something.
+
+**Parameters:**
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `category` | string (optional) | Restrict to a single category (e.g. `"cursor"`, `"form"`) |
+| `limit` | number (optional) | Max results, 1–200, default 100 |
+| `offset` | number (optional) | Pagination offset, 0-based, default 0 |
+
+**Response:** `{ total, count, offset, components: [{ id, name, category, isPremium, access }] }`
+
+- `total` reflects the tier-aware catalog: for a free key it counts only free components (premium fully excluded).
+- For a Pro key it includes premium components and the premium-only ids (`black-hole`, `rubiks-cube`, `toonhub-hero`)
+  that only exist server-side.
 
 ### `get_component`
 
@@ -360,7 +381,9 @@ tools/call
 
 | Capability | Free key | Pro / Elite key |
 |:---|:---|:---|
-| Component search / metadata / categories / deps / behavior search | ✅ | ✅ |
+| Component search — free components only (`search_components`, `search_by_behavior`, `list_all_components`) | ✅ (premium hidden) | ✅ (full catalog incl. premium) |
+| Category listing / dependencies / metadata — **free** components | ✅ | ✅ |
+| Category listing / dependencies / metadata — **premium** components | ❌ `PREMIUM_ACCESS_REQUIRED` | ✅ |
 | Free component source (`get_component_code`, `get_component`) | ✅ | ✅ |
 | **Premium** component source | ❌ `PREMIUM_ACCESS_REQUIRED` | ✅ |
 | AI prompts (`get_ai_prompts`) | ❌ | ✅ |
@@ -371,8 +394,10 @@ tools/call
 - Limits are configurable via environment variables **`MCP_RATE_LIMIT_FREE`** and **`MCP_RATE_LIMIT_PRO`**.
 - Rate limiting is enforced **per API key** (and per plan), backed by Redis when `REDIS_URL` is set.
 - A missing or invalid key is rejected with `-32001` (auth required) before any tool runs.
-- `search_components` keeps showing metadata for premium items to free keys, but marks them `premium-required`
-  and the premium `get_component`/`get_component_code` calls are denied server-side.
+- **Premium components are completely hidden from free keys**: they never appear in any search, behavior, template,
+  animation, or catalog-listing result, and every premium `get_component`/`get_component_code`/metadata/dependency
+  call to them is denied server-side with `PREMIUM_ACCESS_REQUIRED`. A free-tier AI cannot discover a pro component
+  exists, let alone use it.
 
 ---
 
@@ -533,7 +558,7 @@ npx @modelcontextprotocol/inspector
 
 Point it at `https://ui-hub-mcp.onrender.com/mcp` with Streamable HTTP transport. Confirm:
 1. `initialize` succeeds
-2. `tools/list` returns all 13 tools with valid Zod-derived schemas
+2. `tools/list` returns all 14 tools with valid Zod-derived schemas
 3. At least one real `tools/call` (e.g. `search_components` with `query: "cursor"`) returns expected content
 
 ### Test with raw curl

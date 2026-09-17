@@ -111,6 +111,7 @@ const CATEGORY_DESCRIPTIONS = {
   cursor: 'Custom cursor and pointer effects',
   effect: 'Visual effects and transitions',
   footer: 'Website footer layouts',
+  form: 'Form and input components',
   'image-interaction': 'Image interactions and galleries',
   'interactive-background': 'Interactive canvas/WebGL backgrounds',
   loader: 'Loading and preloader animations',
@@ -128,7 +129,21 @@ function humanizeId(id) {
   return id.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 }
 
-const premiumIds = components.filter((c) => c.isPremium).map((c) => c.id);
+// Premium flags come from TWO sources that must be merged:
+//   1. componentData.tsx `isPremium` fields (catalog components marked premium)
+//   2. frontend premiumComponents.ts canonical list (mirrors backend premium list)
+// Only ids present in the catalog should be flagged here; premium-only ids that
+// are NOT in the catalog are still written to premiumComponents.json below so
+// they stay discoverable/coverage-checked without a forced category guess.
+const catalogPremiumIds = components.filter((c) => c.isPremium).map((c) => c.id);
+let canonicalPremiumIds = [];
+try {
+  canonicalPremiumIds = [...(evalTs('frontend/src/data/premiumComponents.ts').PREMIUM_COMPONENT_IDS || [])];
+} catch (e) { console.error('  (skip premiumComponents.ts:', e.message + ')'); }
+const premiumIds = Array.from(new Set([
+  ...catalogPremiumIds,
+  ...canonicalPremiumIds.filter((id) => components.some((c) => c.id === id)),
+]));
 
 // components.ts content
 const compHeader = `/**
@@ -323,10 +338,6 @@ for (const comp of components) {
 }
 
 // Canonical premium IDs not in the catalog (premium-only components served by backend/MCP)
-let canonicalPremiumIds = [];
-try {
-  canonicalPremiumIds = [...(evalTs('frontend/src/data/premiumComponents.ts').PREMIUM_COMPONENT_IDS || [])];
-} catch (e) { console.error('  (skip premiumComponents.ts:', e.message + ')'); }
 for (const id of canonicalPremiumIds) {
   if (sourceCode[id]) continue;
   const pascal = kebabToPascal(id);

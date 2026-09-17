@@ -9,6 +9,7 @@ const distDataDir = path.join(root, 'dist', 'data');
 
 const dataFiles = [
   'sourceCode.json',
+  'premiumComponents.json',
   'aiPrompts.json',
   'componentMetadata.json',
   'componentVibePrompts.json',
