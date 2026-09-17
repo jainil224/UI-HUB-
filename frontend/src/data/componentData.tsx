@@ -95,7 +95,13 @@ const OtpCodeInput = React.lazy(() => import('../components/ui/OtpCodeInput').th
 const PasswordStrengthMeter = React.lazy(() => import('../components/ui/PasswordStrengthMeter').then(m => ({ default: m.PasswordStrengthMeter })));
 const SignaturePad = React.lazy(() => import('../components/ui/SignaturePad').then(m => ({ default: m.SignaturePad })));
 const DragDropUpload = React.lazy(() => import('../components/ui/DragDropUpload').then(m => ({ default: m.DragDropUpload })));
-const TickRangeSlider = React.lazy(() => import('../components/ui/TickRangeSlider').then(m => ({ default: m.TickRangeSlider })));
+const SignalStrengthMeter = React.lazy(() => import('../components/ui/SignalStrengthMeter').then(m => ({ default: m.SignalStrengthMeter })));
+const AuroraBpmLoader = React.lazy(() => import('../components/ui/AuroraBpmLoader').then(m => ({ default: m.AuroraBpmLoader })));
+const RippleSignatureLedger = React.lazy(() => import('../components/ui/RippleSignatureLedger').then(m => ({ default: m.RippleSignatureLedger })));
+const CrossfadeTypewriter = React.lazy(() => import('../components/ui/CrossfadeTypewriter').then(m => ({ default: m.CrossfadeTypewriter })));
+const KirigamiButton = React.lazy(() => import('../components/ui/KirigamiButton').then(m => ({ default: m.KirigamiButton })));
+const EclipseProgressRing = React.lazy(() => import('../components/ui/EclipseProgressRing').then(m => ({ default: m.EclipseProgressRing })));
+const DriftwoodGallery = React.lazy(() => import('../components/ui/DriftwoodGallery').then(m => ({ default: m.DriftwoodGallery })));
 
 
 
@@ -2773,7 +2779,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'password-strength-meter': PasswordStrengthMeter,
     'signature-pad': SignaturePad,
     'drag-drop-upload': DragDropUpload,
-    'tick-range-slider': TickRangeSlider,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -4897,26 +4902,166 @@ const DragDropUploadPreview: React.FC = () => {
     );
 };
 
-// ── Tick Range Slider preview ──
-const TickRangeSliderPreview: React.FC = () => {
+// ── Signal Strength Meter preview ──
+const SignalStrengthMeterPreview: React.FC = () => {
     return (
         <div style={{
             width: '100%',
             height: '100%',
-            minHeight: '100%',
+            minHeight: '380px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: 'radial-gradient(120% 120% at 50% 0%, #16181d 0%, #0b0c10 60%, #06070a 100%)',
-            padding: 32,
+            background: 'radial-gradient(120% 120% at 50% 0%, #0f120c 0%, #090b07 60%, #040603 100%)',
+            padding: 28,
         }}>
-            <div style={{ width: '100%', maxWidth: 360 }}>
+            <div style={{ width: '100%', maxWidth: 320 }}>
                 <Suspense fallback={null}>
-                    <TickRangeSlider
-                        min={0}
-                        max={100}
-                        step={10}
-                        labelFor={(v) => (v % 50 === 0 ? String(v) : undefined)}
+                    <SignalStrengthMeter value="NOMAD-7X" />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Aurora BPM loader preview ──
+const AuroraBpmLoaderPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '380px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #0d0f0c 0%, #080a08 60%, #040503 100%)',
+            padding: 28,
+        }}>
+            <Suspense fallback={null}>
+                <AuroraBpmLoader autoPlay label="sync" />
+            </Suspense>
+        </div>
+    );
+};
+
+// ── Ripple Signature Ledger preview ──
+const RippleSignatureLedgerPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '380px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #0c0c09 0%, #080806 60%, #040403 100%)',
+            padding: 28,
+        }}>
+            <div style={{ width: '100%', maxWidth: 420, height: 240 }}>
+                <Suspense fallback={null}>
+                    <RippleSignatureLedger
+                        image={{ src: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800', alt: 'ledger' }}
+                    />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Crossfade Typewriter preview ──
+const CrossfadeTypewriterPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '380px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #100d07 0%, #0a0805 60%, #050403 100%)',
+            padding: 40,
+        }}>
+            <div style={{ width: '100%', maxWidth: 480 }}>
+                <Suspense fallback={null}>
+                    <CrossfadeTypewriter
+                        lines={[
+                            'the tide keeps the ledger.',
+                            'ink remembers the drift.',
+                            'paper holds a constant hum.',
+                        ]}
+                    />
+                </Suspense>
+            </div>
+        </div>
+    );
+};
+
+// ── Kirigami Button preview ──
+const KirigamiButtonPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '380px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 20,
+            flexWrap: 'wrap',
+            background: 'radial-gradient(120% 120% at 50% 0%, #1a140c 0%, #100c07 60%, #080603 100%)',
+            padding: 40,
+        }}>
+            <Suspense fallback={null}>
+                <KirigamiButton label="Launch" papers={['map', 'route']} variant="kraft" />
+            </Suspense>
+            <Suspense fallback={null}>
+                <KirigamiButton label="Sketch" papers={['cut', 'fold']} variant="white" />
+            </Suspense>
+        </div>
+    );
+};
+
+// ── Eclipse Progress Ring preview ──
+const EclipseProgressRingPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '380px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #120d09 0%, #0a0806 60%, #040302 100%)',
+            padding: 28,
+        }}>
+            <Suspense fallback={null}>
+                <EclipseProgressRing progress={72} label="burn" />
+            </Suspense>
+        </div>
+    );
+};
+
+// ── Driftwood Gallery preview ──
+const DriftwoodGalleryPreview: React.FC = () => {
+    return (
+        <div style={{
+            width: '100%',
+            height: '100%',
+            minHeight: '380px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            background: 'radial-gradient(120% 120% at 50% 0%, #1a170f 0%, #110f09 60%, #080703 100%)',
+            padding: 28,
+        }}>
+            <div style={{ width: '100%', maxWidth: 480, height: 300 }}>
+                <Suspense fallback={null}>
+                    <DriftwoodGallery
+                        images={[
+                            { src: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800', alt: 'dune' },
+                            { src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800', alt: 'shore' },
+                            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800', alt: 'wood' },
+                        ]}
                     />
                 </Suspense>
             </div>
@@ -14663,15 +14808,93 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         vibePrompt: "",
     },
 
-    // ── Tick Range Slider ───────────────────────────────
+    // ── Signal Strength Meter ───────────────────────────
     {
-        id: "tick-range-slider",
-        title: "Tick Range Slider",
+        id: "signal-strength-meter",
+        title: "Signal Strength Meter",
         category: "form",
         addedAt: "2026-09-17",
         newBadgeDays: 120,
-        description: "An audio-style slider with labeled tick marks and magnetic stops that snap the thumb to each step.",
-        preview: () => <TickRangeSliderPreview />,
+        description: "A 5-bar signal tower fed by pass/fail rules (length, case, digit, symbol) with a static-noise floor.",
+        preview: () => <SignalStrengthMeterPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Aurora BPM Loader ───────────────────────────────
+    {
+        id: "aurora-bpm-loader",
+        title: "Aurora BPM Loader",
+        category: "loader",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "A heartbeat cardio trace drawn with strokeDashoffset under swaying aurora ribbons, counting BPM.",
+        preview: () => <AuroraBpmLoaderPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Ripple Signature Ledger ─────────────────────────
+    {
+        id: "ripple-signature-ledger",
+        title: "Ripple Signature Ledger",
+        category: "image-interaction",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "Click a photo to stamp coin-settle wax seals that expand, squash, and slowly dissolve.",
+        preview: () => <RippleSignatureLedgerPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Crossfade Typewriter ────────────────────────────
+    {
+        id: "crossfade-typewriter",
+        title: "Crossfade Typewriter",
+        category: "text",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "Two stacked lines race to type and erase, crossfading between them with a blinking caret.",
+        preview: () => <CrossfadeTypewriterPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Kirigami Button ─────────────────────────────────
+    {
+        id: "kirigami-button",
+        title: "Kirigami Button",
+        category: "button",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "A paper-cut button that folds into three clipped panels on click, then settles flat.",
+        preview: () => <KirigamiButtonPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Eclipse Progress Ring ───────────────────────────
+    {
+        id: "eclipse-progress-ring",
+        title: "Eclipse Progress Ring",
+        category: "effect",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "The moon crosses the sun as progress rises; at 100% a corona flare fires and totality locks.",
+        preview: () => <EclipseProgressRingPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Driftwood Gallery ───────────────────────────────
+    {
+        id: "driftwood-gallery",
+        title: "Driftwood Gallery",
+        category: "image-interaction",
+        addedAt: "2026-09-17",
+        newBadgeDays: 120,
+        description: "A tide-bobbed photo gallery in a driftwood frame that tilts with the pointer and swaps on a wave.",
+        preview: () => <DriftwoodGalleryPreview />,
         code: "",
         vibePrompt: "",
     },

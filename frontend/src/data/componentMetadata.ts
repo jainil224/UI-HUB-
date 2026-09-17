@@ -959,26 +959,117 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["drag/drop events", "hidden file input fallback", "max size validation", "progress ring via SVG stroke-dashoffset", "controlled/uncontrolled progress"]
         }
     },
-    "tick-range-slider": {
+    "signal-strength-meter": {
         props: [
-            { name: "min", type: "number", default: "0", description: "Minimum value." },
-            { name: "max", type: "number", default: "100", description: "Maximum value." },
-            { name: "step", type: "number", default: "10", description: "Step between values (defines the magnetic stops)." },
-            { name: "value", type: "number", default: "undefined", description: "Controlled value." },
-            { name: "onChange", type: "(value: number) => void", default: "undefined", description: "Called with the new value while dragging (and on release snap)." },
-            { name: "labelFor", type: "(value: number) => string | undefined", default: "undefined", description: "Custom labels rendered under tick marks (map from value to label)." },
-            { name: "magnetRadius", type: "number", default: "8", description: "Magnetic snap distance in px around each stop." },
-            { name: "disabled", type: "boolean", default: "false", description: "Disable the slider." },
-            { name: "ariaLabel", type: "string", default: '"Range slider"', description: "ARIA label for the range control." },
-            { name: "className", type: "string", default: '""', description: "Extra class names for the wrapper." }
+            { name: "value", type: "string", default: "undefined", description: "Controlled signal string; the meter is read-only by default." },
+            { name: "rules", type: "{ label: string; test: (v: string) => boolean }[]", default: "undefined", description: "Custom pass/fail rules; defaults to length, case, digit, symbol." },
+            { name: "labels", type: "[string, string]", default: "['SIGNAL','NOISE']", description: "Left/right captions under the bars." }
         ],
         vibeMeta: {
-            behavior: "An audio-style stepped slider with tick marks. Each stop acts as a magnet so the thumb snaps value to tick positions, while labels can render under ticks. Keyboard arrows, Home/End, and pointer dragging are supported.",
-            states: { from: "thumb at start of gradient track", to: "thumb snapped to a magnetic tick with optional label" },
-            cssProperties: ["gradient fill", "tick marks", "transform thumb", "custom properties"],
-            description: "Stepped tick slider with magnetic snap stops, gradient fill, tick labels, and keyboard support.",
+            behavior: "A 5-bar signal tower whose lit bars equal the count of passed rules. Unlit bars sit low with a jittery 1-2px static-shake; a floor of 40 grain dots flickers per rules[0]. No auto-play motion beyond the static noise layer.",
+            states: { from: "all bars dark on empty input", to: "bars lit left-to-right as rules pass, static layer sharpens" },
+            cssProperties: ["steps() static shake", "inline styles", "monospace meter tag"],
+            description: "5-bar signal-strength meter driven by pass/fail rules, with a static-noise floor.",
             libraries: ["react"],
-            requirements: ["pointer capture", "magnetic stop snapping", "keyboard navigation", "tick label rendering", "controlled/uncontrolled value"]
+            requirements: ["inline styles only", "rules array", "readOnly + internal fallback state"]
+        }
+    },
+    "aurora-bpm-loader": {
+        props: [
+            { name: "progress", type: "number", default: "0", description: "Controlled progress 0-100." },
+            { name: "size", type: "number", default: "240", description: "Square footprint in px." },
+            { name: "label", type: "string", default: '"Loading"', description: "Caption above the BPM readout." },
+            { name: "ribbonColors", type: "string[]", default: "['#5a6a52','#6f7a50','#7d7352']", description: "Aurora ribbon gradient colors." },
+            { name: "autoPlay", type: "boolean", default: "false", description: "Advance progress on a timer (48ms steps, ~1.2/step)." },
+            { name: "onComplete", type: "() => void", default: "undefined", description: "Fired when progress reaches 100 (autoPlay only)." }
+        ],
+        vibeMeta: {
+            behavior: "A dark cardio loader. The heartbeat ECG path fills via strokeDashoffset as progress rises, while three aurora ribbons sway vertically with progress sine and light up at 100 (brightness lift, corona caps). Counts label + BPM readout.",
+            states: { from: "flat trace, dim ribbons", to: "trace drawn to progress, ribbons swaying, brighter at totality" },
+            cssProperties: ["svg strokeDashoffset fill", "sinusoidal ribbon sway", "brightness filter on complete"],
+            description: "Heartbeat trace loader with swaying aurora ribbons and a BPM counter.",
+            libraries: ["react"],
+            requirements: ["svg path", "inline styles + scoped <style>", "timer-free (progress driven)"]
+        }
+    },
+    "ripple-signature-ledger": {
+        props: [
+            { name: "image", type: "{ src: string; alt?: string }", default: "-", description: "Background photo the seals are stamped onto." },
+            { name: "ringColor", type: "string", default: "'rgba(214, 190, 150, '", description: "Ring rgba prefix; alpha appended per seal." },
+            { name: "maxSeals", type: "number", default: "3", description: "Max concurrent stamps; oldest is dropped." }
+        ],
+        vibeMeta: {
+            behavior: "Click any spot on a photo to stamp a coin-settle wax seal. Each seal expands from 14 to 60px, then squashes vertically while alpha bleeds out to near-zero. Ragged 40-vertex silhouette + off-by-half-degree inner tick ring sells the hand-stamped ledger look.",
+            states: { from: "click spawns a growing ring", to: "ring settles into a squashed, fading wax seal" },
+            cssProperties: ["canvas 2d", "requestAnimationFrame loop", "scale squash", "devicePixelRatio"],
+            description: "Canvas seal-stamping ledger over a photo: rings expand, coin-settle, and dissolve.",
+            libraries: ["react"],
+            requirements: ["canvas 2d", "ResizeObserver", "devicePixelRatio scaling", "raf loop", "no external textures"]
+        }
+    },
+    "crossfade-typewriter": {
+        props: [
+            { name: "lines", type: "string[]", default: "[]", description: "Exactly two lines raced against each other (index 0 vs 1)." },
+            { name: "speedMs", type: "number", default: "90", description: "Chars (type or erase) per tick." },
+            { name: "pauseMs", type: "number", default: "1600", description: "Pause after a full line types out." },
+            { name: "textClass", type: "string", default: "undefined", description: "Extra class name on the block." }
+        ],
+        vibeMeta: {
+            behavior: "Two stacked spans race: while line A types, line B is dimmed; at full A holds, then B erases-then-types as A fades to 25%. A serif caret blinks. Only the caret loops; the type/erase cycle is user-paced by interval.",
+            states: { from: "line 0 typing, line 1 dimmed", to: "line 1 typing while line 0 dims, hold, swap" },
+            cssProperties: ["opacity crossfade", "inline-block caret blink", "clamp() fluid type"],
+            description: "Two-line racing typewriter with crossfade dimming and a blinking caret.",
+            libraries: ["react"],
+            requirements: ["inline styles + scoped <style>", "interval tick", "two-line races only"]
+        }
+    },
+    "kirigami-button": {
+        props: [
+            { name: "label", type: "string", default: "-", description: "Center panel text (the primary label)." },
+            { name: "papers", type: "string[]", default: "['cut','fold']", description: "Small captions on the two side panels." },
+            { name: "variant", type: "'kraft' | 'white' | 'black'", default: "'kraft'", description: "Paper palette (base/fold/ink/edge)." },
+            { name: "href", type: "string", default: "undefined", description: "Render as an <a> instead of a <button>." },
+            { name: "onClick", type: "() => void", default: "undefined", description: "Fired 360ms after press (folds then settles)." }
+        ],
+        vibeMeta: {
+            behavior: "A paper-cut button sliced into three clip-path panels around a diamond fold. Hover spreads the outer panels apart; click folds the whole sheet down to 0.96 scale, waits 360ms, then resets and fires onClick. 4px offset shadow for raised-paper depth.",
+            states: { from: "flat cut sheet", to: "hover: panels splayed ±5deg, click: sheet folds and settles" },
+            cssProperties: ["clip-path polygons", "cubic-bezier fold transform", "offset box-shadow"],
+            description: "Kirigami paper panel button that folds on click and settles flat.",
+            libraries: ["react"],
+            requirements: ["inline styles", "clip-path polygon cells", "hard 1px borders + offset shadow"]
+        }
+    },
+    "eclipse-progress-ring": {
+        props: [
+            { name: "progress", type: "number", default: "0", description: "0-100; the moon crosses the sun." },
+            { name: "size", type: "number", default: "220", description: "Square footprint in px." },
+            { name: "sunColor", type: "string", default: "'#b86b2e'", description: "Sun disc fill." },
+            { name: "coronaIntensity", type: "number", default: "1", description: "Scales the done-flash opacity." },
+            { name: "label", type: "string", default: "'burn'", description: "Status word before the % readout." }
+        ],
+        vibeMeta: {
+            behavior: "As progress rises the moon sweeps left-to-right across a fixed sun while shrinking in radius. At totality a corona flash spikes and the caption locks to TOTALLITY. Between 0-100 a short crescent sliver of light peeks from the occlusion gap.",
+            states: { from: "full sun, no moon", to: "moon crossing + shrinking, corona flash at 100" },
+            cssProperties: ["svg discs", "corona flash keyframe (once)", "blur filter"],
+            description: "Eclipse progress ring: the moon crosses the sun, flaring a corona at 100.",
+            libraries: ["react"],
+            requirements: ["svg", "inline styles + scoped <style>", "progress driven", "no looping ambient motion"]
+        }
+    },
+    "driftwood-gallery": {
+        props: [
+            { name: "images", type: "{ src: string; alt?: string; tint?: string }[]", default: "[]", description: "Photos cycled by the gallery." },
+            { name: "intervalMs", type: "number", default: "5200", description: "Time per slide." },
+            { name: "waveAmp", type: "number", default: "6", description: "Horizontal drift amplitude of the current wave bob." }
+        ],
+        vibeMeta: {
+            behavior: "A photo gallery behind a weathered driftwood frame on a sand-grain field. The frame tilts with the pointer (perspective rotate), slides crossfade between images, and each image bobs on a sine wave unique to its index while the counter ticks. Only pointer- and interval-driven — no idle looping.",
+            states: { from: "image 1 centered, frame flat", to: "frame tilting to pointer, next image bobbing onto the tide" },
+            cssProperties: ["perspective rotate", "sepia/saturate filters", "sine bob", "crossfade"],
+            description: "Driftwood-framed gallery with parallax tilt and wavy slide bob.",
+            libraries: ["react"],
+            requirements: ["inline styles", "PointerEvent", "interval timer", "seeded-ish wave phases"]
         }
     }
 };
