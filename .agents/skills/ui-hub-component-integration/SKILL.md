@@ -238,6 +238,41 @@ Run this checklist before writing code:
 
 ## 6. Step-by-Step Integration Procedure
 
+### Step 0 — Determine Input Mode (run first)
+
+| Mode | How you know | What the AI does |
+|---|---|---|
+| **A — CODE PROVIDED** | User pasted the full component code and gave a name (`MyComponent`, "my component") | Treat the code as CANONICAL (verbatim). Derive ALL metadata from the code. **No follow-up questions.** |
+| **B — AI-BUILT** | User gave only a description / idea and expects the AI to write the code | Follow Steps 1–6 normally; AI authors the component (§13 responsive + §12 visual rules apply). |
+
+#### Mode A rules ("I give you only code + name")
+
+1. **The provided code is the source of truth.** Copy it byte-for-byte into
+   `frontend/src/components/ui/<PascalName>.tsx` AND into `embeddedSourceCode.ts`. Never
+   reformat, re-indent, "clean up", or rewrite it — even if you think it could be improved.
+   The vibe prompts ship this exact code to users.
+2. **Derive everything else from the code** — do NOT ask the user questions. Map code signals to decisions:
+
+   | Signal in the provided code | Decision |
+   |---|---|
+   | `three` / `@react-three/*` / `WebGL` / heavy `canvas` | Category `3D`; deps include three/fiber/drei |
+   | `framer-motion` / `motion` / `gsap` / `ScrollTrigger` | deps include that library; animation engine = that library |
+   | mouse/pointer listeners (`onMouseMove`, `addEventListener('mousemove')`) | Category `Cursors` |
+   | fills the viewport, `position: fixed` + full-screen canvas | Category `Backgrounds` |
+   | button/click semantics | Category `Buttons` |
+   | manipulates text chars/words | Category `Text Animations` |
+   | loading spinner / skeleton / progress state | Category `Loader` |
+   | `props` interface at the top of the file | Map each field into the `componentMetadata.ts` `props` array |
+   | CSS classes / `.module.css` / inline styles | Create the CSS file alongside; record classes in `vibeMeta.cssProperties` |
+   | Standalone full-page layout / hero / section | Needs a `/demo/<slug>` page (§8) |
+
+3. **Slug & file name.** Convert the given name to a kebab-case slug
+   (`MyComponent` → `my-component`). The file must be `frontend/src/components/ui/<PascalName>.tsx`.
+   If `kebabToPascal(slug)` in `mcp-server/scripts/sync-frontend-data.mjs` would produce a
+   DIFFERENT file name than the one you create (acronyms, numbers, special casing), add the
+   `id → filename` mapping to that script's `DISK_OVERRIDES` map so the MCP sync still finds the source.
+4. If the code uses a library not already in §1's list, follow §11 dependency safety before importing.
+
 ### Step 1 — Understand the new component
 
 Before writing any code, answer:
@@ -247,9 +282,14 @@ Before writing any code, answer:
 - Does it need canvas/WebGL/Three.js/GSAP or just React + CSS?
 - Does it need a full-screen demo page (`/demo/slug`)?
 
+> **Mode A only:** every answer above is derived from the provided code (Step 0). Skip authoring
+> and go straight to placement.
+
 ### Step 2 — Create the component file
 
 **Location:** `frontend/src/components/ui/MyComponent.tsx`
+
+> **Mode A only:** skip authoring — place the user's provided code VERBATIM in this file. Never modify it.
 
 Follow these conventions:
 
@@ -960,6 +1000,7 @@ Prompt Rendering Guarantee verification (§7.4):
 
 ### Added
 - Component: [Name] (slug: `my-component`)
+- Input mode: `CODE PROVIDED` (user-supplied code used verbatim) | `AI-BUILT` (code written by AI)
 - File: `frontend/src/components/ui/MyComponent.tsx`
 - Demo page: `frontend/src/pages/Components/MyComponentDemoPage.tsx` (if applicable)
 
@@ -1006,6 +1047,11 @@ START
   |
   v
 Read section 1 — confirm working directory is frontend/
+  |
+  v
+[MANDATORY] Step 0 (§6) — determine INPUT MODE:
+   Mode A (code provided) → code is canonical; derive ALL metadata from it; no questions
+   Mode B (AI-built)      → author the component from the description ($13 + §12 apply)
   |
   v
 [MANDATORY] Section 5 — TARGET LOCATION DISCOVERY
@@ -1076,6 +1122,7 @@ STOP — do not "clean up" or refactor unrelated code
 11. Validate — always run `npm run lint` and verify prompt output after every integration
 12. Report exactly — list placement decision, every file changed, new dependencies installed, confirm all 5 prompt strings verified, confirm responsive results at all breakpoints
 13. **MCP DATA SYNC (Step 6)** — after every add/remove/replace, regenerate `mcp-server/src/data/` with `node mcp-server/scripts/sync-frontend-data.mjs` and confirm `check-source-coverage.mjs` passes. **Never push `mcp-server/**` inside this skill** — publishing to `UI-HUB-MCP-` is exclusive to the `ui-hub-github-sync-and-push` skill.
+14. **CANONICAL PROVIDED CODE (Step 0, Mode A)** — when the user supplies the component code, use it byte-for-byte. Never reformat or rewrite it. Derive all metadata from the code without asking follow-up questions.
 
 ---
 
