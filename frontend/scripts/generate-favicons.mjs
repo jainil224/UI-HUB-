@@ -27,7 +27,7 @@ const pngBlobs = {};
 
 for (const { file, size } of outputs) {
   const png = await sharp(Buffer.from(lightSvg), { density: 300 })
-    .resize(size, size)
+    .resize(size, size, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer();
   await fs.promises.writeFile(path.join(publicDir, file), png);
