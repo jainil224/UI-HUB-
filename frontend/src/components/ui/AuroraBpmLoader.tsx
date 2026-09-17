@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 interface AuroraBpmLoaderProps {
     progress?: number; // 0-100
@@ -21,10 +21,17 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
     onComplete,
 }) => {
     const [internal, setInternal] = useState(0);
+    const [pathLen, setPathLen] = useState(0);
+    const pathRef = useRef<SVGPathElement>(null);
+    const [reduced] = useState(
+        () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    );
+
     const progress = controlled !== undefined ? controlled : internal;
+    const done = progress >= 100;
 
     useEffect(() => {
-        if (!autoPlay) return;
+        if (!autoPlay || reduced) return;
         let v = 0;
         const id = window.setInterval(() => {
             v = Math.min(100, v + 1.2);
@@ -35,13 +42,36 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
             }
         }, 48);
         return () => window.clearInterval(id);
-    }, [autoPlay, onComplete]);
+    }, [autoPlay, onComplete, reduced]);
 
-    const done = progress >= 100;
-    const dashLen = useRef(200).current;
+    // Measure the real path length so the dash fill is exact for every viewBox.
+    useLayoutEffect(() => {
+        const el = pathRef.current;
+        if (el) setPathLen(el.getTotalLength());
+    }, []);
+
+    // Travelling pulse dot at the current progress point on the trace.
+    const pulse = useMemo(() => {
+        if (pathLen <= 0 || progress <= 0) return null;
+        const el = pathRef.current;
+        if (!el) return null;
+        try {
+            const p = el.getPointAtLength((pathLen * Math.min(100, progress)) / 100);
+            return { x: p.x, y: p.y };
+        } catch {
+            return null;
+        }
+    }, [progress, pathLen]);
+
+    const dashLen = pathLen || 200;
 
     return (
         <div
+            role="progressbar"
+            aria-valuenow={Math.round(progress)}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={label}
             style={{
                 position: 'relative',
                 width: size,
@@ -56,8 +86,16 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
                 fontFamily: '"Courier New", monospace',
             }}
         >
-            {/* aurora ribbons */}
-            <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', opacity: done ? 0.75 : 1 }}>
+            {/* aurora ribbons — continuously swaying */}
+            <div
+                style={{
+                    position: 'absolute',
+                    inset: 0,
+                    overflow: 'hidden',
+                    opacity: done ? 1 : 0.9,
+                    transition: 'opacity 0.6s ease',
+                }}
+            >
                 {ribbonColors.map((c, i) => (
                     <div
                         key={i}
@@ -65,22 +103,21 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
                             position: 'absolute',
                             left: 0,
                             top: `${34 + i * 14}%`,
-                            width: '120%',
-                            height: 16,
+                            width: '130%',
+                            height: 18,
                             background: `radial-gradient(ellipse at center, ${c} 0%, transparent 70%)`,
-                            transform: `translateY(${Math.sin(progress * 0.035 + i * 1.1) * 5}px) scaleX(1.04)`,
-                            transition: 'transform 0.3s linear',
-                            opacity: 0.5 - i * 0.12,
+                            transform: 'translateY(0) scaleX(1.04)',
+                            animation: `aurora-sway ${3.2 + i * 0.9}s ease-in-out ${-i * 0.7}s infinite alternate`,
+                            opacity: done ? 0.85 - i * 0.14 : 0.42 - i * 0.1,
+                            filter: done ? 'brightness(1.35) saturate(1.15)' : 'brightness(0.95)',
+                            transition: 'opacity 0.5s ease, filter 0.6s ease',
                         }}
                     />
                 ))}
             </div>
 
             {/* heartbeat trace */}
-            <svg
-                viewBox="0 0 100 100"
-                style={{ position: 'relative', width: '82%', height: '56%' }}
-            >
+            <svg viewBox="0 0 100 100" style={{ position: 'relative', width: '82%', height: '56%' }}>
                 <path
                     d={HEARTBEAT}
                     fill="none"
@@ -90,6 +127,7 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
                     strokeLinejoin="round"
                 />
                 <path
+                    ref={pathRef}
                     d={HEARTBEAT}
                     fill="none"
                     stroke="#a9a35c"
@@ -103,16 +141,32 @@ export const AuroraBpmLoader: React.FC<AuroraBpmLoaderProps> = ({
                         transition: 'stroke-dashoffset 0.08s linear, filter 0.4s ease',
                     }}
                 />
+                {pulse && !reduced && (
+                    <g>
+                        <circle cx={pulse.x} cy={pulse.y} r={2.2} fill="#d8cd7e" />
+                        <circle cx={pulse.x} cy={pulse.y} r={5.5} fill="none" stroke="#d8cd7e" strokeWidth={0.7} opacity={0.5}>
+                            <animate attributeName="r" values="3;9" dur="0.9s" repeatCount="indefinite" />
+                            <animate attributeName="opacity" values="0.5;0" dur="0.9s" repeatCount="indefinite" />
+                        </circle>
+                    </g>
+                )}
             </svg>
 
             <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
-                <span style={{ fontSize: 11, letterSpacing: '0.3em', color: '#8a8550', textTransform: 'uppercase' }}>
+                <span style={{ fontSize: 11, letterSpacing: '0.3em', color: done ? '#c9c27a' : '#8a8550', textTransform: 'uppercase', transition: 'color 0.4s ease' }}>
                     {label}
                 </span>
-                <span style={{ fontSize: 12, color: '#5f5a3a', letterSpacing: '0.2em' }}>
+                <span style={{ fontSize: 12, color: done ? '#a9a35c' : '#5f5a3a', letterSpacing: '0.2em', transition: 'color 0.4s ease' }}>
                     {Math.min(100, Math.round(progress)).toString().padStart(3, '0')} bpm
                 </span>
             </div>
+
+            <style>{`
+                @keyframes aurora-sway {
+                    from { transform: translateY(-7px) scaleX(1.02); }
+                    to { transform: translateY(7px) scaleX(1.06); }
+                }
+            `}</style>
         </div>
     );
 };

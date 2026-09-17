@@ -5,100 +5,121 @@ interface CrossfadeTypewriterProps {
     speedMs?: number;
     pauseMs?: number;
     textClass?: string;
+    cursorColor?: string;
 }
+
+type Phase = 'type' | 'hold';
 
 export const CrossfadeTypewriter: React.FC<CrossfadeTypewriterProps> = ({
     lines,
     speedMs = 90,
-    pauseMs = 1600,
+    pauseMs = 1700,
     textClass,
+    cursorColor = '#8a6f45',
 }) => {
-    const [lens, setLens] = useState<number[]>([0, Math.min(3, lines[1]?.length ?? 0)]);
-    const [active, setActive] = useState(0);
-    const activeRef = useRef(0);
-    const enteringRef = useRef(true);
-    const pausedRef = useRef(0);
+    const [reduced] = useState(
+        () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    );
+    const count = Math.max(1, lines.length);
+    const [lens, setLens] = useState<[number, number]>([lines[0]?.length ?? 0, 0]);
+
+    const lensRef = useRef<[number, number]>([lines[0]?.length ?? 0, 0]);
+    const idxRef = useRef<[number, number]>([0, count > 1 ? 1 : 0]);
+    const lastRef = useRef<[number, number]>([lines[0]?.length ?? 0, 0]);
+    const phaseRef = useRef<Phase>('type');
+    const heldAtRef = useRef(0);
+
+    // Reset whenever the line list changes.
+    useEffect(() => {
+        const n = Math.max(1, lines.length);
+        idxRef.current = [0, n > 1 ? 1 : 0];
+        lensRef.current = [lines[0]?.length ?? 0, 0];
+        lastRef.current = [...lensRef.current] as [number, number];
+        phaseRef.current = 'type';
+        setLens([...lensRef.current] as [number, number]);
+    }, [lines]);
 
     useEffect(() => {
-        if (!lines.length) return;
-        const left = lines[0];
-        const right = lines[1];
+        if (reduced || lines.length < 1) return;
 
         const tick = () => {
+            if (document.hidden) return;
             const now = Date.now();
-            if (pausedRef.current && now - pausedRef.current < pauseMs) return;
+            const cur = idxRef.current[1];
+            const target = lines[cur]?.length ?? 0;
 
-            const entering = enteringRef.current;
-            const onB = activeRef.current === 1;
-
-            if (entering) {
-                if (lens[onB ? 1 : 0] < lines[activeRef.current].length) {
-                    setLens((prev) => {
-                        const next = [...prev];
-                        next[onB ? 1 : 0] = next[onB ? 1 : 0] + 1;
-                        return next;
-                    });
+            if (phaseRef.current === 'type') {
+                if (lensRef.current[1] < target) {
+                    lensRef.current[1] += 1;
                 } else {
-                    enteringRef.current = false;
+                    phaseRef.current = 'hold';
+                    heldAtRef.current = now;
                 }
-            } else {
-                if (lens[onB ? 1 : 0] > 0) {
-                    setLens((prev) => {
-                        const next = [...prev];
-                        next[onB ? 1 : 0] = next[onB ? 1 : 0] - 1;
-                        return next;
-                    });
-                } else {
-                    // swap sides
-                    activeRef.current = activeRef.current === 0 ? 1 : 0;
-                    setActive(activeRef.current);
-                    enteringRef.current = true;
-                    pausedRef.current = Date.now();
-                    return;
-                }
+            } else if (now - heldAtRef.current >= pauseMs) {
+                const prev = idxRef.current[1];
+                const next = (prev + 1) % Math.max(1, lines.length);
+                idxRef.current = [prev, next];
+                lensRef.current = [lines[prev]?.length ?? 0, 0];
+                phaseRef.current = 'type';
             }
 
-            pausedRef.current = 0;
+            const changed =
+                lastRef.current[0] !== lensRef.current[0] ||
+                lastRef.current[1] !== lensRef.current[1];
+            lastRef.current = [...lensRef.current] as [number, number];
+            if (changed) setLens([...lensRef.current] as [number, number]);
         };
 
         const id = window.setInterval(tick, speedMs);
         return () => window.clearInterval(id);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [lines, speedMs, pauseMs]);
+    }, [lines, reduced, speedMs, pauseMs]);
 
-    const shown = (i: number) => (lines[i] || '').slice(0, lens[i]);
+    if (lines.length === 0) return null;
+
+    const shown = (i: number) => (lines[i] != null ? lines[i].slice(0, lens[i]) : '');
 
     return (
         <div
             className={textClass}
+            role="log"
+            aria-live="polite"
+            aria-label="Rotating typewriter lines"
             style={{
                 position: 'relative',
                 fontFamily: 'Georgia, "Times New Roman", serif',
                 fontSize: 'clamp(1.15rem, 3vw, 1.6rem)',
-                lineHeight: 1.5,
-                minHeight: '1.6em',
+                lineHeight: 1.55,
+                minHeight: 'calc(1.55em * 2)',
                 whiteSpace: 'pre-wrap',
             }}
-            aria-live="polite"
         >
-            <span style={{ opacity: active === 1 ? 0.25 : 1, transition: 'opacity 0.3s ease', marginRight: 2 }}>
-                {shown(0)}
-            </span>
-            <span style={{ opacity: active === 0 ? 0.25 : 1, transition: 'opacity 0.3s ease' }}>
-                {shown(1)}
-            </span>
-            <span
-                style={{
-                    display: 'inline-block',
-                    width: 2,
-                    height: '0.9em',
-                    marginLeft: 2,
-                    background: '#8a6f45',
-                    verticalAlign: '-0.1em',
-                    animation: 'cwt-caret 0.9s steps(2) infinite',
-                }}
-            />
-            <style>{`@keyframes cwt-caret { 0%,100% { opacity: 1; } 50% { opacity: 0; } }`}</style>
+            {reduced ? (
+                lines.map((l, i) => (
+                    <div key={i} style={i % 2 === 1 ? { opacity: 0.55 } : undefined}>
+                        {l}
+                    </div>
+                ))
+            ) : (
+                <>
+                    <div style={{ opacity: 0.3, transition: 'opacity 0.4s ease' }}>{shown(0)}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                        <span>{shown(1)}</span>
+                        <span
+                            aria-hidden
+                            style={{
+                                display: 'inline-block',
+                                width: 2,
+                                height: '0.85em',
+                                marginLeft: 3,
+                                background: cursorColor,
+                                animation: 'cwt-blink 0.95s steps(2, start) infinite',
+                                alignSelf: 'center',
+                            }}
+                        />
+                    </div>
+                </>
+            )}
+            <style>{`@keyframes cwt-blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }`}</style>
         </div>
     );
 };

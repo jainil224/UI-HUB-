@@ -95,12 +95,10 @@ const OtpCodeInput = React.lazy(() => import('../components/ui/OtpCodeInput').th
 const PasswordStrengthMeter = React.lazy(() => import('../components/ui/PasswordStrengthMeter').then(m => ({ default: m.PasswordStrengthMeter })));
 const SignaturePad = React.lazy(() => import('../components/ui/SignaturePad').then(m => ({ default: m.SignaturePad })));
 const DragDropUpload = React.lazy(() => import('../components/ui/DragDropUpload').then(m => ({ default: m.DragDropUpload })));
-const SignalStrengthMeter = React.lazy(() => import('../components/ui/SignalStrengthMeter').then(m => ({ default: m.SignalStrengthMeter })));
 const AuroraBpmLoader = React.lazy(() => import('../components/ui/AuroraBpmLoader').then(m => ({ default: m.AuroraBpmLoader })));
 const RippleSignatureLedger = React.lazy(() => import('../components/ui/RippleSignatureLedger').then(m => ({ default: m.RippleSignatureLedger })));
 const CrossfadeTypewriter = React.lazy(() => import('../components/ui/CrossfadeTypewriter').then(m => ({ default: m.CrossfadeTypewriter })));
 const KirigamiButton = React.lazy(() => import('../components/ui/KirigamiButton').then(m => ({ default: m.KirigamiButton })));
-const EclipseProgressRing = React.lazy(() => import('../components/ui/EclipseProgressRing').then(m => ({ default: m.EclipseProgressRing })));
 const DriftwoodGallery = React.lazy(() => import('../components/ui/DriftwoodGallery').then(m => ({ default: m.DriftwoodGallery })));
 
 
@@ -4902,28 +4900,6 @@ const DragDropUploadPreview: React.FC = () => {
     );
 };
 
-// ── Signal Strength Meter preview ──
-const SignalStrengthMeterPreview: React.FC = () => {
-    return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-            minHeight: '380px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'radial-gradient(120% 120% at 50% 0%, #0f120c 0%, #090b07 60%, #040603 100%)',
-            padding: 28,
-        }}>
-            <div style={{ width: '100%', maxWidth: 320 }}>
-                <Suspense fallback={null}>
-                    <SignalStrengthMeter value="NOMAD-7X" />
-                </Suspense>
-            </div>
-        </div>
-    );
-};
-
 // ── Aurora BPM loader preview ──
 const AuroraBpmLoaderPreview: React.FC = () => {
     return (
@@ -5016,26 +4992,6 @@ const KirigamiButtonPreview: React.FC = () => {
             </Suspense>
             <Suspense fallback={null}>
                 <KirigamiButton label="Sketch" papers={['cut', 'fold']} variant="white" />
-            </Suspense>
-        </div>
-    );
-};
-
-// ── Eclipse Progress Ring preview ──
-const EclipseProgressRingPreview: React.FC = () => {
-    return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-            minHeight: '380px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'radial-gradient(120% 120% at 50% 0%, #120d09 0%, #0a0806 60%, #040302 100%)',
-            padding: 28,
-        }}>
-            <Suspense fallback={null}>
-                <EclipseProgressRing progress={72} label="burn" />
             </Suspense>
         </div>
     );
@@ -14808,19 +14764,6 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         vibePrompt: "",
     },
 
-    // ── Signal Strength Meter ───────────────────────────
-    {
-        id: "signal-strength-meter",
-        title: "Signal Strength Meter",
-        category: "form",
-        addedAt: "2026-09-17",
-        newBadgeDays: 120,
-        description: "A 5-bar signal tower fed by pass/fail rules (length, case, digit, symbol) with a static-noise floor.",
-        preview: () => <SignalStrengthMeterPreview />,
-        code: "",
-        vibePrompt: "",
-    },
-
     // ── Aurora BPM Loader ───────────────────────────────
     {
         id: "aurora-bpm-loader",
@@ -14828,7 +14771,7 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         category: "loader",
         addedAt: "2026-09-17",
         newBadgeDays: 120,
-        description: "A heartbeat cardio trace drawn with strokeDashoffset under swaying aurora ribbons, counting BPM.",
+        description: "A heartbeat cardio trace with an exact dash fill and a travelling pulse dot under swaying aurora ribbons, counting BPM.",
         preview: () => <AuroraBpmLoaderPreview />,
         code: "",
         vibePrompt: "",
@@ -14841,7 +14784,7 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         category: "image-interaction",
         addedAt: "2026-09-17",
         newBadgeDays: 120,
-        description: "Click a photo to stamp coin-settle wax seals that expand, squash, and slowly dissolve.",
+        description: "Click or touch a photo to stamp shadowed coin-settle wax seals that expand, squash, and slowly dissolve.",
         preview: () => <RippleSignatureLedgerPreview />,
         code: "",
         vibePrompt: "",
@@ -14854,7 +14797,7 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         category: "text",
         addedAt: "2026-09-17",
         newBadgeDays: 120,
-        description: "Two stacked lines race to type and erase, crossfading between them with a blinking caret.",
+        description: "Cycles through every line: the previous line dims while the next types, holds, then swaps — with a blinking caret.",
         preview: () => <CrossfadeTypewriterPreview />,
         code: "",
         vibePrompt: "",
@@ -14867,21 +14810,8 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         category: "button",
         addedAt: "2026-09-17",
         newBadgeDays: 120,
-        description: "A paper-cut button that folds into three clipped panels on click, then settles flat.",
+        description: "Top-hinged curtains flip up and out on hover to reveal the full label, with a fold-burst glow and shine sweep on click.",
         preview: () => <KirigamiButtonPreview />,
-        code: "",
-        vibePrompt: "",
-    },
-
-    // ── Eclipse Progress Ring ───────────────────────────
-    {
-        id: "eclipse-progress-ring",
-        title: "Eclipse Progress Ring",
-        category: "effect",
-        addedAt: "2026-09-17",
-        newBadgeDays: 120,
-        description: "The moon crosses the sun as progress rises; at 100% a corona flare fires and totality locks.",
-        preview: () => <EclipseProgressRingPreview />,
         code: "",
         vibePrompt: "",
     },
@@ -14893,7 +14823,7 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         category: "image-interaction",
         addedAt: "2026-09-17",
         newBadgeDays: 120,
-        description: "A tide-bobbed photo gallery in a driftwood frame that tilts with the pointer and swaps on a wave.",
+        description: "A tide-bobbed photo gallery in a driftwood frame with smooth ref-driven parallax tilt, hover-paused auto-slides, and jump dots.",
         preview: () => <DriftwoodGalleryPreview />,
         code: "",
         vibePrompt: "",

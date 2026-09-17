@@ -4,65 +4,89 @@ interface DriftwoodGalleryProps {
     images: { src: string; alt?: string; tint?: string }[];
     intervalMs?: number;
     waveAmp?: number;
+    showDots?: boolean;
 }
 
 export const DriftwoodGallery: React.FC<DriftwoodGalleryProps> = ({
     images,
     intervalMs = 5200,
     waveAmp = 6,
+    showDots = true,
 }) => {
     const [index, setIndex] = useState(0);
-    const [motion, setMotion] = useState({ x: 0, y: 0 });
-    const ref = useRef<HTMLDivElement>(null);
-    const timer = useRef<number>(0);
+    const [reduced] = useState(
+        () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    );
+    const wrapRef = useRef<HTMLDivElement>(null);
+    const frameRef = useRef<HTMLDivElement>(null);
+    const deckRef = useRef<HTMLDivElement>(null);
     const motionRef = useRef({ x: 0, y: 0 });
+    const hoverRef = useRef(false);
 
+    // Slideshow — pauses while the pointer rests on the frame.
     useEffect(() => {
+        const count = Math.max(1, images.length);
         const id = window.setInterval(() => {
-            setIndex((i) => (i + 1) % Math.max(1, images.length));
+            if (hoverRef.current) return;
+            setIndex((i) => (i + 1) % count);
         }, intervalMs);
-        timer.current = id;
         return () => window.clearInterval(id);
     }, [images.length, intervalMs]);
 
+    // Pointer parallax + idle tide-bob, written straight to the DOM (zero re-renders).
     useEffect(() => {
-        const onMove = (e: PointerEvent) => {
-            const rect = ref.current?.getBoundingClientRect();
-            if (!rect) return;
-            motionRef.current = {
-                x: (e.clientX - rect.left) / rect.width - 0.5,
-                y: (e.clientY - rect.top) / rect.height - 0.5,
-            };
-        };
-        const onLeave = () => {
-            motionRef.current = { x: 0, y: 0 };
-        };
-        const raf = () => {
-            setMotion((prev) => {
-                const nx = prev.x + (motionRef.current.x - prev.x) * 0.06;
-                const ny = prev.y + (motionRef.current.y - prev.y) * 0.06;
-                return { x: nx, y: ny };
-            });
-            requestAnimationFrame(raf);
-        };
-        window.addEventListener('pointermove', onMove);
-        window.addEventListener('pointerleave', onLeave);
-        const id = requestAnimationFrame(raf);
-        return () => {
-            window.removeEventListener('pointermove', onMove);
-            window.removeEventListener('pointerleave', onLeave);
-            cancelAnimationFrame(id);
-        };
-    }, []);
+        if (reduced) return;
+        let raf = 0;
+        let prev = performance.now();
+        let tilt = { x: 0, y: 0 };
+        let t = Math.random() * 20;
 
-    const tiltX = motion.y * 6;
-    const tiltY = motion.x * 8;
-    const driftX = Math.sin(index * 1.7) * waveAmp;
-    const driftY = Math.cos(index * 2.1) * (waveAmp * 0.55);
+        const loop = (now: number) => {
+            const dt = Math.min(0.05, Math.max(0, (now - prev) / 1000));
+            prev = now;
+            t += dt;
+            tilt.x += (motionRef.current.x - tilt.x) * 0.09;
+            tilt.y += (motionRef.current.y - tilt.y) * 0.09;
+
+            const floatX = Math.sin(t * 0.75) * waveAmp;
+            const floatY = Math.cos(t * 0.5) * waveAmp * 0.5;
+
+            if (frameRef.current) {
+                frameRef.current.style.transform =
+                    `perspective(900px) rotateX(${(-tilt.y * 5).toFixed(2)}deg) rotateY(${(tilt.x * 7).toFixed(2)}deg)`;
+            }
+            if (deckRef.current) {
+                deckRef.current.style.transform =
+                    `translate(${floatX.toFixed(2)}px, ${floatY.toFixed(2)}px) scale(1.03)`;
+            }
+            raf = requestAnimationFrame(loop);
+        };
+        raf = requestAnimationFrame(loop);
+        return () => cancelAnimationFrame(raf);
+    }, [reduced, waveAmp]);
+
+    const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+        const rect = wrapRef.current?.getBoundingClientRect();
+        if (!rect) return;
+        motionRef.current = {
+            x: (e.clientX - rect.left) / rect.width - 0.5,
+            y: (e.clientY - rect.top) / rect.height - 0.5,
+        };
+    };
+    const onPointerEnter = () => {
+        hoverRef.current = true;
+    };
+    const onPointerLeave = () => {
+        hoverRef.current = false;
+        motionRef.current = { x: 0, y: 0 };
+    };
 
     return (
         <div
-            ref={ref}
+            ref={wrapRef}
+            onPointerMove={onPointerMove}
+            onPointerEnter={onPointerEnter}
+            onPointerLeave={onPointerLeave}
             style={{
                 position: 'relative',
                 width: '100%',
@@ -87,52 +111,92 @@ export const DriftwoodGallery: React.FC<DriftwoodGalleryProps> = ({
 
             {/* driftwood frame */}
             <div
+                ref={frameRef}
                 style={{
                     position: 'absolute',
                     inset: '10%',
                     border: '10px solid #8a7354',
                     borderRadius: 2,
-                    transform: `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg)`,
+                    transform: 'perspective(900px) rotateX(0deg) rotateY(0deg)',
                     boxShadow: 'inset 0 0 0 2px rgba(60,45,25,0.5), 6px 10px 14px rgba(70,55,30,0.35)',
-                    transition: 'transform 0.08s linear',
+                    willChange: 'transform',
                 }}
             >
-                {images.map((img, i) => (
-                    <img
-                        key={i}
-                        src={img.src}
-                        alt={img.alt || `wave ${i + 1}`}
-                        style={{
-                            position: 'absolute',
-                            inset: 0,
-                            width: '100%',
-                            height: '100%',
-                            objectFit: 'cover',
-                            filter: img.tint ? `sepia(0.24) saturate(0.62) ${img.tint}` : 'sepia(0.24) saturate(0.68) contrast(0.96)',
-                            opacity: i === index ? 1 : 0,
-                            transform: `translate(${(i - index) * 4 + driftX}px, ${driftY}px) scale(1.03)`,
-                            transition: 'opacity 0.9s ease, transform 1.4s ease',
-                        }}
-                    />
-                ))}
+                {/* tide-bobbed deck */}
+                <div ref={deckRef} style={{ position: 'absolute', inset: -6, willChange: 'transform' }}>
+                    {images.map((img, i) => (
+                        <img
+                            key={i}
+                            src={img.src}
+                            alt={img.alt || `wave ${i + 1}`}
+                            loading="lazy"
+                            draggable={false}
+                            style={{
+                                position: 'absolute',
+                                inset: 0,
+                                width: '100%',
+                                height: '100%',
+                                objectFit: 'cover',
+                                filter: img.tint
+                                    ? `sepia(0.24) saturate(0.62) ${img.tint}`
+                                    : 'sepia(0.24) saturate(0.68) contrast(0.96)',
+                                opacity: i === index ? 1 : 0,
+                                transition: 'opacity 1s ease',
+                                transform: 'scale(1.03)',
+                                pointerEvents: 'none',
+                            }}
+                        />
+                    ))}
+                </div>
             </div>
 
-            {/* tide / bottom sway line */}
+            {/* tide / bottom sway line + dots */}
             <div
                 style={{
                     position: 'absolute',
-                    bottom: '4%',
+                    bottom: '2.5%',
                     left: 0,
                     right: 0,
-                    textAlign: 'center',
-                    fontSize: 10,
-                    letterSpacing: '0.3em',
-                    textTransform: 'uppercase',
-                    color: '#5d4a30',
-                    fontFamily: '"Courier New", monospace',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 6,
                 }}
             >
-                ~ {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')} ~
+                {showDots && images.length > 1 && (
+                    <div style={{ display: 'flex', gap: 7 }}>
+                        {images.map((_, i) => (
+                            <button
+                                key={i}
+                                type="button"
+                                aria-label={`Go to slide ${i + 1}`}
+                                onClick={() => setIndex(i)}
+                                style={{
+                                    width: 16,
+                                    height: 4,
+                                    padding: 0,
+                                    border: 'none',
+                                    borderRadius: 2,
+                                    cursor: 'pointer',
+                                    background: i === index ? '#4c3d26' : 'rgba(112,92,62,0.5)',
+                                    transform: i === index ? 'scaleX(1.25)' : 'none',
+                                    transition: 'background 0.3s ease, transform 0.3s ease',
+                                }}
+                            />
+                        ))}
+                    </div>
+                )}
+                <div
+                    style={{
+                        fontSize: 10,
+                        letterSpacing: '0.3em',
+                        textTransform: 'uppercase',
+                        color: '#5d4a30',
+                        fontFamily: '"Courier New", monospace',
+                    }}
+                >
+                    ~ {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')} ~
+                </div>
             </div>
         </div>
     );
