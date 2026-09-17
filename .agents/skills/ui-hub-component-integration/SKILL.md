@@ -387,6 +387,45 @@ If absent, auto-generated from source code:
 > by `promptUtils.ts` from the source code — no manual entry needed for those.
 > Only `antigravity` and `lovable` have optional manual overrides.
 
+### Step 6 — Sync the MCP server data (run after Step 5)
+
+> **Do not skip this step.** The MCP server (`UI-HUB-MCP-`) serves components from
+> `mcp-server/src/data/`, which is REGENERATED from the frontend data files. Skipping it leaves
+> new components invisible to the MCP (missing from searches, metadata, prompts, and source delivery).
+
+From the repo root, run:
+
+```bash
+node mcp-server/scripts/sync-frontend-data.mjs
+```
+
+This rewrites these files in `mcp-server/src/data/` from the frontend sources:
+
+| Regenerated file | Source in `frontend/src/data/` |
+|---|---|
+| `components.ts` | `componentData.tsx` |
+| `componentMetadata.json` | `componentMetadata.ts` |
+| `aiPrompts.json` | `claudePrompts.ts` + `antigravityPrompts.ts` + `lovablePrompts.ts` |
+| `componentVibePrompts.json` | `componentData.tsx` (vibePrompt fields) |
+| `templates.json` | `templatesData.ts` |
+| `sourceCode.json` | `embeddedSourceCode.ts` + backend sources + `frontend/src/components/ui/` disk scan |
+| `premiumComponents.json` | `premiumComponents.ts` (canonical premium list) |
+
+Coverage check (must end `OK`):
+
+```bash
+node mcp-server/scripts/check-source-coverage.mjs
+```
+
+**Template caveat:** the sync script only pulls template source for ids listed in its hardcoded
+`templateFileMap`. If you add a NEW template, first add `'<template-id>': ['templates', 'File.tsx']`
+to that map inside `mcp-server/scripts/sync-frontend-data.mjs`, or its source will be missing from
+`sourceCode.json`.
+
+> **DO NOT PUSH HERE.** The regenerated `mcp-server/**` files belong to the `UI-HUB-MCP-`
+> repository. They are published ONLY when the user invokes the `ui-hub-github-sync-and-push`
+> skill to push. This skill never runs `git push`.
+
 ---
 
 ## 7. The Vibe Prompt System — Full Architecture
@@ -667,6 +706,7 @@ When the user explicitly says "remove" or "delete":
 6. Remove the demo route from `App.tsx` if one exists
 7. Remove the demo page file from `pages/Components/` if one exists
 8. Delete the component file from `components/ui/` only if it is not used by any other component
+9. Re-run the MCP data sync (Step 6, §6) so the removed component also leaves `mcp-server/src/data/`
 
 **Stop condition:** Do NOT delete any shared utility, hook, context, or layout file.
 
@@ -680,6 +720,7 @@ When the user says "replace X with Y":
 2. Follow section 6 to create and register the NEW component under its new slug
 3. Follow section 9 to remove only the OLD component entries
 4. If the old component was rendered on a specific page (not just in the library), update that page's import and JSX too
+5. Re-run the MCP data sync (Step 6, §6) so `mcp-server/src/data/` reflects the replacement
 
 ---
 
@@ -886,6 +927,13 @@ npm run lint     # TypeScript type-check (tsc --noEmit)
 npm run build    # Vite production build — catches bundling errors
 ```
 
+MCP data sync (Step 6, §6) — run from the repo root and confirm coverage passes:
+
+```powershell
+node mcp-server/scripts/sync-frontend-data.mjs
+node mcp-server/scripts/check-source-coverage.mjs   # must print "OK"
+```
+
 Visual check at `localhost:3000`:
 - [ ] Library page shows the new component card
 - [ ] Component preview renders without errors
@@ -929,6 +977,12 @@ Prompt Rendering Guarantee verification (§7.4):
 - CLAUDE CODE prompt: auto-generated from source code
 - CURSOR prompt: auto-generated from source code
 - LOVABLE prompt: auto-generated (or manual override if added)
+
+### MCP Data Sync (Step 6, §6)
+- MCP data regenerated (`mcp-server/src/data`): YES / NO
+- Coverage check (`check-source-coverage.mjs`): PASS / FAIL
+- Pushed: NO — the `mcp-server/**` files are published to `UI-HUB-MCP-` only via the
+  `ui-hub-github-sync-and-push` skill when the user asks to push
 
 ### Preserved
 All existing components, routes, styles, and data entries are untouched.
@@ -989,6 +1043,9 @@ Section 6 — Step-by-Step Integration:
            + componentMetadata.ts
            + antigravityPrompts.ts (manual override, optional, NO code — see §7.3)
            + lovablePrompts.ts (manual override, optional, NO code — see §7.3)
+  Step 6  Sync MCP data: node mcp-server/scripts/sync-frontend-data.mjs
+           + coverage: node mcp-server/scripts/check-source-coverage.mjs
+           (publish to UI-HUB-MCP- happens later via ui-hub-github-sync-and-push — NEVER here)
   |
   v
 Validate: npm run lint + npm run build (section 15)
@@ -1018,6 +1075,7 @@ STOP — do not "clean up" or refactor unrelated code
 10. **Responsive (§13)** — every new component MUST pass all 10 checks at all 6 breakpoints (320px, 375px, 768px, 1024px, 1280px, 1440px+). Never hide the component on mobile to "solve" responsiveness.
 11. Validate — always run `npm run lint` and verify prompt output after every integration
 12. Report exactly — list placement decision, every file changed, new dependencies installed, confirm all 5 prompt strings verified, confirm responsive results at all breakpoints
+13. **MCP DATA SYNC (Step 6)** — after every add/remove/replace, regenerate `mcp-server/src/data/` with `node mcp-server/scripts/sync-frontend-data.mjs` and confirm `check-source-coverage.mjs` passes. **Never push `mcp-server/**` inside this skill** — publishing to `UI-HUB-MCP-` is exclusive to the `ui-hub-github-sync-and-push` skill.
 
 ---
 
