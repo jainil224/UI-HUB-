@@ -1010,25 +1010,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["inline styles + scoped <style>", "interval tick with ref state machine", "N-line cycling", "reduced-motion static mode"]
         }
     },
-    "kirigami-button": {
-        props: [
-            { name: "label", type: "string", default: "-", description: "Full button label, revealed as the curtains draw open." },
-            { name: "papers", type: "string[]", default: "['cut','fold']", description: "Captions printed on the left/right curtains." },
-            { name: "variant", type: "'kraft' | 'white' | 'black'", default: "'kraft'", description: "Paper palette (base/fold/ink/edge)." },
-            { name: "href", type: "string", default: "undefined", description: "Render as an <a> instead of a <button>." },
-            { name: "onClick", type: "() => void", default: "undefined", description: "Fired after the curtain burst settles." },
-            { name: "foldDepth", type: "number", default: "24", description: "Extra degrees the curtains flip past the open angle during the click burst." },
-            { name: "className", type: "string", default: "undefined", description: "Extra class name on the element." }
-        ],
-        vibeMeta: {
-            behavior: "A paper-cut curtain-reveal button. The full label renders behind two diagonally-clipped kirigami curtains (34% width each) that cover the outer edges in the idle state, leaving only the center of the text exposed. Both curtains are hinged at the button's TOP edge (transform-origin: top center), so the top edge never moves. On hover each curtain flips upward in 3D (rotateX ~100°) with preserve-3d + perspective: the bottom edge lifts and swings out over the top of the button, sliding out of the button bounds, until the complete label is revealed. Click fires a burst: the curtains overshoot past the open angle, a fold glow ignites over the button, then the sheets spring back shut and a light shine sweeps the label. Click-guard prevents overlapping timers.",
-            states: { from: "curtains closed at the top edge, center slice of label visible", to: "hover: curtains flip up over the top edge revealing full text; click: lift overshoot, glow, snap shut + shine sweep" },
-            cssProperties: ["clip-path diagonal curtains", "rotateX top-hinge flip", "perspective + preserve-3d", "shine keyframe", "springy open/close", "fold glow flash"],
-            description: "Kirigami paper button whose top-hinged curtains flip up and out on hover to reveal the full label.",
-            libraries: ["react"],
-            requirements: ["inline styles", "clip-path polygon curtains", "horizontal slide transforms", "transition timing curves", "click guard"]
-        }
-    },
     "driftwood-gallery": {
         props: [
             { name: "images", type: "{ src: string; alt?: string; tint?: string }[]", default: "[]", description: "Photos cycled by the gallery." },

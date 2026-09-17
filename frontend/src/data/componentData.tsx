@@ -98,7 +98,6 @@ const DragDropUpload = React.lazy(() => import('../components/ui/DragDropUpload'
 const AuroraBpmLoader = React.lazy(() => import('../components/ui/AuroraBpmLoader').then(m => ({ default: m.AuroraBpmLoader })));
 const RippleSignatureLedger = React.lazy(() => import('../components/ui/RippleSignatureLedger').then(m => ({ default: m.RippleSignatureLedger })));
 const CrossfadeTypewriter = React.lazy(() => import('../components/ui/CrossfadeTypewriter').then(m => ({ default: m.CrossfadeTypewriter })));
-const KirigamiButton = React.lazy(() => import('../components/ui/KirigamiButton').then(m => ({ default: m.KirigamiButton })));
 const DriftwoodGallery = React.lazy(() => import('../components/ui/DriftwoodGallery').then(m => ({ default: m.DriftwoodGallery })));
 
 
@@ -4968,31 +4967,6 @@ const CrossfadeTypewriterPreview: React.FC = () => {
                     />
                 </Suspense>
             </div>
-        </div>
-    );
-};
-
-// ── Kirigami Button preview ──
-const KirigamiButtonPreview: React.FC = () => {
-    return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-            minHeight: '380px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: 20,
-            flexWrap: 'wrap',
-            background: 'radial-gradient(120% 120% at 50% 0%, #1a140c 0%, #100c07 60%, #080603 100%)',
-            padding: 40,
-        }}>
-            <Suspense fallback={null}>
-                <KirigamiButton label="Launch" papers={['map', 'route']} variant="kraft" />
-            </Suspense>
-            <Suspense fallback={null}>
-                <KirigamiButton label="Sketch" papers={['cut', 'fold']} variant="white" />
-            </Suspense>
         </div>
     );
 };
@@ -14799,19 +14773,6 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         newBadgeDays: 120,
         description: "Cycles through every line: the previous line dims while the next types, holds, then swaps — with a blinking caret.",
         preview: () => <CrossfadeTypewriterPreview />,
-        code: "",
-        vibePrompt: "",
-    },
-
-    // ── Kirigami Button ─────────────────────────────────
-    {
-        id: "kirigami-button",
-        title: "Kirigami Button",
-        category: "button",
-        addedAt: "2026-09-17",
-        newBadgeDays: 120,
-        description: "Top-hinged curtains flip up and out on hover to reveal the full label, with a fold-burst glow and shine sweep on click.",
-        preview: () => <KirigamiButtonPreview />,
         code: "",
         vibePrompt: "",
     },
