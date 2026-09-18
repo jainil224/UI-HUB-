@@ -3373,5 +3373,422 @@
         "reduced-motion static bob"
       ]
     }
+  },
+  "reflect-shader": {
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#020202\"",
+        "description": "CSS background colour behind the canvas."
+      },
+      {
+        "name": "tint",
+        "type": "string",
+        "default": "\"#ffffff\"",
+        "description": "RGB multiplier applied to the final colour."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "50",
+        "description": "Animation rate (0 = frozen, 100 = fast)."
+      },
+      {
+        "name": "brightness",
+        "type": "number",
+        "default": "100",
+        "description": "Shader uniform intensity multiplier."
+      },
+      {
+        "name": "thickness",
+        "type": "number",
+        "default": "20",
+        "description": "Refractive band thickness (uLineWidth)."
+      },
+      {
+        "name": "chromatic",
+        "type": "number",
+        "default": "10",
+        "description": "Channel rotation rate (uSpread) controlling chromatic offset."
+      },
+      {
+        "name": "bandGap",
+        "type": "number",
+        "default": "20",
+        "description": "Spatial frequency of the banding (uBands)."
+      },
+      {
+        "name": "zoom",
+        "type": "number",
+        "default": "295",
+        "description": "View scale (uScale); higher = zoomed in."
+      },
+      {
+        "name": "hover",
+        "type": "number",
+        "default": "90",
+        "description": "Pointer glow intensity / reach (uHover)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Optional outer wrapper style override."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A chromium-refraction WebGL shader field composed of 12 thin lines whose per-channel rotations produce shifting chromatic bands that bloom brighter where the pointer rests. Pointer tracking is eased with lerp + dt so the glow follows smoothly without jumps; resize and DPR are handled with ResizeObserver + Math.min(devicePixelRatio, 2).",
+      "states": {
+        "from": "static chromatic field at rest",
+        "to": "pointer-following glow bloom over animated refraction bands"
+      },
+      "cssProperties": [
+        "webgl",
+        "canvas",
+        "fullscreen background",
+        "additive-like glow via alpha",
+        "lerp pointer easing"
+      ],
+      "description": "Chromium-refraction WebGL shader field with pointer-following glow and chromatic band rotation.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "WebGL 1 context",
+        "requestAnimationFrame loop",
+        "ResizeObserver",
+        "devicePixelRatio scaling",
+        "lerp pointer easing"
+      ]
+    }
+  },
+  "infinite-tendrils": {
+    "props": [
+      {
+        "name": "colorA",
+        "type": "string",
+        "default": "\"\"",
+        "description": "First colour used in the per-mote gradient (defaults to gray)."
+      },
+      {
+        "name": "colorB",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Second colour used in the per-mote gradient (defaults to gray)."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "default": "18",
+        "description": "Tendril density 1-20 (maps to 90-1390 motes)."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": "14",
+        "description": "Noise-field spatial scale 1-20."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "default": "5",
+        "description": "Line width 1-20."
+      },
+      {
+        "name": "trail",
+        "type": "number",
+        "default": "20",
+        "description": "Trail persistence 1-20 (higher = longer)."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "100",
+        "description": "Travel rate 0-20 (clamped, 0 = still)."
+      },
+      {
+        "name": "followPointer",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether tendrils curl toward the pointer."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": "13",
+        "description": "Pointer grip reach and whirl 1-20."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Optional outer wrapper style override."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A swarm of motes tracing infinite tendrils through a Canvas 2D field of angles. Each heading is steered by two scrolling value-noise octaves (broad swell + fine fray) while motes move at per-mote pace and leave a fading trail via destination-out compositing. Per-mote colors mix colorA/colorB as an rgba gradient faded at trail ends; with followPointer the pointer grips nearby motes with quadratic-falloff pull so tendrils curl around the cursor.",
+      "states": {
+        "from": "tendrils drifting on noise currents",
+        "to": "tendrils curling around the pointer with eased grip"
+      },
+      "cssProperties": [
+        "canvas 2d",
+        "destination-out trail fade",
+        "value-noise flow field",
+        "rgba gradient strokes",
+        "dpr-capped resize"
+      ],
+      "description": "Canvas flow-field of glowing particle tendrils that curl toward your pointer.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D",
+        "requestAnimationFrame loop",
+        "ResizeObserver",
+        "value noise (2 octaves)",
+        "destination-out trail",
+        "pointer grip easing",
+        "devicePixelRatio cap"
+      ]
+    }
+  },
+  "ocean-swell": {
+    "props": [
+      {
+        "name": "deep",
+        "type": "string",
+        "default": "\"#04222E\"",
+        "description": "Deep water colour."
+      },
+      {
+        "name": "shallow",
+        "type": "string",
+        "default": "\"#1E7F86\"",
+        "description": "Shallow/crest water colour."
+      },
+      {
+        "name": "scatter",
+        "type": "string",
+        "default": "\"#CCCFCE\"",
+        "description": "Subsurface scattering colour near crests."
+      },
+      {
+        "name": "foam",
+        "type": "string",
+        "default": "\"#F2FAFF\"",
+        "description": "Foam colour on steep slopes."
+      },
+      {
+        "name": "zenith",
+        "type": "string",
+        "default": "\"#2C5C8E\"",
+        "description": "Sky zenith colour."
+      },
+      {
+        "name": "horizon",
+        "type": "string",
+        "default": "\"#FAF5B4\"",
+        "description": "Sky horizon colour."
+      },
+      {
+        "name": "swell",
+        "type": "number",
+        "default": "1",
+        "description": "Wave amplitude 1-20."
+      },
+      {
+        "name": "choppy",
+        "type": "number",
+        "default": "20",
+        "description": "Gerstner horizontal displacement 0-20."
+      },
+      {
+        "name": "detail",
+        "type": "number",
+        "default": "20",
+        "description": "Wave frequency base 1-20."
+      },
+      {
+        "name": "glitter",
+        "type": "number",
+        "default": "20",
+        "description": "Specular sharpness 1-20."
+      },
+      {
+        "name": "subsurface",
+        "type": "number",
+        "default": "20",
+        "description": "Scatter strength 0-20."
+      },
+      {
+        "name": "foamAmount",
+        "type": "number",
+        "default": "20",
+        "description": "Foam coverage 0-20."
+      },
+      {
+        "name": "cloud",
+        "type": "number",
+        "default": "20",
+        "description": "Cloud deck density 0-20."
+      },
+      {
+        "name": "haze",
+        "type": "number",
+        "default": "0",
+        "description": "Atmospheric haze 0-20."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "5",
+        "description": "Simulation speed 0-20."
+      },
+      {
+        "name": "drag",
+        "type": "number",
+        "default": "20",
+        "description": "Drag-sensitivity of the orbit 0-20 (0 = no drag)."
+      },
+      {
+        "name": "sizePercent",
+        "type": "number",
+        "default": "200",
+        "description": "Focal/zoom 40-200."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Optional outer wrapper style override."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A ray-marched procedural ocean on a fullscreen THREE shader quad. 4 gerstner-style waves drive a 68-step crest trace with adaptive stepping; 7 waves produce analytic normals for fresnel reflections of a value-noise-cloud sky, sharp glitter speculars, subsurface scattering near crests, and value-noise foam on steep slopes, closed with haze fog and a filmic tonemap. The camera auto-drifts and orbits on drag with inertia decay, clamped to a max pitch. DPR-capped at 1.25.",
+      "states": {
+        "from": "calm open ocean with sun glints",
+        "to": "drag-orbit camera sweeping over lit swell"
+      },
+      "cssProperties": [
+        "webgl",
+        "shader quad",
+        "ray-march",
+        "fresnel",
+        "filmic tonemap",
+        "drag inertia"
+      ],
+      "description": "Ray-marched procedural ocean with sun glitter, foam crests, and drag-to-orbit camera.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "THREE.WebGLRenderer",
+        "ShaderMaterial",
+        "68-step ray march",
+        "4-wave crest + 7-wave detail traces",
+        "gerstner displacement",
+        "fresnel + sky reflection",
+        "glitter specular",
+        "subsurface + foam",
+        "drag inertia camera",
+        "devicePixelRatio cap"
+      ]
+    }
+  },
+  "star-burst": {
+    "props": [
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "10",
+        "description": "Outward travel rate 0-100."
+      },
+      {
+        "name": "starCount",
+        "type": "number",
+        "default": "100",
+        "description": "Number of spokes (each carries 15 pulses, capped at 5000 particles)."
+      },
+      {
+        "name": "color",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Star streak colour (hex or rgba)."
+      },
+      {
+        "name": "centerX",
+        "type": "number",
+        "default": "50",
+        "description": "Burst centre X 0-100 (% of width)."
+      },
+      {
+        "name": "centerY",
+        "type": "number",
+        "default": "100",
+        "description": "Burst centre Y 0-100 (% of height)."
+      },
+      {
+        "name": "starSize",
+        "type": "number",
+        "default": "12",
+        "description": "Streak length scale 0-20."
+      },
+      {
+        "name": "opacity",
+        "type": "number",
+        "default": "50",
+        "description": "Global fade 0-100."
+      },
+      {
+        "name": "flowerIntensity",
+        "type": "number",
+        "default": "10",
+        "description": "Radial bloom strength + per-particle alpha 0-20."
+      },
+      {
+        "name": "twinkleSpeed",
+        "type": "number",
+        "default": "4",
+        "description": "Sine twinkle rate 0-20."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Optional outer wrapper style override."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A radial flower-burst on Canvas 2D: starCount jittered spokes each launch 15 pulses that fly outward, drawn additively as rotated streak sprites (lighter compositing) so the trails fan into a star flower. Particles twinkle on a per-phase sine, fade at spawn/trail end, and respawn behind the core; a radial gradient center bloom scales with flowerIntensity/starSize. Each frame clears to black so it sits over any page. DPR-capped at 2; export/thumbnail modes render 60 static frames.",
+      "states": {
+        "from": "concealed core with faint bloom",
+        "to": "full radial flower of twinkling streaks"
+      },
+      "cssProperties": [
+        "canvas 2d",
+        "additive blending",
+        "rotated streak sprites",
+        "radial gradient bloom",
+        "seeded rng",
+        "dpr-capped resize"
+      ],
+      "description": "Additive canvas flower-burst of twinkling star streaks blooming from a glowing core.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D",
+        "requestAnimationFrame loop",
+        "ResizeObserver",
+        "seeded rng",
+        "additive compositing",
+        "rotated streak sprites",
+        "twinkle/fade envelope",
+        "devicePixelRatio cap"
+      ]
+    }
   }
 }
