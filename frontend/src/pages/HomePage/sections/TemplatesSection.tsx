@@ -28,7 +28,6 @@ import SplitFuzzyOrbHero from '../../../components/templates/SplitFuzzyOrbHero';
 import SegmintFooter from '../../../components/templates/SegmintFooter';
 import HaosShowcase from '../../../components/templates/HaosShowcase';
 import MentalityHero from '../../../components/templates/MentalityHero';
-import LakeraHero from '../../../components/templates/LakeraHero';
 import InteriorDesignShowcase from '../../../components/templates/InteriorDesignShowcase';
 import LumosHero from '../../../components/templates/LumosHero';
 import LoveAppHero from '../../../components/templates/LoveAppHero';
@@ -37,7 +36,6 @@ import AuCabaretPoster from '../../../components/templates/AuCabaretPoster';
 import DontBeGreedyFooter from '../../../components/templates/DontBeGreedyFooter';
 import PaipaiKuaishou from '../../../components/templates/PaipaiKuaishou';
 import LogoHere from '../../../components/templates/LogoHere';
-import Partify from '../../../components/templates/Partify';
 import SuiOverflow from '../../../components/templates/SuiOverflow';
 import PortfolioClosing from '../../../components/templates/PortfolioClosing';
 import GraphicDesignerPortfolio from '../../../components/templates/GraphicDesignerPortfolio';
@@ -166,7 +164,18 @@ const TemplatesSection = () => {
                                          Priority 1: static image (instant, zero CPU)
                                          Priority 2: live React component (virtualized)
                                          Priority 3: gradient fallback */}
-                                    {template.previewImage ? (
+                                    {template.previewVideo ? (
+                                        <video
+                                            src={template.previewVideo}
+                                            poster={template.previewImage}
+                                            autoPlay
+                                            muted
+                                            loop
+                                            playsInline
+                                            preload="metadata"
+                                            className="w-full h-full object-cover object-top select-none"
+                                        />
+                                    ) : template.previewImage ? (
                                         <img
                                             src={template.previewImage}
                                             alt={`${template.title} preview`}
@@ -190,8 +199,6 @@ const TemplatesSection = () => {
                                         <LazyTemplatePreview bgColor="#020202"><HaosShowcase /></LazyTemplatePreview>
                                     ) : template.id === 'mentality' ? (
                                         <LazyTemplatePreview bgColor="#F0F0F0"><MentalityHero /></LazyTemplatePreview>
-                                    ) : template.id === 'lakera-ai-security' ? (
-                                        <LazyTemplatePreview bgColor="#ffffff"><LakeraHero /></LazyTemplatePreview>
                                     ) : template.id === 'interior-design' ? (
                                         <LazyTemplatePreview bgColor="#ffffff"><InteriorDesignShowcase /></LazyTemplatePreview>
                                     ) : template.id === 'lumos' ? (
@@ -208,8 +215,6 @@ const TemplatesSection = () => {
                                         <LazyTemplatePreview bgColor="#59D1EA"><PaipaiKuaishou /></LazyTemplatePreview>
                                     ) : template.id === 'logo-here' ? (
                                         <LazyTemplatePreview bgColor="#ffffff"><LogoHere /></LazyTemplatePreview>
-                                    ) : template.id === 'partify' ? (
-                                        <LazyTemplatePreview bgColor="#FBFBFB"><Partify /></LazyTemplatePreview>
                                     ) : template.id === 'sui-overflow' ? (
                                         <LazyTemplatePreview bgColor="#F2EFE6"><SuiOverflow /></LazyTemplatePreview>
                                     ) : template.id === 'graphic-designer-portfolio' ? (

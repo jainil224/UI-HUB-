@@ -3,7 +3,6 @@ import splitFuzzyOrbCode from '../components/templates/SplitFuzzyOrbHero.tsx?raw
 import segmint2026Code from '../components/templates/SegmintFooter.tsx?raw';
 import haosTechCode from '../components/templates/HaosShowcase.tsx?raw';
 import mentalityCode from '../components/templates/MentalityHero.tsx?raw';
-import lakeraHeroCode from '../components/templates/LakeraHero.tsx?raw';
 import interiorDesignCode from '../components/templates/InteriorDesignShowcase.tsx?raw';
 import lumosCode from '../components/templates/LumosHero.tsx?raw';
 import loveAppHeroCode from '../components/templates/LoveAppHero.tsx?raw';
@@ -12,7 +11,6 @@ import auCabaretCode from '../components/templates/AuCabaretPoster.tsx?raw';
 import dontBeGreedyCode from '../components/templates/DontBeGreedyFooter.tsx?raw';
 import paipaiCode from '../components/templates/PaipaiKuaishou.tsx?raw';
 import logoHereCode from '../components/templates/LogoHere.tsx?raw';
-import partifyCode from '../components/templates/Partify.tsx?raw';
 import suiOverflowCode from '../components/templates/SuiOverflow.tsx?raw';
 import graphicDesignerPortfolioCode from '../components/templates/GraphicDesignerPortfolio.tsx?raw';
 import portfolioClosingCode from '../components/templates/PortfolioClosing.tsx?raw';
@@ -29,7 +27,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'segmint-2026': segmint2026Code,
     'haos-tech-solutions': haosTechCode,
     'mentality': mentalityCode,
-    'lakera-ai-security': lakeraHeroCode,
     'interior-design': interiorDesignCode,
     'lumos': lumosCode,
     'loveapp-hero': loveAppHeroCode,
@@ -38,7 +35,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'dont-be-greedy': dontBeGreedyCode,
     'paipai-kuaishou': paipaiCode,
     'logo-here': logoHereCode,
-    'partify': partifyCode,
     'sui-overflow': suiOverflowCode,
     'graphic-designer-portfolio': graphicDesignerPortfolioCode,
 };

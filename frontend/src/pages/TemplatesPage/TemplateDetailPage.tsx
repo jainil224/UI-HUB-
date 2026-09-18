@@ -34,7 +34,6 @@ const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Component
     'segmint-2026': () => import('../../components/templates/SegmintFooter'),
     'haos-tech-solutions': () => import('../../components/templates/HaosShowcase'),
     'mentality': () => import('../../components/templates/MentalityHero'),
-    'lakera-ai-security': () => import('../../components/templates/LakeraHero'),
     'interior-design': () => import('../../components/templates/InteriorDesignShowcase'),
     'lumos': () => import('../../components/templates/LumosHero'),
     'loveapp-hero': () => import('../../components/templates/LoveAppHero'),
@@ -43,7 +42,6 @@ const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Component
     'dont-be-greedy': () => import('../../components/templates/DontBeGreedyFooter'),
     'paipai-kuaishou': () => import('../../components/templates/PaipaiKuaishou'),
     'logo-here': () => import('../../components/templates/LogoHere'),
-    'partify': () => import('../../components/templates/Partify'),
     'sui-overflow': () => import('../../components/templates/SuiOverflow'),
     'graphic-designer-portfolio': () => import('../../components/templates/GraphicDesignerPortfolio'),
 };
@@ -57,7 +55,6 @@ const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'segmint-2026': 'bg-[#E8E9EE]',
     'haos-tech-solutions': 'bg-[#020202]',
     'mentality': 'bg-[#F0F0F0]',
-    'lakera-ai-security': 'bg-white',
     'interior-design': 'bg-white',
     'lumos': 'bg-[#F1F1F0]',
     'loveapp-hero': 'bg-[#D8D2F8]',
@@ -66,7 +63,6 @@ const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'dont-be-greedy': 'bg-[#050505]',
     'paipai-kuaishou': 'bg-[#59D1EA]',
     'logo-here': 'bg-white',
-    'partify': 'bg-[#FBFBFB]',
     'sui-overflow': 'bg-[#F2EFE6]',
     'graphic-designer-portfolio': 'bg-[#F7F6F2]',
 };
@@ -136,7 +132,18 @@ const PreviewImageFallback: React.FC<{ id: string }> = ({ id }) => {
     if (!t) return null;
     return (
         <div className="relative w-[1280px] h-[720px] overflow-hidden">
-            {t.previewImage ? (
+            {t.previewVideo ? (
+                <video
+                    src={t.previewVideo}
+                    poster={t.previewImage}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-cover object-top"
+                />
+            ) : t.previewImage ? (
                 <img
                     src={t.previewImage}
                     alt={`${t.title} preview`}

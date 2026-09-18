@@ -27,7 +27,6 @@ const SplitOrbDemoPage = React.lazy(() => import('./pages/Components/SplitOrbDem
 const SegmintDemoPage = React.lazy(() => import('./pages/Components/SegmintDemoPage'));
 const HaosDemoPage = React.lazy(() => import('./pages/Components/HaosDemoPage'));
 const MentalityDemoPage = React.lazy(() => import('./pages/Components/MentalityDemoPage'));
-const LakeraDemoPage = React.lazy(() => import('./pages/Components/LakeraDemoPage'));
 const InteriorDesignDemoPage = React.lazy(() => import('./pages/Components/InteriorDesignDemoPage'));
 const LumosDemoPage = React.lazy(() => import('./pages/Components/LumosDemoPage'));
 const LoveAppDemoPage = React.lazy(() => import('./pages/Components/LoveAppDemoPage'));
@@ -36,7 +35,6 @@ const AuCabaretDemoPage = React.lazy(() => import('./pages/Components/AuCabaretD
 const DontBeGreedyDemoPage = React.lazy(() => import('./pages/Components/DontBeGreedyDemoPage'));
 const PaipaiDemoPage = React.lazy(() => import('./pages/Components/PaipaiDemoPage'));
 const LogoHereDemoPage = React.lazy(() => import('./pages/Components/LogoHereDemoPage'));
-const PartifyDemoPage = React.lazy(() => import('./pages/Components/PartifyDemoPage'));
 const SuiOverflowDemoPage = React.lazy(() => import('./pages/Components/SuiOverflowDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
@@ -144,7 +142,6 @@ const AppShell = () => {
             <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />
             <Route path="/demo/haos-tech-solutions" element={<HaosDemoPage />} />
             <Route path="/demo/mentality" element={<MentalityDemoPage />} />
-            <Route path="/demo/lakera-ai-security" element={<LakeraDemoPage />} />
             <Route path="/demo/interior-design" element={<InteriorDesignDemoPage />} />
             <Route path="/demo/lumos" element={<LumosDemoPage />} />
             <Route path="/demo/loveapp-hero" element={<LoveAppDemoPage />} />
@@ -153,7 +150,6 @@ const AppShell = () => {
             <Route path="/demo/dont-be-greedy" element={<DontBeGreedyDemoPage />} />
             <Route path="/demo/paipai-kuaishou" element={<PaipaiDemoPage />} />
             <Route path="/demo/logo-here" element={<LogoHereDemoPage />} />
-            <Route path="/demo/partify" element={<PartifyDemoPage />} />
             <Route path="/demo/sui-overflow" element={<SuiOverflowDemoPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />

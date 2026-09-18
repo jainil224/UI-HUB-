@@ -351,42 +351,6 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                 </div>
             );
 
-        case 'lakera-ai-security':
-            return (
-                <div className="relative w-full h-full bg-white overflow-hidden flex flex-col justify-between p-4 select-none pointer-events-none text-neutral-900">
-                    {/* Top Minimal Navbar */}
-                    <div className="relative z-10 flex items-center justify-between">
-                        <span className="text-xs font-black tracking-tight text-black">
-                            lakera<span className="text-[#1F4BFF]">.ai</span>
-                        </span>
-                        <span className="text-[8px] font-mono font-bold tracking-wider px-1.5 py-0.5 bg-neutral-100 text-neutral-600 rounded border border-neutral-200">
-                            ENTERPRISE
-                        </span>
-                    </div>
-
-                    {/* Center Slit-Scan Circle Artwork */}
-                    <div className="relative z-10 flex flex-col items-center justify-center my-auto text-center">
-                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-tr from-[#3D5CFF] via-[#00E599] to-[#FFC700] p-0.5 shadow-md flex items-center justify-center">
-                            <div className="w-full h-full rounded-full bg-white flex items-center justify-center">
-                                <Shield size={20} className="text-[#1F4BFF]" />
-                            </div>
-                        </div>
-                        <h4 className="mt-2 text-xs font-black uppercase tracking-tight text-black font-heading">
-                            AI SECURITY HERO
-                        </h4>
-                        <p className="text-[9px] text-neutral-500 max-w-[200px] line-clamp-1 mt-0.5">
-                            Protecting LLMs against prompt injection
-                        </p>
-                    </div>
-
-                    {/* Bottom Logos Indicator */}
-                    <div className="relative z-10 flex items-center justify-between text-[8px] font-mono text-neutral-400 border-t border-neutral-100 pt-1.5">
-                        <span>TRUSTED BY TOP LABS</span>
-                        <span className="text-[#1F4BFF] font-bold">1:1 REPLICA</span>
-                    </div>
-                </div>
-            );
-
         case 'interior-design':
             return (
                 <div className="relative w-full h-full bg-white overflow-hidden flex flex-col justify-between p-4 select-none pointer-events-none text-neutral-900">
@@ -835,46 +799,6 @@ export const TemplatePreview: React.FC<TemplatePreviewProps> = ({ template }) =>
                         <span>company</span>
                         <span>incubator</span>
                         <span>corporation</span>
-                    </div>
-                </div>
-            );
-
-        case 'partify':
-            return (
-                <div className="relative w-full h-full bg-white overflow-hidden flex flex-col justify-between p-3 select-none pointer-events-none border border-[#EAEAEA]">
-                    {/* Top CAD Header Mini */}
-                    <div className="flex items-center justify-between border-b border-[#EAEAEA] pb-1.5">
-                        <div className="flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                            <span className="text-[8px] font-bold tracking-widest text-[#0A0A0A] font-mono uppercase">
-                                PARTIFY // PRECISION
-                            </span>
-                        </div>
-                        <span className="text-[7px] font-mono text-neutral-400">B2B INDUSTRIAL</span>
-                    </div>
-
-                    {/* Middle CAD Wireframe illustration */}
-                    <div className="flex flex-col items-center justify-center my-auto text-center py-1">
-                        <div className="w-10 h-10 rounded-lg border border-[#E5E5E5] bg-[#FAFAFA] flex items-center justify-center mb-1">
-                            <svg viewBox="0 0 24 24" className="w-5 h-5 stroke-[#0A0A0A]" fill="none" strokeWidth="1.2">
-                                <circle cx="6" cy="12" r="1.8" fill="#0A0A0A" />
-                                <circle cx="18" cy="6" r="1.8" fill="#0A0A0A" />
-                                <circle cx="18" cy="18" r="1.8" fill="#0A0A0A" />
-                                <circle cx="12" cy="12" r="2.2" fill="#FFFFFF" stroke="#0A0A0A" strokeWidth="1.2" />
-                                <path d="M6 12H12M12 12V6M12 12V18M12 6H18M12 18H18" stroke="#0A0A0A" strokeWidth="1.2" />
-                            </svg>
-                        </div>
-                        <span className="text-[8px] font-bold text-[#0A0A0A] tracking-wider uppercase">
-                            4-Column Feature Bar
-                        </span>
-                    </div>
-
-                    {/* Bottom 4-col mini bar */}
-                    <div className="grid grid-cols-4 border-t border-[#EAEAEA] pt-1.5 text-[6.5px] font-bold text-[#0A0A0A] font-mono uppercase text-center">
-                        <span className="border-r border-[#EAEAEA]">GET STARTED</span>
-                        <span className="border-r border-[#EAEAEA]">POSSIBILITIES</span>
-                        <span className="border-r border-[#EAEAEA]">QUALITY</span>
-                        <span>FASTER</span>
                     </div>
                 </div>
             );
