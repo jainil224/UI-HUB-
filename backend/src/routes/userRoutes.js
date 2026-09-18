@@ -2,9 +2,11 @@ import express from 'express';
 import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
 import { verifyToken } from '../middleware/auth.js';
 import { checkProStatus, checkEliteStatus, evaluateAiTrial, MAX_FREE_AI_TRIALS } from '../services/userService.js';
-import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail, sendReengagementEmail } from '../utils/sendEmail.js';
+import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail, sendReengagementEmail, sendAnnouncementEmail } from '../utils/sendEmail.js';
 import { getCollection } from '../services/mongoService.js';
 import { logActivity } from '../services/activityLogService.js';
+import { savePushSubscription, broadcastPushNotification, getPushSubscriptions, pushEnabled } from '../services/pushService.js';
+import { getAnnouncementManifest } from '../services/announcementService.js';
 
 const router = express.Router();
 
@@ -270,6 +272,221 @@ router.post('/broadcast-reengagement', async (req, res) => {
         });
     } catch (error) {
         console.error('[BroadcastReengagement] Error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/broadcast-announcement
+ * @desc Send the "New Components" announcement email to all MongoDB users AND
+ *       push a phone notification to every subscribed device.
+ * @access Admin (with secret)
+ */
+router.post('/broadcast-announcement', async (req, res) => {
+    try {
+        const { secret, dryRun = false, customSubject, notifyPush = true, manifest: bodyManifest } = req.body;
+        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
+        if (secret !== testSecret) {
+            return res.status(403).json({ error: 'Forbidden: invalid secret key' });
+        }
+
+        const manifest = bodyManifest || getAnnouncementManifest();
+
+        const usersCol = await getCollection('users');
+        const rawUsers = await usersCol.find({}).toArray();
+
+        // Deduplicate and filter emails
+        const emailMap = new Map();
+        for (const u of rawUsers) {
+            const rawEmail = u.email || (typeof u._id === 'string' && u._id.includes('@') ? u._id : null);
+            if (!rawEmail) continue;
+
+            const email = rawEmail.trim().toLowerCase();
+            if (!email.includes('@') || email.length < 5) continue;
+
+            if (!emailMap.has(email)) {
+                emailMap.set(email, {
+                    email,
+                    name: u.displayName || u.name || (email.split('@')[0] || 'Creator'),
+                    status: u.status || 'FREE',
+                });
+            }
+        }
+
+        const uniqueUsers = Array.from(emailMap.values());
+        const pushSubs = await getPushSubscriptions();
+
+        if (dryRun) {
+            return res.json({
+                success: true,
+                dryRun: true,
+                totalUsers: uniqueUsers.length,
+                recipients: uniqueUsers.map((u) => ({ email: u.email, name: u.name, status: u.status })),
+                push: {
+                    enabled: pushEnabled(),
+                    totalSubscriptions: pushSubs.length,
+                    subscriptions: pushSubs.map((s) => ({
+                        email: s.email,
+                        device: s.device,
+                        platform: s.platform,
+                        lastSeen: s.updatedAt,
+                    })),
+                },
+                manifest: {
+                    latestDropDate: manifest.latestDropDate,
+                    latestDropCount: manifest.latestDropCount,
+                    thirtyDayCount: manifest.thirtyDayCount,
+                    totalComponents: manifest.totalComponents,
+                },
+            });
+        }
+
+        // ---- LIVE BROADCAST ----
+        const stats = {
+            email: { total: uniqueUsers.length, sent: 0, failed: 0, failures: [] },
+            push: null,
+        };
+
+        for (let i = 0; i < uniqueUsers.length; i++) {
+            const user = uniqueUsers[i];
+            try {
+                const sendResult = await sendAnnouncementEmail({
+                    email: user.email,
+                    name: user.name,
+                    manifest,
+                    customSubject,
+                });
+                if (sendResult.success) stats.email.sent++;
+                else {
+                    stats.email.failed++;
+                    stats.email.failures.push({ email: user.email, error: sendResult.error });
+                }
+            } catch (err) {
+                stats.email.failed++;
+                stats.email.failures.push({ email: user.email, error: err.message });
+            }
+
+            if (i < uniqueUsers.length - 1) {
+                await new Promise((r) => setTimeout(r, 600));
+            }
+        }
+
+        if (notifyPush) {
+            const count = manifest.latestDropCount || 1;
+            stats.push = await broadcastPushNotification({
+                title: 'UI HUB',
+                body: `We added ${count} new components 🚀 Tap to see what's new`,
+                icon: '/android-chrome-192x192.png',
+                badge: '/favicon-96x96.png',
+                url: 'https://ui-hub-design.vercel.app/library',
+                data: { kind: 'announcement', from: 'broadcast-announcement' },
+            });
+        }
+
+        res.json({
+            success: true,
+            message: `Broadcast completed. Emails sent ${stats.email.sent}/${stats.email.total}${stats.push ? `, push sent ${stats.push.sent}/${stats.push.total}.` : '.'}`,
+            stats,
+        });
+    } catch (error) {
+        console.error('[BroadcastAnnouncement] Error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/push-subscribe
+ * @desc Register a browser/phone push subscription for the current user
+ * @access Private (with verifyToken)
+ */
+router.post('/push-subscribe', verifyToken, async (req, res) => {
+    try {
+        const { subscription, device, platform } = req.body;
+        if (!subscription?.endpoint) {
+            return res.status(400).json({ error: 'Push subscription is required' });
+        }
+
+        const uid = req.user?.uid;
+        if (!uid) {
+            return res.status(401).json({ error: 'UID missing from token.' });
+        }
+
+        const result = await savePushSubscription({
+            uid,
+            email: req.body.email || req.user?.email || '',
+            subscription,
+            meta: {
+                userAgent: req.get('user-agent') || '',
+                device: device || '',
+                platform: platform || detectPlatform(req.get('user-agent')),
+            },
+        });
+
+        if (result.success) {
+            res.json({ success: true, message: 'Push subscription saved' });
+        } else {
+            res.status(500).json({ success: false, error: result.error });
+        }
+    } catch (error) {
+        console.error('[PushSubscribe] Error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+const detectPlatform = (ua = '') => {
+    if (/Android/i.test(ua)) return 'android';
+    if (/iPhone|iPad|iPod/i.test(ua)) return 'ios';
+    if (/Macintosh|Mac OS X/i.test(ua)) return 'macos';
+    if (/Windows/i.test(ua)) return 'windows';
+    if (/Linux/i.test(ua)) return 'linux';
+    return 'unknown';
+};
+
+/**
+ * @route POST /api/v1/users/push-broadcast
+ * @desc Send a push notification to ALL subscribed devices
+ * @access Admin (with secret)
+ */
+router.post('/push-broadcast', async (req, res) => {
+    try {
+        const { secret, dryRun = false, title, body, url, icon, image, badge } = req.body;
+        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
+        if (secret !== testSecret) {
+            return res.status(403).json({ error: 'Forbidden: invalid secret key' });
+        }
+
+        const subs = await getPushSubscriptions();
+        if (dryRun) {
+            return res.json({
+                success: true,
+                dryRun: true,
+                totalSubscriptions: subs.length,
+                subscriptions: subs.map((s) => ({
+                    email: s.email,
+                    device: s.device,
+                    platform: s.platform,
+                    userAgent: s.userAgent,
+                    lastSeen: s.updatedAt,
+                })),
+            });
+        }
+
+        const stats = await broadcastPushNotification({
+            title: title || 'UI-HUB',
+            body: body || 'New components dropped — come check what’s new!',
+            url: url || 'https://ui-hub-design.vercel.app/library',
+            icon,
+            image,
+            badge,
+        });
+
+        res.json({
+            success: true,
+            message: `Push broadcast completed. Sent ${stats.sent}/${stats.total} notifications.`,
+            stats,
+        });
+    } catch (error) {
+        console.error('[PushBroadcast] Error:', error.message);
         res.status(500).json({ error: error.message });
     }
 });

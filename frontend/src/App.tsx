@@ -60,11 +60,13 @@ const ExportPage = React.lazy(() => import('./pages/Admin/ExportPage'));
 import ScrollToTop from './components/ui/ScrollToTop';
 import FourierFlow from './components/ui/FourierFlow';
 import CookieBanner from './components/ui/CookieBanner';
+import PushNotificationPrompt from './components/ui/PushNotificationPrompt';
 import { CookieConsentProvider } from './context/CookieConsentContext';
 import { SkeletonProvider } from './context/SkeletonContext';
 import { HeroSkeleton } from './components/ui/Skeleton';
 import TopLoader from './components/ui/TopLoader';
 import { triggerBackgroundComponentSync } from './utils/componentSync';
+const PreviewCapturePage = React.lazy(() => import('./pages/PreviewCapturePage/PreviewCapturePage'));
 
 
 // Wrapper: only shows Navbar + Footer on non-library pages
@@ -159,8 +161,9 @@ const AppShell = () => {
             <Route path="/terms" element={<TermsPage />} />
             <Route path="/payment-policy" element={<PaymentPolicyPage />} />
             <Route path="/cookies" element={<CookieSettingsPage />} />
-            <Route path="/templates" element={<TemplatesPage />} />
+<Route path="/templates" element={<TemplatesPage />} />
             <Route path="/templates/:id" element={<TemplateDetailPage />} />
+            <Route path="/preview-capture" element={<PreviewCapturePage />} />
           </Routes>
         </React.Suspense>
       </main>
@@ -172,6 +175,7 @@ const AppShell = () => {
     {!isDemo && !isAdmin && <Navbar />}
     <ScrollToTop />
     <CookieBanner />
+    <PushNotificationPrompt />
     </>
   );
 };

@@ -29,3 +29,16 @@ export const getRazorpayKey = () => {
         keyId: process.env.RAZORPAY_KEY_ID || 'dummy_test_key'
     };
 };
+
+/**
+ * Returns the public Web Push (VAPID) configuration, exposed so the
+ * frontend can subscribe a device without hardcoding keys.
+ * @returns {object}
+ */
+export const getPushConfig = () => {
+    return {
+        enabled: Boolean(process.env.VAPID_PUBLIC_KEY),
+        vapidPublicKey: process.env.VAPID_PUBLIC_KEY || '',
+        subject: process.env.VAPID_SUBJECT || 'mailto:uihub.design@gmail.com',
+    };
+};

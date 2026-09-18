@@ -5,10 +5,12 @@ import {
     sendFreeSubscriptionEmail as sendFreeSubscriptionEmailViaBrevoApi,
     sendProSubscriptionEmail as sendProSubscriptionEmailViaBrevoApi,
     sendReengagementEmail as sendReengagementEmailViaBrevoApi,
+    sendAnnouncementEmail as sendAnnouncementEmailViaBrevoApi,
     buildWelcomeEmailHtml,
     buildFreeSubscriptionEmailHtml,
     buildProSubscriptionEmailHtml,
     buildReengagementEmailHtml,
+    buildAnnouncementEmailHtml,
 } from '../services/brevoService.js';
 import { generatePaymentReceiptPdf } from '../services/receiptService.js';
 
@@ -271,9 +273,56 @@ export async function sendReengagementEmail({
   }
 }
 
+/**
+ * Sends the "New Components" announcement email.
+ * 1. Primary: Brevo HTTP API, 2. Fallback: SMTP.
+ *
+ * @param {Object} params { email, name, manifest, customSubject }
+ */
+export async function sendAnnouncementEmail({
+  email,
+  name,
+  manifest,
+  customSubject,
+}) {
+  // 1. Primary method: Brevo HTTP API
+  const result = await sendAnnouncementEmailViaBrevoApi({
+    email,
+    name,
+    manifest,
+    customSubject,
+  });
+
+  if (result.success) {
+    return result;
+  }
+
+  // 2. Fallback to SMTP
+  console.warn('[EmailService] Brevo HTTP API announcement send unfulfilled, attempting SMTP fallback...');
+  try {
+    const { transporter, fromAddress } = getTransporter();
+    const count = manifest?.latestDropCount || 1;
+    const subject = customSubject || `UI HUB — we added ${count} new components 🚀 Break it down below`;
+    const mailOptions = {
+      from: `"UI HUB" <${fromAddress}>`,
+      to: email,
+      replyTo: 'uihub.design@gmail.com',
+      subject,
+      html: buildAnnouncementEmailHtml({ name: name || 'there', manifest }),
+    };
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[EmailService] ✅ Announcement email sent to ${email} via SMTP fallback — messageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[EmailService] ❌ SMTP fallback for announcement email failed:`, err.message);
+    return result;
+  }
+}
+
 export default {
   sendWelcomeEmail,
   sendFreeSubscriptionEmail,
   sendProSubscriptionEmail,
   sendReengagementEmail,
+  sendAnnouncementEmail,
 };

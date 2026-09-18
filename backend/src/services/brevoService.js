@@ -1,5 +1,8 @@
 import axios from 'axios';
 import { logEmailEvent } from './emailLogService.js';
+import { buildAnnouncementEmailHtml } from '../emailTemplates/announcementEmailTemplate.js';
+
+export { buildAnnouncementEmailHtml };
 
 /**
  * Builds the UI-HUB signature 3-color neo-brutalist strip.
@@ -874,13 +877,76 @@ export async function sendReengagementEmail({
     }
 }
 
+/**
+ * Sends the "New Components" announcement email via Brevo HTTP API (v3).
+ *
+ * @param {Object} params
+ * @param {string} params.email Recipient email address
+ * @param {string} [params.name] Recipient name
+ * @param {Object} [params.manifest] Announcement manifest (auto-derivable stats)
+ * @param {string} [params.customSubject] Optional override subject
+ * @returns {Promise<{success: boolean, messageId?: string, error?: any}>}
+ */
+export async function sendAnnouncementEmail({
+    email,
+    name,
+    manifest = {},
+    customSubject,
+}) {
+    if (!email) return { success: false, error: 'Recipient email is required' };
+
+    const apiKey = process.env.BREVO_API_KEY || process.env.BREVO_SMTP_PASS;
+    const senderEmail = process.env.BREVO_SENDER_EMAIL || process.env.SMTP_FROM || process.env.BREVO_SMTP_USER;
+    const senderName = process.env.BREVO_SENDER_NAME || 'UI-HUB';
+
+    if (!apiKey || !senderEmail) return { success: false, error: 'Brevo credentials missing' };
+
+    const count = manifest.latestDropCount || 1;
+    const subject = customSubject || `UI HUB — we added ${count} new components 🚀 Break it down below`;
+    const frontendUrl = process.env.FRONTEND_URL || 'https://ui-hub-design.vercel.app';
+    const libraryUrl = `${frontendUrl}/library`;
+
+    const payload = {
+        sender: { name: senderName, email: senderEmail },
+        to: [{ email, name: name || 'there' }],
+        replyTo: { email: 'uihub.design@gmail.com', name: 'UI-HUB Support' },
+        subject,
+        htmlContent: buildAnnouncementEmailHtml({ name, manifest, frontendUrl }),
+        textContent: `Hey ${name || 'there'}!\n\nWe added ${count} new components to UI HUB — interactive WebGL backgrounds and more.\n\nUI HUB now has ${manifest.totalComponents || 127}+ components live.\n\nExplore the new additions: ${libraryUrl}\n\n© ${new Date().getFullYear()} UI-HUB`,
+    };
+
+    try {
+        console.log(`[BrevoService] Sending announcement email to: ${email} via HTTP API...`);
+        const response = await axios.post('https://api.brevo.com/v3/smtp/email', payload, {
+            headers: {
+                'api-key': apiKey,
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            timeout: 15000,
+        });
+
+        const messageId = response.data?.messageId || response.data?.messageIds?.[0] || 'sent';
+        console.log(`[BrevoService] ✅ Announcement email sent successfully to ${email} | messageId: ${messageId}`);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'announcement', subject, status: 'sent', messageId });
+        return { success: true, messageId, data: response.data };
+    } catch (error) {
+        const brevoError = error.response?.data || error.message;
+        console.error(`[BrevoService] ❌ Failed to send announcement email to ${email}:`, brevoError);
+        logEmailEvent({ recipientEmail: email, recipientName: name, templateType: 'announcement', subject, status: 'failed', error: brevoError });
+        return { success: false, error: typeof brevoError === 'object' ? JSON.stringify(brevoError) : brevoError };
+    }
+}
+
 export default {
     sendWelcomeEmail,
     sendFreeSubscriptionEmail,
     sendProSubscriptionEmail,
     sendReengagementEmail,
+    sendAnnouncementEmail,
     buildWelcomeEmailHtml,
     buildFreeSubscriptionEmailHtml,
     buildProSubscriptionEmailHtml,
     buildReengagementEmailHtml,
+    buildAnnouncementEmailHtml,
 };

@@ -1,0 +1,75 @@
+{
+  "generatedAt": "2026-09-18T13:27:56.186Z",
+  "asOf": "2026-09-18",
+  "totalComponents": 127,
+  "latestDropDate": "2026-09-18",
+  "latestDropCount": 4,
+  "latestDropByCategory": {
+    "background": 1,
+    "interactive-background": 3
+  },
+  "thirtyDayCount": 73,
+  "thirtyDayCountsByCategory": {
+    "background": 2,
+    "interactive-background": 13,
+    "form": 4,
+    "loader": 9,
+    "image-interaction": 5,
+    "text": 16,
+    "footer": 8,
+    "button": 5,
+    "navbar": 7,
+    "cursor": 4
+  },
+  "featured": [
+    {
+      "id": "reflect-shader",
+      "title": "Reflect Shader",
+      "category": "interactive-background",
+      "categoryLabel": "Interactive Background",
+      "description": "A chromium-refraction WebGL shader field that ripples and glows around your pointer.",
+      "addedAt": "2026-09-18",
+      "thumbUrl": "/assets/component-previews/reflect-shader.png"
+    },
+    {
+      "id": "infinite-tendrils",
+      "title": "Infinite Tendrils",
+      "category": "interactive-background",
+      "categoryLabel": "Interactive Background",
+      "description": "An infinite field of glowing particle tendrils that drift on noise-driven currents and curl toward your pointer.",
+      "addedAt": "2026-09-18",
+      "thumbUrl": "/assets/component-previews/infinite-tendrils.png"
+    },
+    {
+      "id": "ocean-swell",
+      "title": "Ocean Swell",
+      "category": "interactive-background",
+      "categoryLabel": "Interactive Background",
+      "description": "A cinematic ray-marched ocean swell with glittering sun speculars, foam crests, and drag-to-orbit camera.",
+      "addedAt": "2026-09-18",
+      "thumbUrl": "/assets/component-previews/ocean-swell.png"
+    },
+    {
+      "id": "star-burst",
+      "title": "Star Burst",
+      "category": "background",
+      "categoryLabel": "Background",
+      "description": "A radial flower-burst of twinkling star streaks that blooms outward from a glowing core.",
+      "addedAt": "2026-09-18",
+      "thumbUrl": "/assets/component-previews/star-burst.png"
+    }
+  ],
+  "bannerIds": [
+    "gravitational-vortex",
+    "black-hole-3d",
+    "blooming-flower",
+    "chandelier",
+    "spider-web",
+    "twin-galaxy-rings",
+    "tornado",
+    "globe-mesh",
+    "ascii-water",
+    "ocean-swell"
+  ],
+  "bannerImage": "/assets/component-previews/announcement-banner.gif"
+}

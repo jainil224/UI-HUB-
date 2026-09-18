@@ -81,6 +81,10 @@ const BlockDrift = React.lazy(() => import('../components/ui/BlockDrift'));
 const Lightfall = React.lazy(() => import('../components/ui/Lightfall'));
 const AsciiWater = React.lazy(() => import('../components/ui/AsciiWater'));
 const GlobeMesh = React.lazy(() => import('../components/ui/GlobeMesh'));
+const ReflectShader = React.lazy(() => import('../components/ui/ReflectShader'));
+const InfiniteTendrils = React.lazy(() => import('../components/ui/InfiniteTendrils'));
+const OceanSwell = React.lazy(() => import('../components/ui/OceanSwell'));
+const StarBurst = React.lazy(() => import('../components/ui/StarBurst'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
 const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
@@ -6064,6 +6068,55 @@ const CardItem = ({ card, globalMousePos, isParentHovered }: { card: any, global
 
     },
     {
+        id: "star-burst",
+        title: "Star Burst",
+        category: "background",
+        addedAt: "2026-09-18",
+        newBadgeDays: 21,
+        isPremium: false,
+        description: "A radial flower-burst of twinkling star streaks that blooms outward from a glowing core.",
+        preview: () => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <StarBurst
+                    speed={10}
+                    starCount={100}
+                    color="#FFFFFF"
+                    centerX={50}
+                    centerY={100}
+                    starSize={12}
+                    opacity={50}
+                    flowerIntensity={10}
+                    twinkleSpeed={4}
+                />
+            </div>
+        ),
+        code: `import StarBurst from "@/components/ui/StarBurst";
+
+export function StarBurstDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <StarBurst
+        speed={10}
+        starCount={120}
+        color="#FFFFFF"
+        centerX={50}
+        centerY={100}
+        starSize={12}
+        opacity={50}
+        flowerIntensity={10}
+        twinkleSpeed={4}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Star Burst' background in React + TypeScript using a single HTML5 Canvas 2D context (one rAF loop, all live state via refs). A radial flower-burst blooms from a glowing core: starCount spokes (each jittered by a seeded rng) carry 15 pulses per spoke that travel outward along the spoke at per-particle speed, drawn additively (globalCompositeOperation lighter) as rotated streak sprites so they look like star trails fanning into a flower. Each particle twinkles with a sine keyed by twinkleSpeed and phase, fades in the first 6% and out the last 15% of its trip, then respawns behind the core. A radial-gradient center bloom scales with flowerIntensity, starSize, and canvas size. The frame is first blacked out so it sits over any page. Props: speed, starCount, color, centerX, centerY, starSize, opacity, flowerIntensity, twinkleSpeed, style. Canvas uses a ResizeObserver and a devicePixelRatio cap of 2; a static render mode (export/thumbnail) draws 60 frames and stops.",
+    },
+    {
         id: "lines-background",
         title: "Lines Background",
         category: "background",
@@ -7402,6 +7455,125 @@ export function GlobeMeshDemo() {
   );
 }`,
         vibePrompt: COMPONENT_FULL_SOURCES["globe-mesh"],
+    },
+    {
+        id: "reflect-shader",
+        title: "Reflect Shader",
+        category: "interactive-background",
+        addedAt: "2026-09-18",
+        newBadgeDays: 21,
+        isPremium: false,
+        description: "A chromium-refraction WebGL shader field that ripples and glows around your pointer.",
+        preview: () => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <ReflectShader />
+            </div>
+        ),
+        code: `import ReflectShader from "@/components/ui/ReflectShader";
+
+export function ReflectShaderDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <ReflectShader
+        background="#020202"
+        tint="#ffffff"
+        speed={50}
+        brightness={100}
+        thickness={20}
+        chromatic={10}
+        bandGap={20}
+        zoom={295}
+        hover={90}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Reflect Shader' interactive background in React + TypeScript using raw WebGL (single GL context, one rAF loop, all live state via refs, one fullscreen-triangle draw call). A fullscreen GLSL fragment shader renders a chromatic-refraction field: for each RGB channel a loop over a configurable line count integrates an inverse-distance field (lineWidth * i^2 / |d|) into a sum, with the per-channel phase offset set by a chromatic spread so the channels split into RGB refraction bands. The field seamed-scrolls at the band gap, travels with time at a base rate scaled by speed, and each channel is multiplied by a tint color, scaled by brightness intensity, clamped and written premultiplied-alpha over a CSS background color. Hover pulls the sampling UV toward the pointer with exponential smoothing plus an eased hover blend, and a gaussian falloff dome around the pointer raises brightness (glow). Props: background, tint, speed, brightness, thickness, chromatic, bandGap, zoom, hover, style. Canvas uses a ResizeObserver and a devicePixelRatio cap of 2.",
+    },
+    {
+        id: "infinite-tendrils",
+        title: "Infinite Tendrils",
+        category: "interactive-background",
+        addedAt: "2026-09-18",
+        newBadgeDays: 21,
+        isPremium: false,
+        description: "An infinite field of glowing particle tendrils that drift on noise-driven currents and curl toward your pointer.",
+        preview: () => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <InfiniteTendrils colorA="#22d3ee" colorB="#a78bfa" />
+            </div>
+        ),
+        code: `import InfiniteTendrils from "@/components/ui/InfiniteTendrils";
+
+export function InfiniteTendrilsDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <InfiniteTendrils
+        colorA="#22d3ee"
+        colorB="#a78bfa"
+        count={18}
+        scale={14}
+        size={5}
+        trail={20}
+        speed={100}
+        strength={13}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create an 'Infinite Tendrils' interactive background in React + TypeScript using a single HTML5 Canvas 2D context (one rAF loop, all live state via refs). A swarm of motes trace ribbons through a field of angles: each mote's heading is steered by two scrolling value-noise fields (one broad swell, one fine fray octave), so the tendrils curl and fan organically as they travel at per-mote pace, leaving a fading trail via destination-out compositing. Colors are mixed per-mote between colorA and colorB as an rgba gradient that fades in and out at each trail's ends. When followPointer is on, the pointer grips nearby motes: a quadratic falloff within a reach radius bends their heading toward an elliptical swing so tendrils curl around the cursor with eased grip. Props: colorA, colorB, count, scale, size, trail, speed, followPointer, strength, style. Canvas uses a ResizeObserver and a devicePixelRatio cap of 2; the scene clears fully if a frame stalls (tab switch).",
+    },
+    {
+        id: "ocean-swell",
+        title: "Ocean Swell",
+        category: "interactive-background",
+        addedAt: "2026-09-18",
+        newBadgeDays: 21,
+        isPremium: false,
+        description: "A cinematic ray-marched ocean swell with glittering sun speculars, foam crests, and drag-to-orbit camera.",
+        preview: () => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <OceanSwell />
+            </div>
+        ),
+        code: `import OceanSwell from "@/components/ui/OceanSwell";
+
+export function OceanSwellDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <OceanSwell
+        deep="#04222E"
+        shallow="#1E7F86"
+        swell={1}
+        choppy={20}
+        detail={20}
+        glitter={20}
+        subsurface={20}
+        foamAmount={20}
+        cloud={20}
+        speed={5}
+        drag={20}
+        sizePercent={200}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create an 'Ocean Swell' interactive background in React + TypeScript using THREE (WebGLRenderer + ShaderMaterial on a fullscreen 2x2 quad, one rAF loop, all live state via refs). A GLSL ray-marched ocean: seaHeight sums 4 gerstner-style waves for the cheap crest trace and 7 for detail normals, each wave compounding over a 68-step march with adaptive stepping, returning a tHit via gap interpolation. Sky mixes a horizon/zenith gradient with scrolling value-noise cloud decks and layered sun glints; the sea colors per-pixel deep/shallow/scatter bodies with fresnel reflection of the sky, sharp glitter specular (pow exponent ~400-2200), subsurface scattering near crests, and chunky value-noise foam on steep slopes, then fogglows with haze and closes with a filmic tonemap + gamma. The camera orbits slowly and drags with inertia (yaw/pitch velocity decay), clamped to a max pitch. Props: deep, shallow, scatter, foam, zenith, horizon, swell, choppy, detail, glitter, subsurface, foamAmount, cloud, haze, speed, drag, sizePercent, style. Uses ResizeObserver and a devicePixelRatio cap of 1.25.",
     },
     {
         id: "isometric-portal",

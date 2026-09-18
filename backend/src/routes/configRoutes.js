@@ -1,8 +1,17 @@
 import express from 'express';
-import { getFirebaseConfig, getRazorpayKey } from '../services/configService.js';
+import { getFirebaseConfig, getRazorpayKey, getPushConfig } from '../services/configService.js';
 import { configLimiter } from '../middleware/rateLimiters.js';
 
 const router = express.Router();
+
+router.get('/push-vapid', configLimiter, (req, res) => {
+    try {
+        res.json(getPushConfig());
+    } catch (error) {
+        console.error('Error in push config route:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 router.get('/firebase', configLimiter, (req, res) => {
     try {
