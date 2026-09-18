@@ -354,7 +354,6 @@ const templateFileMap = {
   'segmint-2026': ['templates', 'SegmintFooter.tsx'],
   'haos-tech-solutions': ['templates', 'HaosShowcase.tsx'],
   'mentality': ['templates', 'MentalityHero.tsx'],
-  'lakera-ai-security': ['templates', 'LakeraHero.tsx'],
   'interior-design': ['templates', 'InteriorDesignShowcase.tsx'],
   'lumos': ['templates', 'LumosHero.tsx'],
   'loveapp-hero': ['templates', 'LoveAppHero.tsx'],
@@ -363,7 +362,6 @@ const templateFileMap = {
   'dont-be-greedy': ['templates', 'DontBeGreedyFooter.tsx'],
   'paipai-kuaishou': ['templates', 'PaipaiKuaishou.tsx'],
   'logo-here': ['templates', 'LogoHere.tsx'],
-  'partify': ['templates', 'Partify.tsx'],
   'sui-overflow': ['templates', 'SuiOverflow.tsx'],
 };
 const templateSource = {};

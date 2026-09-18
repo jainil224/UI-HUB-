@@ -2,6 +2,7 @@
   {
     "id": "2586-labs",
     "previewImage": "/assets/template-previews/2586 Labs.png",
+    "previewVideo": "/assets/template-previews/2586 Labs.webm",
     "title": "2586 Labs",
     "description": "Minimalist editorial landing page for 2586 Labs featuring an isometric 3D extruded gold slab, blueprint technical guides, floating announcement note, split builder cards, and kinetic curved text.",
     "category": "Agency & Portfolio",
@@ -40,6 +41,7 @@
   {
     "id": "mood-hero",
     "previewImage": "/assets/template-previews/Mood Hero.png",
+    "previewVideo": "/assets/template-previews/Mood Hero.webm",
     "title": "Mood Hero",
     "description": "Playful wellness editorial hero section featuring warm amber sun crest, organic shadow foliage, 3D perspective floor grid, and trio of illustrated cards (Sun, Peace Hand, Sunflower).",
     "category": "Agency & Portfolio",
@@ -78,6 +80,7 @@
   {
     "id": "portfolio-closing",
     "previewImage": "/assets/template-previews/Portfolio Closing .png",
+    "previewVideo": "/assets/template-previews/Portfolio Closing.webm",
     "title": "Portfolio Closing",
     "description": "Editorial portfolio closing and contact footer section with dual mechanical spool reels, ambient parallax, and animated handwritten vector signature.",
     "category": "Agency & Portfolio",
@@ -114,6 +117,7 @@
   {
     "id": "tars-protocol",
     "previewImage": "/assets/template-previews/tars-protocol.png",
+    "previewVideo": "/assets/template-previews/tars-protocol.webm",
     "title": "TARS Protocol Hero & Arena",
     "description": "Perspective amphitheater SVG grid, floating 3D metallic sculpture with keyframe physics, and Solana AI ecosystem hero.",
     "category": "Web3 & FinTech",
@@ -122,7 +126,7 @@
     "styling": "Tailwind CSS",
     "animation": "CSS 3D Float Physics",
     "isPro": false,
-    "liveDemoUrl": "/demo/tars-hero-arena",
+    "liveDemoUrl": "https://ai.studio/apps/38ae773c-b5c7-4703-965d-39cc37a24b0d",
     "githubUrl": "https://github.com/ui-hub/tars-protocol-arena",
     "previewGradient": "from-purple-900/40 via-indigo-950 to-black",
     "accentColor": "#8B42FF",
@@ -149,6 +153,7 @@
   {
     "id": "split-fuzzy-orb",
     "previewImage": "/assets/template-previews/split-fuzzy-orb.png",
+    "previewVideo": "/assets/template-previews/split-fuzzy-orb.webm",
     "title": "Split-Canvas Creative Agency",
     "description": "Single-screen, dual-panel split canvas landing hero with an interactive 3D fuzzy purple torus orb, parallax physics, and minimalist editorial layout.",
     "category": "Agency & Portfolio",
@@ -186,6 +191,7 @@
   {
     "id": "segmint-2026",
     "previewImage": "/assets/template-previews/segmint-2026.png",
+    "previewVideo": "/assets/template-previews/segmint-2026.webm",
     "title": "Segmint 2026",
     "description": "Brutalist Web3 editorial metadata footer component inspired by Swiss brutalism, technical cryptographic ledger interfaces, and retro voxel typography.",
     "category": "Web3 & FinTech",
@@ -194,7 +200,7 @@
     "styling": "Tailwind CSS",
     "animation": "5x5 SVG Voxel Engine",
     "isPro": false,
-    "liveDemoUrl": "/demo/segmint-2026",
+    "liveDemoUrl": "https://ai.studio/apps/9a80d3c2-8e20-4ee8-b3f5-3369bb135264",
     "githubUrl": "https://github.com/ui-hub/segmint-2026",
     "previewGradient": "from-neutral-200 via-[#0755CE]/10 to-neutral-300",
     "accentColor": "#0755CE",
@@ -229,7 +235,7 @@
     "styling": "Tailwind CSS",
     "animation": "Split 3D Volumetric Canvas Bloom",
     "isPro": false,
-    "liveDemoUrl": "/demo/haos-tech-solutions",
+    "liveDemoUrl": "https://ai.studio/apps/5ffe9758-f2b1-4dcb-82e5-ff6e817a3eb0",
     "githubUrl": "https://github.com/ui-hub/haos-tech-solutions",
     "previewGradient": "from-black via-[#061B0B] to-[#98FF68]/30",
     "accentColor": "#98FF68",
@@ -258,6 +264,7 @@
   {
     "id": "mentality",
     "previewImage": "/assets/template-previews/mentality.png",
+    "previewVideo": "/assets/template-previews/mentality.webm",
     "title": "mēntality",
     "description": "Bauhaus-inspired minimalist healthcare & mental wellbeing landing page with technical blueprint geometry, inline SVG glyphs, and interactive AI search.",
     "category": "Agency & Portfolio",
@@ -266,7 +273,7 @@
     "styling": "Tailwind CSS",
     "animation": "Interactive Blueprint SVG Canvas",
     "isPro": false,
-    "liveDemoUrl": "/demo/mentality",
+    "liveDemoUrl": "https://ai.studio/apps/fa09595b-d070-4251-b542-2969c7d52531",
     "githubUrl": "https://github.com/ui-hub/mentality",
     "previewGradient": "from-[#F0F0F0] via-[#E2E2E2] to-[#B7B7B7]/30",
     "accentColor": "#111111",
@@ -293,43 +300,6 @@
     }
   },
   {
-    "id": "lakera-ai-security",
-    "previewImage": "/assets/template-previews/lakera-ai-security.png",
-    "title": "Lakera AI Security Hero",
-    "description": "GenAI security hero with slit-scan volumetric circular core graphic, responsive brand proof trust section, and floating support chat bubble.",
-    "category": "SaaS & AI",
-    "badge": "NEW",
-    "framework": "React 19 (TypeScript)",
-    "styling": "Tailwind CSS",
-    "animation": "Slit-Scan Graphic & Ambient Pulse",
-    "isPro": false,
-    "liveDemoUrl": "/demo/lakera-ai-security",
-    "githubUrl": "https://github.com/ui-hub/lakera-ai-security",
-    "previewGradient": "from-white via-neutral-100 to-neutral-200",
-    "accentColor": "#000000",
-    "stats": {
-      "pages": 1,
-      "rating": 5,
-      "downloads": "4.7k"
-    },
-    "features": [
-      "Clean pure white (#ffffff) enterprise GenAI security hero layout",
-      "Right-side slit-scan circular core graphic with responsive viewport scaling",
-      "Precise vector SVG logos for Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, and Juro",
-      "Elevated negative translation rhythm (-translate-y-3 to -translate-y-6)",
-      "Floating support chat bubble with custom smiling avatar SVG",
-      "Full enterprise navigation header with dropdowns and CTA"
-    ],
-    "promptPreview": "Act as a Principal Design Technologist and Staff Frontend Engineer specializing in Tailwind CSS, React, and high-fidelity enterprise landing pages.\n\nBuild an exact 1:1 pixel-perfect, responsive replica of the Lakera AI Hero landing page. Do not skip any detail. Every font size, weight, tracking value, exact hex color, SVG vector, hover transition, layout grid coordinate, and responsive behavior must match the specification below.\n\n---\n\n### 1. GLOBAL ENVIRONMENT & CONTAINER RULES\n- **Page Canvas**: Pure white background (`#ffffff` / `bg-white`), `min-h-screen text-neutral-900 font-sans antialiased flex flex-col justify-between selection:bg-neutral-900 selection:text-white`.\n- **Horizontal Max Width**: `max-w-[1440px] mx-auto w-full`.\n- **Grid / Padding Math**:\n  - Navbar: `h-[68px] sm:h-[76px] px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20`.\n  - Hero Main: `px-4 xs:px-6 sm:px-10 md:px-14 lg:px-20 pt-2 sm:pt-6 md:pt-8 pb-12 sm:pb-16 md:pb-20`.\n\n### 2. NAVBAR SPECIFICATIONS (HEADER)\n- Brand Logo: `w-[24px] h-[24px] sm:w-[26px] sm:h-[26px] bg-black text-white rounded-[6px]` + \"lakera\" lowercase (`text-[19px] sm:text-[21px] font-black tracking-[-0.04em]`).\n- Desktop Nav: Platform, Solutions, Pricing, Company, Resources with chevrons.\n- Actions: Log in + Book a demo pill button.\n\n### 3. HERO CONTENT & TYPOGRAPHY\n- Eyebrow: `font-mono text-[11px] sm:text-[11.5px] font-medium tracking-[0.18em] text-[#557b97] uppercase`: \"INTRODUCING LAKERA GUARD\".\n- H1 Headline: \"Protect your LLM applications against security threats, instantly.\" (`text-[38px] xs:text-[44px] sm:text-[54px] md:text-[62px] lg:text-[68px] font-normal leading-[1.04] tracking-[-0.04em] text-black font-serif mb-4 sm:mb-6`).\n- Description: \"Lakera Guard empowers organizations to build GenAI applications without worrying about prompt injections, data loss, harmful content, and other LLM risks. Powered by the world’s most advanced AI threat intelligence.\"\n- CTAs: \"Start for free\" (black pill) + \"Book a demo\" (white bordered pill).\n\n### 4. RIGHT-SIDE SLIT-SCAN CIRCULAR OBJECT\n- URL: `https://res.cloudinary.com/chhwhdhk/image/upload/v1788364280/ChatGPT_Image_Sep_2_2026_09_21_07_PM_te7wxd.png`\n\n### 5. TRUSTED BY LOGO SECTION\n- Subtitle: \"Lakera is trusted by leading LLM providers, enterprises, and startups.\"\n- 6 Partner Logos: Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, Juro.\n\n### 6. FLOATING SUPPORT CHAT BUTTON\n- Smiling chat bubble icon in fixed bottom-right corner (`#0d1b2e`).",
-    "toolPrompts": {
-      "cursor": "/* .cursorrules - Lakera AI Security Hero Directive */\nBuild an exact 1:1 pixel-perfect, responsive replica of the Lakera AI Hero landing page in React, TypeScript, and Tailwind CSS.\nInclude:\n1. Navbar: Black 'L' badge + 'lakera' lowercase wordmark, dropdown links (Platform, Solutions, Pricing, Company, Resources), 'Log in', and 'Book a demo'.\n2. Eyebrow: 'INTRODUCING LAKERA GUARD' in font-mono text-[11px] tracking-[0.18em] text-[#557b97].\n3. H1 Headline: 'Protect your LLM applications against security threats, instantly.' in editorial serif display weight.\n4. CTAs: 'Start for free' (black pill) and 'Book a demo' (white pill).\n5. Slit-scan circular portal graphic on right side.\n6. TrustLogos: 6 precision SVG vector logos (Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, Juro).\n7. ChatButton: Floating bottom-right support bubble with custom smiling avatar SVG.",
-      "claude": "You are Claude Code, an elite frontend engineer.\nRebuild the Lakera AI Security Hero:\n- Pinned navbar with lowercase 'lakera' branding and mobile drawer\n- Technical monospace eyebrow 'INTRODUCING LAKERA GUARD'\n- Editorial serif headline 'Protect your LLM applications against security threats, instantly.'\n- Right-side slit-scan iridescent circular graphic\n- TrustLogos brand proof section and floating smiling chat bubble",
-      "antigravity": "ANTIGRAVITY DIRECTIVE: LAKERA AI SECURITY HERO\nTokens & Layout:\n- Background: #FFFFFF\n- Display Font: Serif display with tracking-[-0.04em] and leading-[1.04]\n- Eyebrow: font-mono text-[#557b97] tracking-[0.18em]\n- Hero graphic: Slit-scan portal on right side (max-w-[1600px] desktop, max-w-[500px] mobile)\n- Brand Proof: Exact SVG vectors for Cohere, Nexxiot, DEKRA, ANYbotics, Protex AI, Juro",
-      "lovable": "Create the Lakera AI Security Hero landing page in React, TypeScript, and Tailwind CSS with 'lakera' navbar, 'INTRODUCING LAKERA GUARD' eyebrow, serif H1 headline, right-side slit-scan graphic, TrustLogos partner bar, and floating chat button.",
-      "advance": "TECHNICAL SPECIFICATION: LAKERA AI SECURITY HERO\n1. Typography: font-serif H1 leading-[1.04] tracking-[-0.04em] text-[38px] to text-[68px]; font-mono eyebrow text-[#557b97] tracking-[0.18em].\n2. Brand SVGs: Cohere circle centroid, Nexxiot twin arrowheads, DEKRA strokeWidth=2.6 triangle, ANYbotics monogram, Protex AI badge.\n3. Slit-Scan Alignment: absolute top-[65px] to top-[120px] right-[-12%] to right-[-4%] max-h-[1200px]."
-    }
-  },
-  {
     "id": "interior-design",
     "previewImage": "/assets/template-previews/interior-design.png",
     "title": "Interior Design Showcase",
@@ -340,7 +310,7 @@
     "styling": "Tailwind CSS",
     "animation": "Micro-Interactions & Hover Glow",
     "isPro": false,
-    "liveDemoUrl": "/demo/interior-design",
+    "liveDemoUrl": "https://ai.studio/apps/ead4995c-e596-4470-819c-648e76474423",
     "githubUrl": "https://github.com/ui-hub/interior-design",
     "previewGradient": "from-white via-[#B2C951]/20 to-[#EEEEEE]",
     "accentColor": "#B2C951",
@@ -377,7 +347,7 @@
     "styling": "Tailwind CSS",
     "animation": "3D Parallax & Micro-interactions",
     "isPro": false,
-    "liveDemoUrl": "/demo/lumos",
+    "liveDemoUrl": "https://ai.studio/apps/38c82aca-9711-49c6-a9f2-5177adb44886",
     "githubUrl": "https://github.com/ui-hub/lumos-hero",
     "previewGradient": "from-neutral-300 via-neutral-100 to-white",
     "accentColor": "#F54D92",
@@ -652,42 +622,6 @@
       "antigravity": "ANTIGRAVITY DIRECTIVE: SUI OVERFLOW 2025 HERO SECTION\nObjective: Build a pixel-perfect Swiss typographic split hero section in React, TypeScript, and Tailwind CSS.\nKey Specifications:\n- Palette: #F2EFE6 (Sand), #07182A (Obsidian Navy), #4798FF (Sui Blue), #66AFFF (Grid)\n- Texture: feTurbulence fractalNoise paper grain at 3.5% opacity\n- Left: 3-line H1, date, and 2-segment sharp-cornered split Register button\n- Right: Technical blueprint grid with 47px spacing and floating 3D sticker composition",
       "lovable": "Create the Sui Overflow 2025 hero section in React and Tailwind CSS featuring a warm sand background (#F2EFE6), 3-line extra-bold typography in deep navy (#07182A), a custom split Register button with technical dotted arrow, and a right-column blueprint grid with 3D sticker graphics.",
       "advance": "MATHEMATICAL & TECHNICAL SPECIFICATION: SUI OVERFLOW\n1. Layout Geometry: Left column 52-55% text stage; right column 45-48% technical blueprint stage with border-l #66AFFF.\n2. Grid Dimensions: 47px x 47px linear-gradient cells on desktop, 40px on mobile.\n3. Typography Math: tracking-[-0.042em], leading-[0.89], 800 weight in Plus Jakarta Sans.\n4. Custom SVG Arrow: corner arrow d=\"M7 3.5H14.5V11\" stroke=\"#07182A\" strokeWidth=\"2.4\", dotted trail rects at (10.5,6.5), (7,10), (3.5,13.5)."
-    }
-  },
-  {
-    "id": "partify",
-    "previewImage": "/assets/template-previews/Partify.png",
-    "title": "Partify",
-    "description": "Pixel-accurate, responsive 4-column industrial B2B bottom feature bar and footer component with CAD schematic vector icons and interactive micro-animations.",
-    "category": "SaaS & AI",
-    "badge": "NEW",
-    "framework": "React 19 (TypeScript)",
-    "styling": "Tailwind CSS",
-    "animation": "Micro-interactions + CAD Vectors",
-    "isPro": false,
-    "liveDemoUrl": "https://ai.studio/apps/1532c87b-a2a0-428b-b4ae-1da5785e4489",
-    "githubUrl": "https://github.com/ui-hub/partify-footer",
-    "previewGradient": "from-[#FFFFFF] via-[#FAFAFA] to-[#EAEAEA]",
-    "accentColor": "#0A0A0A",
-    "stats": {
-      "pages": 1,
-      "rating": 5,
-      "downloads": "2.1k"
-    },
-    "features": [
-      "Responsive 4-column B2B industrial feature bar / footer",
-      "Pixel-accurate CAD schematic vector icons with dashed reference frames",
-      "Micro-animations with smooth background transitions and interactive chevrons",
-      "Adaptive grid layout: 1-col mobile, 2x2 tablet, 4-col desktop",
-      "Clean geometric typography using Plus Jakarta Sans"
-    ],
-    "promptPreview": "Role & Task:\nYou are an expert Frontend Engineer and UI/UX Designer. Build an exact, pixel-accurate reproduction of the Partify industrial technology bottom feature bar / footer component using React 18+, TypeScript, and Tailwind CSS. Adhere strictly to the design system specifications, animations, layout metrics, and vector drawings outlined below.\n\n================================================================================\n1. DESIGN SYSTEM & COLOR SPECIFICATIONS\n================================================================================\n- Surface Color (Card/Footer): #FFFFFF (Pure White)\n- Primary Border & Divider Color: #EAEAEA\n- Subtle Icon Badge Border: #E5E5E5\n- Icon Border on Hover: #CCCCCC\n- Card Hover Background: #FAFAFA\n- Primary Text & Headings: #0A0A0A\n- Secondary / Description Text: #707070\n- Subtle Chevron Accent Color: #555555\n- Primary Button Fill: #0A0A0A (Hover: #262626 / neutral-800)\n- Primary Button Text: #FFFFFF\n- Typography Family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif\n\n================================================================================\n2. CONTAINER & RESPONSIVE GRID LAYOUT\n================================================================================\n- Outer Wrapper: Full-width footer (`w-full bg-white border-t border-[#EAEAEA]`).\n- Inner Content Boundary: `max-w-7xl mx-auto`.\n- Responsive Grid Breakdown:\n  * Mobile (<640px): 1 column stack (`grid-cols-1`). Each cell is separated by a 1px solid bottom divider (`border-b border-[#EAEAEA]`).\n  * Tablet (640px to 1023px): 2x2 grid (`sm:grid-cols-2`). Col 1 has bottom & right borders; Col 2 has bottom border; Col 3 has right border; Col 4 has no inner borders.\n  * Desktop (>=1024px): 4 columns in a single horizontal row (`lg:grid-cols-4`). Cols 1, 2, and 3 have 1px right dividers (`lg:border-r border-[#EAEAEA]`); all bottom borders are removed (`lg:border-b-0`).\n- Padding:\n  * Mobile/Tablet: `p-3.5 sm:p-4` (approx 14px to 16px).\n  * Desktop: `p-4` (16px).\n\n================================================================================\n3. COMPONENT BREAKDOWN & EXACT MEASUREMENTS\n================================================================================\n\n--- [COLUMN 1: GET STARTED CTA] ---\n- Placement: Centered horizontally and vertically (`flex items-center justify-center`).\n- Button Element:\n  * Shape: Full pill (`rounded-full`).\n  * Size:\n    - Mobile (<640px): Width 120px, Height 32px (`w-[120px] h-[32px]`).\n    - Tablet / Desktop (>=640px): Width 112px, Height 30px (`sm:w-[112px] sm:h-[30px]`).\n  * Colors: Background `#0A0A0A`, Text `#FFFFFF`.\n  * Typography:\n    - Font size: `10px` on mobile, `9.5px` on tablet/desktop.\n    - Weight: `700` (Bold).\n    - Tracking: `0.08em` (`tracking-[0.08em]`).\n    - Transform: All Caps (`uppercase`).\n  * Shadow: `shadow-[0_1px_3px_rgba(0,0,0,0.12)]`.\n  * Interactions & Animations:\n    - Hover: Background changes to `neutral-800` (`hover:bg-neutral-800`).\n    - Click / Active: Scale down to 95% (`active:scale-95 transition-all`).\n    - Cursor: `cursor-pointer`.\n\n--- [COLUMN 2: FEATURE CARD 1 - A WORLD OF POSSIBILITIES] ---\n- Layout: Horizontal flex row (`flex items-center gap-3`).\n- Icon Badge:\n  * Dimensions: Fixed 36px x 36px (`w-9 h-9 shrink-0`).\n  * Shape: Rounded square with 8px radius (`rounded-[8px]`).\n  * Background: `#FFFFFF`.\n  * Border: 1px solid `#E5E5E5`.\n  * Shadow: `shadow-[0_1px_2px_rgba(0,0,0,0.02)]`.\n  * CAD SVG Icon:\n    - ViewBox: `0 0 24 24`, stroke width `1.2`, stroke `#0A0A0A`.\n    - Graphics: Orthogonal 3-axis manufacturing manifold with 4 circular connection nodes (`r=1.8` and center hollow node `r=2.2`), connecting line segments, and a subtle dashed outer guide frame (`stroke=\"#E5E5E5\"` with `strokeDasharray=\"2 2\"`).\n- Text Column:\n  * Heading: `A WORLD OF POSSIBILITIES >`\n    - Font size: `8.5px` (desktop), `9px` (tablet).\n    - Weight: `700` (Bold).\n    - Color: `#0A0A0A`.\n    - Tracking: `0.05em`.\n    - Transform: `uppercase`.\n    - Chevron `>`: Font size `7.5px`, color `#555555`.\n  * Subtitle: `Discover our advanced manufacturing materials and technologies.`\n    - Font size: `7.5px` (desktop), `8px` (tablet).\n    - Weight: `400` (Regular).\n    - Line height: `1.35`.\n    - Color: `#707070`.\n    - Max width: `220px`.\n- Card Hover Animation:\n  * Background transitions smoothly to `#FAFAFA` (`hover:bg-[#FAFAFA] transition-colors`).\n  * Icon badge border darkens to `#CCCCCC` (`group-hover:border-[#CCCCCC]`).\n  * Chevron icon shifts 2px to the right (`group-hover:translate-x-0.5 transition-transform`).\n\n--- [COLUMN 3: FEATURE CARD 2 - QUALITY THAT YOU CAN TRUST] ---\n- Layout: Horizontal flex row (`flex items-center gap-3`).\n- Icon Badge: 36px x 36px (`w-9 h-9 shrink-0`), `rounded-[8px]`, `#E5E5E5` border, `#FFFFFF` background.\n- CAD SVG Icon:\n  * ViewBox: `0 0 24 24`, stroke width `1.2`, stroke `#0A0A0A`.\n  * Graphics: Industrial precision caliper / tolerance gauge. Features a 45-degree diagonal measurement track (`M5 19L19 5`), two end measurement nodes (`r=1.8`), center circular dial (`r=2.2`), crosshair alignment ticks (`M12 9V15M9 12H15`), and dashed CAD boundary square.\n- Text Column:\n  * Heading: `QUALITY THAT YOU CAN TRUST >` (same font specs, weight 700, 8.5px/9px, tracking 0.05em, uppercase).\n  * Subtitle: `Explore our industrial-grade parts and advanced specification options.` (weight 400, 7.5px/8px, color #707070, leading 1.35, max-w-[220px]).\n- Card Hover Animation: Same `#FAFAFA` background shift, icon border transition, and chevron translation.\n\n--- [COLUMN 4: FEATURE CARD 3 - GET YOUR PARTS FASTER] ---\n- Layout: Horizontal flex row (`flex items-center gap-3`).\n- Icon Badge: 36px x 36px (`w-9 h-9 shrink-0`), `rounded-[8px]`, `#E5E5E5` border, `#FFFFFF` background.\n- CAD SVG Icon:\n  * ViewBox: `0 0 24 24`, stroke width `1.2`, stroke `#0A0A0A`.\n  * Graphics: Rapid dispatch node schematic. Features angled branch routes (`M6 18L12 12L18 6` and `M12 12L18 18`), 4 black destination nodes, and dashed CAD guideline box.\n- Text Column:\n  * Heading: `GET YOUR PARTS FASTER >` (same font specs, weight 700, 8.5px/9px, tracking 0.05em, uppercase).\n  * Subtitle: `Industrial-grade parts, fast delivery: 6 business days max.` (weight 400, 7.5px/8px, color #707070, leading 1.35, max-w-[220px]).\n- Card Hover Animation: Same `#FAFAFA` background shift, icon border transition, and chevron translation.",
-    "toolPrompts": {
-      "cursor": "Create an exact, pixel-accurate reproduction of the Partify industrial B2B bottom feature bar / footer component using React, TypeScript, and Tailwind CSS.\nInclude:\n1. Container: Full-width #FFFFFF footer with top border #EAEAEA, max-w-7xl container, responsive grid (1-col mobile with bottom dividers, 2x2 tablet with orthogonal dividers, 4-col desktop with right dividers).\n2. Column 1: Rounded-full solid black (#0A0A0A) \"GET STARTED\" button (112px x 30px desktop, 120px x 32px mobile) with uppercase 9.5px bold typography and active:scale-95 click feedback.\n3. Column 2: \"A WORLD OF POSSIBILITIES\" with 36x36 rounded-[8px] CAD orthogonal connector SVG icon, bold 8.5px uppercase title with translating chevron '>', and #707070 description.\n4. Column 3: \"QUALITY THAT YOU CAN TRUST\" with caliper / tolerance dial CAD SVG icon and specs subtitle.\n5. Column 4: \"GET YOUR PARTS FASTER\" with rapid dispatch node schematic CAD SVG icon.\nCard hover: smooth #FAFAFA background shift, icon border shifts to #CCCCCC, and chevron translates +2px.",
-      "claude": "You are Claude Code, an expert design technologist.\nBuild the Partify industrial B2B bottom feature bar / footer in React, TypeScript, and Tailwind CSS:\n- Full-width white surface with #EAEAEA borders and max-w-7xl inner container\n- Responsive grid: 1-col on mobile, 2x2 on tablet (sm), 4-col horizontal bar on desktop (lg)\n- Column 1: Centered pill button \"GET STARTED\" in solid #0A0A0A with tracking-[0.08em]\n- Columns 2-4: Three feature cards with 36x36px white rounded icon badges (#E5E5E5 border) containing custom CAD SVG schematics\n- Hover states: #FAFAFA card background, #CCCCCC icon border, chevron micro-shift\n- Clean geometric typography ('Plus Jakarta Sans') with high-contrast text tokens",
-      "antigravity": "ANTIGRAVITY DIRECTIVE: PARTIFY INDUSTRIAL B2B FEATURE BAR\nObjective: Build a pixel-accurate 4-column industrial B2B bottom feature bar / footer component in React, TypeScript, and Tailwind CSS.\nKey Specifications:\n- Layout: 4 columns (lg:grid-cols-4), 2x2 tablet (sm:grid-cols-2), 1-col mobile (grid-cols-1)\n- Dividers: #EAEAEA 1px solid borders matching layout responsive grid\n- Col 1: Full pill button (#0A0A0A, text-white, tracking-[0.08em], uppercase)\n- Col 2: \"A WORLD OF POSSIBILITIES\" + 3-way orthogonal CAD SVG icon\n- Col 3: \"QUALITY THAT YOU CAN TRUST\" + caliper dial CAD SVG icon\n- Col 4: \"GET YOUR PARTS FASTER\" + dispatch node CAD SVG icon\n- Hover: transition to #FAFAFA, icon border to #CCCCCC, chevron translateX(+2px)",
-      "lovable": "Create the Partify 4-column industrial B2B feature bar and footer in React, TypeScript, and Tailwind CSS with pure white background, #EAEAEA dividers, GET STARTED pill button, 3 CAD schematic SVG icons, and hover animations with chevron translation.",
-      "advance": "MATHEMATICAL & TECHNICAL SPECIFICATION: PARTIFY FEATURE BAR\n1. Grid Architecture:\n   - Mobile: grid-cols-1 with border-b #EAEAEA per cell.\n   - Tablet (640-1023px): sm:grid-cols-2 with bottom & right interior borders.\n   - Desktop (>=1024px): lg:grid-cols-4 with lg:border-r on cols 1-3, lg:border-b-0.\n2. CAD SVG Math:\n   - 3-Way Connector: ViewBox 0 0 24 24, stroke 1.2, nodes cx=6/18 cy=12/18 r=1.8, center hollow r=2.2.\n   - Caliper Gauge: Diagonal track M5 19L19 5, dial center cx=12 cy=12 r=2.2, crosshair ticks.\n   - Dispatch Schematic: Angled branches M6 18L12 12L18 6 & M12 12L18 18, 4 destination nodes."
     }
   }
 ]
