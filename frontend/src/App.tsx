@@ -36,6 +36,7 @@ const DontBeGreedyDemoPage = React.lazy(() => import('./pages/Components/DontBeG
 const PaipaiDemoPage = React.lazy(() => import('./pages/Components/PaipaiDemoPage'));
 const LogoHereDemoPage = React.lazy(() => import('./pages/Components/LogoHereDemoPage'));
 const SuiOverflowDemoPage = React.lazy(() => import('./pages/Components/SuiOverflowDemoPage'));
+const SkyDemoPage = React.lazy(() => import('./pages/Components/SkyDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
 const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
@@ -151,6 +152,7 @@ const AppShell = () => {
             <Route path="/demo/paipai-kuaishou" element={<PaipaiDemoPage />} />
             <Route path="/demo/logo-here" element={<LogoHereDemoPage />} />
             <Route path="/demo/sui-overflow" element={<SuiOverflowDemoPage />} />
+            <Route path="/demo/sky" element={<SkyDemoPage />} />
             <Route path="/demo/:id" element={<DemoPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/privacy" element={<PrivacyPolicyPage />} />

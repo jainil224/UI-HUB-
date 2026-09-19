@@ -7634,21 +7634,44 @@ export function FrostGlassMeltDemo() {
                 )}
             </div>
         ),
-        code: `import Sky from "@/components/ui/Sky";
+        code: `import { useState } from "react";
+import Sky, { PaletteId } from "@/components/ui/Sky";
 
 export function SkyDemo() {
-  return (
-    <div className="relative h-screen w-full overflow-hidden">
-      <Sky palette="dusk" />
+  const [palette, setPalette] = useState<PaletteId>("dusk");
 
-      {/* Your content on top */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <h1 className="text-4xl font-bold text-white">Your Content</h1>
-      </div>
-    </div>
+  return (
+    <main id="sky-background-section" className="relative w-full h-screen min-h-[380px] overflow-hidden">
+      <Sky palette={palette} />
+
+      {/* Floating Glassmorphic Palette Selector */}
+      <nav
+        aria-label="Palette selection"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 p-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/15 shadow-xl"
+      >
+        {(["day", "dusk", "night"] as const).map((p) => {
+          const isActive = palette === p;
+          return (
+            <button
+              key={p}
+              id={\`palette-btn-\${p}\`}
+              type="button"
+              onClick={() => setPalette(p)}
+              className={\`px-3.5 py-1 text-xs font-medium tracking-wide uppercase rounded-full transition-all duration-200 cursor-pointer \${
+                isActive
+                  ? "bg-white text-slate-900 shadow-sm font-semibold"
+                  : "text-white/75 hover:text-white hover:bg-white/10"
+              }\`}
+            >
+              {p}
+            </button>
+          );
+        })}
+      </nav>
+    </main>
   );
 }`,
-        vibePrompt: "Create a 'Sky' interactive background in React + TypeScript using a single fullscreen Canvas 2D context, one rAF loop, and all live state via refs (zero dependencies). A tranquil sky fills the container: a vertical gradient horizon chosen from three palettes (day / dusk / night), a warm sun or pale moon rendered from a cached radial-glow sprite (offscreen canvas with a hot white core, drawn additively with 'lighter' compositing), a seeded field of twinkling stars in the upper sky (per-star phase/twinkle-speed/alpha driven by a seeded rng and a flattened sine so the sky glimmers), and soft cumulus clouds pre-baked into offscreen puff sprites (overlapping radial-gradient blobs tinted per palette) that drift downwind at per-cloud speed/scale/alpha and wrap around the edges. The pointer parallax eases the cloud, star and glow layers at different depths: the normalized pointer tracks a lerped offset against a cached container rect from window pointermove, clouds shift the most (scaled), stars about a third, and the orb glow barely moves. Props: palette, stars, starCount, twinkleSpeed, clouds, cloudCount, cloudSpeed, parallax, parallaxStrength, seed, style. Uses ResizeObserver, a devicePixelRatio cap of 2 (1.5 on very large canvases), IntersectionObserver parking when out of view, prefers-reduced-motion support (renders a static frame with zero parallax), and pointer-events none on the decorative canvas so content above stays clickable.",
+        vibePrompt: "Create a 'Sky' interactive background in React + TypeScript using a single fullscreen Canvas 2D context (zero dependencies). A full-bleed atmospheric sky renders a multi-stop vertical gradient horizon from three palettes — day (0% #2E6FD8, 45% #6FB8F5, 75% #BDE7FF, 100% #EAF8FF, warm orb RGB[255,234,168] a=0.95 at 72%/28%, starAlpha 0.12, white cloud tint), dusk (0% #1F2B4E, 40% #5B4A8A, 68% #C96E8F, 86% #F5A966, 100% #FFE0B0, orb RGB[255,204,148] a=0.92 at 64%/64%, starAlpha 0.8, warm cloud tint) and night (0% #04060D, 50% #0B1330, 100% #16264A, moon RGB[228,240,255] a=0.90 at 32%/28%, starAlpha 1, cool cloud tint). The celestial orb is a cached 560x560 offscreen sprite (hot white core disc + multi-ring radial falloff to transparent); clouds are cached 480x220 sprites of 8-12 overlapping radial-gradient puffs tinted per palette. A seeded PRNG (mulberry32-style imul hash) lays out 130 stars at Math.pow(rng,1.3)*0.85 (high-altitude concentration) twinkling with 0.35 + 0.65 * max(0, sin(time * twinkleSpeed * 0.4 * speed + phase)), plus faint halos on bright stars. Clouds drift at dt * cloud.speed * (cloudSpeed*2.5 + 6), self-wrap at width + w, and draw a mirrored copy when overflowing the right edge. Parallax clamps the normalized pointer target to [-1,1] against the container center and eases with exponential lerp (1 - exp(-4*dt)) at layer depths stars 0.2x / orb 0.45x / clouds (0.5 + depth*0.7)x. Assets are single-sourced strings/types: COMPONENT_DEFAULTS, SKY_PALETTES, PaletteId, SkyProps. Respects ResizeObserver + setTransform(dpr) reset (DPR cap 2, or 1.5 when width >1920), re-homes clouds past width*1.5, pauses via IntersectionObserver, and prefers-reduced-motion renders one static zero-parallax frame. Wrapper holds an aria-labelled pointer-events-none canvas. A floating glassmorphic pill (absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/35 backdrop-blur-md border-white/15) switches palettes live with active/inactive pill styles. Props: palette, stars, starCount, twinkleSpeed, clouds, cloudCount, cloudSpeed, parallax, parallaxStrength, seed, style, className.",
     },
     {
         id: "isometric-portal",
