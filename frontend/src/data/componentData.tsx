@@ -86,6 +86,7 @@ const InfiniteTendrils = React.lazy(() => import('../components/ui/InfiniteTendr
 const OceanSwell = React.lazy(() => import('../components/ui/OceanSwell'));
 const FrostGlassMelt = React.lazy(() => import('../components/ui/FrostGlassMelt'));
 const StarBurst = React.lazy(() => import('../components/ui/StarBurst'));
+const Sky = React.lazy(() => import('../components/ui/Sky'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
 const GearSystem = React.lazy(() => import('../components/ui/GearSystem'));
@@ -7614,6 +7615,40 @@ export function FrostGlassMeltDemo() {
   );
 }`,
         vibePrompt: "Create a 'Frost Glass Melt' interactive background in React + TypeScript using a single fullscreen Canvas 2D context, one rAF loop, and all live state via refs (zero dependencies). A pane of frost covers an animated winter scene behind the glass: a soft radial gradient backdrop plus drifting snow motes (per-mote speed/size/phase drift with sine sway and edge wrap). The custom pointer is warmth — while the pointer rests over the pane it radiates heat into a per-cell buffer (inverse-square falloff on a 3x3 diffusive heat field that decays over time), which drives frost levels down to reveal the scene; clicking banks a burst of heat 1.4x the reach. When idle the frost slowly re-freezes (rate scaled by remaining heat) so the pane self-heals. Frost is rendered as a grid of cells whose alpha per cell is modulated by a twinkling value-noise grain so the crystals shimmer. Props: background, frost, scene, cell, meltRadius, meltSpeed, refreezeSpeed, drift, twinkle, style. Uses ResizeObserver, a devicePixelRatio cap of 2, prefers-reduced-motion support (renders a single static frosted frame), and touch-action none.",
+    },
+    {
+        id: "sky",
+        title: "Sky",
+        category: "interactive-background",
+        addedAt: "2026-09-19",
+        newBadgeDays: 21,
+        isPremium: false,
+        description: "A serene animated sky with a glowing sun or moon, twinkling stars and drifting cumulus clouds that wrap around the edges. The pointer eases a parallax between the cloud, star and glow layers. Pure Canvas 2D, zero dependencies.",
+        preview: (props?: any) => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <Sky palette="dusk" />
+                {props?.showDemoButton !== false && (
+                    <a href="/demo/sky" className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-5 py-2 rounded-full bg-white/10 text-white text-[11px] font-bold uppercase tracking-widest border border-white/20 backdrop-blur-xl hover:bg-white/20 transition-colors">
+                        View Full Demo
+                    </a>
+                )}
+            </div>
+        ),
+        code: `import Sky from "@/components/ui/Sky";
+
+export function SkyDemo() {
+  return (
+    <div className="relative h-screen w-full overflow-hidden">
+      <Sky palette="dusk" />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Sky' interactive background in React + TypeScript using a single fullscreen Canvas 2D context, one rAF loop, and all live state via refs (zero dependencies). A tranquil sky fills the container: a vertical gradient horizon chosen from three palettes (day / dusk / night), a warm sun or pale moon rendered from a cached radial-glow sprite (offscreen canvas with a hot white core, drawn additively with 'lighter' compositing), a seeded field of twinkling stars in the upper sky (per-star phase/twinkle-speed/alpha driven by a seeded rng and a flattened sine so the sky glimmers), and soft cumulus clouds pre-baked into offscreen puff sprites (overlapping radial-gradient blobs tinted per palette) that drift downwind at per-cloud speed/scale/alpha and wrap around the edges. The pointer parallax eases the cloud, star and glow layers at different depths: the normalized pointer tracks a lerped offset against a cached container rect from window pointermove, clouds shift the most (scaled), stars about a third, and the orb glow barely moves. Props: palette, stars, starCount, twinkleSpeed, clouds, cloudCount, cloudSpeed, parallax, parallaxStrength, seed, style. Uses ResizeObserver, a devicePixelRatio cap of 2 (1.5 on very large canvases), IntersectionObserver parking when out of view, prefers-reduced-motion support (renders a static frame with zero parallax), and pointer-events none on the decorative canvas so content above stays clickable.",
     },
     {
         id: "isometric-portal",

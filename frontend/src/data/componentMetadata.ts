@@ -1143,6 +1143,29 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react"],
             requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "seeded rng", "additive compositing", "rotated streak sprites", "twinkle/fade envelope", "devicePixelRatio cap"]
         }
+    },
+    "sky": {
+        props: [
+            { name: "palette", type: '"day" | "dusk" | "night"', default: '"dusk"', description: "Colour mood of the sky: day (bright blue, faint stars), dusk (violet + orange horizon, visible stars), night (deep navy, bright stars)." },
+            { name: "stars", type: "boolean", default: "true", description: "Whether twinkling stars render in the upper sky." },
+            { name: "starCount", type: "number", default: "130", description: "Number of stars (0-400)." },
+            { name: "twinkleSpeed", type: "number", default: "6", description: "Star twinkle rate 0-20." },
+            { name: "clouds", type: "boolean", default: "true", description: "Whether drifting cumulus clouds render." },
+            { name: "cloudCount", type: "number", default: "5", description: "Number of clouds (0-12)." },
+            { name: "cloudSpeed", type: "number", default: "8", description: "Downwind cloud drift speed 0-20." },
+            { name: "parallax", type: "boolean", default: "true", description: "Whether the pointer eases a parallax between layers." },
+            { name: "parallaxStrength", type: "number", default: "16", description: "Parallax offset strength in px 0-80." },
+            { name: "seed", type: "number", default: "1", description: "Seed for reproducible star/cloud placement." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Optional outer wrapper style override." }
+        ],
+        vibeMeta: {
+            behavior: "A tranquil Canvas 2D sky: a vertical gradient horizon (day / dusk / night palettes), a warm sun or pale moon drawn additively from a cached radial-glow orb sprite with a hot white core, a seeded field of twinkling stars in the upper sky (flattened sine envelope), and cumulus clouds pre-baked into offscreen puff sprites that drift downwind, wrap around the edges, and composite additively per cloud. A lerped normalized pointer (window pointermove against a cached container rect) eases a parallax: clouds shift by scale-dependent strength, stars about a third, the orb glow barely moves. DPR-capped at 2 (1.5 on very large canvases), IntersectionObserver parks the loop out of view, and prefers-reduced-motion renders a static frame with zero parallax. The decorative canvas is pointer-events none so content above stays clickable.",
+            states: { from: "calm gradient horizon with drifting clouds", to: "pointer-eased parallax shifting the cloud, star and glow layers at different depths" },
+            cssProperties: ["canvas 2d", "cached orb glow sprite", "offscreen cloud puff sprites", "additive compositing", "seeded rng", "lerped pointer parallax", "dpr-capped resize", "intersection observer parking"],
+            description: "A serene animated sky with a glowing sun or moon, twinkling stars and drifting cumulus clouds eased by pointer parallax.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "IntersectionObserver parking", "seeded rng", "cached orb + cloud sprites", "pointer parallax with cached rect", "devicePixelRatio cap", "prefers-reduced-motion support"]
+        }
     }
 };
 

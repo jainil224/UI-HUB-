@@ -38,6 +38,7 @@ const CURATED_IDS = [
     'reflect-shader',
     'infinite-tendrils',
     'star-burst',
+    'sky',
 ];
 
 const captureIds = idsArg ? idsArg.split(',').map((s) => s.trim()).filter(Boolean) : CURATED_IDS;
