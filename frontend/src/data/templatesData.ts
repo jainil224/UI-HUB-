@@ -5399,6 +5399,7 @@ Components:
     {
         id: 'haos-tech-solutions',
         previewImage: '/assets/template-previews/haos-tech-solutions.png',
+        previewVideo: '/assets/template-previews/haos-tech-solutions.webm',
         title: 'HAOS Tech Solutions',
         description: 'Pixel-perfect brutalist technical dark-mode showcase with split 3D volumetric glowing neon-green circle, sliced blurred glass louvers, and progress telemetry.',
         category: 'Agency & Portfolio',
@@ -5629,6 +5630,7 @@ Design System:
     {
         id: 'interior-design',
         previewImage: '/assets/template-previews/interior-design.png',
+        previewVideo: '/assets/template-previews/interior-design.webm',
         title: 'Interior Design Showcase',
         description: 'Luxury editorial furniture hero showcase with an olive accent panel, overlapping modular armchair artwork, pill purchase control, and bottom feature cards.',
         category: 'E-Commerce',
@@ -5720,6 +5722,7 @@ Aesthetic: Luxury Editorial E-Commerce
     {
         id: 'lumos',
         previewImage: '/assets/template-previews/lumos.png',
+        previewVideo: '/assets/template-previews/lumos.webm',
         title: 'LUMOS Futuristic Editorial Hero',
         description: 'Futuristic editorial landing hero with 3D surreal eye artwork, interactive mouse parallax tilt, oversized background typography, and technical barcode footer.',
         category: 'Agency & Portfolio',
@@ -5881,6 +5884,7 @@ Aesthetic: Futuristic Editorial Minimal
     {
         id: 'loveapp-hero',
         previewImage: '/assets/template-previews/loveapp-hero.png',
+        previewVideo: '/assets/template-previews/loveapp-hero.webm',
         title: 'LoveApp Hero',
         description: 'Pastel lavender romance and social hero featuring central 3D glossy glass heart with smooth lerp parallax, iridescent flowing ribbons, giant LOVEAPP background typography, and feature pills.',
         category: 'SaaS & AI',
@@ -6094,6 +6098,7 @@ Aesthetic: Pastel Lavender Glassmorphic Romance / Social
     {
         id: 'heyo-agency-cta',
         previewImage: '/assets/template-previews/heyo-agency-cta.png',
+        previewVideo: '/assets/template-previews/heyo-agency-cta.webm',
         title: 'Heyo Agency CTA',
         description: 'Pixel-accurate, responsive agency CTA card + dark footer section featuring vibrant canary yellow canvas (#FFE83B), breakthrough 3D mascot illustration, DM Serif Display headline, and interactive social footer.',
         category: 'Agency & Portfolio',
@@ -6255,6 +6260,7 @@ Aesthetic: Modern Creative Agency / High-Contrast Editorial
     {
         id: 'me-019-au-cabaret',
         previewImage: '/assets/template-previews/me-019-au-cabaret.png',
+        previewVideo: '/assets/template-previews/me-019-au-cabaret.webm',
         title: 'ME.019 Au Cabaret',
         description: 'Pixel-perfect, high-fashion Swiss-editorial electronic music concert poster landing page and footer matching the iconic 019 AU CABARET SAUVAGE aesthetic with airbrush neon smoke plume and artist navigator.',
         category: 'Agency & Portfolio',
@@ -6384,6 +6390,7 @@ Aesthetic: Swiss Minimalist Poster / High-Fashion Brutalism
     {
         id: 'dont-be-greedy',
         previewImage: '/assets/template-previews/dont-be-greedy.png',
+        previewVideo: '/assets/template-previews/dont-be-greedy.webm',
         title: "DON'T BE GREEDY",
         description: 'Full-screen brutalist streetwear art website for the 3D vinyl collectible art release "AKCB" featuring an interactive 1.62:1 Hero Banner poster with dual vinyl mascots, deckled torn paper bottom edge, and a monolithic AKCB Collection History archival section.',
         category: 'Web3 & FinTech',
@@ -6504,6 +6511,7 @@ Aesthetic: Brutalist Streetwear Neo-Noir / 3D Vinyl Toy Art
     {
         id: 'paipai-kuaishou',
         previewImage: '/assets/template-previews/paipai-kuaishou.png',
+        previewVideo: '/assets/template-previews/paipai-kuaishou.webm',
         title: 'PAIPAI Kuaishou',
         description: 'Interactive campaign hero website for PAIPAI Kuaishou Culture featuring 3D snowboard mascot, interactive water ripples, sound synthesis, and editorial graphics.',
         category: 'Agency & Portfolio',
@@ -6674,6 +6682,7 @@ Key Specifications:
     {
         id: 'sui-overflow',
         previewImage: '/assets/template-previews/sui-overflow.png',
+        previewVideo: '/assets/template-previews/sui-overflow.webm',
         title: 'Sui Overflow',
         description: 'Swiss international typographic style hero section with split blueprint grid, procedural paper noise, split register CTA, and floating 3D sticker artwork.',
         category: 'Web3 & FinTech',
