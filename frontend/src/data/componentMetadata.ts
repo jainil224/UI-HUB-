@@ -1100,6 +1100,28 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["THREE.WebGLRenderer", "ShaderMaterial", "68-step ray march", "4-wave crest + 7-wave detail traces", "gerstner displacement", "fresnel + sky reflection", "glitter specular", "subsurface + foam", "drag inertia camera", "devicePixelRatio cap"]
         }
     },
+    "frost-glass-melt": {
+        props: [
+            { name: "background", type: "string", default: '"#060A14"', description: "Base background colour behind the glass." },
+            { name: "frost", type: "string", default: '"#D9E6FF"', description: "Frost crystal colour." },
+            { name: "scene", type: "number", default: "20", description: "Snow-mote density behind the glass 0-20 (maps to 0-150 motes)." },
+            { name: "cell", type: "number", default: "12", description: "Frost granularity 1-20 (maps to 6-32px cells)." },
+            { name: "meltRadius", type: "number", default: "14", description: "Pointer thaw reach in px 1-20." },
+            { name: "meltSpeed", type: "number", default: "12", description: "How quickly frost melts under the pointer heat 1-20." },
+            { name: "refreezeSpeed", type: "number", default: "8", description: "How quickly frost re-forms when idle 1-20." },
+            { name: "drift", type: "number", default: "10", description: "Snow drift / wind speed 0-20 (0 = still)." },
+            { name: "twinkle", type: "number", default: "12", description: "Crystal shimmer rate 0-20." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Optional outer wrapper style override." }
+        ],
+        vibeMeta: {
+            behavior: "A frosted-glass pane on a fullscreen Canvas 2D: a per-cell frost grid sits over an animated winter scene (radial gradient + drifting snow motes with sine sway and edge wrap). The pointer radiates heat into a diffusing 3x3 heat buffer with inverse-square falloff; heat lowers frost levels to reveal the scene and Click banks a 1.4x burst. Idle, heat decays so frost slowly re-freezes and the pane self-heals. Each frost cell renders with a twinkling value-noise alpha grain. DPR-capped at 2; prefers-reduced-motion renders one static frosted frame; touch-action none.",
+            states: { from: "fully frosted pane with shimmering crystals", to: "pointer-thawed clear window revealing the drifting snow scene" },
+            cssProperties: ["canvas 2d", "fullscreen background", "per-cell frost grid", "diffusive heat field", "value-noise twinkle", "dpr-capped resize"],
+            description: "A frosted glass pane that melts around your pointer to reveal a winter scene and re-freezes when idle.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "per-cell frost + heat buffers", "3x3 heat diffusion", "snow-mote scene layer", "pointer heat + click burst", "value-noise twinkle", "devicePixelRatio cap", "prefers-reduced-motion support"]
+        }
+    },
     "star-burst": {
         props: [
             { name: "speed", type: "number", default: "10", description: "Outward travel rate 0-100." },

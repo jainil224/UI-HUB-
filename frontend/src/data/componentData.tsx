@@ -84,6 +84,7 @@ const GlobeMesh = React.lazy(() => import('../components/ui/GlobeMesh'));
 const ReflectShader = React.lazy(() => import('../components/ui/ReflectShader'));
 const InfiniteTendrils = React.lazy(() => import('../components/ui/InfiniteTendrils'));
 const OceanSwell = React.lazy(() => import('../components/ui/OceanSwell'));
+const FrostGlassMelt = React.lazy(() => import('../components/ui/FrostGlassMelt'));
 const StarBurst = React.lazy(() => import('../components/ui/StarBurst'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
@@ -7574,6 +7575,45 @@ export function OceanSwellDemo() {
   );
 }`,
         vibePrompt: "Create an 'Ocean Swell' interactive background in React + TypeScript using THREE (WebGLRenderer + ShaderMaterial on a fullscreen 2x2 quad, one rAF loop, all live state via refs). A GLSL ray-marched ocean: seaHeight sums 4 gerstner-style waves for the cheap crest trace and 7 for detail normals, each wave compounding over a 68-step march with adaptive stepping, returning a tHit via gap interpolation. Sky mixes a horizon/zenith gradient with scrolling value-noise cloud decks and layered sun glints; the sea colors per-pixel deep/shallow/scatter bodies with fresnel reflection of the sky, sharp glitter specular (pow exponent ~400-2200), subsurface scattering near crests, and chunky value-noise foam on steep slopes, then fogglows with haze and closes with a filmic tonemap + gamma. The camera orbits slowly and drags with inertia (yaw/pitch velocity decay), clamped to a max pitch. Props: deep, shallow, scatter, foam, zenith, horizon, swell, choppy, detail, glitter, subsurface, foamAmount, cloud, haze, speed, drag, sizePercent, style. Uses ResizeObserver and a devicePixelRatio cap of 1.25.",
+    },
+    {
+        id: "frost-glass-melt",
+        title: "Frost Glass Melt",
+        category: "interactive-background",
+        addedAt: "2026-09-19",
+        newBadgeDays: 21,
+        isPremium: false,
+        description: "A frosted glass pane that melts around your pointer to reveal a drifting winter scene, then slowly re-freezes when idle. Pure Canvas 2D, zero dependencies.",
+        preview: () => (
+            <div className="w-full h-full rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <FrostGlassMelt />
+            </div>
+        ),
+        code: `import FrostGlassMelt from "@/components/ui/FrostGlassMelt";
+
+export function FrostGlassMeltDemo() {
+  return (
+    <div className="relative h-screen w-full">
+      <FrostGlassMelt
+        background="#060A14"
+        frost="#D9E6FF"
+        scene={20}
+        cell={12}
+        meltRadius={14}
+        meltSpeed={12}
+        refreezeSpeed={8}
+        drift={10}
+        twinkle={12}
+      />
+
+      {/* Your content on top */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <h1 className="text-4xl font-bold text-white">Your Content</h1>
+      </div>
+    </div>
+  );
+}`,
+        vibePrompt: "Create a 'Frost Glass Melt' interactive background in React + TypeScript using a single fullscreen Canvas 2D context, one rAF loop, and all live state via refs (zero dependencies). A pane of frost covers an animated winter scene behind the glass: a soft radial gradient backdrop plus drifting snow motes (per-mote speed/size/phase drift with sine sway and edge wrap). The custom pointer is warmth — while the pointer rests over the pane it radiates heat into a per-cell buffer (inverse-square falloff on a 3x3 diffusive heat field that decays over time), which drives frost levels down to reveal the scene; clicking banks a burst of heat 1.4x the reach. When idle the frost slowly re-freezes (rate scaled by remaining heat) so the pane self-heals. Frost is rendered as a grid of cells whose alpha per cell is modulated by a twinkling value-noise grain so the crystals shimmer. Props: background, frost, scene, cell, meltRadius, meltSpeed, refreezeSpeed, drift, twinkle, style. Uses ResizeObserver, a devicePixelRatio cap of 2, prefers-reduced-motion support (renders a single static frosted frame), and touch-action none.",
     },
     {
         id: "isometric-portal",
