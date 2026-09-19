@@ -58,6 +58,14 @@ const TemplatesSection = () => {
         ? websiteTemplates
         : categoryMatches;
 
+    const isAllView = selectedCategory === 'All';
+    const renderSections = isAllView
+        ? templateCategories
+            .filter(c => c !== 'All')
+            .map(cat => ({ category: cat, items: websiteTemplates.filter(t => t.category === cat) }))
+            .filter(s => s.items.length > 0)
+        : [{ category: selectedCategory, items: filteredTemplates }];
+
     const handleCopyPrompt = (template: TemplateItem, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
         const text = buildTemplatePrompt(template, 'advance');
@@ -142,16 +150,38 @@ const TemplatesSection = () => {
                     </div>
                 </div>
 
-                {/* ── Templates Grid ── */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                {/* ── Templates Grid (grouped by category in the All view) ── */}
+                <div>
                     <AnimatePresence mode="wait">
-                        {filteredTemplates.map((template, idx) => (
+                        {renderSections.map((section, si) => (
                             <motion.div
-                                key={template.id}
+                                key={section.category}
                                 initial={{ opacity: 0, y: 16 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.2) }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ duration: 0.25, delay: Math.min(si * 0.04, 0.2) }}
+                                className={si > 0 ? 'mt-14 sm:mt-20' : ''}
+                            >
+                                {isAllView && (
+                                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
+                                        <span className="h-4 w-1 bg-[#1F4BFF] border border-black" />
+                                        <h3 className="font-mono font-black uppercase tracking-[0.18em] text-xs sm:text-sm lg:text-base text-white">
+                                            {section.category}
+                                        </h3>
+                                        <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500 border border-neutral-800 px-1.5 py-0.5">
+                                            {section.items.length}
+                                        </span>
+                                    </div>
+                                )}
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                                    {section.items.map((template, idx) => (
+                                        <motion.div
+                                            key={template.id}
+                                            initial={{ opacity: 0, y: 16 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.2) }}
                                 onClick={() => handleOpenTemplate(template.id)}
                                 className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] overflow-hidden select-none hover:border-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000] transition-all duration-200 cursor-pointer will-change-transform"
                             >
@@ -300,6 +330,9 @@ const TemplatesSection = () => {
                                             {template.isPro ? 'PRO' : 'FREE'}
                                         </span>
                                     </div>
+                                </div>
+                            </motion.div>
+                                    ))}
                                 </div>
                             </motion.div>
                         ))}
