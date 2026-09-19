@@ -1,27 +1,11 @@
-// Sky — UI HUB
-// An interactive Canvas2D sky scene: a vertical gradient horizon, a warm sun or
-// pale moon with a cached glow sprite, twinkling stars, and soft cumulus clouds
-// that drift and wrap around the edges. Pointer parallax eases the cloud, star
-// and glow layers. One requestAnimationFrame loop with delta-time clamping, a
-// devicePixelRatio cap (2, or 1.5 on very large canvases), IntersectionObserver
-// parking when out of view, and a prefers-reduced-motion static frame with zero
-// parallax.
-//
-//   Sky (React shell)      container + canvas + lifecycle + cleanup
-//   scene (imperative)     gradient fill, cached sprites, stars, drift, easing
-//
-// Pattern: engine-in-effect + React shell, refs-as-film-state (pointer/cloud
-// positions live in locals, never in React state). Decorative layer is
-// pointerEvents:none so content above stays clickable.
-
 "use client"
 
 import * as React from "react"
 import { useEffect, useRef } from "react"
 
-type PaletteId = "day" | "dusk" | "night"
+export type PaletteId = "day" | "dusk" | "night"
 
-type SkyProps = {
+export type SkyProps = {
     palette?: PaletteId
     stars?: boolean
     starCount?: number
@@ -33,10 +17,11 @@ type SkyProps = {
     parallaxStrength?: number
     seed?: number
     style?: React.CSSProperties
+    className?: string
 }
 
-const COMPONENT_DEFAULTS = {
-    palette: "dusk",
+export const COMPONENT_DEFAULTS = {
+    palette: "dusk" as PaletteId,
     stars: true,
     starCount: 130,
     twinkleSpeed: 6,
@@ -48,7 +33,7 @@ const COMPONENT_DEFAULTS = {
     seed: 1,
 }
 
-const SKY_PALETTES: Record<
+export const SKY_PALETTES: Record<
     PaletteId,
     {
         stops: [number, string][]
@@ -135,413 +120,308 @@ function buildOrbSprite(rgb: [number, number, number], alpha: number): HTMLCanva
     return c
 }
 
-type SkySettings = {
-    palette: PaletteId
-    stars: boolean
-    starCount: number
-    twinkleSpeed: number
-    clouds: boolean
-    cloudCount: number
-    cloudSpeed: number
-    parallax: boolean
-    parallaxStrength: number
-    seed: number
+function buildCloudSprite(tint: string, rng: () => number): HTMLCanvasElement {
+    const w = 480
+    const h = 220
+    const c = document.createElement("canvas")
+    c.width = w
+    c.height = h
+    const g = c.getContext("2d")
+    if (!g) return c
+
+    const puffCount = 8 + Math.floor(rng() * 5)
+    for (let i = 0; i < puffCount; i++) {
+        const px = w * 0.2 + rng() * w * 0.6
+        const py = h * 0.35 + rng() * h * 0.45
+        const r = 40 + rng() * 55
+
+        const rad = g.createRadialGradient(px, py, 0, px, py, r)
+        rad.addColorStop(0, `rgba(${tint}, 0.8)`)
+        rad.addColorStop(0.45, `rgba(${tint}, 0.5)`)
+        rad.addColorStop(0.8, `rgba(${tint}, 0.15)`)
+        rad.addColorStop(1, `rgba(${tint}, 0)`)
+
+        g.fillStyle = rad
+        g.beginPath()
+        g.arc(px, py, r, 0, Math.PI * 2)
+        g.fill()
+    }
+
+    return c
 }
 
-type Star = {
+interface Star {
     x: number
     y: number
-    r: number
+    radius: number
+    baseAlpha: number
     phase: number
     speed: number
-    baseAlpha: number
 }
 
-type Cloud = {
+interface Cloud {
     x: number
     y: number
-    scale: number
+    w: number
+    h: number
     speed: number
+    depth: number
     alpha: number
     sprite: HTMLCanvasElement
 }
 
-const MAX_DPR = 2
-const MAX_LARGE_DPR = 1.5
-const LARGE_AREA = 1600 * 1000
-
-class SkyScene {
-    private container: HTMLDivElement
-    private canvas: HTMLCanvasElement
-    private ctx: CanvasRenderingContext2D
-    private cfg: SkySettings
-
-    private width = 0
-    private height = 0
-    private dpr = 1
-    private rect = { left: 0, top: 0, width: 0, height: 0 }
-
-    private pointer = { tx: 0, ty: 0 }
-    private parallax = { x: 0, y: 0 }
-
-    private stars: Star[] = []
-    private clouds: Cloud[] = []
-    private orbSprite: HTMLCanvasElement | null = null
-    private orbKey = ""
-    private skyGradient: CanvasGradient | null = null
-
-    private rafId = 0
-    private last = 0
-    private reduced = false
-
-    constructor(container: HTMLDivElement, cfg: SkySettings) {
-        this.container = container
-        this.cfg = cfg
-
-        const canvas = document.createElement("canvas")
-        canvas.style.position = "absolute"
-        canvas.style.inset = "0"
-        canvas.style.width = "100%"
-        canvas.style.height = "100%"
-        canvas.style.display = "block"
-        canvas.style.pointerEvents = "none"
-        container.appendChild(canvas)
-        this.canvas = canvas
-
-        const ctx = canvas.getContext("2d")
-        if (!ctx) throw new Error("2d context unavailable")
-        this.ctx = ctx
-
-        this.reduced =
-            typeof window !== "undefined" &&
-            !!window.matchMedia &&
-            window.matchMedia("(prefers-reduced-motion: reduce)").matches
-
-        this.buildStars()
-        this.buildClouds()
-        this.ensureOrb()
-        this.bindEvents()
-    }
-
-    private bindEvents() {
-        if (!this.cfg.parallax || this.reduced) return
-        window.addEventListener("pointermove", this.onMove, { passive: true })
-        document.addEventListener("pointerleave", this.onLeave)
-    }
-
-    private unbindEvents() {
-        window.removeEventListener("pointermove", this.onMove)
-        document.removeEventListener("pointerleave", this.onLeave)
-    }
-
-    private onMove = (e: PointerEvent) => {
-        const rect = this.rect
-        if (rect.width <= 0 || rect.height <= 0) return
-        const nx = clamp((e.clientX - rect.left) / rect.width - 0.5, -0.5, 0.5)
-        const ny = clamp((e.clientY - rect.top) / rect.height - 0.5, -0.5, 0.5)
-        this.pointer.tx = nx * 2
-        this.pointer.ty = ny * 2
-    }
-
-    private onLeave = () => {
-        this.pointer.tx = 0
-        this.pointer.ty = 0
-    }
-
-    updateConfig(cfg: SkySettings) {
-        this.cfg = cfg
-        this.unbindEvents()
-        this.bindEvents()
-        this.buildStars()
-        this.buildClouds()
-        this.ensureOrb()
-        this.buildSkyGradient()
-        if (this.reduced) this.render(0)
-    }
-
-    setSize(width: number, height: number) {
-        if (width <= 0 || height <= 0) return
-        this.width = width
-        this.height = height
-        const area = width * height
-        this.dpr = Math.min(window.devicePixelRatio || 1, area > LARGE_AREA ? MAX_LARGE_DPR : MAX_DPR)
-        this.canvas.width = Math.round(width * this.dpr)
-        this.canvas.height = Math.round(height * this.dpr)
-
-        const r = this.container.getBoundingClientRect()
-        this.rect = { left: r.left, top: r.top, width: r.width, height: r.height }
-
-        this.buildStars()
-        this.buildClouds()
-        this.ensureOrb()
-        this.buildSkyGradient()
-
-        if (this.reduced) this.render(0)
-    }
-
-    private buildSkyGradient() {
-        const g = this.ctx.createLinearGradient(0, 0, 0, this.height)
-        for (const [pos, color] of SKY_PALETTES[this.cfg.palette].stops) {
-            g.addColorStop(pos, color)
-        }
-        this.skyGradient = g
-    }
-
-    private ensureOrb() {
-        if (this.orbSprite && this.orbKey === this.cfg.palette) return
-        const p = SKY_PALETTES[this.cfg.palette]
-        this.orbSprite = buildOrbSprite(p.orb, p.orbAlpha)
-        this.orbKey = this.cfg.palette
-    }
-
-    private buildStars() {
-        const s = this.cfg
-        if (!s.stars || s.starCount <= 0) {
-            this.stars = []
-            return
-        }
-        const rng = makeRng(s.seed)
-        const count = Math.round(s.starCount)
-        const stars: Star[] = []
-        for (let i = 0; i < count; i++) {
-            stars.push({
-                x: rng() * this.width,
-                y: rng() * this.height * 0.55,
-                r: 0.6 + rng() * 1.4,
-                phase: rng() * Math.PI * 2,
-                speed: 0.6 + rng() * 1.6,
-                baseAlpha: 0.35 + rng() * 0.65,
-            })
-        }
-        this.stars = stars
-    }
-
-    private buildCloudSprite(tint: string, baseW: number, baseH: number): HTMLCanvasElement {
-        const c = document.createElement("canvas")
-        c.width = Math.max(1, Math.ceil(baseW))
-        c.height = Math.max(1, Math.ceil(baseH))
-        const g = c.getContext("2d")
-        if (!g) return c
-        const w = baseW
-        const h = baseH
-        const puffs: Array<[number, number, number, number]> = [
-            [0.5, 0.55, 0.36, 0.95],
-            [0.24, 0.68, 0.26, 0.8],
-            [0.76, 0.66, 0.28, 0.85],
-            [0.42, 0.4, 0.32, 0.85],
-        ]
-        for (const [px, py, pr, po] of puffs) {
-            const x = px * w
-            const y = py * h
-            const rr = g.createRadialGradient(x, y, 0, x, y, pr * w)
-            rr.addColorStop(0, `rgba(${tint}, ${(0.9 * po).toFixed(3)})`)
-            rr.addColorStop(0.55, `rgba(${tint}, ${(0.5 * po).toFixed(3)})`)
-            rr.addColorStop(1, `rgba(${tint}, 0)`)
-            g.fillStyle = rr
-            g.fillRect(x - pr * w, y - pr * w, pr * w * 2, pr * w * 2)
-        }
-        return c
-    }
-
-    private buildClouds() {
-        const s = this.cfg
-        if (!s.clouds || s.cloudCount <= 0) {
-            this.clouds = []
-            return
-        }
-        const rng = makeRng((s.seed ^ 0x9e3779b9) >>> 0)
-        const count = Math.round(s.cloudCount)
-        const tint = SKY_PALETTES[s.palette].cloudTint
-        const baseW = this.height * 0.55
-        const baseH = this.height * 0.16
-        const baseSpeed = Math.max(6, (s.cloudSpeed / 20) * this.width * 0.06)
-        const clouds: Cloud[] = []
-        for (let i = 0; i < count; i++) {
-            clouds.push({
-                x: rng() * this.width,
-                y: 0.12 + rng() * 0.46,
-                scale: 0.6 + rng() * 0.9,
-                speed: baseSpeed * (0.6 + rng() * 0.8),
-                alpha: 0.3 + rng() * 0.4,
-                sprite: this.buildCloudSprite(tint, baseW, baseH),
-            })
-        }
-        this.clouds = clouds
-    }
-
-    private render(now: number) {
-        const { ctx, width, height, dpr } = this
-        if (width <= 0 || height <= 0) return
-        const s = this.cfg
-
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-        const k = this.reduced ? 1 : 0.05
-        this.parallax.x += (this.pointer.tx - this.parallax.x) * k
-        this.parallax.y += (this.pointer.ty - this.parallax.y) * k
-        const pxn = this.parallax.x
-        const pyn = this.parallax.y
-        const pxo = pxn * s.parallaxStrength
-        const pyo = pyn * s.parallaxStrength
-
-        if (this.skyGradient) {
-            ctx.fillStyle = this.skyGradient
-            ctx.fillRect(0, 0, width, height)
-        }
-
-        if (this.stars.length) {
-            const starAlpha = SKY_PALETTES[s.palette].starAlpha
-            ctx.fillStyle = "#ffffff"
-            for (const star of this.stars) {
-                const tw = 0.5 + 0.5 * Math.sin(now * 0.001 * s.twinkleSpeed * star.speed + star.phase)
-                ctx.globalAlpha = star.baseAlpha * (0.25 + 0.75 * tw) * starAlpha
-                ctx.beginPath()
-                ctx.arc(star.x + pxo * 0.3, star.y + pyo * 0.15, star.r, 0, Math.PI * 2)
-                ctx.fill()
-            }
-            ctx.globalAlpha = 1
-        }
-
-        if (this.orbSprite) {
-            const ox = width * 0.82 + pxo * 0.12
-            const oy = height * 0.24 + pyo * 0.06
-            const size = Math.max(width, height) * 0.42
-            ctx.globalAlpha = 1
-            ctx.globalCompositeOperation = "lighter"
-            ctx.drawImage(this.orbSprite, ox - size / 2, oy - size / 2, size, size)
-            ctx.globalCompositeOperation = "source-over"
-        }
-
-        if (this.clouds.length) {
-            for (const c of this.clouds) {
-                const cw = this.height * 0.55 * c.scale
-                const ch = this.height * 0.16 * c.scale
-                ctx.globalAlpha = c.alpha
-                ctx.globalCompositeOperation = "lighter"
-                ctx.drawImage(c.sprite, c.x + pxo * (0.5 + c.scale * 0.5), c.y * height + pyo * 0.2, cw, ch)
-                ctx.globalCompositeOperation = "source-over"
-            }
-            ctx.globalAlpha = 1
-        }
-    }
-
-    private frame = (now: number) => {
-        this.rafId = requestAnimationFrame(this.frame)
-        const last = this.last || now
-        const dt = Math.min(0.05, Math.max(0, (now - last) / 1000))
-        this.last = now
-
-        if (this.clouds.length) {
-            for (const c of this.clouds) {
-                c.x -= c.speed * dt
-                if (c.x < -(this.height * 0.55 * c.scale) - 10) {
-                    c.x = this.width + 10
-                }
-            }
-        }
-
-        this.render(now)
-    }
-
-    start() {
-        if (this.reduced || this.rafId) return
-        this.last = 0
-        this.rafId = requestAnimationFrame(this.frame)
-    }
-
-    park() {
-        cancelAnimationFrame(this.rafId)
-        this.rafId = 0
-    }
-
-    dispose() {
-        this.park()
-        this.unbindEvents()
-        this.canvas.remove()
-    }
-}
-
-function applyDefaults(props: SkyProps): SkySettings {
-    const d = COMPONENT_DEFAULTS
-    return {
-        palette: props.palette ?? (d.palette as PaletteId),
-        stars: props.stars ?? d.stars,
-        starCount: clamp(props.starCount ?? d.starCount, 0, 400),
-        twinkleSpeed: clamp(props.twinkleSpeed ?? d.twinkleSpeed, 0, 20),
-        clouds: props.clouds ?? d.clouds,
-        cloudCount: clamp(props.cloudCount ?? d.cloudCount, 0, 12),
-        cloudSpeed: clamp(props.cloudSpeed ?? d.cloudSpeed, 0, 20),
-        parallax: props.parallax ?? d.parallax,
-        parallaxStrength: clamp(props.parallaxStrength ?? d.parallaxStrength, 0, 80),
-        seed: props.seed ?? d.seed,
-    }
-}
-
-export function Sky(props: SkyProps) {
-    const {
-        palette,
-        stars,
-        starCount,
-        twinkleSpeed,
-        clouds,
-        cloudCount,
-        cloudSpeed,
-        parallax,
-        parallaxStrength,
-        seed,
-        style,
-    } = props
-
-    const containerRef = useRef<HTMLDivElement | null>(null)
-    const sceneRef = useRef<SkyScene | null>(null)
-
-    const cfgRef = useRef<SkySettings>(null as any)
-    cfgRef.current = applyDefaults(props)
+export const Sky: React.FC<SkyProps> = ({
+    palette = COMPONENT_DEFAULTS.palette,
+    stars = COMPONENT_DEFAULTS.stars,
+    starCount = COMPONENT_DEFAULTS.starCount,
+    twinkleSpeed = COMPONENT_DEFAULTS.twinkleSpeed,
+    clouds = COMPONENT_DEFAULTS.clouds,
+    cloudCount = COMPONENT_DEFAULTS.cloudCount,
+    cloudSpeed = COMPONENT_DEFAULTS.cloudSpeed,
+    parallax = COMPONENT_DEFAULTS.parallax,
+    parallaxStrength = COMPONENT_DEFAULTS.parallaxStrength,
+    seed = COMPONENT_DEFAULTS.seed,
+    style,
+    className = "",
+}) => {
+    const containerRef = useRef<HTMLDivElement>(null)
+    const canvasRef = useRef<HTMLCanvasElement>(null)
 
     useEffect(() => {
+        const canvas = canvasRef.current
         const container = containerRef.current
-        if (!container) return
-        let scene: SkyScene
-        try {
-            scene = new SkyScene(container, cfgRef.current)
-        } catch {
-            return
-        }
-        sceneRef.current = scene
-        scene.setSize(container.clientWidth, container.clientHeight)
-        scene.start()
+        if (!canvas || !container) return
 
-        const ro = new ResizeObserver(() => {
-            scene.setSize(container.clientWidth, container.clientHeight)
-        })
+        const ctx = canvas.getContext("2d")
+        if (!ctx) return
+
+        const activePalette = SKY_PALETTES[palette] || SKY_PALETTES.dusk
+        const rng = makeRng(seed)
+
+        const reduceMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)")
+        let reduced = reduceMotionQuery.matches
+
+        let width = 0
+        let height = 0
+        let rafId = 0
+        let lastTime = performance.now()
+        let isIntersecting = true
+
+        const pointer = { x: 0, y: 0, tx: 0, ty: 0 }
+        const orbSprite = buildOrbSprite(activePalette.orb, activePalette.orbAlpha)
+
+        const starList: Star[] = []
+        for (let i = 0; i < starCount; i++) {
+            starList.push({
+                x: rng(),
+                y: Math.pow(rng(), 1.3) * 0.85,
+                radius: 0.6 + rng() * 1.3,
+                baseAlpha: 0.35 + rng() * 0.65,
+                phase: rng() * Math.PI * 2,
+                speed: 0.4 + rng() * 1.2,
+            })
+        }
+
+        const cloudList: Cloud[] = []
+        for (let i = 0; i < cloudCount; i++) {
+            const depth = 0.3 + rng() * 0.7
+            const cw = (320 + rng() * 260) * (0.6 + depth * 0.4)
+            const ch = cw * 0.45
+            cloudList.push({
+                x: rng() * 1200,
+                y: 0.25 + rng() * 0.48,
+                w: cw,
+                h: ch,
+                speed: (0.5 + rng() * 0.8) * depth,
+                depth,
+                alpha: 0.35 + depth * 0.45,
+                sprite: buildCloudSprite(activePalette.cloudTint, rng),
+            })
+        }
+
+        const drawScene = (timeSec: number) => {
+            if (width === 0 || height === 0) return
+
+            ctx.clearRect(0, 0, width, height)
+
+            const grad = ctx.createLinearGradient(0, 0, 0, height)
+            for (const [pos, color] of activePalette.stops) {
+                grad.addColorStop(pos, color)
+            }
+            ctx.fillStyle = grad
+            ctx.fillRect(0, 0, width, height)
+
+            const px = parallax && !reduced ? pointer.x * parallaxStrength : 0
+            const py = parallax && !reduced ? pointer.y * parallaxStrength : 0
+
+            if (stars && activePalette.starAlpha > 0.01) {
+                ctx.save()
+                for (const star of starList) {
+                    const sx = star.x * width + px * 0.2
+                    const sy = star.y * height + py * 0.2
+
+                    const twinkle = reduced
+                        ? 0.8
+                        : 0.35 + 0.65 * Math.max(0, Math.sin(timeSec * twinkleSpeed * 0.4 * star.speed + star.phase))
+                    const a = star.baseAlpha * twinkle * activePalette.starAlpha
+
+                    ctx.fillStyle = `rgba(255, 255, 255, ${a.toFixed(3)})`
+                    ctx.beginPath()
+                    ctx.arc(sx, sy, star.radius, 0, Math.PI * 2)
+                    ctx.fill()
+
+                    if (star.radius > 1.4 && a > 0.6) {
+                        ctx.fillStyle = `rgba(255, 255, 255, ${(a * 0.35).toFixed(3)})`
+                        ctx.beginPath()
+                        ctx.arc(sx, sy, star.radius * 2.2, 0, Math.PI * 2)
+                        ctx.fill()
+                    }
+                }
+                ctx.restore()
+            }
+
+            const orbBaseX = palette === "day" ? width * 0.72 : palette === "dusk" ? width * 0.64 : width * 0.32
+            const orbBaseY = palette === "day" ? height * 0.28 : palette === "dusk" ? height * 0.64 : height * 0.28
+
+            const orbX = orbBaseX + px * 0.45
+            const orbY = orbBaseY + py * 0.45
+            const orbDrawSize = Math.min(width, height) * 0.55
+
+            ctx.save()
+            ctx.drawImage(
+                orbSprite,
+                orbX - orbDrawSize / 2,
+                orbY - orbDrawSize / 2,
+                orbDrawSize,
+                orbDrawSize
+            )
+            ctx.restore()
+
+            if (clouds) {
+                ctx.save()
+                for (const cloud of cloudList) {
+                    const cx = cloud.x + px * (0.5 + cloud.depth * 0.7)
+                    const cy = cloud.y * height + py * (0.5 + cloud.depth * 0.7)
+
+                    ctx.globalAlpha = cloud.alpha
+                    ctx.drawImage(cloud.sprite, cx, cy, cloud.w, cloud.h)
+
+                    if (cx + cloud.w > width) {
+                        ctx.drawImage(cloud.sprite, cx - (width + cloud.w), cy, cloud.w, cloud.h)
+                    }
+                }
+                ctx.restore()
+            }
+        }
+
+        const resize = () => {
+            const rect = container.getBoundingClientRect()
+            width = rect.width
+            height = rect.height
+            if (width === 0 || height === 0) return
+
+            const rawDpr = window.devicePixelRatio || 1
+            const dpr = Math.min(rawDpr, width > 1920 ? 1.5 : 2)
+
+            canvas.width = Math.floor(width * dpr)
+            canvas.height = Math.floor(height * dpr)
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+            for (let i = 0; i < cloudList.length; i++) {
+                if (cloudList[i].x > width * 1.5) {
+                    cloudList[i].x = (width / cloudList.length) * i
+                }
+            }
+
+            drawScene(performance.now() / 1000)
+        }
+
+        const loop = (now: number) => {
+            if (!isIntersecting || reduced) return
+
+            const dt = Math.min((now - lastTime) / 1000, 0.05)
+            lastTime = now
+
+            if (parallax) {
+                const lerp = 1 - Math.exp(-4.0 * dt)
+                pointer.x += (pointer.tx - pointer.x) * lerp
+                pointer.y += (pointer.ty - pointer.y) * lerp
+            }
+
+            if (clouds) {
+                const speedMult = cloudSpeed * 2.5 + 6
+                for (const cloud of cloudList) {
+                    cloud.x += dt * cloud.speed * speedMult
+                    if (cloud.x > width + cloud.w) {
+                        cloud.x = -cloud.w
+                    }
+                }
+            }
+
+            drawScene(now / 1000)
+            rafId = requestAnimationFrame(loop)
+        }
+
+        const onPointerMove = (e: PointerEvent) => {
+            if (!parallax || reduced) return
+            const rect = container.getBoundingClientRect()
+            if (rect.width === 0 || rect.height === 0) return
+            const nx = (e.clientX - (rect.left + rect.width / 2)) / (rect.width / 2)
+            const ny = (e.clientY - (rect.top + rect.height / 2)) / (rect.height / 2)
+            pointer.tx = clamp(nx, -1, 1)
+            pointer.ty = clamp(ny, -1, 1)
+        }
+
+        const onReduceMotionChange = (e: MediaQueryListEvent) => {
+            cancelAnimationFrame(rafId)
+            reduced = e.matches
+            if (reduced) {
+                pointer.x = pointer.tx = 0
+                pointer.y = pointer.ty = 0
+                drawScene(performance.now() / 1000)
+                return
+            }
+            lastTime = performance.now()
+            rafId = requestAnimationFrame(loop)
+        }
+
+        const ro = new ResizeObserver(resize)
         ro.observe(container)
 
-        let parked = false
         const io = new IntersectionObserver((entries) => {
-            const entry = entries[0]
-            if (!entry) return
-            if (entry.isIntersecting) {
-                if (parked) {
-                    parked = false
-                    scene.start()
+            for (const entry of entries) {
+                isIntersecting = entry.isIntersecting
+                if (isIntersecting && !reduced) {
+                    lastTime = performance.now()
+                    cancelAnimationFrame(rafId)
+                    rafId = requestAnimationFrame(loop)
+                } else {
+                    cancelAnimationFrame(rafId)
                 }
-            } else {
-                parked = true
-                scene.park()
             }
         })
         io.observe(container)
 
-        return () => {
-            io.disconnect()
-            ro.disconnect()
-            scene.dispose()
-            sceneRef.current = null
+        if (parallax) {
+            window.addEventListener("pointermove", onPointerMove, { passive: true })
         }
-    }, [])
 
-    useEffect(() => {
-        sceneRef.current?.updateConfig(cfgRef.current)
+        reduceMotionQuery.addEventListener("change", onReduceMotionChange)
+
+        resize()
+
+        if (!reduced) {
+            lastTime = performance.now()
+            rafId = requestAnimationFrame(loop)
+        }
+
+        return () => {
+            cancelAnimationFrame(rafId)
+            ro.disconnect()
+            io.disconnect()
+            window.removeEventListener("pointermove", onPointerMove)
+            reduceMotionQuery.removeEventListener("change", onReduceMotionChange)
+        }
     }, [
         palette,
         stars,
@@ -558,21 +438,16 @@ export function Sky(props: SkyProps) {
     return (
         <div
             ref={containerRef}
-            role="img"
-            aria-label="A tranquil sky scene with a glowing sun or moon, twinkling stars and drifting cumulus clouds that follow the pointer"
-            style={{
-                position: "relative",
-                width: "100%",
-                height: "100%",
-                minWidth: 160,
-                minHeight: 120,
-                overflow: "hidden",
-                ...style,
-            }}
-        />
+            style={style}
+            className={`relative h-full w-full overflow-hidden ${className}`}
+        >
+            <canvas
+                ref={canvasRef}
+                aria-label={`Interactive sky scene (${palette} palette)`}
+                className="pointer-events-none absolute inset-0 h-full w-full"
+            />
+        </div>
     )
 }
-
-Sky.displayName = "Sky"
 
 export default Sky
