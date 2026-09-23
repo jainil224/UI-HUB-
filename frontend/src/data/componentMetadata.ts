@@ -1278,6 +1278,30 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "seeded rng", "additive compositing", "rotated streak sprites", "twinkle/fade envelope", "devicePixelRatio cap"]
         }
     },
+    "rain-storm": {
+        props: [
+            { name: "density", type: "number", default: "45", description: "Drop count scale (0-100)." },
+            { name: "speed", type: "number", default: "35", description: "Fall speed multiplier (0-100)." },
+            { name: "wind", type: "number", default: "18", description: "Horizontal drift, -100..100." },
+            { name: "intensity", type: "number", default: "30", description: "Streak length/width + lightning flash & bolt strength (0-100)." },
+            { name: "lightning", type: "boolean", default: "true", description: "Master switch for the lightning system (flash + bolts)." },
+            { name: "bolts", type: "boolean", default: "true", description: "Draw branching bolt strokes; false keeps a glow-only flash." },
+            { name: "flashMin", type: "number", default: "7", description: "Minimum seconds between strikes (>=2)." },
+            { name: "flashMax", type: "number", default: "15", description: "Maximum seconds between strikes." },
+            { name: "interactive", type: "boolean", default: "true", description: "Click/tap the canvas to fire a lightning strike on demand (previews)." },
+            { name: "splash", type: "boolean", default: "true", description: "Faint ripples where drops land." },
+            { name: "parallax", type: "boolean", default: "true", description: "Gentle pointer parallax." },
+            { name: "colors", type: "string[]", default: '["#A8C2E8", "#6F8FB8", "#445577"]', description: "Streak tint ramp." },
+            { name: "seed", type: "number", default: "1", description: "Deterministic drop layout." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Wrapper style escape hatch." }
+        ],
+        vibeMeta: {
+            behavior: "A Canvas 2D storm on two depth layers (soft far rain + sharp near rain) that gust with the wind; landing near drops burst into splash flecks; every 7-15s - or any click/tap - a seeded strike fires 1-3 branching bolts with a hard flash, a single echo and a cached radial glow that lights the rain via an additive pass, then decays; a parity-eased pointer nudges the field.",
+            states: { from: "two-depth rain streaks gusting over a dark navy gradient", to: "a click fires branching lightning bolts across lit rain, then decays" },
+            cssProperties: ["canvas 2d", "animation", "requestAnimationFrame", "pointermove", "intersection observer", "resize observer", "prefers-reduced-motion"],
+            description: "Decorative Canvas 2D storm layer: two-depth gusting rain, landing splash flecks and cinematic branching lightning you can trigger with a click/tap (hard flash + echo + radial glow) over a dark navy gradient; aria-hidden canvas behind hero content, static frame under prefers-reduced-motion."
+        }
+    },
     "sky": {
         props: [
             { name: "palette", type: '"day" | "dusk" | "night"', default: '"dusk"', description: "Colour mood of the sky: day (bright blue, faint stars), dusk (violet + orange horizon, visible stars), night (deep navy, bright stars)." },

@@ -132,6 +132,29 @@ function extractBackticked(line) {
   return m ? m[1] : null;
 }
 
+/** Pull the `§12` JSON edit plan out of the spec, or `null` if absent/unparseable. */
+function parseEditPlan(md) {
+  const integration = sectionText(md, 12);
+  const m = /```json\s*\n([\s\S]*?)```/.exec(integration);
+  if (!m) return null;
+  try {
+    const v = JSON.parse(m[1]);
+    return Array.isArray(v) ? v : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * A REVISION spec modifies one or more already-shipped component files instead of
+ * adding a brand-new component. It is detected objectively: the §12 edit plan uses
+ * at least one `replace-*` operation. Revisions relax the "slug + file must be new"
+ * checks (Check 3 / Check 8 create-file) because the component already exists.
+ */
+function isRevisionSpec(editPlan) {
+  return !!editPlan && editPlan.some((e) => e && typeof e.operation === 'string' && e.operation.startsWith('replace-'));
+}
+
 async function main() {
   const specPath = process.argv[2];
   if (!specPath) {
@@ -141,11 +164,14 @@ async function main() {
 
   let md;
   try {
-    md = await readFile(path.resolve(specPath), 'utf8');
+    md = (await readFile(path.resolve(specPath), 'utf8')).replace(/\r\n/g, '\n');
   } catch (err) {
     console.error(`Cannot read spec at ${specPath}: ${err.message}`);
     process.exit(2);
   }
+
+  const editPlan = parseEditPlan(md);
+  const isRevision = isRevisionSpec(editPlan);
 
   // --- Check 1: 15 sections present, in order -----------------------------
   const sections = parseSections(md);
@@ -204,21 +230,28 @@ async function main() {
     if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
       fail(`Check 3 Slug: "${slug}" is not kebab-case (expected /^[a-z0-9]+(-[a-z0-9]+)*$/).`);
     }
+    let inIndex = false;
     try {
       const index = JSON.parse(await readFile(INDEX_PATH, 'utf8'));
-      if (Array.isArray(index) && index.some((e) => e.slug === slug)) {
+      inIndex = Array.isArray(index) && index.some((e) => e.slug === slug);
+      if (!isRevision && inIndex) {
         fail(`Check 3 Slug: "${slug}" already exists in data/component-index.json.`);
       }
     } catch (err) {
       warn(`Check 3 Slug: could not read component-index.json (${err.message}); uniqueness only checked against componentData.tsx.`);
     }
+    let inData = false;
     try {
       const data = await readFile(COMPONENT_DATA_PATH, 'utf8');
-      if (data.includes(`id: "${slug}"`) || data.includes(`"${slug}":`)) {
+      inData = data.includes(`id: "${slug}"`) || data.includes(`"${slug}":`);
+      if (!isRevision && inData) {
         fail(`Check 3 Slug: "${slug}" already exists in frontend/src/data/componentData.tsx.`);
       }
     } catch (err) {
       warn(`Check 3 Slug: could not read componentData.tsx (${err.message}).`);
+    }
+    if (isRevision && !inIndex && !inData) {
+      fail(`Check 3 Slug: revision spec for "${slug}" but the slug is not registered in component-index.json / componentData.tsx — a revision must reference an already-shipped component (first-time adds must use create-file, not replace-* edits).`);
     }
   }
 
@@ -371,7 +404,7 @@ async function main() {
         } else if (edits.length === 0) {
           fail('Check 8 Integration: edit plan contains no edits.');
         } else {
-          const OPS = ['insert-after', 'insert-before', 'create-file'];
+          const OPS = ['insert-after', 'insert-before', 'create-file', 'replace-file', 'replace-line', 'replace-embedded'];
           edits.forEach((edit, i) => {
             const at = `edit[${i}]`;
             if (edit === null || typeof edit !== 'object' || Array.isArray(edit)) {
@@ -402,8 +435,20 @@ async function main() {
             const abs = path.resolve(REPO_ROOT, edit.file);
             const targetExists = existsSync(abs);
             if (edit.operation === 'create-file') {
-              if (targetExists) {
+              if (!isRevision && targetExists) {
                 fail(`Check 8 Integration: ${at} create-file target already exists: ${edit.file}`);
+              }
+              if (isRevision && targetExists) {
+                warn(`Check 8 Integration: ${at} create-file target exists in a revision spec (${edit.file}) — prefer replace-file so the existing component is overwritten, not rejected.`);
+              }
+              return;
+            }
+            if (edit.operation === 'replace-file') {
+              if (!targetExists) {
+                fail(`Check 8 Integration: ${at} replace-file target does not exist: ${edit.file}`);
+              }
+              if (edit.anchor !== '') {
+                fail(`Check 8 Integration: ${at} replace-file anchor must be "" (payload is the full replacement source).`);
               }
               return;
             }
@@ -431,6 +476,12 @@ async function main() {
             }
             if (count !== 1) {
               fail(`Check 8 Integration: ${at} anchor matches ${count} times in ${edit.file} (must be exactly 1).`);
+            }
+            if (edit.operation === 'replace-line') {
+              const wholeLines = text.split('\n').filter((l) => l === needle).length;
+              if (wholeLines !== 1) {
+                fail(`Check 8 Integration: ${at} replace-line anchor must equal exactly one whole line in ${edit.file} (whole-line match: ${wholeLines}).`);
+              }
             }
           });
         }

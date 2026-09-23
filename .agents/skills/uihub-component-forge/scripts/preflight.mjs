@@ -82,7 +82,7 @@ async function main() {
   }
   add('PASS', 'A1', `spec exists: ${specArg}`);
 
-  const md = await readFile(specPath, 'utf8');
+  const md = (await readFile(specPath, 'utf8')).replace(/\r\n/g, '\n');
 
   // A2 — validator exits 0
   const v = spawnSync(process.execPath, [VALIDATOR, specPath], { encoding: 'utf8' });
@@ -114,7 +114,12 @@ async function main() {
         hits.push(`${label}(unreadable)`);
       }
     }
-    if (hits.length) add('FAIL', 'A4', `slug "${slug}" already present in ${hits.join(', ')}`);
+    const edits0 = parseEdits(md);
+    const isRevision = !!edits0 && edits0.some((e) => e && typeof e.operation === 'string' && e.operation.startsWith('replace-'));
+    if (isRevision) {
+      if (hits.length) add('PASS', 'A4', `revision: slug "${slug}" already registered in ${hits.join(', ')} (expected)`);
+      else add('FAIL', 'A4', `revision: slug "${slug}" not found in registry, metadata or index — a revision must target an already-shipped component`);
+    } else if (hits.length) add('FAIL', 'A4', `slug "${slug}" already present in ${hits.join(', ')}`);
     else add('PASS', 'A4', `slug "${slug}" unused in registry, metadata and index`);
   }
 
@@ -126,24 +131,35 @@ async function main() {
   } else {
     const creates = edits.filter((e) => e.operation === 'create-file');
     const existing = creates.filter((e) => typeof e.file === 'string' && existsSync(path.resolve(REPO_ROOT, e.file)));
-    if (!creates.length) add('FAIL', 'A5', '§12 has no create-file edit');
+    const replaces = edits.filter((e) => e.operation === 'replace-file');
+    const isRevision = edits.some((e) => e && typeof e.operation === 'string' && e.operation.startsWith('replace-'));
+    if (isRevision) {
+      const missing = replaces.filter((e) => typeof e.file === 'string' && !existsSync(path.resolve(REPO_ROOT, e.file)));
+      if (!replaces.length) add('FAIL', 'A5', 'revision §12 has no replace-file edit');
+      else if (missing.length) add('FAIL', 'A5', `replace-file target(s) missing: ${missing.map((e) => e.file).join(', ')}`);
+      else add('PASS', 'A5', `revision: ${replaces.length} replace-file target(s) exist (${replaces.map((e) => e.file).join(', ')})`);
+    } else if (!creates.length) add('FAIL', 'A5', '§12 has no create-file edit');
     else if (existing.length) add('FAIL', 'A5', `create-file target already exists: ${existing.map((e) => e.file).join(', ')}`);
     else add('PASS', 'A5', `${creates.length} create-file target(s) do not exist`);
 
     let checked = 0;
     const bad = [];
     for (const e of edits) {
-      if (e.operation === 'create-file') continue;
+      if (e.operation === 'create-file' || e.operation === 'replace-file') continue;
       checked++;
       const abs = path.resolve(REPO_ROOT, e.file);
       if (!existsSync(abs)) { bad.push(`${e.file} missing`); continue; }
       const text = readFileSync(abs, 'utf8').replace(/\r\n/g, '\n');
       const needle = String(e.anchor).replace(/\r\n/g, '\n');
       const n = countOccurrences(text, needle);
-      if (n !== 1) bad.push(`${e.file} (${n} matches)`);
+      if (n !== 1) { bad.push(`${e.file} (${n} matches)`); continue; }
+      if (e.operation === 'replace-line') {
+        const whole = text.split('\n').filter((l) => l === needle).length;
+        if (whole !== 1) bad.push(`${e.file} replace-line whole-line match ${whole}`);
+      }
     }
     if (bad.length) add('FAIL', 'A6', `anchor failures: ${bad.join(', ')}`);
-    else add('PASS', 'A6', `${checked}/${checked} insert anchors resolve exactly once`);
+    else add('PASS', 'A6', `${checked}/${checked} anchors (insert/replace-line/replace-embedded) resolve exactly once`);
   }
 
   // A7 — git status (read-only). Skill/spec scaffolding is auto-accepted; unrelated

@@ -105,6 +105,7 @@ const AuroraBpmLoader = React.lazy(() => import('../components/ui/AuroraBpmLoade
 const RippleSignatureLedger = React.lazy(() => import('../components/ui/RippleSignatureLedger').then(m => ({ default: m.RippleSignatureLedger })));
 const CrossfadeTypewriter = React.lazy(() => import('../components/ui/CrossfadeTypewriter').then(m => ({ default: m.CrossfadeTypewriter })));
 const DriftwoodGallery = React.lazy(() => import('../components/ui/DriftwoodGallery').then(m => ({ default: m.DriftwoodGallery })));
+const RainStorm = React.lazy(() => import('../components/ui/RainStorm'));
 
 
 
@@ -2782,6 +2783,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'password-strength-meter': PasswordStrengthMeter,
     'signature-pad': SignaturePad,
     'drag-drop-upload': DragDropUpload,
+    'rain-storm': RainStorm,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15056,6 +15058,23 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         newBadgeDays: 120,
         description: "A tide-bobbed photo gallery in a driftwood frame with smooth ref-driven parallax tilt, hover-paused auto-slides, and jump dots.",
         preview: () => <DriftwoodGalleryPreview />,
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Rain Storm ───────────────────────────────────────
+    {
+        id: "rain-storm",
+        title: "Rain Storm",
+        category: "interactive-background",
+        addedAt: "2026-09-22",
+        newBadgeDays: 120,
+        description: "Calm-to-moderate night storm: two-depth gusting rain streaks, landing ripple flecks and cinematic branching lightning you can fire with a click or tap — radial sky glow, lit rain and gentle pointer parallax.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#05070F]">
+                <RainStorm />
+            </div>
+        ),
         code: "",
         vibePrompt: "",
     },

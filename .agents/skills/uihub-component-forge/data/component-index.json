@@ -1818,6 +1818,116 @@
     "lineCount": 453
   },
   {
+    "category": "interactive-background",
+    "name": "RainStorm",
+    "slug": "rain-storm",
+    "filePath": "frontend/src/components/ui/RainStorm.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "tailwind",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame",
+      "scroll-reveal"
+    ],
+    "props": [
+      {
+        "name": "density",
+        "type": "number",
+        "default": 45,
+        "purpose": "Drop count scale (0-100)."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 35,
+        "purpose": "Fall speed multiplier (0-100)."
+      },
+      {
+        "name": "wind",
+        "type": "number",
+        "default": 18,
+        "purpose": "Horizontal drift, -100..100."
+      },
+      {
+        "name": "intensity",
+        "type": "number",
+        "default": 30,
+        "purpose": "Streak length/width + flash strength (0-100)."
+      },
+      {
+        "name": "lightning",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Soft, infrequent lightning flashes."
+      },
+      {
+        "name": "bolts",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Bolt on/off; false keeps a soft glow-only flash."
+      },
+      {
+        "name": "flashMin",
+        "type": "number",
+        "default": 7,
+        "purpose": "Minimum seconds between strikes."
+      },
+      {
+        "name": "flashMax",
+        "type": "number",
+        "default": 15,
+        "purpose": "Maximum seconds between strikes."
+      },
+      {
+        "name": "interactive",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Click/tap fires a lightning strike on demand (previews)."
+      },
+      {
+        "name": "splash",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Faint ripples where drops land."
+      },
+      {
+        "name": "parallax",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Gentle pointer parallax."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": [
+          "#A8C2E8",
+          "#6F8FB8",
+          "#445577"
+        ],
+        "purpose": "Streak tint ramp."
+      },
+      {
+        "name": "seed",
+        "type": "number",
+        "default": 1,
+        "purpose": "Deterministic drop layout."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Wrapper style escape hatch."
+      }
+    ],
+    "responsive": "Wrapper h-full w-full overflow-hidden; ResizeObserver with setTransform reset; DPR cap 2 (1.5 above 1920px); drop count x0.55 at <=820px (40-900).",
+    "performanceNotes": "Single rAF with id cancelled on unmount; IntersectionObserver pauses off-screen; ripples capped at 140 with swap-pop; two strokes per drop, no per-frame allocations.",
+    "accessibility": "aria-hidden canvas + pointer-events none; static frame under prefers-reduced-motion; soft + infrequent lightning flash limited to 0.15 alpha.",
+    "lineCount": 629
+  },
+  {
     "category": "image-interaction",
     "name": "SpiralImages",
     "slug": "spiral-images",
