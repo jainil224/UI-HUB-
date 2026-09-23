@@ -164,7 +164,7 @@ async function main() {
     if (isBroadcast) {
         const doPush = wantPush && !skipPush;
         console.log(`\n🚀 INITIATING ANNOUNCEMENT BROADCAST TO ${uniqueUsers.length} USERS`);
-        console.log(`   Subject: "${customSubject || `UI HUB — we added ${manifest.latestDropCount || 1} new components 🚀 Break it down below`}"`);
+        console.log(`   Subject: "${customSubject || `UI-HUB misses you! 🚀 ${manifest.latestDropCount || 1} new components just dropped`}"`);
         console.log(`   Throttling: 600ms per email to prevent rate limits`);
         console.log(`   Push notifications: ${doPush ? 'ON' : 'OFF'}`);
         console.log('===================================================================');

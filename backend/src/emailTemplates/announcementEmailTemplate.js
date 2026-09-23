@@ -37,52 +37,63 @@ export function buildAnnouncementEmailHtml({
     const total = manifest.totalComponents || 127;
     const latestDropDate = manifest.latestDropDate || '';
     const latestDropCount = manifest.latestDropCount || 1;
-    const featured = (manifest.featured || []).slice(0, 4);
-    const bannerUrl = `${origin}${manifest.bannerImage || '/assets/component-previews/announcement-banner.gif'}`;
+    const featured = (manifest.featured || []).slice(0, 5);
+    const featuredCount = featured.length || manifest.latestDropCount || 1;
     const libraryUrl = `${origin}/library`;
+    const componentUrl = (f) => `${origin}/library?id=${encodeURIComponent(f.id)}`;
 
     const assetUrl = (p) => (p ? `${origin}${p}` : '');
 
-    // Tight 2×2 grid of the new components (image + title only).
+    // The 5 new additions as a centered 2+2+1 image grid at the bottom of the
+    // email. Every card links straight to its own component page.
+    const renderCard = (f) => `
+                <table width="100%" cellpadding="0" cellspacing="0" style="width:100%; border:2px solid #FFFFFF; background-color:#0F0F0F;">
+                  <tr>
+                    <td style="padding:0; border-bottom:2px solid #FFFFFF;">
+                      <a href="${componentUrl(f)}">
+                        <img src="${assetUrl(f.thumbUrl)}" alt="${f.title}" width="250" height="140"
+                             style="display:block; width:100%; height:auto; border:0; background-color:#111111;" />
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:10px 12px;">
+                      <div style="font-size:11px; font-weight:900; color:#FFFFFF !important; text-transform:uppercase; letter-spacing:0.5px; line-height:1.3;">
+                        <a href="${componentUrl(f)}" style="color:#FFFFFF !important; text-decoration:none;">${f.title}</a>
+                      </div>
+                      <div style="font-size:11px; color:#A1A1AA; line-height:1.5; margin-top:4px;">${f.description || ''}</div>
+                    </td>
+                  </tr>
+                </table>`;
+
+    const renderRow = (cells) => `
+              <tr>
+                <td style="padding:0 0 18px 0;">
+                  <table width="100%" cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse;">
+                    ${cells}
+                  </table>
+                </td>
+              </tr>`;
+
     const cardRows = (() => {
         const rows = [];
         for (let i = 0; i < featured.length; i += 2) {
             const left = featured[i];
             const right = featured[i + 1];
-            const card = (f) =>
-                f
-                    ? `
-                <td width="47%" style="width:47%; padding:${i % 2 === 0 ? '0 6% 0 0' : '0 0 0 6%'}; vertical-align:top;">
-                  <table width="100%" cellpadding="0" cellspacing="0" style="width:100%; border:2px solid #FFFFFF; background-color:#0F0F0F;">
+            if (right) {
+                rows.push(renderRow(`
                     <tr>
-                      <td style="padding:0; border-bottom:2px solid #FFFFFF;">
-                        <a href="${libraryUrl}">
-                          <img src="${assetUrl(f.thumbUrl)}" alt="${f.title}" width="250" height="140"
-                               style="display:block; width:100%; height:auto; border:0; background-color:#111111;" />
-                        </a>
+                      <td width="47%" style="width:47%; padding:0 3% 0 0; vertical-align:top;">${renderCard(left)}</td>
+                      <td width="47%" style="width:47%; padding:0 0 0 3%; vertical-align:top;">${renderCard(right)}</td>
+                    </tr>`));
+            } else {
+                rows.push(renderRow(`
+                    <tr>
+                      <td align="center" style="vertical-align:top;">
+                        <table width="250" cellpadding="0" cellspacing="0" style="width:100%; max-width:250px; margin:0 auto;">${renderCard(left)}</table>
                       </td>
-                    </tr>
-                    <tr>
-                      <td style="padding:10px 12px;">
-                        <div style="font-size:11px; font-weight:900; color:#FFFFFF !important; text-transform:uppercase; letter-spacing:0.5px; line-height:1.3;">
-                          ${f.title}
-                        </div>
-                      </td>
-                    </tr>
-                  </table>
-                </td>`
-                    : '<td width="47%" style="width:47%;"></td>';
-            rows.push(`
-              <tr>
-                <td style="padding:0 0 18px 0;">
-                  <table width="100%" cellpadding="0" cellspacing="0" style="width:100%; border-collapse:collapse;">
-                    <tr>
-                      ${card(left)}
-                      ${card(right)}
-                    </tr>
-                  </table>
-                </td>
-              </tr>`);
+                    </tr>`));
+            }
         }
         return rows.join('');
     })();
@@ -95,7 +106,7 @@ export function buildAnnouncementEmailHtml({
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="color-scheme" content="dark"/>
   <meta name="supported-color-schemes" content="dark"/>
-  <title>UI HUB — ${latestDropCount} New Components Landed</title>
+  <title>UI HUB — ${featuredCount} New Components Landed</title>
   <style>
     :root { color-scheme: dark; }
   </style>
@@ -132,41 +143,34 @@ export function buildAnnouncementEmailHtml({
 
                 <!-- Badge -->
                 <span style="display:inline-block; background-color:#FFC700; color:#000000 !important; font-size:10px; font-weight:900; padding:5px 12px; border:2px solid #FFFFFF; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:14px;">
-                  ⚡ NEW COMPONENTS DROPPED
+                  ⚡ WE MISSED YOU
                 </span>
 
                 <!-- Headline -->
                 <h1 style="font-size:24px; font-weight:900; color:#FFFFFF !important; text-transform:uppercase; letter-spacing:0.5px; margin:14px 0 6px 0; line-height:1.2;">
-                  Hey ${displayName}, we added ${latestDropCount} new components${latestDropDate ? ' · ' + prettyDate(latestDropDate) : ''}
+                  Hey ${displayName}, ${featuredCount} new components landed while you were away
                 </h1>
 
                 <!-- One-liner -->
                 <p style="font-size:13px; color:#A1A1AA; line-height:1.6; margin:0 0 22px 0; font-weight:500;">
-                  UI HUB now has <strong style="color:#FFFFFF;">${total}+ components live</strong> — ready to drop straight into your builds.
+                  UI HUB is now <strong style="color:#FFFFFF;">${total}+ components live</strong> — and five brand-new ones are waiting for you below.
                 </p>
 
-                <!-- Hero animated banner -->
-                <div style="border:2px solid #FFFFFF; background-color:#000000; padding:6px; margin-bottom:26px;">
-                  <img src="${bannerUrl}" alt="Preview of UI HUB interactive backgrounds"
-                       width="640" height="360"
-                       style="display:block; width:100%; height:auto; border:0; background-color:#000000;" />
+                <!-- CTA -->
+                <div style="margin:0 0 26px 0;">
+                  <a href="${libraryUrl}"
+                     style="display:block; width:100%; box-sizing:border-box; text-align:center; background-color:#3D5CFF; color:#FFFFFF !important; text-decoration:none; font-weight:900; font-size:13px; padding:15px 20px; border:2px solid #FFFFFF; text-transform:uppercase; letter-spacing:1.5px;">
+                    COME SEE WHAT'S NEW →
+                  </a>
                 </div>
 
                 ${featured.length ? `
-                <!-- 2×2 new additions -->
-                <div style="font-size:11px; font-weight:900; color:#3D5CFF; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px;">
+                <!-- 5 new additions (bottom, centered) -->
+                <div style="text-align:center; font-size:11px; font-weight:900; color:#3D5CFF; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:14px;">
                   ✨ THE NEW ADDITIONS
                 </div>
                 ${cardRows}
                 ` : ''}
-
-                <!-- CTA -->
-                <div style="margin:6px 0 20px 0;">
-                  <a href="${libraryUrl}"
-                     style="display:block; width:100%; box-sizing:border-box; text-align:center; background-color:#3D5CFF; color:#FFFFFF !important; text-decoration:none; font-weight:900; font-size:13px; padding:15px 20px; border:2px solid #FFFFFF; text-transform:uppercase; letter-spacing:1.5px;">
-                    EXPLORE THE NEW ADDITIONS →
-                  </a>
-                </div>
 
                 <!-- Link fallback -->
                 <div style="background-color:#141414; border:1.5px solid #333333; padding:10px 12px; font-family:monospace; font-size:11px; color:#3D5CFF; word-break:break-all;">

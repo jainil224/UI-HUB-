@@ -901,8 +901,8 @@ export async function sendAnnouncementEmail({
 
     if (!apiKey || !senderEmail) return { success: false, error: 'Brevo credentials missing' };
 
-    const count = manifest.latestDropCount || 1;
-    const subject = customSubject || `UI HUB — we added ${count} new components 🚀 Break it down below`;
+    const count = (manifest.featured && manifest.featured.length) || manifest.latestDropCount || 1;
+    const subject = customSubject || `UI-HUB misses you! 🚀 ${count} new components just dropped`;
     const frontendUrl = process.env.FRONTEND_URL || 'https://ui-hub-design.vercel.app';
     const libraryUrl = `${frontendUrl}/library`;
 

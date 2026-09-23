@@ -301,8 +301,8 @@ export async function sendAnnouncementEmail({
   console.warn('[EmailService] Brevo HTTP API announcement send unfulfilled, attempting SMTP fallback...');
   try {
     const { transporter, fromAddress } = getTransporter();
-    const count = manifest?.latestDropCount || 1;
-    const subject = customSubject || `UI HUB — we added ${count} new components 🚀 Break it down below`;
+    const count = (manifest?.featured && manifest.featured.length) || manifest?.latestDropCount || 1;
+    const subject = customSubject || `UI-HUB misses you! 🚀 ${count} new components just dropped`;
     const mailOptions = {
       from: `"UI HUB" <${fromAddress}>`,
       to: email,

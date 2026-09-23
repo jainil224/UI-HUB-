@@ -106,6 +106,9 @@ const RippleSignatureLedger = React.lazy(() => import('../components/ui/RippleSi
 const CrossfadeTypewriter = React.lazy(() => import('../components/ui/CrossfadeTypewriter').then(m => ({ default: m.CrossfadeTypewriter })));
 const DriftwoodGallery = React.lazy(() => import('../components/ui/DriftwoodGallery').then(m => ({ default: m.DriftwoodGallery })));
 const RainStorm = React.lazy(() => import('../components/ui/RainStorm'));
+const VectorWordmark = React.lazy(() => import('../components/ui/VectorWordmark'));
+const EmberHusk = React.lazy(() => import('../components/ui/EmberHusk'));
+const ParticleLoader = React.lazy(() => import('../components/ui/ParticleLoader'));
 
 
 
@@ -2784,6 +2787,9 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'signature-pad': SignaturePad,
     'drag-drop-upload': DragDropUpload,
     'rain-storm': RainStorm,
+    'vector-wordmark': VectorWordmark,
+    'ember-husk': EmberHusk,
+    'particle-loader': ParticleLoader,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15073,6 +15079,57 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#05070F]">
                 <RainStorm />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── UI HUB Wordmark ─────────────────────────────────
+    {
+        id: "vector-wordmark",
+        title: "UI HUB Wordmark",
+        category: "text",
+        addedAt: "2026-09-23",
+        newBadgeDays: 120,
+        description: "A raw-WebGL typographic wordmark stage: your brand text reads through a soft-blur canvas with dotted dimension handles that trail the pointer, snap to the nearest cell grid, and drift on noise currents.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <VectorWordmark style={{ minWidth: 0, minHeight: 0 }} />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Ember Husk ──────────────────────────────────────
+    {
+        id: "ember-husk",
+        title: "Ember Husk",
+        category: "interactive-background",
+        addedAt: "2026-09-23",
+        newBadgeDays: 120,
+        description: "A WebGL scene of a fractured volcanic husk: cracked rock shards tumble and scatter in on load to reveal a molten ember core, ringed by drifting cross markers, hot beads and debris — responsive to pointer reach and repel, with volumetric glow.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <EmberHusk />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Particle Loader ─────────────────────────────────
+    {
+        id: "particle-loader",
+        title: "Particle Loader",
+        category: "loader",
+        addedAt: "2026-09-23",
+        newBadgeDays: 120,
+        description: "A canvas load spinner: a tether of dots blooms up and converges around a fibonacci-sphere shell with perspective depth, auto-fit sizing, and drag-and-spin momentum you can reorient — fluorescent green on any dark surface.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <ParticleLoader />
             </div>
         ),
         code: "",

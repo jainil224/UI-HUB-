@@ -46,13 +46,14 @@ const CURATED_BANNER_IDS = [
 ];
 
 // The newest components showcased as "What's New" feature cards.
-const FOCUS_IDS = ['reflect-shader', 'infinite-tendrils', 'ocean-swell', 'star-burst'];
+const FOCUS_IDS = ['particle-loader', 'ember-husk', 'ocean-swell', 'morphing-glow', 'pixel-drift'];
 
 const FEATURED_DESCS = {
-    'reflect-shader': 'Realtime WebGL reflection shader that turns any surface into a living mirror.',
-    'infinite-tendrils': 'Organic ribbons of light that twist and flow endlessly in the background.',
-    'ocean-swell': 'A THREE.js ocean surface rendered with calm, cinematic swell.',
-    'star-burst': 'An animated radial burst of light — pure eye candy for hero sections.',
+    'particle-loader': 'A canvas load spinner: a tether of dots blooms up and converges around a fibonacci-sphere shell with perspective depth, drag-and-spin momentum — fluorescent green on any dark surface.',
+    'ember-husk': 'A WebGL scene of a fractured volcanic husk: cracked rock shards tumble and scatter on load to reveal a molten ember core, responsive to pointer reach and repel.',
+    'ocean-swell': 'A ray-marched cinematic ocean with glittering sun speculars, foam crests, and drag-to-orbit camera.',
+    'morphing-glow': 'A morphing glass diamond loader: blurred polygon blades reshape a glowing amber disc that breathes color — pure CSS, zero dependencies.',
+    'pixel-drift': 'A pixel-matrix drift effect that ripples type and images pixel by pixel — crisp, grid-driven, and playful.',
 };
 
 const SLUG_CATEGORY_DESC = {

@@ -1,21 +1,22 @@
 {
-  "generatedAt": "2026-09-18T13:27:56.186Z",
-  "asOf": "2026-09-18",
-  "totalComponents": 127,
-  "latestDropDate": "2026-09-18",
-  "latestDropCount": 4,
+  "generatedAt": "2026-09-23T13:47:52.533Z",
+  "asOf": "2026-09-23",
+  "totalComponents": 133,
+  "latestDropDate": "2026-09-23",
+  "latestDropCount": 3,
   "latestDropByCategory": {
-    "background": 1,
-    "interactive-background": 3
+    "text": 1,
+    "interactive-background": 1,
+    "loader": 1
   },
-  "thirtyDayCount": 73,
+  "thirtyDayCount": 60,
   "thirtyDayCountsByCategory": {
-    "background": 2,
+    "text": 2,
     "interactive-background": 13,
+    "loader": 10,
+    "background": 2,
     "form": 4,
-    "loader": 9,
     "image-interaction": 5,
-    "text": 16,
     "footer": 8,
     "button": 5,
     "navbar": 7,
@@ -23,22 +24,22 @@
   },
   "featured": [
     {
-      "id": "reflect-shader",
-      "title": "Reflect Shader",
-      "category": "interactive-background",
-      "categoryLabel": "Interactive Background",
-      "description": "A chromium-refraction WebGL shader field that ripples and glows around your pointer.",
-      "addedAt": "2026-09-18",
-      "thumbUrl": "/assets/component-previews/reflect-shader.png"
+      "id": "particle-loader",
+      "title": "Particle Loader",
+      "category": "loader",
+      "categoryLabel": "Loader",
+      "description": "A canvas load spinner: a tether of dots blooms up and converges around a fibonacci-sphere shell with perspective depth, auto-fit sizing, and drag-and-spin momentum you can reorient — fluorescent green on any dark surface.",
+      "addedAt": "2026-09-23",
+      "thumbUrl": "/assets/component-previews/particle-loader.png"
     },
     {
-      "id": "infinite-tendrils",
-      "title": "Infinite Tendrils",
+      "id": "ember-husk",
+      "title": "Ember Husk",
       "category": "interactive-background",
       "categoryLabel": "Interactive Background",
-      "description": "An infinite field of glowing particle tendrils that drift on noise-driven currents and curl toward your pointer.",
-      "addedAt": "2026-09-18",
-      "thumbUrl": "/assets/component-previews/infinite-tendrils.png"
+      "description": "A WebGL scene of a fractured volcanic husk: cracked rock shards tumble and scatter in on load to reveal a molten ember core, ringed by drifting cross markers, hot beads and debris — responsive to pointer reach and repel, with volumetric glow.",
+      "addedAt": "2026-09-23",
+      "thumbUrl": "/assets/component-previews/ember-husk.png"
     },
     {
       "id": "ocean-swell",
@@ -50,13 +51,22 @@
       "thumbUrl": "/assets/component-previews/ocean-swell.png"
     },
     {
-      "id": "star-burst",
-      "title": "Star Burst",
-      "category": "background",
-      "categoryLabel": "Background",
-      "description": "A radial flower-burst of twinkling star streaks that blooms outward from a glowing core.",
-      "addedAt": "2026-09-18",
-      "thumbUrl": "/assets/component-previews/star-burst.png"
+      "id": "morphing-glow",
+      "title": "Morphing Glow",
+      "category": "loader",
+      "categoryLabel": "Loader",
+      "description": "A morphing glass diamond loader: blurred polygon blades reshape a glowing amber disc that breathes color — pure CSS, zero dependencies.",
+      "addedAt": "2026-08-31",
+      "thumbUrl": "/assets/component-previews/morphing-glow.png"
+    },
+    {
+      "id": "pixel-drift",
+      "title": "Pixel Drift",
+      "category": "text",
+      "categoryLabel": "Text",
+      "description": "A pixel-matrix drift effect that ripples type and images pixel by pixel — crisp, grid-driven, and playful.",
+      "addedAt": "2026-08-23",
+      "thumbUrl": "/assets/component-previews/pixel-drift.png"
     }
   ],
   "bannerIds": [
