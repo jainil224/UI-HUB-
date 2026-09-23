@@ -64,9 +64,11 @@ Work in order. Each step names the reference doc to load — load only that doc.
    or `references/03-category-interactive-image.md`; use its definitions, naming,
    skeleton and anti-patterns. Capture the category's **house style** (framework,
    rendering tier, styling, key libraries) — it fills spec §3 and constrains the
-   stack: no new framework or npm package beyond `react`, `react-dom`, `framer-motion`.
+   stack: the only packages in the house stack are `react`, `react-dom`, `three`,
+   and `motion/`(framer-motion), all already installed — **never `npm install` a
+   new dependency in a spec or its §12 edits**.
 4. **Pick 2–3 reference components** from `data/component-index.json`, preferring
-   the "best reference" three named in the category doc. Record each component's
+   the "best reference" components named in the category doc. Record each component's
    exact `filePath` and what will be borrowed.
 5. **Research technique** per `references/05-research-playbook.md` — only when its
    triggers apply (budget 3–8; ≤10 combined with inspiration). Existing component

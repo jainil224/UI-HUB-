@@ -1928,6 +1928,111 @@
     "lineCount": 629
   },
   {
+    "category": "interactive-background",
+    "name": "EmberHusk",
+    "slug": "ember-husk",
+    "filePath": "frontend/src/components/ui/EmberHusk.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react",
+      "three"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "scroll-reveal"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "EmberHuskBackground",
+        "default": "{ color: #1A0402, glowColor: #FF2606, glow: 6 }",
+        "purpose": "Scene backdrop: clear + fog tint color, glowColor spill light, glow radiance 0-10."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "default": 3.7,
+        "purpose": "Global scale of the husk, its shards, orbits and motion."
+      },
+      {
+        "name": "structure",
+        "type": "EmberHuskStructure",
+        "default": "{ shards: 11, irregularity: 6, thickness: 5 }",
+        "purpose": "Husk shell: shard count, irregularity (fracture variance 0-10), thickness (shell depth 0-10)."
+      },
+      {
+        "name": "rock",
+        "type": "EmberHuskRock",
+        "default": "{ color: #171512, weathering: 5, seam: 4 }",
+        "purpose": "Shard material: base color, weathering (surface noise 0-10), seam (crack glow weight 0-10)."
+      },
+      {
+        "name": "core",
+        "type": "EmberHuskCore",
+        "default": "{ color: #FF3B00, hotColor: #FFC46A, intensity: 6, flow: 5 }",
+        "purpose": "Molten core: color, hotColor, intensity (0-10), flow (fluid wobble 0-10)."
+      },
+      {
+        "name": "crosses",
+        "type": "EmberHuskCrosses",
+        "default": "{ count: 52, size: 5, thickness: 5, color: #EDEFF5, spread: 5 }",
+        "purpose": "Marker crosses: orbiting beacon count, size, thickness, color, orbital spread."
+      },
+      {
+        "name": "debris",
+        "type": "EmberHuskDebris",
+        "default": "{ count: 54, size: 5, spread: 5 }",
+        "purpose": "Free-floating debris field: particle count, size, spread."
+      },
+      {
+        "name": "beads",
+        "type": "number",
+        "default": 5,
+        "purpose": "Hot bead orbs circulating the core (0-20)."
+      },
+      {
+        "name": "entrance",
+        "type": "EmberHuskEntrance",
+        "default": "{ scatter: 6, tumble: 6, stagger: 4 }",
+        "purpose": "Mount choreography: shard scatter force, tumble rotation, staggered per-shard timing 0-10."
+      },
+      {
+        "name": "response",
+        "type": "EmberHuskResponse",
+        "default": "{ reach: 5, strength: 5, repel: 6, settle: 5 }",
+        "purpose": "Pointer interaction: reach radius, strength, repel force, settle/spring back 0-10."
+      },
+      {
+        "name": "drift",
+        "type": "EmberHuskDrift",
+        "default": "{ spin: 3, bob: 4, sway: 4 }",
+        "purpose": "Idle motion: orbital spin, vertical bob, cardinal sway 0-10."
+      },
+      {
+        "name": "glow",
+        "type": "EmberHuskGlow",
+        "default": "{ strength: 5, radius: 5, threshold: 5 }",
+        "purpose": "Post glow composite: brightness, spread radius, bloom threshold 0-10."
+      },
+      {
+        "name": "quality",
+        "type": "\"low\" | \"medium\" | \"high\"",
+        "default": "high",
+        "purpose": "Render scale + physics quality: DPR cap and render-target resolution per tier."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Wrapper style escape hatch."
+      }
+    ],
+    "responsive": "Full-bleed canvas scene (wrapper min 1200x800 in index); ResizeObserver-driven resize; DPR cap and render-target resolution scale per quality tier.",
+    "performanceNotes": "Single rAF loop gated on visibilitychange; fixed-timestep physics (120Hz, up to 5 substeps, 0.88 damping) integrated into the render loop; glow pass via down/up-sampled RenderTarget chain (PREFILTER/DOWN/UP/COMPOSITE); heavy noise/bloom lighting in fragment shaders; cleanup tears down GL.",
+    "lineCount": 1978
+  },
+  {
     "category": "image-interaction",
     "name": "SpiralImages",
     "slug": "spiral-images",

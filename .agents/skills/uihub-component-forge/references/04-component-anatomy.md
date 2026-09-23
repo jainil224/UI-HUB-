@@ -112,7 +112,7 @@ Every canvas/rAF component MUST:
 ## 8. Styling
 
 - Backgrounds/canvas tiers: inline styles (the norm) — `inline-styles` in the
-  index for 16/19 backgrounds. Canvas can't take classes meaningfully.
+  index for 19/21 backgrounds. Canvas can't take classes meaningfully.
 - DOM/motion tiers: Tailwind v4 utilities follow breakpoint prefixes; keep tokens
   from `data/design-tokens.json` (brutal shadows `2px/4px`, `rounded-*`, color
   vars) so they match the library's design system.

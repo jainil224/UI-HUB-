@@ -7,7 +7,7 @@
 >
 > **Registry stub:** categories allow `interactive-background`
 > (`frontend/src/data/componentData.tsx` — near `export type ComponentItem`).
-> **19 registered components.**
+> **21 registered components.**
 
 ---
 
@@ -17,10 +17,11 @@
 pointer (hover / drag / click), auto-animate, and sit behind content. In this repo
 they are homogeneous:
 
-- Every one of the 19 is a **single self-contained `.tsx` file** in
+- Every one of the 21 is a **single self-contained `.tsx` file** in
   `frontend/src/components/ui/`.
-- 14 are pure canvas + raw-rAF; 3 use three.js geometry (Tornado, BlockDrift,
-  GlobeMesh, OceanSwell — 4 actually); several wrap `motion/react` around WebGL.
+- 16 are canvas-based (raw-rAF loops; 4 of them wire `motion/react` motion values
+  around the loop); 5 use raw three.js (Tornado, BlockDrift, GlobeMesh, OceanSwell,
+  EmberHusk).
 - ZERO of them depend on each other or on shared UI primitives; the only shared
   deps are `react`, `three`, and `motion/`(framer-motion).
 - All take a `background`/color family prop and a `style` escape hatch; most take
@@ -51,9 +52,12 @@ Source: `data/component-index.json` (dependencies + stylingMethod fields).
 | ocean-swell | `OceanSwell.tsx` | 657 |
 | frost-glass-melt | `FrostGlassMelt.tsx` | 514 |
 | sky | `Sky.tsx` | 453 |
+| rain-storm | `RainStorm.tsx` | 629 |
+| ember-husk | `EmberHusk.tsx` | 1978 |
 
 Registry assignments live in `frontend/src/data/componentData.tsx`:
-`interactive-background` blocks at `:5988-6017`, `:6189`, `:7104-7622`.
+`interactive-background` blocks at `:5988-6017`, `:6189`, `:7104-7622`,
+`:15071-15137`.
 
 ## 3. Naming conventions (critical)
 
@@ -103,8 +107,19 @@ Observed patterns — new components MUST follow the "modern" rows, not the lega
    `animRef` and cancelled on unmount; particle re-init keyed on a `sizeVersion`
    counter so resizes don't rebuild the sim every frame. Cite: `:99`, index
    `performanceNotes`.
+4. **`EmberHusk.tsx`** — WebGL-scene tier reference (the densest three.js rebuild).
+   Demonstrates: a **fixed-timestep physics loop** (`PHYS_STEP` 1/120, up to 5
+   substeps, 0.88 damping) integrated into the single rAF render loop; **glow via
+   down/up-sampled render targets** (PREFILTER/DOWN/UP/COMPOSITE chain) instead of
+   a full-res composite; polyhedral `HULL_PLANES` shard clipping on a cracked rock
+   shell with noise-lit fragment shaders; staggered per-shard entrance
+   choreography; pointer `response.{reach,strength,repel,settle}` mapping pointer
+   distance into a repel force with spring-back; every control group is a typed
+   object of **normalized 0–10 sliders**, plus a `quality: "low"|"medium"|"high"`
+   tier that scales DPR cap + render-target resolution. Cite: `:1528`
+   (IntersectionObserver parking), `:73` (`DEFAULTS`), index `performanceNotes`.
 
-Use these three whenever you need to prove a pattern; the other 16 follow the same
+Use these four whenever you need to prove a pattern; the other 17 follow the same
 shape with more/less custom math.
 
 ## 5. Recurring skeleton
@@ -145,6 +160,12 @@ behind them; a `background` prop sets that CSS color. No wrapper padding.
 - Default palettes are neon-on-dark (`background` ~`#000000`–`#0B0C0E`;
   accents like `#04FF3F`, `#00E5FF`, `#FF007A`, `#3D5CFF`). Matches the brutalist
   token system (`data/design-tokens.json`, groups `colors`).
+- Newest components normalize controls: **every tweakable is a 0–10 slider**
+  grouped in typed objects (`EmberHusk` `structure`/`rock`/`core`/`response`/…),
+  `0–100` or boolean toggles in canvas sims (`RainStorm` `density`/`speed`).
+  Avoid arbitrary units — pick one scale per object and reuse it.
+- A `quality: "low" | "medium" | "high"` tier prop (EmberHusk) scales DPR cap and
+  internal render-target resolution — better than a single hidden DPR number.
 - Every modern component passes `style?: React.CSSProperties` through to the wrapper.
 
 ## 7. Performance & lifecycle rules (from code, not theory)
@@ -157,11 +178,16 @@ behind them; a `background` prop sets that CSS color. No wrapper padding.
 - Recompute sim on resize via a **revision counter** (`sizeVersion`) rather than on
   every frame.
 - Heavy math lives in **vertex shaders** where possible (GravitationalVortex motion)
-  — next generation builds move simulation to GPU.
+  — next generation builds move simulation to GPU. EmberHusk is the current
+  reference for that direction: a **fixed-timestep physics update (120 Hz, up to 5
+  substeps, 0.88 damping)** keeps the shard sim deterministic, and the **glow pass
+  runs through down/up-sampled render targets** rather than a full-res composite.
+  An **IntersectionObserver** parks the GL loop while off-screen (`:1528`), on top
+  of the standard `visibilitychange` cleanup.
 - Framer Motion values replace React state where the value updates at 60fps
   (`BloomingFlower` bloom progress) — no re-renders.
 - **No** Redux/context/zustand in any background component; no component-to-component
-  messaging. (Source: grep of all 19 files — see `dependencies` in index.)
+  messaging. (Source: grep of all 21 files — see `dependencies` in index.)
 
 ## 8. Accessibility
 
