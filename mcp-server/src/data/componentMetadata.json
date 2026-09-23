@@ -4623,5 +4623,324 @@
         "prefers-reduced-motion support"
       ]
     }
+  },
+  "vector-wordmark": {
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "default": "\"UI HUB\"",
+        "description": "Brand text rendered on the wordmark canvas."
+      },
+      {
+        "name": "font",
+        "type": "React.CSSProperties",
+        "default": "Inter 800 / 200px / -0.02em",
+        "description": "Font spec: fontFamily, fontWeight, fontSize, fontStyle, letterSpacing (fontSize scales with host width)."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#000000\"",
+        "description": "Host background color behind the canvas."
+      },
+      {
+        "name": "textColor",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Text fill color (hex / rgb / hsl / var())."
+      },
+      {
+        "name": "shade",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Bottom-to-top shade tint mixed into the fill."
+      },
+      {
+        "name": "accent",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Handle/label accent color for the dashed frame, boxes and labels."
+      },
+      {
+        "name": "reach",
+        "type": "number",
+        "default": "290",
+        "description": "Pointer reach radius in px; larger = handles dart from farther away."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "50",
+        "description": "Overall motion rate (idle sweep + drift), 0-100."
+      },
+      {
+        "name": "damping",
+        "type": "number",
+        "default": "60",
+        "description": "Pointer easing damp factor, 0-100."
+      },
+      {
+        "name": "handles",
+        "type": "HandleGroup",
+        "default": "{ size: 109, spread: 27, labels: true }",
+        "description": "Handle group config: size (frame half-size), spread (cell spacing), labels (show x/y % readouts)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Wrapper style escape hatch."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A raw-WebGL typographic wordmark (single GL context, one fullscreen-triangle draw, live state via refs). The text is rasterized once into an offscreen font atlas: a red fill plus a dashed green perimeter stroke laid into a black RGBA canvas, scaled to fit the 4096px texture cap with a 0.12em pad, then uploaded as a texture with mipmaps (POT or WebGL2) and re-baked whenever text/font/dpr/size changes. The fragment shader samples the atlas with a 6-direction blur to soften the stem, mixes sharp and soft reads by a pointer-distance falloff (k = 1 - smoothstep(0, reach, d)^3) so the wordmark sharpens under the cursor, blends a bottom-up shade gradient into the text color, and overlays an accent dashed triangle plus three dashed bounding boxes (uV0/uV1/uV2 + uHalf) around three drifting vertices. Pointer-aware motion: without a pointer the framerate viewport sweeps left-to-right at speed with constant y at the text baseline and a tiny z-noise sway; on pointermove the target snaps to the nearest cell centers around the cursor inside a 0.6-aspect grid, two vertices hitch cells while the third holds the pointer cell, and every vertex orbits its cell with per-cell pseudo-random sine drift (frequency 1.3 / 1.69) offset by a hash of the cell coords. Easing is an exponential damp (damping/100 * 20 * dt) toward the target. The host keeps a minWidth of 1200 and minHeight of 800, canvas DPR-capped at 2, rAF loop gated on document.visibilitychange, and the active hover reach/framing readouts are drawn as monospace labels at each handle.",
+      "states": {
+        "from": "a softly blurred wordmark on black with three dimension handles drifting on sine currents",
+        "to": "the text sharpens and the handles dart to nearest cell centers as the pointer moves, with live % readouts"
+      },
+      "cssProperties": [
+        "raw webgl",
+        "webgl2 with webgl1 fallback",
+        "offscreen font atlas texture",
+        "6-direction blur sampling",
+        "dashed accent frames + boxes",
+        "radial pointer-distance falloff",
+        "cell-grid snapping",
+        "per-cell hash noise drift",
+        "exponential damp easing",
+        "dpr cap",
+        "visibility gate",
+        "resize observer"
+      ],
+      "description": "A raw-WebGL typographic wordmark stage for brand text: soft-blur stems that sharpen around the pointer with three dotted dimension handles that snap, drift, and trail the cursor inside a cell grid, plus a dashed targeting frame.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "WebGL (WebGL2 preferred, WebGL1 fallback)",
+        "Canvas 2D font atlas",
+        "requestAnimationFrame loop",
+        "ResizeObserver + devicePixelRatio cap",
+        "document.fonts readiness",
+        "visibilitychange rAF gate"
+      ]
+    }
+  },
+  "ember-husk": {
+    "props": [
+      {
+        "name": "background",
+        "type": "EmberHuskBackground",
+        "default": "{ color: \"#1A0402\", glowColor: \"#FF2606\", glow: 6 }",
+        "description": "Scene backdrop: color (clear + fog tint), glowColor (spill light), glow (radiance 0-10)."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "default": "3.7",
+        "description": "Global scale of the husk, its shards, orbits and motion."
+      },
+      {
+        "name": "structure",
+        "type": "EmberHuskStructure",
+        "default": "{ shards: 11, irregularity: 6, thickness: 5 }",
+        "description": "Husk shell: shard count, irregularity (fracture variance 0-10), thickness (shell depth 0-10)."
+      },
+      {
+        "name": "rock",
+        "type": "EmberHuskRock",
+        "default": "{ color: \"#171512\", weathering: 5, seam: 4 }",
+        "description": "Shard material: base color, weathering (surface noise 0-10), seam (crack glow weight 0-10)."
+      },
+      {
+        "name": "core",
+        "type": "EmberHuskCore",
+        "default": "{ color: \"#FF3B00\", hotColor: \"#FFC46A\", intensity: 6, flow: 5 }",
+        "description": "Molten core: color, hotColor, intensity (0-10), flow (fluid wobble 0-10)."
+      },
+      {
+        "name": "crosses",
+        "type": "EmberHuskCrosses",
+        "default": "{ count: 52, size: 5, thickness: 5, color: \"#EDEFF5\", spread: 5 }",
+        "description": "Marker crosses: orbiting beacon count, size, thickness, color, orbital spread."
+      },
+      {
+        "name": "debris",
+        "type": "EmberHuskDebris",
+        "default": "{ count: 54, size: 5, spread: 5 }",
+        "description": "Free-floating debris field: particle count, size, spread."
+      },
+      {
+        "name": "beads",
+        "type": "number",
+        "default": "5",
+        "description": "Hot bead orbs circulating the core (0-20)."
+      },
+      {
+        "name": "entrance",
+        "type": "EmberHuskEntrance",
+        "default": "{ scatter: 6, tumble: 6, stagger: 4 }",
+        "description": "Mount choreography: shard scatter force, tumble rotation, staggered per-shard timing 0-10."
+      },
+      {
+        "name": "response",
+        "type": "EmberHuskResponse",
+        "default": "{ reach: 5, strength: 5, repel: 6, settle: 5 }",
+        "description": "Pointer interaction: reach radius, strength, repel force, settle/spring back 0-10."
+      },
+      {
+        "name": "drift",
+        "type": "EmberHuskDrift",
+        "default": "{ spin: 3, bob: 4, sway: 4 }",
+        "description": "Idle motion: orbital spin, vertical bob, cardinal sway 0-10."
+      },
+      {
+        "name": "glow",
+        "type": "EmberHuskGlow",
+        "default": "{ strength: 5, radius: 5, threshold: 5 }",
+        "description": "Post glow composite: brightness, spread radius, bloom threshold 0-10."
+      },
+      {
+        "name": "quality",
+        "type": "\"low\" | \"medium\" | \"high\"",
+        "default": "\"high\"",
+        "description": "Render scale + physics quality: DPR cap and render-target resolution per tier."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Wrapper style escape hatch."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A raw-WebGL (three.js) scene of a fractured volcanic husk with a single fixed-timestep physics update (PHYS_STEP 1/120 with up to 5 substeps and 0.88 damping) integrated into the render loop. On mount the cracked rock shell (HULL_PLANES polyhedral shards clipped with CLIP_EPS) scatters and tumbles in via per-shard staggered entrance forces (scatter/tumble/stagger); as the shell opens, a molten core shines through with an animated flow noise (ROCK frag + LIGHT_GLSL + NOISE_GLSL) tinted by intensity and hotColor. The scene is dressed with orbiting marker crosses (CROSS_ARM geometry, WAIST/BEVEL), a free-floating debris field, and hot bead orbs. Pointer response maps pointer reach/strength into a repel force on the shell shards that springs back via settle; idle drift adds spin, bob and sway. A glow pass renders the core through down/up-sampled render targets (PREFILTER/DOWN/UP/COMPOSITE) with strength, radius and threshold, and the frame buffer is DPR-capped per quality tier. The whole loop is gated on visibility and the canvas resizes with its host.",
+      "states": {
+        "from": "a dark cracked rock shell frozen in place under a cold sky",
+        "to": "shards scatter and tumble in on a staggered entrance to reveal the molten ember core, ringed by crosses, beads and debris under pointer repel"
+      },
+      "cssProperties": [
+        "three.js",
+        "webgl scene",
+        "fixed-timestep rigid-body physics",
+        "polyhedral hull clipping",
+        "noise-lit rock fragment shaders",
+        "down/up-sampled glow render targets",
+        "pointer reach/repel",
+        "idle spin/bob/sway drift",
+        "quality-tier dpr cap",
+        "visibility gate",
+        "resize observer"
+      ],
+      "description": "A dark WebGL scene of a fractured volcanic husk: a cracked rock shell that tumbles open with a staggered scatter entrance to reveal a molten ember core, ringed by drifting marker crosses, hot beads and debris, responding to pointer reach with a spring-repel on the shell.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "WebGL",
+        "three",
+        "requestAnimationFrame loop",
+        "fixed-timestep physics (120hz, 5 substeps)",
+        "RenderTarget glow compositing",
+        "ResizeObserver + devicePixelRatio cap",
+        "visibilitychange gate"
+      ]
+    }
+  },
+  "particle-loader": {
+    "props": [
+      {
+        "name": "width",
+        "type": "number",
+        "default": "0 (auto)",
+        "description": "Explicit canvas width in px; 0 falls back to the host element width."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": "0 (auto)",
+        "description": "Explicit canvas height in px; 0 falls back to the host element height."
+      },
+      {
+        "name": "dotColor",
+        "type": "string",
+        "default": "\"#94FD00\"",
+        "description": "Dot fill color (hex, rgb(), rgba(), named; also seeds the accent pass)."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": "300",
+        "description": "Dot count (20-300, scaled by a 150-count fibonacci field)."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "default": "100",
+        "description": "Dot radius (20-300%)."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "50",
+        "description": "Cycle speed (-100 to 100; negative reverses the orbit)."
+      },
+      {
+        "name": "spinTurns",
+        "type": "number",
+        "default": "1",
+        "description": "Full turns per cycle (-3 to 3)."
+      },
+      {
+        "name": "ball",
+        "type": "Ball",
+        "default": "{ spread: 100, turn: 0, tilt: 0 }",
+        "description": "Sphere geometry: spread (shell radius 40-180%), turn (rest yaw -180..180 deg), tilt (rest pitch -90..90 deg)."
+      },
+      {
+        "name": "pointer",
+        "type": "Pointer",
+        "default": "{ drag: 100, damping: 20 }",
+        "description": "Drag interaction: drag (sensitivity 0-300%) and damping (inertia decay 1-100)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Wrapper style escape hatch."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A Canvas 2D particle loader. Dots are seeded once on a fibonacci sphere (fib) and converted to polar coords; each frame a bump curve eases them from the equator shell up over the poles, then each dot is yaw/pitch-spun, perspective-projected (PERSPECTIVE 3.5 onto pv/(pv-z)) and painter-sorted by depth so nearer dots draw last. A cached autoFit probes 20 frames to scale the field into its host, and dotScaleFor sizes points by canvas size. Pointer drag reorients the shell with exponential-inertia damping (drag/damping), touchAction none enables one-finger fling on mobile. The canvas DPR-caps at 2 and re-measures the host every frame, so it resizes live without a ResizeObserver. Wrapper is 100%x100% with a 24px floor.",
+      "states": {
+        "from": "a low ring of dots orbiting at the equator",
+        "to": "the tether blooms up over the poles into a full converging shell, reorientable by dragging with momentum"
+      },
+      "cssProperties": [
+        "canvas 2d",
+        "fibonacci-sphere seeded dots",
+        "polar swell bump easing",
+        "perspective projection + depth fade",
+        "painter sort by depth",
+        "cached auto-fit sizing",
+        "size-based dot scale",
+        "pointer drag with exponential inertia",
+        "dpr cap",
+        "per-frame host re-measure"
+      ],
+      "description": "A fluorescent particle tether loader: dots bloom up from the equator over a fibonacci-sphere shell with perspective depth and auto-fit sizing, and you can drag to spin the whole field with momentum.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D",
+        "requestAnimationFrame loop",
+        "Pointer Capture API",
+        "devicePixelRatio cap",
+        "pointer events + touchAction none"
+      ]
+    }
   }
 }

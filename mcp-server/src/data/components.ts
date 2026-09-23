@@ -205,7 +205,10 @@ const CATEGORY_MAP: Record<string, string> = {
   "ripple-signature-ledger": "image-interaction",
   "crossfade-typewriter": "text",
   "driftwood-gallery": "image-interaction",
-  "rain-storm": "interactive-background"
+  "rain-storm": "interactive-background",
+  "vector-wordmark": "text",
+  "ember-husk": "interactive-background",
+  "particle-loader": "loader"
 };
 
 // id -> common dependencies
@@ -340,6 +343,9 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'crossfade-typewriter': ["react","framer-motion"],
   'driftwood-gallery': ["react","framer-motion"],
   'rain-storm': ["react","three","@react-three/fiber","@react-three/drei"],
+  'vector-wordmark': ["react","framer-motion"],
+  'ember-husk': ["react","three","@react-three/fiber","@react-three/drei"],
+  'particle-loader': ["react"],
 };
 
 function humanizeId(id: string): string {

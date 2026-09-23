@@ -1936,6 +1936,530 @@
       ]
     }
   },
+  "card-cascade": {
+    "props": [
+      {
+        "name": "preview",
+        "type": "boolean",
+        "default": "false",
+        "description": "Auto-advance through the cards when rendered inside a fixed-height preview box (no page scroll drives it)."
+      },
+      {
+        "name": "scrollerRef",
+        "type": "RefObject<HTMLElement | null>",
+        "default": "undefined",
+        "description": "Optional internal scroll container that drives the cascade in fullscreen mode; falls back to window scroll."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-driven 3D arc cascade of six technical-skill cards arranged on a giant right-side semi-circle. As the page or internal container scrolls, cards travel along the arc toward a focal centre and tilt to the arc tangent, with eased card-to-card interpolation so motion glides instead of tracking scroll linearly. The active card rotates forward on its X axis to face the viewer while a vertical icon rail lists that card's skills. Preview mode auto-advances deterministically (ease, then hold, looping) because there is no page scroll. Mobile shrinks the arc radius, card size and rail.",
+      "states": {
+        "from": "cards stacked along the far arc with the header hidden",
+        "to": "active card facing forward at the arc apex with its skill rail expanded"
+      },
+      "cssProperties": [
+        "3d-transform",
+        "perspective",
+        "transform-style-preserve-3d",
+        "sticky-positioning",
+        "svg-pattern-grid",
+        "clamp() sizing"
+      ],
+      "description": "A scroll-driven 3D semi-circular cascade of technical-skill cards with tangent tilt and per-card icon rails.",
+      "libraries": [
+        "react",
+        "react-icons",
+        "lucide-react"
+      ],
+      "requirements": [
+        "Semi-circle arc transform math (R·cos/R·sin + tangent rotation)",
+        "rAF-throttled passive scroll handler with cleanup",
+        "Deterministic preview auto-advance via cancelAnimationFrame",
+        "useIsMobile-driven arc radius and clamp() card sizing",
+        "3D perspective stage with preserve-3d cards"
+      ]
+    }
+  },
+  "image-trail": {
+    "props": [
+      {
+        "name": "images",
+        "type": "Array<string | ImageTrailImage>",
+        "default": "DEFAULT_IMAGES",
+        "description": "Images stamped along the pointer trail (strings or { src, alt })."
+      },
+      {
+        "name": "threshold",
+        "type": "number",
+        "default": "80",
+        "description": "Minimum pointer travel in px before a new trail image spawns."
+      },
+      {
+        "name": "minDelay",
+        "type": "number",
+        "default": "50",
+        "description": "Minimum ms between spawned trail images."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": "1000",
+        "description": "Lifetime in ms before each trail image is removed."
+      },
+      {
+        "name": "maxItems",
+        "type": "number",
+        "default": "8",
+        "description": "Maximum simultaneous trail images."
+      },
+      {
+        "name": "rotationRange",
+        "type": "number",
+        "default": "40",
+        "description": "Total random rotation range in degrees (applied as ± half)."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for each trail image."
+      },
+      {
+        "name": "overlayClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for the pointer-events-none overlay layer."
+      },
+      {
+        "name": "transition",
+        "type": "Transition",
+        "default": "DEFAULT_TRANSITION",
+        "description": "Framer Motion transition for entering images (spring, stiffness 260, damping 22)."
+      },
+      {
+        "name": "exitTransition",
+        "type": "Transition",
+        "default": "DEFAULT_EXIT_TRANSITION",
+        "description": "Framer Motion transition for exiting images (0.4s easeInOut)."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": "false",
+        "description": "Disable spawning while still forwarding pointer handlers."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A pointer-trail image effect: as the cursor moves across the container it stamps rotated photos that pop in with a spring and fade/scale out after a set duration. A distance threshold and a minimum delay throttle spawns, the image list cycles and maxItems caps the trail. Timeouts are tracked in a Set and cleared on unmount; images render inside a pointer-events-none overlay so underlying content stays interactive.",
+      "states": {
+        "from": "empty overlay",
+        "to": "trail of rotated image cards following the pointer"
+      },
+      "cssProperties": [
+        "absolute-positioning",
+        "pointer-events-none-overlay",
+        "aspect-ratio",
+        "object-fit",
+        "framer-motion-spring",
+        "AnimatePresence"
+      ],
+      "description": "A cursor-following trail of rotated image cards spawned on pointer move with spring pop-in and timed fade-out.",
+      "libraries": [
+        "react",
+        "framer-motion"
+      ],
+      "requirements": [
+        "Pointer-move throttling via distance threshold + min delay",
+        "Cycling image index and maxItems cap",
+        "Framer Motion AnimatePresence enter/exit",
+        "Timeout Set cleared on unmount",
+        "Inherits HTMLAttributes (className, children, pointer handlers)"
+      ]
+    }
+  },
+  "perspective-carousel": {
+    "props": [
+      {
+        "name": "items",
+        "type": "PerspectiveCarouselItem[]",
+        "default": "DEFAULT_ITEMS",
+        "description": "Slides as { src, title, alt? }."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number",
+        "default": "undefined",
+        "description": "Controlled active slide index (uncontrolled when omitted)."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number",
+        "default": "2",
+        "description": "Initial active slide for uncontrolled use."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number) => void",
+        "default": "undefined",
+        "description": "Called whenever the active slide changes."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": "true",
+        "description": "Wrap navigation around the ends."
+      },
+      {
+        "name": "slideWidth",
+        "type": "number",
+        "default": "220",
+        "description": "Slide width in px (clamped to >= 96)."
+      },
+      {
+        "name": "rotationStep",
+        "type": "number",
+        "default": "55",
+        "description": "rotateY degrees applied per slide of distance from the active card."
+      },
+      {
+        "name": "inactiveScale",
+        "type": "number",
+        "default": "0.85",
+        "description": "Scale of inactive slides (clamped 0.5-1)."
+      },
+      {
+        "name": "transition",
+        "type": "Transition",
+        "default": "DEFAULT_TRANSITION",
+        "description": "Framer Motion transition (spring, bounce 0.14, duration 0.9)."
+      },
+      {
+        "name": "showControls",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the prev/next control bar."
+      },
+      {
+        "name": "showDots",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show dot pagination inside the control bar."
+      },
+      {
+        "name": "viewportClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for the perspective viewport."
+      },
+      {
+        "name": "slideClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for each slide."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for slide images."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for slide title labels."
+      },
+      {
+        "name": "controlsClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for the control bar."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A 3D perspective carousel where slides fan around a shared vertical axis: the active card faces forward while neighbouring cards rotateY by rotationStep per unit distance, scale down and fade. The track translates horizontally to centre the active slide. Navigation via clickable cards, prev/next buttons, dot pagination and ArrowLeft/ArrowRight keys; loop wraps indices. Supports controlled or uncontrolled activeIndex and returns null when there are no items.",
+      "states": {
+        "from": "slides fanned in perspective",
+        "to": "selected slide rotated forward and centred with its label focused"
+      },
+      "cssProperties": [
+        "perspective",
+        "rotateY",
+        "preserve-3d",
+        "will-change-transform",
+        "backdrop-blur",
+        "framer-motion-spring"
+      ],
+      "description": "A 3D perspective image carousel with rotateY slide fan, loop, dots and keyboard navigation.",
+      "libraries": [
+        "react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "requirements": [
+        "Per-slide rotateY fan + active scale/opacity",
+        "Controlled/uncontrolled activeIndex with onActiveIndexChange",
+        "Keyboard ArrowLeft/ArrowRight handling",
+        "ARIA carousel region + aria-current slides",
+        "Inherits HTMLAttributes (className etc.)"
+      ]
+    }
+  },
+  "diagonal-carousel": {
+    "props": [
+      {
+        "name": "items",
+        "type": "DiagonalCarouselItem[]",
+        "default": "DEFAULT_ITEMS",
+        "description": "Slides as { src, title, alt? }."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number",
+        "default": "undefined",
+        "description": "Controlled active slide index (uncontrolled when omitted)."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number",
+        "default": "2",
+        "description": "Initial active slide for uncontrolled use."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(index: number) => void",
+        "default": "undefined",
+        "description": "Called whenever the active slide changes."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": "true",
+        "description": "Wrap navigation around the ends."
+      },
+      {
+        "name": "slideSize",
+        "type": "number",
+        "default": "260",
+        "description": "Slide size in px (clamped to >= 120)."
+      },
+      {
+        "name": "rotationStep",
+        "type": "number",
+        "default": "24",
+        "description": "Rotation degrees applied per slide of distance from the active card."
+      },
+      {
+        "name": "verticalStep",
+        "type": "number",
+        "default": "100",
+        "description": "Vertical offset in px per slide of distance from the active card."
+      },
+      {
+        "name": "inactiveScale",
+        "type": "number",
+        "default": "0.65",
+        "description": "Scale of inactive slides (clamped 0.35-1)."
+      },
+      {
+        "name": "transition",
+        "type": "Transition",
+        "default": "DEFAULT_TRANSITION",
+        "description": "Framer Motion transition (spring, bounce 0.16, duration 0.85)."
+      },
+      {
+        "name": "showControls",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the prev/next control bar."
+      },
+      {
+        "name": "showDots",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show dot pagination inside the control bar."
+      },
+      {
+        "name": "viewportClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for the viewport."
+      },
+      {
+        "name": "slideClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for each slide."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for slide images."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for slide title labels."
+      },
+      {
+        "name": "controlsClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for the control bar."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A diagonal 3D carousel: slides march down an angled line with each neighbour offset vertically by verticalStep, rotated by rotationStep and scaled down, while the active square card sits sharp and bright. The track translates horizontally to centre the active slide. Navigation via card click, prev/next buttons, dots and ArrowLeft/ArrowRight; loop wraps. Supports controlled or uncontrolled activeIndex and returns null when there are no items.",
+      "states": {
+        "from": "slides stepped down the diagonal",
+        "to": "active card centred at the apex with its label scaled in"
+      },
+      "cssProperties": [
+        "translate",
+        "rotate",
+        "scale",
+        "will-change-transform",
+        "backdrop-blur",
+        "framer-motion-spring"
+      ],
+      "description": "A diagonal stepped image carousel with vertical offset, rotation, loop and keyboard navigation.",
+      "libraries": [
+        "react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "requirements": [
+        "Diagonal step math (x track + y = distance*verticalStep + rotation)",
+        "Controlled/uncontrolled activeIndex",
+        "Keyboard ArrowLeft/ArrowRight handling",
+        "ARIA carousel region + aria-current slides",
+        "Inherits HTMLAttributes"
+      ]
+    }
+  },
+  "testimonials-card": {
+    "props": [
+      {
+        "name": "items",
+        "type": "TestimonialItem[]",
+        "default": "DEFAULT_TESTIMONIALS",
+        "description": "Testimonials as { id, title, description, image }."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for the outer container."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": "560",
+        "description": "Max width of the card stack in px."
+      },
+      {
+        "name": "showNavigation",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the previous/next arrow controls."
+      },
+      {
+        "name": "showCounter",
+        "type": "boolean",
+        "default": "true",
+        "description": "Show the active/total counter label."
+      },
+      {
+        "name": "autoPlay",
+        "type": "boolean",
+        "default": "false",
+        "description": "Advance automatically on an interval."
+      },
+      {
+        "name": "autoPlayInterval",
+        "type": "number",
+        "default": "3500",
+        "description": "Auto-play interval in ms."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A 3D testimonial card stack: the active portrait pops forward out of a fanned stack of image cards (rotateZ offsets, z depth, scale) while its name and quote animate in; direction-aware enter/exit slides the card in from the off-screen side. A counter shows position, arrow buttons navigate with disabled ends, and optional autoplay advances on an interval cleared on unmount. Collapses to a single column under md.",
+      "states": {
+        "from": "stacked portrait cards with the first active",
+        "to": "active portrait pulled forward and its testimonial text cross-faded in"
+      },
+      "cssProperties": [
+        "3d-transform",
+        "perspective",
+        "z-index-stacking",
+        "AnimatePresence",
+        "ease-[0.22,1,0.36,1]"
+      ],
+      "description": "A 3D stacked portrait testimonial slider with cross-faded quote, counter and optional autoplay.",
+      "libraries": [
+        "react",
+        "framer-motion",
+        "lucide-react"
+      ],
+      "requirements": [
+        "Direction-aware AnimatePresence enter/exit",
+        "Fanned stack transforms (rotateZ/z/scale per offset)",
+        "Autoplay interval cleared on unmount",
+        "ARIA labels on nav buttons",
+        "Responsive single-column layout under md"
+      ]
+    }
+  },
+  "image-collage": {
+    "props": [
+      {
+        "name": "images",
+        "type": "CollageImage[]",
+        "default": "DEFAULT_COLLAGE_IMAGES",
+        "description": "Images as { src, x, y, rotate, alt? }."
+      },
+      {
+        "name": "containerClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for the inner card row."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "undefined",
+        "description": "Extra classes for each image card."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "An interactive image collage that toggles between a scattered cluster and an organised row on click/tap. Each card springs between its authored x/y/rotate offsets and a flat aligned row using a stiff spring (stiffness 350, damping 25, bounce 0.4); the caption switches between 'Dynamic Collage Cluster' and 'Organized Row View'. Forwards refs and spreads HTML attributes so it can be placed anywhere.",
+      "states": {
+        "from": "scattered rotated cluster of overlapping cards",
+        "to": "flat evenly overlapped aligned row"
+      },
+      "cssProperties": [
+        "negative-margin-overlap",
+        "framer-motion-spring",
+        "aspect-ratio",
+        "object-fit",
+        "cursor-pointer"
+      ],
+      "description": "A click-to-toggle image collage that springs between a scattered cluster and an aligned row.",
+      "libraries": [
+        "react",
+        "framer-motion"
+      ],
+      "requirements": [
+        "Per-card spring animate between authored offsets and zeroed row",
+        "React.forwardRef + HTMLAttributes passthrough",
+        "Click toggle of the isOrganized state",
+        "Responsive card widths + negative overlap",
+        "No rAF or event listeners"
+      ]
+    }
+  },
   "border-beam": {
     "props": [
       {
@@ -3883,6 +4407,539 @@
         "rotated streak sprites",
         "twinkle/fade envelope",
         "devicePixelRatio cap"
+      ]
+    }
+  },
+  "rain-storm": {
+    "props": [
+      {
+        "name": "density",
+        "type": "number",
+        "default": "45",
+        "description": "Drop count scale (0-100)."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "35",
+        "description": "Fall speed multiplier (0-100)."
+      },
+      {
+        "name": "wind",
+        "type": "number",
+        "default": "18",
+        "description": "Horizontal drift, -100..100."
+      },
+      {
+        "name": "intensity",
+        "type": "number",
+        "default": "30",
+        "description": "Streak length/width + lightning flash & bolt strength (0-100)."
+      },
+      {
+        "name": "lightning",
+        "type": "boolean",
+        "default": "true",
+        "description": "Master switch for the lightning system (flash + bolts)."
+      },
+      {
+        "name": "bolts",
+        "type": "boolean",
+        "default": "true",
+        "description": "Draw branching bolt strokes; false keeps a glow-only flash."
+      },
+      {
+        "name": "flashMin",
+        "type": "number",
+        "default": "7",
+        "description": "Minimum seconds between strikes (>=2)."
+      },
+      {
+        "name": "flashMax",
+        "type": "number",
+        "default": "15",
+        "description": "Maximum seconds between strikes."
+      },
+      {
+        "name": "interactive",
+        "type": "boolean",
+        "default": "true",
+        "description": "Click/tap the canvas to fire a lightning strike on demand (previews)."
+      },
+      {
+        "name": "splash",
+        "type": "boolean",
+        "default": "true",
+        "description": "Faint ripples where drops land."
+      },
+      {
+        "name": "parallax",
+        "type": "boolean",
+        "default": "true",
+        "description": "Gentle pointer parallax."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "[\"#A8C2E8\", \"#6F8FB8\", \"#445577\"]",
+        "description": "Streak tint ramp."
+      },
+      {
+        "name": "seed",
+        "type": "number",
+        "default": "1",
+        "description": "Deterministic drop layout."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Wrapper style escape hatch."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A Canvas 2D storm on two depth layers (soft far rain + sharp near rain) that gust with the wind; landing near drops burst into splash flecks; every 7-15s - or any click/tap - a seeded strike fires 1-3 branching bolts with a hard flash, a single echo and a cached radial glow that lights the rain via an additive pass, then decays; a parity-eased pointer nudges the field.",
+      "states": {
+        "from": "two-depth rain streaks gusting over a dark navy gradient",
+        "to": "a click fires branching lightning bolts across lit rain, then decays"
+      },
+      "cssProperties": [
+        "canvas 2d",
+        "animation",
+        "requestAnimationFrame",
+        "pointermove",
+        "intersection observer",
+        "resize observer",
+        "prefers-reduced-motion"
+      ],
+      "description": "Decorative Canvas 2D storm layer: two-depth gusting rain, landing splash flecks and cinematic branching lightning you can trigger with a click/tap (hard flash + echo + radial glow) over a dark navy gradient; aria-hidden canvas behind hero content, static frame under prefers-reduced-motion."
+    }
+  },
+  "sky": {
+    "props": [
+      {
+        "name": "palette",
+        "type": "\"day\" | \"dusk\" | \"night\"",
+        "default": "\"dusk\"",
+        "description": "Colour mood of the sky: day (bright blue, faint stars), dusk (violet + orange horizon, visible stars), night (deep navy, bright stars)."
+      },
+      {
+        "name": "stars",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether twinkling stars render in the upper sky."
+      },
+      {
+        "name": "starCount",
+        "type": "number",
+        "default": "130",
+        "description": "Number of stars (0-400)."
+      },
+      {
+        "name": "twinkleSpeed",
+        "type": "number",
+        "default": "6",
+        "description": "Star twinkle rate 0-20."
+      },
+      {
+        "name": "clouds",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether drifting cumulus clouds render."
+      },
+      {
+        "name": "cloudCount",
+        "type": "number",
+        "default": "5",
+        "description": "Number of clouds (0-12)."
+      },
+      {
+        "name": "cloudSpeed",
+        "type": "number",
+        "default": "8",
+        "description": "Downwind cloud drift speed 0-20."
+      },
+      {
+        "name": "parallax",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether the pointer eases a parallax between layers."
+      },
+      {
+        "name": "parallaxStrength",
+        "type": "number",
+        "default": "16",
+        "description": "Parallax offset strength in px 0-80."
+      },
+      {
+        "name": "seed",
+        "type": "number",
+        "default": "1",
+        "description": "Seed for reproducible star/cloud placement."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Optional outer wrapper style override."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional extra Tailwind classes for the wrapper."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A Canvas 2D atmospheric sky: a vertical multi-stop gradient horizon built from three palettes (day: bright blue with faint stars; dusk: violet + orange with a low warm sun; night: deep navy with a bright moon), a warm sun or pale moon rendered from a cached 560x560 offscreen radial-gradient sprite (hot white core + outer falloff haze), a seeded field of 130 twinkling stars concentrated toward the zenith (pow(rng,1.3)*0.85 high-altitude distribution; twinkle = 0.35 + 0.65 * max(0, sin(time * twinkleSpeed * 0.4 * speed + phase)) cosine curve with halo for bright stars), and soft cumulus clouds pre-baked into offscreen 480x220 puff sprites (8-12 overlapping radial-gradient blobs tinted per palette) that drift at dt * speed * (cloudSpeed*2.5 + 6), self-wrap at width + w, and draw a mirrored edge copy when overflowing. Pointer parallax uses a normalized target clamped to [-1,1] with exponential lerp (1 - exp(-4*dt)) across layers: stars 0.2x, orb 0.45x, clouds (0.5 + depth * 0.7)x. DPR capped at 2 (1.5 on canvases >1920px) with setTransform reset on ResizeObserver, cloud x positions re-homed if they pass width*1.5, IntersectionObserver parks the rAF loop off-screen, and prefers-reduced-motion cancels the loop, zeroes parallax and draws one static frame. The decorative canvas is pointer-events none and carries an aria-label describing the active palette.",
+      "states": {
+        "from": "calm gradient horizon with drifting clouds",
+        "to": "pointer-eased parallax shifting the cloud, star and glow layers at different depths"
+      },
+      "cssProperties": [
+        "canvas 2d",
+        "cached 560x560 orb glow sprite",
+        "cached 480x220 cloud puff sprites",
+        "multi-stop vertical gradient",
+        "seeded rng",
+        "exponential lerp pointer parallax",
+        "cell wrap + mirrored edge cloud draw",
+        "dpr-capped resize",
+        "intersection observer parking"
+      ],
+      "description": "A serene animated sky with a glowing sun or moon, twinkling stars and drifting cumulus clouds eased by pointer parallax.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D",
+        "requestAnimationFrame loop",
+        "ResizeObserver",
+        "IntersectionObserver parking",
+        "seeded rng",
+        "cached orb + cloud sprites",
+        "exponential lerp pointer parallax",
+        "devicePixelRatio cap",
+        "prefers-reduced-motion support"
+      ]
+    }
+  },
+  "vector-wordmark": {
+    "props": [
+      {
+        "name": "text",
+        "type": "string",
+        "default": "\"UI HUB\"",
+        "description": "Brand text rendered on the wordmark canvas."
+      },
+      {
+        "name": "font",
+        "type": "React.CSSProperties",
+        "default": "Inter 800 / 200px / -0.02em",
+        "description": "Font spec: fontFamily, fontWeight, fontSize, fontStyle, letterSpacing (fontSize scales with host width)."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#000000\"",
+        "description": "Host background color behind the canvas."
+      },
+      {
+        "name": "textColor",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Text fill color (hex / rgb / hsl / var())."
+      },
+      {
+        "name": "shade",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Bottom-to-top shade tint mixed into the fill."
+      },
+      {
+        "name": "accent",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Handle/label accent color for the dashed frame, boxes and labels."
+      },
+      {
+        "name": "reach",
+        "type": "number",
+        "default": "290",
+        "description": "Pointer reach radius in px; larger = handles dart from farther away."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "50",
+        "description": "Overall motion rate (idle sweep + drift), 0-100."
+      },
+      {
+        "name": "damping",
+        "type": "number",
+        "default": "60",
+        "description": "Pointer easing damp factor, 0-100."
+      },
+      {
+        "name": "handles",
+        "type": "HandleGroup",
+        "default": "{ size: 109, spread: 27, labels: true }",
+        "description": "Handle group config: size (frame half-size), spread (cell spacing), labels (show x/y % readouts)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Wrapper style escape hatch."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A raw-WebGL typographic wordmark (single GL context, one fullscreen-triangle draw, live state via refs). The text is rasterized once into an offscreen font atlas: a red fill plus a dashed green perimeter stroke laid into a black RGBA canvas, scaled to fit the 4096px texture cap with a 0.12em pad, then uploaded as a texture with mipmaps (POT or WebGL2) and re-baked whenever text/font/dpr/size changes. The fragment shader samples the atlas with a 6-direction blur to soften the stem, mixes sharp and soft reads by a pointer-distance falloff (k = 1 - smoothstep(0, reach, d)^3) so the wordmark sharpens under the cursor, blends a bottom-up shade gradient into the text color, and overlays an accent dashed triangle plus three dashed bounding boxes (uV0/uV1/uV2 + uHalf) around three drifting vertices. Pointer-aware motion: without a pointer the framerate viewport sweeps left-to-right at speed with constant y at the text baseline and a tiny z-noise sway; on pointermove the target snaps to the nearest cell centers around the cursor inside a 0.6-aspect grid, two vertices hitch cells while the third holds the pointer cell, and every vertex orbits its cell with per-cell pseudo-random sine drift (frequency 1.3 / 1.69) offset by a hash of the cell coords. Easing is an exponential damp (damping/100 * 20 * dt) toward the target. The host keeps a minWidth of 1200 and minHeight of 800, canvas DPR-capped at 2, rAF loop gated on document.visibilitychange, and the active hover reach/framing readouts are drawn as monospace labels at each handle.",
+      "states": {
+        "from": "a softly blurred wordmark on black with three dimension handles drifting on sine currents",
+        "to": "the text sharpens and the handles dart to nearest cell centers as the pointer moves, with live % readouts"
+      },
+      "cssProperties": [
+        "raw webgl",
+        "webgl2 with webgl1 fallback",
+        "offscreen font atlas texture",
+        "6-direction blur sampling",
+        "dashed accent frames + boxes",
+        "radial pointer-distance falloff",
+        "cell-grid snapping",
+        "per-cell hash noise drift",
+        "exponential damp easing",
+        "dpr cap",
+        "visibility gate",
+        "resize observer"
+      ],
+      "description": "A raw-WebGL typographic wordmark stage for brand text: soft-blur stems that sharpen around the pointer with three dotted dimension handles that snap, drift, and trail the cursor inside a cell grid, plus a dashed targeting frame.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "WebGL (WebGL2 preferred, WebGL1 fallback)",
+        "Canvas 2D font atlas",
+        "requestAnimationFrame loop",
+        "ResizeObserver + devicePixelRatio cap",
+        "document.fonts readiness",
+        "visibilitychange rAF gate"
+      ]
+    }
+  },
+  "ember-husk": {
+    "props": [
+      {
+        "name": "background",
+        "type": "EmberHuskBackground",
+        "default": "{ color: \"#1A0402\", glowColor: \"#FF2606\", glow: 6 }",
+        "description": "Scene backdrop: color (clear + fog tint), glowColor (spill light), glow (radiance 0-10)."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "default": "3.7",
+        "description": "Global scale of the husk, its shards, orbits and motion."
+      },
+      {
+        "name": "structure",
+        "type": "EmberHuskStructure",
+        "default": "{ shards: 11, irregularity: 6, thickness: 5 }",
+        "description": "Husk shell: shard count, irregularity (fracture variance 0-10), thickness (shell depth 0-10)."
+      },
+      {
+        "name": "rock",
+        "type": "EmberHuskRock",
+        "default": "{ color: \"#171512\", weathering: 5, seam: 4 }",
+        "description": "Shard material: base color, weathering (surface noise 0-10), seam (crack glow weight 0-10)."
+      },
+      {
+        "name": "core",
+        "type": "EmberHuskCore",
+        "default": "{ color: \"#FF3B00\", hotColor: \"#FFC46A\", intensity: 6, flow: 5 }",
+        "description": "Molten core: color, hotColor, intensity (0-10), flow (fluid wobble 0-10)."
+      },
+      {
+        "name": "crosses",
+        "type": "EmberHuskCrosses",
+        "default": "{ count: 52, size: 5, thickness: 5, color: \"#EDEFF5\", spread: 5 }",
+        "description": "Marker crosses: orbiting beacon count, size, thickness, color, orbital spread."
+      },
+      {
+        "name": "debris",
+        "type": "EmberHuskDebris",
+        "default": "{ count: 54, size: 5, spread: 5 }",
+        "description": "Free-floating debris field: particle count, size, spread."
+      },
+      {
+        "name": "beads",
+        "type": "number",
+        "default": "5",
+        "description": "Hot bead orbs circulating the core (0-20)."
+      },
+      {
+        "name": "entrance",
+        "type": "EmberHuskEntrance",
+        "default": "{ scatter: 6, tumble: 6, stagger: 4 }",
+        "description": "Mount choreography: shard scatter force, tumble rotation, staggered per-shard timing 0-10."
+      },
+      {
+        "name": "response",
+        "type": "EmberHuskResponse",
+        "default": "{ reach: 5, strength: 5, repel: 6, settle: 5 }",
+        "description": "Pointer interaction: reach radius, strength, repel force, settle/spring back 0-10."
+      },
+      {
+        "name": "drift",
+        "type": "EmberHuskDrift",
+        "default": "{ spin: 3, bob: 4, sway: 4 }",
+        "description": "Idle motion: orbital spin, vertical bob, cardinal sway 0-10."
+      },
+      {
+        "name": "glow",
+        "type": "EmberHuskGlow",
+        "default": "{ strength: 5, radius: 5, threshold: 5 }",
+        "description": "Post glow composite: brightness, spread radius, bloom threshold 0-10."
+      },
+      {
+        "name": "quality",
+        "type": "\"low\" | \"medium\" | \"high\"",
+        "default": "\"high\"",
+        "description": "Render scale + physics quality: DPR cap and render-target resolution per tier."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Wrapper style escape hatch."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A raw-WebGL (three.js) scene of a fractured volcanic husk with a single fixed-timestep physics update (PHYS_STEP 1/120 with up to 5 substeps and 0.88 damping) integrated into the render loop. On mount the cracked rock shell (HULL_PLANES polyhedral shards clipped with CLIP_EPS) scatters and tumbles in via per-shard staggered entrance forces (scatter/tumble/stagger); as the shell opens, a molten core shines through with an animated flow noise (ROCK frag + LIGHT_GLSL + NOISE_GLSL) tinted by intensity and hotColor. The scene is dressed with orbiting marker crosses (CROSS_ARM geometry, WAIST/BEVEL), a free-floating debris field, and hot bead orbs. Pointer response maps pointer reach/strength into a repel force on the shell shards that springs back via settle; idle drift adds spin, bob and sway. A glow pass renders the core through down/up-sampled render targets (PREFILTER/DOWN/UP/COMPOSITE) with strength, radius and threshold, and the frame buffer is DPR-capped per quality tier. The whole loop is gated on visibility and the canvas resizes with its host.",
+      "states": {
+        "from": "a dark cracked rock shell frozen in place under a cold sky",
+        "to": "shards scatter and tumble in on a staggered entrance to reveal the molten ember core, ringed by crosses, beads and debris under pointer repel"
+      },
+      "cssProperties": [
+        "three.js",
+        "webgl scene",
+        "fixed-timestep rigid-body physics",
+        "polyhedral hull clipping",
+        "noise-lit rock fragment shaders",
+        "down/up-sampled glow render targets",
+        "pointer reach/repel",
+        "idle spin/bob/sway drift",
+        "quality-tier dpr cap",
+        "visibility gate",
+        "resize observer"
+      ],
+      "description": "A dark WebGL scene of a fractured volcanic husk: a cracked rock shell that tumbles open with a staggered scatter entrance to reveal a molten ember core, ringed by drifting marker crosses, hot beads and debris, responding to pointer reach with a spring-repel on the shell.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "WebGL",
+        "three",
+        "requestAnimationFrame loop",
+        "fixed-timestep physics (120hz, 5 substeps)",
+        "RenderTarget glow compositing",
+        "ResizeObserver + devicePixelRatio cap",
+        "visibilitychange gate"
+      ]
+    }
+  },
+  "particle-loader": {
+    "props": [
+      {
+        "name": "width",
+        "type": "number",
+        "default": "0 (auto)",
+        "description": "Explicit canvas width in px; 0 falls back to the host element width."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": "0 (auto)",
+        "description": "Explicit canvas height in px; 0 falls back to the host element height."
+      },
+      {
+        "name": "dotColor",
+        "type": "string",
+        "default": "\"#94FD00\"",
+        "description": "Dot fill color (hex, rgb(), rgba(), named; also seeds the accent pass)."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": "300",
+        "description": "Dot count (20-300, scaled by a 150-count fibonacci field)."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "default": "100",
+        "description": "Dot radius (20-300%)."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "50",
+        "description": "Cycle speed (-100 to 100; negative reverses the orbit)."
+      },
+      {
+        "name": "spinTurns",
+        "type": "number",
+        "default": "1",
+        "description": "Full turns per cycle (-3 to 3)."
+      },
+      {
+        "name": "ball",
+        "type": "Ball",
+        "default": "{ spread: 100, turn: 0, tilt: 0 }",
+        "description": "Sphere geometry: spread (shell radius 40-180%), turn (rest yaw -180..180 deg), tilt (rest pitch -90..90 deg)."
+      },
+      {
+        "name": "pointer",
+        "type": "Pointer",
+        "default": "{ drag: 100, damping: 20 }",
+        "description": "Drag interaction: drag (sensitivity 0-300%) and damping (inertia decay 1-100)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Wrapper style escape hatch."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A Canvas 2D particle loader. Dots are seeded once on a fibonacci sphere (fib) and converted to polar coords; each frame a bump curve eases them from the equator shell up over the poles, then each dot is yaw/pitch-spun, perspective-projected (PERSPECTIVE 3.5 onto pv/(pv-z)) and painter-sorted by depth so nearer dots draw last. A cached autoFit probes 20 frames to scale the field into its host, and dotScaleFor sizes points by canvas size. Pointer drag reorients the shell with exponential-inertia damping (drag/damping), touchAction none enables one-finger fling on mobile. The canvas DPR-caps at 2 and re-measures the host every frame, so it resizes live without a ResizeObserver. Wrapper is 100%x100% with a 24px floor.",
+      "states": {
+        "from": "a low ring of dots orbiting at the equator",
+        "to": "the tether blooms up over the poles into a full converging shell, reorientable by dragging with momentum"
+      },
+      "cssProperties": [
+        "canvas 2d",
+        "fibonacci-sphere seeded dots",
+        "polar swell bump easing",
+        "perspective projection + depth fade",
+        "painter sort by depth",
+        "cached auto-fit sizing",
+        "size-based dot scale",
+        "pointer drag with exponential inertia",
+        "dpr cap",
+        "per-frame host re-measure"
+      ],
+      "description": "A fluorescent particle tether loader: dots bloom up from the equator over a fibonacci-sphere shell with perspective depth and auto-fit sizing, and you can drag to spin the whole field with momentum.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D",
+        "requestAnimationFrame loop",
+        "Pointer Capture API",
+        "devicePixelRatio cap",
+        "pointer events + touchAction none"
       ]
     }
   }
