@@ -627,6 +627,140 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "card-cascade": {
+        props: [
+            { name: "preview", type: "boolean", default: "false", description: "Auto-advance through the cards when rendered inside a fixed-height preview box (no page scroll drives it)." },
+            { name: "scrollerRef", type: "RefObject<HTMLElement | null>", default: "undefined", description: "Optional internal scroll container that drives the cascade in fullscreen mode; falls back to window scroll." }
+        ],
+        vibeMeta: {
+            behavior: "A scroll-driven 3D arc cascade of six technical-skill cards arranged on a giant right-side semi-circle. As the page or internal container scrolls, cards travel along the arc toward a focal centre and tilt to the arc tangent, with eased card-to-card interpolation so motion glides instead of tracking scroll linearly. The active card rotates forward on its X axis to face the viewer while a vertical icon rail lists that card's skills. Preview mode auto-advances deterministically (ease, then hold, looping) because there is no page scroll. Mobile shrinks the arc radius, card size and rail.",
+            states: { from: "cards stacked along the far arc with the header hidden", to: "active card facing forward at the arc apex with its skill rail expanded" },
+            cssProperties: ["3d-transform", "perspective", "transform-style-preserve-3d", "sticky-positioning", "svg-pattern-grid", "clamp() sizing"],
+            description: "A scroll-driven 3D semi-circular cascade of technical-skill cards with tangent tilt and per-card icon rails.",
+            libraries: ["react", "react-icons", "lucide-react"],
+            requirements: ["Semi-circle arc transform math (R·cos/R·sin + tangent rotation)", "rAF-throttled passive scroll handler with cleanup", "Deterministic preview auto-advance via cancelAnimationFrame", "useIsMobile-driven arc radius and clamp() card sizing", "3D perspective stage with preserve-3d cards"]
+        }
+    },
+
+    "image-trail": {
+        props: [
+            { name: "images", type: "Array<string | ImageTrailImage>", default: "DEFAULT_IMAGES", description: "Images stamped along the pointer trail (strings or { src, alt })." },
+            { name: "threshold", type: "number", default: "80", description: "Minimum pointer travel in px before a new trail image spawns." },
+            { name: "minDelay", type: "number", default: "50", description: "Minimum ms between spawned trail images." },
+            { name: "duration", type: "number", default: "1000", description: "Lifetime in ms before each trail image is removed." },
+            { name: "maxItems", type: "number", default: "8", description: "Maximum simultaneous trail images." },
+            { name: "rotationRange", type: "number", default: "40", description: "Total random rotation range in degrees (applied as ± half)." },
+            { name: "imageClassName", type: "string", default: "undefined", description: "Extra classes for each trail image." },
+            { name: "overlayClassName", type: "string", default: "undefined", description: "Extra classes for the pointer-events-none overlay layer." },
+            { name: "transition", type: "Transition", default: "DEFAULT_TRANSITION", description: "Framer Motion transition for entering images (spring, stiffness 260, damping 22)." },
+            { name: "exitTransition", type: "Transition", default: "DEFAULT_EXIT_TRANSITION", description: "Framer Motion transition for exiting images (0.4s easeInOut)." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disable spawning while still forwarding pointer handlers." }
+        ],
+        vibeMeta: {
+            behavior: "A pointer-trail image effect: as the cursor moves across the container it stamps rotated photos that pop in with a spring and fade/scale out after a set duration. A distance threshold and a minimum delay throttle spawns, the image list cycles and maxItems caps the trail. Timeouts are tracked in a Set and cleared on unmount; images render inside a pointer-events-none overlay so underlying content stays interactive.",
+            states: { from: "empty overlay", to: "trail of rotated image cards following the pointer" },
+            cssProperties: ["absolute-positioning", "pointer-events-none-overlay", "aspect-ratio", "object-fit", "framer-motion-spring", "AnimatePresence"],
+            description: "A cursor-following trail of rotated image cards spawned on pointer move with spring pop-in and timed fade-out.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Pointer-move throttling via distance threshold + min delay", "Cycling image index and maxItems cap", "Framer Motion AnimatePresence enter/exit", "Timeout Set cleared on unmount", "Inherits HTMLAttributes (className, children, pointer handlers)"]
+        }
+    },
+
+    "perspective-carousel": {
+        props: [
+            { name: "items", type: "PerspectiveCarouselItem[]", default: "DEFAULT_ITEMS", description: "Slides as { src, title, alt? }." },
+            { name: "activeIndex", type: "number", default: "undefined", description: "Controlled active slide index (uncontrolled when omitted)." },
+            { name: "defaultActiveIndex", type: "number", default: "2", description: "Initial active slide for uncontrolled use." },
+            { name: "onActiveIndexChange", type: "(index: number) => void", default: "undefined", description: "Called whenever the active slide changes." },
+            { name: "loop", type: "boolean", default: "true", description: "Wrap navigation around the ends." },
+            { name: "slideWidth", type: "number", default: "220", description: "Slide width in px (clamped to >= 96)." },
+            { name: "rotationStep", type: "number", default: "55", description: "rotateY degrees applied per slide of distance from the active card." },
+            { name: "inactiveScale", type: "number", default: "0.85", description: "Scale of inactive slides (clamped 0.5-1)." },
+            { name: "transition", type: "Transition", default: "DEFAULT_TRANSITION", description: "Framer Motion transition (spring, bounce 0.14, duration 0.9)." },
+            { name: "showControls", type: "boolean", default: "true", description: "Show the prev/next control bar." },
+            { name: "showDots", type: "boolean", default: "true", description: "Show dot pagination inside the control bar." },
+            { name: "viewportClassName", type: "string", default: "undefined", description: "Extra classes for the perspective viewport." },
+            { name: "slideClassName", type: "string", default: "undefined", description: "Extra classes for each slide." },
+            { name: "imageClassName", type: "string", default: "undefined", description: "Extra classes for slide images." },
+            { name: "labelClassName", type: "string", default: "undefined", description: "Extra classes for slide title labels." },
+            { name: "controlsClassName", type: "string", default: "undefined", description: "Extra classes for the control bar." }
+        ],
+        vibeMeta: {
+            behavior: "A 3D perspective carousel where slides fan around a shared vertical axis: the active card faces forward while neighbouring cards rotateY by rotationStep per unit distance, scale down and fade. The track translates horizontally to centre the active slide. Navigation via clickable cards, prev/next buttons, dot pagination and ArrowLeft/ArrowRight keys; loop wraps indices. Supports controlled or uncontrolled activeIndex and returns null when there are no items.",
+            states: { from: "slides fanned in perspective", to: "selected slide rotated forward and centred with its label focused" },
+            cssProperties: ["perspective", "rotateY", "preserve-3d", "will-change-transform", "backdrop-blur", "framer-motion-spring"],
+            description: "A 3D perspective image carousel with rotateY slide fan, loop, dots and keyboard navigation.",
+            libraries: ["react", "framer-motion", "lucide-react"],
+            requirements: ["Per-slide rotateY fan + active scale/opacity", "Controlled/uncontrolled activeIndex with onActiveIndexChange", "Keyboard ArrowLeft/ArrowRight handling", "ARIA carousel region + aria-current slides", "Inherits HTMLAttributes (className etc.)"]
+        }
+    },
+
+    "diagonal-carousel": {
+        props: [
+            { name: "items", type: "DiagonalCarouselItem[]", default: "DEFAULT_ITEMS", description: "Slides as { src, title, alt? }." },
+            { name: "activeIndex", type: "number", default: "undefined", description: "Controlled active slide index (uncontrolled when omitted)." },
+            { name: "defaultActiveIndex", type: "number", default: "2", description: "Initial active slide for uncontrolled use." },
+            { name: "onActiveIndexChange", type: "(index: number) => void", default: "undefined", description: "Called whenever the active slide changes." },
+            { name: "loop", type: "boolean", default: "true", description: "Wrap navigation around the ends." },
+            { name: "slideSize", type: "number", default: "260", description: "Slide size in px (clamped to >= 120)." },
+            { name: "rotationStep", type: "number", default: "24", description: "Rotation degrees applied per slide of distance from the active card." },
+            { name: "verticalStep", type: "number", default: "100", description: "Vertical offset in px per slide of distance from the active card." },
+            { name: "inactiveScale", type: "number", default: "0.65", description: "Scale of inactive slides (clamped 0.35-1)." },
+            { name: "transition", type: "Transition", default: "DEFAULT_TRANSITION", description: "Framer Motion transition (spring, bounce 0.16, duration 0.85)." },
+            { name: "showControls", type: "boolean", default: "true", description: "Show the prev/next control bar." },
+            { name: "showDots", type: "boolean", default: "true", description: "Show dot pagination inside the control bar." },
+            { name: "viewportClassName", type: "string", default: "undefined", description: "Extra classes for the viewport." },
+            { name: "slideClassName", type: "string", default: "undefined", description: "Extra classes for each slide." },
+            { name: "imageClassName", type: "string", default: "undefined", description: "Extra classes for slide images." },
+            { name: "labelClassName", type: "string", default: "undefined", description: "Extra classes for slide title labels." },
+            { name: "controlsClassName", type: "string", default: "undefined", description: "Extra classes for the control bar." }
+        ],
+        vibeMeta: {
+            behavior: "A diagonal 3D carousel: slides march down an angled line with each neighbour offset vertically by verticalStep, rotated by rotationStep and scaled down, while the active square card sits sharp and bright. The track translates horizontally to centre the active slide. Navigation via card click, prev/next buttons, dots and ArrowLeft/ArrowRight; loop wraps. Supports controlled or uncontrolled activeIndex and returns null when there are no items.",
+            states: { from: "slides stepped down the diagonal", to: "active card centred at the apex with its label scaled in" },
+            cssProperties: ["translate", "rotate", "scale", "will-change-transform", "backdrop-blur", "framer-motion-spring"],
+            description: "A diagonal stepped image carousel with vertical offset, rotation, loop and keyboard navigation.",
+            libraries: ["react", "framer-motion", "lucide-react"],
+            requirements: ["Diagonal step math (x track + y = distance*verticalStep + rotation)", "Controlled/uncontrolled activeIndex", "Keyboard ArrowLeft/ArrowRight handling", "ARIA carousel region + aria-current slides", "Inherits HTMLAttributes"]
+        }
+    },
+
+    "testimonials-card": {
+        props: [
+            { name: "items", type: "TestimonialItem[]", default: "DEFAULT_TESTIMONIALS", description: "Testimonials as { id, title, description, image }." },
+            { name: "className", type: "string", default: "undefined", description: "Extra classes for the outer container." },
+            { name: "width", type: "number", default: "560", description: "Max width of the card stack in px." },
+            { name: "showNavigation", type: "boolean", default: "true", description: "Show the previous/next arrow controls." },
+            { name: "showCounter", type: "boolean", default: "true", description: "Show the active/total counter label." },
+            { name: "autoPlay", type: "boolean", default: "false", description: "Advance automatically on an interval." },
+            { name: "autoPlayInterval", type: "number", default: "3500", description: "Auto-play interval in ms." }
+        ],
+        vibeMeta: {
+            behavior: "A 3D testimonial card stack: the active portrait pops forward out of a fanned stack of image cards (rotateZ offsets, z depth, scale) while its name and quote animate in; direction-aware enter/exit slides the card in from the off-screen side. A counter shows position, arrow buttons navigate with disabled ends, and optional autoplay advances on an interval cleared on unmount. Collapses to a single column under md.",
+            states: { from: "stacked portrait cards with the first active", to: "active portrait pulled forward and its testimonial text cross-faded in" },
+            cssProperties: ["3d-transform", "perspective", "z-index-stacking", "AnimatePresence", "ease-[0.22,1,0.36,1]"],
+            description: "A 3D stacked portrait testimonial slider with cross-faded quote, counter and optional autoplay.",
+            libraries: ["react", "framer-motion", "lucide-react"],
+            requirements: ["Direction-aware AnimatePresence enter/exit", "Fanned stack transforms (rotateZ/z/scale per offset)", "Autoplay interval cleared on unmount", "ARIA labels on nav buttons", "Responsive single-column layout under md"]
+        }
+    },
+
+    "image-collage": {
+        props: [
+            { name: "images", type: "CollageImage[]", default: "DEFAULT_COLLAGE_IMAGES", description: "Images as { src, x, y, rotate, alt? }." },
+            { name: "containerClassName", type: "string", default: "undefined", description: "Extra classes for the inner card row." },
+            { name: "imageClassName", type: "string", default: "undefined", description: "Extra classes for each image card." }
+        ],
+        vibeMeta: {
+            behavior: "An interactive image collage that toggles between a scattered cluster and an organised row on click/tap. Each card springs between its authored x/y/rotate offsets and a flat aligned row using a stiff spring (stiffness 350, damping 25, bounce 0.4); the caption switches between 'Dynamic Collage Cluster' and 'Organized Row View'. Forwards refs and spreads HTML attributes so it can be placed anywhere.",
+            states: { from: "scattered rotated cluster of overlapping cards", to: "flat evenly overlapped aligned row" },
+            cssProperties: ["negative-margin-overlap", "framer-motion-spring", "aspect-ratio", "object-fit", "cursor-pointer"],
+            description: "A click-to-toggle image collage that springs between a scattered cluster and an aligned row.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["Per-card spring animate between authored offsets and zeroed row", "React.forwardRef + HTMLAttributes passthrough", "Click toggle of the isOrganized state", "Responsive card widths + negative overlap", "No rAF or event listeners"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },
@@ -958,7 +1092,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react", "lucide-react"],
             requirements: ["drag/drop events", "hidden file input fallback", "max size validation", "progress ring via SVG stroke-dashoffset", "controlled/uncontrolled progress"]
         }
-    },
+    },
     "aurora-bpm-loader": {
         props: [
             { name: "progress", type: "number", default: "0", description: "Controlled progress 0-100." },
@@ -1167,7 +1301,7 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             libraries: ["react"],
             requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "IntersectionObserver parking", "seeded rng", "cached orb + cloud sprites", "exponential lerp pointer parallax", "devicePixelRatio cap", "prefers-reduced-motion support"]
         }
-    }
+    },
 };
 
 

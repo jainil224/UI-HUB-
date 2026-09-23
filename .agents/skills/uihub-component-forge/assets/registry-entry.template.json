@@ -1,0 +1,25 @@
+{
+  "category": "TODO: interactive-background | image-interaction",
+  "name": "TODO: PascalCase display name (matches the default export)",
+  "slug": "TODO: kebab-case slug (=== lazy key === EMBEDDED_SOURCE_CODE key)",
+  "filePath": "frontend/src/components/ui/TODO.tsx",
+  "language": "tsx",
+  "dependencies": [
+    "react"
+  ],
+  "stylingMethod": "TODO: inline-styles | tailwind",
+  "animationTech": [
+    "TODO: canvas | webgl | framer-motion | css | requestAnimationFrame | ..."
+  ],
+  "props": [
+    {
+      "name": "TODO",
+      "type": "TODO",
+      "default": "TODO",
+      "purpose": "TODO: one-line, mirrors the §7 props contract"
+    }
+  ],
+  "responsive": "TODO: ResizeObserver, DPR cap (<=2; 1.5 above 1920px), sizing behavior.",
+  "performanceNotes": "TODO: caches, single rAF + IntersectionObserver parking, prefers-reduced-motion handling.",
+  "lineCount": 0
+}

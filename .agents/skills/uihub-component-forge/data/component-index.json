@@ -1,0 +1,2540 @@
+[
+  {
+    "category": "interactive-background",
+    "name": "GravitationalVortex",
+    "slug": "gravitational-vortex",
+    "filePath": "frontend/src/components/ui/GravitationalVortex.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#000000",
+        "purpose": "CSS background behind the canvas."
+      },
+      {
+        "name": "baseColor",
+        "type": "string",
+        "default": "#04FF3F",
+        "purpose": "Base particle color."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "default": "#FCFF00",
+        "purpose": "Accent particle color."
+      },
+      {
+        "name": "accentMix",
+        "type": "number",
+        "default": 50,
+        "purpose": "0-100 accent color mix ratio."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 16,
+        "purpose": "Particle count (2000-40000)."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "default": 400,
+        "purpose": "Streak width."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 16,
+        "purpose": "Base fall speed."
+      },
+      {
+        "name": "direction",
+        "type": "\"inward\" | \"outward\"",
+        "default": "inward",
+        "purpose": "Accretion direction."
+      },
+      {
+        "name": "hoverSpeed",
+        "type": "number",
+        "default": 100,
+        "purpose": "Speed boost while pointer hovers."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": 79,
+        "purpose": "Camera zoom (smaller = closer)."
+      },
+      {
+        "name": "tiltX",
+        "type": "number",
+        "default": 35,
+        "purpose": "Camera tilt X degrees."
+      },
+      {
+        "name": "tiltY",
+        "type": "number",
+        "default": 0,
+        "purpose": "Camera orbit Y degrees."
+      },
+      {
+        "name": "vortex",
+        "type": "Partial<{ twist: number; funnel: number }>",
+        "default": "{ twist: 28, funnel: 54 }",
+        "purpose": "Funnel geometry."
+      },
+      {
+        "name": "backgroundColor",
+        "type": "string",
+        "default": "N/A (alias of background)",
+        "purpose": "Back-compat alias for background."
+      },
+      {
+        "name": "particleColor",
+        "type": "string",
+        "default": "N/A (alias of baseColor)",
+        "purpose": "Back-compat alias for baseColor."
+      },
+      {
+        "name": "vortexTwist",
+        "type": "number",
+        "default": "N/A (overrides vortex.twist)",
+        "purpose": "Flat override for twist."
+      },
+      {
+        "name": "funnelDepth",
+        "type": "number",
+        "default": "N/A (overrides vortex.funnel)",
+        "purpose": "Flat override for funnel."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": "N/A",
+        "purpose": "Legacy width override."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": "N/A",
+        "purpose": "Legacy height override."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper min 1200x800 + width/height 100%; DPR-aware canvas resize capped at 2; aspect handled via uAspect uniform.",
+    "performanceNotes": "Raw WebGL shader pipeline (motion in vertex shader); single rAF loop; cleanup cancels rAF, removes pointerenter/leave/cancel listeners and deletes GL buffers/program.",
+    "lineCount": 558
+  },
+  {
+    "category": "interactive-background",
+    "name": "BlackHole",
+    "slug": "black-hole-3d",
+    "filePath": "frontend/src/components/ui/BlackHole.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "showCenter",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Toggle the event-horizon void."
+      },
+      {
+        "name": "centre",
+        "type": "{ voidRadius?: number; voidX?: number; voidY?: number }",
+        "default": "{ voidRadius: 40, voidX: 50, voidY: 50 }",
+        "purpose": "Void geometry and position (0-100)."
+      },
+      {
+        "name": "particleCount",
+        "type": "number",
+        "default": 1000,
+        "purpose": "Number of accretion particles."
+      },
+      {
+        "name": "particleSize",
+        "type": "number",
+        "default": 4,
+        "purpose": "Particle size (1-100, divided by 20 internally)."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "[\"#ffffff\"]",
+        "purpose": "Particle palette."
+      },
+      {
+        "name": "outerRadius",
+        "type": "number",
+        "default": 70,
+        "purpose": "0-100% of half-canvas outer ring."
+      },
+      {
+        "name": "tilt",
+        "type": "number",
+        "default": 20,
+        "purpose": "Disk tilt degrees."
+      },
+      {
+        "name": "tiltSideway",
+        "type": "number",
+        "default": 160,
+        "purpose": "Sideways tilt degrees."
+      },
+      {
+        "name": "trail",
+        "type": "number",
+        "default": 50,
+        "purpose": "0-50 trail persistence."
+      },
+      {
+        "name": "orbitSpeed",
+        "type": "number",
+        "default": 4,
+        "purpose": "Orbital speed."
+      },
+      {
+        "name": "pullSpeed",
+        "type": "number",
+        "default": 0,
+        "purpose": "Inward pull speed (0-20, halved internally)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper width/height 100%; ResizeObserver + DPR cap 1.5; z-sorts particles around void (physics occlusion).",
+    "performanceNotes": "Dual canvas (bg particles + fg particles) with destination-out trail compositing; rAF stored in animRef and cancelled on unmount; ResizeObserver disconnected; particle re-init keyed on sizeVersion.",
+    "lineCount": 528
+  },
+  {
+    "category": "interactive-background",
+    "name": "BloomingFlower",
+    "slug": "blooming-flower",
+    "filePath": "frontend/src/components/ui/BloomingFlower.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "motion",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame",
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#07060C",
+        "purpose": "CSS background behind canvas."
+      },
+      {
+        "name": "baseColor",
+        "type": "string",
+        "default": "#C4327E",
+        "purpose": "Base petal color."
+      },
+      {
+        "name": "stemColor",
+        "type": "string",
+        "default": "#2F7A4F",
+        "purpose": "Stem color."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "default": "#FFD98A",
+        "purpose": "Accent petal color."
+      },
+      {
+        "name": "accentMix",
+        "type": "number",
+        "default": 100,
+        "purpose": "Accent color ratio."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 100,
+        "purpose": "Particle density 1-100."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "default": 10,
+        "purpose": "Point size."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 50,
+        "purpose": "Wind/sway rate."
+      },
+      {
+        "name": "distance",
+        "type": "number",
+        "default": 2820,
+        "purpose": "Camera distance."
+      },
+      {
+        "name": "tilt",
+        "type": "number",
+        "default": 66,
+        "purpose": "Camera pitch degrees."
+      },
+      {
+        "name": "flower",
+        "type": "Partial<{ petals: number; layers: number }>",
+        "default": "{ petals: 16, layers: 1 }",
+        "purpose": "Petal count and depth layers."
+      },
+      {
+        "name": "closed",
+        "type": "number",
+        "default": "N/A (bloom.closed)",
+        "purpose": "0-100 bud closeness (alias of bloom.closed)."
+      },
+      {
+        "name": "bloom",
+        "type": "{ closed?: number; stagger?: number }",
+        "default": "N/A",
+        "purpose": "Bloom closed / stagger controls."
+      },
+      {
+        "name": "transition",
+        "type": "Motion",
+        "default": "{ type: tween, ease: [0.44,0,0.56,1], duration: 0.4 }",
+        "purpose": "motion/react animate() transition."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": "N/A",
+        "purpose": "Legacy width override."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": "N/A",
+        "purpose": "Legacy height override."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper min 1200x800 + width/height 100%; ResizeObserver-driven resize with DPR cap 1.5.",
+    "performanceNotes": "Raw WebGL point cloud; single rAF; motionValue gate + animate() stopped in cleanup; ResizeObserver disconnected; pointerenter/leave removed; rebuild of buffers keyed on density/petals/layers.",
+    "lineCount": 640
+  },
+  {
+    "category": "interactive-background",
+    "name": "Chandelier",
+    "slug": "chandelier",
+    "filePath": "frontend/src/components/ui/Chandelier.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": "N/A",
+        "purpose": "Explicit px width override."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": "N/A",
+        "purpose": "Explicit px height override."
+      },
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#0B0C0E",
+        "purpose": "CSS background."
+      },
+      {
+        "name": "baseColor",
+        "type": "string",
+        "default": "#00F9AC",
+        "purpose": "Glyph ink color."
+      },
+      {
+        "name": "phrase",
+        "type": "string",
+        "default": "thefabricremembersthelineitwasgiven...",
+        "purpose": "Text re-composed by the cloth."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 24,
+        "purpose": "Cloth grid columns 6-40."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 50,
+        "purpose": "Simulation speed 0-100."
+      },
+      {
+        "name": "hover",
+        "type": "number",
+        "default": 100,
+        "purpose": "Pointer grab strength 0-200."
+      },
+      {
+        "name": "cloth",
+        "type": "{ gravity?: number; wind?: number; grab?: number; stretch?: number }",
+        "default": "{ gravity: 300, wind: 100, grab: 100, stretch: 114 }",
+        "purpose": "Cloth physics knobs. NOTE: app preset forces gravity 300; source CLOTH_DEFAULTS is 100."
+      }
+    ],
+    "responsive": "Wrapper min 1200x800 or explicit width/height prop; canvas sized from clientWidth/Height with DPR cap 2.",
+    "performanceNotes": "Canvas 2D cloth + verlet integration; single rAF; cleanup cancels rAF and removes all pointermove/enter/leave/down/up/cancel listeners (canvas + window).",
+    "lineCount": 440
+  },
+  {
+    "category": "interactive-background",
+    "name": "SpiderWeb",
+    "slug": "spider-web",
+    "filePath": "frontend/src/components/ui/spider-web.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "color",
+        "type": "string",
+        "default": "#DCE6FF",
+        "purpose": "Silk strand color."
+      },
+      {
+        "name": "opacity",
+        "type": "number",
+        "default": 100,
+        "purpose": "Global web opacity 0-100."
+      },
+      {
+        "name": "segments",
+        "type": "number",
+        "default": 28,
+        "purpose": "Radial spokes 5-28."
+      },
+      {
+        "name": "rings",
+        "type": "number",
+        "default": 14,
+        "purpose": "Concentric rings 3-14."
+      },
+      {
+        "name": "thickness",
+        "type": "number",
+        "default": 3,
+        "purpose": "Silk weight 1-10."
+      },
+      {
+        "name": "sag",
+        "type": "number",
+        "default": 20,
+        "purpose": "Ring strand bow 0-20."
+      },
+      {
+        "name": "irregularity",
+        "type": "number",
+        "default": 0,
+        "purpose": "Deterministic wobble 0-20."
+      },
+      {
+        "name": "hoverIntensity",
+        "type": "number",
+        "default": 20,
+        "purpose": "Pointer push strength 0-20."
+      },
+      {
+        "name": "nodes",
+        "type": "boolean",
+        "default": false,
+        "purpose": "Draw intersection dots."
+      },
+      {
+        "name": "nodeColor",
+        "type": "string",
+        "default": "#FFFFFF",
+        "purpose": "Intersection dot color."
+      },
+      {
+        "name": "nodeSize",
+        "type": "number",
+        "default": 4,
+        "purpose": "Intersection dot size 1-10."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% + canvas 100%; ResizeObserver with DPR cap 2; outer ring overflows frame on purpose.",
+    "performanceNotes": "Self-parking rAF loop (parks when idle/hover-free); ResizeObserver; deterministic hash seeding; spring-mass with DAMPING = 2*sqrt(STIFFNESS)*0.05.",
+    "lineCount": 513
+  },
+  {
+    "category": "interactive-background",
+    "name": "PointDNAHelix",
+    "slug": "point-dna-helix",
+    "filePath": "frontend/src/components/ui/PointDNAHelix.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "motion",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame",
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#030712",
+        "purpose": "CSS background behind canvas."
+      },
+      {
+        "name": "baseColor",
+        "type": "string",
+        "default": "#00E5FF",
+        "purpose": "Primary helix color."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "default": "#FF007A",
+        "purpose": "Secondary helix color."
+      },
+      {
+        "name": "accentMix",
+        "type": "number",
+        "default": 42,
+        "purpose": "Accent mix ratio 0-100."
+      },
+      {
+        "name": "glow",
+        "type": "string",
+        "default": "#00E5FF20",
+        "purpose": "Glow color (alpha hex)."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 31,
+        "purpose": "Point density."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "default": 100,
+        "purpose": "Point size."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 70,
+        "purpose": "Auto-spin speed."
+      },
+      {
+        "name": "zoom",
+        "type": "number",
+        "default": 30,
+        "purpose": "Camera zoom."
+      },
+      {
+        "name": "hover",
+        "type": "number",
+        "default": 80,
+        "purpose": "Cursor-proximity particle push."
+      },
+      {
+        "name": "tilt",
+        "type": "{ x: number; y: number }",
+        "default": "{ x: 0, y: 90 }",
+        "purpose": "Camera tilt X/Y."
+      },
+      {
+        "name": "helix",
+        "type": "{ turns; thickness; pulse }",
+        "default": "{ turns: 2, thickness: 21, pulse: 40 }",
+        "purpose": "Helix geometry knobs."
+      }
+    ],
+    "responsive": "Wrapper width/height 100%; DPR-aware from rect*dpr; helix runs past both frame edges.",
+    "performanceNotes": "Raw WebGL with ONE GL context in useEffect([]) (explicit 'Rule 6' comment), single rAF, all state via refs; never loseContext; motion/react animate() + motionValue drive drag momentum and breathing pulse.",
+    "lineCount": 1530
+  },
+  {
+    "category": "interactive-background",
+    "name": "TwinGalaxyRings",
+    "slug": "twin-galaxy-rings",
+    "filePath": "frontend/src/components/ui/TwinGalaxyRings.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "framer-motion",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame",
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#050A14",
+        "purpose": "CSS background behind canvas."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "[\"#A050FF\", \"#C9D6E8\"]",
+        "purpose": "Up to 8-color palette."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 98,
+        "purpose": "Particle density."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "default": 2,
+        "purpose": "Particle dot size."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 47,
+        "purpose": "Base stream speed."
+      },
+      {
+        "name": "hoverSpeed",
+        "type": "number",
+        "default": 85,
+        "purpose": "Hover-accelerated speed."
+      },
+      {
+        "name": "direction",
+        "type": "\"cw\" | \"ccw\"",
+        "default": "cw",
+        "purpose": "Stream direction."
+      },
+      {
+        "name": "distance",
+        "type": "number",
+        "default": 3540,
+        "purpose": "Camera pullback."
+      },
+      {
+        "name": "innerVoid",
+        "type": "number",
+        "default": 14,
+        "purpose": "Empty core radius."
+      },
+      {
+        "name": "armThickness",
+        "type": "number",
+        "default": 100,
+        "purpose": "Gaussian arm width."
+      },
+      {
+        "name": "armCount",
+        "type": "number",
+        "default": 5,
+        "purpose": "Spiral arm count."
+      },
+      {
+        "name": "tilt",
+        "type": "{ tilt: number; sideTilt: number }",
+        "default": "{ tilt: 26, sideTilt: -8 }",
+        "purpose": "Camera tilt; scroll also drives pitch/roll."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 120x120.",
+    "performanceNotes": "Raw WebGL single GL context, one rAF, all state in refs; mulberry32 seeded layout; DPR cap 1.5; additive premultiplied blending; press boosts stream + dollies camera in.",
+    "lineCount": 1420
+  },
+  {
+    "category": "interactive-background",
+    "name": "Vortex",
+    "slug": "tornado",
+    "filePath": "frontend/src/components/ui/Tornado.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react",
+      "three"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "canvas",
+      "requestAnimationFrame",
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#000000",
+        "purpose": "CSS background behind canvas."
+      },
+      {
+        "name": "topRadius",
+        "type": "number",
+        "default": 380,
+        "purpose": "Funnel top radius."
+      },
+      {
+        "name": "waistRadius",
+        "type": "number",
+        "default": 53,
+        "purpose": "Funnel waist radius."
+      },
+      {
+        "name": "waistPosition",
+        "type": "number",
+        "default": 50,
+        "purpose": "Waist pinch height 0-100."
+      },
+      {
+        "name": "bottomRadius",
+        "type": "number",
+        "default": 1150,
+        "purpose": "Funnel base radius."
+      },
+      {
+        "name": "twist",
+        "type": "number",
+        "default": 3,
+        "purpose": "Angular strand winding."
+      },
+      {
+        "name": "zoom",
+        "type": "number",
+        "default": 75,
+        "purpose": "Camera zoom %."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 10,
+        "purpose": "Simulation speed 0-100."
+      },
+      {
+        "name": "direction",
+        "type": "\"right\" | \"left\"",
+        "default": "right",
+        "purpose": "Rotation direction."
+      },
+      {
+        "name": "lineOptions",
+        "type": "{ count; color; glow }",
+        "default": "{ count: 240, color: #ffffff, glow: 10 }",
+        "purpose": "Strand line config."
+      },
+      {
+        "name": "dots",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Toggle dot layer."
+      },
+      {
+        "name": "dotOptions",
+        "type": "{ count; size; color; glow; flicker }",
+        "default": "{ count: 8000, size: 20, color: #ffffff, glow: 10, flicker: 10 }",
+        "purpose": "Instanced dot config."
+      },
+      {
+        "name": "comets",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Toggle comet layer."
+      },
+      {
+        "name": "cometOptions",
+        "type": "{ count; speed; color; glow; tail; delay; collide }",
+        "default": "{ count: 10, speed: 6, color: #F9731A, glow: 6, tail: 19, delay: 8, collide: 6 }",
+        "purpose": "Comet-layer config."
+      },
+      {
+        "name": "repel",
+        "type": "boolean",
+        "default": false,
+        "purpose": "Toggle cursor repulsion."
+      },
+      {
+        "name": "repelOptions",
+        "type": "object",
+        "default": "UNKNOWN",
+        "purpose": "Repulsion strength/radius config."
+      }
+    ],
+    "responsive": "Wrapper width/height 100%, canvas 100%; camera frames the form's fixed intrinsic height (600px, per source comments) so height sizes the vortex.",
+    "performanceNotes": "three.js with custom useReducedMotion hook reading matchMedia('(prefers-reduced-motion: reduce)') with add/removeEventListener cleanup; single persistent WebGLRenderer; onBeforeCompile cursor patch; staged entrance; Reinhard tone mapping; additive blending.",
+    "lineCount": 1485
+  },
+  {
+    "category": "interactive-background",
+    "name": "ParticleSphereRefactor",
+    "slug": "particle-sphere",
+    "filePath": "frontend/src/components/ui/ParticleSphere.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "particlesCount",
+        "type": "number",
+        "default": 10000,
+        "purpose": "Surface particle count."
+      },
+      {
+        "name": "particleScale",
+        "type": "number",
+        "default": 4,
+        "purpose": "Instance scale."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 20,
+        "purpose": "Auto-rotation speed."
+      },
+      {
+        "name": "smoothing",
+        "type": "number",
+        "default": 7,
+        "purpose": "Lerp smoothing of rotation."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": 10,
+        "purpose": "Sphere radius scale."
+      },
+      {
+        "name": "rotationDirection",
+        "type": "\"clockwise\" | \"anticlockwise\"",
+        "default": "clockwise",
+        "purpose": "Initial spin direction."
+      },
+      {
+        "name": "drag",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Enable drag-to-rotate."
+      },
+      {
+        "name": "dragSpeed",
+        "type": "number",
+        "default": 5,
+        "purpose": "Drag sensitivity."
+      },
+      {
+        "name": "cursorOn",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Cursor scatter burst + push."
+      },
+      {
+        "name": "cursorRadiusUI",
+        "type": "number",
+        "default": 75,
+        "purpose": "Cursor interaction radius."
+      },
+      {
+        "name": "cursorStrengthUI",
+        "type": "number",
+        "default": 10,
+        "purpose": "Cursor push/attract strength."
+      },
+      {
+        "name": "clickForce",
+        "type": "number",
+        "default": 5,
+        "purpose": "Click/touch scatter burst force."
+      },
+      {
+        "name": "sphereColor",
+        "type": "string",
+        "default": "#ffffff",
+        "purpose": "Per-instance color."
+      }
+    ],
+    "responsive": "Wrapper width/height 100%; oversized canvas (2.5x container, FOV-compensated) prevents clipping; ResizeObserver resizing.",
+    "performanceNotes": "three.js InstancedMesh + additive blending; delta-time normalized (frame-rate independent); drag throw with momentum decay; cleanup disposes renderer/geometry/material and removes canvas (no leak).",
+    "lineCount": 1403
+  },
+  {
+    "category": "interactive-background",
+    "name": "MorphingRings",
+    "slug": "morphing-rings",
+    "filePath": "frontend/src/components/ui/MorphingRings.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "motion",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame",
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#000000",
+        "purpose": "CSS background behind canvas."
+      },
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "[\"#FFEE00\", \"#009DFF\", \"#7500FF\"]",
+        "purpose": "Up to 5-color palette."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 100,
+        "purpose": "Particle density."
+      },
+      {
+        "name": "dotSize",
+        "type": "number",
+        "default": 4,
+        "purpose": "Particle dot size."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 50,
+        "purpose": "Auto-rotation speed."
+      },
+      {
+        "name": "direction",
+        "type": "\"cw\" | \"ccw\"",
+        "default": "cw",
+        "purpose": "Rotation direction."
+      },
+      {
+        "name": "hoverSpeed",
+        "type": "number",
+        "default": 200,
+        "purpose": "Boost multiplier on hover."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": 38,
+        "purpose": "Inverse pullback (camera distance)."
+      },
+      {
+        "name": "amplitude",
+        "type": "number",
+        "default": 100,
+        "purpose": "Travelling-wave height."
+      },
+      {
+        "name": "ring",
+        "type": "{ width; softness; ringBands }",
+        "default": "{ width: 50, softness: 50, ringBands: 5 }",
+        "purpose": "Annular band geometry."
+      },
+      {
+        "name": "tilt",
+        "type": "{ x: number; y: number }",
+        "default": "{ x: 85, y: 0 }",
+        "purpose": "Camera tilt above disc plane."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 120x120.",
+    "performanceNotes": "Raw WebGL (SDF morph circle/pentagon/heart); single GL context + one rAF, state in refs; additive premultiplied blending; motionValue-eased hover; documented DEFAULT_TRANSITION for legacy feel.",
+    "lineCount": 805
+  },
+  {
+    "category": "interactive-background",
+    "name": "BlockDrift",
+    "slug": "block-drift",
+    "filePath": "frontend/src/components/ui/BlockDrift.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react",
+      "three"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "near",
+        "type": "string",
+        "default": "#0012FF",
+        "purpose": "Near-layer color."
+      },
+      {
+        "name": "far",
+        "type": "string",
+        "default": "#FFFFFF",
+        "purpose": "Far-layer color."
+      },
+      {
+        "name": "edge",
+        "type": "string",
+        "default": "#FCFF00",
+        "purpose": "SSAA seam line color."
+      },
+      {
+        "name": "grid",
+        "type": "number",
+        "default": 9,
+        "purpose": "Grid size per layer."
+      },
+      {
+        "name": "blockSize",
+        "type": "number",
+        "default": 10,
+        "purpose": "Cube size."
+      },
+      {
+        "name": "gap",
+        "type": "number",
+        "default": 20,
+        "purpose": "Spacing between layers."
+      },
+      {
+        "name": "layers",
+        "type": "number",
+        "default": 15,
+        "purpose": "Depth layer count."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 10,
+        "purpose": "Noise survival density."
+      },
+      {
+        "name": "cluster",
+        "type": "number",
+        "default": 10,
+        "purpose": "Noise frequency (cluster size)."
+      },
+      {
+        "name": "edgeWidth",
+        "type": "number",
+        "default": 1,
+        "purpose": "Seam edge width."
+      },
+      {
+        "name": "fade",
+        "type": "number",
+        "default": 1,
+        "purpose": "Fog-fade grow-in."
+      },
+      {
+        "name": "shade",
+        "type": "number",
+        "default": 20,
+        "purpose": "Per-face shading strength."
+      },
+      {
+        "name": "clearCentre",
+        "type": "number",
+        "default": 3,
+        "purpose": "Clear corridor radius."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 12,
+        "purpose": "Layer slide speed."
+      },
+      {
+        "name": "direction",
+        "type": "string",
+        "default": "front",
+        "purpose": "Stack travel direction."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 120x120.",
+    "performanceNotes": "three.js instanced cubes, one rAF, state in refs; seamless never-restarting beat sync; camera inside stack; clean cleanup.",
+    "lineCount": 696
+  },
+  {
+    "category": "interactive-background",
+    "name": "Lightfall",
+    "slug": "lightfall",
+    "filePath": "frontend/src/components/ui/Lightfall.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "colors",
+        "type": "string[]",
+        "default": "[\"#A6C8FF\", \"#5227FF\", \"#FF9FFC\"]",
+        "purpose": "Up to 8 streak palette colors."
+      },
+      {
+        "name": "backgroundColor",
+        "type": "string",
+        "default": "#000000",
+        "purpose": "CSS background behind premultiplied canvas."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 200,
+        "purpose": "Animation rate."
+      },
+      {
+        "name": "streakCount",
+        "type": "number",
+        "default": 7,
+        "purpose": "Streak count (max 16)."
+      },
+      {
+        "name": "streakWidth",
+        "type": "number",
+        "default": 207,
+        "purpose": "Streak width."
+      },
+      {
+        "name": "streakLength",
+        "type": "number",
+        "default": 66,
+        "purpose": "Streak length."
+      },
+      {
+        "name": "glow",
+        "type": "number",
+        "default": 29,
+        "purpose": "Glow / tone mapping multiplier."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 111,
+        "purpose": "Angular ring count."
+      },
+      {
+        "name": "twinkle",
+        "type": "number",
+        "default": 100,
+        "purpose": "Twinkle modulation."
+      },
+      {
+        "name": "zoom",
+        "type": "number",
+        "default": 1,
+        "purpose": "Camera/scene zoom."
+      },
+      {
+        "name": "backgroundGlow",
+        "type": "number",
+        "default": 200,
+        "purpose": "Radial vignette tint strength."
+      },
+      {
+        "name": "opacity",
+        "type": "number",
+        "default": 100,
+        "purpose": "Global opacity."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 120x120.",
+    "performanceNotes": "Raw WebGL raymarch (39-iteration sphere march); single rAF; single fullscreen-triangle draw call; premultiplied alpha over CSS background.",
+    "lineCount": 409
+  },
+  {
+    "category": "interactive-background",
+    "name": "AsciiWave",
+    "slug": "ascii-water",
+    "filePath": "frontend/src/components/ui/AsciiWater.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "ink",
+        "type": "string",
+        "default": "#00E8FF",
+        "purpose": "Glyph ink color."
+      },
+      {
+        "name": "cell",
+        "type": "number",
+        "default": 9,
+        "purpose": "Glyph cell size."
+      },
+      {
+        "name": "fill",
+        "type": "number",
+        "default": 10,
+        "purpose": "Water fill level."
+      },
+      {
+        "name": "ripple",
+        "type": "number",
+        "default": 20,
+        "purpose": "Ripple brush radius."
+      },
+      {
+        "name": "push",
+        "type": "number",
+        "default": 20,
+        "purpose": "Pointer push strength."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 8,
+        "purpose": "Simulation speed."
+      },
+      {
+        "name": "slosh",
+        "type": "number",
+        "default": 16,
+        "purpose": "FLIP ratio (sloshiness)."
+      },
+      {
+        "name": "clickIntensity",
+        "type": "number",
+        "default": 58,
+        "purpose": "Click splash intensity."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 120x120; grid cells recompute on resize; letter-spacing-matched monospace font.",
+    "performanceNotes": "DOM-based fluid simulation (Müller FLIP solver) rendered to a hidden pre; single rAF; no WebGL/workers; pointer layer disables pointer events.",
+    "lineCount": 1095
+  },
+  {
+    "category": "interactive-background",
+    "name": "Globe",
+    "slug": "globe-mesh",
+    "filePath": "frontend/src/components/ui/GlobeMesh.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react",
+      "three"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame",
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "dot",
+        "type": "string",
+        "default": "#FFFFFF",
+        "purpose": "Point color."
+      },
+      {
+        "name": "net",
+        "type": "string",
+        "default": "#26FF00",
+        "purpose": "Cage line color."
+      },
+      {
+        "name": "density",
+        "type": "number",
+        "default": 20,
+        "purpose": "Point density."
+      },
+      {
+        "name": "spin",
+        "type": "number",
+        "default": 20,
+        "purpose": "Auto-spin rate."
+      },
+      {
+        "name": "spinDir",
+        "type": "string",
+        "default": "right",
+        "purpose": "Spin direction."
+      },
+      {
+        "name": "hoverOn",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Pointer interaction toggle."
+      },
+      {
+        "name": "sizePercent",
+        "type": "number",
+        "default": 100,
+        "purpose": "Globe scale %."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 120x120; ResizeObserver.",
+    "performanceNotes": "three.js three shared draw passes over one rotation; pointer ray un-projected onto object-space sphere; culled hidden faces per material.",
+    "lineCount": 1253
+  },
+  {
+    "category": "interactive-background",
+    "name": "ShaderGroupSwitcher",
+    "slug": "reflect-shader",
+    "filePath": "frontend/src/components/ui/ReflectShader.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#020202",
+        "purpose": "CSS background behind canvas."
+      },
+      {
+        "name": "tint",
+        "type": "string",
+        "default": "#ffffff",
+        "purpose": "RGB multiplier (uTint)."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 50,
+        "purpose": "Animation rate 0-100 (0 frozen)."
+      },
+      {
+        "name": "brightness",
+        "type": "number",
+        "default": 100,
+        "purpose": "Shader intensity multiplier."
+      },
+      {
+        "name": "thickness",
+        "type": "number",
+        "default": 20,
+        "purpose": "Refractive band thickness."
+      },
+      {
+        "name": "chromatic",
+        "type": "number",
+        "default": 10,
+        "purpose": "Channel rotation / chromatic offset."
+      },
+      {
+        "name": "bandGap",
+        "type": "number",
+        "default": 20,
+        "purpose": "Spatial frequency of banding (uBands)."
+      },
+      {
+        "name": "zoom",
+        "type": "number",
+        "default": 295,
+        "purpose": "View scale (uScale)."
+      },
+      {
+        "name": "hover",
+        "type": "number",
+        "default": 90,
+        "purpose": "Pointer glow intensity (uHover)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper min 1200x800; ResizeObserver; DPR cap 2.",
+    "performanceNotes": "Raw WebGL fragment shader (12-line inverse-distance integration per RGB channel); single rAF; single fullscreen triangle; pointer easing via lerp + dt; premultiplied alpha.",
+    "lineCount": 325
+  },
+  {
+    "category": "interactive-background",
+    "name": "InfiniteTendrils",
+    "slug": "infinite-tendrils",
+    "filePath": "frontend/src/components/ui/InfiniteTendrils.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "colorA",
+        "type": "string",
+        "default": "UNKNOWN (empty string -> gray)",
+        "purpose": "First motion gradient color."
+      },
+      {
+        "name": "colorB",
+        "type": "string",
+        "default": "UNKNOWN (empty string -> gray)",
+        "purpose": "Second motion gradient color."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "default": 18,
+        "purpose": "Tendril density 1-20 (maps to 90-1390 motes)."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": 14,
+        "purpose": "Noise-field spatial scale 1-20."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "default": 5,
+        "purpose": "Line width 1-20."
+      },
+      {
+        "name": "trail",
+        "type": "number",
+        "default": 20,
+        "purpose": "Trail persistence 1-20."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 100,
+        "purpose": "Travel rate 0-20 (0 still)."
+      },
+      {
+        "name": "followPointer",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Tendrils curl toward pointer."
+      },
+      {
+        "name": "strength",
+        "type": "number",
+        "default": 13,
+        "purpose": "Pointer grip reach 1-20."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 120x120; ResizeObserver.",
+    "performanceNotes": "Canvas 2D flow field with two scrolling value-noise octaves; single rAF; destination-out trail compositing; DPR cap 2; scene clears fully if frame stalls (tab switch).",
+    "lineCount": 452
+  },
+  {
+    "category": "interactive-background",
+    "name": "OceanSwell",
+    "slug": "ocean-swell",
+    "filePath": "frontend/src/components/ui/OceanSwell.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react",
+      "three"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "webgl",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "deep",
+        "type": "string",
+        "default": "#04222E",
+        "purpose": "Deep water color."
+      },
+      {
+        "name": "shallow",
+        "type": "string",
+        "default": "#1E7F86",
+        "purpose": "Shallow/crest color."
+      },
+      {
+        "name": "scatter",
+        "type": "string",
+        "default": "#CCCFCE",
+        "purpose": "Subsurface scattering color."
+      },
+      {
+        "name": "foam",
+        "type": "string",
+        "default": "#F2FAFF",
+        "purpose": "Foam color."
+      },
+      {
+        "name": "zenith",
+        "type": "string",
+        "default": "#2C5C8E",
+        "purpose": "Sky zenith color."
+      },
+      {
+        "name": "horizon",
+        "type": "string",
+        "default": "#FAF5B4",
+        "purpose": "Sky horizon color."
+      },
+      {
+        "name": "swell",
+        "type": "number",
+        "default": 1,
+        "purpose": "Wave amplitude 1-20."
+      },
+      {
+        "name": "choppy",
+        "type": "number",
+        "default": 20,
+        "purpose": "Gerstner displacement 0-20."
+      },
+      {
+        "name": "detail",
+        "type": "number",
+        "default": 20,
+        "purpose": "Wave frequency base 1-20."
+      },
+      {
+        "name": "glitter",
+        "type": "number",
+        "default": 20,
+        "purpose": "Specular sharpness 1-20."
+      },
+      {
+        "name": "subsurface",
+        "type": "number",
+        "default": 20,
+        "purpose": "Scatter strength 0-20."
+      },
+      {
+        "name": "foamAmount",
+        "type": "number",
+        "default": 20,
+        "purpose": "Foam coverage 0-20."
+      },
+      {
+        "name": "cloud",
+        "type": "number",
+        "default": 20,
+        "purpose": "Cloud density 0-20."
+      },
+      {
+        "name": "haze",
+        "type": "number",
+        "default": 0,
+        "purpose": "Atmospheric haze 0-20."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 5,
+        "purpose": "Simulation speed 0-20."
+      },
+      {
+        "name": "drag",
+        "type": "number",
+        "default": 20,
+        "purpose": "Orbit drag sensitivity 0-20."
+      },
+      {
+        "name": "sizePercent",
+        "type": "number",
+        "default": 200,
+        "purpose": "Focal/zoom 40-200."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 160x120; camera auto-drifts and drag-orbits with inertia, pitch clamped 0.5.",
+    "performanceNotes": "THREE ShaderMaterial ray-marched ocean (68-step adaptive crest, 4 gerstner + 7 detail waves); DPR cap 1.25; ResizeObserver; drag inertia decay; filmic tonemap.",
+    "lineCount": 657
+  },
+  {
+    "category": "interactive-background",
+    "name": "FrostGlassMelt",
+    "slug": "frost-glass-melt",
+    "filePath": "frontend/src/components/ui/FrostGlassMelt.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "#060A14",
+        "purpose": "Base background behind the glass."
+      },
+      {
+        "name": "frost",
+        "type": "string",
+        "default": "#D9E6FF",
+        "purpose": "Frost crystal color."
+      },
+      {
+        "name": "scene",
+        "type": "number",
+        "default": 20,
+        "purpose": "Snow-mote density 0-20 (0-150 motes)."
+      },
+      {
+        "name": "cell",
+        "type": "number",
+        "default": 12,
+        "purpose": "Frost granularity 1-20 (6-32px cells)."
+      },
+      {
+        "name": "meltRadius",
+        "type": "number",
+        "default": 14,
+        "purpose": "Pointer thaw reach px 1-20."
+      },
+      {
+        "name": "meltSpeed",
+        "type": "number",
+        "default": 12,
+        "purpose": "Melt rate 1-20."
+      },
+      {
+        "name": "refreezeSpeed",
+        "type": "number",
+        "default": 8,
+        "purpose": "Re-freeze rate 1-20."
+      },
+      {
+        "name": "drift",
+        "type": "number",
+        "default": 10,
+        "purpose": "Snow drift 0-20 (0 still)."
+      },
+      {
+        "name": "twinkle",
+        "type": "number",
+        "default": 12,
+        "purpose": "Crystal shimmer 0-20."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper width/height 100% with min 160x120; DPR cap 2; ResizeObserver.",
+    "performanceNotes": "Canvas 2D per-cell heat buffer with inverse-square falloff; single rAF; prefers-reduced-motion renders one static frosted frame (matchMedia at source lines 153-154); touch-action none.",
+    "lineCount": 514
+  },
+  {
+    "category": "interactive-background",
+    "name": "Sky",
+    "slug": "sky",
+    "filePath": "frontend/src/components/ui/Sky.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "tailwind",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame",
+      "scroll-reveal"
+    ],
+    "props": [
+      {
+        "name": "palette",
+        "type": "\"day\" | \"dusk\" | \"night\"",
+        "default": "dusk",
+        "purpose": "Sky mood palette."
+      },
+      {
+        "name": "stars",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Render twinkling stars."
+      },
+      {
+        "name": "starCount",
+        "type": "number",
+        "default": 130,
+        "purpose": "Star count 0-400."
+      },
+      {
+        "name": "twinkleSpeed",
+        "type": "number",
+        "default": 6,
+        "purpose": "Star twinkle rate 0-20."
+      },
+      {
+        "name": "clouds",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Render drifting clouds."
+      },
+      {
+        "name": "cloudCount",
+        "type": "number",
+        "default": 5,
+        "purpose": "Cloud count 0-12."
+      },
+      {
+        "name": "cloudSpeed",
+        "type": "number",
+        "default": 8,
+        "purpose": "Cloud drift speed 0-20."
+      },
+      {
+        "name": "parallax",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Pointer parallax across layers."
+      },
+      {
+        "name": "parallaxStrength",
+        "type": "number",
+        "default": 16,
+        "purpose": "Parallax offset px 0-80."
+      },
+      {
+        "name": "seed",
+        "type": "number",
+        "default": 1,
+        "purpose": "Reproducible star/cloud placement."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "purpose": "Extra wrapper styles."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "purpose": "Extra Tailwind classes for wrapper."
+      }
+    ],
+    "responsive": "Wrapper relative h-full w-full overflow-hidden + optional className; ResizeObserver with setTransform reset; DPR cap 2 (1.5 above 1920px); clouds re-homed at width*1.5.",
+    "performanceNotes": "Cached orb + cloud sprites avoid per-frame redraw; IntersectionObserver parks rAF off-screen; prefers-reduced-motion cancels loop + zeroes parallax + draws one static frame; exponential-lerp parallax.",
+    "lineCount": 453
+  },
+  {
+    "category": "image-interaction",
+    "name": "SpiralImages",
+    "slug": "spiral-images",
+    "filePath": "frontend/src/components/ui/spiral-images.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "images",
+        "type": "Array<{ src: string }>",
+        "default": "14 imagedelivery.net defaults",
+        "purpose": "Image sources."
+      },
+      {
+        "name": "turns",
+        "type": "number",
+        "default": 3.5,
+        "purpose": "Spiral turns."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": 2,
+        "purpose": "Flow speed."
+      },
+      {
+        "name": "spacing",
+        "type": "number",
+        "default": 5,
+        "purpose": "Equal arc spacing between cards."
+      },
+      {
+        "name": "spread",
+        "type": "number",
+        "default": 6,
+        "purpose": "Radial spread factor."
+      },
+      {
+        "name": "sizeAttenuation",
+        "type": "number",
+        "default": 2,
+        "purpose": "Size shrink toward center."
+      },
+      {
+        "name": "imageSize",
+        "type": "number",
+        "default": 200,
+        "purpose": "Base image px size."
+      },
+      {
+        "name": "fadeIn",
+        "type": "number",
+        "default": 20,
+        "purpose": "Fade-in % of path length."
+      },
+      {
+        "name": "fadeOut",
+        "type": "number",
+        "default": 0,
+        "purpose": "Fade-out % of path length."
+      },
+      {
+        "name": "cornerRadius",
+        "type": "number",
+        "default": 5,
+        "purpose": "Card corner radius."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper width/height 100%; ResizeObserver + DPR cap 2; spiral radius based on min(w,h); outer arms overflow and clip.",
+    "performanceNotes": "Canvas 2D Archimedean spiral with arc-length reparameterization; single rAF cancelled on cleanup; ResizeObserver disconnected; images preloaded via new Image (crossOrigin) keyed on srcKey.",
+    "lineCount": 324
+  },
+  {
+    "category": "image-interaction",
+    "name": "InfinityImage",
+    "slug": "infinity-image",
+    "filePath": "frontend/src/components/ui/infinity-image.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "css-keyframes"
+    ],
+    "props": [
+      {
+        "name": "images",
+        "type": "Array<{ src; alt?; title? }>",
+        "default": "16 Unsplash defaults",
+        "purpose": "Thumbnail sources."
+      },
+      {
+        "name": "count",
+        "type": "number",
+        "default": 26,
+        "purpose": "Number of cards on the loop."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": 16,
+        "purpose": "Full loop seconds."
+      },
+      {
+        "name": "cardWidth",
+        "type": "number",
+        "default": 56,
+        "purpose": "Card width px."
+      },
+      {
+        "name": "cardHeight",
+        "type": "number",
+        "default": 78,
+        "purpose": "Card height px."
+      },
+      {
+        "name": "cardRadius",
+        "type": "number",
+        "default": 12,
+        "purpose": "Card corner radius px."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "Infinity Gallery",
+        "purpose": "Corner label text."
+      },
+      {
+        "name": "pauseOnHover",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Pause animation on hover."
+      },
+      {
+        "name": "showTrack",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show guideline SVG track."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "purpose": "Extra wrapper Tailwind classes."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "purpose": "Extra wrapper styles."
+      }
+    ],
+    "responsive": "Wrapper 100% w/h with min-height 360px; ResizeObserver scales whole 700x320 stage below 740px (min scale 0.42).",
+    "performanceNotes": "Pure CSS offset-path keyframes (no JS loop); prefers-reduced-motion disables animation via injected @media; ResizeObserver cleaned up; images loading=eager with onError hide.",
+    "lineCount": 249
+  },
+  {
+    "category": "image-interaction",
+    "name": "CardCascade",
+    "slug": "card-cascade",
+    "filePath": "frontend/src/components/ui/CardCascade.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "lucide-react",
+      "react",
+      "react-icons"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "requestAnimationFrame",
+      "css-keyframes",
+      "scroll-reveal"
+    ],
+    "props": [
+      {
+        "name": "preview",
+        "type": "boolean",
+        "default": false,
+        "purpose": "Boxed auto-advance mode (no page scroll)."
+      },
+      {
+        "name": "scrollerRef",
+        "type": "React.RefObject<HTMLElement | null>",
+        "default": "undefined",
+        "purpose": "Internal scroll container to drive progress."
+      }
+    ],
+    "responsive": "useIsMobile hook drives ARC_RADIUS (1200 vs 900), card width clamp(310px,42vw,440px)/min(85vw,310px), height clamp(380px,50vh,540px)/min(60vh,420px), icon rail sizes.",
+    "performanceNotes": "rAF-throttled scroll handler (passive listeners, removed on cleanup); preview mode auto-advances with cancelAnimationFrame; deterministic ease; no framer-motion dependency despite fancy motion.",
+    "lineCount": 664
+  },
+  {
+    "category": "image-interaction",
+    "name": "ImageTrail",
+    "slug": "image-trail",
+    "filePath": "frontend/src/components/ui/image-trail.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "framer-motion",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "images",
+        "type": "Array<string | { src; alt? }>",
+        "default": "4 Unsplash defaults",
+        "purpose": "Trail image pool."
+      },
+      {
+        "name": "threshold",
+        "type": "number",
+        "default": 80,
+        "purpose": "Min px distance between stamps."
+      },
+      {
+        "name": "minDelay",
+        "type": "number",
+        "default": 50,
+        "purpose": "Min ms between stamps."
+      },
+      {
+        "name": "duration",
+        "type": "number",
+        "default": 1000,
+        "purpose": "Item lifetime ms."
+      },
+      {
+        "name": "maxItems",
+        "type": "number",
+        "default": 8,
+        "purpose": "Max concurrent trail images."
+      },
+      {
+        "name": "rotationRange",
+        "type": "number",
+        "default": 40,
+        "purpose": "Random rotation deg range."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "undefined",
+        "purpose": "Extra classes on trail images."
+      },
+      {
+        "name": "overlayClassName",
+        "type": "string",
+        "default": "undefined",
+        "purpose": "Extra classes on overlay."
+      },
+      {
+        "name": "transition",
+        "type": "Transition",
+        "default": "{ type: spring, stiffness: 260, damping: 22 }",
+        "purpose": "Enter animation."
+      },
+      {
+        "name": "exitTransition",
+        "type": "Transition",
+        "default": "{ duration: 0.4, ease: easeInOut }",
+        "purpose": "Exit animation."
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "default": false,
+        "purpose": "Disable trail entirely."
+      }
+    ],
+    "responsive": "Container relative overflow-hidden; trail images fixed w-32 aspect-[3/4]; scales by breakpoint tags in default classes.",
+    "performanceNotes": "Timeouts tracked in a Set and cleared on unmount; maxItems caps array; pointer move throttled by threshold + minDelay; no rAF loop.",
+    "lineCount": 232
+  },
+  {
+    "category": "image-interaction",
+    "name": "PerspectiveCarousel",
+    "slug": "perspective-carousel",
+    "filePath": "frontend/src/components/ui/perspective-carousel.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "Array<{ src; title; alt? }>",
+        "default": "5 Unsplash defaults",
+        "purpose": "Carousel slides."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number",
+        "default": "undefined (controlled)",
+        "purpose": "Controlled active index."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number",
+        "default": 2,
+        "purpose": "Uncontrolled initial index."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(i: number) => void",
+        "default": "undefined",
+        "purpose": "Change callback."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Wrap-around navigation."
+      },
+      {
+        "name": "slideWidth",
+        "type": "number",
+        "default": 220,
+        "purpose": "Slide width px (min 96)."
+      },
+      {
+        "name": "rotationStep",
+        "type": "number",
+        "default": 55,
+        "purpose": "rotateY per step deg."
+      },
+      {
+        "name": "inactiveScale",
+        "type": "number",
+        "default": 0.85,
+        "purpose": "Inactive scale (0.5-1)."
+      },
+      {
+        "name": "transition",
+        "type": "Transition",
+        "default": "{ type: spring, bounce: 0.14, duration: 0.9 }",
+        "purpose": "Slide animation."
+      },
+      {
+        "name": "showControls",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show arrow controls."
+      },
+      {
+        "name": "showDots",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show dot navigation."
+      },
+      {
+        "name": "viewportClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Viewport classes."
+      },
+      {
+        "name": "slideClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Slide classes."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Image classes."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Label classes."
+      },
+      {
+        "name": "controlsClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Controls classes."
+      }
+    ],
+    "responsive": "Root h-full w-full; slides aspect-[3/4] width slideWidth; keyboard-driven; mobile relies on flex + overflow-hidden.",
+    "performanceNotes": "No rAF/loop; framer-motion springs only; supports keyboard arrows (ArrowLeft/Right) and focusable region; per-slide aria attributes.",
+    "lineCount": 250
+  },
+  {
+    "category": "image-interaction",
+    "name": "DiagonalCarousel",
+    "slug": "diagonal-carousel",
+    "filePath": "frontend/src/components/ui/diagonal-carousel.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "Array<{ src; title; alt? }>",
+        "default": "5 Unsplash defaults",
+        "purpose": "Carousel slides."
+      },
+      {
+        "name": "activeIndex",
+        "type": "number",
+        "default": "undefined (controlled)",
+        "purpose": "Controlled active index."
+      },
+      {
+        "name": "defaultActiveIndex",
+        "type": "number",
+        "default": 2,
+        "purpose": "Uncontrolled initial index."
+      },
+      {
+        "name": "onActiveIndexChange",
+        "type": "(i: number) => void",
+        "default": "undefined",
+        "purpose": "Change callback."
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Wrap-around navigation."
+      },
+      {
+        "name": "slideSize",
+        "type": "number",
+        "default": 260,
+        "purpose": "Slide size px (min 120)."
+      },
+      {
+        "name": "rotationStep",
+        "type": "number",
+        "default": 24,
+        "purpose": "rotate deg per step."
+      },
+      {
+        "name": "verticalStep",
+        "type": "number",
+        "default": 100,
+        "purpose": "Vertical offset px per step."
+      },
+      {
+        "name": "inactiveScale",
+        "type": "number",
+        "default": 0.65,
+        "purpose": "Inactive scale (0.35-1)."
+      },
+      {
+        "name": "transition",
+        "type": "Transition",
+        "default": "{ type: spring, bounce: 0.16, duration: 0.85 }",
+        "purpose": "Slide animation."
+      },
+      {
+        "name": "showControls",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show arrow controls."
+      },
+      {
+        "name": "showDots",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show dot navigation."
+      },
+      {
+        "name": "viewportClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Viewport classes."
+      },
+      {
+        "name": "slideClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Slide classes."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Image classes."
+      },
+      {
+        "name": "labelClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Label classes."
+      },
+      {
+        "name": "controlsClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Controls classes."
+      }
+    ],
+    "responsive": "Root h-full w-full; slides aspect-square width slideSize; keyboard-driven.",
+    "performanceNotes": "No rAF/loop; framer-motion springs only; keyboard arrows; per-slide aria attributes.",
+    "lineCount": 247
+  },
+  {
+    "category": "image-interaction",
+    "name": "TestimonialsCard",
+    "slug": "testimonials-card",
+    "filePath": "frontend/src/components/ui/testimonials-card.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "framer-motion",
+      "lucide-react",
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "items",
+        "type": "Array<{ id; title; description; image }>",
+        "default": "4 Unsplash defaults",
+        "purpose": "Testimonial cards."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Extra root classes."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": 560,
+        "purpose": "Max grid width px."
+      },
+      {
+        "name": "showNavigation",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show prev/next controls."
+      },
+      {
+        "name": "showCounter",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show index counter."
+      },
+      {
+        "name": "autoPlay",
+        "type": "boolean",
+        "default": false,
+        "purpose": "Auto-advance."
+      },
+      {
+        "name": "autoPlayInterval",
+        "type": "number",
+        "default": 3500,
+        "purpose": "Auto-advance ms."
+      }
+    ],
+    "responsive": "grid-cols-1 on mobile, md:grid-cols-[1fr_1fr]; card max-w-[260px] mobile vs fully fluid desktop; p-6 md:p-8.",
+    "performanceNotes": "AnimatePresence with direction-aware exit; autoplay interval cleared on unmount/deps change; no rAF loop.",
+    "lineCount": 245
+  },
+  {
+    "category": "image-interaction",
+    "name": "ImageCollage",
+    "slug": "image-collage",
+    "filePath": "frontend/src/components/ui/image-collage.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "framer-motion",
+      "react"
+    ],
+    "stylingMethod": "tailwind",
+    "animationTech": [
+      "framer-motion"
+    ],
+    "props": [
+      {
+        "name": "images",
+        "type": "Array<{ src; x; y; rotate; alt? }>",
+        "default": "4 Unsplash sneaker defaults",
+        "purpose": "Collage image offsets."
+      },
+      {
+        "name": "containerClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Extra classes on the motion row."
+      },
+      {
+        "name": "imageClassName",
+        "type": "string",
+        "default": "N/A",
+        "purpose": "Extra classes on each card."
+      }
+    ],
+    "responsive": "w-28 sm:w-36 md:w-44 card widths; min-h-[460px]; -space-x-4 md:-space-x-6 overlap.",
+    "performanceNotes": "framer-motion spring toggle (collage <-> organized row); no rAF/listeners; click anywhere toggles layout.",
+    "lineCount": 98
+  },
+  {
+    "category": "image-interaction",
+    "name": "RippleSignatureLedger",
+    "slug": "ripple-signature-ledger",
+    "filePath": "frontend/src/components/ui/RippleSignatureLedger.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "canvas",
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "image",
+        "type": "{ src: string; alt?: string }",
+        "default": "required (no default)",
+        "purpose": "Ledger photo behind seals."
+      },
+      {
+        "name": "ringColor",
+        "type": "string",
+        "default": "rgba(214, 190, 150, ",
+        "purpose": "Wax ring color (alpha suffix appended)."
+      },
+      {
+        "name": "maxSeals",
+        "type": "number",
+        "default": 3,
+        "purpose": "Max concurrent seals (FIFO)."
+      },
+      {
+        "name": "autoSeal",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Auto-stamp one demo seal."
+      }
+    ],
+    "responsive": "Wrapper 100% w/h; ResizeObserver + DPR cap 2; image object-fit cover.",
+    "performanceNotes": "Canvas 2D seal expansion + alpha decay; single rAF cancelled on cleanup; ResizeObserver disconnected; pointerdown listener removed; prefers-reduced-motion short-circuits expansion; touch-action none.",
+    "lineCount": 228
+  },
+  {
+    "category": "image-interaction",
+    "name": "DriftwoodGallery",
+    "slug": "driftwood-gallery",
+    "filePath": "frontend/src/components/ui/DriftwoodGallery.tsx",
+    "language": "tsx",
+    "dependencies": [
+      "react"
+    ],
+    "stylingMethod": "inline-styles",
+    "animationTech": [
+      "requestAnimationFrame"
+    ],
+    "props": [
+      {
+        "name": "images",
+        "type": "Array<{ src; alt?; tint? }>",
+        "default": "required (no default)",
+        "purpose": "Gallery images (tint = extra CSS filter)."
+      },
+      {
+        "name": "intervalMs",
+        "type": "number",
+        "default": 5200,
+        "purpose": "Slide change interval ms."
+      },
+      {
+        "name": "waveAmp",
+        "type": "number",
+        "default": 6,
+        "purpose": "Tide-bob amplitude px."
+      },
+      {
+        "name": "showDots",
+        "type": "boolean",
+        "default": true,
+        "purpose": "Show slide dots."
+      }
+    ],
+    "responsive": "Wrapper 100% w/h; driftwood frame inset 10%; images object-fit cover full-bleed.",
+    "performanceNotes": "Slideshow interval cleared on unmount; rAF parallax writes transform directly to DOM (zero re-renders) and cancelled on cleanup; prefers-reduced-motion skips parallax entirely; images loading=lazy.",
+    "lineCount": 205
+  }
+]

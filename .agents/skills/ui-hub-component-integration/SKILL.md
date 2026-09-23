@@ -11,6 +11,8 @@ description: >
 
 # UI-HUB Component Integration Skill
 
+> **Ownership split:** the Component Forge skill (`uihub-component-forge`) owns analysis, the spec and the edit script; **this** skill is the gate that applies it. If the two ever disagree, **this integration skill wins.**
+
 ## 1. Project Snapshot (Read This First — Do NOT Skip)
 
 **Stack:** React 19 + TypeScript + Vite 6 + TailwindCSS v4
@@ -91,48 +93,64 @@ public/                      <- Static assets
 **Every component visible in the Library requires entries in up to 5 files.**
 The `componentData.tsx` exported array is the master. Each object has this shape:
 
+The real entry type is `ComponentItem` (search `export type ComponentItem` in
+`componentData.tsx`). The **required** fields are exactly these six:
+
 ```typescript
-// Simplified schema — verify by reading the last 3 entries above ]; in componentData.tsx
 {
-  slug: "my-component",           // URL-safe kebab-case identifier (unique)
-  name: "My Component",           // Display name shown in Library
-  description: "Short description...",
-  category: "Cursors",            // See section 3 for valid categories
-  tags: ["cursor", "interactive"],
-  isPremium: false,               // true if slug is in premiumComponents.ts
-  component: <MyComponent />,     // JSX preview element (uses React.lazy import at top)
+  id: "my-component",                  // kebab-case slug — also the UI_COMPONENTS + renderComponent key
+  title: "My Component",               // display name shown in the Library
+  category: "interactive-background",  // a real category SLUG (see section 3)
+  preview: () => <MyComponent />,      // preview factory: (props?) => ReactNode
+  code: "",                            // short usage snippet, or "" (newest entries use "")
+  vibePrompt: "",                      // optional curated prompt, or "" — prompts fall back to embeddedSourceCode
   // --- optional fields ---
-  demoPath: "/demo/my-component", // if a full-screen demo page exists
-  lovablePrompt: LOVABLE_PROMPTS["my-component"],
-  antigravityPrompt: ANTIGRAVITY_PROMPTS["my-component"],
-  sourceCode: EMBEDDED_SOURCE_CODE["my-component"],
-  vibeMeta: COMPONENT_CONFIG["my-component"]?.vibeMeta,
-  props: COMPONENT_CONFIG["my-component"]?.props,
+  description: "One-line description shown on the card.",
+  uploader: "…",                       // free-text uploader name
+  contributor: { name: "…", avatar: "…" }, // credit badge; avatar optional (initials fallback)
+  imageUrl: "…",
+  isPremium: false,
+  downloadUrl: "…",
+  liveUrl: "…",
+  addedAt: "2026-09-19",               // ISO date — drives the auto-expiring NEW badge
+  newBadgeDays: 120,                   // badge lifetime in days (default 120)
 }
 ```
 
-> **Critical:** Always read 10 lines around the last entry (before the closing `];`) in the
-> current file to confirm the exact field names before adding your entry — they may evolve.
+> **`sourceCode`, `props`, `vibeMeta`, `lovablePrompt` and `antigravityPrompt` are NOT fields
+> on the entry.** They are looked up by slug at render time from `EMBEDDED_SOURCE_CODE`,
+> `COMPONENT_CONFIG`, `LOVABLE_PROMPTS` and `ANTIGRAVITY_PROMPTS`. Do not add them to the array.
+
+> **Critical:** the array is ordered by insertion, **not** grouped by category — new entries are
+> appended at the end. Confirm the exact current field names by reading the type definition and a
+> recent entry before adding yours.
 
 ---
 
 ## 3. Component Categories
 
-Valid categories currently in use (verify in `componentData.tsx`):
+`category` is the **exact union below** from `ComponentItem` — the human labels are
+display-only. Never write a label into `category`.
 
-| Category | Examples |
+| Category slug (use this) | Examples |
 |---|---|
-| `Cursors` | AuroraCursor, HeartCursor, MagneticCursor |
-| `Backgrounds` | SpaceBackground, HackerBackground, BeamGridBackground |
-| `Buttons` | GalaxyButton, CornerBorderButton, RainbowButton |
-| `Text Animations` | LetterPullUpText, VaporizeTextCycle, ScrollHighlight |
-| `Carousels` | PerspectiveCarousel, DiagonalCarousel |
-| `3D` | ParticleSphere, TwinGalaxyRings, GlobeMesh |
-| `Loading` | TradingCandles, GeneratingOrb, Hourglass |
-| `Cards` | MagicCard, TestimonialsCard, CardCascade |
-| `Effects` | BorderBeam, SVGPageTransition, FourierFlow |
-| `Footers` | HaulFooter, SoraFooter, OmniflowFooter |
-| `Templates` | Full-page template demos |
+| `text` | LetterPullUpText, CrossfadeTypewriter, ScrollHighlight |
+| `effect` | BorderBeam, SVGPageTransition, FourierFlow |
+| `background` | SpaceBackground, HackerBackground, WaveBackground |
+| `button` | GalaxyButton, CornerBorderButton, RainbowButton |
+| `cursor` | MagneticCursor, HeartCursor, AuroraCursor |
+| `3d` | ParticleSphere, TwinGalaxyRings, GlobeMesh |
+| `custom` | — (escape hatch) |
+| `scroll` | InfiniteMarquee, ScrollExpand, OptionWheel |
+| `image-interaction` | ImageTrail, ImageCollage, InfinityImage |
+| `interactive-background` | GravitationalVortex, BloomingFlower, Sky |
+| `loader` | TradingCandles, GeneratingOrb, Hourglass |
+| `navbar` | PillNavbar, FloatingDarkCapsule, ModernDark |
+| `footer` | HaulFooter, SoraFooter, AlpineFooter |
+| `form` | OtpCodeInput, PasswordStrengthMeter, SignaturePad |
+
+> Full-page **templates** are **not** `ComponentItem`s — they live in
+> `frontend/src/data/templatesData.ts`. Do not add them to the component array.
 
 ---
 
@@ -192,6 +210,11 @@ Use this priority order to determine where the component goes:
 ```
 
 ### 5.3 Component Type Decision Table
+
+> The `category` values shown below are display labels — always emit the matching
+> **slug** from section 3 (for example "Backgrounds" → `background`,
+> "Carousels" → `scroll`/`image-interaction`, "Loading" → `loader`). "Cards" and
+> "Templates" are not `ComponentItem` categories.
 
 | If the user provides... | It goes in... |
 |---|---|
@@ -311,7 +334,9 @@ If the component needs its own CSS: create `MyComponent.module.css` or `MyCompon
 
 ### Step 3 — Register the lazy import in componentData.tsx
 
-At the **top section** of `componentData.tsx` (after existing lazy imports, before line ~95):
+Add the lazy const **next to the other `React.lazy` imports near the top** of
+`componentData.tsx` (use an anchor line, never a line number — see the forge's
+`references/07` for the anchor-based procedure):
 
 ```typescript
 // Default export:
@@ -323,32 +348,45 @@ const MyComponent = React.lazy(() =>
 );
 ```
 
+> **Anti-drift rule:** the file name, the imported export name, the lazy const name,
+> the `UI_COMPONENTS` key and the `id`/slug must all agree. The `UI_COMPONENTS` key
+> **must equal the slug** (e.g. `'sky-aurora': AuroraSky`), and the lazy import must
+> resolve the file's actual export. This is the fix for `black-hole-3d` → `BlackHole3d`
+> alias drift.
+
 ### Step 4 — Add the data entry
 
-In `componentData.tsx`, append to the exported array (before the closing `];`):
+In `componentData.tsx`, append a `ComponentItem` to the exported array (at the end,
+before the closing `];`) — the array is insertion-ordered, not grouped by category:
 
 ```typescript
 {
-  slug: "my-component",
-  name: "My Component",
-  description: "One-line description visible in the library card.",
-  category: "Backgrounds",
-  tags: ["tag1", "tag2"],
+  id: "my-component",
+  title: "My Component",
+  category: "background",              // real category slug (section 3)
+  preview: () => <MyComponent />,       // or: renderComponent("my-component", "My Component")
+  code: "",                             // short usage snippet, or ""
+  vibePrompt: "",                       // curated prompt, or ""
+  description: "One-line description visible on the library card.",
   isPremium: false,
-  component: (
-    <Suspense fallback={<div className="w-full h-full bg-neutral-950" />}>
-      <MyComponent />
-    </Suspense>
-  ),
-  // Include only if applicable:
-  demoPath: "/demo/my-component",
-  sourceCode: EMBEDDED_SOURCE_CODE["my-component"],
-  lovablePrompt: LOVABLE_PROMPTS["my-component"],
-  antigravityPrompt: ANTIGRAVITY_PROMPTS["my-component"],
-  vibeMeta: COMPONENT_CONFIG["my-component"]?.vibeMeta,
-  props: COMPONENT_CONFIG["my-component"]?.props,
+  addedAt: "2026-09-19",               // ISO date → auto-expiring NEW badge
+  newBadgeDays: 120,
 },
 ```
+
+Register the lazy component in the `UI_COMPONENTS` map so `renderComponent` can resolve
+the slug:
+
+```typescript
+const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
+  // …existing entries…
+  "my-component": MyComponent,          // key === slug
+};
+```
+
+> **Rejected legacy shape (do NOT use):** `slug` / `name` / `tags` / `component: <JSX>` /
+> `demoPath` / `sourceCode` / `props` / `vibeMeta` are **not** `ComponentItem` fields.
+> Real fields: `id` / `title` / `preview` / `code` / `vibePrompt` (+ optional extras).
 
 ### Step 5 — Populate all data files
 
