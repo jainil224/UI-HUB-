@@ -123,17 +123,13 @@ const Navbar = () => {
                                 <img
                                     src={logo}
                                     alt="UI HUB Logo"
-                                    className="w-8 h-8 rounded-sm object-contain"
+                                    className="w-12 h-12 rounded-sm object-contain"
                                 />
-                                <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-black shadow-[1px_1px_0px_0px_#000] animate-pulse" />
                             </div>
-                            <span className="font-heading font-black text-2xl tracking-tight text-black uppercase group-hover:text-[#1F4BFF] transition-colors">
-                                UI HUB
-                            </span>
                         </Link>
 
                         {/* ── Center Navigation Links ── */}
-                        <nav className="hidden md:flex items-center gap-2 lg:gap-3">
+                        <nav className="hidden md:flex flex-1 items-center gap-2 lg:gap-3">
                             {navLinks.map(({ to, label, active }) => (
                                 <Link
                                     key={to + label}
