@@ -25,14 +25,6 @@ const Navbar = () => {
     const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
     const [showFavDropdown, setShowFavDropdown] = useState(false);
     const favDropdownRef = useRef<HTMLDivElement>(null);
-    const [scrolled, setScrolled] = useState(false);
-
-    React.useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 40);
-        onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
-    }, []);
 
     React.useEffect(() => {
         const unsub = getUserFavorites(user?.uid, (data) => {
@@ -67,7 +59,7 @@ const Navbar = () => {
         { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
         { to: '/pricing', label: 'PRICING', active: isPricing },
     ];
-    
+
     const submitSearch = () => {
         if (globalSearch.trim()) {
             navigate(`/library?q=${encodeURIComponent(globalSearch.trim())}`);
@@ -99,19 +91,16 @@ const Navbar = () => {
 
     const planTier: PlanTier = planType === 'custom' ? 'custom' : (isPro ? 'pro' : 'free');
 
-    // Spring easing shared by the 3-card → merged-card transition
-    const mergeSpring = { type: 'spring' as const, stiffness: 200, damping: 24, mass: 0.8 };
-
-    // ── Reusable building blocks (3-card → merged navbar) ──
-    const logoMark = (size = 'w-10 h-10') => (
-        <Link to="/" className="flex items-center shrink-0 group">
-            <div className="relative transition-transform duration-200 group-hover:-rotate-6 group-hover:scale-110">
+    // ── Reusable building blocks (one fully-merged black bar) ──
+    const logoMark = (size = 'w-8 h-8') => (
+        <Link to="/" className="flex items-center shrink-0 select-none" aria-label="UI HUB Home">
+            <span className="relative flex items-center justify-center bg-white rounded-sm p-0.5 transition-transform duration-200 hover:-rotate-6 hover:scale-105">
                 <img src={logo} alt="UI HUB Logo" className={`${size} rounded-sm object-contain`} />
-            </div>
+            </span>
         </Link>
     );
 
-    const navLinksGroup = (px = 'px-3') => (
+    const navLinksGroup = (px = 'px-2.5') => (
         <>
             {navLinks.map(({ to, label, active }) => (
                 <Link
@@ -119,13 +108,13 @@ const Navbar = () => {
                     to={to}
                     className={`relative ${px} py-1.5 text-xs lg:text-[13px] font-black uppercase tracking-wider border-2 transition-all ${
                         active
-                            ? 'bg-[#1F4BFF] text-white border-black shadow-[3px_3px_0px_0px_#000000]'
-                            : 'bg-transparent text-black border-transparent hover:border-black hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#000000]'
+                            ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
+                            : 'bg-transparent text-white border-transparent hover:bg-white/10 hover:border-white/20'
                     }`}
                 >
                     {label}
                     {active && (
-                        <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-black" />
+                        <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-white/80" />
                     )}
                 </Link>
             ))}
@@ -139,18 +128,18 @@ const Navbar = () => {
                     onClick={() => setShowFavDropdown(prev => !prev)}
                     title="View Favorite Components"
                     aria-label="Favorite Components"
-                    className={`relative p-2 border-2 border-black transition-all flex items-center justify-center cursor-pointer ${
+                    className={`relative p-2 border-2 border-white/20 transition-all flex items-center justify-center cursor-pointer ${
                         showFavDropdown
-                            ? 'bg-[#FF3B30] text-white shadow-[3px_3px_0px_0px_#000000] -translate-y-0.5'
-                            : 'bg-white text-black hover:bg-neutral-100 hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#000000]'
+                            ? 'bg-[#FF3B30] text-white border-white/40 -translate-y-0.5'
+                            : 'bg-white/10 text-white hover:bg-white/20'
                     }`}
                 >
-                    <Heart 
-                        size={17} 
-                        className={favorites.length > 0 ? "fill-[#FF3B30] text-[#FF3B30]" : "text-black"} 
+                    <Heart
+                        size={17}
+                        className={favorites.length > 0 ? "fill-[#FF3B30] text-[#FF3B30]" : "text-white"}
                     />
                     {favorites.length > 0 && (
-                        <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#FF3B30] text-white text-[10px] font-mono font-black rounded-full border border-black flex items-center justify-center shadow-[1px_1px_0px_#000]">
+                        <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#FF3B30] text-white text-[10px] font-mono font-black rounded-full border border-white flex items-center justify-center">
                             {favorites.length}
                         </span>
                     )}
@@ -175,7 +164,7 @@ const Navbar = () => {
                                         {favorites.length}
                                     </span>
                                 </div>
-                                <button 
+                                <button
                                     onClick={() => setShowFavDropdown(false)}
                                     className="text-white hover:bg-black/20 p-1 cursor-pointer"
                                 >
@@ -195,7 +184,7 @@ const Navbar = () => {
                                     </div>
                                 ) : (
                                     favorites.map((fav) => (
-                                        <div 
+                                        <div
                                             key={fav.componentId}
                                             onClick={() => {
                                                 navigate(`/library?id=${fav.componentId}`);
@@ -255,8 +244,8 @@ const Navbar = () => {
             placeholder="SEARCH..."
             containerClassName={containerCls}
             inputWrapperClassName={wrapperCls}
-            iconClassName="pl-2.5 pr-1.5 flex items-center text-neutral-500 group-focus-within:text-[#1F4BFF] transition-colors"
-            inputClassName="flex-1 w-full bg-transparent py-1.5 pr-2.5 text-xs font-mono font-bold text-black placeholder:text-neutral-400 focus:outline-none uppercase"
+            iconClassName="pl-2.5 pr-1.5 flex items-center text-neutral-400 group-focus-within:text-[#FFC700] transition-colors"
+            inputClassName="flex-1 w-full bg-transparent py-1.5 pr-2.5 text-xs font-mono font-bold text-white placeholder:text-neutral-500 focus:outline-none uppercase"
             dropdownClassName="w-full min-w-[380px] right-0 left-auto"
         />
     );
@@ -269,21 +258,21 @@ const Navbar = () => {
                     title="Favorites & Profile"
                     className="flex items-center gap-1.5 py-0.5 mr-0.5"
                 >
-                    <div className="w-9 h-9 rounded-full border-2 border-black bg-[#1F4BFF] flex items-center justify-center overflow-hidden shrink-0">
+                    <div className="w-9 h-9 rounded-full border-2 border-white/40 bg-[#1F4BFF] flex items-center justify-center overflow-hidden shrink-0">
                         {user.photoURL ? (
                             <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
                         ) : (
                             <UserIcon size={15} className="text-white" />
                         )}
                     </div>
-                    <span className="hidden xl:inline text-xs font-black uppercase tracking-tight text-black max-w-[80px] truncate">
+                    <span className="hidden xl:inline text-xs font-black uppercase tracking-tight text-white max-w-[80px] truncate">
                         {user.displayName?.split(' ')[0] || 'USER'}
                     </span>
                     <span
-                        className={`hidden xl:inline px-1.5 py-0.5 border-2 border-black text-[9px] font-black uppercase ${
+                        className={`hidden xl:inline px-1.5 py-0.5 border-2 text-[9px] font-black uppercase ${
                             planTier === 'pro'
-                                ? 'bg-[#1F4BFF] text-white'
-                                : 'bg-neutral-200 text-black'
+                                ? 'bg-[#1F4BFF] text-white border-white/40'
+                                : 'bg-white/10 text-white border-white/20'
                         }`}
                     >
                         {planTier.toUpperCase()}
@@ -293,7 +282,7 @@ const Navbar = () => {
                     onClick={() => signOut(auth)}
                     aria-label="Sign out"
                     title="Sign Out"
-                    className="w-9 h-9 border-2 border-black flex items-center justify-center text-black hover:bg-[#E52520] hover:text-white active:translate-x-0.5 active:translate-y-0.5 transition-all shrink-0"
+                    className="w-9 h-9 border-2 border-white/20 flex items-center justify-center text-white hover:bg-[#E52520] hover:border-[#E52520] active:translate-x-0.5 active:translate-y-0.5 transition-all shrink-0"
                 >
                     <LogOut size={15} />
                 </button>
@@ -301,12 +290,12 @@ const Navbar = () => {
         ) : (
             <div className="flex items-center gap-2 shrink-0">
                 <Link to="/login">
-                    <button className="bg-white hover:bg-neutral-50 text-black border-2 border-black px-3 py-1.5 text-xs font-black uppercase tracking-wider shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] transition-all">
+                    <button className="bg-transparent hover:bg-white/10 text-white border-2 border-white/20 px-3 py-1.5 text-xs font-black uppercase tracking-wider transition-all">
                         SIGN IN
                     </button>
                 </Link>
                 <Link to="/signup">
-                    <button className="bg-[#1F4BFF] hover:bg-[#1638CC] text-white border-2 border-black px-3 py-1.5 text-xs font-black uppercase tracking-wider shadow-[2px_2px_0px_0px_#000000] hover:shadow-[1px_1px_0px_0px_#000000] transition-all">
+                    <button className="bg-[#1F4BFF] hover:bg-[#1638CC] text-white border-2 border-white/40 px-3 py-1.5 text-xs font-black uppercase tracking-wider transition-all">
                         GET STARTED
                     </button>
                 </Link>
@@ -332,180 +321,121 @@ const Navbar = () => {
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="fixed top-0 left-0 right-0 z-50 select-none [padding-top:env(safe-area-inset-top)]"
+                    className="fixed top-0 left-0 right-0 z-50 select-none bg-black border-b-2 border-[#1F4BFF] shadow-[0_5px_0px_0px_#000000] [padding-top:env(safe-area-inset-top)]"
                 >
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-3">
-                        {/* ── Desktop (lg+): 3 cards that merge into 1 on scroll ── */}
-                        <div className="hidden lg:flex justify-center">
-                            {/* Persistent frame: 3 cards slide together and merge into 1 (spring settle) */}
-                            <motion.div
-                                className="relative flex items-center"
-                                animate={{ gap: scrolled ? '0px' : '12px' }}
-                                transition={mergeSpring}
-                            >
-                                {/* Merged state: base surface + outer border + hard shadow (fade in) */}
-                                <motion.div
-                                    className="pointer-events-none absolute inset-0 -z-10 rounded-lg bg-white"
-                                    animate={{ opacity: scrolled ? 1 : 0 }}
-                                    transition={mergeSpring}
-                                />
-                                <motion.div
-                                    className="pointer-events-none absolute inset-0 z-20 rounded-lg border-2 border-black"
-                                    style={{ boxShadow: '4px 4px 0px 0px #000000' }}
-                                    animate={{ opacity: scrolled ? 1 : 0 }}
-                                    transition={mergeSpring}
-                                />
+                    {/* ── Fully merged bar (all breakpoints), no gaps ── */}
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        {/* Desktop (lg+): logo + links | search | profile in one continuous row */}
+                        <div className="hidden lg:flex h-16 items-center justify-between">
+                            <div className="flex items-center min-w-0">
+                                {logoMark('w-9 h-9')}
+                                <span className="h-7 w-px bg-white/15 mx-1 shrink-0" />
+                                {navLinksGroup('px-2.5 lg:px-3')}
+                            </div>
 
-                                {/* Segment 1 — Nav Links */}
-                                <div className="relative flex items-center pl-2 pr-2 py-2 bg-white rounded-lg">
-                                    <motion.div
-                                        className="pointer-events-none absolute inset-0 rounded-lg border-2 border-black"
-                                        style={{ boxShadow: '4px 4px 0px 0px #000000' }}
-                                        animate={{ opacity: scrolled ? 0 : 1 }}
-                                        transition={mergeSpring}
-                                    />
-                                    {logoMark('w-10 h-10')}
-                                    <span className="h-7 w-px bg-black/15 mx-1" />
-                                    {navLinksGroup('px-2.5 lg:px-3')}
-                                    {favoritesBlock()}
-
-                                    {/* Divider (fades in when merged) */}
-                                    <motion.span
-                                        className="h-7 border-l-2 border-black"
-                                        animate={{ opacity: scrolled ? 1 : 0, marginLeft: scrolled ? 8 : 0 }}
-                                        transition={mergeSpring}
-                                    />
-                                </div>
-
-                                {/* Segment 2 — Search */}
-                                <div className="relative flex items-center px-3 py-2 bg-white rounded-lg">
-                                    <motion.div
-                                        className="pointer-events-none absolute inset-0 rounded-lg border-2 border-black"
-                                        style={{ boxShadow: '4px 4px 0px 0px #000000' }}
-                                        animate={{ opacity: scrolled ? 0 : 1 }}
-                                        transition={mergeSpring}
-                                    />
-                                    {searchBox(
-                                        'relative w-44 xl:w-56',
-                                        'group flex items-center w-full bg-[#F5F5F5] border-2 border-black rounded-md transition-all focus-within:bg-white focus-within:border-[#1F4BFF] focus-within:shadow-[3px_3px_0px_0px_#1F4BFF]'
-                                    )}
-
-                                    {/* Divider (fades in when merged) */}
-                                    <motion.span
-                                        className="h-7 border-l-2 border-black"
-                                        animate={{ opacity: scrolled ? 1 : 0, marginLeft: scrolled ? 8 : 0 }}
-                                        transition={mergeSpring}
-                                    />
-                                </div>
-
-                                {/* Segment 3 — Profile */}
-                                <div className="relative flex items-center px-2 py-2 bg-white rounded-lg">
-                                    <motion.div
-                                        className="pointer-events-none absolute inset-0 rounded-lg border-2 border-black"
-                                        style={{ boxShadow: '4px 4px 0px 0px #000000' }}
-                                        animate={{ opacity: scrolled ? 0 : 1 }}
-                                        transition={mergeSpring}
-                                    />
-                                    {profileBlock()}
-                                </div>
-                            </motion.div>
+                            <div className="flex items-center gap-2">
+                                {searchBox(
+                                    'relative w-40 xl:w-52',
+                                    'group flex items-center w-full bg-white/10 border-2 border-white/15 rounded-md transition-all focus-within:bg-white/15 focus-within:border-[#FFC700]'
+                                )}
+                                {favoritesBlock()}
+                                {profileBlock()}
+                            </div>
                         </div>
 
-                        {/* ── Mobile / Tablet (<lg): floating white card ── */}
-                        <div className="lg:hidden flex justify-center">
-                            <div className="flex flex-col gap-2 pl-2 pr-2 py-2 mx-auto w-full max-w-2xl bg-white rounded-lg border-2 border-black shadow-[4px_4px_0px_0px_#000000]">
-                                <div className="flex items-center justify-between gap-2">
-                                    {logoMark('w-10 h-10')}
+                        {/* Mobile / Tablet (<lg): bar + quick nav */}
+                        <div className="lg:hidden">
+                            <div className="h-16 flex items-center justify-between gap-2">
+                                {logoMark('w-8 h-8')}
 
-                                    <div className="flex items-center gap-2">
-                                        {/* Profile Shortcut (always visible below lg) */}
-                                        {user ? (
-                                            <Link
-                                                to="/favorites"
-                                                title="Favorites & Profile"
-                                                aria-label="Profile"
-                                                className="flex items-center justify-center w-10 h-10 bg-white border-2 border-black rounded-full overflow-hidden shrink-0"
-                                            >
-                                                {user.photoURL ? (
-                                                    <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-                                                ) : (
-                                                    <UserIcon size={18} className="text-black" />
-                                                )}
-                                            </Link>
-                                        ) : (
-                                            <Link
-                                                to="/login"
-                                                title="Sign In"
-                                                aria-label="Sign in"
-                                                className="flex items-center justify-center w-10 h-10 bg-white border-2 border-black text-black hover:bg-[#1F4BFF] hover:text-white active:translate-x-0.5 active:translate-y-0.5 transition-all shrink-0"
-                                            >
-                                                <UserIcon size={18} />
-                                            </Link>
-                                        )}
-
-                                        {/* Mobile Heart Button (Visible on Components / Library Page) */}
-                                        {isLibrary && (
-                                            <button
-                                                onClick={() => navigate('/favorites')}
-                                                title="View Favorites"
-                                                aria-label="View Favorites"
-                                                className="flex items-center justify-center w-10 h-10 bg-white border-2 border-black text-black relative cursor-pointer"
-                                            >
-                                                <Heart 
-                                                    size={18} 
-                                                    className={favorites.length > 0 ? "fill-[#FF3B30] text-[#FF3B30]" : "text-black"} 
-                                                />
-                                                {favorites.length > 0 && (
-                                                    <span className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 bg-[#FF3B30] text-white text-[9px] font-mono font-black rounded-full border border-black flex items-center justify-center">
-                                                        {favorites.length}
-                                                    </span>
-                                                )}
-                                            </button>
-                                        )}
-
-                                        {/* Mobile Hamburger (shown below lg until the 3 cards kick in) */}
-                                        <button
-                                            onClick={() => setIsOpen(!isOpen)}
-                                            aria-label={isOpen ? 'Close menu' : 'Open menu'}
-                                            aria-expanded={isOpen}
-                                            className="flex items-center justify-center w-10 h-10 bg-white border-2 border-black text-black hover:bg-black hover:text-white active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
-                                        >
-                                            <AnimatePresence mode="wait" initial={false}>
-                                                {isOpen ? (
-                                                    <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
-                                                        <X size={18} />
-                                                    </motion.span>
-                                                ) : (
-                                                    <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
-                                                        <Menu size={18} />
-                                                    </motion.span>
-                                                )}
-                                            </AnimatePresence>
-                                        </button>
-                                    </div>
-                                </div>
-
-                                {/* Mobile quick nav: COMPONENTS / MCP / TEMPLATES */}
-                                <div className="flex items-stretch justify-between border-t-2 border-black pt-2">
-                                    {[
-                                        { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                                        { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
-                                        { to: '/templates', label: 'TEMPLATES', active: isTemplates },
-                                        { to: '/pricing', label: 'PRICING', active: isPricing },
-                                    ].map(({ to, label, active }) => (
+                                <div className="flex items-center gap-2">
+                                    {/* Profile Shortcut (always visible below lg) */}
+                                    {user ? (
                                         <Link
-                                            key={to + label}
-                                            to={to}
-                                            className={`flex-1 text-center py-1.5 mx-0.5 text-[10px] font-black uppercase tracking-wider border-2 transition-all ${
-                                                active
-                                                    ? 'bg-[#1F4BFF] text-white border-black shadow-[2px_2px_0px_0px_#000000]'
-                                                    : 'text-black border-transparent hover:border-black hover:bg-[#1F4BFF] hover:text-white'
-                                            }`}
+                                            to="/favorites"
+                                            title="Favorites & Profile"
+                                            aria-label="Profile"
+                                            className="flex items-center justify-center w-9 h-9 bg-[#1F4BFF] border-2 border-white/40 rounded-full overflow-hidden shrink-0"
                                         >
-                                            {label}
+                                            {user.photoURL ? (
+                                                <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                                            ) : (
+                                                <UserIcon size={18} className="text-white" />
+                                            )}
                                         </Link>
-                                    ))}
+                                    ) : (
+                                        <Link
+                                            to="/login"
+                                            title="Sign In"
+                                            aria-label="Sign in"
+                                            className="flex items-center justify-center w-9 h-9 bg-white/10 border-2 border-white/20 text-white hover:bg-[#1F4BFF] hover:border-[#1F4BFF] active:translate-x-0.5 active:translate-y-0.5 transition-all shrink-0"
+                                        >
+                                            <UserIcon size={18} />
+                                        </Link>
+                                    )}
+
+                                    {/* Mobile Heart Button (Visible on Components / Library Page) */}
+                                    {isLibrary && (
+                                        <button
+                                            onClick={() => navigate('/favorites')}
+                                            title="View Favorites"
+                                            aria-label="View Favorites"
+                                            className="flex items-center justify-center w-9 h-9 bg-white/10 border-2 border-white/20 text-white relative cursor-pointer"
+                                        >
+                                            <Heart
+                                                size={18}
+                                                className={favorites.length > 0 ? "fill-[#FF3B30] text-[#FF3B30]" : "text-white"}
+                                            />
+                                            {favorites.length > 0 && (
+                                                <span className="absolute -top-1.5 -right-1.5 min-w-[17px] h-[17px] px-1 bg-[#FF3B30] text-white text-[9px] font-mono font-black rounded-full border border-white flex items-center justify-center">
+                                                    {favorites.length}
+                                                </span>
+                                            )}
+                                        </button>
+                                    )}
+
+                                    {/* Mobile Hamburger */}
+                                    <button
+                                        onClick={() => setIsOpen(!isOpen)}
+                                        aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                                        aria-expanded={isOpen}
+                                        className="flex items-center justify-center w-9 h-9 bg-white/10 border-2 border-white/20 text-white hover:bg-white/20 active:translate-x-0.5 active:translate-y-0.5 transition-all cursor-pointer"
+                                    >
+                                        <AnimatePresence mode="wait" initial={false}>
+                                            {isOpen ? (
+                                                <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                                                    <X size={18} />
+                                                </motion.span>
+                                            ) : (
+                                                <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.15 }}>
+                                                    <Menu size={18} />
+                                                </motion.span>
+                                            )}
+                                        </AnimatePresence>
+                                    </button>
                                 </div>
+                            </div>
+
+                            {/* Mobile quick nav: COMPONENTS / MCP / TEMPLATES / PRICING */}
+                            <div className="flex items-stretch justify-between pb-2.5">
+                                {[
+                                    { to: '/library', label: 'COMPONENTS', active: isLibrary },
+                                    { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
+                                    { to: '/templates', label: 'TEMPLATES', active: isTemplates },
+                                    { to: '/pricing', label: 'PRICING', active: isPricing },
+                                ].map(({ to, label, active }) => (
+                                    <Link
+                                        key={to + label}
+                                        to={to}
+                                        className={`flex-1 text-center py-1.5 mx-0.5 text-[10px] font-black uppercase tracking-wider border-2 transition-all ${
+                                            active
+                                                ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
+                                                : 'text-white/80 border-transparent hover:border-white/20 hover:bg-white/10 hover:text-white'
+                                        }`}
+                                    >
+                                        {label}
+                                    </Link>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -518,17 +448,17 @@ const Navbar = () => {
                                 animate={{ opacity: 1, height: 'auto' }}
                                 exit={{ opacity: 0, height: 0 }}
                                 transition={{ duration: 0.2 }}
-                                className="border-t-2 border-black bg-white px-6 py-5 flex flex-col gap-3 lg:hidden shadow-[0px_8px_0px_0px_rgba(0,0,0,1)]"
+                                className="border-t-2 border-white/10 bg-black px-6 py-5 flex flex-col gap-3 lg:hidden shadow-[0px_8px_0px_0px_#000000]"
                             >
                                 {/* Mobile User Info */}
                                 {user && (
-                                    <Link 
-                                        to="/favorites" 
+                                    <Link
+                                        to="/favorites"
                                         onClick={() => setIsOpen(false)}
-                                        className="p-3 border-2 border-black bg-[#FFFDF0] flex items-center justify-between shadow-[3px_3px_0px_0px_#000000] mb-2"
+                                        className="p-3 border-2 border-white/20 bg-white/10 flex items-center justify-between mb-2"
                                     >
                                         <div className="flex items-center gap-3">
-                                            <div className="w-8 h-8 border-2 border-black bg-[#1F4BFF] flex items-center justify-center overflow-hidden">
+                                            <div className="w-8 h-8 border-2 border-white/40 bg-[#1F4BFF] flex items-center justify-center overflow-hidden">
                                                 {user.photoURL ? (
                                                     <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
                                                 ) : (
@@ -536,8 +466,8 @@ const Navbar = () => {
                                                 )}
                                             </div>
                                             <div>
-                                                <p className="text-xs font-black uppercase text-black">{user.displayName || 'USER'}</p>
-                                                <p className="text-[10px] text-neutral-500 font-mono">{user.email}</p>
+                                                <p className="text-xs font-black uppercase text-white">{user.displayName || 'USER'}</p>
+                                                <p className="text-[10px] text-neutral-400 font-mono">{user.email}</p>
                                             </div>
                                         </div>
                                         <PlanBadge tier={planTier} size="sm" showIcon className="shrink-0" />
@@ -553,8 +483,8 @@ const Navbar = () => {
                                             onClick={() => setIsOpen(false)}
                                             className={`py-2.5 px-3 border-2 text-xs font-black uppercase tracking-wider transition-all ${
                                                 active
-                                                    ? 'bg-[#1F4BFF] text-white border-black shadow-[3px_3px_0px_0px_#000000]'
-                                                    : 'bg-white text-black border-neutral-300 hover:border-black'
+                                                    ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
+                                                    : 'bg-white/5 text-white border-white/15 hover:border-[#FFC700]'
                                             }`}
                                         >
                                             {label}
@@ -566,14 +496,14 @@ const Navbar = () => {
                                         <Link
                                             to="/favorites"
                                             onClick={() => setIsOpen(false)}
-                                            className="py-2.5 px-3 border-2 border-black text-xs font-black uppercase tracking-wider bg-rose-50 text-black flex items-center justify-between shadow-[2px_2px_0px_0px_#000000]"
+                                            className="py-2.5 px-3 border-2 border-rose-400/40 text-xs font-black uppercase tracking-wider bg-rose-950/40 text-white flex items-center justify-between"
                                         >
                                             <div className="flex items-center gap-2">
                                                 <Heart size={14} className="fill-[#FF3B30] text-[#FF3B30]" />
                                                 <span>FAVORITE COMPONENTS</span>
                                             </div>
                                             {favorites.length > 0 && (
-                                                <span className="px-1.5 py-0.5 bg-[#FF3B30] text-white text-[10px] font-mono font-black border border-black">
+                                                <span className="px-1.5 py-0.5 bg-[#FF3B30] text-white text-[10px] font-mono font-black border border-white/40">
                                                     {favorites.length}
                                                 </span>
                                             )}
@@ -582,14 +512,14 @@ const Navbar = () => {
                                 </div>
 
                                 {/* Bottom Auth Action */}
-                                <div className="pt-3 border-t-2 border-black flex gap-3">
+                                <div className="pt-3 border-t-2 border-white/10 flex gap-3">
                                     {user ? (
                                         <button
                                             onClick={() => {
                                                 signOut(auth);
                                                 setIsOpen(false);
                                             }}
-                                            className="w-full bg-[#E52520] hover:bg-[#CC1E1A] text-white border-2 border-black py-2.5 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0px_0px_#000000] flex items-center justify-center gap-2"
+                                            className="w-full bg-[#E52520] hover:bg-[#CC1E1A] text-white border-2 border-white/40 py-2.5 text-xs font-black uppercase tracking-wider flex items-center justify-center gap-2"
                                         >
                                             <LogOut size={14} />
                                             <span>SIGN OUT</span>
@@ -597,12 +527,12 @@ const Navbar = () => {
                                     ) : (
                                         <>
                                             <Link to="/login" onClick={() => setIsOpen(false)} className="flex-1">
-                                                <button className="w-full bg-white hover:bg-neutral-50 text-black border-2 border-black py-2.5 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0px_0px_#000000]">
+                                                <button className="w-full bg-white/10 hover:bg-white/20 text-white border-2 border-white/25 py-2.5 text-xs font-black uppercase tracking-wider">
                                                     SIGN IN
                                                 </button>
                                             </Link>
                                             <Link to="/signup" onClick={() => setIsOpen(false)} className="flex-1">
-                                                <button className="w-full bg-[#E52520] hover:bg-[#CC1E1A] text-white border-2 border-black py-2.5 text-xs font-black uppercase tracking-wider shadow-[3px_3px_0px_0px_#000000]">
+                                                <button className="w-full bg-[#1F4BFF] hover:bg-[#1638CC] text-white border-2 border-white/40 py-2.5 text-xs font-black uppercase tracking-wider">
                                                     GET STARTED
                                                 </button>
                                             </Link>
@@ -614,10 +544,10 @@ const Navbar = () => {
                     </AnimatePresence>
 
                     {/* Global Toast */}
-                    <Toast 
-                        isVisible={showToast} 
-                        message={toastMsg} 
-                        onClose={() => setShowToast(false)} 
+                    <Toast
+                        isVisible={showToast}
+                        message={toastMsg}
+                        onClose={() => setShowToast(false)}
                     />
                 </motion.header>
             )}

@@ -25,27 +25,27 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 // ── 1. Navbar Skeleton ──
 export const NavbarSkeleton: React.FC = () => {
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 px-4 py-3 bg-brand-surface border-b-2 border-white pointer-events-none [padding-top:env(safe-area-inset-top)]">
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b-2 border-[#1F4BFF] shadow-[0_5px_0px_0px_#000000] pointer-events-none [padding-top:env(safe-area-inset-top)]">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 {/* Logo Area */}
-                <div className="flex items-center gap-2.5">
-                    <Skeleton className="w-8 h-8 rounded border-2 border-white" />
-                    <Skeleton className="w-24 h-6 rounded" />
+                <div className="flex items-center gap-1.5">
+                    <Skeleton className="w-8 h-8 rounded bg-white/10 border-2 border-white/20" />
+                    <Skeleton className="w-24 h-6 rounded bg-white/10" />
                 </div>
 
                 {/* Nav Links (Desktop) */}
                 <div className="hidden md:flex items-center gap-3">
-                    <Skeleton className="w-16 h-7 rounded" />
-                    <Skeleton className="w-32 h-7 rounded" />
-                    <Skeleton className="w-20 h-7 rounded" />
-                    <Skeleton className="w-24 h-7 rounded" />
+                    <Skeleton className="w-16 h-7 rounded bg-white/10" />
+                    <Skeleton className="w-32 h-7 rounded bg-white/10" />
+                    <Skeleton className="w-20 h-7 rounded bg-white/10" />
+                    <Skeleton className="w-24 h-7 rounded bg-white/10" />
                 </div>
 
                 {/* Right Actions */}
                 <div className="flex items-center gap-3">
-                    <Skeleton className="w-48 h-9 rounded hidden lg:block" />
-                    <Skeleton className="w-24 h-9 rounded bg-brand-blue border-2 border-black" glow />
-                    <Skeleton className="w-9 h-9 rounded md:hidden block" />
+                    <Skeleton className="w-48 h-9 rounded hidden lg:block bg-white/10" />
+                    <Skeleton className="w-24 h-9 rounded bg-brand-blue border-2 border-white/40" glow />
+                    <Skeleton className="w-9 h-9 rounded md:hidden block bg-white/10" />
                 </div>
             </div>
         </nav>
