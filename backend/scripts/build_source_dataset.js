@@ -67,7 +67,6 @@ const COMPONENT_FILE_MAP = {
   'laptopbot': 'components/ui/LaptopBot.tsx',
 
   // Scrolls & Transitions
-  'fourier-flow': 'components/ui/FourierFlow.tsx',
   'svg-page-transition': 'components/ui/SVGPageTransition.tsx',
   'section-scroll': 'components/ui/SectionScroll.tsx',
   'cloud-scroll': 'components/ui/CloudScroll/CloudScroll.tsx',

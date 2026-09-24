@@ -31,7 +31,6 @@ const CardCascade = React.lazy(() => import('../components/ui/CardCascade').then
 const CardsBeam = React.lazy(() => import('../components/ui/CardsBeam'));
 const SolarSystem = React.lazy(() => import('../components/ui/SolarSystem'));
 const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
-const FourierFlow = React.lazy(() => import('../components/ui/FourierFlow'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
@@ -109,6 +108,7 @@ const RainStorm = React.lazy(() => import('../components/ui/RainStorm'));
 const VectorWordmark = React.lazy(() => import('../components/ui/VectorWordmark'));
 const EmberHusk = React.lazy(() => import('../components/ui/EmberHusk'));
 const ParticleLoader = React.lazy(() => import('../components/ui/ParticleLoader'));
+const NeonBorder = React.lazy(() => import('../components/ui/NeonBorder'));
 
 
 
@@ -2712,7 +2712,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
     '3d-hero': ToonhubHero,
-    'fourier-flow': FourierFlow,
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
     'infinite-marquee': InfiniteMarquee,
@@ -2790,6 +2789,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'vector-wordmark': VectorWordmark,
     'ember-husk': EmberHusk,
     'particle-loader': ParticleLoader,
+    'neon-border': NeonBorder,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -6822,14 +6822,6 @@ MOTION:
 TECH: React + TypeScript + react-icons + lucide-react + CSS 3D transforms + intersection/scroll observers
 Props: none (self-contained data + scrolling). Category: image-interaction / cards.
 UI HUB premium component.`
-    },
-    {
-        id: "fourier-flow",
-        title: "Fourier Flow",
-        category: "effect",
-        preview: renderComponent("fourier-flow", "FourierFlow"),
-        code: `import FourierFlow from '@/components/ui/FourierFlow';\n\nexport const Demo = () => (\n  <div className="w-full h-[500px] flex items-center justify-center bg-[#050505] rounded-3xl overflow-hidden">\n    <FourierFlow />\n  </div>\n);`,
-        vibePrompt: "Create a mathematical 'FourierFlow' loading curve visualizer in React + TSX. Implement mathematical $x(t)$ and $y(t)$ coordinates mapping using harmonic cosines and sines with a dynamic breathing variable $m = 1.0 + 0.16s$ pulsing along with requestAnimationFrame. Design visual presets including Neon Emerald, Vaporwave Cyan/Pink, Solar Gold, and Cosmic Indigo. Include toggles for real-time slider customizability, formula visualization, background grid showing, speed multiplication, and trail particle counts."
     },
     {
         id: "svg-page-transition",
@@ -15130,6 +15122,26 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
                 <ParticleLoader />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Neon Border ────────────────────────────────────────
+    {
+        id: "neon-border",
+        title: "Neon Border",
+        category: "effect",
+        addedAt: "2026-09-24",
+        newBadgeDays: 120,
+        description: "A glowing neon arc that traces the perimeter of any element: a conic-gradient border beam that glides around corners — continuous or stepped motion, layered soft glow, and alpha-fade tails.",
+        preview: () => (
+            <div className="relative w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 bg-black p-10">
+                <div className="relative w-full h-full rounded-2xl bg-neutral-950 border border-white/5 flex items-center justify-center">
+                    <span className="relative z-10 text-xs font-black tracking-[0.25em] text-white/30">NEON BORDER</span>
+                    <NeonBorder />
+                </div>
             </div>
         ),
         code: "",

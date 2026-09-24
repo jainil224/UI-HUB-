@@ -57,7 +57,6 @@ const SettingsPage = React.lazy(() => import('./pages/Admin/SettingsPage'));
 const AuditPage = React.lazy(() => import('./pages/Admin/AuditPage'));
 const ExportPage = React.lazy(() => import('./pages/Admin/ExportPage'));
 import ScrollToTop from './components/ui/ScrollToTop';
-import FourierFlow from './components/ui/FourierFlow';
 import CookieBanner from './components/ui/CookieBanner';
 import PushNotificationPrompt from './components/ui/PushNotificationPrompt';
 import { CookieConsentProvider } from './context/CookieConsentContext';

@@ -1397,6 +1397,26 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
             requirements: ["Canvas 2D", "requestAnimationFrame loop", "Pointer Capture API", "devicePixelRatio cap", "pointer events + touchAction none"]
         }
     },
+    "neon-border": {
+        props: [
+            { name: "color", type: "string", default: '"#CC9149"', description: "Border arc color (hex, rgb(), rgba(), or named; converted to rgba for the gradient stops)." },
+            { name: "rounded", type: "number", default: "24", description: "Border corner radius in % of the smaller side (0-100)." },
+            { name: "thickness", type: "number", default: "6", description: "Border arc thickness in px (1-10)." },
+            { name: "borderSize", type: "number", default: "50", description: "Arc length as % of the perimeter (0-100; short arcs get soft fade tails)." },
+            { name: "glow", type: "number", default: "100", description: "Glow strength (0-100): adds layered blurred plus-lighter copies that widen the reach of the arc." },
+            { name: "movement", type: '"continuous" | "step"', default: '"continuous"', description: "Motion style: continuous glide around the perimeter, or step that beats corner-to-corner with a springy ease." },
+            { name: "speed", type: "number", default: "16", description: "Motion speed (0-20 scale; 0 freezes the arc)." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Wrapper style escape hatch (merged over the 100%x100% flexShrink-0 root)." }
+        ],
+        vibeMeta: {
+            behavior: "Two mirrored conic-gradient arc groups (A at lap 0, B at lap 0.5) are masked to the border region via content-box/border-box xor mask, then animated along the element perimeter. Each frame builds a conic gradient from samples of the arc: withAlpha converts the color to rgba so stops can fade the tail, and the perimeter helper maps a 0-1 lap position to an angle on the box border so the arc wraps corners. The layout runs in a single rAF loop, reading live props via a ref (speed/movement/borderSize/color), and only writes the --arc custom property when speed > 0. Glow is three blurred plus-lighter layers at increasing blur/reach when glow > 0. A ResizeObserver tracks the host box so the arc geometry matches the real border; the root is 100%x100% flexShrink-0 and rounded to the requested radius.",
+            states: { from: "a short bright neon arc sitting on one edge of the border", to: "the arc glides around all four corners, leaving a fading tail where it has been" },
+            cssProperties: ["conic-gradient built from perimeter samples", "content-box/border-box xor webkit mask", "plus-lighter blend", "blur glow layers", "custom property --arc", "resize observer", "requestAnimationFrame loop", "fade tails via rgba alpha"],
+            description: "A moving neon border arc: a short glowing dash built from a per-frame conic gradient skims around the rim of any element with a fading tail and soft layered glow, gliding continuously or stepping corner to corner.",
+            libraries: ["react"],
+            requirements: ["React", "CSS mask (content-box/border-box xor)", "conic-gradient animation", "ResizeObserver", "requestAnimationFrame loop", "mix-blend-mode plus-lighter"]
+        }
+    },
 };
 
 

@@ -332,7 +332,7 @@ describe('MCP Tools — premium isolation for free keys', () => {
 
   it('regression: previously-leaked premium ids now deny source to free keys', async () => {
     const leaked = [
-      'black-hole-3d', 'card-cascade', 'fourier-flow', 'generating-orb', 'gear-system',
+      'black-hole-3d', 'card-cascade', 'generating-orb', 'gear-system',
       'hourglass', 'infinity-image', 'isometric-portal', 'morphing-glow', 'particle-sphere',
       'point-dna-helix', 'radial-glow-button', 'spider-web', 'spiral-images', 'super-mario',
     ];

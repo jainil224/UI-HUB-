@@ -25,7 +25,6 @@ export const PREMIUM_COMPONENT_IDS = new Set([
   'card-cascade',
   'cards-beam',
   'chandelier',
-  'fourier-flow',
   'generating-orb',
   'gear-system',
   'gravitational-vortex',
