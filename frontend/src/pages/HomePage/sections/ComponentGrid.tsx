@@ -32,11 +32,8 @@ const bentoSpecs: BentoSpec[] = [
     {
         id: 'twin-galaxy-rings',
         className: 'sm:col-span-2',
-        // Galaxy sits in the lower half of its canvas — anchor the preview to the tile bottom.
-        // On phones give the frame the demo's natural 1200px width (the host has a hard
-        // minWidth:1200, so w-full just clipped it to a dark center slice) and scale the
-        // whole demo down to fit the tile width so the full galaxy stays visible.
-        frame: 'absolute bottom-0 left-1/2 -translate-x-1/2 w-[175%] h-[520px] max-sm:w-[1200px] max-sm:scale-[0.28] max-sm:origin-bottom flex items-center justify-center',
+        // Component is fluid (100% x 100%, minWidth/minHeight 120) — let it fill the tile edge-to-edge.
+        frame: 'absolute inset-0 flex items-center justify-center',
     },
     {
         id: 'mesh-text-hover',

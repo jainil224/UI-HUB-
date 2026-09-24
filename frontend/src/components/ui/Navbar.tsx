@@ -325,15 +325,17 @@ const Navbar = () => {
                 >
                     {/* ── Fully merged bar (all breakpoints), no gaps ── */}
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        {/* Desktop (lg+): logo + links | search | profile in one continuous row */}
-                        <div className="hidden lg:flex h-16 items-center justify-between">
+                        {/* Desktop (lg+): logo | centered links | search + profile in one continuous row */}
+                        <div className="hidden lg:grid grid-cols-[auto_1fr_auto] items-center h-16">
                             <div className="flex items-center min-w-0">
                                 {logoMark('w-9 h-9')}
-                                <span className="h-7 w-px bg-white/15 mx-1 shrink-0" />
+                            </div>
+
+                            <div className="flex items-center justify-center min-w-0 min-h-0">
                                 {navLinksGroup('px-2.5 lg:px-3')}
                             </div>
 
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 justify-end">
                                 {searchBox(
                                     'relative w-40 xl:w-52',
                                     'group flex items-center w-full bg-white/10 border-2 border-white/15 rounded-md transition-all focus-within:bg-white/15 focus-within:border-[#FFC700]'
