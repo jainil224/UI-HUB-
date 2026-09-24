@@ -43,6 +43,12 @@ export const CATEGORY_PRICES = {
   '3d': { name: '3D Components', usd: 2.99, inr: 59, tier: 3 },
 };
 
+export const COMPONENT_PRICE = {
+  // Flat price to buy a single premium component outright.
+  usd: 1.99,
+  inr: 49,
+};
+
 export const DURATION_DISCOUNTS = {
   '1month': { months: 1, discount: 0 },
   '6months': { months: 6, discount: 0.15 },

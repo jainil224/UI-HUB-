@@ -1,7 +1,8 @@
 import Razorpay from 'razorpay';
 import { verifyRazorpaySignature } from '../utils/verifySignature.js';
 import { fulfillPayment, dispatchProSubscriptionReceipt } from '../services/firebaseService.js';
-import { DURATION_DISCOUNTS } from '../config/plans.js';
+import { DURATION_DISCOUNTS, COMPONENT_PRICE } from '../config/plans.js';
+import { isPremiumComponentId } from '../config/premiumComponents.js';
 
 // Initialize Razorpay
 const getRazorpayInstance = () => {
@@ -20,25 +21,54 @@ const getRazorpayInstance = () => {
  */
 export const createOrder = async (req, res) => {
   try {
-    const { amount, currency = 'USD', planId, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6 } = req.body;
+    const { amount, currency = 'USD', planId, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6, purchaseType = 'pro', componentId } = req.body;
 
-    if (!amount) {
-      return res.status(400).json({ success: false, error: 'Amount is required' });
-    }
+    let options = null;
 
-    const options = {
-      amount: Math.round(Number(amount) * 100), // amount in smallest currency unit (paise/cents)
-      currency,
-      receipt: `receipt_order_${Date.now()}`,
-      notes: {
-        userId: req.user?.uid || 'unknown', 
-        tier: planId || 'pro',
-        displayName: req.user?.name || req.user?.email || 'Customer',
-        selectedCategories: JSON.stringify(selectedCategories || []),
-        duration: duration || '6 Months',
-        subscriptionMonths: String(subscriptionMonths || 6),
+    if (purchaseType === 'component') {
+      // A user buys one premium component outright. The price is ALWAYS derived
+      // server-side from COMPONENT_PRICE — the client-provided amount is never
+      // trusted — and the component id must be a known premium component.
+      if (!componentId || !isPremiumComponentId(componentId)) {
+        return res.status(400).json({ success: false, error: 'Valid premium componentId is required for component purchase' });
       }
-    };
+
+      const price = COMPONENT_PRICE[String(currency).toLowerCase()];
+      if (!price) {
+        return res.status(400).json({ success: false, error: 'Unsupported currency for component purchase' });
+      }
+
+      options = {
+        amount: Math.round(Number(price) * 100), // amount in smallest currency unit (paise/cents)
+        currency,
+        receipt: `receipt_component_${Date.now()}`,
+        notes: {
+          userId: req.user?.uid || 'unknown',
+          tier: 'bundle',
+          purchaseType: 'component',
+          componentId: componentId,
+          displayName: req.user?.name || req.user?.email || 'Customer',
+        },
+      };
+    } else {
+      if (!amount) {
+        return res.status(400).json({ success: false, error: 'Amount is required' });
+      }
+
+      options = {
+        amount: Math.round(Number(amount) * 100), // amount in smallest currency unit (paise/cents)
+        currency,
+        receipt: `receipt_order_${Date.now()}`,
+        notes: {
+          userId: req.user?.uid || 'unknown',
+          tier: planId || 'pro',
+          displayName: req.user?.name || req.user?.email || 'Customer',
+          selectedCategories: JSON.stringify(selectedCategories || []),
+          duration: duration || '6 Months',
+          subscriptionMonths: String(subscriptionMonths || 6),
+        }
+      };
+    }
 
     const instance = getRazorpayInstance();
     const order = await instance.orders.create(options);
@@ -76,7 +106,9 @@ export const verifyPayment = async (req, res) => {
       planId,
       selectedCategories = [],
       duration = '6 Months',
-      subscriptionMonths = 6
+      subscriptionMonths = 6,
+      purchaseType = 'pro',
+      componentId,
     } = req.body;
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature || !user_email) {
@@ -113,20 +145,25 @@ export const verifyPayment = async (req, res) => {
             selectedCategories: Array.isArray(selectedCategories) ? selectedCategories : [],
             duration: duration,
             subscriptionMonths: Number(subscriptionMonths) || 6,
+            purchaseType,
+            componentId,
         });
 
-        // 3. Dispatch PRO Subscription Email with attached PDF Receipt (idempotent)
-        dispatchProSubscriptionReceipt({
-            paymentId: razorpay_payment_id,
-            orderId: razorpay_order_id,
-            email: user_email,
-            displayName,
-            amount,
-            currency,
-            duration: duration || '6 Months',
-        }).catch((emailErr) => {
-            console.error('[VerifyPayment] Background PRO email/receipt error:', emailErr);
-        });
+        // 3. Dispatch the receipt email for subscriptions (idempotent).
+        //    Single-component purchases skip the PRO upgrade email.
+        if (purchaseType !== 'component') {
+            dispatchProSubscriptionReceipt({
+                paymentId: razorpay_payment_id,
+                orderId: razorpay_order_id,
+                email: user_email,
+                displayName,
+                amount,
+                currency,
+                duration: duration || '6 Months',
+            }).catch((emailErr) => {
+                console.error('[VerifyPayment] Background PRO email/receipt error:', emailErr);
+            });
+        }
 
         // Replay Attack Handled via idempotency
         if (result.alreadyProcessed) {
@@ -134,9 +171,11 @@ export const verifyPayment = async (req, res) => {
         }
 
         console.log(`[VerifyPayment] Payment verified & fulfilled for ${user_email}, paymentId: ${razorpay_payment_id}`);
-        const welcomeMsg = tier === 'custom'
-            ? 'Payment verified successfully. Your custom plan is now active!'
-            : 'Payment verified successfully. Welcome to PRO ACCESS! Your payment receipt has been sent to your email.';
+        const welcomeMsg = purchaseType === 'component'
+            ? 'Payment verified successfully. Your single-component access is now active!'
+            : tier === 'custom'
+                ? 'Payment verified successfully. Your custom plan is now active!'
+                : 'Payment verified successfully. Welcome to PRO ACCESS! Your payment receipt has been sent to your email.';
         return res.json({
             success: true,
             tier: tier,

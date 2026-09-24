@@ -15,6 +15,8 @@ import { getComponentCode, withUiHubBranding } from '../../../../utils/codeUtils
 import { downloadComponentZip } from '../../../../utils/zipUtils';
 import { fetchVibePrompt, fetchComponentSource, getFallbackVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
 import { getApiBaseUrl } from '../../../../utils/apiConfig';
+import { useRazorpayCheckout, detectCurrency, formatComponentPrice, Currency, COMPONENT_PRICE } from '../../../../utils/checkout';
+import CheckoutOverlay from '../../../../components/ui/CheckoutOverlay';
 import { useAuth } from '../../../../context/AuthContext';
 import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../../../services/favorites';
 import { listCollections, addToCollection, Collection } from '../../../../services/collections';
@@ -63,9 +65,13 @@ import { ComponentItem } from '../../../../data/componentData';
 const ProBlurGate = ({
     children,
     message = "Upgrade to Pro to view and copy the full source.",
+    onBuy,
+    buyLabel,
 }: {
     children: React.ReactNode;
     message?: string;
+    onBuy?: () => void;
+    buyLabel?: string;
 }) => (
     <div className="relative">
         <div
@@ -85,11 +91,21 @@ const ProBlurGate = ({
             </div>
             <h3 className="text-xl font-black uppercase tracking-tight text-white">Pro Feature</h3>
             <p className="text-neutral-400 text-xs max-w-sm font-medium">{message}</p>
-            <Link to="/pricing">
-                <button className="brutal-btn-primary px-8 py-2.5 text-xs font-black uppercase tracking-wider">
-                    Upgrade to Pro
-                </button>
-            </Link>
+            <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                {onBuy && (
+                    <button
+                        onClick={onBuy}
+                        className="brutal-btn-primary bg-brand-yellow! border-brand-yellow! hover:bg-brand-yellow! text-black px-8 py-2.5 text-xs font-black uppercase tracking-wider"
+                    >
+                        <Zap size={13} /> Buy {buyLabel || 'This Component'}
+                    </button>
+                )}
+                <Link to="/pricing">
+                    <button className="brutal-btn-primary px-8 py-2.5 text-xs font-black uppercase tracking-wider">
+                        Upgrade to Pro
+                    </button>
+                </Link>
+            </div>
         </div>
     </div>
 );
@@ -398,6 +414,9 @@ const VibeSystemSection = React.memo(({
     item,
     user,
     isProUser,
+    isEntitled,
+    onBuyComponent,
+    buyLabel,
     trialsRemaining,
     trialExpiresAt,
     setTrialsRemaining,
@@ -409,6 +428,9 @@ const VibeSystemSection = React.memo(({
     item: ComponentItem;
     user: any;
     isProUser: boolean;
+    isEntitled: boolean;
+    onBuyComponent?: () => void;
+    buyLabel?: string;
     trialsRemaining: number;
     trialExpiresAt: number | null;
     setTrialsRemaining: React.Dispatch<React.SetStateAction<number>>;
@@ -455,9 +477,11 @@ const VibeSystemSection = React.memo(({
         (!trialExpiresAt || Date.now() < trialExpiresAt);
 
     // Whether a premium AI tool is selectable for a non-pro user (trial based).
-    const isToolLocked = React.useCallback((tool: AISystem) => (
-        !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(tool) && !trialActive))
-    ), [isProUser, item.isPremium, trialActive]);
+    // Premium components are fully selectable once entitled (Pro OR bought).
+    const isToolLocked = React.useCallback((tool: AISystem) => {
+        if (item.isPremium && !isEntitled) return true;
+        return !isProUser && (PRO_ONLY_TOOLS.includes(tool) && !trialActive);
+    }, [isProUser, item.isPremium, isEntitled, trialActive]);
 
     const handleToolCardSelect = React.useCallback((tool: AISystem) => (
         handleToolSelect(tool, isToolLocked(tool))
@@ -488,7 +512,8 @@ const VibeSystemSection = React.memo(({
 
             if (result.ok) {
                 // Premium trial consumed on the server — reflect remaining count + expiry.
-                if (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem)) {
+                // Entitled users (Pro OR component bought) never consume trials.
+                if (!isProUser && !isEntitled && PRO_ONLY_TOOLS.includes(aiSystem)) {
                     if (typeof result.trialsRemaining === 'number' && result.trialsRemaining >= 0) {
                         setTrialsRemaining(result.trialsRemaining);
                     }
@@ -519,7 +544,7 @@ const VibeSystemSection = React.memo(({
         } finally {
             setIsLoadingPrompt(false);
         }
-    }, [aiSystem, item, user, isProUser, setTrialsRemaining, setTrialExpiresAt]);
+    }, [aiSystem, item, user, isProUser, isEntitled, setTrialsRemaining, setTrialExpiresAt]);
 
     React.useEffect(() => {
         loadPrompt();
@@ -545,7 +570,9 @@ const VibeSystemSection = React.memo(({
 
     // Terminal overlay states — when locked, render the full native lock screen (no collapse footer).
     const showAuthOverlay = (!user || user.isAnonymous) && !['lovable', 'cursor'].includes(aiSystem);
-    const showProOverlay = !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked));
+    const showProOverlay = item.isPremium
+        ? !isEntitled
+        : (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked);
     const showTerminalOverlay = showAuthOverlay || showProOverlay;
     const showVibeCollapsed = !showTerminalOverlay && !isLoadingPrompt && !vibeExpanded && vibeCanExpand;
 
@@ -562,13 +589,14 @@ const VibeSystemSection = React.memo(({
             return;
         }
 
-        if (item.isPremium && !isProUser) {
+        if (item.isPremium && !isEntitled) {
             setShowAuthModal(false);
             return;
         }
 
         // Non-pro users: premium tools only allowed while a trial is active.
-        if (!isProUser && PRO_ONLY_TOOLS.includes(aiSystem)) {
+        // Entitled users (Pro OR bought) skip the trial gate entirely.
+        if (!isProUser && !isEntitled && PRO_ONLY_TOOLS.includes(aiSystem)) {
             if (trialBlocked.blocked || !trialActive) {
                 setToastMessage(trialBlocked.reason === 'EXPIRY'
                     ? 'TRIAL WINDOW EXPIRED — UPGRADE TO PRO'
@@ -696,8 +724,8 @@ const VibeSystemSection = React.memo(({
                                 </div>
                             </div>
 
-                            {/* Copy Button */}
-                            {!(item.isPremium && !isProUser) && !(!isProUser && PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked) && (
+{/* Copy Button */}
+                            {!showProOverlay && (
                                 <button
                                     disabled={isLoadingPrompt}
                                     onClick={handleCopyBlueprint}
@@ -736,7 +764,7 @@ const VibeSystemSection = React.memo(({
                                             Log In to Access
                                         </button>
                                     </div>
-                                ) : !isProUser && (item.isPremium ? true : (PRO_ONLY_TOOLS.includes(aiSystem) && trialBlocked.blocked)) ? (
+                                ) : showProOverlay ? (
                                     <div className="absolute inset-0 flex flex-col items-center justify-center p-8 text-center bg-[#0A0A0E] z-30">
                                         <div className="w-14 h-14 rounded-lg bg-brand-yellow border-2 border-black flex items-center justify-center mb-6 shadow-[4px_4px_0px_0px_#000000]">
                                             <Lock className="text-black" size={26} />
@@ -744,17 +772,27 @@ const VibeSystemSection = React.memo(({
                                         <h4 className="text-2xl font-heading font-black tracking-tight text-white mb-3 uppercase">Pro Access Required</h4>
                                         <p className="text-neutral-400 max-w-sm mb-8 font-sans text-sm font-medium">
                                             {item.isPremium
-                                                ? "The specialized AI prompts for this premium component are available only to Pro members."
+                                                ? "The specialized AI prompts for this premium component are available to Pro members or when you buy this component outright."
                                                 : trialBlocked.reason === 'EXPIRY'
                                                     ? `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial window has ended. Upgrade to Pro for unlimited elite prompts.`
                                                     : `${aiSystem === 'antigravity' ? 'Antigravity' : aiSystem === 'claude' ? 'Claude' : 'Advanced AI'} free trial has been used up. Upgrade to Pro for unlimited elite prompts.`
                                             }
                                         </p>
-                                        <Link to="/pricing">
-                                            <button className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest">
-                                                Upgrade for Pro Access
-                                            </button>
-                                        </Link>
+                                        <div className="flex flex-col sm:flex-row items-center gap-2.5">
+                                            {item.isPremium && onBuyComponent && (
+                                                <button
+                                                    onClick={onBuyComponent}
+                                                    className="brutal-btn-primary bg-brand-yellow! border-brand-yellow! hover:bg-brand-yellow! text-black px-8 py-3 text-xs font-black uppercase tracking-widest"
+                                                >
+                                                    <Zap size={13} /> Buy This Component {buyLabel ? `· ${buyLabel}` : ''}
+                                                </button>
+                                            )}
+                                            <Link to="/pricing">
+                                                <button className="brutal-btn-primary px-8 py-3 text-xs font-black uppercase tracking-widest">
+                                                    Upgrade for Pro Access
+                                                </button>
+                                            </Link>
+                                        </div>
                                     </div>
                                 ) : (
                                     <pre
@@ -894,7 +932,33 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [promptCopying, setPromptCopying] = React.useState<AISystem | null>(null);
     const promptMenuRef = React.useRef<HTMLDivElement>(null);
     const previewRef = React.useRef<HTMLDivElement>(null);
-    const { user, isPro: isProUser } = useAuth();
+    const { user, isPro: isProUser, refreshProStatus, purchasedComponents } = useAuth();
+
+    // Entitled = full Pro (or special account) OR this component was bought outright.
+    const canAccessComponent = isProUser || purchasedComponents.includes(item.id.toLowerCase());
+    const [currency] = React.useState<Currency>(detectCurrency);
+    const buyPriceLabel = formatComponentPrice(currency);
+    const checkout = useRazorpayCheckout();
+
+    const handleBuyComponent = () => {
+        if (!user) {
+            setShowAuthModal(true);
+            return;
+        }
+        checkout.startCheckout({
+            user,
+            description: `${item.title} — Single Component`,
+            amount: currency === 'INR' ? COMPONENT_PRICE.inr : COMPONENT_PRICE.usd,
+            currency,
+            orderExtra: { purchaseType: 'component', componentId: item.id, planId: 'bundle' },
+            verifyExtra: { purchaseType: 'component', componentId: item.id, planId: 'bundle', tier: 'bundle' },
+            onSuccess: async () => {
+                await refreshProStatus();
+                setToastMessage('COMPONENT UNLOCKED ✓');
+                setShowToast(true);
+            },
+        });
+    };
 
     const copyPromptFromPreview = React.useCallback(async (system: AISystem) => {
         if (promptCopying) return;
@@ -1162,7 +1226,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     };
     React.useEffect(() => {
         const loadSource = async () => {
-            if (tab !== 'code' || !user || (item.isPremium && !isProUser)) return;
+            if (tab !== 'code' || !user || (item.isPremium && !canAccessComponent)) return;
 
             setIsLoadingSource(true);
             try {
@@ -1178,11 +1242,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         };
 
         loadSource();
-    }, [tab, item.id, user, isProUser]);
+    }, [tab, item.id, user, canAccessComponent]);
 
     const handleDownloadZip = async () => {
-        if (!isProUser) {
-            alert("Pro Feature: ZIP downloads are reserved for our Pro members. Upgrade your plan to download the full asset package.");
+        if (!canAccessComponent) {
+            alert("ZIP downloads require Pro access or buying this component. Upgrade your plan or buy this component to download the full asset package.");
             navigate('/pricing');
             return;
         }
@@ -1257,7 +1321,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     };
 
     const handleCopy = (text: string, id: string) => {
-        if (item.isPremium && !isProUser) return;
+        if (item.isPremium && !canAccessComponent) return;
         navigator.clipboard.writeText(text);
         setCopied(id);
         setToastMessage(`CODE COPIED`);
@@ -1299,11 +1363,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [codeCopied, setCodeCopied] = React.useState(false);
 
     const copyCodeFromPreview = React.useCallback(() => {
-        if (item.isPremium && !isProUser) {
+        if (item.isPremium && !canAccessComponent) {
             setPromptMenuOpen(false);
-            setToastMessage('UPGRADE TO PRO TO COPY CODE');
+            setToastMessage(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
             setShowToast(true);
-            navigate('/pricing');
             return;
         }
         navigator.clipboard.writeText(sourceCode).then(() => {
@@ -1318,13 +1381,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 metadata: { componentId: item.id, title: item.title, category: item.category, codeType: 'source' }
             });
         });
-    }, [item.id, item, isProUser, sourceCode, navigate]);
+    }, [item.id, item, canAccessComponent, sourceCode, navigate, buyPriceLabel]);
 
     const handleDownloadSource = () => {
-        if (!isProUser) {
-            setToastMessage('DOWNLOADS ARE A PRO FEATURE — UPGRADE TO PRO');
+        if (!canAccessComponent) {
+            setToastMessage(`DOWNLOADS REQUIRE PRO OR BUYING THIS COMPONENT (${buyPriceLabel})`);
             setShowToast(true);
-            navigate('/pricing');
             return;
         }
         const blob = new Blob([sourceCode], { type: 'text/plain;charset=utf-8' });
@@ -1797,14 +1859,14 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <section>
                             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6">
                                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Source Code</h3>
-                                {item.isPremium && !isProUser ? (
+                                {item.isPremium && !canAccessComponent ? (
                                     <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-brand-yellow bg-brand-bg text-brand-yellow text-xs font-black uppercase tracking-wider">
                                         <Lock size={13} />
-                                        <span>PRO Only</span>
+                                        <span>Premium</span>
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-2 sm:gap-3">
-                                        {isProUser ? (
+                                        {canAccessComponent ? (
                                             <button
                                                 onClick={handleDownloadSource}
                                                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-white bg-brand-surface text-xs font-black uppercase tracking-wider text-neutral-300 hover:text-white hover:border-brand-blue transition-all brutal-shadow-black cursor-pointer"
@@ -1837,8 +1899,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
                                 {snippetExpanded ? (
                                     <>
-                                        {item.isPremium && !isProUser ? (
-                                            <ProBlurGate message="Upgrade to Pro to view and copy the full source code.">
+                                        {item.isPremium && !canAccessComponent ? (
+                                            <ProBlurGate
+                                                message={`Upgrade to Pro or buy this component (${buyPriceLabel}) to view and copy the full source code.`}
+                                                onBuy={handleBuyComponent}
+                                                buyLabel={buyPriceLabel}
+                                            >
                                                 <CodeViewer
                                                     sourceFileName={sourceFileName}
                                                     sourceLineCount={sourceLineCount}
@@ -1902,6 +1968,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         item={item}
                         user={user}
                         isProUser={isProUser}
+                        isEntitled={canAccessComponent}
+                        onBuyComponent={handleBuyComponent}
+                        buyLabel={buyPriceLabel}
                         trialsRemaining={trialsRemaining}
                         trialExpiresAt={trialExpiresAt}
                         setTrialsRemaining={setTrialsRemaining}
@@ -1921,6 +1990,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 onClose={() => setShowAuthModal(false)}
                 title="Save to Vault"
                 description="Sign in to your account to save this elite component to your personal collection."
+            />
+            <CheckoutOverlay
+                isOpen={checkout.isCheckoutOpen}
+                status={checkout.checkoutStatus}
+                message={checkout.checkoutMessage}
+                onClose={checkout.close}
             />
             {/* Holographic Toast Notification */}
             <Toast
@@ -1980,7 +2055,7 @@ const UseWithAI: React.FC<{ isPremium: boolean; componentId: string }> = ({ isPr
                             {isPremium && (
                                 <p className="mt-3 inline-flex items-center gap-2 text-xs font-bold text-brand-yellow">
                                     <Lock size={13} />
-                                    Premium component — full MCP source access requires a Pro subscription.
+                                    Premium component — full MCP source access requires a Pro subscription or a single-component purchase.
                                 </p>
                             )}
                         </div>

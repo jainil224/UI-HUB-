@@ -42,7 +42,7 @@ export const isNewComponent = (item: { addedAt?: string; newBadgeDays?: number }
 };
 
 const LibraryPage = () => {
-    const { isPro } = useAuth();
+    const { isPro, purchasedComponents } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
@@ -366,8 +366,8 @@ const LibraryPage = () => {
                                                 >
                                                     <span className="truncate flex items-center gap-1.5">
                                                         {item.title}
-                                                        {item.isPremium && !isPro && (
-                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
+                                                        {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
+                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" title="Premium — buy this component ($1.99) or upgrade to Pro" />
                                                         )}
                                                     </span>
                                                     <span className="text-[9px] text-neutral-500 uppercase shrink-0">{item.category}</span>
@@ -453,8 +453,8 @@ const LibraryPage = () => {
                                                                 >
                                                                     <span className="truncate pr-2 flex items-center gap-1.5">
                                                                         {item.title}
-                                                                        {item.isPremium && !isPro && (
-                                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
+                                                                        {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
+                                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" title="Premium — buy this component ($1.99) or upgrade to Pro" />
                                                                         )}
                                                                         {isNewComponent(item) && (
                                                                             <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">
@@ -577,8 +577,8 @@ const LibraryPage = () => {
                                                             >
                                                                 <span className="truncate pr-2 flex items-center gap-1.5">
                                                                     {item.title}
-                                                                    {item.isPremium && !isPro && (
-                                                                        <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" />
+                                                                    {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
+                                                                        <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" title="Premium — buy this component ($1.99) or upgrade to Pro" />
                                                                     )}
                                                                     {isNewComponent(item) && (
                                                                         <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">

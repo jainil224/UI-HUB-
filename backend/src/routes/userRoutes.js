@@ -837,6 +837,7 @@ router.get('/status', verifyToken, async (req, res) => {
                 planInfo = {
                     planType: userDoc.planType || (userDoc.planTier || 'free'),
                     selectedCategories: Array.isArray(userDoc.selectedCategories) ? userDoc.selectedCategories : [],
+                    entitlements: Array.isArray(userDoc.entitlements) ? userDoc.entitlements : [],
                     planDuration: userDoc.planDuration || null,
                     planExpiry: userDoc.planExpiry instanceof Date ? userDoc.planExpiry.toISOString() : (userDoc.planExpiry || null),
                     planTier: userDoc.planTier || 'free',

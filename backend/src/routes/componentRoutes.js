@@ -58,6 +58,27 @@ const enforcePremiumTrial = async (req, res, system) => {
     return res.json({ prompt, consumed: false, trialsRemaining: -1, expiresAt: null });
   }
 
+  // 2.5 Users who bought this single component outright are unlimited on its
+  //     premium prompts too (tier 'bundle' from decideAccess). Free components
+  //     fall through to trial logic unchanged.
+  try {
+    const meta = await resolveComponentMeta(id);
+    const access = await canAccessComponent(req.user, meta);
+    if (access.allowed && access.tier === 'bundle') {
+      const prompt = await generateVibePrompt(id, system);
+      logActivity({
+        type: 'ai.prompt_generated',
+        userId: req.user?.uid,
+        email: req.user?.email,
+        level: 'info',
+        metadata: { componentId: id, system, tier: 'bundle' },
+      });
+      return res.json({ prompt, consumed: false, trialsRemaining: -1, expiresAt: null });
+    }
+  } catch (e) {
+    console.error('[Prompt] Entitlement check failed:', e.message);
+  }
+
   // 3. Evaluate trial state for non-pro users.
   let trial;
   try {

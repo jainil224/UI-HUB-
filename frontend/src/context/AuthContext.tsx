@@ -26,6 +26,8 @@ interface AuthContextType {
     planType: string;
     selectedCategories: string[];
     hasCategoryAccess: (category: string) => boolean;
+    purchasedComponents: string[];
+    hasComponentAccess: (id: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -36,6 +38,8 @@ const AuthContext = createContext<AuthContextType>({
     planType: 'free',
     selectedCategories: [],
     hasCategoryAccess: () => false,
+    purchasedComponents: [],
+    hasComponentAccess: () => false,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -47,6 +51,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [welcome, setWelcome] = useState<WelcomeEvent | null>(null);
     const [planType, setPlanType] = useState('free');
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+    const [purchasedComponents, setPurchasedComponents] = useState<string[]>(() => {
+        try {
+            const stored = localStorage.getItem('ui-hub-purchased-components');
+            return stored ? JSON.parse(stored) : [];
+        } catch {
+            return [];
+        }
+    });
     const welcomeFiredForRef = useRef<string | null>(null);
 
     const fireWelcome = (u: User, alreadyShown: boolean | null) => {
@@ -146,6 +158,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     localStorage.setItem('ui-hub-selected-categories', JSON.stringify(data.plan.selectedCategories || []));
                 }
 
+                // Store per-component purchases (single-component ownership)
+                const entitlements = Array.isArray(data.plan?.entitlements) ? data.plan.entitlements : [];
+                setPurchasedComponents(entitlements);
+                localStorage.setItem('ui-hub-purchased-components', JSON.stringify(entitlements));
+
                 console.log(`[Auth] Status Match: Pro=${proStatus}`);
                 return proStatus;
             } else {
@@ -154,10 +171,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setIsPro(false);
                 setPlanType('free');
                 setSelectedCategories([]);
+                setPurchasedComponents([]);
                 localStorage.setItem('ui-hub-pro', 'false');
                 localStorage.setItem('ui-hub-elite', 'false');
                 localStorage.setItem('ui-hub-plan-type', 'free');
                 localStorage.setItem('ui-hub-selected-categories', '[]');
+                localStorage.setItem('ui-hub-purchased-components', '[]');
                 return false;
             }
         } catch (error) {
@@ -223,6 +242,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setIsPro(false);
                 setPlanType('free');
                 setSelectedCategories([]);
+                setPurchasedComponents([]);
+                localStorage.setItem('ui-hub-purchased-components', '[]');
                 setLoading(false);
             }
         });
@@ -243,6 +264,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
         return false; // Free plan
     }, [user?.email, planType, isPro, selectedCategories]);
+
+    // Pro users (and special users) can access every component; otherwise a
+    // user owns a component when its id appears in their purchased entitlements.
+    const hasComponentAccess = useCallback((id: string): boolean => {
+        if (!id) return false;
+        const isSpecial = user?.email === 'jainil11199@gmail.com'
+            || user?.email === 'jainil224@gmail.com'
+            || user?.email === 'jainilpatel2224@gmail.com';
+        if (isSpecial) return true;
+        if (planType === 'pro' || isPro) return true;
+        return purchasedComponents.includes(id.toLowerCase());
+    }, [user?.email, planType, isPro, purchasedComponents]);
 
     // Auto-refresh Pro status when the tab regains focus (covers upgrades
     // completed in another tab or via external payment flows) without polling.
@@ -266,7 +299,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [refreshProStatus]);
 
     return (
-        <AuthContext.Provider value={{ user, isPro: isPro || isSpecialUser, loading, refreshProStatus, planType, selectedCategories, hasCategoryAccess }}>
+        <AuthContext.Provider value={{ user, isPro: isPro || isSpecialUser, loading, refreshProStatus, planType, selectedCategories, hasCategoryAccess, purchasedComponents, hasComponentAccess }}>
             {/* Always render children immediately to unblock app mount */}
             {children}
 

@@ -5,7 +5,7 @@ import { logActivity } from './activityLogService.js';
 const PAYMENTS_COLLECTION = 'payments';
 const USERS_COLLECTION = 'users';
 
-export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, amount, currency = 'USD', signature, displayName, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6 }) => {
+export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, amount, currency = 'USD', signature, displayName, selectedCategories = [], duration = '6 Months', subscriptionMonths = 6, purchaseType = 'pro', componentId }) => {
   const payments = await getCollection(PAYMENTS_COLLECTION);
   const existing = await payments.findOne({ _id: paymentId });
 
@@ -30,6 +30,8 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
       selectedCategories: Array.isArray(selectedCategories) ? selectedCategories : [],
       duration: duration || '6 Months',
       subscriptionMonths: Number(subscriptionMonths) || 6,
+      purchaseType: purchaseType || 'pro',
+      componentId: componentId || null,
       proEmailSent: false,
       invoiceEmailSent: false,
       timestamp: new Date(),
@@ -40,9 +42,44 @@ export const fulfillPayment = async ({ paymentId, orderId, tier = 'pro', email, 
     throw error;
   }
 
-  // 2. Update user tier
+  // 2. Update user tier / entitlements
   try {
     const users = await getCollection(USERS_COLLECTION);
+    const isComponentPurchase = purchaseType === 'component';
+
+    if (isComponentPurchase) {
+      // Single-component purchase: never touch the user's plan/status. Just
+      // grant the a-la-carte entitlement (decideAccess already honors ids in
+      // the `entitlements` array with tier 'bundle'). $addToSet keeps it
+      // idempotent; $setOnInsert seeds brand-new user docs without clobbering
+      // an existing pro/custom plan.
+      await users.updateOne(
+        { _id: email.toLowerCase() },
+        {
+          $addToSet: { entitlements: String(componentId).trim().toLowerCase() },
+          $set: { updatedAt: new Date() },
+          $setOnInsert: {
+            email: email.toLowerCase(),
+            planTier: 'free',
+            status: 'FREE',
+            planType: 'free',
+            createdAt: new Date(),
+          },
+        },
+        { upsert: true }
+      );
+
+      console.log(`[MongoService] User ${email} granted single-component entitlement: ${componentId}`);
+      await logActivity({
+        type: 'payment.component_purchased',
+        userId: undefined,
+        email,
+        level: 'success',
+        metadata: { paymentId, orderId, componentId, amount: Number(amount), currency },
+      });
+      return { success: true };
+    }
+
     const newStatus = (tier || 'pro').toUpperCase();
 
     // Calculate plan expiry based on subscription months
