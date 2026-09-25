@@ -210,6 +210,7 @@ const CATEGORY_MAP: Record<string, string> = {
   "ember-husk": "interactive-background",
   "particle-loader": "loader",
   "neon-border": "effect",
+  "matrix-rain": "interactive-background",
   "quantum-lattice": "interactive-background"
 };
 
@@ -350,6 +351,7 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'ember-husk': ["react","three","@react-three/fiber","@react-three/drei"],
   'particle-loader': ["react"],
   'neon-border': ["react","framer-motion"],
+  'matrix-rain': ["react","three","@react-three/fiber","@react-three/drei"],
   'quantum-lattice': ["react","three","@react-three/fiber","@react-three/drei"],
 };
 

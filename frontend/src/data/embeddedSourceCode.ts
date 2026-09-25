@@ -98,6 +98,281 @@ export const EMBEDDED_SOURCE_CODE: Record<string, string> = {
   "particle-loader": "// Particle Tether — UI HUB\n\n\"use client\"\n\nimport * as React from \"react\"\nimport { useEffect, useRef } from \"react\"\n\nconst MAX_DPR = 2\nconst TAU = Math.PI * 2\n\nconst PERIOD = 4.8\nconst BASE_SPREAD = 0.3\nconst PERSPECTIVE = 3.5\nconst DEPTH_SIZE = 1\nconst DEPTH_FADE = 1\nconst MIN_RADIUS = 0.6\nconst MAX_DOTS = 1024\n\nfunction clamp01(x: number): number {\n    return x < 0 ? 0 : x > 1 ? 1 : x\n}\n\nfunction dotsN(base: number, n: number): number {\n    const v = Math.round(base * n)\n    return v < 1 ? 1 : v\n}\n\nfunction bump(x: number): number {\n    return 0.5 - 0.5 * Math.cos(TAU * clamp01(x))\n}\n\nfunction fib(i: number, n: number): [number, number, number] {\n    const y = 1 - (i / Math.max(1, n - 1)) * 2\n    const r = Math.sqrt(Math.max(0, 1 - y * y))\n    const th = 2.399963 * i\n    return [Math.cos(th) * r, y, Math.sin(th) * r]\n}\n\nfunction polar(p: [number, number, number]): [number, number] {\n    return [Math.acos(Math.max(-1, Math.min(1, p[1]))), Math.atan2(p[2], p[0])]\n}\n\ntype Dot = [number, number, number, number?, number?, string?]\n\nfunction spin(p: Dot, yaw: number, pitch: number): Dot {\n    const ca = Math.cos(yaw)\n    const sa = Math.sin(yaw)\n    const rx = p[0] * ca - p[2] * sa\n    let rz = p[0] * sa + p[2] * ca\n    const co = Math.cos(pitch)\n    const so = Math.sin(pitch)\n    const ry = p[1] * co - rz * so\n    rz = p[1] * so + rz * co\n    return [rx, ry, rz, p[3], p[4], p[5]]\n}\n\ntype Params = {\n    n: number\n    sp: number\n    ds: number\n    yw: number\n    sn: number\n    pc: number\n    t: number\n    dot: string\n    acc: string\n}\n\nfunction frame(t: number, P: Params, out: Dot[]) {\n        const n = dotsN(150, P.n)\n\n        const k = bump(t)\n        for (let i = 0; i < n; i += 1) {\n            const p = polar(fib(i, n))\n\n            const th = p[0] + (Math.PI / 2 - p[0]) * k\n            const sr = Math.sin(th)\n            out.push(spin([Math.cos(p[1]) * sr, Math.cos(th), Math.sin(p[1]) * sr, 0.8 + 0.5 * k, 0.9], TAU * t, 0.4))\n        }\n}\n\ntype Emit = (x: number, y: number, r: number, a: number, col: string) => void\n\nfunction project(pts: Dot[], size: number, P: Params, emit: Emit) {\n    const c = size / 2\n    const R = size * BASE_SPREAD * P.sp\n    const pv = PERSPECTIVE\n\n    const yaw = P.yw + TAU * P.sn * P.t\n    const list: Array<[number, number, number, number, string, number]> = []\n    for (const p of pts) {\n        const q = spin(p, yaw, P.pc)\n        const z = q[2]\n        const s = pv / (pv - z)\n        const f = clamp01((z + 1.1) / 2.2)\n        list.push([\n            c + q[0] * R * s,\n            c + q[1] * R * s,\n            P.ds * (0.4 + 1.6 * DEPTH_SIZE * f) * s * (q[3] === undefined ? 1 : q[3]),\n            (0.07 + 0.93 * Math.pow(f, 1.55 * DEPTH_FADE)) * (q[4] === undefined ? 1 : q[4]),\n            q[5] || P.dot,\n            z,\n        ])\n    }\n    list.sort((a, b) => a[5] - b[5])\n    for (const d of list) emit(d[0], d[1], d[2], d[3], d[4])\n}\n\nconst fitCache = new Map<string, number>()\nfunction autoFit(size: number, P: Params, restYaw: number, restPitch: number): number {\n    const key = size + \"/\" + P.n + \"/\" + P.sp + \"/\" + restYaw + \"/\" + restPitch + \"/\" + P.sn\n    const hit = fitCache.get(key)\n    if (hit !== undefined) return hit\n    const half = size / 2\n    let ext = 0\n    const probe: Params = { ...P, ds: 1, dot: \"#fff\", acc: \"#fff\", t: 0, yw: restYaw, pc: restPitch }\n    const emit: Emit = (x, y, r, a) => {\n        if (a <= 0.05 || r <= 0.15) return\n        ext = Math.max(ext, Math.abs(x - half) + 0.5 * r, Math.abs(y - half) + 0.5 * r)\n    }\n    for (let k = 0; k < 20; k += 1) {\n        probe.t = k / 20\n        const out: Dot[] = []\n        frame(probe.t, probe, out)\n        project(out, size, probe, emit)\n    }\n    const fit = ext > 1 ? Math.max(0.55, Math.min(1.7, (0.415 * size) / ext)) : 1\n    fitCache.set(key, fit)\n    return fit\n}\n\nfunction dotScaleFor(size: number): number {\n    if (size <= 46) return 0.4\n    if (size <= 190) return 0.4 + ((size - 46) / 144) * 0.6\n    if (size <= 340) return 1 + ((size - 190) / 150) * 0.55\n    return 1.55\n}\n\ntype RGBA = [number, number, number, number]\n\nfunction parseColor(input: string | undefined, fb: RGBA): RGBA {\n    if (!input) return fb\n    const str = String(input).trim()\n    if (str.charAt(0) === \"#\") {\n        let hex = str.slice(1)\n        if (hex.length === 3 || hex.length === 4) {\n            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2] + (hex.length === 4 ? hex[3] + hex[3] : \"\")\n        }\n        if (hex.length >= 6) {\n            const r = parseInt(hex.slice(0, 2), 16)\n            const g = parseInt(hex.slice(2, 4), 16)\n            const b = parseInt(hex.slice(4, 6), 16)\n            const a = hex.length >= 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1\n            if (!isNaN(r) && !isNaN(g) && !isNaN(b)) return [r, g, b, a]\n        }\n        return fb\n    }\n    const m = str.match(/[\\d.]+/g)\n    if (m && m.length >= 3) {\n        return [\n            Math.min(255, parseFloat(m[0])),\n            Math.min(255, parseFloat(m[1])),\n            Math.min(255, parseFloat(m[2])),\n            m.length >= 4 ? Math.min(1, parseFloat(m[3])) : 1,\n        ]\n    }\n    return fb\n}\n\nfunction css(c: RGBA): string {\n    return \"rgba(\" + Math.round(c[0]) + \",\" + Math.round(c[1]) + \",\" + Math.round(c[2]) + \",\" + c[3] + \")\"\n}\n\nfunction num(v: unknown, fb: number): number {\n    return typeof v === \"number\" && isFinite(v) ? v : fb\n}\n\nfunction clampN(v: number, lo: number, hi: number): number {\n    return v < lo ? lo : v > hi ? hi : v\n}\n\ntype Ball = { spread?: number; turn?: number; tilt?: number }\ntype Pointer = { drag?: number; damping?: number }\nconst BALL_DEFAULTS: Required<Ball> = { spread: 100, turn: 0, tilt: 0 }\nconst POINTER_DEFAULTS: Required<Pointer> = { drag: 100, damping: 20 }\n\ninterface Props {\n    style?: React.CSSProperties\n    width?: number\n    height?: number\n    dotColor?: string\n    density?: number\n    dotSize?: number\n    speed?: number\n    spinTurns?: number\n    ball?: Ball\n    pointer?: Pointer\n}\n\nfunction __UIHUBBase_OrbConverge(props: Props) {\n    const {\n        style,\n        dotColor = \"#94FD00\",\n        density = 300,\n        dotSize = 100,\n        speed = 50,\n        spinTurns = 1,\n        ball,\n        pointer,\n        width,\n        height,\n    } = props\n\n    const ball_ = { ...BALL_DEFAULTS, ...(ball || {}) }\n    const pointer_ = { ...POINTER_DEFAULTS, ...(pointer || {}) }\n\n    const canvasRef = useRef<HTMLCanvasElement>(null)\n    const sizeRef = useRef({ w: 0, h: 0 })\n    sizeRef.current = { w: num(width, 0), h: num(height, 0) }\n\n    const vRef = useRef<Record<string, number | string>>({})\n    vRef.current = {\n        dot: dotColor,\n\n        acc: dotColor,\n\n        speed: clampN(num(speed, 50), -100, 100) / 50,\n        density: clampN(num(density, 100), 20, 300) / 100,\n        dotSize: clampN(num(dotSize, 100), 20, 300) / 100,\n        spinTurns: Math.round(clampN(num(spinTurns, 1), -3, 3)),\n        drag: clampN(num(pointer_.drag, 100), 0, 300) / 100,\n        damping: clampN(num(pointer_.damping, 20), 1, 100),\n        spread: clampN(num(ball_.spread, 100), 40, 180) / 100,\n        turn: (clampN(num(ball_.turn, 0), -180, 180) * Math.PI) / 180,\n        tilt: (clampN(num(ball_.tilt, 0), -90, 90) * Math.PI) / 180,\n    }\n\n    useEffect(() => {\n        const canvas = canvasRef.current\n        if (!canvas) return\n        const ctx = canvas.getContext(\"2d\")\n        if (!ctx) {\n            console.error(\"OrbConverge: 2D context unavailable\")\n            return\n        }\n\n        const drag = { active: false, lx: 0, ly: 0, lt: 0, yaw: 0, pitch: 0, vx: 0, vy: 0 }\n\n        let raf = 0\n        let last = performance.now()\n        let phase = 0\n\n        const render = (now: number) => {\n            const dt = Math.min(0.05, (now - last) / 1000)\n            last = now\n            const v = vRef.current\n\n            const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)\n            const cw = sizeRef.current.w || canvas.clientWidth || 120\n            const ch = sizeRef.current.h || canvas.clientHeight || 120\n            const bw = Math.max(1, Math.round(cw * dpr))\n            const bh = Math.max(1, Math.round(ch * dpr))\n            if (canvas.width !== bw || canvas.height !== bh) {\n                canvas.width = bw\n                canvas.height = bh\n            }\n            ctx.setTransform(dpr, 0, 0, dpr, 0, 0)\n            ctx.clearRect(0, 0, cw, ch)\n\n            phase = (phase + (dt * (v.speed as number)) / PERIOD) % 1\n            if (phase < 0) phase += 1\n\n            const size = Math.max(4, Math.min(cw, ch))\n            const bx = (cw - size) / 2\n            const by = (ch - size) / 2\n\n            const dotCol = css(parseColor(v.dot as string, [244, 241, 234, 1]))\n            const accCol = css(parseColor(v.acc as string, [244, 241, 234, 1]))\n\n            if (!drag.active) {\n                const decay = Math.exp(-(v.damping as number) * 0.12 * dt)\n                drag.yaw += drag.vx * dt\n                drag.pitch += drag.vy * dt\n                drag.vx *= decay\n                drag.vy *= decay\n            }\n            const restPitch = v.tilt as number\n\n            drag.pitch = clampN(drag.pitch, -Math.PI / 2 - restPitch, Math.PI / 2 - restPitch)\n\n            const P: Params = {\n                n: v.density as number,\n                sp: v.spread as number,\n                ds: dotScaleFor(size) * (v.dotSize as number),\n                yw: (v.turn as number) + drag.yaw,\n                sn: v.spinTurns as number,\n                pc: restPitch + drag.pitch,\n                t: phase,\n                dot: dotCol,\n                acc: accCol,\n            }\n\n            const fit = autoFit(size, P, v.turn as number, restPitch)\n            const half = size / 2\n\n            const out: Dot[] = []\n            frame(phase, P, out)\n            let drawn = 0\n            project(out, size, P, (x, y, r, a, col) => {\n                if (drawn >= MAX_DOTS) return\n\n                const rr = r * (0.55 + 0.45 * fit)\n                if (rr <= 0.05 || a <= 0.004) return\n                const cx = bx + half + (x - half) * fit\n                const cy = by + half + (y - half) * fit\n\n                let dr = rr\n                let da = Math.min(1, a)\n                if (dr < MIN_RADIUS) {\n                    da *= (dr / MIN_RADIUS) * (dr / MIN_RADIUS)\n                    dr = MIN_RADIUS\n                }\n                ctx.globalAlpha = da\n                ctx.fillStyle = col\n                ctx.beginPath()\n                ctx.arc(cx, cy, dr, 0, TAU)\n                ctx.fill()\n                drawn += 1\n            })\n            ctx.globalAlpha = 1\n\n            raf = requestAnimationFrame(render)\n        }\n\n        const onDown = (e: PointerEvent) => {\n            if ((vRef.current.drag as number) <= 0) return\n            drag.active = true\n            drag.lx = e.clientX\n            drag.ly = e.clientY\n            drag.lt = performance.now()\n            drag.vx = 0\n            drag.vy = 0\n            try {\n                canvas.setPointerCapture(e.pointerId)\n            } catch (err) {}\n        }\n        const onMove = (e: PointerEvent) => {\n            if (!drag.active) return\n\n            const k = (((vRef.current.drag as number) * TAU) / Math.max(1, canvas.clientWidth || 120))\n            const dx = (e.clientX - drag.lx) * k\n            const dy = (e.clientY - drag.ly) * k\n            const now2 = performance.now()\n            const span = Math.max(1, now2 - drag.lt)\n            drag.lx = e.clientX\n            drag.ly = e.clientY\n            drag.lt = now2\n\n            drag.yaw -= dx\n            drag.pitch += dy\n            drag.vx = (-dx / span) * 1000\n            drag.vy = (dy / span) * 1000\n        }\n\n        const onUp = () => {\n            drag.active = false\n        }\n\n        canvas.addEventListener(\"pointerdown\", onDown)\n        canvas.addEventListener(\"pointermove\", onMove)\n        window.addEventListener(\"pointerup\", onUp)\n        window.addEventListener(\"pointercancel\", onUp)\n\n        raf = requestAnimationFrame(render)\n        return () => {\n            cancelAnimationFrame(raf)\n            canvas.removeEventListener(\"pointerdown\", onDown)\n            canvas.removeEventListener(\"pointermove\", onMove)\n            window.removeEventListener(\"pointerup\", onUp)\n            window.removeEventListener(\"pointercancel\", onUp)\n        }\n    }, [])\n\n    return (\n        <div\n            style={{\n                position: \"relative\",\n                overflow: \"hidden\",\n\n                minWidth: 24,\n                minHeight: 24,\n                width: typeof width === \"number\" && width > 0 ? width : \"100%\",\n                height: typeof height === \"number\" && height > 0 ? height : \"100%\",\n                ...style,\n            }}\n        >\n            <canvas\n                ref={canvasRef}\n                style={{\n                    position: \"absolute\",\n                    inset: 0,\n                    width: \"100%\",\n                    height: \"100%\",\n                    display: \"block\",\n\n                    touchAction: \"none\",\n                }}\n            />\n        </div>\n    )\n}\n\nconst __uiHubPresetProps = {\n  \"dotSize\": 150,\n  \"ball\": {\n    \"tilt\": 0,\n    \"turn\": 0,\n    \"spread\": 100\n  },\n  \"pointer\": {\n    \"drag\": 100,\n    \"damping\": 20\n  }\n};\n\nexport default function OrbConverge(props: Record<string, unknown>) {\n  return <__UIHUBBase_OrbConverge {...(__uiHubPresetProps as Record<string, unknown>)} {...props} />;\n}",
   "neon-border": "// Neon Border — Originkit\n\n\"use client\";\n\nimport * as React from \"react\";\nimport { useEffect, useRef, useState } from \"react\";\n\ntype Movement = \"continuous\" | \"step\";\n\ntype Props = {\n    color?: string;\n    rounded?: number;\n    thickness?: number;\n    borderSize?: number;\n    glow?: number;\n    movement?: Movement;\n    speed?: number;\n    style?: React.CSSProperties;\n};\n\nconst DEFAULTS = {\n    color: \"#CC9149\",\n    rounded: 24,\n    thickness: 6,\n    borderSize: 50,\n    glow: 100,\n    movement: \"continuous\" as const,\n    speed: 16,\n};\n\nconst EDGE_COPIES = 2;\nconst GLOW_LAYERS = [\n    { blur: 8, opacity: 0.5, reach: 0.3 },\n    { blur: 15, opacity: 0.3, reach: 0.6 },\n    { blur: 57, opacity: 0.18, reach: 1 },\n];\nconst MAX_GLOW_BLUR = Math.max(...GLOW_LAYERS.map((l) => l.blur));\nconst MAX_GLOW_REACH = 36;\n\nfunction withAlpha(input: string, alpha: number) {\n    const a = Math.max(0, Math.min(1, alpha));\n    if (typeof input !== \"string\") return `rgba(0,0,0,${a})`;\n    const s = input.trim();\n\n    const hex = s.match(/^#([0-9a-f]{3,8})$/i);\n    if (hex) {\n        let h = hex[1];\n        if (h.length === 3 || h.length === 4) {\n            h = h\n                .split(\"\")\n                .map((c) => c + c)\n                .join(\"\");\n        }\n        const n = parseInt(h.slice(0, 6), 16);\n        if (!Number.isFinite(n)) return `rgba(0,0,0,${a})`;\n        return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;\n    }\n\n    const rgb = s.match(/^rgba?\\(([^)]+)\\)/i);\n    if (rgb) {\n        const parts = rgb[1].split(\",\").map((v) => parseFloat(v));\n        if (parts.length >= 3 && parts.slice(0, 3).every(Number.isFinite)) {\n            return `rgba(${parts[0]},${parts[1]},${parts[2]},${a})`;\n        }\n    }\n    return `rgba(0,0,0,${a})`;\n}\n\nfunction perimeterPoint(u: number, w: number, h: number): [number, number] {\n    const d = (((u % 1) + 1) % 1) * 2 * (w + h);\n    if (d < w) return [d, 0];\n    if (d < w + h) return [w, d - w];\n    if (d < w * 2 + h) return [w - (d - w - h), h];\n    return [0, h - (d - w * 2 - h)];\n}\n\nfunction cornerLap(k: number, w: number, h: number) {\n    const p = 2 * (w + h);\n    const at = [0, w / p, (w + h) / p, (w * 2 + h) / p];\n    return Math.floor(k / 4) + at[((k % 4) + 4) % 4];\n}\n\nfunction perimeterAngle(u: number, w: number, h: number) {\n    const [x, y] = perimeterPoint(u, w, h);\n    return (Math.atan2(x - w / 2, h / 2 - y) * 180) / Math.PI;\n}\n\nconst ARC_SAMPLES = 24;\nconst MIN_ARC = 0.015;\n\nfunction buildArc(\n    lap: number,\n    lengthPct: number,\n    w: number,\n    h: number,\n    color: string\n) {\n    const fw = w > 0 ? w : 100;\n    const fh = h > 0 ? h : 100;\n\n    const len = Math.max(0, Math.min(100, lengthPct));\n    const span = Math.max(MIN_ARC, (len / 100) * 0.5);\n    const solidT = len / 100;\n\n    const stops: string[] = [];\n    let base = 0;\n    let prev = 0;\n    let acc = 0;\n\n    for (let i = 0; i <= ARC_SAMPLES; i++) {\n        const f = i / ARC_SAMPLES;\n        const angle = perimeterAngle(lap + (f - 0.5) * span, fw, fh);\n        if (i === 0) {\n            base = angle;\n        } else {\n            let d = angle - prev;\n            while (d > 180) d -= 360;\n            while (d < -180) d += 360;\n            acc += d;\n        }\n        prev = angle;\n\n        const t = Math.abs(f - 0.5) * 2;\n        const k =\n            solidT >= 1 ? 1 : t <= solidT ? 1 : 1 - (t - solidT) / (1 - solidT);\n        stops.push(\n            `${withAlpha(color, k * k * (3 - 2 * k))} ${acc.toFixed(2)}deg`\n        );\n    }\n\n    const end = acc.toFixed(2);\n    stops.push(`${withAlpha(color, 0)} ${end}deg`);\n    stops.push(`${withAlpha(color, 0)} 360deg`);\n\n    return `conic-gradient(from ${base.toFixed(2)}deg at 50% 50%, ${stops.join(\n        \", \"\n    )})`;\n}\n\nconst SLOWEST_CYCLE = 30;\nconst FASTEST_CYCLE = 4;\nconst SLOWEST_STEP = 3;\nconst FASTEST_STEP = 0.35;\nconst STEP_EASE = [0.72, 0.16, 0.18, 1.05];\nconst GLIDE_EASE = [0.65, 0, 0.35, 1];\n\nfunction makeEaseFn(pts: number[]) {\n    const [x1, y1, x2, y2] = pts;\n    if (x1 === y1 && x2 === y2) return (t: number) => t;\n    const bez = (a: number, b: number, t: number) => {\n        const u = 1 - t;\n        return 3 * u * u * t * a + 3 * u * t * t * b + t * t * t;\n    };\n    return (t: number) => {\n        const x = Math.max(0, Math.min(1, t));\n        let s = x;\n        for (let i = 0; i < 8; i++) {\n            const cx = bez(x1, x2, s) - x;\n            const u = 1 - s;\n            const dx =\n                3 * u * u * x1 + 6 * u * s * (x2 - x1) + 3 * s * s * (1 - x2);\n            if (Math.abs(dx) < 1e-6) break;\n            s -= cx / dx;\n            s = Math.max(0, Math.min(1, s));\n        }\n        return bez(y1, y2, s);\n    };\n}\n\nconst stepEase = makeEaseFn(STEP_EASE);\nconst glideEase = makeEaseFn(GLIDE_EASE);\n\nconst BAND_MASK: React.CSSProperties = {\n    WebkitMaskImage: \"linear-gradient(#fff 0 0), linear-gradient(#fff 0 0)\",\n    WebkitMaskClip: \"content-box, border-box\",\n    WebkitMaskComposite: \"xor\",\n    maskImage: \"linear-gradient(#fff 0 0), linear-gradient(#fff 0 0)\",\n    maskClip: \"content-box, border-box\",\n    maskComposite: \"exclude\",\n};\n\nexport default function NeonBorder(props: Props) {\n    const {\n        color = DEFAULTS.color,\n        rounded = DEFAULTS.rounded,\n        thickness = DEFAULTS.thickness,\n        borderSize = DEFAULTS.borderSize,\n        glow = DEFAULTS.glow,\n        movement = DEFAULTS.movement,\n        speed = DEFAULTS.speed,\n        style,\n    } = props;\n\n    const groupARef = useRef<HTMLDivElement>(null);\n    const groupBRef = useRef<HTMLDivElement>(null);\n\n    const live = useRef({ speed, movement, borderSize, color });\n    live.current = { speed, movement, borderSize, color };\n\n    const rootRef = useRef<HTMLDivElement>(null);\n    const sizeRef = useRef({ w: 0, h: 0 });\n    const [size, setSize] = useState({ w: 0, h: 0 });\n\n    useEffect(() => {\n        const el = rootRef.current;\n        if (!el || typeof ResizeObserver === \"undefined\") return;\n        const ro = new ResizeObserver(() => {\n            const r = el.getBoundingClientRect();\n            if (r.width === sizeRef.current.w && r.height === sizeRef.current.h)\n                return;\n            sizeRef.current = { w: r.width, h: r.height };\n            setSize(sizeRef.current);\n        });\n        ro.observe(el);\n        return () => ro.disconnect();\n    }, []);\n\n    useEffect(() => {\n        let raf = 0;\n        let last = performance.now();\n        let lap = 0;\n        let corner = 0;\n        let stepT = 0;\n\n        const frame = (now: number) => {\n            const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));\n            last = now;\n            const p = live.current;\n            const s = Math.max(0, Math.min(20, p.speed));\n\n            if (s > 0) {\n                const step = p.movement === \"step\";\n                const beat = step\n                    ? SLOWEST_STEP +\n                      ((FASTEST_STEP - SLOWEST_STEP) * (s - 1)) / 19\n                    : (SLOWEST_CYCLE +\n                          ((FASTEST_CYCLE - SLOWEST_CYCLE) * (s - 1)) / 19) /\n                      4;\n\n                stepT += dt / beat;\n                while (stepT >= 1) {\n                    stepT -= 1;\n                    corner += 1;\n                }\n                const eased = step\n                    ? stepEase(Math.min(1, stepT * 2))\n                    : glideEase(stepT);\n\n                const { w, h } = sizeRef.current;\n                const fw = w > 0 ? w : 100;\n                const fh = h > 0 ? h : 100;\n                const from = cornerLap(corner, fw, fh);\n                const to = cornerLap(corner + 1, fw, fh);\n                lap = from + (to - from) * eased;\n\n                const a = groupARef.current;\n                if (a) {\n                    a.style.setProperty(\n                        \"--arc\",\n                        buildArc(lap, p.borderSize, w, h, p.color)\n                    );\n                }\n                const b = groupBRef.current;\n                if (b) {\n                    b.style.setProperty(\n                        \"--arc\",\n                        buildArc(lap + 0.5, p.borderSize, w, h, p.color)\n                    );\n                }\n            }\n\n            raf = requestAnimationFrame(frame);\n        };\n        raf = requestAnimationFrame(frame);\n\n        return () => cancelAnimationFrame(raf);\n    }, []);\n\n    const thick = Math.max(1, Math.min(10, thickness));\n\n    const radius =\n        (Math.max(0, Math.min(100, rounded)) / 100) *\n        (Math.min(size.w, size.h) / 2);\n\n    const amount = Math.max(0, Math.min(100, glow)) / 100;\n\n    const ringAt = (share: number) => thick + amount * MAX_GLOW_REACH * share;\n    const glowOuter = 10 + MAX_GLOW_REACH + MAX_GLOW_BLUR * 2;\n\n    const band = (r: number, offset = 0) => (\n        <div\n            style={{\n                position: \"absolute\",\n                inset: offset - r,\n                boxSizing: \"border-box\",\n                padding: r,\n                borderRadius: radius > 0 ? radius + r : 0,\n                background: \"var(--arc)\",\n                ...BAND_MASK,\n            }}\n        />\n    );\n\n    const glowLayer = (\n        key: string,\n        r: number,\n        blurPx: number,\n        opacity: number\n    ) => (\n        <div\n            key={key}\n            style={{\n                position: \"absolute\",\n                inset: -glowOuter,\n                boxSizing: \"border-box\",\n                padding: glowOuter,\n                borderRadius: radius > 0 ? radius + glowOuter : 0,\n                opacity,\n                mixBlendMode: \"plus-lighter\",\n                filter: blurPx ? `blur(${blurPx.toFixed(1)}px)` : \"none\",\n                WebkitFilter: blurPx ? `blur(${blurPx.toFixed(1)}px)` : \"none\",\n                ...BAND_MASK,\n            }}\n        >\n            {band(r, glowOuter)}\n        </div>\n    );\n\n    const glowGroup = (start: number, ref: React.Ref<HTMLDivElement>) => (\n        <div\n            ref={ref}\n            style={\n                {\n                    position: \"absolute\",\n                    inset: 0,\n                    overflow: \"visible\",\n                    pointerEvents: \"none\",\n                    \"--arc\": buildArc(start, borderSize, size.w, size.h, color),\n                } as React.CSSProperties\n            }\n        >\n            {amount > 0 &&\n                GLOW_LAYERS.map((l, i) =>\n                    glowLayer(`glow-${i}`, ringAt(l.reach), l.blur, l.opacity)\n                )}\n            {Array.from({ length: EDGE_COPIES }).map((_, i) => (\n                <div\n                    key={`edge-${i}`}\n                    style={{\n                        position: \"absolute\",\n                        inset: 0,\n                        mixBlendMode: \"plus-lighter\",\n                    }}\n                >\n                    {band(thick)}\n                </div>\n            ))}\n        </div>\n    );\n\n    return (\n        <div\n            ref={rootRef}\n            style={{\n                position: \"relative\",\n                width: \"100%\",\n                height: \"100%\",\n                flexShrink: 0,\n                borderRadius: radius,\n                ...style,\n            }}\n        >\n            {glowGroup(0, groupARef)}\n            {glowGroup(0.5, groupBRef)}\n        </div>\n    );\n}",
 
+  "matrix-rain": `"use client";
+import * as React from "react";
+
+export interface MatrixRainProps {
+    background?: string;
+    glyphs?: string;
+    fontSize?: number;
+    speed?: number;
+    density?: number;
+    wind?: number;
+    color?: string;
+    highlightColor?: string;
+    fade?: number;
+    interactive?: boolean;
+    seed?: number;
+    style?: React.CSSProperties;
+}
+
+interface MatrixCell {
+    char: string;
+}
+
+interface MatrixColumn {
+    x: number;
+    head: number;
+    cells: MatrixCell[];
+    speed: number;
+    drift: number;
+}
+
+type Rng = () => number;
+
+const DEFAULT_GLYPHS = "アァカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+const RAIN_DEFAULTS = {
+    background: "#0A0A0A",
+    glyphs: DEFAULT_GLYPHS,
+    fontSize: 18,
+    speed: 55,
+    density: 65,
+    wind: 0,
+    color: "#3D5CFF",
+    highlightColor: "#FFFFFF",
+    fade: 0.08,
+    interactive: true,
+    seed: 1,
+};
+
+const MAX_DPR = 2;
+const MAX_COLUMNS = 160;
+
+function clamp(v: number, lo: number, hi: number) {
+    return v < lo ? lo : v > hi ? hi : v;
+}
+
+function makeRng(seed: number): Rng {
+    let s = seed >>> 0 || 1;
+    return function () {
+        s = (s * 1664525 + 1013904223) >>> 0;
+        return s / 4294967296;
+    };
+}
+
+function withColor(input: string, alpha: number): string {
+    const a = clamp(alpha, 0, 1);
+    const s = input.trim();
+    const hex = /^#([0-9a-f]{6})$/i.exec(s) || /^#([0-9a-f]{3})$/i.exec(s);
+    if (hex) {
+        let h = hex[1];
+        if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+        const n = parseInt(h, 16);
+        return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")";
+    }
+    const rgb = /^rgba?\\(\\s*([\\d.]+)\\s*,\\s*([\\d.]+)\\s*,\\s*([\\d.]+)/.exec(s);
+    if (rgb) return "rgba(" + rgb[1] + "," + rgb[2] + "," + rgb[3] + "," + a + ")";
+    return "rgba(10,10,10," + a + ")";
+}
+
+export default function MatrixRain(props: MatrixRainProps) {
+    const wrapperRef = React.useRef<HTMLDivElement>(null);
+    const canvasRef = React.useRef<HTMLCanvasElement>(null);
+    const rafRef = React.useRef<number>(0);
+    const stateRef = React.useRef<{ columns: MatrixColumn[]; glyphs: string[]; w: number; h: number }>({
+        columns: [],
+        glyphs: [],
+        w: 0,
+        h: 0,
+    });
+    const propsRef = React.useRef(props);
+    propsRef.current = props;
+
+    React.useEffect(() => {
+        const wrapper = wrapperRef.current;
+        const canvas = canvasRef.current;
+        if (!wrapper || !canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        const state = stateRef.current;
+        const rng = makeRng(props.seed ?? RAIN_DEFAULTS.seed);
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+        let running = !reduced.matches;
+        let last = performance.now();
+
+        const build = (w: number, h: number, size: number) => {
+            const p = propsRef.current;
+            const density = clamp(p.density ?? RAIN_DEFAULTS.density, 0, 100);
+            const count = Math.min(MAX_COLUMNS, Math.max(1, Math.round((w / size) * (density / 100))));
+            const trail = Math.max(1, Math.round(density / 6));
+            const glyphs = (p.glyphs ?? RAIN_DEFAULTS.glyphs).split("");
+            const columns: MatrixColumn[] = [];
+            for (let i = 0; i < count; i++) {
+                const cells: MatrixCell[] = [];
+                for (let j = 0; j < trail; j++) cells.push({ char: glyphs[(rng() * glyphs.length) | 0] || "0" });
+                columns.push({
+                    x: (i + 0.5) * (w / count),
+                    head: -rng() * h,
+                    cells,
+                    speed: 60 + rng() * 240,
+                    drift: 0,
+                });
+            }
+            state.columns = columns;
+            state.glyphs = glyphs;
+            state.w = w;
+            state.h = h;
+        };
+
+        const drawStatic = () => {
+            ctx.clearRect(0, 0, state.w, state.h);
+            const p = propsRef.current;
+            const size = clamp(p.fontSize ?? RAIN_DEFAULTS.fontSize, 10, 64);
+            ctx.font = "bold " + size + "px ui-monospace, SFMono-Regular, Menlo, monospace";
+            ctx.textAlign = "center";
+            for (const col of state.columns) {
+                for (let j = 0; j < col.cells.length; j++) {
+                    const y = col.head - j * size;
+                    if (y < -size || y > state.h + size) continue;
+                    ctx.fillStyle = j === 0 ? withColor(p.highlightColor ?? RAIN_DEFAULTS.highlightColor, 1) : withColor(p.color ?? RAIN_DEFAULTS.color, 0.85);
+                    ctx.fillText(col.cells[j].char, col.x + col.drift, y);
+                }
+            }
+        };
+
+        const resize = () => {
+            const p = propsRef.current;
+            const size = clamp(p.fontSize ?? RAIN_DEFAULTS.fontSize, 10, 64);
+            const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
+            const rect = wrapper.getBoundingClientRect();
+            const w = Math.max(1, Math.round(rect.width));
+            const h = Math.max(1, Math.round(rect.height));
+            canvas.width = Math.round(w * dpr);
+            canvas.height = Math.round(h * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            build(w, h, size);
+            drawStatic();
+        };
+
+        const loop = (now: number) => {
+            const dt = Math.min(0.05, (now - last) / 1000);
+            last = now;
+            const p = propsRef.current;
+            const size = clamp(p.fontSize ?? RAIN_DEFAULTS.fontSize, 10, 64);
+            const fade = clamp(p.fade ?? RAIN_DEFAULTS.fade, 0, 0.25);
+            ctx.font = "bold " + size + "px ui-monospace, SFMono-Regular, Menlo, monospace";
+            ctx.textAlign = "center";
+            ctx.fillStyle = withColor(p.background ?? RAIN_DEFAULTS.background, fade);
+            ctx.fillRect(0, 0, state.w, state.h);
+            for (const col of state.columns) {
+                col.head += col.speed * 0.5 * (p.speed ?? RAIN_DEFAULTS.speed) / 100 * dt * 10;
+                col.drift += (p.wind ?? RAIN_DEFAULTS.wind) * size * dt * 60;
+                for (let j = 0; j < col.cells.length; j++) {
+                    const y = col.head - j * size;
+                    if (y < -size) continue;
+                    if (y > state.h + size) break;
+                    ctx.fillStyle = j === 0 ? withColor(p.highlightColor ?? RAIN_DEFAULTS.highlightColor, 1) : withColor(p.color ?? RAIN_DEFAULTS.color, 0.85);
+                    ctx.fillText(col.cells[j].char, col.x + col.drift, y);
+                }
+                if (col.head - (col.cells.length - 1) * size > state.h) {
+                    col.head = -rng() * state.h;
+                    col.speed = 60 + rng() * 240;
+                    col.drift = 0;
+                    for (let j = 0; j < col.cells.length; j++) {
+                        if (rng() < 0.6) col.cells[j].char = state.glyphs[(rng() * state.glyphs.length) | 0] || "0";
+                    }
+                }
+            }
+            if (running) rafRef.current = requestAnimationFrame(loop);
+        };
+
+        const onPointer = (e: PointerEvent) => {
+            const p = propsRef.current;
+            if (p.interactive === false) return;
+            const rect = wrapper.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            let best = 0;
+            let bestD = Infinity;
+            for (let i = 0; i < state.columns.length; i++) {
+                const d = Math.abs(state.columns[i].x - x);
+                if (d < bestD) { bestD = d; best = i; }
+            }
+            const col = state.columns[best];
+            if (col) {
+                const flash: MatrixCell = { char: state.glyphs[(rng() * state.glyphs.length) | 0] || "0" };
+                col.cells.unshift(flash);
+                if (col.cells.length > 1) col.cells.pop();
+                col.head = Math.max(0.5 * state.h, e.clientY - rect.top);
+                col.speed = 240;
+            }
+        };
+
+        const onReduceChange = (e: MediaQueryListEvent) => {
+            if (e.matches) {
+                running = false;
+                cancelAnimationFrame(rafRef.current);
+                drawStatic();
+            } else {
+                running = true;
+                last = performance.now();
+                rafRef.current = requestAnimationFrame(loop);
+            }
+        };
+
+        const onVisibility = () => {
+            if (document.hidden) {
+                running = false;
+                cancelAnimationFrame(rafRef.current);
+            } else if (!reduced.matches) {
+                running = true;
+                last = performance.now();
+                rafRef.current = requestAnimationFrame(loop);
+            }
+        };
+
+        const ro = new ResizeObserver(resize);
+        ro.observe(wrapper);
+        resize();
+        reduced.addEventListener("change", onReduceChange);
+        document.addEventListener("visibilitychange", onVisibility);
+        wrapper.addEventListener("pointermove", onPointer);
+        wrapper.addEventListener("pointerdown", onPointer);
+        if (running) rafRef.current = requestAnimationFrame(loop);
+
+        return () => {
+            cancelAnimationFrame(rafRef.current);
+            ro.disconnect();
+            reduced.removeEventListener("change", onReduceChange);
+            document.removeEventListener("visibilitychange", onVisibility);
+            wrapper.removeEventListener("pointermove", onPointer);
+            wrapper.removeEventListener("pointerdown", onPointer);
+        };
+    }, [props.seed]);
+
+    return (
+        <div
+            ref={wrapperRef}
+            style={{
+                position: "relative",
+                width: "100%",
+                height: "100%",
+                overflow: "hidden",
+                backgroundColor: props.background ?? RAIN_DEFAULTS.background,
+                touchAction: "none",
+                ...props.style,
+            }}
+        >
+            <canvas
+                ref={canvasRef}
+                aria-hidden="true"
+                style={{ position: "absolute", inset: 0, display: "block", pointerEvents: "none" }}
+            />
+        </div>
+    );
+}`,
+
   "quantum-lattice": `"use client";
 
 import * as React from "react";

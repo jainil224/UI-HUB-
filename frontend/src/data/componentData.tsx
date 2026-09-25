@@ -112,6 +112,7 @@ const EmberHusk = React.lazy(() => import('../components/ui/EmberHusk'));
 const ParticleLoader = React.lazy(() => import('../components/ui/ParticleLoader'));
 const NeonBorder = React.lazy(() => import('../components/ui/NeonBorder'));
 const QuantumLattice = React.lazy(() => import('../components/ui/QuantumLattice'));
+const MatrixRain = React.lazy(() => import('../components/ui/MatrixRain'));
 
 
 
@@ -2795,6 +2796,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'ember-husk': EmberHusk,
     'particle-loader': ParticleLoader,
     'neon-border': NeonBorder,
+    'matrix-rain': MatrixRain,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15183,6 +15185,22 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
                     <span className="relative z-10 text-xs font-black tracking-[0.25em] text-white/30">NEON BORDER</span>
                     <NeonBorder />
                 </div>
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    {
+        id: "matrix-rain",
+        title: "Matrix Rain",
+        category: "interactive-background",
+        addedAt: "2026-09-25",
+        newBadgeDays: 120,
+        description: "A living digital-rain backdrop: constant comet streams of brand-blue glyphs with white leading heads, drifting under wind and flaring where the pointer touches.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#0A0A0A]">
+                <MatrixRain />
             </div>
         ),
         code: "",

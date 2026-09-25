@@ -1464,6 +1464,30 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
             requirements: ["React", "CSS mask (content-box/border-box xor)", "conic-gradient animation", "ResizeObserver", "requestAnimationFrame loop", "mix-blend-mode plus-lighter"]
         }
     },
+    "matrix-rain": {
+        props: [
+            { name: "background", type: "string", default: '"#0A0A0A"', description: "Trail + canvas base colour (hex, rgb/rgba, or named)." },
+            { name: "glyphs", type: "string", default: 'DEFAULT_GLYPHS', description: "Character set to rain (unicode + alnum)." },
+            { name: "fontSize", type: "number", default: "18", description: "Glyph size in px (10-64)." },
+            { name: "speed", type: "number", default: "55", description: "Fall speed (0-100; 0 freezes the rain)." },
+            { name: "density", type: "number", default: "65", description: "Rain density 0-100 (column count + trail length)." },
+            { name: "wind", type: "number", default: "0", description: "Horizontal drift (-1..1, pushed into each column's drift)." },
+            { name: "color", type: "string", default: '"#3D5CFF"', description: "Primary glyph colour (hex, rgb/rgba, or named)." },
+            { name: "highlightColor", type: "string", default: '"#FFFFFF"', description: "Leading glyph colour (hex, rgb/rgba, or named)." },
+            { name: "fade", type: "number", default: "0.08", description: "Trail decay alpha per frame (0-0.25)." },
+            { name: "interactive", type: "boolean", default: "true", description: "Pointer snap + flare on the nearest column." },
+            { name: "seed", type: "number", default: "1", description: "Seeded RNG for column placement, speeds and glyphs." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Wrapper style escape hatch (merged over the 100%x100% root)." }
+        ],
+        vibeMeta: {
+            behavior: "A Canvas 2D digital-rain simulation. Columns of glyphs are seeded once by a seeded RNG into a ResizeObserver-sized field and fall at per-column speeds. Each frame paints a translucent background rect (withColor accumulator on background at alpha = fade) to leave the comet trail, then stamps glyphs top-down with the leading cell full-alpha in highlightColor. density maps to column count (capped at 160) and trail length, speed scales the fall, wind drifts columns sideways. Pointer move/down on the wrapper snaps the nearest column's head to the cursor, injects a flash cell and speeds it up. The canvas DPR-caps at 2 and re-bakes on ResizeObserver; prefers-reduced-motion draws one static frame and the rAF loop is parked while the document is hidden.",
+            states: { from: "dark canvas awaiting its first seeded frame", to: "perpetual comet streams of brand-blue glyphs with white heads, drifting under wind and flaring at the pointer" },
+            cssProperties: ["canvas 2d", "seeded rng column seeding", "per-column comet trails", "translucent-trail compositing", "pointer snap + flash", "dpr cap", "resize observer", "visibilitychange park", "prefers-reduced-motion static frame"],
+            description: "An interactive digital-rain backdrop: seeded streams of brand-blue glyphs fall as glowing comet trails with white leading heads, drift under wind, and flare where the pointer touches the nearest column.",
+            libraries: ["react"],
+            requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "pointer events with touchAction none", "prefers-reduced-motion support", "visibilitychange gate"]
+        }
+    },
     "quantum-lattice": {
         props: [
             { name: "background", type: "string", default: '"#0A0A0A"', description: "Canvas background container fill color." },
