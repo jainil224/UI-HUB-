@@ -44,8 +44,10 @@ prompt.md
 .firebaserc
 firebase.json
 
-# Agent skills (local only — never pushed to GitHub)
+# Agent skills & local specs (local only — never pushed to GitHub)
 .agents/
+component-specs/
+
 
 # OS generated files
 .DS_Store

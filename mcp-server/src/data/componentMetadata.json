@@ -5023,5 +5023,108 @@
         "mix-blend-mode plus-lighter"
       ]
     }
+  },
+  "quantum-lattice": {
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#0A0A0A\"",
+        "description": "Canvas background container fill color."
+      },
+      {
+        "name": "nodeColor",
+        "type": "string",
+        "default": "\"#3D5CFF\"",
+        "description": "Resting base color of lattice nodes."
+      },
+      {
+        "name": "activeColor",
+        "type": "string",
+        "default": "\"#00E5FF\"",
+        "description": "Highlight color for excited and stretched flux strings."
+      },
+      {
+        "name": "spacing",
+        "type": "number",
+        "default": "42",
+        "description": "Resting cell distance in px between lattice nodes."
+      },
+      {
+        "name": "springTension",
+        "type": "number",
+        "default": "0.08",
+        "description": "Elastic spring restitution stiffness factor."
+      },
+      {
+        "name": "damping",
+        "type": "number",
+        "default": "0.88",
+        "description": "Velocity damping friction coefficient."
+      },
+      {
+        "name": "reach",
+        "type": "number",
+        "default": "140",
+        "description": "Pointer interaction influence radius in pixels."
+      },
+      {
+        "name": "impulse",
+        "type": "number",
+        "default": "0.8",
+        "description": "Momentum injection strength from pointer motion."
+      },
+      {
+        "name": "pulseOnClick",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether clicking or tapping triggers a radial quantum shockwave."
+      },
+      {
+        "name": "showNodes",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to draw circular particle nodes at lattice intersections."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Extra CSS class names applied to the container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Style escape hatch for the root container element."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A 2D Canvas mass-spring lattice simulating quantum particle flux. Nodes oscillate with Hooke restitution and exponential velocity damping. Pointer motion transfers kinetic momentum to nearby nodes, stretching connections and shifting color from #3D5CFF to #00E5FF; pointer down fires a radial shockwave.",
+      "states": {
+        "from": "resting geometric lattice with subtle zero-point vacuum vibrations",
+        "to": "elastic lattice warping under cursor path and propagating circular shockwaves on click"
+      },
+      "cssProperties": [
+        "canvas 2d",
+        "mass-spring verlet integration",
+        "elastic line tension rendering",
+        "damped harmonic oscillation",
+        "radial quantum shockwave",
+        "dpr cap",
+        "prefers-reduced-motion fallback"
+      ],
+      "description": "An interactive subatomic grid of elastic nodal particles connected by quantum flux strings that dynamically deform, oscillate, and disperse color-confined energy when perturbed by pointer movement.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D",
+        "requestAnimationFrame loop",
+        "ResizeObserver",
+        "IntersectionObserver parking",
+        "prefers-reduced-motion support"
+      ]
+    }
   }
 }

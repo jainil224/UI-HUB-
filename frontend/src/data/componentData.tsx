@@ -109,6 +109,7 @@ const VectorWordmark = React.lazy(() => import('../components/ui/VectorWordmark'
 const EmberHusk = React.lazy(() => import('../components/ui/EmberHusk'));
 const ParticleLoader = React.lazy(() => import('../components/ui/ParticleLoader'));
 const NeonBorder = React.lazy(() => import('../components/ui/NeonBorder'));
+const QuantumLattice = React.lazy(() => import('../components/ui/QuantumLattice'));
 
 
 
@@ -15142,6 +15143,23 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
                     <span className="relative z-10 text-xs font-black tracking-[0.25em] text-white/30">NEON BORDER</span>
                     <NeonBorder />
                 </div>
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Quantum Lattice ────────────────────────────────────────
+    {
+        id: "quantum-lattice",
+        title: "Quantum Lattice",
+        category: "interactive-background",
+        addedAt: "2026-09-24",
+        newBadgeDays: 120,
+        description: "An interactive subatomic grid of elastic nodal particles connected by quantum flux strings that dynamically deform, oscillate, and disperse color-confined energy when perturbed by pointer movement.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#0A0A0A]">
+                <QuantumLattice />
             </div>
         ),
         code: "",

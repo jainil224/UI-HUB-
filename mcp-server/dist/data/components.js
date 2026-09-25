@@ -45,7 +45,6 @@ const PREMIUM_IDS = new Set([
     "lightfall",
     "black-hole-3d",
     "card-cascade",
-    "fourier-flow",
     "generating-orb",
     "gear-system",
     "hourglass",
@@ -133,7 +132,6 @@ const CATEGORY_MAP = {
     "spin-cursor": "cursor",
     "user-cursor": "cursor",
     "card-cascade": "image-interaction",
-    "fourier-flow": "effect",
     "svg-page-transition": "scroll",
     "section-scroll": "scroll",
     "infinite-marquee": "scroll",
@@ -193,7 +191,9 @@ const CATEGORY_MAP = {
     "rain-storm": "interactive-background",
     "vector-wordmark": "text",
     "ember-husk": "interactive-background",
-    "particle-loader": "loader"
+    "particle-loader": "loader",
+    "neon-border": "effect",
+    "quantum-lattice": "interactive-background"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -269,7 +269,6 @@ const DEPENDENCIES_MAP = {
     'spin-cursor': ["react"],
     'user-cursor': ["react"],
     'card-cascade': ["react", "framer-motion"],
-    'fourier-flow': ["react", "framer-motion"],
     'svg-page-transition': ["react", "framer-motion"],
     'section-scroll': ["react", "framer-motion"],
     'infinite-marquee': ["react", "framer-motion"],
@@ -330,6 +329,8 @@ const DEPENDENCIES_MAP = {
     'vector-wordmark': ["react", "framer-motion"],
     'ember-husk': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'particle-loader': ["react"],
+    'neon-border': ["react", "framer-motion"],
+    'quantum-lattice': ["react", "three", "@react-three/fiber", "@react-three/drei"],
 };
 function humanizeId(id) {
     return id

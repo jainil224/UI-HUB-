@@ -91,4 +91,313 @@ export const EMBEDDED_SOURCE_CODE: Record<string, string> = {
   "particle-loader": "// Particle Tether — UI HUB\n\n\"use client\"\n\nimport * as React from \"react\"\nimport { useEffect, useRef } from \"react\"\n\nconst MAX_DPR = 2\nconst TAU = Math.PI * 2\n\nconst PERIOD = 4.8\nconst BASE_SPREAD = 0.3\nconst PERSPECTIVE = 3.5\nconst DEPTH_SIZE = 1\nconst DEPTH_FADE = 1\nconst MIN_RADIUS = 0.6\nconst MAX_DOTS = 1024\n\nfunction clamp01(x: number): number {\n    return x < 0 ? 0 : x > 1 ? 1 : x\n}\n\nfunction dotsN(base: number, n: number): number {\n    const v = Math.round(base * n)\n    return v < 1 ? 1 : v\n}\n\nfunction bump(x: number): number {\n    return 0.5 - 0.5 * Math.cos(TAU * clamp01(x))\n}\n\nfunction fib(i: number, n: number): [number, number, number] {\n    const y = 1 - (i / Math.max(1, n - 1)) * 2\n    const r = Math.sqrt(Math.max(0, 1 - y * y))\n    const th = 2.399963 * i\n    return [Math.cos(th) * r, y, Math.sin(th) * r]\n}\n\nfunction polar(p: [number, number, number]): [number, number] {\n    return [Math.acos(Math.max(-1, Math.min(1, p[1]))), Math.atan2(p[2], p[0])]\n}\n\ntype Dot = [number, number, number, number?, number?, string?]\n\nfunction spin(p: Dot, yaw: number, pitch: number): Dot {\n    const ca = Math.cos(yaw)\n    const sa = Math.sin(yaw)\n    const rx = p[0] * ca - p[2] * sa\n    let rz = p[0] * sa + p[2] * ca\n    const co = Math.cos(pitch)\n    const so = Math.sin(pitch)\n    const ry = p[1] * co - rz * so\n    rz = p[1] * so + rz * co\n    return [rx, ry, rz, p[3], p[4], p[5]]\n}\n\ntype Params = {\n    n: number\n    sp: number\n    ds: number\n    yw: number\n    sn: number\n    pc: number\n    t: number\n    dot: string\n    acc: string\n}\n\nfunction frame(t: number, P: Params, out: Dot[]) {\n        const n = dotsN(150, P.n)\n\n        const k = bump(t)\n        for (let i = 0; i < n; i += 1) {\n            const p = polar(fib(i, n))\n\n            const th = p[0] + (Math.PI / 2 - p[0]) * k\n            const sr = Math.sin(th)\n            out.push(spin([Math.cos(p[1]) * sr, Math.cos(th), Math.sin(p[1]) * sr, 0.8 + 0.5 * k, 0.9], TAU * t, 0.4))\n        }\n}\n\ntype Emit = (x: number, y: number, r: number, a: number, col: string) => void\n\nfunction project(pts: Dot[], size: number, P: Params, emit: Emit) {\n    const c = size / 2\n    const R = size * BASE_SPREAD * P.sp\n    const pv = PERSPECTIVE\n\n    const yaw = P.yw + TAU * P.sn * P.t\n    const list: Array<[number, number, number, number, string, number]> = []\n    for (const p of pts) {\n        const q = spin(p, yaw, P.pc)\n        const z = q[2]\n        const s = pv / (pv - z)\n        const f = clamp01((z + 1.1) / 2.2)\n        list.push([\n            c + q[0] * R * s,\n            c + q[1] * R * s,\n            P.ds * (0.4 + 1.6 * DEPTH_SIZE * f) * s * (q[3] === undefined ? 1 : q[3]),\n            (0.07 + 0.93 * Math.pow(f, 1.55 * DEPTH_FADE)) * (q[4] === undefined ? 1 : q[4]),\n            q[5] || P.dot,\n            z,\n        ])\n    }\n    list.sort((a, b) => a[5] - b[5])\n    for (const d of list) emit(d[0], d[1], d[2], d[3], d[4])\n}\n\nconst fitCache = new Map<string, number>()\nfunction autoFit(size: number, P: Params, restYaw: number, restPitch: number): number {\n    const key = size + \"/\" + P.n + \"/\" + P.sp + \"/\" + restYaw + \"/\" + restPitch + \"/\" + P.sn\n    const hit = fitCache.get(key)\n    if (hit !== undefined) return hit\n    const half = size / 2\n    let ext = 0\n    const probe: Params = { ...P, ds: 1, dot: \"#fff\", acc: \"#fff\", t: 0, yw: restYaw, pc: restPitch }\n    const emit: Emit = (x, y, r, a) => {\n        if (a <= 0.05 || r <= 0.15) return\n        ext = Math.max(ext, Math.abs(x - half) + 0.5 * r, Math.abs(y - half) + 0.5 * r)\n    }\n    for (let k = 0; k < 20; k += 1) {\n        probe.t = k / 20\n        const out: Dot[] = []\n        frame(probe.t, probe, out)\n        project(out, size, probe, emit)\n    }\n    const fit = ext > 1 ? Math.max(0.55, Math.min(1.7, (0.415 * size) / ext)) : 1\n    fitCache.set(key, fit)\n    return fit\n}\n\nfunction dotScaleFor(size: number): number {\n    if (size <= 46) return 0.4\n    if (size <= 190) return 0.4 + ((size - 46) / 144) * 0.6\n    if (size <= 340) return 1 + ((size - 190) / 150) * 0.55\n    return 1.55\n}\n\ntype RGBA = [number, number, number, number]\n\nfunction parseColor(input: string | undefined, fb: RGBA): RGBA {\n    if (!input) return fb\n    const str = String(input).trim()\n    if (str.charAt(0) === \"#\") {\n        let hex = str.slice(1)\n        if (hex.length === 3 || hex.length === 4) {\n            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2] + (hex.length === 4 ? hex[3] + hex[3] : \"\")\n        }\n        if (hex.length >= 6) {\n            const r = parseInt(hex.slice(0, 2), 16)\n            const g = parseInt(hex.slice(2, 4), 16)\n            const b = parseInt(hex.slice(4, 6), 16)\n            const a = hex.length >= 8 ? parseInt(hex.slice(6, 8), 16) / 255 : 1\n            if (!isNaN(r) && !isNaN(g) && !isNaN(b)) return [r, g, b, a]\n        }\n        return fb\n    }\n    const m = str.match(/[\\d.]+/g)\n    if (m && m.length >= 3) {\n        return [\n            Math.min(255, parseFloat(m[0])),\n            Math.min(255, parseFloat(m[1])),\n            Math.min(255, parseFloat(m[2])),\n            m.length >= 4 ? Math.min(1, parseFloat(m[3])) : 1,\n        ]\n    }\n    return fb\n}\n\nfunction css(c: RGBA): string {\n    return \"rgba(\" + Math.round(c[0]) + \",\" + Math.round(c[1]) + \",\" + Math.round(c[2]) + \",\" + c[3] + \")\"\n}\n\nfunction num(v: unknown, fb: number): number {\n    return typeof v === \"number\" && isFinite(v) ? v : fb\n}\n\nfunction clampN(v: number, lo: number, hi: number): number {\n    return v < lo ? lo : v > hi ? hi : v\n}\n\ntype Ball = { spread?: number; turn?: number; tilt?: number }\ntype Pointer = { drag?: number; damping?: number }\nconst BALL_DEFAULTS: Required<Ball> = { spread: 100, turn: 0, tilt: 0 }\nconst POINTER_DEFAULTS: Required<Pointer> = { drag: 100, damping: 20 }\n\ninterface Props {\n    style?: React.CSSProperties\n    width?: number\n    height?: number\n    dotColor?: string\n    density?: number\n    dotSize?: number\n    speed?: number\n    spinTurns?: number\n    ball?: Ball\n    pointer?: Pointer\n}\n\nfunction __UIHUBBase_OrbConverge(props: Props) {\n    const {\n        style,\n        dotColor = \"#94FD00\",\n        density = 300,\n        dotSize = 100,\n        speed = 50,\n        spinTurns = 1,\n        ball,\n        pointer,\n        width,\n        height,\n    } = props\n\n    const ball_ = { ...BALL_DEFAULTS, ...(ball || {}) }\n    const pointer_ = { ...POINTER_DEFAULTS, ...(pointer || {}) }\n\n    const canvasRef = useRef<HTMLCanvasElement>(null)\n    const sizeRef = useRef({ w: 0, h: 0 })\n    sizeRef.current = { w: num(width, 0), h: num(height, 0) }\n\n    const vRef = useRef<Record<string, number | string>>({})\n    vRef.current = {\n        dot: dotColor,\n\n        acc: dotColor,\n\n        speed: clampN(num(speed, 50), -100, 100) / 50,\n        density: clampN(num(density, 100), 20, 300) / 100,\n        dotSize: clampN(num(dotSize, 100), 20, 300) / 100,\n        spinTurns: Math.round(clampN(num(spinTurns, 1), -3, 3)),\n        drag: clampN(num(pointer_.drag, 100), 0, 300) / 100,\n        damping: clampN(num(pointer_.damping, 20), 1, 100),\n        spread: clampN(num(ball_.spread, 100), 40, 180) / 100,\n        turn: (clampN(num(ball_.turn, 0), -180, 180) * Math.PI) / 180,\n        tilt: (clampN(num(ball_.tilt, 0), -90, 90) * Math.PI) / 180,\n    }\n\n    useEffect(() => {\n        const canvas = canvasRef.current\n        if (!canvas) return\n        const ctx = canvas.getContext(\"2d\")\n        if (!ctx) {\n            console.error(\"OrbConverge: 2D context unavailable\")\n            return\n        }\n\n        const drag = { active: false, lx: 0, ly: 0, lt: 0, yaw: 0, pitch: 0, vx: 0, vy: 0 }\n\n        let raf = 0\n        let last = performance.now()\n        let phase = 0\n\n        const render = (now: number) => {\n            const dt = Math.min(0.05, (now - last) / 1000)\n            last = now\n            const v = vRef.current\n\n            const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)\n            const cw = sizeRef.current.w || canvas.clientWidth || 120\n            const ch = sizeRef.current.h || canvas.clientHeight || 120\n            const bw = Math.max(1, Math.round(cw * dpr))\n            const bh = Math.max(1, Math.round(ch * dpr))\n            if (canvas.width !== bw || canvas.height !== bh) {\n                canvas.width = bw\n                canvas.height = bh\n            }\n            ctx.setTransform(dpr, 0, 0, dpr, 0, 0)\n            ctx.clearRect(0, 0, cw, ch)\n\n            phase = (phase + (dt * (v.speed as number)) / PERIOD) % 1\n            if (phase < 0) phase += 1\n\n            const size = Math.max(4, Math.min(cw, ch))\n            const bx = (cw - size) / 2\n            const by = (ch - size) / 2\n\n            const dotCol = css(parseColor(v.dot as string, [244, 241, 234, 1]))\n            const accCol = css(parseColor(v.acc as string, [244, 241, 234, 1]))\n\n            if (!drag.active) {\n                const decay = Math.exp(-(v.damping as number) * 0.12 * dt)\n                drag.yaw += drag.vx * dt\n                drag.pitch += drag.vy * dt\n                drag.vx *= decay\n                drag.vy *= decay\n            }\n            const restPitch = v.tilt as number\n\n            drag.pitch = clampN(drag.pitch, -Math.PI / 2 - restPitch, Math.PI / 2 - restPitch)\n\n            const P: Params = {\n                n: v.density as number,\n                sp: v.spread as number,\n                ds: dotScaleFor(size) * (v.dotSize as number),\n                yw: (v.turn as number) + drag.yaw,\n                sn: v.spinTurns as number,\n                pc: restPitch + drag.pitch,\n                t: phase,\n                dot: dotCol,\n                acc: accCol,\n            }\n\n            const fit = autoFit(size, P, v.turn as number, restPitch)\n            const half = size / 2\n\n            const out: Dot[] = []\n            frame(phase, P, out)\n            let drawn = 0\n            project(out, size, P, (x, y, r, a, col) => {\n                if (drawn >= MAX_DOTS) return\n\n                const rr = r * (0.55 + 0.45 * fit)\n                if (rr <= 0.05 || a <= 0.004) return\n                const cx = bx + half + (x - half) * fit\n                const cy = by + half + (y - half) * fit\n\n                let dr = rr\n                let da = Math.min(1, a)\n                if (dr < MIN_RADIUS) {\n                    da *= (dr / MIN_RADIUS) * (dr / MIN_RADIUS)\n                    dr = MIN_RADIUS\n                }\n                ctx.globalAlpha = da\n                ctx.fillStyle = col\n                ctx.beginPath()\n                ctx.arc(cx, cy, dr, 0, TAU)\n                ctx.fill()\n                drawn += 1\n            })\n            ctx.globalAlpha = 1\n\n            raf = requestAnimationFrame(render)\n        }\n\n        const onDown = (e: PointerEvent) => {\n            if ((vRef.current.drag as number) <= 0) return\n            drag.active = true\n            drag.lx = e.clientX\n            drag.ly = e.clientY\n            drag.lt = performance.now()\n            drag.vx = 0\n            drag.vy = 0\n            try {\n                canvas.setPointerCapture(e.pointerId)\n            } catch (err) {}\n        }\n        const onMove = (e: PointerEvent) => {\n            if (!drag.active) return\n\n            const k = (((vRef.current.drag as number) * TAU) / Math.max(1, canvas.clientWidth || 120))\n            const dx = (e.clientX - drag.lx) * k\n            const dy = (e.clientY - drag.ly) * k\n            const now2 = performance.now()\n            const span = Math.max(1, now2 - drag.lt)\n            drag.lx = e.clientX\n            drag.ly = e.clientY\n            drag.lt = now2\n\n            drag.yaw -= dx\n            drag.pitch += dy\n            drag.vx = (-dx / span) * 1000\n            drag.vy = (dy / span) * 1000\n        }\n\n        const onUp = () => {\n            drag.active = false\n        }\n\n        canvas.addEventListener(\"pointerdown\", onDown)\n        canvas.addEventListener(\"pointermove\", onMove)\n        window.addEventListener(\"pointerup\", onUp)\n        window.addEventListener(\"pointercancel\", onUp)\n\n        raf = requestAnimationFrame(render)\n        return () => {\n            cancelAnimationFrame(raf)\n            canvas.removeEventListener(\"pointerdown\", onDown)\n            canvas.removeEventListener(\"pointermove\", onMove)\n            window.removeEventListener(\"pointerup\", onUp)\n            window.removeEventListener(\"pointercancel\", onUp)\n        }\n    }, [])\n\n    return (\n        <div\n            style={{\n                position: \"relative\",\n                overflow: \"hidden\",\n\n                minWidth: 24,\n                minHeight: 24,\n                width: typeof width === \"number\" && width > 0 ? width : \"100%\",\n                height: typeof height === \"number\" && height > 0 ? height : \"100%\",\n                ...style,\n            }}\n        >\n            <canvas\n                ref={canvasRef}\n                style={{\n                    position: \"absolute\",\n                    inset: 0,\n                    width: \"100%\",\n                    height: \"100%\",\n                    display: \"block\",\n\n                    touchAction: \"none\",\n                }}\n            />\n        </div>\n    )\n}\n\nconst __uiHubPresetProps = {\n  \"dotSize\": 150,\n  \"ball\": {\n    \"tilt\": 0,\n    \"turn\": 0,\n    \"spread\": 100\n  },\n  \"pointer\": {\n    \"drag\": 100,\n    \"damping\": 20\n  }\n};\n\nexport default function OrbConverge(props: Record<string, unknown>) {\n  return <__UIHUBBase_OrbConverge {...(__uiHubPresetProps as Record<string, unknown>)} {...props} />;\n}",
   "neon-border": "// Neon Border — Originkit\n\n\"use client\";\n\nimport * as React from \"react\";\nimport { useEffect, useRef, useState } from \"react\";\n\ntype Movement = \"continuous\" | \"step\";\n\ntype Props = {\n    color?: string;\n    rounded?: number;\n    thickness?: number;\n    borderSize?: number;\n    glow?: number;\n    movement?: Movement;\n    speed?: number;\n    style?: React.CSSProperties;\n};\n\nconst DEFAULTS = {\n    color: \"#CC9149\",\n    rounded: 24,\n    thickness: 6,\n    borderSize: 50,\n    glow: 100,\n    movement: \"continuous\" as const,\n    speed: 16,\n};\n\nconst EDGE_COPIES = 2;\nconst GLOW_LAYERS = [\n    { blur: 8, opacity: 0.5, reach: 0.3 },\n    { blur: 15, opacity: 0.3, reach: 0.6 },\n    { blur: 57, opacity: 0.18, reach: 1 },\n];\nconst MAX_GLOW_BLUR = Math.max(...GLOW_LAYERS.map((l) => l.blur));\nconst MAX_GLOW_REACH = 36;\n\nfunction withAlpha(input: string, alpha: number) {\n    const a = Math.max(0, Math.min(1, alpha));\n    if (typeof input !== \"string\") return `rgba(0,0,0,${a})`;\n    const s = input.trim();\n\n    const hex = s.match(/^#([0-9a-f]{3,8})$/i);\n    if (hex) {\n        let h = hex[1];\n        if (h.length === 3 || h.length === 4) {\n            h = h\n                .split(\"\")\n                .map((c) => c + c)\n                .join(\"\");\n        }\n        const n = parseInt(h.slice(0, 6), 16);\n        if (!Number.isFinite(n)) return `rgba(0,0,0,${a})`;\n        return `rgba(${(n >> 16) & 255},${(n >> 8) & 255},${n & 255},${a})`;\n    }\n\n    const rgb = s.match(/^rgba?\\(([^)]+)\\)/i);\n    if (rgb) {\n        const parts = rgb[1].split(\",\").map((v) => parseFloat(v));\n        if (parts.length >= 3 && parts.slice(0, 3).every(Number.isFinite)) {\n            return `rgba(${parts[0]},${parts[1]},${parts[2]},${a})`;\n        }\n    }\n    return `rgba(0,0,0,${a})`;\n}\n\nfunction perimeterPoint(u: number, w: number, h: number): [number, number] {\n    const d = (((u % 1) + 1) % 1) * 2 * (w + h);\n    if (d < w) return [d, 0];\n    if (d < w + h) return [w, d - w];\n    if (d < w * 2 + h) return [w - (d - w - h), h];\n    return [0, h - (d - w * 2 - h)];\n}\n\nfunction cornerLap(k: number, w: number, h: number) {\n    const p = 2 * (w + h);\n    const at = [0, w / p, (w + h) / p, (w * 2 + h) / p];\n    return Math.floor(k / 4) + at[((k % 4) + 4) % 4];\n}\n\nfunction perimeterAngle(u: number, w: number, h: number) {\n    const [x, y] = perimeterPoint(u, w, h);\n    return (Math.atan2(x - w / 2, h / 2 - y) * 180) / Math.PI;\n}\n\nconst ARC_SAMPLES = 24;\nconst MIN_ARC = 0.015;\n\nfunction buildArc(\n    lap: number,\n    lengthPct: number,\n    w: number,\n    h: number,\n    color: string\n) {\n    const fw = w > 0 ? w : 100;\n    const fh = h > 0 ? h : 100;\n\n    const len = Math.max(0, Math.min(100, lengthPct));\n    const span = Math.max(MIN_ARC, (len / 100) * 0.5);\n    const solidT = len / 100;\n\n    const stops: string[] = [];\n    let base = 0;\n    let prev = 0;\n    let acc = 0;\n\n    for (let i = 0; i <= ARC_SAMPLES; i++) {\n        const f = i / ARC_SAMPLES;\n        const angle = perimeterAngle(lap + (f - 0.5) * span, fw, fh);\n        if (i === 0) {\n            base = angle;\n        } else {\n            let d = angle - prev;\n            while (d > 180) d -= 360;\n            while (d < -180) d += 360;\n            acc += d;\n        }\n        prev = angle;\n\n        const t = Math.abs(f - 0.5) * 2;\n        const k =\n            solidT >= 1 ? 1 : t <= solidT ? 1 : 1 - (t - solidT) / (1 - solidT);\n        stops.push(\n            `${withAlpha(color, k * k * (3 - 2 * k))} ${acc.toFixed(2)}deg`\n        );\n    }\n\n    const end = acc.toFixed(2);\n    stops.push(`${withAlpha(color, 0)} ${end}deg`);\n    stops.push(`${withAlpha(color, 0)} 360deg`);\n\n    return `conic-gradient(from ${base.toFixed(2)}deg at 50% 50%, ${stops.join(\n        \", \"\n    )})`;\n}\n\nconst SLOWEST_CYCLE = 30;\nconst FASTEST_CYCLE = 4;\nconst SLOWEST_STEP = 3;\nconst FASTEST_STEP = 0.35;\nconst STEP_EASE = [0.72, 0.16, 0.18, 1.05];\nconst GLIDE_EASE = [0.65, 0, 0.35, 1];\n\nfunction makeEaseFn(pts: number[]) {\n    const [x1, y1, x2, y2] = pts;\n    if (x1 === y1 && x2 === y2) return (t: number) => t;\n    const bez = (a: number, b: number, t: number) => {\n        const u = 1 - t;\n        return 3 * u * u * t * a + 3 * u * t * t * b + t * t * t;\n    };\n    return (t: number) => {\n        const x = Math.max(0, Math.min(1, t));\n        let s = x;\n        for (let i = 0; i < 8; i++) {\n            const cx = bez(x1, x2, s) - x;\n            const u = 1 - s;\n            const dx =\n                3 * u * u * x1 + 6 * u * s * (x2 - x1) + 3 * s * s * (1 - x2);\n            if (Math.abs(dx) < 1e-6) break;\n            s -= cx / dx;\n            s = Math.max(0, Math.min(1, s));\n        }\n        return bez(y1, y2, s);\n    };\n}\n\nconst stepEase = makeEaseFn(STEP_EASE);\nconst glideEase = makeEaseFn(GLIDE_EASE);\n\nconst BAND_MASK: React.CSSProperties = {\n    WebkitMaskImage: \"linear-gradient(#fff 0 0), linear-gradient(#fff 0 0)\",\n    WebkitMaskClip: \"content-box, border-box\",\n    WebkitMaskComposite: \"xor\",\n    maskImage: \"linear-gradient(#fff 0 0), linear-gradient(#fff 0 0)\",\n    maskClip: \"content-box, border-box\",\n    maskComposite: \"exclude\",\n};\n\nexport default function NeonBorder(props: Props) {\n    const {\n        color = DEFAULTS.color,\n        rounded = DEFAULTS.rounded,\n        thickness = DEFAULTS.thickness,\n        borderSize = DEFAULTS.borderSize,\n        glow = DEFAULTS.glow,\n        movement = DEFAULTS.movement,\n        speed = DEFAULTS.speed,\n        style,\n    } = props;\n\n    const groupARef = useRef<HTMLDivElement>(null);\n    const groupBRef = useRef<HTMLDivElement>(null);\n\n    const live = useRef({ speed, movement, borderSize, color });\n    live.current = { speed, movement, borderSize, color };\n\n    const rootRef = useRef<HTMLDivElement>(null);\n    const sizeRef = useRef({ w: 0, h: 0 });\n    const [size, setSize] = useState({ w: 0, h: 0 });\n\n    useEffect(() => {\n        const el = rootRef.current;\n        if (!el || typeof ResizeObserver === \"undefined\") return;\n        const ro = new ResizeObserver(() => {\n            const r = el.getBoundingClientRect();\n            if (r.width === sizeRef.current.w && r.height === sizeRef.current.h)\n                return;\n            sizeRef.current = { w: r.width, h: r.height };\n            setSize(sizeRef.current);\n        });\n        ro.observe(el);\n        return () => ro.disconnect();\n    }, []);\n\n    useEffect(() => {\n        let raf = 0;\n        let last = performance.now();\n        let lap = 0;\n        let corner = 0;\n        let stepT = 0;\n\n        const frame = (now: number) => {\n            const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));\n            last = now;\n            const p = live.current;\n            const s = Math.max(0, Math.min(20, p.speed));\n\n            if (s > 0) {\n                const step = p.movement === \"step\";\n                const beat = step\n                    ? SLOWEST_STEP +\n                      ((FASTEST_STEP - SLOWEST_STEP) * (s - 1)) / 19\n                    : (SLOWEST_CYCLE +\n                          ((FASTEST_CYCLE - SLOWEST_CYCLE) * (s - 1)) / 19) /\n                      4;\n\n                stepT += dt / beat;\n                while (stepT >= 1) {\n                    stepT -= 1;\n                    corner += 1;\n                }\n                const eased = step\n                    ? stepEase(Math.min(1, stepT * 2))\n                    : glideEase(stepT);\n\n                const { w, h } = sizeRef.current;\n                const fw = w > 0 ? w : 100;\n                const fh = h > 0 ? h : 100;\n                const from = cornerLap(corner, fw, fh);\n                const to = cornerLap(corner + 1, fw, fh);\n                lap = from + (to - from) * eased;\n\n                const a = groupARef.current;\n                if (a) {\n                    a.style.setProperty(\n                        \"--arc\",\n                        buildArc(lap, p.borderSize, w, h, p.color)\n                    );\n                }\n                const b = groupBRef.current;\n                if (b) {\n                    b.style.setProperty(\n                        \"--arc\",\n                        buildArc(lap + 0.5, p.borderSize, w, h, p.color)\n                    );\n                }\n            }\n\n            raf = requestAnimationFrame(frame);\n        };\n        raf = requestAnimationFrame(frame);\n\n        return () => cancelAnimationFrame(raf);\n    }, []);\n\n    const thick = Math.max(1, Math.min(10, thickness));\n\n    const radius =\n        (Math.max(0, Math.min(100, rounded)) / 100) *\n        (Math.min(size.w, size.h) / 2);\n\n    const amount = Math.max(0, Math.min(100, glow)) / 100;\n\n    const ringAt = (share: number) => thick + amount * MAX_GLOW_REACH * share;\n    const glowOuter = 10 + MAX_GLOW_REACH + MAX_GLOW_BLUR * 2;\n\n    const band = (r: number, offset = 0) => (\n        <div\n            style={{\n                position: \"absolute\",\n                inset: offset - r,\n                boxSizing: \"border-box\",\n                padding: r,\n                borderRadius: radius > 0 ? radius + r : 0,\n                background: \"var(--arc)\",\n                ...BAND_MASK,\n            }}\n        />\n    );\n\n    const glowLayer = (\n        key: string,\n        r: number,\n        blurPx: number,\n        opacity: number\n    ) => (\n        <div\n            key={key}\n            style={{\n                position: \"absolute\",\n                inset: -glowOuter,\n                boxSizing: \"border-box\",\n                padding: glowOuter,\n                borderRadius: radius > 0 ? radius + glowOuter : 0,\n                opacity,\n                mixBlendMode: \"plus-lighter\",\n                filter: blurPx ? `blur(${blurPx.toFixed(1)}px)` : \"none\",\n                WebkitFilter: blurPx ? `blur(${blurPx.toFixed(1)}px)` : \"none\",\n                ...BAND_MASK,\n            }}\n        >\n            {band(r, glowOuter)}\n        </div>\n    );\n\n    const glowGroup = (start: number, ref: React.Ref<HTMLDivElement>) => (\n        <div\n            ref={ref}\n            style={\n                {\n                    position: \"absolute\",\n                    inset: 0,\n                    overflow: \"visible\",\n                    pointerEvents: \"none\",\n                    \"--arc\": buildArc(start, borderSize, size.w, size.h, color),\n                } as React.CSSProperties\n            }\n        >\n            {amount > 0 &&\n                GLOW_LAYERS.map((l, i) =>\n                    glowLayer(`glow-${i}`, ringAt(l.reach), l.blur, l.opacity)\n                )}\n            {Array.from({ length: EDGE_COPIES }).map((_, i) => (\n                <div\n                    key={`edge-${i}`}\n                    style={{\n                        position: \"absolute\",\n                        inset: 0,\n                        mixBlendMode: \"plus-lighter\",\n                    }}\n                >\n                    {band(thick)}\n                </div>\n            ))}\n        </div>\n    );\n\n    return (\n        <div\n            ref={rootRef}\n            style={{\n                position: \"relative\",\n                width: \"100%\",\n                height: \"100%\",\n                flexShrink: 0,\n                borderRadius: radius,\n                ...style,\n            }}\n        >\n            {glowGroup(0, groupARef)}\n            {glowGroup(0.5, groupBRef)}\n        </div>\n    );\n}",
 
+  "quantum-lattice": `"use client";
+
+import * as React from "react";
+
+export interface QuantumLatticeProps {
+  background?: string;
+  nodeColor?: string;
+  activeColor?: string;
+  spacing?: number;
+  springTension?: number;
+  damping?: number;
+  reach?: number;
+  impulse?: number;
+  pulseOnClick?: boolean;
+  showNodes?: boolean;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+interface LatticeNode {
+  x: number;
+  y: number;
+  baseX: number;
+  baseY: number;
+  vx: number;
+  vy: number;
+  row: number;
+  col: number;
+}
+
+interface QuantumShockwave {
+  x: number;
+  y: number;
+  radius: number;
+  maxRadius: number;
+  strength: number;
+  speed: number;
+  active: boolean;
+}
+
+interface ColorRgb {
+  r: number;
+  g: number;
+  b: number;
+}
+
+function parseHexColor(hex: string): ColorRgb {
+  const clean = hex.replace("#", "").trim();
+  if (clean.length === 3) {
+    return {
+      r: parseInt(clean[0] + clean[0], 16),
+      g: parseInt(clean[1] + clean[1], 16),
+      b: parseInt(clean[2] + clean[2], 16),
+    };
+  }
+  if (clean.length >= 6) {
+    return {
+      r: parseInt(clean.substring(0, 2), 16),
+      g: parseInt(clean.substring(2, 4), 16),
+      b: parseInt(clean.substring(4, 6), 16),
+    };
+  }
+  return { r: 61, g: 92, b: 255 };
+}
+
+export default function QuantumLattice(props: QuantumLatticeProps) {
+  const {
+    background = "#0A0A0A",
+    nodeColor = "#3D5CFF",
+    activeColor = "#00E5FF",
+    spacing = 42,
+    springTension = 0.08,
+    damping = 0.88,
+    reach = 140,
+    impulse = 0.8,
+    pulseOnClick = true,
+    showNodes = true,
+    className = "",
+    style,
+  } = props;
+
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+    const container = containerRef.current;
+    const canvas = canvasRef.current;
+    if (!container || !canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    let rafId = 0;
+    let isIntersecting = true;
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+
+    let nodes: LatticeNode[] = [];
+    let cols = 0;
+    let rows = 0;
+
+    let shockwaves: QuantumShockwave[] = [];
+
+    const pointer = {
+      x: -1000,
+      y: -1000,
+      prevX: -1000,
+      prevY: -1000,
+      vx: 0,
+      vy: 0,
+      active: false,
+    };
+
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let reducedMotion = mediaQuery.matches;
+
+    const cNode = parseHexColor(nodeColor);
+    const cActive = parseHexColor(activeColor);
+
+    const initGrid = () => {
+      if (width <= 0 || height <= 0) return;
+      const cellSpacing = Math.max(28, Math.min(80, spacing));
+      cols = Math.ceil(width / cellSpacing) + 2;
+      rows = Math.ceil(height / cellSpacing) + 2;
+      const offsetX = (width - (cols - 1) * cellSpacing) / 2;
+      const offsetY = (height - (rows - 1) * cellSpacing) / 2;
+      nodes = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const bx = offsetX + c * cellSpacing;
+          const by = offsetY + r * cellSpacing;
+          nodes.push({ x: bx, y: by, baseX: bx, baseY: by, vx: 0, vy: 0, row: r, col: c });
+        }
+      }
+    };
+
+    const resize = () => {
+      const rect = container.getBoundingClientRect();
+      width = Math.max(1, Math.floor(rect.width));
+      height = Math.max(1, Math.floor(rect.height));
+      const rawDpr = window.devicePixelRatio || 1;
+      dpr = Math.min(rawDpr, width > 1920 ? 1.5 : 2);
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + "px";
+      canvas.style.height = height + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      initGrid();
+      if (reducedMotion) drawStaticFrame();
+    };
+
+    const drawStaticFrame = () => {
+      ctx.fillStyle = background;
+      ctx.fillRect(0, 0, width, height);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = \`rgba(\${cNode.r}, \${cNode.g}, \${cNode.b}, 0.22)\`;
+      ctx.beginPath();
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        if (node.col < cols - 1) { const right = nodes[i + 1]; ctx.moveTo(node.baseX, node.baseY); ctx.lineTo(right.baseX, right.baseY); }
+        if (node.row < rows - 1) { const bottom = nodes[i + cols]; ctx.moveTo(node.baseX, node.baseY); ctx.lineTo(bottom.baseX, bottom.baseY); }
+      }
+      ctx.stroke();
+      if (showNodes) {
+        ctx.fillStyle = \`rgba(\${cNode.r}, \${cNode.g}, \${cNode.b}, 0.5)\`;
+        for (let i = 0; i < nodes.length; i++) { const node = nodes[i]; ctx.beginPath(); ctx.arc(node.baseX, node.baseY, 1.6, 0, Math.PI * 2); ctx.fill(); }
+      }
+    };
+
+    let lastTime = performance.now();
+
+    const loop = (currentTime: number) => {
+      if (!isIntersecting || reducedMotion) return;
+      const dt = Math.min(0.04, Math.max(0.001, (currentTime - lastTime) / 1000));
+      lastTime = currentTime;
+      const k = Math.max(0.01, Math.min(0.3, springTension));
+      const damp = Math.max(0.7, Math.min(0.98, damping));
+      const rMax = Math.max(40, reach);
+      const rMaxSq = rMax * rMax;
+      const imp = Math.max(0.1, Math.min(3, impulse));
+      const pVx = pointer.active ? (pointer.x - pointer.prevX) * 0.4 : 0;
+      const pVy = pointer.active ? (pointer.y - pointer.prevY) * 0.4 : 0;
+      pointer.prevX = pointer.x;
+      pointer.prevY = pointer.y;
+      for (let s = shockwaves.length - 1; s >= 0; s--) {
+        const wave = shockwaves[s];
+        wave.radius += wave.speed * dt * 60;
+        wave.strength *= Math.exp(-3 * dt);
+        if (wave.radius > wave.maxRadius || wave.strength < 0.01) { wave.active = false; shockwaves.splice(s, 1); }
+      }
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        node.vx += (node.baseX - node.x) * k;
+        node.vy += (node.baseY - node.y) * k;
+        if (pointer.active) {
+          const dx = node.x - pointer.x; const dy = node.y - pointer.y;
+          const distSq = dx * dx + dy * dy;
+          if (distSq < rMaxSq && distSq > 1) {
+            const dist = Math.sqrt(distSq); const factor = (1 - dist / rMax) * imp;
+            node.vx += (dx / dist) * factor * 14 + pVx * factor * 8;
+            node.vy += (dy / dist) * factor * 14 + pVy * factor * 8;
+          }
+        }
+        for (let s = 0; s < shockwaves.length; s++) {
+          const wave = shockwaves[s];
+          const wdx = node.x - wave.x; const wdy = node.y - wave.y;
+          const wdist = Math.sqrt(wdx * wdx + wdy * wdy);
+          const diff = Math.abs(wdist - wave.radius);
+          if (diff < 36) {
+            const pFactor = (1 - diff / 36) * wave.strength;
+            node.vx += (wdist > 0.001 ? wdx / wdist : 0) * pFactor * 22;
+            node.vy += (wdist > 0.001 ? wdy / wdist : 0) * pFactor * 22;
+          }
+        }
+        node.vx *= damp; node.vy *= damp;
+        node.vx = Math.max(-40, Math.min(40, node.vx));
+        node.vy = Math.max(-40, Math.min(40, node.vy));
+        node.x += node.vx * dt * 60;
+        node.y += node.vy * dt * 60;
+        const offX = node.x - node.baseX; const offY = node.y - node.baseY;
+        const curDist = Math.sqrt(offX * offX + offY * offY);
+        if (curDist > 48) { node.x = node.baseX + (offX / curDist) * 48; node.y = node.baseY + (offY / curDist) * 48; }
+      }
+      ctx.fillStyle = background;
+      ctx.fillRect(0, 0, width, height);
+      for (let i = 0; i < nodes.length; i++) {
+        const node = nodes[i];
+        const drawEdge = (nx: number, ny: number) => {
+          const dx = nx - node.x; const dy = ny - node.y;
+          const len = Math.sqrt(dx * dx + dy * dy);
+          const strain = Math.abs(len - spacing) / spacing;
+          const activeT = Math.min(1, strain * 3.5);
+          const r = Math.round(cNode.r + (cActive.r - cNode.r) * activeT);
+          const g = Math.round(cNode.g + (cActive.g - cNode.g) * activeT);
+          const b = Math.round(cNode.b + (cActive.b - cNode.b) * activeT);
+          ctx.lineWidth = 1 + activeT * 1.5;
+          ctx.strokeStyle = \`rgba(\${r}, \${g}, \${b}, \${(0.2 + activeT * 0.65).toFixed(3)})\`;
+          ctx.beginPath(); ctx.moveTo(node.x, node.y); ctx.lineTo(nx, ny); ctx.stroke();
+        };
+        if (node.col < cols - 1) { const right = nodes[i + 1]; drawEdge(right.x, right.y); }
+        if (node.row < rows - 1) { const bottom = nodes[i + cols]; drawEdge(bottom.x, bottom.y); }
+      }
+      if (showNodes) {
+        for (let i = 0; i < nodes.length; i++) {
+          const node = nodes[i];
+          const speed = Math.sqrt(node.vx * node.vx + node.vy * node.vy);
+          const energy = Math.min(1, speed / 8);
+          const r = Math.round(cNode.r + (cActive.r - cNode.r) * energy);
+          const g = Math.round(cNode.g + (cActive.g - cNode.g) * energy);
+          const b = Math.round(cNode.b + (cActive.b - cNode.b) * energy);
+          ctx.fillStyle = \`rgba(\${r}, \${g}, \${b}, \${(0.45 + energy * 0.55).toFixed(3)})\`;
+          ctx.beginPath(); ctx.arc(node.x, node.y, 1.8 + energy * 1.6, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      rafId = requestAnimationFrame(loop);
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - rect.left; pointer.y = e.clientY - rect.top;
+      if (!pointer.active) { pointer.prevX = pointer.x; pointer.prevY = pointer.y; }
+      pointer.active = true;
+    };
+    const onPointerLeave = () => { pointer.active = false; };
+    const onPointerDown = (e: PointerEvent) => {
+      if (!pulseOnClick) return;
+      const rect = canvas.getBoundingClientRect();
+      shockwaves.push({ x: e.clientX - rect.left, y: e.clientY - rect.top, radius: 4, maxRadius: Math.max(width, height) * 0.85, strength: 1.2, speed: 9, active: true });
+      if (shockwaves.length > 5) shockwaves.shift();
+    };
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(container);
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        isIntersecting = entry.isIntersecting;
+        if (isIntersecting && !reducedMotion) { lastTime = performance.now(); cancelAnimationFrame(rafId); rafId = requestAnimationFrame(loop); }
+        else cancelAnimationFrame(rafId);
+      }
+    });
+    io.observe(container);
+    const onReduceMotionChange = (e: MediaQueryListEvent) => {
+      reducedMotion = e.matches;
+      if (reducedMotion) { cancelAnimationFrame(rafId); drawStaticFrame(); }
+      else { lastTime = performance.now(); cancelAnimationFrame(rafId); rafId = requestAnimationFrame(loop); }
+    };
+    mediaQuery.addEventListener("change", onReduceMotionChange);
+    container.addEventListener("pointermove", onPointerMove);
+    container.addEventListener("pointerleave", onPointerLeave);
+    container.addEventListener("pointerdown", onPointerDown);
+    resize();
+    if (!reducedMotion) rafId = requestAnimationFrame(loop);
+    return () => {
+      cancelAnimationFrame(rafId); ro.disconnect(); io.disconnect();
+      mediaQuery.removeEventListener("change", onReduceMotionChange);
+      container.removeEventListener("pointermove", onPointerMove);
+      container.removeEventListener("pointerleave", onPointerLeave);
+      container.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, [background, nodeColor, activeColor, spacing, springTension, damping, reach, impulse, pulseOnClick, showNodes]);
+
+  return (
+    <div ref={containerRef} style={{ position: "relative", width: "100%", height: "100%", overflow: "hidden", backgroundColor: background, ...style }} className={className}>
+      <canvas ref={canvasRef} aria-hidden="true" style={{ position: "absolute", inset: 0, display: "block", pointerEvents: "none" }} />
+    </div>
+  );
+}`,
+
 };
