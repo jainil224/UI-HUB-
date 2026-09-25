@@ -761,6 +761,53 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
         }
     },
 
+    "image-compare": {
+        props: [
+            { name: "before", type: "ImageSource", default: "IMAGE_COMPARE_DEFAULTS.before", description: "\"Before\" image { src, alt? } shown under the reveal layer." },
+            { name: "after", type: "ImageSource", default: "IMAGE_COMPARE_DEFAULTS.after", description: "\"After\" image { src, alt? } shown as the base layer." },
+            { name: "initialPosition", type: "number", default: "50", description: "Starting divider position 0-100 (%)." },
+            { name: "orientation", type: "'horizontal' | 'vertical'", default: "'horizontal'", description: "Drag axis; horizontal splits left/right, vertical splits top/bottom." },
+            { name: "showLabels", type: "boolean", default: "true", description: "Show the Before/After chips." },
+            { name: "labelBefore", type: "string", default: "'Before'", description: "Chip text + alt fallback for the before image." },
+            { name: "labelAfter", type: "string", default: "'After'", description: "Chip text + alt fallback for the after image." },
+            { name: "ariaLabel", type: "string", default: "'Before and after image comparison'", description: "Accessible name of the slider widget." },
+            { name: "className", type: "string", default: "''", description: "Extra classes for the wrapper." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Wrapper style escape hatch." },
+            { name: "onPositionChange", type: "(pos: number) => void", default: "undefined", description: "Called with the rounded 0-100 position while the divider moves." }
+        ],
+        vibeMeta: {
+            behavior: "A before/after slider: a full-size after image sits on top of a clip-path-inset masked before copy; the divider edge and grip follow the pointer (or arrow keys) through a stiffness-900/damping-55 spring, so the reveal decelerates into place instead of snapping.",
+            states: { from: "divider at start position over a still image", to: "divider slides to reveal the other state" },
+            cssProperties: ["clip-path: inset()", "object-fit: cover", "framer-motion spring", "aspect-ratio", "touch-action: none"],
+            description: "A draggable divider that peels between before/after image states with spring physics and ARIA slider semantics.",
+            libraries: ["react", "framer-motion"],
+            requirements: ["clip-path inset() reveal, no image re-layout", "stiff 900/55 spring on divider + edge", "pointer + arrow-key control, Home/End jump", "role=slider with live aria-valuenow", "prefers-reduced-motion jumps instead of springs", "no state writes per pointer frame"]
+        }
+    },
+
+    "image-lens": {
+        props: [
+            { name: "image", type: "ImageSource", default: "IMAGE_LENS_DEFAULTS.image", description: "Source image { src, alt? } to magnify." },
+            { name: "zoom", type: "number", default: "3", description: "Magnification power, clamped 1.5-6." },
+            { name: "lensSize", type: "number", default: "160", description: "Lens diameter in px (min 48)." },
+            { name: "cornerRadius", type: "number", default: "999", description: "Lens corner radius in px; near-full circle by default, 0 for a square lens." },
+            { name: "borderColor", type: "string", default: "rgba(255,255,255,0.35)", description: "Color of the crisp box-shadow lens ring." },
+            { name: "followSmoothing", type: "number", default: "80", description: "Lens follow lag in ms; 0 = instant." },
+            { name: "alwaysOn", type: "boolean", default: "false", description: "Keep the lens visible even before hover." },
+            { name: "disabled", type: "boolean", default: "false", description: "Disable the lens entirely and hide it." },
+            { name: "className", type: "string", default: "''", description: "Extra classes for the wrapper." },
+            { name: "style", type: "React.CSSProperties", default: "undefined", description: "Wrapper style escape hatch." }
+        ],
+        vibeMeta: {
+            behavior: "A hover lens: a circular, pointer-events-none overlay tracks the clamped cursor; an inner copy of the base image is scaled ~3x (1.5-6) and translated so the pixel under the lens centre lands on the lens centre; a shared CSS transform transition gives the follower a short lag with zero JS animation loop; leaving fades the lens out. The lens ring is rendered as a box-shadow so it stays crisp on the rounded clip while following, and the magnified layer opts into will-change transform to avoid shimmer. The default preview image is a supplied lava artwork URL shared by the base image and the magnified layer.",
+            states: { from: "pristine image, no lens", to: "circular lens tracks the pointer, magnifying the region beneath it" },
+            cssProperties: ["transform: translate + scale", "background-image cover layer", "box-shadow lens ring + border-radius clip", "overflow-hidden", "touch-action: none"],
+            description: "A hover-following circular lens that magnifies an image region up to 6x with zero per-frame state.",
+            libraries: ["react"],
+            requirements: ["POINTER-follow with clamped lens position", "magnified inner layer pinned under lens centre", "ResizeObserver sizing, disconnected on unmount", "no state writes per pointer frame", "prefers-reduced-motion disables the easing transition", "lens ring is a box-shadow (crisp on rounded clip, no dotted edge)", "lens + inner layers use will-change transform to prevent shimmer", "default preview image URL is shared by the base <img> and the lens background layer"]
+        }
+    },
+
     "border-beam": {
         props: [
             { name: "className", type: "string", default: '""', description: "Additional CSS classes for the container." },

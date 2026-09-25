@@ -68,6 +68,8 @@ const PerspectiveCarousel = React.lazy(() => import('../components/ui/perspectiv
 const DiagonalCarousel = React.lazy(() => import('../components/ui/diagonal-carousel').then(m => ({ default: m.DiagonalCarousel })));
 const TestimonialsCard = React.lazy(() => import('../components/ui/testimonials-card').then(m => ({ default: m.TestimonialsCard })));
 const ImageCollage = React.lazy(() => import('../components/ui/image-collage').then(m => ({ default: m.ImageCollage })));
+const ImageLens = React.lazy(() => import('../components/ui/ImageLens').then(m => ({ default: m.ImageLens })));
+const ImageCompare = React.lazy(() => import('../components/ui/ImageCompare').then(m => ({ default: m.ImageCompare })));
 const PointDNAHelix = React.lazy(() => import('../components/ui/PointDNAHelix'));
 const TwinGalaxyRings = React.lazy(() => import('../components/ui/TwinGalaxyRings'));
 const Tornado = React.lazy(() => import('../components/ui/Tornado'));
@@ -2751,6 +2753,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'diagonal-carousel': DiagonalCarousel,
     'testimonials-card': TestimonialsCard,
     'image-collage': ImageCollage,
+    'image-lens': ImageLens,
+    'image-compare': ImageCompare,
     'letter-pull-up': LetterPullUpText as any,
     'scale-letter': ScaleLetterText as any,
     'separate-away': SeparateAwayText as any,
@@ -7098,6 +7102,42 @@ export function ImageCollageDemo() {
   );
 }`,
         vibePrompt: "Create an interactive 'ImageCollage' component in React + TypeScript with Framer Motion. Clicking anywhere dynamically toggles between a scattered artistic collage (using configured x, y, and rotate values with realistic drop shadows) and an organized linear showcase grid with spring physics (stiffness: 350, damping: 25)."
+    },
+
+    // ---- Image Lens Magnifier ----
+    {
+        id: "image-lens",
+        title: "Image Lens Magnifier",
+        category: "image-interaction",
+        addedAt: "2026-09-25",
+        newBadgeDays: 120,
+        description: "A hover-following circular lens that magnifies a region of an image up to 6x with zero per-frame React state and a CSS-only follow easing.",
+        preview: () => (
+            <div className="w-full h-full min-h-[420px] rounded-3xl overflow-hidden border border-white/10 relative flex items-center justify-center bg-neutral-950">
+                <ImageLens />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ---- Image Compare Slider ----
+    {
+        id: "image-compare",
+        title: "Image Compare Slider",
+        category: "image-interaction",
+        addedAt: "2026-09-25",
+        newBadgeDays: 120,
+        description: "A draggable divider that peels between before/after states of an image with spring physics, arrow-key control and full ARIA slider semantics.",
+        preview: () => (
+            <div className="w-full h-full min-h-[420px] rounded-3xl overflow-hidden border border-white/10 relative flex items-center justify-center bg-neutral-950 p-4">
+                <div className="w-full max-w-[560px]">
+                    <ImageCompare />
+                </div>
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
     },
     {
         id: "point-dna-helix",

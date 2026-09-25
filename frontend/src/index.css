@@ -852,3 +852,12 @@ html {
 .close:after {
   transform: rotate(-45deg);
 }
+/* Hide scrollbars for horizontal scroller bars (e.g. shader selector dock) */
+@utility no-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
