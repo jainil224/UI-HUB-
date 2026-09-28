@@ -20,6 +20,7 @@ const TermsPage = React.lazy(() => import('./pages/legal/TermsPage'));
 const PaymentPolicyPage = React.lazy(() => import('./pages/legal/PaymentPolicyPage'));
 const CookieSettingsPage = React.lazy(() => import('./pages/legal/CookieSettingsPage'));
 const TemplatesPage = React.lazy(() => import('./pages/TemplatesPage/TemplatesPage'));
+const BuildWithUIHubPage = React.lazy(() => import('./pages/BuildWithUIHubPage/BuildWithUIHubPage'));
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
 const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
@@ -38,6 +39,7 @@ const LogoHereDemoPage = React.lazy(() => import('./pages/Components/LogoHereDem
 const SuiOverflowDemoPage = React.lazy(() => import('./pages/Components/SuiOverflowDemoPage'));
 const SkyDemoPage = React.lazy(() => import('./pages/Components/SkyDemoPage'));
 const MatrixRainDemoPage = React.lazy(() => import('./pages/Components/MatrixRainDemoPage'));
+const OriginkitHero24DemoPage = React.lazy(() => import('./pages/Components/OriginkitHero24DemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
 const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
@@ -85,96 +87,98 @@ const AppShell = () => {
   const isAdmin = location.pathname.startsWith('/admin');
   const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
   const isDemo = location.pathname.startsWith('/demo');
+  const isTemplates = location.pathname.startsWith('/templates');
 
   return (
     <>
-    <div className={`min-h-[100dvh] flex flex-col overflow-x-clip transition-colors duration-300 ${
-      isDemo
-        ? 'bg-neutral-950 text-white'
-        : theme === 'dark'
-          ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black'
-          : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
-    }`}>
-      <main className="flex-1 flex flex-col">
-        <React.Suspense fallback={
-          <div className="w-full flex-1 flex flex-col">
-            <HeroSkeleton />
-          </div>
-        }>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/library" element={<LibraryPage />} />
-            <Route path="/favorites" element={<FavoritesPage />} />
-            <Route path="/dashboard" element={<DashboardLayout />}>
+      <div className={`min-h-[100dvh] flex flex-col overflow-x-clip transition-colors duration-300 ${isDemo
+          ? 'bg-neutral-950 text-white'
+          : theme === 'dark'
+            ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black'
+            : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
+        }`}>
+        <main className="flex-1 flex flex-col">
+          <React.Suspense fallback={
+            <div className="w-full flex-1 flex flex-col">
+              <HeroSkeleton />
+            </div>
+          }>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/library" element={<LibraryPage />} />
+              <Route path="/favorites" element={<FavoritesPage />} />
+              <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route index element={<Navigate to="/dashboard/mcp" replace />} />
                 <Route path="mcp" element={<MCPPage />} />
                 <Route path="collections" element={<CollectionsPage />} />
-            </Route>
-            <Route path="/mcp" element={<Navigate to="/dashboard/mcp" replace />} />
-            <Route path="/admin/mcp" element={<AdminGuard />}>
+              </Route>
+              <Route path="/mcp" element={<Navigate to="/dashboard/mcp" replace />} />
+              <Route path="/admin/mcp" element={<AdminGuard />}>
                 <Route element={<AdminLayout />}>
-                    <Route index element={<Navigate to="/admin/mcp/overview" replace />} />
-                    <Route path="overview" element={<OverviewPage />} />
-                    <Route path="analytics" element={<AnalyticsPage />} />
-                    <Route path="tools" element={<ToolsPage />} />
-                    <Route path="playground" element={<PlaygroundPage />} />
-                    <Route path="components" element={<ComponentsPage />} />
-                    <Route path="search" element={<SearchPage />} />
-                    <Route path="users" element={<UsersPage />} />
-                    <Route path="users/:uid" element={<UserDetailPage />} />
-                    <Route path="api-keys" element={<ApiKeysPage />} />
-                    <Route path="logs" element={<LogsPage />} />
-                    <Route path="security" element={<SecurityPage />} />
-                    <Route path="health" element={<HealthPage />} />
-                    <Route path="alerts" element={<AlertsPage />} />
-                    <Route path="settings" element={<SettingsPage />} />
-                    <Route path="audit" element={<AuditPage />} />
-                    <Route path="export" element={<ExportPage />} />
+                  <Route index element={<Navigate to="/admin/mcp/overview" replace />} />
+                  <Route path="overview" element={<OverviewPage />} />
+                  <Route path="analytics" element={<AnalyticsPage />} />
+                  <Route path="tools" element={<ToolsPage />} />
+                  <Route path="playground" element={<PlaygroundPage />} />
+                  <Route path="components" element={<ComponentsPage />} />
+                  <Route path="search" element={<SearchPage />} />
+                  <Route path="users" element={<UsersPage />} />
+                  <Route path="users/:uid" element={<UserDetailPage />} />
+                  <Route path="api-keys" element={<ApiKeysPage />} />
+                  <Route path="logs" element={<LogsPage />} />
+                  <Route path="security" element={<SecurityPage />} />
+                  <Route path="health" element={<HealthPage />} />
+                  <Route path="alerts" element={<AlertsPage />} />
+                  <Route path="settings" element={<SettingsPage />} />
+                  <Route path="audit" element={<AuditPage />} />
+                  <Route path="export" element={<ExportPage />} />
                 </Route>
-            </Route>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
-            <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
-            <Route path="/demo/section-scroll" element={<SectionScrollPage />} />
-            <Route path="/demo/tars-hero-arena" element={<TarsDemoPage />} />
-            <Route path="/demo/split-fuzzy-orb" element={<SplitOrbDemoPage />} />
-            <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />
-            <Route path="/demo/haos-tech-solutions" element={<HaosDemoPage />} />
-            <Route path="/demo/mentality" element={<MentalityDemoPage />} />
-            <Route path="/demo/interior-design" element={<InteriorDesignDemoPage />} />
-            <Route path="/demo/lumos" element={<LumosDemoPage />} />
-            <Route path="/demo/loveapp-hero" element={<LoveAppDemoPage />} />
-            <Route path="/demo/heyo-agency-cta" element={<HeyoDemoPage />} />
-            <Route path="/demo/me-019-au-cabaret" element={<AuCabaretDemoPage />} />
-            <Route path="/demo/dont-be-greedy" element={<DontBeGreedyDemoPage />} />
-            <Route path="/demo/paipai-kuaishou" element={<PaipaiDemoPage />} />
-            <Route path="/demo/logo-here" element={<LogoHereDemoPage />} />
-            <Route path="/demo/sui-overflow" element={<SuiOverflowDemoPage />} />
-            <Route path="/demo/sky" element={<SkyDemoPage />} />
-            <Route path="/demo/matrix-rain" element={<MatrixRainDemoPage />} />
-            <Route path="/demo/:id" element={<DemoPage />} />
-            <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/privacy" element={<PrivacyPolicyPage />} />
-            <Route path="/terms" element={<TermsPage />} />
-            <Route path="/payment-policy" element={<PaymentPolicyPage />} />
-            <Route path="/cookies" element={<CookieSettingsPage />} />
-<Route path="/templates" element={<TemplatesPage />} />
-            <Route path="/templates/:id" element={<TemplateDetailPage />} />
-            <Route path="/preview-capture" element={<PreviewCapturePage />} />
-          </Routes>
-        </React.Suspense>
-      </main>
+              </Route>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
+              <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
+              <Route path="/demo/section-scroll" element={<SectionScrollPage />} />
+              <Route path="/demo/tars-hero-arena" element={<TarsDemoPage />} />
+              <Route path="/demo/split-fuzzy-orb" element={<SplitOrbDemoPage />} />
+              <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />
+              <Route path="/demo/haos-tech-solutions" element={<HaosDemoPage />} />
+              <Route path="/demo/mentality" element={<MentalityDemoPage />} />
+              <Route path="/demo/interior-design" element={<InteriorDesignDemoPage />} />
+              <Route path="/demo/lumos" element={<LumosDemoPage />} />
+              <Route path="/demo/loveapp-hero" element={<LoveAppDemoPage />} />
+              <Route path="/demo/heyo-agency-cta" element={<HeyoDemoPage />} />
+              <Route path="/demo/me-019-au-cabaret" element={<AuCabaretDemoPage />} />
+              <Route path="/demo/dont-be-greedy" element={<DontBeGreedyDemoPage />} />
+              <Route path="/demo/paipai-kuaishou" element={<PaipaiDemoPage />} />
+              <Route path="/demo/logo-here" element={<LogoHereDemoPage />} />
+              <Route path="/demo/sui-overflow" element={<SuiOverflowDemoPage />} />
+              <Route path="/demo/sky" element={<SkyDemoPage />} />
+              <Route path="/demo/matrix-rain" element={<MatrixRainDemoPage />} />
+              <Route path="/demo/originkit-hero-24" element={<OriginkitHero24DemoPage />} />
+              <Route path="/demo/:id" element={<DemoPage />} />
+              <Route path="/pricing" element={<PricingPage />} />
+              <Route path="/privacy" element={<PrivacyPolicyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="/payment-policy" element={<PaymentPolicyPage />} />
+              <Route path="/cookies" element={<CookieSettingsPage />} />
+              <Route path="/templates" element={<TemplatesPage />} />
+              <Route path="/templates/:id" element={<TemplateDetailPage />} />
+              <Route path="/build-with-ui-hub" element={<BuildWithUIHubPage />} />
+              <Route path="/preview-capture" element={<PreviewCapturePage />} />
+            </Routes>
+          </React.Suspense>
+        </main>
 
-      {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && <Footer />}
-    </div>
+        {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && !isTemplates && <Footer />}
+      </div>
 
-    <TopLoader />
-    {!isDemo && !isAdmin && <Navbar />}
-    <ScrollToTop />
-    <CookieBanner />
-    <PushNotificationPrompt />
+      <TopLoader />
+      {!isDemo && !isAdmin && <Navbar />}
+      <ScrollToTop />
+      <CookieBanner />
+      <PushNotificationPrompt />
     </>
   );
 };

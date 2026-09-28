@@ -1512,6 +1512,19 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
             requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "IntersectionObserver parking", "prefers-reduced-motion support"]
         }
     },
+    "originkit-hero-24": {
+        props: [
+            { name: "className", type: "string", default: "''", description: "Extra class names merged onto the full-bleed hero root." }
+        ],
+        vibeMeta: {
+            behavior: "A full-bleed Hirefy hero holds a real-time WebGL dot globe that turns under drag, framed by a glass card, a phone mockup and a hand cutout, with a staged reveal on first paint.",
+            states: { from: "globe scaling and fading in behind a static glass card, dots not yet rotating", to: "globe settled and slowly rotating, drag scrubs longitude, hero content revealed" },
+            cssProperties: ["full-bleed hero root", "glassmorphic card with backdrop blur", "phone bezel frame", "hand cutout mask", "staged reveal keyframes", "responsive breakpoint variants"],
+            description: "Originkit's Hirefy hero: a real-time WebGL dot globe. A Three.js sphere carries a d3-geo equirectangular land fill, a coastline outline and a graticule, with instanced surface dots and city markers that turn under drag. Presented as a glass-card product hero with a phone mockup, hand cutout and a staged reveal.",
+            libraries: ["react", "three", "d3-geo"],
+            requirements: ["WebGL context (Three.js WebGLRenderer)", "d3-geo equirectangular projection", "requestAnimationFrame loop", "ResizeObserver-driven sizing", "dpr cap", "reduced-motion fallback"]
+        }
+    },
 };
 
 

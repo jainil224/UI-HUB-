@@ -6799,4 +6799,301 @@ Key Specifications:
 4. Custom SVG Arrow: corner arrow d="M7 3.5H14.5V11" stroke="#07182A" strokeWidth="2.4", dotted trail rects at (10.5,6.5), (7,10), (3.5,13.5).`
         }
     },
+    {
+        id: 'originkit-hero-24',
+        previewVideo: '/assets/template-previews/11.webm',
+        title: 'Hirefy Glass Globe',
+        description: 'Cinematic global-hiring hero with a draggable dot-matrix Three.js globe, two photo-mask hand cutouts sliding in from the edges, floating glass statistic cards, and a staggered glass-morphism nav bar.',
+        category: 'SaaS & AI',
+        badge: 'NEW',
+        framework: 'React 19 (TypeScript)',
+        styling: 'Tailwind CSS',
+        animation: 'Three.js Dot Globe + CSS Mask Hand Reveal',
+        isPro: false,
+        githubUrl: 'https://github.com/ui-hub/originkit-hero-24',
+        previewGradient: 'from-[#101216] via-[#16191F] to-[#00A1DB]',
+        accentColor: '#00A1DB',
+        stats: {
+            pages: 1,
+            rating: 5.0,
+            downloads: '2.7k'
+        },
+        features: [
+            'Draggable dot-matrix Three.js globe (d3-geo orthographic land projection, 4,000+ instanced dot markers)',
+            'Lat/long graticule grid and continent outline tubes rebuilt as TubeGeometry meshes',
+            'Two photo-mask hand cutouts with CSS mask-composite alpha intersection sliding in from opposite edges',
+            'Two floating frosted-glass cards: a 95% stat plate and a customer testimonial with avatar',
+            'Staggered reveal animation cascade across nav, heading, CTAs, globe, hands and cards',
+            'Three responsive stages (phone 402px / tablet 744px / desktop 1280px) driven by ScaleFrame'
+        ],
+        promptPreview: `Build a cinematic, dark glassmorphism "hire globally" hero section in React 19, TypeScript, and Tailwind CSS, anchored by an interactive Three.js dot globe and two photo-mask hand cutouts that slide in from the frame edges.
+
+================================================================================
+1. DESIGN TOKENS
+================================================================================
+- Canvas / Background: #101216 (near-black slate)
+- Globe Ocean: #101216 (matches canvas, so the sphere reads as a void)
+- Accent (globe dots, outline, graticule): #00A1DB (cyan)
+- Glass Surface: rgba(255,255,255,0.1) border, backdrop-blur-sm
+- Secondary Button Fill: #252525
+- Primary Button Fill: #F0F0F0 with a top-down white gloss overlay
+- Text: #FFFFFF primary, rgba(255,255,255,0.7) secondary
+- Typography: "Helvetica Neue", Helvetica, Arial, sans-serif (system stack; no webfont download)
+
+================================================================================
+2. LAYOUT — three responsive stages
+================================================================================
+Each stage is a fixed-width frame scaled to fit its container by a ScaleFrame
+component (transform: scale(clientWidth / frameWidth), transformOrigin: "top left",
+outer height set to inner.offsetHeight * scale).
+
+- Phone:   402 x 836   visible below 640px
+- Tablet:  744 x 994   visible 640px – 1279px
+- Desktop: 1280 x 913  visible at 1280px and up
+
+Backdrop image swaps by the same breakpoints: bg.png / bg-ipad.png / bg-desktop.png.
+Backdrops are absolutely positioned, object-cover, pointer-events-none, and must
+size with the stage height (h-full) — never min-h-screen, which would escape the
+scaled stage.
+
+================================================================================
+3. NAVIGATION (desktop only, 90px tall, bottom hairline rgba(255,255,255,0.18))
+================================================================================
+- Wordmark "Hirefy": 32px, tracking -0.96px, line-height 1.15
+- "Get started" pill on the right
+- Centered link row (Home / Pricing / About / Tools): 17px, gap 28px,
+  absolutely centered with left-1/2 + -translate-x-1/2 + -translate-y-1/2
+
+Get started pill: rounded-[999px], padding 20px 24px, 16px text, tracking -0.32px,
+text #060E08. Two stacked overlays:
+  - a linear-gradient(180deg, rgba(255,255,255,0.33) 0%, rgba(255,255,255,0) 100%)
+    gloss layer over a solid rgb(240,240,240) fill
+  - an inset ring: shadow-[inset_0px_1px_1px_0px_white,inset_0px_-1.5px_0px_0px_rgba(0,0,0,0.1)]
+
+================================================================================
+4. HEADING BLOCK (desktop: left 417px, top 144px, width 446px, centered)
+================================================================================
+- H1 "Build Your Global Team. Effortlessly." — 48px / line-height 55px /
+  tracking -1.92px, centered, width 446px
+- Subcopy: 16px / line-height 1.5 / rgba(255,255,255,0.7), "Hire exceptional
+  talent across 180+ countries, automate compliance, and manage international payroll."
+- CTA row gap 12px: "Get started" pill + "Book a Call" pill
+  (Book a Call: bg #252525, border rgba(255,255,255,0.1), 16px/1.15, tracking -0.32px)
+
+================================================================================
+5. THE GLOBE (Three.js, raw — not react-three-fiber)
+================================================================================
+Mounted at desktop left 431px / top 448px, 418 x 420, border-radius 999px, overflow clip.
+
+- geoEquirectangular + geoPath from d3-geo project Natural Earth 50m land GeoJSON
+  into path commands; the raw @[ML] command stream is parsed into points and
+  swept into TubeGeometry continent outlines.
+- Land is rasterized to a 2048x1024 offscreen canvas, read back with
+  getImageData, and sampled per dot to keep only land markers.
+- Dots: SphereGeometry(0.01 * dotSizeMultiplier, 4, 4) instanced through
+  InstancedMesh, one Matrix4 per marker placed by
+  latLngToPosition(lat, lng) = (cos(lat)sin(lng), sin(lat), cos(lat)cos(lng)).
+- Density 8 maps to a base angular step of dotSpacing * 0.08, divided by
+  max(0.3, cos(lat)) so dot density stays visually even poleward.
+- Graticule: latitude and longitude tubes every 15 degrees, 64 segments each.
+- Camera: PerspectiveCamera 50deg, positioned at z = 2.5 / scaleMultiplier
+  (scale 9.7), sphere radius = scaleMultiplier.
+- Renderer: antialias, alpha, srgb output color space, pixelRatio capped at 2.
+  The canvas is appended hidden (opacity 0, visibility hidden) and only faded in
+  once the land fetch resolves, so there is no flash of an empty sphere.
+- Interaction: pointerdown + document-level pointermove rotates the globe via a
+  Raycaster; stopOnHover pauses auto-rotation while the cursor is over the
+  sphere. Rotation is lerped toward the target each frame with a velocity decay
+  term, and the rAF loop parks itself once motion settles.
+- Cleanup: cancel the rAF, remove both canvas listeners, disconnect the
+  ResizeObserver, dispose the renderer, and remove the canvas from the DOM.
+
+================================================================================
+6. HAND CUTOUTS (CSS mask-composite alpha intersection)
+================================================================================
+Each hand is one shared hands.png, positioned with a negative percentage
+offset, then clipped by intersecting two mask layers:
+
+  maskImage: url("<mask>.svg"), <linear-gradient edge fade>
+  maskMode: "alpha"
+  maskComposite: "intersect"
+  maskSize: "<maskSize>", 100% 100%
+
+The linear-gradient fades the outer 18% of the hand to transparent so it
+dissolves off the frame edge instead of ending on a hard line:
+  from left:  linear-gradient(to right,  transparent 0%, #000 18%, #000 100%)
+  from right: linear-gradient(to left,   transparent 0%, #000 18%, #000 100%)
+
+Desktop placement:
+  - Top hand    from right: left 794px, top 269.169px, 486 x 374.664,
+                mask desk-mask-top.svg,    image offset left -97.68% / top -17.2% / 197.68% w / 170.95% h
+  - Bottom hand from left:  left 0,     top 592.398px, 443 x 420.85,
+                mask desk-mask-bottom.svg, image offset left -15.3% / top -63.32% / 232.73% w / 163.32% h
+
+Entry: 900ms cubic-bezier(0.16, 1, 0.3, 1), translating in from translateX(-30%)
+or translateX(30%) while fading from opacity 0.
+
+================================================================================
+7. GLASS CARDS
+================================================================================
+Shared shell: absolute flex-col items-start, overflow-clip,
+border rgba(255,255,255,0.1), backdrop-blur-sm. Inside sits a blurred
+301x166px "plate" (blur 20px, bg rgba(255,255,255,0.1), backdrop-blur 2px)
+centered with -translate-x-1/2 -translate-y-1/2, which is what produces the
+soft light bloom behind the card content.
+
+Card A — stat plate: desktop left 339px / top 504px, 169 wide, 16px padding,
+  rounded 6px, gap 4px.
+  "95%" 20px bold italic, then "Faster Global Hiring" 14px at 70% opacity.
+
+Card B — testimonial: desktop left 803px / top 685px, 246 wide, 14px padding,
+  rounded 6px, gap 16px, border-width 0.788px.
+  Quote 14px: "We expanded into 12 new markets in under 60 days without hiring."
+  Then a 32px avatar with a 6px gap to a two-line byline:
+  "Sarah Kim" 12px bold italic, "VP People at NovaTech" 12px at 70% opacity.
+
+================================================================================
+8. REVEAL CASCADE
+================================================================================
+Staggered opacity/translateY reveals at 300ms cubic-bezier(0.215, 0.61, 0.355, 1):
+  0ms nav · 80ms heading · 160ms subcopy · 240ms CTA row · 320ms globe
+  360ms top hand · 400ms card A · 440ms bottom hand · 480ms card B
+
+Honour prefers-reduced-motion: collapse every duration to 1ms and drop all
+transforms so the section renders in its final state instantly.`,
+        toolPrompts: {
+            cursor: `/* Cursor AI Rules: Hirefy Glass Globe Hero (Originkit Hero 24) */
+/* Stack: React 19, TypeScript, Tailwind CSS, three, d3-geo */
+
+Build a dark glassmorphism hero on a #101216 canvas, framed at 1280x913:
+
+1. Nav: 90px tall, bottom hairline rgba(255,255,255,0.18), "Hirefy" wordmark at
+   32px/-0.96px tracking, centered Home/Pricing/About/Tools row at 17px with
+   28px gap, "Get started" pill on the right (rounded-[999px], #F0F0F0 fill,
+   top-down white gloss gradient, inset white top highlight, text #060E08).
+2. Heading: left 417px top 144px, width 446px, centered. H1 "Build Your Global
+   Team. Effortlessly." 48px/55px tracking -1.92px; subcopy 16px/1.5 at 70%
+   white; CTA row gap 12px with a #252525 "Book a Call" pill beside the pill CTA.
+3. Globe: 418x420 border-radius-full overflow-clip at left 431px top 448px.
+   Raw Three.js. Project Natural Earth land GeoJSON with d3-geo
+   geoEquirectangular + geoPath, parse the path command stream into points,
+   sweep continent outlines as TubeGeometry, rasterize land to a 2048x1024
+   offscreen canvas and keep only land dots. InstancedMesh dots sized
+   0.01 * dotSizeMultiplier, graticule tubes every 15 degrees, PerspectiveCamera
+   at z = 2.5 / 9.7. Fade the canvas in only after the land fetch resolves.
+   Raycast-hover pauses auto-rotation; pointer-drag rotates it.
+4. Hands: one shared hands.png per hand, clipped by intersecting an SVG mask
+   with an edge-fade linear-gradient (maskComposite "intersect", maskMode
+   "alpha"). Top hand enters from the right at left 794px top 269.169px
+   486x374.664; bottom hand from the left at left 0 top 592.398px 443x420.85.
+   Both 900ms cubic-bezier(0.16, 1, 0.3, 1) sliding in from +/-30% X.
+5. Glass cards: backdrop-blur-sm over border rgba(255,255,255,0.1), each with a
+   blurred 301x166px white plate centered behind the content. A 169px stat card
+   at left 339px top 504px ("95%" + "Faster Global Hiring") and a 246px
+   testimonial card at left 803px top 685px (Sarah Kim / VP People at NovaTech).
+6. Reveals stagger at 0/80/160/240/320/360/400/440/480ms, 300ms
+   cubic-bezier(0.215, 0.61, 0.355, 1). Collapse to 1ms and drop transforms
+   under prefers-reduced-motion.`,
+            claude: `You are Claude Code, an expert design technologist and frontend engineer.
+Build the "Hirefy" global-hiring hero section in React 19, TypeScript, Tailwind CSS,
+and raw Three.js (plus d3-geo) — matching a dark, cinematic glassmorphism design:
+
+- Canvas #101216 with a 1280x913 desktop stage (plus 402/744 phone/tablet stages
+  scaled to fit their containers).
+- 90px glass nav: "Hirefy" wordmark, centered Home/Pricing/About/Tools links, and a
+  gloss-topped "Get started" pill.
+- Centered heading block: "Build Your Global Team. Effortlessly." at 48px with
+  -1.92px tracking, 16px 70%-white subcopy, and Get started + Book a Call CTAs.
+- An interactive dot-matrix globe: d3-geo projects Natural Earth land GeoJSON,
+  TubeGeometry draws the continent outlines and a 15-degree graticule, and an
+  InstancedMesh renders land-only dot markers placed by lat/lng. Auto-rotates,
+  pauses on hover, and is draggable. The canvas stays hidden until land data
+  resolves, then fades in.
+- Two photo-mask hand cutouts that slide in from opposite edges, each clipped by
+  intersecting an SVG alpha mask with an edge-fade linear-gradient so the hands
+  dissolve off the frame rather than cutting hard.
+- Two frosted glass cards, each with a blurred white plate behind the content: a
+  "95% Faster Global Hiring" stat and a 12-new-markets testimonial from Sarah Kim.
+- Staggered reveal cascade at 0-480ms, fully disabled under prefers-reduced-motion.`,
+            antigravity: `[Antigravity Agent Blueprint]
+Task: Deploy the "Hirefy Glass Globe" hero section in a React 19 + Vite codebase.
+
+Tech Stack: React 19, TypeScript, Tailwind CSS, three (raw WebGL), d3-geo, Lucide.
+
+Objective: reproduce a #101216 glassmorphism hero where an interactive dot globe
+is framed by two mask-composited hand cutouts and two blurred glass cards.
+
+Key Specifications:
+- Stage: 1280x913 desktop, 744x994 tablet, 402x836 phone, each scaled by
+  clientWidth / frameWidth with transformOrigin "top left"
+- Backdrops: object-cover absolute images swapped at 640px and 1280px
+- Nav: 90px, hairline rgba(255,255,255,0.18), centered link row, gloss pill CTA
+- Type: H1 48px/55px tracking -1.92px; body 16px/1.5 at 70% white
+- Globe: d3-geo geoEquirectangular projection, TubeGeometry continent outlines,
+  15-degree graticule, InstancedMesh land dots, PerspectiveCamera z = 2.5/9.7,
+  raycast hover pause, pointer drag, deferred canvas fade-in
+- Hands: maskComposite "intersect" + maskMode "alpha" over an edge-fade gradient,
+  900ms cubic-bezier(0.16, 1, 0.3, 1) from +/-30% X
+- Cards: backdrop-blur-sm, rgba(255,255,255,0.1) border, blurred 301x166 plate
+- Motion: 0/80/160/240/320/360/400/440/480ms cascade, 300ms
+  cubic-bezier(0.215, 0.61, 0.355, 1), reduced-motion collapse to 1ms`,
+            lovable: `Create a dark glassmorphism hero section for a global-hiring product called "Hirefy", using React, Tailwind CSS, and Three.js.
+
+Include:
+1. A #101216 canvas with a 90px transparent nav bar — "Hirefy" wordmark, centered Home / Pricing / About / Tools links, and a glossy white "Get started" pill.
+2. A centered headline "Build Your Global Team. Effortlessly." with a short muted sub-paragraph and two rounded pill buttons.
+3. An interactive circular dot globe that users can drag and spin, drawn as glowing cyan #00A1DB dots over land masses, with a faint latitude/longitude grid and a dark sphere behind it.
+4. Two realistic hands reaching in from the left and right edges, softly fading out where they meet the frame border.
+5. Two frosted glass cards floating over the scene: one showing "95% Faster Global Hiring", the other a short customer quote with a round avatar and the name "Sarah Kim".
+6. Everything fading and sliding in gently on load in a staggered sequence, and respecting the user's reduced-motion preference.`,
+            advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: HIREFY GLASS GLOBE HERO
+
+1. Stage Geometry:
+   - Desktop 1280 x 913, tablet 744 x 994, phone 402 x 836.
+   - ScaleFrame: scale = clientWidth / frameWidth, transformOrigin "top left",
+     outer height = inner.offsetHeight * scale. Breakpoints 640px and 1280px
+     expressed as Tailwind arbitrary variants (min-[640px]:, min-[1280px]:).
+2. Backdrop Rules: absolute inset, h-full (never min-h-screen — it escapes the
+   scaled stage), object-cover, pointer-events-none, swapped per breakpoint.
+3. Typography Math:
+   - H1 48px / leading 55px / tracking -1.92px, centered, width 446px,
+     offset left 417px top 144px.
+   - Subcopy 16px / leading 1.5 / rgba(255,255,255,0.7).
+   - Wordmark 32px / 1.15 / -0.96px. Nav links 17px / 1.15, gap 28px.
+   - Button label 16px / 1.15 / -0.32px.
+4. Globe Projection:
+   - Projection: d3-geo geoEquirectangular; path generator geoPath().projection().
+   - Land mask: 2048 x 1024 offscreen canvas, getImageData, isOnLand when
+     red channel > 128 at x = round(((lng+180)/360) * 2048), y from 90-lat.
+   - Marker placement: latLngToPosition = (cos(lat)sin(lng), sin(lat),
+     cos(lat)cos(lng)) scaled by globeRadius.
+   - Dot angular step: baseStep = dotSpacing * 0.08; lngStep = baseStep /
+     max(0.3, cos(lat)); dot radius = 0.01 * dotSizeMultiplier.
+   - Graticule: 15-degree spacing, 64 segments per line, tube radius
+     (gridWidth/10) * 0.01. Continent outline tube radius (outlineWidth/10)*0.01.
+   - Camera: fov 50, distance 2.5 / scaleMultiplier, scale 9.7.
+5. Hand Mask Intersection:
+   - maskImage = url("<mask>"), <edge-fade>; maskMode "alpha";
+     maskComposite "intersect"; maskSize "<w> <h>", 100% 100%.
+   - Edge fade stops: transparent 0%, #000 18%, #000 100%.
+   - Desktop top hand: 486 x 374.664 at (794, 269.169), image offset
+     (-97.68%, -17.2%) at 197.68% w / 170.95% h.
+   - Desktop bottom hand: 443 x 420.85 at (0, 592.398), image offset
+     (-15.3%, -63.32%) at 232.73% w / 163.32% h.
+6. Glass Card Shell:
+   - Blur plate 301 x 166, blur 20px, rgba(255,255,255,0.1), backdrop-blur 2px,
+     centered with -translate-x-1/2 -translate-y-1/2.
+   - Stat card 169 wide at (339, 504), padding 16px, radius 6px, gap 4px.
+   - Testimonial card 246 wide at (803, 685), padding 14px, radius 6px, gap 16px,
+     border-width 0.788px, avatar 32px, gap 6px, byline 12px/1.3.
+7. Reveal Timeline (300ms cubic-bezier(0.215, 0.61, 0.355, 1), translateY 12px):
+   0 nav, 80 H1, 160 subcopy, 240 CTA, 320 globe, 360 top hand, 400 stat card,
+   440 bottom hand, 480 testimonial card.
+8. Hand Entry (900ms cubic-bezier(0.16, 1, 0.3, 1)):
+   left hand from translateX(-30%), right hand from translateX(30%), both to 0
+   with opacity 0 -> 1.
+9. Reduced Motion: all animation durations collapse to 1ms and every
+   transform resolves to none.`
+        }
+    },
 ];

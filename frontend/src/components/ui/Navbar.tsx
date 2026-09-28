@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, LogOut, User as UserIcon, Heart, Trash2, ArrowUpRight } from 'lucide-react';
+import { Menu, X, LogOut, User as UserIcon, Heart, Trash2, ArrowUpRight, ChevronDown, Grid2X2, PanelsTopLeft, LayoutTemplate } from 'lucide-react';
 import logo from '../../Assets/webiste logo.svg';
 import PlanBadge, { PlanTier } from './PlanBadge';
 import SearchBox from './SearchBox';
@@ -12,6 +12,9 @@ import Toast from './Toast';
 import { useSkeleton } from '../../context/SkeletonContext';
 import { NavbarSkeleton } from './Skeleton';
 import { getUserFavorites, removeFromFavorites, FavoriteItem } from '../../services/favorites';
+
+/** Route for the `Build with UI HUB` section catalog. */
+const SECTIONS_ANCHOR = '/build-with-ui-hub';
 
 const Navbar = () => {
     const { user, isPro, loading, planType } = useAuth();
@@ -25,6 +28,8 @@ const Navbar = () => {
     const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
     const [showFavDropdown, setShowFavDropdown] = useState(false);
     const favDropdownRef = useRef<HTMLDivElement>(null);
+    const [showLibrariesDropdown, setShowLibrariesDropdown] = useState(false);
+    const librariesDropdownRef = useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
         const unsub = getUserFavorites(user?.uid, (data) => {
@@ -48,14 +53,25 @@ const Navbar = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [showFavDropdown]);
 
+    React.useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (librariesDropdownRef.current && !librariesDropdownRef.current.contains(e.target as Node)) {
+                setShowLibrariesDropdown(false);
+            }
+        };
+        if (showLibrariesDropdown) document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showLibrariesDropdown]);
+
     const isTemplates = location.pathname.startsWith('/templates');
+    const isBuildWithUIHub = location.pathname.startsWith('/build-with-ui-hub');
+    const isLibraryMenuActive = isLibrary || isTemplates || isBuildWithUIHub;
     const isMcp = location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp';
     const isPricing = location.pathname === '/pricing';
 
     const navLinks = [
         { to: '/', label: 'HOME', active: isHomePage },
         { to: '/library', label: 'COMPONENTS', active: isLibrary },
-        { to: '/templates', label: 'TEMPLATES', active: isTemplates },
         { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
         { to: '/pricing', label: 'PRICING', active: isPricing },
     ];
@@ -103,20 +119,72 @@ const Navbar = () => {
     const navLinksGroup = (px = 'px-2.5') => (
         <>
             {navLinks.map(({ to, label, active }) => (
-                <Link
-                    key={to + label}
-                    to={to}
-                    className={`relative ${px} py-1.5 text-xs lg:text-[13px] font-black uppercase tracking-wider border-2 transition-all ${
-                        active
-                            ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
-                            : 'bg-transparent text-white border-transparent hover:bg-white/10 hover:border-white/20'
-                    }`}
-                >
-                    {label}
-                    {active && (
-                        <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-white/80" />
-                    )}
-                </Link>
+                label === 'COMPONENTS' ? (
+                    <div key="libraries-menu" className="relative" ref={librariesDropdownRef} onMouseEnter={() => setShowLibrariesDropdown(true)} onMouseLeave={() => setShowLibrariesDropdown(false)}>
+                        <button
+                            type="button"
+                            onClick={() => setShowLibrariesDropdown((open) => !open)}
+                            aria-haspopup="menu"
+                            aria-expanded={showLibrariesDropdown}
+                            className={`relative inline-flex items-center gap-1.5 ${px} py-1.5 text-xs lg:text-[13px] font-black uppercase tracking-wider border-2 transition-all ${isLibraryMenuActive
+                                    ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
+                                    : 'bg-transparent text-white border-transparent hover:bg-white/10 hover:border-white/20'
+                                }`}
+                        >
+                            COMPONENTS <ChevronDown size={13} className={`transition-transform ${showLibrariesDropdown ? 'rotate-180' : ''}`} />
+                            {isLibraryMenuActive && <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-white/80" />}
+                        </button>
+                        <AnimatePresence>
+                            {showLibrariesDropdown && (
+                                <motion.div
+                                    role="menu"
+                                    initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                                    transition={{ duration: 0.14 }}
+                                    className="absolute left-0 top-full z-[80] mt-2 w-[340px] max-w-[calc(100vw-2rem)] rounded-2xl border border-white/10 bg-[#1b1c1f] p-2 shadow-2xl"
+                                >
+                                    <p className="px-3 pb-1 pt-2 text-sm font-semibold text-neutral-200">Libraries</p>
+                                    {[
+                                        { to: '/library', label: 'Components', description: 'Ready-made UI building blocks', Icon: Grid2X2 },
+                                        { to: '/templates', label: 'Templates', description: 'Complete pages to customize', Icon: LayoutTemplate },
+                                        { to: SECTIONS_ANCHOR, label: 'Build with UI HUB', description: 'Section-level layouts', Icon: PanelsTopLeft },
+                                    ].map(({ to, label, description, Icon }) => (
+                                        <Link
+                                            key={label}
+                                            to={to}
+                                            role="menuitem"
+                                            onClick={() => setShowLibrariesDropdown(false)}
+                                            className="group flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-left hover:bg-white/[0.07] transition-colors"
+                                        >
+                                            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#1F4BFF]/15 text-[#91a8ff] group-hover:bg-[#1F4BFF]/25">
+                                                <Icon size={18} />
+                                            </span>
+                                            <span className="min-w-0">
+                                                <span className="block text-sm font-medium text-neutral-100">{label}</span>
+                                                <span className="block truncate text-xs text-neutral-400">{description}</span>
+                                            </span>
+                                        </Link>
+                                    ))}
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+                ) : (
+                    <Link
+                        key={to + label}
+                        to={to}
+                        className={`relative ${px} py-1.5 text-xs lg:text-[13px] font-black uppercase tracking-wider border-2 transition-all ${active
+                                ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
+                                : 'bg-transparent text-white border-transparent hover:bg-white/10 hover:border-white/20'
+                            }`}
+                    >
+                        {label}
+                        {active && (
+                            <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-[#FFC700] border-2 border-white/80" />
+                        )}
+                    </Link>
+                )
             ))}
         </>
     );
@@ -128,11 +196,10 @@ const Navbar = () => {
                     onClick={() => setShowFavDropdown(prev => !prev)}
                     title="View Favorite Components"
                     aria-label="Favorite Components"
-                    className={`relative p-2 border-2 border-white/20 transition-all flex items-center justify-center cursor-pointer ${
-                        showFavDropdown
+                    className={`relative p-2 border-2 border-white/20 transition-all flex items-center justify-center cursor-pointer ${showFavDropdown
                             ? 'bg-[#FF3B30] text-white border-white/40 -translate-y-0.5'
                             : 'bg-white/10 text-white hover:bg-white/20'
-                    }`}
+                        }`}
                 >
                     <Heart
                         size={17}
@@ -269,11 +336,10 @@ const Navbar = () => {
                         {user.displayName?.split(' ')[0] || 'USER'}
                     </span>
                     <span
-                        className={`hidden xl:inline px-1.5 py-0.5 border-2 text-[9px] font-black uppercase ${
-                            planTier === 'pro'
+                        className={`hidden xl:inline px-1.5 py-0.5 border-2 text-[9px] font-black uppercase ${planTier === 'pro'
                                 ? 'bg-[#1F4BFF] text-white border-white/40'
                                 : 'bg-white/10 text-white border-white/20'
-                        }`}
+                            }`}
                     >
                         {planTier.toUpperCase()}
                     </span>
@@ -418,22 +484,21 @@ const Navbar = () => {
                                 </div>
                             </div>
 
-                            {/* Mobile quick nav: COMPONENTS / MCP / TEMPLATES / PRICING */}
+                            {/* Mobile quick nav */}
                             <div className="flex items-stretch justify-between pb-2.5">
                                 {[
                                     { to: '/library', label: 'COMPONENTS', active: isLibrary },
-                                    { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
                                     { to: '/templates', label: 'TEMPLATES', active: isTemplates },
+                                    { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
                                     { to: '/pricing', label: 'PRICING', active: isPricing },
                                 ].map(({ to, label, active }) => (
                                     <Link
                                         key={to + label}
                                         to={to}
-                                        className={`flex-1 text-center py-1.5 mx-0.5 text-[10px] font-black uppercase tracking-wider border-2 transition-all ${
-                                            active
+                                        className={`flex-1 text-center py-1.5 mx-0.5 text-[10px] font-black uppercase tracking-wider border-2 transition-all ${active
                                                 ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
                                                 : 'text-white/80 border-transparent hover:border-white/20 hover:bg-white/10 hover:text-white'
-                                        }`}
+                                            }`}
                                     >
                                         {label}
                                     </Link>
@@ -483,11 +548,10 @@ const Navbar = () => {
                                             key={'m-' + to + label}
                                             to={to}
                                             onClick={() => setIsOpen(false)}
-                                            className={`py-2.5 px-3 border-2 text-xs font-black uppercase tracking-wider transition-all ${
-                                                active
+                                            className={`py-2.5 px-3 border-2 text-xs font-black uppercase tracking-wider transition-all ${active
                                                     ? 'bg-[#1F4BFF] text-white border-[#1F4BFF]'
                                                     : 'bg-white/5 text-white border-white/15 hover:border-[#FFC700]'
-                                            }`}
+                                                }`}
                                         >
                                             {label}
                                         </Link>
@@ -511,6 +575,27 @@ const Navbar = () => {
                                             )}
                                         </Link>
                                     )}
+                                </div>
+
+                                {/* Mobile Libraries — mirrors the 3 desktop dropdown rows (Components is in navLinks) */}
+                                <div className="flex flex-col gap-2">
+                                    <Link
+                                        to="/templates"
+                                        onClick={() => setIsOpen(false)}
+                                        className="py-2.5 px-3 border-2 border-white/15 bg-white/5 text-xs font-black uppercase tracking-wider text-neutral-200 flex items-center gap-2"
+                                    >
+                                        <LayoutTemplate size={14} className="shrink-0 text-[#91a8ff]" />
+                                        <span className="truncate">Templates</span>
+                                    </Link>
+
+                                    <Link
+                                        to={SECTIONS_ANCHOR}
+                                        onClick={() => setIsOpen(false)}
+                                        className="py-2.5 px-3 border-2 border-white/15 bg-white/5 text-xs font-black uppercase tracking-wider text-neutral-200 flex items-center gap-2"
+                                    >
+                                        <PanelsTopLeft size={14} className="shrink-0 text-[#91a8ff]" />
+                                        <span className="truncate">Build with UI HUB</span>
+                                    </Link>
                                 </div>
 
                                 {/* Bottom Auth Action */}

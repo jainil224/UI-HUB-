@@ -9,6 +9,7 @@ import { GET_STARTED_PAGES } from './sections/GetStarted/getStartedData';
 import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
+import { isNewComponent } from '../../utils/componentUtils';
 
 interface Category {
     name: string;
@@ -28,17 +29,6 @@ const CATEGORY_META: Record<string, { icon: string; color: string; bg: string; b
     "Loaders": { icon: "⏳", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Navbars": { icon: "➤", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
     "Footers": { icon: "⌂", color: "text-brand-blue", bg: "bg-brand-surface", border: "border-brand-blue" },
-};
-
-/** Components added recently show an auto-expiring "NEW" badge.
- *  Default lifetime: 4 months — overridable per item via newBadgeDays. */
-const NEW_BADGE_DEFAULT_DAYS = 120;
-export const isNewComponent = (item: { addedAt?: string; newBadgeDays?: number }): boolean => {
-    if (!item.addedAt) return false;
-    const added = new Date(item.addedAt).getTime();
-    if (Number.isNaN(added)) return false;
-    const durationMs = (item.newBadgeDays ?? NEW_BADGE_DEFAULT_DAYS) * 24 * 60 * 60 * 1000;
-    return Date.now() - added < durationMs;
 };
 
 const LibraryPage = () => {
@@ -367,7 +357,7 @@ const LibraryPage = () => {
                                                     <span className="truncate flex items-center gap-1.5">
                                                         {item.title}
                                                         {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
-                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" title="Premium — buy this component ($1.99) or upgrade to Pro" />
+                                                            <span className="inline-flex shrink-0" title="Premium — buy this component ($1.99) or upgrade to Pro"><Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" /></span>
                                                         )}
                                                     </span>
                                                     <span className="text-[9px] text-neutral-500 uppercase shrink-0">{item.category}</span>
@@ -454,7 +444,7 @@ const LibraryPage = () => {
                                                                     <span className="truncate pr-2 flex items-center gap-1.5">
                                                                         {item.title}
                                                                         {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
-                                                                            <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" title="Premium — buy this component ($1.99) or upgrade to Pro" />
+                                                                            <span className="inline-flex shrink-0" title="Premium — buy this component ($1.99) or upgrade to Pro"><Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" /></span>
                                                                         )}
                                                                         {isNewComponent(item) && (
                                                                             <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">
@@ -578,7 +568,7 @@ const LibraryPage = () => {
                                                                 <span className="truncate pr-2 flex items-center gap-1.5">
                                                                     {item.title}
                                                                     {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
-                                                                        <Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" title="Premium — buy this component ($1.99) or upgrade to Pro" />
+                                                                        <span className="inline-flex shrink-0" title="Premium — buy this component ($1.99) or upgrade to Pro"><Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" /></span>
                                                                     )}
                                                                     {isNewComponent(item) && (
                                                                         <span className="px-1 py-px bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black shadow-[1px_1px_0px_0px_#000000] shrink-0">

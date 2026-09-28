@@ -113,6 +113,7 @@ const ParticleLoader = React.lazy(() => import('../components/ui/ParticleLoader'
 const NeonBorder = React.lazy(() => import('../components/ui/NeonBorder'));
 const QuantumLattice = React.lazy(() => import('../components/ui/QuantumLattice'));
 const MatrixRain = React.lazy(() => import('../components/ui/MatrixRain'));
+const OriginkitHero24 = React.lazy(() => import('../components/templates/OriginkitHero24'));
 
 
 
@@ -2716,6 +2717,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
     '3d-hero': ToonhubHero,
+    'originkit-hero-24': OriginkitHero24,
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
     'infinite-marquee': InfiniteMarquee,
@@ -15220,6 +15222,19 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
                 <QuantumLattice />
             </div>
         ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Hirefy Glass Globe ──────────────────────────────────────
+    {
+        id: "originkit-hero-24",
+        title: "Hirefy Glass Globe",
+        category: "3d",
+        addedAt: "2026-09-28",
+        newBadgeDays: 120,
+        description: "Originkit's Hirefy hero: a real-time WebGL dot globe. A Three.js sphere carries a d3-geo equirectangular land fill, a coastline outline and a graticule, with instanced surface dots and city markers that turn under drag. Presented as a glass-card product hero with a phone mockup, hand cutout and a staged reveal.",
+        preview: renderComponent("originkit-hero-24", "OriginkitHero24"),
         code: "",
         vibePrompt: "",
     },

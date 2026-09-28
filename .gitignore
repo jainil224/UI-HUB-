@@ -53,6 +53,9 @@ firebase.json
 .agents/
 component-specs/
 
+# Originkit CLI credentials (local only — never pushed to GitHub)
+.originkit/
+
 
 # OS generated files
 .DS_Store

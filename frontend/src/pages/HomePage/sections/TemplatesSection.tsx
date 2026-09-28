@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { 
-    ExternalLink, 
-    Copy, 
-    Check, 
-    Sparkles, 
-    Code, 
-    Layers, 
-    Globe, 
-    Github, 
+import {
+    ExternalLink,
+    Copy,
+    Check,
+    Sparkles,
+    Code,
+    Layers,
+    Globe,
+    Github,
     Laptop,
     ArrowRight,
     X,
     Bot,
     Rocket
 } from 'lucide-react';
+import { Crown, Eye } from 'lucide-react';
 import { SiClaude, SiCursor } from 'react-icons/si';
-import { 
-    websiteTemplates, 
-    templateCategories, 
-    TemplateCategory, 
-    TemplateItem 
+import {
+    websiteTemplates,
+    TemplateItem
 } from '../../../data/templatesData';
 import TarsHeroArena from '../../../components/templates/TarsHeroArena';
 import SplitFuzzyOrbHero from '../../../components/templates/SplitFuzzyOrbHero';
@@ -47,24 +46,14 @@ import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
-    const [selectedCategory, setSelectedCategory] = useState<TemplateCategory>('All');
     const [activeTemplate, setActiveTemplate] = useState<TemplateItem | null>(null);
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState('');
 
-    const categoryMatches = websiteTemplates.filter(t => t.category === selectedCategory);
-    const filteredTemplates = (selectedCategory === 'All' || categoryMatches.length === 0)
-        ? websiteTemplates
-        : categoryMatches;
-
-    const isAllView = selectedCategory === 'All';
-    const renderSections = isAllView
-        ? templateCategories
-            .filter(c => c !== 'All')
-            .map(cat => ({ category: cat, items: websiteTemplates.filter(t => t.category === cat) }))
-            .filter(s => s.items.length > 0)
-        : [{ category: selectedCategory, items: filteredTemplates }];
+    const renderSections = [
+        { category: 'Templates', hint: 'Complete pages to customize', items: websiteTemplates.filter((template) => template.id !== 'originkit-hero-24') },
+    ];
 
     const handleCopyPrompt = (template: TemplateItem, e?: React.MouseEvent) => {
         if (e) e.stopPropagation();
@@ -83,7 +72,7 @@ const TemplatesSection = () => {
     };
 
     return (
-        <section id="templates" className="relative py-16 sm:py-24 lg:py-32 px-3 sm:px-6 lg:px-8 bg-[#0A0A0A] border-t-4 border-black overflow-hidden">
+        <section id="templates" className="relative min-h-screen py-5 sm:py-6 px-3 sm:px-5 lg:px-6 bg-[#0A0A0A] overflow-hidden">
             {/* Graph-square grid backdrop — matches Hero & Footer */}
             <div
                 className="absolute inset-0 pointer-events-none"
@@ -100,57 +89,9 @@ const TemplatesSection = () => {
             <div className="absolute top-0 left-1/4 w-72 h-72 bg-[#1F4BFF]/8 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-[#FFC700]/6 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="relative max-w-7xl mx-auto">
-                {/* ── Section Header ── */}
-                <div className="flex flex-col items-center text-center mb-10 sm:mb-14">
-                    {/* Live indicator */}
-                    <div className="flex items-center gap-2 mb-5">
-                        <span className="w-2 h-2 rounded-full bg-[#E52520] animate-pulse" />
-                        <span className="text-[10px] sm:text-[11px] font-mono font-black uppercase tracking-[0.25em] text-neutral-400">
-                            Production-Ready Templates
-                        </span>
-                        <Sparkles size={12} className="text-[#FFC700]" />
-                    </div>
+            <div className="relative mx-auto max-w-[1600px]">
 
-                    <h2 className="text-3xl sm:text-5xl md:text-7xl font-black tracking-tight text-white leading-tight">
-                        Curated Website{' '}
-                        <span className="inline-flex items-center justify-center w-[0.8em] h-[0.8em] rounded-[22%] bg-[#1F4BFF] border-2 md:border-4 border-black shadow-[0.05em_0.07em_0px_#000000] align-middle mr-2 relative -top-[0.06em]">
-                            <Layers className="w-[0.5em] h-[0.5em] text-white" strokeWidth={2.5} />
-                        </span>
-                        <span className="text-[#1F4BFF]">Templates.</span>
-                    </h2>
-
-                    <p className="mt-4 text-neutral-400 font-medium text-sm sm:text-base max-w-xl leading-relaxed">
-                        Full landing pages ready to deploy or paste into any AI tool.
-                        Built with React, Next.js &amp; Tailwind CSS.
-                    </p>
-
-                    {/* ── Filter Categories ──
-                         Mobile: horizontal snap rail (no stacking).
-                         Desktop: centered wrapping row. */}
-                    <div className="w-full max-w-3xl mt-7 sm:mt-9">
-                        <div className="flex items-center gap-2 overflow-x-auto pb-2 snap-x snap-mandatory [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:flex-wrap sm:justify-center sm:overflow-visible sm:pb-0 sm:snap-none">
-                            {templateCategories.map((category) => {
-                                const isActive = selectedCategory === category;
-                                return (
-                                    <button
-                                        key={category}
-                                        onClick={() => setSelectedCategory(category)}
-                                        className={`shrink-0 snap-center px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-black uppercase tracking-wider border-2 transition-all duration-150 cursor-pointer ${
-                                            isActive
-                                                ? 'bg-[#1F4BFF] text-white border-black shadow-[3px_3px_0px_0px_#FFFFFF] -translate-y-0.5'
-                                                : 'bg-transparent text-neutral-400 border-black hover:border-[#FFC700] hover:text-[#FFC700]'
-                                        }`}
-                                    >
-                                        {category}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
-
-                {/* ── Templates Grid (grouped by category in the All view) ── */}
+                {/* ── Complete template catalog ── */}
                 <div>
                     <AnimatePresence mode="wait">
                         {renderSections.map((section, si) => (
@@ -160,21 +101,15 @@ const TemplatesSection = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -8 }}
                                 transition={{ duration: 0.25, delay: Math.min(si * 0.04, 0.2) }}
-                                className={si > 0 ? 'mt-14 sm:mt-20' : ''}
+                                className={si > 0 ? 'mt-8 sm:mt-10' : ''}
                             >
-                                {isAllView && (
-                                    <div className="flex items-center gap-3 mb-4 sm:mb-6">
-                                        <span className="h-4 w-1 bg-[#1F4BFF] border border-black" />
-                                        <h3 className="font-mono font-black uppercase tracking-[0.18em] text-xs sm:text-sm lg:text-base text-white">
-                                            {section.category}
-                                        </h3>
-                                        <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-neutral-500 border border-neutral-800 px-1.5 py-0.5">
-                                            {section.items.length}
-                                        </span>
-                                    </div>
-                                )}
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+                                <div className="mb-3 flex flex-wrap items-center gap-2.5">
+                                    <span className="h-4 w-1 rounded-full bg-[#1F4BFF]" />
+                                    <h2 className="text-sm font-semibold text-neutral-200">{section.category}</h2>
+                                    <span className="text-xs text-neutral-500">{section.items.length}</span>
+                                    {section.hint && <span className="text-xs text-neutral-600">— {section.hint}</span>}
+                                </div>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
                                     {section.items.map((template, idx) => (
                                         <motion.div
                                             key={template.id}
@@ -182,156 +117,120 @@ const TemplatesSection = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0 }}
                                             transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.2) }}
-                                onClick={() => handleOpenTemplate(template.id)}
-                                className="group relative flex flex-col rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] overflow-hidden select-none hover:border-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000] transition-all duration-200 cursor-pointer will-change-transform"
-                            >
-                                {/* ── Preview Window ── */}
-                                <div
-                                    onClick={() => navigate(`/templates/${template.id}`)}
-                                    className="relative h-48 sm:h-56 lg:h-64 w-full overflow-hidden cursor-pointer"
-                                >
-                                    {/* ── Preview renderer ──
+                                            onClick={() => handleOpenTemplate(template.id)}
+                                            className="group relative flex flex-col rounded-xl border border-[#292a2d] bg-[#1b1c1f] overflow-hidden select-none transition-all duration-200 cursor-pointer hover:border-[#55575d] hover:bg-[#242529] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+                                        >
+                                            {/* ── Preview Window ── */}
+                                            <div
+                                                onClick={() => navigate(`/templates/${template.id}`)}
+                                                className="relative aspect-[16/9] w-full overflow-hidden cursor-pointer bg-[#101114]"
+                                            >
+                                                {/* ── Preview renderer ──
                                          Priority 1: static image (instant, zero CPU)
                                          Priority 2: live React component (virtualized)
                                          Priority 3: gradient fallback */}
-                                    {template.previewVideo ? (
-                                        <video
-                                            src={template.previewVideo}
-                                            poster={template.previewImage}
-                                            autoPlay
-                                            muted
-                                            loop
-                                            playsInline
-                                            preload="metadata"
-                                            className="w-full h-full object-cover object-top select-none"
-                                        />
-                                    ) : template.previewImage ? (
-                                        <img
-                                            src={template.previewImage}
-                                            alt={`${template.title} preview`}
-                                            className="w-full h-full object-cover object-top select-none"
-                                            loading="lazy"
-                                            decoding="async"
-                                        />
-                                    ) : template.id === '2586-labs' ? (
-                                        <LazyTemplatePreview bgColor="#F8F3E5"><Labs2586 /></LazyTemplatePreview>
-                                    ) : template.id === 'mood-hero' ? (
-                                        <LazyTemplatePreview bgColor="#EDE8DE"><MoodHero /></LazyTemplatePreview>
-                                    ) : template.id === 'portfolio-closing' ? (
-                                        <LazyTemplatePreview bgColor="#0B1014"><PortfolioClosing /></LazyTemplatePreview>
-                                    ) : template.id === 'tars-protocol' ? (
-                                        <LazyTemplatePreview bgColor="#ffffff"><TarsHeroArena /></LazyTemplatePreview>
-                                    ) : template.id === 'split-fuzzy-orb' ? (
-                                        <LazyTemplatePreview bgColor="#d6c0e3"><SplitFuzzyOrbHero /></LazyTemplatePreview>
-                                    ) : template.id === 'segmint-2026' ? (
-                                        <LazyTemplatePreview bgColor="#0755CE"><SegmintFooter /></LazyTemplatePreview>
-                                    ) : template.id === 'haos-tech-solutions' ? (
-                                        <LazyTemplatePreview bgColor="#020202"><HaosShowcase /></LazyTemplatePreview>
-                                    ) : template.id === 'mentality' ? (
-                                        <LazyTemplatePreview bgColor="#F0F0F0"><MentalityHero /></LazyTemplatePreview>
-                                    ) : template.id === 'interior-design' ? (
-                                        <LazyTemplatePreview bgColor="#ffffff"><InteriorDesignShowcase /></LazyTemplatePreview>
-                                    ) : template.id === 'lumos' ? (
-                                        <LazyTemplatePreview bgColor="#F1F1F0"><LumosHero /></LazyTemplatePreview>
-                                    ) : template.id === 'loveapp-hero' ? (
-                                        <LazyTemplatePreview bgColor="#D8D2F8"><LoveAppHero /></LazyTemplatePreview>
-                                    ) : template.id === 'heyo-agency-cta' ? (
-                                        <LazyTemplatePreview bgColor="#F5F5F2"><HeyoAgencyCta /></LazyTemplatePreview>
-                                    ) : template.id === 'me-019-au-cabaret' ? (
-                                        <LazyTemplatePreview bgColor="#EDEDED"><AuCabaretPoster /></LazyTemplatePreview>
-                                    ) : template.id === 'dont-be-greedy' ? (
-                                        <LazyTemplatePreview bgColor="#050505"><DontBeGreedyFooter /></LazyTemplatePreview>
-                                    ) : template.id === 'paipai-kuaishou' ? (
-                                        <LazyTemplatePreview bgColor="#59D1EA"><PaipaiKuaishou /></LazyTemplatePreview>
-                                    ) : template.id === 'logo-here' ? (
-                                        <LazyTemplatePreview bgColor="#ffffff"><LogoHere /></LazyTemplatePreview>
-                                    ) : template.id === 'sui-overflow' ? (
-                                        <LazyTemplatePreview bgColor="#F2EFE6"><SuiOverflow /></LazyTemplatePreview>
-                                    ) : template.id === 'graphic-designer-portfolio' ? (
-                                        <LazyTemplatePreview bgColor="#F7F6F2"><GraphicDesignerPortfolio /></LazyTemplatePreview>
-                                    ) : template.liveDemoUrl ? (
-                                        <iframe
-                                            src={template.liveDemoUrl}
-                                            title={template.title}
-                                            className="w-full h-full border-0 select-none"
-                                            sandbox="allow-scripts allow-same-origin"
-                                            loading="lazy"
-                                        />
-                                    ) : (
-                                        <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden`}>
-                                            <span className="text-xl font-black text-white">{template.title}</span>
-                                        </div>
-                                    )}
+                                                {template.previewVideo ? (
+                                                    <video
+                                                        src={template.previewVideo}
+                                                        poster={template.previewImage}
+                                                        autoPlay
+                                                        muted
+                                                        loop
+                                                        playsInline
+                                                        preload="metadata"
+                                                        className="w-full h-full object-cover object-top select-none transition-transform duration-300 group-hover:scale-[1.025]"
+                                                    />
+                                                ) : template.previewImage ? (
+                                                    <img
+                                                        src={template.previewImage}
+                                                        alt={`${template.title} preview`}
+                                                        className="w-full h-full object-cover object-top select-none transition-transform duration-300 group-hover:scale-[1.025]"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                ) : template.id === '2586-labs' ? (
+                                                    <LazyTemplatePreview bgColor="#F8F3E5"><Labs2586 /></LazyTemplatePreview>
+                                                ) : template.id === 'mood-hero' ? (
+                                                    <LazyTemplatePreview bgColor="#EDE8DE"><MoodHero /></LazyTemplatePreview>
+                                                ) : template.id === 'portfolio-closing' ? (
+                                                    <LazyTemplatePreview bgColor="#0B1014"><PortfolioClosing /></LazyTemplatePreview>
+                                                ) : template.id === 'tars-protocol' ? (
+                                                    <LazyTemplatePreview bgColor="#ffffff"><TarsHeroArena /></LazyTemplatePreview>
+                                                ) : template.id === 'split-fuzzy-orb' ? (
+                                                    <LazyTemplatePreview bgColor="#d6c0e3"><SplitFuzzyOrbHero /></LazyTemplatePreview>
+                                                ) : template.id === 'segmint-2026' ? (
+                                                    <LazyTemplatePreview bgColor="#0755CE"><SegmintFooter /></LazyTemplatePreview>
+                                                ) : template.id === 'haos-tech-solutions' ? (
+                                                    <LazyTemplatePreview bgColor="#020202"><HaosShowcase /></LazyTemplatePreview>
+                                                ) : template.id === 'mentality' ? (
+                                                    <LazyTemplatePreview bgColor="#F0F0F0"><MentalityHero /></LazyTemplatePreview>
+                                                ) : template.id === 'interior-design' ? (
+                                                    <LazyTemplatePreview bgColor="#ffffff"><InteriorDesignShowcase /></LazyTemplatePreview>
+                                                ) : template.id === 'lumos' ? (
+                                                    <LazyTemplatePreview bgColor="#F1F1F0"><LumosHero /></LazyTemplatePreview>
+                                                ) : template.id === 'loveapp-hero' ? (
+                                                    <LazyTemplatePreview bgColor="#D8D2F8"><LoveAppHero /></LazyTemplatePreview>
+                                                ) : template.id === 'heyo-agency-cta' ? (
+                                                    <LazyTemplatePreview bgColor="#F5F5F2"><HeyoAgencyCta /></LazyTemplatePreview>
+                                                ) : template.id === 'me-019-au-cabaret' ? (
+                                                    <LazyTemplatePreview bgColor="#EDEDED"><AuCabaretPoster /></LazyTemplatePreview>
+                                                ) : template.id === 'dont-be-greedy' ? (
+                                                    <LazyTemplatePreview bgColor="#050505"><DontBeGreedyFooter /></LazyTemplatePreview>
+                                                ) : template.id === 'paipai-kuaishou' ? (
+                                                    <LazyTemplatePreview bgColor="#59D1EA"><PaipaiKuaishou /></LazyTemplatePreview>
+                                                ) : template.id === 'logo-here' ? (
+                                                    <LazyTemplatePreview bgColor="#ffffff"><LogoHere /></LazyTemplatePreview>
+                                                ) : template.id === 'sui-overflow' ? (
+                                                    <LazyTemplatePreview bgColor="#F2EFE6"><SuiOverflow /></LazyTemplatePreview>
+                                                ) : template.id === 'graphic-designer-portfolio' ? (
+                                                    <LazyTemplatePreview bgColor="#F7F6F2"><GraphicDesignerPortfolio /></LazyTemplatePreview>
+                                                ) : template.liveDemoUrl ? (
+                                                    <iframe
+                                                        src={template.liveDemoUrl}
+                                                        title={template.title}
+                                                        className="w-full h-full border-0 select-none"
+                                                        sandbox="allow-scripts allow-same-origin"
+                                                        loading="lazy"
+                                                    />
+                                                ) : (
+                                                    <div className={`relative h-full w-full bg-gradient-to-br ${template.previewGradient} p-5 flex flex-col justify-between overflow-hidden`}>
+                                                        <span className="text-xl font-black text-white">{template.title}</span>
+                                                    </div>
+                                                )}
 
-                                    {/* Floating category chip — top-left (matches ComponentGrid label) */}
-                                    <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1.5">
-                                        <span className="px-2.5 py-1 rounded-md bg-black/75 backdrop-blur-sm border border-white/15 text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-widest text-white inline-flex items-center gap-1.5">
-                                            <span
-                                                className="w-1.5 h-1.5 rounded-full"
-                                                style={{ background: template.accentColor }}
-                                            />
-                                            {template.category}
-                                        </span>
-                                        {template.isPro && (
-                                            <span className="px-1.5 py-0.5 bg-[#1F4BFF] text-white text-[8px] font-black uppercase leading-none rounded-sm border border-black/50 shadow-[1px_1px_0px_0px_#000000]">
-                                                PRO
-                                            </span>
-                                        )}
-                                        {template.badge && (
-                                            <span className="px-1.5 py-0.5 bg-[#FFC700] text-black text-[8px] font-black uppercase leading-none rounded-sm border border-black/50 shadow-[1px_1px_0px_0px_#000000]">
-                                                {template.badge}
-                                            </span>
-                                        )}
-                                    </div>
+                                                {template.isPro && (
+                                                    <span className="absolute right-2.5 top-2.5 z-20 grid h-8 w-8 place-items-center rounded-lg border border-black/40 bg-[#d6a900] text-[#fff2b2] shadow-md" aria-label="Pro template">
+                                                        <Crown size={15} />
+                                                    </span>
+                                                )}
 
-                                    {/* Arrow icon top-right — appears on hover (matches ComponentGrid) */}
-                                    <div className="absolute top-2.5 right-2.5 z-20 w-6 h-6 rounded-md border border-white/15 bg-black/75 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                        <ArrowRight size={11} className="text-white" />
-                                    </div>
+                                                {/* Arrow icon top-right — appears on hover (matches ComponentGrid) */}
+                                                <div className="absolute top-2.5 right-2.5 z-20 w-6 h-6 rounded-md border border-white/15 bg-black/75 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                                    <ArrowRight size={11} className="text-white" />
+                                                </div>
 
-                                    {/* Bottom readability gradient (matches ComponentGrid) */}
-                                    <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/70 to-transparent pointer-events-none z-10" />
+                                                {/* Bottom readability gradient (matches ComponentGrid) */}
+                                                <div className="absolute inset-x-0 bottom-0 h-12 bg-gradient-to-t from-black/70 to-transparent pointer-events-none z-10" />
 
-                                    {/* Hover overlay with CTA (hover-capable devices only — tap opens the card directly) */}
-                                    <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20
-                                        opacity-0 group-hover:opacity-100
-                                        [@media(hover:none)]:hidden
-                                        transition-opacity duration-200">
-                                        <button
-                                            onClick={(e) => handleOpenTemplate(template.id, e)}
-                                            className="px-3.5 py-2 bg-white text-black font-black text-[11px] uppercase tracking-widest border-2 border-black shadow-[3px_3px_0px_0px_#000] hover:bg-[#FFC700] transition-colors flex items-center gap-1.5 cursor-pointer"
-                                        >
-                                            <Laptop size={12} />
-                                            <span>Open Preview</span>
-                                        </button>
-                                    </div>
-                                </div>
+                                            </div>
 
-                                {/* ── Card Footer ── */}
-                                <div className="px-4 py-3 sm:px-5 sm:py-4 border-t border-neutral-800">
-                                    <div className="flex items-center justify-between gap-3">
-                                        <div className="min-w-0">
-                                            <h3
-                                                className="font-black text-sm sm:text-base text-white group-hover:text-[#1F4BFF] transition-colors truncate leading-tight"
-                                            >
-                                                {template.title}
-                                            </h3>
-                                            <p className="text-[11px] text-neutral-500 font-mono mt-0.5 truncate">
-                                                {template.framework} · {template.styling}
-                                            </p>
-                                        </div>
-                                        <span
-                                            className={`shrink-0 px-2 py-0.5 text-[9px] font-black uppercase tracking-wider border shadow-[2px_2px_0px_0px_#000] ${
-                                                template.isPro
-                                                    ? 'bg-[#1F4BFF] text-white border-black'
-                                                    : 'bg-[#00E599] text-black border-black'
-                                            }`}
-                                        >
-                                            {template.isPro ? 'PRO' : 'FREE'}
-                                        </span>
-                                    </div>
-                                </div>
-                            </motion.div>
+                                            {/* ── Card Footer ── */}
+                                            <div className="flex min-h-11 items-center justify-between gap-3 px-2.5 sm:px-3">
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <div className="min-w-0">
+                                                        <h3
+                                                            className="font-medium text-sm text-neutral-200 group-hover:text-white transition-colors truncate leading-tight"
+                                                        >
+                                                            {template.title}
+                                                        </h3>
+                                                    </div>
+                                                </div>
+                                                <span className="inline-flex shrink-0 items-center gap-1.5 text-sm text-neutral-300">
+                                                    <Eye size={14} className="text-neutral-400" />
+                                                    {template.stats.downloads}
+                                                </span>
+                                            </div>
+                                        </motion.div>
                                     ))}
                                 </div>
                             </motion.div>
@@ -345,7 +244,7 @@ const TemplatesSection = () => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.5, ease: 'easeOut' }}
-                    className="relative mt-12 sm:mt-16 p-6 sm:p-10 rounded-xl border-3 border-black bg-[#0B0B0D] overflow-hidden shadow-[8px_8px_0px_0px_#000000] hover:-translate-y-1 hover:shadow-[5px_5px_0px_0px_#000000] transition-all duration-200"
+                    className="hidden"
                 >
                     {/* Graph-square grid backdrop — matches section/Hero/Footer */}
                     <div
