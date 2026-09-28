@@ -363,6 +363,7 @@ const templateFileMap = {
   'paipai-kuaishou': ['templates', 'PaipaiKuaishou.tsx'],
   'logo-here': ['templates', 'LogoHere.tsx'],
   'sui-overflow': ['templates', 'SuiOverflow.tsx'],
+  'originkit-hero-24': ['templates', 'OriginkitHero24.tsx'],
 };
 const templateSource = {};
 for (const id of new Set(templateIds)) {
