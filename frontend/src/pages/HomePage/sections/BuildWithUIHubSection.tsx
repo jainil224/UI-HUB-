@@ -2,19 +2,18 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Crown } from 'lucide-react';
-import { componentList } from '../../../data/componentData';
-import OriginkitHero24 from '../../../components/templates/OriginkitHero24';
-import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
 import { isNewComponent } from '../../../utils/componentUtils';
 
-/**
- * Live React preview for every component allowed in this section.
- * Membership is driven by this map, so a component only appears once it can
- * actually be rendered here — add an entry to surface a new one.
- */
-const SECTION_PREVIEWS: Record<string, () => React.ReactNode> = {
-    'originkit-hero-24': () => <OriginkitHero24 />,
-};
+const SECTION_COMPONENTS = [
+    {
+        id: 'originkit-hero-24',
+        title: 'Hirefy Glass Globe',
+        previewVideo: '/assets/template-previews/11-preview.mp4',
+        isPremium: false,
+        addedAt: '2026-09-28',
+        newBadgeDays: 120,
+    },
+];
 
 const SECTION_TITLE = 'Build with UI HUB';
 const SECTION_HINT = 'Section-level layouts';
@@ -22,7 +21,7 @@ const SECTION_HINT = 'Section-level layouts';
 const BuildWithUIHubSection = () => {
     const navigate = useNavigate();
 
-    const components = componentList.filter((component) => component.id in SECTION_PREVIEWS);
+    const components = SECTION_COMPONENTS;
 
     return (
         <section id="build-with-ui-hub" className="relative min-h-screen py-5 sm:py-6 px-3 sm:px-5 lg:px-6 bg-[#0A0A0A] overflow-hidden">
@@ -42,7 +41,7 @@ const BuildWithUIHubSection = () => {
             <div className="absolute top-0 left-1/4 w-72 h-72 bg-[#1F4BFF]/8 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-[#FFC700]/6 rounded-full blur-3xl pointer-events-none" />
 
-            <div className="relative mx-auto max-w-[1600px]">
+            <div className="relative mx-auto w-full max-w-[1440px]">
                 <div className="mb-4 flex flex-wrap items-center gap-2.5">
                     <span className="h-4 w-1 rounded-full bg-[#1F4BFF]" />
                     <h2 className="text-sm font-semibold text-neutral-200">{SECTION_TITLE}</h2>
@@ -50,7 +49,7 @@ const BuildWithUIHubSection = () => {
                     <span className="text-xs text-neutral-600">— {SECTION_HINT}</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:gap-4 lg:grid-cols-3">
                     {components.map((component, idx) => (
                         <motion.div
                             key={component.id}
@@ -60,13 +59,20 @@ const BuildWithUIHubSection = () => {
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.2) }}
                             onClick={() => navigate(`/library?id=${component.id}`)}
-                            className="group relative flex flex-col rounded-xl border border-[#292a2d] bg-[#1b1c1f] overflow-hidden select-none transition-all duration-200 cursor-pointer hover:border-[#55575d] hover:bg-[#242529] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
+                            className="group relative flex w-full min-w-0 flex-col overflow-hidden rounded-xl border border-[#292a2d] bg-[#1b1c1f] select-none transition-all duration-200 cursor-pointer hover:border-[#55575d] hover:bg-[#242529] hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.35)]"
                         >
                             {/* ── Preview Window ── */}
                             <div className="relative aspect-[16/9] w-full overflow-hidden cursor-pointer bg-[#101216]">
-                                <LazyTemplatePreview bgColor="#101216">
-                                    {SECTION_PREVIEWS[component.id]()}
-                                </LazyTemplatePreview>
+                                <video
+                                    src={component.previewVideo}
+                                    autoPlay
+                                    muted
+                                    loop
+                                    playsInline
+                                    preload="metadata"
+                                    aria-label={`${component.title} preview`}
+                                    className="h-full w-full select-none object-cover object-top transition-transform duration-300 group-hover:scale-[1.025]"
+                                />
 
                                 {component.isPremium && (
                                     <span className="absolute right-2.5 top-2.5 z-20 grid h-8 w-8 place-items-center rounded-lg border border-black/40 bg-[#d6a900] text-[#fff2b2] shadow-md" aria-label="Premium component">

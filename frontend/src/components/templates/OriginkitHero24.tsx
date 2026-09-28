@@ -293,7 +293,13 @@ function Globe({
         camera.position.set(0, 0, cameraDistance);
         camera.lookAt(0, 0, 0);
 
-        const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        let renderer: WebGLRenderer;
+        try {
+            renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        } catch {
+            if (!cancelled) setError("WebGL is unavailable in this browser");
+            return;
+        }
         renderer.setSize(containerWidth, containerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.outputColorSpace = "srgb";
@@ -997,34 +1003,50 @@ function Globe({
         return (
             <div style={containerStyle}>
                 <div
+                    role="img"
+                    aria-label="Static globe preview. Interactive rendering is unavailable in this browser."
                     style={{
                         position: "relative",
-                        width: "100%",
-                        height: "100%",
-                        minWidth: 0,
-                        minHeight: 0,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#ffffff",
-                        textAlign: "center",
-                        padding: "16px",
-                        fontFamily:
-                            "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                        width: "min(72vw, 360px)",
+                        aspectRatio: "1",
+                        overflow: "hidden",
+                        border: "1px solid rgba(34, 211, 238, 0.34)",
+                        borderRadius: "50%",
+                        backgroundColor: "#101216",
+                        backgroundImage: [
+                            "radial-gradient(circle at 35% 30%, rgba(34,211,238,0.34) 0, rgba(34,211,238,0.08) 34%, transparent 66%)",
+                            "radial-gradient(circle, rgba(112,231,255,0.72) 1px, transparent 1.7px)",
+                            "repeating-linear-gradient(90deg, transparent 0 27px, rgba(34,211,238,0.12) 28px 29px, transparent 30px 56px)",
+                            "repeating-linear-gradient(0deg, transparent 0 27px, rgba(34,211,238,0.12) 28px 29px, transparent 30px 56px)",
+                            "radial-gradient(circle at 50% 50%, #16313b 0%, #101216 68%)",
+                        ].join(", "),
+                        backgroundSize: "auto, 10px 10px, auto, auto, auto",
+                        boxShadow: "inset -24px -10px 52px rgba(0,0,0,0.78), 0 0 50px rgba(0,161,219,0.18)",
                     }}
                 >
-                    <div style={{ fontSize: "16px", fontWeight: 600 }}>
-                        Error loading Earth visualization
-                    </div>
-                    <div style={{ fontSize: "13px", opacity: 0.7, marginTop: "4px" }}>
-                        {error}
-                    </div>
+                    <span
+                        aria-hidden="true"
+                        style={{
+                            position: "absolute",
+                            inset: "12% 25%",
+                            border: "1px solid rgba(103,232,249,0.24)",
+                            borderRadius: "50%",
+                        }}
+                    />
+                    <span
+                        aria-hidden="true"
+                        style={{
+                            position: "absolute",
+                            inset: "0 34%",
+                            borderRight: "1px solid rgba(103,232,249,0.2)",
+                            borderLeft: "1px solid rgba(103,232,249,0.2)",
+                            borderRadius: "50%",
+                        }}
+                    />
                 </div>
             </div>
         );
     }
-
     return <div ref={containerRef} style={containerStyle} />;
 }
 

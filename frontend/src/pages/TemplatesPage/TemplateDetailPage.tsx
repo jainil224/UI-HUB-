@@ -1,25 +1,26 @@
-import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import {
     Copy,
     Check,
     ChevronDown,
-    RotateCcw,
-    ArrowLeft,
     ChevronRight,
+    RotateCcw,
     Code2,
     Eye,
     ExternalLink,
-    FileCode2,
-    FileImage,
-    FolderOpen,
     Maximize2,
     Minimize2,
     Terminal
 } from 'lucide-react';
 import { websiteTemplates, TemplateItem } from '../../data/templatesData';
-import { TEMPLATE_SOURCE_CODE } from '../../data/templateSourceCode';
 import { buildTemplatePrompt } from '../../utils/templatePromptUtils';
+import {
+    TEMPLATE_PREVIEWS,
+    TEMPLATE_PREVIEW_BGS,
+} from '../../components/templates/registry';
+import TemplateCodeViewer from '../../components/templates/TemplateCodeViewer';
+import TemplateSimilarRail from '../../components/templates/TemplateSimilarRail';
 import Toast from '../../components/ui/Toast';
 
 type AISystem = 'advance' | 'antigravity' | 'claude' | 'cursor' | 'lovable';
@@ -32,86 +33,8 @@ const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = 
     { system: 'lovable', label: 'LOVABLE', iconPath: '/logos/lovable-color.svg' },
 ];
 
-const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.ComponentType }>> = {
-    '2586-labs': () => import('../../components/templates/Labs2586'),
-    'mood-hero': () => import('../../components/templates/MoodHero'),
-    'portfolio-closing': () => import('../../components/templates/PortfolioClosing'),
-    'tars-protocol': () => import('../../components/templates/TarsHeroArena'),
-    'split-fuzzy-orb': () => import('../../components/templates/SplitFuzzyOrbHero'),
-    'segmint-2026': () => import('../../components/templates/SegmintFooter'),
-    'haos-tech-solutions': () => import('../../components/templates/HaosShowcase'),
-    'mentality': () => import('../../components/templates/MentalityHero'),
-    'interior-design': () => import('../../components/templates/InteriorDesignShowcase'),
-    'lumos': () => import('../../components/templates/LumosHero'),
-    'loveapp-hero': () => import('../../components/templates/LoveAppHero'),
-    'heyo-agency-cta': () => import('../../components/templates/HeyoAgencyCta'),
-    'me-019-au-cabaret': () => import('../../components/templates/AuCabaretPoster'),
-    'dont-be-greedy': () => import('../../components/templates/DontBeGreedyFooter'),
-    'paipai-kuaishou': () => import('../../components/templates/PaipaiKuaishou'),
-    'logo-here': () => import('../../components/templates/LogoHere'),
-    'sui-overflow': () => import('../../components/templates/SuiOverflow'),
-    'graphic-designer-portfolio': () => import('../../components/templates/GraphicDesignerPortfolio'),
-    'originkit-hero-24': () => import('../../components/templates/OriginkitHero24'),
-};
-
-const TEMPLATE_SOURCE_FILES: Record<string, string> = {
-    '2586-labs': 'Labs2586.tsx',
-    'mood-hero': 'MoodHero.tsx',
-    'portfolio-closing': 'PortfolioClosing.tsx',
-    'tars-protocol': 'TarsHeroArena.tsx',
-    'split-fuzzy-orb': 'SplitFuzzyOrbHero.tsx',
-    'segmint-2026': 'SegmintFooter.tsx',
-    'haos-tech-solutions': 'HaosShowcase.tsx',
-    'mentality': 'MentalityHero.tsx',
-    'interior-design': 'InteriorDesignShowcase.tsx',
-    'lumos': 'LumosHero.tsx',
-    'loveapp-hero': 'LoveAppHero.tsx',
-    'heyo-agency-cta': 'HeyoAgencyCta.tsx',
-    'me-019-au-cabaret': 'AuCabaretPoster.tsx',
-    'dont-be-greedy': 'DontBeGreedyFooter.tsx',
-    'paipai-kuaishou': 'PaipaiKuaishou.tsx',
-    'logo-here': 'LogoHere.tsx',
-    'sui-overflow': 'SuiOverflow.tsx',
-    'graphic-designer-portfolio': 'GraphicDesignerPortfolio.tsx',
-    'originkit-hero-24': 'UI-HUB.tsx',
-};
-
-const ORIGINKIT_HERO_24_ASSETS = [
-    'avatar.png',
-    'bg-desktop.png',
-    'bg-ipad.png',
-    'bg.png',
-    'desk-mask-bottom.svg',
-    'desk-mask-top.svg',
-    'hand-mask-bottom.svg',
-    'hand-mask-top.svg',
-    'hands.png',
-    'ipad-mask-bottom.svg',
-    'ipad-mask-top.svg',
-    'menu.svg',
-];
-
-const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
-    '2586-labs': 'bg-[#F8F3E5]',
-    'mood-hero': 'bg-[#EDE8DE]',
-    'portfolio-closing': 'bg-[#0B1014]',
-    'tars-protocol': 'bg-white',
-    'split-fuzzy-orb': 'bg-[#d6c0e3]',
-    'segmint-2026': 'bg-[#E8E9EE]',
-    'haos-tech-solutions': 'bg-[#020202]',
-    'mentality': 'bg-[#F0F0F0]',
-    'interior-design': 'bg-white',
-    'lumos': 'bg-[#F1F1F0]',
-    'loveapp-hero': 'bg-[#D8D2F8]',
-    'heyo-agency-cta': 'bg-[#F5F5F2]',
-    'me-019-au-cabaret': 'bg-[#EDEDED]',
-    'dont-be-greedy': 'bg-[#050505]',
-    'paipai-kuaishou': 'bg-[#59D1EA]',
-    'logo-here': 'bg-white',
-    'sui-overflow': 'bg-[#F2EFE6]',
-    'graphic-designer-portfolio': 'bg-[#F7F6F2]',
-    'originkit-hero-24': 'bg-[#101216]',
-};
+/** Query param that keeps the Similar Templates rail fully expanded. */
+const SIMILAR_PARAM = 'similar';
 
 // Desktop-only preview: renders the template on a fixed 1280px desktop canvas
 // and scales it down to fit the preview container, so the full desktop layout
@@ -181,7 +104,6 @@ const PreviewImageFallback: React.FC<{ id: string }> = ({ id }) => {
             {t.previewVideo ? (
                 <video
                     src={t.previewVideo}
-                    poster={t.previewImage}
                     autoPlay
                     muted
                     loop
@@ -223,8 +145,33 @@ const LazyTemplateRenderer: React.FC<{ id: string; resetKey: number }> = ({ id, 
 const TemplateDetailPage = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const template: TemplateItem = websiteTemplates.find(t => t.id === id) || websiteTemplates[0];
+    // Unknown ids used to silently fall back to websiteTemplates[0], so a typo
+    // or a removed template rendered an unrelated page as if it were the real one.
+    const template: TemplateItem | undefined = useMemo(
+        () => websiteTemplates.find((t) => t.id === id),
+        [id],
+    );
+
+    const similarExpanded = searchParams.get(SIMILAR_PARAM) === 'all';
+
+    const toggleSimilarExpanded = useCallback(() => {
+        setSearchParams(
+            (prev) => {
+                const next = new URLSearchParams(prev);
+                if (next.get(SIMILAR_PARAM) === 'all') {
+                    next.delete(SIMILAR_PARAM);
+                } else {
+                    next.set(SIMILAR_PARAM, 'all');
+                }
+                return next;
+            },
+            // Push a history entry so the browser Back button collapses the rail
+            // again instead of only leaving the page.
+            { replace: false },
+        );
+    }, [setSearchParams]);
 
     const [promptMenuOpen, setPromptMenuOpen] = useState(false);
     const [promptCopied, setPromptCopied] = useState<string | null>(null);
@@ -235,14 +182,12 @@ const TemplateDetailPage = () => {
     const [toastToolLogo, setToastToolLogo] = useState<React.ReactNode | null>(null);
     const [showCode, setShowCode] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [selectedCodeAsset, setSelectedCodeAsset] = useState<string | null>(null);
 
     const promptMenuRef = useRef<HTMLDivElement>(null);
 
     // Scroll window to top when template detail page opens or changes
     useEffect(() => {
         window.scrollTo(0, 0);
-        setSelectedCodeAsset(null);
     }, [id]);
 
     // Close dropdown on click outside
@@ -257,6 +202,26 @@ const TemplateDetailPage = () => {
         }
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [promptMenuOpen]);
+
+    // Every hook above runs unconditionally so hook order stays stable; the
+    // unknown-id bail-out has to come after them all.
+    if (!template) {
+        return (
+            <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-[#101114] px-6 text-center text-white">
+                <div className="text-2xl font-semibold">Template not found</div>
+                <p className="max-w-md text-sm text-neutral-400">
+                    We could not find a template with the id <code className="text-neutral-200">{id}</code>.
+                    It may have been renamed or removed.
+                </p>
+                <button
+                    onClick={() => navigate('/templates')}
+                    className="rounded-lg border border-white/15 bg-white/[0.05] px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:bg-white/[0.1] hover:text-white"
+                >
+                    Back to all templates
+                </button>
+            </div>
+        );
+    }
 
     const handleCopyPrompt = (system: AISystem = 'cursor') => {
         const text = buildTemplatePrompt(template, system);
@@ -283,57 +248,16 @@ const TemplateDetailPage = () => {
         setShowToast(true);
     };
 
-    const handleCopySource = () => {
-        navigator.clipboard.writeText(sourceCode);
-        setToastMessage(`${sourceFileName} copied to clipboard`);
-        setToastToolLogo(null);
-        setShowToast(true);
-    };
-
-    const relatedTemplates = websiteTemplates
-        .filter((item) => item.id !== template.id)
-        .sort((first, second) => Number(second.category === template.category) - Number(first.category === template.category));
-    const sourceFileName = TEMPLATE_SOURCE_FILES[template.id] || `${template.id}.tsx`;
-    const sourceCode = TEMPLATE_SOURCE_CODE[template.id] || '';
-    const sourceLines = sourceCode.split('\n');
-    const templateAssets = template.id === 'originkit-hero-24' ? ORIGINKIT_HERO_24_ASSETS : [];
-
     return (
         <div className="min-h-screen bg-[#101114] text-white pt-16 lg:pt-[72px]">
-            <div className="flex min-h-[calc(100vh-64px)]">
-                <aside className="sticky top-[72px] hidden h-[calc(100vh-72px)] w-[280px] shrink-0 self-start flex-col border-r border-white/10 bg-[#191a1d] lg:flex">
-                    <div className="h-14 shrink-0 border-b border-white/10 px-4 flex items-center">
-                        <button
-                            onClick={() => navigate('/templates')}
-                            className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-medium text-neutral-300 hover:bg-white/[0.08] hover:text-white transition-colors"
-                        >
-                            <ArrowLeft size={14} />
-                            Go back
-                        </button>
-                    </div>
-                    <div className="px-4 py-3 text-sm font-semibold text-neutral-200">Similar Templates</div>
-                    <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-4 space-y-2">
-                        {relatedTemplates.map((item) => (
-                            <button
-                                key={item.id}
-                                type="button"
-                                onClick={() => navigate(`/templates/${item.id}`)}
-                                className="group w-full overflow-hidden rounded-xl border border-white/10 bg-[#242528] text-left hover:border-white/25 transition-colors"
-                            >
-                                <div className="aspect-[16/9] overflow-hidden bg-black">
-                                    {item.previewImage ? (
-                                        <img src={item.previewImage} alt={`${item.title} preview`} loading="lazy" className="h-full w-full object-cover object-top" />
-                                    ) : (
-                                        <div className={`h-full w-full bg-gradient-to-br ${item.previewGradient}`} />
-                                    )}
-                                </div>
-                                <span className="block truncate px-3 py-2.5 text-sm text-neutral-200 group-hover:text-white">{item.title}</span>
-                            </button>
-                        ))}
-                    </div>
-                </aside>
+            <div className="flex min-h-[calc(100vh-64px)] flex-col lg:flex-row">
+                <TemplateSimilarRail
+                    template={template}
+                    expanded={similarExpanded}
+                    onToggleExpanded={toggleSimilarExpanded}
+                />
 
-                <main className="min-w-0 flex-1 px-4 pb-8 sm:px-6 lg:px-9">
+                <main className="w-full min-w-0 px-4 pb-8 sm:px-6 lg:flex-1 lg:px-9">
                     <div className="mx-auto max-w-[1500px]">
                         <div className="flex min-h-14 flex-wrap items-center justify-between gap-3 py-3">
                             <div className="flex min-w-0 items-center gap-2 text-sm text-neutral-400">
@@ -430,91 +354,30 @@ const TemplateDetailPage = () => {
                             </div>
 
                             {showCode ? (
-                                <div className="grid min-h-[65vh] grid-cols-[minmax(150px,220px)_minmax(0,1fr)] bg-[#202124] max-sm:grid-cols-1">
-                                    <aside className="border-r border-white/10 bg-[#191a1d] py-3 text-sm max-sm:border-r-0 max-sm:border-b">
-                                        <div className="flex items-center gap-2 px-3 pb-3 text-xs font-semibold text-neutral-300">
-                                            <FolderOpen size={15} />
-                                            <span className="truncate">{template.title}</span>
-                                        </div>
-                                        <div className="space-y-0.5">
-                                            <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-neutral-400">
-                                                <ChevronDown size={13} /> <FolderOpen size={14} /> src
-                                            </div>
-                                            <div className="flex items-center gap-2 py-1.5 pl-8 text-xs text-neutral-400">
-                                                <ChevronDown size={13} /> <FolderOpen size={14} /> components
-                                            </div>
-                                            <div className="flex items-center gap-2 py-1.5 pl-12 text-xs text-neutral-400">
-                                                <ChevronDown size={13} /> <FolderOpen size={14} /> templates
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => setSelectedCodeAsset(null)}
-                                                className={`flex w-full items-center gap-2 py-1.5 pl-16 pr-2 text-left text-xs ${selectedCodeAsset === null ? 'bg-[#34363a] text-white' : 'text-neutral-300 hover:bg-white/[0.05]'}`}
-                                            >
-                                                <FileCode2 size={14} className="shrink-0 text-sky-400" />
-                                                <span className="truncate">{sourceFileName}</span>
-                                            </button>
-                                            {templateAssets.length > 0 && (
-                                                <>
-                                                    <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-neutral-400">
-                                                        <ChevronDown size={13} /> <FolderOpen size={14} /> public
-                                                    </div>
-                                                    <div className="flex items-center gap-2 py-1.5 pl-8 text-xs text-neutral-400">
-                                                        <ChevronDown size={13} /> <FolderOpen size={14} /> originkit
-                                                    </div>
-                                                    <div className="flex items-center gap-2 py-1.5 pl-12 text-xs text-neutral-400">
-                                                        <ChevronDown size={13} /> <FolderOpen size={14} /> hero-24
-                                                    </div>
-                                                    {templateAssets.map((asset) => (
-                                                        <button
-                                                            key={asset}
-                                                            type="button"
-                                                            onClick={() => setSelectedCodeAsset(asset)}
-                                                            className={`flex w-full items-center gap-2 py-1.5 pl-16 pr-2 text-left text-xs ${selectedCodeAsset === asset ? 'bg-[#34363a] text-white' : 'text-neutral-300 hover:bg-white/[0.05]'}`}
-                                                        >
-                                                            <FileImage size={14} className="shrink-0 text-amber-300" />
-                                                            <span className="truncate">{asset}</span>
-                                                        </button>
-                                                    ))}
-                                                </>
-                                            )}
-                                        </div>
-                                    </aside>
-                                    <div className="flex min-w-0 flex-col overflow-hidden">
-                                        <div className="flex h-10 shrink-0 items-center justify-between border-b border-white/10 bg-[#202124] px-3">
-                                            <span className="flex min-w-0 items-center gap-2 text-xs text-neutral-300">
-                                                {selectedCodeAsset ? <FileImage size={14} className="text-amber-300" /> : <FileCode2 size={14} className="text-sky-400" />}
-                                                <span className="truncate">{selectedCodeAsset || sourceFileName}</span>
-                                            </span>
-                                            {!selectedCodeAsset && (
-                                                <button onClick={handleCopySource} className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-white/10 px-2.5 py-1.5 text-xs text-neutral-300 hover:bg-white/[0.06]">
-                                                    <Copy size={13} /> Copy code
-                                                </button>
-                                            )}
-                                        </div>
-                                        {selectedCodeAsset ? (
-                                            <div className="flex min-h-[calc(65vh-40px)] flex-1 items-center justify-center overflow-auto bg-[#202124] p-6">
-                                                <img
-                                                    src={`/originkit/hero-24/${selectedCodeAsset}`}
-                                                    alt={selectedCodeAsset}
-                                                    className="max-h-[60vh] max-w-full object-contain"
-                                                />
-                                            </div>
-                                        ) : (
-                                            <div className="min-h-[calc(65vh-40px)] flex-1 overflow-auto bg-[#202124] py-2 font-mono text-[12px] leading-[1.65] text-[#d4d4d4] sm:text-[13px]">
-                                                {sourceLines.map((line, index) => (
-                                                    <div key={index} className="flex min-w-max pr-6 hover:bg-white/[0.035]">
-                                                        <span className="sticky left-0 w-12 shrink-0 select-none bg-[#202124] px-3 text-right text-neutral-500">{index + 1}</span>
-                                                        <span className="whitespace-pre">{line || ' '}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
+                                <TemplateCodeViewer
+                                    templateId={template.id}
+                                    title={template.title}
+                                    isFullscreen={isFullscreen}
+                                    onNotify={(message) => {
+                                        setToastMessage(message);
+                                        setShowToast(true);
+                                    }}
+                                />
                             ) : (
                                 <div className="min-h-[65vh] flex-1 overflow-auto bg-[#0d0e10]">
-                                    {TEMPLATE_PREVIEWS[template.id] ? (
+                                    {template.previewVideo ? (
+                                        <video
+                                            key={`template-video-${resetKey}`}
+                                            src={template.previewVideo}
+                                            autoPlay
+                                            muted
+                                            loop
+                                            playsInline
+                                            preload="metadata"
+                                            aria-label={`${template.title} preview`}
+                                            className="block min-h-[65vh] w-full bg-[#101216] object-cover object-top"
+                                        />
+                                    ) : TEMPLATE_PREVIEWS[template.id] ? (
                                         <div className={`relative w-full ${TEMPLATE_PREVIEW_BGS[template.id]}`}>
                                             <ScaledTemplateScene>
                                                 <LazyTemplateRenderer id={template.id} resetKey={resetKey} />

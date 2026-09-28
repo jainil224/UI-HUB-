@@ -132,7 +132,6 @@ const TemplatesSection = () => {
                                                 {template.previewVideo ? (
                                                     <video
                                                         src={template.previewVideo}
-                                                        poster={template.previewImage}
                                                         autoPlay
                                                         muted
                                                         loop

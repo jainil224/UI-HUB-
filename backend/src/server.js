@@ -51,11 +51,11 @@ app.use(helmet({
       scriptSrc: ["'self'", "https://checkout.razorpay.com"],
       frameSrc: ["https://api.razorpay.com"],
       connectSrc: [
-        "'self'", 
-        "http://localhost:*", 
-        "https://ui-hub-design.vercel.app", 
-        "https://ui-hub-design-git-main-jainil224s-projects.vercel.app", 
-        "https://ui-hub-design-jainil224s-projects.vercel.app", 
+        "'self'",
+        "http://localhost:*",
+        "https://ui-hub-design.vercel.app",
+        "https://ui-hub-design-git-main-jainil224s-projects.vercel.app",
+        "https://ui-hub-design-jainil224s-projects.vercel.app",
         "https://api.razorpay.com"
       ],
       imgSrc: ["'self'", "data:", "https:"],
@@ -70,12 +70,12 @@ app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
-    
+
     // Check if origin is in allowedOrigins or matches a wildcard
-    const isAllowed = allowedOrigins.indexOf(origin) !== -1 || 
-                     origin.endsWith('.vercel.app') ||
-                     origin.includes('localhost');
-                     
+    const isAllowed = allowedOrigins.indexOf(origin) !== -1 ||
+      origin.endsWith('.vercel.app') ||
+      origin.includes('localhost');
+
     if (isAllowed) {
       return callback(null, true);
     } else {
@@ -111,11 +111,11 @@ try {
   const { existsSync, symlinkSync } = await import('node:fs');
   const { resolve, dirname } = await import('node:path');
   const { fileURLToPath } = await import('node:url');
-  
+
   const currentDir = dirname(fileURLToPath(import.meta.url));
   const backendModules = resolve(currentDir, '../node_modules');
   const mcpModules = resolve(currentDir, '../../mcp-server/node_modules');
-  
+
   if (existsSync(backendModules) && !existsSync(mcpModules)) {
     try {
       symlinkSync(backendModules, mcpModules, 'junction');
@@ -139,8 +139,8 @@ try {
 
 // Health check endpoint (at the very top levels)
 const healthCheck = (req, res) => {
-  res.json({ 
-    status: 'ok', 
+  res.json({
+    status: 'ok',
     services: {
       backend: 'online',
       mcp: 'online'
@@ -171,17 +171,39 @@ app.use((err, req, res, next) => {
 // Export the app for Vercel
 export default app;
 
-// Synchronize all website UI components to MongoDB Atlas on boot
-syncAllComponentsToMongo().catch((err) =>
-  console.error('[Startup] Component sync notice:', err.message)
-);
-
-// Start background user synchronization worker
 if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  startUserSyncWorker();
-  app.listen(PORT, '0.0.0.0', () => {
+  const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server is running on port ${PORT}`);
     console.log(`Local:   http://localhost:${PORT}`);
     console.log(`Network: http://0.0.0.0:${PORT}`);
+    syncAllComponentsToMongo().catch((err) =>
+      console.error('[Startup] Component sync notice:', err.message)
+    );
+    startUserSyncWorker();
   });
+
+  server.on('error', async (err) => {
+    if (err.code === 'EADDRINUSE') {
+      try {
+        const response = await fetch(`http://127.0.0.1:${PORT}/health`, {
+          signal: AbortSignal.timeout(2000),
+        });
+        const health = response.ok ? await response.json() : null;
+        if (health?.message === 'UI-Hub Unified Backend & MCP Server is Live') {
+          console.log(`[Startup] UI-HUB backend is already running on port ${PORT}; reusing it.`);
+          return;
+        }
+      } catch {
+        // Fall through to the actionable bind error below.
+      }
+    }
+
+    console.error(`[Startup] Could not listen on port ${PORT}:`, err.message);
+    process.exitCode = 1;
+  });
+} else {
+  // Vercel runs the exported app as a serverless function, without app.listen().
+  syncAllComponentsToMongo().catch((err) =>
+    console.error('[Startup] Component sync notice:', err.message)
+  );
 }
