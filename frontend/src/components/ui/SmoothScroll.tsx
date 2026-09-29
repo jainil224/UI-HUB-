@@ -20,8 +20,14 @@ const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
             return;
         }
 
-        // Disable smooth scroll on demo, library, and templates routes to allow native container scrolling
-        if (location.pathname.startsWith('/demo') || location.pathname.startsWith('/library') || location.pathname.startsWith('/templates')) {
+        // Disable smooth scroll on demo, library, templates and build-with routes
+        // to allow native container scrolling
+        if (
+            location.pathname.startsWith('/demo') ||
+            location.pathname.startsWith('/library') ||
+            location.pathname.startsWith('/templates') ||
+            location.pathname.startsWith('/build-with-ui-hub')
+        ) {
             return;
         }
 

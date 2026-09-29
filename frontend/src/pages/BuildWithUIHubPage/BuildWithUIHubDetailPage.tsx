@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useMemo, useCallback, lazy, Suspense } from 'react';
-import { useParams, useNavigate, useSearchParams, Navigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useMemo, lazy, Suspense } from 'react';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import {
     Check,
     ChevronDown,
@@ -8,21 +8,25 @@ import {
     Code2,
     Eye,
     ExternalLink,
+    Github,
     Maximize2,
     Minimize2,
     Terminal
 } from 'lucide-react';
-import { websiteTemplates, buildWithUIHubSlugByTemplateId, TemplateItem } from '../../data/templatesData';
-import TemplateSimilarRail from '../../components/templates/TemplateSimilarRail';
+import {
+    buildWithUIHubTemplateBySlug,
+    buildWithUIHubSlugByTemplateId,
+    TemplateItem,
+} from '../../data/templatesData';
 import { TemplatePreviewStage } from '../../components/templates/TemplatePreviewStage';
+import BuildWithUIHubRail from '../../components/templates/BuildWithUIHubRail';
 import Toast from '../../components/ui/Toast';
 
-// The Code tab is behind a click, but a static import cost this page ~3.2 MB of
-// JavaScript before the preview could paint anything: TemplateCodeViewer pulls
-// data/templateSourceCode, which embeds the full text of all 19 template
-// components as ?raw strings, and templatePromptUtils pulls the component
-// library catalog through utils/promptUtils. Neither is needed to show a preview,
-// so both are loaded on demand instead.
+// Both of these sit behind a click - the Code tab and the CLI prompt dropdown -
+// but a static import cost the page ~3.2 MB of JavaScript before the preview
+// could paint. TemplateCodeViewer embeds the full text of all 19 template
+// components via ?raw, and templatePromptUtils pulls the component library
+// catalog through utils/promptUtils. Loaded on demand instead.
 const TemplateCodeViewer = lazy(
     () => import('../../components/templates/TemplateCodeViewer'),
 );
@@ -37,39 +41,32 @@ const PROMPT_OPTIONS: { system: AISystem; label: string; iconPath: string }[] = 
     { system: 'lovable', label: 'LOVABLE', iconPath: '/logos/lovable-color.svg' },
 ];
 
-/** Query param that keeps the Similar Templates rail fully expanded. */
-const SIMILAR_PARAM = 'similar';
+const SECTION_PATH = '/build-with-ui-hub';
 
-const TemplateDetailPage = () => {
-    const { id } = useParams<{ id: string }>();
+/**
+ * Detail page for a "Build with UI HUB" section.
+ *
+ * Deliberately the same experience as /templates/:id - breadcrumb, CLI prompt
+ * dropdown, Preview | Code tabs, fullscreen and reload - so the two catalogs
+ * feel identical once you open a card. Two things differ:
+ *
+ *   1. The left rail is a flat list of published section URLs rather than a
+ *      relevance-ranked "Similar Templates" panel.
+ *   2. The preview renders the live component. A section is one full-screen
+ *      layout, so the visitor expects the real thing rather than a recording of
+ *      it, and the recorded video is only the loading state.
+ *
+ * It is routed by public slug (`/build-with-ui-hub/UIHUB-hero-1`), which is kept
+ * separate from the master template id.
+ */
+const BuildWithUIHubDetailPage = () => {
+    const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
-    const [searchParams, setSearchParams] = useSearchParams();
 
-    // Unknown ids used to silently fall back to websiteTemplates[0], so a typo
-    // or a removed template rendered an unrelated page as if it were the real one.
-    const template: TemplateItem | undefined = useMemo(
-        () => websiteTemplates.find((t) => t.id === id),
-        [id],
+    const sectionItem: TemplateItem | undefined = useMemo(
+        () => buildWithUIHubTemplateBySlug[slug],
+        [slug],
     );
-
-    const similarExpanded = searchParams.get(SIMILAR_PARAM) === 'all';
-
-    const toggleSimilarExpanded = useCallback(() => {
-        setSearchParams(
-            (prev) => {
-                const next = new URLSearchParams(prev);
-                if (next.get(SIMILAR_PARAM) === 'all') {
-                    next.delete(SIMILAR_PARAM);
-                } else {
-                    next.set(SIMILAR_PARAM, 'all');
-                }
-                return next;
-            },
-            // Push a history entry so the browser Back button collapses the rail
-            // again instead of only leaving the page.
-            { replace: false },
-        );
-    }, [setSearchParams]);
 
     const [promptMenuOpen, setPromptMenuOpen] = useState(false);
     const [promptCopied, setPromptCopied] = useState<string | null>(null);
@@ -83,15 +80,9 @@ const TemplateDetailPage = () => {
 
     const promptMenuRef = useRef<HTMLDivElement>(null);
 
-    // Scroll window to top when template detail page opens or changes, and
-    // rebuild the preview from scratch. The Similar rail is a same-route
-    // navigation, so without this the previous template's mount is reused and
-    // the new component can inherit stale measurement state from
-    // ScaledTemplateScene while its chunk is still in flight.
     useEffect(() => {
         window.scrollTo(0, 0);
-        setResetKey(0);
-    }, [id]);
+    }, [slug]);
 
     // Close dropdown on click outside
     useEffect(() => {
@@ -106,31 +97,29 @@ const TemplateDetailPage = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [promptMenuOpen]);
 
-    // Every hook above runs unconditionally so hook order stays stable; the
-    // redirects and the unknown-id bail-out have to come after them all.
-    //
-    // A template that has been promoted to a "Build with UI HUB" section keeps
-    // its id in websiteTemplates, so this route still matches it. Redirecting
-    // here gives each template exactly one canonical page no matter whether the
-    // visitor arrived from a stale link, a search result or a Similar rail.
-    const buildWithSlug = template ? buildWithUIHubSlugByTemplateId[template.id] : undefined;
-    if (buildWithSlug) {
-        return <Navigate to={`/build-with-ui-hub/${buildWithSlug}`} replace />;
+    // Canonical URL guard. A slug that is actually a master template id - an old
+    // link, or the id before the section was given a slug of its own - is sent
+    // to its real URL. Runs for every slug, so future renames are covered too.
+    const canonicalSlug = buildWithUIHubSlugByTemplateId[slug];
+    if (canonicalSlug) {
+        return <Navigate to={`${SECTION_PATH}/${canonicalSlug}`} replace />;
     }
 
-    if (!template) {
+    // Every hook above runs unconditionally so hook order stays stable; the
+    // unknown-slug bail-out has to come after them all.
+    if (!sectionItem) {
         return (
             <div className="flex min-h-screen flex-col items-center justify-center gap-5 bg-[#101114] px-6 text-center text-white">
-                <div className="text-2xl font-semibold">Template not found</div>
+                <div className="text-2xl font-semibold">Section layout not found</div>
                 <p className="max-w-md text-sm text-neutral-400">
-                    We could not find a template with the id <code className="text-neutral-200">{id}</code>.
-                    It may have been renamed or removed.
+                    We could not find a Build with UI HUB section at{' '}
+                    <code className="text-neutral-200">{slug}</code>. It may have been renamed or removed.
                 </p>
                 <button
-                    onClick={() => navigate('/templates')}
+                    onClick={() => navigate(SECTION_PATH)}
                     className="rounded-lg border border-white/15 bg-white/[0.05] px-4 py-2 text-sm font-medium text-neutral-200 transition-colors hover:bg-white/[0.1] hover:text-white"
                 >
-                    Back to all templates
+                    Back to all sections
                 </button>
             </div>
         );
@@ -146,27 +135,25 @@ const TemplateDetailPage = () => {
         setIsBuildingPrompt(true);
         try {
             const { buildTemplatePrompt } = await import('../../utils/templatePromptUtils');
-            const text = buildTemplatePrompt(template, system);
+            const text = buildTemplatePrompt(sectionItem, system);
             navigator.clipboard.writeText(text);
             setPromptCopied(system);
             setTimeout(() => setPromptCopied(null), 2500);
             setPromptMenuOpen(false);
 
-            const selectedOption = PROMPT_OPTIONS.find(o => o.system === system);
+            const selectedOption = PROMPT_OPTIONS.find((o) => o.system === system);
             const label = selectedOption?.label || system.toUpperCase();
             setToastMessage(`${label} PROMPT COPIED TO CLIPBOARD`);
-            if (selectedOption) {
-                setToastToolLogo(
+            setToastToolLogo(
+                selectedOption ? (
                     <img
                         src={selectedOption.iconPath}
                         alt={selectedOption.label}
                         className={`h-4 w-4 shrink-0 object-contain ${system === 'cursor' ? 'brightness-0 invert' : ''
                             }`}
                     />
-                );
-            } else {
-                setToastToolLogo(null);
-            }
+                ) : null,
+            );
             setShowToast(true);
         } finally {
             setIsBuildingPrompt(false);
@@ -176,21 +163,22 @@ const TemplateDetailPage = () => {
     return (
         <div className="min-h-screen bg-[#101114] text-white pt-16 lg:pt-[72px]">
             <div className="flex min-h-[calc(100vh-64px)] flex-col lg:flex-row">
-                <TemplateSimilarRail
-                    template={template}
-                    expanded={similarExpanded}
-                    onToggleExpanded={toggleSimilarExpanded}
-                />
+                <BuildWithUIHubRail activeSlug={slug} />
 
-                <main className="w-full min-w-0 px-4 pb-8 sm:px-6 lg:flex-1 lg:px-9">
+                <main className="w-full min-w-0 flex-1 px-4 pb-8 sm:px-6 lg:px-9">
                     <div className="mx-auto max-w-[1500px]">
                         <div className="flex min-h-14 flex-wrap items-center justify-between gap-3 py-3">
                             <div className="flex min-w-0 items-center gap-2 text-sm text-neutral-400">
-                                <button onClick={() => navigate('/templates')} className="hover:text-white">Templates</button>
-                                <ChevronRight size={15} />
-                                <span className="hidden sm:inline truncate">{template.category}</span>
+                                <button
+                                    onClick={() => navigate(SECTION_PATH)}
+                                    className="hover:text-white"
+                                >
+                                    Build with UI HUB
+                                </button>
                                 <ChevronRight size={15} className="hidden sm:block" />
-                                <span className="truncate text-white">{template.title}</span>
+                                <span className="hidden sm:inline truncate">{sectionItem.category}</span>
+                                <ChevronRight size={15} className="hidden sm:block" />
+                                <span className="truncate text-white">{sectionItem.title}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <div className="relative" ref={promptMenuRef}>
@@ -226,24 +214,33 @@ const TemplateDetailPage = () => {
                                         </div>
                                     )}
                                 </div>
-                                {template.liveDemoUrl && (
+                                {sectionItem.liveDemoUrl ? (
                                     <a
-                                        href={template.liveDemoUrl}
+                                        href={sectionItem.liveDemoUrl}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#17181a] hover:bg-neutral-200 transition-colors"
                                     >
                                         Live Link <ExternalLink size={14} />
                                     </a>
-                                )}
+                                ) : sectionItem.githubUrl ? (
+                                    <a
+                                        href={sectionItem.githubUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#17181a] hover:bg-neutral-200 transition-colors"
+                                    >
+                                        Source Code <Github size={14} />
+                                    </a>
+                                ) : null}
                             </div>
                         </div>
 
                         <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-neutral-400">
                             <Eye size={14} />
-                            <span>{template.stats.downloads} downloads</span>
+                            <span>{sectionItem.stats.downloads} downloads</span>
                             <span className="text-neutral-600">•</span>
-                            <span>{template.framework}</span>
+                            <span>{sectionItem.framework}</span>
                         </div>
 
                         <section
@@ -291,8 +288,8 @@ const TemplateDetailPage = () => {
                                     }
                                 >
                                     <TemplateCodeViewer
-                                        templateId={template.id}
-                                        title={template.title}
+                                        templateId={sectionItem.id}
+                                        title={sectionItem.title}
                                         isFullscreen={isFullscreen}
                                         onNotify={(message) => {
                                             setToastMessage(message);
@@ -302,7 +299,7 @@ const TemplateDetailPage = () => {
                                 </Suspense>
                             ) : (
                                 <TemplatePreviewStage
-                                    template={template}
+                                    template={sectionItem}
                                     resetKey={resetKey}
                                     isLoadingIframe={isLoadingIframe}
                                     onIframeLoad={() => setIsLoadingIframe(false)}
@@ -326,4 +323,4 @@ const TemplateDetailPage = () => {
     );
 };
 
-export default TemplateDetailPage;
+export default BuildWithUIHubDetailPage;

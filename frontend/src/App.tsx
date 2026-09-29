@@ -21,6 +21,7 @@ const PaymentPolicyPage = React.lazy(() => import('./pages/legal/PaymentPolicyPa
 const CookieSettingsPage = React.lazy(() => import('./pages/legal/CookieSettingsPage'));
 const TemplatesPage = React.lazy(() => import('./pages/TemplatesPage/TemplatesPage'));
 const BuildWithUIHubPage = React.lazy(() => import('./pages/BuildWithUIHubPage/BuildWithUIHubPage'));
+const BuildWithUIHubDetailPage = React.lazy(() => import('./pages/BuildWithUIHubPage/BuildWithUIHubDetailPage'));
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
 const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
@@ -88,6 +89,8 @@ const AppShell = () => {
   const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
   const isDemo = location.pathname.startsWith('/demo');
   const isTemplates = location.pathname.startsWith('/templates');
+  // The Build with UI HUB section and its detail page mirror /templates, footer included.
+  const isBuildWithUIHub = location.pathname.startsWith('/build-with-ui-hub');
 
   return (
     <>
@@ -166,12 +169,13 @@ const AppShell = () => {
               <Route path="/templates" element={<TemplatesPage />} />
               <Route path="/templates/:id" element={<TemplateDetailPage />} />
               <Route path="/build-with-ui-hub" element={<BuildWithUIHubPage />} />
+              <Route path="/build-with-ui-hub/:slug" element={<BuildWithUIHubDetailPage />} />
               <Route path="/preview-capture" element={<PreviewCapturePage />} />
             </Routes>
           </React.Suspense>
         </main>
 
-        {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && !isTemplates && <Footer />}
+        {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && !isTemplates && !isBuildWithUIHub && <Footer />}
       </div>
 
       <TopLoader />

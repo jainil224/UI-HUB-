@@ -7097,3 +7097,37 @@ Include:
     }
   },
 ];
+
+/**
+ * Public URLs for the "Build with UI HUB" section live in their own
+ * dependency-free module so the navbar search box can read them without pulling
+ * this ~800 kB catalog into the initial bundle. Re-exported here because every
+ * lazy consumer already imports from templatesData.
+ */
+export {
+  BUILD_WITH_UI_HUB_SECTIONS,
+  BUILD_WITH_UI_HUB_IDS,
+  buildWithUIHubSlugByTemplateId,
+} from './buildWithUIHubSlugs';
+export type { BuildWithUIHubSection } from './buildWithUIHubSlugs';
+
+import {
+  BUILD_WITH_UI_HUB_IDS,
+  BUILD_WITH_UI_HUB_SECTIONS,
+  buildWithUIHubSlugByTemplateId,
+} from './buildWithUIHubSlugs';
+
+/** The "Build with UI HUB" catalog, resolved from the master template list. */
+export const buildWithUIHubTemplates: TemplateItem[] = websiteTemplates.filter((template) =>
+  BUILD_WITH_UI_HUB_IDS.includes(template.id),
+);
+
+/** Public slug -> master template record. Used by the detail page and the left rail. */
+export const buildWithUIHubTemplateBySlug: Record<string, TemplateItem> = Object.fromEntries(
+  BUILD_WITH_UI_HUB_SECTIONS.flatMap((section) => {
+    const template = websiteTemplates.find((t) => t.id === section.templateId);
+    // A slug whose template record is missing would render an empty page, so it
+    // is dropped here rather than surfaced as a 404 at navigation time.
+    return template ? [[section.slug, template] as const] : [];
+  }),
+);

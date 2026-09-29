@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, ChevronUp, Eye } from 'lucide-react';
-import { TemplateItem, websiteTemplates } from '../../data/templatesData';
+import { TemplateItem, websiteTemplates, BUILD_WITH_UI_HUB_IDS } from '../../data/templatesData';
 import {
     getRelatedTemplates,
     toMatchPercent,
@@ -33,16 +33,28 @@ interface TemplateSimilarRailProps {
  * fallback, which means the card paints its brand colour immediately and the
  * video fades in over it instead of flashing black.
  *
- * Videos are not attached until the card is within 200px of the viewport: six
- * autoplaying previews are up to ~5MB, and expanding to all 17 would be far
- * worse. The observer disconnects after the first hit so scrolling back past a
- * card never re-fetches it.
+ * Bandwidth: these files are 65 KB - 1.5 MB each, so five of them starting at
+ * once is up to ~4.7 MB. That used to be requested with `preload="auto"` as soon
+ * as a card came within 200px, which put every rail video in direct competition
+ * with the main preview's JS chunk - and the live preview paints nothing until
+ * its chunk arrives, so the page looked like it had failed to load. Cards now
+ * mount at `preload="metadata"` and only buffer in full once they are actually
+ * on screen, and a card that scrolls out of the rail is paused rather than left
+ * downloading. Hovering or focusing a card pre-buffers it, so the card the
+ * visitor is actually about to click has time to fill without any of the cards
+ * they skip past paying for it.
  */
-const RelatedThumbnail: React.FC<{ template: TemplateItem }> = ({ template }) => {
+const RelatedThumbnail: React.FC<{ template: TemplateItem; isHovered: boolean }> = ({
+    template,
+    isHovered,
+}) => {
     const holderRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [shouldLoad, setShouldLoad] = useState(false);
+    const [inView, setInView] = useState(false);
 
+    // The observer stays connected (rather than disconnecting on first hit) so
+    // playback can follow the card in and out of the rail's scroll area.
     useEffect(() => {
         if (!template.previewVideo) return;
 
@@ -51,31 +63,64 @@ const RelatedThumbnail: React.FC<{ template: TemplateItem }> = ({ template }) =>
 
         if (typeof IntersectionObserver === 'undefined') {
             setShouldLoad(true);
+            setInView(true);
             return;
         }
 
         const observer = new IntersectionObserver(
             (entries) => {
-                if (!entries.some((entry) => entry.isIntersecting)) return;
-                setShouldLoad(true);
-                observer.disconnect();
+                const visible = entries.some((entry) => entry.isIntersecting);
+                if (visible) setShouldLoad(true);
+                setInView(visible);
             },
-            { rootMargin: '200px' },
+            { rootMargin: '120px' },
         );
 
         observer.observe(holder);
         return () => observer.disconnect();
     }, [template.previewVideo]);
 
-    // Autoplay can still be refused (data saver, low-power mode), and a silently
-    // frozen first frame is worse than no attempt at all.
+    // Play only while the card is on screen and the tab is in front. Autoplay can
+    // still be refused (data saver, low-power mode), and a silently frozen first
+    // frame is worse than no attempt at all.
     useEffect(() => {
-        if (!shouldLoad) return;
         const video = videoRef.current;
-        if (!video) return;
+        if (!shouldLoad || !video) return;
+
+        if (!inView || document.hidden) {
+            video.pause();
+            return;
+        }
+
         const attempt = video.play();
         if (attempt) attempt.catch(() => {});
-    }, [shouldLoad]);
+    }, [shouldLoad, inView]);
+
+    // A backgrounded tab should not keep pulling preview media.
+    useEffect(() => {
+        if (!shouldLoad) return;
+
+        const handleVisibility = () => {
+            const video = videoRef.current;
+            if (!video) return;
+            if (document.hidden) {
+                video.pause();
+            } else if (inView) {
+                video.play().catch(() => {});
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibility);
+        return () => document.removeEventListener('visibilitychange', handleVisibility);
+    }, [shouldLoad, inView]);
+
+    // Setting the attribute alone does not reliably restart buffering on an
+    // already-mounted element, so the hover upgrade is also applied directly.
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!shouldLoad || !video) return;
+        video.preload = inView || isHovered ? 'auto' : 'metadata';
+    }, [shouldLoad, inView, isHovered]);
 
     return (
         <div
@@ -86,11 +131,12 @@ const RelatedThumbnail: React.FC<{ template: TemplateItem }> = ({ template }) =>
                 <video
                     ref={videoRef}
                     src={template.previewVideo}
-                    autoPlay
                     muted
                     loop
                     playsInline
-                    preload="auto"
+                    // Full buffering is opted into only once the card is on screen
+                    // or the visitor has signalled they are about to click it.
+                    preload={inView || isHovered ? 'auto' : 'metadata'}
                     aria-hidden="true"
                     className="absolute inset-0 h-full w-full object-cover object-top"
                 />
@@ -108,20 +154,30 @@ const RelatedCard: React.FC<{ item: RelatedTemplate; onNavigate: (id: string) =>
 }) => {
     const { template } = item;
     const matchPercent = toMatchPercent(item.score);
+    const [isHovered, setIsHovered] = useState(false);
 
+    // Warms both halves of the destination in one gesture: the live component
+    // chunk and the rail thumbnail the visitor is about to land on.
     const warm = useCallback(() => prefetchTemplateChunk(template.id), [template.id]);
+    const handleEnter = useCallback(() => {
+        setIsHovered(true);
+        warm();
+    }, [warm]);
+    const handleLeave = useCallback(() => setIsHovered(false), []);
 
     return (
         <button
             type="button"
             onClick={() => onNavigate(template.id)}
-            onMouseEnter={warm}
-            onFocus={warm}
+            onMouseEnter={handleEnter}
+            onMouseLeave={handleLeave}
+            onFocus={handleEnter}
+            onBlur={handleLeave}
             aria-label={`${template.title} - ${matchPercent}% match`}
             className="group flex w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#242528] text-left transition-colors hover:border-white/25 focus-visible:border-white/40 focus-visible:outline-none"
         >
             <div className="relative">
-                <RelatedThumbnail template={template} />
+                <RelatedThumbnail template={template} isHovered={isHovered} />
                 <span className="absolute right-1.5 top-1.5 rounded-md bg-black/75 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-white/85 backdrop-blur-sm">
                     {matchPercent}%
                 </span>
@@ -159,7 +215,18 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
 }) => {
     const navigate = useNavigate();
 
-    const allRelated = useMemo(() => getRelatedTemplates(template, websiteTemplates), [template]);
+    // A template promoted to "Build with UI HUB" owns a different canonical page,
+    // so listing it here would offer a card that can never open as a template
+    // preview - it would redirect away the moment it was clicked.
+    const similarCatalog = useMemo(
+        () => websiteTemplates.filter((item) => !BUILD_WITH_UI_HUB_IDS.includes(item.id)),
+        [],
+    );
+
+    const allRelated = useMemo(
+        () => getRelatedTemplates(template, similarCatalog),
+        [template, similarCatalog],
+    );
     const visible = useMemo(
         () => (expanded ? allRelated : allRelated.slice(0, SIMILAR_COLLAPSED_COUNT)),
         [allRelated, expanded],

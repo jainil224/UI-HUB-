@@ -20,6 +20,7 @@ import { Crown, Eye } from 'lucide-react';
 import { SiClaude, SiCursor } from 'react-icons/si';
 import {
     websiteTemplates,
+    BUILD_WITH_UI_HUB_IDS,
     TemplateItem
 } from '../../../data/templatesData';
 import TarsHeroArena from '../../../components/templates/TarsHeroArena';
@@ -52,7 +53,7 @@ const TemplatesSection = () => {
     const [toastMessage, setToastMessage] = useState('');
 
     const renderSections = [
-        { category: 'Templates', hint: 'Complete pages to customize', items: websiteTemplates.filter((template) => template.id !== 'originkit-hero-24') },
+        { category: 'Templates', hint: 'Complete pages to customize', items: websiteTemplates.filter((template) => !BUILD_WITH_UI_HUB_IDS.includes(template.id)) },
     ];
 
     const handleCopyPrompt = (template: TemplateItem, e?: React.MouseEvent) => {

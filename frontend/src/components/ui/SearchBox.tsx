@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Search, ArrowRight } from 'lucide-react';
 import { searchEverything, COMPONENT_CATEGORY_COLORS } from '../../utils/searchIndex';
 import type { ComponentItem } from '../../data/componentData';
+// The slug map is imported from its own dependency-free module, not from
+// templatesData: SearchBox sits in the navbar, so importing the catalog here
+// would put ~800 kB of template records into the initial bundle.
+import { buildWithUIHubSlugByTemplateId } from '../../data/buildWithUIHubSlugs';
 import type { TemplateItem } from '../../data/templatesData';
 
 type SuggestionBadge = 'PRO' | 'FREE' | 'NEW' | null;
@@ -111,6 +115,9 @@ const SearchBox: React.FC<SearchBoxProps> = ({
             });
         }
         for (const t of live.templates) {
+            // A template promoted to a "Build with UI HUB" section has its own
+            // canonical URL, so send the hit there rather than to /templates.
+            const sectionSlug = buildWithUIHubSlugByTemplateId[t.id];
             items.push({
                 type: 'template',
                 id: t.id,
@@ -118,7 +125,7 @@ const SearchBox: React.FC<SearchBoxProps> = ({
                 category: t.category,
                 color: t.accentColor,
                 badge: t.isPro ? 'PRO' : t.badge ? 'NEW' : 'FREE',
-                route: `/templates/${t.id}`,
+                route: sectionSlug ? `/build-with-ui-hub/${sectionSlug}` : `/templates/${t.id}`,
             });
         }
         return items;

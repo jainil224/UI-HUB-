@@ -59,6 +59,15 @@ export default defineConfig(({mode}) => {
       chunkSizeWarningLimit: 1200,
       rollupOptions: {
         output: {
+          // Without this, Rollup hoists the *dependencies* of every package
+          // listed in manualChunks into those same vendor chunks. That is how a
+          // pure data module ended up with static imports of three.js and
+          // recharts: the built templatesData chunk carried side-effect imports
+          // of vendor-three (518 kB) and vendor-charts (386 kB), so even a flat
+          // 2D template downloaded both before it could render. With this flag
+          // only the named packages are grouped, and a page that never imports
+          // them no longer pulls them in.
+          onlyExplicitManualChunks: true,
           manualChunks: {
             // Split heavy vendor libraries into separate chunks for better caching and faster initial load
             'vendor-react': ['react', 'react-dom', 'react-router-dom'],
