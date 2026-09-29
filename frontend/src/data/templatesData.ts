@@ -6805,7 +6805,7 @@ Key Specifications:
   },
   {
     id: 'originkit-hero-24',
-    previewVideo: '/assets/template-previews/11-preview.mp4',
+    previewVideo: '/assets/template-previews/11.webm',
     title: 'Hirefy Glass Globe',
     description: 'Cinematic global-hiring hero with a draggable dot-matrix Three.js globe, two photo-mask hand cutouts sliding in from the edges, floating glass statistic cards, and a staggered glass-morphism nav bar.',
     category: 'SaaS & AI',
@@ -7098,13 +7098,11 @@ Include:
    with opacity 0 -> 1.
 9. Reduced Motion: all animation durations collapse to 1ms and every
    transform resolves to none.`
-     }
+    }
   },
   {
     id: 'visionary-orb-hero',
-    // TODO: add previewVideo: '/assets/template-previews/<file>' once the
-    // Visionary capture is supplied. Optional — the rail falls back to
-    // previewGradient until then.
+    previewVideo: '/assets/template-previews/build withe UI HUB 2.webm',
     title: 'Visionary',
     description: 'Cinematic wellness hero on a deep obsidian stage: a dusty-rose particle orb cradled in a photographic hand under a single top-center horizon filament, with editorial serif typography, a floating glass nav and a static frosted recommendation card.',
     category: 'SaaS & AI',

@@ -806,8 +806,8 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                   </div>
                   <span
                     className={`text-xs font-normal transition-all duration-200 ${item.completed
-                        ? "text-slate-400 line-through opacity-70"
-                        : "text-slate-200 group-hover/item:text-white"
+                      ? "text-slate-400 line-through opacity-70"
+                      : "text-slate-200 group-hover/item:text-white"
                       }`}
                   >
                     {item.label}
@@ -953,7 +953,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
 
             <ParticleSphere
               particlesCount={8500}
-              particleScale={4.0}
+              particleScale={4.5}
               speed={22}
               scale={ORB_SCALE}
               drag={true}
