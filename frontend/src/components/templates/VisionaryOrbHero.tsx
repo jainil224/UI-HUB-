@@ -317,56 +317,27 @@ const ParticleSphere: React.FC<ParticleSphereProps> = ({
     const cursorPx = { x: 0, y: 0 };
     let cursorActive = false;
 
-    const raycaster = new THREE.Raycaster();
-    const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
-    const localCursor = new THREE.Vector3(9999, 9999, 9999);
-
     const updateCursor3DPosition = (clientX: number, clientY: number) => {
       const rect = canvas.getBoundingClientRect();
       cursorPx.x = clientX - rect.left;
       cursorPx.y = clientY - rect.top;
       cursorActive = true;
-      const ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
-      const ndcY = -(((clientY - rect.top) / rect.height) * 2 - 1);
-      raycaster.setFromCamera(new THREE.Vector2(ndcX, ndcY), camera);
-      const worldIntersection = new THREE.Vector3();
-      raycaster.ray.intersectPlane(plane, worldIntersection);
-      if (worldIntersection) {
-        localCursor.copy(worldIntersection);
-        group.worldToLocal(localCursor);
-      }
     };
 
     // 7. Pointer listeners
     const onPointerDown = (e: PointerEvent) => {
-      if (!drag) return;
       updateCursor3DPosition(e.clientX, e.clientY);
+      applyScatter(e.clientX, e.clientY);
+      if (!drag) return;
       isDragging = true;
       previousPointer = { x: e.clientX, y: e.clientY };
       canvas.setPointerCapture(e.pointerId);
-
-      const clickPush = clickForce * 0.2;
-      for (let i = 0; i < particlesCount; i++) {
-        const base = basePositions[i];
-        const dx = base.x - localCursor.x;
-        const dy = base.y - localCursor.y;
-        const dz = base.z - localCursor.z;
-        const distSq = dx * dx + dy * dy + dz * dz;
-        if (distSq < sphereRadius * sphereRadius * 1.5) {
-          const dist = Math.max(0.1, Math.sqrt(distSq));
-          scatterVelocities[i].add(
-            new THREE.Vector3(
-              (dx / dist) * clickPush,
-              (dy / dist) * clickPush,
-              (dz / dist) * clickPush
-            )
-          );
-        }
-      }
     };
 
     const onPointerMove = (e: PointerEvent) => {
+      const wasOutside = !cursorActive;
       updateCursor3DPosition(e.clientX, e.clientY);
+      if (wasOutside) applyScatter(e.clientX, e.clientY);
       if (isDragging) {
         const deltaX = e.clientX - previousPointer.x;
         const deltaY = e.clientY - previousPointer.y;
@@ -391,7 +362,6 @@ const ParticleSphere: React.FC<ParticleSphereProps> = ({
     const onPointerLeave = () => {
       cursorActive = false;
       isDragging = false;
-      localCursor.set(9999, 9999, 9999);
     };
 
     canvas.addEventListener("pointerdown", onPointerDown);
@@ -408,6 +378,72 @@ const ParticleSphere: React.FC<ParticleSphereProps> = ({
     const worldPos = new THREE.Vector3();
     const projectedVec = new THREE.Vector3();
     const localRepulsion = new THREE.Vector3();
+    const clickRay = new THREE.Vector3();
+    const cameraWorldPosition = new THREE.Vector3();
+    const clickDirection = new THREE.Vector3();
+    const clickWorldPosition = new THREE.Vector3();
+    const scatterRadial = new THREE.Vector3();
+    const scatterWorld = new THREE.Vector3();
+    const scatterLocal = new THREE.Vector3();
+
+    const applyScatter = (clientX: number, clientY: number) => {
+      if (!cursorOn || !clickForce || cursorRadiusPx <= 0) return;
+
+      group.updateMatrixWorld(true);
+      inverseGroupMatrix.copy(group.matrixWorld).invert();
+
+      const rect = canvas.getBoundingClientRect();
+      const clickX = clientX - rect.left;
+      const clickY = clientY - rect.top;
+      const ndcX = (clickX / boxWidth) * 2 - 1;
+      const ndcY = 1 - (clickY / boxHeight) * 2;
+
+      clickRay.set(ndcX, ndcY, 0.5).unproject(camera);
+      cameraWorldPosition.setFromMatrixPosition(camera.matrixWorld);
+      clickDirection
+        .subVectors(clickRay, cameraWorldPosition)
+        .normalize();
+      clickWorldPosition
+        .copy(cameraWorldPosition)
+        .addScaledVector(clickDirection, cameraWorldPosition.length());
+
+      for (let i = 0; i < particlesCount; i++) {
+        const base = basePositions[i];
+        const displacement = displacements[i];
+        worldPos.set(
+          base.x + displacement.x,
+          base.y + displacement.y,
+          base.z + displacement.z
+        );
+        worldPos.applyMatrix4(group.matrixWorld);
+        projectedVec.copy(worldPos).project(camera);
+
+        const screenX = (projectedVec.x * 0.5 + 0.5) * boxWidth;
+        const screenY = (-projectedVec.y * 0.5 + 0.5) * boxHeight;
+        const dx = clickX - screenX;
+        const dy = clickY - screenY;
+        const distSq = dx * dx + dy * dy;
+
+        if (distSq < cursorRadSq && distSq > 0) {
+          const screenDistance = Math.sqrt(distSq);
+          const force =
+            ((cursorRadiusPx - screenDistance) / cursorRadiusPx) * clickForce;
+
+          scatterRadial.subVectors(worldPos, clickWorldPosition);
+          const radialDistance = scatterRadial.length();
+          if (radialDistance > 0.001) {
+            scatterRadial.normalize();
+            scatterWorld
+              .copy(scatterRadial)
+              .multiplyScalar(force * 0.5);
+            scatterLocal
+              .copy(scatterWorld)
+              .applyMatrix4(inverseGroupMatrix);
+            scatterVelocities[i].add(scatterLocal);
+          }
+        }
+      }
+    };
 
     // Particle Sphere cursor physics, in the same units it uses.
     const CURSOR_RETURN = 0.015;
@@ -769,11 +805,10 @@ const RecommendationCard: React.FC<RecommendationCardProps> = ({
                     {item.icon}
                   </div>
                   <span
-                    className={`text-xs font-normal transition-all duration-200 ${
-                      item.completed
+                    className={`text-xs font-normal transition-all duration-200 ${item.completed
                         ? "text-slate-400 line-through opacity-70"
                         : "text-slate-200 group-hover/item:text-white"
-                    }`}
+                      }`}
                   >
                     {item.label}
                   </span>
@@ -861,7 +896,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
       <HeroBackground />
 
       {/* 2. Top Floating Navigation Header */}
-      <HeroNavbar onOpenAuth={() => {}} />
+      <HeroNavbar onOpenAuth={() => { }} />
 
       {/* 3. Center Hand & Glowing Particle Sphere Anchor */}
       <div
@@ -963,7 +998,7 @@ const Hero: React.FC<HeroProps> = ({ className }) => {
       {/* 4. Foreground Content Stage */}
       <main className="relative z-20 flex-1 flex flex-col justify-between px-6 sm:px-10 lg:px-14 py-8 lg:py-12 pointer-events-none">
         {/* Left Column: Editorial Headline & Brand Grid */}
-        <div className="w-full lg:w-7/12 pointer-events-auto mt-auto mb-10 sm:mb-14 lg:mb-16">
+        <div className="w-full lg:w-7/12 pointer-events-none mt-auto mb-10 sm:mb-14 lg:mb-16">
           <HeroContent />
         </div>
 

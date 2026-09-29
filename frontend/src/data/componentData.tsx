@@ -113,8 +113,6 @@ const ParticleLoader = React.lazy(() => import('../components/ui/ParticleLoader'
 const NeonBorder = React.lazy(() => import('../components/ui/NeonBorder'));
 const QuantumLattice = React.lazy(() => import('../components/ui/QuantumLattice'));
 const MatrixRain = React.lazy(() => import('../components/ui/MatrixRain'));
-const OriginkitHero24 = React.lazy(() => import('../components/templates/OriginkitHero24'));
-const VisionaryOrbHero = React.lazy(() => import('../components/templates/VisionaryOrbHero'));
 
 
 
@@ -699,11 +697,11 @@ const TargetCursorPreview: React.FC = () => {
                 <div style={{ gridTemplateColumns: 'repeat(3, 1fr)', display: 'grid', gap: 16 }}>
                     {[1, 2, 3].map(i => (
                         <MagneticElement key={i} strength={10}>
-                            <div 
+                            <div
                                 className="cursor-target group/node"
-                                style={{ 
-                                    height: 100, 
-                                    background: '#0a0a0a', 
+                                style={{
+                                    height: 100,
+                                    background: '#0a0a0a',
                                     border: '1px solid #1a1a1a',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -728,9 +726,9 @@ const TargetCursorPreview: React.FC = () => {
 
                 <div style={{ display: 'flex', gap: 12 }}>
                     <MagneticElement className="flex-1" strength={20}>
-                        <button 
-                            className="cursor-target" 
-                            style={{ 
+                        <button
+                            className="cursor-target"
+                            style={{
                                 width: '100%', padding: '12px', background: '#ffffff', color: '#000', fontSize: 11, fontWeight: 'bold', border: 'none', letterSpacing: '0.1em',
                                 transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)',
                                 boxShadow: '0 4px 12px rgba(255, 255, 255, 0.2)'
@@ -750,9 +748,9 @@ const TargetCursorPreview: React.FC = () => {
                         </button>
                     </MagneticElement>
                     <MagneticElement className="flex-1" strength={20}>
-                        <button 
-                            className="cursor-target" 
-                            style={{ 
+                        <button
+                            className="cursor-target"
+                            style={{
                                 width: '100%', padding: '12px', background: 'transparent', border: '1px solid #333', color: '#666', fontSize: 11, fontWeight: 'bold', letterSpacing: '0.1em',
                                 transition: 'all 0.3s cubic-bezier(0.23, 1, 0.32, 1)'
                             }}
@@ -799,74 +797,74 @@ const BlackHoleCursorPreview: React.FC = () => {
             }}
         >
             <Suspense fallback={null}>
-            <BlackHoleCursor gravityRadius={250} containerRef={containerRef}>
-                {/* Mock Website Overlay */}
-                <div style={{ padding: '16px 20px', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                    {/* Mock Nav */}
-                    <nav style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 'auto' }}>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: '8px 20px' }}>
-                            {['Home', 'About', 'Library'].map(link => (
-                                <span key={link} style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer' }}>{link}</span>
+                <BlackHoleCursor gravityRadius={250} containerRef={containerRef}>
+                    {/* Mock Website Overlay */}
+                    <div style={{ padding: '16px 20px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                        {/* Mock Nav */}
+                        <nav style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginBottom: 'auto' }}>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: '8px 20px' }}>
+                                {['Home', 'About', 'Library'].map(link => (
+                                    <span key={link} style={{ color: 'rgba(255,255,255,0.4)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', cursor: 'pointer' }}>{link}</span>
+                                ))}
+                            </div>
+                        </nav>
+
+                        {/* Hero Text */}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, flex: 1, justifyContent: 'center', textAlign: 'center', padding: '12px 0' }}>
+                            <h1 style={{
+                                fontSize: 'clamp(28px, 8vw, 48px)', fontWeight: 900, letterSpacing: '-0.05em',
+                                color: '#fff',
+                                margin: 0,
+                                textShadow: '0 0 40px rgba(139, 92, 246, 0.8)',
+                            }}>
+                                Black Hole
+                            </h1>
+                            <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
+                                Move cursor · Touch &amp; drag · Stars follow gravity
+                            </div>
+                        </div>
+                        {/* Interactive elements to test gravity pulse effect */}
+                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px 20px', zIndex: 10, marginTop: 'auto', paddingBottom: '16px' }}>
+                            {['Singularity', 'Wormhole', 'Nebula'].map((label, i) => (
+                                <button
+                                    key={i}
+                                    className="bh-demo-btn group/btn"
+                                    style={{
+                                        position: 'relative',
+                                        padding: '10px 24px',
+                                        fontSize: 12,
+                                        fontWeight: 700,
+                                        letterSpacing: '0.1rem',
+                                        textTransform: 'uppercase',
+                                        color: '#fff',
+                                        background: 'transparent',
+                                        border: '1px solid rgba(255,255,255,0.1)',
+                                        borderRadius: '8px',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        pointerEvents: 'auto',
+                                        overflow: 'hidden'
+                                    }}
+                                >
+                                    {/* Inner Black Hole Effect */}
+                                    <div className="btn-bh-core" style={{
+                                        position: 'absolute',
+                                        top: '50%', left: '50%',
+                                        width: '0%', height: '0%',
+                                        background: '#000',
+                                        borderRadius: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                                        zIndex: 0,
+                                        boxShadow: '0 0 0 0 rgba(139, 92, 246, 0)',
+                                    }} />
+
+                                    <span className="relative z-10 transition-transform duration-300 inline-block group-hover/btn:scale-110 group-hover/btn:tracking-[0.2em]">{label}</span>
+                                </button>
                             ))}
                         </div>
-                    </nav>
 
-                    {/* Hero Text */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, flex: 1, justifyContent: 'center', textAlign: 'center', padding: '12px 0' }}>
-                        <h1 style={{
-                            fontSize: 'clamp(28px, 8vw, 48px)', fontWeight: 900, letterSpacing: '-0.05em',
-                            color: '#fff',
-                            margin: 0,
-                            textShadow: '0 0 40px rgba(139, 92, 246, 0.8)',
-                        }}>
-                            Black Hole
-                        </h1>
-                        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.25em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)' }}>
-                            Move cursor · Touch &amp; drag · Stars follow gravity
-                        </div>
-                    </div>
-                    {/* Interactive elements to test gravity pulse effect */}
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '12px 20px', zIndex: 10, marginTop: 'auto', paddingBottom: '16px' }}>
-                        {['Singularity', 'Wormhole', 'Nebula'].map((label, i) => (
-                            <button
-                                key={i}
-                                className="bh-demo-btn group/btn"
-                                style={{
-                                    position: 'relative',
-                                    padding: '10px 24px',
-                                    fontSize: 12,
-                                    fontWeight: 700,
-                                    letterSpacing: '0.1rem',
-                                    textTransform: 'uppercase',
-                                    color: '#fff',
-                                    background: 'transparent',
-                                    border: '1px solid rgba(255,255,255,0.1)',
-                                    borderRadius: '8px',
-                                    cursor: 'pointer',
-                                    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                                    pointerEvents: 'auto',
-                                    overflow: 'hidden'
-                                }}
-                            >
-                                {/* Inner Black Hole Effect */}
-                                <div className="btn-bh-core" style={{
-                                    position: 'absolute',
-                                    top: '50%', left: '50%',
-                                    width: '0%', height: '0%',
-                                    background: '#000',
-                                    borderRadius: '50%',
-                                    transform: 'translate(-50%, -50%)',
-                                    transition: 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-                                    zIndex: 0,
-                                    boxShadow: '0 0 0 0 rgba(139, 92, 246, 0)',
-                                }} />
-
-                                <span className="relative z-10 transition-transform duration-300 inline-block group-hover/btn:scale-110 group-hover/btn:tracking-[0.2em]">{label}</span>
-                            </button>
-                        ))}
-                    </div>
-
-                    <style>{`
+                        <style>{`
                         .bh-demo-btn {
                             overflow: hidden;
                             position: relative;
@@ -896,8 +894,8 @@ const BlackHoleCursorPreview: React.FC = () => {
                             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
                         }
                     `}</style>
-                </div>
-            </BlackHoleCursor>
+                    </div>
+                </BlackHoleCursor>
             </Suspense>
         </div>
     );
@@ -909,16 +907,16 @@ const HeartCursorPreview: React.FC = () => {
 
     // Stable floating hearts (deterministic positions)
     const floatingHearts = [
-        { top: '10%',  left: '8%',   size: 28, opacity: 0.18, dur: 6,   delay: 0   },
-        { top: '25%',  left: '88%',  size: 18, opacity: 0.14, dur: 8,   delay: 1.2 },
-        { top: '60%',  left: '5%',   size: 22, opacity: 0.12, dur: 7,   delay: 0.5 },
-        { top: '75%',  left: '92%',  size: 30, opacity: 0.16, dur: 9,   delay: 2   },
-        { top: '45%',  left: '82%',  size: 14, opacity: 0.10, dur: 6.5, delay: 3   },
-        { top: '15%',  left: '55%',  size: 12, opacity: 0.08, dur: 7.5, delay: 1.8 },
-        { top: '80%',  left: '30%',  size: 20, opacity: 0.12, dur: 8.5, delay: 0.8 },
-        { top: '88%',  left: '65%',  size: 16, opacity: 0.09, dur: 6,   delay: 2.5 },
-        { top: '35%',  left: '15%',  size: 10, opacity: 0.07, dur: 9,   delay: 4   },
-        { top: '5%',   left: '72%',  size: 24, opacity: 0.13, dur: 7,   delay: 3.5 },
+        { top: '10%', left: '8%', size: 28, opacity: 0.18, dur: 6, delay: 0 },
+        { top: '25%', left: '88%', size: 18, opacity: 0.14, dur: 8, delay: 1.2 },
+        { top: '60%', left: '5%', size: 22, opacity: 0.12, dur: 7, delay: 0.5 },
+        { top: '75%', left: '92%', size: 30, opacity: 0.16, dur: 9, delay: 2 },
+        { top: '45%', left: '82%', size: 14, opacity: 0.10, dur: 6.5, delay: 3 },
+        { top: '15%', left: '55%', size: 12, opacity: 0.08, dur: 7.5, delay: 1.8 },
+        { top: '80%', left: '30%', size: 20, opacity: 0.12, dur: 8.5, delay: 0.8 },
+        { top: '88%', left: '65%', size: 16, opacity: 0.09, dur: 6, delay: 2.5 },
+        { top: '35%', left: '15%', size: 10, opacity: 0.07, dur: 9, delay: 4 },
+        { top: '5%', left: '72%', size: 24, opacity: 0.13, dur: 7, delay: 3.5 },
     ];
 
     return (
@@ -1011,7 +1009,7 @@ const HeartCursorPreview: React.FC = () => {
                     pointerEvents: 'none',
                 }}>
                     <svg width={h.size} height={h.size} viewBox="0 0 24 24" fill="#ec4899">
-                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" />
                     </svg>
                 </div>
             ))}
@@ -1046,7 +1044,7 @@ const HeartCursorPreview: React.FC = () => {
                     borderRadius: 999, padding: '5px 14px',
                 }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="#f472b6">
-                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" />
                     </svg>
                     <span style={{ fontSize: 11, fontWeight: 700, color: '#f9a8d4', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
                         Heart Cursor
@@ -1098,7 +1096,7 @@ const HeartCursorPreview: React.FC = () => {
                     display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
                 }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/>
+                        <path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z" />
                     </svg>
                     Explore Components
                 </button>
@@ -1174,12 +1172,12 @@ const LizardCursorPreview: React.FC = () => {
 
             {/* Content Layer */}
             <div style={{ position: 'relative', zIndex: 10, textAlign: 'center', width: '90%', maxWidth: '800px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 32 }}>
-                
+
                 {/* Header Section */}
                 <div style={{ borderBottom: '1px solid rgba(34, 197, 94, 0.1)', paddingBottom: 24, width: '100%' }}>
-                    <div style={{ 
+                    <div style={{
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 12,
-                        fontSize: 10, color: '#22c55e', letterSpacing: '0.5em', fontWeight: 'bold' 
+                        fontSize: 10, color: '#22c55e', letterSpacing: '0.5em', fontWeight: 'bold'
                     }}>
                         <div style={{ width: 8, height: 8, background: '#22c55e', borderRadius: '50%', boxShadow: '0 0 10px #22c55e' }} />
                         UI_HUB // ADAPTIVE_BIOME
@@ -1196,11 +1194,11 @@ const LizardCursorPreview: React.FC = () => {
                 <div style={{ display: 'flex', gap: 16, width: '100%' }}>
                     {[1, 2, 3].map(i => (
                         <MagneticElement key={i} strength={15} className="flex-1">
-                            <div 
+                            <div
                                 className="interactive"
-                                style={{ 
-                                    height: 120, 
-                                    background: 'rgba(255, 255, 255, 0.02)', 
+                                style={{
+                                    height: 120,
+                                    background: 'rgba(255, 255, 255, 0.02)',
                                     border: '1px solid rgba(34, 197, 94, 0.1)',
                                     borderRadius: '20px',
                                     display: 'flex',
@@ -1232,10 +1230,10 @@ const LizardCursorPreview: React.FC = () => {
                 {/* Primary & Secondary CTAs */}
                 <div style={{ display: 'flex', gap: 16, width: '100%' }}>
                     <MagneticElement className="flex-1" strength={25}>
-                        <button 
-                            className="interactive" 
-                            style={{ 
-                                width: '100%', padding: '16px', background: '#fff', 
+                        <button
+                            className="interactive"
+                            style={{
+                                width: '100%', padding: '16px', background: '#fff',
                                 color: '#000', fontSize: 12, fontWeight: '900', border: 'none', letterSpacing: '0.2em',
                                 borderRadius: '12px', transition: 'all 0.3s ease', cursor: 'none',
                                 boxShadow: '0 8px 32px rgba(255,255,255,0.1)'
@@ -1254,11 +1252,11 @@ const LizardCursorPreview: React.FC = () => {
                     </MagneticElement>
 
                     <MagneticElement className="flex-1" strength={25}>
-                        <button 
-                            className="interactive" 
-                            style={{ 
-                                width: '100%', padding: '16px', background: 'rgba(34, 197, 94, 0.03)', 
-                                color: '#fff', fontSize: 12, fontWeight: '900', border: '1px solid rgba(34, 197, 94, 0.2)', 
+                        <button
+                            className="interactive"
+                            style={{
+                                width: '100%', padding: '16px', background: 'rgba(34, 197, 94, 0.03)',
+                                color: '#fff', fontSize: 12, fontWeight: '900', border: '1px solid rgba(34, 197, 94, 0.2)',
                                 letterSpacing: '0.2em', borderRadius: '12px', transition: 'all 0.3s ease', cursor: 'none',
                             }}
                             onMouseEnter={(e) => {
@@ -1685,7 +1683,7 @@ const ThreeDSliderPreview: React.FC = () => {
             borderRadius: '24px'
         }}>
             <ThreeDSlider autoPlay={true} interval={6000} />
-            
+
             {/* Library Themed Overlay */}
             <div style={{
                 position: 'absolute',
@@ -1767,10 +1765,10 @@ const CinematicNavbarPreview: React.FC = () => {
                 <a className="cin-logo" href="#top">
                     <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <g transform="rotate(-30 12 12)">
-                            <circle cx="7.3" cy="3.2" r="1.45"/>
-                            <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-                            <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8"/>
-                            <circle cx="16.7" cy="20.8" r="1.45"/>
+                            <circle cx="7.3" cy="3.2" r="1.45" />
+                            <rect x="5.5" y="4.7" width="3.6" height="14.6" rx="1.8" />
+                            <rect x="14.9" y="4.7" width="3.6" height="14.6" rx="1.8" />
+                            <circle cx="16.7" cy="20.8" r="1.45" />
                         </g>
                     </svg>
                     Vesper<span className="cin-suffix">.ai</span>
@@ -2260,7 +2258,7 @@ const ModernDarkNavbarPreview: React.FC = () => {
                             border: 'none', background: 'transparent', color: '#f4f4f5',
                             cursor: 'pointer', alignItems: 'center', justifyContent: 'center',
                         }}>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
                         </div>
                     </div>
                 </div>
@@ -2670,10 +2668,10 @@ const LazyRenderer: React.FC<{ type: 'animation' | 'effect', name: string, rawNa
     useEffect(() => {
         const load = async () => {
             try {
-                const module = type === 'animation' 
+                const module = type === 'animation'
                     ? await import('../components/animations/TextAnimations')
                     : await import('../components/animations/VisualEffects');
-                
+
                 const component = module[name] || module[rawName];
                 setComp(() => component);
             } catch (err) {
@@ -2718,8 +2716,6 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cards-beam': CardsBeam,
     'solar-system': SolarSystem,
     '3d-hero': ToonhubHero,
-    'originkit-hero-24': OriginkitHero24,
-    'visionary-orb-hero': VisionaryOrbHero,
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
     'infinite-marquee': InfiniteMarquee,
@@ -2814,18 +2810,18 @@ const renderComponent = (id: string, _name: string, props: any = {}): (() => Rea
 
         const rawName = id.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join('');
         // If it's a text category, it might need 'Text' suffix if it's not already in the ID
-        const isText = id.includes('text') || 
-                       id.includes('cinematic') || 
-                       id.includes('separate') || 
-                       id.includes('wavy') || 
-                       ['letter-pull-up', 'scale-letter', 'word-pull-up'].includes(id);
+        const isText = id.includes('text') ||
+            id.includes('cinematic') ||
+            id.includes('separate') ||
+            id.includes('wavy') ||
+            ['letter-pull-up', 'scale-letter', 'word-pull-up'].includes(id);
         const CompName = isText ? (id.endsWith('-text') ? rawName : `${rawName}Text`) : rawName;
 
         return (
-            <LazyRenderer 
-                type={isText ? 'animation' : 'effect'} 
-                name={CompName} 
-                rawName={rawName} 
+            <LazyRenderer
+                type={isText ? 'animation' : 'effect'}
+                name={CompName}
+                rawName={rawName}
                 componentProps={props}
             />
         );
@@ -2946,19 +2942,19 @@ const HaulFooterPreview: React.FC = () => {
                             }}>
                                 <p style={{ fontSize: 14, color: '#6b7280', fontWeight: 500, margin: 0 }}>© 2026 HAUL! All Rights Reserved</p>
                                 <div style={{ display: 'flex', gap: 8 }}>
-                                    {["M26 3.4c-.6.3-2.2.9-2.6 1 .3.2.5.7.6 1 .3 1.0.3 1.4.3 2.2 0 6.7-3 9.3-6.6 10.8 3.4.9 6 .0 7.8-1.2 2.3-1.5 3.9-3.8 4.2-6.6.3 2.4 1.5 4.4 3.4 5.7 1.7-1 2.3-2.8.8-7.1-.2-.5-.3-1.2-.9-2.4.1 0-.1-1.4-1.3-2.4 1 .0-2.2-.5-3.1-.4 .1-1.3-.2-2.6-1.3-3.2z", 
-                                        "M4 12l14-6-3 8 3 7-14-9", 
-                                        "M12 2c2.5 0 2.8 1 4 1s2-.5 4-1l-1.5 4.5M12 22c-2.5 0-2.8-1-4-1s-2 .5-4 1l1.5-4.5", 
+                                    {["M26 3.4c-.6.3-2.2.9-2.6 1 .3.2.5.7.6 1 .3 1.0.3 1.4.3 2.2 0 6.7-3 9.3-6.6 10.8 3.4.9 6 .0 7.8-1.2 2.3-1.5 3.9-3.8 4.2-6.6.3 2.4 1.5 4.4 3.4 5.7 1.7-1 2.3-2.8.8-7.1-.2-.5-.3-1.2-.9-2.4.1 0-.1-1.4-1.3-2.4 1 .0-2.2-.5-3.1-.4 .1-1.3-.2-2.6-1.3-3.2z",
+                                        "M4 12l14-6-3 8 3 7-14-9",
+                                        "M12 2c2.5 0 2.8 1 4 1s2-.5 4-1l-1.5 4.5M12 22c-2.5 0-2.8-1-4-1s-2 .5-4 1l1.5-4.5",
                                         "M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"].map((icon, i) => (
-                                        <a key={i} href="#" className="haul-social" style={{
-                                            width: 40, height: 40, borderRadius: '50%', border: '1px solid #f3f4f6',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280',
-                                        }}>
-                                            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <path d={icon} />
-                                            </svg>
-                                        </a>
-                                    ))}
+                                            <a key={i} href="#" className="haul-social" style={{
+                                                width: 40, height: 40, borderRadius: '50%', border: '1px solid #f3f4f6',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6b7280',
+                                            }}>
+                                                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <path d={icon} />
+                                                </svg>
+                                            </a>
+                                        ))}
                                 </div>
                             </div>
                         </div>
@@ -9239,7 +9235,7 @@ export const GradientOrb: React.FC = () => {
 
 export default GradientOrb;`,
         vibePrompt: "Create a 'Gradient Orb' loader in React + TypeScript with pure CSS keyframes and animated SVG masks (no dependencies). The mark is a glossy 100px liquid-gradient sphere built from three stacked layers inside a .gorb-loader (position relative, border-radius 50%, overflow hidden). Layer one is a .gorb-sphere pill with a white radial specular gradient at 80% 20%. Its ::before pseudo spins on a 2s loop (gorb-rotation) while carrying two inset box-shadows that act as colored blobs - a cyan blob inset from the top-left (-size/20,-size/20 blur size/10) and a yellow blob inset from the right (size/10,0 blur size/5) - plus a hue-rotate palette animation (gorb-colorize) sweeping 0deg -> -30 -> -60 -> -90 -> -45 -> 0 on a 2s ease-in-out. The ::after pseudo sits at z-index -1 behind it painting a blurred linear-gradient from red to blue at 120deg, and animates the same rotation but with a gorb-colorblur filter that adds a soft blur(size/15) while hue-rotating. Over the sphere an inline 100x100 SVG rotates on a slower 3s cubic-bezier(0.7,0.6,0.3,0.4) loop and sculpts the orb's face with four masks (all gorb- prefixed ids): a #gorb-waves stroke mask whose two duplicated paths animate their d attribute (gorb-wave-one bulges upward, gorb-wave-two bulges downward, each offset by half a period and the second pair running reverse) so liquid ripples cross the surface; a #gorb-clipping ellipse mask so the ripple pattern wraps a vertical band; a #gorb-blurriness mask blurring 7px; and a #gorb-fade ellipse mask that diffuses the whole mark's edges. Everything is driven off CSS variables (--gorb-size 100px, --gorb-time-animation 1s, red/blue/yellow/cyan/white palette vars) and drawn on a dark radial backdrop."
-},
+    },
     {
         id: "super-mario",
         title: "Super Mario",
@@ -15224,32 +15220,6 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
                 <QuantumLattice />
             </div>
         ),
-        code: "",
-        vibePrompt: "",
-    },
-
-    // ── Hirefy Glass Globe ──────────────────────────────────────
-    {
-        id: "originkit-hero-24",
-        title: "Hirefy Glass Globe",
-        category: "3d",
-        addedAt: "2026-09-28",
-        newBadgeDays: 120,
-        description: "Originkit's Hirefy hero: a real-time WebGL dot globe. A Three.js sphere carries a d3-geo equirectangular land fill, a coastline outline and a graticule, with instanced surface dots and city markers that turn under drag. Presented as a glass-card product hero with a phone mockup, hand cutout and a staged reveal.",
-        preview: renderComponent("originkit-hero-24", "OriginkitHero24"),
-        code: "",
-        vibePrompt: "",
-    },
-
-    // ── Visionary Orb ─────────────────────────────────────────────
-    {
-        id: "visionary-orb-hero",
-        title: "Visionary Orb",
-        category: "3d",
-        addedAt: "2026-09-29",
-        newBadgeDays: 120,
-        description: "A cinematic editorial wellness hero. A 10,000-instance Fibonacci particle orb shaded on a three-stop top-to-base depth ramp rests in a screen-blended photographic hand cutout, lit by one narrow top light bar whose radial mask keeps the glow from spilling off the sides. The orb drags with friction decay, keeps a slow idle rotation, and pushes particles away from the cursor. Hovering also craters the surface: particles spring away from the pointer along the surface normal, hold an inflated rim just outside the radius, and settle back when the pointer leaves. A static frosted glass card completes the composition.",
-        preview: renderComponent("visionary-orb-hero", "VisionaryOrbHero"),
         code: "",
         vibePrompt: "",
     },
