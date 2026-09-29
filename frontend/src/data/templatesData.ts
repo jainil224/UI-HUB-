@@ -19,6 +19,10 @@ export interface TemplateItem {
   previewVideo?: string;
   liveDemoUrl?: string;
   githubUrl?: string;
+  /** When set, the preview toolbar's Code button opens this external source
+   *  (e.g. an AI Studio app) in a new tab instead of the in-page source
+   *  viewer. Templates without it keep the built-in code tab. */
+  codeUrl?: string;
   previewGradient: string;
   accentColor: string;
   stats: {
@@ -7094,6 +7098,891 @@ Include:
    with opacity 0 -> 1.
 9. Reduced Motion: all animation durations collapse to 1ms and every
    transform resolves to none.`
+     }
+  },
+  {
+    id: 'visionary-orb-hero',
+    // TODO: add previewVideo: '/assets/template-previews/<file>' once the
+    // Visionary capture is supplied. Optional — the rail falls back to
+    // previewGradient until then.
+    title: 'Visionary',
+    description: 'Cinematic wellness hero on a deep obsidian stage: a dusty-rose particle orb cradled in a photographic hand under a single top-center horizon filament, with editorial serif typography, a floating glass nav and a static frosted recommendation card.',
+    category: 'SaaS & AI',
+    badge: 'NEW',
+    framework: 'React 19 (TypeScript)',
+    styling: 'Tailwind CSS',
+    animation: 'Three.js Instanced Orb + Idle Auto-Rotate + Drag Throw + Screen-Space Cursor Void + Click Scatter Burst',
+    isPro: false,
+    githubUrl: 'https://github.com/ui-hub/visionary-orb-hero',
+    codeUrl: 'https://ai.studio/apps/27229b83-8bd6-47c4-bca5-f87b54d916e3',
+    previewGradient: 'from-[#080305] via-[#1A0B10] to-[#E2B4BD]',
+    accentColor: '#E2B4BD',
+    stats: {
+      pages: 1,
+      rating: 5.0,
+      downloads: '1.4k'
+    },
+    features: [
+      'Instanced Three.js orb — 8,500 Fibonacci-distributed spheres with additive blending, shaded on a three-stop #FFF0F3 to #C27586 depth ramp through sphereColor',
+      'Screen-space hover void ported from the Interactive Background Particle Sphere: every particle is projected into canvas pixels and, if it lands within cursorRadiusUI px of the pointer on the camera-facing hemisphere (worldPos.z > 0), it is pushed radially away in the view plane, so the pointer carves a soft void instead of swelling the surface',
+      'Cursor physics: displacement is bled off by friction (0.94) and a spring return (0.015 x speed) per frame, exactly as the Particle Sphere does, so the void relaxes smoothly when the pointer leaves',
+      'Click scatter — a one-shot radial velocity burst inside 1.5 x the sphere radius that decays by 0.95 per frame, integrated as velocity with friction so the orb settles softly',
+      'Idle rotation where speed advances the target yaw every frame, a 0.94 velocity decay carries the throw momentum, and smoothing sets how fast the mesh chases the target orientation',
+      'Drag to spin with throw momentum, pointer capture, and a smoothing-driven lerp plus velocity decay',
+      'Frosted glass nav and a static recommendation card with toggleable habits, a live completed counter and a pulsing Live Sync dot'
+    ],
+    promptPreview: `Build a cinematic, editorial wellness hero on a deep obsidian stage in React 19, TypeScript, Tailwind CSS and raw Three.js, anchored by a particle orb cradled in a photographic hand cutout.
+
+================================================================================
+1. DESIGN TOKENS
+================================================================================
+- Stage / Background: #080305
+- Accent (orb tint, horizon filament, "✦" wordmark, card tags): #E2B4BD
+- Orb depth ramp: #FFF0F3 (top highlight) → #E2B4BD (equator) → #C27586 (base)
+- Card surface: rgba(20,8,12,0.75) fill, rgba(226,180,189,0.18) border, backdrop-blur 20px
+- Text: #FFFFFF headings, slate-300/85 body, slate-400 meta
+- Typography: "Cormorant Garamond" serif display, "Plus Jakarta Sans" for everything else
+
+================================================================================
+2. STAGE
+================================================================================
+- Root: relative, w-full, overflow-hidden, height 720px, background #080305, flex flex-col
+  justify-between, text-white, with selection:bg-[#E2B4BD]/30 selection:text-white.
+- Horizon filament: a centered horizontal rule 240/300/360px wide and 3px tall with a
+  linear-gradient(90deg, transparent, rose, #FFFFFF, rose, transparent) fill and a stacked
+  box-shadow of 0 0 14px #FFFFFF, 0 0 28px #E2B4BD, 0 0 55px rgba(226,180,189,0.8),
+  0 0 85px rgba(183,109,126,0.5). This is the single brightest element on the stage.
+- Light curtain: directly under the filament, 260/320/380px wide by 280px, blur-2xl, opacity
+  0.8, radial-gradient(ellipse at 50% 0%, rgba(255,235,240,0.85), rgba(226,180,189,0.5) 35%,
+  rgba(183,109,126,0.15) 65%, transparent 85%).
+- Soft cone: 300/380/440px wide by 288px, blur-[70px], opacity 0.4, pulled up with -mt-20, to
+  give the beam atmospheric falloff.
+- Ambient washes: 580/720px radial at top 32% (rose 0.3 → transparent 72%, blur 95px), plus a
+  620x480px lower pool at top 65% (rose 0.22 → transparent 80%, blur 100px).
+- Film grain: a 24px radial dot grid at 1px, opacity 0.03, mix-blend-overlay.
+- Edge vignette: radial-gradient(circle at 50% 50%, transparent 45%, rgba(8,3,5,0.8) 85%,
+  #080305 100%). Do not add a separate bottom vignette.
+
+================================================================================
+3. THE ORB (Three.js, raw — not react-three-fiber)
+================================================================================
+Self-contained in the same file so the single-file code viewer can ship the exact source.
+Call it as: particlesCount 8500, particleScale 4.0, speed 22, scale 16.9, drag true,
+dragSpeed 6, smoothing 7.5, cursorOn true, cursorRadiusUI 75, cursorStrengthUI 12,
+clickForce 6, sphereColor "#E2B4BD".
+
+- 8,500 spheres in a single THREE.InstancedMesh inside a rotating THREE.Group.
+- Camera and sizing are deliberately plain: PerspectiveCamera(45, aspect, 0.1, 1000)
+  with camera.position.z = 24, and sphereRadius = scale * 0.45. There is NO overflow
+  canvas and NO FOV compensation: the renderer is sized to the container exactly, so
+  the box stays an honest proxy for the orb's on-screen size.
+- Renderer: WebGLRenderer({ canvas, alpha, antialias, powerPreference
+  "high-performance" }) then setSize(width, height) and setPixelRatio(
+  min(devicePixelRatio, 2)).
+
+There are no UI-to-internal value maps here. Every knob is used at face value:
+
+  sphereRadius        = scale * 0.45
+  particleSize        = particleScale * 0.055
+  dampingSpeed        = min(0.15, max(0.03, 1 / (smoothing + 1)))   0.118 at 7.5
+  speedN              = speed / 10
+  cursorRadius        = clamp(cursorRadiusUI, 0, 600) px on the canvas
+  cursorStrength      = min(1, max(0, cursorStrengthUI / 10)) * 15
+  drag factor         = (dragSpeed * 0.001) / max(1, smoothing * 0.2)
+  clickPush           = clickForce * 0.2
+  idle yaw            += speed * 0.0001 per frame
+  velocity decay      *= 0.94 per frame
+  friction            *= 0.94 ^ deltaFactor per frame
+  return              *= (1 - 0.015 * speedN * deltaFactor)
+  scatter decay       *= 0.95 ^ deltaFactor per frame
+- Fibonacci sphere, golden-angle spiral:
+    phi   = acos(-1 + (2 * i) / count)
+    theta = sqrt(count * PI) * phi
+    posX  =  cos(theta) * sin(phi) * R
+    posY  =  sin(theta) * sin(phi) * R
+    posZ  =  cos(phi) * R
+- Geometry: SphereGeometry(particleSize * 0.16, 6, 6). At 8.5k instances of sub-pixel
+  dots, 6x6 segments is indistinguishable from 8x8 and saves a large triangle count.
+- Material: MeshBasicMaterial({ color: 0xffffff, blending: AdditiveBlending,
+  transparent: true, opacity: 0.95 }).
+- Per-instance color via an InstancedBufferAttribute of count*3 floats: map normalized
+  height t = (base.y / R + 1) / 2 onto the three-stop ramp with linear interpolation
+  between adjacent stops, from #C27586 (base) through sphereColor at the equator to
+  #FFF0F3 (top highlight). There is no extra accent lerp: sphereColor IS the core.
+
+================================================================================
+4. ORB INTERACTION
+================================================================================
+This orb mixes two timing regimes. The idle rotation / drag / throw forces are bare
+per-frame constants applied in a single unconditional rAF loop that never parks —
+deliberately tuned against 60fps. The cursor physics, however, IS delta-normalized,
+ported straight from the Interactive Background Particle Sphere: it multiplies by
+deltaFactor = min(3, dt / (1000 / 60)) so the void feels the same at 60Hz and 120Hz.
+Do not "fix" the rotation constants with an elapsed-time divisor unless you also add
+loop parking, because the two changes interact.
+
+State, in group-local space:
+  basePositions[]      the untouched Fibonacci lattice, never mutated
+  displacements[]      the live offset applied on top of base
+  scatterVelocities[]  click burst energy, integrated then decayed
+
+- 1. HOVER VOID — screen-space, ported from the Interactive Background Particle
+  Sphere. The pointer is tracked in canvas pixels (clientX - rect.left). Each frame,
+  per particle, build the current local position base + displacement, apply
+  group.matrixWorld to get world space, then project it with camera.project() to
+  canvas pixels:
+    screenX = (ndc.x * 0.5 + 0.5) * width
+    screenY = (-ndc.y * 0.5 + 0.5) * height
+  If that pixel is within cursorRadius of the pointer AND worldPos.z > 0 (front
+  hemisphere only, so the back layer keeps rotating untouched):
+    force        = (cursorRadius - dist) / cursorRadius
+    angle        = atan2(cursorY - screenY, cursorX - screenX)
+    repulsion2D  = force * cursorStrength * speedN * deltaFactor
+    worldRepulse = cameraRight * (-cos(angle) * repulsion2D * 0.01)
+                 + cameraUp    * ( sin(angle) * repulsion2D * 0.01)
+    localRepulse = worldRepulse * inverse(group.matrixWorld)
+    displacement += localRepulse
+  cameraRight / cameraUp are the camera matrix's 0th / 1st columns, normalized. The
+  push is radial in the view plane, so the pointer carves a soft void rather than
+  swelling the surface. cursorRadius = clamp(cursorRadiusUI, 0, 600) px and
+  cursorStrength = min(1, max(0, cursorStrengthUI / 10)) * 15.
+- 2. CLICK SCATTER — a one-shot radial velocity burst on pointerdown. localCursor
+  comes from raycasting the pointer's NDC against the z = 0 plane and converting it
+  to group-local space with group.worldToLocal. For every particle whose squared
+  distance to that local cursor is under 1.5 * sphereRadius squared (dist floored at
+  0.1 so the direction stays finite):
+    scatterVelocity += normalize(base - localCursor) * (clickForce * 0.2)
+  It is integrated as velocity, not position.
+- 3. CURSOR PHYSICS — Particle Sphere's friction + spring, applied to displacement
+  every frame (even with the pointer gone):
+    displacement *= 0.94 ^ deltaFactor
+    displacement *= 1 - 0.015 * speedN * deltaFactor
+    displacement += scatterVelocity * (deltaFactor * 0.1)
+    scatterVelocity *= 0.95 ^ deltaFactor
+    scatterVelocity *= 1 - 0.015 * speedN * deltaFactor
+  Because the hover push and the click scatter share the same return, the two relax
+  smoothly and cannot fight each other into a jitter.
+- 4. IDLE ROTATION — every frame while NOT dragging, target.y += speed * 0.0001 and
+  velocity *= 0.94, then target.x += velocity.x and target.y += velocity.y, so a
+  thrown flick coasts. The visible mesh eases toward the target at
+  dampingSpeed = min(0.15, max(0.03, 1 / (smoothing + 1))) = 0.118 at smoothing 7.5.
+- Drag: on pointermove while dragging, with
+  factor = (dragSpeed * 0.001) / max(1, smoothing * 0.2):
+    target.y += dx * factor;  target.x += dy * factor
+    velocity.x  = dy * factor; velocity.y = dx * factor
+  There is no ±90 degree pitch clamp here and no event-timing normalisation; the
+  momentum comes from reusing the per-frame delta as the next frame's velocity.
+- PERFORMANCE:
+  * One pass per frame over the three arrays, writing each instance matrix
+    directly with a reused Matrix4. Never call .clone() in the loop.
+  * Reuse scratch Vector3s (cameraRight, cameraUp, worldPos, projectedVec,
+    localRepulsion) and a scratch Matrix4 for the inverse; recompute the camera
+    columns and the inverse group matrix ONCE per frame, not per particle.
+  * Compare squared screen distances and only sqrt() inside the radius, which is
+    what keeps the projection test cheap across 8,500 particles.
+  * Hoist cursorRadius, cursorStrength, speedN and dampingSpeed out of the loop.
+- Cleanup must cancel the rAF, remove the window resize listener and all five canvas
+  listeners, dispose the geometry, the material and the renderer.
+- Resize: on window resize, update camera.aspect, call updateProjectionMatrix, and
+  renderer.setSize. There is no ResizeObserver.
+
+================================================================================
+5. HAND CUTOUT
+================================================================================
+- The orb and the hand are ONE bottom-anchored flex column, not two independently
+  positioned elements. A relative max-w-[440px] column, children centred, holds the
+  orb box then the hand, so the overlap is a single number you can reason about.
+- Orb box: a fixed 325 x 325 square, z-20, marginBottom -60. Because the column is
+  bottom-anchored, that overlap moves the orb DOWN without ever moving the hand container
+  (which stays y 380 -> 680). The projected diameter as a fraction of the box is
+  tan(asin(R / 24)) / tan(22.5 degrees) with R = scale * 0.45, so scale IS the size knob
+  and the box stays an honest proxy. CRITICAL: the component's own default of 9 is only
+  41.3% of the box (134.3px), which would leave the orb floating 35px clear of the palm,
+  so this hero passes 16.9 to get the 262px the composition needs:
+    scale 9.0  ->  R 4.050 -> 134.3px = 41.3% of the box   (props default, too small here)
+    scale 16.9 ->  R 7.605 -> 262.0px = 80.6% of the box   (this hero)
+  To re-target a different box size, solve scale from that ratio rather than resizing
+  the box. Note the ratio is NON-LINEAR in scale, so iterate: R is linear in scale but
+  asin(R / 24) is not.
+- The column is lifted STAGE_LIFT 40px off the stage floor. This is safe because the
+  hand photo is masked to fully transparent by 76% of its own box and its visible
+  content already ended near y 608, so lifting moves the wrist fade up instead of
+  exposing a cut-off forearm.
+- Hand container: fixed height 300px, z-10, w-full, with the img filling it as
+  h-full w-full object-contain object-bottom. Fixing the container height is what makes
+  the overlap predictable regardless of the source image's aspect ratio.
+- Fade the wrist with [mask-image:linear-gradient(to_bottom,black_76%,transparent_99%)]
+  on the img wrapper, plus a separate 80px linear-gradient(to top, #080305 25%, transparent)
+  div on top so the blend is not itself masked away.
+- brightness-105 contrast-105 and a drop shadow tinted to the accent.
+- The decorative corona ring (363px), the ambient wash behind the pair (390px), the
+  top spotlight ray (260x173) and the core highlight (191px) are all sized as
+  multiples of the 325px orb box — rescale them with the orb, never independently.
+
+Resulting geometry inside the fixed 1280x720 preview stage:
+  hand container  y 380 -> 680   (bottom-anchored, so ORB_OVERLAP never moves it)
+  orb box         y 115 -> 440
+  sphere          262.0px, centre y 277.5, so y 147 -> 409
+  nestle          the sphere's lowest 28.6px sit inside the hand container
+  sphere          x 509 -> 771   (headline text ends at 456, card starts at 970)
+  nav bottom      y 56, leaving a 59px gap down to the orb box
+  light cone      y 171 -> 459, falling across the orb's upper 262px
+The canvas is exactly the 325px box with no overflow, and the hover void is now a
+screen-space push of up to roughly cursorRadius px (75px here) away from the pointer,
+so a pointer near the silhouette edge can push front-layer particles past the 162.5px
+half-box and clip them. That is the trade-off of matching the Interactive Background
+Particle Sphere, which hides the same push under a 2.5x overflow canvas. Keep
+cursorRadiusUI comfortably under the half-box and re-check this if you raise
+cursorStrengthUI or cursorRadiusUI rather than assuming headroom.
+The recommendation card sits on the right at mb-48 under the main's 48px bottom padding, so
+its bottom edge is y 480 and it clears the sphere by 199px horizontally. Do not let the
+sphere drop below y ~480 or past x 460/960, or it will collide with the headline, the HUD
+card, or the stage's clip.
+
+================================================================================
+6. NAVIGATION (top bar, pt-6, px-6/10/14, z-30)
+================================================================================
+- Not a single floating pill. A three-part bar: brand left, glass link pill center, actions right.
+- Left: "✦" in #E2B4BD with a 45deg group-hover rotation and a glow text-shadow, then
+  "Visionary" in white.
+- Center: hidden below md, then a rounded-xl pill of bg-white/[0.04], border-white/[0.08],
+  backdrop-blur-md holding Home / Service / Product / About Us at 12px. The active link gets
+  bg-white/[0.08], a rose glow, aria-current="page", and local state so it actually switches.
+- Right: "Sign in" as a bordered ghost button, then "Join" as a solid white button with
+  text #080305 and a white glow, shrinking to scale-95 on active.
+
+================================================================================
+7. HEADLINE BLOCK (bottom-left, lg:w-7/12, pointer-events-none wrapper)
+================================================================================
+- Push it down with mt-auto and a 40/56/64px bottom margin; the orb owns the center.
+- H1 "Your Everyday" then a line break then italic "Wellness Partner". Only "Wellness" is
+  italic — "Partner" stays roman. 34px base, 44px at sm, 54px at lg, leading 1.1, font-serif.
+- Subcopy at 13.5/14.5px, leading 1.72, slate-300/85, max-width 400px, 20px above: "Stay on
+  top of your health with a trusted partner by your side—track habits, monitor progress, and
+  receive personalized guidance for a balanced, healthier life every day."
+- Partner strip: 32px above, a border-t border-white/[0.08] top rule, then five inline
+  "glyph + name" pairs — Typely, Framex, Webora, Logiqo, Designo — with the glyph in #E2B4BD
+  and the name sliding slate-400 → white on hover.
+
+================================================================================
+8. RECOMMENDATION CARD (static, 210/230px, right column below lg, centered below it)
+================================================================================
+- rounded-2xl, p-4, bg rgba(20,8,12,0.75), border rgba(226,180,189,0.18), backdrop-blur 20px,
+  box-shadow 0 8px 32px rgba(0,0,0,0.5) plus an inset 1px white top highlight.
+- IMPORTANT: the card is deliberately static. It must NOT translate, rotate or parallax in
+  response to the pointer. Only its checkboxes toggle.
+- Header: a rose Sparkles badge, the word "Recommendation", and a live "{completed}/{total}"
+  counter in font-mono tabular-nums on the right.
+- Three rows, each a role="checkbox" button with aria-checked: a lucide icon
+  (Footprints / Droplets / Moon), the label, and a CheckCircle2 or hollow Circle on the right.
+  A completed label gets line-through plus reduced opacity.
+- Use Tailwind v4 named groups — group/item on the button and group-hover/item: on its children
+  — so hovering one row does not light up the others.
+- Footer: a pulsing 6px rose dot with "Live Sync", and "Today" right-aligned.
+
+================================================================================
+9. TYPOGRAPHY
+================================================================================
+- index.css uses @import "tailwindcss" with no @config, so tailwind.config.ts is inert and the
+  font-serif / font-sans tokens fall back to the ui-serif / ui-sans stacks. Set them explicitly
+  in a <style> block scoped to the hero root:
+    .visionary-orb-root {
+      --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+  Tailwind v4 resolves font-serif / font-sans through these variables, so this realises the
+  intended pairing without editing the global theme.
+
+================================================================================
+10. RESPONSIVE
+================================================================================
+- Use Tailwind breakpoints throughout (sm:/md:/lg:/xl:), not a fixed frame scaler.
+- The preview stage clips at 1280x720, so the root uses a fixed 720px height rather than
+  min-h-screen; the AI prompts still specify 100vh for a real page.
+- Below md the center link pill hides. Below lg the card moves out of the right column and
+  renders centered under the hero content, so it never overlaps the palm.`,
+    toolPrompts: {
+      cursor: `/* Cursor AI Rules: Visionary Orb Hero */
+/* Stack: React 19, TypeScript, Tailwind CSS, three */
+
+Build a cinematic wellness hero on a #080305 stage, 720px tall, anchored by a particle orb
+cradled in a photographic hand cutout.
+
+1. Stage: relative overflow-hidden bg-[#080305], height 720px, flex flex-col justify-between,
+   selection:bg-[#E2B4BD]/30 selection:text-white. Add a centered horizon filament 240/300/360px
+   x 3px with a transparent→rose→#FFFFFF→rose→transparent gradient and stacked shadows
+   0 0 14px #FFFFFF, 0 0 28px #E2B4BD, 0 0 55px rgba(226,180,189,0.8), 0 0 85px
+   rgba(183,109,126,0.5). Under it a light curtain (260/320/380px x 280px, blur-2xl, opacity
+   0.8, radial from rgba(255,235,240,0.85) at 50% 0% to transparent 85%) and a soft cone
+   (300/380/440px x 288px, blur-[70px], opacity 0.4, -mt-20). Add two ambient washes: a
+   580/720px rose radial at top 32% (opacity 0.7, blur 95px) and a 620x480px pool at top 65%
+   (opacity 0.45, blur 100px). Finish with a 24px film-grain dot grid at opacity 0.03
+   mix-blend-overlay and a radial edge vignette (transparent 45% → rgba(8,3,5,0.8) 85% →
+   #080305 100%). No mist, no base stage light, no bottom vignette.
+2. Orb (raw Three.js, inline in the same file so the single-file code viewer can ship it).
+   Call it with: particlesCount 8500, particleScale 4.0, speed 22, scale 16.9, drag true,
+   dragSpeed 6, smoothing 7.5, cursorOn true, cursorRadiusUI 75, cursorStrengthUI 12,
+   clickForce 6, sphereColor "#E2B4BD".
+   8,500 spheres in one InstancedMesh inside a rotating Group, MeshBasicMaterial color
+   0xffffff, AdditiveBlending, transparent true, opacity 0.95. Cap DPR at 2.
+   Camera and sizing are deliberately plain: PerspectiveCamera(45, aspect, 0.1, 1000),
+   camera.position.z = 24, sphereRadius = scale * 0.45. There is NO overflow canvas and
+   NO fov compensation — the renderer is sized to the container exactly.
+   There are NO UI-to-internal value maps; every knob is used at face value:
+     particleSize             = particleScale * 0.055
+     dampingSpeed             = min(0.15, max(0.03, 1 / (smoothing + 1)))   -> 0.118 at 7.5
+     speedN                   = speed / 10
+     cursorRadius             = clamp(cursorRadiusUI, 0, 600) px
+     cursorStrength           = min(1, max(0, cursorStrengthUI / 10)) * 15
+     drag factor              = (dragSpeed * 0.001) / max(1, smoothing * 0.2)
+     clickPush                = clickForce * 0.2
+     idle yaw                 += speed * 0.0001 per frame; velocity *= 0.94 per frame
+     friction                 *= 0.94 ^ deltaFactor; return *= (1 - 0.015 * speedN * deltaFactor)
+     scatter decay            *= 0.95 ^ deltaFactor; displacement += scatter * (deltaFactor * 0.1)
+   Fibonacci golden-angle spiral: phi = acos(-1 + 2*i/count), theta = sqrt(count*PI)*phi,
+   posX = cos(theta)*sin(phi)*R, posY = sin(theta)*sin(phi)*R, posZ = cos(phi)*R.
+   SphereGeometry(particleSize * 0.16, 6, 6) — 6x6 is indistinguishable from 8x8 on a
+   sub-pixel dot at this count. Write per-instance colors into an InstancedBufferAttribute
+   of count*3 floats by mapping t = (base.y/R + 1)/2 onto the ramp
+   #C27586 (base) -> sphereColor (equator) -> #FFF0F3 (top) with linear interpolation
+   between adjacent stops. No extra accent lerp: sphereColor IS the core.
+ 3. Orb interaction — two timing regimes. Idle rotation / drag / throw are bare per-frame
+    constants in a single unconditional rAF loop that never parks (deliberately tuned at
+    60fps); do not add an elapsed-time divisor unless you also add parking. The cursor
+    physics, however, is delta-normalized exactly like the Interactive Background Particle
+    Sphere, with deltaFactor = min(3, dt / (1000/60)).
+    Hover is a SCREEN-SPACE void, not surface-anchored: track the pointer in canvas pixels
+    (clientX - rect.left). Per particle, build base + displacement, apply group.matrixWorld,
+    project with camera.project(), and convert to pixels:
+      screenX = (ndc.x*0.5 + 0.5)*width ; screenY = (-ndc.y*0.5 + 0.5)*height
+    If within cursorRadius px of the pointer AND worldPos.z > 0 (front hemisphere only):
+      force = (cursorRadius - dist)/cursorRadius ; angle = atan2(cursorY - screenY, cursorX - screenX)
+      repulsion2D = force * cursorStrength * speedN * deltaFactor
+      worldRepulse = cameraRight*(-cos(angle)*repulsion2D*0.01) + cameraUp*(sin(angle)*repulsion2D*0.01)
+      displacement += worldRepulse * inverse(group.matrixWorld)
+    cameraRight/cameraUp are the camera matrix's 0th/1st columns normalized. The push is
+    radial in the view plane, so the pointer carves a soft void instead of swelling the
+    surface. cursorRadius = clamp(cursorRadiusUI, 0, 600)px and
+    cursorStrength = min(1, max(0, cursorStrengthUI/10))*15.
+    Click scatter is a one-shot radial velocity burst on pointerdown: raycast the pointer's
+    NDC against the z = 0 plane, group.worldToLocal it to get localCursor, then for every
+    particle whose squared distance to it is under 1.5*sphereRadius^2 (distance floored at
+    0.1): scatterVelocity += normalize(base - localCursor)*clickPush.
+    Both relax through the Particle Sphere friction + spring every frame:
+      displacement *= 0.94^deltaFactor ; displacement *= 1 - 0.015*speedN*deltaFactor
+      displacement += scatterVelocity*(deltaFactor*0.1)
+      scatterVelocity *= 0.95^deltaFactor ; scatterVelocity *= 1 - 0.015*speedN*deltaFactor
+    Idle rotation advances the target yaw every frame while not dragging, and the visible
+    mesh eases toward the target at dampingSpeed. Drag with the factor above does
+    target.y += dx*factor, target.x += dy*factor and reuses the delta as the next frame's
+    velocity, so a flick coasts. There is no pitch clamp and no event-timing normalisation.
+ 4. PERFORMANCE:
+    - One pass per frame over three Vector3[] arrays (base, displacement, scatter velocity),
+      writing each instance matrix with a reused Matrix4. Never .clone() in the loop.
+    - Reuse scratch Vector3s and one scratch Matrix4; recompute cameraRight/cameraUp and the
+      inverse group matrix ONCE per frame, not per particle.
+    - Compare squared screen distances and only sqrt() inside the radius, which is what keeps
+      the projection test cheap across 8,500 particles.
+    - Hoist cursorRadius, cursorStrength, speedN and dampingSpeed out of the loop.
+   - Resize via a window resize listener (update camera.aspect, updateProjectionMatrix,
+     setSize). There is no ResizeObserver.
+5. Orb / hand arrangement: make them ONE bottom-anchored flex column inside a relative
+    max-w-[440px] container so the overlap is a single number. Orb box a fixed 325x325
+    square at z-20 with marginBottom -60; because the column is bottom-anchored that
+    overlap moves the orb down without ever moving the hand container. The orb's SIZE is
+    set by scale, not by the box: the projected diameter as a fraction of the box is
+    tan(asin(R / 24)) / tan(22.5 degrees) with R = scale * 0.45. CRITICAL: the component's
+    own default of 9 is only 41.3% of the box (134.3px), which would leave the orb floating
+    35px clear of the palm, so this hero passes 16.9 to get the 262px the composition needs
+    (scale 16.9 -> R 7.605 -> 262.0px = 80.6%). The ratio is NON-LINEAR in scale — R is
+    linear but asin(R/24) is not — so iterate when solving it. To make the orb bigger, raise
+    the scale and rescale the corona ring, ambient wash, spotlight ray and core highlight
+    with it. Lift the whole column 40px off the stage
+   floor (STAGE_LIFT); that is safe because the hand photo is masked to fully transparent
+   by 76% of its own box, so lifting moves the wrist fade up instead of exposing a
+   cut-off forearm. Hand container a fixed 300px tall at z-10 with the img as
+   h-full w-full object-contain object-bottom — fixing the height is what makes the
+   overlap predictable regardless of the source aspect ratio. Fade the wrist with
+   [mask-image:linear-gradient(to_bottom,black_76%,transparent_99%)] on the img wrapper,
+   plus a separate 80px linear-gradient(to top, #080305 25%, transparent) div on top so
+   the blend is not itself masked away. Apply brightness-105 contrast-105.
+    In the fixed 1280x720 stage this lands: hand y 380->680, orb box y 115->440, sphere
+   262.0px centred at y 277.5 (so y 147->409) with its lowest 28.6px inside the hand
+   container, and sphere x 509->771. The canvas is exactly the 325px box with no overflow, and
+   the hover void is a screen-space push of up to about cursorRadius px (75px here), so a
+   pointer near the silhouette edge can push front-layer particles past the 162.5px half-box
+   and clip them — the same push is hidden under the 2.5x overflow canvas of the Interactive
+   Background Particle Sphere. Keep cursorRadiusUI well under the half-box and re-check if
+   you raise cursorStrengthUI or cursorRadiusUI. The recommendation
+   card sits at mb-48 on the right, its bottom edge at y 480, clearing the sphere by
+   199px. Do not let the sphere drop below y ~480 or pass x 460/960, or it will hit the
+   headline, the HUD card, or the stage's bottom clip.
+6. Nav: a top bar, not one floating pill — pt-6 px-6/10/14 z-30 in three parts. Left: "✦" in
+   #E2B4BD with a group-hover:rotate-45 and a glow text-shadow, then "Visionary" in white.
+   Center: hidden below md, then a rounded-xl pill (bg-white/[0.04], border-white/[0.08],
+   backdrop-blur-md) with Home / Service / Product / About Us at 12px; the active link gets
+   bg-white/[0.08], a rose glow and aria-current="page" from local state so it really switches.
+   Right: a bordered ghost "Sign in" and a solid white "Join" with text #080305, a white glow and
+   active:scale-95.
+7. Headline: bottom-left, lg:w-7/12, pushed down with mt-auto and a 40/56/64px bottom margin so
+   the orb owns the center. H1 "Your Everyday" then a break then italic "Wellness Partner" —
+   only "Wellness" is italic, "Partner" stays roman — at 34px, 44px at sm, 54px at lg,
+   leading 1.1, font-serif. Subcopy 13.5/14.5px leading 1.72 slate-300/85 max 400px: "Stay on
+   top of your health with a trusted partner by your side—track habits, monitor progress, and
+   receive personalized guidance for a balanced, healthier life every day." Then a partner strip
+   32px below a border-t border-white/[0.08] rule: Typely, Framex, Webora, Logiqo, Designo as
+   glyph + name pairs, glyph in #E2B4BD, name slate-400 → white on hover.
+8. Recommendation card: 210/230px, rounded-2xl, p-4, bg rgba(20,8,12,0.75), border
+   rgba(226,180,189,0.18), backdrop-blur 20px, box-shadow 0 8px 32px rgba(0,0,0,0.5) with an
+   inset 1px white top highlight. In the right column at lg, centered under the content below
+   it. It must be completely static — no pointer-following, no parallax. Only the rows toggle.
+   Header: a rose Sparkles badge, the word "Recommendation", and a live "{completed}/{total}"
+   counter in font-mono tabular-nums. Three role="checkbox" rows with aria-checked, each a lucide
+   icon (Footprints / Droplets / Moon), the label, and a CheckCircle2 or hollow Circle; completed
+   labels get line-through and reduced opacity. Use Tailwind v4 named groups — group/item on the
+   button and group-hover/item: on the children — so one row's hover does not light the others.
+   Footer: a pulsing 6px rose dot with "Live Sync" and "Today" right-aligned.
+9. Typography: index.css uses @import "tailwindcss" with no @config, so tailwind.config.ts is
+   inert and font-serif/font-sans fall back to the ui stacks. Set them in a <style> block scoped
+   to the hero root: .visionary-orb-root { --font-serif: 'Cormorant Garamond', 'Playfair
+   Display', Georgia, serif; --font-sans: 'Plus Jakarta Sans', Inter, ui-sans-serif, system-ui,
+   sans-serif; } — Tailwind v4 resolves the utilities through these variables.
+10. Responsive: use Tailwind sm:/md:/lg:/xl: breakpoints. The preview stage clips at 1280x720, so
+   the root uses a fixed 720px height rather than min-h-screen. Below md the center link pill
+   hides; below lg the card moves out of the right column and renders centered under the hero so
+   it never covers the palm.`,
+      claude: `You are Claude Code, an expert design technologist and frontend engineer.
+Build the "Visionary" cinematic wellness hero section in React 19, TypeScript, Tailwind CSS
+and raw Three.js, matching an editorial, gallery-like design:
+
+- A deep obsidian #080305 stage at a fixed 720px height, laid out as a flex column with
+  justify-between. A single centered horizon filament (3px, white core, stacked rose glows) is
+  the brightest element on the stage; under it sit a focused light curtain and a soft cone, both
+  contained so no glow spills off the sides. Two ambient rose washes sit behind the orb, and the
+  frame is closed by 3% film grain and a radial edge vignette. There is deliberately no mist, no
+  base stage light and no bottom vignette.
+- A particle orb cradled in a photographic hand cutout: 8,500 spheres in a single
+  InstancedMesh with additive blending, distributed on a golden-angle Fibonacci sphere
+  and shaded on a three-stop depth ramp (#C27586 at the base → sphereColor at the equator
+  → #FFF0F3 at the top pole) written into an InstancedBufferAttribute; sphereColor IS the
+  core, with no extra accent lerp. Camera and sizing are deliberately plain —
+  PerspectiveCamera(45), position.z = 24, sphereRadius = scale * 0.45 — with no overflow
+  canvas and no fov compensation, and every knob used at face value rather than through
+  a UI-range map. Note the timing is split: idle rotation / drag / throw are bare per-frame
+  constants in one unconditional rAF loop that never parks (tuned at 60fps), while the
+  cursor physics is delta-normalized just like the Interactive Background Particle Sphere
+  (deltaFactor = min(3, dt / (1000/60))). The orb rotates on its own, can be dragged and
+  thrown with momentum, and deforms under the cursor with a SCREEN-SPACE void: track the
+  pointer in canvas pixels, project each particle with camera.project(), and if it lands
+  within cursorRadius px of the pointer and on the front hemisphere (worldPos.z > 0), push
+  it radially away in the view plane via the camera right/up vectors, converted back to
+  local space with inverse(group.matrixWorld). The pointer carves a soft void instead of
+  swelling the surface. A click fires a one-shot radial velocity burst inside 1.5x the
+  sphere radius. Displacement then relaxes through the Particle Sphere friction + spring
+  (multiply by 0.94^dt and 1 - 0.015*speedN*dt), the same return the click scatter uses, so
+  the two never fight into a jitter. Keep the per-frame work cheap: one merged pass over
+  three Vector3[] arrays, reused scratch vectors plus one Matrix4 with no .clone() in the
+  loop, the camera columns and inverse group matrix computed once per frame rather than per
+  particle, and squared screen-distance tests with sqrt() taken only inside the radius.
+- The hand and orb are one bottom-anchored flex column: a fixed 325x325 orb box pulled up
+  60px over a fixed 300px hand container, so the sphere's lowest 28.6px rest in the palm,
+  and the whole column is lifted 40px off the floor of the stage. The orb's size comes from
+  scale, not the box: the projected diameter as a fraction of the box is
+  tan(asin(R / 24)) / tan(22.5 degrees) with R = scale * 0.45. The component's own default of
+  9 is only 41.3% of the box, which would leave the orb floating 35px clear of the palm, so
+  the hero passes 16.9 for 262.0px = 80.6%. That ratio is non-linear in scale, so iterate
+  when solving it — and to resize the orb, raise the scale and rescale the glow layers with
+  it. The canvas is exactly the box with no overflow, and the screen-space void can push
+   front-layer particles up to about cursorRadius px (75px here) away from the pointer, so a
+   pointer near the silhouette edge can push them past the 162.5px half-box and clip them;
+   keep cursorRadiusUI well under the half-box and re-check if you raise the strength. The
+  wrist fades into the stage with a bottom mask plus a
+  dark blend, and the image is lifted slightly in brightness and contrast.
+- A top navigation bar rather than one floating pill: a "✦" wordmark and "Visionary" on the
+  left, a frosted glass pill of Home / Service / Product / About Us in the center (hidden on
+  small screens, with a real active state), and a ghost "Sign in" plus a solid white "Join" on
+  the right.
+- A bottom-left editorial headline: "Your Everyday" over an italic "Wellness Partner" — only
+  the word "Wellness" is italic — set in Cormorant Garamond, over a muted sub-paragraph and a
+  hairline-ruled strip of five partner wordmarks.
+- A frosted recommendation card in the right column with three toggleable habit rows, a live
+  completed counter, and a "Live Sync" chip with a pulsing rose dot. This card is intentionally
+  static and must not react to pointer movement. Use Tailwind v4 named groups for its row hovers.
+- Font tokens must be set explicitly in a style block scoped to the hero root, because the
+  project's index.css imports Tailwind v4 without an @config and its config file is inert.
+- Full responsive behavior via Tailwind breakpoints: the center pill collapses on small screens
+  and the card moves under the hero content on medium-and-down so it never covers the palm.`,
+      antigravity: `[Antigravity Agent Blueprint]
+Task: Deploy the "Visionary" orb hero section in a React 19 + Vite codebase.
+
+Tech Stack: React 19, TypeScript, Tailwind CSS, three (raw WebGL).
+
+Objective: reproduce a #080305 editorial wellness hero where an instanced particle orb rests
+in a photographic hand cutout, lit by a single top-center horizon filament, alongside a
+static frosted recommendation card.
+
+Key Specifications:
+- Stage: relative overflow-hidden, background #080305, fixed height 720px, flex flex-col
+  justify-between, selection:bg-[#E2B4BD]/30 selection:text-white
+- Palette: accent #E2B4BD; orb ramp #FFF0F3 → #E2B4BD → #C27586
+- Lighting: centered 240/300/360px x 3px filament with a
+  transparent→rose→#FFFFFF→rose→transparent gradient and shadows
+  0 0 14px #FFFFFF / 0 0 28px #E2B4BD / 0 0 55px rgba(226,180,189,0.8) /
+  0 0 85px rgba(183,109,126,0.5); a 260/320/380px x 280px blur-2xl curtain at opacity 0.8;
+  a 300/380/440px x 288px blur-[70px] cone at opacity 0.4; ambient radial washes of
+  580/720px at top 32% and 620x480px at top 65%; 24px film grain at 0.03 mix-blend-overlay;
+  radial edge vignette transparent 45% → rgba(8,3,5,0.8) 85% → #080305. No mist, no base
+  stage light, no bottom vignette.
+- Orb: InstancedMesh, 8,500 instances, inside a rotating Group. MeshBasicMaterial color
+  0xffffff, AdditiveBlending, transparent true, opacity 0.95. Fibonacci golden-angle
+  spiral: phi = acos(-1 + 2*i/count), theta = sqrt(count*PI)*phi, posX = cos(theta)*sin(phi)*R,
+  posY = sin(theta)*sin(phi)*R, posZ = cos(phi)*R. SphereGeometry(particleSize * 0.16, 6, 6)
+  — 6x6 is indistinguishable from 8x8 on a sub-pixel dot. Per-instance color written into an
+  InstancedBufferAttribute of count*3 floats from the three-stop height ramp on
+  (base.y/R + 1)/2: #C27586 at the base, sphereColor at the equator, #FFF0F3 at the top.
+  sphereColor IS the core, with no extra accent lerp. DPR capped at 2. Call it with
+  particlesCount 8500, particleScale 4.0, speed 22, scale 16.9, dragSpeed 6, smoothing 7.5,
+  cursorRadiusUI 75, cursorStrengthUI 12, clickForce 6, sphereColor "#E2B4BD".
+- Camera and sizing are deliberately plain: PerspectiveCamera(45, aspect, 0.1, 1000),
+  position.z = 24, sphereRadius = scale * 0.45. NO overflow canvas and NO fov
+  compensation — the renderer is sized to the container exactly.
+- No UI-to-engine value maps; every knob is used at face value:
+  particleSize = particleScale * 0.055;
+  dampingSpeed = min(0.15, max(0.03, 1 / (smoothing + 1))) = 0.118 at 7.5;
+  speedN = speed / 10; cursorRadius = clamp(cursorRadiusUI, 0, 600) px;
+  cursorStrength = min(1, max(0, cursorStrengthUI / 10)) * 15;
+  drag factor = (dragSpeed * 0.001) / max(1, smoothing * 0.2);
+  clickPush = clickForce * 0.2; idle yaw += speed * 0.0001/frame; velocity *= 0.94/frame;
+  friction *= 0.94^deltaFactor; return *= (1 - 0.015 * speedN * deltaFactor);
+  scatter *= 0.95^deltaFactor; displacement += scatter * (deltaFactor * 0.1).
+- Two timing regimes. Idle rotation / drag / throw are bare per-frame constants in one
+  unconditional rAF loop that never parks (tuned at 60fps); do not add an elapsed-time
+  divisor unless you also add loop parking, because the two changes interact. The cursor
+  physics, however, is delta-normalized exactly like the Interactive Background Particle
+  Sphere, with deltaFactor = min(3, dt / (1000/60)).
+  Hover is a SCREEN-SPACE void, ported from that same Particle Sphere, not a surface-
+  anchored deformation. Track the pointer in canvas pixels (clientX - rect.left). Per
+  particle: build base + displacement, apply group.matrixWorld, project with
+  camera.project(), then
+    screenX = (ndc.x*0.5 + 0.5)*width ; screenY = (-ndc.y*0.5 + 0.5)*height
+  If within cursorRadius px of the pointer AND worldPos.z > 0 (front hemisphere only, so
+  the back layer keeps rotating untouched):
+    force = (cursorRadius - dist)/cursorRadius ;
+    angle = atan2(cursorY - screenY, cursorX - screenX) ;
+    repulsion2D = force * cursorStrength * speedN * deltaFactor ;
+    worldRepulse = cameraRight*(-cos(angle)*repulsion2D*0.01)
+                 + cameraUp*( sin(angle)*repulsion2D*0.01) ;
+    displacement += worldRepulse * inverse(group.matrixWorld)
+  cameraRight/cameraUp are the camera matrix's 0th/1st columns, normalized, recomputed once
+  per frame. The push is radial in the view plane, so the pointer carves a soft void rather
+  than swelling the surface.
+  Click scatter is a one-shot radial velocity burst on pointerdown: raycast the pointer's NDC
+  against the orb's own z = 0 plane and group.worldToLocal it to get localCursor, then for
+  every particle within 1.5 * sphereRadius (squared distance tested, actual distance floored
+  at 0.1 so the direction stays finite),
+  scatterVelocity += normalize(base - localCursor) * clickPush.
+  Both relax through the Particle Sphere friction + spring every frame:
+    displacement *= 0.94^deltaFactor ; displacement *= 1 - 0.015*speedN*deltaFactor
+    scatter *= 0.95^deltaFactor     ; scatter *= 1 - 0.015*speedN*deltaFactor
+  which is what keeps them independent instead of fighting each other into a jitter.
+  Idle rotation advances the target yaw each frame while not dragging, the mesh eases toward
+  the target at dampingSpeed, and a drag reuses its per-frame delta as the next frame's
+  velocity so a flick coasts. There is no pitch clamp and no event-timing normalisation.
+- Performance: one merged pass per frame over three Vector3[] arrays (base positions,
+  displacements, scatter velocities), writing each instance matrix with a reused Matrix4
+  and never .clone()ing in the loop. Reuse scratch Vector3s and one scratch Matrix4; compute
+  the camera columns and the inverse group matrix once per frame, not per particle. Test
+  squared screen distances and take sqrt() only inside the radius. Hoist cursorRadius,
+  cursorStrength, speedN and dampingSpeed out of the loop.
+  Resize via a window resize listener (aspect, updateProjectionMatrix, setSize); there is no
+  ResizeObserver.
+- Hand: one bottom-anchored flex column, max-w-[440px], lifted 40px off the stage floor.
+  Orb box a fixed 325x325 at z-20 with marginBottom -60; hand a fixed 300px container at
+  z-10 with the img as h-full w-full object-contain object-bottom, so the 60px overlap is
+  predictable regardless of source aspect ratio. Lifting is safe because the photo is
+  masked to fully transparent by 76% of its own box. Wrist mask
+  [mask-image:linear-gradient(to_bottom,black_76%,transparent_99%)] plus a separate 80px
+   linear-gradient(to top, #080305 25%, transparent) div above it. The orb's size comes from
+   scale, not the box: the projected diameter as a fraction of the box is
+   tan(asin(R / 24)) / tan(22.5 degrees) with R = scale * 0.45. CRITICAL: the component's own
+   default of 9 is only 41.3% of the box (134.3px), which would leave the orb floating 35px
+   clear of the palm, so pass 16.9 for 262.0px = 80.6% of the 325px box. That ratio is
+   non-linear in scale, so iterate when solving it. Lands at hand
+    y 380->680, orb box y 115->440, sphere 262.0px centred at y 277.5 (so y 147->409) with
+    its lowest 28.6px inside the hand container, and sphere x 509->771. The canvas is exactly
+    the box with no overflow, and the screen-space void pushes front-layer particles up to
+    about cursorRadius px (75px here) from the pointer, so a pointer near the silhouette edge
+    can push them past the 162.5px half-box and clip them — the Particle Sphere hides the
+    same push under a 2.5x overflow canvas. Keep cursorRadiusUI well under the half-box and
+    re-check if you raise cursorStrengthUI or cursorRadiusUI.
+- Nav: a top bar (pt-6, px-6/10/14, z-30) — "✦" + "Visionary" left, a rounded-xl
+  bg-white/[0.04] border-white/[0.08] backdrop-blur-md link pill center (hidden below md,
+  real active state), ghost "Sign in" + solid white "Join" right
+- Type: Cormorant Garamond display at 34/44/54px leading 1.1, Plus Jakarta Sans for the rest,
+  set via a .visionary-orb-root scoped --font-serif / --font-sans override because the
+  project's Tailwind v4 config file is inert
+- Card: 210/230px, rounded-2xl, p-4, rgba(20,8,12,0.75), border rgba(226,180,189,0.18),
+  backdrop-blur 20px, static by design, three role="checkbox" rows with aria-checked and
+  Tailwind v4 named groups (group/item), a live {completed}/{total} counter, and a pulsing
+  Live Sync dot
+- Cleanup: cancel rAF, remove all listeners, dispose geometry/material/renderer, detach canvas`,
+      lovable: `Create a cinematic, editorial wellness hero section for a product called "Visionary", using React, Tailwind CSS, and Three.js.
+
+Include:
+1. A deep obsidian #080305 stage 720px tall, lit by a single thin glowing horizontal line
+   centered at the very top — make it the brightest thing on the page, with a soft curtain of
+   light and a wide cone of haze falling from it so the glow stays contained and never spills
+   off the left and right edges. Add faint drifting haze-free dust: no, keep the air clean and
+   add only a very subtle film grain plus a soft dark vignette around the edges.
+2. A luminous particle orb made of thousands of tiny glowing spheres in a dusty rose color,
+   brightest at the top and deepest toward the base, with the brand rose at its equator. It
+    should slowly rotate on its own, tilt and spin when the user drags it and keep spinning
+    after you let go, and burst outward in a soft pulse when the user presses on it. The
+    hover effect is the important detail here, and it is a screen-space one: copy the
+    behaviour of the interactive background's particle sphere, where the cursor carves a
+    soft void rather than swelling the surface. Track the pointer in canvas pixels, and on
+    every frame project each particle into that same pixel space with the camera. If a
+    particle lands within the cursor radius of the pointer and is on the half of the sphere
+    facing the camera, push it straight away from the pointer in the plane of the screen —
+    work out that direction from the angle between the two on screen, apply it along the
+    camera's right and up vectors, then convert it back into the orb's own local space so
+    the orb's rotation does not skew it. The back half keeps rotating untouched. The void
+    must then ease closed: bleed the offset off every frame with a gentle friction term
+    plus a small spring pull back to rest, exactly as the interactive background does, and
+    use that same spring for the click burst so the two never fight and shimmer. Those two
+    steps should be scaled by the frame delta so the orb feels the same on 60Hz and 120Hz
+    displays, while the rotation and throw keep their fixed per-frame constants on purpose
+    (one continuous loop, no idle parking). Keep the per-frame work allocation-free: reuse
+    scratch vectors and one scratch matrix, never clone objects inside the loop, compute the
+    camera's right and up vectors and the inverse of the orb's rotation once per frame
+    instead of once per particle, and compare squared distances so the square root is only
+    taken for particles actually in range, or the preview will stutter.
+3. A realistic photographic cutout of an open hand rising from the bottom of the stage, with
+   the orb nestled up in its palm so the hand appears to be holding it. Lay the two out as
+   one bottom-anchored column with a fixed-size box for the orb and a fixed-height box for
+   the photo, so the amount of overlap is one number you can tune rather than something
+   that shifts with the image, and lift that whole column slightly off the floor of the
+   stage. The orb's size is set by its own scale value, not by the box, and you must raise
+   that value well past the component's default to fill the palm — the default only covers
+   about 41% of the box and would leave a visible gap above the hand. Work out the size from
+   the ratio of the tangent of the sphere's angular radius to the tangent of half the
+   camera's field of view, and note that this ratio is not linear in scale, so iterate
+   rather than solving it in one step. To resize the orb, raise the scale and grow the glow
+   layers around it in step. Fade the wrist out into the dark background so the photo doesn't
+   have a hard edge, and lift its brightness a touch so it reads against the near-black
+   stage.
+4. A top navigation bar: a small ✦ sparkle and the word "Visionary" on the left, a frosted
+   glass pill in the middle holding Home, Service, Product and About Us, and Sign in plus a
+   solid white "Join" button on the right. Make the active nav link actually highlight and
+   switch when clicked, and hide the middle pill on small phones.
+5. A large serif headline in the lower left reading "Your Everyday" on one line and an italic
+   "Wellness Partner" on the next, where only the word "Wellness" is italic. Under it, a short
+   muted paragraph, then a thin hairline rule and a row of five small partner wordmarks.
+6. A frosted glass card on the right with a small sparkle badge, the word "Recommendation", and
+   a live count like "2/3". Under it, three habit rows you can tick and untick, each with a
+   little icon and a check circle, and a completed row shown struck through. Finish with a
+   "Live Sync" label with a softly pulsing dot and "Today" on the right. Keep this card
+   completely still — it should not move or tilt when the mouse passes over it, and hovering
+   one row should not light up the others.
+7. Use the Cormorant Garamond serif for the headline and Plus Jakarta Sans for everything else.
+   If the project's Tailwind theme isn't picking those up, set the font variables yourself
+   scoped to this section rather than editing the global theme.
+8. Make the whole thing responsive: on medium-and-down screens move the card out of the right
+   column and center it underneath the headline so it never covers the hand, and hide the
+   center navigation pill on small phones.`,
+      advance: `MATHEMATICAL & TECHNICAL SPECIFICATION: VISIONARY ORB HERO
+
+1. Stage Geometry:
+   - Root: relative, w-full, overflow-hidden, background #080305, height 720px (fixed, because
+     the preview stage clips at 1280x720), flex flex-col justify-between, text-white.
+   - Selection: selection:bg-[#E2B4BD]/30 selection:text-white.
+2. Horizon Filament (the single brightest element):
+   - Bar: 240px base, 300px sm, 360px md; height 3px; left 50%, translateX(-50%).
+   - Fill: linear-gradient(90deg, transparent 0%, rgba(226,180,189,0.5) 20%, #FFFFFF 50%,
+     rgba(226,180,189,0.5) 80%, transparent 100%).
+   - Shadow stack, in order: 0 0 14px #FFFFFF, 0 0 28px #E2B4BD,
+     0 0 55px rgba(226,180,189,0.8), 0 0 85px rgba(183,109,126,0.5).
+3. Light Containment:
+   - Curtain: 260/320/380px wide, height 280px, blur-2xl, opacity 0.8, -mt-1.
+     radial-gradient(ellipse at 50% 0%, rgba(255,235,240,0.85) 0%, rgba(226,180,189,0.5) 35%,
+     rgba(183,109,126,0.15) 65%, transparent 85%).
+   - Cone: 300/380/440px wide, height 288px, blur-[70px], opacity 0.4, -mt-20.
+     radial-gradient(ellipse at 50% 0%, rgba(226,180,189,0.45) 0%, transparent 75%).
+   - Ambient: 580/720px radial at top 32%, opacity 0.7, blur 95px, rose 0.3 → transparent 72%.
+     Lower pool 620x480px at top 65%, opacity 0.45, blur 100px, rose 0.22 → transparent 80%.
+4. Grain & Vignette:
+   - Grain: 24px radial dot grid (1px dots, rgba(255,255,255,0.7)), opacity 0.03,
+     mix-blend-overlay.
+   - Edge vignette: radial-gradient(circle at 50% 50%, transparent 45%, rgba(8,3,5,0.8) 85%,
+     #080305 100%). Do NOT add a separate bottom vignette, a base stage light, or mist.
+5. Orb Lattice:
+   - count = 8500. There are NO UI-to-engine value maps; every knob is used at face value.
+     sphereRadius = scale * 0.45 and particleSize = particleScale * 0.055.
+   - Geometry: SphereGeometry(particleSize * 0.16, 6, 6). On a sub-pixel dot, 6x6 is
+     indistinguishable from 8x8 and saves a large triangle count at 8.5k instances.
+   - Material: MeshBasicMaterial, color 0xffffff, blending AdditiveBlending,
+     transparent = true, opacity = 0.95. sphereColor drives the RAMP, not the alpha.
+   - Fibonacci, golden-angle spiral:
+       phi   = acos(-1 + (2 * i) / count)
+       theta = sqrt(count * PI) * phi
+       position = ( cos(theta) * sin(phi) * R,
+                    sin(theta) * sin(phi) * R,
+                    cos(phi) * R )                    R = sphereRadius
+   - Camera: PerspectiveCamera(45, aspect, 0.1, 1000), position.z = 24.
+6. Color Ramp:
+   - Stops: #C27586 (base) → sphereColor (equator) → #FFF0F3 (top pole).
+   - t = (base.y / R + 1) / 2, clamped to 0..1. If t > 0.5 lerp sphereColor→TOP by
+     (t - 0.5) * 2, else BASE→sphereColor by t * 2. There is NO extra accent lerp:
+     sphereColor IS the core colour.
+   - Write into a Float32Array of count*3 floats and attach it as an
+     InstancedBufferAttribute(..., 3) on particles.instanceColor, then set
+     colorAttr.needsUpdate = true.
+7. Canvas Geometry (no overflow, and the size ratio that follows):
+   - The canvas is rendered at exactly the container size. There is no CANVAS_OVERFLOW and
+     no FOV compensation; the box stays an honest proxy for the orb's on-screen size.
+   - The sphere's on-screen diameter as a fraction of its box is
+       tan(asin(R / 24)) / tan(fov / 2) = tan(asin(R / 24)) / tan(22.5 degrees)
+     which is 41.3% at the component's default scale 9 (134.3px in a 325px box) and
+     80.6% at scale 16.9 (262.0px). The ratio is NON-LINEAR in scale — R is linear in
+     scale but asin(R / 24) is not — so iterate when solving it for a target size.
+    - Because there is no overflow, the no-clipping margin is now a screen-space
+      constraint rather than a world-space one: the hover void pushes front-layer
+      particles up to about cursorRadius px (75px here) away from the pointer, so a pointer
+      near the silhouette edge can push them past the 162.5px half-box and clip them. The
+      interactive background's particle sphere hides the same push under a 2.5x overflow
+      canvas. Keep cursorRadiusUI well under the half-box and re-check if you raise
+      cursorStrengthUI or cursorRadiusUI.
+    - DPR = min(devicePixelRatio, 2). Resize via a window resize listener (aspect,
+      updateProjectionMatrix, setSize); there is no ResizeObserver.
+8. Orb Interaction — two timing regimes. Idle rotation / drag / throw are bare per-frame
+   constants in one unconditional rAF loop that never parks (tuned at 60fps); do not add an
+   elapsed-time divisor to those unless you also add loop parking, because the two
+   interact. The cursor physics, however, IS delta-normalized, ported straight from the
+   interactive background's particle sphere: deltaFactor = min(3, dt / (1000 / 60)).
+   - Derived constants, hoisted out of the particle loop:
+       dampingSpeed    = min(0.15, max(0.03, 1 / (smoothing + 1)))   0.118 at 7.5
+       speedN          = speed / 10
+       cursorRadius    = clamp(cursorRadiusUI, 0, 600)      px on the canvas
+       cursorStrength  = min(1, max(0, cursorStrengthUI / 10)) * 15
+       drag factor     = (dragSpeed * 0.001) / max(1, smoothing * 0.2)
+       clickPush       = clickForce * 0.2
+   - Hover is a SCREEN-SPACE void, not a surface-anchored deformation. Track the pointer
+     in canvas pixels (clientX - rect.left) and clear it on pointerleave. Per particle:
+     build the current local position base + displacement, apply group.matrixWorld to get
+     world space, then project it with camera.project() and un-NDC it back to pixels:
+       screenX = (ndc.x * 0.5 + 0.5) * width
+       screenY = (-ndc.y * 0.5 + 0.5) * height
+     Inside cursorRadius of the pointer AND on the camera-facing hemisphere
+     (worldPos.z > 0 — the back layer keeps rotating untouched):
+       force       = (cursorRadius - dist) / cursorRadius
+       angle       = atan2(cursorY - screenY, cursorX - screenX)
+       repulsion2D = force * cursorStrength * speedN * deltaFactor
+       worldRepulse = cameraRight * (-cos(angle) * repulsion2D * 0.01)
+                    + cameraUp    * ( sin(angle) * repulsion2D * 0.01)
+       displacement += worldRepulse * inverse(group.matrixWorld)
+     cameraRight / cameraUp are the camera matrix's 0th / 1st columns, normalized. The push
+     is radial in the view plane, so the pointer carves a soft void instead of swelling the
+     surface; anything outside the radius gets nothing this frame.
+   - Click scatter is a one-shot radial velocity burst on pointerdown. Raycast the
+     pointer's NDC against the orb's own z = 0 plane and group.worldToLocal it to get
+     localCursor; for every particle whose SQUARED distance to it is under 1.5 *
+     sphereRadius squared (the actual distance floored at 0.1 so the direction stays
+     finite):
+       scatterVelocity += normalize(base - localCursor) * clickPush
+     Integrated as velocity, not position.
+   - Both forces relax through the same particle-sphere friction + spring, every frame,
+     even with the pointer gone:
+       displacement *= 0.94 ^ deltaFactor
+       displacement *= 1 - 0.015 * speedN * deltaFactor
+       displacement += scatterVelocity * (deltaFactor * 0.1)
+       scatterVelocity *= 0.95 ^ deltaFactor
+       scatterVelocity *= 1 - 0.015 * speedN * deltaFactor
+     Sharing the return is what keeps hover and click independent instead of fighting each
+     other into a jitter.
+   - Idle rotation: while not dragging, target.y += speed * 0.0001, velocity *= 0.94, then
+     target.x += velocity.x and target.y += velocity.y so a thrown flick coasts. The
+     visible mesh eases toward the target at dampingSpeed.
+   - Drag: on pointermove while dragging, with the factor above, target.y += dx * factor,
+     target.x += dy * factor, velocity.x = dy * factor, velocity.y = dx * factor. There is
+     no ±PI/2 pitch clamp and no event-timing normalisation; the momentum comes from
+     reusing the per-frame delta as the next frame's velocity. Use setPointerCapture and
+     release it in onPointerUp.
+9. Performance Requirements:
+   - Three Vector3[] arrays: basePositions (never mutated), displacements (the live
+     offset), and scatterVelocities. Merge the repulsion, decay, scatter and matrix-write
+     loops into a SINGLE pass — they are per-particle independent, so this is
+     mathematically identical to separate loops.
+   - Reuse scratch Vector3s (cameraRight, cameraUp, worldPos, projectedVec,
+     localRepulsion) and one scratch Matrix4. Recompute the camera columns and the inverse
+     group matrix ONCE per frame, not per particle — rebuilding them per particle dominates
+     the frame cost at 8.5k particles.
+   - Compare SQUARED screen distances and take sqrt() only inside the radius.
+   - Never call .clone() in the loop.
+   - Cleanup: cancel the rAF, remove the window resize listener and all five canvas
+     listeners, dispose the geometry, the material and the renderer.
+10. Hand Placement:
+   - The orb and hand are ONE bottom-anchored flex column inside a relative
+     max-w-[440px] container, children centred, so the overlap is one tunable number.
+     Lift the whole column STAGE_LIFT 40px off the stage floor. This does not expose a
+     cut-off forearm: the photo is masked to fully transparent by 76% of its own box,
+     so its visible content already ended around y 608 before the lift.
+    - Orb box: fixed 325 x 325, z-20, marginBottom -60. Because the column is
+      bottom-anchored, that overlap moves the orb down without ever moving the hand
+      container, which stays y 380 -> 680. Keep scale 16.9: the projected diameter as a
+      fraction of the box is tan(asin(R / 24)) / tan(22.5 degrees) with R = scale * 0.45, so
+      16.9 gives 262.0px = 80.6% and the box stays an honest proxy for the orb's on-screen
+      size. CRITICAL: the component's own default of 9 is only 41.3% (134.3px), which would
+      leave the orb floating 35px clear of the palm, so the hero overrides it. That ratio is
+      non-linear in scale, so iterate when solving it. SCALE IS THE SIZE CONTROL: to make
+      the orb bigger, raise the scale and rescale the corona ring (363px), ambient wash
+      (390px), spotlight ray (260x173) and core highlight (191px) with it.
+   - Hand: fixed height 300px, z-10, w-full, with the img as
+     h-full w-full object-contain object-bottom, brightness-105, contrast-105. Fixing the
+     container height is what makes the overlap predictable regardless of the source
+     image's aspect ratio.
+   - Wrist mask: [mask-image:linear-gradient(to_bottom,black_76%,transparent_99%)] on the
+     img wrapper, plus a separate 80px linear-gradient(to top, #080305 25%, transparent)
+     div above it so the blend is not itself masked away.
+     - Resulting geometry in the fixed 1280x720 preview stage: hand container y 380->680,
+      orb box y 115->440, sphere 262.0px centred at y 277.5 (so y 147->409) with its lowest
+      28.6px inside the hand container, and sphere x 509->771. The canvas is exactly the
+      325px box with no overflow, and the screen-space void can push front-layer particles
+      up to about cursorRadius px (75px here) from the pointer, so a pointer near the
+      silhouette edge can push them past the 162.5px half-box and clip them; keep
+      cursorRadiusUI well under the half-box. The recommendation card sits at mb-48
+      on the right, its bottom edge at y 480, clearing the sphere by 199px.
+   - Do not let the sphere drop below y ~480 or pass x 460/960, or it will collide with
+     the headline, the HUD card, or the stage's bottom clip.
+11. Typography Math:
+   - H1 34px / leading 1.1; 44px at sm; 54px at lg. "Your Everyday" white, then a break, then
+     italic "Wellness Partner" where ONLY the word "Wellness" is italic. font-serif.
+   - Subcopy 13.5px (14.5px at sm) / leading 1.72, slate-300/85, max-width 400px, 20px above.
+   - Partner strip: 32/40px above, border-t border-white/[0.08], then five glyph+name pairs at
+     12px with a 20/24px vertical gap.
+   - Do NOT rely on Tailwind's font-serif token: index.css uses @import "tailwindcss" with no
+     @config, so tailwind.config.ts is inert. Set them in a scoped style block:
+       .visionary-orb-root {
+         --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+         --font-sans: 'Plus Jakarta Sans', Inter, ui-sans-serif, system-ui, sans-serif;
+       }
+     Tailwind v4 resolves font-serif / font-sans through these theme variables.
+12. Card Shell:
+   - 210px, 230px at sm. rounded-2xl, padding 16px. background rgba(20,8,12,0.75),
+     border rgba(226,180,189,0.18), backdrop-blur 20px,
+     box-shadow 0 8px 32px rgba(0,0,0,0.5) plus inset 0 1px 0 0 rgba(255,255,255,0.08).
+   - Header: 20px rose badge at 0.15 alpha with a 30% rose border holding a 10px Sparkles;
+     "Recommendation" at 11px semibold; "{completed}/{total}" at 10px font-mono with
+     tabular-nums on the right.
+   - Rows: role="checkbox" with aria-checked, 10px vertical gap, 14px lucide icon (Footprints /
+     Droplets / Moon), 12px label, and a 14px CheckCircle2 or hollow Circle. Completed labels
+     get line-through, slate-400 and 0.7 opacity.
+   - Use Tailwind v4 NAMED groups: 'group/item' on the button and 'group-hover/item:' on the
+     children, so one row's hover never lights the others.
+   - Footer: a 6px rose pulsing dot with "Live Sync", and "Today" right-aligned.
+   - The card is STATIC: no transform, no parallax, no pointer tracking. Only rows toggle.
+ 13. Cleanup: cancel the rAF, remove the window resize listener and all five canvas listeners,
+    dispose the geometry, the material and the renderer, and detach the canvas from the
+    mount node.`
     }
   },
 ];

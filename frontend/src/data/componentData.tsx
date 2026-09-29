@@ -114,6 +114,7 @@ const NeonBorder = React.lazy(() => import('../components/ui/NeonBorder'));
 const QuantumLattice = React.lazy(() => import('../components/ui/QuantumLattice'));
 const MatrixRain = React.lazy(() => import('../components/ui/MatrixRain'));
 const OriginkitHero24 = React.lazy(() => import('../components/templates/OriginkitHero24'));
+const VisionaryOrbHero = React.lazy(() => import('../components/templates/VisionaryOrbHero'));
 
 
 
@@ -2718,6 +2719,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'solar-system': SolarSystem,
     '3d-hero': ToonhubHero,
     'originkit-hero-24': OriginkitHero24,
+    'visionary-orb-hero': VisionaryOrbHero,
     'svg-page-transition': SVGPageTransition,
     'section-scroll': SectionScroll,
     'infinite-marquee': InfiniteMarquee,
@@ -15235,6 +15237,19 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         newBadgeDays: 120,
         description: "Originkit's Hirefy hero: a real-time WebGL dot globe. A Three.js sphere carries a d3-geo equirectangular land fill, a coastline outline and a graticule, with instanced surface dots and city markers that turn under drag. Presented as a glass-card product hero with a phone mockup, hand cutout and a staged reveal.",
         preview: renderComponent("originkit-hero-24", "OriginkitHero24"),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Visionary Orb ─────────────────────────────────────────────
+    {
+        id: "visionary-orb-hero",
+        title: "Visionary Orb",
+        category: "3d",
+        addedAt: "2026-09-29",
+        newBadgeDays: 120,
+        description: "A cinematic editorial wellness hero. A 10,000-instance Fibonacci particle orb shaded on a three-stop top-to-base depth ramp rests in a screen-blended photographic hand cutout, lit by one narrow top light bar whose radial mask keeps the glow from spilling off the sides. The orb drags with friction decay, keeps a slow idle rotation, and pushes particles away from the cursor. Hovering also craters the surface: particles spring away from the pointer along the surface normal, hold an inflated rim just outside the radius, and settle back when the pointer leaves. A static frosted glass card completes the composition.",
+        preview: renderComponent("visionary-orb-hero", "VisionaryOrbHero"),
         code: "",
         vibePrompt: "",
     },

@@ -20,9 +20,11 @@ import {
 } from '../../data/templatesData';
 import { TemplatePreviewStage } from '../../components/templates/TemplatePreviewStage';
 import BuildWithUIHubRail from '../../components/templates/BuildWithUIHubRail';
+import BuildWithUIHubUsedComponents from '../../components/templates/BuildWithUIHubUsedComponents';
+import { buildWithUIHubSectionBySlug } from '../../data/buildWithUIHubSlugs';
 import Toast from '../../components/ui/Toast';
 
-// Both of these sit behind a click - the Code tab and the CLI prompt dropdown -
+// Both of these sit behind a click - the Code tab and the AI prompt dropdown -
 // but a static import cost the page ~3.2 MB of JavaScript before the preview
 // could paint. TemplateCodeViewer embeds the full text of all 19 template
 // components via ?raw, and templatePromptUtils pulls the component library
@@ -46,7 +48,7 @@ const SECTION_PATH = '/build-with-ui-hub';
 /**
  * Detail page for a "Build with UI HUB" section.
  *
- * Deliberately the same experience as /templates/:id - breadcrumb, CLI prompt
+ * Deliberately the same experience as /templates/:id - breadcrumb, AI prompt
  * dropdown, Preview | Code tabs, fullscreen and reload - so the two catalogs
  * feel identical once you open a card. Two things differ:
  *
@@ -67,6 +69,11 @@ const BuildWithUIHubDetailPage = () => {
         () => buildWithUIHubTemplateBySlug[slug],
         [slug],
     );
+
+    // The full section record, which carries the componentIds the "Built with
+    // UI HUB" panel below the preview lists. Read from the dependency-free slug
+    // module rather than the template catalog.
+    const sectionRecord = useMemo(() => buildWithUIHubSectionBySlug[slug], [slug]);
 
     const [promptMenuOpen, setPromptMenuOpen] = useState(false);
     const [promptCopied, setPromptCopied] = useState<string | null>(null);
@@ -188,7 +195,7 @@ const BuildWithUIHubDetailPage = () => {
                                         title="Copy a prompt for an AI coding tool"
                                     >
                                         <Terminal size={15} />
-                                        <span>CLI</span>
+                                        <span>AI Prompt</span>
                                         <ChevronDown size={13} className={`transition-transform ${promptMenuOpen ? 'rotate-180' : ''}`} />
                                     </button>
                                     {promptMenuOpen && (
@@ -306,6 +313,14 @@ const BuildWithUIHubDetailPage = () => {
                                 />
                             )}
                         </section>
+
+                        {/* Which UI HUB components this section is built from. A
+                            sibling of the preview, not a child: the preview turns
+                            into a fixed fullscreen overlay, and a panel inside it
+                            would either be covered or orphaned. */}
+                        <BuildWithUIHubUsedComponents
+                            componentIds={sectionRecord?.componentIds ?? []}
+                        />
                     </div>
                 </main>
             </div>

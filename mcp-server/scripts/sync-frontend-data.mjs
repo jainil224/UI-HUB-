@@ -25,15 +25,69 @@ const BACKEND = path.join(ROOT, 'backend', 'src', 'data');
 
 /** Transpile a TS data module to CJS and evaluate it, returning its exports. */
 function evalTs(relPath) {
-  const src = fs.readFileSync(path.join(ROOT, relPath), 'utf8');
+  return evalTsWith(relPath);
+}
+
+/**
+ * Same as evalTs, but resolves relative sibling imports inside the data folder.
+ *
+ * templatesData.ts re-exports from ./buildWithUIHubSlugs, so evaluating it in
+ * isolation needs that one module. Anything else still throws, which keeps the
+ * sandbox honest about what the generated data actually depends on.
+ *
+ * Results are cached by absolute path and the module object is registered before
+ * evaluation, so a module that is required more than once (or re-exported and then
+ * imported, as templatesData.ts does with buildWithUIHubSlugs) is evaluated once
+ * and follows normal CommonJS partial-export semantics.
+ */
+const TS_MODULE_CACHE = new Map();
+
+function evalTsWith(relPath) {
+  const abs = path.resolve(ROOT, relPath);
+  if (TS_MODULE_CACHE.has(abs)) return TS_MODULE_CACHE.get(abs).exports;
+
+  const src = fs.readFileSync(abs, 'utf8');
   const js = ts.transpileModule(src, {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
     fileName: relPath,
   }).outputText;
+
   const module = { exports: {} };
-  vm.runInNewContext(js, { module, exports: module.exports, require: (id) => {
-    throw new Error(`Unexpected require in ${relPath}: ${id}`);
-  }, console, process, setTimeout, clearTimeout, setInterval, clearInterval });
+  TS_MODULE_CACHE.set(abs, module);
+
+  vm.runInNewContext(js, {
+    module,
+    exports: module.exports,
+    require: (id) => {
+      if (id.startsWith('./') || id.startsWith('../')) {
+        const base = path.dirname(abs);
+        // Vite's `?raw` suffix means "export this file's text as the default
+        // export", so embeddedSourceCode.ts can be read here even though the
+        // bundler - not Node - is what actually implements it.
+        const isRaw = id.endsWith('?raw');
+        const spec = isRaw ? id.slice(0, -'?raw'.length) : id;
+        // A `?raw` spec already carries its extension; a bare TS import may not.
+        const candidates = path.extname(spec)
+          ? [spec, path.join(spec, 'index.ts'), path.join(spec, 'index.tsx')]
+          : [`${spec}.ts`, `${spec}.tsx`, path.join(spec, 'index.ts'), path.join(spec, 'index.tsx')];
+        for (const c of candidates) {
+          const dep = path.join(base, c);
+          if (fs.existsSync(dep) && fs.statSync(dep).isFile()) {
+            if (isRaw) return fs.readFileSync(dep, 'utf8');
+            return evalTsWith(path.relative(ROOT, dep).split(path.sep).join('/'));
+          }
+        }
+        throw new Error(`Unresolved require in ${relPath}: ${id}`);
+      }
+      throw new Error(`Unexpected require in ${relPath}: ${id}`);
+    },
+    console,
+    process,
+    setTimeout,
+    clearTimeout,
+    setInterval,
+    clearInterval,
+  });
   return module.exports;
 }
 
@@ -364,6 +418,7 @@ const templateFileMap = {
   'logo-here': ['templates', 'LogoHere.tsx'],
   'sui-overflow': ['templates', 'SuiOverflow.tsx'],
   'originkit-hero-24': ['templates', 'OriginkitHero24.tsx'],
+  'visionary-orb-hero': ['templates', 'VisionaryOrbHero.tsx'],
 };
 const templateSource = {};
 for (const id of new Set(templateIds)) {

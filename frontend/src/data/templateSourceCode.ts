@@ -17,6 +17,7 @@ import portfolioClosingCode from '../components/templates/PortfolioClosing.tsx?r
 import moodHeroCode from '../components/templates/MoodHero.tsx?raw';
 import labs2586Code from '../components/templates/Labs2586.tsx?raw';
 import originkitHero24Code from '../components/templates/OriginkitHero24.tsx?raw';
+import visionaryOrbHeroCode from '../components/templates/VisionaryOrbHero.tsx?raw';
 
 export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     '2586-labs': labs2586Code,
@@ -39,5 +40,6 @@ export const TEMPLATE_SOURCE_CODE: Record<string, string> = {
     'sui-overflow': suiOverflowCode,
     'graphic-designer-portfolio': graphicDesignerPortfolioCode,
     'originkit-hero-24': originkitHero24Code,
+    'visionary-orb-hero': visionaryOrbHeroCode,
 };
 

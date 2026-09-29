@@ -20,6 +20,20 @@ export interface BuildWithUIHubSection {
    * embedded source map, the MCP mirror, the demo route - so it stays stable.
    */
   templateId: string;
+  /**
+   * Catalog ids of the UI HUB components this section is built from, in the
+   * order they should be listed under the preview on the detail page.
+   *
+   * Plain string ids only: this module is imported on first paint by the navbar
+   * search box, so it must stay dependency-free. The detail page resolves them
+   * against `componentList` at render time, behind a lazy import, so the ~760 kB
+   * catalog never lands in the initial bundle.
+   *
+   * Only claim a component here if a user opening that component would find the
+   * same thing they saw in the section preview. Sections that are a single
+   * self-contained component list just that one id.
+   */
+  componentIds: string[];
 }
 
 /**
@@ -31,7 +45,14 @@ export interface BuildWithUIHubSection {
  * needed to publish a new section URL.
  */
 export const BUILD_WITH_UI_HUB_SECTIONS: BuildWithUIHubSection[] = [
-  { slug: 'UIHUB-hero-1', templateId: 'originkit-hero-24' },
+  { slug: 'UIHUB-hero-1', templateId: 'originkit-hero-24', componentIds: [] },
+  {
+    slug: 'UIHUB-hero-2',
+    templateId: 'visionary-orb-hero',
+    // The Visionary section is a single self-contained component, so the panel
+    // lists exactly that one. Add ids here as sections start composing parts.
+    componentIds: ['visionary-orb-hero'],
+  },
 ];
 
 /** Templates rendered by Build with UI HUB; excluded from the Templates grid. */
@@ -41,6 +62,12 @@ export const BUILD_WITH_UI_HUB_IDS: string[] = BUILD_WITH_UI_HUB_SECTIONS.map(
 
 /** Master template id -> public slug. Used by search and by the canonical redirects. */
 export const buildWithUIHubSlugByTemplateId: Record<string, string> =
-  Object.fromEntries(
-    BUILD_WITH_UI_HUB_SECTIONS.map((section) => [section.templateId, section.slug]),
-  );
+    Object.fromEntries(
+        BUILD_WITH_UI_HUB_SECTIONS.map((section) => [section.templateId, section.slug]),
+    );
+
+/** Public slug -> the full section record, including its componentIds. */
+export const buildWithUIHubSectionBySlug: Record<string, BuildWithUIHubSection> =
+    Object.fromEntries(
+        BUILD_WITH_UI_HUB_SECTIONS.map((section) => [section.slug, section]),
+    );

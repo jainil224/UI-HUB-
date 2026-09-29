@@ -34,6 +34,7 @@ export const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Co
     'sui-overflow': () => import('./SuiOverflow'),
     'graphic-designer-portfolio': () => import('./GraphicDesignerPortfolio'),
     'originkit-hero-24': () => import('./OriginkitHero24'),
+  'visionary-orb-hero': () => import('./VisionaryOrbHero'),
 };
 
 /**
@@ -90,6 +91,9 @@ export const TEMPLATE_SOURCE_FILES: Record<string, string> = {
     'sui-overflow': 'SuiOverflow.tsx',
     'graphic-designer-portfolio': 'GraphicDesignerPortfolio.tsx',
     'originkit-hero-24': 'UI-HUB.tsx',
+  // The orb, hand, nav, headline and card all live in one self-contained file,
+  // which is what the single-file Code tab requires.
+  'visionary-orb-hero': 'VisionaryOrbHero.tsx',
 };
 
 /**
@@ -149,6 +153,7 @@ export const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'sui-overflow': 'bg-[#F2EFE6]',
     'graphic-designer-portfolio': 'bg-[#F7F6F2]',
     'originkit-hero-24': 'bg-[#101216]',
+  'visionary-orb-hero': 'bg-[#080305]',
 };
 
 const prefetchedChunks = new Set<string>();

@@ -218,7 +218,7 @@ const TemplateDetailPage = () => {
                                         title="Copy a prompt for an AI coding tool"
                                     >
                                         <Terminal size={15} />
-                                        <span>CLI</span>
+                                        <span>AI Prompt</span>
                                         <ChevronDown size={13} className={`transition-transform ${promptMenuOpen ? 'rotate-180' : ''}`} />
                                     </button>
                                     {promptMenuOpen && (
@@ -252,6 +252,16 @@ const TemplateDetailPage = () => {
                                         className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#17181a] hover:bg-neutral-200 transition-colors"
                                     >
                                         Live Link <ExternalLink size={14} />
+                                    </a>
+                                )}
+                                {template.codeUrl && (
+                                    <a
+                                        href={template.codeUrl}
+                                        className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-[#34363a] px-3 py-2 text-sm text-white hover:bg-[#414348] transition-colors"
+                                        title="Open the source code in Google AI Studio"
+                                    >
+                                        <Code2 size={15} />
+                                        <span>Source code</span>
                                     </a>
                                 )}
                             </div>

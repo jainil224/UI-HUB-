@@ -1,638 +1,227 @@
-# Task: Fix WebM Similar Template Selection and Live Preview Loading
+# Build Prompt: Visionary Wellness Hero
 
-## Objective
+Build a polished, responsive, single-screen landing-page hero for **Visionary**, matching the specification below as closely as possible. Treat every phrase, placement, color, and behavior here as intentional. Do not redesign, simplify, or add unrelated sections. The result should feel like the same cinematic wellness experience at desktop, tablet, and mobile sizes.
 
-Improve the template detail page so that **WebM files used by Similar Templates do not become the main preview when a user clicks them**.
+## 1. Product and Overall Art Direction
 
-The current UI has:
+Create a premium digital wellness experience: cinematic, calm, editorial, tactile, and subtly futuristic. The screen is a near-black stage with a warm rose-pink light source, a photorealistic cupped hand rising from the bottom center, and a luminous, interactive sphere made from thousands of pink particles floating just above the palm. Text is elegant and restrained. UI panels use fine borders and translucent dark glass rather than bright solid cards.
 
-* A **Similar Templates** section on the left side.
-* Some template cards use **WebM files** as their visual previews.
-* When a user selects one of these templates, the application may attempt to use the WebM file as the main preview, which can cause unnecessary loading delays.
-* The main preview area is located on the **right side**.
+The contrast between the dark background, pale rose sphere, realistic hand, quiet typography, and compact interface panels is the defining look. Preserve generous negative space. The central hand-and-sphere visual is the emotional focal point, while the headline remains easy to read on the left and the wellness recommendation panel remains easy to scan on the right.
 
-The required behavior is:
+Do not use a cyan or blue sphere, a blue-lit hand, a purple gradient, a generic stock wellness dashboard, a cartoon hand, or an unrelated hero illustration. Do not add a crown/VIP tile: it is not part of the visible target composition. Do not add sections below the hero, a footer, a large marketing CTA block, or decorative floating orbs.
 
-> **WebM = thumbnail/visual representation only.
-> Actual template/live preview = content displayed in the right-side preview area.**
+## 2. Canvas and Layout
 
----
+- Make the hero fill at least the full viewport height. On desktop, fit the complete composition into one viewport without a page-level scrollbar; on small screens, allow natural vertical scrolling if required to keep every element usable.
+- Use a full-bleed background, not a framed page or a card around the entire hero.
+- Use a near-black base: `#080305` for the visual stage and `#030609` where needed for the darkest page/background blend. Main text is white.
+- Keep the content container centered and capped at approximately `1440px` wide. Use horizontal padding of about `24px` on narrow screens, `40px` on small/medium screens, and `56px` on large screens.
+- Layer the screen in this order: ambient background; top navigation; center-bottom hand and sphere; foreground content. The foreground content sits above the hand layer but must not obscure the particle sphere.
+- At desktop widths, use a three-zone visual balance: headline and supporting content in the left portion, hand and sphere centered, recommendation panel toward the lower right. The hand/sphere is absolutely centered on the horizontal axis and anchored to the bottom edge. The left column is roughly five-twelfths of the content width. Keep the right panel near the lower-right edge with comfortable viewport margins.
+- At tablet/mobile widths, keep the brand and actions in the header, collapse the navigation to a menu button, center the hand/sphere, and move the recommendation panel below the headline/content in normal flow. Prevent text, menu, and card from colliding with the hand or each other.
 
-# Requirements
+## 3. Background and Lighting
 
-## 1. Make Similar Template Cards Fully Clickable
+Build a layered, restrained lighting treatment rather than a flat black fill:
 
-In the **Similar Templates** section on the left:
+1. Start with a deep obsidian/black-cherry field (`#080305`).
+2. At the top center, add a short, thin, horizontal white-to-rose light bar, about `240px` wide on a small screen and up to `360px` on a desktop. The center is nearly white; the ends fade to transparent. Add a soft rose halo around it.
+3. Directly beneath that bar, add a narrow, downward-facing rose spotlight beam centered over the sphere. It should fade out before reaching the page edges and feel like a studio light, not a hard geometric triangle.
+4. Add a broad, soft rose ambient bloom behind the sphere in the upper-middle area and a subtler, darker rose diffusion around the lower hand/wrist area. Use large, very soft radial gradients and blur; keep the corners dark.
+5. Add a barely visible fine-grain texture (around 3% opacity) and a soft dark vignette at the edges.
+6. Track pointer position to move only the background lighting layer a few pixels in the opposite direction, with smooth easing. Do not make the hand drift with the pointer. Disable this parallax when reduced motion is requested.
 
-* Make the complete template card clickable.
-* The user should be able to click:
+Suggested rose colors: `#E2B4BD` as the main sphere/glow color, `#C27586` for the deeper rose, and a near-white blush (`#FFF0F3`) for highlights. The atmosphere should remain mostly dark; pink light is concentrated around the center, not spread over the entire canvas.
 
-  * WebM thumbnail
-  * Template image/thumbnail
-  * Template title
-  * Card area
-* Do not require the user to click a small button.
-* Preserve the existing card design and styling.
-* Preserve the current hover effects and animations unless they interfere with usability.
+## 4. Header and Navigation
 
-The click should identify the selected template using its existing template ID/slug/object.
+Place a single horizontal header near the top edge, with roughly `24px` top spacing on mobile and `24px` horizontal/vertical breathing room on desktop. Align its three zones vertically:
 
-Do **not** create a second independent template-selection system if one already exists.
+### Left: wordmark
 
-Reuse the application's existing selection/navigation/state logic wherever possible.
+- Show a small rose sparkle glyph (`✦`) followed by the word **Visionary**.
+- Use white text, medium weight, approximately `16px` on mobile and `18px` on larger screens.
+- Color the sparkle `#E2B4BD` and give it a subtle rose glow.
+- Keep the wordmark on one line and aligned to the left edge of the content container.
 
----
+### Center: desktop navigation
 
-# 2. Do NOT Use WebM as the Main Preview
+- Show a compact translucent glass navigation capsule centered horizontally in the header.
+- Include exactly these labels, in this order: **Home**, **Service**, **Product**, **About Us**.
+- Use small, approximately `12px` sans-serif text, with compact horizontal/vertical padding and a small gap between items.
+- The capsule has a faint white border, very dark transparent fill, approximately `16px` backdrop blur, and a subtle inset highlight/shadow. It should not look like a large floating panel.
+- **Home** is initially active: slightly brighter white text, a subtly lighter translucent background, faint border, and restrained rose-tinted shadow. Other items are muted cool-neutral gray and brighten on hover.
+- Clicking an item changes the active visual state. Do not invent page routes or extra content if only this hero is implemented.
 
-This is the most important requirement.
+### Right: account actions
 
-When the selected Similar Template contains a `.webm` preview:
+- Show **Sign in** as a quiet translucent dark button with a thin white border, white small text, and restrained hover feedback.
+- Show **Join** beside it as a compact white button with dark text, a small corner radius, and a subtle white glow. It is the brightest header control.
+- Use approximately `12px` text and compact vertical padding. Both buttons have visible keyboard-focus styles and a slight pressed state.
+- On small screens, hide the desktop navigation and the Sign in button; keep **Join** visible and add a compact hamburger/close icon button. The icon toggles a dark, blurred dropdown containing the four same navigation items, then a divider and Sign in / Join Visionary actions. Close the dropdown after selecting a navigation item or an account action. Keep the dropdown within the viewport.
 
-### DO NOT:
+There is no crown tile or floating VIP badge in this target header.
 
-* Open the WebM as the main preview.
-* Set the WebM URL as the right-side preview source.
-* Render the WebM as the main preview video.
-* Automatically play the WebM inside the main preview.
-* Download/load the complete WebM unnecessarily just to display the selected template.
-* Replace the live preview with the WebM animation.
+## 5. Central Hand Image
 
-### Instead:
+- Use a photorealistic human hand with the palm facing upward, fingers naturally relaxed and gently cupped, as if supporting a floating sphere. The hand and forearm rise vertically from the bottom center. Show enough palm and fingers to make the gesture immediately legible; let the wrist fade into the dark bottom edge.
+- Center the hand precisely. Anchor its bottom to the viewport bottom, with a maximum desktop width around `430px`; scale down smoothly on smaller screens. At desktop, the hand image should extend about `230–300px` high, depending on viewport size.
+- Use the supplied original hand image if available. The reference asset used by the current implementation is `https://res.cloudinary.com/dgqd54pbl/image/upload/v1790671314/ChatGPT_Image_Sep_29_2026_02_07_08_PM_vshk0k.png`. If it cannot be loaded, use a local supplied equivalent or create/source a closely matched photorealistic cupped-hand image. Do not substitute an unrelated image.
+- Preserve the image's natural proportions with `object-fit: contain` and bottom alignment. Avoid hard rectangular image edges: softly mask/fade the upper/lower transition as appropriate and blend the wrist into the background with a dark-to-transparent bottom gradient.
+- Apply only a restrained brightness/contrast lift and a soft rose rim illumination/drop shadow (`rgba(226,180,189,0.35)` neighborhood). The skin should remain realistic; do not tint the whole hand pink.
+- The hand remains stationary. It does not rotate, bob, or follow the pointer.
 
-Use the WebM **only as a visual thumbnail for the left-side Similar Template card**.
+## 6. Floating Particle Sphere (The “Ball”)
 
-The WebM should never become the actual content of the main preview area.
+Position a luminous spherical particle object directly above the open palm, centered on the same vertical axis. It should look like a dense, three-dimensional ball of glowing points, not a solid plastic ball, flat circle, wireframe, or cloudy blob.
 
----
+### Shape and size
 
-# 3. Load the Actual Template Preview on the Right
+- Desktop sphere diameter: approximately `240–260px`; tablet: approximately `210–240px`; small screen: approximately `180–210px`.
+- The sphere floats just above the fingertips/palm. Keep a small visible gap or luminous overlap so the light visually connects the ball and hand without hiding the fingers.
+- Use thousands of individual, round, softly glowing particles distributed evenly over a true 3D spherical surface. The current target uses about `8,500` points.
+- Color the lower/deeper region dusty rose (`#C27586`), the central body soft rose (`#E2B4BD`), and the upper-facing highlights pale blush/near-white (`#FFF0F3`). Vary point brightness and size slightly so the surface has depth. Keep the silhouette spherical and readable.
+- Use additive/glow-like rendering, with bright pinpoint particles and soft falloff. Avoid excessive bloom that merges all points into one solid disk.
 
-When the user clicks a Similar Template:
+### Sphere lighting
 
-1. Detect the selected template.
-2. Retrieve its existing live-preview information.
-3. Load the **actual template preview** into the right-side preview area.
-4. Render the template itself rather than rendering the WebM file.
+- Put a soft rose core glow behind the sphere.
+- Surround it with a subtle luminous corona ring: transparent in the center, brightest at the outer circumference, and feathered at the edge. The ring should read as light around the sphere, not a sharp outlined circle.
+- Add a pale spotlight from above, fading down onto the top of the sphere.
+- Add a broader, warm rose halo behind the sphere and hand. Keep all glows soft and layered.
 
-Example flow:
+### Motion and interaction
 
-```text
-User clicks WebM card
-        ↓
-Identify selected template
-        ↓
-Get template ID / slug
-        ↓
-Find existing live preview URL/component
-        ↓
-Load actual template
-        ↓
-Display template on RIGHT side
-```
+- Rotate the sphere continuously and slowly around its vertical axis. Motion should be smooth and steady, not fast or distracting. The target implementation uses a speed setting around `22` on its component scale.
+- Keep the hand and surrounding page content stationary while the sphere rotates.
+- Allow direct pointer/touch interaction with the sphere: dragging rotates it with the gesture, and rotation settles smoothly when released. Use easing/smoothing rather than snapping.
+- As a pointer approaches the surface, nearby particles subtly push away from it and ease back into their original positions. A click/tap can briefly scatter nearby particles outward, then they smoothly return to the spherical surface.
+- Use a moderate influence radius (about `75px` in the interaction coordinate system) and restrained force. Interaction must preserve the overall sphere silhouette.
+- Keep the pointer cursor as grab/grabbing while interacting. Do not let the sphere interaction block the rest of the page.
+- Respect `prefers-reduced-motion`: disable automatic rotation and background parallax, and avoid nonessential animation. Keep the sphere visible and, where practical, still permit direct user interaction.
 
-The WebM should only represent the template visually on the left.
+## 7. Left-Side Hero Copy
 
----
+Place the copy left aligned in a column with a maximum width around `500px`. Vertically center it in the available desktop hero area, with enough distance from the left edge and enough contrast over the background. Keep it above the visual background but do not put it inside a card.
 
-# 4. Preserve the Existing Main Preview System
-
-Before changing anything, inspect how the current right-side preview works.
-
-Find the existing implementation responsible for:
-
-* Template selection
-* Preview rendering
-* Live preview URL
-* iframe rendering
-* Dynamic template rendering
-* Template route/navigation
-* Preview component
-* Template metadata
-
-Reuse the existing implementation instead of creating an entirely new preview architecture.
-
-Do not replace working preview functionality unnecessarily.
-
-The goal is to **fix the selection behavior**, not rewrite the entire template preview system.
-
----
-
-# 5. Support Different Preview Types
-
-The solution should work regardless of whether the Similar Template thumbnail is:
-
-* `.webm`
-* `.mp4`
-* `.png`
-* `.jpg`
-* `.jpeg`
-* `.webp`
-* Static image
-* Other existing thumbnail format
-
-The thumbnail format should **not determine the main preview format**.
-
-For example:
-
-```ts
-thumbnailUrl = template.previewWebm
-livePreviewUrl = template.livePreviewUrl
-```
-
-Then:
+Use this exact headline and line arrangement:
 
 ```text
-LEFT SIDE:
-template.previewWebm
-        ↓
-visual thumbnail only
-
-RIGHT SIDE:
-template.livePreviewUrl
-        ↓
-actual live template preview
+Your Everyday
+Wellness Partner
 ```
 
----
+- Use **Cormorant Garamond** or a very close editorial serif, regular weight, with a refined high-contrast appearance.
+- Set the first line in white. On the second line, italicize **Wellness** in a light serif weight, followed by **Partner** in the regular serif style.
+- Use a desktop font size around `54px` (fluidly reduce toward `32px` on narrow screens), line-height around `1.1`, and restrained dark text shadow for legibility.
+- Do not use all caps, bold sans-serif display lettering, or a gradient-filled headline.
 
-# 6. Add Proper Template Data Separation
+Under the headline, show this exact supporting text:
 
-Make sure the application clearly separates:
+> Stay on top of your health with a trusted partner by your side—track habits, monitor progress, and receive personalized guidance for a balanced, healthier life every day.
 
-### Thumbnail / Preview Media
+- Use **Plus Jakarta Sans** or a close clean sans-serif, light weight, muted light gray, approximately `13.5–14.5px`, with line-height around `1.72` and a maximum width around `400px`.
+- Leave about `20px` above this paragraph. Keep the text readable and do not let it collide with the center hand/sphere.
 
-Used for Similar Template cards:
+Below the paragraph, add a subtle partner-brand row:
 
-```ts
-thumbnailUrl
-previewImage
-previewWebm
-previewVideo
-```
+- Add a faint horizontal divider above the row.
+- Show these five names in this exact order: **Typely**, **Framex**, **Webora**, **Logiqo**, **Designo**.
+- Precede every name with a small rose `✻` symbol. Use approximately `12px` muted-gray text with modest horizontal spacing; allow a neat wrap on narrow screens.
+- Keep this row visually secondary to the headline and paragraph.
 
-### Actual Live Preview
+The **Join** header action and an optional hero action may open the same Join flow; do not add a visually large extra CTA if it compromises the target composition.
 
-Used in the right-side preview:
+## 8. Recommendation Card
 
-```ts
-livePreviewUrl
-demoUrl
-previewUrl
-templateUrl
-route
-component
-```
+Create one compact wellness recommendation HUD card. On desktop place it in the lower-right region, aligned near the bottom of the main content area; on mobile/tablet show it below the hero copy and center it. The card should not cover the sphere or hand.
 
-Use whichever field names already exist in the project.
+- Width: about `210px` on a narrow layout and `230px` on a wider layout.
+- Padding: about `16px`. Corner radius: about `16px`.
+- Fill: translucent dark burgundy/black, near `rgba(20, 8, 12, 0.75)`. Add a fine rose border (`rgba(226,180,189,0.18)` neighborhood), approximately `20px` backdrop blur, a soft black drop shadow, and a subtle inset white top edge.
+- Keep typography compact and crisp; do not enlarge the card or make it the primary focal point.
 
-**Do not invent duplicate data fields if equivalent fields already exist.**
+### Card header
 
-The important architectural rule is:
+- On the left, show a small circular rose-tinted badge with a sparkle icon, followed by **Recommendation**.
+- Use small, semibold, light-gray text (about `11px`).
+- On the right, show a rose-tinted count in `completed/total` form. Initial state is **1/3**.
+- Add a thin, low-contrast divider below the header.
 
-```text
-thumbnail media ≠ live preview
-```
+### Habit rows
 
----
+Show exactly three compact, clickable rows in this order:
 
-# 7. Loading Behavior
+1. Footprints icon, rose tint; label **20 min walk**; initially incomplete with an empty circular check control.
+2. Droplet icon, pale rose tint; label **Drink 600ml water**; initially complete with a rose check-circle; use subdued, crossed-out text for the completed item.
+3. Moon icon, rose tint; label **Sleep before 10 PM**; initially incomplete with an empty circular check control.
 
-When the user clicks a Similar Template:
+Use approximately `12px` label text and small consistent icons (around `14px`). Clicking a row toggles its completion state and updates the header count. Use subtle row hover feedback and visible keyboard focus. Keep row spacing tight and even.
 
-* Show a lightweight loading state in the right-side preview if needed.
-* Do not block the entire page.
-* Do not reload unrelated page sections.
-* Do not reload all Similar Templates.
-* Do not download every WebM file on click.
-* Only load the selected template's actual live preview.
+### Card footer
 
-If the live preview requires an iframe or external URL, load only that resource.
+- Add a faint divider.
+- On the left, show a tiny rose live-status dot and **Live Sync**.
+- On the right, show **Today**.
+- Use about `10px` muted text. The status dot may pulse very subtly, but do not animate the entire card.
 
-Example:
+## 9. Typography, UI Finish, and Accessibility
 
-```tsx
-{selectedTemplate && (
-  <LivePreview
-    template={selectedTemplate}
-  />
-)}
-```
+- Load **Cormorant Garamond** for the display headline and **Plus Jakarta Sans** for navigation, paragraph, labels, and controls when web fonts are available. Use sensible serif/sans fallbacks.
+- Keep white for primary copy; use cool-neutral gray for supporting copy and warm rose only for the sphere, tiny symbols, checks, selected states, and concentrated lighting.
+- Buttons and compact UI use small radii (roughly `6–10px`), except the recommendation card and circular badges. Borders should be low contrast and thin.
+- Add restrained hover, pressed, and focus-visible states. Avoid dramatic button scaling, bouncy easing, or continuous motion on text and cards.
+- Use semantic header, nav, main, headings, lists, and buttons. Give icon-only menu controls accessible labels. Provide meaningful alt text for the hand image. Ensure adequate contrast and keyboard operation.
+- Respect reduced-motion preferences. Keep controls usable at touch sizes on mobile even though desktop visual controls are compact.
 
-Avoid:
+## 10. Responsive Composition
 
-```tsx
-<video src={selectedTemplate.previewWebm} />
-```
+### Large desktop (about 1024px and wider)
 
-inside the main preview area.
+- Keep the header in one row: wordmark left, four-link nav centered, Sign in and Join right.
+- Keep the headline in the left column; keep the hand/sphere centered and anchored to the bottom; keep Recommendation near the lower-right.
+- Use a hero height equal to the viewport and hide horizontal overflow. Ensure the headline does not sit directly behind the sphere.
 
----
+### Tablet and narrow desktop
 
-# 8. WebM Thumbnail Optimization
+- Preserve the center focal visual while shrinking the sphere and hand proportionally.
+- Keep headline and recommendation card legible. Move the card into a non-overlapping position when the right-side desktop placement no longer fits.
+- Replace the desktop nav with the mobile menu at the chosen breakpoint; do not cram all header controls into a narrow row.
 
-WebM files may be relatively expensive compared with static thumbnails.
+### Mobile (below about 768px)
 
-Keep WebM usage limited to the Similar Templates cards.
+- Show the wordmark left and Join/menu controls right. The desktop nav and Sign in button are hidden until the menu opens.
+- Use a readable headline, approximately `32px` at the narrow end, and keep supporting copy within the viewport width.
+- Center the hand and sphere and scale them down; do not let them obscure the headline or recommendation card. Allow vertical scrolling if the content needs it.
+- Put the recommendation card below the copy, centered, with no horizontal overflow. The brand row may wrap cleanly.
 
-Where possible:
+## 11. Interaction and Functional Requirements
 
-* Lazy-load WebM thumbnails.
-* Do not load every WebM simultaneously if the existing implementation already supports lazy loading.
-* Avoid autoplaying large WebM files unnecessarily.
-* Use the existing poster/thumbnail mechanism where available.
-* Do not change the current visual appearance unless necessary.
+- Desktop navigation buttons update the active tab state; Home starts selected.
+- Join and Sign in open a simple, accessible authentication modal or equivalent dialog in the corresponding mode. Include a close control, close on Escape, and close on backdrop click if appropriate. Keep the modal styling consistent with the dark/rose glass aesthetic. Do not invent complex product flows.
+- Mobile menu opens/closes from its icon and closes after a menu or account action.
+- Recommendation checklist toggles each item and updates its completion count.
+- Sphere rotates automatically when motion is allowed; supports drag rotation, pointer repulsion, and brief click/tap scatter as detailed above.
+- Background lighting responds to pointer parallax only; foreground elements remain stable.
+- All controls must work, not merely look clickable. Handle resize and touch input gracefully.
 
-However, **do not aggressively rewrite the media pipeline** if the current implementation is already working.
+## 12. Implementation Guidance
 
-Make the smallest safe change required.
+If implementing in a web app, use the existing framework and project conventions. Use a real WebGL/Three.js particle system (or an equivalent proven particle-rendering library) for the sphere; do not fake it with a static image or a CSS gradient. Use the original hand image where available. Build the layout with responsive CSS and preserve the specified component hierarchy and layering.
 
----
+Keep animation deterministic and smooth. Clean up animation frames, listeners, and WebGL resources on unmount. Avoid unnecessary rendering work. Do not allow the high particle count to freeze mobile devices; cap pixel ratio, resize correctly, and gracefully reduce rendering cost on low-power devices without changing the overall appearance. Provide a static/reduced-motion fallback if WebGL is unavailable.
 
-# 9. Selected Card State
-
-When a user clicks a Similar Template:
-
-* Clearly indicate which template is selected.
-* Preserve the existing selected/active-card UI if one already exists.
-* The selected template should remain identifiable while its live preview loads.
-
-Example states:
-
-```text
-Normal card
-↓
-Hover card
-↓
-Selected card
-↓
-Right-side live preview loading
-↓
-Right-side live preview displayed
-```
-
-Do not introduce a visually inconsistent new design.
-
----
-
-# 10. Navigation / URL Behavior
-
-Inspect the existing routing behavior before implementing the change.
-
-If clicking a Similar Template currently updates the route, preserve that behavior.
-
-If the application uses something like:
-
-```text
-/templates/{slug}
-```
-
-continue using the same routing structure.
-
-Do not break:
-
-* Browser back button
-* Browser forward button
-* Direct template URLs
-* Page refresh
-* Deep linking
-* Existing template navigation
-
-If the current page can change its selected template without full navigation, preserve that behavior instead.
-
----
-
-# 11. Prevent WebM From Accidentally Becoming the Main Preview
-
-Add a clear media-type guard.
-
-For example, conceptually:
-
-```ts
-const isVideoThumbnail = thumbnailUrl?.endsWith(".webm");
-
-if (isVideoThumbnail) {
-    // Use WebM only for the Similar Template card.
-    // Main preview must use livePreviewUrl.
-}
-```
-
-But do not blindly rely on `.endsWith(".webm")` if the application already has metadata indicating the media type.
-
-Prefer the application's existing template metadata/type system.
-
-The final preview selection should follow logic similar to:
-
-```ts
-const previewSource =
-  template.livePreviewUrl ||
-  template.demoUrl ||
-  template.route ||
-  template.previewComponent;
-```
-
-and **never automatically fall back to the WebM thumbnail just because it exists**.
-
-If no live preview is available, use the application's existing fallback behavior rather than displaying the WebM as the main preview.
-
----
-
-# 12. Error Handling
-
-If the selected template's live preview fails:
-
-* Show an existing/error-safe fallback UI.
-* Provide a useful loading/error state.
-* Do not fall back to rendering the WebM video as the main preview.
-* Do not crash the page.
-
-Example:
-
-```text
-Unable to load live preview.
-Please try again.
-```
-
-Use the application's existing error UI/style where possible.
-
----
-
-# 13. Preserve Existing Functionality
-
-This change must NOT break:
-
-* Template search
-* Similar Template ranking
-* Template cards
-* Template downloads
-* Live Link button
-* CLI button
-* Preview / code toggle
-* Fullscreen preview
-* Refresh preview
-* Breadcrumb navigation
-* Routing
-* Authentication
-* Existing animations
-* Existing responsive behavior
-* Existing API calls
-* Existing template metadata
-* Existing WebM thumbnails
-
-Do not modify unrelated components.
-
----
-
-# 14. Implementation Strategy
-
-Before modifying code:
-
-### Step 1 — Find the Similar Templates component
-
-Locate the component responsible for:
-
-```text
-Similar Templates
-Top 5 of 16 ranked by relevance
-```
-
-Identify:
-
-* Card component
-* Thumbnail renderer
-* Click handler
-* Template data structure
-
-### Step 2 — Find the main preview component
-
-Locate the component responsible for:
-
-```text
-Preview
-```
-
-on the right side.
-
-Determine how it receives:
-
-* template data
-* URL
-* slug
-* selected template
-* live preview source
-
-### Step 3 — Trace the existing template-selection flow
-
-Determine:
-
-```text
-click card
-    ↓
-selected template
-    ↓
-route/state
-    ↓
-preview
-```
-
-Reuse this flow.
-
-### Step 4 — Separate thumbnail and preview sources
-
-Ensure the WebM source is used only for the left-side card.
-
-The actual preview source must come from the template's existing live-preview mechanism.
-
-### Step 5 — Add the smallest necessary change
-
-Avoid large refactors.
-
-Change only what is required to achieve the new behavior safely.
-
----
-
-# 15. Required Final UX
-
-The finished interaction should work like this:
-
-```text
-┌──────────────────────┬────────────────────────────────────────┐
-│ Similar Templates    │                                        │
-│                      │                                        │
-│ [WebM Thumbnail]     │                                        │
-│ Template A           │          ACTUAL LIVE PREVIEW            │
-│                      │                                        │
-│ [WebM Thumbnail] ←── │          of selected template           │
-│ Template B           │                                        │
-│                      │                                        │
-│ [Image Thumbnail]    │                                        │
-│ Template C           │                                        │
-│                      │                                        │
-└──────────────────────┴────────────────────────────────────────┘
-```
-
-When clicking Template B:
-
-```text
-WebM thumbnail remains on LEFT
-             +
-actual Template B preview appears on RIGHT
-             +
-WebM is NOT shown on RIGHT
-```
-
----
-
-# 16. Important Constraint: No Breaking Changes
-
-Follow these rules strictly:
-
-* Do not rewrite the complete page.
-* Do not redesign the UI.
-* Do not remove existing features.
-* Do not change the database schema unless absolutely required.
-* Do not change unrelated APIs.
-* Do not replace the existing preview engine without a strong technical reason.
-* Do not rename existing public interfaces unnecessarily.
-* Do not remove existing WebM assets.
-* Do not change template ranking logic.
-* Do not change the current Similar Templates visual design.
-
-Use the smallest maintainable implementation.
-
----
-
-# 17. Test Cases
-
-After implementation, test all of the following.
-
-### Test 1 — WebM Similar Template
-
-Click a Similar Template whose thumbnail is WebM.
-
-Expected:
-
-```text
-LEFT:
-WebM thumbnail remains visible
-
-RIGHT:
-Actual live template preview loads
-
-NOT:
-WebM video as the right-side preview
-```
-
-### Test 2 — Image Similar Template
-
-Click a Similar Template using PNG/JPG/WebP.
-
-Expected:
-
-```text
-Actual live template preview loads on the right.
-```
-
-### Test 3 — Multiple WebM Templates
-
-Click WebM Template A → Preview A.
-
-Click WebM Template B → Preview B.
-
-Click WebM Template C → Preview C.
-
-Ensure the correct live preview appears every time.
-
-### Test 4 — Rapid Clicking
-
-Rapidly click:
-
-```text
-Template A
-Template B
-Template C
-```
-
-Ensure the preview does not display the wrong template because of stale asynchronous loading.
-
-Handle race conditions safely.
-
-### Test 5 — Missing Live Preview
-
-If a template does not have a valid live preview source:
-
-```text
-Show safe fallback/error state.
-Do NOT display WebM as the main preview.
-```
-
-### Test 6 — Existing Controls
-
-Verify that:
-
-* Preview button still works.
-* Code button still works.
-* Fullscreen still works.
-* Refresh still works.
-* Live Link still works.
-* CLI still works.
-
-### Test 7 — Responsive UI
-
-Check desktop and mobile/tablet layouts.
-
-The Similar Templates section must remain usable and clickable.
-
----
-
-# 18. Acceptance Criteria
-
-The task is complete only when all of these are true:
-
-* [ ] Similar Template cards are clickable.
-* [ ] WebM thumbnails remain available for visual representation.
-* [ ] Clicking a WebM thumbnail does not open/render the WebM as the main preview.
-* [ ] Clicking a Similar Template updates the right-side preview.
-* [ ] The right-side preview displays the actual template content/live preview.
-* [ ] Only the necessary live-preview resource is loaded.
-* [ ] Existing navigation and template functionality continue working.
-* [ ] No unrelated UI is redesigned.
-* [ ] No existing features are removed.
-* [ ] No console errors are introduced.
-* [ ] No broken routes are introduced.
-* [ ] Existing image-based templates continue working.
-* [ ] Multiple WebM templates can be selected correctly.
-* [ ] Missing/failed live previews have a safe fallback.
-* [ ] The implementation is clean, maintainable, and uses the existing architecture wherever possible.
-
----
-
-# Final Instruction to the Coding Agent
-
-First inspect the existing codebase and identify the exact components and data flow responsible for:
-
-1. Similar Template cards
-2. WebM thumbnail rendering
-3. Template selection
-4. Right-side preview rendering
-5. Live preview URLs/components
-6. Routing/state management
-
-Then implement the **minimum safe change** needed to separate WebM thumbnail media from the actual live preview.
-
-The core rule is:
-
-**WebM is only for the Similar Templates thumbnail.
-The selected template's real/live content must be rendered in the right-side preview.**
-
-Do not break existing functionality, styling, routing, APIs, or preview controls.
-
-After making the changes, run the relevant checks/build/tests and report:
-
-* Files changed
-* What was changed
-* Why it fixes the WebM loading problem
-* How WebM thumbnails are handled now
-* How the actual live preview is selected
-* Test/build results
-* Any remaining limitation
+## 13. Acceptance Checklist
+
+The result is correct only when all of the following are true:
+
+- The page opens on a full-viewport, near-black cinematic wellness hero with rose lighting.
+- The header has Visionary at left, Home / Service / Product / About Us in the desktop center, and Sign in / Join at right; Home is selected.
+- The exact headline and supporting paragraph appear on the left with serif/sans typography as specified.
+- A realistic upward-cupped hand rises from the bottom center, with a luminous pink particle sphere floating directly above its palm.
+- The sphere visibly rotates and responds to pointer/touch interaction; it remains a particle-built 3D sphere, not a solid orb.
+- The right/lower recommendation panel has the exact title, three exact habit labels, initial water completion, initial count 1/3, and Live Sync / Today footer.
+- The background spotlight, rose glow, subtle texture, vignette, and background-only pointer parallax are present but never overpower the content.
+- Mobile uses a working collapsible menu, keeps all content readable, and has no horizontal overflow or overlapping controls.
+- Reduced-motion, keyboard focus, image alt text, and functional button/checklist behavior are supported.
+- No cyan orb, floating crown/VIP card, unrelated hero content, or extra page sections are introduced.
