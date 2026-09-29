@@ -18,6 +18,9 @@ interface TemplateSimilarRailProps {
     /** True when the visitor asked to see the full match list. */
     expanded: boolean;
     onToggleExpanded: () => void;
+    /** While true, rail WebM cards hold at preload="metadata" and stay paused so
+     * their downloads do not compete with the main live preview still loading. */
+    suspendVideos?: boolean;
 }
 
 /**
@@ -44,10 +47,13 @@ interface TemplateSimilarRailProps {
  * visitor is actually about to click has time to fill without any of the cards
  * they skip past paying for it.
  */
-const RelatedThumbnail: React.FC<{ template: TemplateItem; isHovered: boolean }> = ({
-    template,
-    isHovered,
-}) => {
+const RelatedThumbnail: React.FC<{
+    template: TemplateItem;
+    isHovered: boolean;
+    /** While the main live preview is still loading, rail videos hold at
+     * preload="metadata" and stay paused so they do not compete with the chunk. */
+    suspendVideos: boolean;
+}> = ({ template, isHovered, suspendVideos }) => {
     const holderRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const [shouldLoad, setShouldLoad] = useState(false);
@@ -87,14 +93,14 @@ const RelatedThumbnail: React.FC<{ template: TemplateItem; isHovered: boolean }>
         const video = videoRef.current;
         if (!shouldLoad || !video) return;
 
-        if (!inView || document.hidden) {
+        if (!inView || document.hidden || suspendVideos) {
             video.pause();
             return;
         }
 
         const attempt = video.play();
         if (attempt) attempt.catch(() => {});
-    }, [shouldLoad, inView]);
+    }, [shouldLoad, inView, suspendVideos]);
 
     // A backgrounded tab should not keep pulling preview media.
     useEffect(() => {
@@ -105,22 +111,22 @@ const RelatedThumbnail: React.FC<{ template: TemplateItem; isHovered: boolean }>
             if (!video) return;
             if (document.hidden) {
                 video.pause();
-            } else if (inView) {
+            } else if (inView && !suspendVideos) {
                 video.play().catch(() => {});
             }
         };
 
         document.addEventListener('visibilitychange', handleVisibility);
         return () => document.removeEventListener('visibilitychange', handleVisibility);
-    }, [shouldLoad, inView]);
+    }, [shouldLoad, inView, suspendVideos]);
 
     // Setting the attribute alone does not reliably restart buffering on an
     // already-mounted element, so the hover upgrade is also applied directly.
     useEffect(() => {
         const video = videoRef.current;
         if (!shouldLoad || !video) return;
-        video.preload = inView || isHovered ? 'auto' : 'metadata';
-    }, [shouldLoad, inView, isHovered]);
+        video.preload = suspendVideos || (!inView && !isHovered) ? 'metadata' : 'auto';
+    }, [shouldLoad, inView, isHovered, suspendVideos]);
 
     return (
         <div
@@ -134,9 +140,10 @@ const RelatedThumbnail: React.FC<{ template: TemplateItem; isHovered: boolean }>
                     muted
                     loop
                     playsInline
-                    // Full buffering is opted into only once the card is on screen
-                    // or the visitor has signalled they are about to click it.
-                    preload={inView || isHovered ? 'auto' : 'metadata'}
+                    // Full buffering is opted into only once the card is on screen,
+                    // the visitor has signalled intent, and the main live preview
+                    // is not still loading (suspendVideos).
+                    preload={suspendVideos || !(inView || isHovered) ? 'metadata' : 'auto'}
                     aria-hidden="true"
                     className="absolute inset-0 h-full w-full object-cover object-top"
                 />
@@ -148,10 +155,11 @@ const RelatedThumbnail: React.FC<{ template: TemplateItem; isHovered: boolean }>
 /**
  * One related template.
  */
-const RelatedCard: React.FC<{ item: RelatedTemplate; onNavigate: (id: string) => void }> = ({
-    item,
-    onNavigate,
-}) => {
+const RelatedCard: React.FC<{
+    item: RelatedTemplate;
+    onNavigate: (id: string) => void;
+    suspendVideos: boolean;
+}> = ({ item, onNavigate, suspendVideos }) => {
     const { template } = item;
     const matchPercent = toMatchPercent(item.score);
     const [isHovered, setIsHovered] = useState(false);
@@ -177,7 +185,7 @@ const RelatedCard: React.FC<{ item: RelatedTemplate; onNavigate: (id: string) =>
             className="group flex w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#242528] text-left transition-colors hover:border-white/25 focus-visible:border-white/40 focus-visible:outline-none"
         >
             <div className="relative">
-                <RelatedThumbnail template={template} isHovered={isHovered} />
+                <RelatedThumbnail template={template} isHovered={isHovered} suspendVideos={suspendVideos} />
                 <span className="absolute right-1.5 top-1.5 rounded-md bg-black/75 px-1.5 py-0.5 text-[10px] font-semibold tabular-nums text-white/85 backdrop-blur-sm">
                     {matchPercent}%
                 </span>
@@ -198,6 +206,47 @@ const RelatedCard: React.FC<{ item: RelatedTemplate; onNavigate: (id: string) =>
 };
 
 /**
+ * The template currently open, pinned above the ranked list.
+ *
+ * `getRelatedTemplates` deliberately excludes a template from its own matches, so
+ * there is no card in the list to highlight - folding the current template back
+ * in would change the ranking output. This card states the selection without
+ * touching the ranking: it uses the same shell and the same thumbnail component
+ * as a ranked card, so it reads as part of the rail rather than as new UI.
+ *
+ * Its thumbnail is the one WebM on screen that is meant to be watched: the
+ * visitor is looking at the rail while the live preview is still loading, which
+ * is exactly the window `suspendVideos` would otherwise hold paused.
+ */
+const CurrentTemplateCard: React.FC<{ template: TemplateItem }> = ({ template }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    return (
+        <div
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            aria-current="page"
+            className="flex w-full flex-col overflow-hidden rounded-xl border border-white/25 bg-[#2a2b2f] text-left"
+        >
+            <div className="relative">
+                <RelatedThumbnail template={template} isHovered={isHovered} suspendVideos={false} />
+                <span className="absolute left-1.5 top-1.5 rounded-md bg-white px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-[#17181a]">
+                    Viewing
+                </span>
+            </div>
+
+            <div className="min-w-0 px-3 py-2.5">
+                <span className="block truncate text-sm text-white">{template.title}</span>
+                <span className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-500">
+                    <Eye size={10} aria-hidden="true" />
+                    {template.stats.downloads}
+                </span>
+            </div>
+        </div>
+    );
+};
+
+/**
  * "Similar Templates" navigation for the template detail page.
  *
  * Renders two presentations from one ranked list and one shared card:
@@ -212,6 +261,7 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
     template,
     expanded,
     onToggleExpanded,
+    suspendVideos = false,
 }) => {
     const navigate = useNavigate();
 
@@ -269,11 +319,13 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
                     <div className="space-y-2">
+                        <CurrentTemplateCard template={template} />
                         {visible.map((item) => (
                             <RelatedCard
                                 key={item.template.id}
                                 item={item}
                                 onNavigate={handleNavigate}
+                                suspendVideos={suspendVideos}
                             />
                         ))}
                     </div>
@@ -313,22 +365,27 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
 
                 {expanded ? (
                     <div className="mt-3 space-y-2">
+                        <CurrentTemplateCard template={template} />
                         {visible.map((item) => (
                             <RelatedCard
                                 key={item.template.id}
                                 item={item}
                                 onNavigate={handleNavigate}
+                                suspendVideos={suspendVideos}
                             />
                         ))}
                     </div>
                 ) : (
                     <div className="-mx-4 mt-3 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-4 pb-1">
+                        <div className="w-[190px] shrink-0 snap-start">
+                            <CurrentTemplateCard template={template} />
+                        </div>
                         {visible.map((item) => (
                             <div
                                 key={item.template.id}
                                 className="w-[190px] shrink-0 snap-start"
                             >
-                                <RelatedCard item={item} onNavigate={handleNavigate} />
+                                <RelatedCard item={item} onNavigate={handleNavigate} suspendVideos={suspendVideos} />
                             </div>
                         ))}
                     </div>

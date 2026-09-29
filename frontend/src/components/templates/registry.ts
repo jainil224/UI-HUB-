@@ -1,4 +1,5 @@
 import type React from 'react';
+import type { TemplateItem } from '../../data/templatesData';
 
 /**
  * UI Hub - Website Template Registry
@@ -34,6 +35,40 @@ export const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Co
     'graphic-designer-portfolio': () => import('./GraphicDesignerPortfolio'),
     'originkit-hero-24': () => import('./OriginkitHero24'),
 };
+
+/**
+ * Where the main (right-hand) preview gets its content.
+ *
+ * Note what is NOT in this union: there is no `video` variant, and no field
+ * points at `previewVideo`. That omission is the guard - thumbnail media cannot
+ * become the main preview even by accident, because there is no value it could
+ * be assigned to. A `thumbnailUrl?.endsWith('.webm')` check would be the weaker
+ * option: it has to be remembered at every call site and it silently passes
+ * any media the app did not think to test for.
+ */
+export type TemplatePreviewSource =
+    /** A live component chunk exists, so the actual template can be rendered. */
+    | { kind: 'component' }
+    /** No chunk, but the template exposes an external demo to embed. */
+    | { kind: 'iframe'; url: string }
+    /** Nothing renderable: show the template's own brand gradient. */
+    | { kind: 'gradient' };
+
+/**
+ * Single source of truth for the main preview, shared by every detail page.
+ *
+ * `previewVideo` / `previewImage` are thumbnail media. They belong to the cards
+ * (the Similar Templates rail, the home grid) and are deliberately not consulted
+ * here, which is what keeps a .webm from ever being loaded as the full-size
+ * preview: those files are 65 KB - 1.5 MB each and they are recordings, not the
+ * template. A template with no live representation degrades to its gradient
+ * rather than substituting a recording for the real thing.
+ */
+export function resolvePreviewSource(template: TemplateItem): TemplatePreviewSource {
+    if (TEMPLATE_PREVIEWS[template.id]) return { kind: 'component' };
+    if (template.liveDemoUrl) return { kind: 'iframe', url: template.liveDemoUrl };
+    return { kind: 'gradient' };
+}
 
 export const TEMPLATE_SOURCE_FILES: Record<string, string> = {
     '2586-labs': 'Labs2586.tsx',

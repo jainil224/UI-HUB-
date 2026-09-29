@@ -80,18 +80,35 @@ const TemplateDetailPage = () => {
     const [toastToolLogo, setToastToolLogo] = useState<React.ReactNode | null>(null);
     const [showCode, setShowCode] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    // False while the main live preview chunk is still loading: it suspends the
+    // Similar Templates WebM cards so they do not compete for bandwidth, and is
+    // lifted the moment the live component paints (see handleLiveReady).
+    const [mainPreviewReady, setMainPreviewReady] = useState(false);
 
     const promptMenuRef = useRef<HTMLDivElement>(null);
 
     // Scroll window to top when template detail page opens or changes, and
     // rebuild the preview from scratch. The Similar rail is a same-route
-    // navigation, so without this the previous template's mount is reused and
-    // the new component can inherit stale measurement state from
-    // ScaledTemplateScene while its chunk is still in flight.
+    // navigation, so without this the previous template's component instance is
+    // reused. ScaledTemplateScene remounts on template.id (see TemplatePreview
+    // Stage), which is what clears the previous template's measured height
+    // instead of inheriting it while the new chunk is still in flight.
     useEffect(() => {
         window.scrollTo(0, 0);
         setResetKey(0);
+        setMainPreviewReady(false);
     }, [id]);
+
+    // If the live chunk never reports ready (load error, blocked request, ...),
+    // do not let the sidebar WebM cards stay frozen forever - release the gate
+    // after a few seconds so the rail resumes its normal lazy loading.
+    useEffect(() => {
+        if (mainPreviewReady) return;
+        const timer = setTimeout(() => setMainPreviewReady(true), 6000);
+        return () => clearTimeout(timer);
+    }, [id, mainPreviewReady]);
+
+    const handleLiveReady = useCallback(() => setMainPreviewReady(true), []);
 
     // Close dropdown on click outside
     useEffect(() => {
@@ -180,6 +197,7 @@ const TemplateDetailPage = () => {
                     template={template}
                     expanded={similarExpanded}
                     onToggleExpanded={toggleSimilarExpanded}
+                    suspendVideos={!mainPreviewReady}
                 />
 
                 <main className="w-full min-w-0 px-4 pb-8 sm:px-6 lg:flex-1 lg:px-9">
@@ -271,6 +289,7 @@ const TemplateDetailPage = () => {
                                         onClick={() => {
                                             setResetKey((previous) => previous + 1);
                                             setIsLoadingIframe(true);
+                                            setMainPreviewReady(false);
                                         }}
                                         className="rounded-md p-2 text-neutral-400 hover:bg-white/[0.07] hover:text-white"
                                         title="Reload preview"
@@ -306,7 +325,8 @@ const TemplateDetailPage = () => {
                                     resetKey={resetKey}
                                     isLoadingIframe={isLoadingIframe}
                                     onIframeLoad={() => setIsLoadingIframe(false)}
-                                    preferLive
+                                    onLiveReady={handleLiveReady}
+                                    onRetry={() => setIsLoadingIframe(true)}
                                 />
                             )}
                         </section>

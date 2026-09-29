@@ -303,7 +303,6 @@ const BuildWithUIHubDetailPage = () => {
                                     resetKey={resetKey}
                                     isLoadingIframe={isLoadingIframe}
                                     onIframeLoad={() => setIsLoadingIframe(false)}
-                                    preferLive
                                 />
                             )}
                         </section>
