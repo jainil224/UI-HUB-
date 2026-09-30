@@ -8,6 +8,10 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/health",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
@@ -34,11 +38,7 @@
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": [
-        "backend/**",
-        "mcp-server/dist/**",
-        "mcp-server/package.json"
-      ],
+      "includeFiles": "{backend/**,mcp-server/dist/**,mcp-server/package.json}",
       "maxDuration": 30
     }
   }
