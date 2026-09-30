@@ -2,7 +2,7 @@
   "$schema": {
     "generatedBy": ".uihub-agent/scripts/generate-map.mjs",
     "phase": 1,
-    "generatedAt": "2026-09-30T09:15:52.097Z",
+    "generatedAt": "2026-09-30T09:32:56.441Z",
     "note": "Mechanical facts (counts, routes, endpoints, dependencies) are read from source at run time. Purpose strings are curated. Unverifiable items carry status UNKNOWN or confidence low.",
     "regenerateWith": "node .uihub-agent/scripts/generate-map.mjs",
     "verifyWith": "node .uihub-agent/scripts/generate-map.mjs --check"

@@ -63,7 +63,7 @@ const PushNotificationPrompt = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-[9998] w-[320px] max-w-[calc(100vw-2rem)]">
-      <div className="border-2 border-brand-dark bg-brand-black shadow-[4px_4px_0_0_#3D5CFF] rounded-none overflow-hidden">
+      <div className="border-2 border-brand-black bg-brand-black shadow-[4px_4px_0_0_#3D5CFF] rounded-none overflow-hidden">
         <div className="flex items-center justify-between px-4 py-3 bg-[#3D5CFF]">
           <div className="text-[10px] font-extrabold tracking-[0.18em] uppercase text-white">
             UI-HUB Alerts
@@ -96,13 +96,13 @@ const PushNotificationPrompt = () => {
               <button
                 onClick={handleAllow}
                 disabled={busy}
-                className="flex-1 bg-[#3D5CFF] hover:bg-[#2b47e6] text-white text-xs font-extrabold uppercase tracking-wider border-2 border-brand-dark px-3 py-2 transition-colors disabled:opacity-50"
+                className="flex-1 bg-[#3D5CFF] hover:bg-[#2b47e6] text-white text-xs font-extrabold uppercase tracking-wider border-2 border-brand-black px-3 py-2 transition-colors disabled:opacity-50"
               >
                 {busy ? 'Wiring…' : 'Enable'}
               </button>
               <button
                 onClick={handleDismiss}
-                className="flex-1 bg-transparent border-2 border-brand-dark text-neutral-300 hover:text-white text-xs font-extrabold uppercase tracking-wider px-3 py-2 transition-colors"
+                className="flex-1 bg-transparent border-2 border-brand-black text-neutral-300 hover:text-white text-xs font-extrabold uppercase tracking-wider px-3 py-2 transition-colors"
               >
                 Not now
               </button>

@@ -593,3 +593,43 @@ booleans, not strings. See `runtime/UNKNOWN_REGISTER.md`.
   `/api/health`.
 - Do not assume a deployed fix is live. A 500 recorded before a redeploy is not
   evidence about the current code; re-probe after deploying.
+
+---
+
+# PHASE 4 ADDENDUM - light mode and token audit
+
+## Light mode is worse than Phase 3 recorded
+
+Phase 3 said light mode was "reachable but partial". Measured in headless Chrome
+it produces **invisible text**: 20 leaf text elements flip to `rgb(0,0,0)` while
+the page background stays `rgb(0,0,0)`.
+
+The token layer works - `:root.light` correctly sets `--color-bg: #f5f5f7` and
+`--color-text-primary: #000`. Two hardcoded rules override it:
+
+1. An inline `<style>` in `frontend/index.html` sets
+   `body { background-color:#000000; color:#ffffff }`. Vite places the bundled
+   stylesheet `<link>` at char 4310 of the built HTML and this inline block at
+   char 5379 - **after** it - so at equal specificity it wins.
+2. `frontend/src/index.css:150-152` hardcodes `html { background-color:#0A0A0A }`.
+
+Full evidence, per-mode computed values and the two-line fix are in
+`runtime/PRODUCTION_BASELINE.md` §6.
+
+**Deliberately not fixed.** The owner scoped Phase 3 light mode to documentation
+only, and enabling it is a theme behaviour change, not a defect repair. The fix
+is written down and ready if authorised. Note that it would restore background
+and text colour but would NOT fix the 21 OS-following `dark:` variants or the
+hardcoded `@theme` brand colours, so light mode would still be inconsistent
+afterwards.
+
+## One real token defect found and fixed
+
+`border-brand-dark` was used 3x in `components/ui/PushNotificationPrompt.tsx`
+but `--color-brand-dark` is not declared in `@theme`, so no border colour
+rendered. Remapped to the declared `border-brand-black`.
+
+Full audit: 33 distinct colour classes used across 339 source files, now **33/33
+resolve**. Two apparent failures were `hover:` / `focus-visible:` variants that
+do generate, and `data/embeddedSourceCode.ts` contains component source as
+strings, so classes found there are not real usages.
