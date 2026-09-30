@@ -52,6 +52,10 @@ firebase.json
 
 # Agent skills & local specs (local only — never pushed to GitHub)
 .agents/
+.uihub-agent/
+.opencode/
+.github/
+.claude/
 component-specs/
 
 # Originkit CLI credentials (local only — never pushed to GitHub)
