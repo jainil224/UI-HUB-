@@ -298,8 +298,8 @@ const Navbar = () => {
                             <LogoMark size="w-5 h-5" />
                         </div>
 
-                        {/* Quick tabs when in Components/Templates section */}
-                        {isLibraryMenuActive && (
+                        {/* Quick tabs: Library/Templates section vs Home/Hero quick links */}
+                        {isLibraryMenuActive ? (
                             <div className="flex items-center gap-1.5">
                                 <button
                                     type="button"
@@ -332,6 +332,30 @@ const Navbar = () => {
                                     <span className="px-1 py-0.5 bg-[#FFC700] text-black text-[8px] font-black rounded-sm leading-none shrink-0">
                                         NEW
                                     </span>
+                                </Link>
+                            </div>
+                        ) : (
+                            <div className="flex items-center gap-1 sm:gap-1.5">
+                                <Link
+                                    to="/library"
+                                    className="px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-semibold text-white/80 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.09] transition-all shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                                >
+                                    Components
+                                </Link>
+                                <Link
+                                    to="/templates"
+                                    className="px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-semibold text-white/80 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.09] transition-all shadow-[0_2px_8px_rgba(0,0,0,0.2)] flex items-center gap-1"
+                                >
+                                    <span>Templates</span>
+                                    <span className="px-1 py-0.2 bg-[#FFC700] text-black text-[7.5px] font-black rounded-sm leading-none shrink-0">
+                                        NEW
+                                    </span>
+                                </Link>
+                                <Link
+                                    to="/pricing"
+                                    className="px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-semibold text-white/80 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.09] transition-all shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
+                                >
+                                    Pricing
                                 </Link>
                             </div>
                         )}
