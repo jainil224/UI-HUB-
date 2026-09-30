@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "favicons": "node scripts/generate-favicons.mjs",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -60,6 +62,7 @@
     "typescript": "~5.8.2",
     "vite": "^6.2.0",
     "vite-plugin-javascript-obfuscator": "^3.1.0",
-    "vite-plugin-mkcert": "^1.17.10"
+    "vite-plugin-mkcert": "^1.17.10",
+    "vitest": "^3.2.7"
   }
 }

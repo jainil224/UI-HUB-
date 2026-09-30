@@ -113,6 +113,8 @@ const ParticleLoader = React.lazy(() => import('../components/ui/ParticleLoader'
 const NeonBorder = React.lazy(() => import('../components/ui/NeonBorder'));
 const QuantumLattice = React.lazy(() => import('../components/ui/QuantumLattice'));
 const MatrixRain = React.lazy(() => import('../components/ui/MatrixRain'));
+const LightCables = React.lazy(() => import('../components/ui/LightCables'));
+const Globe = React.lazy(() => import('../components/ui/Globe'));
 
 
 
@@ -2797,6 +2799,9 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'particle-loader': ParticleLoader,
     'neon-border': NeonBorder,
     'matrix-rain': MatrixRain,
+    'quantum-lattice': QuantumLattice,
+    'light-cables': LightCables,
+    'globe': Globe,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15218,6 +15223,40 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#0A0A0A]">
                 <QuantumLattice />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Light Cables ──────────────────────────────────────────
+    {
+        id: "light-cables",
+        title: "Light Cables",
+        category: "interactive-background",
+        addedAt: "2026-09-30",
+        newBadgeDays: 120,
+        description: "A high-performance WebGL interactive light cable simulation with dynamic pulsing fiber-optic glow, physics bending, and responsive pointer surge interaction.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black">
+                <LightCables />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Globe ─────────────────────────────────────────────────
+    {
+        id: "globe",
+        title: "Globe",
+        category: "interactive-background",
+        addedAt: "2026-09-30",
+        newBadgeDays: 120,
+        description: "An interactive, high-precision 3D WebGL Earth globe rendered with Three.js and d3-geo featuring continental landmass outlines, dotted particle grids, latitude/longitude graticules, and draggable momentum physics.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black flex items-center justify-center">
+                <Globe />
             </div>
         ),
         code: "",

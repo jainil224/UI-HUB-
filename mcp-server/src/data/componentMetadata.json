@@ -5421,5 +5421,276 @@
         "prefers-reduced-motion support"
       ]
     }
+  },
+  "light-cables": {
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#000000\"",
+        "description": "Background fill color for the canvas."
+      },
+      {
+        "name": "baseColor",
+        "type": "string",
+        "default": "\"#000000\"",
+        "description": "Base ambient glow color behind the cable bundle."
+      },
+      {
+        "name": "accentColor",
+        "type": "string",
+        "default": "\"#EA53CD\"",
+        "description": "Primary sheath and fiber-optic filament color."
+      },
+      {
+        "name": "highlight",
+        "type": "string",
+        "default": "\"#D62EEB\"",
+        "description": "High-energy core pulse and light surge color."
+      },
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "34",
+        "description": "Speed of continuous light pulse flow along cables (0-100)."
+      },
+      {
+        "name": "hover",
+        "type": "number",
+        "default": "114",
+        "description": "Pointer hover responsiveness and bending attraction multiplier."
+      },
+      {
+        "name": "grab",
+        "type": "number",
+        "default": "100",
+        "description": "Pointer influence radius and magnetic displacement width."
+      },
+      {
+        "name": "direction",
+        "type": "\"ltr\" | \"rtl\" | \"ttb\" | \"btt\"",
+        "default": "\"ttb\"",
+        "description": "Cable layout flow axis and propagation direction."
+      },
+      {
+        "name": "positionX",
+        "type": "number",
+        "default": "-13",
+        "description": "Horizontal bundle offset percentage (-100 to 100)."
+      },
+      {
+        "name": "positionY",
+        "type": "number",
+        "default": "-21",
+        "description": "Vertical bundle offset percentage (-100 to 100)."
+      },
+      {
+        "name": "bundle",
+        "type": "BundleGroup",
+        "default": "{ count: 48, bend: 0, spread: 89, thickness: 220, widthStart: 0, widthEnd: 300 }",
+        "description": "Bundle configuration: cable count, bend curve, spread, thickness, and taper."
+      },
+      {
+        "name": "flow",
+        "type": "FlowGroup",
+        "default": "{ flow: 300, pulses: 1 }",
+        "description": "Pulse flow rate and active traveling pulse frequency."
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "default": "undefined",
+        "description": "Explicit width override in pixels (defaults to 100%)."
+      },
+      {
+        "name": "height",
+        "type": "number",
+        "default": "undefined",
+        "description": "Explicit height override in pixels (defaults to 100%)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Optional CSS styles merged onto the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A custom WebGL fragment shader simulation rendering high-density fiber-optic light cables. Each cable is generated procedurally with FBM noise distortion, dynamic harmonic curvature, and pulsating energy packet waveforms. Pointer interaction creates an exponential magnetic displacement field that attracts the nearest cables and ignites an intense light surge along the sheath. The shader includes high-frequency procedural film grain and dynamic device-pixel-ratio scaling for ultra-crisp retina displays.",
+      "states": {
+        "from": "dormant glowing fiber-optic strand bundle streaming steady light pulses",
+        "to": "magnetic distortion wave where cables dynamically bend toward the cursor with intense luminescent surges"
+      },
+      "cssProperties": [
+        "webgl shader",
+        "procedural fbm noise",
+        "pointer-driven magnetic displacement",
+        "high-dpr canvas rendering",
+        "procedural film grain",
+        "hardware accelerated 60fps raf loop"
+      ],
+      "description": "An interactive fiber-optic WebGL light cable simulation with dynamic pulsing energy packets, procedural noise turbulence, and fluid magnetic pointer interaction.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "WebGL",
+        "requestAnimationFrame loop",
+        "Pointer Events",
+        "High-precision fragment shader support"
+      ]
+    }
+  },
+  "globe": {
+    "props": [
+      {
+        "name": "speed",
+        "type": "number",
+        "default": "2",
+        "description": "Globe auto-rotation speed (0 freezes rotation, 1-10 range)."
+      },
+      {
+        "name": "smoothing",
+        "type": "number",
+        "default": "8",
+        "description": "Inertial rotation smoothing factor (0-10) for drag and decay physics."
+      },
+      {
+        "name": "dots",
+        "type": "DotsConfig",
+        "default": "{ color: \"#ffffff\", size: 5, density: 8, allDots: false }",
+        "description": "Configuration for continental dot matrix (color, size, density, allDots)."
+      },
+      {
+        "name": "fill",
+        "type": "\"dots\" | \"solid\"",
+        "default": "\"dots\"",
+        "description": "Continent rendering style: instanced particle dots or solid continent texture."
+      },
+      {
+        "name": "fillColor",
+        "type": "string",
+        "default": "\"#ffffff\"",
+        "description": "Landmass fill color when fill is set to 'solid'."
+      },
+      {
+        "name": "scale",
+        "type": "number",
+        "default": "8",
+        "description": "Globe zoom and camera relative scale factor (1-20)."
+      },
+      {
+        "name": "stopOnHover",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether auto-rotation pauses while hovering over the globe surface."
+      },
+      {
+        "name": "markerConfig",
+        "type": "MarkerConfig",
+        "default": "{ markers: [], color: \"#00f7ff\", size: 40 }",
+        "description": "Geographic point markers (lat/lng coordinates, color, and size)."
+      },
+      {
+        "name": "direction",
+        "type": "\"left\" | \"right\"",
+        "default": "\"left\"",
+        "description": "Rotation direction along the equatorial axis."
+      },
+      {
+        "name": "initialLatitude",
+        "type": "number",
+        "default": "23",
+        "description": "Initial tilt angle / latitude in degrees (-90 to 90)."
+      },
+      {
+        "name": "initialLongitude",
+        "type": "number",
+        "default": "-23",
+        "description": "Initial longitude in degrees (-180 to 180)."
+      },
+      {
+        "name": "oceanColor",
+        "type": "string",
+        "default": "\"#000000\"",
+        "description": "Base sphere ocean/void color (hex, rgb, or rgba)."
+      },
+      {
+        "name": "outlineColor",
+        "type": "string",
+        "default": "\"#ffffff\"",
+        "description": "Color of coastlines and continental border lines."
+      },
+      {
+        "name": "showOutline",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to render 3D spline tube continental coastlines."
+      },
+      {
+        "name": "graticuleColor",
+        "type": "string",
+        "default": "\"#D4D4D4\"",
+        "description": "Color for latitude and longitude graticule coordinate lines."
+      },
+      {
+        "name": "showGrid",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to display the spherical latitude/longitude grid."
+      },
+      {
+        "name": "outlineWidth",
+        "type": "number",
+        "default": "1",
+        "description": "Thickness of coastline tube geometry."
+      },
+      {
+        "name": "dragSpeed",
+        "type": "number",
+        "default": "5",
+        "description": "Pointer drag rotation sensitivity (0-10)."
+      },
+      {
+        "name": "detail",
+        "type": "number",
+        "default": "5",
+        "description": "Coastline polygon curve sampling resolution (1-10)."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Optional CSS styles merged onto the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "An interactive, physically-modeled 3D Earth visualization rendered in Three.js with d3-geo equirectangular map projection. GeoJSON landmass boundaries are rasterized to determine land presence vs oceans, populating thousands of instanced spherical particle dots or solid continent textures. Continental coastlines and graticules are extruded as smooth 3D CatmullRom spline tubes. Pointer dragging allows complete spherical orbital rotation with damped inertial momentum decay and raycasted hover-pause detection.",
+      "states": {
+        "from": "spinning orbital Earth globe with glowing continental dot matrix and coordinate grid",
+        "to": "user interactive free-spin rotation with fluid angular momentum and custom location pinpoints"
+      },
+      "cssProperties": [
+        "three.js webgl",
+        "d3-geo projection",
+        "instanced particle mesh",
+        "catmull-rom 3d spline tubes",
+        "inertial momentum physics",
+        "raycasted pointer tracking"
+      ],
+      "description": "An interactive 3D WebGL Earth globe rendered with Three.js and d3-geo featuring continental landmass outlines, dotted particle grids, latitude/longitude graticules, and draggable momentum physics.",
+      "libraries": [
+        "react",
+        "three",
+        "d3-geo"
+      ],
+      "requirements": [
+        "Three.js",
+        "d3-geo",
+        "WebGL",
+        "ResizeObserver",
+        "Pointer Events"
+      ]
+    }
   }
 }

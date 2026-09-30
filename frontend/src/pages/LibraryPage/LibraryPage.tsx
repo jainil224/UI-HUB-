@@ -61,6 +61,12 @@ const LibraryPage = () => {
     const [searchQuery, setSearchQuery] = useState(qFromUrl);
     const [mobileSearch, setMobileSearch] = useState('');
 
+    useEffect(() => {
+        const handleToggle = () => setIsMobileMenuOpen(prev => !prev);
+        window.addEventListener('ui-hub-toggle-library-menu', handleToggle);
+        return () => window.removeEventListener('ui-hub-toggle-library-menu', handleToggle);
+    }, []);
+
     const [showUpdates, setShowUpdates] = useState(false);
 
     const [showGetStarted, setShowGetStarted] = useState(true);
@@ -226,34 +232,7 @@ const LibraryPage = () => {
                 .main-scroll::-webkit-scrollbar-thumb { background: #262626; }
             `}</style>
 
-            <div className="flex flex-col md:flex-row relative pt-16 bg-brand-bg text-white md:h-dvh md:overflow-hidden">
-                {/* ── Mobile top nav ── */}
-                <div className="md:hidden flex items-center justify-between px-3 sm:px-4 py-2.5 border-b-2 border-white shrink-0 z-30 bg-brand-surface">
-                    <div className="flex items-center gap-2">
-                        <button
-                            onClick={() => setIsMobileMenuOpen(true)}
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border-2 border-brand-blue bg-brand-blue/20 text-brand-blue text-xs font-black uppercase tracking-wider active:translate-y-0.5 cursor-pointer"
-                        >
-                            <MenuIcon size={14} />
-                            <span>Components</span>
-                        </button>
-                        <Link
-                            to="/templates"
-                            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border-2 border-[#FFC700] bg-[#FFC700]/15 text-white hover:bg-[#FFC700] hover:text-black text-xs font-black uppercase tracking-wider transition-colors shadow-[2px_2px_0px_0px_#000]"
-                        >
-                            <span>Templates</span>
-                            <span className="px-1 py-0.2 bg-[#FFC700] text-black text-[8px] font-black uppercase rounded-sm leading-none">NEW</span>
-                        </Link>
-                    </div>
-                    <button
-                        onClick={() => setIsMobileMenuOpen(true)}
-                        aria-label="Open components menu"
-                        aria-expanded={isMobileMenuOpen}
-                        className="w-10 h-10 flex items-center justify-center rounded-lg border-2 border-white bg-brand-surface text-white active:translate-y-0.5 cursor-pointer"
-                    >
-                        <MenuIcon size={20} />
-                    </button>
-                </div>
+            <div className="flex flex-col md:flex-row relative pt-14 md:pt-16 bg-brand-bg text-white md:h-dvh md:overflow-hidden">
 
                 {/* ── Mobile Menu Drawer ── */}
                 <AnimatePresence>
