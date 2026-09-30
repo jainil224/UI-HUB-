@@ -349,8 +349,15 @@ export interface AdminHealth {
         loggingEnabled: boolean;
         rateLimitFree: number;
         rateLimitPro: number;
-        toolsEnabled: number;
-        toolsTotal: number;
+        tools: {
+            registered: number;
+            configured: number;
+            enabled: string[];
+            disabled: string[];
+            unknown: string[];
+            implicitlyEnabled: string[];
+            inSync: boolean;
+        };
     };
 }
 

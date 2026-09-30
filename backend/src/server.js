@@ -8,9 +8,10 @@ import configRoutes from './routes/configRoutes.js';
 import paymentRoutes from './routes/paymentRoutes.js';
 import favoritesRoutes from './routes/favoritesRoutes.js';
 import collectionsRoutes from './routes/collectionsRoutes.js';
-import { globalLimiter } from './middleware/rateLimiters.js';
+import { globalLimiter, redisStatus } from './middleware/rateLimiters.js';
 import { startUserSyncWorker } from './services/syncService.js';
 import { syncAllComponentsToMongo } from './services/componentSyncService.js';
+import { buildHealthReport } from './services/healthService.js';
 
 dotenv.config();
 console.log('Environment variables loaded from .env');
@@ -106,6 +107,7 @@ router.use('/v1', favoritesRoutes);
 router.use('/v1', collectionsRoutes);
 
 // 6. MCP Server Integration (Unified Deployment)
+let mcpMounted = false;
 try {
   // Ensure mcp-server can resolve node_modules (e.g. express, cors) from backend
   const { existsSync, symlinkSync } = await import('node:fs');
@@ -132,23 +134,19 @@ try {
   app.use('/mcp', mcpRouter);
   app.use('/api/dashboard/mcp', dashboardRouter);
   app.use('/api/admin/mcp', adminRouter);
+  mcpMounted = true;
   console.log('[MCP] ✅ MCP endpoints (/mcp, /api/dashboard/mcp, /api/admin/mcp) mounted');
 } catch (mcpErr) {
   console.warn('[MCP] ⚠️ MCP routes could not be mounted:', mcpErr.message);
 }
 
 // Health check endpoint (at the very top levels)
-const healthCheck = (req, res) => {
-  res.json({
-    status: 'ok',
-    services: {
-      backend: 'online',
-      mcp: 'online'
-    },
-    message: 'UI-Hub Unified Backend & MCP Server is Live',
-    timestamp: new Date().toISOString(),
-    env: process.env.NODE_ENV || 'development'
-  });
+// Reports real dependency state. MongoDB down => unhealthy (503). MCP not
+// mounted => degraded (200), since the REST API still serves. Redis is optional
+// and never degrades health.
+const healthCheck = async (req, res) => {
+  const report = await buildHealthReport({ mcpMounted, redis: redisStatus });
+  res.status(report.httpStatus).json(report.body);
 };
 
 app.get('/health', healthCheck);

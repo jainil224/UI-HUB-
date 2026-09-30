@@ -4,12 +4,24 @@ import Redis from 'ioredis';
 
 let store = undefined;
 
+/**
+ * Redis availability, surfaced for the /health dependency check.
+ * Redis is OPTIONAL: when REDIS_URL is unset the rate limiter uses the
+ * in-memory store, so unconfigured Redis is reported but never degrades
+ * overall health.
+ */
+export const redisStatus = {
+  configured: Boolean(process.env.REDIS_URL),
+  connected: false,
+};
+
 if (process.env.REDIS_URL) {
   try {
     const redisClient = new Redis(process.env.REDIS_URL);
     store = new RedisStore({
       sendCommand: (...args) => redisClient.call(...args),
     });
+    redisStatus.connected = true;
     console.log('[RateLimiter] Connected to Redis for persistent rate limiting.');
   } catch (err) {
     console.warn('[RateLimiter] Failed to connect to Redis. Falling back to memory store.');

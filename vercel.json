@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install && cd frontend && npm install && npm run build",
+  "buildCommand": "npm install && cd mcp-server && npm install && npm run build && cd ../frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "framework": "vite",
   "rewrites": [
@@ -34,7 +34,11 @@
   ],
   "functions": {
     "api/index.js": {
-      "includeFiles": "backend/**",
+      "includeFiles": [
+        "backend/**",
+        "mcp-server/dist/**",
+        "mcp-server/package.json"
+      ],
       "maxDuration": 30
     }
   }

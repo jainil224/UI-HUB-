@@ -1,6 +1,6 @@
 import express from 'express';
 import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
-import { verifyToken } from '../middleware/auth.js';
+import { verifyToken, requireAdmin } from '../middleware/auth.js';
 import { checkProStatus, checkEliteStatus, evaluateAiTrial, MAX_FREE_AI_TRIALS } from '../services/userService.js';
 import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail, sendReengagementEmail, sendAnnouncementEmail } from '../utils/sendEmail.js';
 import { getCollection } from '../services/mongoService.js';
@@ -9,6 +9,37 @@ import { savePushSubscription, broadcastPushNotification, getPushSubscriptions, 
 import { getAnnouncementManifest } from '../services/announcementService.js';
 
 const router = express.Router();
+
+/**
+ * Guards the operator-only email test tooling.
+ *
+ * There is deliberately no hardcoded fallback secret. A previous version used
+ * a `process.env.EMAIL_TEST_SECRET || '<literal>'` expression, which meant that
+ * any deployment missing the env var accepted a publicly readable default and
+ * allowed a full-user broadcast. When the variable is unset the feature is now
+ * simply unavailable.
+ *
+ * @returns {boolean} true when the request was rejected and the response sent
+ */
+export const denyUnlessEmailTestSecret = (req, res) => {
+  const expected = process.env.EMAIL_TEST_SECRET;
+
+  if (!expected) {
+    return res.status(503).json({
+      error: 'Email test tooling is not configured: EMAIL_TEST_SECRET is unset'
+    });
+  }
+
+  const provided = req.body?.secret;
+  if (typeof provided !== 'string' || provided.length === 0) {
+    return res.status(401).json({ error: 'Unauthorized: Missing secret' });
+  }
+  if (provided !== expected) {
+    return res.status(403).json({ error: 'Forbidden: invalid secret key' });
+  }
+
+  return null;
+};
 
 router.get('/check', (req, res) => {
     const brevoApiKey = process.env.BREVO_API_KEY;
@@ -37,16 +68,13 @@ router.get('/check', (req, res) => {
 /**
  * @route POST /api/v1/users/email-test
  * @desc Test Brevo email delivery — send a test welcome email
- * @access Public (with secret)
+ * @access Operator tooling (EMAIL_TEST_SECRET, fails closed when unset)
  */
 router.post('/email-test', async (req, res) => {
     try {
-        const { email, name, secret } = req.body;
+        const { email, name } = req.body;
 
-        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
-        if (secret !== testSecret) {
-            return res.status(403).json({ error: 'Forbidden: invalid test secret' });
-        }
+        if (denyUnlessEmailTestSecret(req, res)) return;
 
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
@@ -78,15 +106,12 @@ router.post('/email-test', async (req, res) => {
 /**
  * @route POST /api/v1/users/free-email-test
  * @desc Test sending a FREE subscription email
- * @access Public (with secret)
+ * @access Operator tooling (EMAIL_TEST_SECRET, fails closed when unset)
  */
 router.post('/free-email-test', async (req, res) => {
     try {
-        const { email, name, secret } = req.body;
-        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
-        if (secret !== testSecret) {
-            return res.status(403).json({ error: 'Forbidden: invalid test secret' });
-        }
+        const { email, name } = req.body;
+        if (denyUnlessEmailTestSecret(req, res)) return;
 
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
@@ -112,15 +137,12 @@ router.post('/free-email-test', async (req, res) => {
 /**
  * @route POST /api/v1/users/pro-email-test
  * @desc Test sending a PRO subscription email with attached PDF receipt
- * @access Public (with secret)
+ * @access Operator tooling (EMAIL_TEST_SECRET, fails closed when unset)
  */
 router.post('/pro-email-test', async (req, res) => {
     try {
-        const { email, name, amount = 4.99, currency = 'USD', secret } = req.body;
-        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
-        if (secret !== testSecret) {
-            return res.status(403).json({ error: 'Forbidden: invalid test secret' });
-        }
+        const { email, name, amount = 4.99, currency = 'USD' } = req.body;
+        if (denyUnlessEmailTestSecret(req, res)) return;
 
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
@@ -154,15 +176,12 @@ router.post('/pro-email-test', async (req, res) => {
 /**
  * @route POST /api/v1/users/reengagement-email-test
  * @desc Test sending the 'UI-HUB misses you / new components' re-engagement email
- * @access Public (with secret)
+ * @access Operator tooling (EMAIL_TEST_SECRET, fails closed when unset)
  */
 router.post('/reengagement-email-test', async (req, res) => {
     try {
-        const { email, name, secret, customSubject } = req.body;
-        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
-        if (secret !== testSecret) {
-            return res.status(403).json({ error: 'Forbidden: invalid test secret' });
-        }
+        const { email, name, customSubject } = req.body;
+        if (denyUnlessEmailTestSecret(req, res)) return;
 
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
@@ -189,15 +208,11 @@ router.post('/reengagement-email-test', async (req, res) => {
 /**
  * @route POST /api/v1/users/broadcast-reengagement
  * @desc Broadcast 'UI-HUB misses you / new components' email to all MongoDB users
- * @access Admin (with secret)
+ * @access Admin (requireAdmin: Firebase token + isAdmin in Mongo)
  */
-router.post('/broadcast-reengagement', async (req, res) => {
+router.post('/broadcast-reengagement', requireAdmin, async (req, res) => {
     try {
-        const { secret, dryRun = false, customSubject } = req.body;
-        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
-        if (secret !== testSecret) {
-            return res.status(403).json({ error: 'Forbidden: invalid secret key' });
-        }
+        const { dryRun = false, customSubject } = req.body;
 
         const usersCol = await getCollection('users');
         const rawUsers = await usersCol.find({}).toArray();
@@ -280,15 +295,11 @@ router.post('/broadcast-reengagement', async (req, res) => {
  * @route POST /api/v1/users/broadcast-announcement
  * @desc Send the "New Components" announcement email to all MongoDB users AND
  *       push a phone notification to every subscribed device.
- * @access Admin (with secret)
+ * @access Admin (requireAdmin: Firebase token + isAdmin in Mongo)
  */
-router.post('/broadcast-announcement', async (req, res) => {
+router.post('/broadcast-announcement', requireAdmin, async (req, res) => {
     try {
-        const { secret, dryRun = false, customSubject, notifyPush = true, manifest: bodyManifest } = req.body;
-        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
-        if (secret !== testSecret) {
-            return res.status(403).json({ error: 'Forbidden: invalid secret key' });
-        }
+        const { dryRun = false, customSubject, notifyPush = true, manifest: bodyManifest } = req.body;
 
         const manifest = bodyManifest || getAnnouncementManifest();
 
@@ -445,15 +456,11 @@ const detectPlatform = (ua = '') => {
 /**
  * @route POST /api/v1/users/push-broadcast
  * @desc Send a push notification to ALL subscribed devices
- * @access Admin (with secret)
+ * @access Admin (requireAdmin: Firebase token + isAdmin in Mongo)
  */
-router.post('/push-broadcast', async (req, res) => {
+router.post('/push-broadcast', requireAdmin, async (req, res) => {
     try {
-        const { secret, dryRun = false, title, body, url, icon, image, badge } = req.body;
-        const testSecret = process.env.EMAIL_TEST_SECRET || 'ui-hub-test-2026';
-        if (secret !== testSecret) {
-            return res.status(403).json({ error: 'Forbidden: invalid secret key' });
-        }
+        const { dryRun = false, title, body, url, icon, image, badge } = req.body;
 
         const subs = await getPushSubscriptions();
         if (dryRun) {

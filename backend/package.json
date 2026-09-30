@@ -12,7 +12,8 @@
     "sync:components": "node src/scripts/syncComponents.js",
     "sync:premium": "node src/scripts/embedPremiumSources.js",
     "check:premium": "node src/scripts/checkPremiumCoverage.js",
-    "test": "npm run check:premium && node --test tests/"
+    "test": "npm run check:premium && node --test \"tests/**/*.test.js\"",
+    "test:unit": "node --test \"tests/**/*.test.js\""
   },
   "dependencies": {
     "@upstash/redis": "^1.37.0",

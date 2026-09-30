@@ -112,8 +112,29 @@ const HealthPage: React.FC = () => {
                         </div>
                         <div className="flex items-center justify-between px-5 py-4">
                             <span className="text-xs text-neutral-400">Tools enabled</span>
-                            <span className="font-mono text-sm font-bold text-white">{data.config.toolsEnabled} / {data.config.toolsTotal}</span>
+                            <span className="font-mono text-sm font-bold text-white">
+                                {data.config.tools.enabled.length} / {data.config.tools.registered}
+                            </span>
                         </div>
+                        {!data.config.tools.inSync && (
+                            <div className="flex flex-col gap-2 px-5 py-4">
+                                <span className="text-xs text-neutral-400">Tool config drift</span>
+                                {data.config.tools.unknown.length > 0 && (
+                                    <span className="text-xs text-amber-400">
+                                        Stale config keys with no matching tool:{' '}
+                                        <span className="font-mono">{data.config.tools.unknown.join(', ')}</span>
+                                    </span>
+                                )}
+                                {data.config.tools.implicitlyEnabled.length > 0 && (
+                                    <span className="text-xs text-neutral-500">
+                                        Enabled by default (no stored entry):{' '}
+                                        <span className="font-mono">
+                                            {data.config.tools.implicitlyEnabled.length} of {data.config.tools.registered}
+                                        </span>
+                                    </span>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </Panel>
             </div>

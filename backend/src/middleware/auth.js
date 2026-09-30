@@ -1,4 +1,5 @@
 import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
+import { getCollection } from '../services/mongoService.js';
 
 const IS_PRODUCTION = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
 
@@ -69,5 +70,60 @@ export const verifyToken = async (req, res, next) => {
     return res.status(401).json({ error: 'Unauthorized: Invalid token' });
   }
 };
+
+/**
+ * Builds the `requireAdmin` middleware.
+ *
+ * Admin status is read from the database rather than from the token, so a
+ * revoked admin loses access immediately instead of at token expiry.
+ *
+ * Responds 401 when there is no verified identity and 403 when the caller is
+ * authenticated but not an admin. The collection resolver is injectable so the
+ * middleware can be tested offline without a database.
+ *
+ * @param {() => Promise<import('mongodb').Collection>} [getUsers]
+ */
+export const createRequireAdmin = (getUsers = () => getCollection('users')) => {
+  return async (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ error: 'Unauthorized: Missing token' });
+    }
+
+    try {
+      const uid = req.user.uid;
+      const email = typeof req.user.email === 'string' ? req.user.email.toLowerCase() : null;
+
+      // Matches the lookup used elsewhere in userRoutes.js, since documents may
+      // be keyed by uid, by email, or by email as the _id.
+      const clauses = [];
+      if (uid) clauses.push({ uid });
+      if (email) clauses.push({ email }, { _id: email });
+      if (clauses.length === 0) {
+        return res.status(403).json({ error: 'Forbidden: Admin access required' });
+      }
+
+      const users = await getUsers();
+      const doc = await users.findOne(
+        { $or: clauses },
+        { projection: { isAdmin: 1, email: 1, uid: 1 } }
+      );
+
+      if (!doc || doc.isAdmin !== true) {
+        return res.status(403).json({ error: 'Forbidden: Admin access required' });
+      }
+
+      req.user = { ...req.user, isAdmin: true };
+      return next();
+    } catch (err) {
+      // Fail closed: if the admin lookup itself breaks, do not let the request
+      // through on the assumption that it is harmless.
+      console.error('[auth] requireAdmin lookup failed:', err?.message || err);
+      return res.status(503).json({ error: 'Service unavailable: admin check failed' });
+    }
+  };
+};
+
+/** Requires a verified Firebase token whose Mongo user document is an admin. */
+export const requireAdmin = createRequireAdmin();
 
 
