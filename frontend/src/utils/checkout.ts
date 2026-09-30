@@ -13,7 +13,7 @@ export const detectCurrency = (): Currency => {
 
 export const formatComponentPrice = (currency: Currency): string => {
     const price = COMPONENT_PRICE[currency === 'INR' ? 'inr' : 'usd'];
-    return currency === 'INR' ? `₹${price}` : `$${price}`;
+    return currency === 'INR' ? `\u20b9${price}` : `$${price}`;
 };
 
 export type CheckoutStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -35,8 +35,8 @@ interface StartCheckoutParams {
 
 /**
  * Shared Razorpay checkout flow (extracted from PricingPage).
- * Renders nothing itself — returns overlay state the caller feeds into
- * <CheckoutOverlay>, and runs the full create-order → razorpay → verify loop.
+ * Renders nothing itself â€” returns overlay state the caller feeds into
+ * <CheckoutOverlay>, and runs the full create-order â†’ razorpay â†’ verify loop.
  */
 export const useRazorpayCheckout = () => {
     const [checkoutStatus, setCheckoutStatusRaw] = useState<CheckoutStatus>('idle');
@@ -63,7 +63,7 @@ export const useRazorpayCheckout = () => {
         }
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
+            const apiUrl = getApiBaseUrl();
 
             // Fetch Razorpay Key ID from backend at runtime
             let razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
@@ -80,7 +80,7 @@ export const useRazorpayCheckout = () => {
             }
 
             if (!razorpayKey || razorpayKey.includes('dummy')) {
-                const msg = 'Configuration Error: Razorpay Key ID is missing. Please ensure your backend is deployed and VITE_API_URL is configured correctly.';
+                const msg = 'Configuration Error: Razorpay Key ID is missing. Please ensure the backend is deployed and reachable at the API base URL.';
                 setStatus('error');
                 setCheckoutMessage(msg);
                 onError?.(msg);

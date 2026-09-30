@@ -1,38 +1,170 @@
-export const getApiBaseUrl = () => {
-    // Check if an production API URL is explicitly provided (e.g. for Render)
-    const configuredUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL;
-    
-    // In production, prioritize the configured Render URL
-    if (import.meta.env.PROD) {
-        if (configuredUrl) {
-            console.log(`[API Config] Using configured Production API: ${configuredUrl}`);
-            return configuredUrl;
-        }
-        
-        // Fallback to current origin (useful if API is on the same domain or proxied)
-        if (typeof window !== 'undefined') {
-            const origin = window.location.origin;
-            console.warn(`[API Config] Production: No VITE_API_URL provided. Falling back to origin: ${origin}. This may fail if the backend is hosted separately.`);
-            return origin;
-        }
-        return '';
+/**
+ * API base URL resolution.
+ *
+ * Canonical architecture (Phase 5):
+ *   - production  -> same-origin by default. The Vercel deployment serves the
+ *                    frontend AND /api from one host, so no configuration is
+ *                    required and no cross-origin request is made.
+ *   - external    -> opt-in, only via an explicit VITE_API_URL.
+ *   - development -> the local backend on port 5000.
+ *
+ * `VITE_API_URL` is OPTIONAL, not required. It is inlined at build time, so a
+ * value baked into a deployment outlives the dashboard setting that created it.
+ * Unsetting it is the supported way to return a deployment to same-origin.
+ *
+ * The resolution logic is a pure function so it can be unit tested without a
+ * browser or a real Vite build; `getApiBaseUrl()` is a thin binding to the
+ * ambient environment.
+ */
+
+/** Hosts verified unreachable in production during Phase 4/5. */
+export const KNOWN_DEAD_API_HOSTS = [
+  'ui-hub.onrender.com',
+  'ui-hub-backend-mcp.onrender.com',
+] as const;
+
+export interface ApiEnv {
+  PROD?: boolean;
+  VITE_API_URL?: string;
+  VITE_API_BASE_URL?: string;
+}
+
+export interface ApiLocation {
+  origin: string;
+  hostname: string;
+  protocol: string;
+  port: string;
+}
+
+export type UrlValidation = { ok: true; url: string } | { ok: false; reason: string };
+
+/**
+ * Explicit type guard. `tsconfig.json` does not enable `strict`, so plain
+ * discriminated-union narrowing on a boolean literal is unreliable here; a
+ * user-defined guard works regardless of strictness.
+ */
+export function isUrlInvalid(value: UrlValidation): value is { ok: false; reason: string } {
+  return value.ok === false;
+}
+
+/**
+ * Validate and normalise a configured API base URL.
+ *
+ * Rejects anything that is not an absolute http(s) URL, and strips a trailing
+ * slash so consumers can safely append `/api/v1/...` without doubling it.
+ */
+export function validateApiUrl(raw: string | undefined | null): UrlValidation {
+  if (raw === undefined || raw === null) return { ok: false, reason: 'not set' };
+  const trimmed = String(raw).trim();
+  if (!trimmed) return { ok: false, reason: 'empty' };
+
+  let parsed: URL;
+  try {
+    parsed = new URL(trimmed);
+  } catch {
+    return { ok: false, reason: 'not a valid absolute URL' };
+  }
+  if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+    return { ok: false, reason: `unsupported protocol "${parsed.protocol}"` };
+  }
+  if (!parsed.hostname) return { ok: false, reason: 'missing hostname' };
+
+  const withoutTrailingSlash = trimmed.replace(/\/+$/, '');
+  return { ok: true, url: withoutTrailingSlash };
+}
+
+/** True when the host is one proven unreachable in production. */
+export function isKnownDeadApiHost(url: string): boolean {
+  let host: string;
+  try {
+    host = new URL(url).hostname.toLowerCase();
+  } catch {
+    return false;
+  }
+  return (KNOWN_DEAD_API_HOSTS as readonly string[]).some((h) => host === h);
+}
+
+function warnDeadHost(url: string, host: string): void {
+  console.warn(
+    `[API Config] WARNING: the configured production API "${url}" points at ` +
+      `"${host}", which is verified unreachable (the Render origin is refused ` +
+      `at the Cloudflare edge). Requests to it will fail. This value is being ` +
+      `honoured because it was explicitly configured. To restore same-origin ` +
+      `routing, UNSET VITE_API_URL in the deployment environment and rebuild.`
+  );
+}
+
+function warnInvalid(raw: string, reason: string, fallback: string): void {
+  console.warn(
+    `[API Config] Ignoring the configured API URL (${reason}): ` +
+      `"${raw}". Falling back to: ${fallback}`
+  );
+}
+
+/**
+ * Resolve the API base URL. Pure: no ambient reads, so it is directly testable.
+ */
+export function resolveApiBaseUrl(env: ApiEnv, loc?: ApiLocation): string {
+  const configuredRaw = env.VITE_API_URL || env.VITE_API_BASE_URL;
+
+  if (env.PROD) {
+    if (configuredRaw !== undefined && configuredRaw !== null && String(configuredRaw).trim() !== '') {
+      const validated = validateApiUrl(configuredRaw);
+      if (isUrlInvalid(validated)) {
+        // Safe failure: a malformed value must not become a broken request URL.
+        const fallback = loc?.origin ?? '';
+        warnInvalid(String(configuredRaw), validated.reason, fallback || 'empty (no origin available)');
+        return fallback;
+      }
+      if (isKnownDeadApiHost(validated.url)) {
+        warnDeadHost(validated.url, new URL(validated.url).hostname);
+      } else {
+        console.log(`[API Config] Using explicitly configured production API: ${validated.url}`);
+      }
+      return validated.url;
     }
 
-    // Local development handling
-    if (typeof window !== 'undefined') {
-        const hostname = window.location.hostname;
-        const protocol = window.location.protocol;
-        
-        // Handle local network IPs (e.g. 192.168.x.x) for mobile testing
-        const isLocalNetworkIP = /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(hostname);
-        const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
-        
-        if (isLocalNetworkIP || (isLocalhost && window.location.port !== '5000')) {
-            const url = `${protocol}//${hostname}:5000`;
-            console.log(`[API Config] Local/Network detected, using: ${url}`);
-            return url;
-        }
+    if (loc) {
+      // Same-origin is the production default and the intended architecture.
+      console.log(`[API Config] Production: using same-origin API at ${loc.origin} (no VITE_API_URL set).`);
+      return loc.origin;
     }
-    
-    return 'http://localhost:5000';
+    return '';
+  }
+
+  // Local development.
+  if (loc) {
+    const { protocol, hostname, port, origin } = loc;
+    const isLocalNetworkIP = /^(192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(hostname);
+    const isLocalhost = hostname === 'localhost' || hostname === '127.0.0.1';
+
+    if (isLocalNetworkIP || (isLocalhost && port !== '5000')) {
+      const url = `${protocol}//${hostname}:5000`;
+      console.log(`[API Config] Development: local backend at ${url}`);
+      return url;
+    }
+  }
+  return 'http://localhost:5000';
+}
+
+/** Bind the pure resolver to the ambient browser/build environment. */
+export const getApiBaseUrl = (): string => {
+  const loc: ApiLocation | undefined =
+    typeof window !== 'undefined'
+      ? {
+          origin: window.location.origin,
+          hostname: window.location.hostname,
+          protocol: window.location.protocol,
+          port: window.location.port,
+        }
+      : undefined;
+
+  return resolveApiBaseUrl(
+    {
+      PROD: import.meta.env.PROD,
+      VITE_API_URL: import.meta.env.VITE_API_URL,
+      VITE_API_BASE_URL: import.meta.env.VITE_API_BASE_URL,
+    },
+    loc
+  );
 };

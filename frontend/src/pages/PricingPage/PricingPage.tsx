@@ -39,7 +39,7 @@ const PricingPage = () => {
         }
 
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
+            const apiUrl = getApiBaseUrl();
             const idToken = await user.getIdToken();
             fetch(`${apiUrl}/api/v1/users/activate-free`, {
                 method: 'POST',
@@ -73,7 +73,7 @@ const PricingPage = () => {
 
         try {
             // 1. Resolve API URL
-            const apiUrl = import.meta.env.VITE_API_URL || getApiBaseUrl();
+            const apiUrl = getApiBaseUrl();
             
             // Fetch Razorpay Key ID from backend at runtime
             let razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
@@ -92,7 +92,7 @@ const PricingPage = () => {
             // Strict Guardrail: Stop if we still have a dummy key or no key
             if (!razorpayKey || razorpayKey.includes('dummy')) {
                 setStatus('error');
-                setCheckoutMessage('Configuration Error: Razorpay Key ID is missing. Please ensure your backend is deployed and VITE_API_URL is configured correctly.');
+                setCheckoutMessage('Configuration Error: Razorpay Key ID is missing. Please ensure the backend is deployed and reachable at the API base URL.');
                 return;
             }
 
@@ -296,7 +296,7 @@ const PricingPage = () => {
             />
 
             <div className="max-w-7xl mx-auto">
-                {/* ── Section Header ── */}
+                {/* â”€â”€ Section Header â”€â”€ */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -344,7 +344,7 @@ const PricingPage = () => {
                     </div>
                 </motion.div>
 
-                {/* ── Pricing Cards ── */}
+                {/* â”€â”€ Pricing Cards â”€â”€ */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto gap-6 sm:gap-8 mb-16">
                     {plans.map((plan, idx) => {
                         const Icon = plan.icon;
@@ -388,7 +388,7 @@ const PricingPage = () => {
                                     {/* Badge preview */}
                                     <div className="flex items-center gap-2 mb-4 px-3 py-1.5 rounded border border-neutral-700 bg-brand-bg w-fit">
                                         <span className="text-[9px] font-black uppercase tracking-widest text-neutral-400">YOUR BADGE</span>
-                                        <span className="text-neutral-500 text-[9px]">→</span>
+                                        <span className="text-neutral-500 text-[9px]">â†’</span>
                                         <PlanBadge tier={plan.badgeTier} size="sm" showIcon animated />
                                     </div>
 
@@ -472,7 +472,7 @@ const PricingPage = () => {
                     />
                 </div>
 
-                {/* ── Trust strip ── */}
+                {/* â”€â”€ Trust strip â”€â”€ */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {[
                         { icon: Shield, title: 'Secure Payments', desc: 'Industry-standard encryption on every transaction.' },

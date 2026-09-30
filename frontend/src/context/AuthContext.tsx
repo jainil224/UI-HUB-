@@ -180,7 +180,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 return false;
             }
         } catch (error) {
-            console.error('[Auth] Connection Failure: Could not reach status endpoint. Check VITE_API_URL and CORS.', error);
+                console.error('[Auth] Connection Failure: Could not reach status endpoint. Check the API base URL and CORS.', error);
             // Don't wipe storage on network failure, preserve offline optimism
             const pro = (localStorage.getItem('ui-hub-pro') === 'true' || localStorage.getItem('ui-hub-elite') === 'true');
             setIsPro(pro);

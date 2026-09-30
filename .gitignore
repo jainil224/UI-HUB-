@@ -27,6 +27,7 @@ backend/service-account.json
 # Editor directories and files
 .idea
 .vscode
+.opencode/
 *.suo
 *.ntvs*
 *.njsproj

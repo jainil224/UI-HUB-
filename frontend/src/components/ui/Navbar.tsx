@@ -4,7 +4,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
     Menu, X, LogOut, User as UserIcon, Heart, Trash2,
     ArrowUpRight, ChevronDown, Grid2X2, PanelsTopLeft,
-    LayoutTemplate, Sparkles,
+    LayoutTemplate, Sparkles, Search,
 } from 'lucide-react';
 import logo from '../../Assets/webiste logo.svg';
 import PlanBadge, { PlanTier } from './PlanBadge';
@@ -32,6 +32,8 @@ const Navbar = () => {
     const [showLibrariesDropdown, setShowLibrariesDropdown] = useState(false);
     const librariesDropdownRef = useRef<HTMLDivElement>(null);
     const [scrolled, setScrolled] = useState(false);
+    const [searchFocused, setSearchFocused] = useState(false);
+    const [searchVal, setSearchVal] = useState('');
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 20);
@@ -52,9 +54,37 @@ const Navbar = () => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [showFavDropdown]);
 
+    const librariesDropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleLibrariesMouseEnter = () => {
+        if (librariesDropdownTimeoutRef.current) {
+            clearTimeout(librariesDropdownTimeoutRef.current);
+            librariesDropdownTimeoutRef.current = null;
+        }
+        setShowLibrariesDropdown(true);
+    };
+
+    const handleLibrariesMouseLeave = () => {
+        if (librariesDropdownTimeoutRef.current) {
+            clearTimeout(librariesDropdownTimeoutRef.current);
+        }
+        librariesDropdownTimeoutRef.current = setTimeout(() => {
+            setShowLibrariesDropdown(false);
+        }, 220);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (librariesDropdownTimeoutRef.current) clearTimeout(librariesDropdownTimeoutRef.current);
+        };
+    }, []);
+
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
-            if (librariesDropdownRef.current && !librariesDropdownRef.current.contains(e.target as Node)) setShowLibrariesDropdown(false);
+            if (librariesDropdownRef.current && !librariesDropdownRef.current.contains(e.target as Node)) {
+                if (librariesDropdownTimeoutRef.current) clearTimeout(librariesDropdownTimeoutRef.current);
+                setShowLibrariesDropdown(false);
+            }
         };
         if (showLibrariesDropdown) document.addEventListener('mousedown', handleClickOutside);
         return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -84,54 +114,80 @@ const Navbar = () => {
     const planTier: PlanTier = planType === 'custom' ? 'custom' : (isPro ? 'pro' : 'free');
 
     const glassBase = scrolled
-        ? 'bg-[rgba(8,8,14,0.88)] backdrop-blur-2xl border-b border-white/[0.07]'
-        : 'bg-[rgba(8,8,14,0.55)] backdrop-blur-xl border-b border-white/[0.04]';
+        ? 'bg-[#09090f] border-b border-white/[0.07]'
+        : 'bg-[#0a0a10]/95 border-b border-white/[0.05]';
 
-    const linkCls = (active: boolean) =>
-        `relative flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-semibold tracking-wide transition-all duration-200 rounded-full select-none cursor-pointer ${active ? 'text-white bg-white/[0.10] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.10)]' : 'text-white/55 hover:text-white hover:bg-white/[0.06]'}`;
+    /**
+     * Unified desktop nav button:
+     * - ACTIVE   → solid #1F4BFF rectangle + white text (matches HOME in the image)
+     * - INACTIVE → dim text, animated underline on hover
+     */
+    const navBtn = (active: boolean) =>
+        active
+            ? 'relative flex items-center px-4 py-1.5 rounded-sm text-[13px] font-extrabold tracking-widest uppercase cursor-pointer select-none bg-[#1F4BFF] text-white transition-all duration-150'
+            : 'relative flex items-center px-4 py-1.5 text-[13px] font-extrabold tracking-widest uppercase cursor-pointer select-none text-white/40 hover:text-white transition-colors duration-150' +
+              ' after:absolute after:bottom-0 after:left-4 after:right-4 after:h-[2px] after:rounded-full after:bg-[#1F4BFF]' +
+              ' after:scale-x-0 after:origin-left after:transition-transform after:duration-200 hover:after:scale-x-100';
+
+    /* keep desktopLink as alias (used by ComponentsDropdown trigger) */
+    const desktopLink = navBtn;
+
+    /* Mobile pill */
+    const mobilePill = (active: boolean, accent: 'blue' | 'yellow' = 'blue') => {
+        if (active && accent === 'blue') return 'bg-[#1F4BFF] text-white shadow-[0_0_14px_rgba(31,75,255,0.5)] border-[#1F4BFF]';
+        if (active && accent === 'yellow') return 'bg-[#FFC700]/20 text-white border-[#FFC700]/60 shadow-[0_0_12px_rgba(255,199,0,0.3)]';
+        return 'bg-white/[0.07] text-white/70 border-white/[0.10] hover:text-white hover:bg-white/[0.12]';
+    };
 
     const LogoMark = ({ size = 'w-5 h-5' }: { size?: string }) => (
-        <Link to="/" className="flex items-center shrink-0 select-none group" aria-label="UI HUB Home">
+        <Link to="/" className="flex items-center gap-2 shrink-0 select-none group" aria-label="UI HUB Home">
             <span className="relative flex items-center justify-center bg-[#1F4BFF] rounded-xl p-1.5 transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_18px_rgba(31,75,255,0.55)]">
                 <img src={logo} alt="UI HUB Logo" className={`${size} object-contain`} />
             </span>
+            <span className="hidden sm:block text-[15px] font-black tracking-widest text-white uppercase leading-none">UI HUB</span>
         </Link>
     );
 
     const ComponentsDropdown = () => (
         <div className="relative" ref={librariesDropdownRef}
-            onMouseEnter={() => setShowLibrariesDropdown(true)}
-            onMouseLeave={() => setShowLibrariesDropdown(false)}>
+            onMouseEnter={handleLibrariesMouseEnter}
+            onMouseLeave={handleLibrariesMouseLeave}>
             <button type="button" onClick={() => setShowLibrariesDropdown(o => !o)}
                 aria-haspopup="menu" aria-expanded={showLibrariesDropdown}
-                className={linkCls(isLibraryMenuActive)}>
-                {isLibraryMenuActive && <span className="w-1.5 h-1.5 rounded-full bg-[#1F4BFF] shadow-[0_0_6px_#1F4BFF] shrink-0" />}
-                Components
-                <ChevronDown size={13} className={`opacity-40 transition-transform duration-200 ${showLibrariesDropdown ? 'rotate-180' : ''}`} />
+                className={desktopLink(isLibrary || isBuildWithUIHub || showLibrariesDropdown)}>
+                COMPONENTS
+                <ChevronDown size={13} className={`ml-1 transition-transform duration-200 ${showLibrariesDropdown ? 'rotate-180 text-white' : 'opacity-40'}`} />
             </button>
             <AnimatePresence>
                 {showLibrariesDropdown && (
                     <motion.div role="menu"
-                        initial={{ opacity: 0, y: 8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.97 }} transition={{ duration: 0.15, ease: 'easeOut' }}
-                        className="absolute left-0 top-full z-[80] mt-3 w-[285px] rounded-2xl border border-white/[0.08] bg-[rgba(10,10,18,0.97)] backdrop-blur-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.7)]">
-                        <p className="px-3 pb-2 pt-2 text-[10px] font-semibold text-white/25 uppercase tracking-widest">Libraries</p>
-                        {[
-                            { to: '/library', label: 'Components', description: 'Ready-made UI building blocks', Icon: Grid2X2, color: '#1F4BFF' },
-                            { to: '/templates', label: 'Templates', description: 'Complete pages to customize', Icon: LayoutTemplate, color: '#8B5CF6' },
-                            { to: SECTIONS_ANCHOR, label: 'Build with UI HUB', description: 'Section-level layouts', Icon: PanelsTopLeft, color: '#06B6D4' },
-                        ].map(({ to, label, description, Icon, color }) => (
-                            <Link key={label} to={to} role="menuitem" onClick={() => setShowLibrariesDropdown(false)}
-                                className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-white/[0.05] transition-colors">
-                                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl" style={{ background: `${color}1a`, color }}>
-                                    <Icon size={16} />
-                                </span>
-                                <span className="min-w-0">
-                                    <span className="block text-[13px] font-medium text-white/80 group-hover:text-white transition-colors">{label}</span>
-                                    <span className="block truncate text-[11px] text-white/30">{description}</span>
-                                </span>
-                            </Link>
-                        ))}
+                        initial={{ opacity: 0, y: 6, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 6, scale: 0.98 }} transition={{ duration: 0.15, ease: 'easeOut' }}
+                        className="absolute left-0 top-full z-[80] pt-2 w-[295px]">
+                        <div className="rounded-2xl border border-white/[0.08] bg-[rgba(10,10,18,0.98)] backdrop-blur-2xl p-2.5 shadow-[0_24px_60px_rgba(0,0,0,0.85)]">
+                            <p className="px-3 pb-2 pt-1.5 text-[10px] font-semibold text-white/30 uppercase tracking-widest">Libraries</p>
+                            {[
+                                { to: '/library', label: 'Components', description: 'Ready-made UI building blocks', Icon: Grid2X2, color: '#1F4BFF' },
+                                { to: '/templates', label: 'Templates', description: 'Complete pages to customize', Icon: LayoutTemplate, color: '#8B5CF6' },
+                                { to: SECTIONS_ANCHOR, label: 'Build with UI HUB', description: 'Section-level layouts', Icon: PanelsTopLeft, color: '#06B6D4' },
+                            ].map(({ to, label, description, Icon, color }) => (
+                                <Link key={label} to={to} role="menuitem"
+                                    onClick={() => {
+                                        if (librariesDropdownTimeoutRef.current) clearTimeout(librariesDropdownTimeoutRef.current);
+                                        setShowLibrariesDropdown(false);
+                                    }}
+                                    className="group flex items-center gap-3 rounded-xl px-3 py-2.5 text-left hover:bg-white/[0.06] transition-all duration-150 cursor-pointer">
+                                    <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl transition-transform duration-200 group-hover:scale-105"
+                                        style={{ background: `${color}1a`, color }}>
+                                        <Icon size={16} />
+                                    </span>
+                                    <span className="min-w-0">
+                                        <span className="block text-[13px] font-semibold text-white/80 group-hover:text-white transition-colors">{label}</span>
+                                        <span className="block truncate text-[11px] text-white/35 group-hover:text-white/60 transition-colors">{description}</span>
+                                    </span>
+                                </Link>
+                            ))}
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -202,32 +258,59 @@ const Navbar = () => {
 
     const ProfileBlock = () =>
         user ? (
-            <div className="flex items-center gap-1">
-                <Link to="/favorites" title="Profile" className="flex items-center gap-2 group">
-                    <div className="w-8 h-8 rounded-full border border-white/[0.12] overflow-hidden transition-all duration-200 group-hover:border-white/25 group-hover:shadow-[0_0_10px_rgba(255,255,255,0.08)]">
-                        {user.photoURL
-                            ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-                            : <div className="w-full h-full bg-[#1F4BFF] flex items-center justify-center"><UserIcon size={13} className="text-white" /></div>
-                        }
+            /* avatar | NAME | PRO pill | [→] */
+            <div className="flex items-center gap-2">
+                <Link to="/favorites" title="Profile"
+                    className="flex items-center gap-2.5 px-2.5 py-1 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/20 transition-all duration-200 group">
+
+                    {/* Avatar — blue ring glow + green online dot ALWAYS visible */}
+                    <div className="relative shrink-0">
+                        <div className="w-8 h-8 rounded-full border-2 border-[#1F4BFF] shadow-[0_0_12px_rgba(31,75,255,0.45)] overflow-hidden transition-all duration-200 group-hover:shadow-[0_0_16px_rgba(31,75,255,0.7)]">
+                            {user.photoURL
+                                ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                                : <div className="w-full h-full bg-[#1F4BFF] flex items-center justify-center"><UserIcon size={13} className="text-white" /></div>
+                            }
+                        </div>
+                        {/* Green online dot badge */}
+                        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#22C55E] border-2 border-[#09090f] shadow-[0_0_6px_rgba(34,197,94,0.8)]" />
                     </div>
-                    {isPro && (
-                        <span className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#1F4BFF]/15 border border-[#1F4BFF]/25 text-[10px] font-semibold text-[#7CA3FF] uppercase tracking-wider">
-                            <Sparkles size={8} />Pro
-                        </span>
-                    )}
+
+                    {/* Name — prominent and crisp */}
+                    <span className="hidden lg:block text-[13px] font-black text-white uppercase tracking-wider">
+                        {user.displayName?.split(' ')[0] || 'User'}
+                    </span>
+
+                    {/* Badge — ALWAYS visible directly without hover */}
+                    <span className={`flex items-center gap-0.5 px-2.5 py-0.5 rounded-md text-[11px] font-black tracking-wider shrink-0 transition-shadow duration-200 ${
+                        isPro
+                            ? 'bg-[#1F4BFF] text-white shadow-[0_0_12px_rgba(31,75,255,0.5)] group-hover:shadow-[0_0_16px_rgba(31,75,255,0.75)]'
+                            : planTier === 'custom'
+                            ? 'bg-[#06B6D4] text-white shadow-[0_0_12px_rgba(6,182,212,0.5)]'
+                            : 'bg-white/[0.12] text-white/90 border border-white/20'
+                    }`}>
+                        {isPro ? 'PRO' : (planTier === 'custom' ? 'CUSTOM' : 'FREE')}
+                    </span>
                 </Link>
+
+                {/* Square logout [→] */}
                 <button onClick={() => signOut(auth)} aria-label="Sign out" title="Sign Out"
-                    className="w-8 h-8 rounded-full flex items-center justify-center text-white/25 hover:text-white/70 hover:bg-white/[0.07] transition-all duration-200 cursor-pointer">
-                    <LogOut size={13} />
+                    className="w-8 h-8 rounded-lg flex items-center justify-center
+                        text-white/50 hover:text-white
+                        bg-white/[0.04] hover:bg-white/[0.10]
+                        border border-white/[0.08] hover:border-white/20
+                        hover:shadow-[0_0_12px_rgba(255,255,255,0.08)]
+                        transition-all duration-200 cursor-pointer">
+                    <LogOut size={14} />
                 </button>
             </div>
         ) : (
             <div className="flex items-center gap-1.5">
                 <Link to="/login">
-                    <button className="px-4 py-2 rounded-full text-[13px] font-medium text-white/50 hover:text-white hover:bg-white/[0.06] transition-all duration-200 cursor-pointer">Sign in</button>
+                    <button className="px-4 py-1.5 text-[12px] font-bold text-white/50 hover:text-white uppercase tracking-wider transition-colors cursor-pointer">Sign in</button>
                 </Link>
                 <Link to="/signup">
-                    <button className="px-4 py-2 rounded-full text-[13px] font-semibold text-white bg-[#1F4BFF] hover:bg-[#2855FF] shadow-[0_0_22px_rgba(31,75,255,0.4)] hover:shadow-[0_0_30px_rgba(31,75,255,0.6)] transition-all duration-200 cursor-pointer">
+                    <button className="px-4 py-1.5 rounded text-[12px] font-bold text-white bg-[#1F4BFF] hover:bg-[#2855FF]
+                        hover:shadow-[0_0_18px_rgba(31,75,255,0.5)] uppercase tracking-wider transition-all duration-200 cursor-pointer">
                         Get started
                     </button>
                 </Link>
@@ -243,133 +326,107 @@ const Navbar = () => {
             ) : (
                 <motion.header key="navbar-real" initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: 'easeOut' }}
                     className={`fixed top-0 left-0 right-0 z-50 select-none transition-all duration-300 ${glassBase} [padding-top:env(safe-area-inset-top)]`}>                    {/* Desktop bar */}
-                    <div className="hidden lg:flex items-center justify-between h-[60px] px-6 xl:px-10 max-w-screen-2xl mx-auto">
+                    {/* ═══ DESKTOP BAR — matches provided image ═══ */}
+                    <div className="hidden lg:flex items-center justify-between h-[58px] px-5 xl:px-8 max-w-screen-2xl mx-auto gap-6">
+
+                        {/* Logo */}
                         <LogoMark size="w-[22px] h-[22px]" />
-                        <nav className="flex items-center gap-1.5">
-                            {isLibraryMenuActive ? (
-                                <div className="flex items-center gap-2 mr-1">
-                                    <Link
-                                        to="/library"
-                                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-black uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                                            isLibrary
-                                                ? 'border-[#2952FF] bg-[#1F4BFF]/20 text-[#5584FF] shadow-[0_0_14px_rgba(41,82,255,0.45)]'
-                                                : 'border-white/10 bg-white/[0.04] text-white/60 hover:text-white hover:bg-white/[0.08]'
-                                        }`}
-                                    >
-                                        <Menu size={13} className="shrink-0" />
-                                        <span>COMPONENTS</span>
-                                    </Link>
-                                    <Link
-                                        to="/templates"
-                                        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-black uppercase tracking-wider transition-all duration-200 cursor-pointer ${
-                                            isTemplates
-                                                ? 'border-[#FFC700] bg-[#FFC700]/25 text-white shadow-[0_0_14px_rgba(255,199,0,0.45)]'
-                                                : 'border-[#FFC700]/80 bg-[#FFC700]/10 text-white hover:bg-[#FFC700]/20 shadow-[0_0_8px_rgba(255,199,0,0.2)]'
-                                        }`}
-                                    >
-                                        <span>TEMPLATES</span>
-                                        <span className="px-1.5 py-0.5 bg-[#FFC700] text-black text-[9px] font-black rounded-sm leading-none shrink-0">
-                                            NEW
-                                        </span>
-                                    </Link>
-                                </div>
-                            ) : (
-                                <ComponentsDropdown />
-                            )}
-                            <Link to="/dashboard/mcp" className={linkCls(isMcp)}>
-                                {isMcp && <span className="w-1.5 h-1.5 rounded-full bg-[#1F4BFF] shadow-[0_0_6px_#1F4BFF] shrink-0" />}
-                                MCP
+
+                        {/* ── Nav links: every active page → solid blue rect (same as HOME in image) ── */}
+                        <nav className="flex items-center gap-1 flex-1 ml-3">
+
+                            {/* HOME — always has the orange dot badge */}
+                            <Link to="/" className="relative">
+                                <span className={navBtn(isHomePage)}>HOME</span>
+                                {/* Orange dot */}
+                                <span className="absolute -top-1 -right-0.5 w-3 h-3 rounded-full bg-[#FF6B2B] border-2 border-[#09090f] flex items-center justify-center pointer-events-none">
+                                    <span className="w-1 h-1 rounded-full bg-white" />
+                                </span>
                             </Link>
-                            <Link to="/pricing" className={linkCls(isPricing)}>
-                                {isPricing && <span className="w-1.5 h-1.5 rounded-full bg-[#1F4BFF] shadow-[0_0_6px_#1F4BFF] shrink-0" />}
-                                Pricing
-                            </Link>
+
+                            <ComponentsDropdown />
+                            <Link to="/templates"><span className={navBtn(isTemplates)}>TEMPLATES</span></Link>
+                            <Link to="/dashboard/mcp"><span className={navBtn(isMcp)}>MCP</span></Link>
+                            <Link to="/pricing"><span className={navBtn(isPricing)}>PRICING</span></Link>
                         </nav>
-                        <div className="flex items-center gap-2">
+
+                        {/* Right side: Search + avatar/name/PRO + logout */}
+                        <div className="flex items-center gap-2 shrink-0">
+                            {/* Search — matches image: wide box with border, SEARCH... placeholder */}
+                            <div className={`flex items-center gap-2 px-3 py-[7px] border transition-all duration-200 ${
+                                searchFocused
+                                    ? 'bg-white/[0.06] border-white/20 w-52'
+                                    : 'bg-white/[0.03] border-white/[0.12] w-44 hover:border-white/20'
+                            }`}>
+                                <Search size={12} className="text-white/30 shrink-0" />
+                                <input
+                                    type="text"
+                                    placeholder="SEARCH..."
+                                    value={searchVal}
+                                    onChange={e => setSearchVal(e.target.value)}
+                                    onFocus={() => setSearchFocused(true)}
+                                    onBlur={() => setSearchFocused(false)}
+                                    className="bg-transparent outline-none border-none text-[11px] font-bold text-white/70 placeholder:text-white/30 placeholder:tracking-widest placeholder:font-bold w-full uppercase tracking-wider"
+                                />
+                            </div>
                             <FavoritesBlock />
-                            <div className="w-px h-5 bg-white/[0.07] mx-0.5" />
                             <ProfileBlock />
                         </div>
                     </div>
 
-                    {/* Mobile bar */}
+                    {/* ═══ MOBILE BAR ═══ */}
                     <div className="lg:hidden flex items-center justify-between h-[56px] px-3 sm:px-4">
-                        <div className="flex items-center gap-2 shrink-0">
-                            <LogoMark size="w-5 h-5" />
+                        <LogoMark size="w-5 h-5" />
+
+                        {/* 3-pill context bar */}
+                        <div className="flex items-center gap-1.5">
+                            {isLibraryMenuActive ? (
+                                /* On library/components → HOME | TEMPLATES | MCP */
+                                <>
+                                    <Link to="/"
+                                        className={`px-2.5 py-1.5 rounded-md text-[11px] font-black uppercase tracking-wider transition-all border ${mobilePill(isHomePage)}`}>
+                                        HOME
+                                    </Link>
+                                    <Link to="/templates"
+                                        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-black uppercase tracking-wider transition-all border ${mobilePill(isTemplates, 'yellow')}`}>
+                                        TEMPLATES
+                                        <span className="px-1 py-0.5 bg-[#FFC700] text-black text-[7px] font-black rounded-sm leading-none">NEW</span>
+                                    </Link>
+                                    <Link to="/dashboard/mcp"
+                                        className={`px-2.5 py-1.5 rounded-md text-[11px] font-black uppercase tracking-wider transition-all border ${mobilePill(isMcp)}`}>
+                                        MCP
+                                    </Link>
+                                </>
+                            ) : (
+                                /* Default → COMPONENTS | MCP | PRICING */
+                                <>
+                                    <Link to="/library"
+                                        className={`px-2.5 py-1.5 rounded-md text-[11px] font-black uppercase tracking-wider transition-all border ${mobilePill(isLibrary)}`}>
+                                        COMPONENTS
+                                    </Link>
+                                    <Link to="/dashboard/mcp"
+                                        className={`px-2.5 py-1.5 rounded-md text-[11px] font-black uppercase tracking-wider transition-all border ${mobilePill(isMcp)}`}>
+                                        MCP
+                                    </Link>
+                                    <Link to="/pricing"
+                                        className={`px-2.5 py-1.5 rounded-md text-[11px] font-black uppercase tracking-wider transition-all border ${mobilePill(isPricing)}`}>
+                                        PRICING
+                                    </Link>
+                                </>
+                            )}
                         </div>
 
-                        {/* Quick tabs: Library/Templates section vs Home/Hero quick links */}
-                        {isLibraryMenuActive ? (
-                            <div className="flex items-center gap-1.5">
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        if (isLibrary) {
-                                            window.dispatchEvent(new CustomEvent('ui-hub-toggle-library-menu'));
-                                        } else {
-                                            navigate('/library');
-                                        }
-                                    }}
-                                    className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                                        isLibrary
-                                            ? 'border-[#2952FF] bg-[#1F4BFF]/25 text-[#5580FF] shadow-[0_0_12px_rgba(41,82,255,0.4)]'
-                                            : 'border-white/10 bg-white/[0.04] text-white/60 hover:text-white'
-                                    }`}
-                                    title="Components"
-                                >
-                                    <Menu size={13} className="shrink-0" />
-                                    <span>COMPONENTS</span>
-                                </button>
-                                <Link
-                                    to="/templates"
-                                    className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer ${
-                                        isTemplates
-                                            ? 'border-[#FFC700] bg-[#FFC700]/25 text-white shadow-[0_0_12px_rgba(255,199,0,0.4)]'
-                                            : 'border-[#FFC700]/80 bg-[#FFC700]/12 text-white hover:bg-[#FFC700]/20 shadow-[0_0_8px_rgba(255,199,0,0.2)]'
-                                    }`}
-                                >
-                                    <span>TEMPLATES</span>
-                                    <span className="px-1 py-0.5 bg-[#FFC700] text-black text-[8px] font-black rounded-sm leading-none shrink-0">
-                                        NEW
-                                    </span>
-                                </Link>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-1 sm:gap-1.5">
-                                <Link
-                                    to="/library"
-                                    className="px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-semibold text-white/80 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.09] transition-all shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
-                                >
-                                    Components
-                                </Link>
-                                <Link
-                                    to="/templates"
-                                    className="px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-semibold text-white/80 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.09] transition-all shadow-[0_2px_8px_rgba(0,0,0,0.2)] flex items-center gap-1"
-                                >
-                                    <span>Templates</span>
-                                    <span className="px-1 py-0.2 bg-[#FFC700] text-black text-[7.5px] font-black rounded-sm leading-none shrink-0">
-                                        NEW
-                                    </span>
-                                </Link>
-                                <Link
-                                    to="/pricing"
-                                    className="px-2.5 sm:px-3 py-1.5 rounded-full text-[11px] sm:text-[12px] font-semibold text-white/80 hover:text-white bg-white/[0.07] hover:bg-white/[0.12] border border-white/[0.09] transition-all shadow-[0_2px_8px_rgba(0,0,0,0.2)]"
-                                >
-                                    Pricing
-                                </Link>
-                            </div>
-                        )}
-
+                        {/* Avatar + hamburger */}
                         <div className="flex items-center gap-1.5 shrink-0">
                             {user ? (
-                                <Link to="/favorites" aria-label="Profile" className="w-8 h-8 rounded-full border border-white/[0.12] overflow-hidden">
+                                <Link to="/favorites" aria-label="Profile" className="w-8 h-8 rounded-full border-2 border-[#1F4BFF] shadow-[0_0_10px_rgba(31,75,255,0.45)] overflow-hidden">
                                     {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-[#1F4BFF] flex items-center justify-center"><UserIcon size={13} className="text-white" /></div>}
                                 </Link>
                             ) : (
-                                <Link to="/login" className="px-2.5 py-1.5 rounded-full text-[11px] font-medium text-white/55 bg-white/[0.05] border border-white/[0.07]">Sign in</Link>
+                                <Link to="/login" className="px-2.5 py-1.5 rounded-md text-[11px] font-semibold text-white/55 bg-white/[0.05] border border-white/[0.07]">Sign in</Link>
                             )}
                             <button onClick={() => setIsOpen(!isOpen)} aria-label={isOpen ? 'Close menu' : 'Open menu'} aria-expanded={isOpen}
-                                className="w-8 h-8 rounded-full flex items-center justify-center text-white/45 hover:text-white bg-white/[0.06] border border-white/[0.07] hover:bg-white/[0.10] transition-all cursor-pointer">
+                                className="w-8 h-8 rounded-md flex items-center justify-center text-white/45 hover:text-white bg-white/[0.06] border border-white/[0.08] hover:bg-white/[0.12] transition-all cursor-pointer">
                                 <AnimatePresence mode="wait" initial={false}>
                                     {isOpen ? (
                                         <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.12 }}><X size={15} /></motion.span>
@@ -394,13 +451,18 @@ const Navbar = () => {
                                                     {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-[#1F4BFF] flex items-center justify-center"><UserIcon size={15} className="text-white" /></div>}
                                                 </div>
                                                 <div>
-                                                    <p className="text-[13px] font-semibold text-white/90">{user.displayName || 'User'}</p>
+                                                    <p className="text-[13px] font-black text-white/90 uppercase tracking-wider">{user.displayName || 'User'}</p>
                                                     <p className="text-[11px] text-white/30">{user.email}</p>
                                                 </div>
                                             </div>
                                             <PlanBadge tier={planTier} size="sm" showIcon className="shrink-0" />
                                         </Link>
                                     )}
+                                    {/* Drawer search */}
+                                    <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-white/[0.04] border border-white/[0.07] mb-1">
+                                        <Search size={13} className="text-white/30 shrink-0" />
+                                        <input type="text" placeholder="Search components..." className="bg-transparent outline-none text-[13px] text-white/75 placeholder:text-white/25 flex-1" />
+                                    </div>
                                     {[
                                         { to: '/', label: 'Home', active: isHomePage },
                                         { to: '/library', label: 'Components', active: isLibrary },
@@ -410,36 +472,51 @@ const Navbar = () => {
                                         { to: '/pricing', label: 'Pricing', active: isPricing },
                                     ].map(({ to, label, active }) => (
                                         <Link key={to + label} to={to} onClick={() => setIsOpen(false)}
-                                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-medium transition-all ${active ? 'bg-[#1F4BFF]/12 text-white border border-[#1F4BFF]/18' : 'text-white/45 hover:text-white hover:bg-white/[0.05]'}`}>
+                                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-bold uppercase tracking-wider transition-all ${active ? 'bg-[#1F4BFF]/15 text-white border border-[#1F4BFF]/20' : 'text-white/40 hover:text-white hover:bg-white/[0.05]'}`}>
                                             {active && <span className="w-1.5 h-1.5 rounded-full bg-[#1F4BFF] shadow-[0_0_5px_#1F4BFF] shrink-0" />}
                                             {label}
                                         </Link>
                                     ))}
                                     {isLibrary && (
-                                        <Link to="/favorites" onClick={() => setIsOpen(false)}
-                                            className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl text-[13px] font-medium text-white/45 hover:text-white hover:bg-white/[0.05] transition-all">
-                                            <div className="flex items-center gap-3">
-                                                <Heart size={14} className={favorites.length > 0 ? 'fill-rose-400 text-rose-400' : ''} />
-                                                <span>Saved components</span>
-                                            </div>
-                                            {favorites.length > 0 && (
-                                                <span className="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 text-[10px] font-semibold border border-rose-500/20">{favorites.length}</span>
-                                            )}
-                                        </Link>
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setIsOpen(false);
+                                                    window.dispatchEvent(new CustomEvent('ui-hub-toggle-library-menu'));
+                                                }}
+                                                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl text-[13px] font-bold text-white bg-[#1F4BFF]/20 hover:bg-[#1F4BFF]/30 border border-[#1F4BFF]/50 uppercase tracking-wider transition-all cursor-pointer shadow-[0_0_15px_rgba(31,75,255,0.25)]">
+                                                <div className="flex items-center gap-3">
+                                                    <Grid2X2 size={16} className="text-[#1F4BFF]" />
+                                                    <span>Browse All Components</span>
+                                                </div>
+                                                <span className="text-[10px] px-2 py-0.5 rounded bg-[#1F4BFF] text-white font-mono font-bold">228+</span>
+                                            </button>
+                                            <Link to="/favorites" onClick={() => setIsOpen(false)}
+                                                className="flex items-center justify-between gap-3 px-4 py-3 rounded-xl text-[13px] font-medium text-white/40 hover:text-white hover:bg-white/[0.05] transition-all">
+                                                <div className="flex items-center gap-3">
+                                                    <Heart size={14} className={favorites.length > 0 ? 'fill-rose-400 text-rose-400' : ''} />
+                                                    <span>Saved components</span>
+                                                </div>
+                                                {favorites.length > 0 && (
+                                                    <span className="px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-400 text-[10px] font-semibold border border-rose-500/20">{favorites.length}</span>
+                                                )}
+                                            </Link>
+                                        </>
                                     )}
                                     <div className="mt-2 pt-3 border-t border-white/[0.05]">
                                         {user ? (
                                             <button onClick={() => { signOut(auth); setIsOpen(false); }}
-                                                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-medium text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/08 border border-rose-500/15 transition-all cursor-pointer">
+                                                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-bold text-rose-400/80 hover:text-rose-400 hover:bg-rose-500/[0.08] border border-rose-500/15 uppercase tracking-wider transition-all cursor-pointer">
                                                 <LogOut size={13} />Sign out
                                             </button>
                                         ) : (
                                             <div className="flex gap-2">
                                                 <Link to="/login" onClick={() => setIsOpen(false)} className="flex-1">
-                                                    <button className="w-full py-3 rounded-xl text-[13px] font-medium text-white/55 bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.09] transition-all cursor-pointer">Sign in</button>
+                                                    <button className="w-full py-3 rounded-xl text-[13px] font-bold text-white/55 bg-white/[0.05] border border-white/[0.08] hover:bg-white/[0.09] uppercase tracking-wider transition-all cursor-pointer">Sign in</button>
                                                 </Link>
                                                 <Link to="/signup" onClick={() => setIsOpen(false)} className="flex-1">
-                                                    <button className="w-full py-3 rounded-xl text-[13px] font-semibold text-white bg-[#1F4BFF] hover:bg-[#2855FF] shadow-[0_0_20px_rgba(31,75,255,0.3)] transition-all cursor-pointer">Get started</button>
+                                                    <button className="w-full py-3 rounded-xl text-[13px] font-bold text-white bg-[#1F4BFF] hover:bg-[#2855FF] shadow-[0_0_20px_rgba(31,75,255,0.3)] uppercase tracking-wider transition-all cursor-pointer">Get started</button>
                                                 </Link>
                                             </div>
                                         )}

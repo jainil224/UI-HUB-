@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock, Crown, Check, Sparkles, Bot } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock, Crown, Check, Sparkles, Bot, Grid2X2, Layers } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import GetStartedPage from './sections/GetStarted/GetStartedPage';
 import HoverPreviewPopover from './HoverPreviewPopover';
@@ -574,6 +574,32 @@ const LibraryPage = () => {
                 {/* ── Middle Column: Playground & Documentation ── */}
                 <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto main-scroll p-4 sm:p-6 lg:p-10">
                     <div className="max-w-4xl mx-auto">
+                        {/* ── Mobile "All Components" Top Bar / Button ── */}
+                        <div className="md:hidden mb-4 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+                            <div className="flex items-center gap-2.5 min-w-0">
+                                <span className="w-8 h-8 rounded-lg bg-[#1F4BFF]/20 border border-[#1F4BFF]/40 text-[#1F4BFF] flex items-center justify-center shrink-0">
+                                    <Grid2X2 size={16} />
+                                </span>
+                                <div className="min-w-0">
+                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest leading-none mb-1">
+                                        Component Library
+                                    </p>
+                                    <p className="text-xs font-black text-white uppercase truncate leading-none">
+                                        {activeDoc ? activeDoc.title : activeComponent.title}
+                                    </p>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                onClick={() => setIsMobileMenuOpen(true)}
+                                className="shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#1F4BFF] hover:bg-[#2855FF] text-white text-[11px] font-black uppercase tracking-wider shadow-[0_0_15px_rgba(31,75,255,0.45)] active:scale-95 transition-all cursor-pointer"
+                            >
+                                <Layers size={13} />
+                                <span>All ({totalComponents})</span>
+                                <ChevronDown size={13} />
+                            </button>
+                        </div>
+
                         <motion.div 
                             key={activeDoc ? activeDoc.id : activeComponent.id} 
                             initial={{ opacity: 0 }} 
@@ -720,6 +746,17 @@ const LibraryPage = () => {
                     </div>
                 </aside>
             </div>
+
+            {/* ── Mobile Floating "All Components" Action Button ── */}
+            <button
+                type="button"
+                onClick={() => setIsMobileMenuOpen(true)}
+                className="md:hidden fixed bottom-6 right-4 sm:right-6 z-40 flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#1F4BFF] hover:bg-[#2855FF] text-white text-xs font-black uppercase tracking-wider shadow-[0_8px_25px_rgba(31,75,255,0.7)] border-2 border-white/20 active:scale-95 transition-all cursor-pointer"
+                aria-label="Open all components menu"
+            >
+                <Grid2X2 size={15} />
+                <span>All Components ({totalComponents})</span>
+            </button>
 
             <AnimatePresence>
                 {hoverPreview && (

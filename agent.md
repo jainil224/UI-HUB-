@@ -1,570 +1,1411 @@
-UI HUB — AI Agent Task Protocol
+# UI HUB AGENT — PHASE 5
 
-Purpose: This file is a reusable task contract for the AI coding agent working on the UI HUB project.
+## Production Connectivity, API Routing & Deployment Contract
 
-How this works: I will give the AI a task using this file. The AI must investigate only what is necessary, complete the task safely, and provide a structured summary at the end. I will send that summary back for analysis and the next task will then be created from the result.
+**Phase:** 5 of 10
+**Phase Name:** Production Connectivity, API Routing & Deployment Contract
+**Status:** NOT STARTED
 
-1. Agent Role
+**Primary Goal:**
+Eliminate ambiguity between Vercel, Render, Cloudflare, and the frontend API configuration; establish one documented and deterministic production API architecture; prepare and validate the repository for a safe deployment; and verify the real production connectivity after owner-controlled deployment actions.
 
-You are the UI HUB Project Engineering Agent.
+---
 
-Your job is to:
+# 1. PHASE OBJECTIVE
 
-Understand the assigned task.
+Phase 4 established several critical facts:
 
-Use the existing UI HUB architecture and coding patterns.
+```text
+Frontend static shell works.
+Production API is not currently reachable.
+Vercel /api/* has been failing.
+Render API hosts are unavailable at the Cloudflare edge.
+The frontend bundle contains a Render API host.
+getApiBaseUrl() prefers VITE_API_URL in production.
+Vercel therefore does not automatically become the browser's API destination.
+```
 
-Locate only the files and systems relevant to the task.
+The central problem is now:
 
-Make the smallest safe changes necessary.
+```text
+WHO SERVES THE FRONTEND?
+        ↓
+WHO SERVES THE WEB API?
+        ↓
+WHO SERVES MCP?
+        ↓
+WHICH URL DOES THE BROWSER USE?
+        ↓
+WHICH URL DOES MCP USE?
+        ↓
+WHICH DEPLOYMENT OWNS EACH SERVICE?
+```
 
-Avoid breaking existing features.
+Phase 5 must answer these questions and make the repository behavior deterministic.
 
-Validate the result.
+---
 
-Provide a complete structured summary at the end.
+# 2. PHASE 5 CORE PRINCIPLE
 
-Do not analyze the entire repository unless the task genuinely requires repository-wide investigation.
-
-2. Core Rules
-
-Rule 1 — Do Not Scan Everything First
-
-Do not start by reading the entire project.
-
-First determine:
-
-What feature is involved?
-
-Which page/component/system owns it?
-
-Which files are most likely responsible?
-
-What dependencies could be affected?
-
-Then inspect only those areas.
-
-Rule 2 — Preserve Existing Architecture
-
-Before creating new code, check whether UI HUB already has:
-
-a reusable component
-
-a hook
-
-a utility
-
-a service
-
-an API helper
-
-an animation helper
-
-a shared style
-
-an existing data model
-
-an existing state-management pattern
-
-Prefer extending existing systems instead of creating duplicates.
-
-Rule 3 — Minimal Change
-
-Change only what is necessary for the assigned task.
-
-Do not:
-
-refactor unrelated code
-
-rename unrelated files
-
-change the design system without reason
-
-change APIs without checking consumers
-
-replace working libraries unnecessarily
-
-remove existing behavior unless the task requires it
-
-Rule 4 — Preserve UI/UX
-
-UI HUB is a design-focused product.
-
-When modifying UI, preserve:
-
-existing visual language
-
-spacing system
-
-typography
-
-responsive behavior
-
-animations
-
-accessibility
-
-component consistency
-
-loading and error states
-
-Use existing UI components and design tokens whenever possible.
-
-Rule 5 — Check Dependencies Before Changing Shared Code
-
-If a component, hook, utility, service, API, or schema is shared, identify its consumers before modifying it.
-
-Example:
-
-TemplatePreview
-    ↓
-TemplateCard
-    ↓
-SimilarTemplates
-    ↓
-TemplateDetails
-
-A shared change must be checked against its dependent systems.
-
-Rule 6 — Do Not Guess
-
-When behavior depends on existing code, inspect the relevant implementation.
-
-Do not assume:
-
-file names
-
-API behavior
-
-database structure
-
-component props
-
-environment variables
-
-routes
-
-asset locations
-
-state-management behavior
-
-Use the repository as the source of truth.
-
-3. Task Information
-
-Fill the following section for each new task.
-
-Task ID
-
-[TASK-ID]
-
-Task Title
-
-[SHORT TASK TITLE]
-
-Task Type
-
-[BUG / FEATURE / UI / UX / PERFORMANCE / REFACTOR / BACKEND / DATABASE / ANIMATION / SECURITY / OTHER]
-
-Priority
-
-[P0 / P1 / P2 / P3]
-
-User Requirement
-
-[Describe exactly what needs to be changed.
-Do not reinterpret the requirement unless required by the existing codebase.]
-
-Expected Result
-
-[Describe what should be true after the task is completed.]
-
-Important Constraints
-
-- Do not break existing features.
-- Do not modify unrelated systems.
-- Preserve existing design patterns.
-- Keep the implementation maintainable.
-- [Add task-specific constraints here.]
-
-4. Recommended Investigation Process
-
-Follow this sequence.
-
-Step 1 — Understand the Task
-
-Identify:
-
-user-visible behavior
-
-technical behavior
-
-affected subsystem
-
-likely source files
-
-possible side effects
-
-Do not modify code yet.
-
-Step 2 — Locate the Relevant System
-
-Search for:
-
-page/route
-
-component
-
-hook
-
-utility
-
-API
-
-service
-
-data model
-
-asset
-
-configuration
-
-Create a small impact map.
-
-Example:
-
-User Action
-    ↓
-Page
-    ↓
-Component
-    ↓
-Hook / Utility
-    ↓
-API / Service
-    ↓
-Database / Storage
-
-Step 3 — Read Existing Implementation
-
-Read the minimum amount of code needed to understand:
-
-current behavior
-
-intended behavior
-
-dependencies
-
-error handling
-
-loading behavior
-
-responsive behavior
-
-performance considerations
-
-Step 4 — Decide the Smallest Safe Change
-
-Before editing, determine:
-
-Root Cause:
-[What is actually causing the issue?]
-
-Files To Change:
-[List only relevant files.]
-
-Files To Review:
-[List dependent files that need validation.]
-
-Implementation:
-[Describe the change briefly.]
-
-Step 5 — Implement
-
-Make the change.
-
-Keep existing behavior intact except where the task explicitly requires a change.
-
-Step 6 — Validate
-
-Run the most relevant checks available for the changed area.
-
-Possible checks:
-
-type checking
-
-linting
-
-unit tests
-
-integration tests
-
-build
-
-targeted runtime checks
-
-route/page verification
-
-responsive verification
-
-browser console verification
-
-network/request verification
-
-performance verification
-
-Do not claim a check was completed unless it was actually performed.
-
-Step 7 — Review for Side Effects
-
-Before finishing, check:
-
-Did the change affect shared components?
-
-Did the change affect mobile/tablet layouts?
-
-Did the change affect unrelated routes?
-
-Did the change introduce duplicate logic?
-
-Did the change create unnecessary network requests?
-
-Did the change affect loading states?
-
-Did the change affect accessibility?
-
-Did the change affect animations?
-
-Did the change affect authentication or permissions?
-
-Did the change affect API consumers?
-
-5. Special UI HUB Rules
-
-Template / Preview System
-
-When working on templates or previews:
-
-Understand the difference between actual live preview and media preview.
-
-Do not automatically display large WebM assets as the primary visible preview unless explicitly required.
-
-Preserve existing Similar Templates behavior unless the task says otherwise.
-
-Consider loading time, lazy loading, poster images, caching, and preview responsiveness.
-
-Do not change preview behavior globally without checking all preview consumers.
-
-Animation System
-
-Before changing animations, identify whether the feature uses:
-
-Framer Motion
-
-GSAP
-
-ScrollTrigger
-
-Three.js
-
-React Three Fiber
-
-Canvas/Web APIs
-
-existing UI HUB animation utilities
-
-Prefer the project's existing animation engine for that feature.
-
-Design System
-
-Do not invent a new visual style for an existing feature unless the task explicitly requests a redesign.
-
-Prefer:
-
-existing colors
-
-existing typography
-
-existing spacing
-
-existing buttons
-
-existing cards
-
-existing modals
-
-existing layout utilities
-
-existing interaction patterns
-
-6. Completion Requirements
-
-A task is complete only when:
-
-The requested behavior has been implemented.
-
-Relevant existing behavior still works.
-
-Relevant validation has been performed.
-
-No unrelated changes were introduced.
-
-The final summary below is completed.
-
-If the task cannot be completed, do not hide the problem. Report exactly what blocked completion.
-
-7. REQUIRED FINAL SUMMARY
-
-At the end of every task, return the following format exactly.
-
-==================================================
-UI HUB — TASK COMPLETION SUMMARY
-==================================================
-
-TASK ID:
-[TASK-ID]
-
-TASK TITLE:
-[TASK TITLE]
-
-STATUS:
-[COMPLETED / PARTIALLY COMPLETED / BLOCKED]
-
-1. TASK UNDERSTANDING
----------------------
-[What you understood the task to be.] 
-
-2. ROOT CAUSE / CURRENT STATE
------------------------------
-[What caused the issue or what the previous system was doing.]
-
-3. CHANGES MADE
----------------
-[List every meaningful change.] 
-
-4. FILES CHANGED
-----------------
-- path/to/file1
-- path/to/file2
-- path/to/file3
-
-5. FILES REVIEWED
------------------
-- path/to/file1
-- path/to/file2
-
-6. ARCHITECTURE / DEPENDENCY IMPACT
-------------------------------------
-[Explain what depends on the changed code and whether those areas were checked.]
-
-7. VALIDATION PERFORMED
------------------------
-- [Check/test/build/runtime verification]
-- [Result]
-
-8. USER-VISIBLE RESULT
-----------------------
-[Explain what the user will now see or experience.]
-
-9. POSSIBLE SIDE EFFECTS
-------------------------
-[State any known risks or write "None identified".]
-
-10. UNRESOLVED ISSUES
----------------------
-[List anything still incomplete or write "None".]
-
-11. NEXT RECOMMENDED TASK
-------------------------
-[Give one logical next task based only on what was discovered in this task.]
-
-12. IMPORTANT NOTES FOR NEXT AGENT
-----------------------------------
-[Anything the next task agent should know so it does not repeat investigation.]
-
-==================================================
-END OF SUMMARY
-==================================================
-
-8. Rules for the Final Summary
-
-The summary must be factual and specific.
-
-Do not write:
-
-Everything looks perfect.
-
-Write:
-
-TypeScript check passed for the modified frontend package.
-No full production build was run.
-
-Do not write:
-
-Fixed the website.
-
-Write:
-
-Updated SimilarTemplates.tsx so WebM assets are not rendered as the primary visible preview.
-
-Always mention:
-
-exact files changed
-
-exact files reviewed
-
-validation actually performed
-
-remaining issues
-
-important discoveries
-
-9. Handoff Protocol
-
-This project uses a task → summary → next task workflow.
-
-After completing a task:
-
-Return the REQUIRED FINAL SUMMARY.
-
-Do not start a large unrelated task automatically.
-
-Keep useful discoveries in the summary.
-
-The project owner will use the summary to create the next task.
-
-The next task may refer to information from the previous summary, so do not omit important architectural discoveries.
-
-10. Emergency Safety Rule
-
-When a requested change appears likely to break a shared system, stop before making a broad change.
+Do not attempt to "fix production" by changing random URLs.
 
 Instead:
 
-identify the shared dependency
+```text
+Map architecture
+      ↓
+Choose canonical ownership
+      ↓
+Make frontend routing deterministic
+      ↓
+Make deployment configuration consistent
+      ↓
+Validate locally
+      ↓
+Owner deploys
+      ↓
+Verify production
+      ↓
+Document final architecture
+```
 
-determine the smallest safe implementation
+---
 
-validate affected consumers
+# 3. REQUIRED ARCHITECTURAL TARGET
 
-make the narrowest change possible
+The agent must determine whether the intended architecture is:
 
-If there is insufficient evidence to safely modify a critical system, report the limitation in the final summary instead of guessing.
+```text
+OPTION A
 
-11. Agent Success Metric
+Browser
+  ↓
+Vercel
+  ├── Frontend
+  └── /api → Backend
 
-The goal is not to read the most code.
 
-The goal is:
+MCP Client
+  ↓
+Dedicated MCP service
+  ↓
+MCP Server
+```
 
-Correct Task Understanding
-        +
-Relevant Code Discovery
-        +
-Minimal Safe Change
-        +
-Targeted Validation
-        +
-Useful Handoff Summary
+or another architecture already supported by the repository.
 
-A fast task is useful only when it remains correct and safe.
+Do NOT select an architecture solely because it appears simpler.
+
+Use:
+
+```text
+vercel.json
+api/
+frontend/src/services/
+environment configuration
+Render configuration
+MCP configuration
+backend/server.js
+documentation
+```
+
+as evidence.
+
+Once the intended architecture is verified, document it as the canonical architecture.
+
+---
+
+# 4. TASK 5.1 — AUDIT `getApiBaseUrl()`
+
+Perform a complete audit of the frontend API base URL logic.
+
+Find:
+
+```text
+getApiBaseUrl()
+VITE_API_URL
+API base constants
+fetch wrappers
+axios clients
+REST service clients
+hardcoded API hosts
+environment-dependent API paths
+```
+
+Create a table:
+
+```text
+Source
+Environment
+Current behavior
+Fallback
+Consumer
+Risk
+```
+
+Determine exactly why the production bundle contains the Render host.
+
+---
+
+# 5. TASK 5.2 — DEFINE THE PRODUCTION API DEFAULT
+
+Do not blindly rely on:
+
+```text
+VITE_API_URL
+```
+
+Determine whether the normal web API should use:
+
+```text
+/api
+```
+
+as the production default.
+
+If the repository architecture confirms that the Vercel serverless backend is intended to serve the web API, implement the smallest safe behavior:
+
+```text
+Production default
+→ same-origin /api
+```
+
+Allow an external API URL only when explicitly configured.
+
+Recommended conceptual behavior:
+
+```text
+development
+→ local configured API if required
+
+production
+→ same-origin /api by default
+
+external API
+→ explicit opt-in configuration
+```
+
+Do not silently route production back to the unavailable Render service.
+
+---
+
+# 6. TASK 5.3 — PREVENT ENVIRONMENT OVERRIDE SURPRISES
+
+The agent must determine whether:
+
+```text
+VITE_API_URL
+```
+
+is still needed.
+
+Do not delete it merely because it caused the current problem.
+
+Instead document:
+
+```text
+Why it exists
+Who uses it
+Which environments require it
+What happens when it is absent
+What happens when it is present
+```
+
+If the correct design is:
+
+```text
+VITE_API_URL = optional
+```
+
+then make that behavior explicit.
+
+If the correct design requires the value in a particular environment, keep it and document the required value source.
+
+---
+
+# 7. TASK 5.4 — SEARCH FOR HARDCODED PRODUCTION HOSTS
+
+Search the entire repository for:
+
+```text
+ui-hub.onrender.com
+ui-hub-mcp.onrender.com
+ui-hub-backend-mcp.onrender.com
+VITE_API_URL
+MCP_SERVER_URL
+MCP_ALLOWED_ORIGINS
+```
+
+Classify every occurrence:
+
+```text
+ACTIVE
+LEGACY
+DOCUMENTATION
+GENERATED
+TEST
+UNKNOWN
+```
+
+Do not change every occurrence automatically.
+
+For each ACTIVE occurrence, determine whether it represents:
+
+```text
+Web API
+MCP
+Webhook
+Monitoring
+Documentation
+```
+
+---
+
+# 8. TASK 5.5 — SEPARATE WEB API FROM MCP
+
+Do not treat these as the same service.
+
+Document the distinction:
+
+```text
+WEB API
+→ REST endpoints used by the UI
+
+MCP
+→ MCP protocol used by AI clients
+```
+
+Determine:
+
+```text
+Who owns the web API?
+Who owns MCP?
+Which host serves each?
+Does Vercel need MCP?
+Does Render need the web API?
+```
+
+The Phase 4 report already established that the MCP deployment path and normal frontend API path are different concerns.
+
+Do not combine them simply to reduce configuration.
+
+---
+
+# 9. TASK 5.6 — VERCEL ROUTING AUDIT
+
+Phase 4 flagged a specific risk in:
+
+```text
+vercel.json
+```
+
+where:
+
+```text
+/api/(.*) → /api/index.js
+```
+
+could turn an intended API route into a 404 after deployment.
+
+Perform a complete routing audit.
+
+Verify:
+
+```text
+/api
+/api/health
+/api/v1/*
+```
+
+and the interaction among:
+
+```text
+rewrites
+functions
+filesystem routes
+api/index.js
+SPA fallback
+```
+
+Do not change routing until the actual behavior is mapped.
+
+---
+
+# 10. TASK 5.7 — VERIFY SPA FALLBACK DOES NOT MASK API FAILURES
+
+The Phase 4 report discovered that:
+
+```text
+/health
+```
+
+on the frontend returns the same HTML shell as `/`.
+
+This means SPA fallback can make a missing API endpoint look healthy.
+
+The routing architecture must therefore clearly distinguish:
+
+```text
+Frontend route
+```
+
+from:
+
+```text
+API route
+```
+
+Ensure API requests cannot silently become the frontend HTML shell.
+
+The desired behavior is:
+
+```text
+Unknown API route
+→ API-style error / 404
+
+Frontend route
+→ SPA shell
+```
+
+Do not break legitimate React routes.
+
+---
+
+# 11. TASK 5.8 — LOCAL REPRODUCTION OF VERCEL ROUTING
+
+Create a reproducible local validation procedure for the Vercel API architecture.
+
+The procedure should verify:
+
+```text
+/api/health
+/api/v1/*
+frontend routes
+unknown API route
+unknown frontend route
+```
+
+Record the commands and expected results in:
+
+```text
+.uihub-agent/runtime/
+└── VERCEL_ROUTING_BASELINE.md
+```
+
+The goal is that future changes can reproduce deployment routing behavior before pushing.
+
+---
+
+# 12. TASK 5.9 — MCP ENDPOINT CONTRACT
+
+Document the canonical MCP endpoint separately.
+
+Create:
+
+```text
+.uihub-agent/APIs/MCP_DEPLOYMENT_CONTRACT.md
+```
+
+Include:
+
+```text
+Canonical MCP service
+Expected endpoint
+Authentication
+Allowed origins
+Tool registry
+Build source
+Generated dist
+Deployment owner
+Health/verification method
+```
+
+Do not invent the final URL.
+
+If the canonical MCP service remains unresolved because Render is unavailable:
+
+```text
+STATUS: OWNER ACTION REQUIRED
+```
+
+---
+
+# 13. TASK 5.10 — RENDER SERVICE CONTRACT
+
+The Render configuration must be compared against the actual expected service architecture.
+
+Document:
+
+```text
+service name
+service type
+build command
+start command
+health path
+environment requirements
+MCP responsibility
+backend responsibility
+```
+
+Do not create a new Render service merely because a hostname returns 404 or 503.
+
+Do not delete an old service.
+
+Do not rename services during this phase.
+
+---
+
+# 14. TASK 5.11 — CLOUDFLARE CONTRACT
+
+Document what Cloudflare is supposed to do.
+
+Determine:
+
+```text
+DNS
+proxy
+origin
+TLS
+challenge/security layer
+API traffic
+MCP traffic
+```
+
+Do not disable challenges or security controls merely to pass tests.
+
+If the current configuration cannot be verified without dashboard access:
+
+```text
+OWNER ACTION REQUIRED
+```
+
+Record exactly what needs to be checked.
+
+---
+
+# 15. TASK 5.12 — ENVIRONMENT CONTRACT
+
+Create:
+
+```text
+.uihub-agent/infrastructure/
+└── ENVIRONMENT_CONTRACT.md
+```
+
+For each environment:
+
+```text
+Local
+CI
+Vercel
+Render
+```
+
+document:
+
+```text
+Variable
+Purpose
+Required?
+Public/private
+Consumer
+Status
+```
+
+Never record values.
+
+Use:
+
+```text
+PRESENT
+ABSENT
+UNKNOWN
+NOT REQUIRED
+```
+
+Never print secrets.
+
+---
+
+# 16. TASK 5.13 — FRONTEND BUILD VERIFICATION
+
+After the API-base logic is finalized:
+
+Run:
+
+```text
+npm run build
+```
+
+Then inspect the emitted bundle.
+
+Verify:
+
+```text
+Old Render web API host
+→ absent unless intentionally required
+
+Unexpected production API host
+→ absent
+
+Expected API path
+→ present
+
+MCP-only host
+→ only present in MCP-specific code/config where intended
+```
+
+This is important because Phase 4 proved that the actual browser bundle, rather than the source code alone, determines where the browser sends requests.
+
+---
+
+# 17. TASK 5.14 — GENERATED ARTIFACT VERIFICATION
+
+The Phase 4 report found that `mcp-server/dist` had been stale and was actually what the deployed service would execute.
+
+Phase 5 must ensure generated artifacts cannot silently diverge.
+
+Verify:
+
+```text
+mcp-server/src
+mcp-server/dist
+generated JSON/data files
+tool registry
+```
+
+and run:
+
+```text
+check-source-coverage
+```
+
+plus the actual MCP build.
+
+Do not rely on `check-source-coverage` alone.
+
+The build must regenerate what is supposed to be generated.
+
+---
+
+# 18. TASK 5.15 — TEST API ROUTING
+
+Add or update tests where appropriate for:
+
+```text
+/api/health
+unknown /api route
+frontend fallback
+production API base URL
+development API base URL
+explicit external API URL
+missing VITE_API_URL
+```
+
+Tests must verify behavior rather than implementation details.
+
+Do not remove existing tests.
+
+---
+
+# 19. TASK 5.16 — API BASE URL SAFETY TESTS
+
+Add a focused test matrix:
+
+```text
+CASE 1
+Production + no VITE_API_URL
+→ same-origin /api
+
+CASE 2
+Production + explicit approved external URL
+→ external API
+
+CASE 3
+Development + local API
+→ local API
+
+CASE 4
+Production + stale legacy Render URL
+→ behavior must be explicitly defined
+
+CASE 5
+Malformed URL
+→ safe failure
+```
+
+Do not silently transform arbitrary user-provided environment values.
+
+---
+
+# 20. TASK 5.17 — PRODUCTION DEPLOYMENT GATE
+
+Before deployment, create a checklist:
+
+```text
+Code build PASS
+Typecheck PASS
+Tests PASS
+MCP build PASS
+Generated data synchronized
+API base URL verified
+Vercel routing verified
+Environment contract reviewed
+No secrets exposed
+No production data changes
+```
+
+Store it as:
+
+```text
+.uihub-agent/runtime/
+└── PRODUCTION_DEPLOYMENT_GATE.md
+```
+
+---
+
+# 21. TASK 5.18 — OWNER DEPLOYMENT ACTION
+
+The agent must clearly identify actions that only the owner can perform.
+
+At minimum:
+
+```text
+1. Configure/unset VITE_API_URL as determined by the verified architecture.
+2. Deploy the current branch through the available Vercel integration.
+3. Verify the Vercel deployment.
+4. Restore/confirm the intended Render service if required.
+5. Verify Cloudflare routing.
+6. Open PR / merge according to repository workflow.
+```
+
+Do not pretend these have been completed by the coding agent.
+
+---
+
+# 22. TASK 5.19 — PRODUCTION VERIFICATION AFTER OWNER DEPLOYMENT
+
+Once a real deployment exists, verify:
+
+```text
+GET /
+GET /api/health
+GET /api/v1/config/firebase
+GET /api/v1/auth/me
+```
+
+Also verify:
+
+```text
+unknown API route
+frontend route
+```
+
+Record:
+
+```text
+status
+latency
+response type
+timestamp
+```
+
+Do not classify `/health` as successful if it returns HTML.
+
+---
+
+# 23. TASK 5.20 — BROWSER API DESTINATION VERIFICATION
+
+Use a browser-level verification if available.
+
+The goal is to observe the actual network destination of frontend API calls.
+
+Verify:
+
+```text
+Browser
+   ↓
+Expected API host
+   ↓
+Expected endpoint
+```
+
+Make sure requests are not silently going to:
+
+```text
+old Render host
+wrong MCP host
+wrong environment
+SPA fallback
+```
+
+This test is mandatory because Phase 4 proved that source/config inspection alone was insufficient.
+
+---
+
+# 24. TASK 5.21 — VERIFY AUTHENTICATION IN THE REAL DEPLOYMENT
+
+Once the API is reachable, verify:
+
+```text
+No token
+Invalid token
+Expired token
+Normal authenticated user
+Admin
+```
+
+Verify at least:
+
+```text
+/api/v1/auth/me
+protected REST route
+admin route
+broadcast route
+```
+
+Do not send real broadcasts.
+
+Do not use real payment operations.
+
+Do not expose tokens.
+
+---
+
+# 25. TASK 5.22 — VERIFY MCP IN THE REAL DEPLOYMENT
+
+Once the intended MCP service is reachable:
+
+```text
+initialize
+tools/list
+```
+
+Verify:
+
+```text
+14 expected tools
+authentication
+configuration
+generated data
+response correctness
+```
+
+If the MCP service remains unavailable:
+
+```text
+BLOCKED — OWNER ACTION REQUIRED
+```
+
+Do not fabricate a successful MCP verification.
+
+---
+
+# 26. TASK 5.23 — DO NOT MODIFY LIGHT MODE
+
+The Phase 4 report proved that the light theme currently produces invisible text because of the interaction between:
+
+```text
+inline <style>
+Vite stylesheet
+html background
+theme variables
+dark variants
+```
+
+Do NOT fix this in Phase 5.
+
+Do NOT introduce the full theme refactor.
+
+Do NOT change `@custom-variant dark`.
+
+Do NOT delete the light theme.
+
+Record it as:
+
+```text
+DEFERRED
+```
+
+for the dedicated design-system/theme phase.
+
+---
+
+# 27. TASK 5.24 — DOCUMENT THE LIGHT-MODE DECISION
+
+Update:
+
+```text
+.uihub-agent/runtime/PRODUCTION_BASELINE.md
+.uihub-agent/design-system/DESIGN_SYSTEM.md
+.uihub-agent/tasks/ACTIVE_TASK.md
+```
+
+State:
+
+```text
+Light mode is known to be inconsistent.
+The issue is confirmed.
+No Phase 5 change is made.
+A future dedicated theme task is required.
+```
+
+Do not allow future agents to rediscover this as an unknown.
+
+---
+
+# 28. TASK 5.25 — RECHECK PRIOR FINDINGS
+
+Before completing Phase 5:
+
+Re-evaluate important previous findings against the new architecture.
+
+Especially:
+
+```text
+Vercel MCP availability
+Render API ownership
+MCP_SERVER_URL
+MCP_ALLOWED_ORIGINS
+Health semantics
+mcp-server/dist
+Tailwind token status
+Theme behavior
+```
+
+Do not preserve a finding merely because it existed in Phase 1–4.
+
+---
+
+# 29. TASK 5.26 — CREATE API ARCHITECTURE MAP
+
+Create:
+
+```text
+.uihub-agent/APIs/API_ARCHITECTURE.md
+```
+
+It should show:
+
+```text
+Browser
+  ↓
+Canonical Web API
+  ↓
+Express
+  ├── Authentication
+  ├── MongoDB
+  ├── Redis
+  ├── Payments
+  ├── Admin
+  └── Other services
+
+AI Client
+  ↓
+Canonical MCP Service
+  ↓
+MCP Server
+  ↓
+MCP Data/Registry
+```
+
+Include:
+
+```text
+canonical URL
+fallback
+environment
+deployment owner
+```
+
+for each runtime surface.
+
+---
+
+# 30. TASK 5.27 — CREATE PRODUCTION CONNECTIVITY BASELINE
+
+Create:
+
+```text
+.uihub-agent/runtime/
+└── CONNECTIVITY_BASELINE.md
+```
+
+Track:
+
+```text
+Frontend
+Web API
+Health
+Authentication
+Admin
+MCP
+Database
+Redis
+Cloudflare
+Vercel
+Render
+```
+
+For each:
+
+```text
+Expected
+Actual
+Status
+Evidence
+Timestamp
+```
+
+---
+
+# 31. SUCCESS CRITERIA
+
+Phase 5 is successful when:
+
+```text
+1. The canonical web API is explicitly defined.
+2. The canonical MCP service is explicitly defined or clearly marked owner-blocked.
+3. getApiBaseUrl() behavior is deterministic.
+4. VITE_API_URL behavior is documented and intentional.
+5. No stale production API host is unintentionally embedded in the frontend.
+6. Vercel routing behavior is understood and tested.
+7. SPA fallback cannot masquerade as API health.
+8. Environment requirements are documented.
+9. MCP source/dist consistency is verified.
+10. Local routing tests exist.
+11. Production deployment gate exists.
+12. Real production API behavior is verified after deployment.
+13. Browser network behavior is verified.
+14. Authentication works in the deployed environment.
+15. MCP is verified or explicitly blocked by owner access.
+16. Light mode remains intentionally deferred.
+17. Previous findings have been reclassified using current evidence.
+18. Production connectivity baseline is created.
+19. No production data was modified.
+20. No secrets were exposed.
+```
+
+---
+
+# 32. STOP CONDITIONS
+
+Stop a specific task when:
+
+```text
+Dashboard access is required.
+Production environment values are unavailable.
+Cloudflare behavior cannot be safely determined.
+A service must be recreated.
+A DNS change is required.
+A production database mutation is proposed.
+Payment behavior becomes involved.
+An architecture decision cannot be inferred from repository evidence.
+A routing change could break frontend navigation.
+```
+
+Use:
+
+```text
+OWNER ACTION REQUIRED
+```
+
+or:
+
+```text
+BLOCKED
+```
+
+rather than guessing.
+
+---
+
+# 33. FILES TO CREATE
+
+Expected new files:
+
+```text
+.uihub-agent/
+├── APIs/
+│   ├── API_ARCHITECTURE.md
+│   └── MCP_DEPLOYMENT_CONTRACT.md
+│
+├── infrastructure/
+│   └── ENVIRONMENT_CONTRACT.md
+│
+└── runtime/
+    ├── VERCEL_ROUTING_BASELINE.md
+    ├── PRODUCTION_DEPLOYMENT_GATE.md
+    └── CONNECTIVITY_BASELINE.md
+```
+
+Only create additional files when required by actual repository evidence.
+
+---
+
+# 34. KNOWLEDGE FILES TO UPDATE
+
+Update where applicable:
+
+```text
+.uihub-agent/CONFLICTS.md
+.uihub-agent/runtime/PRODUCTION_BASELINE.md
+.uihub-agent/runtime/RUNTIME_VERIFICATION.md
+.uihub-agent/runtime/UNKNOWN_REGISTER.md
+.uihub-agent/tasks/ACTIVE_TASK.md
+.uihub-agent/APIs/API_OVERVIEW.md
+.uihub-agent/infrastructure/INFRASTRUCTURE.md
+.uihub-agent/design-system/DESIGN_SYSTEM.md
+.uihub-agent/PROJECT_MAP.json
+```
+
+Preserve historical findings.
+
+Do not erase previous reports.
+
+---
+
+# 35. REQUIRED TEST MATRIX
+
+At minimum:
+
+```text
+BUILD
+PASS / FAIL
+
+TYPECHECK
+PASS / FAIL
+
+UNIT TESTS
+PASS / FAIL
+
+API ROUTING
+PASS / FAIL
+
+SPA FALLBACK
+PASS / FAIL
+
+PRODUCTION API BASE URL
+PASS / FAIL
+
+MCP BUILD
+PASS / FAIL
+
+MCP REGISTRY
+PASS / FAIL
+
+GENERATED DATA
+PASS / FAIL
+
+BROWSER NETWORK TARGET
+PASS / FAIL
+
+PRODUCTION HEALTH
+PASS / FAIL
+
+AUTHENTICATION
+PASS / FAIL
+
+MCP PRODUCTION
+PASS / FAIL / BLOCKED
+```
+
+---
+
+# 36. REQUIRED FINAL SUMMARY
+
+At the end of Phase 5, provide EXACTLY:
+
+==================================================
+UI HUB AGENT — PHASE 5 COMPLETION REPORT
+========================================
+
+PHASE:
+5 — Production Connectivity, API Routing & Deployment Contract
+
+STATUS:
+COMPLETED / PARTIAL / BLOCKED
+
+1. TASK UNDERSTANDING
+
+---
+
+Explain the purpose of Phase 5.
+
+2. CANONICAL ARCHITECTURE
+
+---
+
+Web API:
+MCP:
+Frontend:
+Database:
+Other services:
+
+3. API BASE URL AUDIT
+
+---
+
+Current behavior:
+Production behavior:
+Development behavior:
+VITE_API_URL behavior:
+
+4. HARDCODED HOST AUDIT
+
+---
+
+List production hosts found and their classifications.
+
+5. VERCEL ROUTING
+
+---
+
+Explain final routing behavior.
+
+6. SPA FALLBACK
+
+---
+
+Explain final frontend/API separation.
+
+7. RENDER ARCHITECTURE
+
+---
+
+Verified service architecture.
+
+8. CLOUDFLARE ARCHITECTURE
+
+---
+
+Verified role/status.
+
+9. ENVIRONMENT CONTRACT
+
+---
+
+List variables as PRESENT / ABSENT / UNKNOWN only.
+
+10. MCP DEPLOYMENT
+
+---
+
+Endpoint:
+Status:
+Authentication:
+Tools:
+Source/dist:
+
+11. GENERATED ARTIFACTS
+
+---
+
+Build result and source/dist consistency.
+
+12. API ROUTING TESTS
+
+---
+
+Results.
+
+13. BROWSER NETWORK TEST
+
+---
+
+Actual API destination.
+
+14. AUTHENTICATION TEST
+
+---
+
+Results.
+
+15. PRODUCTION HEALTH
+
+---
+
+Actual result.
+
+16. PRODUCTION STATUS
+
+---
+
+Frontend:
+Backend:
+MCP:
+Database:
+Redis:
+Cloudflare:
+
+17. LIGHT MODE
+
+---
+
+State explicitly that it was deferred.
+
+18. OWNER ACTIONS
+
+---
+
+List all dashboard/deployment tasks still required.
+
+19. BLOCKED TASKS
+
+---
+
+List anything that could not be verified.
+
+20. TEST RESULTS
+
+---
+
+Backend:
+MCP:
+CLI:
+Frontend:
+Routing:
+Other:
+
+21. BUILD RESULTS
+
+---
+
+Frontend:
+MCP:
+CLI:
+Other:
+
+22. FILES CREATED
+
+---
+
+List all.
+
+23. FILES MODIFIED
+
+---
+
+List all.
+
+24. FILES DELETED
+
+---
+
+NONE or exact list.
+
+25. PRODUCTION DATA CHANGES
+
+---
+
+YES / NO
+
+26. SECRETS EXPOSED
+
+---
+
+YES / NO
+
+Must be NO.
+
+27. REGRESSIONS
+
+---
+
+List all.
+
+28. PREVIOUS FINDINGS RECLASSIFIED
+
+---
+
+List important changes in status.
+
+29. KNOWLEDGE BASE UPDATED
+
+---
+
+List all `.uihub-agent/` files updated.
+
+30. IMPORTANT ARCHITECTURAL DISCOVERIES
+
+---
+
+Document newly verified architecture facts.
+
+31. IMPORTANT DISCOVERIES FOR PHASE 6
+
+---
+
+List facts that should influence the next phase.
+
+32. FINAL GIT / DIFF REVIEW
+
+---
+
+Clean / reviewed / unexpected changes.
+
+33. FINAL STATUS
+
+---
+
+COMPLETED / PARTIAL / BLOCKED
+
+==================================================
+END OF PHASE 5 REPORT
+=====================
+
+---
+
+# 37. FINAL EXECUTION INSTRUCTION
+
+Phase 5 is about making UI HUB's production connectivity understandable and deterministic.
+
+Do not assume that:
+
+```text
+Vercel
+=
+Web API
+
+Render
+=
+MCP
+
+Cloudflare
+=
+correctly configured
+```
+
+until evidence confirms it.
+
+Do not rely on:
+
+```text
+HTML 200
+```
+
+as proof of API health.
+
+Do not rely on source code alone to determine browser API destinations.
+
+Inspect the emitted production bundle.
+
+Do not expose secrets.
+
+Do not modify production data.
+
+Do not send real broadcasts.
+
+Do not perform payment transactions.
+
+Do not disable security controls merely to make connectivity succeed.
+
+Do not make broad UI/theme changes.
+
+When owner-only access is required, record the exact owner action rather than guessing.
+
+At the end, update the `.uihub-agent/` knowledge system and provide the exact Phase 5 Completion Report.
+
+The Phase 5 report will be reviewed before Phase 6 is designed.
+
+END — UI HUB AGENT PHASE 5
