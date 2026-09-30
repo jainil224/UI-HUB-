@@ -8,7 +8,6 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useMcpKeepAlive } from '../../hooks/useMcpKeepAlive';
 import { MCP_BASE_URL } from '../../utils/mcpConfig';
 import {
     getMcpOverview, createApiKey, revokeApiKey, getAdminMetrics,
@@ -143,7 +142,6 @@ const ToolLogo: React.FC<{ tool: ToolDef; size?: number; className?: string }> =
 /* ── Main Page ── */
 const MCPPage: React.FC = () => {
     const { user, isPro, loading: authLoading } = useAuth();
-    useMcpKeepAlive();
     const [status, setStatus] = useState<McpStatus | null>(null);
     const [keys, setKeys] = useState<McpApiKey[]>([]);
     const [usage, setUsage] = useState<McpUsage | null>(null);

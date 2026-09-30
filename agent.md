@@ -1,227 +1,570 @@
-# Build Prompt: Visionary Wellness Hero
+UI HUB — AI Agent Task Protocol
 
-Build a polished, responsive, single-screen landing-page hero for **Visionary**, matching the specification below as closely as possible. Treat every phrase, placement, color, and behavior here as intentional. Do not redesign, simplify, or add unrelated sections. The result should feel like the same cinematic wellness experience at desktop, tablet, and mobile sizes.
+Purpose: This file is a reusable task contract for the AI coding agent working on the UI HUB project.
 
-## 1. Product and Overall Art Direction
+How this works: I will give the AI a task using this file. The AI must investigate only what is necessary, complete the task safely, and provide a structured summary at the end. I will send that summary back for analysis and the next task will then be created from the result.
 
-Create a premium digital wellness experience: cinematic, calm, editorial, tactile, and subtly futuristic. The screen is a near-black stage with a warm rose-pink light source, a photorealistic cupped hand rising from the bottom center, and a luminous, interactive sphere made from thousands of pink particles floating just above the palm. Text is elegant and restrained. UI panels use fine borders and translucent dark glass rather than bright solid cards.
+1. Agent Role
 
-The contrast between the dark background, pale rose sphere, realistic hand, quiet typography, and compact interface panels is the defining look. Preserve generous negative space. The central hand-and-sphere visual is the emotional focal point, while the headline remains easy to read on the left and the wellness recommendation panel remains easy to scan on the right.
+You are the UI HUB Project Engineering Agent.
 
-Do not use a cyan or blue sphere, a blue-lit hand, a purple gradient, a generic stock wellness dashboard, a cartoon hand, or an unrelated hero illustration. Do not add a crown/VIP tile: it is not part of the visible target composition. Do not add sections below the hero, a footer, a large marketing CTA block, or decorative floating orbs.
+Your job is to:
 
-## 2. Canvas and Layout
+Understand the assigned task.
 
-- Make the hero fill at least the full viewport height. On desktop, fit the complete composition into one viewport without a page-level scrollbar; on small screens, allow natural vertical scrolling if required to keep every element usable.
-- Use a full-bleed background, not a framed page or a card around the entire hero.
-- Use a near-black base: `#080305` for the visual stage and `#030609` where needed for the darkest page/background blend. Main text is white.
-- Keep the content container centered and capped at approximately `1440px` wide. Use horizontal padding of about `24px` on narrow screens, `40px` on small/medium screens, and `56px` on large screens.
-- Layer the screen in this order: ambient background; top navigation; center-bottom hand and sphere; foreground content. The foreground content sits above the hand layer but must not obscure the particle sphere.
-- At desktop widths, use a three-zone visual balance: headline and supporting content in the left portion, hand and sphere centered, recommendation panel toward the lower right. The hand/sphere is absolutely centered on the horizontal axis and anchored to the bottom edge. The left column is roughly five-twelfths of the content width. Keep the right panel near the lower-right edge with comfortable viewport margins.
-- At tablet/mobile widths, keep the brand and actions in the header, collapse the navigation to a menu button, center the hand/sphere, and move the recommendation panel below the headline/content in normal flow. Prevent text, menu, and card from colliding with the hand or each other.
+Use the existing UI HUB architecture and coding patterns.
 
-## 3. Background and Lighting
+Locate only the files and systems relevant to the task.
 
-Build a layered, restrained lighting treatment rather than a flat black fill:
+Make the smallest safe changes necessary.
 
-1. Start with a deep obsidian/black-cherry field (`#080305`).
-2. At the top center, add a short, thin, horizontal white-to-rose light bar, about `240px` wide on a small screen and up to `360px` on a desktop. The center is nearly white; the ends fade to transparent. Add a soft rose halo around it.
-3. Directly beneath that bar, add a narrow, downward-facing rose spotlight beam centered over the sphere. It should fade out before reaching the page edges and feel like a studio light, not a hard geometric triangle.
-4. Add a broad, soft rose ambient bloom behind the sphere in the upper-middle area and a subtler, darker rose diffusion around the lower hand/wrist area. Use large, very soft radial gradients and blur; keep the corners dark.
-5. Add a barely visible fine-grain texture (around 3% opacity) and a soft dark vignette at the edges.
-6. Track pointer position to move only the background lighting layer a few pixels in the opposite direction, with smooth easing. Do not make the hand drift with the pointer. Disable this parallax when reduced motion is requested.
+Avoid breaking existing features.
 
-Suggested rose colors: `#E2B4BD` as the main sphere/glow color, `#C27586` for the deeper rose, and a near-white blush (`#FFF0F3`) for highlights. The atmosphere should remain mostly dark; pink light is concentrated around the center, not spread over the entire canvas.
+Validate the result.
 
-## 4. Header and Navigation
+Provide a complete structured summary at the end.
 
-Place a single horizontal header near the top edge, with roughly `24px` top spacing on mobile and `24px` horizontal/vertical breathing room on desktop. Align its three zones vertically:
+Do not analyze the entire repository unless the task genuinely requires repository-wide investigation.
 
-### Left: wordmark
+2. Core Rules
 
-- Show a small rose sparkle glyph (`✦`) followed by the word **Visionary**.
-- Use white text, medium weight, approximately `16px` on mobile and `18px` on larger screens.
-- Color the sparkle `#E2B4BD` and give it a subtle rose glow.
-- Keep the wordmark on one line and aligned to the left edge of the content container.
+Rule 1 — Do Not Scan Everything First
 
-### Center: desktop navigation
+Do not start by reading the entire project.
 
-- Show a compact translucent glass navigation capsule centered horizontally in the header.
-- Include exactly these labels, in this order: **Home**, **Service**, **Product**, **About Us**.
-- Use small, approximately `12px` sans-serif text, with compact horizontal/vertical padding and a small gap between items.
-- The capsule has a faint white border, very dark transparent fill, approximately `16px` backdrop blur, and a subtle inset highlight/shadow. It should not look like a large floating panel.
-- **Home** is initially active: slightly brighter white text, a subtly lighter translucent background, faint border, and restrained rose-tinted shadow. Other items are muted cool-neutral gray and brighten on hover.
-- Clicking an item changes the active visual state. Do not invent page routes or extra content if only this hero is implemented.
+First determine:
 
-### Right: account actions
+What feature is involved?
 
-- Show **Sign in** as a quiet translucent dark button with a thin white border, white small text, and restrained hover feedback.
-- Show **Join** beside it as a compact white button with dark text, a small corner radius, and a subtle white glow. It is the brightest header control.
-- Use approximately `12px` text and compact vertical padding. Both buttons have visible keyboard-focus styles and a slight pressed state.
-- On small screens, hide the desktop navigation and the Sign in button; keep **Join** visible and add a compact hamburger/close icon button. The icon toggles a dark, blurred dropdown containing the four same navigation items, then a divider and Sign in / Join Visionary actions. Close the dropdown after selecting a navigation item or an account action. Keep the dropdown within the viewport.
+Which page/component/system owns it?
 
-There is no crown tile or floating VIP badge in this target header.
+Which files are most likely responsible?
 
-## 5. Central Hand Image
+What dependencies could be affected?
 
-- Use a photorealistic human hand with the palm facing upward, fingers naturally relaxed and gently cupped, as if supporting a floating sphere. The hand and forearm rise vertically from the bottom center. Show enough palm and fingers to make the gesture immediately legible; let the wrist fade into the dark bottom edge.
-- Center the hand precisely. Anchor its bottom to the viewport bottom, with a maximum desktop width around `430px`; scale down smoothly on smaller screens. At desktop, the hand image should extend about `230–300px` high, depending on viewport size.
-- Use the supplied original hand image if available. The reference asset used by the current implementation is `https://res.cloudinary.com/dgqd54pbl/image/upload/v1790671314/ChatGPT_Image_Sep_29_2026_02_07_08_PM_vshk0k.png`. If it cannot be loaded, use a local supplied equivalent or create/source a closely matched photorealistic cupped-hand image. Do not substitute an unrelated image.
-- Preserve the image's natural proportions with `object-fit: contain` and bottom alignment. Avoid hard rectangular image edges: softly mask/fade the upper/lower transition as appropriate and blend the wrist into the background with a dark-to-transparent bottom gradient.
-- Apply only a restrained brightness/contrast lift and a soft rose rim illumination/drop shadow (`rgba(226,180,189,0.35)` neighborhood). The skin should remain realistic; do not tint the whole hand pink.
-- The hand remains stationary. It does not rotate, bob, or follow the pointer.
+Then inspect only those areas.
 
-## 6. Floating Particle Sphere (The “Ball”)
+Rule 2 — Preserve Existing Architecture
 
-Position a luminous spherical particle object directly above the open palm, centered on the same vertical axis. It should look like a dense, three-dimensional ball of glowing points, not a solid plastic ball, flat circle, wireframe, or cloudy blob.
+Before creating new code, check whether UI HUB already has:
 
-### Shape and size
+a reusable component
 
-- Desktop sphere diameter: approximately `240–260px`; tablet: approximately `210–240px`; small screen: approximately `180–210px`.
-- The sphere floats just above the fingertips/palm. Keep a small visible gap or luminous overlap so the light visually connects the ball and hand without hiding the fingers.
-- Use thousands of individual, round, softly glowing particles distributed evenly over a true 3D spherical surface. The current target uses about `8,500` points.
-- Color the lower/deeper region dusty rose (`#C27586`), the central body soft rose (`#E2B4BD`), and the upper-facing highlights pale blush/near-white (`#FFF0F3`). Vary point brightness and size slightly so the surface has depth. Keep the silhouette spherical and readable.
-- Use additive/glow-like rendering, with bright pinpoint particles and soft falloff. Avoid excessive bloom that merges all points into one solid disk.
+a hook
 
-### Sphere lighting
+a utility
 
-- Put a soft rose core glow behind the sphere.
-- Surround it with a subtle luminous corona ring: transparent in the center, brightest at the outer circumference, and feathered at the edge. The ring should read as light around the sphere, not a sharp outlined circle.
-- Add a pale spotlight from above, fading down onto the top of the sphere.
-- Add a broader, warm rose halo behind the sphere and hand. Keep all glows soft and layered.
+a service
 
-### Motion and interaction
+an API helper
 
-- Rotate the sphere continuously and slowly around its vertical axis. Motion should be smooth and steady, not fast or distracting. The target implementation uses a speed setting around `22` on its component scale.
-- Keep the hand and surrounding page content stationary while the sphere rotates.
-- Allow direct pointer/touch interaction with the sphere: dragging rotates it with the gesture, and rotation settles smoothly when released. Use easing/smoothing rather than snapping.
-- As a pointer approaches the surface, nearby particles subtly push away from it and ease back into their original positions. A click/tap can briefly scatter nearby particles outward, then they smoothly return to the spherical surface.
-- Use a moderate influence radius (about `75px` in the interaction coordinate system) and restrained force. Interaction must preserve the overall sphere silhouette.
-- Keep the pointer cursor as grab/grabbing while interacting. Do not let the sphere interaction block the rest of the page.
-- Respect `prefers-reduced-motion`: disable automatic rotation and background parallax, and avoid nonessential animation. Keep the sphere visible and, where practical, still permit direct user interaction.
+an animation helper
 
-## 7. Left-Side Hero Copy
+a shared style
 
-Place the copy left aligned in a column with a maximum width around `500px`. Vertically center it in the available desktop hero area, with enough distance from the left edge and enough contrast over the background. Keep it above the visual background but do not put it inside a card.
+an existing data model
 
-Use this exact headline and line arrangement:
+an existing state-management pattern
 
-```text
-Your Everyday
-Wellness Partner
-```
+Prefer extending existing systems instead of creating duplicates.
 
-- Use **Cormorant Garamond** or a very close editorial serif, regular weight, with a refined high-contrast appearance.
-- Set the first line in white. On the second line, italicize **Wellness** in a light serif weight, followed by **Partner** in the regular serif style.
-- Use a desktop font size around `54px` (fluidly reduce toward `32px` on narrow screens), line-height around `1.1`, and restrained dark text shadow for legibility.
-- Do not use all caps, bold sans-serif display lettering, or a gradient-filled headline.
+Rule 3 — Minimal Change
 
-Under the headline, show this exact supporting text:
+Change only what is necessary for the assigned task.
 
-> Stay on top of your health with a trusted partner by your side—track habits, monitor progress, and receive personalized guidance for a balanced, healthier life every day.
+Do not:
 
-- Use **Plus Jakarta Sans** or a close clean sans-serif, light weight, muted light gray, approximately `13.5–14.5px`, with line-height around `1.72` and a maximum width around `400px`.
-- Leave about `20px` above this paragraph. Keep the text readable and do not let it collide with the center hand/sphere.
+refactor unrelated code
 
-Below the paragraph, add a subtle partner-brand row:
+rename unrelated files
 
-- Add a faint horizontal divider above the row.
-- Show these five names in this exact order: **Typely**, **Framex**, **Webora**, **Logiqo**, **Designo**.
-- Precede every name with a small rose `✻` symbol. Use approximately `12px` muted-gray text with modest horizontal spacing; allow a neat wrap on narrow screens.
-- Keep this row visually secondary to the headline and paragraph.
+change the design system without reason
 
-The **Join** header action and an optional hero action may open the same Join flow; do not add a visually large extra CTA if it compromises the target composition.
+change APIs without checking consumers
 
-## 8. Recommendation Card
+replace working libraries unnecessarily
 
-Create one compact wellness recommendation HUD card. On desktop place it in the lower-right region, aligned near the bottom of the main content area; on mobile/tablet show it below the hero copy and center it. The card should not cover the sphere or hand.
+remove existing behavior unless the task requires it
 
-- Width: about `210px` on a narrow layout and `230px` on a wider layout.
-- Padding: about `16px`. Corner radius: about `16px`.
-- Fill: translucent dark burgundy/black, near `rgba(20, 8, 12, 0.75)`. Add a fine rose border (`rgba(226,180,189,0.18)` neighborhood), approximately `20px` backdrop blur, a soft black drop shadow, and a subtle inset white top edge.
-- Keep typography compact and crisp; do not enlarge the card or make it the primary focal point.
+Rule 4 — Preserve UI/UX
 
-### Card header
+UI HUB is a design-focused product.
 
-- On the left, show a small circular rose-tinted badge with a sparkle icon, followed by **Recommendation**.
-- Use small, semibold, light-gray text (about `11px`).
-- On the right, show a rose-tinted count in `completed/total` form. Initial state is **1/3**.
-- Add a thin, low-contrast divider below the header.
+When modifying UI, preserve:
 
-### Habit rows
+existing visual language
 
-Show exactly three compact, clickable rows in this order:
+spacing system
 
-1. Footprints icon, rose tint; label **20 min walk**; initially incomplete with an empty circular check control.
-2. Droplet icon, pale rose tint; label **Drink 600ml water**; initially complete with a rose check-circle; use subdued, crossed-out text for the completed item.
-3. Moon icon, rose tint; label **Sleep before 10 PM**; initially incomplete with an empty circular check control.
+typography
 
-Use approximately `12px` label text and small consistent icons (around `14px`). Clicking a row toggles its completion state and updates the header count. Use subtle row hover feedback and visible keyboard focus. Keep row spacing tight and even.
+responsive behavior
 
-### Card footer
+animations
 
-- Add a faint divider.
-- On the left, show a tiny rose live-status dot and **Live Sync**.
-- On the right, show **Today**.
-- Use about `10px` muted text. The status dot may pulse very subtly, but do not animate the entire card.
+accessibility
 
-## 9. Typography, UI Finish, and Accessibility
+component consistency
 
-- Load **Cormorant Garamond** for the display headline and **Plus Jakarta Sans** for navigation, paragraph, labels, and controls when web fonts are available. Use sensible serif/sans fallbacks.
-- Keep white for primary copy; use cool-neutral gray for supporting copy and warm rose only for the sphere, tiny symbols, checks, selected states, and concentrated lighting.
-- Buttons and compact UI use small radii (roughly `6–10px`), except the recommendation card and circular badges. Borders should be low contrast and thin.
-- Add restrained hover, pressed, and focus-visible states. Avoid dramatic button scaling, bouncy easing, or continuous motion on text and cards.
-- Use semantic header, nav, main, headings, lists, and buttons. Give icon-only menu controls accessible labels. Provide meaningful alt text for the hand image. Ensure adequate contrast and keyboard operation.
-- Respect reduced-motion preferences. Keep controls usable at touch sizes on mobile even though desktop visual controls are compact.
+loading and error states
 
-## 10. Responsive Composition
+Use existing UI components and design tokens whenever possible.
 
-### Large desktop (about 1024px and wider)
+Rule 5 — Check Dependencies Before Changing Shared Code
 
-- Keep the header in one row: wordmark left, four-link nav centered, Sign in and Join right.
-- Keep the headline in the left column; keep the hand/sphere centered and anchored to the bottom; keep Recommendation near the lower-right.
-- Use a hero height equal to the viewport and hide horizontal overflow. Ensure the headline does not sit directly behind the sphere.
+If a component, hook, utility, service, API, or schema is shared, identify its consumers before modifying it.
 
-### Tablet and narrow desktop
+Example:
 
-- Preserve the center focal visual while shrinking the sphere and hand proportionally.
-- Keep headline and recommendation card legible. Move the card into a non-overlapping position when the right-side desktop placement no longer fits.
-- Replace the desktop nav with the mobile menu at the chosen breakpoint; do not cram all header controls into a narrow row.
+TemplatePreview
+    ↓
+TemplateCard
+    ↓
+SimilarTemplates
+    ↓
+TemplateDetails
 
-### Mobile (below about 768px)
+A shared change must be checked against its dependent systems.
 
-- Show the wordmark left and Join/menu controls right. The desktop nav and Sign in button are hidden until the menu opens.
-- Use a readable headline, approximately `32px` at the narrow end, and keep supporting copy within the viewport width.
-- Center the hand and sphere and scale them down; do not let them obscure the headline or recommendation card. Allow vertical scrolling if the content needs it.
-- Put the recommendation card below the copy, centered, with no horizontal overflow. The brand row may wrap cleanly.
+Rule 6 — Do Not Guess
 
-## 11. Interaction and Functional Requirements
+When behavior depends on existing code, inspect the relevant implementation.
 
-- Desktop navigation buttons update the active tab state; Home starts selected.
-- Join and Sign in open a simple, accessible authentication modal or equivalent dialog in the corresponding mode. Include a close control, close on Escape, and close on backdrop click if appropriate. Keep the modal styling consistent with the dark/rose glass aesthetic. Do not invent complex product flows.
-- Mobile menu opens/closes from its icon and closes after a menu or account action.
-- Recommendation checklist toggles each item and updates its completion count.
-- Sphere rotates automatically when motion is allowed; supports drag rotation, pointer repulsion, and brief click/tap scatter as detailed above.
-- Background lighting responds to pointer parallax only; foreground elements remain stable.
-- All controls must work, not merely look clickable. Handle resize and touch input gracefully.
+Do not assume:
 
-## 12. Implementation Guidance
+file names
 
-If implementing in a web app, use the existing framework and project conventions. Use a real WebGL/Three.js particle system (or an equivalent proven particle-rendering library) for the sphere; do not fake it with a static image or a CSS gradient. Use the original hand image where available. Build the layout with responsive CSS and preserve the specified component hierarchy and layering.
+API behavior
 
-Keep animation deterministic and smooth. Clean up animation frames, listeners, and WebGL resources on unmount. Avoid unnecessary rendering work. Do not allow the high particle count to freeze mobile devices; cap pixel ratio, resize correctly, and gracefully reduce rendering cost on low-power devices without changing the overall appearance. Provide a static/reduced-motion fallback if WebGL is unavailable.
+database structure
 
-## 13. Acceptance Checklist
+component props
 
-The result is correct only when all of the following are true:
+environment variables
 
-- The page opens on a full-viewport, near-black cinematic wellness hero with rose lighting.
-- The header has Visionary at left, Home / Service / Product / About Us in the desktop center, and Sign in / Join at right; Home is selected.
-- The exact headline and supporting paragraph appear on the left with serif/sans typography as specified.
-- A realistic upward-cupped hand rises from the bottom center, with a luminous pink particle sphere floating directly above its palm.
-- The sphere visibly rotates and responds to pointer/touch interaction; it remains a particle-built 3D sphere, not a solid orb.
-- The right/lower recommendation panel has the exact title, three exact habit labels, initial water completion, initial count 1/3, and Live Sync / Today footer.
-- The background spotlight, rose glow, subtle texture, vignette, and background-only pointer parallax are present but never overpower the content.
-- Mobile uses a working collapsible menu, keeps all content readable, and has no horizontal overflow or overlapping controls.
-- Reduced-motion, keyboard focus, image alt text, and functional button/checklist behavior are supported.
-- No cyan orb, floating crown/VIP card, unrelated hero content, or extra page sections are introduced.
+routes
+
+asset locations
+
+state-management behavior
+
+Use the repository as the source of truth.
+
+3. Task Information
+
+Fill the following section for each new task.
+
+Task ID
+
+[TASK-ID]
+
+Task Title
+
+[SHORT TASK TITLE]
+
+Task Type
+
+[BUG / FEATURE / UI / UX / PERFORMANCE / REFACTOR / BACKEND / DATABASE / ANIMATION / SECURITY / OTHER]
+
+Priority
+
+[P0 / P1 / P2 / P3]
+
+User Requirement
+
+[Describe exactly what needs to be changed.
+Do not reinterpret the requirement unless required by the existing codebase.]
+
+Expected Result
+
+[Describe what should be true after the task is completed.]
+
+Important Constraints
+
+- Do not break existing features.
+- Do not modify unrelated systems.
+- Preserve existing design patterns.
+- Keep the implementation maintainable.
+- [Add task-specific constraints here.]
+
+4. Recommended Investigation Process
+
+Follow this sequence.
+
+Step 1 — Understand the Task
+
+Identify:
+
+user-visible behavior
+
+technical behavior
+
+affected subsystem
+
+likely source files
+
+possible side effects
+
+Do not modify code yet.
+
+Step 2 — Locate the Relevant System
+
+Search for:
+
+page/route
+
+component
+
+hook
+
+utility
+
+API
+
+service
+
+data model
+
+asset
+
+configuration
+
+Create a small impact map.
+
+Example:
+
+User Action
+    ↓
+Page
+    ↓
+Component
+    ↓
+Hook / Utility
+    ↓
+API / Service
+    ↓
+Database / Storage
+
+Step 3 — Read Existing Implementation
+
+Read the minimum amount of code needed to understand:
+
+current behavior
+
+intended behavior
+
+dependencies
+
+error handling
+
+loading behavior
+
+responsive behavior
+
+performance considerations
+
+Step 4 — Decide the Smallest Safe Change
+
+Before editing, determine:
+
+Root Cause:
+[What is actually causing the issue?]
+
+Files To Change:
+[List only relevant files.]
+
+Files To Review:
+[List dependent files that need validation.]
+
+Implementation:
+[Describe the change briefly.]
+
+Step 5 — Implement
+
+Make the change.
+
+Keep existing behavior intact except where the task explicitly requires a change.
+
+Step 6 — Validate
+
+Run the most relevant checks available for the changed area.
+
+Possible checks:
+
+type checking
+
+linting
+
+unit tests
+
+integration tests
+
+build
+
+targeted runtime checks
+
+route/page verification
+
+responsive verification
+
+browser console verification
+
+network/request verification
+
+performance verification
+
+Do not claim a check was completed unless it was actually performed.
+
+Step 7 — Review for Side Effects
+
+Before finishing, check:
+
+Did the change affect shared components?
+
+Did the change affect mobile/tablet layouts?
+
+Did the change affect unrelated routes?
+
+Did the change introduce duplicate logic?
+
+Did the change create unnecessary network requests?
+
+Did the change affect loading states?
+
+Did the change affect accessibility?
+
+Did the change affect animations?
+
+Did the change affect authentication or permissions?
+
+Did the change affect API consumers?
+
+5. Special UI HUB Rules
+
+Template / Preview System
+
+When working on templates or previews:
+
+Understand the difference between actual live preview and media preview.
+
+Do not automatically display large WebM assets as the primary visible preview unless explicitly required.
+
+Preserve existing Similar Templates behavior unless the task says otherwise.
+
+Consider loading time, lazy loading, poster images, caching, and preview responsiveness.
+
+Do not change preview behavior globally without checking all preview consumers.
+
+Animation System
+
+Before changing animations, identify whether the feature uses:
+
+Framer Motion
+
+GSAP
+
+ScrollTrigger
+
+Three.js
+
+React Three Fiber
+
+Canvas/Web APIs
+
+existing UI HUB animation utilities
+
+Prefer the project's existing animation engine for that feature.
+
+Design System
+
+Do not invent a new visual style for an existing feature unless the task explicitly requests a redesign.
+
+Prefer:
+
+existing colors
+
+existing typography
+
+existing spacing
+
+existing buttons
+
+existing cards
+
+existing modals
+
+existing layout utilities
+
+existing interaction patterns
+
+6. Completion Requirements
+
+A task is complete only when:
+
+The requested behavior has been implemented.
+
+Relevant existing behavior still works.
+
+Relevant validation has been performed.
+
+No unrelated changes were introduced.
+
+The final summary below is completed.
+
+If the task cannot be completed, do not hide the problem. Report exactly what blocked completion.
+
+7. REQUIRED FINAL SUMMARY
+
+At the end of every task, return the following format exactly.
+
+==================================================
+UI HUB — TASK COMPLETION SUMMARY
+==================================================
+
+TASK ID:
+[TASK-ID]
+
+TASK TITLE:
+[TASK TITLE]
+
+STATUS:
+[COMPLETED / PARTIALLY COMPLETED / BLOCKED]
+
+1. TASK UNDERSTANDING
+---------------------
+[What you understood the task to be.] 
+
+2. ROOT CAUSE / CURRENT STATE
+-----------------------------
+[What caused the issue or what the previous system was doing.]
+
+3. CHANGES MADE
+---------------
+[List every meaningful change.] 
+
+4. FILES CHANGED
+----------------
+- path/to/file1
+- path/to/file2
+- path/to/file3
+
+5. FILES REVIEWED
+-----------------
+- path/to/file1
+- path/to/file2
+
+6. ARCHITECTURE / DEPENDENCY IMPACT
+------------------------------------
+[Explain what depends on the changed code and whether those areas were checked.]
+
+7. VALIDATION PERFORMED
+-----------------------
+- [Check/test/build/runtime verification]
+- [Result]
+
+8. USER-VISIBLE RESULT
+----------------------
+[Explain what the user will now see or experience.]
+
+9. POSSIBLE SIDE EFFECTS
+------------------------
+[State any known risks or write "None identified".]
+
+10. UNRESOLVED ISSUES
+---------------------
+[List anything still incomplete or write "None".]
+
+11. NEXT RECOMMENDED TASK
+------------------------
+[Give one logical next task based only on what was discovered in this task.]
+
+12. IMPORTANT NOTES FOR NEXT AGENT
+----------------------------------
+[Anything the next task agent should know so it does not repeat investigation.]
+
+==================================================
+END OF SUMMARY
+==================================================
+
+8. Rules for the Final Summary
+
+The summary must be factual and specific.
+
+Do not write:
+
+Everything looks perfect.
+
+Write:
+
+TypeScript check passed for the modified frontend package.
+No full production build was run.
+
+Do not write:
+
+Fixed the website.
+
+Write:
+
+Updated SimilarTemplates.tsx so WebM assets are not rendered as the primary visible preview.
+
+Always mention:
+
+exact files changed
+
+exact files reviewed
+
+validation actually performed
+
+remaining issues
+
+important discoveries
+
+9. Handoff Protocol
+
+This project uses a task → summary → next task workflow.
+
+After completing a task:
+
+Return the REQUIRED FINAL SUMMARY.
+
+Do not start a large unrelated task automatically.
+
+Keep useful discoveries in the summary.
+
+The project owner will use the summary to create the next task.
+
+The next task may refer to information from the previous summary, so do not omit important architectural discoveries.
+
+10. Emergency Safety Rule
+
+When a requested change appears likely to break a shared system, stop before making a broad change.
+
+Instead:
+
+identify the shared dependency
+
+determine the smallest safe implementation
+
+validate affected consumers
+
+make the narrowest change possible
+
+If there is insufficient evidence to safely modify a critical system, report the limitation in the final summary instead of guessing.
+
+11. Agent Success Metric
+
+The goal is not to read the most code.
+
+The goal is:
+
+Correct Task Understanding
+        +
+Relevant Code Discovery
+        +
+Minimal Safe Change
+        +
+Targeted Validation
+        +
+Useful Handoff Summary
+
+A fast task is useful only when it remains correct and safe.
