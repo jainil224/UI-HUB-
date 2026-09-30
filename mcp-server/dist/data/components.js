@@ -142,6 +142,8 @@ const CATEGORY_MAP = {
     "diagonal-carousel": "image-interaction",
     "testimonials-card": "image-interaction",
     "image-collage": "image-interaction",
+    "image-lens": "image-interaction",
+    "image-compare": "image-interaction",
     "point-dna-helix": "interactive-background",
     "twin-galaxy-rings": "interactive-background",
     "tornado": "interactive-background",
@@ -193,6 +195,7 @@ const CATEGORY_MAP = {
     "ember-husk": "interactive-background",
     "particle-loader": "loader",
     "neon-border": "effect",
+    "matrix-rain": "interactive-background",
     "quantum-lattice": "interactive-background"
 };
 // id -> common dependencies
@@ -279,6 +282,8 @@ const DEPENDENCIES_MAP = {
     'diagonal-carousel': ["react", "framer-motion"],
     'testimonials-card': ["react", "framer-motion"],
     'image-collage': ["react", "framer-motion"],
+    'image-lens': ["react", "framer-motion"],
+    'image-compare': ["react", "framer-motion"],
     'point-dna-helix': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'twin-galaxy-rings': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'tornado': ["react", "three", "@react-three/fiber", "@react-three/drei"],
@@ -330,6 +335,7 @@ const DEPENDENCIES_MAP = {
     'ember-husk': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'particle-loader': ["react"],
     'neon-border': ["react", "framer-motion"],
+    'matrix-rain': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'quantum-lattice': ["react", "three", "@react-three/fiber", "@react-three/drei"],
 };
 function humanizeId(id) {
