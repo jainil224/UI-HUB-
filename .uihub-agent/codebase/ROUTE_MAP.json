@@ -11,6 +11,24 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Router declarations. `association` records HOW a route was matched to a component file.",
   "counts": {
     "routes": 63,

@@ -4,6 +4,21 @@
 Ten tasks run through `npm run agent:context`, measured against the committed
 indexes: **485 indexed files**, 20 roles, fingerprint `7e27afc36f0d`.
 
+> **SUPERSEDED FIGURES — do not reuse without re-measuring.** The report below is
+> the Phase 8 run and is accurate **for the 485-file index of that moment**. Two
+> corrections apply to the current index:
+>
+> - **485 → 501.** 16 of the 18 real test files were never indexed at all, so
+>   this run could not include a single test file. See `CONFLICTS.md` A24 and
+>   `PHASE_8_CLOSURE_TEST_INDEX.md`.
+> - **mean 9.7 → 9.8, max 31 → 32.** Re-running the same ten tasks against the
+>   501-file index adds exactly one file total (S5) and two test files (S4, S5).
+>   `TEST_DEPENDENCY` fires 0 / 10 here — see the closure record for why, and for
+>   the ranking defect that keeps `mcp-server/tests/tools.test.ts` out of S5.
+>
+> The original numbers are left in place. They were correct for the index that
+> produced them.
+
 Every bundle below was validated against
 `.uihub-agent/generated/CONTEXT_BUNDLE_SCHEMA.json`. **10/10 valid.**
 

@@ -11,6 +11,24 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Feature  file list, the inverse of FEATURE_MAP, shaped for a single lookup.",
   "counts": {
     "features": 56
@@ -559,7 +577,23 @@
       "backend/scripts/setAdminUser.js",
       "backend/scripts/tempSeed.js",
       "backend/scripts/verifyUser.js",
+      "backend/tests/accessService.test.js",
+      "backend/tests/broadcastAuth.test.js",
+      "backend/tests/collectionsService.test.js",
+      "backend/tests/cors.test.js",
+      "backend/tests/emailTestSecret.test.js",
+      "backend/tests/health.test.js",
+      "cli/tests/args.test.ts",
+      "cli/tests/config.test.ts",
+      "cli/tests/mcp.test.ts",
+      "cli/tests/output.test.ts",
       "frontend/scripts/generate-favicons.mjs",
+      "mcp-server/tests/apiKey.test.ts",
+      "mcp-server/tests/auth.test.ts",
+      "mcp-server/tests/configService.test.ts",
+      "mcp-server/tests/cors.test.ts",
+      "mcp-server/tests/permissions.test.ts",
+      "mcp-server/tests/tools.test.ts",
       "scripts/announcement/build-banner.mjs",
       "scripts/announcement/capture-previews.mjs",
       "scripts/announcement/check-png.mjs",

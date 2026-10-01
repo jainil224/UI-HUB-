@@ -11,11 +11,29 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "For every file: who imports it. The first tool to check before editing anything.",
   "counts": {
-    "tracked": 548,
-    "externalPackages": 63,
-    "orphans": 36,
+    "tracked": 567,
+    "externalPackages": 66,
+    "orphans": 51,
     "deadEnds": 196
   },
   "topFanIn": [
@@ -27,13 +45,13 @@
     },
     {
       "path": "backend/src/services/mongoService.js",
-      "importedBy": 23,
+      "importedBy": 24,
       "role": "SERVICE",
       "feature": "mongo-service"
     },
     {
       "path": "cli/src/args.ts",
-      "importedBy": 22,
+      "importedBy": 23,
       "role": "UNKNOWN",
       "feature": "cli"
     },
@@ -56,10 +74,22 @@
       "feature": "services"
     },
     {
+      "path": "cli/src/output.ts",
+      "importedBy": 16,
+      "role": "UNKNOWN",
+      "feature": "cli"
+    },
+    {
       "path": "frontend/src/data/componentData.tsx",
       "importedBy": 16,
       "role": "DATA",
       "feature": "data"
+    },
+    {
+      "path": "mcp-server/src/services/componentService.ts",
+      "importedBy": 16,
+      "role": "SERVICE",
+      "feature": "mcp"
     },
     {
       "path": "cli/src/commands/index.ts",
@@ -74,7 +104,7 @@
       "feature": "cli"
     },
     {
-      "path": "cli/src/output.ts",
+      "path": "cli/src/errors.ts",
       "importedBy": 15,
       "role": "UNKNOWN",
       "feature": "cli"
@@ -86,16 +116,10 @@
       "feature": "utils"
     },
     {
-      "path": "mcp-server/src/services/componentService.ts",
+      "path": "mcp-server/src/services/permissionService.ts",
       "importedBy": 15,
       "role": "SERVICE",
       "feature": "mcp"
-    },
-    {
-      "path": "cli/src/errors.ts",
-      "importedBy": 14,
-      "role": "UNKNOWN",
-      "feature": "cli"
     },
     {
       "path": "frontend/src/data/templatesData.ts",
@@ -128,9 +152,9 @@
       "feature": "auth-context"
     },
     {
-      "path": "mcp-server/src/services/permissionService.ts",
+      "path": "mcp-server/src/types/index.ts",
       "importedBy": 13,
-      "role": "SERVICE",
+      "role": "TYPE",
       "feature": "mcp"
     },
     {
@@ -146,12 +170,6 @@
       "feature": "lib"
     },
     {
-      "path": "mcp-server/src/types/index.ts",
-      "importedBy": 11,
-      "role": "TYPE",
-      "feature": "mcp"
-    },
-    {
       "path": "backend/src/utils/sendEmail.js",
       "importedBy": 10,
       "role": "UTILITY",
@@ -159,7 +177,7 @@
     },
     {
       "path": "mcp-server/src/config/env.ts",
-      "importedBy": 8,
+      "importedBy": 9,
       "role": "CONFIG",
       "feature": "mcp"
     },
@@ -271,9 +289,10 @@
     },
     "backend/src/config/corsPolicy.js": {
       "importers": [
-        "backend/src/server.js"
+        "backend/src/server.js",
+        "backend/tests/cors.test.js"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "CONFIG",
       "feature": "config"
@@ -386,9 +405,10 @@
         "backend/src/routes/componentRoutes.js",
         "backend/src/routes/favoritesRoutes.js",
         "backend/src/routes/paymentRoutes.js",
-        "backend/src/routes/userRoutes.js"
+        "backend/src/routes/userRoutes.js",
+        "backend/tests/broadcastAuth.test.js"
       ],
-      "importedBy": 5,
+      "importedBy": 6,
       "dynamicImporters": [],
       "role": "MIDDLEWARE",
       "feature": "middleware"
@@ -461,9 +481,10 @@
     },
     "backend/src/routes/userRoutes.js": {
       "importers": [
-        "backend/src/server.js"
+        "backend/src/server.js",
+        "backend/tests/emailTestSecret.test.js"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "ROUTE_CONFIG",
       "feature": "user-routes"
@@ -595,9 +616,10 @@
     },
     "backend/src/services/accessService.js": {
       "importers": [
-        "backend/src/routes/componentRoutes.js"
+        "backend/src/routes/componentRoutes.js",
+        "backend/tests/accessService.test.js"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "SERVICE",
       "feature": "access-service"
@@ -641,9 +663,10 @@
     },
     "backend/src/services/collectionsService.js": {
       "importers": [
-        "backend/src/routes/collectionsRoutes.js"
+        "backend/src/routes/collectionsRoutes.js",
+        "backend/tests/collectionsService.test.js"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "SERVICE",
       "feature": "collections-service"
@@ -702,9 +725,10 @@
     },
     "backend/src/services/healthService.js": {
       "importers": [
-        "backend/src/server.js"
+        "backend/src/server.js",
+        "backend/tests/health.test.js"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "SERVICE",
       "feature": "health-service"
@@ -733,10 +757,13 @@
         "backend/src/services/healthService.js",
         "backend/src/services/pushService.js",
         "backend/src/services/syncService.js",
-        "backend/src/services/userService.js"
+        "backend/src/services/userService.js",
+        "backend/tests/collectionsService.test.js"
       ],
-      "importedBy": 23,
-      "dynamicImporters": [],
+      "importedBy": 24,
+      "dynamicImporters": [
+        "backend/tests/collectionsService.test.js"
+      ],
       "role": "SERVICE",
       "feature": "mongo-service"
     },
@@ -844,6 +871,48 @@
       "role": "UTILITY",
       "feature": "utils"
     },
+    "backend/tests/accessService.test.js": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "backend/tests/broadcastAuth.test.js": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "backend/tests/collectionsService.test.js": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "backend/tests/cors.test.js": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "backend/tests/emailTestSecret.test.js": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "backend/tests/health.test.js": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
     "cli/src/args.ts": {
       "importers": [
         "cli/src/cli.ts",
@@ -860,9 +929,10 @@
         "cli/src/commands/show.ts",
         "cli/src/commands/template.ts",
         "cli/src/commands/use.ts",
-        "cli/src/commands/whoami.ts"
+        "cli/src/commands/whoami.ts",
+        "cli/tests/args.test.ts"
       ],
-      "importedBy": 22,
+      "importedBy": 23,
       "dynamicImporters": [],
       "role": "UNKNOWN",
       "feature": "cli"
@@ -1031,9 +1101,10 @@
         "cli/src/cli.ts",
         "cli/src/commands/config.ts",
         "cli/src/commands/login.ts",
-        "cli/src/commands/whoami.ts"
+        "cli/src/commands/whoami.ts",
+        "cli/tests/config.test.ts"
       ],
-      "importedBy": 4,
+      "importedBy": 5,
       "dynamicImporters": [],
       "role": "CONFIG",
       "feature": "cli"
@@ -1076,9 +1147,10 @@
         "cli/src/commands/show.ts",
         "cli/src/commands/template.ts",
         "cli/src/commands/use.ts",
-        "cli/src/mcp.ts"
+        "cli/src/mcp.ts",
+        "cli/tests/args.test.ts"
       ],
-      "importedBy": 14,
+      "importedBy": 15,
       "dynamicImporters": [],
       "role": "UNKNOWN",
       "feature": "cli"
@@ -1097,9 +1169,10 @@
         "cli/src/cli.ts",
         "cli/src/commands/login.ts",
         "cli/src/commands/util.ts",
-        "cli/src/ctx.ts"
+        "cli/src/ctx.ts",
+        "cli/tests/mcp.test.ts"
       ],
-      "importedBy": 4,
+      "importedBy": 5,
       "dynamicImporters": [],
       "role": "UNKNOWN",
       "feature": "cli"
@@ -1120,12 +1193,41 @@
         "cli/src/commands/template.ts",
         "cli/src/commands/use.ts",
         "cli/src/commands/whoami.ts",
-        "cli/src/help.ts"
+        "cli/src/help.ts",
+        "cli/tests/output.test.ts"
       ],
-      "importedBy": 15,
+      "importedBy": 16,
       "dynamicImporters": [],
       "role": "UNKNOWN",
       "feature": "cli"
+    },
+    "cli/tests/args.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "cli/tests/config.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "cli/tests/mcp.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "cli/tests/output.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
     },
     "frontend/scripts/generate-favicons.mjs": {
       "importers": [],
@@ -5065,9 +5167,10 @@
         "mcp-server/src/routes/admin.ts",
         "mcp-server/src/routes/dashboard.ts",
         "mcp-server/src/routes/mcp.ts",
-        "mcp-server/src/services/analyticsService.ts"
+        "mcp-server/src/services/analyticsService.ts",
+        "mcp-server/tests/configService.test.ts"
       ],
-      "importedBy": 6,
+      "importedBy": 7,
       "dynamicImporters": [
         "mcp-server/src/services/analyticsService.ts"
       ],
@@ -5076,9 +5179,10 @@
     },
     "mcp-server/src/config/corsPolicy.ts": {
       "importers": [
-        "mcp-server/src/index.ts"
+        "mcp-server/src/index.ts",
+        "mcp-server/tests/cors.test.ts"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "CONFIG",
       "feature": "mcp"
@@ -5092,9 +5196,10 @@
         "mcp-server/src/routes/dashboard.ts",
         "mcp-server/src/services/apiKeyService.ts",
         "mcp-server/src/services/firebase.ts",
-        "mcp-server/src/services/mongo.ts"
+        "mcp-server/src/services/mongo.ts",
+        "mcp-server/tests/apiKey.test.ts"
       ],
-      "importedBy": 8,
+      "importedBy": 9,
       "dynamicImporters": [],
       "role": "CONFIG",
       "feature": "mcp"
@@ -5109,8 +5214,10 @@
       "feature": "mcp"
     },
     "mcp-server/src/index.ts": {
-      "importers": [],
-      "importedBy": 0,
+      "importers": [
+        "mcp-server/tests/auth.test.ts"
+      ],
+      "importedBy": 1,
       "dynamicImporters": [],
       "role": "ENTRY",
       "feature": "mcp"
@@ -5220,9 +5327,10 @@
     "mcp-server/src/services/apiKeyService.ts": {
       "importers": [
         "mcp-server/src/middleware/auth.ts",
-        "mcp-server/src/routes/dashboard.ts"
+        "mcp-server/src/routes/dashboard.ts",
+        "mcp-server/tests/apiKey.test.ts"
       ],
-      "importedBy": 2,
+      "importedBy": 4,
       "dynamicImporters": [],
       "role": "SERVICE",
       "feature": "mcp"
@@ -5252,9 +5360,10 @@
         "mcp-server/src/tools/searchAnimations.ts",
         "mcp-server/src/tools/searchByBehavior.ts",
         "mcp-server/src/tools/searchComponents.ts",
-        "mcp-server/src/tools/searchTemplates.ts"
+        "mcp-server/src/tools/searchTemplates.ts",
+        "mcp-server/tests/tools.test.ts"
       ],
-      "importedBy": 15,
+      "importedBy": 16,
       "dynamicImporters": [],
       "role": "SERVICE",
       "feature": "mcp"
@@ -5301,9 +5410,10 @@
         "mcp-server/src/tools/searchAnimations.ts",
         "mcp-server/src/tools/searchByBehavior.ts",
         "mcp-server/src/tools/searchComponents.ts",
-        "mcp-server/src/tools/searchTemplates.ts"
+        "mcp-server/src/tools/searchTemplates.ts",
+        "mcp-server/tests/permissions.test.ts"
       ],
-      "importedBy": 13,
+      "importedBy": 15,
       "dynamicImporters": [],
       "role": "SERVICE",
       "feature": "mcp"
@@ -5414,9 +5524,11 @@
         "mcp-server/src/config/configService.ts",
         "mcp-server/src/routes/admin.ts",
         "mcp-server/src/routes/mcp.ts",
-        "mcp-server/src/stdio.ts"
+        "mcp-server/src/stdio.ts",
+        "mcp-server/tests/configService.test.ts",
+        "mcp-server/tests/tools.test.ts"
       ],
-      "importedBy": 4,
+      "importedBy": 6,
       "dynamicImporters": [],
       "role": "MCP_TOOL",
       "feature": "mcp"
@@ -5487,9 +5599,11 @@
         "mcp-server/src/stdio.ts",
         "mcp-server/src/tools/getAiPrompts.ts",
         "mcp-server/src/tools/helpers.ts",
-        "mcp-server/src/tools/index.ts"
+        "mcp-server/src/tools/index.ts",
+        "mcp-server/tests/permissions.test.ts",
+        "mcp-server/tests/tools.test.ts"
       ],
-      "importedBy": 11,
+      "importedBy": 13,
       "dynamicImporters": [],
       "role": "TYPE",
       "feature": "mcp"
@@ -5500,6 +5614,48 @@
       "dynamicImporters": [],
       "role": "TYPE",
       "feature": "mcp"
+    },
+    "mcp-server/tests/apiKey.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "mcp-server/tests/auth.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "mcp-server/tests/configService.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "mcp-server/tests/cors.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "mcp-server/tests/permissions.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "mcp-server/tests/tools.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
     },
     "scripts/announcement/build-banner.mjs": {
       "importers": [],
@@ -5671,10 +5827,12 @@
     "external:cors": {
       "importers": [
         "backend/src/server.js",
+        "backend/tests/cors.test.js",
         "mcp-server/src/config/corsPolicy.ts",
-        "mcp-server/src/index.ts"
+        "mcp-server/src/index.ts",
+        "mcp-server/tests/cors.test.ts"
       ],
-      "importedBy": 3,
+      "importedBy": 5,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -5733,6 +5891,7 @@
         "backend/src/routes/paymentRoutes.js",
         "backend/src/routes/userRoutes.js",
         "backend/src/server.js",
+        "backend/tests/cors.test.js",
         "mcp-server/src/index.ts",
         "mcp-server/src/middleware/auth.ts",
         "mcp-server/src/middleware/dashboardAuth.ts",
@@ -5742,9 +5901,10 @@
         "mcp-server/src/routes/admin.ts",
         "mcp-server/src/routes/dashboard.ts",
         "mcp-server/src/routes/mcp.ts",
-        "mcp-server/src/types/index.ts"
+        "mcp-server/src/types/index.ts",
+        "mcp-server/tests/cors.test.ts"
       ],
-      "importedBy": 17,
+      "importedBy": 19,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6098,6 +6258,24 @@
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
     },
+    "external:node:assert": {
+      "importers": [
+        "backend/tests/accessService.test.js",
+        "backend/tests/broadcastAuth.test.js",
+        "backend/tests/collectionsService.test.js",
+        "backend/tests/cors.test.js",
+        "backend/tests/emailTestSecret.test.js",
+        "backend/tests/health.test.js",
+        "cli/tests/args.test.ts",
+        "cli/tests/config.test.ts",
+        "cli/tests/mcp.test.ts",
+        "cli/tests/output.test.ts"
+      ],
+      "importedBy": 10,
+      "dynamicImporters": [],
+      "role": "EXTERNAL_PACKAGE",
+      "feature": "shared"
+    },
     "external:node:child_process": {
       "importers": [
         "scripts/announcement/capture-previews.mjs"
@@ -6190,6 +6368,24 @@
         "cli/src/commands/login.ts"
       ],
       "importedBy": 1,
+      "dynamicImporters": [],
+      "role": "EXTERNAL_PACKAGE",
+      "feature": "shared"
+    },
+    "external:node:test": {
+      "importers": [
+        "backend/tests/accessService.test.js",
+        "backend/tests/broadcastAuth.test.js",
+        "backend/tests/collectionsService.test.js",
+        "backend/tests/cors.test.js",
+        "backend/tests/emailTestSecret.test.js",
+        "backend/tests/health.test.js",
+        "cli/tests/args.test.ts",
+        "cli/tests/config.test.ts",
+        "cli/tests/mcp.test.ts",
+        "cli/tests/output.test.ts"
+      ],
+      "importedBy": 10,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6701,6 +6897,16 @@
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
     },
+    "external:supertest": {
+      "importers": [
+        "mcp-server/tests/auth.test.ts",
+        "mcp-server/tests/cors.test.ts"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [],
+      "role": "EXTERNAL_PACKAGE",
+      "feature": "shared"
+    },
     "external:tailwind-merge": {
       "importers": [
         "frontend/src/lib/utils.ts"
@@ -6778,9 +6984,15 @@
     "external:vitest": {
       "importers": [
         "frontend/src/routing/vercelRouting.test.ts",
-        "frontend/src/utils/apiConfig.test.ts"
+        "frontend/src/utils/apiConfig.test.ts",
+        "mcp-server/tests/apiKey.test.ts",
+        "mcp-server/tests/auth.test.ts",
+        "mcp-server/tests/configService.test.ts",
+        "mcp-server/tests/cors.test.ts",
+        "mcp-server/tests/permissions.test.ts",
+        "mcp-server/tests/tools.test.ts"
       ],
-      "importedBy": 2,
+      "importedBy": 8,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"

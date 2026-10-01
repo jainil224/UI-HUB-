@@ -11,21 +11,39 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Every top-level symbol with file, line, kind, and fan-in. Names that appear more than once are flagged ambiguous.",
   "counts": {
-    "symbols": 2943,
-    "distinctNames": 2347,
-    "ambiguousNames": 378,
+    "symbols": 2986,
+    "distinctNames": 2383,
+    "ambiguousNames": 383,
     "byKind": {
       "CLASS": 10,
       "COMPONENT": 521,
       "CONSTANT": 1106,
-      "FUNCTION": 460,
+      "FUNCTION": 469,
       "HOOK": 7,
       "INTERFACE": 107,
       "NAMESPACE": 1,
-      "TYPE": 23,
-      "VARIABLE": 708
+      "TYPE": 24,
+      "VARIABLE": 741
     }
   },
   "symbolsByName": {
@@ -262,6 +280,12 @@
         "frontend/src/services/collections.ts:104"
       ],
       "ambiguous": true
+    },
+    "ADMIN": {
+      "locations": [
+        "backend/tests/broadcastAuth.test.js:26"
+      ],
+      "ambiguous": false
     },
     "ADMIN_BASE": {
       "locations": [
@@ -1194,9 +1218,10 @@
     },
     "baseUrl": {
       "locations": [
+        "backend/tests/cors.test.js:30",
         "scripts/announcement/capture-previews.mjs:48"
       ],
-      "ambiguous": false
+      "ambiguous": true
     },
     "BEAD_FRAG": {
       "locations": [
@@ -1894,6 +1919,12 @@
       ],
       "ambiguous": false
     },
+    "captureLog": {
+      "locations": [
+        "cli/tests/output.test.ts:5"
+      ],
+      "ambiguous": false
+    },
     "CARD_HEIGHT": {
       "locations": [
         "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx:8"
@@ -2503,6 +2534,12 @@
     "collectionKey": {
       "locations": [
         "backend/src/services/collectionsService.js:13"
+      ],
+      "ambiguous": false
+    },
+    "collectionReturning": {
+      "locations": [
+        "backend/tests/broadcastAuth.test.js:22"
       ],
       "ambiguous": false
     },
@@ -3407,9 +3444,16 @@
         "backend/scripts/resetFirebase.js:3",
         "backend/scripts/tempSeed.js:4",
         "backend/src/scripts/initFirestore.js:3",
-        "backend/src/services/mongoService.js:19"
+        "backend/src/services/mongoService.js:19",
+        "backend/tests/collectionsService.test.js:17"
       ],
       "ambiguous": true
+    },
+    "dbDown": {
+      "locations": [
+        "backend/tests/health.test.js:15"
+      ],
+      "ambiguous": false
     },
     "dbName": {
       "locations": [
@@ -3423,6 +3467,12 @@
         "backend/src/routes/favoritesRoutes.js:15"
       ],
       "ambiguous": true
+    },
+    "dbUp": {
+      "locations": [
+        "backend/tests/health.test.js:14"
+      ],
+      "ambiguous": false
     },
     "DEBRIS_VERT": {
       "locations": [
@@ -3818,6 +3868,13 @@
         "frontend/src/utils/mcpConfig.ts:1"
       ],
       "ambiguous": false
+    },
+    "DEV_ORIGIN": {
+      "locations": [
+        "backend/tests/cors.test.js:28",
+        "mcp-server/tests/cors.test.ts:29"
+      ],
+      "ambiguous": true
     },
     "devServer": {
       "locations": [
@@ -4676,6 +4733,12 @@
       ],
       "ambiguous": false
     },
+    "FetchImpl": {
+      "locations": [
+        "cli/tests/mcp.test.ts:5"
+      ],
+      "ambiguous": false
+    },
     "fetchOnce": {
       "locations": [
         "frontend/src/services/mcp.ts:43"
@@ -5140,6 +5203,18 @@
         "backend/src/services/favoritesService.js:5"
       ],
       "ambiguous": true
+    },
+    "freeMeta": {
+      "locations": [
+        "backend/tests/accessService.test.js:13"
+      ],
+      "ambiguous": false
+    },
+    "freeUser": {
+      "locations": [
+        "mcp-server/tests/tools.test.ts:13"
+      ],
+      "ambiguous": false
     },
     "FRICTION": {
       "locations": [
@@ -6982,6 +7057,12 @@
       ],
       "ambiguous": false
     },
+    "jsonResponse": {
+      "locations": [
+        "cli/tests/mcp.test.ts:7"
+      ],
+      "ambiguous": false
+    },
     "jsonRpcError": {
       "locations": [
         "mcp-server/src/routes/mcp.ts:42"
@@ -7721,6 +7802,12 @@
       ],
       "ambiguous": true
     },
+    "makeApp": {
+      "locations": [
+        "mcp-server/tests/cors.test.ts:31"
+      ],
+      "ambiguous": false
+    },
     "makeEase": {
       "locations": [
         "frontend/src/components/animations/VaporizeTextCycle.tsx:97"
@@ -7740,6 +7827,13 @@
         "frontend/src/components/ui/EmberHusk.tsx:996"
       ],
       "ambiguous": false
+    },
+    "makeRes": {
+      "locations": [
+        "backend/tests/broadcastAuth.test.js:6",
+        "backend/tests/emailTestSecret.test.js:5"
+      ],
+      "ambiguous": true
     },
     "makeRng": {
       "locations": [
@@ -7771,6 +7865,12 @@
     "makeStrike": {
       "locations": [
         "frontend/src/components/ui/RainStorm.tsx:134"
+      ],
+      "ambiguous": false
+    },
+    "makeUser": {
+      "locations": [
+        "mcp-server/tests/permissions.test.ts:6"
       ],
       "ambiguous": false
     },
@@ -8418,6 +8518,12 @@
       ],
       "ambiguous": true
     },
+    "mockCollection": {
+      "locations": [
+        "mcp-server/tests/apiKey.test.ts:7"
+      ],
+      "ambiguous": false
+    },
     "MODELS": {
       "locations": [
         "frontend/src/components/ui/CloudScroll/components/common/Preloader.tsx:9"
@@ -8433,6 +8539,12 @@
     "MONGO_PROBE_TIMEOUT_MS": {
       "locations": [
         "backend/src/services/healthService.js:7"
+      ],
+      "ambiguous": false
+    },
+    "mongoModule": {
+      "locations": [
+        "backend/tests/collectionsService.test.js:60"
       ],
       "ambiguous": false
     },
@@ -8687,6 +8799,18 @@
       ],
       "ambiguous": false
     },
+    "NON_ADMIN": {
+      "locations": [
+        "backend/tests/broadcastAuth.test.js:27"
+      ],
+      "ambiguous": false
+    },
+    "noRedis": {
+      "locations": [
+        "backend/tests/health.test.js:12"
+      ],
+      "ambiguous": false
+    },
     "norm": {
       "locations": [
         "frontend/src/utils/searchIndex.ts:40"
@@ -8879,6 +9003,12 @@
     "OrbitButtonProps": {
       "locations": [
         "frontend/src/components/ui/OrbitButton.tsx:7"
+      ],
+      "ambiguous": false
+    },
+    "origFetch": {
+      "locations": [
+        "cli/tests/mcp.test.ts:23"
       ],
       "ambiguous": false
     },
@@ -9081,6 +9211,12 @@
         "frontend/src/components/ui/ParticleLoader.tsx:57"
       ],
       "ambiguous": true
+    },
+    "parse": {
+      "locations": [
+        "mcp-server/tests/tools.test.ts:22"
+      ],
+      "ambiguous": false
     },
     "parseArgs": {
       "locations": [
@@ -9531,6 +9667,12 @@
       ],
       "ambiguous": false
     },
+    "plan": {
+      "locations": [
+        "backend/tests/accessService.test.js:21"
+      ],
+      "ambiguous": false
+    },
     "PlanBadge": {
       "locations": [
         "frontend/src/components/ui/PlanBadge.tsx:63"
@@ -9771,6 +9913,12 @@
       ],
       "ambiguous": false
     },
+    "premiumMeta": {
+      "locations": [
+        "backend/tests/accessService.test.js:12"
+      ],
+      "ambiguous": false
+    },
     "prepColors": {
       "locations": [
         "frontend/src/components/ui/Lightfall.tsx:35"
@@ -9954,6 +10102,12 @@
       ],
       "ambiguous": false
     },
+    "probe": {
+      "locations": [
+        "backend/tests/cors.test.js:55"
+      ],
+      "ambiguous": false
+    },
     "probeMongo": {
       "locations": [
         "backend/src/services/healthService.js:30"
@@ -9971,6 +10125,13 @@
         "frontend/src/utils/mcpConfig.ts:2"
       ],
       "ambiguous": false
+    },
+    "PROD_ORIGIN": {
+      "locations": [
+        "backend/tests/cors.test.js:27",
+        "mcp-server/tests/cors.test.ts:28"
+      ],
+      "ambiguous": true
     },
     "prodOrigin": {
       "locations": [
@@ -10114,6 +10275,12 @@
     "PropsTable": {
       "locations": [
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx:32"
+      ],
+      "ambiguous": false
+    },
+    "proUser": {
+      "locations": [
+        "mcp-server/tests/tools.test.ts:14"
       ],
       "ambiguous": false
     },
@@ -10384,6 +10551,12 @@
       ],
       "ambiguous": false
     },
+    "REAL_SECRET": {
+      "locations": [
+        "backend/tests/emailTestSecret.test.js:21"
+      ],
+      "ambiguous": false
+    },
     "RecommendationCard": {
       "locations": [
         "frontend/src/components/templates/VisionaryOrbHero.tsx:728"
@@ -10605,6 +10778,12 @@
       ],
       "ambiguous": false
     },
+    "reset": {
+      "locations": [
+        "backend/tests/collectionsService.test.js:72"
+      ],
+      "ambiguous": false
+    },
     "resetClient": {
       "locations": [
         "backend/src/services/mongoService.js:38"
@@ -10701,6 +10880,12 @@
     "resourceLinks": {
       "locations": [
         "frontend/src/components/ui/Footer.tsx:14"
+      ],
+      "ambiguous": false
+    },
+    "restoreFetch": {
+      "locations": [
+        "cli/tests/mcp.test.ts:19"
       ],
       "ambiguous": false
     },
@@ -10937,6 +11122,7 @@
     "run": {
       "locations": [
         "backend/src/scripts/migrateFirestoreToMongo.js:119",
+        "backend/tests/broadcastAuth.test.js:29",
         "scripts/announcement/capture-previews.mjs:84"
       ],
       "ambiguous": true
@@ -10989,6 +11175,12 @@
       ],
       "ambiguous": false
     },
+    "runWithDb": {
+      "locations": [
+        "backend/tests/collectionsService.test.js:61"
+      ],
+      "ambiguous": false
+    },
     "safeFetch": {
       "locations": [
         "cli/src/commands/util.ts:6"
@@ -11016,6 +11208,12 @@
     "sanitizeName": {
       "locations": [
         "cli/src/commands/util.ts:20"
+      ],
+      "ambiguous": false
+    },
+    "saved": {
+      "locations": [
+        "backend/tests/emailTestSecret.test.js:22"
       ],
       "ambiguous": false
     },
@@ -11534,6 +11732,12 @@
     "serialize": {
       "locations": [
         "backend/src/scripts/migrateFirestoreToMongo.js:40"
+      ],
+      "ambiguous": false
+    },
+    "server": {
+      "locations": [
+        "backend/tests/cors.test.js:31"
       ],
       "ambiguous": false
     },
@@ -12158,9 +12362,10 @@
     },
     "SPECIAL_EMAILS": {
       "locations": [
-        "backend/src/services/accessService.js:8"
+        "backend/src/services/accessService.js:8",
+        "backend/tests/accessService.test.js:6"
       ],
-      "ambiguous": false
+      "ambiguous": true
     },
     "SPEED_REF": {
       "locations": [
@@ -12446,6 +12651,12 @@
       ],
       "ambiguous": false
     },
+    "state": {
+      "locations": [
+        "backend/tests/collectionsService.test.js:13"
+      ],
+      "ambiguous": false
+    },
     "Stats": {
       "locations": [
         "frontend/src/pages/HomePage/sections/Stats.tsx:23"
@@ -12620,6 +12831,12 @@
     "StrokePoint": {
       "locations": [
         "frontend/src/components/ui/SignaturePad.tsx:4"
+      ],
+      "ambiguous": false
+    },
+    "stubFetch": {
+      "locations": [
+        "cli/tests/mcp.test.ts:15"
       ],
       "ambiguous": false
     },
@@ -13140,6 +13357,12 @@
       ],
       "ambiguous": false
     },
+    "textResult": {
+      "locations": [
+        "cli/tests/mcp.test.ts:25"
+      ],
+      "ambiguous": false
+    },
     "TextTag": {
       "locations": [
         "frontend/src/components/animations/RollingLetters.tsx:19"
@@ -13418,6 +13641,12 @@
     "toObjectId": {
       "locations": [
         "mcp-server/src/services/apiKeyService.ts:12"
+      ],
+      "ambiguous": false
+    },
+    "tool": {
+      "locations": [
+        "mcp-server/tests/tools.test.ts:16"
       ],
       "ambiguous": false
     },
@@ -13928,6 +14157,12 @@
     "usePortalStore": {
       "locations": [
         "frontend/src/components/ui/CloudScroll/stores/portalStore.ts:8"
+      ],
+      "ambiguous": false
+    },
+    "user": {
+      "locations": [
+        "backend/tests/accessService.test.js:15"
       ],
       "ambiguous": false
     },
@@ -14595,6 +14830,12 @@
     "withColor": {
       "locations": [
         "frontend/src/components/ui/MatrixRain.tsx:64"
+      ],
+      "ambiguous": false
+    },
+    "withRedis": {
+      "locations": [
+        "backend/tests/health.test.js:13"
       ],
       "ambiguous": false
     },
@@ -15356,7 +15597,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "accessService",
@@ -15367,7 +15608,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "ACTION_LABELS",
@@ -15455,7 +15696,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "addToCollection",
@@ -15467,6 +15708,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 2
+    },
+    {
+      "name": "ADMIN",
+      "kind": "VARIABLE",
+      "path": "backend/tests/broadcastAuth.test.js",
+      "line": 26,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "ADMIN_BASE",
@@ -15851,7 +16103,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "AIR_CELL",
@@ -16093,7 +16345,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "AnimationSummary",
@@ -16104,7 +16356,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "ANTIGRAVITY_PROMPTS",
@@ -16137,7 +16389,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 4
     },
     {
       "name": "ApiEnv",
@@ -16159,7 +16411,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "apiKeyService",
@@ -16170,7 +16422,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 4
     },
     {
       "name": "ApiKeyService",
@@ -16181,7 +16433,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 4
     },
     {
       "name": "ApiKeysPage",
@@ -16214,7 +16466,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "ApiKeyValidationResult",
@@ -16225,7 +16477,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "ApiLocation",
@@ -16269,7 +16521,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 0
+      "inbound": 1
     },
     {
       "name": "App",
@@ -16291,7 +16543,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 8
+      "inbound": 9
     },
     {
       "name": "applyAliases",
@@ -16907,7 +17159,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "authenticateMcp",
@@ -16929,7 +17181,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "authFailureMessage",
@@ -17440,6 +17692,17 @@
     {
       "name": "baseUrl",
       "kind": "VARIABLE",
+      "path": "backend/tests/cors.test.js",
+      "line": 30,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "baseUrl",
+      "kind": "VARIABLE",
       "path": "scripts/announcement/capture-previews.mjs",
       "line": 48,
       "feature": "shared",
@@ -17831,7 +18094,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "Bolt",
@@ -17853,7 +18116,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 22
+      "inbound": 23
     },
     {
       "name": "boolFlag",
@@ -17864,7 +18127,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 22
+      "inbound": 23
     },
     {
       "name": "BorderBeam",
@@ -18227,7 +18490,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "buildCorsOptions",
@@ -18238,7 +18501,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "BuildCorsOptions",
@@ -18249,7 +18512,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "buildCrossGeometry",
@@ -18348,7 +18611,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "buildHusk",
@@ -18733,7 +18996,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "cached",
@@ -18843,7 +19106,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "CANVAS_FPS",
@@ -18883,6 +19146,17 @@
       "kind": "VARIABLE",
       "path": "scripts/announcement/capture-previews.mjs",
       "line": 44,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "captureLog",
+      "kind": "FUNCTION",
+      "path": "cli/tests/output.test.ts",
+      "line": 5,
       "feature": "shared",
       "exported": false,
       "isDefault": false,
@@ -19800,7 +20074,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 8
+      "inbound": 9
     },
     {
       "name": "cleanup",
@@ -19877,7 +20151,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "client",
@@ -19888,7 +20162,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "client",
@@ -19910,7 +20184,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 14
+      "inbound": 15
     },
     {
       "name": "CLIP_EPS",
@@ -20130,7 +20404,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "COLD_START_OPTS",
@@ -20229,7 +20503,18 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
+    },
+    {
+      "name": "collectionReturning",
+      "kind": "VARIABLE",
+      "path": "backend/tests/broadcastAuth.test.js",
+      "line": 22,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "COLLECTIONS",
@@ -20251,7 +20536,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "CollectionsError",
@@ -20306,7 +20591,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "COLOR_SPEED",
@@ -20790,7 +21075,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "componentFileName",
@@ -20878,7 +21163,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "ComponentPreviewTile",
@@ -20911,7 +21196,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "COMPONENTS_COLLECTION",
@@ -20922,7 +21207,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "COMPONENTS_COLLECTION",
@@ -20966,7 +21251,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "ComponentService",
@@ -20977,7 +21262,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "ComponentsPage",
@@ -21021,7 +21306,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "componentSyncService",
@@ -21054,7 +21339,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "COMPOSITE_FRAG",
@@ -21087,7 +21372,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 8
+      "inbound": 9
     },
     {
       "name": "Config",
@@ -21175,7 +21460,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "CONFIG_DB_TIMEOUT_MS",
@@ -21186,7 +21471,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "CONFIG_DIR",
@@ -21197,7 +21482,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "CONFIG_DOC",
@@ -21208,7 +21493,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "configCmd",
@@ -21241,7 +21526,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "ConfigService",
@@ -21252,7 +21537,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "connecting",
@@ -21263,7 +21548,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "connecting",
@@ -21582,7 +21867,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "createApiKey",
@@ -21604,7 +21889,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "createCollection",
@@ -21648,7 +21933,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "createOriginPolicy",
@@ -21659,7 +21944,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "createParticles",
@@ -21692,7 +21977,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 5
+      "inbound": 6
     },
     {
       "name": "createTool",
@@ -22154,7 +22439,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "CyberpunkSpinner",
@@ -22286,7 +22571,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "database",
@@ -22374,7 +22659,29 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
+    },
+    {
+      "name": "db",
+      "kind": "VARIABLE",
+      "path": "backend/tests/collectionsService.test.js",
+      "line": 17,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "dbDown",
+      "kind": "VARIABLE",
+      "path": "backend/tests/health.test.js",
+      "line": 15,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "dbName",
@@ -22385,7 +22692,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "dbUnavailable",
@@ -22410,6 +22717,17 @@
       "inbound": 1
     },
     {
+      "name": "dbUp",
+      "kind": "VARIABLE",
+      "path": "backend/tests/health.test.js",
+      "line": 14,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "DEBRIS_VERT",
       "kind": "CONSTANT",
       "path": "frontend/src/components/ui/EmberHusk.tsx",
@@ -22429,7 +22747,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "decodeDevToken",
@@ -22440,7 +22758,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 5
+      "inbound": 6
     },
     {
       "name": "decodePayload",
@@ -22462,7 +22780,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "DEFAULT_ALLOWED_ORIGINS",
@@ -22473,7 +22791,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "DEFAULT_BACKGROUND",
@@ -22627,7 +22945,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "DEFAULT_ENTRANCE",
@@ -23133,7 +23451,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "delay",
@@ -23188,7 +23506,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "deleteCollection",
@@ -23276,7 +23594,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "DEPENDENCIES_MAP",
@@ -23364,7 +23682,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "DesktopFrame",
@@ -23430,7 +23748,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "detectPlatform",
@@ -23453,6 +23771,28 @@
       "isDefault": false,
       "async": false,
       "inbound": 5
+    },
+    {
+      "name": "DEV_ORIGIN",
+      "kind": "VARIABLE",
+      "path": "backend/tests/cors.test.js",
+      "line": 28,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "DEV_ORIGIN",
+      "kind": "VARIABLE",
+      "path": "mcp-server/tests/cors.test.ts",
+      "line": 29,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "devServer",
@@ -23573,7 +23913,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "dir",
@@ -24288,7 +24628,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "EMAIL_LOGS_COLLECTION",
@@ -24585,7 +24925,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "ensureVapidConfigured",
@@ -24717,7 +25057,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "existing",
@@ -24739,7 +25079,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 14
+      "inbound": 15
     },
     {
       "name": "Experience",
@@ -25080,7 +25420,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "FAVORITES_COLLECTION",
@@ -25180,6 +25520,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 2
+    },
+    {
+      "name": "FetchImpl",
+      "kind": "TYPE",
+      "path": "cli/tests/mcp.test.ts",
+      "line": 5,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "fetchOnce",
@@ -26213,7 +26564,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "FREE_VAULT_LIMIT",
@@ -26225,6 +26576,28 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "freeMeta",
+      "kind": "VARIABLE",
+      "path": "backend/tests/accessService.test.js",
+      "line": 13,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "freeUser",
+      "kind": "VARIABLE",
+      "path": "mcp-server/tests/tools.test.ts",
+      "line": 13,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "FRICTION",
@@ -26829,7 +27202,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "getClient",
@@ -26851,7 +27224,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "getCollection",
@@ -26862,7 +27235,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "getCollection",
@@ -26983,7 +27356,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "getDb",
@@ -27346,7 +27719,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "getUserFavorites",
@@ -27962,7 +28335,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "GRID_COLOR",
@@ -28435,7 +28808,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "healthCheck",
@@ -28479,7 +28852,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "HEART_IMAGE_URL",
@@ -29051,7 +29424,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "Hourglass",
@@ -29161,7 +29534,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "HULL_PLANES",
@@ -29854,7 +30227,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 5
+      "inbound": 6
     },
     {
       "name": "isAbortError",
@@ -29898,7 +30271,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "isImageFile",
@@ -29953,7 +30326,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 0
+      "inbound": 1
     },
     {
       "name": "isMongoConnected",
@@ -29964,7 +30337,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "isNewComponent",
@@ -30074,7 +30447,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "isOriginAllowed",
@@ -30085,7 +30458,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "isPremiumAITool",
@@ -30198,6 +30571,17 @@
       "inbound": 1
     },
     {
+      "name": "jsonResponse",
+      "kind": "FUNCTION",
+      "path": "cli/tests/mcp.test.ts",
+      "line": 7,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "jsonRpcError",
       "kind": "FUNCTION",
       "path": "mcp-server/src/routes/mcp.ts",
@@ -30261,7 +30645,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "keyPrefixMask",
@@ -30921,7 +31305,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 4
     },
     {
       "name": "list_categories",
@@ -30976,7 +31360,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 4
     },
     {
       "name": "listCollections",
@@ -30987,7 +31371,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "listCollections",
@@ -31020,7 +31404,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "listUserFavorites",
@@ -31119,7 +31503,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "loadMetadataMap",
@@ -31130,7 +31514,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "loadPromptSets",
@@ -31141,7 +31525,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "loadRazorpayScript",
@@ -31163,7 +31547,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "loadTemplates",
@@ -31174,7 +31558,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "loadVibePrompts",
@@ -31185,7 +31569,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "LOCAL_FALLBACK_URL",
@@ -31782,6 +32166,17 @@
       "inbound": 0
     },
     {
+      "name": "makeApp",
+      "kind": "FUNCTION",
+      "path": "mcp-server/tests/cors.test.ts",
+      "line": 31,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "makeEase",
       "kind": "FUNCTION",
       "path": "frontend/src/components/animations/VaporizeTextCycle.tsx",
@@ -31835,6 +32230,28 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "makeRes",
+      "kind": "VARIABLE",
+      "path": "backend/tests/broadcastAuth.test.js",
+      "line": 6,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "makeRes",
+      "kind": "VARIABLE",
+      "path": "backend/tests/emailTestSecret.test.js",
+      "line": 5,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "makeRng",
@@ -31923,6 +32340,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "makeUser",
+      "kind": "FUNCTION",
+      "path": "mcp-server/tests/permissions.test.ts",
+      "line": 6,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "mapCursorStrengthUiToMultiplier",
@@ -32846,7 +33274,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "McpClient",
@@ -32857,7 +33285,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "mcpError",
@@ -32879,7 +33307,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "McpEvent",
@@ -32989,7 +33417,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "mcpResult",
@@ -33044,7 +33472,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "McpToolResult",
@@ -33055,7 +33483,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "McpUsage",
@@ -33077,7 +33505,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "measureAdvance",
@@ -33231,7 +33659,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "MetadataMap",
@@ -33242,7 +33670,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "metricCtx",
@@ -33399,6 +33827,17 @@
       "inbound": 1
     },
     {
+      "name": "mockCollection",
+      "kind": "VARIABLE",
+      "path": "mcp-server/tests/apiKey.test.ts",
+      "line": 7,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "MODELS",
       "kind": "CONSTANT",
       "path": "frontend/src/components/ui/CloudScroll/components/common/Preloader.tsx",
@@ -33429,7 +33868,18 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
+    },
+    {
+      "name": "mongoModule",
+      "kind": "VARIABLE",
+      "path": "backend/tests/collectionsService.test.js",
+      "line": 60,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "mongoService",
@@ -33440,7 +33890,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "mongoService",
@@ -34048,6 +34498,28 @@
       "inbound": 4
     },
     {
+      "name": "NON_ADMIN",
+      "kind": "VARIABLE",
+      "path": "backend/tests/broadcastAuth.test.js",
+      "line": 27,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "noRedis",
+      "kind": "VARIABLE",
+      "path": "backend/tests/health.test.js",
+      "line": 12,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "norm",
       "kind": "FUNCTION",
       "path": "frontend/src/utils/searchIndex.ts",
@@ -34155,7 +34627,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 22
+      "inbound": 23
     },
     {
       "name": "objectToSchemaProperties",
@@ -34342,7 +34814,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "OptionWheel",
@@ -34488,6 +34960,17 @@
       "inbound": 3
     },
     {
+      "name": "origFetch",
+      "kind": "VARIABLE",
+      "path": "cli/tests/mcp.test.ts",
+      "line": 23,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "originalStdoutWrite",
       "kind": "VARIABLE",
       "path": "mcp-server/src/stdio.ts",
@@ -34551,7 +35034,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "OtpCodeInput",
@@ -34606,7 +35089,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "OUT_PATH",
@@ -34928,6 +35411,17 @@
       "inbound": 1
     },
     {
+      "name": "parse",
+      "kind": "FUNCTION",
+      "path": "mcp-server/tests/tools.test.ts",
+      "line": 22,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "parseArgs",
       "kind": "FUNCTION",
       "path": "cli/src/args.ts",
@@ -34936,7 +35430,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 22
+      "inbound": 23
     },
     {
       "name": "parseBody",
@@ -34947,7 +35441,7 @@
       "exported": false,
       "isDefault": false,
       "async": true,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "parseCatalog",
@@ -35112,7 +35606,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 22
+      "inbound": 23
     },
     {
       "name": "parseDownloads",
@@ -35189,7 +35683,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 8
+      "inbound": 9
     },
     {
       "name": "parseOriginList",
@@ -35200,7 +35694,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "parseOriginList",
@@ -35211,7 +35705,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "parseRange",
@@ -35651,7 +36145,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 13
+      "inbound": 15
     },
     {
       "name": "PermissionService",
@@ -35662,7 +36156,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 13
+      "inbound": 15
     },
     {
       "name": "PERSPECTIVE",
@@ -36017,6 +36511,17 @@
       "inbound": 4
     },
     {
+      "name": "plan",
+      "kind": "VARIABLE",
+      "path": "backend/tests/accessService.test.js",
+      "line": 21,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "PlanBadge",
       "kind": "COMPONENT",
       "path": "frontend/src/components/ui/PlanBadge.tsx",
@@ -36102,7 +36607,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "PlaygroundPage",
@@ -36333,7 +36838,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 0
+      "inbound": 1
     },
     {
       "name": "PortalStore",
@@ -36506,6 +37011,17 @@
       "path": "backend/src/scripts/checkPremiumCoverage.js",
       "line": 53,
       "feature": "scripts",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "premiumMeta",
+      "kind": "VARIABLE",
+      "path": "backend/tests/accessService.test.js",
+      "line": 12,
+      "feature": "shared",
       "exported": false,
       "isDefault": false,
       "async": false,
@@ -36817,7 +37333,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "printDepsNote",
@@ -36872,7 +37388,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "printSummaries",
@@ -36883,7 +37399,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "printTable",
@@ -36894,7 +37410,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "PrivacyPolicyPage",
@@ -36930,6 +37446,17 @@
       "inbound": 1
     },
     {
+      "name": "probe",
+      "kind": "FUNCTION",
+      "path": "backend/tests/cors.test.js",
+      "line": 55,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": true,
+      "inbound": 0
+    },
+    {
       "name": "probeMongo",
       "kind": "VARIABLE",
       "path": "backend/src/services/healthService.js",
@@ -36938,7 +37465,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "ProBlurGate",
@@ -36961,6 +37488,28 @@
       "isDefault": false,
       "async": false,
       "inbound": 5
+    },
+    {
+      "name": "PROD_ORIGIN",
+      "kind": "VARIABLE",
+      "path": "backend/tests/cors.test.js",
+      "line": 27,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "PROD_ORIGIN",
+      "kind": "VARIABLE",
+      "path": "mcp-server/tests/cors.test.ts",
+      "line": 28,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "prodOrigin",
@@ -37015,7 +37564,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "projectId",
@@ -37180,7 +37729,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "PromptSets",
@@ -37191,7 +37740,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "PropDefinition",
@@ -37346,6 +37895,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "proUser",
+      "kind": "VARIABLE",
+      "path": "mcp-server/tests/tools.test.ts",
+      "line": 14,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "publicDir",
@@ -37862,7 +38422,7 @@
       "exported": false,
       "isDefault": false,
       "async": true,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "readJson",
@@ -37873,7 +38433,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "readPage",
@@ -37918,6 +38478,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 2
+    },
+    {
+      "name": "REAL_SECRET",
+      "kind": "VARIABLE",
+      "path": "backend/tests/emailTestSecret.test.js",
+      "line": 21,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "RecommendationCard",
@@ -37994,7 +38565,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "redisStatus",
@@ -38126,7 +38697,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "removeFromCollection",
@@ -38181,7 +38752,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "renderParticles",
@@ -38390,7 +38961,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 5
+      "inbound": 6
     },
     {
       "name": "requireAdmin",
@@ -38426,6 +38997,17 @@
       "inbound": 0
     },
     {
+      "name": "reset",
+      "kind": "VARIABLE",
+      "path": "backend/tests/collectionsService.test.js",
+      "line": 72,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "resetClient",
       "kind": "VARIABLE",
       "path": "backend/src/services/mongoService.js",
@@ -38434,7 +39016,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "resetConsent",
@@ -38489,7 +39071,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "resolveAllowedOrigins",
@@ -38500,7 +39082,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "resolveApiBaseUrl",
@@ -38522,7 +39104,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "resolveConfig",
@@ -38533,7 +39115,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "resolveDuration",
@@ -38633,6 +39215,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "restoreFetch",
+      "kind": "FUNCTION",
+      "path": "cli/tests/mcp.test.ts",
+      "line": 19,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "ResultRow",
@@ -39149,7 +39742,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "router",
@@ -39190,6 +39783,17 @@
       "path": "backend/src/scripts/migrateFirestoreToMongo.js",
       "line": 119,
       "feature": "scripts",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "run",
+      "kind": "VARIABLE",
+      "path": "backend/tests/broadcastAuth.test.js",
+      "line": 29,
+      "feature": "shared",
       "exported": false,
       "isDefault": false,
       "async": false,
@@ -39295,6 +39899,17 @@
       "inbound": 0
     },
     {
+      "name": "runWithDb",
+      "kind": "VARIABLE",
+      "path": "backend/tests/collectionsService.test.js",
+      "line": 61,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "safeFetch",
       "kind": "FUNCTION",
       "path": "cli/src/commands/util.ts",
@@ -39350,6 +39965,17 @@
       "inbound": 4
     },
     {
+      "name": "saved",
+      "kind": "VARIABLE",
+      "path": "backend/tests/emailTestSecret.test.js",
+      "line": 22,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "savePreferences",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
@@ -39391,7 +40017,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "SCALE_DAMPING",
@@ -40477,6 +41103,17 @@
       "path": "backend/src/scripts/migrateFirestoreToMongo.js",
       "line": 40,
       "feature": "scripts",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "server",
+      "kind": "VARIABLE",
+      "path": "backend/tests/cors.test.js",
+      "line": 31,
+      "feature": "shared",
       "exported": false,
       "isDefault": false,
       "async": false,
@@ -41635,7 +42272,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "SourceCodeMap",
@@ -41646,7 +42283,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "sourceLimiter",
@@ -41800,7 +42437,18 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
+    },
+    {
+      "name": "SPECIAL_EMAILS",
+      "kind": "VARIABLE",
+      "path": "backend/tests/accessService.test.js",
+      "line": 6,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "SPEED_REF",
@@ -42339,7 +42987,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 0
+      "inbound": 1
     },
     {
       "name": "startedServer",
@@ -42395,6 +43043,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 18
+    },
+    {
+      "name": "state",
+      "kind": "VARIABLE",
+      "path": "backend/tests/collectionsService.test.js",
+      "line": 13,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "Stats",
@@ -42713,7 +43372,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 22
+      "inbound": 23
     },
     {
       "name": "StringKeyDoc",
@@ -42735,7 +43394,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "StrokePoint",
@@ -42747,6 +43406,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "stubFetch",
+      "kind": "FUNCTION",
+      "path": "cli/tests/mcp.test.ts",
+      "line": 15,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "SUBSCRIPTIONS_COLLECTION",
@@ -43439,7 +44109,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "templateCategories",
@@ -43516,7 +44186,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "TemplateDetailPage",
@@ -43681,7 +44351,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "TemplateStore",
@@ -43692,7 +44362,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "TemplateSummary",
@@ -43703,7 +44373,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 11
+      "inbound": 13
     },
     {
       "name": "TermsPage",
@@ -43869,6 +44539,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 2
+    },
+    {
+      "name": "textResult",
+      "kind": "VARIABLE",
+      "path": "cli/tests/mcp.test.ts",
+      "line": 25,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "TextTag",
@@ -44264,7 +44945,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "toComponentItem",
@@ -44429,7 +45110,18 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 4
+    },
+    {
+      "name": "tool",
+      "kind": "FUNCTION",
+      "path": "mcp-server/tests/tools.test.ts",
+      "line": 16,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "TOOL_BUILDERS",
@@ -44462,7 +45154,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "TOOL_THEMES",
@@ -44506,7 +45198,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "ToolDef",
@@ -44561,7 +45253,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "ToolsPage",
@@ -44913,7 +45605,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "TrustLogos",
@@ -45111,7 +45803,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "uniqueIds",
@@ -45155,7 +45847,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 6
+      "inbound": 7
     },
     {
       "name": "unresolveAlert",
@@ -45188,7 +45880,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "UP_FRAG",
@@ -45210,7 +45902,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "updateCollection",
@@ -45287,7 +45979,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 23
+      "inbound": 24
     },
     {
       "name": "UrlValidation",
@@ -45309,7 +46001,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 14
+      "inbound": 15
     },
     {
       "name": "USE_COLOR",
@@ -45320,7 +46012,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "useAuth",
@@ -45477,6 +46169,17 @@
       "inbound": 1
     },
     {
+      "name": "user",
+      "kind": "VARIABLE",
+      "path": "backend/tests/accessService.test.js",
+      "line": 15,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "UserAgg",
       "kind": "INTERFACE",
       "path": "mcp-server/src/routes/admin.ts",
@@ -45507,7 +46210,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 5
     },
     {
       "name": "UserCursor",
@@ -45628,7 +46331,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "USERS_COLLECTION",
@@ -46090,7 +46793,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 5
+      "inbound": 6
     },
     {
       "name": "VERT",
@@ -46244,7 +46947,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "VibePromptMap",
@@ -46255,7 +46958,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "VibeSystemSection",
@@ -46874,6 +47577,17 @@
       "inbound": 2
     },
     {
+      "name": "withRedis",
+      "kind": "VARIABLE",
+      "path": "backend/tests/health.test.js",
+      "line": 13,
+      "feature": "shared",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "withTimeout",
       "kind": "VARIABLE",
       "path": "backend/src/services/healthService.js",
@@ -46882,7 +47596,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 1
+      "inbound": 2
     },
     {
       "name": "withTimeout",
@@ -47003,7 +47717,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "writeCodeFile",
@@ -47025,7 +47739,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 15
+      "inbound": 16
     },
     {
       "name": "YellowCard",

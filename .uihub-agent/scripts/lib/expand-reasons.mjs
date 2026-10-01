@@ -158,8 +158,14 @@ export function reasonsForPath(path, { routing, initial, ix, trigger, named }) {
       // `undefined === path`, so this trigger could never fire.
       for (const area of routing.protectedAreas ?? []) {
         const dependents = ix.inboundOf?.get(area.path ?? '') ?? [];
+        // Direction: `dependents` is the set of files that IMPORT `area.path`, so
+        // this file is the one doing the importing. The wording used to be
+        // "is depended on by a protected file", which asserts the exact
+        // opposite — that the protected file imports this one. No source file
+        // imports a test, so that sentence was false in every bundle it appeared
+        // in, and expansion evidence is only worth anything if it is true.
         if (dependents.includes(path)) {
-          out.push(`${path} is depended on by a protected file (${area.path})`);
+          out.push(`${path} imports the protected file (${area.path})`);
         }
       }
       break;

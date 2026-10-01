@@ -11,6 +11,24 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Page entry points with their route, direct component dependencies, and hooks.",
   "counts": {
     "pages": 74,

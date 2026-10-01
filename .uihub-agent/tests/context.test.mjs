@@ -230,6 +230,140 @@ test('a test file is classified TEST by filename, not by its directory', () => {
   assert.equal(ix.roleByPath.get('frontend/src/utils/apiConfig.test.ts')?.role, 'TEST');
 });
 
+/*
+ * Phase 8 closure found that 16 of the repository's 18 real test files were
+ * absent from the index entirely, because they live in sibling `tests/`
+ * directories that SOURCE_ROOTS never walked into. Only the two tests that happen
+ * to sit inside `frontend/src` were reachable, and purely by accident of location.
+ *
+ * The consequence was not cosmetic: with almost no test files indexed,
+ * TEST_DEPENDENCY had almost nothing to admit, so the trigger the contract
+ * promises was effectively dead outside `frontend/src`.
+ */
+test('all 18 real test files are indexed and classified TEST', () => {
+  const ix = intel();
+  const frm = JSON.parse(
+    readFileSync(new URL('../codebase/FILE_ROLE_MAP.json', import.meta.url), 'utf8'),
+  );
+  const indexed = frm.files.filter((f) => f.role === 'TEST').map((f) => f.path);
+
+  // Taken from the runner configs, not guessed:
+  //   frontend/vitest.config.ts   src, recursive, .test.ts
+  //   mcp-server/vitest.config.ts tests, recursive, .test.ts
+  //   backend/package.json        node --test over tests, recursive, .test.js
+  //   cli/package.json            tests/*.test.ts named explicitly
+  const expected = [
+    'backend/tests/accessService.test.js',
+    'backend/tests/broadcastAuth.test.js',
+    'backend/tests/collectionsService.test.js',
+    'backend/tests/cors.test.js',
+    'backend/tests/emailTestSecret.test.js',
+    'backend/tests/health.test.js',
+    'cli/tests/args.test.ts',
+    'cli/tests/config.test.ts',
+    'cli/tests/mcp.test.ts',
+    'cli/tests/output.test.ts',
+    'frontend/src/routing/vercelRouting.test.ts',
+    'frontend/src/utils/apiConfig.test.ts',
+    'mcp-server/tests/apiKey.test.ts',
+    'mcp-server/tests/auth.test.ts',
+    'mcp-server/tests/configService.test.ts',
+    'mcp-server/tests/cors.test.ts',
+    'mcp-server/tests/permissions.test.ts',
+    'mcp-server/tests/tools.test.ts',
+  ];
+
+  assert.equal(expected.length, 18, 'the expected list itself drifted from the repository');
+  assert.equal(indexed.length, expected.length,
+    `expected ${expected.length} TEST files in FILE_ROLE_MAP, found ${indexed.length}`);
+  for (const p of expected) {
+    assert.ok(indexed.includes(p), `${p} is not indexed as TEST`);
+    assert.ok(ix.roleByPath.has(p), `${p} is not loadable from the index`);
+    assert.equal(ix.roleByPath.get(p)?.role, 'TEST', `${p} is not classified TEST`);
+  }
+});
+
+test('a file merely CONTAINING the word test is not a test', () => {
+  const ix = intel();
+  // These three exist in the repository and all contain "test" in their name or
+  // path. None of them is a test suite, and a substring rule would have
+  // misclassified every one of them.
+  assert.equal(ix.roleByPath.get('backend/src/scripts/sendAllTestEmails.js')?.role, 'SCRIPT');
+  assert.equal(ix.roleByPath.get('backend/src/scripts/testEmailRequest.js')?.role, 'SCRIPT');
+  assert.equal(ix.roleByPath.get('frontend/src/components/ui/testimonials-card.tsx')?.role, 'COMPONENT');
+});
+
+test('TEST_DEPENDENCY resolves in BOTH directions from real edges', () => {
+  const ix = intel();
+  const ig = JSON.parse(
+    readFileSync(new URL('../generated/IMPORT_GRAPH.json', import.meta.url), 'utf8'),
+  );
+  const rd = JSON.parse(
+    readFileSync(new URL('../generated/REVERSE_DEPENDENCY_MAP.json', import.meta.url), 'utf8'),
+  ).reverse;
+
+  // test -> what it covers, via the outbound edge
+  const covered = ig.edges.filter(
+    (e) => e.from === 'backend/tests/health.test.js' && e.resolution === 'internal',
+  );
+  assert.ok(
+    covered.some((e) => e.to === 'backend/src/services/healthService.js'),
+    'health.test.js has no internal edge to the service it tests',
+  );
+
+  // source -> the tests that cover it, via inboundOf
+  const covering = rd['backend/src/services/healthService.js'].importers;
+  assert.ok(
+    covering.includes('backend/tests/health.test.js'),
+    'healthService.js does not list the test that covers it',
+  );
+
+  // And the trigger is what actually admits it into a bundle.
+  const b = buildBundle('Fix backend/src/services/healthService.js', { expandSteps: 1 });
+  const hit = b.expansionLog.find((e) => e.path === 'backend/tests/health.test.js');
+  assert.ok(hit, 'the covering test was not added to the bundle');
+  assert.equal(hit.trigger, 'TEST_DEPENDENCY',
+    'a test covering a named file should be recorded as TEST_DEPENDENCY');
+});
+
+test('TEST_DEPENDENCY is not used for unrelated tests', () => {
+  // A test that imports nothing the task named must never be admitted by this
+  // trigger. `broadcastAuth.test.js` imports middleware/auth.js, which this task
+  // does not name.
+  const b = buildBundle('Fix backend/src/services/accessService.js', { expandSteps: 1 });
+  const byTestTrigger = b.expansionLog.filter((e) => e.trigger === 'TEST_DEPENDENCY');
+  assert.ok(byTestTrigger.length > 0, 'TEST_DEPENDENCY fired nothing at all');
+  for (const e of byTestTrigger) {
+    const outboundOfTest = ix_outbound(e.path);
+    assert.ok(
+      outboundOfTest.some((t) => t.includes('accessService')),
+      `${e.path} was admitted by TEST_DEPENDENCY but imports nothing accessService-related`,
+    );
+  }
+});
+
+function ix_outbound(p) {
+  const ig = JSON.parse(
+    readFileSync(new URL('../generated/IMPORT_GRAPH.json', import.meta.url), 'utf8'),
+  );
+  return ig.edges
+    .filter((e) => e.from === p && e.resolution === 'internal')
+    .map((e) => e.to);
+}
+
+test('a fixture route inside a test is not published as a real API endpoint', () => {
+  // backend/tests/cors.test.js and mcp-server/tests/cors.test.ts each build a
+  // throwaway express app with app.get('/probe'). Once tests were indexed, `app`
+  // matched the router receiver pattern and `GET /probe` was published in
+  // API_MAP as an endpoint owned by a TEST file.
+  const api = JSON.parse(
+    readFileSync(new URL('../codebase/API_MAP.json', import.meta.url), 'utf8'),
+  );
+  const probe = (api.endpoints ?? []).filter((e) => e.path === '/probe');
+  assert.equal(probe.length, 0,
+    'a /probe endpoint declared only inside a test fixture was published as real API surface');
+});
+
 test('the most specific trigger is the one recorded', () => {
   const b = buildBundle('Fix activity logging in backend/src/routes/userRoutes.js and backend/src/routes/favoritesRoutes.js', { expandSteps: 4 });
   const svc = b.expansionLog.find((e) => e.path === 'backend/src/services/activityLogService.js');
@@ -318,6 +452,35 @@ test('a task that resolved no source file does not expand into the protected clo
   assert.ok(b.emptyReason.searchedTerms.length > 0, 'emptyReason must record what was searched for');
   // The genuinely useful output survives: which protected areas and knowledge apply.
   assert.ok(b.protectedAreas.length > 0, 'the XSS task should still surface its protected areas');
+});
+
+test('PROTECTED_RELATIONSHIP evidence states the direction of the import', () => {
+  // `inboundOf(area)` is the set of files that IMPORT `area`. The justification
+  // used to read "<path> is depended on by a protected file (<area>)", asserting
+  // the reverse. No source file imports a test, so the sentence was false in
+  // every bundle it appeared in — and expansion evidence is worthless if it is
+  // merely true-sounding. Assert the direction against the import graph itself
+  // rather than against a sample string.
+  const ix = intel();
+  let checked = 0;
+  for (const t of TASKS) {
+    const b = buildBundle(t, { expandSteps: 4 });
+    for (const e of b.expansionLog) {
+      if (e.trigger !== 'PROTECTED_RELATIONSHIP') continue;
+      const m = /^(\S+) imports the protected file \((.+)\)$/.exec(e.how[0] || '');
+      assert.ok(m,
+        `PROTECTED_RELATIONSHIP for ${e.path} does not state the import direction: "${e.how[0]}"`);
+      const [importer, area] = [m[1], m[2]];
+      // The named importer really does import the named protected file...
+      assert.ok((ix.outboundOf?.get(importer) ?? []).includes(area),
+        `${importer} does not import ${area}, so the justification is wrong`);
+      // ...and the protected file does NOT import the importer.
+      assert.ok(!(ix.outboundOf?.get(area) ?? []).includes(importer),
+        `${area} imports ${importer}; the "is depended on by" wording would be correct`);
+      checked++;
+    }
+  }
+  assert.ok(checked > 0, 'no PROTECTED_RELATIONSHIP evidence found to check');
 });
 
 test('every bundle lists the commands that must pass', () => {

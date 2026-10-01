@@ -11,9 +11,27 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Data-layer reach per file: Mongo collections, mongoose models, Prisma, raw SQL.",
   "counts": {
-    "files": 16,
+    "files": 17,
     "distinctCollections": 4,
     "models": 0,
     "prisma": 0
@@ -101,6 +119,14 @@
     {
       "file": "backend/src/services/componentSyncService.js",
       "feature": "component-sync-service",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "backend/tests/collectionsService.test.js",
+      "feature": "shared",
       "collections": [],
       "models": [],
       "prisma": false,

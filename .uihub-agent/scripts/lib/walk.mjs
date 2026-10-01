@@ -49,6 +49,53 @@ export const SOURCE_ROOTS = [
  * in NO_INDEX_DIRS so it is never parsed, and tracked separately so freshness
  * can still be reported.
  */
+/**
+ * Roots that contain test suites.
+ *
+ * Phase 8 closed with 16 of the repository's 18 real test files missing from the
+ * index entirely, because every one of them lives in a sibling `tests/` directory
+ * that SOURCE_ROOTS never descends into. The two that were indexed only made it
+ * in by accident: they sit inside `frontend/src`, so `frontend/src/utils/
+ * apiConfig.test.ts` and `frontend/src/routing/vercelRouting.test.ts` were
+ * reachable purely by their location.
+ *
+ * This is a DISCOVERY gap, not a classification gap. classify.mjs already
+ * returned TEST for both `(^|/)tests?/` and `*.test.*`, so nothing about the
+ * classifier needed to change to admit these files - the walker simply never
+ * offered them. Walking TEST_ROOTS is therefore the smallest change that makes
+ * `TEST_DEPENDENCY` reachable, and it reuses the existing parse / resolve /
+ * classify pipeline unchanged.
+ *
+ * Both directions of the question the intelligence layer must answer now work
+ * from real graph edges:
+ *
+ *   test  -> what it covers     IMPORT_GRAPH outbound edge
+ *   source -> tests that cover  REVERSE_DEPENDENCY_MAP importer
+ *
+ * The test-runner globs in this repository are the evidence for these paths, not
+ * a guess. `frontend/vitest.config.ts` sets include to src, recursive, .test.ts;
+ * `mcp-server/vitest.config.ts` sets include to tests, recursive, .test.ts; and
+ * `backend/package.json` runs node --test over tests, recursive, .test.js while
+ * `cli/package.json` names files directly under `tests/`.
+ *
+ * No test file is MOVED. `TEST_ROOTS` only widens what is read.
+ */
+export const TEST_ROOTS = [
+  'backend/tests',
+  'mcp-server/tests',
+  'cli/tests',
+];
+
+/**
+ * Every root the walker descends into.
+ *
+ * SOURCE_ROOTS and TEST_ROOTS are kept separate because they mean different
+ * things: SOURCE_ROOTS is application source, TEST_ROOTS is verification of it.
+ * Each generated artifact records both so a reader can tell which a file came
+ * from instead of inferring it.
+ */
+export const ALL_ROOTS = [...SOURCE_ROOTS, ...TEST_ROOTS];
+
 export const NO_INDEX_DIRS = new Set([
   'node_modules',
   '.git',
@@ -214,7 +261,7 @@ export function discover(root, { includeRoleOnly = true } = {}) {
     }
   };
 
-  for (const r of SOURCE_ROOTS) {
+  for (const r of ALL_ROOTS) {
     const abs = resolve(root, r);
     if (!existsSync(abs)) {
       excluded.push({ path: r, kind: 'directory', reason: 'root-missing', filesBeneath: 0 });

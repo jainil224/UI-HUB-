@@ -23,6 +23,19 @@ import { basename, extname } from 'node:path';
 // `components?/` and was published as a React component named `FOOTER_LINKS` --
 // it is a typed array of link data with no JSX in it. The same inversion
 // mislabelled `constants/projects.ts` and `constants/work.ts`.
+/**
+ * True when a path is a test file by the same evidence classify.mjs uses.
+ *
+ * The TEST evidence is defined once here so the generator and the classifier can
+ * never disagree about what counts as a test. It is deliberately not exported as
+ * a role lookup: callers that already have a classified file should read its role.
+ */
+export function isTestPath(path) {
+  const base = basename(path);
+  if (/\.(test|spec)\.(ts|tsx|js|jsx|mjs|cjs)$/.test(base)) return true;
+  return /(^|\/)(tests?|__tests__)\//i.test(path);
+}
+
 const PATH_RULES = [
   [/(^|\/)constants?\//i, 'DATA'],
   [/(^|\/)types?\//i, 'TYPE'],
@@ -142,18 +155,40 @@ export function classifyFile(rec, graphEntry) {
   let roleSource = 'path-convention';
   let confidence = 'HIGH';
 
-  /*
+/*
    * A test file's role comes from its FILENAME, never from the directory that
    * happens to hold it.
    *
    * `PATH_RULES` outrank `NAME_RULES`, so `frontend/src/utils/apiConfig.test.ts`
-   * matched `utils/` and was indexed as UTILITY — which silently disabled the
+   * matched `utils/` and was indexed as UTILITY - which silently disabled the
    * TEST_DEPENDENCY expansion trigger for every colocated test in the repo. A
    * test is a test wherever it lives, so this is checked first.
+   *
+   * The pattern matches the repository's ACTUAL conventions, taken from the
+   * runner configs rather than assumed:
+   *   frontend/vitest.config.ts   include: src, recursive, .test.ts
+   *   mcp-server/vitest.config.ts include: tests, recursive, .test.ts
+   *   backend/package.json        node --test over tests, recursive, .test.js
+   *   cli/package.json            tests/*.test.ts named explicitly
+   *
+   * The extension list mirrors CODE_EXT in walk.mjs rather than repeating
+   * `[tj]sx?`, so a `.test.mjs` suite is classified the same way a `.test.ts`
+   * one is. Anchored at the end of the basename, so it cannot fire on a
+   * directory or a prefix.
+   *
+   * It is deliberately NOT a substring search for "test". `backend/src/
+   * scripts/sendAllTestEmails.js`, `testEmailRequest.js` and
+   * `frontend/src/components/ui/testimonials-card.tsx` all contain "test" and
+   * none of them is a test; they stay SCRIPT and COMPONENT because the rule
+   * below only recognises a `.test.`/`.spec.` INFIX between a name and a known
+   * code extension.
    */
-  if (/\.(test|spec)\.[tj]sx?$/.test(base)) {
+  if (/\.(test|spec)\.(ts|tsx|js|jsx|mjs|cjs)$/.test(base)) {
     role = 'TEST';
     roleSource = 'test-filename';
+  } else if (/(^|\/)(tests?|__tests__)\//i.test(path)) {
+    role = 'TEST';
+    roleSource = 'test-directory';
   }
 
   if (!role) {

@@ -244,12 +244,39 @@ headline file counts. These indexes are the detailed AST-derived layer, and they
 are the authority for anything structural. Three known divergences, all recorded
 here rather than by editing the coarse generator:
 
-**`codeVolume` counts different things, so 481 and 485 are not comparable.**
+**`codeVolume` counts different things, so 481 and 501 are not comparable.**
+
+> **Corrected during the Phase 8 final closure.** This section previously read
+> "481 and 485", and the pipeline total was **485**. That number was **wrong**:
+> the walker never descended into `backend/tests/`, `mcp-server/tests/` or
+> `cli/tests/`, so **16 of the repository's 18 real test files were missing from
+> the index entirely**. The index claimed to describe the codebase while being
+> blind to every backend, MCP and CLI test.
+>
+> | | count | what it counts |
+> | --- | --- | --- |
+> | old pipeline total (Phase 7, incomplete) | 485 | omitted all 16 non-`frontend` test files |
+> | **corrected pipeline total** | **501** | **485 + the 16 test files that were never walked** |
+>
+> The fix was discovery, not classification: `walk.mjs` now exports a
+> `TEST_ROOTS` list (`backend/tests`, `mcp-server/tests`, `cli/tests`) walked
+> alongside `SOURCE_ROOTS`. The test-runner globs in this repository are the
+> evidence for those three paths. **No test file was moved**, and no application
+> source changed.
+>
+> The only two test files that had been indexed were
+> `frontend/src/utils/apiConfig.test.ts` and `frontend/src/routing/vercelRouting.test.ts`,
+> and they were reachable purely by sitting inside `frontend/src`.
+>
+> Consequence: `FILE_ROLE_MAP` TEST count went **2 → 18**, and `TEST_DEPENDENCY`
+> — a trigger the Phase 8 contract promises — went from effectively dead to
+> firing against real edges. See `CONFLICTS.md` A24 and
+> `codebase/PHASE_8_CLOSURE_TEST_INDEX.md`.
 
 | | count | what it counts |
 | --- | --- | --- |
 | PROJECT_MAP `codeVolume` | 481 | every git-tracked file under the four `src/` roots |
-| this pipeline | 485 | parseable code files under those roots, **plus** 20 first-party scripts elsewhere |
+| this pipeline | **501** | parseable code under those roots, **plus** 20 first-party scripts and 16 test files elsewhere |
 
 The arithmetic, verified per root:
 
@@ -261,10 +288,11 @@ The arithmetic, verified per root:
 | `cli/src` | 23 | 23 | — |
 | **total under `src/`** | **481** | **465** | 16 non-code files, all by extension |
 | outside `src/` | not counted | 20 | `api/index.js`, 13 `backend/scripts/`, 5 `scripts/announcement/`, `frontend/scripts/` |
+| **test directories** | not counted | **16** | `backend/tests` 6, `mcp-server/tests` 6, `cli/tests` 4 — added by the Phase 8 closure |
 
 So: **481 tracked under `src/` − 16 non-code = 465 indexed under `src/`, + 20
-scripts outside = 485.** Neither number is wrong. Quote which one you mean; an
-AST index cannot describe a stylesheet.
+scripts outside + 16 test files = 501.** Neither number is wrong. Quote which one
+you mean; an AST index cannot describe a stylesheet.
 
 `walk.mjs` also discovers 15 `ROLE_ONLY_EXT` files that are counted but never
 parsed or indexed.

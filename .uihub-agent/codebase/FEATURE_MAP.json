@@ -11,6 +11,24 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Feature clusters inferred from directory structure, cross-checked against role assignment.",
   "counts": {
     "features": 56
@@ -1280,9 +1298,10 @@
     },
     {
       "feature": "shared",
-      "files": 19,
+      "files": 35,
       "roles": {
-        "SCRIPT": 19
+        "SCRIPT": 19,
+        "TEST": 16
       },
       "entryPoints": [],
       "components": [],
@@ -1290,21 +1309,27 @@
       "hooks": [],
       "endpoints": [],
       "externalPackages": [
+        "cors",
+        "express",
         "firebase-admin",
         "fs",
         "gifenc",
+        "node:assert",
         "node:child_process",
         "node:fs",
         "node:module",
         "node:path",
+        "node:test",
         "node:url",
         "path",
         "playwright",
         "pngjs",
         "sharp",
-        "url"
+        "supertest",
+        "url",
+        "vitest"
       ],
-      "lines": 1722
+      "lines": 3825
     },
     {
       "feature": "skeleton-context",

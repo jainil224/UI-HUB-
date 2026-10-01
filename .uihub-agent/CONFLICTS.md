@@ -1252,8 +1252,16 @@ and is excluded from indexing by extension. It holds embedded component source.
 
 ## A24. NEW - `PROJECT_MAP.codeVolume` and the index count different things
 
-Naively: `codeVolume` sums **481**, the index reports **485**. Neither is wrong
-and the gap is not a 14-file omission.
+> **SUPERSEDED BY THE PHASE 8 TEST-INDEX CORRECTION.** The "index reports 485"
+> figure below was **wrong**, and the reconciliation it performed was itself
+> incomplete. The corrected total is **501**. The original text is preserved
+> below so the historical record is not rewritten, followed by what changed and
+> why. See `codebase/PHASE_8_CLOSURE_TEST_INDEX.md`.
+
+### Original A24 (Phase 7) — superseded, kept for the record
+
+Naively: `codeVolume` sums **481**, the index reported **485**. Neither number is
+wrong and the gap is not a 14-file omission.
 
 - `codeVolume` counts every git-tracked file under the four `src/` roots: **481**.
 - The index indexes parseable code files under those roots: **465**. The 16-file
@@ -1273,6 +1281,77 @@ and the gap is not a 14-file omission.
   `codeVolume` cannot describe an import edge. Quote which denominator you mean;
   "the repo has 481 files" and "the index has 485" are both accurate and refer to
   different sets.
+
+### Correction (Phase 8 final closure) — 485 → 501
+
+The arithmetic above was internally consistent but **described an incomplete
+index**. It verified only that the numbers matched, never that the walker had
+reached every file it was supposed to.
+
+**What was wrong:** `SOURCE_ROOTS` listed only `*/src` and script directories. The
+repository's test suites live in sibling `tests/` directories that no root
+covered:
+
+| test directory | files | indexed before the fix |
+| --- | --- | --- |
+| `backend/tests` | 6 | 0 |
+| `mcp-server/tests` | 6 | 0 |
+| `cli/tests` | 4 | 0 |
+| `frontend/src/**` (colocated) | 2 | 2 |
+
+**16 of 18 real test files were missing from the index.** The two that were
+present (`frontend/src/utils/apiConfig.test.ts`,
+`frontend/src/routing/vercelRouting.test.ts`) were reachable only because they sit
+inside `frontend/src`.
+
+**Corrected arithmetic:**
+
+```
+481 tracked under src/ - 16 non-code           = 465 indexed under src/
+465 + 20 first-party scripts outside src/      = 485   (the old, incomplete total)
+485 + 16 test files in tests/ directories      = 501   (the corrected total)
+```
+
+- **Severity raised S3 → S2.** This was not a reporting nuance. While it stood,
+  the intelligence layer could not answer "which tests cover this service?", which
+  is a question the Phase 8 context contract explicitly promises to answer via
+  `TEST_DEPENDENCY`. `TEST_DEPENDENCY` was reachable only for the two `frontend`
+  tests.
+- **Reason for the fix:** discovery, not classification. `classify.mjs` already
+  returned `TEST` for both `(^|/)tests?/` and `*.test.*`; the walker simply never
+  offered it the files. `walk.mjs` now exports `TEST_ROOTS`, walked alongside
+  `SOURCE_ROOTS`. **No test file was moved and no application source changed.**
+- **Confidence:** high — verified against the runner configs
+  (`frontend/vitest.config.ts` include `src/**/*.test.ts`,
+  `mcp-server/vitest.config.ts` include `tests/**/*.test.ts`,
+  `backend/package.json` `node --test "tests/**/*.test.js"`, `cli/package.json`
+  naming files directly under `tests/`).
+
+### Two further defects found while closing this
+
+1. **A fixture route was published as real API surface.** `backend/tests/cors.test.js`
+   and `mcp-server/tests/cors.test.ts` each build a throwaway express app with
+   `app.get('/probe')` / `app.post('/probe')`. `app` matched the router-receiver
+   pattern, so `GET /probe` and `POST /probe` entered `API_MAP` as endpoints owned
+   by files classified TEST — which `check-index` immediately reported as a
+   CONFLICT. A route declared inside a test fixture is not reachable by any
+   client. `probeEndpoints()` now returns early for test files. Route harvesting
+   is suppressed; **outbound client-call harvesting is not**, because a test
+   asserting against a real service is a genuine caller.
+
+2. **`TEST_DEPENDENCY` was shadowed by `PROTECTED_RELATIONSHIP`.** `TRIGGER_PRIORITY`
+   evaluated `PROTECTED_RELATIONSHIP` first, so a test importing a protected file
+   was always attributed to the protected trigger and `TEST_DEPENDENCY` could
+   never be the recorded reason for it. Reordered most-specific-first:
+   `TEST_DEPENDENCY` → `API_DEPENDENCY` → `STATE_DEPENDENCY` →
+   `PROTECTED_RELATIONSHIP` → `SHARED_SERVICE` → `DIRECT_DEPENDENCY` →
+   `RELEVANT_CONSUMER`. This records the more useful justification without
+   changing which files are admitted.
+
+- **Why it matters:** the lesson generalises. A count that reconciles is not the
+  same as a count that is complete. The Phase 7 check asked "do these numbers
+  agree?" and got a clean answer about an index that was missing a sixth of its
+  own tests.
 
 ## What Phase 7 deliberately did not do
 

@@ -65,6 +65,7 @@ Every task in `agent.md` with where it was satisfied and how it was verified.
 | 8.41 | Required real-task simulations | 10 tasks in `PHASE_8_SIMULATIONS.md` | 10/10 bundles valid |
 | 8.42 | Simulation metrics | files, expanded, P0, protected, critical, % of repo | `PHASE_8_SIMULATIONS.md` |
 | 8.43 | Target efficiency | mean 9.7 files; mean 2.01% of repo; max 6.4% | measured, not asserted |
+| 8.43a | Efficiency re-measured after the test-index correction | mean 9.8 files; relevant 85→88; irrelevant 12→10; max 32 | `PHASE_8_CLOSURE_TEST_INDEX.md` |
 
 ## Integration and safety
 
@@ -92,6 +93,11 @@ invisible to the router. Adding them would change the indexed total from 485 and
 invalidate the 481/485 reconciliation in `CONFLICTS.md` A24 and
 `CODEBASE_INTELLIGENCE.md`. Recorded in `PHASE_8_CHANGES.md` §7 rather than
 changed.
+
+> **NO LONGER OUT OF SCOPE — resolved in the Phase 8 final closure.** The count
+> was 16 of 18, and the 485/481 reconciliation was protecting an incomplete set.
+> `TEST_ROOTS` is now walked alongside `SOURCE_ROOTS`: 485 → 501 files, `TEST`
+> role 2 → 18. Evidence in `PHASE_8_CLOSURE_TEST_INDEX.md`.
 
 ## Sign-off
 

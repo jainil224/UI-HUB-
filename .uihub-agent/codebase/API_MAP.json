@@ -11,6 +11,24 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Served HTTP routes derived from router call syntax (receiver is a router, verb is an HTTP method, first argument is a string literal starting with \"/\"), plus MCP tool registrations. Outbound client calls and dynamically computed route paths are listed separately so neither is mistaken for a served endpoint nor silently dropped.",
   "counts": {
     "endpoints": 69,

@@ -25,6 +25,9 @@ Two properties are load-bearing:
   in the bundle.
 - **The context stays small.** Mean 9.7 files across ten real tasks; 2.01% of
   the repository.
+  - *Re-measured in the Phase 8 final closure against the 501-file index: mean
+    **9.8** files, relevant 85 → 88, heuristic/irrelevant 12 → 10. No
+    regression.*
 
 ## 2. Files created
 
@@ -168,6 +171,21 @@ are outside `SOURCE_ROOTS`. Adding them would change the indexed total from 485
 and invalidate the 481/485 reconciliation documented in `CONFLICTS.md` A24 and
 `CODEBASE_INTELLIGENCE.md`. Out of scope for Phase 8; recorded rather than
 silently changed. Consequence: `TEST_DEPENDENCY` fires rarely.
+
+> **CORRECTED IN THE PHASE 8 FINAL CLOSURE — this deviation is now resolved.**
+> Both the figure and the reasoning were off.
+>
+> - The count is **16 of 18**, not 17. The two tests inside `frontend/src`
+>   (`utils/apiConfig.test.ts`, `routing/vercelRouting.test.ts`) *were* indexed,
+>   because `frontend/vitest.config.ts` colocates them under a `SOURCE_ROOT`.
+> - The reasoning was wrong. "It would change 485 and invalidate the 481/485
+>   reconciliation" describes a bookkeeping obstacle, not a reason to leave real
+>   code unindexed — and the reconciliation it aimed to protect was reconciling
+>   an *incomplete* set in the first place. Correcting it to 501 **strengthens**
+>   A24 rather than invalidating it.
+>
+> `TEST_ROOTS` was added in the closure. 485 → 501 files, `TEST` role 2 → 18. See
+> `PHASE_8_CLOSURE_TEST_INDEX.md`.
 
 **"Add an MCP tool" returns 31 files (6.4%).** The largest context in the
 simulation set. Defensible — the task spans backend, frontend and MCP-server —

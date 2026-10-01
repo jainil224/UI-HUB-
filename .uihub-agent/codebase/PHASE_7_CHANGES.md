@@ -103,6 +103,27 @@ The coarse `PROJECT_MAP.json` is **kept, not replaced.** It answers a different
 question (`how many tracked files exist`) than the AST index (`what does this code
 do`). `CONFLICTS.md` A24 records why 481 and 485 are both correct.
 
+> **CORRECTED IN THE PHASE 8 FINAL CLOSURE — read this before trusting any count
+> in this document.** The **485** quoted throughout this Phase 7 report was
+> **not a complete index**. `walk.mjs` never descended into `backend/tests/`,
+> `mcp-server/tests/` or `cli/tests/`, so **16 of the repository's 18 real test
+> files were absent from the index**. Only the two tests colocated inside
+> `frontend/src` were present, and only by accident of location.
+>
+> **The corrected total is 501** (485 + the 16 missing test files), and the
+> `TEST` role count is **18**, not 1 or 2. Every "485" in this document describes
+> what the pipeline indexed **at the time**, which was a subset of the codebase.
+> The counts were internally consistent — A24 reconciled them — but consistency
+> was mistaken for completeness.
+>
+> Consequences found during the correction, both now fixed and covered by tests:
+> `TEST_DEPENDENCY`, a trigger the Phase 8 contract promises, was effectively
+> dead outside `frontend/src`; and the CORS test fixtures' `app.get('/probe')`
+> had published `GET /probe` and `POST /probe` as real `API_MAP` endpoints owned
+> by files classified TEST.
+>
+> See `CONFLICTS.md` A24 and `codebase/PHASE_8_CLOSURE_TEST_INDEX.md`.
+
 ---
 
 ## 3. Scale and counts
@@ -113,7 +134,7 @@ patterns and 1 ledgered file (`frontend/src/data/embeddedSourceCode.ts.bak`,
 
 | Index | Count |
 | --- | --- |
-| Files indexed | 485 |
+| Files indexed | 485 — **superseded by 501**, see the correction note above |
 | Components | 227 (157 HIGH, 70 MEDIUM, 5 orphaned, 155 lazy) |
 | Pages / routes | 74 / 63 (60 matched, 14 pages unrouted) |
 | Features | 56 (21 multi-file) |

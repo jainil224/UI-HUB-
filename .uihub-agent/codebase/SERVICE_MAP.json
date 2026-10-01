@@ -11,6 +11,24 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Service-layer modules in backend, frontend, and MCP, with their data-layer reach and consumers.",
   "counts": {
     "services": 30,
@@ -33,7 +51,8 @@
         "accessService"
       ],
       "usedBy": [
-        "backend/src/routes/componentRoutes.js"
+        "backend/src/routes/componentRoutes.js",
+        "backend/tests/accessService.test.js"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
@@ -135,7 +154,8 @@
         "collectionsService"
       ],
       "usedBy": [
-        "backend/src/routes/collectionsRoutes.js"
+        "backend/src/routes/collectionsRoutes.js",
+        "backend/tests/collectionsService.test.js"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
@@ -270,7 +290,8 @@
         "buildHealthReport"
       ],
       "usedBy": [
-        "backend/src/server.js"
+        "backend/src/server.js",
+        "backend/tests/health.test.js"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
@@ -316,7 +337,8 @@
         "backend/src/services/healthService.js",
         "backend/src/services/pushService.js",
         "backend/src/services/syncService.js",
-        "backend/src/services/userService.js"
+        "backend/src/services/userService.js",
+        "backend/tests/collectionsService.test.js"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
@@ -704,7 +726,8 @@
       ],
       "usedBy": [
         "mcp-server/src/middleware/auth.ts",
-        "mcp-server/src/routes/dashboard.ts"
+        "mcp-server/src/routes/dashboard.ts",
+        "mcp-server/tests/apiKey.test.ts"
       ],
       "touchesDatabase": true,
       "touchesStorage": false,
@@ -758,7 +781,8 @@
         "mcp-server/src/tools/searchAnimations.ts",
         "mcp-server/src/tools/searchByBehavior.ts",
         "mcp-server/src/tools/searchComponents.ts",
-        "mcp-server/src/tools/searchTemplates.ts"
+        "mcp-server/src/tools/searchTemplates.ts",
+        "mcp-server/tests/tools.test.ts"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
@@ -845,7 +869,8 @@
         "mcp-server/src/tools/searchAnimations.ts",
         "mcp-server/src/tools/searchByBehavior.ts",
         "mcp-server/src/tools/searchComponents.ts",
-        "mcp-server/src/tools/searchTemplates.ts"
+        "mcp-server/src/tools/searchTemplates.ts",
+        "mcp-server/tests/permissions.test.ts"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,

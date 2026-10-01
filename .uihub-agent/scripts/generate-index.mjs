@@ -25,10 +25,10 @@ import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 
-import { discover, SOURCE_ROOTS, NO_INDEX_DIRS, relFromRoot } from './lib/walk.mjs';
+import { discover, SOURCE_ROOTS, TEST_ROOTS, ALL_ROOTS, NO_INDEX_DIRS, relFromRoot } from './lib/walk.mjs';
 import { parseAll, ts } from './lib/parse.mjs';
 import { loadAliases, makeResolver } from './lib/resolve.mjs';
-import { classifyFile, inferFeature, isPageLike, symbolKindOf } from './lib/classify.mjs';
+import { classifyFile, inferFeature, isPageLike, isTestPath, symbolKindOf } from './lib/classify.mjs';
 import { scanText } from './secret-scan.mjs';
 import {
   sourceSnapshot,
@@ -94,6 +94,28 @@ function probeEndpoints(rec) {
   const routes = [];
   const outbound = [];
   const dynamic = [];
+
+  /*
+   * A route declared inside a TEST file is a test fixture, not a deployed
+   * endpoint.
+   *
+   * `backend/tests/cors.test.js` and `mcp-server/tests/cors.test.ts` each build a
+   * throwaway express app to assert CORS headers against:
+   *
+   *   app.get('/probe', (_req, res) => res.json({ ok: true }));
+   *   app.post('/probe', (_req, res) => res.json({ ok: true }));
+   *
+   * `app` matches ROUTER_RECEIVER, so indexing the tests published `GET /probe`
+   * and `POST /probe` as real API_MAP endpoints owned by files classified TEST -
+   * which is exactly the contradiction check-index then reports as a CONFLICT.
+   *
+   * The fix is to not harvest routes from tests at all. A fixture route is not
+   * reachable by any client, and recording it would let a task asking about
+   * `/probe` expand into a CORS test instead of real API surface. Outbound
+   * client-call harvesting is unaffected: a test asserting against a real service
+   * is a genuine caller, and API_DEPENDENCY wants exactly that.
+   */
+  if (isTestPath(rec.path)) return { routes, outbound, dynamic };
 
   const visit = (node) => {
     if (ts.isCallExpression(node)) {
@@ -689,7 +711,18 @@ function stripVolatile(serialized) {
 }
 
 function meta(extra) {
-  return { schemaVersion: SCHEMA_VERSION, generatedBy: PIPELINE_ID, sourceRoots: SOURCE_ROOTS, ...extra };
+  // `sourceRoots` and `testRoots` are reported separately rather than merged.
+  // Every artifact that carries this metadata is a record of what was READ, and
+  // a reader needs to be able to tell application source from the tests that
+  // verify it without inferring it from a path.
+  return {
+    schemaVersion: SCHEMA_VERSION,
+    generatedBy: PIPELINE_ID,
+    sourceRoots: SOURCE_ROOTS,
+    testRoots: TEST_ROOTS,
+    allRoots: ALL_ROOTS,
+    ...extra,
+  };
 }
 
 function compose(m) {

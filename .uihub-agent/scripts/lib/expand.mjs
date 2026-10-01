@@ -27,10 +27,10 @@ import { expandReasons, reasonsForPath, candidatesFor } from './expand-reasons.m
  * trigger reachable, and records the more useful reason.
  */
 const TRIGGER_PRIORITY = [
-  'PROTECTED_RELATIONSHIP',
   'TEST_DEPENDENCY',
   'API_DEPENDENCY',
   'STATE_DEPENDENCY',
+  'PROTECTED_RELATIONSHIP',
   'SHARED_SERVICE',
   'DIRECT_DEPENDENCY',
   'RELEVANT_CONSUMER',

@@ -11,11 +11,29 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "Freshness record for every intelligence artifact. The ONLY file carrying a timestamp.",
-  "generatedAt": "2026-10-01T08:26:21.927Z",
-  "sourceFingerprint": "7e27afc36f0df201cbe0b0d1ad26a1cb1bf068059ba94b436056955217ede6f3",
-  "sourceFileCount": 485,
-  "sourceBytes": 8891909,
+  "generatedAt": "2026-10-01T10:04:07.801Z",
+  "sourceFingerprint": "b7805860f03affe05b0f987ded7b4816f715af0ae3144b12a74f686635bd21ed",
+  "sourceFileCount": 501,
+  "sourceBytes": 8972873,
   "sourceSnapshot": [
     {
       "path": "api/index.js",
@@ -378,6 +396,36 @@
       "sha": "19bdc3a2d289580db1113d1e0c6bf9db3172eacb856f4fabc031b88aa318f9b1"
     },
     {
+      "path": "backend/tests/accessService.test.js",
+      "size": 4809,
+      "sha": "8d0ae241b0b74f5dc01615e614e31b7d8805abea78b50c639cd307874cb8dd7b"
+    },
+    {
+      "path": "backend/tests/broadcastAuth.test.js",
+      "size": 5121,
+      "sha": "a7d0b63cd5c0f18e16beacc87a8a4960aa72231a49f8ed1d443f8df2318e77b2"
+    },
+    {
+      "path": "backend/tests/collectionsService.test.js",
+      "size": 5440,
+      "sha": "96a91925a6b6d0e7581b4b8fb641a6ec7aa7b16f343c939c3e8bfccb4af6dd5c"
+    },
+    {
+      "path": "backend/tests/cors.test.js",
+      "size": 9873,
+      "sha": "a7c0732edf85f4d96c2e28ecbad01f8a1ab084775206ee83c149b3776d878e06"
+    },
+    {
+      "path": "backend/tests/emailTestSecret.test.js",
+      "size": 3417,
+      "sha": "0e0b86686682c720499d2533baa30fca4de1d794e187f4f12d46bed3a2f06e6f"
+    },
+    {
+      "path": "backend/tests/health.test.js",
+      "size": 4924,
+      "sha": "1c1227fc80b41e159bf5ea1debf3c3d0912e58b9b440cd9edebfd4d56b5e78b4"
+    },
+    {
       "path": "cli/src/args.ts",
       "size": 2078,
       "sha": "6fe871bd3bf7d08df1093336170542e02b475cea7e5bc816f0a1ebee31bec830"
@@ -491,6 +539,26 @@
       "path": "cli/src/output.ts",
       "size": 3065,
       "sha": "e33a074aa4d3aed863a65d6f6393d987b8c743d4feea34b448bba094ea9cf21a"
+    },
+    {
+      "path": "cli/tests/args.test.ts",
+      "size": 2088,
+      "sha": "655f27abc8d93d5f83faee7b9d68ce60185bc547dd480ddc7a44f1f56a9313a7"
+    },
+    {
+      "path": "cli/tests/config.test.ts",
+      "size": 1951,
+      "sha": "39e96da722b2783fbbfefdf9c266adc9dd796b89de4b89a4760ef27bb2cd221d"
+    },
+    {
+      "path": "cli/tests/mcp.test.ts",
+      "size": 4539,
+      "sha": "1651a16a0f1d7f33e82f041c42127485dc0f7a87e57d35a2c87d56ac2cd666e1"
+    },
+    {
+      "path": "cli/tests/output.test.ts",
+      "size": 2151,
+      "sha": "d1566ca2add55d25d3811dfa47259fbdff43a77cfc6ec7ea04d2bed9ea8682e8"
     },
     {
       "path": "frontend/scripts/generate-favicons.mjs",
@@ -2418,6 +2486,36 @@
       "sha": "60f6781d0ffe81ba68f38e66f877cc9cf9a5819c1a52e1221a3f95dd7e36b32b"
     },
     {
+      "path": "mcp-server/tests/apiKey.test.ts",
+      "size": 2927,
+      "sha": "c583b24fe3c7c185f715a7e9060d26b536dee959c08846b4084881e2dc016080"
+    },
+    {
+      "path": "mcp-server/tests/auth.test.ts",
+      "size": 5606,
+      "sha": "c0be5a3cc52fac35c55af8280c70830fd5eb0644c01c8314e712de2ebe3705c5"
+    },
+    {
+      "path": "mcp-server/tests/configService.test.ts",
+      "size": 2935,
+      "sha": "2515071f7ebc535f45c8c6b6917d79149363f2d6f032dfdbef4a342662831def"
+    },
+    {
+      "path": "mcp-server/tests/cors.test.ts",
+      "size": 6851,
+      "sha": "397fe93c8cb65331d8acf87086123623cb9ac3aa567292a6e618dc6acbc22985"
+    },
+    {
+      "path": "mcp-server/tests/permissions.test.ts",
+      "size": 2093,
+      "sha": "02cec849e29c5d030795777b3a4572195a432b912b30e024dd482fc3edbae3b3"
+    },
+    {
+      "path": "mcp-server/tests/tools.test.ts",
+      "size": 16239,
+      "sha": "9147b03abe97216d1d96f7228bfd780d3f837dda75e3b3fd21b3b0dd977a4572"
+    },
+    {
       "path": "scripts/announcement/build-banner.mjs",
       "size": 3921,
       "sha": "4d07678b00e173bbb1d9692ecfea828bc56b50bdea85245f663f02a4462ff36f"
@@ -2469,11 +2567,11 @@
       "tmp"
     ],
     "totals": {
-      "indexed": 485,
+      "indexed": 501,
       "roleOnly": 15,
       "excludedEntries": 1,
       "excludedFiles": 1,
-      "parseableBytes": 8891909
+      "parseableBytes": 8972873
     },
     "ledger": [
       {
@@ -2485,84 +2583,84 @@
     ]
   },
   "timingsMs": {
-    "discover": 109,
-    "parse": 1390,
-    "resolve": 42,
-    "build": 1405,
-    "total": 2947
+    "discover": 94,
+    "parse": 877,
+    "resolve": 29,
+    "build": 1005,
+    "total": 2004
   },
   "artifacts": [
     {
       "path": ".uihub-agent/codebase/API_MAP.json",
-      "bytes": 19020
+      "bytes": 19334
     },
     {
       "path": ".uihub-agent/codebase/COMPONENT_MAP.json",
-      "bytes": 147427
+      "bytes": 147741
     },
     {
       "path": ".uihub-agent/codebase/DATABASE_USAGE_MAP.json",
-      "bytes": 3733
+      "bytes": 4234
     },
     {
       "path": ".uihub-agent/codebase/FEATURE_MAP.json",
-      "bytes": 40731
+      "bytes": 41183
     },
     {
       "path": ".uihub-agent/codebase/FILE_ROLE_MAP.json",
-      "bytes": 250767
+      "bytes": 258166
     },
     {
       "path": ".uihub-agent/codebase/HOOKS_MAP.json",
-      "bytes": 2255
+      "bytes": 2569
     },
     {
       "path": ".uihub-agent/codebase/INTEGRATION_MAP.json",
-      "bytes": 10145
+      "bytes": 10587
     },
     {
       "path": ".uihub-agent/codebase/PAGE_MAP.json",
-      "bytes": 29118
+      "bytes": 29432
     },
     {
       "path": ".uihub-agent/codebase/ROUTE_MAP.json",
-      "bytes": 20590
+      "bytes": 20904
     },
     {
       "path": ".uihub-agent/codebase/SERVICE_MAP.json",
-      "bytes": 24493
+      "bytes": 25131
     },
     {
       "path": ".uihub-agent/codebase/STORAGE_USAGE_MAP.json",
-      "bytes": 807
+      "bytes": 1121
     },
     {
       "path": ".uihub-agent/generated/CONTEXT_BUNDLE_SCHEMA.json",
-      "bytes": 4370
+      "bytes": 4684
     },
     {
       "path": ".uihub-agent/generated/FEATURE_FILE_INDEX.json",
-      "bytes": 27930
+      "bytes": 28889
     },
     {
       "path": ".uihub-agent/generated/IMPORT_GRAPH.json",
-      "bytes": 571844
+      "bytes": 587579
     },
     {
       "path": ".uihub-agent/generated/KNOWLEDGE_ROUTING_GRAPH.json",
-      "bytes": 14220
+      "bytes": 14534
     },
     {
       "path": ".uihub-agent/generated/PAGE_COMPONENT_INDEX.json",
-      "bytes": 244915
+      "bytes": 245229
     },
     {
       "path": ".uihub-agent/generated/REVERSE_DEPENDENCY_MAP.json",
-      "bytes": 224880
+      "bytes": 230851
     },
     {
       "path": ".uihub-agent/generated/SYMBOL_INDEX.json",
-      "bytes": 1154223
+      "bytes": 1170126
     }
   ]
 }

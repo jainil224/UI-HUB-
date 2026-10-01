@@ -121,6 +121,13 @@ These are real limits of the delivered layer, not unfinished tasks.
 - **The coarse map and the AST index use different denominators.** 481 tracked
   files under the four `src/` roots versus 485 indexed files. Explained in
   `CONFLICTS.md` A24.
+  - **Corrected in the Phase 8 final closure: 485 → 501.** This reconciliation
+    was arithmetically correct but described an **incomplete** index — 16 of 18
+    real test files were never walked, because no `SOURCE_ROOTS` entry covered
+    `backend/tests/`, `mcp-server/tests/` or `cli/tests/`. `TEST` role count is
+    18, not 1. A number that reconciles is not the same as a number that is
+    complete. See `CONFLICTS.md` A24 and
+    `codebase/PHASE_8_CLOSURE_TEST_INDEX.md`.
 
 ## Deliberately not done
 

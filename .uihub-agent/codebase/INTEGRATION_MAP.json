@@ -11,9 +11,27 @@
     "backend/scripts",
     "frontend/scripts"
   ],
+  "testRoots": [
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
+  "allRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts",
+    "backend/tests",
+    "mcp-server/tests",
+    "cli/tests"
+  ],
   "description": "External service surface, derived from imported package names and env vars actually read.",
   "counts": {
-    "files": 27,
+    "files": 30,
     "integrations": 6,
     "envVarsReferenced": 55,
     "envVarsDeclared": 55
@@ -66,8 +84,10 @@
       "name": "security-headers",
       "usedIn": [
         "backend/src/server.js",
+        "backend/tests/cors.test.js",
         "mcp-server/src/config/corsPolicy.ts",
-        "mcp-server/src/index.ts"
+        "mcp-server/src/index.ts",
+        "mcp-server/tests/cors.test.ts"
       ],
       "packageNames": [
         "cors",
@@ -128,7 +148,8 @@
     {
       "name": "EMAIL_TEST_SECRET",
       "readIn": [
-        "backend/src/routes/userRoutes.js"
+        "backend/src/routes/userRoutes.js",
+        "backend/tests/emailTestSecret.test.js"
       ]
     },
     {
