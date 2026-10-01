@@ -37,6 +37,7 @@ proving that sentence.
 | `expansionLog` | One entry per added file: `step`, `path`, `trigger`, `how[]`, `reason`. |
 | `expansionCount` / `expansionSteps` | Files actually added, and the step budget allowed. |
 | `stopReason` | Why expansion stopped. Never empty. |
+| `sizePolicy` | Which budget applied and why: `relevanceBudget`, `relevanceBudgetBase`, `relevanceBudgetExplicit`, `evidence[]`, `expansionBudget`, `expansionSteps`, `safetyCeiling`, `safetyCeilingApplied`, `droppedByCeiling[]`, `maxRelevanceBudget`. |
 | `efficiency` | `totalIndexedFiles`, `qualifiedCandidates`, `initialFiles`, `expandedFiles`, `filesSelected`, `selectionRatio`. |
 | `emptyReason` | Set **instead of** an empty `files` list: `why`, `searchedTerms`, `note`. |
 | `unknown` | Present only when `categories` is `[UNKNOWN]`: `why` and `suggestion[]`. |
@@ -112,15 +113,48 @@ These are asserted by `.uihub-agent/tests/context.test.mjs`, not merely intended
 - **Stale indexes are refused.** `agent:context` exits 2 unless the pre-check
   passes, or `--allow-stale` is given.
 
+## Context size policy
+
+Context size is governed by three separately-named numbers. They used to be one
+number (`maxFiles: 25`) described in prose as "no arbitrary cap", which meant the
+code and the documentation disagreed. The policy lives in
+`scripts/lib/context-size.mjs` and every bundle reports its own copy in
+`sizePolicy`.
+
+| Number | Value | What it is |
+|---|---|---|
+| **Relevance budget** | 25 baseline, evidence-raised to at most 40 | A soft target for what relevance alone selects. Derived per task, not a cap. |
+| **Expansion budget** | 1 step × 10 files by default | Independent of the relevance budget, so "relevance wanted 35" and "expansion added 8" are never conflated. |
+| **Safety ceiling** | 60 | A runaway guard only. Not a target, and nothing legitimate approaches it. |
+
+The relevance budget grows only with evidence the context-size contract allows —
+feature scope, validation requirements, protected relationships, and task
+complexity — and it **shrinks** when the task names files, because the named set
+is the subject. It never grows because more files happen to be available: a
+larger repository, or a task that matched more candidates, does not earn a larger
+context.
+
+Passing `maxFiles` explicitly is a caller override. It is honoured verbatim and
+disables growth, because an explicit number is already a decision.
+`npm run agent:context -- --max-files 8` therefore means exactly 8, and omitting
+the flag means the derived budget.
+
+If the safety ceiling fires, `sizePolicy.safetyCeilingApplied` is `true` and
+`droppedByCeiling[]` names every path removed. Truncation preserves the ordered
+list, so what survives is the strongest evidence rather than an arbitrary prefix.
+Across the ten canonical benchmark tasks it never fires.
+
 ## Reading the numbers honestly
 
-`selectionRatio` is measured against the **repository** (485 indexed files), not
+`selectionRatio` is measured against the **repository** (501 indexed files), not
 against the candidate list. An earlier version divided by the candidate count,
 which made "12 of 12 candidates" look like a 100% context.
 
-`initialFiles` and `expandedFiles` are reported separately because the cap
-applies to what relevance selected. Expansion is a separate budgeted decision
-that may legitimately push the total higher.
+`initialFiles` and `expandedFiles` are reported separately because the relevance
+budget applies to what relevance selected. Expansion is a separate budgeted
+decision that may legitimately push the total higher. Both are derived from the
+**final** file list, so the reported split cannot disagree with the files
+actually emitted.
 
 ## Where a per-task manifest goes
 

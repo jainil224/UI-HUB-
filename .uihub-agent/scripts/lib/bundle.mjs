@@ -1,5 +1,5 @@
 /**
- * Context bundle assembly — agent.md tasks 8.15, 8.39, 8.47, 8.48, 8.51.
+ * Context bundle assembly â€” the bundle-assembly contract, 8.39, 8.47, 8.48, 8.51.
  *
  * A bundle is the machine-readable answer to "what is the minimal necessary
  * context for this task?" It contains nothing that cannot be explained, and
@@ -11,6 +11,7 @@ import { classify } from './router.mjs';
 import { initialContext, rankFiles } from './relevance.mjs';
 import { expand, ExpansionBudget } from './expand.mjs';
 import { repositorySize } from './intel.mjs';
+import { CONTEXT_SIZE_POLICY, relevanceBudgetFor, applySafetyCeiling } from './context-size.mjs';
 import { load } from '../query-index.mjs';
 
 const BUNDLE_VERSION = '8.0.0';
@@ -40,9 +41,24 @@ function serialiseFiles(files) {
   }));
 }
 
-export function buildBundle(task, { expandSteps = 1, maxFiles = 25 } = {}) {
+export function buildBundle(task, {
+  expandSteps = CONTEXT_SIZE_POLICY.expansionBudget.steps,
+  maxFiles = null,
+  safetyCeiling = CONTEXT_SIZE_POLICY.safetyCeiling,
+} = {}) {
   const routing = classify(task);
-  let ctx = initialContext(task, routing, { maxFiles });
+
+  // An explicit `maxFiles` is a decision by the caller and is honoured verbatim;
+  // otherwise the budget is derived from evidence about this task. Passing
+  // `null` (not 25) is what distinguishes "caller chose nothing" from "caller
+  // chose exactly the old default".
+  const explicitBudget = Number.isFinite(maxFiles);
+  const sizing = relevanceBudgetFor(routing, {
+    base: explicitBudget ? maxFiles : CONTEXT_SIZE_POLICY.relevanceBudget,
+    grow: !explicitBudget,
+  });
+
+  let ctx = initialContext(task, routing, { maxFiles: sizing.budget });
 
   const all = rankFiles(task, routing, { maxFiles: 2000, minScore: 0 });
 
@@ -61,6 +77,11 @@ export function buildBundle(task, { expandSteps = 1, maxFiles = 25 } = {}) {
 
   const files = serialiseFiles(ctx.files);
 
+  // The runaway guard runs last, on the ordered final list, and reports itself.
+  const guarded = applySafetyCeiling(files, safetyCeiling);
+  const finalFiles = guarded.files;
+  const expandedInFinal = finalFiles.filter((f) => f.addedByExpansion).length;
+
   const bundle = {
     schemaVersion: BUNDLE_VERSION,
     generatedAt: new Date().toISOString(),
@@ -71,15 +92,15 @@ export function buildBundle(task, { expandSteps = 1, maxFiles = 25 } = {}) {
     confidence: routing.confidence,
     confidenceWhy: routing.confidenceWhy,
     featureCandidates: routing.featureCandidates,
-    // agent.md 8.14 lists "Indexes queried" as part of the bundle. Stating which
+    // the bundle-field contract lists "Indexes queried" as part of the bundle. Stating which
     // indexes were opened makes the bundle self-describing: a reader can tell
     // whether the context came from the symbol index or only from keywords.
     indexes: routing.initialIndexes ?? [],
     entities: routing.entities,
     evidence: routing.evidence,
-    files,
+files: finalFiles,
     knowledge: (routing.knowledge ?? []).map((k) => ({ path: k, reason: `knowledge for ${routing.categories.join(', ')}` })),
-    // agent.md 8.14 also lists "Dependencies". Every relationship the bundle
+    // the bundle-field contract also lists "Dependencies". Every relationship the bundle
     // actually relied on, derived from the expansion log rather than
     // re-derived, so it can never disagree with what was really used.
     dependencies: (exp?.expansionLog ?? []).map((e) => ({
@@ -99,26 +120,41 @@ export function buildBundle(task, { expandSteps = 1, maxFiles = 25 } = {}) {
     expansionSteps: exp.expansionSteps,
     stopReason: exp.stopReason,
     unknown: routing.unknown ?? null,
+    // The context-size contract made explicit: which budget applied, what raised
+    // it, and whether the runaway guard fired. A bundle that cannot state its own
+    // size policy forces a reader to guess which rule was respected.
+    sizePolicy: {
+      relevanceBudget: sizing.budget,
+      relevanceBudgetBase: sizing.base,
+      relevanceBudgetExplicit: explicitBudget,
+      evidence: sizing.evidence,
+      expansionBudget: CONTEXT_SIZE_POLICY.expansionBudget,
+      expansionSteps: exp.expansionSteps,
+      safetyCeiling: guarded.ceiling,
+      safetyCeilingApplied: guarded.applied,
+      droppedByCeiling: guarded.dropped,
+      maxRelevanceBudget: CONTEXT_SIZE_POLICY.maxRelevanceBudget,
+    },
     efficiency: {
       // The real repository total, not the number of ranked candidates. Using
       // the candidate count made "12 of 12 candidates" look like a 100% ratio
       // against 12 files when the repository holds hundreds.
       totalIndexedFiles: repositorySize().indexedFiles,
       qualifiedCandidates: all.files.length,
-      filesSelected: files.length,
-      // Reported separately because the cap applies to what RELEVANCE selected.
-      // Expansion is a separate, budgeted decision that may legitimately push
-      // the total past it; conflating the two hides which rule was respected.
-      initialFiles: files.length - exp.expansionCount,
-      expandedFiles: exp.expansionCount,
-      selectionRatio: files.length === 0
+      filesSelected: finalFiles.length,
+      // Split derived from the FINAL list rather than from `expansionCount`, so
+      // the reported split cannot disagree with the files actually emitted —
+      // including after the safety ceiling dropped something.
+      initialFiles: finalFiles.length - expandedInFinal,
+      expandedFiles: expandedInFinal,
+      selectionRatio: finalFiles.length === 0
         ? 0
-        : Number((files.length / repositorySize().indexedFiles).toFixed(4)),
+        : Number((finalFiles.length / repositorySize().indexedFiles).toFixed(4)),
     },
     // Derived from the FINAL file list, not from either intermediate context:
     // expansion can turn an empty result into a non-empty one, and a bundle that
     // claims "no file matched" while listing files is worse than no bundle.
-    emptyReason: files.length === 0 ? (initialEmptyReason ?? exp.emptyReason ?? null) : null,
+    emptyReason: finalFiles.length === 0 ? (initialEmptyReason ?? exp.emptyReason ?? null) : null,
   };
 
   return bundle;
@@ -161,11 +197,11 @@ export function validateBundle(bundle) {
 
   // Two invariants that make a bundle trustworthy rather than merely well-typed.
   if ((bundle.files ?? []).length === 0 && !bundle.emptyReason) {
-    problems.push('files is empty but emptyReason is null — an empty context must say why');
+    problems.push('files is empty but emptyReason is null â€” an empty context must say why');
   }
   for (const f of bundle.files ?? []) {
     if (!Array.isArray(f.why) || f.why.length === 0) {
-      problems.push(`${f.path}: no reason recorded — every file must be explainable`);
+      problems.push(`${f.path}: no reason recorded â€” every file must be explainable`);
     }
   }
 

@@ -1,9 +1,9 @@
 /**
- * Intelligence access layer — agent.md task 8.16.
+ * Intelligence access layer — the intelligence-access contract.
  *
  * Everything in Phase 8 reads the codebase through this module. It is a thin
  * facade over `query-index.mjs`, which owns the Phase 7 indexes and is the ONLY
- * thing that parses them. agent.md 8.16 is explicit:
+ * thing that parses them. the intelligence-access contract is explicit:
  *
  *   "Do not create a second independent indexing engine."
  *
@@ -14,7 +14,7 @@
  *
  * Every lookup is intentionally total: it returns an empty result rather than
  * throwing, because "the router found nothing" is a normal, reportable outcome
- * (agent.md 8.35 UNKNOWN handling), not an error.
+ * (the UNKNOWN-handling contract UNKNOWN handling), not an error.
  */
 
 import { existsSync, readFileSync, statSync } from 'node:fs';
@@ -27,7 +27,7 @@ export { ROOT, AGENT_DIR, slash, impactOf };
 /* ------------------------------------------------------------------ *
  * Normalisation
  *
- * agent.md 8.28 requires `TemplateCard`, `template card`, `template-card` and
+ * the non-existent-identifier contract requires `TemplateCard`, `template card`, `template-card` and
  * "card for templates" to reach the same component, and 8.3 forbids classifying
  * on keywords alone. Both are satisfied by the same trick: reduce every spelling
  * of an identifier to one canonical token form before matching it against index
@@ -70,14 +70,74 @@ export function identifierTokens(s) {
   return String(s).match(/\b[A-Z][A-Za-z0-9]*\b/g) ?? [];
 }
 
-/** Route-ish strings: `/api/v1/templates`, `/admin/mcp/health`. */
+/**
+ * Route-ish strings: `/api/v1/templates`, `/admin/mcp/health`.
+ *
+ * The route is whatever follows the opening slash, and it is allowed to start
+ * directly after any delimiter rather than only after whitespace. Developers
+ * write `Fix the \`/activate-free\` endpoint`, not `Fix the /activate-free
+ * endpoint`, and a boundary of `(?:^|\s)` made every decorated form invisible:
+ * backtick, double quote and open paren each caused the task to resolve
+ * UNKNOWN with zero files instead of API with ten. Inline decoration is
+ * presentation, never part of the route.
+ *
+ * Only the captured route is returned. The previous version returned the whole
+ * match including the leading boundary character and relied on the single caller
+ * trimming it, which is one refactor away from leaking punctuation into an
+ * endpoint lookup.
+ */
 export function routeTokens(s) {
-  return String(s).match(/(?:^|\s)(\/[A-Za-z0-9_\-/:.$*{}[\]]*)/g) ?? [];
+  const out = [];
+  // The boundary class excludes `/ . -` so a path fragment or a date-like string
+  // is not mistaken for the start of a route.
+  for (const m of String(s).matchAll(/(?:^|[^\w/.\-])(\/[A-Za-z0-9_\-/:.$*{}[\]]*)/g)) {
+    out.push(m[1]);
+  }
+  return out;
 }
 
-/** Repository file paths, with or without a leading `./`. */
+/**
+ * Source extensions the index can legitimately infer for a path written without
+ * one, or strip from a path written with the wrong one.
+ */
+const SOURCE_EXTS = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs'];
+
+/**
+ * Repository file paths, with or without a leading `./`.
+ *
+ * Three shapes are recognised, because developers write all three:
+ *
+ *   - a full path with an extension: `backend/src/services/healthService.js`
+ *   - a bare filename with a source extension: `accessService.js`
+ *   - a full path written WITHOUT its extension: `backend/src/services/healthService`
+ *
+ * The second shape used to be dropped entirely: the original pattern required at
+ * least one `/`, so `Update accessService.js` lost the one token in it that
+ * mattered. `identifierTokens` could not rescue it either, because that pattern
+ * requires a leading capital letter and the service is named `accessService`.
+ * The task therefore resolved UNKNOWN with zero files for a real, indexed file.
+ *
+ * The third shape is new for the same reason — dropping the extension is how
+ * people type a path they have open in an editor tab.
+ *
+ * Both additions are restricted to source extensions, so an incidental mention of
+ * `package.json`, a version number or a `.md` filename cannot hijack the
+ * explicit-file fast path. Resolution stays index-gated either way: the router
+ * discards anything `resolveFilePath` cannot match against a real indexed file,
+ * so widening the pattern cannot manufacture a fast path.
+ */
 export function filePathTokens(s) {
-  return String(s).match(/(?:\.{0,2}\/)?(?:[A-Za-z0-9_\-]+\/)+[A-Za-z0-9_\-.!]+\.[A-Za-z0-9]+/g) ?? [];
+  const text = String(s);
+  const paths = text.match(/(?:\.{0,2}\/)?(?:[A-Za-z0-9_\-]+\/)+[A-Za-z0-9_\-.!]+\.[A-Za-z0-9]+/g) ?? [];
+  const bare = text.match(/(?<![\w./\\-])[A-Za-z0-9_\-]+\.(?:js|jsx|ts|tsx|mjs|cjs)(?![\w-])/g) ?? [];
+  // Two or more slashes, so ordinary prose like "backend/src" is not treated as a
+  // path and then guessed at.
+  const extensionless = text.match(/(?:\.{0,2}\/)?(?:[A-Za-z0-9_\-]+\/){2,}[A-Za-z0-9_\-]+(?![\w.\-/])/g) ?? [];
+  const out = [...paths];
+  for (const t of [...bare, ...extensionless]) {
+    if (!out.some((p) => p.endsWith(t) || t.endsWith(p))) out.push(t);
+  }
+  return out;
 }
 
 /* ------------------------------------------------------------------ *
@@ -86,7 +146,7 @@ export function filePathTokens(s) {
  * The first version of the router fed every whitespace token into the index.
  * "the" then matched 40 component paths and the classifier confidently returned
  * all sixteen categories for every task, which is the precise failure
- * agent.md 8.3 forbids ("Do NOT classify purely by keyword").
+ * the classification-evidence contract forbids ("Do NOT classify purely by keyword").
  *
  * The fix is not a longer stopword list. It is to ask, for each word, how much
  * it actually narrows the search: a token that appears in a quarter of all
@@ -314,7 +374,7 @@ export function resolveFeature(term) {
 /**
  * Related task wording → real feature slugs.
  *
- * agent.md 8.27 asks the router to "associate related terms" using Phase 7
+ * the related-terms contract asks the router to "associate related terms" using Phase 7
  * feature metadata rather than building a hand-maintained synonym dictionary.
  * That is exactly what this is, and it is small on purpose: each entry is a
  * piece of domain vocabulary a developer would actually use, mapped to features
@@ -456,14 +516,14 @@ export function resolveTaskFeatures(terms) {
 /**
  * Closest real names for an identifier that resolved to nothing.
  *
- * agent.md uses `TemplateCard` as its worked example in 8.28 and in the success
+ * The router contract uses `TemplateCard` as its worked example, and
  * criteria, and simulation 2 asks to route "Change the TemplateCard design".
  * That component does not exist in this repository — the nearest real name is
  * the local, non-exported `CurrentTemplateCard` inside TemplateSimilarRail.tsx.
  *
  * A router that silently returned UNKNOWN there would be defensible but useless,
  * and one that confidently matched it would be worse. Reporting the near miss
- * with the distance stated is the honest answer, and it is what agent.md 8.49
+ * with the distance stated is the honest answer, and it is what the honest-distance contract
  * asks for: search exact symbols, return candidate areas, mark confidence.
  */
 export function resolveNearMisses(term, max = 5) {
@@ -621,6 +681,58 @@ export function resolveRoute(term) {
 export function resolveFilePath(term) {
   const ix = intel();
   const cleaned = slash(String(term).trim()).replace(/^\.\//, '');
+  const exact = fileRecord(cleaned, ix);
+  if (exact) return { ...exact, how: 'exact repository path' };
+
+  // The path with its source extension removed. This is the form developers type
+  // for a path with no extension at all (`backend/src/services/healthService`),
+  // and it is also the stem to search on for a bare filename (`accessService.js`
+  // → `accessService`), so every fallback below works from it.
+  const given = SOURCE_EXTS.find((e) => cleaned.toLowerCase().endsWith(e));
+  const base = given ? cleaned.slice(0, -given.length) : cleaned;
+  if (!base) return null;
+
+  const stripped = fileRecord(base, ix);
+  if (stripped) {
+    return {
+      ...stripped,
+      how: given
+        ? `path written with ${given}; matched the path without it`
+        : 'exact repository path',
+    };
+  }
+
+  // The extension was omitted, so infer it from the index — but only when exactly
+  // one candidate matches.
+  if (!given) {
+    const byExt = SOURCE_EXTS.map((e) => fileRecord(base + e, ix)).filter(Boolean);
+    if (byExt.length === 1) {
+      return { ...byExt[0], how: 'extension inferred: the index records exactly one such file' };
+    }
+    if (byExt.length > 1) return null;
+  }
+
+  // A bare filename such as `accessService.js` names no directory at all, so the
+  // index decides: accept only when exactly one indexed file carries that name.
+  // Two real files sharing a basename resolve to nothing, because guessing which
+  // one the developer meant is worse than admitting the router does not know.
+  // `base` has already had its source extension removed, so the candidates are
+  // compared without theirs too.
+  const sameName = [...ix.roleByPath.keys()].filter((p) => {
+    const name = p.slice(p.lastIndexOf('/') + 1);
+    const stemName = SOURCE_EXTS.find((e) => name.toLowerCase().endsWith(e));
+    const bare = stemName ? name.slice(0, -stemName.length) : name;
+    return bare === base;
+  });
+  if (sameName.length === 1) {
+    return { ...fileRecord(sameName[0], ix), how: 'filename matched exactly one indexed file' };
+  }
+
+  return null;
+}
+
+/** The indexed record for a path, or null when the index does not have it. */
+function fileRecord(cleaned, ix) {
   const role = ix.roleByPath.get(cleaned);
   if (!role) return null;
   const rev = ix.reverse.reverse[cleaned];

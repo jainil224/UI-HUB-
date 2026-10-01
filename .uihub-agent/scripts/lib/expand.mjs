@@ -1,9 +1,9 @@
 /**
- * Evidence-gated context expansion — agent.md tasks 8.12, 8.13, 8.31, 8.33,
+ * Evidence-gated context expansion â€” the permitted-trigger contract, 8.13, 8.31, 8.33,
  * 8.34, 8.35, 8.43.
  *
  * The whole point of this file is that expansion is a DECISION with a recorded
- * reason, not a reflex. agent.md 8.12 lists the only seven justifications that
+ * reason, not a reflex. the permitted-trigger contract lists the only seven justifications that
  * permit adding a file, and 8.12 also lists four things that must never justify
  * one. Those denials are enforced here as a hard filter, because a rule that is
  * only written in prose is a rule that gets forgotten.
@@ -17,7 +17,7 @@ import { expandReasons, reasonsForPath, candidatesFor } from './expand-reasons.m
 
 /**
  * Most-specific-first. When a file qualifies under several triggers, the most
- * specific justification is the one worth recording — it tells the reader more.
+ * specific justification is the one worth recording â€” it tells the reader more.
  *
  * The ordering is load-bearing, not cosmetic. SHARED_SERVICE is strictly a
  * subset of DIRECT_DEPENDENCY (both ask "does a named file import this?", the
@@ -39,14 +39,16 @@ const TRIGGER_PRIORITY = [
 export { TRIGGER_PRIORITY };
 
 /**
- * Guidelines, not universal caps (8.13, 8.43).
-
-export { TRIGGER_PRIORITY };
+ * Guidelines, not universal caps.
  *
- * agent.md explicitly refuses a hard maximum like "never inspect more than 10
- * files", because a database migration legitimately needs more than a button
- * change. These are therefore defaults the caller can raise with an explicit
- * reason, not limits the engine enforces on its own.
+ * The context-size contract explicitly refuses a hard maximum like "never
+ * inspect more than 10 files", because a database migration legitimately needs
+ * more than a button change. These are therefore defaults the caller can raise
+ * with an explicit reason, not limits the engine enforces on its own.
+ *
+ * The relevance budget that these sit alongside is a separate number owned by
+ * `context-size.mjs`; it is deliberately not configured here, so expansion and
+ * relevance cannot drift into one shared "limit".
  */
 export const DEFAULT_LIMITS = {
   initialTarget: 15,      // "5-15 files where practical"
@@ -78,7 +80,7 @@ export class ExpansionBudget {
  * Should expansion continue?
  *
  * Returns `{ stop, why }`. The `why` is required because 8.34/8.35 ask for an
- * explanation when the system declines to expand — silence is not an acceptable
+ * explanation when the system declines to expand â€” silence is not an acceptable
  * answer to "why did you stop?".
  */
 export function shouldStop({ budget, pending, task, routing }) {
@@ -108,7 +110,7 @@ export function shouldStop({ budget, pending, task, routing }) {
  *
  * `pending` is the set of files the relevance engine saw but did not admit. A
  * file may only be added when a permitted trigger explains WHY THIS TASK needs
- * it — never because it is nearby or merely shares a name.
+ * it â€” never because it is nearby or merely shares a name.
  */
 export function expand({ task, routing, initial, budget = new ExpansionBudget() }) {
   const ix = intel();
@@ -119,7 +121,7 @@ export function expand({ task, routing, initial, budget = new ExpansionBudget() 
   // not taken from the relevance engine: by the time a file reaches the pending
   // list it has already been filtered out for lacking substantive evidence, so
   // reusing that list made expansion unreachable for every explicit-file task.
-  const universe = candidatesFor({ routing, ix, named });
+  const universe = candidatesFor({ routing, ix, named, initial: initial.files ?? [] });
   let stopped = null;
 
   // One pass over the candidate universe. Each candidate is matched against
@@ -173,7 +175,7 @@ export function expand({ task, routing, initial, budget = new ExpansionBudget() 
     }
     cursor += budget.limits.perStep;
     if (budget.exhausted && cursor < admitted.length) {
-      stopped = `reached the step limit (${budget.limits.maxSteps}); ${admitted.length - cursor} justified file(s) were left unopened — ask for a larger budget if they are genuinely needed`;
+      stopped = `reached the step limit (${budget.limits.maxSteps}); ${admitted.length - cursor} justified file(s) were left unopened â€” ask for a larger budget if they are genuinely needed`;
     }
   }
 
@@ -196,12 +198,12 @@ export function expand({ task, routing, initial, budget = new ExpansionBudget() 
   }
 }
 
-/** Paths the task itself named — the seeds every trigger must relate to. */
+/** Paths the task itself named â€” the seeds every trigger must relate to. */
 function namedPaths(routing) {
   const explicit = (routing.entities?.explicitFiles ?? []).map((f) => f.path);
   // 8.30: when the developer named a file, that file is the subject. Expanding
   // from every loosely-matched component as well would re-admit the whole feature
-  // through the back door — the same over-broad context the fast path exists to
+  // through the back door â€” the same over-broad context the fast path exists to
   // prevent, just one expansion step later.
   if (explicit.length) return new Set(explicit);
 

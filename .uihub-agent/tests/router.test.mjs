@@ -1,5 +1,5 @@
 /**
- * Router tests — agent.md tasks 8.53, 8.54.
+ * Router tests â€” the router-design contract, 8.54.
  *
  * These assert on BEHAVIOUR that the specification actually names, not on
  * incidental output shape. A test that pinned the exact ordering of every
@@ -28,7 +28,7 @@ const run = runQuery;
 const matrix = buildRoutingMatrix();
 
 /* ------------------------------------------------------------------ *
- * 8.2 / 8.3 — classification
+ * 8.2 / 8.3 â€” classification
  * ------------------------------------------------------------------ */
 
 test('an explicit file path routes to exactly that file', () => {
@@ -59,7 +59,7 @@ test('an identifier that does not exist resolves to nothing rather than to a gue
   assert.ok(r.evidence.nearMisses.length > 0, 'a failed exact match should surface near misses');
 });
 
-test('confidence is one of HIGH, MEDIUM, LOW — never a percentage', () => {
+test('confidence is one of HIGH, MEDIUM, LOW â€” never a percentage', () => {
   for (const t of ['Fix a payment verification bug', 'Fix something', 'xyzzy frobnicate widget']) {
     const r = classify(t);
     assert.ok(['HIGH', 'MEDIUM', 'LOW'].includes(r.confidence), `bad confidence: ${r.confidence}`);
@@ -92,7 +92,7 @@ test('weak-only evidence never reaches HIGH confidence', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.4 — intent
+ * 8.4 â€” intent
  * ------------------------------------------------------------------ */
 
 test('intent verbs classify, and a question with no verb is an investigation', () => {
@@ -109,7 +109,7 @@ test('intent carries a reason', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.5 — surface
+ * 8.5 â€” surface
  * ------------------------------------------------------------------ */
 
 test('surface follows the resolved evidence', () => {
@@ -119,7 +119,7 @@ test('surface follows the resolved evidence', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.52 — protected paths
+ * 8.52 â€” protected paths
  * ------------------------------------------------------------------ */
 
 test('protected tiers come from PROTECTED_PATHS.md, not a copied table', () => {
@@ -147,7 +147,7 @@ test('every tier the router can emit is declared in PROTECTED_PATHS.md', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.51 — freshness
+ * 8.51 â€” freshness
  * ------------------------------------------------------------------ */
 
 test('freshness reports FRESH against the committed indexes', () => {
@@ -164,7 +164,7 @@ test('repository size is consistent with the manifest snapshot', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.53 — the matrix contract
+ * 8.53 â€” the matrix contract
  * ------------------------------------------------------------------ */
 
 test('the routing matrix is internally consistent', () => {
@@ -198,7 +198,7 @@ test('subsystem overlays are declared as overlays, not as new surfaces', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.54 — query-index still works as a library
+ * 8.54 â€” query-index still works as a library
  * ------------------------------------------------------------------ */
 
 test('query-index imports silently and returns data', () => {

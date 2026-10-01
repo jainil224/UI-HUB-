@@ -1497,7 +1497,7 @@
       "ROUTE_RELATIONSHIP": "a page on a route that a selected file serves",
       "RUNTIME_EVIDENCE": "runtime behaviour of a selected file requires it"
     },
-    "note": "Guidelines, not hard limits — see agent.md 8.13."
+    "note": "Guidelines, not hard limits — see the context-size contract."
   },
   "highCautionCategories": [
     "PAYMENT",

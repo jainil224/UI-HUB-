@@ -1,17 +1,17 @@
 /**
- * Explainable file relevance — agent.md tasks 8.9, 8.10, 8.11, 8.32, 8.37, 8.38.
+ * Explainable file relevance â€” the no-fake-precision contract, 8.10, 8.11, 8.32, 8.37, 8.38.
  *
  * Two rules shape this file.
  *
- * 1. NO FAKE PRECISION (8.9). agent.md forbids reporting "97.43% relevant" unless
+ * 1. NO FAKE PRECISION. The contract forbids reporting "97.43% relevant" unless
  *    there is a real measurable basis. There is no such basis here, so a file
- *    gets a `score` — an integer used only for ORDERING — plus the list of
+ *    gets a `score` â€” an integer used only for ORDERING â€” plus the list of
  *    `reasons` that produced it. The reasons are the output; the score is an
  *    implementation detail and is never presented as a percentage.
  *
  * 2. EVERY FILE EXPLAINS ITSELF (8.10). A relevance result you cannot debug is
  *    worse than no result, so `why` is mandatory on every entry and each reason
- *    names the concrete evidence — the file, the edge, the feature — rather than
+ *    names the concrete evidence â€” the file, the edge, the feature â€” rather than
  *    restating the task.
  *
  * Candidates are only ever drawn from the Phase 7 indexes, so a path that is not
@@ -49,17 +49,17 @@ export const REASON_WEIGHTS = {
   CATEGORY_SOURCE_ROOT: 20,  // the file sits in a source root this category owns
   PATH_SEGMENT_RARE: 38,     // a RARE directory segment in the task names this file
   PATH_SEGMENT: 32,          // a common task word names a segment of this path
-  PROTECTED_DEPENDENCY: 15,  // a protected file depends on it — worth knowing early
+  PROTECTED_DEPENDENCY: 15,  // a protected file depends on it â€” worth knowing early
   SHARED_SERVICE: 12,        // a service several resolved files use
 };
 
 export const PRIORITY = {
-  P0: 'P0 — direct target',
-  P1: 'P1 — direct dependency',
-  P2: 'P2 — direct consumer',
-  P3: 'P3 — shared service',
-  P4: 'P4 — supporting knowledge',
-  P5: 'P5 — optional context',
+  P0: 'P0 â€” direct target',
+  P1: 'P1 â€” direct dependency',
+  P2: 'P2 â€” direct consumer',
+  P3: 'P3 â€” shared service',
+  P4: 'P4 â€” supporting knowledge',
+  P5: 'P5 â€” optional context',
 };
 
 /**
@@ -162,8 +162,8 @@ export function buildCandidates(task, routing) {
   }
 
   // --- 8.32 exact component / symbol names ---------------------------
-  // "Exact" is reserved for a match on the WHOLE name. A partial match — the
-  // task said "auth middleware" and the component is "AuthBrandPanel" — is real
+  // "Exact" is reserved for a match on the WHOLE name. A partial match â€” the
+  // task said "auth middleware" and the component is "AuthBrandPanel" â€” is real
   // evidence but much weaker, and scoring it as exact let a frontend brand panel
   // outrank backend/src/middleware/auth.js on a backend task.
   for (const c of routing.entities.components ?? []) {
@@ -233,7 +233,7 @@ export function buildCandidates(task, routing) {
     for (const edge of inbound(seed)) {
       if (edge.from) add(edge.from, 'REVERSE_DEPENDENCY', `${seed} depends on this file`);
     }
-    // A page that renders ITSELF is not evidence — it is the same file. Without this
+    // A page that renders ITSELF is not evidence â€” it is the same file. Without this
     // guard every page outranked the backend file it shares a name with, purely by
     // pointing at itself.
     //
@@ -267,7 +267,7 @@ export function buildCandidates(task, routing) {
   // backend/src/middleware/auth.js and not stop at AuthBrandPanel.tsx, and
   // nothing in either component or symbol index says "middleware".
   //
-  // Deliberately not substantive on its own — a path word narrows, it does not
+  // Deliberately not substantive on its own â€” a path word narrows, it does not
   // identify. A file qualifies only when combined with something stronger.
   const segmentTokens = new Map();
   // How many indexed files sit under each directory segment. A segment held by
@@ -358,15 +358,38 @@ function siblingsInDir(dir, ix) {
  * ------------------------------------------------------------------ */
 
 /**
- * Rank candidates for a task (8.9 / 8.10 / 8.38).
+ * Verified import-graph connectivity for a path.
  *
- * `maxFiles` is deliberately NOT a fixed cap. 8.43 forbids an arbitrary
- * universal maximum; the caller passes a budget and the caller decides.
+ * Read from the Phase 7 dependency graph (`inboundOf` / `outboundOf`), so it is a
+ * measurement of real code structure rather than an invented score. `inbound` is
+ * the number of files that import this one; `outbound` is the number of modules
+ * it imports. `degree` is their sum and is used as the primary tie-break, with
+ * the two components as ordered fallbacks so two files with equal degree are
+ * still separated deterministically.
+ *
+ * A file with no edges scores zero, which places it last among equals rather
+ * than excluding it — connectivity reorders, it never rejects.
+ */
+export function connectivityOf(path, ix = intel()) {
+  const inbound = ix.inboundOf?.get(path)?.length ?? 0;
+  const outbound = ix.outboundOf?.get(path)?.length ?? 0;
+  return { inbound, outbound, degree: inbound + outbound };
+}
+
+/**
+ * Rank candidates for a task.
+ *
+ * `maxFiles` is the relevance BUDGET, not a universal cap — see the
+ * context-size contract recorded in `scripts/lib/context-size.mjs` and
+ * `tasks/CONTEXT_BUNDLE.md`. The caller may
+ * raise it with an explicit reason, and expansion is budgeted separately, so the
+ * final bundle size is not bounded by this number.
  */
 export function rankFiles(task, routing, { maxFiles = 25, minScore = 12 } = {}) {
   const byPath = buildCandidates(task, routing);
 
   const scored = [];
+  const ix = intel();
   for (const entry of byPath.values()) {
     if (!isSubstantive(entry.reasons)) continue;
     const score = scoreOf(entry.reasons);
@@ -374,7 +397,7 @@ export function rankFiles(task, routing, { maxFiles = 25, minScore = 12 } = {}) 
     // Strongest evidence first, so a truncated view still leads with the real
     // reason rather than with a "sits beside ..." line.
     entry.reasons.sort((a, b) => (REASON_WEIGHTS[b.kind] ?? 0) - (REASON_WEIGHTS[a.kind] ?? 0));
-    const role = intel().roleByPath.get(entry.path);
+    const role = ix.roleByPath.get(entry.path);
     scored.push({
       path: entry.path,
       score,
@@ -384,18 +407,54 @@ export function rankFiles(task, routing, { maxFiles = 25, minScore = 12 } = {}) 
       lines: role?.lines ?? null,
       tier: entry.tier ?? 'NORMAL',
       component: entry.component ?? null,
+      // Verified connectivity, read from the Phase 7 import graph. Used only to
+      // break a tie between files that already rank equally, never to make a
+      // relevant file out of an irrelevant one.
+      connectivity: connectivityOf(entry.path, ix),
       reasons: entry.reasons,
       why: entry.reasons.map((r) => r.why),
     });
   }
 
-  // Deterministic order: score desc, then priority, then path. Two runs on the
-  // same task must produce byte-identical bundles.
+  // Deterministic order: score desc, then priority, then connectivity, then path.
+  // Two runs on the same task must produce byte-identical bundles.
+  //
+  // Connectivity sits immediately above path because a score tie is not evidence
+  // of equal importance. For "Add an MCP tool" every file under
+  // mcp-server/src/tools/ scores exactly 80, so ordering fell to
+  // `localeCompare` and kept getAiPrompts/getAnimationCode/getComponent while
+  // discarding tools/index.ts (6 importers, 15 imports) and tools/helpers.ts
+  // (14 importers) — the two files a developer adding a tool actually has to
+  // understand. Alphabetical order is deterministic, but determinism is not the
+  // same thing as correctness: it is the last resort here, not the first.
   const ORDER = ['P0', 'P1', 'P2', 'P3', 'P4', 'P5'];
-  scored.sort((a, b) =>
+  const byRankThenPath = [...scored].sort((a, b) =>
     b.score - a.score
     || ORDER.indexOf(a.priority) - ORDER.indexOf(b.priority)
     || a.path.localeCompare(b.path));
+
+  scored.sort((a, b) =>
+    b.score - a.score
+    || ORDER.indexOf(a.priority) - ORDER.indexOf(b.priority)
+    || b.connectivity.degree - a.connectivity.degree
+    || b.connectivity.inbound - a.connectivity.inbound
+    || b.connectivity.outbound - a.connectivity.outbound
+    || a.path.localeCompare(b.path));
+
+  // Record where connectivity actually changed the outcome, so the bundle can
+  // explain it. A tie-break that silently reordered the context would be
+  // indistinguishable from a bug in the weights.
+  const pathOrder = new Map(byRankThenPath.map((f, i) => [f.path, i]));
+  const connOrder = new Map(scored.map((f, i) => [f.path, i]));
+  for (const f of scored) {
+    if (pathOrder.get(f.path) === connOrder.get(f.path)) continue;
+    const moved = connOrder.get(f.path) < pathOrder.get(f.path) ? 'ahead of' : 'behind';
+    const line = `connectivity tie-break: ${f.connectivity.degree} import edges `
+      + `(${f.connectivity.inbound} importers, ${f.connectivity.outbound} imports) ranked this `
+      + `${moved} the same-score alphabetical order`;
+    f.reasons.push({ kind: 'CONNECTIVITY_TIE_BREAK', why: line, connectivity: f.connectivity });
+    f.why.push(line);
+  }
 
   return {
     files: scored.slice(0, maxFiles),
@@ -405,7 +464,7 @@ export function rankFiles(task, routing, { maxFiles = 25, minScore = 12 } = {}) 
 }
 
 /**
- * 8.11 initial context set, plus 8.32 ordering — the small starting set the
+ * 8.11 initial context set, plus 8.32 ordering â€” the small starting set the
  * agent should read before touching source.
  */
 export function initialContext(task, routing, opts = {}) {
@@ -418,7 +477,7 @@ export function initialContext(task, routing, opts = {}) {
   // This happens for real. "Fix an XSS vulnerability in the comment renderer"
   // resolves the SECURITY category correctly, but this repository has no
   // component, service, hook, feature or symbol whose name contains "comment"
-  // — so there is genuinely no file to open, only the security knowledge to
+  // â€” so there is genuinely no file to open, only the security knowledge to
   // read. Inventing a near-match would be worse than admitting it.
   const emptyReason = files.length === 0
     ? {

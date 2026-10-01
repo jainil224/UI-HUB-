@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Intelligence query CLI — agent.md tasks 7.19–7.22, extended by Phase 8 (8.16, 8.19).
+ * Intelligence query CLI — the intelligence-query contract, extended by Phase 8.
  *
  * The indexes are large on purpose: SYMBOL_INDEX alone holds ~2,940 symbols and
  * IMPORT_GRAPH ~1,100 internal edges. An agent that reads those files spends
@@ -10,7 +10,7 @@
  *
  * So the indexes stay on disk and this tool answers questions about them,
  * printing only the lines that answer the question. Every example query in
- * agent.md A7.22 and every success criterion in A50 is a subcommand here, so the
+ * every example query and every success criterion in the contract is a subcommand here, so the
  * documented examples are executable rather than aspirational.
  *
  * Phase 8 (8.16) requires the task router to sit ON TOP of these indexes rather
@@ -21,7 +21,7 @@
  *
  * The commands never reach into an index directly, so a routing bug cannot be
  * fixed in one place and stay broken in the other. `--json` returns the `queries`
- * result verbatim, which is what agent.md 8.19 asks for: metadata and paths
+ * result verbatim, which is what the verbatim-output contract asks for: metadata and paths
  * first, no source code in the default output.
  *
  * Usage:
@@ -667,7 +667,7 @@ function usage() {
   say('  confidence                    confidence distribution + unresolved edges');
   say('  stats                         manifest, fingerprints, timings');
   say('');
-  say('  --json                        machine-readable output (agent.md 8.19)');
+  say('  --json                        machine-readable output (the verbatim-output contract)');
   flush();
 }
 

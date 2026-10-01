@@ -1,12 +1,12 @@
 /**
- * Task classifier — agent.md tasks 8.3 – 8.6.
+ * Task classifier — the classification contract.
  *
  * The contract in tasks/TASK_ROUTER.md:
  *
  *   classify(task) → { task, intent, categories, surface, confidence,
  *                      featureCandidates, initialIndexes, entities, evidence }
  *
- * agent.md 8.3 says "Do NOT classify purely by keyword", and that single
+ * the classification-evidence contract says "Do NOT classify purely by keyword", and that single
  * sentence is the reason this module is shaped the way it is.
  *
  * A naive router matches "preview" against a TEMPLATE keyword list and calls it
@@ -25,7 +25,7 @@
  *
  * Every category in the result carries `strong` / `weak` signal lists, and
  * `strong` is what allows HIGH. Weak-only categories cap at MEDIUM, and a task
- * with no strong signal at all returns UNKNOWN / LOW per agent.md 8.35.
+ * with no strong signal at all returns UNKNOWN / LOW per the UNKNOWN-handling contract.
  */
 
 import {
@@ -69,7 +69,7 @@ function evExplicitPath(paths, ident) {
  *
  * Intent comes from the verb, not the noun. "Why is preview slow?" and "Fix
  * preview loading" name the same subsystem and differ in intent, which is
- * exactly the split agent.md 8.4 asks for.
+ * exactly the split the surface-split contract asks for.
  * ------------------------------------------------------------------ */
 
 export function classifyIntent(task) {
@@ -147,6 +147,18 @@ function collectEntities(task) {
   // 8.30 fast path: an explicit repository path is the strongest signal there
   // is. An experienced developer naming a file does not need the whole map.
   const explicitFiles = paths.map((p) => resolveFilePath(p)).filter(Boolean);
+
+  // A path or route the task names but the index does not have is a FINDING, not
+  // noise. Discarding it silently made "Fix frontend/src/components/templates/
+  // TemplateCard.tsx" fall through to a keyword search for "template", which
+  // resolved TEMPLATE + COMPONENT from other files and reported HIGH confidence
+  // for a file that does not exist — fifty files of confident wrong context.
+  // The token is kept here and surfaced as `unresolvedTargets` so classification
+  // can discount the confidence the leftover keywords appear to justify.
+  const unresolvedTargets = [
+    ...paths.filter((p) => !resolveFilePath(p)).map((p) => ({ kind: 'PATH', asked: p, near: nearFiles(p) })),
+    ...routeStrings.filter((r) => !resolvedRouteHit(r)).map((r) => ({ kind: 'ROUTE', asked: r, near: nearRoutes(r) })),
+  ];
 
   // 8.30 fast path, part 1: when the task names real files, broad
   // classification is explicitly not wanted. Searching the task's other words
@@ -253,9 +265,67 @@ function collectEntities(task) {
     identifiers, paths, routeStrings, terms, words, distinctive,
     explicitFiles, featureHits, featureCandidates,
     components, symbols, services, hooks, resolvedRoutes,
-    integrations, mcpTools, roles, entityPaths, nearMisses,
+    integrations, mcpTools, roles, entityPaths, nearMisses, unresolvedTargets,
     distinctiveNote: explainNonDistinctive(words),
   };
+}
+
+/** Did this route string resolve to something the index actually records? */
+function resolvedRouteHit(route) {
+  return resolveRoute(route) !== null;
+}
+
+/**
+ * Real files near a path the task named but the index does not have.
+ *
+ * Deliberately structural, not fuzzy. The candidates are ranked by the two things
+ * that actually indicate a typo — same directory, and the same leaf name appearing
+ * elsewhere in the tree — so "TemplateCard.tsx" can be answered with "no such
+ * file; the templates directory holds registry.ts, TemplateCodeViewer.tsx and
+ * seven other files" without ever guessing an edit distance.
+ */
+function nearFiles(path) {
+  const ix = intel();
+  const dir = path.slice(0, path.lastIndexOf('/')) || '.';
+  const leaf = path.slice(path.lastIndexOf('/') + 1);
+  const stem = leaf.replace(/\.[A-Za-z0-9]+$/, '');
+  const sameDir = [...ix.roleByPath.keys()].filter((p) => p.startsWith(`${dir}/`) && p !== path);
+  const sameLeaf = stem.length >= 3
+    ? [...ix.roleByPath.keys()].filter((p) => p !== path && p.slice(p.lastIndexOf('/') + 1).replace(/\.[A-Za-z0-9]+$/, '') === stem)
+    : [];
+  const out = [];
+  for (const p of [...sameLeaf, ...sameDir]) {
+    if (out.includes(p)) continue;
+    out.push(p);
+    if (out.length >= 8) break;
+  }
+  return out;
+}
+
+/** Say plainly that a named target is absent, and what exists nearby instead. */
+function describeUnresolvedTargets(targets) {
+  return targets.map((t) => {
+    const where = t.kind === 'ROUTE' ? 'route' : 'file';
+    return t.near.length > 0
+      ? `no such ${where} "${t.asked}"; the repository has ${t.near.slice(0, 5).join(', ')}`
+      : `no such ${where} "${t.asked}"`;
+  });
+}
+
+/** Real routes near a route the task named but the index does not record. */
+function nearRoutes(route) {
+  const ix = intel();
+  const want = route.replace(/^\/+/, '').split('/').filter(Boolean);
+  const out = [];
+  for (const group of [ix.api?.endpoints ?? {}, ix.routes?.routes ?? {}]) {
+    for (const p of Object.keys(group ?? {})) {
+      const have = p.replace(/^\/+/, '').split('/').filter(Boolean);
+      const shared = have.filter((seg, i) => seg === want[i]).length;
+      if (shared === 0) continue;
+      if (!out.includes(p)) out.push(p);
+    }
+  }
+  return out.slice(0, 8);
 }
 
 /**
@@ -380,6 +450,20 @@ export function classify(task) {
     confidenceWhy = `exactly one indexed entity resolved (${resolvedCount}); a single confirmed signal`;
   }
 
+  // A task that named a concrete target the repository does not contain is not
+  // confidently resolved, whatever its other words happened to match. "Fix
+  // .../TemplateCard.tsx" resolved TEMPLATE from the word "template" and reached
+  // HIGH with fifty files, none of them the file that was asked for. The
+  // category evidence is still reported — it may genuinely be relevant — but the
+  // confidence it can justify is capped, because the strongest signal in the task
+  // went unmatched.
+  if (ev.unresolvedTargets.length > 0) {
+    const asked = ev.unresolvedTargets.map((t) => `${t.kind.toLowerCase()} "${t.asked}"`).join(', ');
+    confidence = confidence === 'HIGH' ? 'MEDIUM' : 'LOW';
+    confidenceWhy = `${asked} does not exist in this repository; `
+      + `the remaining category evidence comes only from the task's other words. ${confidenceWhy}`;
+  }
+
   const entities = {
     components: ev.components.map((c) => ({
       name: c.component.name, path: c.component.path, feature: c.component.feature,
@@ -418,7 +502,7 @@ target: r.kind === 'PAGE' ? r.page.path
   /* --- 8.35 / 8.49: honest UNKNOWN ---------------------------------- */
   if (strongCount === 0) {
     // An unresolved identifier alongside zero category evidence is the exact
-    // shape of the `TemplateCard` case in agent.md 8.28. That is still an
+    // shape of the `TemplateCard` case in the non-existent-identifier contract. That is still an
     // UNKNOWN classification — the named thing does not exist — but it carries
     // the near miss so the caller is not left with nothing.
     const unidentified = ev.nearMisses.length
@@ -449,13 +533,18 @@ target: r.kind === 'PAGE' ? r.page.path
         searchedTerms: ev.terms,
         ignoredAsTooCommon: ev.distinctiveNote,
         nearMisses: ev.nearMisses,
+        unresolvedTargets: ev.unresolvedTargets,
         resolvedRoles: [...ev.roles].sort(),
       },
       unknown: {
         state: true,
         why: confidenceWhy,
         askedForNarrowing: true,
-        suggestion: [...unidentified, ...describeNarrowing(task)],
+        suggestion: [
+          ...unidentified,
+          ...describeUnresolvedTargets(ev.unresolvedTargets),
+          ...describeNarrowing(task),
+        ],
       },
     };
   }
@@ -513,6 +602,7 @@ target: r.kind === 'PAGE' ? r.page.path
       searchedTerms: ev.terms,
       ignoredAsTooCommon: ev.distinctiveNote,
       nearMisses: ev.nearMisses,
+      unresolvedTargets: ev.unresolvedTargets,
       resolvedRoles: [...ev.roles].sort(),
       surfaceWhy: surface.why,
       fastPathReason: ev.explicitFiles.length

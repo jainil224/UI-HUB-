@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 /**
- * agent:context — build a task context bundle and explain every selection.
+ * agent:context â€” build a task context bundle and explain every selection.
  *
- * agent.md tasks 8.14, 8.15, 8.18, 8.19, 8.20, 8.39, 8.47, 8.48, 8.51.
+ * the bundle-field contract, 8.15, 8.18, 8.19, 8.20, 8.39, 8.47, 8.48, 8.51.
  * Read-only: it never writes application source.
  *
  * The `--manifest <path>` option writes a per-task manifest to an explicit path.
- * agent.md 8.39 expects `generated/CONTEXT_MANIFEST.json` to exist, so a static
+ * the generated-manifest contract expects `generated/CONTEXT_MANIFEST.json` to exist, so a static
  * template is checked in at that path; this CLI does NOT overwrite it. Real
  * per-task output goes to the path the caller names, which keeps per-task state
  * out of a generated artifact that `agent:index:check` owns.
@@ -31,7 +31,7 @@ USAGE
 
 OPTIONS
   --json                machine-readable bundle
-  --max-files <n>       cap the context file list (default 25)
+  --max-files <n>       override the evidence-driven relevance budget (default: derived per task)
   --expand-steps <n>    context expansion rounds, 0 disables (default 1)
   --manifest <path>     write the manifest to <path> (ignored unless given)
   --allow-stale         proceed even when the indexes are stale
@@ -52,11 +52,11 @@ function render(bundle, fresh) {
   const push = (s = '') => L.push(s);
 
   push(`TASK         ${bundle.task}`);
-  push(`INTENT       ${bundle.intent.intent} — ${bundle.intent.why}`);
+  push(`INTENT       ${bundle.intent.intent} â€” ${bundle.intent.why}`);
   push(`CATEGORIES   ${bundle.categories.join(', ')}`);
-  push(`CONFIDENCE   ${bundle.confidence} — ${bundle.confidenceWhy}`);
+  push(`CONFIDENCE   ${bundle.confidence} â€” ${bundle.confidenceWhy}`);
   push(`SURFACE      ${bundle.surface.join(', ')}`);
-  if (fresh && fresh.state !== 'FRESH') push(`INDEX FRESHNESS  ${fresh.state} — ${fresh.reason}`);
+  if (fresh && fresh.state !== 'FRESH') push(`INDEX FRESHNESS  ${fresh.state} â€” ${fresh.reason}`);
 
   if (bundle.knowledge.length) {
     push();
@@ -89,7 +89,7 @@ function render(bundle, fresh) {
   if (bundle.expansionLog.length) {
     push();
     push('EXPANSION');
-    for (const e of bundle.expansionLog) push(`${B}step ${e.step}: ${e.path} — ${e.how[0]}`);
+    for (const e of bundle.expansionLog) push(`${B}step ${e.step}: ${e.path} â€” ${e.how[0]}`);
   }
   push(`STOP         ${bundle.stopReason}`);
 
@@ -126,15 +126,20 @@ function main() {
   const freshOk = fresh.state === 'FRESH';
   if (!freshOk && !opts.flags['allow-stale']) {
     process.stderr.write(
-      `agent:context: indexes are ${fresh.state} — ${fresh.reason}\n` +
+      `agent:context: indexes are ${fresh.state} â€” ${fresh.reason}\n` +
       '  run: npm run agent:index\n' +
       '  override with --allow-stale if you know the indexes are close enough\n');
     process.exit(2);
   }
 
-  const maxFiles = Number.parseInt(opts.flags['max-files'] ?? '25', 10);
+  // `--max-files` is deliberately left undefined by default. Passing a literal
+  // 25 here would register as a caller override and silently switch OFF the
+  // evidence-driven relevance budget, which is the opposite of what a default
+  // flag should do. Omit it to get the policy; pass a number to override it.
+  const maxFilesRaw = opts.flags['max-files'];
+  const maxFiles = maxFilesRaw === undefined ? null : Number.parseInt(maxFilesRaw, 10);
   const expandSteps = Number.parseInt(opts.flags['expand-steps'] ?? '1', 10);
-  if (!Number.isFinite(maxFiles) || maxFiles < 1) { process.stderr.write('agent:context: --max-files must be positive\n'); process.exit(1); }
+  if (maxFiles !== null && (!Number.isFinite(maxFiles) || maxFiles < 1)) { process.stderr.write('agent:context: --max-files must be positive\n'); process.exit(1); }
   if (!Number.isFinite(expandSteps) || expandSteps < 0) { process.stderr.write('agent:context: --expand-steps must be >= 0\n'); process.exit(1); }
 
   const bundle = buildBundle(task, { maxFiles, expandSteps });

@@ -178,6 +178,41 @@ PATCH 3, PUT 1) plus **14 MCP tool registrations**.
 - asset and query imports (`?raw`, `.css`, `.svg`) recorded as asset edges
 - **anything unresolved is recorded, never dropped**
 
+### Connectivity, and what it is used for
+
+`IMPORT_GRAPH.json` and `REVERSE_DEPENDENCY_MAP.json` carry edges in both
+directions, so any file's **connectivity** is directly readable as
+`inbound + outbound` — the number of files that import it plus the number of
+modules it imports. Nothing is derived or estimated: `intel()` exposes
+`inboundOf` / `outboundOf`, and the ranker reads them.
+
+Connectivity is used for exactly one decision today: breaking a tie between
+files that scored identically. It reorders and never rejects. It is deliberately
+*not* used as a relevance signal — "this file is widely imported" says how
+central a file is, not whether this task needs it, and treating the two as the
+same thing is how a router ends up handing over the repository's most popular
+file for every task. Files with no edges score zero and sort last among equals.
+
+### Test files are first-class graph citizens
+
+All **18** test files are indexed, and their import edges are real edges in
+`IMPORT_GRAPH.json` — `backend/tests/health.test.js` importing
+`backend/src/services/healthService.js` is the same kind of edge as any other.
+This matters for two decisions:
+
+- **Test discovery.** A test that imports a task-named file is admitted under
+  `TEST_DEPENDENCY`. For a conceptual task that named nothing, the
+  relevance-selected file is accepted as the subject instead. Either way the
+  justification is a real import edge, read from the graph — never a filename
+  pattern.
+- **Test files are never subjects.** A test cannot be the evidence that admits
+  another test, so test discovery cannot chain into "all tests".
+
+Nine of the eighteen are `node:test` / `vitest` unit tests of a single service or
+config; three of them import only their own subject. That makes them precise
+test-dependency targets rather than broad ones, which is why conceptual test
+discovery adds three files for "Fix authentication middleware" and not more.
+
 ### Determinism
 
 All content is JSON-serialized with sorted keys, so two runs on unchanged source

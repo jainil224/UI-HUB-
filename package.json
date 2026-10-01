@@ -34,7 +34,7 @@
     "agent:query": "node .uihub-agent/scripts/query-index.mjs",
     "agent:route": "node .uihub-agent/scripts/route-task.mjs",
     "agent:context": "node .uihub-agent/scripts/context-task.mjs",
-    "agent:test": "node --test .uihub-agent/tests/router.test.mjs .uihub-agent/tests/context.test.mjs",
+    "agent:test": "node --test .uihub-agent/tests/router.test.mjs .uihub-agent/tests/context.test.mjs .uihub-agent/tests/precision.test.mjs",
     "check:routing": "npm run agent:test && node .uihub-agent/scripts/check-index.mjs"
   },
   "devDependencies": {

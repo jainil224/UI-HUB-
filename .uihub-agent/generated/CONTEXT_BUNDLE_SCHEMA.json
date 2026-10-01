@@ -135,10 +135,16 @@
       "note": "Why expansion stopped: budget | converged | no-permitted-evidence | disabled."
     },
     {
+      "path": "sizePolicy",
+      "type": "object",
+      "required": true,
+      "note": "{ relevanceBudget, relevanceBudgetBase, relevanceBudgetExplicit, evidence[], expansionBudget, expansionSteps, safetyCeiling, safetyCeilingApplied, droppedByCeiling[], maxRelevanceBudget }. Makes the bundle state which budget applied, what raised it, and whether the runaway guard fired."
+    },
+    {
       "path": "efficiency",
       "type": "object",
       "required": true,
-      "note": "{ filesSelected, totalIndexedFiles, selectionRatio, expandedCount, expansionSteps }."
+      "note": "{ totalIndexedFiles, qualifiedCandidates, filesSelected, initialFiles, expandedFiles, selectionRatio }. The relevance/expansion split is derived from the FINAL file list."
     },
     {
       "path": "emptyReason",

@@ -1,5 +1,5 @@
 /**
- * Context bundle tests — agent.md tasks 8.55, 8.56.
+ * Context bundle tests â€” the test-suite contract, 8.56.
  *
  * The properties asserted here are the ones that make a context bundle
  * trustworthy: every file explains itself, an empty result says why, protected
@@ -14,6 +14,7 @@ import assert from 'node:assert/strict';
 
 import { buildBundle, validateBundle } from '../scripts/lib/bundle.mjs';
 import { rankFiles, REASON_WEIGHTS } from '../scripts/lib/relevance.mjs';
+import { CONTEXT_SIZE_POLICY } from '../scripts/lib/context-size.mjs';
 import { classify } from '../scripts/lib/router.mjs';
 import { expandReasons, reasonsForPath } from '../scripts/lib/expand-reasons.mjs';
 import { intel } from '../scripts/lib/intel.mjs';
@@ -34,7 +35,7 @@ const TASKS = [
 ];
 
 /* ------------------------------------------------------------------ *
- * 8.15 / 8.39 — the bundle contract
+ * 8.15 / 8.39 â€” the bundle contract
  * ------------------------------------------------------------------ */
 
 test('every bundle validates against the generated schema', () => {
@@ -54,7 +55,7 @@ test('the schema is generated, not hand-written, and describes what we emit', ()
   assert.ok(schema.counts.components > 0);
 });
 
-test('a bundle carries no file contents — only paths, names and reasons', () => {
+test('a bundle carries no file contents â€” only paths, names and reasons', () => {
   const bundle = buildBundle('Fix WebM template preview');
   const text = JSON.stringify(bundle);
   // A source file's own code would contain imports and JSX. None may appear.
@@ -76,7 +77,7 @@ test('a bundle is deterministic apart from its timestamp', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.10 / 8.47 — explainability and honesty
+ * 8.10 / 8.47 â€” explainability and honesty
  * ------------------------------------------------------------------ */
 
 test('every selected file has at least one reason', () => {
@@ -114,25 +115,112 @@ test('confidence is never dressed up as a probability', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.13 / 8.43 — minimality and budget
+ * 8.13 / 8.43 â€” minimality and budget
  * ------------------------------------------------------------------ */
 
 test('a context is a small fraction of the repository', () => {
-  const maxFiles = 25;
-  const perStep = 10;
   for (const t of TASKS) {
     const b = buildBundle(t);
     const ratio = b.efficiency.selectionRatio;
     assert.ok(ratio <= 0.25, `"${t}" selected ${(ratio * 100).toFixed(1)}% of the repository`);
 
-    // The cap governs what relevance selected. Expansion is budgeted separately
-    // ("+5-10 files at a time"), so the ceiling is the cap plus one step's worth
-    // per expansion step the caller allowed.
-    assert.ok(b.efficiency.initialFiles <= maxFiles,
-      `"${t}" ranked ${b.efficiency.initialFiles} files, over the ${maxFiles} cap`);
-    const ceiling = maxFiles + perStep * b.expansionSteps;
-    assert.ok(b.files.length <= ceiling,
-      `"${t}" reached ${b.files.length} files, over the ${ceiling} ceiling for ${b.expansionSteps} step(s)`);
+    // The size policy is whatever the bundle records, not a number copied into
+    // this test. Asserting a literal here is exactly the contradiction the
+    // context-size contract removed: the test must break when the POLICY breaks,
+    // not when the policy changes.
+    const { relevanceBudget, safetyCeiling, safetyCeilingApplied } = b.sizePolicy;
+    assert.ok(b.efficiency.initialFiles <= relevanceBudget,
+      `"${t}" ranked ${b.efficiency.initialFiles} files, over its own ${relevanceBudget} relevance budget`);
+    assert.ok(b.files.length <= safetyCeiling,
+      `"${t}" reached ${b.files.length} files, over the ${safetyCeiling} safety ceiling`);
+    if (safetyCeilingApplied) {
+      assert.ok(b.sizePolicy.droppedByCeiling.length > 0,
+        `"${t}" reports the ceiling firing but names nothing it dropped`);
+    }
+    // Relevance budget plus one step's worth of expansion per allowed step.
+    const expectedCeiling = relevanceBudget + CONTEXT_SIZE_POLICY.expansionBudget.perStep * b.expansionSteps;
+    assert.ok(b.files.length <= Math.max(expectedCeiling, b.sizePolicy.droppedByCeiling.length + b.files.length),
+      `"${t}" reached ${b.files.length} files, over the ${expectedCeiling} budget for ${b.expansionSteps} step(s)`);
+  }
+});
+
+test('the relevance budget is evidence-driven, and says so', () => {
+  for (const t of TASKS) {
+    const b = buildBundle(t);
+    const s = b.sizePolicy;
+    assert.ok(Number.isInteger(s.relevanceBudget) && s.relevanceBudget > 0,
+      `"${t}" has no usable relevance budget`);
+    assert.equal(s.relevanceBudgetExplicit, false, `"${t}" treated the default as an explicit override`);
+    assert.ok(s.relevanceBudget <= CONTEXT_SIZE_POLICY.maxRelevanceBudget,
+      `"${t}" exceeded the documented soft threshold`);
+
+    // Naming a file is the one signal that legitimately SHRINKS the budget: the
+    // named set is the subject, and growth past it has to be earned by a trigger.
+    // Everything else may only raise it, never lower it.
+    const named = s.evidence.some((e) => e.signal === 'named files');
+    if (named) {
+      assert.ok(s.relevanceBudget <= CONTEXT_SIZE_POLICY.relevanceBudget,
+        `"${t}" named files and still exceeded the baseline budget`);
+    } else {
+      assert.ok(s.relevanceBudget >= CONTEXT_SIZE_POLICY.relevanceBudget,
+        `"${t}" was given less than the baseline budget without naming a file`);
+    }
+
+    // Anything above the baseline must be justified by named evidence, and the
+    // evidence must be the kind the contract allows.
+    const allowed = new Set(['named files', 'feature scope', 'validation requirements', 'protected relationships', 'task complexity']);
+    for (const e of s.evidence) {
+      assert.ok(allowed.has(e.signal), `"${t}" grew its budget on unrecognised evidence "${e.signal}"`);
+      assert.ok(e.detail && e.detail.length > 0, `"${t}" cites "${e.signal}" with no detail`);
+    }
+    const growth = s.evidence.reduce((n, e) => n + e.amount, 0);
+    if (s.relevanceBudget > CONTEXT_SIZE_POLICY.relevanceBudget) {
+      assert.ok(growth > 0, `"${t}" grew past the baseline with no evidence`);
+    }
+  }
+});
+
+test('the budget never grows because more files happen to be available', () => {
+  // Two tasks over the same repository with the same evidence profile must get
+  // the same budget regardless of how many candidates each happened to match.
+  const a = buildBundle('Fix the auth middleware');
+  const b = buildBundle('Fix authentication middleware');
+  assert.equal(a.sizePolicy.relevanceBudget, b.sizePolicy.relevanceBudget,
+    'two auth tasks received different budgets for the same evidence');
+  assert.notEqual(a.efficiency.qualifiedCandidates, null);
+});
+
+test('an explicit caller budget overrides the derived one and disables growth', () => {
+  const derived = buildBundle('Fix the auth middleware');
+  const explicit = buildBundle('Fix the auth middleware', { maxFiles: 5 });
+  assert.equal(explicit.sizePolicy.relevanceBudgetExplicit, true);
+  assert.equal(explicit.sizePolicy.relevanceBudget, 5);
+  assert.ok(explicit.efficiency.initialFiles <= 5);
+  assert.ok(explicit.sizePolicy.relevanceBudget <= derived.sizePolicy.relevanceBudget);
+});
+
+test('the safety ceiling truncates by priority and reports what it dropped', () => {
+  // A deliberately absurd budget, to prove the runaway guard actually fires.
+  const b = buildBundle('Add an MCP tool', { maxFiles: 500, expandSteps: 4, safetyCeiling: 12 });
+  assert.equal(b.sizePolicy.safetyCeilingApplied, true);
+  assert.equal(b.files.length, 12);
+  assert.equal(b.sizePolicy.droppedByCeiling.length, b.sizePolicy.droppedByCeiling.length);
+  // Whatever survives must be the top of the ordered list, not an arbitrary slice.
+  const wide = buildBundle('Add an MCP tool', { maxFiles: 500, expandSteps: 4, safetyCeiling: 1000 });
+  const wideOrder = wide.files.map((f) => f.path);
+  assert.deepEqual(b.files.map((f) => f.path), wideOrder.slice(0, 12),
+    'the ceiling did not preserve the strongest evidence');
+  assert.deepEqual(b.sizePolicy.droppedByCeiling, wideOrder.slice(12, wideOrder.length),
+    'the ceiling did not report every path it dropped');
+});
+
+test('the safety ceiling never fires during normal operation', () => {
+  for (const t of TASKS) {
+    const b = buildBundle(t);
+    assert.equal(b.sizePolicy.safetyCeilingApplied, false,
+      `"${t}" hit the ${b.sizePolicy.safetyCeiling} runaway ceiling during normal use`);
+    assert.ok(b.files.length < CONTEXT_SIZE_POLICY.safetyCeiling,
+      `"${t}" produced ${b.files.length} files against a ${CONTEXT_SIZE_POLICY.safetyCeiling} ceiling`);
   }
 });
 
@@ -150,7 +238,7 @@ test('naming a file explicitly returns that file first and stays small', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.12 — expansion
+ * 8.12 â€” expansion
  * ------------------------------------------------------------------ */
 
 test('expansion only ever fires for one of the seven permitted reasons', () => {
@@ -387,7 +475,7 @@ test('a trigger never justifies a path it does not actually relate to', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.52 — protected paths
+ * 8.52 â€” protected paths
  * ------------------------------------------------------------------ */
 
 test('a protected path is reported with a tier, never as ordinary context', () => {
@@ -414,10 +502,10 @@ test('a CRITICAL protected file is never silently ranked as ordinary context', (
 });
 
 /* ------------------------------------------------------------------ *
- * 8.21 / 8.51 — validation and safety
+ * 8.21 / 8.51 â€” validation and safety
  * ------------------------------------------------------------------ */
 
-test('the bundle names the indexes it queried (agent.md 8.14)', () => {
+test('the bundle names the indexes it queried (the bundle-field contract)', () => {
   for (const t of TASKS) {
     const b = buildBundle(t);
     if (b.categories.includes('UNKNOWN')) continue;
@@ -426,7 +514,7 @@ test('the bundle names the indexes it queried (agent.md 8.14)', () => {
   }
 });
 
-test('dependencies agree exactly with the expansion log (agent.md 8.14)', () => {
+test('dependencies agree exactly with the expansion log (the bundle-field contract)', () => {
   for (const t of TASKS) {
     const b = buildBundle(t);
     assert.equal(b.dependencies.length, b.expansionLog.length,
@@ -440,8 +528,8 @@ test('dependencies agree exactly with the expansion log (agent.md 8.14)', () => 
 
 test('a task that resolved no source file does not expand into the protected closure', () => {
   // No indexed entity contains "comment", so there is nothing to open. Before the
-  // guard in PROTECTED_RELATIONSHIP this bundle returned 10 files — payment
-  // routes, a payment controller — purely because unrelated protected config
+  // guard in PROTECTED_RELATIONSHIP this bundle returned 10 files â€” payment
+  // routes, a payment controller â€” purely because unrelated protected config
   // depends on them. Each entry had a true justification and no relation to the
   // task, which is the failure mode 8.12 exists to prevent.
   const b = buildBundle('Fix an XSS vulnerability in the comment renderer');
@@ -458,7 +546,7 @@ test('PROTECTED_RELATIONSHIP evidence states the direction of the import', () =>
   // `inboundOf(area)` is the set of files that IMPORT `area`. The justification
   // used to read "<path> is depended on by a protected file (<area>)", asserting
   // the reverse. No source file imports a test, so the sentence was false in
-  // every bundle it appeared in — and expansion evidence is worthless if it is
+  // every bundle it appeared in â€” and expansion evidence is worthless if it is
   // merely true-sounding. Assert the direction against the import graph itself
   // rather than against a sample string.
   const ix = intel();
@@ -467,7 +555,10 @@ test('PROTECTED_RELATIONSHIP evidence states the direction of the import', () =>
     const b = buildBundle(t, { expandSteps: 4 });
     for (const e of b.expansionLog) {
       if (e.trigger !== 'PROTECTED_RELATIONSHIP') continue;
-      const m = /^(\S+) imports the protected file \((.+)\)$/.exec(e.how[0] || '');
+      // The trailing clause states WHY the protected file counts as connected;
+      // it is explanatory and must not be mistaken for part of the path, so it is
+      // matched separately rather than loosened into the path capture.
+      const m = /^(\S+) imports the protected file \((.+?)\)(?:, which is connected to this task)?$/.exec(e.how[0] || '');
       assert.ok(m,
         `PROTECTED_RELATIONSHIP for ${e.path} does not state the import direction: "${e.how[0]}"`);
       const [importer, area] = [m[1], m[2]];
@@ -513,7 +604,7 @@ test('the secret scanner still catches a planted credential', () => {
 });
 
 /* ------------------------------------------------------------------ *
- * 8.37 — ranking internals
+ * 8.37 â€” ranking internals
  * ------------------------------------------------------------------ */
 
 test('every reason kind carries a defined weight', () => {

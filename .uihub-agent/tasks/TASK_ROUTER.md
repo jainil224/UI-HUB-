@@ -135,6 +135,46 @@ found, and are filtered so they do not become noise. `TemplateCard` is the
 worked example: no such entity exists, and the nearest symbol is the local
 `CurrentTemplateCard` at `frontend/src/components/templates/TemplateSimilarRail.tsx:221`.
 
+## Ranking
+
+Files are ordered by **score**, and score is built only from substantive
+evidence. Ties are then broken, in this order:
+
+1. **Priority** — `P0` before `P1` before `P2`, and so on.
+2. **Connectivity** — how many import edges the file actually has, read from
+   `IMPORT_GRAPH.json` as `inbound + outbound`. This is a measurement of real
+   code structure, not an invented score.
+
+   Before this rule existed, same-score files were ordered alphabetically, which
+   systematically excluded the most-connected files in a large feature: on "Add
+   an MCP tool", `mcp-server/src/tools/index.ts` (21 import edges) and
+   `tools/helpers.ts` (18 edges) both lost the tie to alphabetically earlier but
+   weakly connected files, so the files that define the MCP tool surface were
+   the ones that never reached the bundle.
+3. **Path**, so ordering is total and byte-identical across runs.
+
+Connectivity **reorders, it never rejects**: a file with no edges scores zero and
+sorts last among equals, but it is not excluded for that alone. Whenever the
+tie-break changes the outcome it is recorded in the file's `why[]` with the real
+edge counts, e.g.
+
+```
+connectivity tie-break: 21 import edges (6 importers, 15 imports) ranked this ahead of the same-score alphabetical order
+```
+
+The regression test asserts the *property* — no equally-scoring file may be kept
+while a better-connected one is dropped — so it keeps working if those paths are
+ever renamed, and it separately asserts that a genuine score tie still exists so
+the test cannot silently stop proving anything.
+
+## Context size
+
+Context size is a three-number policy, not one hidden limit: an evidence-derived
+**relevance budget** (25 baseline, raised only by task evidence, at most 40), a
+separate **expansion budget**, and a **safety ceiling** of 60 that exists purely
+to stop a runaway. Every bundle reports its own copy in `sizePolicy`. The budget
+is described in full in `.uihub-agent/tasks/CONTEXT_BUNDLE.md`.
+
 ## Context expansion
 
 The router proposes leads; the context builder decides what to add. Adding a
@@ -151,7 +191,64 @@ Two properties matter more than the list:
   import graph's actual consumers and dependencies.
 - **Expansion can be turned off**, and when it is, `stopReason` says so.
 
+### Test discovery
+
+`TEST_DEPENDENCY` admits a test that imports a file the task **named**. For a task
+that named nothing — a conceptual task like "Fix authentication middleware" — the
+relevance selection is the only evidence available, so it is also accepted as a
+subject. The evidence is a real import edge read from `IMPORT_GRAPH.json`;
+`*auth*` filename matching is never used and appears nowhere in the tests, which
+assert the *absence* of that mechanism structurally.
+
+A test is never itself a subject, so tests cannot recruit more tests.
+
+```
+Fix authentication middleware
+  → backend/src/middleware/auth.js         (relevance)
+  → backend/tests/broadcastAuth.test.js    (TEST_DEPENDENCY: imports auth.js)
+```
+
+When a task names its own files, the named file is the subject and relevance-
+selected paths are **not** used — otherwise the explicit-file fast path would stop
+being about what was asked.
+
 Full contract: `.uihub-agent/tasks/CONTEXT_BUNDLE.md`.
+
+## Explicit-file resolution
+
+An experienced developer naming a file does not need the map searched. Four
+spellings of the same file all resolve to that file, and all of them are
+**index-gated** — a spelling that matches no indexed file resolves to nothing,
+so widening the patterns cannot manufacture a fast path:
+
+| Written as | Resolves |
+|---|---|
+| `backend/src/services/healthService.js` | exact path |
+| `Update accessService.js` | bare filename, unique in the index |
+| `backend/src/services/healthService` | path without its extension |
+| `accessService.jsx` | path with an extension the repository does not use |
+
+When two indexed files share a basename, every spelling resolves to **nothing**
+and the reason is reported. Guessing which of two real files was meant is worse
+than saying so, because the guess is invisible in a bundle and wrong in an editor.
+
+## Named targets that do not exist
+
+A path or route the task names but the repository does not have is recorded in
+`evidence.unresolvedTargets` and **caps confidence** — at MEDIUM, or LOW if it was
+already lower. `confidenceWhy` states which target is missing.
+
+```
+Fix frontend/src/components/templates/TemplateCard.tsx
+  → no such file; the repository has TemplateCodeViewer.tsx, TemplateSimilarRail.tsx, ...
+  → MEDIUM, not HIGH
+```
+
+The category evidence is kept, not discarded: it may genuinely be relevant, it just
+cannot be called certain. Candidates are structural — same directory, or the same
+leaf name elsewhere in the tree — never edit distance. The cap must not fire on
+ordinary tasks, or every bundle would be MEDIUM and the signal worthless; a test
+asserts it does not.
 
 ## Protected paths
 
@@ -163,6 +260,21 @@ wildcards, directory trees and `/**`.
 `CRITICAL`, `HIGH_RISK`, `GENERATED` and `NORMAL` resolution is covered by
 tests. A protected path is reported with its tier and rule text; it is never
 silently ranked as ordinary context.
+
+**Protected is not relevant.** Protection means *dangerous to touch*, not *needed
+by this task*. A protected path enters the context only when its feature scope
+intersects the task's, or when the task resolved a category that declares it
+protected **and** it lives in a surface the task actually implicated. Surface
+membership is read from path prefixes, not from the role table — `ROLE_SURFACE`
+maps `MIDDLEWARE` to `BACKEND` even for `mcp-server/src/middleware/auth.ts`.
+
+Maintenance scripts (`SCRIPT` role) are excluded entirely: they build and seed the
+repository, they do not participate in a feature.
+
+Every surviving admission ends with `which is connected to this task`, so the
+connection is readable rather than inferred. When the guard blocks a protected file,
+the caution marker still reaches the reader through `protectedAreas` — the
+information is preserved even though the file is not loaded.
 
 Non-negotiable rules live in `.uihub-agent/rules/DO_NOT_CHANGE.md`.
 

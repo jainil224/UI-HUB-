@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * agent:route — classify a natural-language task and explain the routing.
+ * agent:route â€” classify a natural-language task and explain the routing.
  *
- * agent.md tasks 8.16, 8.17, 8.19, 8.20. Read-only: it never writes application
+ * the intelligence-access contract, 8.17, 8.19, 8.20. Read-only: it never writes application
  * source, and it touches the network zero times.
  *
  *   node route-task.mjs "Fix WebM preview loading in Similar Templates"
@@ -41,12 +41,12 @@ function render(r, { explain, maxFiles }) {
   const push = (s = '') => L.push(s);
 
   push(`TASK      ${r.task}`);
-  push(`INTENT    ${r.intent.intent} — ${r.intent.why}`);
+  push(`INTENT    ${r.intent.intent} â€” ${r.intent.why}`);
   push(`CATEGORY  ${r.categories.join(', ')}`);
   push(`CONFIDENCE ${r.confidence}`);
   push(`SURFACE   ${r.surface.join(', ')}`);
 
-  if (r.fastPath) push('FAST PATH  a file was named directly — broad classification was skipped (8.30)');
+  if (r.fastPath) push('FAST PATH  a file was named directly â€” broad classification was skipped (8.30)');
 
   push();
   push('WHY THIS CLASSIFICATION');
@@ -109,11 +109,11 @@ function render(r, { explain, maxFiles }) {
     if (explain) for (const w of f.why) push(`        ${w}`);
     else if (f.why[0]) push(`        ${f.why[0]}`);
   }
-  if (ranked.files.length === 0) push(`${BULLET}no indexed file matched — see the explanation above`);
+  if (ranked.files.length === 0) push(`${BULLET}no indexed file matched â€” see the explanation above`);
 
   if (r.unknown) {
     push();
-    push('UNKNOWN — narrow the task');
+    push('UNKNOWN â€” narrow the task');
     push(`  ${r.unknown.why}`);
     for (const s of r.unknown.suggestion.slice(0, 6)) push(`${BULLET}${s}`);
   }

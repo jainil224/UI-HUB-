@@ -1,5 +1,5 @@
 /**
- * Task Router taxonomy and routing matrix — agent.md tasks 8.2 – 8.8.
+ * Task Router taxonomy and routing matrix — the taxonomy contract – 8.8.
  *
  * This module is the single source of truth for:
  *
@@ -21,7 +21,7 @@
  *    are small integers used only to order candidates; the reason string is
  *    always carried alongside so a ranking can be argued with.
  *
- * The category list is deliberately short (agent.md 8.2: "Do not create dozens
+ * The category list is deliberately short (the taxonomy contract: "Do not create dozens
  * of unnecessary categories"). Sixteen categories cover every UI HUB subsystem.
  */
 
@@ -352,7 +352,7 @@ export const CATEGORY_NAMES = Object.keys(CATEGORIES);
  *
  * Intent comes from the verb, not from the noun. "Why is preview slow?" and
  * "Fix preview loading" share a subsystem and differ in intent, which is
- * exactly the split agent.md 8.4 asks for.
+ * exactly the split the surface-split contract asks for.
  * ------------------------------------------------------------------ */
 
 export const INTENTS = {
@@ -417,7 +417,7 @@ export const PATH_SURFACE = [
 /* ------------------------------------------------------------------ *
  * 8.21 — Protected-path classification.
  *
- * The three levels agent.md 8.21 asks for are derived from the tiers that
+ * The three levels the protection-level contract asks for are derived from the tiers that
  * already exist in rules/PROTECTED_PATHS.md. The mapping is:
  *
  *   CRITICAL / DO_NOT_CHANGE section  → REQUIRES_EXPLICIT_TASK_INTENT
@@ -459,7 +459,7 @@ export const PRIORITY_ORDER = ['P0', 'P1', 'P2', 'P3', 'P4', 'P5'];
 /* ------------------------------------------------------------------ *
  * 8.13 — Expansion guardrails.
  *
- * agent.md 8.13 is explicit that these are guidelines, not hard limits: "These
+ * the context-size contract is explicit that these are guidelines, not hard limits: "These
  * are guidelines, not hard-coded universal limits. A database migration task may
  * legitimately require more context than a button-style change."
  *
@@ -481,7 +481,7 @@ export const EXPANSION = {
  *
  * Every expansion step must cite one of these. `lib/expand.mjs` rejects any
  * step without a reason, which is how "the directory is nearby" and "it is
- * convenient" (agent.md 8.12) are prevented mechanically rather than by asking
+ * convenient" (the permitted-trigger contract) are prevented mechanically rather than by asking
  * the model to be disciplined.
  * ------------------------------------------------------------------ */
 
@@ -552,7 +552,7 @@ export function buildRoutingMatrix() {
     expansion: {
       ...EXPANSION,
       reasons: EXPANSION_REASONS,
-      note: 'Guidelines, not hard limits — see agent.md 8.13.',
+      note: 'Guidelines, not hard limits — see the context-size contract.',
     },
     highCautionCategories: HIGH_CAUTION_CATEGORIES,
   };

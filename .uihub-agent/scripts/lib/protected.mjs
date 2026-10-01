@@ -1,5 +1,5 @@
 /**
- * Protected path detection — agent.md tasks 8.21-8.26, 8.52.
+ * Protected path detection — the protection-level contract-8.26, 8.52.
  *
  * The tiers come from the generated maps, not from a hand-written list that
  * could drift from PROTECTED_PATHS.md. Each protected file a task's categories
