@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Data-layer reach per file: Mongo collections, mongoose models, Prisma, raw SQL.",
+  "counts": {
+    "files": 16,
+    "distinctCollections": 4,
+    "models": 0,
+    "prisma": 0
+  },
+  "usage": [
+    {
+      "file": "backend/scripts/grantProUser.js",
+      "feature": "shared",
+      "collections": [
+        "users"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "backend/scripts/recoverPayment.js",
+      "feature": "shared",
+      "collections": [
+        "payments",
+        "users"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "backend/scripts/resendWelcomeEmails.js",
+      "feature": "shared",
+      "collections": [
+        "users"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "backend/scripts/setAdminUser.js",
+      "feature": "shared",
+      "collections": [
+        "users"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "backend/scripts/tempSeed.js",
+      "feature": "shared",
+      "collections": [
+        "users"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "backend/scripts/verifyUser.js",
+      "feature": "shared",
+      "collections": [
+        "users"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "backend/src/data/sourceCodeData.js",
+      "feature": "data",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "backend/src/routes/userRoutes.js",
+      "feature": "user-routes",
+      "collections": [
+        "users"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "backend/src/services/componentSyncService.js",
+      "feature": "component-sync-service",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "frontend/src/data/componentData.tsx",
+      "feature": "data",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "frontend/src/data/omniflowFooterSource.ts",
+      "feature": "data",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+      "feature": "dashboard",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
+      "feature": "legal",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "mcp-server/src/services/analyticsService.ts",
+      "feature": "mcp",
+      "collections": [
+        "(op:insertOne on db)"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "mcp-server/src/services/apiKeyService.ts",
+      "feature": "mcp",
+      "collections": [
+        "(op:insertOne on collection)"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    },
+    {
+      "file": "mcp-server/src/services/auditService.ts",
+      "feature": "mcp",
+      "collections": [
+        "(op:insertOne on collection)"
+      ],
+      "models": [],
+      "prisma": false,
+      "rawSql": false
+    }
+  ]
+}

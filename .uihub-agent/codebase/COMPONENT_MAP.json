@@ -1,0 +1,5083 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "React components discovered from JSX syntax and capitalized exports, with page usage and orphan status.",
+  "counts": {
+    "components": 227,
+    "orphaned": 5,
+    "lazy": 155,
+    "confidence": {
+      "HIGH": 157,
+      "MEDIUM": 70,
+      "LOW_CONFIDENCE": 0,
+      "UNKNOWN": 0
+    }
+  },
+  "components": [
+    {
+      "name": "StatusBadge",
+      "path": "frontend/src/components/admin/AdminUi.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 280,
+      "exportedSymbols": [
+        "Tone",
+        "toneFor",
+        "StatusBadge",
+        "Panel",
+        "PanelHeader",
+        "PageHeader",
+        "StatCard",
+        "EmptyState",
+        "ErrorState",
+        "SkeletonBlock",
+        "SkeletonTable",
+        "DataState",
+        "useData",
+        "Pagination",
+        "Table",
+        "Th",
+        "Td",
+        "formatCompact",
+        "formatNum",
+        "formatMs",
+        "formatPct",
+        "formatDate",
+        "timeAgo",
+        "keyPrefixMask"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Admin/AdminGuard.tsx",
+        "frontend/src/pages/Admin/AlertsPage.tsx",
+        "frontend/src/pages/Admin/AnalyticsPage.tsx",
+        "frontend/src/pages/Admin/ApiKeysPage.tsx",
+        "frontend/src/pages/Admin/AuditPage.tsx",
+        "frontend/src/pages/Admin/ComponentsPage.tsx",
+        "frontend/src/pages/Admin/ExportPage.tsx",
+        "frontend/src/pages/Admin/HealthPage.tsx",
+        "frontend/src/pages/Admin/LogsPage.tsx",
+        "frontend/src/pages/Admin/OverviewPage.tsx",
+        "frontend/src/pages/Admin/PlaygroundPage.tsx",
+        "frontend/src/pages/Admin/SearchPage.tsx",
+        "frontend/src/pages/Admin/SecurityPage.tsx",
+        "frontend/src/pages/Admin/SettingsPage.tsx",
+        "frontend/src/pages/Admin/ToolsPage.tsx",
+        "frontend/src/pages/Admin/UserDetailPage.tsx",
+        "frontend/src/pages/Admin/UsersPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/admin/Charts.tsx",
+        "frontend/src/pages/Admin/AdminGuard.tsx",
+        "frontend/src/pages/Admin/AlertsPage.tsx",
+        "frontend/src/pages/Admin/AnalyticsPage.tsx",
+        "frontend/src/pages/Admin/ApiKeysPage.tsx",
+        "frontend/src/pages/Admin/AuditPage.tsx",
+        "frontend/src/pages/Admin/ComponentsPage.tsx",
+        "frontend/src/pages/Admin/ExportPage.tsx",
+        "frontend/src/pages/Admin/HealthPage.tsx",
+        "frontend/src/pages/Admin/LogsPage.tsx",
+        "frontend/src/pages/Admin/OverviewPage.tsx",
+        "frontend/src/pages/Admin/PlaygroundPage.tsx",
+        "frontend/src/pages/Admin/SearchPage.tsx",
+        "frontend/src/pages/Admin/SecurityPage.tsx",
+        "frontend/src/pages/Admin/SettingsPage.tsx",
+        "frontend/src/pages/Admin/ToolsPage.tsx",
+        "frontend/src/pages/Admin/UserDetailPage.tsx",
+        "frontend/src/pages/Admin/UsersPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ChartTooltip",
+      "path": "frontend/src/components/admin/Charts.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 101,
+      "exportedSymbols": [
+        "ChartTooltip",
+        "RequestsChart",
+        "ToolBars",
+        "Donut",
+        "LegendList"
+      ],
+      "importsInternal": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Admin/AnalyticsPage.tsx",
+        "frontend/src/pages/Admin/OverviewPage.tsx",
+        "frontend/src/pages/Admin/SearchPage.tsx",
+        "frontend/src/pages/Admin/UserDetailPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Admin/AnalyticsPage.tsx",
+        "frontend/src/pages/Admin/OverviewPage.tsx",
+        "frontend/src/pages/Admin/SearchPage.tsx",
+        "frontend/src/pages/Admin/UserDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MeshText",
+      "path": "frontend/src/components/animations/MeshText.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 573,
+      "exportedSymbols": [
+        "MeshTextFontProps",
+        "MeshTextProps",
+        "MeshText"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PixelDrift",
+      "path": "frontend/src/components/animations/PixelDrift.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 691,
+      "exportedSymbols": [
+        "TransitionValue",
+        "PixelDriftProps",
+        "PixelDrift",
+        "ParticleText"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "RandomLetterSwap",
+      "path": "frontend/src/components/animations/RandomLetterSwap.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 327,
+      "exportedSymbols": [
+        "RandomLetterSwapProps",
+        "RandomLetterSwap"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "RollingLetters",
+      "path": "frontend/src/components/animations/RollingLetters.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 170,
+      "exportedSymbols": [
+        "FontStyle",
+        "TransitionValue",
+        "StaggerFrom",
+        "StartFrom",
+        "TextTag",
+        "RollingLettersProps",
+        "RollingLetters",
+        "SlotMachine"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "RotatingText",
+      "path": "frontend/src/components/animations/RotatingText.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 410,
+      "exportedSymbols": [
+        "FontStyle",
+        "TransitionValue",
+        "StaggerFrom",
+        "SplitBy",
+        "WordPart",
+        "RotatingTextProps",
+        "COMPONENT_DEFAULTS",
+        "RotatingText",
+        "TextCarousel"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ScrambleText",
+      "path": "frontend/src/components/animations/ScrambleText.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 1322,
+      "exportedSymbols": [
+        "EnterMode",
+        "HoverMode",
+        "ScrambleTextProps",
+        "COMPONENT_DEFAULTS",
+        "ScrambleText",
+        "GlitchCharReveal"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ScrollHighlight",
+      "path": "frontend/src/components/animations/ScrollHighlight.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 170,
+      "exportedSymbols": [
+        "FontStyle",
+        "SplitBy",
+        "ScrollPosition",
+        "ScrollHighlightProps",
+        "ScrollHighlight",
+        "ScrollTextHighlight"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SmokyText",
+      "path": "frontend/src/components/animations/SmokyText.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 538,
+      "exportedSymbols": [
+        "SmokyPosition",
+        "SmokyAnimationMode",
+        "SmokyPhase",
+        "SmokyAppearTrigger",
+        "CharEntry",
+        "Group",
+        "VLI",
+        "SmokyTextProps",
+        "COMPONENT_DEFAULTS",
+        "SmokyText"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SocialTooltipButtons",
+      "path": "frontend/src/components/animations/SocialTooltipButtons.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 95,
+      "exportedSymbols": [
+        "SocialTooltipButtons"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LetterPullUpText",
+      "path": "frontend/src/components/animations/TextAnimations.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 210,
+      "exportedSymbols": [
+        "LetterPullUpTextProps",
+        "LetterPullUpText",
+        "ScaleLetterTextProps",
+        "ScaleLetterText",
+        "SeparateAwayTextProps",
+        "SeparateAwayText",
+        "WavyTextProps",
+        "WavyText",
+        "WordPullUpTextProps",
+        "WordPullUpText",
+        "SplitText"
+      ],
+      "importsInternal": [
+        "frontend/src/components/animations/MeshText.tsx",
+        "frontend/src/components/animations/PixelDrift.tsx",
+        "frontend/src/components/animations/RandomLetterSwap.tsx",
+        "frontend/src/components/animations/RollingLetters.tsx",
+        "frontend/src/components/animations/RotatingText.tsx",
+        "frontend/src/components/animations/ScrambleText.tsx",
+        "frontend/src/components/animations/ScrollHighlight.tsx",
+        "frontend/src/components/animations/SmokyText.tsx",
+        "frontend/src/components/animations/TextPath.tsx",
+        "frontend/src/components/animations/VaporizeTextCycle.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TextPath",
+      "path": "frontend/src/components/animations/TextPath.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 344,
+      "exportedSymbols": [
+        "TextPathFontValue",
+        "TextPathProps",
+        "COMPONENT_DEFAULTS",
+        "TextPath"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "VaporizeTextCycle",
+      "path": "frontend/src/components/animations/VaporizeTextCycle.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 857,
+      "exportedSymbols": [
+        "VaporizeTextCycleFont",
+        "VaporizeTextCycleTransition",
+        "VaporizeTextCyclePhaseConfig",
+        "VaporizeTextCycleProps",
+        "DEFAULT_PROPS",
+        "VaporizeTextCycle",
+        "TextVaporize"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/TextAnimations.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LiquidGlass",
+      "path": "frontend/src/components/animations/VisualEffects.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 771,
+      "exportedSymbols": [
+        "LiquidGlassProps",
+        "LiquidGlass",
+        "SpotlightCardsProps",
+        "SpotlightCards",
+        "ImageRevealProps",
+        "ImageReveal",
+        "HackerBackgroundProps",
+        "HackerBackground",
+        "GlowButton",
+        "BorderBeam",
+        "CornerBorderButton",
+        "MarqueeHoverButton",
+        "PaymentTransactionButton",
+        "MagicCardEffect",
+        "RainbowButton",
+        "InteractiveHoverButton"
+      ],
+      "importsInternal": [
+        "frontend/src/components/animations/SocialTooltipButtons.tsx",
+        "frontend/src/components/ui/BeamGridBackground.tsx",
+        "frontend/src/components/ui/FallBeamBackground.tsx",
+        "frontend/src/components/ui/GalaxyButton.tsx",
+        "frontend/src/components/ui/HellBackground.tsx",
+        "frontend/src/components/ui/InteractiveGridBackground.tsx",
+        "frontend/src/components/ui/LiquidFillButton.tsx",
+        "frontend/src/components/ui/LiquidGlassCard.tsx",
+        "frontend/src/components/ui/OrbitButton.tsx",
+        "frontend/src/components/ui/WaveBackground.tsx",
+        "frontend/src/components/ui/background-paths.tsx",
+        "frontend/src/components/ui/border-beam.tsx",
+        "frontend/src/components/ui/corner-border-button.tsx",
+        "frontend/src/components/ui/interactive-hover-button.tsx",
+        "frontend/src/components/ui/isometric-grid-background.tsx",
+        "frontend/src/components/ui/magic-card.tsx",
+        "frontend/src/components/ui/marquee-hover-button.tsx",
+        "frontend/src/components/ui/payment-transaction-button.tsx",
+        "frontend/src/components/ui/rainbow-button.tsx",
+        "frontend/src/components/ui/sparkles-background.tsx",
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "AuCabaretPoster",
+      "path": "frontend/src/components/templates/AuCabaretPoster.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 325,
+      "exportedSymbols": [
+        "AuCabaretPoster"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BuildWithUIHubRail",
+      "path": "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 229,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templatesData.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "BuildWithUIHubUsedComponents",
+      "path": "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 172,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "DontBeGreedyFooter",
+      "path": "frontend/src/components/templates/DontBeGreedyFooter.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 433,
+      "exportedSymbols": [
+        "DontBeGreedyFooter"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GraphicDesignerPortfolio",
+      "path": "frontend/src/components/templates/GraphicDesignerPortfolio.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 149,
+      "exportedSymbols": [
+        "GraphicDesignerPortfolioProps",
+        "GraphicDesignerPortfolio"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HaosShowcase",
+      "path": "frontend/src/components/templates/HaosShowcase.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 512,
+      "exportedSymbols": [
+        "BackgroundArtwork",
+        "TopMetadata",
+        "MetricProgress",
+        "TechIcon",
+        "HaosLogo",
+        "HaosShowcase"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/HaosDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/HaosDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HeyoAgencyCta",
+      "path": "frontend/src/components/templates/HeyoAgencyCta.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 369,
+      "exportedSymbols": [
+        "HeyoAgencyCta"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/HeyoDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/HeyoDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "InteriorDesignShowcase",
+      "path": "frontend/src/components/templates/InteriorDesignShowcase.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 160,
+      "exportedSymbols": [
+        "InteriorDesignShowcase"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Labs2586",
+      "path": "frontend/src/components/templates/Labs2586.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 772,
+      "exportedSymbols": [
+        "BottomCurvedText",
+        "SplitPanel",
+        "YellowCard",
+        "IsometricBlockProps",
+        "IsometricBlock",
+        "Navbar",
+        "Labs2586Props",
+        "Labs2586"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LogoHere",
+      "path": "frontend/src/components/templates/LogoHere.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 298,
+      "exportedSymbols": [
+        "Navbar",
+        "HeroContent",
+        "TrustLogos",
+        "GlassContainer",
+        "LogoHere"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/LogoHereDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/LogoHereDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LoveAppHero",
+      "path": "frontend/src/components/templates/LoveAppHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 478,
+      "exportedSymbols": [
+        "TopNav",
+        "PillsNav",
+        "GiantTypography",
+        "FrostedDistortion",
+        "FlowingRibbons",
+        "CenterObject",
+        "CenterHeroContent",
+        "BottomDecorations",
+        "NoiseOverlay",
+        "LoveAppHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/LoveAppDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/LoveAppDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LumosHero",
+      "path": "frontend/src/components/templates/LumosHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 396,
+      "exportedSymbols": [
+        "BackgroundTypography",
+        "TopNav",
+        "LeftContent",
+        "RightContent",
+        "CentralArtwork",
+        "BottomFooter",
+        "LumosHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/LumosDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/LumosDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MentalityHero",
+      "path": "frontend/src/components/templates/MentalityHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 159,
+      "exportedSymbols": [
+        "MentalityHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/MentalityDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/MentalityDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MoodHero",
+      "path": "frontend/src/components/templates/MoodHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 865,
+      "exportedSymbols": [
+        "soundManager",
+        "BackgroundAtmosphere",
+        "Navbar",
+        "SocialProof",
+        "SparkleDoodleLeft",
+        "CurlyDoodleRight",
+        "PerspectiveFloorGrid",
+        "SunCard",
+        "PeaceHandCard",
+        "FlowerCard",
+        "VideoCards",
+        "VideoModal",
+        "MoodHeroProps",
+        "MoodHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "OriginkitHero24",
+      "path": "frontend/src/components/templates/OriginkitHero24.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1682,
+      "exportedSymbols": [
+        "OriginkitHero24Props",
+        "OriginkitHero24"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PaipaiKuaishou",
+      "path": "frontend/src/components/templates/PaipaiKuaishou.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 786,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/PaipaiDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/PaipaiDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "PortfolioClosing",
+      "path": "frontend/src/components/templates/PortfolioClosing.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 596,
+      "exportedSymbols": [
+        "Signature",
+        "TopPanel",
+        "ReelAssemblyProps",
+        "ReelAssembly",
+        "ContactSection",
+        "PortfolioClosingProps",
+        "PortfolioClosing"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SegmintFooter",
+      "path": "frontend/src/components/templates/SegmintFooter.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 543,
+      "exportedSymbols": [
+        "PixelText",
+        "PixelTransition",
+        "PixelParticleTransition",
+        "VoxelWeb3FooterSection",
+        "SegmintFooter"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/SegmintDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/SegmintDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SplitFuzzyOrbHero",
+      "path": "frontend/src/components/templates/SplitFuzzyOrbHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 255,
+      "exportedSymbols": [
+        "SplitFuzzyOrb",
+        "DotLogo",
+        "HeroContent",
+        "ArrowControls",
+        "SocialIcons",
+        "NavHeader",
+        "SplitFuzzyOrbHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/SplitOrbDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/SplitOrbDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HeroSection",
+      "path": "frontend/src/components/templates/SuiOverflow.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 145,
+      "exportedSymbols": [
+        "HeroSection"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/SuiOverflowDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/SuiOverflowDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TarsHeroArena",
+      "path": "frontend/src/components/templates/TarsHeroArena.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 553,
+      "exportedSymbols": [
+        "SteppedGrid",
+        "Navbar",
+        "HeroContent",
+        "TarsHeroArena"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/TarsDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/pages/Components/TarsDemoPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TemplateCodeViewer",
+      "path": "frontend/src/components/templates/TemplateCodeViewer.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 525,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts",
+        "frontend/src/utils/codeHighlighter.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "TemplatePreview",
+      "path": "frontend/src/components/templates/TemplatePreview.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 868,
+      "exportedSymbols": [
+        "TemplatePreview"
+      ],
+      "importsInternal": [
+        "frontend/src/data/templatesData.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [],
+      "orphaned": true,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TemplatePreviewStage",
+      "path": "frontend/src/components/templates/TemplatePreviewStage.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 307,
+      "exportedSymbols": [
+        "ScaledTemplateScene",
+        "PreviewImageFallback",
+        "LazyTemplateRenderer",
+        "TemplatePreviewStage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templatesData.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TemplateSimilarRail",
+      "path": "frontend/src/components/templates/TemplateSimilarRail.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 422,
+      "exportedSymbols": [
+        "SIMILAR_COLLAPSED_COUNT"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templatesData.ts",
+        "frontend/src/utils/templateRelevance.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "VisionaryOrbHero",
+      "path": "frontend/src/components/templates/VisionaryOrbHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1039,
+      "exportedSymbols": [
+        "VisionaryOrbHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "AsciiCursor",
+      "path": "frontend/src/components/ui/AsciiCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 397,
+      "exportedSymbols": [
+        "AsciiCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "FlipFluid",
+      "path": "frontend/src/components/ui/AsciiWater.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1095,
+      "exportedSymbols": [
+        "AsciiWaveProps",
+        "AsciiWave"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "AuraCursor",
+      "path": "frontend/src/components/ui/AuraCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1522,
+      "exportedSymbols": [
+        "AuraCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "AuroraBpmLoader",
+      "path": "frontend/src/components/ui/AuroraBpmLoader.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 174,
+      "exportedSymbols": [
+        "AuroraBpmLoader"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "AuthBrandPanel",
+      "path": "frontend/src/components/ui/AuthBrandPanel.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 68,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/Logo.tsx",
+        "frontend/src/components/ui/WaveBackground.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Auth/ForgotPassword.tsx",
+        "frontend/src/pages/Auth/LoginPage.tsx",
+        "frontend/src/pages/Auth/SignupPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Auth/ForgotPassword.tsx",
+        "frontend/src/pages/Auth/LoginPage.tsx",
+        "frontend/src/pages/Auth/SignupPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "AuthRequiredModal",
+      "path": "frontend/src/components/ui/AuthRequiredModal.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 108,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "BoxesCore",
+      "path": "frontend/src/components/ui/background-boxes.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 93,
+      "exportedSymbols": [
+        "BoxesCore",
+        "Boxes"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/isometric-grid-background.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "FloatingPaths",
+      "path": "frontend/src/components/ui/background-paths.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 116,
+      "exportedSymbols": [
+        "BackgroundPathsProps",
+        "BackgroundPaths"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BeamGridBackground",
+      "path": "frontend/src/components/ui/BeamGridBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 287,
+      "exportedSymbols": [
+        "BeamGridBackgroundProps"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BlackHole",
+      "path": "frontend/src/components/ui/BlackHole.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 528,
+      "exportedSymbols": [
+        "BlackHole"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BlackHoleBackground",
+      "path": "frontend/src/components/ui/BlackHoleBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 183,
+      "exportedSymbols": [
+        "BlackHoleBackground"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BlackHoleCursor",
+      "path": "frontend/src/components/ui/BlackHoleCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 670,
+      "exportedSymbols": [
+        "BlackHoleCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BlockDrift",
+      "path": "frontend/src/components/ui/BlockDrift.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 696,
+      "exportedSymbols": [
+        "BlockDrift"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BloomingFlower",
+      "path": "frontend/src/components/ui/BloomingFlower.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 640,
+      "exportedSymbols": [
+        "BloomingFlower"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "BorderBeam",
+      "path": "frontend/src/components/ui/border-beam.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 143,
+      "exportedSymbols": [
+        "BorderBeam"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Button",
+      "path": "frontend/src/components/ui/button.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 57,
+      "exportedSymbols": [
+        "ButtonProps"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [],
+      "orphaned": true,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CardCascade",
+      "path": "frontend/src/components/ui/CardCascade.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 664,
+      "exportedSymbols": [
+        "CardCascade"
+      ],
+      "importsInternal": [
+        "frontend/src/hooks/use-mobile.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CardsBeam",
+      "path": "frontend/src/components/ui/CardsBeam.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 500,
+      "exportedSymbols": [
+        "CardsBeam"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/Logo.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Chandelier",
+      "path": "frontend/src/components/ui/Chandelier.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 440,
+      "exportedSymbols": [
+        "Chandelier"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CheckoutOverlay",
+      "path": "frontend/src/components/ui/CheckoutOverlay.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 300,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/Logo.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "CloudScroll",
+      "path": "frontend/src/components/ui/CloudScroll/CloudScroll.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "CloudScrollProps"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ScrollWrapper.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/footer/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/hero/index.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Components/CloudScrollPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/CloudScrollPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CanvasLoader",
+      "path": "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 90,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/common/Preloader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ProgressLoader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ScrollHint.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ThemeSwitcher.tsx",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/CloudScroll.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "Preloader",
+      "path": "frontend/src/components/ui/CloudScroll/components/common/Preloader.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 30,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/models/Memory.tsx",
+        "frontend/src/components/ui/CloudScroll/components/models/Wanderer.tsx",
+        "frontend/src/components/ui/CloudScroll/components/models/WindowModel.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ProgressLoader",
+      "path": "frontend/src/components/ui/CloudScroll/components/common/ProgressLoader.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 123,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ScrollHint",
+      "path": "frontend/src/components/ui/CloudScroll/components/common/ScrollHint.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 52,
+      "exportedSymbols": [
+        "ScrollHint"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ScrollWrapper",
+      "path": "frontend/src/components/ui/CloudScroll/components/common/ScrollWrapper.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 48,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/CloudScroll.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ThemeSwitcher",
+      "path": "frontend/src/components/ui/CloudScroll/components/common/ThemeSwitcher.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 45,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "GridTile",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/GridTile.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 215,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/experience/Triangle.tsx",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "Experience",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/index.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 87,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/experience/GridTile.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/work/index.tsx",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/CloudScroll.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "Projects",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/projects/index.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 72,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectsCarousel.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/TouchPanControls.tsx",
+        "frontend/src/components/ui/CloudScroll/components/models/Wanderer.tsx",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ProjectsCarousel",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectsCarousel.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 60,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectTile.tsx",
+        "frontend/src/components/ui/CloudScroll/constants/index.ts",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ProjectTile",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectTile.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 170,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts",
+        "frontend/src/components/ui/CloudScroll/types/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectsCarousel.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/UiHubProjectsCarousel.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "TouchPanControls",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/projects/TouchPanControls.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 120,
+      "exportedSymbols": [
+        "TouchPanControls"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/work/UiHubProjects.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "UiHubProjectsCarousel",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/projects/UiHubProjectsCarousel.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 61,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectTile.tsx",
+        "frontend/src/components/ui/CloudScroll/constants/index.ts",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/work/UiHubProjects.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "TriangleGeometry",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/Triangle.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 27,
+      "exportedSymbols": [
+        "TriangleGeometry"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/GridTile.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "Timeline",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/work/Timeline.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 152,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/constants/index.ts",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts",
+        "frontend/src/components/ui/CloudScroll/types/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [],
+      "orphaned": true,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "UiHubProjects",
+      "path": "frontend/src/components/ui/CloudScroll/components/experience/work/UiHubProjects.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 72,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/TouchPanControls.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/UiHubProjectsCarousel.tsx",
+        "frontend/src/components/ui/CloudScroll/components/models/Memory.tsx",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/stores/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/experience/work/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "FooterLinkItem",
+      "path": "frontend/src/components/ui/CloudScroll/components/footer/index.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 119,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/constants/index.ts",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+        "frontend/src/components/ui/CloudScroll/types/index.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/CloudScroll.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "Hero",
+      "path": "frontend/src/components/ui/CloudScroll/components/hero/index.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 54,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/CloudScroll/components/hero/TextWindow.tsx",
+        "frontend/src/components/ui/CloudScroll/components/models/Cloud.tsx",
+        "frontend/src/components/ui/CloudScroll/components/models/Stars.tsx",
+        "frontend/src/components/ui/CloudScroll/components/models/WindowModel.tsx",
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/CloudScroll.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "TextWindow",
+      "path": "frontend/src/components/ui/CloudScroll/components/hero/TextWindow.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 87,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/hero/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "Memory",
+      "path": "frontend/src/components/ui/CloudScroll/components/models/Memory.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 57,
+      "exportedSymbols": [
+        "Memory"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/common/Preloader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/work/UiHubProjects.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "Wanderer",
+      "path": "frontend/src/components/ui/CloudScroll/components/models/Wanderer.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 53,
+      "exportedSymbols": [
+        "Wanderer"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/common/Preloader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "CodeHighlighter",
+      "path": "frontend/src/components/ui/CodeHighlighter.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 47,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "CookieBanner",
+      "path": "frontend/src/components/ui/CookieBanner.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 67,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/context/CookieConsentContext.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "CornerBorderButton",
+      "path": "frontend/src/components/ui/corner-border-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 103,
+      "exportedSymbols": [
+        "CornerBorderButtonProps",
+        "CornerBorderButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CornerButton",
+      "path": "frontend/src/components/ui/corner-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 225,
+      "exportedSymbols": [
+        "CornerButtonProps",
+        "CornerButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CreepyButton",
+      "path": "frontend/src/components/ui/creepy-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 169,
+      "exportedSymbols": [
+        "CreepyButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CrossfadeTypewriter",
+      "path": "frontend/src/components/ui/CrossfadeTypewriter.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 127,
+      "exportedSymbols": [
+        "CrossfadeTypewriter"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "CustomPricingCard",
+      "path": "frontend/src/components/ui/CustomPricingCard.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 518,
+      "exportedSymbols": [
+        "CategoryKey",
+        "CATEGORIES"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/PlanBadge.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "DiagonalCarousel",
+      "path": "frontend/src/components/ui/diagonal-carousel.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 247,
+      "exportedSymbols": [
+        "DiagonalCarouselItem",
+        "DiagonalCarouselProps",
+        "DiagonalCarousel"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "DragDropUpload",
+      "path": "frontend/src/components/ui/DragDropUpload.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 233,
+      "exportedSymbols": [
+        "DragDropUpload"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "DriftwoodGallery",
+      "path": "frontend/src/components/ui/DriftwoodGallery.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 205,
+      "exportedSymbols": [
+        "DriftwoodGallery"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "EmberHusk",
+      "path": "frontend/src/components/ui/EmberHusk.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1978,
+      "exportedSymbols": [
+        "EmberHuskBackground",
+        "EmberHuskStructure",
+        "EmberHuskRock",
+        "EmberHuskCore",
+        "EmberHuskDebris",
+        "EmberHuskCrosses",
+        "EmberHuskEntrance",
+        "EmberHuskResponse",
+        "EmberHuskDrift",
+        "EmberHuskGlow",
+        "EmberHuskProps",
+        "EmberHusk"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "FaizurPortfolio",
+      "path": "frontend/src/components/ui/FaizurPortfolio.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 230,
+      "exportedSymbols": [
+        "FaizurPortfolio"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "FallBeamBackground",
+      "path": "frontend/src/components/ui/FallBeamBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 139,
+      "exportedSymbols": [
+        "FallBeamBackgroundProps"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Footer",
+      "path": "frontend/src/components/ui/Footer.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 236,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/Logo.tsx",
+        "frontend/src/components/ui/PixelDrift.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "FrostGlassMelt",
+      "path": "frontend/src/components/ui/FrostGlassMelt.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 514,
+      "exportedSymbols": [
+        "FrostGlassMeltProps",
+        "FrostGlassMelt"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GalaxyButton",
+      "path": "frontend/src/components/ui/GalaxyButton.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 174,
+      "exportedSymbols": [
+        "GalaxyButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GearSystem",
+      "path": "frontend/src/components/ui/GearSystem.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 230,
+      "exportedSymbols": [
+        "GearSystem"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GeneratingOrb",
+      "path": "frontend/src/components/ui/GeneratingOrb.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 145,
+      "exportedSymbols": [
+        "GeneratingOrb"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Globe",
+      "path": "frontend/src/components/ui/Globe.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1043,
+      "exportedSymbols": [
+        "Marker",
+        "MarkerConfig",
+        "DotsConfig",
+        "GlobeProps",
+        "Globe"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/GlobeDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/GlobeDemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GlobeScene",
+      "path": "frontend/src/components/ui/GlobeMesh.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1253,
+      "exportedSymbols": [
+        "Globe"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GlowButton",
+      "path": "frontend/src/components/ui/GlowButton.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 70,
+      "exportedSymbols": [
+        "GlowButtonProps",
+        "GlowButton"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GradientOrb",
+      "path": "frontend/src/components/ui/GradientOrb.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 251,
+      "exportedSymbols": [
+        "GradientOrb"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "GravitationalVortex",
+      "path": "frontend/src/components/ui/GravitationalVortex.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 558,
+      "exportedSymbols": [
+        "GravitationalVortexProps",
+        "GravitationalVortex"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HackerBackground",
+      "path": "frontend/src/components/ui/HackerBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 113,
+      "exportedSymbols": [
+        "HackerBackgroundProps",
+        "HackerBackground"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HaulFooter",
+      "path": "frontend/src/components/ui/HaulFooter.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 119,
+      "exportedSymbols": [
+        "HaulFooter"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HeartCursor",
+      "path": "frontend/src/components/ui/HeartCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 259,
+      "exportedSymbols": [
+        "HeartCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HellBackground",
+      "path": "frontend/src/components/ui/HellBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 222,
+      "exportedSymbols": [
+        "BlurSize",
+        "HellBackgroundProps"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Hourglass",
+      "path": "frontend/src/components/ui/Hourglass.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 319,
+      "exportedSymbols": [
+        "Hourglass"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ImageCollage",
+      "path": "frontend/src/components/ui/image-collage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 98,
+      "exportedSymbols": [
+        "CollageImage",
+        "ImageCollageProps",
+        "ImageCollage"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ImageTrail",
+      "path": "frontend/src/components/ui/image-trail.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 232,
+      "exportedSymbols": [
+        "ImageTrailImage",
+        "ImageTrailProps",
+        "ImageTrail"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ImageCompare",
+      "path": "frontend/src/components/ui/ImageCompare.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 193,
+      "exportedSymbols": [
+        "ImageSource",
+        "ImageCompareProps",
+        "IMAGE_COMPARE_DEFAULTS",
+        "ImageCompare"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ImageLens",
+      "path": "frontend/src/components/ui/ImageLens.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 162,
+      "exportedSymbols": [
+        "ImageSource",
+        "ImageLensProps",
+        "IMAGE_LENS_DEFAULTS",
+        "ImageLens"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "InfiniteMarquee",
+      "path": "frontend/src/components/ui/InfiniteMarquee.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 349,
+      "exportedSymbols": [
+        "MarqueeItem",
+        "InfiniteMarqueeProps",
+        "InfiniteMarquee"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "InfiniteTendrils",
+      "path": "frontend/src/components/ui/InfiniteTendrils.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 452,
+      "exportedSymbols": [
+        "InfiniteTendrils"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "InfinityImage",
+      "path": "frontend/src/components/ui/infinity-image.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 249,
+      "exportedSymbols": [
+        "InfinityImageProps",
+        "InfinityImage"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "InteractiveHoverButton",
+      "path": "frontend/src/components/ui/interactive-hover-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 167,
+      "exportedSymbols": [
+        "InteractiveHoverButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/ui/ViewSourceButton.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "InteractiveGridBackground",
+      "path": "frontend/src/components/ui/InteractiveGridBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 284,
+      "exportedSymbols": [
+        "InteractiveGridBackgroundProps"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "IsometricGridBackground",
+      "path": "frontend/src/components/ui/isometric-grid-background.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 38,
+      "exportedSymbols": [
+        "IsometricGridBackgroundProps",
+        "IsometricGridBackground"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/background-boxes.tsx",
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "IsometricPortal",
+      "path": "frontend/src/components/ui/IsometricPortal.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 112,
+      "exportedSymbols": [
+        "IsometricPortal"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "KineticGrid",
+      "path": "frontend/src/components/ui/KineticGrid.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 351,
+      "exportedSymbols": [
+        "KineticGrid"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LazyTemplatePreview",
+      "path": "frontend/src/components/ui/LazyTemplatePreview.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 90,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "LightCables",
+      "path": "frontend/src/components/ui/LightCables.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 425,
+      "exportedSymbols": [
+        "BundleGroup",
+        "BUNDLE_DEFAULTS",
+        "FlowGroup",
+        "FLOW_DEFAULTS",
+        "LightCablesProps",
+        "LightCables"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/LightCablesDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/LightCablesDemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Lightfall",
+      "path": "frontend/src/components/ui/Lightfall.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 409,
+      "exportedSymbols": [
+        "Lightfall"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LiquidFillButton",
+      "path": "frontend/src/components/ui/LiquidFillButton.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 117,
+      "exportedSymbols": [
+        "LiquidFillButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LiquidGlassCard",
+      "path": "frontend/src/components/ui/LiquidGlassCard.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 56,
+      "exportedSymbols": [
+        "LiquidGlassCard"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "LizardCursor",
+      "path": "frontend/src/components/ui/LizardCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 512,
+      "exportedSymbols": [
+        "LizardCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Logo",
+      "path": "frontend/src/components/ui/Logo.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 80,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/AuthBrandPanel.tsx",
+        "frontend/src/components/ui/CardsBeam.tsx",
+        "frontend/src/components/ui/CheckoutOverlay.tsx",
+        "frontend/src/components/ui/Footer.tsx",
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "MagicCard",
+      "path": "frontend/src/components/ui/magic-card.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 142,
+      "exportedSymbols": [
+        "MagicCard"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MagicCursor",
+      "path": "frontend/src/components/ui/MagicCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 271,
+      "exportedSymbols": [
+        "MagicCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MagneticBackground",
+      "path": "frontend/src/components/ui/MagneticBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 175,
+      "exportedSymbols": [
+        "MagneticBackground"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MagneticCursor",
+      "path": "frontend/src/components/ui/MagneticCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 237,
+      "exportedSymbols": [
+        "MagneticCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MarqueeHoverButton",
+      "path": "frontend/src/components/ui/marquee-hover-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 73,
+      "exportedSymbols": [
+        "MarqueeHoverButtonProps",
+        "MarqueeHoverButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MatrixRain",
+      "path": "frontend/src/components/ui/MatrixRain.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 274,
+      "exportedSymbols": [
+        "MatrixRainProps",
+        "MatrixRain"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/MatrixRainDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/MatrixRainDemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MorphingGlow",
+      "path": "frontend/src/components/ui/MorphingGlow.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 183,
+      "exportedSymbols": [
+        "MorphingGlow"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MorphingRings",
+      "path": "frontend/src/components/ui/MorphingRings.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 805,
+      "exportedSymbols": [
+        "MorphingRings"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "MouseGravityBackground",
+      "path": "frontend/src/components/ui/MouseGravityBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 194,
+      "exportedSymbols": [
+        "MouseGravityBackground"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Navbar",
+      "path": "frontend/src/components/ui/Navbar.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 537,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/PlanBadge.tsx",
+        "frontend/src/components/ui/Skeleton.tsx",
+        "frontend/src/components/ui/Toast.tsx",
+        "frontend/src/context/AuthContext.tsx",
+        "frontend/src/context/SkeletonContext.tsx",
+        "frontend/src/lib/firebase.ts",
+        "frontend/src/services/favorites.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "NeonBorder",
+      "path": "frontend/src/components/ui/NeonBorder.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 377,
+      "exportedSymbols": [
+        "NeonBorder"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "OceanSwell",
+      "path": "frontend/src/components/ui/OceanSwell.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 657,
+      "exportedSymbols": [
+        "OceanSwellProps",
+        "OceanSwell"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "OmniflowFooter",
+      "path": "frontend/src/components/ui/OmniflowFooter.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 179,
+      "exportedSymbols": [
+        "OmniflowFooter"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "OptionWheel",
+      "path": "frontend/src/components/ui/OptionWheel.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 350,
+      "exportedSymbols": [
+        "OptionWheelProps"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "OrbitButton",
+      "path": "frontend/src/components/ui/OrbitButton.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 133,
+      "exportedSymbols": [
+        "OrbitButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "OtpCodeInput",
+      "path": "frontend/src/components/ui/OtpCodeInput.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 156,
+      "exportedSymbols": [
+        "OtpCodeInput"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ParticleCursor",
+      "path": "frontend/src/components/ui/ParticleCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 326,
+      "exportedSymbols": [
+        "ParticleCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "OrbConverge",
+      "path": "frontend/src/components/ui/ParticleLoader.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 428,
+      "exportedSymbols": [
+        "OrbConverge"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ParticleSphereRefactor",
+      "path": "frontend/src/components/ui/ParticleSphere.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1403,
+      "exportedSymbols": [
+        "ParticleSphereRefactor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PasswordStrengthMeter",
+      "path": "frontend/src/components/ui/PasswordStrengthMeter.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 165,
+      "exportedSymbols": [
+        "PasswordStrengthMeter"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PaymentTransactionButton",
+      "path": "frontend/src/components/ui/payment-transaction-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 293,
+      "exportedSymbols": [
+        "PaymentTransactionButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PerspectiveCarousel",
+      "path": "frontend/src/components/ui/perspective-carousel.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 250,
+      "exportedSymbols": [
+        "PerspectiveCarouselItem",
+        "PerspectiveCarouselProps",
+        "PerspectiveCarousel"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PixelBounce",
+      "path": "frontend/src/components/ui/PixelBounce.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 381,
+      "exportedSymbols": [
+        "PixelBounce"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PixelDrift",
+      "path": "frontend/src/components/ui/PixelDrift.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 475,
+      "exportedSymbols": [
+        "PixelDriftProps",
+        "PixelDrift"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/Footer.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PlanBadge",
+      "path": "frontend/src/components/ui/PlanBadge.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 96,
+      "exportedSymbols": [
+        "PlanTier"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/Navbar.tsx",
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PointDNAHelix",
+      "path": "frontend/src/components/ui/PointDNAHelix.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1530,
+      "exportedSymbols": [
+        "PointDNAHelixProps",
+        "PointDNAHelix"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PushNotificationPrompt",
+      "path": "frontend/src/components/ui/PushNotificationPrompt.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 117,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/context/AuthContext.tsx",
+        "frontend/src/utils/pushService.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "QuantumLattice",
+      "path": "frontend/src/components/ui/QuantumLattice.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 478,
+      "exportedSymbols": [
+        "QuantumLatticeProps",
+        "QuantumLattice"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "RadialGlowButton",
+      "path": "frontend/src/components/ui/radial-glow-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 176,
+      "exportedSymbols": [
+        "RadialGlowButtonProps",
+        "RadialGlowButton"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "RainbowButton",
+      "path": "frontend/src/components/ui/rainbow-button.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 60,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "RainStorm",
+      "path": "frontend/src/components/ui/RainStorm.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 629,
+      "exportedSymbols": [
+        "StormProps",
+        "RAIN_DEFAULTS",
+        "RainStorm"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ShaderGroupSwitcher",
+      "path": "frontend/src/components/ui/ReflectShader.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 325,
+      "exportedSymbols": [
+        "ShaderGroupSwitcher"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "RippleSignatureLedger",
+      "path": "frontend/src/components/ui/RippleSignatureLedger.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 228,
+      "exportedSymbols": [
+        "RippleSignatureLedger"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "RubiksCube",
+      "path": "frontend/src/components/ui/RubiksCube.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 307,
+      "exportedSymbols": [
+        "RubiksCube"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Scroll3DAnimation",
+      "path": "frontend/src/components/ui/Scroll3DAnimation.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 332,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/Scroll3DAnimationPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ScrollExpand",
+      "path": "frontend/src/components/ui/ScrollExpand.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 275,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ScrollToTop",
+      "path": "frontend/src/components/ui/ScrollToTop.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 196,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/context/ThemeContext.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SearchBox",
+      "path": "frontend/src/components/ui/SearchBox.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 347,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/data/buildWithUIHubSlugs.ts",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/data/templatesData.ts",
+        "frontend/src/utils/searchIndex.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/Hero.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/HomePage/sections/Hero.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SectionHeader",
+      "path": "frontend/src/components/ui/SectionHeader.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 14,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [],
+      "orphaned": true,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SectionScroll",
+      "path": "frontend/src/components/ui/SectionScroll.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 293,
+      "exportedSymbols": [
+        "SectionScroll"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/SectionScrollPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/SectionScrollPage.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SignaturePad",
+      "path": "frontend/src/components/ui/SignaturePad.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 247,
+      "exportedSymbols": [
+        "SignaturePad"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Skeleton",
+      "path": "frontend/src/components/ui/Skeleton.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 163,
+      "exportedSymbols": [
+        "Skeleton",
+        "NavbarSkeleton",
+        "HeroSkeleton",
+        "ComponentGridSkeleton",
+        "PreviewSkeleton"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/HomePage/sections/Hero.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ui/Navbar.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/HomePage/sections/Hero.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Sky",
+      "path": "frontend/src/components/ui/Sky.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 453,
+      "exportedSymbols": [
+        "PaletteId",
+        "SkyProps",
+        "COMPONENT_DEFAULTS",
+        "SKY_PALETTES",
+        "Sky"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/SkyDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/SkyDemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SmoothScroll",
+      "path": "frontend/src/components/ui/SmoothScroll.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 67,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SolarSystem",
+      "path": "frontend/src/components/ui/SolarSystem.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 246,
+      "exportedSymbols": [
+        "SolarSystem"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SoraFooter",
+      "path": "frontend/src/components/ui/SoraFooter.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 235,
+      "exportedSymbols": [
+        "SoraFooter"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SpaceBackground",
+      "path": "frontend/src/components/ui/SpaceBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 404,
+      "exportedSymbols": [
+        "SpaceBackground"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SparklesBackground",
+      "path": "frontend/src/components/ui/sparkles-background.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 93,
+      "exportedSymbols": [
+        "SparklesBackgroundProps",
+        "IsometricGridBackgroundProps",
+        "SparklesBackground"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/sparkles.tsx",
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SparklesCore",
+      "path": "frontend/src/components/ui/sparkles.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 435,
+      "exportedSymbols": [
+        "SparklesCore"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/ui/sparkles-background.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "WebScene",
+      "path": "frontend/src/components/ui/spider-web.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 513,
+      "exportedSymbols": [
+        "SpiderWebProps",
+        "SpiderWeb"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SpiralImages",
+      "path": "frontend/src/components/ui/spiral-images.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 324,
+      "exportedSymbols": [
+        "SpiralImages"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "StarBurst",
+      "path": "frontend/src/components/ui/StarBurst.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 368,
+      "exportedSymbols": [
+        "StarBurst"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "StarCursor",
+      "path": "frontend/src/components/ui/StarCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 726,
+      "exportedSymbols": [
+        "StarCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SuiFoundation",
+      "path": "frontend/src/components/ui/SuiFoundation.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 340,
+      "exportedSymbols": [
+        "SteppedGraphic",
+        "SuiFoundation"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/DemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SuperMario",
+      "path": "frontend/src/components/ui/SuperMario.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 303,
+      "exportedSymbols": [
+        "SuperMario"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "SVGPageTransition",
+      "path": "frontend/src/components/ui/SVGPageTransition.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 227,
+      "exportedSymbols": [
+        "SVGPageTransition"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TargetCursor",
+      "path": "frontend/src/components/ui/TargetCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 223,
+      "exportedSymbols": [
+        "TargetCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TestimonialsCard",
+      "path": "frontend/src/components/ui/testimonials-card.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 245,
+      "exportedSymbols": [
+        "TestimonialItem",
+        "TestimonialsCardProps",
+        "TestimonialsCard"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ThreeDSlider",
+      "path": "frontend/src/components/ui/ThreeDSlider.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 368,
+      "exportedSymbols": [
+        "ThreeDSlider"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/ThreeDSliderPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/ThreeDSliderPage.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Toast",
+      "path": "frontend/src/components/ui/Toast.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 94,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/ui/Navbar.tsx",
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ToonhubHero",
+      "path": "frontend/src/components/ui/ToonhubHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 231,
+      "exportedSymbols": [
+        "ToonhubHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TopLoader",
+      "path": "frontend/src/components/ui/TopLoader.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 67,
+      "exportedSymbols": [
+        "TopLoader"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "Vortex",
+      "path": "frontend/src/components/ui/Tornado.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1485,
+      "exportedSymbols": [
+        "VortexProps",
+        "Vortex"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TradingCandles",
+      "path": "frontend/src/components/ui/TradingCandles.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 78,
+      "exportedSymbols": [
+        "TradingCandles"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "TwinGalaxyRings",
+      "path": "frontend/src/components/ui/TwinGalaxyRings.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1420,
+      "exportedSymbols": [
+        "TwinGalaxyRings"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "UserCursor",
+      "path": "frontend/src/components/ui/UserCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 535,
+      "exportedSymbols": [
+        "UserCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "VectorWordmark",
+      "path": "frontend/src/components/ui/VectorWordmark.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 792,
+      "exportedSymbols": [
+        "VectorWordmarkProps",
+        "VectorWordmark"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "VenomCursor",
+      "path": "frontend/src/components/ui/VenomCursor.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 241,
+      "exportedSymbols": [
+        "VenomCursor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ViewSourceButton",
+      "path": "frontend/src/components/ui/ViewSourceButton.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 30,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/components/ui/interactive-hover-button.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [],
+      "orphaned": true,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "WaveBackground",
+      "path": "frontend/src/components/ui/WaveBackground.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 192,
+      "exportedSymbols": [
+        "BlurSize"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/utils.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Auth/ForgotPassword.tsx",
+        "frontend/src/pages/Auth/LoginPage.tsx",
+        "frontend/src/pages/Auth/SignupPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/ui/AuthBrandPanel.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Auth/ForgotPassword.tsx",
+        "frontend/src/pages/Auth/LoginPage.tsx",
+        "frontend/src/pages/Auth/SignupPage.tsx",
+        "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "WelcomeNotifications",
+      "path": "frontend/src/components/ui/WelcomeNotifications.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 138,
+      "exportedSymbols": [],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/context/AuthContext.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "AuthProvider",
+      "path": "frontend/src/context/AuthContext.tsx",
+      "feature": "auth-context",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 317,
+      "exportedSymbols": [
+        "useAuth",
+        "AuthProvider"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/WelcomeNotifications.tsx",
+        "frontend/src/lib/firebase.ts",
+        "frontend/src/utils/activityLogger.ts",
+        "frontend/src/utils/apiConfig.ts",
+        "frontend/src/utils/syncUser.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Admin/AdminGuard.tsx",
+        "frontend/src/pages/Admin/AdminLayout.tsx",
+        "frontend/src/pages/Auth/LoginPage.tsx",
+        "frontend/src/pages/Auth/SignupPage.tsx",
+        "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+        "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+        "frontend/src/pages/Dashboard/MCPPage.tsx",
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ui/Navbar.tsx",
+        "frontend/src/components/ui/PushNotificationPrompt.tsx",
+        "frontend/src/pages/Admin/AdminGuard.tsx",
+        "frontend/src/pages/Admin/AdminLayout.tsx",
+        "frontend/src/pages/Auth/LoginPage.tsx",
+        "frontend/src/pages/Auth/SignupPage.tsx",
+        "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+        "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+        "frontend/src/pages/Dashboard/MCPPage.tsx",
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "CookieConsentProvider",
+      "path": "frontend/src/context/CookieConsentContext.tsx",
+      "feature": "cookie-consent-context",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 129,
+      "exportedSymbols": [
+        "useCookieConsent",
+        "CookieConsentProvider"
+      ],
+      "importsInternal": [
+        "frontend/src/lib/firebase.ts",
+        "frontend/src/utils/cookieUtils.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/legal/CookieSettingsPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ui/CookieBanner.tsx",
+        "frontend/src/pages/legal/CookieSettingsPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SkeletonProvider",
+      "path": "frontend/src/context/SkeletonContext.tsx",
+      "feature": "skeleton-context",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 35,
+      "exportedSymbols": [
+        "SkeletonProvider",
+        "useSkeleton"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/HomePage/sections/Hero.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ui/Navbar.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/HomePage/sections/Hero.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ThemeProvider",
+      "path": "frontend/src/context/ThemeContext.tsx",
+      "feature": "theme-context",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 43,
+      "exportedSymbols": [
+        "ThemeProvider",
+        "useTheme"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ui/ScrollToTop.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "VaporizeTextPreview",
+      "path": "frontend/src/data/componentData.tsx",
+      "feature": "data",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 15267,
+      "exportedSymbols": [
+        "RubiksCube",
+        "ComponentItem",
+        "SuiFoundationPreview",
+        "componentList"
+      ],
+      "importsInternal": [
+        "frontend/src/components/animations/SocialTooltipButtons.tsx",
+        "frontend/src/components/animations/TextAnimations.tsx",
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/ui/AsciiCursor.tsx",
+        "frontend/src/components/ui/AsciiWater.tsx",
+        "frontend/src/components/ui/AuraCursor.tsx",
+        "frontend/src/components/ui/AuroraBpmLoader.tsx",
+        "frontend/src/components/ui/BeamGridBackground.tsx",
+        "frontend/src/components/ui/BlackHole.tsx",
+        "frontend/src/components/ui/BlackHoleBackground.tsx",
+        "frontend/src/components/ui/BlackHoleCursor.tsx",
+        "frontend/src/components/ui/BlockDrift.tsx",
+        "frontend/src/components/ui/BloomingFlower.tsx",
+        "frontend/src/components/ui/CardCascade.tsx",
+        "frontend/src/components/ui/CardsBeam.tsx",
+        "frontend/src/components/ui/Chandelier.tsx",
+        "frontend/src/components/ui/CrossfadeTypewriter.tsx",
+        "frontend/src/components/ui/DragDropUpload.tsx",
+        "frontend/src/components/ui/DriftwoodGallery.tsx",
+        "frontend/src/components/ui/EmberHusk.tsx",
+        "frontend/src/components/ui/FallBeamBackground.tsx",
+        "frontend/src/components/ui/FrostGlassMelt.tsx",
+        "frontend/src/components/ui/GalaxyButton.tsx",
+        "frontend/src/components/ui/GearSystem.tsx",
+        "frontend/src/components/ui/GeneratingOrb.tsx",
+        "frontend/src/components/ui/Globe.tsx",
+        "frontend/src/components/ui/GlobeMesh.tsx",
+        "frontend/src/components/ui/GlowButton.tsx",
+        "frontend/src/components/ui/GradientOrb.tsx",
+        "frontend/src/components/ui/GravitationalVortex.tsx",
+        "frontend/src/components/ui/HackerBackground.tsx",
+        "frontend/src/components/ui/HeartCursor.tsx",
+        "frontend/src/components/ui/HellBackground.tsx",
+        "frontend/src/components/ui/Hourglass.tsx",
+        "frontend/src/components/ui/ImageCompare.tsx",
+        "frontend/src/components/ui/ImageLens.tsx",
+        "frontend/src/components/ui/InfiniteMarquee.tsx",
+        "frontend/src/components/ui/InfiniteTendrils.tsx",
+        "frontend/src/components/ui/InteractiveGridBackground.tsx",
+        "frontend/src/components/ui/IsometricPortal.tsx",
+        "frontend/src/components/ui/KineticGrid.tsx",
+        "frontend/src/components/ui/LightCables.tsx",
+        "frontend/src/components/ui/Lightfall.tsx",
+        "frontend/src/components/ui/LizardCursor.tsx",
+        "frontend/src/components/ui/Logo.tsx",
+        "frontend/src/components/ui/MagicCursor.tsx",
+        "frontend/src/components/ui/MagneticBackground.tsx",
+        "frontend/src/components/ui/MagneticCursor.tsx",
+        "frontend/src/components/ui/MatrixRain.tsx",
+        "frontend/src/components/ui/MorphingGlow.tsx",
+        "frontend/src/components/ui/MorphingRings.tsx",
+        "frontend/src/components/ui/MouseGravityBackground.tsx",
+        "frontend/src/components/ui/NeonBorder.tsx",
+        "frontend/src/components/ui/OceanSwell.tsx",
+        "frontend/src/components/ui/OptionWheel.tsx",
+        "frontend/src/components/ui/OrbitButton.tsx",
+        "frontend/src/components/ui/OtpCodeInput.tsx",
+        "frontend/src/components/ui/ParticleCursor.tsx",
+        "frontend/src/components/ui/ParticleLoader.tsx",
+        "frontend/src/components/ui/ParticleSphere.tsx",
+        "frontend/src/components/ui/PasswordStrengthMeter.tsx",
+        "frontend/src/components/ui/PixelBounce.tsx",
+        "frontend/src/components/ui/PointDNAHelix.tsx",
+        "frontend/src/components/ui/QuantumLattice.tsx",
+        "frontend/src/components/ui/RainStorm.tsx",
+        "frontend/src/components/ui/ReflectShader.tsx",
+        "frontend/src/components/ui/RippleSignatureLedger.tsx",
+        "frontend/src/components/ui/RubiksCube.tsx",
+        "frontend/src/components/ui/SVGPageTransition.tsx",
+        "frontend/src/components/ui/Scroll3DAnimation.tsx",
+        "frontend/src/components/ui/ScrollExpand.tsx",
+        "frontend/src/components/ui/SectionScroll.tsx",
+        "frontend/src/components/ui/SignaturePad.tsx",
+        "frontend/src/components/ui/Sky.tsx",
+        "frontend/src/components/ui/SolarSystem.tsx",
+        "frontend/src/components/ui/SpaceBackground.tsx",
+        "frontend/src/components/ui/StarBurst.tsx",
+        "frontend/src/components/ui/StarCursor.tsx",
+        "frontend/src/components/ui/SuperMario.tsx",
+        "frontend/src/components/ui/TargetCursor.tsx",
+        "frontend/src/components/ui/ThreeDSlider.tsx",
+        "frontend/src/components/ui/ToonhubHero.tsx",
+        "frontend/src/components/ui/Tornado.tsx",
+        "frontend/src/components/ui/TradingCandles.tsx",
+        "frontend/src/components/ui/TwinGalaxyRings.tsx",
+        "frontend/src/components/ui/UserCursor.tsx",
+        "frontend/src/components/ui/VectorWordmark.tsx",
+        "frontend/src/components/ui/VenomCursor.tsx",
+        "frontend/src/components/ui/WaveBackground.tsx",
+        "frontend/src/components/ui/background-boxes.tsx",
+        "frontend/src/components/ui/background-paths.tsx",
+        "frontend/src/components/ui/border-beam.tsx",
+        "frontend/src/components/ui/corner-border-button.tsx",
+        "frontend/src/components/ui/corner-button.tsx",
+        "frontend/src/components/ui/creepy-button.tsx",
+        "frontend/src/components/ui/diagonal-carousel.tsx",
+        "frontend/src/components/ui/image-collage.tsx",
+        "frontend/src/components/ui/image-trail.tsx",
+        "frontend/src/components/ui/infinity-image.tsx",
+        "frontend/src/components/ui/interactive-hover-button.tsx",
+        "frontend/src/components/ui/isometric-grid-background.tsx",
+        "frontend/src/components/ui/magic-card.tsx",
+        "frontend/src/components/ui/marquee-hover-button.tsx",
+        "frontend/src/components/ui/payment-transaction-button.tsx",
+        "frontend/src/components/ui/perspective-carousel.tsx",
+        "frontend/src/components/ui/radial-glow-button.tsx",
+        "frontend/src/components/ui/rainbow-button.tsx",
+        "frontend/src/components/ui/sparkles-background.tsx",
+        "frontend/src/components/ui/spider-web.tsx",
+        "frontend/src/components/ui/spiral-images.tsx",
+        "frontend/src/components/ui/testimonials-card.tsx",
+        "frontend/src/data/antigravityPrompts.ts",
+        "frontend/src/data/componentFullSources.ts",
+        "frontend/src/data/lovablePrompts.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Components/DemoPage.tsx",
+        "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+        "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+        "frontend/src/pages/Dashboard/components/ComponentPreviewTile.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx",
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
+        "frontend/src/components/ui/SearchBox.tsx",
+        "frontend/src/pages/Components/DemoPage.tsx",
+        "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+        "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+        "frontend/src/pages/Dashboard/components/ComponentPreviewTile.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx",
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
+        "frontend/src/services/community.tsx",
+        "frontend/src/services/favorites.ts",
+        "frontend/src/utils/promptUtils.ts",
+        "frontend/src/utils/searchIndex.ts"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "AdminLayout",
+      "path": "frontend/src/pages/Admin/AdminLayout.tsx",
+      "feature": "admin",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 194,
+      "exportedSymbols": [
+        "ADMIN_NAV"
+      ],
+      "importsInternal": [
+        "frontend/src/context/AuthContext.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "AuCabaretDemoPage",
+      "path": "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "AuCabaretDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/AuCabaretPoster.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "DontBeGreedyDemoPage",
+      "path": "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "DontBeGreedyDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/DontBeGreedyFooter.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "GlobeDemoPage",
+      "path": "frontend/src/pages/Components/GlobeDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 118,
+      "exportedSymbols": [
+        "GlobeDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/Globe.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "HaosDemoPage",
+      "path": "frontend/src/pages/Components/HaosDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 35,
+      "exportedSymbols": [
+        "HaosDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/HaosShowcase.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "HeyoDemoPage",
+      "path": "frontend/src/pages/Components/HeyoDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "HeyoDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/HeyoAgencyCta.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "InteriorDesignDemoPage",
+      "path": "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "InteriorDesignDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/InteriorDesignShowcase.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "LightCablesDemoPage",
+      "path": "frontend/src/pages/Components/LightCablesDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 53,
+      "exportedSymbols": [
+        "LightCablesDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/LightCables.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "LogoHereDemoPage",
+      "path": "frontend/src/pages/Components/LogoHereDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 31,
+      "exportedSymbols": [
+        "LogoHereDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/LogoHere.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "LoveAppDemoPage",
+      "path": "frontend/src/pages/Components/LoveAppDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "LoveAppDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/LoveAppHero.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "LumosDemoPage",
+      "path": "frontend/src/pages/Components/LumosDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "LumosDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/LumosHero.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "MatrixRainDemoPage",
+      "path": "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 53,
+      "exportedSymbols": [
+        "MatrixRainDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/MatrixRain.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "MentalityDemoPage",
+      "path": "frontend/src/pages/Components/MentalityDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 34,
+      "exportedSymbols": [
+        "MentalityDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/MentalityHero.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "OriginkitHero24DemoPage",
+      "path": "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 31,
+      "exportedSymbols": [
+        "OriginkitHero24DemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/OriginkitHero24.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "PaipaiDemoPage",
+      "path": "frontend/src/pages/Components/PaipaiDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 31,
+      "exportedSymbols": [
+        "PaipaiDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/PaipaiKuaishou.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SegmintDemoPage",
+      "path": "frontend/src/pages/Components/SegmintDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 38,
+      "exportedSymbols": [
+        "SegmintDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/SegmintFooter.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SkyDemoPage",
+      "path": "frontend/src/pages/Components/SkyDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 39,
+      "exportedSymbols": [
+        "SkyDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/Sky.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "SuiOverflowDemoPage",
+      "path": "frontend/src/pages/Components/SuiOverflowDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 31,
+      "exportedSymbols": [
+        "SuiOverflowDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/templates/SuiOverflow.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "LegalPage",
+      "path": "frontend/src/pages/legal/LegalPage.tsx",
+      "feature": "legal",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 148,
+      "exportedSymbols": [
+        "LegalSection",
+        "LegalSectionBlock",
+        "LegalContent"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/legal/CookieSettingsPage.tsx",
+        "frontend/src/pages/legal/PaymentPolicyPage.tsx",
+        "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
+        "frontend/src/pages/legal/TermsPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/legal/CookieSettingsPage.tsx",
+        "frontend/src/pages/legal/PaymentPolicyPage.tsx",
+        "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
+        "frontend/src/pages/legal/TermsPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "HoverPreviewPopover",
+      "path": "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx",
+      "feature": "library-page",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 117,
+      "exportedSymbols": [
+        "HoverPreviewPopover"
+      ],
+      "importsInternal": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "GetStartedPage",
+      "path": "frontend/src/pages/LibraryPage/sections/GetStarted/GetStartedPage.tsx",
+      "feature": "library-page",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 221,
+      "exportedSymbols": [
+        "GetStartedPage"
+      ],
+      "importsInternal": [
+        "frontend/src/pages/LibraryPage/sections/GetStarted/getStartedData.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    }
+  ]
+}

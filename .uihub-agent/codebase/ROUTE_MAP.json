@@ -1,0 +1,659 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Router declarations. `association` records HOW a route was matched to a component file.",
+  "counts": {
+    "routes": 63,
+    "association": {
+      "HIGH": 60,
+      "MEDIUM": 0,
+      "LOW_CONFIDENCE": 3,
+      "UNKNOWN": 0
+    }
+  },
+  "routerFiles": [
+    "frontend/src/App.tsx"
+  ],
+  "routes": [
+    {
+      "path": "(none)",
+      "index": false,
+      "element": "Navigate",
+      "componentFile": null,
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "none",
+      "confidence": "LOW_CONFIDENCE"
+    },
+    {
+      "path": "(none)",
+      "index": false,
+      "element": "AdminLayout",
+      "componentFile": "frontend/src/pages/Admin/AdminLayout.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "(none)",
+      "index": false,
+      "element": "Navigate",
+      "componentFile": null,
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "none",
+      "confidence": "LOW_CONFIDENCE"
+    },
+    {
+      "path": "/",
+      "index": false,
+      "element": "HomePage",
+      "componentFile": "frontend/src/pages/HomePage/HomePage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/admin/mcp",
+      "index": false,
+      "element": "AdminGuard",
+      "componentFile": "frontend/src/pages/Admin/AdminGuard.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/build-with-ui-hub",
+      "index": false,
+      "element": "BuildWithUIHubPage",
+      "componentFile": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/build-with-ui-hub/:slug",
+      "index": false,
+      "element": "BuildWithUIHubDetailPage",
+      "componentFile": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/cookies",
+      "index": false,
+      "element": "CookieSettingsPage",
+      "componentFile": "frontend/src/pages/legal/CookieSettingsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/dashboard",
+      "index": false,
+      "element": "DashboardLayout",
+      "componentFile": "frontend/src/pages/Dashboard/DashboardLayout.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/3d-scroll-animation",
+      "index": false,
+      "element": "Scroll3DAnimationPage",
+      "componentFile": "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/3d-slider",
+      "index": false,
+      "element": "ThreeDSliderPage",
+      "componentFile": "frontend/src/pages/Components/ThreeDSliderPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/:id",
+      "index": false,
+      "element": "DemoPage",
+      "componentFile": "frontend/src/pages/Components/DemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/dont-be-greedy",
+      "index": false,
+      "element": "DontBeGreedyDemoPage",
+      "componentFile": "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/globe",
+      "index": false,
+      "element": "GlobeDemoPage",
+      "componentFile": "frontend/src/pages/Components/GlobeDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/haos-tech-solutions",
+      "index": false,
+      "element": "HaosDemoPage",
+      "componentFile": "frontend/src/pages/Components/HaosDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/heyo-agency-cta",
+      "index": false,
+      "element": "HeyoDemoPage",
+      "componentFile": "frontend/src/pages/Components/HeyoDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/interior-design",
+      "index": false,
+      "element": "InteriorDesignDemoPage",
+      "componentFile": "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/light-cables",
+      "index": false,
+      "element": "LightCablesDemoPage",
+      "componentFile": "frontend/src/pages/Components/LightCablesDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/logo-here",
+      "index": false,
+      "element": "LogoHereDemoPage",
+      "componentFile": "frontend/src/pages/Components/LogoHereDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/loveapp-hero",
+      "index": false,
+      "element": "LoveAppDemoPage",
+      "componentFile": "frontend/src/pages/Components/LoveAppDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/lumos",
+      "index": false,
+      "element": "LumosDemoPage",
+      "componentFile": "frontend/src/pages/Components/LumosDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/matrix-rain",
+      "index": false,
+      "element": "MatrixRainDemoPage",
+      "componentFile": "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/me-019-au-cabaret",
+      "index": false,
+      "element": "AuCabaretDemoPage",
+      "componentFile": "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/mentality",
+      "index": false,
+      "element": "MentalityDemoPage",
+      "componentFile": "frontend/src/pages/Components/MentalityDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/originkit-hero-24",
+      "index": false,
+      "element": "OriginkitHero24DemoPage",
+      "componentFile": "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/paipai-kuaishou",
+      "index": false,
+      "element": "PaipaiDemoPage",
+      "componentFile": "frontend/src/pages/Components/PaipaiDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/section-scroll",
+      "index": false,
+      "element": "SectionScrollPage",
+      "componentFile": "frontend/src/pages/Components/SectionScrollPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/segmint-2026",
+      "index": false,
+      "element": "SegmintDemoPage",
+      "componentFile": "frontend/src/pages/Components/SegmintDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/sky",
+      "index": false,
+      "element": "SkyDemoPage",
+      "componentFile": "frontend/src/pages/Components/SkyDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/split-fuzzy-orb",
+      "index": false,
+      "element": "SplitOrbDemoPage",
+      "componentFile": "frontend/src/pages/Components/SplitOrbDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/sui-overflow",
+      "index": false,
+      "element": "SuiOverflowDemoPage",
+      "componentFile": "frontend/src/pages/Components/SuiOverflowDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/tars-hero-arena",
+      "index": false,
+      "element": "TarsDemoPage",
+      "componentFile": "frontend/src/pages/Components/TarsDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/favorites",
+      "index": false,
+      "element": "FavoritesPage",
+      "componentFile": "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/forgot-password",
+      "index": false,
+      "element": "ForgotPassword",
+      "componentFile": "frontend/src/pages/Auth/ForgotPassword.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/library",
+      "index": false,
+      "element": "LibraryPage",
+      "componentFile": "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/login",
+      "index": false,
+      "element": "LoginPage",
+      "componentFile": "frontend/src/pages/Auth/LoginPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/mcp",
+      "index": false,
+      "element": "Navigate",
+      "componentFile": null,
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "none",
+      "confidence": "LOW_CONFIDENCE"
+    },
+    {
+      "path": "/payment-policy",
+      "index": false,
+      "element": "PaymentPolicyPage",
+      "componentFile": "frontend/src/pages/legal/PaymentPolicyPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/preview-capture",
+      "index": false,
+      "element": "PreviewCapturePage",
+      "componentFile": "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/pricing",
+      "index": false,
+      "element": "PricingPage",
+      "componentFile": "frontend/src/pages/PricingPage/PricingPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/privacy",
+      "index": false,
+      "element": "PrivacyPolicyPage",
+      "componentFile": "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/signup",
+      "index": false,
+      "element": "SignupPage",
+      "componentFile": "frontend/src/pages/Auth/SignupPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/templates",
+      "index": false,
+      "element": "TemplatesPage",
+      "componentFile": "frontend/src/pages/TemplatesPage/TemplatesPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/templates/:id",
+      "index": false,
+      "element": "TemplateDetailPage",
+      "componentFile": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/terms",
+      "index": false,
+      "element": "TermsPage",
+      "componentFile": "frontend/src/pages/legal/TermsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "alerts",
+      "index": false,
+      "element": "AlertsPage",
+      "componentFile": "frontend/src/pages/Admin/AlertsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "analytics",
+      "index": false,
+      "element": "AnalyticsPage",
+      "componentFile": "frontend/src/pages/Admin/AnalyticsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "api-keys",
+      "index": false,
+      "element": "ApiKeysPage",
+      "componentFile": "frontend/src/pages/Admin/ApiKeysPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "audit",
+      "index": false,
+      "element": "AuditPage",
+      "componentFile": "frontend/src/pages/Admin/AuditPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "collections",
+      "index": false,
+      "element": "CollectionsPage",
+      "componentFile": "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "components",
+      "index": false,
+      "element": "ComponentsPage",
+      "componentFile": "frontend/src/pages/Admin/ComponentsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "export",
+      "index": false,
+      "element": "ExportPage",
+      "componentFile": "frontend/src/pages/Admin/ExportPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "health",
+      "index": false,
+      "element": "HealthPage",
+      "componentFile": "frontend/src/pages/Admin/HealthPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "logs",
+      "index": false,
+      "element": "LogsPage",
+      "componentFile": "frontend/src/pages/Admin/LogsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "mcp",
+      "index": false,
+      "element": "MCPPage",
+      "componentFile": "frontend/src/pages/Dashboard/MCPPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "overview",
+      "index": false,
+      "element": "OverviewPage",
+      "componentFile": "frontend/src/pages/Admin/OverviewPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "playground",
+      "index": false,
+      "element": "PlaygroundPage",
+      "componentFile": "frontend/src/pages/Admin/PlaygroundPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "search",
+      "index": false,
+      "element": "SearchPage",
+      "componentFile": "frontend/src/pages/Admin/SearchPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "security",
+      "index": false,
+      "element": "SecurityPage",
+      "componentFile": "frontend/src/pages/Admin/SecurityPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "settings",
+      "index": false,
+      "element": "SettingsPage",
+      "componentFile": "frontend/src/pages/Admin/SettingsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "tools",
+      "index": false,
+      "element": "ToolsPage",
+      "componentFile": "frontend/src/pages/Admin/ToolsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "users",
+      "index": false,
+      "element": "UsersPage",
+      "componentFile": "frontend/src/pages/Admin/UsersPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "users/:uid",
+      "index": false,
+      "element": "UserDetailPage",
+      "componentFile": "frontend/src/pages/Admin/UserDetailPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    }
+  ]
+}

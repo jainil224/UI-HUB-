@@ -1,0 +1,856 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Service-layer modules in backend, frontend, and MCP, with their data-layer reach and consumers.",
+  "counts": {
+    "services": 30,
+    "backend": 18,
+    "frontend": 5,
+    "withDatabase": 4
+  },
+  "services": [
+    {
+      "name": "accessService",
+      "path": "backend/src/services/accessService.js",
+      "layer": "backend",
+      "feature": "access-service",
+      "lines": 194,
+      "exportedSymbols": [
+        "resolveComponentMeta",
+        "getUserEntitlements",
+        "decideAccess",
+        "canAccessComponent",
+        "accessService"
+      ],
+      "usedBy": [
+        "backend/src/routes/componentRoutes.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "activityLogService",
+      "path": "backend/src/services/activityLogService.js",
+      "layer": "backend",
+      "feature": "activity-log-service",
+      "lines": 114,
+      "exportedSymbols": [
+        "logActivity",
+        "getRecentActivityLogs",
+        "activityLogs"
+      ],
+      "usedBy": [
+        "backend/src/routes/collectionsRoutes.js",
+        "backend/src/routes/componentRoutes.js",
+        "backend/src/routes/favoritesRoutes.js",
+        "backend/src/routes/userRoutes.js",
+        "backend/src/services/componentSyncService.js",
+        "backend/src/services/firebaseService.js",
+        "backend/src/services/syncService.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "announcementService",
+      "path": "backend/src/services/announcementService.js",
+      "layer": "backend",
+      "feature": "announcement-service",
+      "lines": 45,
+      "exportedSymbols": [
+        "getAnnouncementManifest"
+      ],
+      "usedBy": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/scripts/sendAnnouncementEmail.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "brevoService",
+      "path": "backend/src/services/brevoService.js",
+      "layer": "backend",
+      "feature": "brevo-service",
+      "lines": 953,
+      "exportedSymbols": [
+        "buildWelcomeEmailHtml",
+        "buildFreeSubscriptionEmailHtml",
+        "buildProSubscriptionEmailHtml",
+        "sendWelcomeEmail",
+        "sendFreeSubscriptionEmail",
+        "sendProSubscriptionEmail",
+        "buildReengagementEmailHtml",
+        "sendReengagementEmail",
+        "sendAnnouncementEmail"
+      ],
+      "usedBy": [
+        "backend/src/scripts/previewEmails.js",
+        "backend/src/scripts/sendReengagementEmail.js",
+        "backend/src/scripts/testReceiptAndEmails.js",
+        "backend/src/utils/sendEmail.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "axios"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "collectionsService",
+      "path": "backend/src/services/collectionsService.js",
+      "layer": "backend",
+      "feature": "collections-service",
+      "lines": 227,
+      "exportedSymbols": [
+        "FREE_VAULT_LIMIT",
+        "listCollections",
+        "getCollection",
+        "createCollection",
+        "updateCollection",
+        "deleteCollection",
+        "addToCollection",
+        "removeFromCollection",
+        "collectionsService"
+      ],
+      "usedBy": [
+        "backend/src/routes/collectionsRoutes.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "componentSyncService",
+      "path": "backend/src/services/componentSyncService.js",
+      "layer": "backend",
+      "feature": "component-sync-service",
+      "lines": 300,
+      "exportedSymbols": [
+        "inferCategory",
+        "formatTitle",
+        "collectAllWebsiteComponents",
+        "syncAllComponentsToMongo",
+        "componentSyncService"
+      ],
+      "usedBy": [
+        "backend/src/routes/componentRoutes.js",
+        "backend/src/scripts/syncComponents.js",
+        "backend/src/server.js",
+        "backend/src/services/accessService.js",
+        "backend/src/services/syncService.js"
+      ],
+      "touchesDatabase": true,
+      "touchesStorage": false,
+      "externalPackages": [
+        "fs",
+        "path",
+        "url"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "configService",
+      "path": "backend/src/services/configService.js",
+      "layer": "backend",
+      "feature": "config-service",
+      "lines": 45,
+      "exportedSymbols": [
+        "getFirebaseConfig",
+        "getRazorpayKey",
+        "getPushConfig"
+      ],
+      "usedBy": [
+        "backend/src/routes/configRoutes.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "dotenv"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "emailLogService",
+      "path": "backend/src/services/emailLogService.js",
+      "layer": "backend",
+      "feature": "email-log-service",
+      "lines": 56,
+      "exportedSymbols": [
+        "logEmailEvent",
+        "emailLogService"
+      ],
+      "usedBy": [
+        "backend/src/services/brevoService.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "favoritesService",
+      "path": "backend/src/services/favoritesService.js",
+      "layer": "backend",
+      "feature": "favorites-service",
+      "lines": 120,
+      "exportedSymbols": [
+        "listCommunityComponents",
+        "getCommunityComponent",
+        "listUserFavorites",
+        "addFavorite",
+        "removeFavorite"
+      ],
+      "usedBy": [
+        "backend/src/routes/favoritesRoutes.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "firebaseService",
+      "path": "backend/src/services/firebaseService.js",
+      "layer": "backend",
+      "feature": "firebase-service",
+      "lines": 225,
+      "exportedSymbols": [
+        "fulfillPayment",
+        "dispatchProSubscriptionReceipt"
+      ],
+      "usedBy": [
+        "backend/scripts/recoverPayment.js",
+        "backend/src/controllers/paymentController.js",
+        "backend/src/controllers/webhookController.js",
+        "backend/src/routes/paymentRoutes.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "healthService",
+      "path": "backend/src/services/healthService.js",
+      "layer": "backend",
+      "feature": "health-service",
+      "lines": 121,
+      "exportedSymbols": [
+        "HEALTHY",
+        "DEGRADED",
+        "UNHEALTHY",
+        "MONGO_PROBE_TIMEOUT_MS",
+        "HEALTH_MESSAGE",
+        "probeMongo",
+        "withTimeout",
+        "httpStatusFor",
+        "buildHealthReport"
+      ],
+      "usedBy": [
+        "backend/src/server.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "mongoService",
+      "path": "backend/src/services/mongoService.js",
+      "layer": "backend",
+      "feature": "mongo-service",
+      "lines": 180,
+      "exportedSymbols": [
+        "resetClient",
+        "getClient",
+        "isMongoConnected",
+        "getDb",
+        "getCollection",
+        "executeWithRetry",
+        "ensureIndex",
+        "mongoService"
+      ],
+      "usedBy": [
+        "backend/src/controllers/webhookController.js",
+        "backend/src/middleware/auth.js",
+        "backend/src/routes/collectionsRoutes.js",
+        "backend/src/routes/componentRoutes.js",
+        "backend/src/routes/favoritesRoutes.js",
+        "backend/src/routes/userRoutes.js",
+        "backend/src/scripts/initMongo.js",
+        "backend/src/scripts/migrateFirestoreToMongo.js",
+        "backend/src/scripts/sendAnnouncementEmail.js",
+        "backend/src/scripts/sendReengagementEmail.js",
+        "backend/src/scripts/setupProductionDatabase.js",
+        "backend/src/scripts/syncComponents.js",
+        "backend/src/services/accessService.js",
+        "backend/src/services/activityLogService.js",
+        "backend/src/services/collectionsService.js",
+        "backend/src/services/componentSyncService.js",
+        "backend/src/services/emailLogService.js",
+        "backend/src/services/favoritesService.js",
+        "backend/src/services/firebaseService.js",
+        "backend/src/services/healthService.js",
+        "backend/src/services/pushService.js",
+        "backend/src/services/syncService.js",
+        "backend/src/services/userService.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "dotenv",
+        "mongodb"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "promptService",
+      "path": "backend/src/services/promptService.js",
+      "layer": "backend",
+      "feature": "prompt-service",
+      "lines": 155,
+      "exportedSymbols": [
+        "generateVibePrompt",
+        "getComponentSource"
+      ],
+      "usedBy": [
+        "backend/src/routes/componentRoutes.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "fs",
+        "path",
+        "url"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "pushService",
+      "path": "backend/src/services/pushService.js",
+      "layer": "backend",
+      "feature": "push-service",
+      "lines": 214,
+      "exportedSymbols": [
+        "pushEnabled",
+        "getVapidPublicKey",
+        "savePushSubscription",
+        "getPushSubscriptions",
+        "sendPushNotification",
+        "broadcastPushNotification"
+      ],
+      "usedBy": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/scripts/sendAnnouncementEmail.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "web-push"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "receiptService",
+      "path": "backend/src/services/receiptService.js",
+      "layer": "backend",
+      "feature": "receipt-service",
+      "lines": 369,
+      "exportedSymbols": [
+        "generatePaymentReceiptPdf"
+      ],
+      "usedBy": [
+        "backend/src/scripts/testReceiptAndEmails.js",
+        "backend/src/utils/sendEmail.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "pdfkit"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "syncService",
+      "path": "backend/src/services/syncService.js",
+      "layer": "backend",
+      "feature": "sync-service",
+      "lines": 113,
+      "exportedSymbols": [
+        "startUserSyncWorker"
+      ],
+      "usedBy": [
+        "backend/src/server.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "userService",
+      "path": "backend/src/services/userService.js",
+      "layer": "backend",
+      "feature": "user-service",
+      "lines": 249,
+      "exportedSymbols": [
+        "PREMIUM_AI_TOOLS",
+        "MAX_FREE_AI_TRIALS",
+        "TRIAL_WINDOW_MS",
+        "checkEliteStatus",
+        "checkProStatus",
+        "getUserTrialState",
+        "evaluateAiTrial",
+        "recordPremiumTrialUse"
+      ],
+      "usedBy": [
+        "backend/src/routes/componentRoutes.js",
+        "backend/src/routes/userRoutes.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "vibeEngine",
+      "path": "backend/src/services/vibeEngine.js",
+      "layer": "backend",
+      "feature": "vibe-engine",
+      "lines": 227,
+      "exportedSymbols": [
+        "buildAdvancePrompt",
+        "buildAntigravityPrompt",
+        "buildClaudePrompt",
+        "buildLovablePrompt",
+        "buildCursorPrompt",
+        "TOOL_BUILDERS"
+      ],
+      "usedBy": [
+        "backend/src/services/promptService.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "admin",
+      "path": "frontend/src/services/admin.ts",
+      "layer": "frontend",
+      "feature": "services",
+      "lines": 578,
+      "exportedSymbols": [
+        "AdminStatus",
+        "AdminRange",
+        "ToolUsage",
+        "AdminAlert",
+        "OverviewStats",
+        "AdminOverview",
+        "TopComponentUsage",
+        "AdminAnalytics",
+        "AdminUser",
+        "AdminUserList",
+        "AdminUserDetail",
+        "AdminKey",
+        "AdminApiKeyList",
+        "AdminTool",
+        "AdminComponents",
+        "SearchUsage",
+        "AdminSearch",
+        "McpLogEntry",
+        "AdminLogList",
+        "AdminSecurity",
+        "AdminHealth",
+        "AdminSettings",
+        "AdminAuditEntry",
+        "AdminAudit",
+        "PlaygroundResult",
+        "getAdminStatus",
+        "getOverview",
+        "getAnalytics",
+        "getUsers",
+        "getUserDetail",
+        "suspendUser",
+        "unsuspendUser",
+        "listAdminKeys",
+        "patchApiKey",
+        "getTools",
+        "setTool",
+        "getComponents",
+        "getSearchAnalytics",
+        "getLogs",
+        "getSecurity",
+        "getHealth",
+        "getAlerts",
+        "resolveAlert",
+        "unresolveAlert",
+        "getSettings",
+        "updateSettings",
+        "getAudit",
+        "PlaygroundRequest",
+        "runPlayground",
+        "ExportType",
+        "ExportFormat",
+        "downloadExport"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Admin/AdminGuard.tsx",
+        "frontend/src/pages/Admin/AlertsPage.tsx",
+        "frontend/src/pages/Admin/AnalyticsPage.tsx",
+        "frontend/src/pages/Admin/ApiKeysPage.tsx",
+        "frontend/src/pages/Admin/AuditPage.tsx",
+        "frontend/src/pages/Admin/ComponentsPage.tsx",
+        "frontend/src/pages/Admin/ExportPage.tsx",
+        "frontend/src/pages/Admin/HealthPage.tsx",
+        "frontend/src/pages/Admin/LogsPage.tsx",
+        "frontend/src/pages/Admin/OverviewPage.tsx",
+        "frontend/src/pages/Admin/PlaygroundPage.tsx",
+        "frontend/src/pages/Admin/SearchPage.tsx",
+        "frontend/src/pages/Admin/SecurityPage.tsx",
+        "frontend/src/pages/Admin/SettingsPage.tsx",
+        "frontend/src/pages/Admin/ToolsPage.tsx",
+        "frontend/src/pages/Admin/UserDetailPage.tsx",
+        "frontend/src/pages/Admin/UsersPage.tsx"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "collections",
+      "path": "frontend/src/services/collections.ts",
+      "layer": "frontend",
+      "feature": "services",
+      "lines": 124,
+      "exportedSymbols": [
+        "CollectionItem",
+        "Collection",
+        "CollectionsResponse",
+        "CollectionsError",
+        "listCollections",
+        "getCollection",
+        "createCollection",
+        "updateCollection",
+        "deleteCollection",
+        "addToCollection",
+        "removeFromCollection"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "community",
+      "path": "frontend/src/services/community.tsx",
+      "layer": "frontend",
+      "feature": "services",
+      "lines": 55,
+      "exportedSymbols": [
+        "fetchCommunityComponents",
+        "getCommunityComponent"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/DemoPage.tsx",
+        "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+        "frontend/src/pages/Dashboard/FavoritesPage.tsx"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "favorites",
+      "path": "frontend/src/services/favorites.ts",
+      "layer": "frontend",
+      "feature": "services",
+      "lines": 185,
+      "exportedSymbols": [
+        "FavoriteItem",
+        "FavoritesError",
+        "getGuestFavorites",
+        "saveToFavorites",
+        "removeFromFavorites",
+        "getUserFavorites"
+      ],
+      "usedBy": [
+        "frontend/src/components/ui/Navbar.tsx",
+        "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "mcp",
+      "path": "frontend/src/services/mcp.ts",
+      "layer": "frontend",
+      "feature": "services",
+      "lines": 259,
+      "exportedSymbols": [
+        "MCP_AUTH_REQUIRED",
+        "FetchWithRetryOptions",
+        "McpApiKey",
+        "McpStatus",
+        "McpUsage",
+        "McpOverview",
+        "getMcpOverview",
+        "getMcpStatus",
+        "listApiKeys",
+        "createApiKey",
+        "revokeApiKey",
+        "deleteApiKey",
+        "getMcpUsage",
+        "McpAdminMetrics",
+        "getAdminMetrics"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Dashboard/MCPPage.tsx"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "analyticsService",
+      "path": "mcp-server/src/services/analyticsService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 476,
+      "exportedSymbols": [
+        "McpEventType",
+        "McpEvent",
+        "DailySummary",
+        "AnalyticsService",
+        "ToolUsage",
+        "ComponentUsage",
+        "SearchUsage",
+        "McpStats",
+        "aggregateEvents",
+        "analyticsService"
+      ],
+      "usedBy": [
+        "mcp-server/src/index.ts",
+        "mcp-server/src/middleware/auth.ts",
+        "mcp-server/src/middleware/rateLimiter.ts",
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/routes/dashboard.ts",
+        "mcp-server/src/routes/mcp.ts",
+        "mcp-server/src/tools/getAiPrompts.ts",
+        "mcp-server/src/tools/getAnimationCode.ts",
+        "mcp-server/src/tools/getComponent.ts",
+        "mcp-server/src/tools/getComponentCode.ts",
+        "mcp-server/src/tools/getComponentMetadata.ts",
+        "mcp-server/src/tools/getDependencies.ts",
+        "mcp-server/src/tools/getTemplate.ts",
+        "mcp-server/src/tools/getTemplateSource.ts",
+        "mcp-server/src/tools/helpers.ts",
+        "mcp-server/src/tools/listAllComponents.ts",
+        "mcp-server/src/tools/listCategories.ts",
+        "mcp-server/src/tools/searchAnimations.ts",
+        "mcp-server/src/tools/searchByBehavior.ts",
+        "mcp-server/src/tools/searchComponents.ts",
+        "mcp-server/src/tools/searchTemplates.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "apiKeyService",
+      "path": "mcp-server/src/services/apiKeyService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 219,
+      "exportedSymbols": [
+        "ApiKeyService",
+        "apiKeyService"
+      ],
+      "usedBy": [
+        "mcp-server/src/middleware/auth.ts",
+        "mcp-server/src/routes/dashboard.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesStorage": false,
+      "externalPackages": [
+        "crypto",
+        "mongodb"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "auditService",
+      "path": "mcp-server/src/services/auditService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 36,
+      "exportedSymbols": [
+        "AuditEntry",
+        "recordAudit",
+        "listAudit"
+      ],
+      "usedBy": [
+        "mcp-server/src/routes/admin.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "componentService",
+      "path": "mcp-server/src/services/componentService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 427,
+      "exportedSymbols": [
+        "ComponentService",
+        "componentService"
+      ],
+      "usedBy": [
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/tools/getAiPrompts.ts",
+        "mcp-server/src/tools/getAnimationCode.ts",
+        "mcp-server/src/tools/getComponent.ts",
+        "mcp-server/src/tools/getComponentCode.ts",
+        "mcp-server/src/tools/getComponentMetadata.ts",
+        "mcp-server/src/tools/getDependencies.ts",
+        "mcp-server/src/tools/getTemplate.ts",
+        "mcp-server/src/tools/getTemplateSource.ts",
+        "mcp-server/src/tools/listAllComponents.ts",
+        "mcp-server/src/tools/listCategories.ts",
+        "mcp-server/src/tools/searchAnimations.ts",
+        "mcp-server/src/tools/searchByBehavior.ts",
+        "mcp-server/src/tools/searchComponents.ts",
+        "mcp-server/src/tools/searchTemplates.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "firebase",
+      "path": "mcp-server/src/services/firebase.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 127,
+      "exportedSymbols": [
+        "FirebaseService",
+        "firebaseService"
+      ],
+      "usedBy": [
+        "mcp-server/src/middleware/auth.ts",
+        "mcp-server/src/middleware/dashboardAuth.ts",
+        "mcp-server/src/middleware/requireAdmin.ts",
+        "mcp-server/src/routes/dashboard.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "firebase-admin"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "mongo",
+      "path": "mcp-server/src/services/mongo.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 57,
+      "exportedSymbols": [
+        "StringKeyDoc",
+        "getClient",
+        "getDb",
+        "getCollection",
+        "mongoService"
+      ],
+      "usedBy": [
+        "mcp-server/src/config/configService.ts",
+        "mcp-server/src/index.ts",
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/routes/dashboard.ts",
+        "mcp-server/src/services/analyticsService.ts",
+        "mcp-server/src/services/apiKeyService.ts",
+        "mcp-server/src/services/auditService.ts",
+        "mcp-server/src/services/firebase.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "mongodb"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "permissionService",
+      "path": "mcp-server/src/services/permissionService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 76,
+      "exportedSymbols": [
+        "PermissionService",
+        "permissionService"
+      ],
+      "usedBy": [
+        "mcp-server/src/tools/getAnimationCode.ts",
+        "mcp-server/src/tools/getComponent.ts",
+        "mcp-server/src/tools/getComponentCode.ts",
+        "mcp-server/src/tools/getComponentMetadata.ts",
+        "mcp-server/src/tools/getDependencies.ts",
+        "mcp-server/src/tools/getTemplate.ts",
+        "mcp-server/src/tools/helpers.ts",
+        "mcp-server/src/tools/listAllComponents.ts",
+        "mcp-server/src/tools/listCategories.ts",
+        "mcp-server/src/tools/searchAnimations.ts",
+        "mcp-server/src/tools/searchByBehavior.ts",
+        "mcp-server/src/tools/searchComponents.ts",
+        "mcp-server/src/tools/searchTemplates.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    }
+  ]
+}

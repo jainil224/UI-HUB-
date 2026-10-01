@@ -12,12 +12,15 @@ concurrency:
   cancel-in-progress: true
 
 # Phase 6 (tasks 6.8, 6.20, 6.21): governance.
+# Phase 7 (task 7.42): codebase-intelligence freshness and agreement.
 #
 # Jobs are separated by concern so a failure in one is never reported as success
 # in another:
 #
 #   security-scan    must run first and block everything else
 #   knowledge        validates .uihub-agent/
+#   generated        verifies tracked build output matches source
+#   intelligence     verifies the 17 AST indexes are fresh and self-consistent
 #   build            compiles each package
 #   test             per-package suites
 #   typecheck        non-blocking for the frontend, see below
@@ -97,6 +100,35 @@ jobs:
       - run: npm ci
       - name: Verify tracked mcp-server/dist matches a fresh build
         run: npm run check:generated
+
+  # ---------------------------------------------------------------------------
+  # 4b. Codebase intelligence (Phase 7, task 7.42).
+  #
+  # Blocking, and separate from `generated` on purpose:
+  #   agent:index:check  the 17 AST indexes still match the source tree
+  #   check:index        the indexes agree with each other
+  #
+  # `check:index` runs `agent:index:check` internally, so the second step is what
+  # adds cross-reference checking. Both are read-only; neither writes an artifact.
+  #
+  # This needs `npm ci` because the index generator uses the TypeScript compiler
+  # API from the root devDependency.
+  # ---------------------------------------------------------------------------
+  intelligence:
+    name: Codebase intelligence (freshness + agreement)
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Index freshness
+        run: npm run agent:index:check
+      - name: Cross-reference agreement
+        run: npm run check:index
 
   # ---------------------------------------------------------------------------
   # 5. Builds. Split from tests so a compile failure is not reported as a test

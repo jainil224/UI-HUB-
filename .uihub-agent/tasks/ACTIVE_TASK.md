@@ -725,3 +725,157 @@ Two process facts that are not visible from the code:
 - Phase 5's code reached `main` via external UI commits `6c203adc`, `9cd6ab2c`
   and `254ce55d` rather than a Phase 5 branch. The content is correct and
   tested, but there is no single Phase 5 commit to review or revert.
+
+---
+
+# PHASE 6 COMPLETE (2026-10-01)
+
+Security, CORS, validator, CI, documentation and build/test baselines. No
+application feature work. Full detail: `../runtime/PHASE_6_CHANGES.md`.
+
+- Credential hygiene re-verified: the knowledge base contains only a redacted
+  placeholder. Rotation still recommended (see `CONFLICTS.md` A18).
+- Baselines that must not move: **231/231 tests**, frontend typecheck **61 errors
+  across 23 files**, `check:config` **7 CONSISTENT / 4 CONFLICT / 0 UNKNOWN**.
+
+---
+
+# PHASE 7 COMPLETE (2026-10-01) - Codebase Intelligence
+
+**No application source was changed in Phase 7.** The product behaves exactly as
+it did at the end of Phase 6.
+
+## What Phase 7 produced
+
+| Area | Contents |
+|---|---|
+| `scripts/lib/*.mjs` | 6 modules: `walk`, `parse`, `resolve`, `classify`, `confidence`, `fingerprint` |
+| `scripts/generate-index.mjs` | 17 JSON artifacts + `--check` |
+| `scripts/query-index.mjs` | 19 read-only query commands |
+| `scripts/check-index.mjs` | 17 cross-reference rules |
+| `codebase/*.json` | 11 human-oriented maps |
+| `generated/*.json` | 5 lookup structures + manifest |
+| `codebase/CODEBASE_INTELLIGENCE.md` | how the indexes are built, and what they got wrong first |
+| `codebase/INTELLIGENCE_QUERIES.md` | verified worked examples |
+| `codebase/PHASE_7_CHECKLIST.md` | tasks 7.1–7.46, each with its evidence command |
+| `codebase/PHASE_7_CHANGES.md` | what shipped, gate results, deviations, risks |
+| `codebase/PHASE_7_SIMULATIONS.md` | 5 task simulations, false positives, perf, no-prod-dep proof |
+| `tasks/TASK_CATEGORY_CATALOG.md` | task to query to gate mapping |
+
+Root `typescript@^5.9.3` added as a devDependency; `package.json` gained
+`agent:index`, `agent:index:check`, `agent:index:stats`, `agent:query` and
+`check:index`, the last wired into the aggregate `check`.
+
+## Start here instead of grepping
+
+```bash
+npm run agent:query -- help        # every question the index can answer
+npm run agent:query -- orphans     # dead code
+npm run agent:query -- impact <path>   # blast radius before you edit
+npm run check:index                # freshness + cross-reference agreement
+```
+
+## Scale
+
+485 files / 8.5 MB across `frontend/src`, `backend/src`, `mcp-server/src`,
+`cli/src`, `api`, `scripts`, `backend/scripts`, `frontend/scripts`.
+
+| Index | Count |
+|---|---|
+| Files indexed | 485 |
+| Components | 227 (5 orphaned, 155 lazy) |
+| Pages / routes | 74 / 63 |
+| Services | 30 |
+| Served HTTP endpoints | 69 |
+| MCP tool registrations | 14 |
+| Symbols | 2,943 (378 ambiguous names) |
+| Import edges | 1,098 internal, 850 external, 272 dynamic, 39 re-export, 11 asset, 3 unresolved |
+| Features | 56 |
+| Runtime | ~1.8–4.2 s (cold TypeScript API load is the upper end) |
+
+## Six defects the validator caught in this phase's own work
+
+Worth recording because they are the reason the validator exists:
+
+1. **9 phantom endpoints.** `searchParams.get('q')`,
+   `params.get('tool')`, `req.get('user-agent')`, an `axios.post()` to Brevo and
+   `Promise.all([...])` were all reported as served routes. Endpoint detection now
+   requires the receiver to look like a router **and** the path to be a string
+   literal starting with `/`.
+2. **Barrels reported as pages.** `^index\.tsx?$ -> PAGE` made the `index` ENTRY
+   rule unreachable and listed pure re-export files as user-facing pages.
+3. **`usedByPages` always empty.** It read a component's outbound edges and
+   filtered for pages, which is the opposite of the question being asked.
+4. **Every file was a component.** A shorthand property returned the helper
+   *function* instead of calling it, so `isReactComponent` was truthy for all 485
+   files and orphan count jumped from 5 to 37.
+5. **`INTEGRATION_MAP` claimed `.` and `..` as packages.** Relative specifiers
+   were reduced with `split('/')[0]` and then inventoried as npm packages.
+6. **`FEATURE_MAP` had 91 features, most with one file.** The `frontend/src`
+   fallback used `split('/')[3]`, which is the *filename*, minting a feature per
+   root file. Now 56 features, all 485 files covered.
+
+Two design decisions worth not undoing:
+
+- The manifest records **no hash of its own outputs**. A manifest storing the
+  previous outputs embeds run N-1 state, so the value differs every run and
+  `--check` can never pass.
+- The manifest **cannot list itself** (it carries each file's sha256), so it lists
+  the other 16 artifacts. `check-index.mjs` asserts exactly that contract.
+
+Two more found by query-level testing rather than the validator:
+
+7. **Component names read from the wrong symbol.** `TemplateSimilarRail.tsx` was
+   named after `SIMILAR_COLLAPSED_COUNT` and `AdminLayout.tsx` after `ADMIN_NAV`.
+   Naming now prefers an exported `COMPONENT` symbol matching the basename.
+8. **Nested directories classified by their parent.** `components/models/`,
+   `components/types/` and `components/stores/` were all `COMPONENT` because
+   `components/` matched first. Path rules now classify a directory by what it
+   *is* before its container, and `components/templates/` keeps its 26 real
+   components instead of being swallowed by a `templates/` rule.
+
+## Where to read the detail
+
+| Question | File |
+|---|---|
+| What did this phase change? | `../codebase/PHASE_7_CHANGES.md` |
+| Is every task done, with evidence? | `../codebase/PHASE_7_CHECKLIST.md` |
+| How do the indexes work? | `../codebase/CODEBASE_INTELLIGENCE.md` |
+| What can I query? | `../codebase/INTELLIGENCE_QUERIES.md` |
+| Is it fast / safe / accurate? | `../codebase/PHASE_7_SIMULATIONS.md` |
+| What is still wrong? | `../CONFLICTS.md` A19–A24 |
+
+## Gates after Phase 7
+
+`npm run check` behaves as before, plus `check:index`. All sub-checks pass except
+`check:config`, which reports the same 4 owner-owned conflicts. Baseline unchanged:
+231/231 tests, 61-error frontend typecheck.
+
+Final measured results:
+
+| Gate | Result |
+|---|---|
+| `agent:index:check` | 17/17 fresh, drift 0 |
+| `check:index` | PASS — 17 MATCH, 3 WARN, 0 FAIL |
+| `check:secrets` | PASS — 1235 files, 0 real secrets |
+| `check:knowledge` | VALID — 4 checks, 0 problems |
+| `check:generated` | FRESH — 83 tracked `dist` files |
+| `check:docs` | 0 drift findings |
+| `check:config` | 7 CONSISTENT, 4 CONFLICT (owner-owned) |
+
+The 3 `check:index` warnings are findings about the repository, not index
+defects: 14 pages with no route (shared/partial components), 3 unresolved import
+edges (`mcp-server`/`backend` import a `dist` path absent in a clean checkout),
+and 5 genuinely orphaned components.
+
+## Next session
+
+Phase 7 changed no product behaviour, so **there is no new product work implied
+by it**. The open items are unchanged and owner-owned:
+
+1. The 4 configuration conflicts (`infrastructure/DEPLOYMENT_CONFLICTS.md`).
+2. Credential rotation (recommended, `CONFLICTS.md` A18).
+3. Delete `VITE_API_URL` from Vercel production and rebuild (Phase 5 finding).
+4. The remaining `runtime/UNKNOWN_REGISTER.md` items needing dashboard access.
+5. Optional cleanup from `CONFLICTS.md` A19-A23: 5 orphaned components, the
+   860 KB `.bak` file, the two `useIsMobile` hooks.

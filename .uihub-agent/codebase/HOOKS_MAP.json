@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Custom hooks. A file qualifies only if it is named use* AND exports something -- not either alone.",
+  "counts": {
+    "hooks": 2,
+    "unused": 0
+  },
+  "hooks": [
+    {
+      "name": "useIsMobile",
+      "path": "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts",
+      "feature": "components",
+      "lines": 21,
+      "exportedSymbols": [
+        "useIsMobile"
+      ],
+      "usedBy": [
+        "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ProgressLoader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ThemeSwitcher.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/GridTile.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectTile.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectsCarousel.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/UiHubProjectsCarousel.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/work/Timeline.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/work/UiHubProjects.tsx",
+        "frontend/src/components/ui/CloudScroll/components/footer/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/hero/index.tsx"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "useIsMobile",
+      "path": "frontend/src/hooks/use-mobile.ts",
+      "feature": "mobile",
+      "lines": 24,
+      "exportedSymbols": [
+        "useIsMobile"
+      ],
+      "usedBy": [
+        "frontend/src/components/ui/CardCascade.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "confidence": "HIGH"
+    }
+  ]
+}

@@ -47,7 +47,8 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
-import { relative } from 'node:path';
+import { relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const ROOT = process.cwd();
 const SELF = '.uihub-agent/scripts/secret-scan.mjs';
@@ -285,27 +286,18 @@ function gitVisibleFiles() {
 const BINARY_EXT =
   /\.(png|jpe?g|gif|webp|ico|bmp|avif|glb|gltf|fbx|obj|blend|pdf|zip|tar|gz|bz2|xz|7z|rar|mp3|mp4|wav|ogg|webm|woff2?|ttf|otf|eot|so|dll|exe|class|jar|pyc|node|wasm)$/i;
 
-async function scanFile(relPath) {
-  if (relPath === SELF) return []; // a scanner necessarily contains its own patterns
+/**
+ * Scan in-memory text with the same detectors used for files.
+ *
+ * Exported (task 7.29) so the Phase 7 indexer can prove a generated artifact is
+ * credential-free BEFORE it is written to disk, rather than scanning it
+ * afterwards and deleting it. Behaviour of the CLI is unchanged: scanFile is
+ * now a thin wrapper around this.
+ */
+export function scanText(text, relPath) {
+  if (relPath === SELF) return [];
   if (BINARY_EXT.test(relPath)) return [];
   if (ALLOWLIST.has(relPath)) return [];
-
-  let buf;
-  try {
-    buf = await readFile(`${ROOT}/${relPath}`);
-  } catch {
-    return [];
-  }
-  // Binary content: NUL byte in the first 8 KiB.
-  const probe = buf.subarray(0, 8192);
-  if (probe.includes(0)) return [];
-
-  const text = buf.toString('utf8');
-  if (text.includes('�') && buf.length > 0) {
-    // high ratio of replacement chars => not really text
-    const bad = (text.match(/�/g) || []).length;
-    if (bad / Math.max(text.length, 1) > 0.05) return [];
-  }
 
   const lines = text.split(/\r?\n/);
   const results = [];
@@ -339,6 +331,31 @@ async function scanFile(relPath) {
     }
   }
   return results;
+}
+
+async function scanFile(relPath) {
+  if (relPath === SELF) return []; // a scanner necessarily contains its own patterns
+  if (BINARY_EXT.test(relPath)) return [];
+  if (ALLOWLIST.has(relPath)) return [];
+
+  let buf;
+  try {
+    buf = await readFile(`${ROOT}/${relPath}`);
+  } catch {
+    return [];
+  }
+  // Binary content: NUL byte in the first 8 KiB.
+  const probe = buf.subarray(0, 8192);
+  if (probe.includes(0)) return [];
+
+  const text = buf.toString('utf8');
+  if (text.includes('\uFFFD') && buf.length > 0) {
+    // high ratio of replacement chars => not really text
+    const bad = (text.match(/\uFFFD/g) || []).length;
+    if (bad / Math.max(text.length, 1) > 0.05) return [];
+  }
+
+  return scanText(text, relPath);
 }
 
 const ORDER = {
@@ -401,7 +418,15 @@ async function main() {
   process.exit(real.length > 0 ? 2 : 0);
 }
 
-main().catch((e) => {
-  console.error('secret-scan failed:', e.message);
-  process.exit(1);
-});
+// Only run the CLI when executed directly. When imported for `scanText` (the
+// Phase 7 indexer), importing must not trigger a full-repo scan and a
+// `process.exit` that would kill the importer.
+const invokedDirectly =
+  process.argv[1] && fileURLToPath(import.meta.url) === resolve(process.argv[1]);
+
+if (invokedDirectly) {
+  main().catch((e) => {
+    console.error('secret-scan failed:', e.message);
+    process.exit(1);
+  });
+}

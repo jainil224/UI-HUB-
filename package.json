@@ -19,21 +19,27 @@
     "start": "cd backend && npm start",
     "sync:components": "cd backend && npm run sync:components",
     "generate": "cd mcp-server && npm run build",
-    "check": "npm run check:secrets && npm run check:tracking && npm run check:knowledge && npm run check:generated && npm run check:docs && npm run check:config",
+    "check": "npm run check:secrets && npm run check:tracking && npm run check:knowledge && npm run check:generated && npm run check:docs && npm run check:config && npm run check:index",
     "check:secrets": "node .uihub-agent/scripts/secret-scan.mjs",
     "check:secrets:all": "node .uihub-agent/scripts/secret-scan.mjs --all",
     "check:tracking": "node .uihub-agent/scripts/check-tracking.mjs",
     "check:knowledge": "node .uihub-agent/scripts/check-knowledge.mjs",
     "check:generated": "node .uihub-agent/scripts/check-generated.mjs",
     "check:docs": "node .uihub-agent/scripts/check-docs.mjs",
-    "check:config": "node .uihub-agent/scripts/check-config.mjs"
+    "check:config": "node .uihub-agent/scripts/check-config.mjs",
+    "check:index": "npm run agent:index:check && node .uihub-agent/scripts/check-index.mjs",
+    "agent:index": "node .uihub-agent/scripts/generate-index.mjs",
+    "agent:index:stats": "node .uihub-agent/scripts/generate-index.mjs --stats",
+    "agent:index:check": "node .uihub-agent/scripts/generate-index.mjs --check",
+    "agent:query": "node .uihub-agent/scripts/query-index.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",
     "firebase-tools": "^14.23.0",
     "gifenc": "^1.0.3",
     "playwright": "^1.63.0",
-    "pngjs": "^7.0.0"
+    "pngjs": "^7.0.0",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@upstash/redis": "^1.37.0",

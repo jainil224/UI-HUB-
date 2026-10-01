@@ -1158,3 +1158,126 @@ documented, copy-paste-oriented knowledge base is not.
 **Lesson:** a plain-text scan of `mongodb+srv://` is mandatory before any commit
 that adds documentation. Value-shaped regexes catch this; review does not,
 because each occurrence reads as an illustrative placeholder.
+
+---
+
+# PHASE 7 ADDENDUM - Codebase Intelligence (2026-10-01)
+
+Phase 7 built an AST-derived index of the repository (485 files, 8 source roots).
+It **changed no application source**. Every finding below was produced by the new
+indexes and is recorded for the next session; none is fixed, because fixing them is
+application work.
+
+Evidence: `codebase/CODEBASE_INTELLIGENCE.md`, `codebase/INTELLIGENCE_QUERIES.md`.
+Reproduce any of these with `npm run agent:query -- <command>`.
+
+## Headline
+
+The indexes disagreed with hand-written documentation in four places, and the
+indexes were right each time. `PROJECT_MAP.json` and several prose documents
+described the repository less accurately than a single TypeScript parse.
+
+## A19. NEW - 868-line component is dead code
+
+`frontend/src/components/templates/TemplatePreview.tsx` (868 lines) has **zero
+inbound import edges**. The live preview is
+`frontend/src/components/ui/LazyTemplatePreview.tsx`. Four more orphans exist:
+`ui/button.tsx` (57), `CloudScroll/.../work/Timeline.tsx` (152),
+`ui/SectionHeader.tsx` (14), `ui/ViewSourceButton.tsx` (30).
+
+- **Severity:** S3 (quality). **Confidence:** high.
+- **Fix owner:** whoever owns the templates area.
+- **Caveat:** an orphan proves no *static* importer. The index cannot see
+  string-built imports or runtime lookups. Confirm before deleting.
+
+## A20. NEW - `backend/src/server.js` imports a build artifact that git ignores
+
+Three import specifiers do not resolve:
+
+```
+../../mcp-server/dist/routes/mcp.js
+../../mcp-server/dist/routes/dashboard.js
+../../mcp-server/dist/routes/admin.js
+```
+
+`mcp-server/dist` is excluded from indexing by policy (it is build output), so
+these are recorded as unresolved rather than silently dropped. They also explain
+the Vercel module-load 500 recorded as `A2`: the function depends on a directory
+that a clean checkout does not contain.
+
+- **Severity:** S2 (deployment). **Confidence:** high.
+- **Fix owner:** owner - this needs a build-order or packaging decision.
+
+## A21. NEW - `PROJECT_MAP.json` names only 12 of 18 backend services
+
+`directories.backend/src.services.fileCount` says 18, which is correct, but
+`keyFiles` lists only 12 filenames. Six real services are absent from the
+inventory a reader would actually consult:
+
+```
+mongoService.js is listed; promptService.js, pushService.js, receiptService.js,
+syncService.js, userService.js and vibeEngine.js are not.
+```
+
+The AST index resolves all 18 there, plus 5 in `frontend/src/services` and 7 in
+`mcp-server/src/services`, for **30** services repo-wide.
+
+- **Severity:** S3. **Confidence:** high.
+- **Correction to an earlier note:** an earlier draft of this addendum claimed
+  `healthService.js` was missing from `PROJECT_MAP.json`. It is present, as
+  `keyFiles[10]`. The real gap is the six unnamed services above.
+- **Action:** documented in `codebase/CODEBASE_INTELLIGENCE.md`; the coarse
+  generator was not patched, because `SERVICE_MAP.json` supersedes it.
+
+## A22. NEW - two different `useIsMobile` hooks
+
+`frontend/src/hooks/use-mobile.ts` (2 consumers) and
+`frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts` (13 consumers) are
+distinct implementations that happen to share a name.
+
+`SYMBOL_INDEX.json` reports 378 ambiguous names out of 2,943 symbols. That is
+**not** index noise - it is a monorepo with four packages that each define their
+own utilities. Any task that names a symbol must check occurrences before
+assuming one definition site.
+
+- **Severity:** S3. **Confidence:** high.
+
+## A23. NEW - an 860 KB `.bak` file is tracked in the source tree
+
+`frontend/src/data/embeddedSourceCode.ts.bak` (860 KB) sits inside `frontend/src`
+and is excluded from indexing by extension. It holds embedded component source.
+
+- **Severity:** S3. **Confidence:** high.
+- **Action:** owner decision on whether to delete; it is not a Phase 7 change.
+
+## A24. NEW - `PROJECT_MAP.codeVolume` and the index count different things
+
+Naively: `codeVolume` sums **481**, the index reports **485**. Neither is wrong
+and the gap is not a 14-file omission.
+
+- `codeVolume` counts every git-tracked file under the four `src/` roots: **481**.
+- The index indexes parseable code files under those roots: **465**. The 16-file
+  difference is **15 role-only files plus 1 excluded file**:
+  - 6 `.css` + 1 `.svg` in `frontend/src`,
+  - 1 `.json` in `backend/src`,
+  - 7 `.json` data files in `mcp-server/src`,
+  - and `frontend/src/data/embeddedSourceCode.ts.bak` (860 KB), which `walk.mjs`
+    excludes because it is a backup file. 481 - 16 = 465. ✓
+- The index adds **20** first-party scripts `codeVolume` never counts:
+  `api/index.js`, 13 in `backend/scripts/` (including `grantProUser.js` and
+  `resetFirebase.js`), 5 in `scripts/announcement/`, and
+  `frontend/scripts/generate-favicons.mjs`. 465 + 20 = **485**. ✓
+
+- **Severity:** S3. **Confidence:** high.
+- **Why it matters:** an AST index cannot describe a stylesheet, and
+  `codeVolume` cannot describe an import edge. Quote which denominator you mean;
+  "the repo has 481 files" and "the index has 485" are both accurate and refer to
+  different sets.
+
+## What Phase 7 deliberately did not do
+
+- No application source was edited. No behaviour changed.
+- The 4 open configuration conflicts remain owner-owned and `check:config` still
+  fails, exactly as recorded in `runtime/PHASE_6_CHANGES.md`.
+- The 61-error frontend typecheck baseline is untouched.
+- `agent.md` was not modified.

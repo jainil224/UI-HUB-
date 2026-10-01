@@ -1,0 +1,1059 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Page entry points with their route, direct component dependencies, and hooks.",
+  "counts": {
+    "pages": 74,
+    "withRoute": 60
+  },
+  "pages": [
+    {
+      "path": "frontend/src/pages/Admin/AdminGuard.tsx",
+      "name": "AdminGuard",
+      "feature": "admin",
+      "route": "/admin/mcp",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 90,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/AdminLayout.tsx",
+      "name": "AdminLayout",
+      "feature": "admin",
+      "route": "(none)",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 194,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/AlertsPage.tsx",
+      "name": "AlertsPage",
+      "feature": "admin",
+      "route": "alerts",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 127,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/AnalyticsPage.tsx",
+      "name": "AnalyticsPage",
+      "feature": "admin",
+      "route": "analytics",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 205,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx",
+        "frontend/src/components/admin/Charts.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/ApiKeysPage.tsx",
+      "name": "ApiKeysPage",
+      "feature": "admin",
+      "route": "api-keys",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 179,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/AuditPage.tsx",
+      "name": "AuditPage",
+      "feature": "admin",
+      "route": "audit",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 106,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/ComponentsPage.tsx",
+      "name": "ComponentsPage",
+      "feature": "admin",
+      "route": "components",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 202,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/ExportPage.tsx",
+      "name": "ExportPage",
+      "feature": "admin",
+      "route": "export",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 122,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/HealthPage.tsx",
+      "name": "HealthPage",
+      "feature": "admin",
+      "route": "health",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 175,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/LogsPage.tsx",
+      "name": "LogsPage",
+      "feature": "admin",
+      "route": "logs",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 158,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/OverviewPage.tsx",
+      "name": "OverviewPage",
+      "feature": "admin",
+      "route": "overview",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 211,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx",
+        "frontend/src/components/admin/Charts.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/PlaygroundPage.tsx",
+      "name": "PlaygroundPage",
+      "feature": "admin",
+      "route": "playground",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 200,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/SearchPage.tsx",
+      "name": "SearchPage",
+      "feature": "admin",
+      "route": "search",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 137,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx",
+        "frontend/src/components/admin/Charts.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/SecurityPage.tsx",
+      "name": "SecurityPage",
+      "feature": "admin",
+      "route": "security",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 126,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/SettingsPage.tsx",
+      "name": "SettingsPage",
+      "feature": "admin",
+      "route": "settings",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 174,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/ToolsPage.tsx",
+      "name": "ToolsPage",
+      "feature": "admin",
+      "route": "tools",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 132,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/UserDetailPage.tsx",
+      "name": "UserDetailPage",
+      "feature": "admin",
+      "route": "users/:uid",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 202,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx",
+        "frontend/src/components/admin/Charts.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/UsersPage.tsx",
+      "name": "UsersPage",
+      "feature": "admin",
+      "route": "users",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 153,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Auth/ForgotPassword.tsx",
+      "name": "ForgotPassword",
+      "feature": "auth",
+      "route": "/forgot-password",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 173,
+      "components": [
+        "frontend/src/components/ui/AuthBrandPanel.tsx",
+        "frontend/src/components/ui/WaveBackground.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Auth/LoginPage.tsx",
+      "name": "LoginPage",
+      "feature": "auth",
+      "route": "/login",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 239,
+      "components": [
+        "frontend/src/components/ui/AuthBrandPanel.tsx",
+        "frontend/src/components/ui/WaveBackground.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Auth/SignupPage.tsx",
+      "name": "SignupPage",
+      "feature": "auth",
+      "route": "/signup",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 283,
+      "components": [
+        "frontend/src/components/ui/AuthBrandPanel.tsx",
+        "frontend/src/components/ui/WaveBackground.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+      "name": "BuildWithUIHubDetailPage",
+      "feature": "build-with-uihub-page",
+      "route": "/build-with-ui-hub/:slug",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 341,
+      "components": [
+        "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
+        "frontend/src/components/templates/TemplateCodeViewer.tsx",
+        "frontend/src/components/templates/TemplatePreviewStage.tsx",
+        "frontend/src/components/ui/Toast.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubPage.tsx",
+      "name": "BuildWithUIHubPage",
+      "feature": "build-with-uihub-page",
+      "route": "/build-with-ui-hub",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 13,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+      "name": "AuCabaretDemoPage",
+      "feature": "components",
+      "route": "/demo/me-019-au-cabaret",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 34,
+      "components": [
+        "frontend/src/components/templates/AuCabaretPoster.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/CloudScrollPage.tsx",
+      "name": "CloudScrollPage",
+      "feature": "components",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 29,
+      "components": [
+        "frontend/src/components/ui/CloudScroll/CloudScroll.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/DemoPage.tsx",
+      "name": "DemoPage",
+      "feature": "components",
+      "route": "/demo/:id",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 158,
+      "components": [
+        "frontend/src/components/ui/FaizurPortfolio.tsx",
+        "frontend/src/components/ui/HaulFooter.tsx",
+        "frontend/src/components/ui/OmniflowFooter.tsx",
+        "frontend/src/components/ui/SoraFooter.tsx",
+        "frontend/src/components/ui/SuiFoundation.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+      "name": "DontBeGreedyDemoPage",
+      "feature": "components",
+      "route": "/demo/dont-be-greedy",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 34,
+      "components": [
+        "frontend/src/components/templates/DontBeGreedyFooter.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/GlobeDemoPage.tsx",
+      "name": "GlobeDemoPage",
+      "feature": "components",
+      "route": "/demo/globe",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 118,
+      "components": [
+        "frontend/src/components/ui/Globe.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/HaosDemoPage.tsx",
+      "name": "HaosDemoPage",
+      "feature": "components",
+      "route": "/demo/haos-tech-solutions",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 35,
+      "components": [
+        "frontend/src/components/templates/HaosShowcase.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/HeyoDemoPage.tsx",
+      "name": "HeyoDemoPage",
+      "feature": "components",
+      "route": "/demo/heyo-agency-cta",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 34,
+      "components": [
+        "frontend/src/components/templates/HeyoAgencyCta.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
+      "name": "InteriorDesignDemoPage",
+      "feature": "components",
+      "route": "/demo/interior-design",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 34,
+      "components": [
+        "frontend/src/components/templates/InteriorDesignShowcase.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/LightCablesDemoPage.tsx",
+      "name": "LightCablesDemoPage",
+      "feature": "components",
+      "route": "/demo/light-cables",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 53,
+      "components": [
+        "frontend/src/components/ui/LightCables.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/LogoHereDemoPage.tsx",
+      "name": "LogoHereDemoPage",
+      "feature": "components",
+      "route": "/demo/logo-here",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 31,
+      "components": [
+        "frontend/src/components/templates/LogoHere.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/LoveAppDemoPage.tsx",
+      "name": "LoveAppDemoPage",
+      "feature": "components",
+      "route": "/demo/loveapp-hero",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 34,
+      "components": [
+        "frontend/src/components/templates/LoveAppHero.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/LumosDemoPage.tsx",
+      "name": "LumosDemoPage",
+      "feature": "components",
+      "route": "/demo/lumos",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 34,
+      "components": [
+        "frontend/src/components/templates/LumosHero.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
+      "name": "MatrixRainDemoPage",
+      "feature": "components",
+      "route": "/demo/matrix-rain",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 53,
+      "components": [
+        "frontend/src/components/ui/MatrixRain.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/MentalityDemoPage.tsx",
+      "name": "MentalityDemoPage",
+      "feature": "components",
+      "route": "/demo/mentality",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 34,
+      "components": [
+        "frontend/src/components/templates/MentalityHero.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
+      "name": "OriginkitHero24DemoPage",
+      "feature": "components",
+      "route": "/demo/originkit-hero-24",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 31,
+      "components": [
+        "frontend/src/components/templates/OriginkitHero24.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/PaipaiDemoPage.tsx",
+      "name": "PaipaiDemoPage",
+      "feature": "components",
+      "route": "/demo/paipai-kuaishou",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 31,
+      "components": [
+        "frontend/src/components/templates/PaipaiKuaishou.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
+      "name": "Scroll3DAnimationPage",
+      "feature": "components",
+      "route": "/demo/3d-scroll-animation",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 29,
+      "components": [
+        "frontend/src/components/ui/Scroll3DAnimation.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/SectionScrollPage.tsx",
+      "name": "SectionScrollPage",
+      "feature": "components",
+      "route": "/demo/section-scroll",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 27,
+      "components": [
+        "frontend/src/components/ui/SectionScroll.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/SegmintDemoPage.tsx",
+      "name": "SegmintDemoPage",
+      "feature": "components",
+      "route": "/demo/segmint-2026",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 38,
+      "components": [
+        "frontend/src/components/templates/SegmintFooter.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/SkyDemoPage.tsx",
+      "name": "SkyDemoPage",
+      "feature": "components",
+      "route": "/demo/sky",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 39,
+      "components": [
+        "frontend/src/components/ui/Sky.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/SplitOrbDemoPage.tsx",
+      "name": "SplitOrbDemoPage",
+      "feature": "components",
+      "route": "/demo/split-fuzzy-orb",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 13,
+      "components": [
+        "frontend/src/components/templates/SplitFuzzyOrbHero.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/SuiOverflowDemoPage.tsx",
+      "name": "SuiOverflowDemoPage",
+      "feature": "components",
+      "route": "/demo/sui-overflow",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 31,
+      "components": [
+        "frontend/src/components/templates/SuiOverflow.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/TarsDemoPage.tsx",
+      "name": "TarsDemoPage",
+      "feature": "components",
+      "route": "/demo/tars-hero-arena",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 13,
+      "components": [
+        "frontend/src/components/templates/TarsHeroArena.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/ThreeDSliderPage.tsx",
+      "name": "ThreeDSliderPage",
+      "feature": "components",
+      "route": "/demo/3d-slider",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 27,
+      "components": [
+        "frontend/src/components/ui/ThreeDSlider.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+      "name": "CollectionsPage",
+      "feature": "dashboard",
+      "route": "collections",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 720,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Dashboard/components/ComponentPreviewTile.tsx",
+      "name": "ComponentPreviewTile",
+      "feature": "dashboard",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 58,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Dashboard/DashboardLayout.tsx",
+      "name": "DashboardLayout",
+      "feature": "dashboard",
+      "route": "/dashboard",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 71,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+      "name": "FavoritesPage",
+      "feature": "dashboard",
+      "route": "/favorites",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 321,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Dashboard/MCPPage.tsx",
+      "name": "MCPPage",
+      "feature": "dashboard",
+      "route": "mcp",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 819,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/HomePage.tsx",
+      "name": "HomePage",
+      "feature": "home-page",
+      "route": "/",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 21,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+      "name": "BuildWithUIHubSection",
+      "feature": "home-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 149,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/sections/CategoryShowcase.tsx",
+      "name": "CategoryShowcase",
+      "feature": "home-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 426,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+      "name": "ComponentGrid",
+      "feature": "home-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 230,
+      "components": [
+        "frontend/src/components/ui/Skeleton.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/sections/FAQ.tsx",
+      "name": "FAQ",
+      "feature": "home-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 117,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/sections/Hero.tsx",
+      "name": "Hero",
+      "feature": "home-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 219,
+      "components": [
+        "frontend/src/components/ui/SearchBox.tsx",
+        "frontend/src/components/ui/Skeleton.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/sections/Stats.tsx",
+      "name": "Stats",
+      "feature": "home-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 65,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+      "name": "TemplatesSection",
+      "feature": "home-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 448,
+      "components": [
+        "frontend/src/components/templates/AuCabaretPoster.tsx",
+        "frontend/src/components/templates/DontBeGreedyFooter.tsx",
+        "frontend/src/components/templates/GraphicDesignerPortfolio.tsx",
+        "frontend/src/components/templates/HaosShowcase.tsx",
+        "frontend/src/components/templates/HeyoAgencyCta.tsx",
+        "frontend/src/components/templates/InteriorDesignShowcase.tsx",
+        "frontend/src/components/templates/Labs2586.tsx",
+        "frontend/src/components/templates/LogoHere.tsx",
+        "frontend/src/components/templates/LoveAppHero.tsx",
+        "frontend/src/components/templates/LumosHero.tsx",
+        "frontend/src/components/templates/MentalityHero.tsx",
+        "frontend/src/components/templates/MoodHero.tsx",
+        "frontend/src/components/templates/PaipaiKuaishou.tsx",
+        "frontend/src/components/templates/PortfolioClosing.tsx",
+        "frontend/src/components/templates/SegmintFooter.tsx",
+        "frontend/src/components/templates/SplitFuzzyOrbHero.tsx",
+        "frontend/src/components/templates/SuiOverflow.tsx",
+        "frontend/src/components/templates/TarsHeroArena.tsx",
+        "frontend/src/components/ui/LazyTemplatePreview.tsx",
+        "frontend/src/components/ui/Toast.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/legal/CookieSettingsPage.tsx",
+      "name": "CookieSettingsPage",
+      "feature": "legal",
+      "route": "/cookies",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 316,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/legal/LegalPage.tsx",
+      "name": "LegalPage",
+      "feature": "legal",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 148,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/legal/PaymentPolicyPage.tsx",
+      "name": "PaymentPolicyPage",
+      "feature": "legal",
+      "route": "/payment-policy",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 85,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
+      "name": "PrivacyPolicyPage",
+      "feature": "legal",
+      "route": "/privacy",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 105,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/legal/TermsPage.tsx",
+      "name": "TermsPage",
+      "feature": "legal",
+      "route": "/terms",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 106,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx",
+      "name": "HoverPreviewPopover",
+      "feature": "library-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 117,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+      "name": "LibraryPage",
+      "feature": "library-page",
+      "route": "/library",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 776,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+      "name": "index",
+      "feature": "library-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 2086,
+      "components": [
+        "frontend/src/components/animations/TextAnimations.tsx",
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/ui/AuthRequiredModal.tsx",
+        "frontend/src/components/ui/CheckoutOverlay.tsx",
+        "frontend/src/components/ui/CodeHighlighter.tsx",
+        "frontend/src/components/ui/Skeleton.tsx",
+        "frontend/src/components/ui/Toast.tsx"
+      ],
+      "hooks": [
+        "frontend/src/hooks/use-mobile.ts"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/LibraryPage/sections/GetStarted/getStartedData.ts",
+      "name": "getStartedData",
+      "feature": "library-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 326,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/LibraryPage/sections/GetStarted/GetStartedPage.tsx",
+      "name": "GetStartedPage",
+      "feature": "library-page",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 221,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
+      "name": "PreviewCapturePage",
+      "feature": "preview-capture-page",
+      "route": "/preview-capture",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 51,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/PricingPage/PricingPage.tsx",
+      "name": "PricingPage",
+      "feature": "pricing-page",
+      "route": "/pricing",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 505,
+      "components": [
+        "frontend/src/components/ui/CheckoutOverlay.tsx",
+        "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/PlanBadge.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+      "name": "TemplateDetailPage",
+      "feature": "templates-page",
+      "route": "/templates/:id",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 360,
+      "components": [
+        "frontend/src/components/templates/TemplateCodeViewer.tsx",
+        "frontend/src/components/templates/TemplatePreviewStage.tsx",
+        "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/components/ui/Toast.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/TemplatesPage/TemplatesPage.tsx",
+      "name": "TemplatesPage",
+      "feature": "templates-page",
+      "route": "/templates",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 13,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    }
+  ]
+}

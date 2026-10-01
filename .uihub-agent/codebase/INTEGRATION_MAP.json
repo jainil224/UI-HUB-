@@ -1,0 +1,458 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "External service surface, derived from imported package names and env vars actually read.",
+  "counts": {
+    "files": 27,
+    "integrations": 6,
+    "envVarsReferenced": 55,
+    "envVarsDeclared": 55
+  },
+  "integrations": [
+    {
+      "name": "firebase",
+      "usedIn": [
+        "backend/scripts/resendWelcomeEmails.js",
+        "backend/scripts/tempSeed.js",
+        "backend/src/utils/firebaseAdmin.js",
+        "mcp-server/src/services/firebase.ts"
+      ],
+      "packageNames": [
+        "firebase-admin"
+      ]
+    },
+    {
+      "name": "mongodb",
+      "usedIn": [
+        "backend/src/services/mongoService.js",
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/services/apiKeyService.ts",
+        "mcp-server/src/services/mongo.ts"
+      ],
+      "packageNames": [
+        "mongodb"
+      ]
+    },
+    {
+      "name": "rate-limiting",
+      "usedIn": [
+        "backend/src/middleware/rateLimiters.js"
+      ],
+      "packageNames": [
+        "express-rate-limit"
+      ]
+    },
+    {
+      "name": "razorpay",
+      "usedIn": [
+        "backend/src/controllers/paymentController.js",
+        "backend/src/scripts/setupProductionDatabase.js"
+      ],
+      "packageNames": [
+        "razorpay"
+      ]
+    },
+    {
+      "name": "security-headers",
+      "usedIn": [
+        "backend/src/server.js",
+        "mcp-server/src/config/corsPolicy.ts",
+        "mcp-server/src/index.ts"
+      ],
+      "packageNames": [
+        "cors",
+        "helmet"
+      ]
+    },
+    {
+      "name": "upstash-redis",
+      "usedIn": [
+        "mcp-server/src/middleware/rateLimiter.ts",
+        "mcp-server/src/routes/mcp.ts"
+      ],
+      "packageNames": [
+        "@upstash/redis"
+      ]
+    }
+  ],
+  "envVars": [
+    {
+      "name": "BREVO_API_KEY",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/services/brevoService.js"
+      ]
+    },
+    {
+      "name": "BREVO_SENDER_EMAIL",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/services/brevoService.js"
+      ]
+    },
+    {
+      "name": "BREVO_SENDER_NAME",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/services/brevoService.js"
+      ]
+    },
+    {
+      "name": "BREVO_SMTP_PASS",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/server.js",
+        "backend/src/services/brevoService.js",
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "BREVO_SMTP_USER",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/server.js",
+        "backend/src/services/brevoService.js",
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "EMAIL_TEST_SECRET",
+      "readIn": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "name": "FIREBASE_API_KEY",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "FIREBASE_APP_ID",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "FIREBASE_AUTH_DOMAIN",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "FIREBASE_CLIENT_EMAIL",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "FIREBASE_MEASUREMENT_ID",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "FIREBASE_MESSAGING_SENDER_ID",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "FIREBASE_PRIVATE_KEY",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "FIREBASE_PROJECT_ID",
+      "readIn": [
+        "backend/src/services/configService.js",
+        "backend/src/utils/firebaseAdmin.js",
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "FIREBASE_SERVICE_ACCOUNT_JSON",
+      "readIn": [
+        "backend/src/utils/firebaseAdmin.js",
+        "mcp-server/src/services/firebase.ts"
+      ]
+    },
+    {
+      "name": "FIREBASE_STORAGE_BUCKET",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "FRONTEND_URL",
+      "readIn": [
+        "backend/src/emailTemplates/announcementEmailTemplate.js",
+        "backend/src/services/brevoService.js"
+      ]
+    },
+    {
+      "name": "MCP_ADMIN_EMAILS",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_ALLOWED_ORIGINS",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_API_KEY_PREFIX",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_PORT",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_RATE_LIMIT_FREE",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_RATE_LIMIT_PRO",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_SERVER_URL",
+      "readIn": [
+        "mcp-server/src/config/env.ts",
+        "mcp-server/src/routes/mcp.ts"
+      ]
+    },
+    {
+      "name": "MONGODB_DB",
+      "readIn": [
+        "backend/src/services/mongoService.js",
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MONGODB_URI",
+      "readIn": [
+        "backend/src/services/mongoService.js",
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "NEXT_PUBLIC_FIREBASE_PROJECT_ID",
+      "readIn": [
+        "backend/src/utils/firebaseAdmin.js"
+      ]
+    },
+    {
+      "name": "NODE_ENV",
+      "readIn": [
+        "backend/src/middleware/auth.js",
+        "backend/src/server.js",
+        "backend/src/services/healthService.js",
+        "mcp-server/src/config/env.ts",
+        "mcp-server/src/routes/mcp.ts"
+      ]
+    },
+    {
+      "name": "PORT",
+      "readIn": [
+        "backend/src/server.js",
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "RAZORPAY_KEY_ID",
+      "readIn": [
+        "backend/src/controllers/paymentController.js",
+        "backend/src/scripts/setupProductionDatabase.js",
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "RAZORPAY_KEY_SECRET",
+      "readIn": [
+        "backend/src/controllers/paymentController.js",
+        "backend/src/scripts/setupProductionDatabase.js"
+      ]
+    },
+    {
+      "name": "RAZORPAY_WEBHOOK_SECRET",
+      "readIn": [
+        "backend/src/controllers/webhookController.js"
+      ]
+    },
+    {
+      "name": "REDIS_URL",
+      "readIn": [
+        "backend/src/middleware/rateLimiters.js",
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "RENDER",
+      "readIn": [
+        "backend/src/middleware/auth.js",
+        "mcp-server/src/routes/mcp.ts"
+      ]
+    },
+    {
+      "name": "SMTP_FROM",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/server.js",
+        "backend/src/services/brevoService.js",
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "SMTP_HOST",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "SMTP_PASS",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/server.js",
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "SMTP_PORT",
+      "readIn": [
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "SMTP_SECURE",
+      "readIn": [
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "SMTP_USER",
+      "readIn": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/server.js",
+        "backend/src/utils/sendEmail.js"
+      ]
+    },
+    {
+      "name": "UI_HUB_API_KEY",
+      "readIn": [
+        "cli/src/config.ts"
+      ]
+    },
+    {
+      "name": "UI_HUB_ENDPOINT",
+      "readIn": [
+        "cli/src/config.ts"
+      ]
+    },
+    {
+      "name": "UPSTASH_REDIS_REST_TOKEN",
+      "readIn": [
+        "mcp-server/src/middleware/rateLimiter.ts"
+      ]
+    },
+    {
+      "name": "UPSTASH_REDIS_REST_URL",
+      "readIn": [
+        "mcp-server/src/middleware/rateLimiter.ts"
+      ]
+    },
+    {
+      "name": "VAPID_PRIVATE_KEY",
+      "readIn": [
+        "backend/src/services/pushService.js"
+      ]
+    },
+    {
+      "name": "VAPID_PUBLIC_KEY",
+      "readIn": [
+        "backend/src/services/configService.js",
+        "backend/src/services/pushService.js"
+      ]
+    },
+    {
+      "name": "VAPID_SUBJECT",
+      "readIn": [
+        "backend/src/services/configService.js",
+        "backend/src/services/pushService.js"
+      ]
+    },
+    {
+      "name": "VERCEL",
+      "readIn": [
+        "backend/src/server.js"
+      ]
+    },
+    {
+      "name": "VITE_FIREBASE_API_KEY",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "VITE_FIREBASE_APP_ID",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "VITE_FIREBASE_AUTH_DOMAIN",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "VITE_FIREBASE_MEASUREMENT_ID",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "VITE_FIREBASE_MESSAGING_SENDER_ID",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    },
+    {
+      "name": "VITE_FIREBASE_PROJECT_ID",
+      "readIn": [
+        "backend/src/services/configService.js",
+        "backend/src/utils/firebaseAdmin.js",
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "VITE_FIREBASE_STORAGE_BUCKET",
+      "readIn": [
+        "backend/src/services/configService.js"
+      ]
+    }
+  ]
+}

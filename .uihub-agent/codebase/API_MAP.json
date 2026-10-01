@@ -1,0 +1,749 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Served HTTP routes derived from router call syntax (receiver is a router, verb is an HTTP method, first argument is a string literal starting with \"/\"), plus MCP tool registrations. Outbound client calls and dynamically computed route paths are listed separately so neither is mistaken for a served endpoint nor silently dropped.",
+  "counts": {
+    "endpoints": 69,
+    "byMethod": {
+      "DELETE": 5,
+      "GET": 34,
+      "PATCH": 3,
+      "POST": 26,
+      "PUT": 1
+    },
+    "mcpRegistrations": 14,
+    "outboundClientCalls": 5,
+    "dynamicRoutePaths": 0
+  },
+  "endpoints": [
+    {
+      "method": "DELETE",
+      "path": "/",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/mcp.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "feature": "backend-root",
+      "handlers": [
+        "backend/src/server.js",
+        "mcp-server/src/index.ts",
+        "mcp-server/src/routes/mcp.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/",
+      "feature": "component-routes",
+      "handlers": [
+        "backend/src/routes/componentRoutes.js",
+        "mcp-server/src/routes/mcp.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/:id/prompt/:system",
+      "feature": "component-routes",
+      "handlers": [
+        "backend/src/routes/componentRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/:id/source",
+      "feature": "component-routes",
+      "handlers": [
+        "backend/src/routes/componentRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/activate-free",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/activity",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/admin/metrics",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/alerts",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/alerts/:key/resolve",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/alerts/:key/unresolve",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/analytics",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api-keys",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api-keys/:id",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "feature": "backend-root",
+      "handlers": [
+        "backend/src/server.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/audit",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/broadcast-announcement",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/broadcast-reengagement",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/check",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/collections",
+      "feature": "collections-routes",
+      "handlers": [
+        "backend/src/routes/collectionsRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/collections",
+      "feature": "collections-routes",
+      "handlers": [
+        "backend/src/routes/collectionsRoutes.js"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/collections/:collectionId",
+      "feature": "collections-routes",
+      "handlers": [
+        "backend/src/routes/collectionsRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/collections/:collectionId",
+      "feature": "collections-routes",
+      "handlers": [
+        "backend/src/routes/collectionsRoutes.js"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/collections/:collectionId",
+      "feature": "collections-routes",
+      "handlers": [
+        "backend/src/routes/collectionsRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/collections/:collectionId/items",
+      "feature": "collections-routes",
+      "handlers": [
+        "backend/src/routes/collectionsRoutes.js"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/collections/:collectionId/items/:componentId",
+      "feature": "collections-routes",
+      "handlers": [
+        "backend/src/routes/collectionsRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/components",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/components/community",
+      "feature": "favorites-routes",
+      "handlers": [
+        "backend/src/routes/favoritesRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/components/community/:id",
+      "feature": "favorites-routes",
+      "handlers": [
+        "backend/src/routes/favoritesRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/create-order",
+      "feature": "payment-routes",
+      "handlers": [
+        "backend/src/routes/paymentRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/db",
+      "feature": "component-routes",
+      "handlers": [
+        "backend/src/routes/componentRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/email-test",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/export",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/favorites",
+      "feature": "favorites-routes",
+      "handlers": [
+        "backend/src/routes/favoritesRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/favorites",
+      "feature": "favorites-routes",
+      "handlers": [
+        "backend/src/routes/favoritesRoutes.js"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/favorites/:componentId",
+      "feature": "favorites-routes",
+      "handlers": [
+        "backend/src/routes/favoritesRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/firebase",
+      "feature": "config-routes",
+      "handlers": [
+        "backend/src/routes/configRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/free-email-test",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "feature": "backend-root",
+      "handlers": [
+        "backend/src/server.js",
+        "mcp-server/src/index.ts",
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/routes/mcp.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/keys",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/keys",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/keys/:id",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/keys/:id/revoke",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/logs",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/overview",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/playground",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/pro-email-test",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/push-broadcast",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/push-subscribe",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/push-vapid",
+      "feature": "config-routes",
+      "handlers": [
+        "backend/src/routes/configRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/razorpay-key",
+      "feature": "config-routes",
+      "handlers": [
+        "backend/src/routes/configRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/recover-jainil",
+      "feature": "payment-routes",
+      "handlers": [
+        "backend/src/routes/paymentRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/reengagement-email-test",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/search",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/security",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/settings",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/settings",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/status",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js",
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/sync",
+      "feature": "component-routes",
+      "handlers": [
+        "backend/src/routes/componentRoutes.js",
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/tools",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/tools/:name",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/usage",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/users",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/users/:id",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/users/:id/suspend",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/users/:id/unsuspend",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/verify-payment",
+      "feature": "payment-routes",
+      "handlers": [
+        "backend/src/routes/paymentRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/webhook",
+      "feature": "payment-routes",
+      "handlers": [
+        "backend/src/routes/paymentRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/welcome-shown",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    }
+  ],
+  "outboundClientCalls": [
+    {
+      "method": "POST",
+      "target": "https://api.brevo.com/v3/smtp/email",
+      "client": "axios",
+      "line": 493,
+      "file": "backend/src/services/brevoService.js",
+      "feature": "brevo-service"
+    },
+    {
+      "method": "POST",
+      "target": "https://api.brevo.com/v3/smtp/email",
+      "client": "axios",
+      "line": 538,
+      "file": "backend/src/services/brevoService.js",
+      "feature": "brevo-service"
+    },
+    {
+      "method": "POST",
+      "target": "https://api.brevo.com/v3/smtp/email",
+      "client": "axios",
+      "line": 610,
+      "file": "backend/src/services/brevoService.js",
+      "feature": "brevo-service"
+    },
+    {
+      "method": "POST",
+      "target": "https://api.brevo.com/v3/smtp/email",
+      "client": "axios",
+      "line": 859,
+      "file": "backend/src/services/brevoService.js",
+      "feature": "brevo-service"
+    },
+    {
+      "method": "POST",
+      "target": "https://api.brevo.com/v3/smtp/email",
+      "client": "axios",
+      "line": 920,
+      "file": "backend/src/services/brevoService.js",
+      "feature": "brevo-service"
+    }
+  ],
+  "dynamicRoutePaths": [],
+  "mcpTools": [
+    {
+      "tool": "get_ai_prompts",
+      "symbol": "get_ai_prompts",
+      "file": "mcp-server/src/tools/getAiPrompts.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Return ready-to-use AI generation prompts (Claude, Antigravity, Lovable) for a specific UI HUB component. Requires a UI HUB Pro subscription."
+    },
+    {
+      "tool": "get_animation_code",
+      "symbol": "get_animation_code",
+      "file": "mcp-server/src/tools/getAnimationCode.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Return the implementation/code for a selected animation."
+    },
+    {
+      "tool": "get_component",
+      "symbol": "get_component",
+      "file": "mcp-server/src/tools/getComponent.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Retrieve complete information about a specific UI HUB component, including metadata, code, dependencies, and usage."
+    },
+    {
+      "tool": "get_component_code",
+      "symbol": "get_component_code",
+      "file": "mcp-server/src/tools/getComponentCode.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Return copy-paste-ready source code for a specific UI HUB component."
+    },
+    {
+      "tool": "get_component_metadata",
+      "symbol": "get_component_metadata",
+      "file": "mcp-server/src/tools/getComponentMetadata.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Return rich metadata (props, behavior/vibe description, CSS properties, requirements) for a UI HUB component. Useful for accurately reproducing or integrating a component. Premium components require a"
+    },
+    {
+      "tool": "get_dependencies",
+      "symbol": "get_dependencies",
+      "file": "mcp-server/src/tools/getDependencies.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Return the dependencies required by a specific UI HUB component. Premium components require a Pro subscription."
+    },
+    {
+      "tool": "get_template",
+      "symbol": "get_template",
+      "file": "mcp-server/src/tools/getTemplate.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Return complete template information and code."
+    },
+    {
+      "tool": "get_template_source",
+      "symbol": "get_template_source",
+      "file": "mcp-server/src/tools/getTemplateSource.ts",
+      "line": 6,
+      "factory": "createTool",
+      "description": "Return the full source code and metadata for a complete website template from the UI HUB catalog (e.g. \"tars-protocol\", \"sui-overflow\"). Requires a UI HUB Pro subscription."
+    },
+    {
+      "tool": "list_all_components",
+      "symbol": "list_all_components",
+      "file": "mcp-server/src/tools/listAllComponents.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "List the ENTIRE UI HUB component catalog with pagination. Premium components are hidden completely for free-tier keys and only appear for Pro/Elite/Admin keys."
+    },
+    {
+      "tool": "list_categories",
+      "symbol": "list_categories",
+      "file": "mcp-server/src/tools/listCategories.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Return all available UI HUB component categories with counts. Counts exclude premium components for free-tier keys."
+    },
+    {
+      "tool": "search_animations",
+      "symbol": "search_animations",
+      "file": "mcp-server/src/tools/searchAnimations.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Search UI HUB animation resources (text, scroll, and effect animations). Premium animations are hidden completely for free-tier keys."
+    },
+    {
+      "tool": "search_by_behavior",
+      "symbol": "search_by_behavior",
+      "file": "mcp-server/src/tools/searchByBehavior.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Search UI HUB components by visual BEHAVIOR or vibe descriptions (e.g. \"magnetic pull\", \"scroll reveal parallax\", \"accretion disk\", \"glow on hover\"). Matches behavior descriptions, requirements, and A"
+    },
+    {
+      "tool": "search_components",
+      "symbol": "search_components",
+      "file": "mcp-server/src/tools/searchComponents.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Returns structured component metadata. Premium components are hidden completely for free-tier key"
+    },
+    {
+      "tool": "search_templates",
+      "symbol": "search_templates",
+      "file": "mcp-server/src/tools/searchTemplates.ts",
+      "line": 7,
+      "factory": "createTool",
+      "description": "Search UI HUB templates (full-page/hero layouts built from components). Premium templates are hidden completely for free-tier keys."
+    }
+  ]
+}

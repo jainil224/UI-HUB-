@@ -1,0 +1,1469 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Feature clusters inferred from directory structure, cross-checked against role assignment.",
+  "counts": {
+    "features": 56
+  },
+  "features": [
+    {
+      "feature": "access-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/accessService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 194
+    },
+    {
+      "feature": "activity-log-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/activityLogService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 114
+    },
+    {
+      "feature": "admin",
+      "files": 18,
+      "roles": {
+        "PAGE": 18
+      },
+      "entryPoints": [
+        "frontend/src/pages/Admin/AdminGuard.tsx",
+        "frontend/src/pages/Admin/AdminLayout.tsx",
+        "frontend/src/pages/Admin/AlertsPage.tsx",
+        "frontend/src/pages/Admin/AnalyticsPage.tsx",
+        "frontend/src/pages/Admin/ApiKeysPage.tsx",
+        "frontend/src/pages/Admin/AuditPage.tsx",
+        "frontend/src/pages/Admin/ComponentsPage.tsx",
+        "frontend/src/pages/Admin/ExportPage.tsx",
+        "frontend/src/pages/Admin/HealthPage.tsx",
+        "frontend/src/pages/Admin/LogsPage.tsx",
+        "frontend/src/pages/Admin/OverviewPage.tsx",
+        "frontend/src/pages/Admin/PlaygroundPage.tsx",
+        "frontend/src/pages/Admin/SearchPage.tsx",
+        "frontend/src/pages/Admin/SecurityPage.tsx",
+        "frontend/src/pages/Admin/SettingsPage.tsx",
+        "frontend/src/pages/Admin/ToolsPage.tsx",
+        "frontend/src/pages/Admin/UserDetailPage.tsx",
+        "frontend/src/pages/Admin/UsersPage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "lucide-react",
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 2893
+    },
+    {
+      "feature": "announcement-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/announcementService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "lines": 45
+    },
+    {
+      "feature": "api",
+      "files": 1,
+      "roles": {
+        "BARREL": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 3
+    },
+    {
+      "feature": "auth",
+      "files": 3,
+      "roles": {
+        "PAGE": 3
+      },
+      "entryPoints": [
+        "frontend/src/pages/Auth/ForgotPassword.tsx",
+        "frontend/src/pages/Auth/LoginPage.tsx",
+        "frontend/src/pages/Auth/SignupPage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "firebase",
+        "lucide-react",
+        "motion",
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 695
+    },
+    {
+      "feature": "auth-context",
+      "files": 1,
+      "roles": {
+        "STATE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "firebase",
+        "react"
+      ],
+      "lines": 317
+    },
+    {
+      "feature": "backend-root",
+      "files": 1,
+      "roles": {
+        "ENTRY": 1
+      },
+      "entryPoints": [
+        "backend/src/server.js"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "GET /",
+        "GET /api/health",
+        "GET /health"
+      ],
+      "externalPackages": [
+        "cors",
+        "dotenv",
+        "express",
+        "helmet",
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "lines": 185
+    },
+    {
+      "feature": "brevo-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/brevoService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "axios"
+      ],
+      "lines": 953
+    },
+    {
+      "feature": "build-with-uihub-page",
+      "files": 2,
+      "roles": {
+        "PAGE": 2
+      },
+      "entryPoints": [
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubPage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "lucide-react",
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 354
+    },
+    {
+      "feature": "cli",
+      "files": 23,
+      "roles": {
+        "CONFIG": 2,
+        "ENTRY": 1,
+        "TYPE": 1,
+        "UNKNOWN": 19
+      },
+      "entryPoints": [
+        "cli/src/commands/index.ts"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "node:fs",
+        "node:os",
+        "node:path",
+        "node:readline",
+        "node:stream"
+      ],
+      "lines": 1160
+    },
+    {
+      "feature": "collections-routes",
+      "files": 1,
+      "roles": {
+        "ROUTE_CONFIG": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "DELETE /collections/:collectionId",
+        "DELETE /collections/:collectionId/items/:componentId",
+        "GET /collections",
+        "GET /collections/:collectionId",
+        "PATCH /collections/:collectionId",
+        "POST /collections",
+        "POST /collections/:collectionId/items"
+      ],
+      "externalPackages": [
+        "express"
+      ],
+      "lines": 163
+    },
+    {
+      "feature": "collections-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/collectionsService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 227
+    },
+    {
+      "feature": "component-routes",
+      "files": 1,
+      "roles": {
+        "ROUTE_CONFIG": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "GET /:id/prompt/:system",
+        "GET /:id/source",
+        "GET /db",
+        "POST /",
+        "POST /sync"
+      ],
+      "externalPackages": [
+        "express"
+      ],
+      "lines": 302
+    },
+    {
+      "feature": "component-sync-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/componentSyncService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "fs",
+        "path",
+        "url"
+      ],
+      "lines": 300
+    },
+    {
+      "feature": "components",
+      "files": 243,
+      "roles": {
+        "BARREL": 4,
+        "COMPONENT": 199,
+        "DATA": 4,
+        "HOOK": 1,
+        "MODEL": 5,
+        "PAGE": 24,
+        "STATE": 3,
+        "TYPE": 3
+      },
+      "entryPoints": [
+        "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+        "frontend/src/pages/Components/CloudScrollPage.tsx",
+        "frontend/src/pages/Components/DemoPage.tsx",
+        "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+        "frontend/src/pages/Components/GlobeDemoPage.tsx",
+        "frontend/src/pages/Components/HaosDemoPage.tsx",
+        "frontend/src/pages/Components/HeyoDemoPage.tsx",
+        "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
+        "frontend/src/pages/Components/LightCablesDemoPage.tsx",
+        "frontend/src/pages/Components/LogoHereDemoPage.tsx",
+        "frontend/src/pages/Components/LoveAppDemoPage.tsx",
+        "frontend/src/pages/Components/LumosDemoPage.tsx",
+        "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
+        "frontend/src/pages/Components/MentalityDemoPage.tsx",
+        "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
+        "frontend/src/pages/Components/PaipaiDemoPage.tsx",
+        "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
+        "frontend/src/pages/Components/SectionScrollPage.tsx",
+        "frontend/src/pages/Components/SegmintDemoPage.tsx",
+        "frontend/src/pages/Components/SkyDemoPage.tsx",
+        "frontend/src/pages/Components/SplitOrbDemoPage.tsx",
+        "frontend/src/pages/Components/SuiOverflowDemoPage.tsx",
+        "frontend/src/pages/Components/TarsDemoPage.tsx",
+        "frontend/src/pages/Components/ThreeDSliderPage.tsx"
+      ],
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx",
+        "frontend/src/components/admin/Charts.tsx",
+        "frontend/src/components/animations/MeshText.tsx",
+        "frontend/src/components/animations/PixelDrift.tsx",
+        "frontend/src/components/animations/RandomLetterSwap.tsx",
+        "frontend/src/components/animations/RollingLetters.tsx",
+        "frontend/src/components/animations/RotatingText.tsx",
+        "frontend/src/components/animations/ScrambleText.tsx",
+        "frontend/src/components/animations/ScrollHighlight.tsx",
+        "frontend/src/components/animations/SmokyText.tsx",
+        "frontend/src/components/animations/SocialTooltipButtons.tsx",
+        "frontend/src/components/animations/TextAnimations.tsx",
+        "frontend/src/components/animations/TextPath.tsx",
+        "frontend/src/components/animations/VaporizeTextCycle.tsx",
+        "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/templates/AuCabaretPoster.tsx",
+        "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
+        "frontend/src/components/templates/DontBeGreedyFooter.tsx",
+        "frontend/src/components/templates/GraphicDesignerPortfolio.tsx",
+        "frontend/src/components/templates/HaosShowcase.tsx",
+        "frontend/src/components/templates/HeyoAgencyCta.tsx",
+        "frontend/src/components/templates/InteriorDesignShowcase.tsx",
+        "frontend/src/components/templates/Labs2586.tsx",
+        "frontend/src/components/templates/LogoHere.tsx",
+        "frontend/src/components/templates/LoveAppHero.tsx",
+        "frontend/src/components/templates/LumosHero.tsx",
+        "frontend/src/components/templates/MentalityHero.tsx",
+        "frontend/src/components/templates/MoodHero.tsx",
+        "frontend/src/components/templates/OriginkitHero24.tsx",
+        "frontend/src/components/templates/PaipaiKuaishou.tsx",
+        "frontend/src/components/templates/PortfolioClosing.tsx",
+        "frontend/src/components/templates/SegmintFooter.tsx",
+        "frontend/src/components/templates/SplitFuzzyOrbHero.tsx",
+        "frontend/src/components/templates/SuiOverflow.tsx",
+        "frontend/src/components/templates/TarsHeroArena.tsx",
+        "frontend/src/components/templates/TemplateCodeViewer.tsx",
+        "frontend/src/components/templates/TemplatePreview.tsx",
+        "frontend/src/components/templates/TemplatePreviewStage.tsx",
+        "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/components/templates/VisionaryOrbHero.tsx",
+        "frontend/src/components/ui/AsciiCursor.tsx",
+        "frontend/src/components/ui/AsciiWater.tsx",
+        "frontend/src/components/ui/AuraCursor.tsx",
+        "frontend/src/components/ui/AuroraBpmLoader.tsx",
+        "frontend/src/components/ui/AuthBrandPanel.tsx",
+        "frontend/src/components/ui/AuthRequiredModal.tsx",
+        "frontend/src/components/ui/BeamGridBackground.tsx",
+        "frontend/src/components/ui/BlackHole.tsx",
+        "frontend/src/components/ui/BlackHoleBackground.tsx",
+        "frontend/src/components/ui/BlackHoleCursor.tsx",
+        "frontend/src/components/ui/BlockDrift.tsx",
+        "frontend/src/components/ui/BloomingFlower.tsx",
+        "frontend/src/components/ui/CardCascade.tsx",
+        "frontend/src/components/ui/CardsBeam.tsx",
+        "frontend/src/components/ui/Chandelier.tsx",
+        "frontend/src/components/ui/CheckoutOverlay.tsx",
+        "frontend/src/components/ui/CloudScroll/CloudScroll.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/CanvasLoader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/Preloader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ProgressLoader.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ScrollHint.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ScrollWrapper.tsx",
+        "frontend/src/components/ui/CloudScroll/components/common/ThemeSwitcher.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/GridTile.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/Triangle.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectTile.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/ProjectsCarousel.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/TouchPanControls.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/UiHubProjectsCarousel.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/projects/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/work/Timeline.tsx",
+        "frontend/src/components/ui/CloudScroll/components/experience/work/UiHubProjects.tsx",
+        "frontend/src/components/ui/CloudScroll/components/footer/index.tsx",
+        "frontend/src/components/ui/CloudScroll/components/hero/TextWindow.tsx",
+        "frontend/src/components/ui/CloudScroll/components/hero/index.tsx",
+        "frontend/src/components/ui/CodeHighlighter.tsx",
+        "frontend/src/components/ui/CookieBanner.tsx",
+        "frontend/src/components/ui/CrossfadeTypewriter.tsx",
+        "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/DragDropUpload.tsx",
+        "frontend/src/components/ui/DriftwoodGallery.tsx",
+        "frontend/src/components/ui/EmberHusk.tsx",
+        "frontend/src/components/ui/FaizurPortfolio.tsx",
+        "frontend/src/components/ui/FallBeamBackground.tsx",
+        "frontend/src/components/ui/Footer.tsx",
+        "frontend/src/components/ui/FrostGlassMelt.tsx",
+        "frontend/src/components/ui/GalaxyButton.tsx",
+        "frontend/src/components/ui/GearSystem.tsx",
+        "frontend/src/components/ui/GeneratingOrb.tsx",
+        "frontend/src/components/ui/Globe.tsx",
+        "frontend/src/components/ui/GlobeMesh.tsx",
+        "frontend/src/components/ui/GlowButton.tsx",
+        "frontend/src/components/ui/GradientOrb.tsx",
+        "frontend/src/components/ui/GravitationalVortex.tsx",
+        "frontend/src/components/ui/HackerBackground.tsx",
+        "frontend/src/components/ui/HaulFooter.tsx",
+        "frontend/src/components/ui/HeartCursor.tsx",
+        "frontend/src/components/ui/HellBackground.tsx",
+        "frontend/src/components/ui/Hourglass.tsx",
+        "frontend/src/components/ui/ImageCompare.tsx",
+        "frontend/src/components/ui/ImageLens.tsx",
+        "frontend/src/components/ui/InfiniteMarquee.tsx",
+        "frontend/src/components/ui/InfiniteTendrils.tsx",
+        "frontend/src/components/ui/InteractiveGridBackground.tsx",
+        "frontend/src/components/ui/IsometricPortal.tsx",
+        "frontend/src/components/ui/KineticGrid.tsx",
+        "frontend/src/components/ui/LazyTemplatePreview.tsx",
+        "frontend/src/components/ui/LightCables.tsx",
+        "frontend/src/components/ui/Lightfall.tsx",
+        "frontend/src/components/ui/LiquidFillButton.tsx",
+        "frontend/src/components/ui/LiquidGlassCard.tsx",
+        "frontend/src/components/ui/LizardCursor.tsx",
+        "frontend/src/components/ui/Logo.tsx",
+        "frontend/src/components/ui/MagicCursor.tsx",
+        "frontend/src/components/ui/MagneticBackground.tsx",
+        "frontend/src/components/ui/MagneticCursor.tsx",
+        "frontend/src/components/ui/MatrixRain.tsx",
+        "frontend/src/components/ui/MorphingGlow.tsx",
+        "frontend/src/components/ui/MorphingRings.tsx",
+        "frontend/src/components/ui/MouseGravityBackground.tsx",
+        "frontend/src/components/ui/Navbar.tsx",
+        "frontend/src/components/ui/NeonBorder.tsx",
+        "frontend/src/components/ui/OceanSwell.tsx",
+        "frontend/src/components/ui/OmniflowFooter.tsx",
+        "frontend/src/components/ui/OptionWheel.tsx",
+        "frontend/src/components/ui/OrbitButton.tsx",
+        "frontend/src/components/ui/OtpCodeInput.tsx",
+        "frontend/src/components/ui/ParticleCursor.tsx",
+        "frontend/src/components/ui/ParticleLoader.tsx",
+        "frontend/src/components/ui/ParticleSphere.tsx",
+        "frontend/src/components/ui/PasswordStrengthMeter.tsx",
+        "frontend/src/components/ui/PixelBounce.tsx",
+        "frontend/src/components/ui/PixelDrift.tsx",
+        "frontend/src/components/ui/PlanBadge.tsx",
+        "frontend/src/components/ui/PointDNAHelix.tsx",
+        "frontend/src/components/ui/PushNotificationPrompt.tsx",
+        "frontend/src/components/ui/QuantumLattice.tsx",
+        "frontend/src/components/ui/RainStorm.tsx",
+        "frontend/src/components/ui/ReflectShader.tsx",
+        "frontend/src/components/ui/RippleSignatureLedger.tsx",
+        "frontend/src/components/ui/RubiksCube.tsx",
+        "frontend/src/components/ui/SVGPageTransition.tsx",
+        "frontend/src/components/ui/Scroll3DAnimation.tsx",
+        "frontend/src/components/ui/ScrollExpand.tsx",
+        "frontend/src/components/ui/ScrollToTop.tsx",
+        "frontend/src/components/ui/SearchBox.tsx",
+        "frontend/src/components/ui/SectionHeader.tsx",
+        "frontend/src/components/ui/SectionScroll.tsx",
+        "frontend/src/components/ui/SignaturePad.tsx",
+        "frontend/src/components/ui/Skeleton.tsx",
+        "frontend/src/components/ui/Sky.tsx",
+        "frontend/src/components/ui/SmoothScroll.tsx",
+        "frontend/src/components/ui/SolarSystem.tsx",
+        "frontend/src/components/ui/SoraFooter.tsx",
+        "frontend/src/components/ui/SpaceBackground.tsx",
+        "frontend/src/components/ui/StarBurst.tsx",
+        "frontend/src/components/ui/StarCursor.tsx",
+        "frontend/src/components/ui/SuiFoundation.tsx",
+        "frontend/src/components/ui/SuperMario.tsx",
+        "frontend/src/components/ui/TargetCursor.tsx",
+        "frontend/src/components/ui/ThreeDSlider.tsx",
+        "frontend/src/components/ui/Toast.tsx",
+        "frontend/src/components/ui/ToonhubHero.tsx",
+        "frontend/src/components/ui/TopLoader.tsx",
+        "frontend/src/components/ui/Tornado.tsx",
+        "frontend/src/components/ui/TradingCandles.tsx",
+        "frontend/src/components/ui/TwinGalaxyRings.tsx",
+        "frontend/src/components/ui/UserCursor.tsx",
+        "frontend/src/components/ui/VectorWordmark.tsx",
+        "frontend/src/components/ui/VenomCursor.tsx",
+        "frontend/src/components/ui/ViewSourceButton.tsx",
+        "frontend/src/components/ui/WaveBackground.tsx",
+        "frontend/src/components/ui/WelcomeNotifications.tsx",
+        "frontend/src/components/ui/background-boxes.tsx",
+        "frontend/src/components/ui/background-paths.tsx",
+        "frontend/src/components/ui/border-beam.tsx",
+        "frontend/src/components/ui/button.tsx",
+        "frontend/src/components/ui/corner-border-button.tsx",
+        "frontend/src/components/ui/corner-button.tsx",
+        "frontend/src/components/ui/creepy-button.tsx",
+        "frontend/src/components/ui/diagonal-carousel.tsx",
+        "frontend/src/components/ui/image-collage.tsx",
+        "frontend/src/components/ui/image-trail.tsx",
+        "frontend/src/components/ui/infinity-image.tsx",
+        "frontend/src/components/ui/interactive-hover-button.tsx",
+        "frontend/src/components/ui/isometric-grid-background.tsx",
+        "frontend/src/components/ui/magic-card.tsx",
+        "frontend/src/components/ui/marquee-hover-button.tsx",
+        "frontend/src/components/ui/payment-transaction-button.tsx",
+        "frontend/src/components/ui/perspective-carousel.tsx",
+        "frontend/src/components/ui/radial-glow-button.tsx",
+        "frontend/src/components/ui/rainbow-button.tsx",
+        "frontend/src/components/ui/sparkles-background.tsx",
+        "frontend/src/components/ui/sparkles.tsx",
+        "frontend/src/components/ui/spider-web.tsx",
+        "frontend/src/components/ui/spiral-images.tsx",
+        "frontend/src/components/ui/testimonials-card.tsx"
+      ],
+      "services": [],
+      "hooks": [
+        "frontend/src/components/ui/CloudScroll/hooks/useIsMobile.ts"
+      ],
+      "endpoints": [],
+      "externalPackages": [
+        "@gsap/react",
+        "@radix-ui/react-slot",
+        "@react-three/drei",
+        "@react-three/fiber",
+        "@tsparticles/engine",
+        "@tsparticles/react",
+        "@tsparticles/slim",
+        "class-variance-authority",
+        "d3-geo",
+        "firebase",
+        "framer-motion",
+        "gsap",
+        "lenis",
+        "lucide-react",
+        "motion",
+        "react",
+        "react-device-detect",
+        "react-icons",
+        "react-router-dom",
+        "recharts",
+        "three",
+        "three-stdlib",
+        "zustand"
+      ],
+      "lines": 71384
+    },
+    {
+      "feature": "config",
+      "files": 3,
+      "roles": {
+        "CONFIG": 3
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 274
+    },
+    {
+      "feature": "config-routes",
+      "files": 1,
+      "roles": {
+        "ROUTE_CONFIG": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "GET /firebase",
+        "GET /push-vapid",
+        "GET /razorpay-key"
+      ],
+      "externalPackages": [
+        "express"
+      ],
+      "lines": 37
+    },
+    {
+      "feature": "config-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/configService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "dotenv"
+      ],
+      "lines": 45
+    },
+    {
+      "feature": "controllers",
+      "files": 2,
+      "roles": {
+        "CONTROLLER": 2
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "crypto",
+        "razorpay"
+      ],
+      "lines": 299
+    },
+    {
+      "feature": "cookie-consent-context",
+      "files": 1,
+      "roles": {
+        "STATE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 129
+    },
+    {
+      "feature": "dashboard",
+      "files": 5,
+      "roles": {
+        "PAGE": 5
+      },
+      "entryPoints": [
+        "frontend/src/pages/Dashboard/CollectionsPage.tsx",
+        "frontend/src/pages/Dashboard/DashboardLayout.tsx",
+        "frontend/src/pages/Dashboard/FavoritesPage.tsx",
+        "frontend/src/pages/Dashboard/MCPPage.tsx",
+        "frontend/src/pages/Dashboard/components/ComponentPreviewTile.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "framer-motion",
+        "lucide-react",
+        "motion",
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 1989
+    },
+    {
+      "feature": "data",
+      "files": 21,
+      "roles": {
+        "DATA": 21
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 40809
+    },
+    {
+      "feature": "email-log-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/emailLogService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 56
+    },
+    {
+      "feature": "email-templates",
+      "files": 1,
+      "roles": {
+        "TEMPLATE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 209
+    },
+    {
+      "feature": "favorites-routes",
+      "files": 1,
+      "roles": {
+        "ROUTE_CONFIG": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "DELETE /favorites/:componentId",
+        "GET /components/community",
+        "GET /components/community/:id",
+        "GET /favorites",
+        "POST /favorites"
+      ],
+      "externalPackages": [
+        "express"
+      ],
+      "lines": 106
+    },
+    {
+      "feature": "favorites-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/favoritesService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 120
+    },
+    {
+      "feature": "firebase-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/firebaseService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 225
+    },
+    {
+      "feature": "frontend-root",
+      "files": 3,
+      "roles": {
+        "ENTRY": 1,
+        "TYPE": 1,
+        "UNKNOWN": 1
+      },
+      "entryPoints": [
+        "frontend/src/main.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react",
+        "react-dom",
+        "react-router-dom"
+      ],
+      "lines": 280
+    },
+    {
+      "feature": "health-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/healthService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 121
+    },
+    {
+      "feature": "home-page",
+      "files": 8,
+      "roles": {
+        "PAGE": 8
+      },
+      "entryPoints": [
+        "frontend/src/pages/HomePage/HomePage.tsx",
+        "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+        "frontend/src/pages/HomePage/sections/CategoryShowcase.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/HomePage/sections/FAQ.tsx",
+        "frontend/src/pages/HomePage/sections/Hero.tsx",
+        "frontend/src/pages/HomePage/sections/Stats.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "framer-motion",
+        "lucide-react",
+        "motion",
+        "react",
+        "react-icons",
+        "react-router-dom"
+      ],
+      "lines": 1675
+    },
+    {
+      "feature": "legal",
+      "files": 5,
+      "roles": {
+        "PAGE": 5
+      },
+      "entryPoints": [
+        "frontend/src/pages/legal/CookieSettingsPage.tsx",
+        "frontend/src/pages/legal/LegalPage.tsx",
+        "frontend/src/pages/legal/PaymentPolicyPage.tsx",
+        "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
+        "frontend/src/pages/legal/TermsPage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "lucide-react",
+        "motion",
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 760
+    },
+    {
+      "feature": "lib",
+      "files": 2,
+      "roles": {
+        "UNKNOWN": 2
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "clsx",
+        "firebase",
+        "tailwind-merge"
+      ],
+      "lines": 96
+    },
+    {
+      "feature": "library-page",
+      "files": 5,
+      "roles": {
+        "PAGE": 5
+      },
+      "entryPoints": [
+        "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx",
+        "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/LibraryPage/sections/GetStarted/GetStartedPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/GetStarted/getStartedData.ts"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "framer-motion",
+        "lucide-react",
+        "motion",
+        "react",
+        "react-dom",
+        "react-router-dom"
+      ],
+      "lines": 3526
+    },
+    {
+      "feature": "mcp",
+      "files": 39,
+      "roles": {
+        "CONFIG": 3,
+        "DATA": 1,
+        "ENTRY": 1,
+        "MCP_TOOL": 16,
+        "MIDDLEWARE": 5,
+        "ROUTE_CONFIG": 3,
+        "SERVICE": 7,
+        "TYPE": 2,
+        "UNKNOWN": 1
+      },
+      "entryPoints": [
+        "mcp-server/src/index.ts"
+      ],
+      "components": [],
+      "services": [
+        "mcp-server/src/services/analyticsService.ts",
+        "mcp-server/src/services/apiKeyService.ts",
+        "mcp-server/src/services/auditService.ts",
+        "mcp-server/src/services/componentService.ts",
+        "mcp-server/src/services/firebase.ts",
+        "mcp-server/src/services/mongo.ts",
+        "mcp-server/src/services/permissionService.ts"
+      ],
+      "hooks": [],
+      "endpoints": [
+        "DELETE /",
+        "DELETE /keys/:id",
+        "GET /",
+        "GET /",
+        "GET /admin/metrics",
+        "GET /alerts",
+        "GET /analytics",
+        "GET /api-keys",
+        "GET /audit",
+        "GET /components",
+        "GET /export",
+        "GET /health",
+        "GET /health",
+        "GET /health",
+        "GET /keys",
+        "GET /logs",
+        "GET /logs",
+        "GET /overview",
+        "GET /overview",
+        "GET /search",
+        "GET /security",
+        "GET /settings",
+        "GET /status",
+        "GET /status",
+        "GET /tools",
+        "GET /usage",
+        "GET /users",
+        "GET /users/:id",
+        "PATCH /api-keys/:id",
+        "PATCH /tools/:name",
+        "POST /",
+        "POST /alerts/:key/resolve",
+        "POST /alerts/:key/unresolve",
+        "POST /keys",
+        "POST /keys/:id/revoke",
+        "POST /playground",
+        "POST /users/:id/suspend",
+        "POST /users/:id/unsuspend",
+        "PUT /settings"
+      ],
+      "externalPackages": [
+        "@upstash/redis",
+        "cors",
+        "crypto",
+        "dotenv",
+        "express",
+        "express-async-errors",
+        "firebase-admin",
+        "helmet",
+        "mongodb",
+        "node:fs",
+        "node:path",
+        "node:readline",
+        "node:url",
+        "zod"
+      ],
+      "lines": 5929
+    },
+    {
+      "feature": "middleware",
+      "files": 3,
+      "roles": {
+        "MIDDLEWARE": 3
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "express-rate-limit",
+        "express-validator",
+        "ioredis",
+        "rate-limit-redis"
+      ],
+      "lines": 282
+    },
+    {
+      "feature": "mobile",
+      "files": 1,
+      "roles": {
+        "HOOK": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [
+        "frontend/src/hooks/use-mobile.ts"
+      ],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 24
+    },
+    {
+      "feature": "mongo-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/mongoService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "dotenv",
+        "mongodb"
+      ],
+      "lines": 180
+    },
+    {
+      "feature": "payment-routes",
+      "files": 1,
+      "roles": {
+        "ROUTE_CONFIG": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "GET /recover-jainil",
+        "POST /create-order",
+        "POST /verify-payment",
+        "POST /webhook"
+      ],
+      "externalPackages": [
+        "express"
+      ],
+      "lines": 33
+    },
+    {
+      "feature": "preview-capture-page",
+      "files": 1,
+      "roles": {
+        "PAGE": 1
+      },
+      "entryPoints": [
+        "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 51
+    },
+    {
+      "feature": "pricing-page",
+      "files": 1,
+      "roles": {
+        "PAGE": 1
+      },
+      "entryPoints": [
+        "frontend/src/pages/PricingPage/PricingPage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "lucide-react",
+        "motion",
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 505
+    },
+    {
+      "feature": "prompt-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/promptService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "fs",
+        "path",
+        "url"
+      ],
+      "lines": 155
+    },
+    {
+      "feature": "push-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/pushService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "web-push"
+      ],
+      "lines": 214
+    },
+    {
+      "feature": "receipt-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/receiptService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "pdfkit"
+      ],
+      "lines": 369
+    },
+    {
+      "feature": "routing",
+      "files": 1,
+      "roles": {
+        "TEST": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url",
+        "vitest"
+      ],
+      "lines": 87
+    },
+    {
+      "feature": "scripts",
+      "files": 16,
+      "roles": {
+        "SCRIPT": 16
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "dotenv",
+        "fs",
+        "node:fs",
+        "node:path",
+        "node:url",
+        "path",
+        "razorpay",
+        "url"
+      ],
+      "lines": 1556
+    },
+    {
+      "feature": "services",
+      "files": 5,
+      "roles": {
+        "SERVICE": 5
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "frontend/src/services/admin.ts",
+        "frontend/src/services/collections.ts",
+        "frontend/src/services/community.tsx",
+        "frontend/src/services/favorites.ts",
+        "frontend/src/services/mcp.ts"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 1201
+    },
+    {
+      "feature": "shared",
+      "files": 19,
+      "roles": {
+        "SCRIPT": 19
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "firebase-admin",
+        "fs",
+        "gifenc",
+        "node:child_process",
+        "node:fs",
+        "node:module",
+        "node:path",
+        "node:url",
+        "path",
+        "playwright",
+        "pngjs",
+        "sharp",
+        "url"
+      ],
+      "lines": 1722
+    },
+    {
+      "feature": "skeleton-context",
+      "files": 1,
+      "roles": {
+        "STATE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 35
+    },
+    {
+      "feature": "sync-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/syncService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 113
+    },
+    {
+      "feature": "templates-page",
+      "files": 2,
+      "roles": {
+        "PAGE": 2
+      },
+      "entryPoints": [
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplatesPage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "lucide-react",
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 373
+    },
+    {
+      "feature": "theme-context",
+      "files": 1,
+      "roles": {
+        "STATE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 43
+    },
+    {
+      "feature": "user-routes",
+      "files": 1,
+      "roles": {
+        "ROUTE_CONFIG": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "GET /check",
+        "GET /status",
+        "POST /activate-free",
+        "POST /activity",
+        "POST /broadcast-announcement",
+        "POST /broadcast-reengagement",
+        "POST /email-test",
+        "POST /free-email-test",
+        "POST /pro-email-test",
+        "POST /push-broadcast",
+        "POST /push-subscribe",
+        "POST /reengagement-email-test",
+        "POST /sync",
+        "POST /welcome-shown"
+      ],
+      "externalPackages": [
+        "express"
+      ],
+      "lines": 931
+    },
+    {
+      "feature": "user-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/userService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 249
+    },
+    {
+      "feature": "utils",
+      "files": 23,
+      "roles": {
+        "UTILITY": 23
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "crypto",
+        "dotenv",
+        "firebase",
+        "firebase-admin",
+        "jszip",
+        "node:fs",
+        "node:path",
+        "node:url",
+        "nodemailer",
+        "react",
+        "shiki",
+        "vitest"
+      ],
+      "lines": 3958
+    },
+    {
+      "feature": "vibe-engine",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/vibeEngine.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 227
+    }
+  ]
+}

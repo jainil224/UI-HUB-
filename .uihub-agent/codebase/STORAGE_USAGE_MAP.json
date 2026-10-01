@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "localStorage / sessionStorage / Redis / Firebase Storage usage and the keys in play.",
+  "counts": {
+    "files": 2,
+    "stores": [
+      "upstash-redis"
+    ],
+    "literalKeys": 0
+  },
+  "usage": [
+    {
+      "file": "mcp-server/src/middleware/rateLimiter.ts",
+      "feature": "mcp",
+      "stores": [
+        "upstash-redis"
+      ],
+      "calls": []
+    },
+    {
+      "file": "mcp-server/src/routes/mcp.ts",
+      "feature": "mcp",
+      "stores": [
+        "upstash-redis"
+      ],
+      "calls": []
+    }
+  ],
+  "literalKeys": []
+}

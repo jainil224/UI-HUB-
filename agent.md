@@ -1,1093 +1,1610 @@
-# UI HUB AGENT — PHASE 6
+# UI HUB AGENT — PHASE 7
 
-## Security, Configuration & Agent-Governance Hardening
+## Codebase Intelligence, Component Mapping & Dependency Graph
 
-**Phase:** 6 of 10
-**Phase Name:** Security, Configuration & Agent-Governance Hardening
+**Phase:** 7 of 10
+**Phase Name:** Codebase Intelligence, Component Mapping & Dependency Graph
 **Status:** NOT STARTED
 
 **Primary Goal:**
-Harden the UI HUB repository against configuration drift, ineffective security controls, documentation drift, accidental secret exposure, and agent-generated regressions while preserving the existing application behavior and the verified test/build baseline.
+Transform the Phase 1–6 project census into a high-resolution machine-readable model of UI HUB so future AI agents can locate relevant pages, components, features, hooks, services, APIs, and dependencies without scanning the entire repository.
 
 ---
 
 # 1. PHASE OBJECTIVE
 
-Phase 5 established the current production topology and identified several risks that are independent of the unresolved deployment outage:
+The first six phases established:
 
 ```text
-1. CORS is not actually enforcing its allowlist.
-2. Documentation can advertise endpoints that the deployment cannot serve.
-3. Secrets can visually resemble placeholders and evade naive scanning.
-4. .uihub-agent/ and .github/ can become untracked because of ignore rules.
-5. Multiple deployment descriptors can disagree.
-6. Generated artifacts can become stale.
-7. The agent can accidentally modify protected architectural surfaces.
+Phase 1
+Project census
+
+Phase 2
+Runtime verification
+
+Phase 3
+Controlled remediation
+
+Phase 4
+Production verification
+
+Phase 5
+Deployment/API contract
+
+Phase 6
+Security + governance
 ```
 
-The goal of Phase 6 is to turn these into enforceable repository-level controls.
-
-The phase should make UI HUB safer to maintain with OpenCode, Antigravity, and future coding agents.
-
----
-
-# 2. CORE PRINCIPLE
-
-Phase 6 is a **hardening phase**, not a redesign phase.
-
-The workflow is:
-
-```text
-Current risk
-    ↓
-Verify exact behavior
-    ↓
-Define intended invariant
-    ↓
-Add automated protection
-    ↓
-Add regression tests
-    ↓
-Document the rule
-    ↓
-Validate
-```
-
-Do not make a large architectural change merely because a smaller invariant can solve the problem.
-
----
-
-# 3. IMPORTANT SCOPE BOUNDARY
-
-## IN SCOPE
-
-* CORS enforcement
-* Security regression tests
-* Secret scanning
-* Documentation endpoint validation
-* Deployment configuration consistency checks
-* Git tracking/ignore hygiene
-* Generated-artifact freshness checks
-* Agent-protection rules
-* Configuration validation
-* CI hardening
-* Knowledge-base governance
-* Protected-path checks
-
-## OUT OF SCOPE
-
-Do NOT:
-
-* Redeploy production
-* Recreate Render services
-* Change Cloudflare settings
-* Change DNS
-* Modify production MongoDB data
-* Perform payment operations
-* Modify the production environment directly
-* Refactor the entire backend
-* Rewrite Express
-* Rewrite authentication
-* Perform the full theme refactor
-* Redesign the UI
-* Replace MongoDB/Firebase/Razorpay/MCP
-* Choose between conflicting Render blueprints without owner authorization
-
----
-
-# 4. REQUIRED BASELINE
-
-Before any code change, record:
-
-```text
-Backend tests
-MCP tests
-CLI tests
-Frontend tests
-Frontend build
-MCP build
-CLI build
-Frontend typecheck
-```
-
-The previous baseline was:
-
-```text
-Backend: 54/54
-MCP: 78/78
-CLI: 30/30
-Frontend: 27/27
-Frontend build: PASS
-MCP build: PASS
-CLI build: PASS
-```
-
-If any baseline differs before modifications:
-
-```text
-STOP
-RECORD DIFFERENCE
-DO NOT ATTRIBUTE IT TO PHASE 6
-```
-
----
-
-# 5. TASK 6.1 — CORS BEHAVIOR AUDIT
-
-Phase 5 verified that the current CORS callback logs blocked origins but still calls:
-
-```text
-callback(null, true)
-```
-
-which means the allowlist does not actually block the request.
-
-First inspect:
-
-```text
-backend/src/server.js
-MCP_ALLOWED_ORIGINS
-CORS middleware
-Frontend origin
-MCP origin
-Development origins
-```
-
-Determine:
-
-```text
-Web API CORS policy
-MCP CORS policy
-Development policy
-Production policy
-```
-
-Do not immediately implement a generic wildcard solution.
-
----
-
-# 6. TASK 6.2 — DEFINE THE CORS INVARIANT
-
-Document the desired behavior.
-
-At minimum:
-
-```text
-Allowed origin
-→ request permitted
-
-Disallowed origin
-→ request rejected
-
-Missing Origin
-→ defined explicitly
-
-Development localhost
-→ defined explicitly
-
-Malformed origin
-→ rejected safely
-```
-
-Determine whether credentials/cookies are involved.
-
-Do not enable:
-
-```text
-Access-Control-Allow-Origin: *
-```
-
-when credentialed requests are required.
-
----
-
-# 7. TASK 6.3 — IMPLEMENT CORS ENFORCEMENT
-
-Implement the smallest safe change that makes the existing allowlist meaningful.
-
-Requirements:
-
-```text
-Allowed origins are accepted.
-Unauthorized origins are rejected.
-Existing legitimate frontend traffic continues to work.
-```
-
-Do not silently broaden the allowlist.
-
-Do not add arbitrary origins just to make tests pass.
-
-Do not modify MCP and Web API policies as though they were automatically identical.
-
----
-
-# 8. TASK 6.4 — ADD CORS REGRESSION TESTS
-
-Create tests covering:
-
-```text
-Allowed production origin
-Allowed development origin
-Unknown origin
-Malformed origin
-No Origin header
-Multiple configured origins
-Whitespace around origin
-Duplicate origins
-```
-
-The exact cases should reflect the implementation.
-
-The test suite must verify actual middleware behavior, not just the configuration string.
-
----
-
-# 9. TASK 6.5 — DOCUMENT CORS CONTRACT
-
-Create:
-
-```text
-.uihub-agent/APIs/CORS_CONTRACT.md
-```
-
-Include:
-
-```text
-API surface
-Allowed origins
-Development exceptions
-Credential behavior
-MCP behavior
-Environment variables
-Failure behavior
-Testing method
-```
-
-Do not record secret values.
-
-Use:
-
-```text
-PRESENT
-ABSENT
-CONFIGURED
-NOT CONFIGURED
-```
-
-where appropriate.
-
----
-
-# 10. TASK 6.6 — SECRET SCANNING SYSTEM
-
-Phase 5 found a live-looking MongoDB password inside placeholder-shaped knowledge-base documentation. The report notes that ordinary placeholder-looking text was not sufficient to identify it, and a value-shaped scan caught it.
-
-Create a repository-level secret scanning mechanism.
-
-It must inspect at least:
-
-```text
-Source
-Configuration
-Documentation
-.uihub-agent/
-.github/
-Examples
-Markdown
-JSON
-YAML
-```
-
-Detect patterns such as:
-
-```text
-MongoDB connection strings
-AWS-style credentials
-API keys
-Private keys
-Firebase private credentials
-Razorpay secrets
-SMTP credentials
-Bearer tokens
-Webhook secrets
-VAPID private keys
-```
-
-Do not attempt to prove that every arbitrary secret is detectable.
-
-Document the known limitations.
-
----
-
-# 11. TASK 6.7 — SECRET-SCAN FALSE-POSITIVE RULES
-
-The scanner must avoid treating obvious safe examples as real secrets.
-
-Classify:
-
-```text
-REAL SECRET
-PLACEHOLDER
-MASKED EXAMPLE
-PUBLIC IDENTIFIER
-TEST FIXTURE
-FALSE POSITIVE
-```
-
-Examples such as:
-
-```text
-<password>
-<user>
-<REDACTED>
-example.com
-uh_live_xxxxx
-```
-
-must be handled according to explicit rules.
-
-Do not create a scanner that simply reports every URI as a leak.
-
----
-
-# 12. TASK 6.8 — CI SECRET GATE
-
-Integrate the secret scanner into CI.
-
-Requirements:
-
-```text
-Secret detected
-→ CI fails
-
-No secret detected
-→ CI continues
-```
-
-The scanner must run before potentially publishing artifacts.
-
-Do not print the matched secret into CI logs.
-
-Output only:
-
-```text
-file
-line/category where safe
-detector
-redacted fingerprint or type
-```
-
-Never print the actual value.
-
----
-
-# 13. TASK 6.9 — GITIGNORE / TRACKING AUDIT
-
-Phase 5 found that `.uihub-agent/` and `.github/` were previously ignored, which made important project knowledge and CI configuration effectively untrackable.
-
-Audit:
-
-```text
-.gitignore
-global ignore assumptions
-.uihub-agent/
-.github/
-generated files
-environment examples
-CI workflows
-agent files
-```
-
-The result must ensure:
-
-```text
-Agent knowledge
-CI workflows
-Important project rules
-```
-
-are intentionally trackable.
-
----
-
-# 14. TASK 6.10 — CREATE TRACKING INVARIANTS
-
-Create a repository validation script that verifies:
-
-```text
-.uihub-agent/ is tracked/trackable
-.github/workflows/ is trackable
-AGENT files are trackable
-environment secrets remain ignored
-build output remains ignored where appropriate
-generated artifacts are handled intentionally
-```
-
-Do not force every generated file into git.
-
-Document the intended tracking model.
-
----
-
-# 15. TASK 6.11 — DOCUMENTATION ENDPOINT AUDIT
-
-Phase 5 discovered that documentation advertised a Vercel `/mcp` endpoint even though the Vercel deployment cannot serve it.
-
-Search all documentation:
-
-```text
-README
-MCP.md
-API docs
-.uihub-agent/
-comments
-examples
-deployment docs
-```
-
-for:
-
-```text
-URLs
-routes
-hosts
-API endpoints
-MCP endpoints
-```
-
-Classify:
-
-```text
-VALID
-INVALID
-OUTDATED
-ENVIRONMENT-SPECIFIC
-UNKNOWN
-```
-
----
-
-# 16. TASK 6.12 — DOCUMENTATION DRIFT CHECK
-
-Build a lightweight validator for high-value deployment claims.
-
-Examples:
-
-```text
-Documented web API endpoint
-↔ vercel.json
-
-Documented MCP endpoint
-↔ MCP deployment contract
-
-Documented frontend domain
-↔ deployment configuration
-
-Documented route
-↔ actual route registration
-```
-
-Do not attempt to automatically verify every sentence in Markdown.
-
-Focus on machine-checkable claims.
-
----
-
-# 17. TASK 6.13 — DEPLOYMENT-CONFIGURATION CONSISTENCY
-
-Phase 5 found two conflicting Render blueprints:
-
-```text
-render.yaml
-mcp-server/render.yaml
-```
-
-with different services and admin lists.
-
-Do NOT choose one automatically.
-
-Instead create:
-
-```text
-.uihub-agent/infrastructure/DEPLOYMENT_CONFLICTS.md
-```
-
-Record:
-
-```text
-File
-Service
-Purpose
-Difference
-Conflict
-Owner decision required
-```
-
-Add a machine-checkable warning so future agents cannot accidentally assume both are authoritative.
-
----
-
-# 18. TASK 6.14 — DEFINE CONFIGURATION OWNERSHIP
-
-For each major configuration source:
-
-```text
-vercel.json
-render.yaml
-mcp-server/render.yaml
-package.json
-environment variables
-API config
-MCP config
-```
-
-document:
-
-```text
-Owner
-Scope
-Environment
-Source of truth
-Generated or manual
-```
-
-Create:
-
-```text
-.uihub-agent/infrastructure/CONFIGURATION_OWNERSHIP.md
-```
-
----
-
-# 19. TASK 6.15 — GENERATED ARTIFACT GUARD
-
-Phase 5 confirmed that `mcp-server/dist` can become stale and that the tracked generated artifact can differ from source. It also established that the normal source-coverage check alone does not prove generated-data freshness.
-
-Create a validation step that:
-
-```text
-Builds generated artifacts
-↓
-Compares expected files
-↓
-Detects stale tracked output
-↓
-Fails when source and generated output diverge
-```
-
-Do not silently modify generated files during validation.
-
-Use a clearly named generation command for actual regeneration.
-
----
-
-# 20. TASK 6.16 — PREVENT MANUAL EDITS TO GENERATED MCP DATA
-
-Document protected generated paths:
-
-```text
-mcp-server/dist/
-mcp-server/src/data/
-```
-
-where appropriate.
-
-The rule should explain:
-
-```text
-Edit source
-→ regenerate
-→ validate
-```
-
-not:
-
-```text
-Edit generated output manually
-```
-
-Add an agent rule in:
-
-```text
-.uihub-agent/rules/DO_NOT_CHANGE.md
-```
-
----
-
-# 21. TASK 6.17 — AGENT PROTECTED-PATH SYSTEM
-
-The coding AI should know which paths require extra caution.
-
-Create:
-
-```text
-.uihub-agent/rules/PROTECTED_PATHS.md
-```
-
-Classify paths:
-
-```text
-CRITICAL
-HIGH RISK
-GENERATED
-DOCUMENTATION
-SAFE / NORMAL
-```
-
-Potential critical areas:
-
-```text
-paymentRoutes.js
-accessService.js
-authentication
-server.js
-database mutation scripts
-deployment configuration
-MCP authentication
-```
-
-Use the existing Phase 1/3 protected-path knowledge as the starting point.
-
----
-
-# 22. TASK 6.18 — PRE-CHANGE IMPACT CHECK
-
-Add an agent rule requiring:
-
-```text
-Before changing a protected path:
-1. Search consumers.
-2. Identify dependencies.
-3. Check protected invariants.
-4. Run targeted tests.
-5. Make the smallest change.
-```
-
-The objective is to prevent future agents from blindly modifying load-bearing code.
-
----
-
-# 23. TASK 6.19 — POST-CHANGE KNOWLEDGE REQUIREMENT
-
-Add a rule stating:
-
-```text
-Architecture change
-→ update architecture knowledge
-
-API change
-→ update API knowledge
-
-Feature change
-→ update feature knowledge
-
-Deployment change
-→ update infrastructure knowledge
-
-Protected-path change
-→ update relevant safety documentation
-```
-
-This prevents `.uihub-agent/` from becoming stale.
-
----
-
-# 24. TASK 6.20 — CI GOVERNANCE
-
-Phase 5 created four CI jobs but discovered the frontend typecheck currently fails from pre-existing UI commits, even though builds pass.
-
-Do NOT simply remove the typecheck job.
-
-Instead ensure CI distinguishes:
-
-```text
-BUILD
-TEST
-TYPECHECK
-SECURITY SCAN
-KNOWLEDGE VALIDATION
-```
-
-A failure in one must not be mislabeled as success in another.
-
----
-
-# 25. TASK 6.21 — TYPECHECK BASELINE CLARIFICATION
-
-Document the current state:
-
-```text
-Frontend build: PASS
-Frontend typecheck: FAIL
-```
-
-and record that the typecheck failure originated from earlier UI commits, not Phase 6.
-
-Do not fix those unrelated UI errors in Phase 6 unless they directly block the CI architecture.
-
----
-
-# 26. TASK 6.22 — KNOWLEDGE-BASE VALIDATION
-
-Create a validation command that checks:
-
-```text
-PROJECT_MAP.json parses
-references resolve
-required knowledge files exist
-no required section is missing
-generated files are fresh
-no prohibited secrets exist
-deployment docs do not claim impossible endpoints
-```
+Phase 7 now builds the **Codebase Intelligence Layer**.
 
 The goal is:
 
 ```text
-.uihub-agent/
-=
-validated engineering knowledge
+USER TASK
+    ↓
+RELEVANT FEATURE
+    ↓
+RELEVANT PAGE
+    ↓
+RELEVANT COMPONENT
+    ↓
+RELEVANT HOOK / SERVICE
+    ↓
+RELEVANT API / DATA
+    ↓
+DEPENDENCIES
+    ↓
+TARGET FILES
 ```
 
-rather than a collection of unchecked Markdown files.
+The future agent should be able to identify the likely impact area before opening hundreds of unrelated source files.
 
 ---
 
-# 27. TASK 6.23 — KNOWLEDGE FILE FRESHNESS
+# 2. IMPORTANT PHASE BOUNDARY
 
-Determine which files are:
+Phase 7 is primarily an **intelligence/indexing phase**.
+
+Do NOT use it to:
+
+* Redesign UI
+* Refactor components
+* Rename directories
+* Rewrite APIs
+* Change database architecture
+* Change authentication
+* Change payments
+* Fix production deployment
+* Rewrite Render configuration
+* Modify Cloudflare
+* Modify production data
+* Perform the full light-mode refactor
+* Upgrade major dependencies
+
+The application's source code should remain unchanged unless a tiny supporting change is absolutely required for the indexing/validation system.
+
+Prefer:
 
 ```text
-GENERATED
-SEMI-AUTOMATIC
-MANUAL
+READ
+→ ANALYZE
+→ INDEX
+→ VALIDATE
+→ DOCUMENT
 ```
 
-Document the update mechanism.
+over:
+
+```text
+READ
+→ REFACTOR
+```
+
+---
+
+# 3. CORE PRINCIPLE — SOURCE PRECEDENCE
+
+Phase 6 identified that tracked generated output can become a second source of truth.
+
+Phase 7 must establish an explicit precedence model.
+
+Use this hierarchy:
+
+```text
+1. LIVE RUNTIME EVIDENCE
+2. CURRENT SOURCE CODE
+3. CURRENT CONFIGURATION
+4. GENERATED ARTIFACTS
+5. GENERATED INDEXES
+6. CURRENT DOCUMENTATION
+7. HISTORICAL DOCUMENTATION
+8. ASSUMPTION
+```
+
+However, precedence must be applied by artifact type.
 
 For example:
 
 ```text
-PROJECT_MAP.json
-→ generated
+Application behavior
+→ source + runtime
 
-ARCHITECTURE.md
-→ manual
-
-DEPLOYMENT_MAP.md
-→ manual + verified
-
-BASELINE.md
-→ measured
-
-CONFLICTS.md
-→ append/update with evidence
-```
-
----
-
-# 28. TASK 6.24 — AGENT SOURCE-PRECEDENCE RULE
-
-Strengthen `AGENT.md` with an explicit evidence hierarchy:
-
-```text
-Current runtime evidence
->
-Current source/configuration
->
-Generated index
->
-Current documentation
->
-Historical documentation
->
-Assumption
-```
-
-When two sources disagree:
-
-```text
-Do not silently choose.
-Record the conflict.
-```
-
-This is important because earlier phases already corrected several false assumptions.
-
----
-
-# 29. TASK 6.25 — AUTOMATED CONFLICT DETECTION
-
-Add validation for known high-value conflicts:
-
-```text
-Frontend API host
-Vercel routing
-MCP endpoint
-Render blueprint
-MCP tool registry
-Environment contract
 Generated MCP data
+→ generator/source + generated artifact validation
+
+Production URL
+→ deployment configuration + verified runtime
+
+Project map
+→ generator output
+
+Architecture description
+→ verified source/config/runtime evidence
 ```
 
-The validator should report:
+Do not blindly claim:
+
+```text source always wins
+```
+
+or:
+
+```text generated file always wins
+```
+
+The authoritative source depends on what is being described.
+
+Document this in:
 
 ```text
-CONSISTENT
-CONFLICT
-UNKNOWN
+.uihub-agent/AGENT.md
 ```
-
-Do not make the validator attempt automatic fixes.
 
 ---
 
-# 30. TASK 6.26 — OWNER-DECISION REGISTER
+# 4. TASK 7.1 — CREATE CODEBASE INTELLIGENCE CONTRACT
 
 Create:
 
 ```text
-.uihub-agent/tasks/OWNER_DECISIONS.md
-```
-
-Record decisions that cannot safely be made by the coding agent.
-
-Current examples:
-
-```text
-Production VITE_API_URL
-Vercel deployment/root cause
-Render blueprint ownership
-Cloudflare configuration
-CORS production policy
-Mongo credential rotation
-Light-mode architecture
-```
-
-For each:
-
-```text
-Decision
-Why required
-Options discovered
-What the agent must not assume
-Current status
-```
-
-Do not recommend a political or business decision; these are engineering ownership decisions.
-
----
-
-# 31. TASK 6.27 — SAFE CONFIGURATION EXAMPLE POLICY
-
-Audit:
-
-```text
-.env.example
-README examples
-MCP docs
-deployment examples
-```
-
-Every example must contain:
-
-```text
-safe placeholders
-```
-
-and never:
-
-```text
-real host credentials
-real passwords
-real private keys
-real webhook secrets
-```
-
-Use realistic structure but fake values.
-
----
-
-# 32. TASK 6.28 — SECURITY DOCUMENTATION
-
-Create:
-
-```text
-.uihub-agent/security/
-├── SECURITY_OVERVIEW.md
-├── SECRET_HANDLING.md
-└── SECURITY_VALIDATION.md
+.uihub-agent/codebase/
+└── CODEBASE_INTELLIGENCE.md
 ```
 
 Document:
 
 ```text
+Purpose
+Inputs
+Generated outputs
+Source precedence
+Index freshness
+Supported entities
+Limitations
+Update process
+```
+
+The file should explain how future agents should use the intelligence layer.
+
+---
+
+# 5. TASK 7.2 — COMPONENT INVENTORY
+
+Create a machine-readable component inventory.
+
+At minimum:
+
+```text
+Component
+Path
+Category
+Export
+Type
+Purpose
+Props
+Hooks
+Imports
+Used By
+Route/Page usage
+Feature
+```
+
+The system should distinguish:
+
+```text
+React component
+Page
+Layout
+Hook
+Utility
+Service
+Provider
+Context
+Primitive
+Experimental component
+Generated component
+```
+
+Do not classify based only on filenames.
+
+Use source evidence.
+
+---
+
+# 6. TASK 7.3 — COMPONENT MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── COMPONENT_MAP.json
+```
+
+Example conceptual structure:
+
+```json
+{
+  "TemplateCard": {
+    "path": "frontend/src/components/templates/TemplateCard.tsx",
+    "type": "component",
+    "feature": "templates",
+    "usedBy": [
+      "TemplatesPage",
+      "FeaturedTemplates"
+    ],
+    "imports": [
+      "TemplatePreview",
+      "Badge"
+    ],
+    "hooks": [
+      "useTemplate"
+    ],
+    "risk": "medium"
+  }
+}
+```
+
+The actual structure should reflect UI HUB.
+
+Do not invent fields that cannot be generated reliably.
+
+---
+
+# 7. TASK 7.4 — PAGE MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── PAGE_MAP.json
+```
+
+For every meaningful page:
+
+```text
+Route
+Page file
+Lazy-loaded?
+Feature
+Components
+Hooks
+Services
+API calls
+Auth requirement
+Admin requirement
+```
+
+Example:
+
+```text
+/templates
+→ TemplatesPage
+→ Template marketplace
+→ TemplateCard
+→ TemplatePreview
+→ template service
+```
+
+---
+
+# 8. TASK 7.5 — ROUTE MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── ROUTE_MAP.json
+```
+
+Separate:
+
+```text
+Frontend routes
+REST routes
+MCP routes
+Admin routes
+Webhook routes
+```
+
+Do not combine frontend and backend routing into one ambiguous list.
+
+Each route record should include:
+
+```text
+Path
+Method
+Surface
+Handler/page
+Auth
+Owner
+Source
+```
+
+---
+
+# 9. TASK 7.6 — FEATURE MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── FEATURE_MAP.json
+```
+
+Every major feature should map to:
+
+```text
+Feature
+Pages
+Components
+Hooks
+Services
+APIs
+Database
+Storage
+External integrations
+Related configuration
+```
+
+Use the verified feature inventory from earlier phases as the starting point.
+
+Do not duplicate large descriptions unnecessarily.
+
+Use references to other indexes where appropriate.
+
+---
+
+# 10. TASK 7.7 — HOOK MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── HOOKS_MAP.json
+```
+
+For every important custom hook:
+
+```text
+Hook
+Path
+Purpose
+Inputs
+Outputs
+State
+Dependencies
+Consumers
+Feature
+```
+
+Focus on meaningful custom hooks.
+
+Do not create unnecessary records for trivial inline React usage.
+
+---
+
+# 11. TASK 7.8 — SERVICE MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── SERVICE_MAP.json
+```
+
+Document:
+
+```text
+Service
+Path
+Purpose
+Consumers
+API dependencies
+Database dependencies
+External dependencies
+Auth dependency
+Feature
+```
+
+This is particularly important for:
+
+```text
 Authentication
-Authorization
-CORS
-Secret handling
-MCP authentication
-Payment security boundaries
-Production-data rules
-CI security
-Agent security rules
-```
-
-Do not duplicate every technical detail already documented elsewhere.
-
-Link to the existing knowledge files.
-
----
-
-# 33. TASK 6.29 — NO PRODUCTION DATA CHANGES
-
-Phase 6 must maintain:
-
-```text
-Production writes = 0
-```
-
-Do not:
-
-```text
-update users
-update payments
-update entitlements
-update MCP configuration
-create indexes
-delete data
-```
-
-unless separately authorized by the owner.
-
----
-
-# 34. TASK 6.30 — FINAL SECURITY REGRESSION
-
-Run:
-
-```text
-tests
-builds
-typechecks
-secret scan
-documentation validation
-configuration validation
-generated-artifact validation
-git tracking validation
-```
-
-Then inspect:
-
-```text
-git diff
-git status
-tracked/untracked files
-CI workflow
-```
-
-No unexpected application changes should remain.
-
----
-
-# 35. REQUIRED SUCCESS CRITERIA
-
-Phase 6 is successful when:
-
-```text
-1. CORS actually enforces its configured policy.
-2. CORS behavior is covered by tests.
-3. Secret scanning exists and runs safely.
-4. Secret scanning is integrated into CI.
-5. No secret appears in repository documentation.
-6. .uihub-agent/ is intentionally trackable.
-7. .github/workflows is intentionally trackable.
-8. Environment secrets remain ignored.
-9. Documentation endpoints are checked for drift.
-10. Deployment conflicts are documented.
-11. Configuration ownership is documented.
-12. Generated MCP artifacts have freshness validation.
-13. Generated paths have explicit agent protection.
-14. Protected-path rules exist.
-15. Agent pre-change impact checks are documented.
-16. Agent post-change knowledge updates are documented.
-17. Knowledge-base validation exists.
-18. Configuration conflict validation exists.
-19. Owner decisions are formally tracked.
-20. No production data is changed.
-21. No secrets are exposed.
-22. Existing test/build behavior is preserved except for explicitly documented baseline issues.
+Templates
+Components
+Payments
+Admin
+MCP
+Search
+User library
 ```
 
 ---
 
-# 36. REQUIRED NEW FILE STRUCTURE
+# 12. TASK 7.9 — API MAP
 
-Expected additions:
+Create:
 
 ```text
-.uihub-agent/
-│
-├── APIs/
-│   └── CORS_CONTRACT.md
-│
-├── infrastructure/
-│   ├── DEPLOYMENT_CONFLICTS.md
-│   └── CONFIGURATION_OWNERSHIP.md
-│
-├── security/
-│   ├── SECURITY_OVERVIEW.md
-│   ├── SECRET_HANDLING.md
-│   └── SECURITY_VALIDATION.md
-│
-├── rules/
-│   └── PROTECTED_PATHS.md
-│
-└── tasks/
-    └── OWNER_DECISIONS.md
+.uihub-agent/codebase/
+└── API_MAP.json
 ```
 
-Only create additional files when required by actual implementation.
+For each REST endpoint:
+
+```text
+Path
+Method
+Router
+Handler
+Middleware
+Frontend callers
+Auth
+Database usage
+External service usage
+```
+
+For MCP tools include:
+
+```text
+Tool
+Source
+Route/transport
+Auth
+Data dependencies
+```
+
+Do not replace the existing API documentation.
+
+This is the machine-readable companion.
 
 ---
 
-# 37. REQUIRED AUTOMATION / SCRIPTS
+# 13. TASK 7.10 — DATABASE USAGE MAP
 
-Add appropriate repository scripts for:
+Create:
 
 ```text
-secret scan
-knowledge validation
-configuration validation
-deployment-doc validation
-generated-artifact validation
-git tracking validation
+.uihub-agent/codebase/
+└── DATABASE_USAGE_MAP.json
 ```
 
-Use clear names.
+This should describe **code usage**, not a new schema.
+
+Example:
+
+```text
+Collection
+Read locations
+Write locations
+Services
+Features
+Criticality
+```
+
+Do not perform database writes.
+
+Do not inspect more production data than necessary.
+
+Use source-code evidence primarily.
+
+---
+
+# 14. TASK 7.11 — STORAGE USAGE MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── STORAGE_USAGE_MAP.json
+```
+
+Identify:
+
+```text
+Upload paths
+Download paths
+Storage services
+Consumers
+Features
+Authentication requirements
+```
+
+Do not upload/delete production assets.
+
+---
+
+# 15. TASK 7.12 — EXTERNAL INTEGRATION MAP
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── INTEGRATION_MAP.json
+```
+
+Map integrations such as:
+
+```text
+Firebase
+Razorpay
+Brevo
+Redis
+MongoDB
+Web Push
+MCP
+Analytics
+```
+
+For each:
+
+```text
+Provider
+Purpose
+Source files
+Environment variables
+Consumers
+Failure behavior
+Feature
+```
+
+Never include credential values.
+
+---
+
+# 16. TASK 7.13 — IMPORT GRAPH
+
+Create a machine-readable import/dependency graph:
+
+```text
+.uihub-agent/generated/
+└── IMPORT_GRAPH.json
+```
+
+The graph should represent:
+
+```text
+File A
+  ↓ imports
+File B
+  ↓ imports
+File C
+```
+
+Include enough information for an agent to answer:
+
+```text
+What depends on this file?
+What does this file depend on?
+```
+
+Do not create a graph that is so verbose that agents cannot practically use it.
+
+---
+
+# 17. TASK 7.14 — REVERSE DEPENDENCY MAP
+
+Create:
+
+```text
+.uihub-agent/generated/
+└── REVERSE_DEPENDENCY_MAP.json
+```
+
+This is critical for safe changes.
+
+Example:
+
+```text
+TemplatePreview
+→ used by:
+  TemplateCard
+  TemplateDetails
+  RelatedTemplates
+```
+
+The agent can then know:
+
+> "Changing TemplatePreview may affect three UI surfaces."
+
+---
+
+# 18. TASK 7.15 — SYMBOL INDEX
+
+Create:
+
+```text
+.uihub-agent/generated/
+└── SYMBOL_INDEX.json
+```
+
+Index important:
+
+```text
+Components
+Functions
+Hooks
+Classes
+Services
+Constants
+Types
+Interfaces
+Exports
+```
+
+Every symbol should have:
+
+```text
+Name
+File
+Line/range where available
+Type
+Exported?
+Consumers
+```
+
+Do not index meaningless compiler/runtime symbols.
+
+---
+
+# 19. TASK 7.16 — FILE ROLE CLASSIFICATION
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── FILE_ROLE_MAP.json
+```
+
+Classify important files:
+
+```text
+PAGE
+COMPONENT
+HOOK
+SERVICE
+API
+CONFIG
+DATA
+GENERATOR
+TEST
+SCRIPT
+STYLE
+DOCUMENTATION
+DEPLOYMENT
+SECURITY
+GENERATED
+```
+
+This gives the future agent a fast way to narrow the search space.
+
+---
+
+# 20. TASK 7.17 — FEATURE → FILE INDEX
+
+Create:
+
+```text
+.uihub-agent/generated/
+└── FEATURE_FILE_INDEX.json
+```
+
+Example:
+
+```text
+templates
+→
+TemplatesPage
+TemplateCard
+TemplatePreview
+templateService
+templateData
+template API
+template styles
+```
+
+This should be one of the fastest indexes an AI can query.
+
+---
+
+# 21. TASK 7.18 — PAGE → COMPONENT INDEX
+
+Create:
+
+```text
+.uihub-agent/generated/
+└── PAGE_COMPONENT_INDEX.json
+```
+
+For each route/page:
+
+```text
+Page
+→ direct components
+→ indirect important components
+→ hooks
+→ services
+```
+
+Do not blindly include the entire recursive tree.
+
+Distinguish:
+
+```text
+DIRECT
+INDIRECT
+```
+
+---
+
+# 22. TASK 7.19 — COMPONENT IMPACT ANALYSIS
+
+Create a reusable process for answering:
+
+```text
+"If I change this component, what might break?"
+```
+
+The process should calculate:
+
+```text
+Direct consumers
+Indirect consumers
+Routes affected
+Features affected
+Shared services
+Tests affected
+Risk level
+```
+
+Do not assign an arbitrary numeric score.
+
+Use qualitative labels:
+
+```text
+LOW
+MEDIUM
+HIGH
+CRITICAL
+```
+
+Only where evidence justifies them.
+
+---
+
+# 23. TASK 7.20 — ROUTE IMPACT ANALYSIS
+
+Create a similar mechanism for routes.
+
+Given:
+
+```text
+/api/v1/templates
+```
+
+the agent should be able to identify:
+
+```text
+Router
+Handler
+Middleware
+Services
+Database
+Frontend callers
+Tests
+```
+
+This becomes important for future API modifications.
+
+---
+
+# 24. TASK 7.21 — FEATURE IMPACT ANALYSIS
+
+Given:
+
+```text
+Templates
+```
+
+the system should answer:
+
+```text
+Pages
+Components
+Services
+API
+Database
+Storage
+Authentication
+External integrations
+Tests
+```
+
+This should become a reusable agent query pattern.
+
+---
+
+# 25. TASK 7.22 — CREATE QUERY EXAMPLES
+
+Create:
+
+```text
+.uihub-agent/codebase/
+└── INTELLIGENCE_QUERIES.md
+```
+
+Include practical examples such as:
+
+```text
+"Show all files involved in TemplatePreview."
+
+"Who uses TemplateCard?"
+
+"What APIs are called by the Templates page?"
+
+"What files affect the payment flow?"
+
+"What routes depend on accessService?"
+
+"What components depend on Firebase auth?"
+
+"What files are generated?"
+
+"What files are protected?"
+```
+
+The purpose is to teach the coding agent how to use the index.
+
+---
+
+# 26. TASK 7.23 — TASK CATEGORY CATALOG
+
+Create:
+
+```text
+.uihub-agent/tasks/
+└── TASK_CATEGORY_CATALOG.md
+```
+
+Define categories such as:
+
+```text
+UI
+Component
+Template
+Authentication
+Payment
+Admin
+MCP
+API
+Database
+Performance
+Security
+Deployment
+Documentation
+Testing
+Infrastructure
+```
+
+For each category define:
+
+```text
+Relevant indexes
+Relevant documentation
+Likely source directories
+Protected areas
+Validation required
+```
+
+Do NOT implement automatic task routing yet.
+
+That is Phase 8.
+
+---
+
+# 27. TASK 7.24 — CODEBASE INDEX GENERATOR
+
+Create/update scripts to generate the maps automatically.
+
+Suggested structure:
+
+```text
+.uihub-agent/scripts/
+├── generate-map.mjs
+├── generate-component-map.mjs
+├── generate-page-map.mjs
+├── generate-route-map.mjs
+├── generate-feature-map.mjs
+├── generate-service-map.mjs
+├── generate-api-map.mjs
+├── generate-symbol-index.mjs
+└── generate-dependency-graph.mjs
+```
+
+Do not create unnecessary scripts if a single generator can safely generate multiple outputs.
+
+Prefer one consistent indexing pipeline when practical.
+
+---
+
+# 28. TASK 7.25 — SINGLE INDEX COMMAND
+
+Create a single command such as:
+
+```text
+npm run agent:index
+```
+
+or the repository's equivalent.
+
+It should generate all supported intelligence indexes.
+
+The command must be:
+
+```text
+Deterministic
+Repeatable
+Idempotent
+Safe
+No production writes
+No network dependency unless explicitly required
+```
+
+---
+
+# 29. TASK 7.26 — INDEX CHECK MODE
+
+Add:
+
+```text
+npm run agent:index:check
+```
+
+or equivalent.
+
+Behavior:
+
+```text
+Index current
+→ exit 0
+
+Index stale
+→ exit 1
+```
+
+It must NOT automatically modify files in check mode.
+
+---
+
+# 30. TASK 7.27 — INDEX FRESHNESS
+
+Track:
+
+```text
+Source snapshot
+Generated timestamp
+Generator version
+Input file count
+Indexed file count
+```
+
+Do not rely only on timestamps.
+
+Prefer a deterministic fingerprint/hash of relevant source inputs where practical.
+
+---
+
+# 31. TASK 7.28 — EXCLUDE IRRELEVANT FILES
+
+The indexing system must explicitly exclude:
+
+```text
+node_modules
+build caches
+temporary files
+logs
+coverage
+unrelated binary assets
+environment secrets
+editor metadata
+```
+
+Use the repository's actual structure.
+
+Do not accidentally index credentials.
+
+---
+
+# 32. TASK 7.29 — GENERATED OUTPUT SECURITY
+
+Before writing generated JSON:
+
+```text
+Run secret validation
+```
+
+Generated indexes must not contain:
+
+```text
+API keys
+Passwords
+Tokens
+Private credentials
+Connection strings with credentials
+```
+
+A path or public identifier is not automatically a secret.
+
+Use the Phase 6 secret scanner.
+
+---
+
+# 33. TASK 7.30 — CROSS-REFERENCE VALIDATION
+
+The generated indexes must cross-check each other.
+
+Examples:
+
+```text
+COMPONENT_MAP
+↔ FILE_ROLE_MAP
+
+PAGE_MAP
+↔ ROUTE_MAP
+
+FEATURE_MAP
+↔ COMPONENT_MAP
+
+API_MAP
+↔ API_OVERVIEW
+
+IMPORT_GRAPH
+↔ SYMBOL_INDEX
+```
+
+Report:
+
+```text
+MATCH
+CONFLICT
+MISSING
+```
+
+Do not silently manufacture missing relationships.
+
+---
+
+# 34. TASK 7.31 — UNKNOWN / LOW-CONFIDENCE HANDLING
+
+When the index cannot confidently determine something:
+
+```text
+UNKNOWN
+```
+
+or:
+
+```text
+LOW_CONFIDENCE
+```
+
+must be used.
+
+Never turn inference into fact.
+
+Each uncertain relationship should carry evidence where practical.
+
+---
+
+# 35. TASK 7.32 — GENERATED VS MANUAL KNOWLEDGE
+
+Clearly classify every new knowledge file as:
+
+```text
+GENERATED
+MANUAL
+HYBRID
+```
 
 For example:
 
 ```text
-npm run check:secrets
-npm run check:knowledge
-npm run check:config
-npm run check:generated
+COMPONENT_MAP.json
+→ GENERATED
+
+ARCHITECTURE.md
+→ MANUAL
+
+INTELLIGENCE_QUERIES.md
+→ MANUAL
+
+PROJECT_MAP.json
+→ GENERATED
+
+TASK_CATEGORY_CATALOG.md
+→ MANUAL
 ```
 
-Do not invent names if the existing repository uses another convention.
+Document this in:
+
+```text
+.uihub-agent/codebase/CODEBASE_INTELLIGENCE.md
+```
 
 ---
 
-# 38. REQUIRED FINAL REPORT
+# 36. TASK 7.33 — PROTECTED SOURCE RELATIONSHIPS
 
-At the end of Phase 6, provide EXACTLY:
+Teach the intelligence system about protected relationships.
+
+Examples:
+
+```text
+paymentRoutes
+→ payment verification
+→ webhook
+→ entitlement
+
+accessService
+→ paywall
+→ plan checks
+→ reason strings
+
+server.js
+→ API mount
+→ MCP mount
+→ health
+
+componentData
+→ catalogue
+→ generated data
+```
+
+The agent must understand that these are not ordinary isolated files.
+
+---
+
+# 37. TASK 7.34 — DEPLOYMENT PRECEDENCE DOCUMENTATION
+
+Do not fix production deployment in Phase 7.
+
+Instead document:
+
+```text
+Source
+Configuration
+Build artifact
+Deployment environment
+Live runtime
+```
+
+for:
+
+```text
+Web API
+Frontend
+MCP
+Generated MCP data
+Environment variables
+```
+
+This directly addresses the Phase 6 discovery that tracked output and deployment state can differ.
+
+---
+
+# 38. TASK 7.35 — AGENT CONTEXT BUDGET RULE
+
+Add a rule to `AGENT.md`:
+
+The agent should not load every index for every task.
+
+Use:
+
+```text
+Task
+ ↓
+Relevant category
+ ↓
+Relevant index
+ ↓
+Target files
+ ↓
+Only expand dependencies when needed
+```
+
+For example:
+
+```text
+Template UI bug
+→ feature map
+→ page map
+→ component map
+→ reverse dependency map
+→ source files
+```
+
+Do NOT automatically load:
+
+```text
+Payment
+Authentication
+MCP
+Deployment
+```
+
+unless related.
+
+---
+
+# 39. TASK 7.36 — "MINIMUM NECESSARY CONTEXT" RULE
+
+Add:
+
+```text
+Before opening source files, identify the minimum relevant set.
+
+Start narrow.
+Expand only when evidence shows another file matters.
+```
+
+This is one of the most important rules for solving the original full-codebase analysis problem.
+
+---
+
+# 40. TASK 7.37 — CONTEXT EXPANSION RULE
+
+Define when an agent is allowed to expand context:
+
+```text
+Direct import
+Direct consumer
+Shared service
+Shared state
+Shared API
+Protected dependency
+Runtime dependency
+Test dependency
+```
+
+Do not recursively load the entire repository.
+
+Stop expanding when additional files are no longer relevant to the requested task.
+
+---
+
+# 41. TASK 7.38 — REAL TASK SIMULATIONS
+
+Do not modify application behavior.
+
+Use read-only simulations with real UI HUB tasks.
+
+Example:
+
+```text
+TASK A
+"Find where TemplateCard preview is rendered."
+
+TASK B
+"Find all files affected by changing a component card."
+
+TASK C
+"Find the API and frontend callers for templates."
+
+TASK D
+"Find all files involved in authentication."
+
+TASK E
+"Find the files involved in the MCP tools list."
+```
+
+Measure:
+
+```text
+files identified
+relevant files
+irrelevant files
+time/context cost where measurable
+```
+
+---
+
+# 42. TASK 7.39 — FALSE-POSITIVE TESTING
+
+The agent must be tested against ambiguous names.
+
+Examples:
+
+```text
+"Button"
+"Card"
+"Config"
+"Admin"
+"Template"
+"Index"
+"User"
+```
+
+The intelligence layer should use:
+
+```text
+path
+feature
+imports
+consumers
+route
+purpose
+```
+
+rather than name-only matching.
+
+---
+
+# 43. TASK 7.40 — INDEX PERFORMANCE
+
+The indexing process should be practical for a large project.
+
+Track:
+
+```text
+Total files
+Source files
+Indexed files
+Excluded files
+Generation time
+Output size
+```
+
+Do not optimize prematurely.
+
+First obtain a working baseline.
+
+---
+
+# 44. TASK 7.41 — NO PRODUCTION DEPENDENCY
+
+The index generator should not require:
+
+```text
+MongoDB
+Razorpay
+Firebase
+Render
+Vercel
+Cloudflare
+```
+
+to generate the normal codebase indexes.
+
+It should work locally from repository source/configuration.
+
+This keeps the agent's basic intelligence available even when production is down.
+
+---
+
+# 45. TASK 7.42 — KNOWLEDGE INTEGRATION
+
+Connect the new codebase indexes to the existing knowledge:
+
+```text
+PROJECT_CONTEXT
+ARCHITECTURE
+FEATURES
+API_OVERVIEW
+DATA_OVERVIEW
+INFRASTRUCTURE
+CONFLICTS
+RUNTIME BASELINE
+SECURITY RULES
+```
+
+Do not duplicate large sections.
+
+Use references.
+
+---
+
+# 46. TASK 7.43 — UPDATE AGENT.MD
+
+Add a section:
+
+```text
+## Codebase Intelligence Usage
+```
+
+It should explain:
+
+```text
+1. Read project context.
+2. Identify task category.
+3. Query the relevant index.
+4. Locate target files.
+5. Inspect direct dependencies.
+6. Expand context only when justified.
+7. Check protected paths.
+8. Make minimal changes.
+```
+
+---
+
+# 47. TASK 7.44 — CREATE INTELLIGENCE MANIFEST
+
+Create:
+
+```text
+.uihub-agent/generated/
+└── INTELLIGENCE_MANIFEST.json
+```
+
+It should identify:
+
+```text
+Index
+Type
+Generated/manual
+Generator
+Inputs
+Version
+Status
+Last generation
+```
+
+Example:
+
+```json
+{
+  "componentMap": {
+    "type": "generated",
+    "status": "fresh",
+    "generator": "generate-component-map.mjs"
+  }
+}
+```
+
+---
+
+# 48. TASK 7.45 — FINAL INTEGRITY CHECK
+
+Before completion run:
+
+```text
+agent:index
+agent:index:check
+knowledge validation
+secret scan
+configuration validation
+generated artifact validation
+tests
+builds
+```
+
+Do not weaken any existing gate.
+
+Phase 6 reported 231/231 tests passing across the four suites, while frontend typecheck remained a known pre-existing failure. Preserve that distinction.
+
+---
+
+# 49. TASK 7.46 — DO NOT FIX FRONTEND TYPECHECK
+
+The Phase 6 report records approximately 61 frontend typecheck errors across 23 files and explicitly attributes them to earlier UI commits.
+
+Do not use Phase 7 as an excuse to fix those unrelated UI errors.
+
+Document:
+
+```text
+KNOWN BASELINE ISSUE
+```
+
+and leave it for its own deliberate phase.
+
+---
+
+# 50. REQUIRED SUCCESS CRITERIA
+
+Phase 7 is successful when an AI can answer:
+
+```text
+Where is the TemplateCard?
+Who uses TemplateCard?
+Which pages use TemplateCard?
+Which hooks does TemplateCard use?
+Which feature owns TemplateCard?
+What services does it depend on?
+Which files would be affected if TemplateCard changes?
+Which tests cover it?
+```
+
+without scanning the entire repository.
+
+It should also answer:
+
+```text
+Where is the authentication flow?
+Where is the payment flow?
+Where is the MCP tool registry?
+Where is the admin dashboard?
+What APIs does a page call?
+What database collections does a service use?
+What files are generated?
+What files are protected?
+```
+
+from the intelligence layer plus targeted source inspection.
+
+---
+
+# 51. REQUIRED NEW FILE STRUCTURE
+
+Expected structure:
+
+```text
+.uihub-agent/
+│
+├── codebase/
+│   ├── CODEBASE_INTELLIGENCE.md
+│   ├── COMPONENT_MAP.json
+│   ├── PAGE_MAP.json
+│   ├── ROUTE_MAP.json
+│   ├── FEATURE_MAP.json
+│   ├── HOOKS_MAP.json
+│   ├── SERVICE_MAP.json
+│   ├── API_MAP.json
+│   ├── DATABASE_USAGE_MAP.json
+│   ├── STORAGE_USAGE_MAP.json
+│   ├── INTEGRATION_MAP.json
+│   ├── FILE_ROLE_MAP.json
+│   └── INTELLIGENCE_QUERIES.md
+│
+├── generated/
+│   ├── IMPORT_GRAPH.json
+│   ├── REVERSE_DEPENDENCY_MAP.json
+│   ├── SYMBOL_INDEX.json
+│   ├── FEATURE_FILE_INDEX.json
+│   ├── PAGE_COMPONENT_INDEX.json
+│   └── INTELLIGENCE_MANIFEST.json
+│
+├── tasks/
+│   └── TASK_CATEGORY_CATALOG.md
+│
+└── scripts/
+    ├── generate-map.mjs
+    └── additional indexing scripts as required
+```
+
+Do not create unnecessary duplicate indexes.
+
+---
+
+# 52. REQUIRED FINAL REPORT
+
+At the end of Phase 7, provide EXACTLY:
 
 ==================================================
-UI HUB AGENT — PHASE 6 COMPLETION REPORT
+UI HUB AGENT — PHASE 7 COMPLETION REPORT
 ========================================
 
 PHASE:
-6 — Security, Configuration & Agent-Governance Hardening
+7 — Codebase Intelligence, Component Mapping & Dependency Graph
 
 STATUS:
 COMPLETED / PARTIAL / BLOCKED
@@ -1096,146 +1613,180 @@ COMPLETED / PARTIAL / BLOCKED
 
 ---
 
-Explain the purpose of Phase 6.
+Explain the objective.
 
-2. CORS AUDIT
-
----
-
-Current behavior:
-Desired behavior:
-Implementation:
-Tests:
-
-3. SECURITY CHANGES
+2. SOURCE PRECEDENCE
 
 ---
 
-List all security changes.
+Final precedence model.
 
-4. SECRET SCANNING
+3. CODEBASE SIZE
 
 ---
 
-Scanner:
-Patterns:
-False-positive handling:
-CI integration:
+Total files:
+Source files:
+Indexed:
+Excluded:
+
+4. COMPONENT INTELLIGENCE
+
+---
+
+Components indexed:
+Pages indexed:
+Hooks indexed:
+Services indexed:
+
+5. ROUTE INTELLIGENCE
+
+---
+
+Frontend routes:
+REST routes:
+MCP routes:
+Admin routes:
+
+6. FEATURE INTELLIGENCE
+
+---
+
+Features indexed.
+
+7. API INTELLIGENCE
+
+---
+
+Endpoints/tools indexed.
+
+8. DATA INTELLIGENCE
+
+---
+
+Database usage:
+Storage usage:
+External integrations:
+
+9. DEPENDENCY GRAPH
+
+---
+
+Import graph:
+Reverse dependencies:
+Impact analysis:
+
+10. SYMBOL INDEX
+
+---
+
+Symbols indexed.
+
+11. FILE ROLE CLASSIFICATION
+
+---
+
+Results.
+
+12. TASK CATEGORY CATALOG
+
+---
+
+Categories created.
+
+13. INDEX GENERATOR
+
+---
+
+Commands:
+Generation result:
+Check result:
+
+14. INDEX FRESHNESS
+
+---
+
+Fresh / stale.
+
+15. SECURITY VALIDATION
+
+---
+
+Secret scan result.
+
+16. KNOWLEDGE VALIDATION
+
+---
+
+Result.
+
+17. CROSS-REFERENCE VALIDATION
+
+---
+
+Result.
+
+18. REAL TASK SIMULATIONS
+
+---
+
+For each simulation:
+Files inspected:
+Relevant:
+Irrelevant:
 Result:
 
-5. GIT / TRACKING HYGIENE
+19. PERFORMANCE
 
 ---
 
-.uihub-agent:
-.github:
-Environment files:
-Generated files:
+Generation time:
+Output sizes:
+Any concerns:
 
-6. DOCUMENTATION DRIFT
-
----
-
-Endpoints checked:
-Invalid/outdated claims:
-Corrections:
-
-7. CONFIGURATION OWNERSHIP
+20. FILES CREATED
 
 ---
 
-Summarize the final ownership map.
+List all.
 
-8. DEPLOYMENT CONFLICTS
-
----
-
-List unresolved conflicts.
-
-9. GENERATED ARTIFACT VALIDATION
+21. FILES MODIFIED
 
 ---
 
-Results.
+List all.
 
-10. AGENT PROTECTED PATHS
-
----
-
-List protected categories.
-
-11. AGENT PRE-CHANGE RULES
+22. FILES DELETED
 
 ---
 
-Summarize.
+NONE or exact list.
 
-12. AGENT POST-CHANGE RULES
-
----
-
-Summarize.
-
-13. KNOWLEDGE VALIDATION
-
----
-
-Results.
-
-14. CONFIGURATION VALIDATION
-
----
-
-Results.
-
-15. OWNER DECISIONS
-
----
-
-List unresolved decisions.
-
-16. TEST RESULTS
-
----
-
-Backend:
-MCP:
-CLI:
-Frontend:
-Security:
-Knowledge:
-Other:
-
-17. TYPECHECK RESULTS
-
----
-
-Frontend:
-MCP:
-CLI:
-Backend:
-
-18. BUILD RESULTS
-
----
-
-Frontend:
-MCP:
-CLI:
-
-19. PRODUCTION DATA CHANGES
+23. APPLICATION SOURCE CHANGES
 
 ---
 
 YES / NO
 
-20. PRODUCTION DEPLOYMENT CHANGES
+If YES, explain exactly.
+
+24. PRODUCTION DATA CHANGES
 
 ---
 
 YES / NO
 
-21. SECRETS EXPOSED
+Must normally be NO.
+
+25. PRODUCTION DEPLOYMENT CHANGES
+
+---
+
+YES / NO
+
+Must normally be NO.
+
+26. SECRETS EXPOSED
 
 ---
 
@@ -1243,114 +1794,142 @@ YES / NO
 
 Must be NO.
 
-22. REGRESSIONS
+27. TEST RESULTS
+
+---
+
+Backend:
+MCP:
+CLI:
+Frontend:
+Knowledge:
+Security:
+Other:
+
+28. BUILD RESULTS
+
+---
+
+Frontend:
+MCP:
+CLI:
+Other:
+
+29. TYPECHECK RESULTS
+
+---
+
+Frontend:
+MCP:
+CLI:
+Backend:
+
+30. REGRESSIONS
 
 ---
 
 List all.
 
-23. FILES CREATED
+31. PHASE 6 FINDING STATUS
 
 ---
 
-List all.
+RESOLVED / PARTIAL / DEFERRED / OWNER REQUIRED
 
-24. FILES MODIFIED
-
----
-
-List all.
-
-25. FILES DELETED
-
----
-
-NONE or exact list.
-
-26. PHASE 5 FINDING STATUS
-
----
-
-RESOLVED / PARTIAL / DEFERRED / OWNER REQUIRED / INVALID
-
-27. REMAINING HIGH-RISK ISSUES
+32. REMAINING HIGH-RISK ISSUES
 
 ---
 
 List them.
 
-28. REMAINING UNKNOWN AREAS
+33. REMAINING UNKNOWN AREAS
 
 ---
 
 List them.
 
-29. KNOWLEDGE BASE UPDATED
+34. KNOWLEDGE FILES UPDATED
 
 ---
 
-List all updated files.
+List all.
 
-30. IMPORTANT SECURITY DISCOVERIES
-
----
-
-List major discoveries.
-
-31. IMPORTANT DISCOVERIES FOR PHASE 7
+35. IMPORTANT ARCHITECTURAL DISCOVERIES
 
 ---
 
-List facts that should influence Phase 7.
+List new discoveries.
 
-32. FINAL GIT / DIFF REVIEW
+36. IMPORTANT DISCOVERIES FOR PHASE 8
+
+---
+
+List facts that should influence task routing/context loading.
+
+37. FINAL GIT / DIFF REVIEW
 
 ---
 
 Clean / reviewed / unexpected changes.
 
-33. FINAL STATUS
+38. FINAL STATUS
 
 ---
 
 COMPLETED / PARTIAL / BLOCKED
 
 ==================================================
-END OF PHASE 6 REPORT
+END OF PHASE 7 REPORT
 =====================
 
 ---
 
-# 39. FINAL EXECUTION INSTRUCTION
+# 53. FINAL EXECUTION INSTRUCTION
 
-Phase 6 is a security and governance hardening phase.
+Phase 7 builds the intelligence layer of the UI HUB Agent.
 
-Do not treat security as documentation only.
+The objective is not to make UI HUB look different.
 
-Where a control claims to exist:
+The objective is not to repair production.
+
+The objective is to make future AI agents understand the codebase quickly and accurately.
+
+The agent must prefer:
 
 ```text
-test the actual behavior.
+INDEX
+→ LOCATE
+→ VERIFY
+→ OPEN RELEVANT SOURCE
 ```
 
-Do not treat configuration as effective merely because a variable or allowlist exists.
+instead of:
 
-Do not expose secrets while testing the secret scanner.
+```text
+OPEN ENTIRE REPOSITORY
+→ SEARCH EVERYTHING
+```
 
-Do not modify production data.
+Do not treat generated indexes as unquestionable truth.
 
-Do not make deployment decisions that require owner authorization.
+Always preserve the source-precedence rules.
 
-Do not resolve the conflicting Render blueprints by guessing.
+Do not convert guesses into facts.
+
+Do not expose secrets.
+
+Do not touch production data.
+
+Do not change payment/authentication behavior.
+
+Do not perform the unresolved Render/Vercel/Cloudflare owner decisions.
+
+Do not fix the pre-existing frontend typecheck errors.
 
 Do not perform the light-mode refactor.
 
-Do not perform broad application refactoring.
+At the end, update `.uihub-agent/`, validate all indexes, and provide the exact Phase 7 Completion Report.
 
-Do not weaken tests or CI gates to obtain green status.
+The Phase 7 report will be reviewed before Phase 8 is designed.
 
-The objective is to make future AI-driven development safer, more deterministic, and easier to audit.
-
-At the end, update `.uihub-agent/` and provide the exact Phase 6 Completion Report.
-
-END — UI HUB AGENT PHASE 6
+END — UI HUB AGENT PHASE 7

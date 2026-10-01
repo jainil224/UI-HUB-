@@ -131,10 +131,67 @@ Load selectively. Do not read the whole tree for a small task.
 | `infrastructure/INFRASTRUCTURE.md` | You are deploying, configuring env vars or debugging a build. |
 | `rules/DO_NOT_CHANGE.md` | **Before any edit.** Lists the protected areas and why. |
 | `CONFLICTS.md` | Before trusting any existing documentation. |
-| `tasks/ACTIVE_TASK.md` | To see what is in flight and what Phase 2 should pick up. |
-| `scripts/generate-map.mjs` | To regenerate the machine-readable map. |
+| `tasks/ACTIVE_TASK.md` | To see what is in flight and what the next phase should pick up. |
+| `tasks/TASK_CATEGORY_CATALOG.md` | **Starting a task.** Maps a request to its queries, file areas and gates. |
+| `codebase/CODEBASE_INTELLIGENCE.md` | You need to know what an index field means or how confident it is. |
+| `codebase/INTELLIGENCE_QUERIES.md` | You want a worked example before running a query. |
+| `scripts/generate-map.mjs` | To regenerate the coarse `PROJECT_MAP.json`. |
+| `scripts/generate-index.mjs` | To regenerate the 17 detailed intelligence artifacts. |
+| `scripts/query-index.mjs` | To answer a structural question. |
 
-### Regenerating the machine-readable map
+### The codebase intelligence index (Phase 7)
+
+**Query the index before searching source.** It is a TypeScript-AST parse of 485
+files across 8 roots, and it answers structural questions faster and more
+accurately than grep:
+
+```bash
+npm run agent:query -- help          # every available question
+npm run agent:query -- component X   # who uses this component, what breaks
+npm run agent:query -- impact <path> # blast radius before editing
+npm run agent:query -- orphans       # dead code
+npm run agent:query -- feature <slug>
+npm run agent:query -- service X
+npm run agent:query -- endpoint "GET /api/health"
+npm run agent:query -- symbol X      # ALWAYS check occurrences, see below
+npm run agent:query -- stats
+```
+
+Regenerating and validating:
+
+```bash
+npm run agent:index          # rewrite all 17 artifacts
+npm run agent:index:check    # exit 1 if stale (read-only)
+npm run agent:index:stats    # counts and timings, no write
+npm run check:index          # freshness + do the indexes agree with each other
+```
+
+`check:index` is **not** the same as `agent:index:check`. Freshness proves the
+indexes match the source; `check-index.mjs` proves they agree with *each other*.
+Both are wired into `npm run check`.
+
+**Rules for the index:**
+
+1. **Never hand-edit anything in `codebase/*.json` or `generated/*.json`.** Fix
+   `generate-index.mjs` and regenerate. A hand-edited artifact fails
+   `agent:index:check` even when no source changed.
+2. **Counts come from the index, not from prose.** Where this knowledge base and
+   an index disagree, the index wins on facts. The prose may lag.
+3. **`LOW_CONFIDENCE` and `UNKNOWN` mean unverified.** Confirm against source.
+   `ROUTE_MAP.association` records *how* each route matched its component.
+4. **Ambiguous names are real, not noise.** 378 of 2,943 symbols share a name
+   across the four packages. Two genuinely different `useIsMobile` hooks exist.
+   Never name a definition site without checking `npm run agent:query -- symbol`.
+5. **An orphan proves no *static* importer.** The index cannot see string-built
+   imports, runtime lookups or consumers outside the 8 roots. Confirm before
+   deleting anything `orphans` reports.
+6. **Embedded source strings are not modules.** `frontend/src/data/componentData.tsx`
+   holds component source as strings and `embeddedSourceCode.ts.bak` is excluded.
+   Imports visible in those files are text, not edges.
+
+---
+
+### Regenerating the coarse machine-readable map
 
 `PROJECT_MAP.json` is **generated**, not hand-written. Its counts, routes,
 endpoints, MCP tools and dependency usage are read out of the source at run time.
@@ -147,6 +204,11 @@ node .uihub-agent/scripts/generate-map.mjs --check  # exit 1 if stale, for CI
 Re-run it after any change that alters routes, endpoints, the component catalog,
 the template catalog or a dependency. Its `PURPOSE` strings are curated; its
 numbers are not.
+
+It is the **coarse** overview and is superseded by the Phase 7 indexes on any
+structural question. Two known divergences are documented in
+`codebase/CODEBASE_INTELLIGENCE.md`: `codeVolume` omits the 14 first-party
+scripts outside `src/`, and the services inventory is incomplete.
 
 ---
 
@@ -166,8 +228,12 @@ numbers are not.
    id list exists in three files that must be kept in sync manually. The MCP
    catalogs are generated from the frontend by a script.
 5. **Enumerate rather than sample** when documenting a set, and state the count.
-   The 137-component catalog and the 19-template catalog are counted, not estimated.
+   Counts come from the Phase 7 indexes, not from estimation.
 6. **Mark what you could not verify as `UNKNOWN`.** Do not quietly drop it.
+7. **Query the index before concluding a file is unused.**
+   `npm run agent:query -- orphans` and `-- impact <path>` answer that in one
+   command, and they see re-exports, dynamic imports and path aliases that grep
+   misses.
 
 ---
 
