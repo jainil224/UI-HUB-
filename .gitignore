@@ -51,8 +51,11 @@ prompt.md
 firebase.json
 
 # Agent skills & local specs (local only — never pushed to GitHub)
+#
+# NOTE: .uihub-agent/ is intentionally NOT ignored. It is the project knowledge
+# base (architecture, API, deployment, runtime and conflict contracts) and must
+# be tracked so those contracts live with the code. Do not re-add it here.
 .agents/
-.uihub-agent/
 .opencode/
 .github/
 .claude/

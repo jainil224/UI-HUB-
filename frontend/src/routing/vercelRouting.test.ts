@@ -66,10 +66,15 @@ describe('Task 5.6/5.7 - function and SPA fallback contract', () => {
   });
 
   it('ships the backend and built MCP data into the function', () => {
-    const include = vercel.functions['api/index.js'].includeFiles;
-    expect(include).toContain('backend/**');
-    expect(include).toContain('mcp-server/dist/**');
-    expect(include).toContain('mcp-server/package.json');
+    // vercel.json declares includeFiles as a brace-expansion string
+    // ("{backend/**,mcp-server/dist/**,mcp-server/package.json}"), not an array.
+    // Assert on the members as tokens so this test actually fails if a member
+    // is dropped, rather than silently substring-matching.
+    const raw = vercel.functions['api/index.js'].includeFiles;
+    const include = String(raw).replace(/^\{|\}$/g, '').split(',');
+    expect(include).toEqual(
+      expect.arrayContaining(['backend/**', 'mcp-server/dist/**', 'mcp-server/package.json'])
+    );
   });
 
   it('declares no env block, so VITE_API_URL can only come from the dashboard', () => {
