@@ -131,6 +131,42 @@ jobs:
         run: npm run check:index
 
   # ---------------------------------------------------------------------------
+  # 6. Task routing + context bundles (Phase 8, tasks 8.40, 8.47, 8.51).
+  #
+  # BLOCKING, and additive: it adds a job rather than editing an existing one, so
+  # a failure here is attributed to the router and never silently absorbed into
+  # the intelligence job above.
+  #
+  # What this catches that nothing else does:
+  #   - a routing change that makes a category unreachable, or returns a
+  #     confidence level the specification does not allow;
+  #   - a context bundle that grows to a large slice of the repository, stops
+  #     explaining why each file was chosen, or leaks a credential-shaped value;
+  #   - a routing matrix edited as JSON without changing the module that builds
+  #     it, which check-index cross-checks.
+  #
+  # No application dependency: the router reads committed indexes, so this job
+  # needs neither npm install nor a build.
+  # ---------------------------------------------------------------------------
+  task-routing:
+    name: Task routing + context bundles
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Router + context bundle tests
+        run: npm run agent:test
+      - name: Routing matrix agrees with the router module
+        run: node .uihub-agent/scripts/check-index.mjs
+      - name: Both CLIs respond
+        run: |
+          node .uihub-agent/scripts/route-task.mjs "Fix a payment verification bug"
+          node .uihub-agent/scripts/context-task.mjs "Fix WebM template preview"
+
+  # ---------------------------------------------------------------------------
   # 5. Builds. Split from tests so a compile failure is not reported as a test
   #    failure.
   # ---------------------------------------------------------------------------

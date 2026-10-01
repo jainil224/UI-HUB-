@@ -1426,7 +1426,8 @@
       "feature": "utils",
       "files": 23,
       "roles": {
-        "UTILITY": 23
+        "TEST": 1,
+        "UTILITY": 22
       },
       "entryPoints": [],
       "components": [],

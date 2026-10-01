@@ -31,10 +31,10 @@
       "SERVICE": 30,
       "STATE": 7,
       "TEMPLATE": 1,
-      "TEST": 1,
+      "TEST": 2,
       "TYPE": 7,
       "UNKNOWN": 23,
-      "UTILITY": 23
+      "UTILITY": 22
     }
   },
   "files": [
@@ -8449,7 +8449,7 @@
     {
       "path": "frontend/src/routing/vercelRouting.test.ts",
       "role": "TEST",
-      "roleSource": "path-convention",
+      "roleSource": "test-filename",
       "confidence": "HIGH",
       "feature": "routing",
       "featureConfidence": "LOW_CONFIDENCE",
@@ -8668,8 +8668,8 @@
     },
     {
       "path": "frontend/src/utils/apiConfig.test.ts",
-      "role": "UTILITY",
-      "roleSource": "path-convention",
+      "role": "TEST",
+      "roleSource": "test-filename",
       "confidence": "HIGH",
       "feature": "utils",
       "featureConfidence": "LOW_CONFIDENCE",

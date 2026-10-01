@@ -1,0 +1,538 @@
+{
+  "$template": "Static CONTEXT_MANIFEST template. Per-task manifests are NOT written here.",
+  "generatedBy": "uihub-context/8 (static template, not per-task output)",
+  "usage": "Copy this shape to your own path, then write a real manifest there: node .uihub-agent/scripts/context-task.mjs --manifest <your-path> \"<task>\"",
+  "whyStatic": "A generated artifact that changes per task cannot be freshness-checked, so this file stays a template and real output goes only where the caller asks for it.",
+  "schema": ".uihub-agent/generated/CONTEXT_BUNDLE_SCHEMA.json",
+  "secretPolicy": "Bundles carry paths, names and reasons only. No file contents and no secret values.",
+  "bundle": {
+    "schemaVersion": "8.0.0",
+    "generatedAt": "2026-10-01T08:26:57.704Z",
+    "task": "Fix a payment verification bug",
+    "intent": {
+      "intent": "FIX",
+      "why": "2 intent verb(s) matched"
+    },
+    "categories": [
+      "PAYMENT",
+      "COMPONENT"
+    ],
+    "surface": [
+      "BACKEND",
+      "FRONTEND"
+    ],
+    "confidence": "HIGH",
+    "confidenceWhy": "2 indexed entities resolved and 2 category/categories confirmed",
+    "featureCandidates": [
+      "payment-routes"
+    ],
+    "indexes": [
+      "API_MAP",
+      "SERVICE_MAP",
+      "INTEGRATION_MAP",
+      "COMPONENT_MAP",
+      "SYMBOL_INDEX",
+      "PAGE_COMPONENT_INDEX"
+    ],
+    "entities": {
+      "components": [
+        {
+          "name": "PaymentTransactionButton",
+          "path": "frontend/src/components/ui/payment-transaction-button.tsx",
+          "feature": "components",
+          "how": "rare name token \"payment\" (1 matches)",
+          "strength": "fuzzy",
+          "matched": "payment"
+        }
+      ],
+      "services": [],
+      "hooks": [],
+      "symbols": [],
+      "routes": [],
+      "explicitFiles": [],
+      "features": [
+        {
+          "feature": "payment-routes",
+          "how": "known term \"payment\"",
+          "terms": [
+            "payment"
+          ]
+        }
+      ]
+    },
+    "evidence": {
+      "searchedTerms": [
+        "payment verification",
+        "verification bug",
+        "payment"
+      ],
+      "ignoredAsTooCommon": [
+        "\"verification\" appears in no indexed component, feature or symbol name"
+      ],
+      "nearMisses": [],
+      "resolvedRoles": [
+        "COMPONENT"
+      ],
+      "surfaceWhy": "2 surfaces implicated by resolved evidence",
+      "fastPathReason": null
+    },
+    "files": [
+      {
+        "path": "backend/src/routes/paymentRoutes.js",
+        "score": 112,
+        "priority": "P1",
+        "tier": "NORMAL",
+        "role": "ROUTE_CONFIG",
+        "feature": "payment-routes",
+        "lines": 33,
+        "addedByExpansion": false,
+        "expansionTrigger": null,
+        "why": [
+          "belongs to the resolved feature \"payment-routes\"",
+          "the task word \"payment\" names a segment of this path",
+          "sits in the PAYMENT source root backend/src/routes"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/src/controllers/paymentController.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "CONTROLLER",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/src/controllers/paymentController.js is depended on by a protected file (backend/src/utils/verifySignature.js)",
+          "backend/src/controllers/paymentController.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/scripts/build_source_dataset.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "SCRIPT",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/scripts/build_source_dataset.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/scripts/complete_source_dataset.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "SCRIPT",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/scripts/complete_source_dataset.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/src/scripts/checkPremiumCoverage.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "SCRIPT",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/src/scripts/checkPremiumCoverage.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/src/scripts/setupProductionDatabase.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "SCRIPT",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/src/scripts/setupProductionDatabase.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/src/server.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "ENTRY",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/src/server.js is depended on by a protected file (backend/src/routes/paymentRoutes.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/src/services/accessService.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "SERVICE",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/src/services/accessService.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "backend/src/services/componentSyncService.js",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "SERVICE",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "PROTECTED_RELATIONSHIP",
+        "why": [
+          "backend/src/services/componentSyncService.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "matched": null
+      },
+      {
+        "path": "frontend/src/components/animations/VisualEffects.tsx",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "COMPONENT",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "RELEVANT_CONSUMER",
+        "why": [
+          "frontend/src/components/animations/VisualEffects.tsx imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ],
+        "matched": null
+      },
+      {
+        "path": "frontend/src/data/componentData.tsx",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "DATA",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "RELEVANT_CONSUMER",
+        "why": [
+          "frontend/src/data/componentData.tsx imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ],
+        "matched": null
+      },
+      {
+        "path": "frontend/src/lib/utils.ts",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "UNKNOWN",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "DIRECT_DEPENDENCY",
+        "why": [
+          "named file frontend/src/components/ui/payment-transaction-button.tsx imports frontend/src/lib/utils.ts"
+        ],
+        "matched": null
+      },
+      {
+        "path": "frontend/src/utils/prefetchUtils.ts",
+        "score": null,
+        "priority": "P5",
+        "tier": "NORMAL",
+        "role": "UTILITY",
+        "feature": null,
+        "lines": null,
+        "addedByExpansion": true,
+        "expansionTrigger": "RELEVANT_CONSUMER",
+        "why": [
+          "frontend/src/utils/prefetchUtils.ts imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ],
+        "matched": null
+      }
+    ],
+    "knowledge": [
+      {
+        "path": ".uihub-agent/rules/DO_NOT_CHANGE.md",
+        "reason": "knowledge for PAYMENT, COMPONENT"
+      },
+      {
+        "path": ".uihub-agent/rules/PROTECTED_PATHS.md",
+        "reason": "knowledge for PAYMENT, COMPONENT"
+      },
+      {
+        "path": ".uihub-agent/security/SECURITY_OVERVIEW.md",
+        "reason": "knowledge for PAYMENT, COMPONENT"
+      },
+      {
+        "path": ".uihub-agent/design-system/DESIGN_SYSTEM.md",
+        "reason": "knowledge for PAYMENT, COMPONENT"
+      },
+      {
+        "path": ".uihub-agent/features/FEATURES.md",
+        "reason": "knowledge for PAYMENT, COMPONENT"
+      }
+    ],
+    "dependencies": [
+      {
+        "path": "backend/src/controllers/paymentController.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/controllers/paymentController.js is depended on by a protected file (backend/src/utils/verifySignature.js)",
+          "backend/src/controllers/paymentController.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ]
+      },
+      {
+        "path": "backend/scripts/build_source_dataset.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/scripts/build_source_dataset.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ]
+      },
+      {
+        "path": "backend/scripts/complete_source_dataset.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/scripts/complete_source_dataset.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ]
+      },
+      {
+        "path": "backend/src/scripts/checkPremiumCoverage.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/scripts/checkPremiumCoverage.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ]
+      },
+      {
+        "path": "backend/src/scripts/setupProductionDatabase.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/scripts/setupProductionDatabase.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ]
+      },
+      {
+        "path": "backend/src/server.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/server.js is depended on by a protected file (backend/src/routes/paymentRoutes.js)"
+        ]
+      },
+      {
+        "path": "backend/src/services/accessService.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/services/accessService.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ]
+      },
+      {
+        "path": "backend/src/services/componentSyncService.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/services/componentSyncService.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ]
+      },
+      {
+        "path": "frontend/src/components/animations/VisualEffects.tsx",
+        "trigger": "RELEVANT_CONSUMER",
+        "how": [
+          "frontend/src/components/animations/VisualEffects.tsx imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ]
+      },
+      {
+        "path": "frontend/src/data/componentData.tsx",
+        "trigger": "RELEVANT_CONSUMER",
+        "how": [
+          "frontend/src/data/componentData.tsx imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ]
+      },
+      {
+        "path": "frontend/src/lib/utils.ts",
+        "trigger": "DIRECT_DEPENDENCY",
+        "how": [
+          "named file frontend/src/components/ui/payment-transaction-button.tsx imports frontend/src/lib/utils.ts"
+        ]
+      },
+      {
+        "path": "frontend/src/utils/prefetchUtils.ts",
+        "trigger": "RELEVANT_CONSUMER",
+        "how": [
+          "frontend/src/utils/prefetchUtils.ts imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ]
+      }
+    ],
+    "protectedAreas": [
+      {
+        "path": "backend/src/routes/paymentRoutes.js",
+        "tier": "CRITICAL",
+        "rule": "Razorpay order creation, payment verification, signature checks. A flaw here can accept unpaid orders or reject paid ones.",
+        "via": "PAYMENT"
+      },
+      {
+        "path": "backend/src/utils/verifySignature.js",
+        "tier": "CRITICAL",
+        "rule": "Webhook signature verification via `timingSafeEqual`.",
+        "via": "PAYMENT"
+      },
+      {
+        "path": "backend/src/config/premiumComponents.js",
+        "tier": "HIGH_RISK",
+        "rule": "Premium component entitlement list.",
+        "via": "PAYMENT"
+      }
+    ],
+    "validation": [
+      "backend tests",
+      "frontend build",
+      "frontend tests"
+    ],
+    "expansionLog": [
+      {
+        "step": 2,
+        "path": "backend/src/controllers/paymentController.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/controllers/paymentController.js is depended on by a protected file (backend/src/utils/verifySignature.js)",
+          "backend/src/controllers/paymentController.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "backend/scripts/build_source_dataset.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/scripts/build_source_dataset.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "backend/scripts/complete_source_dataset.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/scripts/complete_source_dataset.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "backend/src/scripts/checkPremiumCoverage.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/scripts/checkPremiumCoverage.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "backend/src/scripts/setupProductionDatabase.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/scripts/setupProductionDatabase.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "backend/src/server.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/server.js is depended on by a protected file (backend/src/routes/paymentRoutes.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "backend/src/services/accessService.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/services/accessService.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "backend/src/services/componentSyncService.js",
+        "trigger": "PROTECTED_RELATIONSHIP",
+        "how": [
+          "backend/src/services/componentSyncService.js is depended on by a protected file (backend/src/config/premiumComponents.js)"
+        ],
+        "reason": "Protected relationship discovered (a protected path depends on this file)"
+      },
+      {
+        "step": 2,
+        "path": "frontend/src/components/animations/VisualEffects.tsx",
+        "trigger": "RELEVANT_CONSUMER",
+        "how": [
+          "frontend/src/components/animations/VisualEffects.tsx imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ],
+        "reason": "Relevant consumer discovered (this file imports a named file)"
+      },
+      {
+        "step": 2,
+        "path": "frontend/src/data/componentData.tsx",
+        "trigger": "RELEVANT_CONSUMER",
+        "how": [
+          "frontend/src/data/componentData.tsx imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ],
+        "reason": "Relevant consumer discovered (this file imports a named file)"
+      },
+      {
+        "step": 3,
+        "path": "frontend/src/lib/utils.ts",
+        "trigger": "DIRECT_DEPENDENCY",
+        "how": [
+          "named file frontend/src/components/ui/payment-transaction-button.tsx imports frontend/src/lib/utils.ts"
+        ],
+        "reason": "Direct dependency discovered (a named file imports this file)"
+      },
+      {
+        "step": 3,
+        "path": "frontend/src/utils/prefetchUtils.ts",
+        "trigger": "RELEVANT_CONSUMER",
+        "how": [
+          "frontend/src/utils/prefetchUtils.ts imports the named file frontend/src/components/ui/payment-transaction-button.tsx"
+        ],
+        "reason": "Relevant consumer discovered (this file imports a named file)"
+      }
+    ],
+    "expansionCount": 12,
+    "expansionSteps": 2,
+    "stopReason": "reached the step limit (2); ask for a larger budget if more context is genuinely needed",
+    "unknown": null,
+    "efficiency": {
+      "totalIndexedFiles": 485,
+      "qualifiedCandidates": 1,
+      "filesSelected": 13,
+      "initialFiles": 1,
+      "expandedFiles": 12,
+      "selectionRatio": 0.0268
+    },
+    "emptyReason": null
+  }
+}

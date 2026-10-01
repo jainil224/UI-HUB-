@@ -2,7 +2,7 @@
 /**
  * Codebase Intelligence index generator -- agent.md tasks 7.24"7.27.
  *
- * ONE pipeline produces all 17 JSON artifacts from ONE parse of each
+ * ONE pipeline produces all 19 JSON artifacts from ONE parse of each
  * source file. Nothing here touches application source; it only reads.
  *
  * Determinism (task 7.27): the index files contain NO timestamp. The only
@@ -37,6 +37,7 @@ import {
   shortHash,
 } from './lib/fingerprint.mjs';
 import { edgeConfidence, featureConfidence, weakest, tally } from './lib/confidence.mjs';
+import { buildRoutingMatrix } from './lib/router-matrix.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '..', '..');
@@ -1159,7 +1160,91 @@ function compose(m) {
     index: pageComponentIndex,
   });
 
+  /* --- Phase 8: router contract + knowledge routing graph ----------- */
+
+  // These two are derived from the router matrix and the counts already
+  // computed above, so they add no parse cost and cannot drift from the maps
+  // they describe. They are what makes `agent:route` explainable without
+  // reading the router source.
+  out['generated/CONTEXT_BUNDLE_SCHEMA.json'] = meta({
+    description: 'Shape of an `agent:context` bundle, so any consumer can validate a bundle without the router source.',
+    version: '8.0.0',
+    properties: [
+      { path: 'task', type: 'string', required: true, note: 'The task text exactly as given.' },
+      { path: 'generatedAt', type: 'string', required: true, note: 'ISO-8601. The only wall-clock value in the bundle.' },
+      { path: 'intent', type: 'object', required: true, note: '{ intent, confidence, matched }' },
+      { path: 'categories', type: 'string[]', required: true, note: 'Ordered strongest-first. UNKNOWN when nothing resolved.' },
+      { path: 'surface', type: 'string[]', required: true, note: 'FRONTEND | BACKEND | MCP | DATABASE | CLI | DEPLOYMENT | DOCUMENTATION | INFRASTRUCTURE | UNKNOWN' },
+      { path: 'confidence', type: 'string', required: true, note: 'HIGH | MEDIUM | LOW' },
+      { path: 'confidenceWhy', type: 'string', required: true, note: 'Human-readable justification for the level chosen.' },
+      { path: 'featureCandidates', type: 'string[]', required: true, note: 'FEATURE_MAP slugs the task resolved.' },
+      { path: 'indexes', type: 'string[]', required: true, note: 'Indexes the router decided were worth querying, in order. Empty only for UNKNOWN.' },
+      { path: 'dependencies', type: 'object[]', required: true, note: 'Relationships behind the selected files: { from, to, trigger, how[] }. Derived from expansionLog.' },
+      { path: 'entities', type: 'object', required: true, note: 'components, symbols, services, hooks, routes, explicitFiles -- each with its own evidence string.' },
+      { path: 'files', type: 'object[]', required: true, note: 'Ranked context files. See `fileShape`.' },
+      { path: 'knowledge', type: 'string[]', required: true, note: 'Markdown file paths to read first, in priority order.' },
+      { path: 'protectedAreas', type: 'object[]', required: true, note: 'Protected files the task touches, with tier and rule.' },
+      { path: 'validation', type: 'string[]', required: true, note: 'Commands that must pass before the work is considered done.' },
+      { path: 'expansionLog', type: 'object[]', required: true, note: 'One entry per added file: { step, path, trigger, how[] }. Empty when nothing expanded.' },
+      { path: 'stopReason', type: 'string', required: true, note: 'Why expansion stopped: budget | converged | no-permitted-evidence | disabled.' },
+      { path: 'efficiency', type: 'object', required: true, note: '{ filesSelected, totalIndexedFiles, selectionRatio, expandedCount, expansionSteps }.' },
+      { path: 'emptyReason', type: 'object|null', required: true, note: 'Set instead of an empty `files` list: { why, searchedTerms[] }. Null when files were found.' },
+      { path: 'unknown', type: 'object|null', required: true, note: 'Present only when categories is [UNKNOWN]. Carries why, askedForNarrowing and suggestion[].' },
+    ],
+    fileShape: {
+      path: 'string', score: 'number', priority: 'P0|P1|P2|P3|P4|P5',
+      tier: 'string', role: 'string|null', feature: 'string|null',
+      why: 'string[]', matched: 'string|null', lines: 'number|null',
+      addedByExpansion: 'boolean', expansionTrigger: 'string|null',
+    },
+    tiers: ['CRITICAL', 'HIGH_RISK', 'GENERATED', 'NORMAL'],
+    confidences: ['HIGH', 'MEDIUM', 'LOW'],
+    counts: {
+      features: features.length,
+      components: components.length,
+    },
+  });
+
+  out['generated/KNOWLEDGE_ROUTING_GRAPH.json'] = meta({
+    description: 'Category -> knowledge document graph. Lets a caller know which .md file answers a category without invoking the router.',
+    edges: buildKnowledgeEdges(),
+    counts: (() => {
+      const edges = buildKnowledgeEdges();
+      return {
+        edges: edges.length,
+        documents: new Set(edges.map((e) => e.file)).size,
+        categories: new Set(edges.map((e) => e.category)).size,
+      };
+    })(),
+  });
+
   return out;
+}
+
+/**
+ * Category -> knowledge document edges, derived from the routing matrix.
+ *
+ * This is the machine-readable counterpart of ROUTING_MATRIX.json: given a
+ * category, it answers "which .md do I read?" without the caller having to
+ * import the router or know the routing table. Built from the matrix rather
+ * than hand-listed so the two cannot disagree.
+ */
+function buildKnowledgeEdges() {
+  const matrix = buildRoutingMatrix();
+  const edges = [];
+  for (const [category, def] of Object.entries(matrix.categories)) {
+    for (const file of def.knowledge ?? []) {
+      edges.push({
+        category,
+        file,
+        reason: def.summary,
+        primaryIndexes: def.primaryIndexes ?? [],
+        ownerActionRequired: !!def.ownerActionRequired,
+      });
+    }
+  }
+  return edges.sort((a, b) =>
+    a.category.localeCompare(b.category) || a.file.localeCompare(b.file));
 }
 
 /* ------------------------------------------------------------------ *

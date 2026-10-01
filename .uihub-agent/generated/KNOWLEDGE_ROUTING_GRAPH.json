@@ -1,0 +1,482 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Category -> knowledge document graph. Lets a caller know which .md file answers a category without invoking the router.",
+  "edges": [
+    {
+      "category": "ADMIN",
+      "file": ".uihub-agent/features/FEATURES.md",
+      "reason": "The admin dashboard, its guard, and admin-only routes.",
+      "primaryIndexes": [
+        "PAGE_MAP",
+        "ROUTE_MAP",
+        "API_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "ADMIN",
+      "file": ".uihub-agent/infrastructure/INFRASTRUCTURE.md",
+      "reason": "The admin dashboard, its guard, and admin-only routes.",
+      "primaryIndexes": [
+        "PAGE_MAP",
+        "ROUTE_MAP",
+        "API_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "ADMIN",
+      "file": ".uihub-agent/rules/PROTECTED_PATHS.md",
+      "reason": "The admin dashboard, its guard, and admin-only routes.",
+      "primaryIndexes": [
+        "PAGE_MAP",
+        "ROUTE_MAP",
+        "API_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "API",
+      "file": ".uihub-agent/APIs/API_ARCHITECTURE.md",
+      "reason": "Backend HTTP surface: routes, controllers, request validation, responses.",
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "ROUTE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "API",
+      "file": ".uihub-agent/APIs/API_OVERVIEW.md",
+      "reason": "Backend HTTP surface: routes, controllers, request validation, responses.",
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "ROUTE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "API",
+      "file": ".uihub-agent/architecture/ARCHITECTURE.md",
+      "reason": "Backend HTTP surface: routes, controllers, request validation, responses.",
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "ROUTE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "AUTHENTICATION",
+      "file": ".uihub-agent/features/FEATURES.md",
+      "reason": "Login, signup, sessions, Firebase ID tokens, entitlement checks.",
+      "primaryIndexes": [
+        "SERVICE_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "AUTHENTICATION",
+      "file": ".uihub-agent/rules/PROTECTED_PATHS.md",
+      "reason": "Login, signup, sessions, Firebase ID tokens, entitlement checks.",
+      "primaryIndexes": [
+        "SERVICE_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "AUTHENTICATION",
+      "file": ".uihub-agent/security/SECURITY_OVERVIEW.md",
+      "reason": "Login, signup, sessions, Firebase ID tokens, entitlement checks.",
+      "primaryIndexes": [
+        "SERVICE_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "COMPONENT",
+      "file": ".uihub-agent/design-system/DESIGN_SYSTEM.md",
+      "reason": "A specific React component: its props, state, behaviour or reuse.",
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "SYMBOL_INDEX",
+        "PAGE_COMPONENT_INDEX"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "COMPONENT",
+      "file": ".uihub-agent/features/FEATURES.md",
+      "reason": "A specific React component: its props, state, behaviour or reuse.",
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "SYMBOL_INDEX",
+        "PAGE_COMPONENT_INDEX"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DATABASE",
+      "file": ".uihub-agent/architecture/ARCHITECTURE.md",
+      "reason": "Mongo access, collections, models, migrations and query shape.",
+      "primaryIndexes": [
+        "DATABASE_USAGE_MAP",
+        "SERVICE_MAP",
+        "API_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DATABASE",
+      "file": ".uihub-agent/data/DATA_OVERVIEW.md",
+      "reason": "Mongo access, collections, models, migrations and query shape.",
+      "primaryIndexes": [
+        "DATABASE_USAGE_MAP",
+        "SERVICE_MAP",
+        "API_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DEPLOYMENT",
+      "file": ".uihub-agent/infrastructure/CONFIGURATION_OWNERSHIP.md",
+      "reason": "Vercel, Render, Cloudflare, environment variables, build and hosting.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DEPLOYMENT",
+      "file": ".uihub-agent/infrastructure/DEPLOYMENT_CONFLICTS.md",
+      "reason": "Vercel, Render, Cloudflare, environment variables, build and hosting.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DEPLOYMENT",
+      "file": ".uihub-agent/infrastructure/DEPLOYMENT_MAP.md",
+      "reason": "Vercel, Render, Cloudflare, environment variables, build and hosting.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DEPLOYMENT",
+      "file": ".uihub-agent/infrastructure/ENVIRONMENT_CONTRACT.md",
+      "reason": "Vercel, Render, Cloudflare, environment variables, build and hosting.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DEPLOYMENT",
+      "file": ".uihub-agent/infrastructure/INFRASTRUCTURE.md",
+      "reason": "Vercel, Render, Cloudflare, environment variables, build and hosting.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DESIGN_SYSTEM",
+      "file": ".uihub-agent/design-system/DESIGN_SYSTEM.md",
+      "reason": "Tokens, theme, primitives, spacing, colour and the live CSS entrypoint.",
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "SYMBOL_INDEX"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DOCUMENTATION",
+      "file": ".uihub-agent/AGENT.md",
+      "reason": "Agent knowledge base, READMEs, inline docs, ADRs.",
+      "primaryIndexes": [],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "DOCUMENTATION",
+      "file": ".uihub-agent/PROJECT_CONTEXT.md",
+      "reason": "Agent knowledge base, READMEs, inline docs, ADRs.",
+      "primaryIndexes": [],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "INFRASTRUCTURE",
+      "file": ".uihub-agent/infrastructure/INFRASTRUCTURE.md",
+      "reason": "Build tooling, CI, scripts, agents, the knowledge base itself.",
+      "primaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "INFRASTRUCTURE",
+      "file": ".uihub-agent/infrastructure/TRACKING_MODEL.md",
+      "reason": "Build tooling, CI, scripts, agents, the knowledge base itself.",
+      "primaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "INFRASTRUCTURE",
+      "file": ".uihub-agent/PROJECT_CONTEXT.md",
+      "reason": "Build tooling, CI, scripts, agents, the knowledge base itself.",
+      "primaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "MCP",
+      "file": ".uihub-agent/APIs/MCP_DEPLOYMENT_CONTRACT.md",
+      "reason": "The Model Context Protocol server: tools, resources, dashboard, auth.",
+      "primaryIndexes": [
+        "API_MAP",
+        "FILE_ROLE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "MCP",
+      "file": ".uihub-agent/architecture/ARCHITECTURE.md",
+      "reason": "The Model Context Protocol server: tools, resources, dashboard, auth.",
+      "primaryIndexes": [
+        "API_MAP",
+        "FILE_ROLE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "MCP",
+      "file": ".uihub-agent/rules/PROTECTED_PATHS.md",
+      "reason": "The Model Context Protocol server: tools, resources, dashboard, auth.",
+      "primaryIndexes": [
+        "API_MAP",
+        "FILE_ROLE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "PAYMENT",
+      "file": ".uihub-agent/rules/DO_NOT_CHANGE.md",
+      "reason": "Razorpay orders, payment verification, pricing and premium entitlement.",
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "PAYMENT",
+      "file": ".uihub-agent/rules/PROTECTED_PATHS.md",
+      "reason": "Razorpay orders, payment verification, pricing and premium entitlement.",
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "PAYMENT",
+      "file": ".uihub-agent/security/SECURITY_OVERVIEW.md",
+      "reason": "Razorpay orders, payment verification, pricing and premium entitlement.",
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "PERFORMANCE",
+      "file": ".uihub-agent/architecture/ARCHITECTURE.md",
+      "reason": "Load time, render cost, bundle size, query efficiency, responsiveness.",
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "IMPORT_GRAPH",
+        "PAGE_COMPONENT_INDEX"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "PERFORMANCE",
+      "file": ".uihub-agent/features/FEATURES.md",
+      "reason": "Load time, render cost, bundle size, query efficiency, responsiveness.",
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "IMPORT_GRAPH",
+        "PAGE_COMPONENT_INDEX"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "SECURITY",
+      "file": ".uihub-agent/APIs/CORS_CONTRACT.md",
+      "reason": "CORS, headers, rate limiting, secrets, signature verification.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "SECURITY",
+      "file": ".uihub-agent/rules/PROTECTED_PATHS.md",
+      "reason": "CORS, headers, rate limiting, secrets, signature verification.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "SECURITY",
+      "file": ".uihub-agent/security/SECRET_HANDLING.md",
+      "reason": "CORS, headers, rate limiting, secrets, signature verification.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "SECURITY",
+      "file": ".uihub-agent/security/SECURITY_OVERVIEW.md",
+      "reason": "CORS, headers, rate limiting, secrets, signature verification.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "SECURITY",
+      "file": ".uihub-agent/security/SECURITY_VALIDATION.md",
+      "reason": "CORS, headers, rate limiting, secrets, signature verification.",
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "STORAGE",
+      "file": ".uihub-agent/data/DATA_OVERVIEW.md",
+      "reason": "Redis and browser storage: rate limiting, caching, persistence keys.",
+      "primaryIndexes": [
+        "STORAGE_USAGE_MAP",
+        "SERVICE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "STORAGE",
+      "file": ".uihub-agent/infrastructure/ENVIRONMENT_CONTRACT.md",
+      "reason": "Redis and browser storage: rate limiting, caching, persistence keys.",
+      "primaryIndexes": [
+        "STORAGE_USAGE_MAP",
+        "SERVICE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "TEMPLATE",
+      "file": ".uihub-agent/features/FEATURES.md",
+      "reason": "The template marketplace: previews, cards, galleries, source and data.",
+      "primaryIndexes": [
+        "FEATURE_MAP",
+        "COMPONENT_MAP",
+        "PAGE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "TESTING",
+      "file": ".uihub-agent/PROJECT_CONTEXT.md",
+      "reason": "Test suites, fixtures, coverage, test-only failures.",
+      "primaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "UI",
+      "file": ".uihub-agent/design-system/DESIGN_SYSTEM.md",
+      "reason": "Frontend presentation, layout, styling and rendering.",
+      "primaryIndexes": [
+        "PAGE_MAP",
+        "COMPONENT_MAP",
+        "FEATURE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "UI",
+      "file": ".uihub-agent/features/FEATURES.md",
+      "reason": "Frontend presentation, layout, styling and rendering.",
+      "primaryIndexes": [
+        "PAGE_MAP",
+        "COMPONENT_MAP",
+        "FEATURE_MAP"
+      ],
+      "ownerActionRequired": false
+    },
+    {
+      "category": "USER_LIBRARY",
+      "file": ".uihub-agent/features/FEATURES.md",
+      "reason": "A user's saved components and templates, favourites, collections.",
+      "primaryIndexes": [
+        "FEATURE_MAP",
+        "PAGE_MAP",
+        "API_MAP"
+      ],
+      "ownerActionRequired": false
+    }
+  ],
+  "counts": {
+    "edges": 44,
+    "documents": 21,
+    "categories": 18
+  }
+}

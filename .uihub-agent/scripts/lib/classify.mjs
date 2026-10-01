@@ -142,10 +142,26 @@ export function classifyFile(rec, graphEntry) {
   let roleSource = 'path-convention';
   let confidence = 'HIGH';
 
-  for (const [re, r] of PATH_RULES) {
-    if (re.test(path)) {
-      role = r;
-      break;
+  /*
+   * A test file's role comes from its FILENAME, never from the directory that
+   * happens to hold it.
+   *
+   * `PATH_RULES` outrank `NAME_RULES`, so `frontend/src/utils/apiConfig.test.ts`
+   * matched `utils/` and was indexed as UTILITY — which silently disabled the
+   * TEST_DEPENDENCY expansion trigger for every colocated test in the repo. A
+   * test is a test wherever it lives, so this is checked first.
+   */
+  if (/\.(test|spec)\.[tj]sx?$/.test(base)) {
+    role = 'TEST';
+    roleSource = 'test-filename';
+  }
+
+  if (!role) {
+    for (const [re, r] of PATH_RULES) {
+      if (re.test(path)) {
+        role = r;
+        break;
+      }
     }
   }
   if (!role) {

@@ -4854,7 +4854,7 @@
       "importers": [],
       "importedBy": 0,
       "dynamicImporters": [],
-      "role": "UTILITY",
+      "role": "TEST",
       "feature": "utils"
     },
     "frontend/src/utils/apiConfig.ts": {

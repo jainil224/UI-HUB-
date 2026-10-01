@@ -1,0 +1,1510 @@
+{
+  "schemaVersion": 1,
+  "phase": 8,
+  "routerVersion": "1.0.0",
+  "generatedBy": ".uihub-agent/scripts/lib/router-matrix.mjs",
+  "description": "Task category → knowledge, indexes, source roots, protected areas and required validation. Read by lib/router.mjs and emitted as .uihub-agent/tasks/ROUTING_MATRIX.json and .uihub-agent/generated/KNOWLEDGE_ROUTING_GRAPH.json. Edit this file, not the JSON.",
+  "categories": {
+    "UI": {
+      "category": "UI",
+      "summary": "Frontend presentation, layout, styling and rendering.",
+      "surfaces": [
+        "FRONTEND"
+      ],
+      "strongEvidence": {
+        "features": [
+          "home-page",
+          "legal",
+          "pricing-page",
+          "build-with-uihub-page",
+          "preview-capture-page"
+        ],
+        "roles": [],
+        "integrations": [],
+        "paths": [],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "frontend",
+          "layout",
+          "page",
+          "render",
+          "responsive",
+          "screen",
+          "ui"
+        ],
+        "paths": [
+          "^frontend/src/(pages|components)/"
+        ]
+      },
+      "primaryIndexes": [
+        "PAGE_MAP",
+        "COMPONENT_MAP",
+        "FEATURE_MAP"
+      ],
+      "secondaryIndexes": [
+        "SERVICE_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/design-system/DESIGN_SYSTEM.md",
+        ".uihub-agent/features/FEATURES.md"
+      ],
+      "sourceRoots": [
+        "frontend/src"
+      ],
+      "protectedAreas": [],
+      "requiredValidation": [
+        "frontend build",
+        "frontend tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "COMPONENT": {
+      "category": "COMPONENT",
+      "summary": "A specific React component: its props, state, behaviour or reuse.",
+      "surfaces": [
+        "FRONTEND"
+      ],
+      "strongEvidence": {
+        "features": [],
+        "roles": [
+          "COMPONENT"
+        ],
+        "integrations": [],
+        "paths": [],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "button",
+          "card",
+          "carousel",
+          "component",
+          "grid",
+          "modal",
+          "rail",
+          "slider",
+          "stage"
+        ],
+        "paths": [
+          "/components/[^/]+\\.tsx?$"
+        ]
+      },
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "SYMBOL_INDEX",
+        "PAGE_COMPONENT_INDEX"
+      ],
+      "secondaryIndexes": [
+        "FILE_ROLE_MAP",
+        "REVERSE_DEPENDENCY_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/design-system/DESIGN_SYSTEM.md",
+        ".uihub-agent/features/FEATURES.md"
+      ],
+      "sourceRoots": [
+        "frontend/src/components"
+      ],
+      "requiredValidation": [
+        "frontend build",
+        "frontend tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "TEMPLATE": {
+      "category": "TEMPLATE",
+      "summary": "The template marketplace: previews, cards, galleries, source and data.",
+      "surfaces": [
+        "FRONTEND"
+      ],
+      "strongEvidence": {
+        "features": [
+          "templates-page",
+          "build-with-uihub-page",
+          "preview-capture-page"
+        ],
+        "roles": [],
+        "integrations": [],
+        "paths": [],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "gallery",
+          "marketplace",
+          "preview",
+          "template",
+          "templates",
+          "thumbnail",
+          "webm"
+        ],
+        "paths": [
+          "/components/templates/"
+        ]
+      },
+      "primaryIndexes": [
+        "FEATURE_MAP",
+        "COMPONENT_MAP",
+        "PAGE_MAP"
+      ],
+      "secondaryIndexes": [
+        "SERVICE_MAP",
+        "PAGE_COMPONENT_INDEX"
+      ],
+      "knowledge": [
+        ".uihub-agent/features/FEATURES.md"
+      ],
+      "sourceRoots": [
+        "frontend/src/components/templates",
+        "frontend/src/pages/TemplatesPage"
+      ],
+      "protectedAreas": [
+        "frontend/src/data/templatesData.ts",
+        "frontend/src/components/templates/registry.ts"
+      ],
+      "requiredValidation": [
+        "frontend build",
+        "frontend tests",
+        "mcp tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "AUTHENTICATION": {
+      "category": "AUTHENTICATION",
+      "summary": "Login, signup, sessions, Firebase ID tokens, entitlement checks.",
+      "surfaces": [
+        "FRONTEND",
+        "BACKEND"
+      ],
+      "strongEvidence": {
+        "features": [
+          "auth",
+          "auth-context",
+          "access-service"
+        ],
+        "roles": [],
+        "integrations": [
+          "firebase"
+        ],
+        "paths": [],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "auth",
+          "authentication",
+          "jwt",
+          "login",
+          "logout",
+          "password",
+          "profile",
+          "session",
+          "sign-up",
+          "signup",
+          "token",
+          "unauthenticated"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "SERVICE_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "secondaryIndexes": [
+        "COMPONENT_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/security/SECURITY_OVERVIEW.md",
+        ".uihub-agent/rules/PROTECTED_PATHS.md",
+        ".uihub-agent/features/FEATURES.md"
+      ],
+      "sourceRoots": [
+        "backend/src/middleware",
+        "frontend/src/pages/Auth"
+      ],
+      "protectedAreas": [
+        "backend/src/middleware/auth.js",
+        "backend/src/services/accessService.js",
+        "mcp-server/src/middleware/auth.ts"
+      ],
+      "requiredValidation": [
+        "backend tests",
+        "frontend tests",
+        "mcp tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": true,
+      "note": null
+    },
+    "PAYMENT": {
+      "category": "PAYMENT",
+      "summary": "Razorpay orders, payment verification, pricing and premium entitlement.",
+      "surfaces": [
+        "BACKEND",
+        "FRONTEND"
+      ],
+      "strongEvidence": {
+        "features": [
+          "payment-routes",
+          "pricing-page"
+        ],
+        "roles": [],
+        "integrations": [
+          "razorpay"
+        ],
+        "paths": [
+          "paymentRoutes",
+          "verifySignature"
+        ],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "billing",
+          "checkout",
+          "entitlement",
+          "invoice",
+          "order",
+          "pay",
+          "payment",
+          "premium",
+          "razorpay",
+          "subscription"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "secondaryIndexes": [
+        "COMPONENT_MAP",
+        "DATABASE_USAGE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/rules/DO_NOT_CHANGE.md",
+        ".uihub-agent/rules/PROTECTED_PATHS.md",
+        ".uihub-agent/security/SECURITY_OVERVIEW.md"
+      ],
+      "sourceRoots": [
+        "backend/src/routes",
+        "backend/src/services"
+      ],
+      "protectedAreas": [
+        "backend/src/routes/paymentRoutes.js",
+        "backend/src/utils/verifySignature.js",
+        "backend/src/config/premiumComponents.js"
+      ],
+      "requiredValidation": [
+        "backend tests",
+        "frontend build"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": true,
+      "note": null
+    },
+    "ADMIN": {
+      "category": "ADMIN",
+      "summary": "The admin dashboard, its guard, and admin-only routes.",
+      "surfaces": [
+        "FRONTEND",
+        "BACKEND"
+      ],
+      "strongEvidence": {
+        "features": [
+          "admin",
+          "dashboard"
+        ],
+        "roles": [],
+        "integrations": [],
+        "paths": [
+          "/pages/Admin/"
+        ],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "admin",
+          "analytics",
+          "audit",
+          "dashboard",
+          "metrics",
+          "moderation",
+          "overview"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "PAGE_MAP",
+        "ROUTE_MAP",
+        "API_MAP"
+      ],
+      "secondaryIndexes": [
+        "COMPONENT_MAP",
+        "SERVICE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/infrastructure/INFRASTRUCTURE.md",
+        ".uihub-agent/features/FEATURES.md",
+        ".uihub-agent/rules/PROTECTED_PATHS.md"
+      ],
+      "sourceRoots": [
+        "frontend/src/pages/Admin",
+        "frontend/src/components/admin",
+        "backend/src/routes"
+      ],
+      "protectedAreas": [
+        "mcp-server/src/middleware/requireAdmin.ts",
+        "mcp-server/src/middleware/dashboardAuth.ts"
+      ],
+      "requiredValidation": [
+        "frontend tests",
+        "mcp tests",
+        "backend tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "MCP": {
+      "category": "MCP",
+      "summary": "The Model Context Protocol server: tools, resources, dashboard, auth.",
+      "surfaces": [
+        "MCP"
+      ],
+      "strongEvidence": {
+        "features": [
+          "mcp",
+          "dashboard"
+        ],
+        "roles": [],
+        "integrations": [],
+        "paths": [
+          "^mcp-server/"
+        ],
+        "tools": [
+          "list_all_components",
+          "get_component",
+          "search_components",
+          "get_template",
+          "list_categories"
+        ],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "api-key",
+          "apikey",
+          "claude",
+          "context protocol",
+          "llm",
+          "mcp",
+          "playground",
+          "tool",
+          "tools"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "API_MAP",
+        "FILE_ROLE_MAP",
+        "INTEGRATION_MAP"
+      ],
+      "secondaryIndexes": [
+        "SERVICE_MAP",
+        "SYMBOL_INDEX"
+      ],
+      "knowledge": [
+        ".uihub-agent/APIs/MCP_DEPLOYMENT_CONTRACT.md",
+        ".uihub-agent/architecture/ARCHITECTURE.md",
+        ".uihub-agent/rules/PROTECTED_PATHS.md"
+      ],
+      "sourceRoots": [
+        "mcp-server/src"
+      ],
+      "protectedAreas": [
+        "mcp-server/src/middleware/auth.ts",
+        "mcp-server/src/middleware/dashboardAuth.ts",
+        "mcp-server/src/middleware/requireAdmin.ts",
+        "mcp-server/src/services/apiKeyService.ts"
+      ],
+      "requiredValidation": [
+        "mcp tests",
+        "mcp build"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": true,
+      "note": null
+    },
+    "API": {
+      "category": "API",
+      "summary": "Backend HTTP surface: routes, controllers, request validation, responses.",
+      "surfaces": [
+        "BACKEND"
+      ],
+      "strongEvidence": {
+        "features": [],
+        "roles": [
+          "ROUTE_CONFIG",
+          "CONTROLLER",
+          "MIDDLEWARE"
+        ],
+        "integrations": [],
+        "paths": [
+          "^backend/src/routes/"
+        ],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "api",
+          "controller",
+          "endpoint",
+          "handler",
+          "payload",
+          "request",
+          "response",
+          "rest",
+          "route",
+          "status code"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP",
+        "ROUTE_MAP"
+      ],
+      "secondaryIndexes": [
+        "DATABASE_USAGE_MAP",
+        "INTEGRATION_MAP",
+        "COMPONENT_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/APIs/API_OVERVIEW.md",
+        ".uihub-agent/APIs/API_ARCHITECTURE.md",
+        ".uihub-agent/architecture/ARCHITECTURE.md"
+      ],
+      "sourceRoots": [
+        "backend/src/routes",
+        "backend/src/controllers",
+        "backend/src/middleware"
+      ],
+      "protectedAreas": [
+        "backend/src/server.js",
+        "backend/src/routes/",
+        "backend/src/middleware/validators.js"
+      ],
+      "requiredValidation": [
+        "backend tests",
+        "backend tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "DATABASE": {
+      "category": "DATABASE",
+      "summary": "Mongo access, collections, models, migrations and query shape.",
+      "surfaces": [
+        "BACKEND",
+        "MCP"
+      ],
+      "strongEvidence": {
+        "features": [
+          "mongo-service"
+        ],
+        "roles": [
+          "MODEL"
+        ],
+        "integrations": [],
+        "paths": [
+          "mongoService",
+          "mongo\\.ts$"
+        ],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "collection",
+          "database",
+          "db",
+          "document",
+          "index",
+          "migration",
+          "model",
+          "mongo",
+          "mongodb",
+          "query",
+          "schema"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "DATABASE_USAGE_MAP",
+        "SERVICE_MAP",
+        "API_MAP"
+      ],
+      "secondaryIndexes": [
+        "INTEGRATION_MAP",
+        "STORAGE_USAGE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/data/DATA_OVERVIEW.md",
+        ".uihub-agent/architecture/ARCHITECTURE.md"
+      ],
+      "sourceRoots": [
+        "backend/src/data",
+        "backend/src/services",
+        "mcp-server/src/services"
+      ],
+      "protectedAreas": [
+        "backend/src/services/mongoService.js",
+        "mcp-server/src/services/mongo.ts"
+      ],
+      "requiredValidation": [
+        "backend tests",
+        "mcp tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": true,
+      "note": null
+    },
+    "STORAGE": {
+      "category": "STORAGE",
+      "summary": "Redis and browser storage: rate limiting, caching, persistence keys.",
+      "surfaces": [
+        "MCP",
+        "FRONTEND"
+      ],
+      "strongEvidence": {
+        "features": [
+          "push-service"
+        ],
+        "roles": [],
+        "integrations": [
+          "upstash-redis"
+        ],
+        "paths": [],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "cache",
+          "caching",
+          "key",
+          "localstorage",
+          "persist",
+          "redis",
+          "session storage",
+          "storage",
+          "ttl"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "STORAGE_USAGE_MAP",
+        "SERVICE_MAP"
+      ],
+      "secondaryIndexes": [
+        "INTEGRATION_MAP",
+        "API_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/data/DATA_OVERVIEW.md",
+        ".uihub-agent/infrastructure/ENVIRONMENT_CONTRACT.md"
+      ],
+      "sourceRoots": [
+        "mcp-server/src/middleware",
+        "mcp-server/src/routes"
+      ],
+      "protectedAreas": [
+        "mcp-server/src/middleware/rateLimiter.ts"
+      ],
+      "requiredValidation": [
+        "mcp tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "SECURITY": {
+      "category": "SECURITY",
+      "summary": "CORS, headers, rate limiting, secrets, signature verification.",
+      "surfaces": [
+        "BACKEND",
+        "MCP",
+        "DEPLOYMENT"
+      ],
+      "strongEvidence": {
+        "features": [],
+        "roles": [],
+        "integrations": [
+          "security-headers",
+          "rate-limiting"
+        ],
+        "paths": [
+          "corsPolicy",
+          "verifySignature",
+          "rateLimiters?\\."
+        ],
+        "tools": [],
+        "concepts": [
+          "xss",
+          "csrf",
+          "sql injection",
+          "nosql injection",
+          "injection",
+          "vulnerability",
+          "exploit",
+          "sanitiz",
+          "xxe",
+          "ssrf",
+          "auth bypass",
+          "bypass auth",
+          "privilege escalation",
+          "helmet",
+          "rate limit",
+          "ratelimit",
+          "cors misconfig",
+          "security header",
+          "secret leak",
+          "credential leak",
+          "hardcoded secret",
+          "insecure",
+          "untrusted"
+        ]
+      },
+      "weakEvidence": {
+        "words": [
+          "cors",
+          "credential",
+          "secret",
+          "security",
+          "signature"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "API_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "secondaryIndexes": [
+        "SERVICE_MAP",
+        "DATABASE_USAGE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/security/SECURITY_OVERVIEW.md",
+        ".uihub-agent/security/SECRET_HANDLING.md",
+        ".uihub-agent/security/SECURITY_VALIDATION.md",
+        ".uihub-agent/APIs/CORS_CONTRACT.md",
+        ".uihub-agent/rules/PROTECTED_PATHS.md"
+      ],
+      "sourceRoots": [
+        "backend/src/config",
+        "backend/src/middleware",
+        "mcp-server/src/config",
+        "mcp-server/src/middleware"
+      ],
+      "protectedAreas": [
+        "backend/src/config/corsPolicy.js",
+        "mcp-server/src/config/corsPolicy.ts",
+        "backend/src/middleware/rateLimiters.js",
+        "backend/src/utils/verifySignature.js",
+        "mcp-server/src/config/env.ts"
+      ],
+      "requiredValidation": [
+        "npm run check:secrets",
+        "backend tests",
+        "mcp tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": true,
+      "note": null
+    },
+    "PERFORMANCE": {
+      "category": "PERFORMANCE",
+      "summary": "Load time, render cost, bundle size, query efficiency, responsiveness.",
+      "surfaces": [],
+      "strongEvidence": {
+        "features": [],
+        "roles": [],
+        "integrations": [],
+        "paths": [],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "blocking",
+          "bundle",
+          "fast",
+          "fps",
+          "heavy",
+          "jank",
+          "lag",
+          "latency",
+          "lazy",
+          "memo",
+          "memory leak",
+          "optimise",
+          "optimization",
+          "optimize",
+          "performance",
+          "re-render",
+          "render time",
+          "rendering",
+          "rerender",
+          "slow",
+          "slower",
+          "slowly",
+          "speed"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "IMPORT_GRAPH",
+        "PAGE_COMPONENT_INDEX"
+      ],
+      "secondaryIndexes": [
+        "FEATURE_MAP",
+        "SERVICE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/features/FEATURES.md",
+        ".uihub-agent/architecture/ARCHITECTURE.md"
+      ],
+      "sourceRoots": [],
+      "protectedAreas": [],
+      "requiredValidation": [
+        "frontend build",
+        "frontend tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": "PERFORMANCE is an overlay category: it names a quality axis, not a subsystem, so it carries no source roots of its own. It is always combined with the subsystem it affects."
+    },
+    "DEPLOYMENT": {
+      "category": "DEPLOYMENT",
+      "summary": "Vercel, Render, Cloudflare, environment variables, build and hosting.",
+      "surfaces": [
+        "DEPLOYMENT"
+      ],
+      "strongEvidence": {
+        "features": [],
+        "roles": [],
+        "integrations": [],
+        "paths": [
+          "^vercel\\.json$",
+          "^render\\.yaml$",
+          "cloudflare",
+          "Dockerfile"
+        ],
+        "tools": [],
+        "concepts": [
+          "deployment",
+          "deploy",
+          "hosting",
+          "vercel",
+          "cloudflare",
+          "environment variable",
+          "env var",
+          "render.yaml",
+          "vercel.json",
+          "build config",
+          "ci pipeline",
+          "cdn",
+          "edge function"
+        ]
+      },
+      "weakEvidence": {
+        "words": [
+          "build",
+          "cd",
+          "ci",
+          "cloudflare",
+          "cors-origin",
+          "deploy",
+          "deployment",
+          "env",
+          "env var",
+          "environment",
+          "hosting",
+          "origin",
+          "pipeline",
+          "render",
+          "vercel"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "INTEGRATION_MAP",
+        "FILE_ROLE_MAP"
+      ],
+      "secondaryIndexes": [
+        "API_MAP",
+        "SERVICE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/infrastructure/INFRASTRUCTURE.md",
+        ".uihub-agent/infrastructure/DEPLOYMENT_MAP.md",
+        ".uihub-agent/infrastructure/ENVIRONMENT_CONTRACT.md",
+        ".uihub-agent/infrastructure/DEPLOYMENT_CONFLICTS.md",
+        ".uihub-agent/infrastructure/CONFIGURATION_OWNERSHIP.md"
+      ],
+      "sourceRoots": [
+        "backend/src/config",
+        "mcp-server/src/config"
+      ],
+      "protectedAreas": [
+        "vercel.json",
+        "render.yaml",
+        "mcp-server/render.yaml",
+        "mcp-server/src/config/env.ts"
+      ],
+      "requiredValidation": [
+        "npm run check:config",
+        "npm run check:index",
+        "mcp tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": true,
+      "note": null
+    },
+    "DOCUMENTATION": {
+      "category": "DOCUMENTATION",
+      "summary": "Agent knowledge base, READMEs, inline docs, ADRs.",
+      "surfaces": [
+        "DOCUMENTATION"
+      ],
+      "strongEvidence": {
+        "features": [],
+        "roles": [],
+        "integrations": [],
+        "paths": [
+          "README",
+          "\\.md$",
+          "^agent\\.md$"
+        ],
+        "tools": [],
+        "concepts": [
+          "readme",
+          "documentation",
+          "docs",
+          "changelog",
+          "jsdoc",
+          "docstring",
+          "knowledge base",
+          "agent.md",
+          "architecture decision",
+          "adr",
+          "write-up",
+          "inline comment",
+          "code comment"
+        ]
+      },
+      "weakEvidence": {
+        "words": [
+          "comment",
+          "comments",
+          "explain",
+          "guide"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [],
+      "secondaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/PROJECT_CONTEXT.md",
+        ".uihub-agent/AGENT.md"
+      ],
+      "sourceRoots": [],
+      "protectedAreas": [
+        "agent.md"
+      ],
+      "requiredValidation": [
+        "npm run check:knowledge",
+        "npm run check:docs"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "TESTING": {
+      "category": "TESTING",
+      "summary": "Test suites, fixtures, coverage, test-only failures.",
+      "surfaces": [],
+      "strongEvidence": {
+        "features": [],
+        "roles": [
+          "TEST"
+        ],
+        "integrations": [],
+        "paths": [
+          "(^|/)(tests?|__tests__|spec)/",
+          "\\.(test|spec)\\.[jt]sx?$"
+        ],
+        "tools": [],
+        "concepts": [
+          "unit test",
+          "integration test",
+          "e2e test",
+          "test suite",
+          "test coverage",
+          "test fixture",
+          "flaky test",
+          "failing test",
+          "snapshot test",
+          "vitest",
+          "jest",
+          "pytest",
+          "playwright",
+          "supertest"
+        ]
+      },
+      "weakEvidence": {
+        "words": [
+          "assert",
+          "assertion",
+          "coverage",
+          "fixture",
+          "spec",
+          "test",
+          "testing",
+          "tests"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "secondaryIndexes": [
+        "IMPORT_GRAPH"
+      ],
+      "knowledge": [
+        ".uihub-agent/PROJECT_CONTEXT.md"
+      ],
+      "sourceRoots": [],
+      "protectedAreas": [],
+      "requiredValidation": [
+        "all suites"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "INFRASTRUCTURE": {
+      "category": "INFRASTRUCTURE",
+      "summary": "Build tooling, CI, scripts, agents, the knowledge base itself.",
+      "surfaces": [
+        "DEPLOYMENT",
+        "DOCUMENTATION"
+      ],
+      "strongEvidence": {
+        "features": [],
+        "roles": [
+          "SCRIPT"
+        ],
+        "integrations": [],
+        "paths": [
+          "^scripts/",
+          "^\\.github/"
+        ],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "automation",
+          "ci",
+          "config",
+          "configuration",
+          "infra",
+          "infrastructure",
+          "monorepo",
+          "pipeline",
+          "script",
+          "tooling",
+          "workflow"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "secondaryIndexes": [
+        "IMPORT_GRAPH"
+      ],
+      "knowledge": [
+        ".uihub-agent/infrastructure/INFRASTRUCTURE.md",
+        ".uihub-agent/infrastructure/TRACKING_MODEL.md",
+        ".uihub-agent/PROJECT_CONTEXT.md"
+      ],
+      "sourceRoots": [
+        ".uihub-agent/scripts"
+      ],
+      "protectedAreas": [],
+      "requiredValidation": [
+        "npm run check",
+        "npm run check:index"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "DESIGN_SYSTEM": {
+      "category": "DESIGN_SYSTEM",
+      "summary": "Tokens, theme, primitives, spacing, colour and the live CSS entrypoint.",
+      "surfaces": [
+        "FRONTEND"
+      ],
+      "strongEvidence": {
+        "features": [],
+        "roles": [],
+        "integrations": [],
+        "paths": [
+          "index\\.css$",
+          "/design-system/"
+        ],
+        "tools": [],
+        "concepts": [
+          "design token",
+          "design system",
+          "tailwind",
+          "theme",
+          "css variable",
+          "typography",
+          "palette",
+          "dark mode",
+          "light mode",
+          "spacing scale",
+          "style guide",
+          "variant"
+        ]
+      },
+      "weakEvidence": {
+        "words": [
+          "color",
+          "colour",
+          "consistency",
+          "css variable",
+          "dark mode",
+          "design system",
+          "design-system",
+          "font",
+          "light mode",
+          "palette",
+          "spacing",
+          "style guide",
+          "theme",
+          "token",
+          "tokens",
+          "typography"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "COMPONENT_MAP",
+        "SYMBOL_INDEX"
+      ],
+      "secondaryIndexes": [
+        "FILE_ROLE_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/design-system/DESIGN_SYSTEM.md"
+      ],
+      "sourceRoots": [
+        "frontend/src/components/ui",
+        "frontend/src/index.css"
+      ],
+      "protectedAreas": [
+        "frontend/src/index.css"
+      ],
+      "requiredValidation": [
+        "frontend build",
+        "frontend tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    },
+    "USER_LIBRARY": {
+      "category": "USER_LIBRARY",
+      "summary": "A user's saved components and templates, favourites, collections.",
+      "surfaces": [
+        "FRONTEND",
+        "BACKEND"
+      ],
+      "strongEvidence": {
+        "features": [
+          "library-page",
+          "favorites-routes",
+          "favorites-service",
+          "collections-routes",
+          "collections-service"
+        ],
+        "roles": [],
+        "integrations": [],
+        "paths": [],
+        "tools": [],
+        "concepts": []
+      },
+      "weakEvidence": {
+        "words": [
+          "bookmark",
+          "collection",
+          "favorite",
+          "favorites",
+          "favourite",
+          "library",
+          "my components",
+          "saved",
+          "wishlist"
+        ],
+        "paths": []
+      },
+      "primaryIndexes": [
+        "FEATURE_MAP",
+        "PAGE_MAP",
+        "API_MAP"
+      ],
+      "secondaryIndexes": [
+        "SERVICE_MAP",
+        "COMPONENT_MAP"
+      ],
+      "knowledge": [
+        ".uihub-agent/features/FEATURES.md"
+      ],
+      "sourceRoots": [
+        "frontend/src/pages/LibraryPage",
+        "backend/src/routes"
+      ],
+      "protectedAreas": [
+        "backend/src/routes/favoritesRoutes.js"
+      ],
+      "requiredValidation": [
+        "backend tests",
+        "frontend tests"
+      ],
+      "ownerActionRequired": false,
+      "ownerActionReason": null,
+      "highCautionByDefault": false,
+      "note": null
+    }
+  },
+  "intents": {
+    "FIX": {
+      "words": [
+        "fix",
+        "broken",
+        "break",
+        "breaks",
+        "broken",
+        "bug",
+        "regression",
+        "fails",
+        "failing",
+        "failure",
+        "error",
+        "crash",
+        "wrong",
+        "incorrect",
+        "issue",
+        "problem",
+        "doesn't work",
+        "not working",
+        "stopped working",
+        "repair",
+        "patch",
+        "hotfix"
+      ]
+    },
+    "ADD": {
+      "words": [
+        "add",
+        "create",
+        "new",
+        "introduce",
+        "build",
+        "implement",
+        "support",
+        "scaffold",
+        "generate"
+      ]
+    },
+    "MODIFY": {
+      "words": [
+        "change",
+        "modify",
+        "update",
+        "edit",
+        "adjust",
+        "tweak",
+        "rename",
+        "replace",
+        "swap",
+        "move",
+        "set",
+        "configure"
+      ]
+    },
+    "REMOVE": {
+      "words": [
+        "remove",
+        "delete",
+        "drop",
+        "remove",
+        "deprecate",
+        "retire",
+        "clean up",
+        "uninstall"
+      ]
+    },
+    "REFACTOR": {
+      "words": [
+        "refactor",
+        "restructure",
+        "reorganise",
+        "reorganize",
+        "extract",
+        "inline",
+        "simplify",
+        "clean up",
+        "tidy",
+        "consolidate",
+        "dedupe",
+        "deduplicate"
+      ]
+    },
+    "OPTIMIZE": {
+      "words": [
+        "optimize",
+        "optimise",
+        "speed up",
+        "faster",
+        "reduce",
+        "improve performance",
+        "performance",
+        "make it faster",
+        "cut",
+        "lower",
+        "minimize",
+        "minimise"
+      ]
+    },
+    "DEBUG": {
+      "words": [
+        "debug",
+        "diagnose",
+        "troubleshoot",
+        "reproduce",
+        "trace",
+        "step through",
+        "why is",
+        "why does",
+        "why are",
+        "why do",
+        "whats wrong",
+        "what's wrong"
+      ]
+    },
+    "INVESTIGATE": {
+      "words": [
+        "why",
+        "investigate",
+        "explore",
+        "understand",
+        "research",
+        "find out",
+        "learn",
+        "audit",
+        "look into",
+        "what is",
+        "what does",
+        "how does",
+        "check",
+        "review",
+        "inspect",
+        "examine"
+      ]
+    },
+    "DOCUMENT": {
+      "words": [
+        "document",
+        "docs",
+        "documentation",
+        "comment",
+        "jsdoc",
+        "readme",
+        "explain",
+        "write up",
+        "write-up",
+        "changelog"
+      ]
+    },
+    "TEST": {
+      "words": [
+        "test",
+        "tests",
+        "add tests",
+        "cover",
+        "coverage",
+        "spec",
+        "assert",
+        "verify it works"
+      ]
+    },
+    "AUDIT": {
+      "words": [
+        "audit",
+        "review",
+        "compliance",
+        "security review",
+        "lint",
+        "drift",
+        "verify no",
+        "double check"
+      ]
+    }
+  },
+  "surfaces": {
+    "values": [
+      "FRONTEND",
+      "BACKEND",
+      "MCP",
+      "DATABASE",
+      "DEPLOYMENT",
+      "DOCUMENTATION",
+      "MULTI_SURFACE",
+      "UNKNOWN"
+    ],
+    "roleSurface": {
+      "COMPONENT": "FRONTEND",
+      "PAGE": "FRONTEND",
+      "HOOK": "FRONTEND",
+      "STATE": "FRONTEND",
+      "TYPE": "FRONTEND",
+      "UTILITY": "FRONTEND",
+      "BARREL": "FRONTEND",
+      "ROUTE_CONFIG": "FRONTEND",
+      "ENTRY": "FRONTEND",
+      "SERVICE": "BACKEND",
+      "CONTROLLER": "BACKEND",
+      "MIDDLEWARE": "BACKEND",
+      "CONFIG": "DEPLOYMENT",
+      "MODEL": "DATABASE",
+      "MCP_TOOL": "MCP",
+      "SCRIPT": "INFRASTRUCTURE",
+      "TEST": "UNKNOWN",
+      "DATA": "UNKNOWN",
+      "TEMPLATE": "UNKNOWN",
+      "UNKNOWN": "UNKNOWN"
+    }
+  },
+  "protectedTiers": {
+    "CRITICAL": "REQUIRES_EXPLICIT_TASK_INTENT",
+    "HIGH RISK": "CAUTION",
+    "GENERATED": "CAUTION",
+    "DOCUMENTATION": "CAUTION",
+    "SAFE / NORMAL": "NORMAL"
+  },
+  "priority": {
+    "bands": {
+      "P0": "direct target",
+      "P1": "direct dependency",
+      "P2": "direct consumer",
+      "P3": "shared service",
+      "P4": "supporting knowledge",
+      "P5": "optional context"
+    },
+    "order": [
+      "P0",
+      "P1",
+      "P2",
+      "P3",
+      "P4",
+      "P5"
+    ]
+  },
+  "expansion": {
+    "initialTarget": {
+      "min": 5,
+      "max": 15
+    },
+    "stepTarget": {
+      "min": 5,
+      "max": 10
+    },
+    "largeExpansionFactor": 3,
+    "wideInitialCategories": [
+      "DATABASE",
+      "DEPLOYMENT",
+      "SECURITY",
+      "PAYMENT",
+      "API",
+      "MCP"
+    ],
+    "reasons": {
+      "DIRECT_DEPENDENCY": "a file this task already touches imports it",
+      "RELEVANT_CONSUMER": "a file this task already touches is rendered by it",
+      "SHARED_SERVICE": "a service reachable from more than one selected file",
+      "API_DEPENDENCY": "an endpoint or handler this task already touches depends on it",
+      "STATE_DEPENDENCY": "shared state or store that more than one selected file reads",
+      "PROTECTED_RELATIONSHIP": "a selected file is protected, or protects another selected file",
+      "TEST_DEPENDENCY": "a test that covers a selected file",
+      "ROUTE_RELATIONSHIP": "a page on a route that a selected file serves",
+      "RUNTIME_EVIDENCE": "runtime behaviour of a selected file requires it"
+    },
+    "note": "Guidelines, not hard limits — see agent.md 8.13."
+  },
+  "highCautionCategories": [
+    "PAYMENT",
+    "AUTHENTICATION",
+    "SECURITY",
+    "DATABASE",
+    "DEPLOYMENT",
+    "MCP"
+  ]
+}

@@ -12,7 +12,7 @@
     "frontend/scripts"
   ],
   "description": "Freshness record for every intelligence artifact. The ONLY file carrying a timestamp.",
-  "generatedAt": "2026-10-01T06:07:26.794Z",
+  "generatedAt": "2026-10-01T08:26:21.927Z",
   "sourceFingerprint": "7e27afc36f0df201cbe0b0d1ad26a1cb1bf068059ba94b436056955217ede6f3",
   "sourceFileCount": 485,
   "sourceBytes": 8891909,
@@ -2485,11 +2485,11 @@
     ]
   },
   "timingsMs": {
-    "discover": 125,
-    "parse": 1146,
-    "resolve": 49,
-    "build": 1248,
-    "total": 2568
+    "discover": 109,
+    "parse": 1390,
+    "resolve": 42,
+    "build": 1405,
+    "total": 2947
   },
   "artifacts": [
     {
@@ -2506,11 +2506,11 @@
     },
     {
       "path": ".uihub-agent/codebase/FEATURE_MAP.json",
-      "bytes": 40712
+      "bytes": 40731
     },
     {
       "path": ".uihub-agent/codebase/FILE_ROLE_MAP.json",
-      "bytes": 250774
+      "bytes": 250767
     },
     {
       "path": ".uihub-agent/codebase/HOOKS_MAP.json",
@@ -2537,6 +2537,10 @@
       "bytes": 807
     },
     {
+      "path": ".uihub-agent/generated/CONTEXT_BUNDLE_SCHEMA.json",
+      "bytes": 4370
+    },
+    {
       "path": ".uihub-agent/generated/FEATURE_FILE_INDEX.json",
       "bytes": 27930
     },
@@ -2545,12 +2549,16 @@
       "bytes": 571844
     },
     {
+      "path": ".uihub-agent/generated/KNOWLEDGE_ROUTING_GRAPH.json",
+      "bytes": 14220
+    },
+    {
       "path": ".uihub-agent/generated/PAGE_COMPONENT_INDEX.json",
       "bytes": 244915
     },
     {
       "path": ".uihub-agent/generated/REVERSE_DEPENDENCY_MAP.json",
-      "bytes": 224883
+      "bytes": 224880
     },
     {
       "path": ".uihub-agent/generated/SYMBOL_INDEX.json",

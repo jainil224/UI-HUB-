@@ -18,10 +18,13 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildRoutingMatrix } from './lib/router-matrix.mjs';
+import { knowledgeRel } from './lib/intel.mjs';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, '..', '..');
 const A = join(ROOT, '.uihub-agent');
+const AGENT_DIR = '.uihub-agent';
 
 const results = [];
 const warn = (rule, message) => results.push({ level: 'WARN', rule, message });
@@ -272,9 +275,11 @@ function main() {
   {
     // The manifest cannot list itself: its `artifacts` array carries each file's
     // sha256, and a file cannot contain its own digest. So the expected
-    // contract is "the manifest lists the other 16 artifacts, and those 16
-    // plus the manifest are the artifacts that exist". Checking for exactly 17
+    // contract is "the manifest lists the other 18 artifacts, and those 18
+    // plus the manifest are the artifacts that exist". Checking for exactly 19
     // self-referential entries would be checking for an impossibility.
+    // The `match()` line below derives its own count from `allArtifacts`, so
+    // this list stays the single place to update when an artifact is added.
     const MANIFEST_PATH = '.uihub-agent/generated/INTELLIGENCE_MANIFEST.json';
     const allArtifacts = [
       'codebase/API_MAP.json', 'codebase/COMPONENT_MAP.json',
@@ -285,6 +290,8 @@ function main() {
       'codebase/STORAGE_USAGE_MAP.json', 'generated/FEATURE_FILE_INDEX.json',
       'generated/IMPORT_GRAPH.json', 'generated/PAGE_COMPONENT_INDEX.json',
       'generated/REVERSE_DEPENDENCY_MAP.json', 'generated/SYMBOL_INDEX.json',
+      // Phase 8: the router's two generated contracts.
+      'generated/CONTEXT_BUNDLE_SCHEMA.json', 'generated/KNOWLEDGE_ROUTING_GRAPH.json',
     ].map((f) => `.uihub-agent/${f}`);
 
     const listed = new Set(manifest.artifacts.map((a) => a.path));
@@ -359,6 +366,53 @@ function main() {
         orphans.slice(0, 5).map((c) => `${c.path} (${c.lines} lines)`).join(', '));
     } else {
       match('COMPONENT_MAP orphans', 'every component has at least one importer');
+    }
+  }
+
+  /* ---- 18. Phase 8 routing contracts agree with the code ---------- */
+  {
+    // ROUTING_MATRIX.json is a checked-in contract, but the source of truth is
+    // buildRoutingMatrix(). If someone edits the JSON without the module, every
+    // category the router actually uses silently disagrees with the document a
+    // reader trusts.
+    const checkedIn = readFileSync(join(ROOT, '.uihub-agent/tasks/ROUTING_MATRIX.json'), 'utf8');
+    const built = JSON.stringify(buildRoutingMatrix(), null, 2) + '\n';
+    if (checkedIn.trimEnd() !== built.trimEnd()) {
+      conflict('ROUTING_MATRIX <-> router-matrix.mjs',
+        'tasks/ROUTING_MATRIX.json is stale; regenerate it with: node .uihub-agent/scripts/lib/router-matrix.mjs');
+    } else {
+      match('ROUTING_MATRIX <-> router-matrix.mjs',
+        `checked-in matrix equals buildRoutingMatrix() across ${Object.keys(buildRoutingMatrix().categories).length} categories`);
+    }
+
+    // Every knowledge path the matrix names must actually exist on disk, or the
+    // router will confidently tell the agent to read a file that is not there.
+    const matrix = buildRoutingMatrix();
+    const missingDocs = new Set();
+    for (const cat of Object.values(matrix.categories)) {
+      for (const k of cat.knowledge ?? []) {
+        const p = knowledgeRel(k);
+        if (!existsSync(join(ROOT, AGENT_DIR, p))) missingDocs.add(k);
+      }
+    }
+    if (missingDocs.size) {
+      conflict('KNOWLEDGE paths <-> filesystem',
+        `${missingDocs.size} knowledge path(s) named by the matrix do not exist: ${[...missingDocs].slice(0, 3).join(', ')}`);
+    } else {
+      match('KNOWLEDGE paths <-> filesystem',
+        'every knowledge path named by the routing matrix exists');
+    }
+
+    // The generated graph must be a faithful projection of the matrix.
+    const graph = load('generated/KNOWLEDGE_ROUTING_GRAPH.json');
+    const expectedEdges = Object.values(matrix.categories)
+      .reduce((n, c) => n + (c.knowledge?.length ?? 0), 0);
+    if ((graph.edges?.length ?? 0) !== expectedEdges) {
+      conflict('KNOWLEDGE_ROUTING_GRAPH <-> router-matrix',
+        `graph has ${graph.edges?.length ?? 0} edges but the matrix declares ${expectedEdges}`);
+    } else {
+      match('KNOWLEDGE_ROUTING_GRAPH <-> router-matrix',
+        `graph projects all ${expectedEdges} category->knowledge edges`);
     }
   }
 

@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "generatedBy": "uihub-codebase-intelligence/1",
+  "sourceRoots": [
+    "frontend/src",
+    "backend/src",
+    "mcp-server/src",
+    "cli/src",
+    "api",
+    "scripts",
+    "backend/scripts",
+    "frontend/scripts"
+  ],
+  "description": "Shape of an `agent:context` bundle, so any consumer can validate a bundle without the router source.",
+  "version": "8.0.0",
+  "properties": [
+    {
+      "path": "task",
+      "type": "string",
+      "required": true,
+      "note": "The task text exactly as given."
+    },
+    {
+      "path": "generatedAt",
+      "type": "string",
+      "required": true,
+      "note": "ISO-8601. The only wall-clock value in the bundle."
+    },
+    {
+      "path": "intent",
+      "type": "object",
+      "required": true,
+      "note": "{ intent, confidence, matched }"
+    },
+    {
+      "path": "categories",
+      "type": "string[]",
+      "required": true,
+      "note": "Ordered strongest-first. UNKNOWN when nothing resolved."
+    },
+    {
+      "path": "surface",
+      "type": "string[]",
+      "required": true,
+      "note": "FRONTEND | BACKEND | MCP | DATABASE | CLI | DEPLOYMENT | DOCUMENTATION | INFRASTRUCTURE | UNKNOWN"
+    },
+    {
+      "path": "confidence",
+      "type": "string",
+      "required": true,
+      "note": "HIGH | MEDIUM | LOW"
+    },
+    {
+      "path": "confidenceWhy",
+      "type": "string",
+      "required": true,
+      "note": "Human-readable justification for the level chosen."
+    },
+    {
+      "path": "featureCandidates",
+      "type": "string[]",
+      "required": true,
+      "note": "FEATURE_MAP slugs the task resolved."
+    },
+    {
+      "path": "indexes",
+      "type": "string[]",
+      "required": true,
+      "note": "Indexes the router decided were worth querying, in order. Empty only for UNKNOWN."
+    },
+    {
+      "path": "dependencies",
+      "type": "object[]",
+      "required": true,
+      "note": "Relationships behind the selected files: { from, to, trigger, how[] }. Derived from expansionLog."
+    },
+    {
+      "path": "entities",
+      "type": "object",
+      "required": true,
+      "note": "components, symbols, services, hooks, routes, explicitFiles -- each with its own evidence string."
+    },
+    {
+      "path": "files",
+      "type": "object[]",
+      "required": true,
+      "note": "Ranked context files. See `fileShape`."
+    },
+    {
+      "path": "knowledge",
+      "type": "string[]",
+      "required": true,
+      "note": "Markdown file paths to read first, in priority order."
+    },
+    {
+      "path": "protectedAreas",
+      "type": "object[]",
+      "required": true,
+      "note": "Protected files the task touches, with tier and rule."
+    },
+    {
+      "path": "validation",
+      "type": "string[]",
+      "required": true,
+      "note": "Commands that must pass before the work is considered done."
+    },
+    {
+      "path": "expansionLog",
+      "type": "object[]",
+      "required": true,
+      "note": "One entry per added file: { step, path, trigger, how[] }. Empty when nothing expanded."
+    },
+    {
+      "path": "stopReason",
+      "type": "string",
+      "required": true,
+      "note": "Why expansion stopped: budget | converged | no-permitted-evidence | disabled."
+    },
+    {
+      "path": "efficiency",
+      "type": "object",
+      "required": true,
+      "note": "{ filesSelected, totalIndexedFiles, selectionRatio, expandedCount, expansionSteps }."
+    },
+    {
+      "path": "emptyReason",
+      "type": "object|null",
+      "required": true,
+      "note": "Set instead of an empty `files` list: { why, searchedTerms[] }. Null when files were found."
+    },
+    {
+      "path": "unknown",
+      "type": "object|null",
+      "required": true,
+      "note": "Present only when categories is [UNKNOWN]. Carries why, askedForNarrowing and suggestion[]."
+    }
+  ],
+  "fileShape": {
+    "path": "string",
+    "score": "number",
+    "priority": "P0|P1|P2|P3|P4|P5",
+    "tier": "string",
+    "role": "string|null",
+    "feature": "string|null",
+    "why": "string[]",
+    "matched": "string|null",
+    "lines": "number|null",
+    "addedByExpansion": "boolean",
+    "expansionTrigger": "string|null"
+  },
+  "tiers": [
+    "CRITICAL",
+    "HIGH_RISK",
+    "GENERATED",
+    "NORMAL"
+  ],
+  "confidences": [
+    "HIGH",
+    "MEDIUM",
+    "LOW"
+  ],
+  "counts": {
+    "features": 56,
+    "components": 227
+  }
+}
