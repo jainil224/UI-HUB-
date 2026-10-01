@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import config from './config/env.js';
+import { buildCorsOptions } from './config/corsPolicy.js';
 import { configService } from './config/configService.js';
 import { mcpRouter } from './routes/mcp.js';
 import { dashboardRouter } from './routes/dashboard.js';
@@ -20,29 +21,16 @@ const PORT = config.port;
 app.use(helmet({ crossOriginEmbedderPolicy: false, crossOriginResourcePolicy: false }));
 
 // CORS with dynamic origin checking
+//
+// The policy lives in config/corsPolicy.ts. Before Phase 6 this was inline and
+// returned `callback(null, true)` in its rejection branch, so every origin was
+// accepted. See ../../.uihub-agent/APIs/CORS_CONTRACT.md.
 app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Allow no-origin requests (server-to-server, curl, MCP clients)
-      if (!origin) return callback(null, true);
-
-      const allowed = config.allowedOrigins.some((o) => origin === o || origin.includes('localhost'));
-      if (allowed) return callback(null, true);
-
-      callback(null, true);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'Accept',
-      'MCP-Protocol-Version',
-      'MCP-Session-Id',
-      'Mcp-Session-Id',
-    ],
-    exposedHeaders: ['Mcp-Session-Id', 'MCP-Session-Id'],
-  })
+  cors(
+    buildCorsOptions({
+      allowedOrigins: config.allowedOrigins,
+    }),
+  ),
 );
 
 // Body parsers

@@ -55,9 +55,16 @@ firebase.json
 # NOTE: .uihub-agent/ is intentionally NOT ignored. It is the project knowledge
 # base (architecture, API, deployment, runtime and conflict contracts) and must
 # be tracked so those contracts live with the code. Do not re-add it here.
+#
+# NOTE: .github/ is intentionally NOT ignored. CI workflows are project
+# configuration: an untracked workflow means every agent reads a CI definition
+# that does not exist for anyone else, and the pipeline cannot be reviewed in a
+# pull request. Removed in Phase 6 (agent.md 6.9/6.10).
+#
+# .agents/, .claude/ and .opencode/ remain ignored. They hold personal local
+# tooling and skills, not shared project contracts. Confirmed by owner in Phase 6.
 .agents/
 .opencode/
-.github/
 .claude/
 component-specs/
 

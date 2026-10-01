@@ -52,6 +52,53 @@ Code evidence
 > table of Python scripts that do not exist. **Read `CONFLICTS.md` before trusting
 > any prose documentation here**, and verify anything load-bearing against code.
 
+### 2.1 State and source precedence (Phase 6, task 6.24)
+
+"The repository is the source of truth" is about *code*. It does not settle what
+is true about **deployed** systems, and collapsing the two produces confident
+wrong answers. Distinguish three kinds of claim, and never let one inherit the
+precedence of another:
+
+| Kind | Precedence | Verified by |
+|---|---|---|
+| **Code behaviour** | The source, as it stands | Reading and running the code |
+| **Committed artifact** | The bytes in git | `git show`, `git log -p` |
+| **Deployed state** | An observation, dated | A live request or dashboard, with the date |
+
+Two rules follow, both learned from Phase 5/6 errors:
+
+**1. The code and its tracked output are separate sources.** `mcp-server/dist` is
+tracked, so "the file says X" is true of the file and false of the build.
+`npm run check:generated` exists because a committed artifact can be stale while
+every source file reads correctly.
+
+**2. A past observation outranks present inference, and cannot be "corrected".**
+If a measurement recorded `VITE_API_URL = https://ui-hub.onrender.com`, that
+remains true of the bundle measured on that date, even after Render is renamed.
+Rewriting it to the current guess would falsify evidence *and* make dependent
+instructions wrong — telling an owner to delete a variable that does not hold
+that value. **Correct the present, never the record.** Cite the observation with
+its date and attribute the uncertainty to the *present*, not the past.
+
+When code, tracked output and deployment disagree, that disagreement is itself a
+finding. Record all three; do not pick a winner.
+
+### 2.2 Recording a conflict (Phase 6, task 6.25)
+
+Disagreements are not resolved by choosing the more convenient source. Each one
+gets an entry in `CONFLICTS.md` with:
+
+1. **The claim**, quoted, with `file:line`.
+2. **Each competing source**, with its own `file:line`. Never only the winner.
+3. **What is verifiable now**, and how — read code, ran a test, or observed.
+4. **What remains unprovable from the repository**, and who could prove it.
+5. **The decision**, if the owner has made one, or `OPEN` with a pointer to
+   `tasks/OWNER_DECISIONS.md`.
+
+Do not add a conflict entry by editing the losing document into agreement.
+Automation must be able to detect the disagreement, so
+`check:config` and `check:docs` read both sides.
+
 ### Confidence and status markers
 
 Every claim in this knowledge base carries one:

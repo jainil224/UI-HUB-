@@ -43,17 +43,32 @@ If you remember nothing else:
 Write `MONGODB_URI`, not the URI. Write `RAZORPAY_KEY_SECRET`, not the secret.
 This documentation tree follows that rule except where a leak must be reported.
 
-### Known leak — do not copy it, do not "helpfully" reuse it
+### Known leak — the file is clean, the history is not
 
-**`backend/.env.example` is tracked and contains a live MongoDB Atlas
-connection string with a real username and password.**
+**Corrected in Phase 6 (task 6.29).** `backend/.env.example:37` today reads:
 
-The correct content is a placeholder:
-`mongodb+srv://<user>:<password>@<cluster-host>/<db>`.
+```
+MONGODB_URI="mongodb+srv://<username>:<password>@<cluster-host>/<database>?retryWrites=true&w=majority"
+```
 
-**Rotation is the fix, not redaction.** The value is in git history; editing the
-file does not remove it. The full detail is in
-`../infrastructure/INFRASTRUCTURE.md` and `../CONFLICTS.md` §1.
+That is a placeholder and it is what the file should always contain.
+
+However, **git history contains a real MongoDB Atlas URI with a real username
+and password in this same file.** Verified in Phase 6 with
+`git log --all -p -- backend/.env.example`, which returns a
+`mongodb+srv://uihub_backend:…@cluster0.rynecsh.mongodb.net/` line. Editing the
+file does not remove that.
+
+**Two consequences, and they differ:**
+
+1. **Rotation is still an owner action (OD-08).** The committed password must be
+   treated as exposed to anyone who ever cloned this repository.
+2. **An earlier version of this document claimed the file "is tracked and
+   contains a live" credential.** That was false in the present tense and was
+   corrected. Historical fact, current state, and unknown state must be stated
+   separately — see `../AGENT.md` §"State and source precedence".
+
+Full detail in `../CONFLICTS.md` §1 and `../tasks/OWNER_DECISIONS.md` OD-08.
 
 ### Firebase's web config is *not* in this category
 
@@ -318,6 +333,35 @@ source* — never that your edit was overwritten.
 | A template | `frontend/src/data/templatesData.ts` |
 | An AI prompt | the prompt bank, then `sync:data` |
 
+### Freshness classification (Phase 6, task 6.23)
+
+Editing is not the only danger; **stale committed output** is. Before writing any
+path, identify which class it belongs to:
+
+| Class | Meaning | How freshness is verified |
+|---|---|---|
+| **Generated** | Fully derived; the repository stores no unique content | `npm run check:generated` rebuilds `mcp-server` to a temp dir and compares the whole tracked `dist` tree |
+| **Semi-automatic** | Committed output of a script that can fail or skip | Same command, plus a manual confirmation the script actually ran |
+| **Manual** | Hand-maintained; no generator exists | Read the file, then the tests that cover it |
+
+Current classification:
+
+| Path | Class | Verification |
+|---|---|---|
+| `mcp-server/dist/**` | **Generated** | `npm run check:generated` — never hand-edit, never commit a partial build |
+| `mcp-server/src/data/**` | **Generated** | `npm run sync:data`; a hand edit is silently reverted |
+| `backend/dist`, `frontend/dist` | **Generated** | gitignored, rebuilt per deploy; must never be committed |
+| `.uihub-agent/PROJECT_MAP.json` | **Generated** | `npm run generate`; do not hand-patch |
+| `premiumComponents.json` | **Semi-automatic** | written by sync, but three premium lists exist and are not reconciled |
+| `backend/.env.example` | **Manual** | placeholder-only by contract, §1 |
+| `.uihub-agent/security/**`, `rules/**` | **Manual** | reviewed, not generated |
+
+**Phase 6 finding:** `mcp-server/dist/data/` was stale in `HEAD` — the committed
+copy did not match `src/data`. A rebuild fixed it. The reason it drifted is that
+`npm run build` in CI runs *after* the tracked-output check would run, and the
+"Restore committed dist" step previously hid the difference. `check:generated`
+now closes that gap.
+
 ### Three hand-maintained premium lists, none reconciled
 
 `componentData.tsx` · `premiumComponents.json` (41 ids) · the backend's
@@ -410,7 +454,7 @@ until that knowledge is captured here**, and do not run it.
 | `mcp-server/src/data/*` | Generated — §7 |
 | `frontend/tailwind.config.ts` | Dead — §6. (Delete only as a deliberate, owner-approved cleanup.) |
 | `frontend/public/**` | Large binary assets; not analysed. No blind edits. |
-| `backend/.env.example` | Contains the leaked credential — §1 |
+| `backend/.env.example` | Placeholder-only by contract. A real URI is in git **history**, not in the file — §1 |
 | `.agents/skills/**` | Local-only agent workflows, git-ignored. Preserved as-is. |
 | `agent.md` (repo root) | The owner's plan document. **Not ours to edit.** |
 | `.uihub-agent/**` | The knowledge base. Regenerate via the generator, do not hand-patch `PROJECT_MAP.json`. |

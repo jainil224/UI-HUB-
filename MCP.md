@@ -52,7 +52,16 @@ Endpoint: https://ui-hub-mcp.onrender.com/mcp
 Protocol: MCP Streamable HTTP (JSON-RPC 2.0 over POST)
 ```
 
-Also reachable through the unified deployment at `https://ui-hub-design.vercel.app/mcp` when mounted via the backend.
+> **The MCP endpoint is `https://ui-hub-mcp.onrender.com/mcp`.**
+>
+> `https://ui-hub-design.vercel.app/mcp` is **not** an MCP endpoint. It is a
+> client-side redirect in the frontend router (`frontend/src/App.tsx`), which
+> sends browsers to `/dashboard/mcp`. The Vercel deployment has no rewrite for
+> `/mcp`, so that URL resolves to the SPA shell with HTTP 200 rather than a
+> JSON-RPC response — a request that looks successful and is not.
+>
+> See `.uihub-agent/APIs/CORS_CONTRACT.md` and
+> `.uihub-agent/runtime/DOCUMENTATION_ENDPOINT_AUDIT.md`.
 
 ### 2. Stdio (local, offline, zero latency)
 

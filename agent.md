@@ -1,1127 +1,1093 @@
-# UI HUB AGENT — PHASE 5
+# UI HUB AGENT — PHASE 6
 
-## Production Connectivity, API Routing & Deployment Contract
+## Security, Configuration & Agent-Governance Hardening
 
-**Phase:** 5 of 10
-**Phase Name:** Production Connectivity, API Routing & Deployment Contract
+**Phase:** 6 of 10
+**Phase Name:** Security, Configuration & Agent-Governance Hardening
 **Status:** NOT STARTED
 
 **Primary Goal:**
-Eliminate ambiguity between Vercel, Render, Cloudflare, and the frontend API configuration; establish one documented and deterministic production API architecture; prepare and validate the repository for a safe deployment; and verify the real production connectivity after owner-controlled deployment actions.
+Harden the UI HUB repository against configuration drift, ineffective security controls, documentation drift, accidental secret exposure, and agent-generated regressions while preserving the existing application behavior and the verified test/build baseline.
 
 ---
 
 # 1. PHASE OBJECTIVE
 
-Phase 4 established several critical facts:
+Phase 5 established the current production topology and identified several risks that are independent of the unresolved deployment outage:
 
 ```text
-Frontend static shell works.
-Production API is not currently reachable.
-Vercel /api/* has been failing.
-Render API hosts are unavailable at the Cloudflare edge.
-The frontend bundle contains a Render API host.
-getApiBaseUrl() prefers VITE_API_URL in production.
-Vercel therefore does not automatically become the browser's API destination.
+1. CORS is not actually enforcing its allowlist.
+2. Documentation can advertise endpoints that the deployment cannot serve.
+3. Secrets can visually resemble placeholders and evade naive scanning.
+4. .uihub-agent/ and .github/ can become untracked because of ignore rules.
+5. Multiple deployment descriptors can disagree.
+6. Generated artifacts can become stale.
+7. The agent can accidentally modify protected architectural surfaces.
 ```
 
-The central problem is now:
+The goal of Phase 6 is to turn these into enforceable repository-level controls.
 
-```text
-WHO SERVES THE FRONTEND?
-        ↓
-WHO SERVES THE WEB API?
-        ↓
-WHO SERVES MCP?
-        ↓
-WHICH URL DOES THE BROWSER USE?
-        ↓
-WHICH URL DOES MCP USE?
-        ↓
-WHICH DEPLOYMENT OWNS EACH SERVICE?
-```
-
-Phase 5 must answer these questions and make the repository behavior deterministic.
+The phase should make UI HUB safer to maintain with OpenCode, Antigravity, and future coding agents.
 
 ---
 
-# 2. PHASE 5 CORE PRINCIPLE
+# 2. CORE PRINCIPLE
 
-Do not attempt to "fix production" by changing random URLs.
+Phase 6 is a **hardening phase**, not a redesign phase.
 
-Instead:
+The workflow is:
 
 ```text
-Map architecture
-      ↓
-Choose canonical ownership
-      ↓
-Make frontend routing deterministic
-      ↓
-Make deployment configuration consistent
-      ↓
-Validate locally
-      ↓
-Owner deploys
-      ↓
-Verify production
-      ↓
-Document final architecture
+Current risk
+    ↓
+Verify exact behavior
+    ↓
+Define intended invariant
+    ↓
+Add automated protection
+    ↓
+Add regression tests
+    ↓
+Document the rule
+    ↓
+Validate
+```
+
+Do not make a large architectural change merely because a smaller invariant can solve the problem.
+
+---
+
+# 3. IMPORTANT SCOPE BOUNDARY
+
+## IN SCOPE
+
+* CORS enforcement
+* Security regression tests
+* Secret scanning
+* Documentation endpoint validation
+* Deployment configuration consistency checks
+* Git tracking/ignore hygiene
+* Generated-artifact freshness checks
+* Agent-protection rules
+* Configuration validation
+* CI hardening
+* Knowledge-base governance
+* Protected-path checks
+
+## OUT OF SCOPE
+
+Do NOT:
+
+* Redeploy production
+* Recreate Render services
+* Change Cloudflare settings
+* Change DNS
+* Modify production MongoDB data
+* Perform payment operations
+* Modify the production environment directly
+* Refactor the entire backend
+* Rewrite Express
+* Rewrite authentication
+* Perform the full theme refactor
+* Redesign the UI
+* Replace MongoDB/Firebase/Razorpay/MCP
+* Choose between conflicting Render blueprints without owner authorization
+
+---
+
+# 4. REQUIRED BASELINE
+
+Before any code change, record:
+
+```text
+Backend tests
+MCP tests
+CLI tests
+Frontend tests
+Frontend build
+MCP build
+CLI build
+Frontend typecheck
+```
+
+The previous baseline was:
+
+```text
+Backend: 54/54
+MCP: 78/78
+CLI: 30/30
+Frontend: 27/27
+Frontend build: PASS
+MCP build: PASS
+CLI build: PASS
+```
+
+If any baseline differs before modifications:
+
+```text
+STOP
+RECORD DIFFERENCE
+DO NOT ATTRIBUTE IT TO PHASE 6
 ```
 
 ---
 
-# 3. REQUIRED ARCHITECTURAL TARGET
+# 5. TASK 6.1 — CORS BEHAVIOR AUDIT
 
-The agent must determine whether the intended architecture is:
+Phase 5 verified that the current CORS callback logs blocked origins but still calls:
 
 ```text
-OPTION A
-
-Browser
-  ↓
-Vercel
-  ├── Frontend
-  └── /api → Backend
-
-
-MCP Client
-  ↓
-Dedicated MCP service
-  ↓
-MCP Server
+callback(null, true)
 ```
 
-or another architecture already supported by the repository.
+which means the allowlist does not actually block the request.
 
-Do NOT select an architecture solely because it appears simpler.
-
-Use:
+First inspect:
 
 ```text
-vercel.json
-api/
-frontend/src/services/
-environment configuration
-Render configuration
-MCP configuration
-backend/server.js
-documentation
-```
-
-as evidence.
-
-Once the intended architecture is verified, document it as the canonical architecture.
-
----
-
-# 4. TASK 5.1 — AUDIT `getApiBaseUrl()`
-
-Perform a complete audit of the frontend API base URL logic.
-
-Find:
-
-```text
-getApiBaseUrl()
-VITE_API_URL
-API base constants
-fetch wrappers
-axios clients
-REST service clients
-hardcoded API hosts
-environment-dependent API paths
-```
-
-Create a table:
-
-```text
-Source
-Environment
-Current behavior
-Fallback
-Consumer
-Risk
-```
-
-Determine exactly why the production bundle contains the Render host.
-
----
-
-# 5. TASK 5.2 — DEFINE THE PRODUCTION API DEFAULT
-
-Do not blindly rely on:
-
-```text
-VITE_API_URL
-```
-
-Determine whether the normal web API should use:
-
-```text
-/api
-```
-
-as the production default.
-
-If the repository architecture confirms that the Vercel serverless backend is intended to serve the web API, implement the smallest safe behavior:
-
-```text
-Production default
-→ same-origin /api
-```
-
-Allow an external API URL only when explicitly configured.
-
-Recommended conceptual behavior:
-
-```text
-development
-→ local configured API if required
-
-production
-→ same-origin /api by default
-
-external API
-→ explicit opt-in configuration
-```
-
-Do not silently route production back to the unavailable Render service.
-
----
-
-# 6. TASK 5.3 — PREVENT ENVIRONMENT OVERRIDE SURPRISES
-
-The agent must determine whether:
-
-```text
-VITE_API_URL
-```
-
-is still needed.
-
-Do not delete it merely because it caused the current problem.
-
-Instead document:
-
-```text
-Why it exists
-Who uses it
-Which environments require it
-What happens when it is absent
-What happens when it is present
-```
-
-If the correct design is:
-
-```text
-VITE_API_URL = optional
-```
-
-then make that behavior explicit.
-
-If the correct design requires the value in a particular environment, keep it and document the required value source.
-
----
-
-# 7. TASK 5.4 — SEARCH FOR HARDCODED PRODUCTION HOSTS
-
-Search the entire repository for:
-
-```text
-ui-hub.onrender.com
-ui-hub-mcp.onrender.com
-ui-hub-backend-mcp.onrender.com
-VITE_API_URL
-MCP_SERVER_URL
+backend/src/server.js
 MCP_ALLOWED_ORIGINS
-```
-
-Classify every occurrence:
-
-```text
-ACTIVE
-LEGACY
-DOCUMENTATION
-GENERATED
-TEST
-UNKNOWN
-```
-
-Do not change every occurrence automatically.
-
-For each ACTIVE occurrence, determine whether it represents:
-
-```text
-Web API
-MCP
-Webhook
-Monitoring
-Documentation
-```
-
----
-
-# 8. TASK 5.5 — SEPARATE WEB API FROM MCP
-
-Do not treat these as the same service.
-
-Document the distinction:
-
-```text
-WEB API
-→ REST endpoints used by the UI
-
-MCP
-→ MCP protocol used by AI clients
+CORS middleware
+Frontend origin
+MCP origin
+Development origins
 ```
 
 Determine:
 
 ```text
-Who owns the web API?
-Who owns MCP?
-Which host serves each?
-Does Vercel need MCP?
-Does Render need the web API?
+Web API CORS policy
+MCP CORS policy
+Development policy
+Production policy
 ```
 
-The Phase 4 report already established that the MCP deployment path and normal frontend API path are different concerns.
-
-Do not combine them simply to reduce configuration.
+Do not immediately implement a generic wildcard solution.
 
 ---
 
-# 9. TASK 5.6 — VERCEL ROUTING AUDIT
+# 6. TASK 6.2 — DEFINE THE CORS INVARIANT
 
-Phase 4 flagged a specific risk in:
+Document the desired behavior.
 
-```text
-vercel.json
-```
-
-where:
+At minimum:
 
 ```text
-/api/(.*) → /api/index.js
+Allowed origin
+→ request permitted
+
+Disallowed origin
+→ request rejected
+
+Missing Origin
+→ defined explicitly
+
+Development localhost
+→ defined explicitly
+
+Malformed origin
+→ rejected safely
 ```
 
-could turn an intended API route into a 404 after deployment.
+Determine whether credentials/cookies are involved.
 
-Perform a complete routing audit.
-
-Verify:
+Do not enable:
 
 ```text
-/api
-/api/health
-/api/v1/*
+Access-Control-Allow-Origin: *
 ```
 
-and the interaction among:
-
-```text
-rewrites
-functions
-filesystem routes
-api/index.js
-SPA fallback
-```
-
-Do not change routing until the actual behavior is mapped.
+when credentialed requests are required.
 
 ---
 
-# 10. TASK 5.7 — VERIFY SPA FALLBACK DOES NOT MASK API FAILURES
+# 7. TASK 6.3 — IMPLEMENT CORS ENFORCEMENT
 
-The Phase 4 report discovered that:
+Implement the smallest safe change that makes the existing allowlist meaningful.
 
-```text
-/health
-```
-
-on the frontend returns the same HTML shell as `/`.
-
-This means SPA fallback can make a missing API endpoint look healthy.
-
-The routing architecture must therefore clearly distinguish:
+Requirements:
 
 ```text
-Frontend route
+Allowed origins are accepted.
+Unauthorized origins are rejected.
+Existing legitimate frontend traffic continues to work.
 ```
 
-from:
+Do not silently broaden the allowlist.
 
-```text
-API route
-```
+Do not add arbitrary origins just to make tests pass.
 
-Ensure API requests cannot silently become the frontend HTML shell.
-
-The desired behavior is:
-
-```text
-Unknown API route
-→ API-style error / 404
-
-Frontend route
-→ SPA shell
-```
-
-Do not break legitimate React routes.
+Do not modify MCP and Web API policies as though they were automatically identical.
 
 ---
 
-# 11. TASK 5.8 — LOCAL REPRODUCTION OF VERCEL ROUTING
+# 8. TASK 6.4 — ADD CORS REGRESSION TESTS
 
-Create a reproducible local validation procedure for the Vercel API architecture.
-
-The procedure should verify:
+Create tests covering:
 
 ```text
-/api/health
-/api/v1/*
-frontend routes
-unknown API route
-unknown frontend route
+Allowed production origin
+Allowed development origin
+Unknown origin
+Malformed origin
+No Origin header
+Multiple configured origins
+Whitespace around origin
+Duplicate origins
 ```
 
-Record the commands and expected results in:
+The exact cases should reflect the implementation.
 
-```text
-.uihub-agent/runtime/
-└── VERCEL_ROUTING_BASELINE.md
-```
-
-The goal is that future changes can reproduce deployment routing behavior before pushing.
+The test suite must verify actual middleware behavior, not just the configuration string.
 
 ---
 
-# 12. TASK 5.9 — MCP ENDPOINT CONTRACT
-
-Document the canonical MCP endpoint separately.
+# 9. TASK 6.5 — DOCUMENT CORS CONTRACT
 
 Create:
 
 ```text
-.uihub-agent/APIs/MCP_DEPLOYMENT_CONTRACT.md
+.uihub-agent/APIs/CORS_CONTRACT.md
 ```
 
 Include:
 
 ```text
-Canonical MCP service
-Expected endpoint
-Authentication
+API surface
 Allowed origins
-Tool registry
-Build source
-Generated dist
-Deployment owner
-Health/verification method
+Development exceptions
+Credential behavior
+MCP behavior
+Environment variables
+Failure behavior
+Testing method
 ```
 
-Do not invent the final URL.
-
-If the canonical MCP service remains unresolved because Render is unavailable:
-
-```text
-STATUS: OWNER ACTION REQUIRED
-```
-
----
-
-# 13. TASK 5.10 — RENDER SERVICE CONTRACT
-
-The Render configuration must be compared against the actual expected service architecture.
-
-Document:
-
-```text
-service name
-service type
-build command
-start command
-health path
-environment requirements
-MCP responsibility
-backend responsibility
-```
-
-Do not create a new Render service merely because a hostname returns 404 or 503.
-
-Do not delete an old service.
-
-Do not rename services during this phase.
-
----
-
-# 14. TASK 5.11 — CLOUDFLARE CONTRACT
-
-Document what Cloudflare is supposed to do.
-
-Determine:
-
-```text
-DNS
-proxy
-origin
-TLS
-challenge/security layer
-API traffic
-MCP traffic
-```
-
-Do not disable challenges or security controls merely to pass tests.
-
-If the current configuration cannot be verified without dashboard access:
-
-```text
-OWNER ACTION REQUIRED
-```
-
-Record exactly what needs to be checked.
-
----
-
-# 15. TASK 5.12 — ENVIRONMENT CONTRACT
-
-Create:
-
-```text
-.uihub-agent/infrastructure/
-└── ENVIRONMENT_CONTRACT.md
-```
-
-For each environment:
-
-```text
-Local
-CI
-Vercel
-Render
-```
-
-document:
-
-```text
-Variable
-Purpose
-Required?
-Public/private
-Consumer
-Status
-```
-
-Never record values.
+Do not record secret values.
 
 Use:
 
 ```text
 PRESENT
 ABSENT
+CONFIGURED
+NOT CONFIGURED
+```
+
+where appropriate.
+
+---
+
+# 10. TASK 6.6 — SECRET SCANNING SYSTEM
+
+Phase 5 found a live-looking MongoDB password inside placeholder-shaped knowledge-base documentation. The report notes that ordinary placeholder-looking text was not sufficient to identify it, and a value-shaped scan caught it.
+
+Create a repository-level secret scanning mechanism.
+
+It must inspect at least:
+
+```text
+Source
+Configuration
+Documentation
+.uihub-agent/
+.github/
+Examples
+Markdown
+JSON
+YAML
+```
+
+Detect patterns such as:
+
+```text
+MongoDB connection strings
+AWS-style credentials
+API keys
+Private keys
+Firebase private credentials
+Razorpay secrets
+SMTP credentials
+Bearer tokens
+Webhook secrets
+VAPID private keys
+```
+
+Do not attempt to prove that every arbitrary secret is detectable.
+
+Document the known limitations.
+
+---
+
+# 11. TASK 6.7 — SECRET-SCAN FALSE-POSITIVE RULES
+
+The scanner must avoid treating obvious safe examples as real secrets.
+
+Classify:
+
+```text
+REAL SECRET
+PLACEHOLDER
+MASKED EXAMPLE
+PUBLIC IDENTIFIER
+TEST FIXTURE
+FALSE POSITIVE
+```
+
+Examples such as:
+
+```text
+<password>
+<user>
+<REDACTED>
+example.com
+uh_live_xxxxx
+```
+
+must be handled according to explicit rules.
+
+Do not create a scanner that simply reports every URI as a leak.
+
+---
+
+# 12. TASK 6.8 — CI SECRET GATE
+
+Integrate the secret scanner into CI.
+
+Requirements:
+
+```text
+Secret detected
+→ CI fails
+
+No secret detected
+→ CI continues
+```
+
+The scanner must run before potentially publishing artifacts.
+
+Do not print the matched secret into CI logs.
+
+Output only:
+
+```text
+file
+line/category where safe
+detector
+redacted fingerprint or type
+```
+
+Never print the actual value.
+
+---
+
+# 13. TASK 6.9 — GITIGNORE / TRACKING AUDIT
+
+Phase 5 found that `.uihub-agent/` and `.github/` were previously ignored, which made important project knowledge and CI configuration effectively untrackable.
+
+Audit:
+
+```text
+.gitignore
+global ignore assumptions
+.uihub-agent/
+.github/
+generated files
+environment examples
+CI workflows
+agent files
+```
+
+The result must ensure:
+
+```text
+Agent knowledge
+CI workflows
+Important project rules
+```
+
+are intentionally trackable.
+
+---
+
+# 14. TASK 6.10 — CREATE TRACKING INVARIANTS
+
+Create a repository validation script that verifies:
+
+```text
+.uihub-agent/ is tracked/trackable
+.github/workflows/ is trackable
+AGENT files are trackable
+environment secrets remain ignored
+build output remains ignored where appropriate
+generated artifacts are handled intentionally
+```
+
+Do not force every generated file into git.
+
+Document the intended tracking model.
+
+---
+
+# 15. TASK 6.11 — DOCUMENTATION ENDPOINT AUDIT
+
+Phase 5 discovered that documentation advertised a Vercel `/mcp` endpoint even though the Vercel deployment cannot serve it.
+
+Search all documentation:
+
+```text
+README
+MCP.md
+API docs
+.uihub-agent/
+comments
+examples
+deployment docs
+```
+
+for:
+
+```text
+URLs
+routes
+hosts
+API endpoints
+MCP endpoints
+```
+
+Classify:
+
+```text
+VALID
+INVALID
+OUTDATED
+ENVIRONMENT-SPECIFIC
 UNKNOWN
-NOT REQUIRED
-```
-
-Never print secrets.
-
----
-
-# 16. TASK 5.13 — FRONTEND BUILD VERIFICATION
-
-After the API-base logic is finalized:
-
-Run:
-
-```text
-npm run build
-```
-
-Then inspect the emitted bundle.
-
-Verify:
-
-```text
-Old Render web API host
-→ absent unless intentionally required
-
-Unexpected production API host
-→ absent
-
-Expected API path
-→ present
-
-MCP-only host
-→ only present in MCP-specific code/config where intended
-```
-
-This is important because Phase 4 proved that the actual browser bundle, rather than the source code alone, determines where the browser sends requests.
-
----
-
-# 17. TASK 5.14 — GENERATED ARTIFACT VERIFICATION
-
-The Phase 4 report found that `mcp-server/dist` had been stale and was actually what the deployed service would execute.
-
-Phase 5 must ensure generated artifacts cannot silently diverge.
-
-Verify:
-
-```text
-mcp-server/src
-mcp-server/dist
-generated JSON/data files
-tool registry
-```
-
-and run:
-
-```text
-check-source-coverage
-```
-
-plus the actual MCP build.
-
-Do not rely on `check-source-coverage` alone.
-
-The build must regenerate what is supposed to be generated.
-
----
-
-# 18. TASK 5.15 — TEST API ROUTING
-
-Add or update tests where appropriate for:
-
-```text
-/api/health
-unknown /api route
-frontend fallback
-production API base URL
-development API base URL
-explicit external API URL
-missing VITE_API_URL
-```
-
-Tests must verify behavior rather than implementation details.
-
-Do not remove existing tests.
-
----
-
-# 19. TASK 5.16 — API BASE URL SAFETY TESTS
-
-Add a focused test matrix:
-
-```text
-CASE 1
-Production + no VITE_API_URL
-→ same-origin /api
-
-CASE 2
-Production + explicit approved external URL
-→ external API
-
-CASE 3
-Development + local API
-→ local API
-
-CASE 4
-Production + stale legacy Render URL
-→ behavior must be explicitly defined
-
-CASE 5
-Malformed URL
-→ safe failure
-```
-
-Do not silently transform arbitrary user-provided environment values.
-
----
-
-# 20. TASK 5.17 — PRODUCTION DEPLOYMENT GATE
-
-Before deployment, create a checklist:
-
-```text
-Code build PASS
-Typecheck PASS
-Tests PASS
-MCP build PASS
-Generated data synchronized
-API base URL verified
-Vercel routing verified
-Environment contract reviewed
-No secrets exposed
-No production data changes
-```
-
-Store it as:
-
-```text
-.uihub-agent/runtime/
-└── PRODUCTION_DEPLOYMENT_GATE.md
 ```
 
 ---
 
-# 21. TASK 5.18 — OWNER DEPLOYMENT ACTION
+# 16. TASK 6.12 — DOCUMENTATION DRIFT CHECK
 
-The agent must clearly identify actions that only the owner can perform.
+Build a lightweight validator for high-value deployment claims.
 
-At minimum:
+Examples:
 
 ```text
-1. Configure/unset VITE_API_URL as determined by the verified architecture.
-2. Deploy the current branch through the available Vercel integration.
-3. Verify the Vercel deployment.
-4. Restore/confirm the intended Render service if required.
-5. Verify Cloudflare routing.
-6. Open PR / merge according to repository workflow.
+Documented web API endpoint
+↔ vercel.json
+
+Documented MCP endpoint
+↔ MCP deployment contract
+
+Documented frontend domain
+↔ deployment configuration
+
+Documented route
+↔ actual route registration
 ```
 
-Do not pretend these have been completed by the coding agent.
+Do not attempt to automatically verify every sentence in Markdown.
+
+Focus on machine-checkable claims.
 
 ---
 
-# 22. TASK 5.19 — PRODUCTION VERIFICATION AFTER OWNER DEPLOYMENT
+# 17. TASK 6.13 — DEPLOYMENT-CONFIGURATION CONSISTENCY
 
-Once a real deployment exists, verify:
+Phase 5 found two conflicting Render blueprints:
 
 ```text
-GET /
-GET /api/health
-GET /api/v1/config/firebase
-GET /api/v1/auth/me
+render.yaml
+mcp-server/render.yaml
 ```
 
-Also verify:
+with different services and admin lists.
+
+Do NOT choose one automatically.
+
+Instead create:
 
 ```text
-unknown API route
-frontend route
+.uihub-agent/infrastructure/DEPLOYMENT_CONFLICTS.md
 ```
 
 Record:
 
 ```text
-status
-latency
-response type
-timestamp
+File
+Service
+Purpose
+Difference
+Conflict
+Owner decision required
 ```
 
-Do not classify `/health` as successful if it returns HTML.
+Add a machine-checkable warning so future agents cannot accidentally assume both are authoritative.
 
 ---
 
-# 23. TASK 5.20 — BROWSER API DESTINATION VERIFICATION
+# 18. TASK 6.14 — DEFINE CONFIGURATION OWNERSHIP
 
-Use a browser-level verification if available.
-
-The goal is to observe the actual network destination of frontend API calls.
-
-Verify:
+For each major configuration source:
 
 ```text
-Browser
-   ↓
-Expected API host
-   ↓
-Expected endpoint
+vercel.json
+render.yaml
+mcp-server/render.yaml
+package.json
+environment variables
+API config
+MCP config
 ```
 
-Make sure requests are not silently going to:
+document:
 
 ```text
-old Render host
-wrong MCP host
-wrong environment
-SPA fallback
+Owner
+Scope
+Environment
+Source of truth
+Generated or manual
 ```
 
-This test is mandatory because Phase 4 proved that source/config inspection alone was insufficient.
+Create:
+
+```text
+.uihub-agent/infrastructure/CONFIGURATION_OWNERSHIP.md
+```
 
 ---
 
-# 24. TASK 5.21 — VERIFY AUTHENTICATION IN THE REAL DEPLOYMENT
+# 19. TASK 6.15 — GENERATED ARTIFACT GUARD
 
-Once the API is reachable, verify:
+Phase 5 confirmed that `mcp-server/dist` can become stale and that the tracked generated artifact can differ from source. It also established that the normal source-coverage check alone does not prove generated-data freshness.
 
-```text
-No token
-Invalid token
-Expired token
-Normal authenticated user
-Admin
-```
-
-Verify at least:
+Create a validation step that:
 
 ```text
-/api/v1/auth/me
-protected REST route
-admin route
-broadcast route
+Builds generated artifacts
+↓
+Compares expected files
+↓
+Detects stale tracked output
+↓
+Fails when source and generated output diverge
 ```
 
-Do not send real broadcasts.
+Do not silently modify generated files during validation.
 
-Do not use real payment operations.
-
-Do not expose tokens.
+Use a clearly named generation command for actual regeneration.
 
 ---
 
-# 25. TASK 5.22 — VERIFY MCP IN THE REAL DEPLOYMENT
+# 20. TASK 6.16 — PREVENT MANUAL EDITS TO GENERATED MCP DATA
 
-Once the intended MCP service is reachable:
+Document protected generated paths:
 
 ```text
-initialize
-tools/list
+mcp-server/dist/
+mcp-server/src/data/
 ```
 
-Verify:
+where appropriate.
+
+The rule should explain:
 
 ```text
-14 expected tools
+Edit source
+→ regenerate
+→ validate
+```
+
+not:
+
+```text
+Edit generated output manually
+```
+
+Add an agent rule in:
+
+```text
+.uihub-agent/rules/DO_NOT_CHANGE.md
+```
+
+---
+
+# 21. TASK 6.17 — AGENT PROTECTED-PATH SYSTEM
+
+The coding AI should know which paths require extra caution.
+
+Create:
+
+```text
+.uihub-agent/rules/PROTECTED_PATHS.md
+```
+
+Classify paths:
+
+```text
+CRITICAL
+HIGH RISK
+GENERATED
+DOCUMENTATION
+SAFE / NORMAL
+```
+
+Potential critical areas:
+
+```text
+paymentRoutes.js
+accessService.js
 authentication
-configuration
-generated data
-response correctness
+server.js
+database mutation scripts
+deployment configuration
+MCP authentication
 ```
 
-If the MCP service remains unavailable:
-
-```text
-BLOCKED — OWNER ACTION REQUIRED
-```
-
-Do not fabricate a successful MCP verification.
+Use the existing Phase 1/3 protected-path knowledge as the starting point.
 
 ---
 
-# 26. TASK 5.23 — DO NOT MODIFY LIGHT MODE
+# 22. TASK 6.18 — PRE-CHANGE IMPACT CHECK
 
-The Phase 4 report proved that the light theme currently produces invisible text because of the interaction between:
-
-```text
-inline <style>
-Vite stylesheet
-html background
-theme variables
-dark variants
-```
-
-Do NOT fix this in Phase 5.
-
-Do NOT introduce the full theme refactor.
-
-Do NOT change `@custom-variant dark`.
-
-Do NOT delete the light theme.
-
-Record it as:
+Add an agent rule requiring:
 
 ```text
-DEFERRED
+Before changing a protected path:
+1. Search consumers.
+2. Identify dependencies.
+3. Check protected invariants.
+4. Run targeted tests.
+5. Make the smallest change.
 ```
 
-for the dedicated design-system/theme phase.
+The objective is to prevent future agents from blindly modifying load-bearing code.
 
 ---
 
-# 27. TASK 5.24 — DOCUMENT THE LIGHT-MODE DECISION
+# 23. TASK 6.19 — POST-CHANGE KNOWLEDGE REQUIREMENT
 
-Update:
-
-```text
-.uihub-agent/runtime/PRODUCTION_BASELINE.md
-.uihub-agent/design-system/DESIGN_SYSTEM.md
-.uihub-agent/tasks/ACTIVE_TASK.md
-```
-
-State:
+Add a rule stating:
 
 ```text
-Light mode is known to be inconsistent.
-The issue is confirmed.
-No Phase 5 change is made.
-A future dedicated theme task is required.
+Architecture change
+→ update architecture knowledge
+
+API change
+→ update API knowledge
+
+Feature change
+→ update feature knowledge
+
+Deployment change
+→ update infrastructure knowledge
+
+Protected-path change
+→ update relevant safety documentation
 ```
 
-Do not allow future agents to rediscover this as an unknown.
+This prevents `.uihub-agent/` from becoming stale.
 
 ---
 
-# 28. TASK 5.25 — RECHECK PRIOR FINDINGS
+# 24. TASK 6.20 — CI GOVERNANCE
 
-Before completing Phase 5:
+Phase 5 created four CI jobs but discovered the frontend typecheck currently fails from pre-existing UI commits, even though builds pass.
 
-Re-evaluate important previous findings against the new architecture.
+Do NOT simply remove the typecheck job.
 
-Especially:
+Instead ensure CI distinguishes:
 
 ```text
-Vercel MCP availability
-Render API ownership
-MCP_SERVER_URL
-MCP_ALLOWED_ORIGINS
-Health semantics
-mcp-server/dist
-Tailwind token status
-Theme behavior
+BUILD
+TEST
+TYPECHECK
+SECURITY SCAN
+KNOWLEDGE VALIDATION
 ```
 
-Do not preserve a finding merely because it existed in Phase 1–4.
+A failure in one must not be mislabeled as success in another.
 
 ---
 
-# 29. TASK 5.26 — CREATE API ARCHITECTURE MAP
+# 25. TASK 6.21 — TYPECHECK BASELINE CLARIFICATION
+
+Document the current state:
+
+```text
+Frontend build: PASS
+Frontend typecheck: FAIL
+```
+
+and record that the typecheck failure originated from earlier UI commits, not Phase 6.
+
+Do not fix those unrelated UI errors in Phase 6 unless they directly block the CI architecture.
+
+---
+
+# 26. TASK 6.22 — KNOWLEDGE-BASE VALIDATION
+
+Create a validation command that checks:
+
+```text
+PROJECT_MAP.json parses
+references resolve
+required knowledge files exist
+no required section is missing
+generated files are fresh
+no prohibited secrets exist
+deployment docs do not claim impossible endpoints
+```
+
+The goal is:
+
+```text
+.uihub-agent/
+=
+validated engineering knowledge
+```
+
+rather than a collection of unchecked Markdown files.
+
+---
+
+# 27. TASK 6.23 — KNOWLEDGE FILE FRESHNESS
+
+Determine which files are:
+
+```text
+GENERATED
+SEMI-AUTOMATIC
+MANUAL
+```
+
+Document the update mechanism.
+
+For example:
+
+```text
+PROJECT_MAP.json
+→ generated
+
+ARCHITECTURE.md
+→ manual
+
+DEPLOYMENT_MAP.md
+→ manual + verified
+
+BASELINE.md
+→ measured
+
+CONFLICTS.md
+→ append/update with evidence
+```
+
+---
+
+# 28. TASK 6.24 — AGENT SOURCE-PRECEDENCE RULE
+
+Strengthen `AGENT.md` with an explicit evidence hierarchy:
+
+```text
+Current runtime evidence
+>
+Current source/configuration
+>
+Generated index
+>
+Current documentation
+>
+Historical documentation
+>
+Assumption
+```
+
+When two sources disagree:
+
+```text
+Do not silently choose.
+Record the conflict.
+```
+
+This is important because earlier phases already corrected several false assumptions.
+
+---
+
+# 29. TASK 6.25 — AUTOMATED CONFLICT DETECTION
+
+Add validation for known high-value conflicts:
+
+```text
+Frontend API host
+Vercel routing
+MCP endpoint
+Render blueprint
+MCP tool registry
+Environment contract
+Generated MCP data
+```
+
+The validator should report:
+
+```text
+CONSISTENT
+CONFLICT
+UNKNOWN
+```
+
+Do not make the validator attempt automatic fixes.
+
+---
+
+# 30. TASK 6.26 — OWNER-DECISION REGISTER
 
 Create:
 
 ```text
-.uihub-agent/APIs/API_ARCHITECTURE.md
+.uihub-agent/tasks/OWNER_DECISIONS.md
 ```
 
-It should show:
+Record decisions that cannot safely be made by the coding agent.
+
+Current examples:
 
 ```text
-Browser
-  ↓
-Canonical Web API
-  ↓
-Express
-  ├── Authentication
-  ├── MongoDB
-  ├── Redis
-  ├── Payments
-  ├── Admin
-  └── Other services
-
-AI Client
-  ↓
-Canonical MCP Service
-  ↓
-MCP Server
-  ↓
-MCP Data/Registry
-```
-
-Include:
-
-```text
-canonical URL
-fallback
-environment
-deployment owner
-```
-
-for each runtime surface.
-
----
-
-# 30. TASK 5.27 — CREATE PRODUCTION CONNECTIVITY BASELINE
-
-Create:
-
-```text
-.uihub-agent/runtime/
-└── CONNECTIVITY_BASELINE.md
-```
-
-Track:
-
-```text
-Frontend
-Web API
-Health
-Authentication
-Admin
-MCP
-Database
-Redis
-Cloudflare
-Vercel
-Render
+Production VITE_API_URL
+Vercel deployment/root cause
+Render blueprint ownership
+Cloudflare configuration
+CORS production policy
+Mongo credential rotation
+Light-mode architecture
 ```
 
 For each:
 
 ```text
-Expected
-Actual
-Status
-Evidence
-Timestamp
+Decision
+Why required
+Options discovered
+What the agent must not assume
+Current status
+```
+
+Do not recommend a political or business decision; these are engineering ownership decisions.
+
+---
+
+# 31. TASK 6.27 — SAFE CONFIGURATION EXAMPLE POLICY
+
+Audit:
+
+```text
+.env.example
+README examples
+MCP docs
+deployment examples
+```
+
+Every example must contain:
+
+```text
+safe placeholders
+```
+
+and never:
+
+```text
+real host credentials
+real passwords
+real private keys
+real webhook secrets
+```
+
+Use realistic structure but fake values.
+
+---
+
+# 32. TASK 6.28 — SECURITY DOCUMENTATION
+
+Create:
+
+```text
+.uihub-agent/security/
+├── SECURITY_OVERVIEW.md
+├── SECRET_HANDLING.md
+└── SECURITY_VALIDATION.md
+```
+
+Document:
+
+```text
+Authentication
+Authorization
+CORS
+Secret handling
+MCP authentication
+Payment security boundaries
+Production-data rules
+CI security
+Agent security rules
+```
+
+Do not duplicate every technical detail already documented elsewhere.
+
+Link to the existing knowledge files.
+
+---
+
+# 33. TASK 6.29 — NO PRODUCTION DATA CHANGES
+
+Phase 6 must maintain:
+
+```text
+Production writes = 0
+```
+
+Do not:
+
+```text
+update users
+update payments
+update entitlements
+update MCP configuration
+create indexes
+delete data
+```
+
+unless separately authorized by the owner.
+
+---
+
+# 34. TASK 6.30 — FINAL SECURITY REGRESSION
+
+Run:
+
+```text
+tests
+builds
+typechecks
+secret scan
+documentation validation
+configuration validation
+generated-artifact validation
+git tracking validation
+```
+
+Then inspect:
+
+```text
+git diff
+git status
+tracked/untracked files
+CI workflow
+```
+
+No unexpected application changes should remain.
+
+---
+
+# 35. REQUIRED SUCCESS CRITERIA
+
+Phase 6 is successful when:
+
+```text
+1. CORS actually enforces its configured policy.
+2. CORS behavior is covered by tests.
+3. Secret scanning exists and runs safely.
+4. Secret scanning is integrated into CI.
+5. No secret appears in repository documentation.
+6. .uihub-agent/ is intentionally trackable.
+7. .github/workflows is intentionally trackable.
+8. Environment secrets remain ignored.
+9. Documentation endpoints are checked for drift.
+10. Deployment conflicts are documented.
+11. Configuration ownership is documented.
+12. Generated MCP artifacts have freshness validation.
+13. Generated paths have explicit agent protection.
+14. Protected-path rules exist.
+15. Agent pre-change impact checks are documented.
+16. Agent post-change knowledge updates are documented.
+17. Knowledge-base validation exists.
+18. Configuration conflict validation exists.
+19. Owner decisions are formally tracked.
+20. No production data is changed.
+21. No secrets are exposed.
+22. Existing test/build behavior is preserved except for explicitly documented baseline issues.
 ```
 
 ---
 
-# 31. SUCCESS CRITERIA
+# 36. REQUIRED NEW FILE STRUCTURE
 
-Phase 5 is successful when:
-
-```text
-1. The canonical web API is explicitly defined.
-2. The canonical MCP service is explicitly defined or clearly marked owner-blocked.
-3. getApiBaseUrl() behavior is deterministic.
-4. VITE_API_URL behavior is documented and intentional.
-5. No stale production API host is unintentionally embedded in the frontend.
-6. Vercel routing behavior is understood and tested.
-7. SPA fallback cannot masquerade as API health.
-8. Environment requirements are documented.
-9. MCP source/dist consistency is verified.
-10. Local routing tests exist.
-11. Production deployment gate exists.
-12. Real production API behavior is verified after deployment.
-13. Browser network behavior is verified.
-14. Authentication works in the deployed environment.
-15. MCP is verified or explicitly blocked by owner access.
-16. Light mode remains intentionally deferred.
-17. Previous findings have been reclassified using current evidence.
-18. Production connectivity baseline is created.
-19. No production data was modified.
-20. No secrets were exposed.
-```
-
----
-
-# 32. STOP CONDITIONS
-
-Stop a specific task when:
-
-```text
-Dashboard access is required.
-Production environment values are unavailable.
-Cloudflare behavior cannot be safely determined.
-A service must be recreated.
-A DNS change is required.
-A production database mutation is proposed.
-Payment behavior becomes involved.
-An architecture decision cannot be inferred from repository evidence.
-A routing change could break frontend navigation.
-```
-
-Use:
-
-```text
-OWNER ACTION REQUIRED
-```
-
-or:
-
-```text
-BLOCKED
-```
-
-rather than guessing.
-
----
-
-# 33. FILES TO CREATE
-
-Expected new files:
+Expected additions:
 
 ```text
 .uihub-agent/
+│
 ├── APIs/
-│   ├── API_ARCHITECTURE.md
-│   └── MCP_DEPLOYMENT_CONTRACT.md
+│   └── CORS_CONTRACT.md
 │
 ├── infrastructure/
-│   └── ENVIRONMENT_CONTRACT.md
+│   ├── DEPLOYMENT_CONFLICTS.md
+│   └── CONFIGURATION_OWNERSHIP.md
 │
-└── runtime/
-    ├── VERCEL_ROUTING_BASELINE.md
-    ├── PRODUCTION_DEPLOYMENT_GATE.md
-    └── CONNECTIVITY_BASELINE.md
+├── security/
+│   ├── SECURITY_OVERVIEW.md
+│   ├── SECRET_HANDLING.md
+│   └── SECURITY_VALIDATION.md
+│
+├── rules/
+│   └── PROTECTED_PATHS.md
+│
+└── tasks/
+    └── OWNER_DECISIONS.md
 ```
 
-Only create additional files when required by actual repository evidence.
+Only create additional files when required by actual implementation.
 
 ---
 
-# 34. KNOWLEDGE FILES TO UPDATE
+# 37. REQUIRED AUTOMATION / SCRIPTS
 
-Update where applicable:
+Add appropriate repository scripts for:
 
 ```text
-.uihub-agent/CONFLICTS.md
-.uihub-agent/runtime/PRODUCTION_BASELINE.md
-.uihub-agent/runtime/RUNTIME_VERIFICATION.md
-.uihub-agent/runtime/UNKNOWN_REGISTER.md
-.uihub-agent/tasks/ACTIVE_TASK.md
-.uihub-agent/APIs/API_OVERVIEW.md
-.uihub-agent/infrastructure/INFRASTRUCTURE.md
-.uihub-agent/design-system/DESIGN_SYSTEM.md
-.uihub-agent/PROJECT_MAP.json
+secret scan
+knowledge validation
+configuration validation
+deployment-doc validation
+generated-artifact validation
+git tracking validation
 ```
 
-Preserve historical findings.
+Use clear names.
 
-Do not erase previous reports.
-
----
-
-# 35. REQUIRED TEST MATRIX
-
-At minimum:
+For example:
 
 ```text
-BUILD
-PASS / FAIL
-
-TYPECHECK
-PASS / FAIL
-
-UNIT TESTS
-PASS / FAIL
-
-API ROUTING
-PASS / FAIL
-
-SPA FALLBACK
-PASS / FAIL
-
-PRODUCTION API BASE URL
-PASS / FAIL
-
-MCP BUILD
-PASS / FAIL
-
-MCP REGISTRY
-PASS / FAIL
-
-GENERATED DATA
-PASS / FAIL
-
-BROWSER NETWORK TARGET
-PASS / FAIL
-
-PRODUCTION HEALTH
-PASS / FAIL
-
-AUTHENTICATION
-PASS / FAIL
-
-MCP PRODUCTION
-PASS / FAIL / BLOCKED
+npm run check:secrets
+npm run check:knowledge
+npm run check:config
+npm run check:generated
 ```
+
+Do not invent names if the existing repository uses another convention.
 
 ---
 
-# 36. REQUIRED FINAL SUMMARY
+# 38. REQUIRED FINAL REPORT
 
-At the end of Phase 5, provide EXACTLY:
+At the end of Phase 6, provide EXACTLY:
 
 ==================================================
-UI HUB AGENT — PHASE 5 COMPLETION REPORT
+UI HUB AGENT — PHASE 6 COMPLETION REPORT
 ========================================
 
 PHASE:
-5 — Production Connectivity, API Routing & Deployment Contract
+6 — Security, Configuration & Agent-Governance Hardening
 
 STATUS:
 COMPLETED / PARTIAL / BLOCKED
@@ -1130,133 +1096,105 @@ COMPLETED / PARTIAL / BLOCKED
 
 ---
 
-Explain the purpose of Phase 5.
+Explain the purpose of Phase 6.
 
-2. CANONICAL ARCHITECTURE
-
----
-
-Web API:
-MCP:
-Frontend:
-Database:
-Other services:
-
-3. API BASE URL AUDIT
+2. CORS AUDIT
 
 ---
 
 Current behavior:
-Production behavior:
-Development behavior:
-VITE_API_URL behavior:
+Desired behavior:
+Implementation:
+Tests:
 
-4. HARDCODED HOST AUDIT
-
----
-
-List production hosts found and their classifications.
-
-5. VERCEL ROUTING
+3. SECURITY CHANGES
 
 ---
 
-Explain final routing behavior.
+List all security changes.
 
-6. SPA FALLBACK
-
----
-
-Explain final frontend/API separation.
-
-7. RENDER ARCHITECTURE
+4. SECRET SCANNING
 
 ---
 
-Verified service architecture.
+Scanner:
+Patterns:
+False-positive handling:
+CI integration:
+Result:
 
-8. CLOUDFLARE ARCHITECTURE
-
----
-
-Verified role/status.
-
-9. ENVIRONMENT CONTRACT
+5. GIT / TRACKING HYGIENE
 
 ---
 
-List variables as PRESENT / ABSENT / UNKNOWN only.
+.uihub-agent:
+.github:
+Environment files:
+Generated files:
 
-10. MCP DEPLOYMENT
-
----
-
-Endpoint:
-Status:
-Authentication:
-Tools:
-Source/dist:
-
-11. GENERATED ARTIFACTS
+6. DOCUMENTATION DRIFT
 
 ---
 
-Build result and source/dist consistency.
+Endpoints checked:
+Invalid/outdated claims:
+Corrections:
 
-12. API ROUTING TESTS
+7. CONFIGURATION OWNERSHIP
+
+---
+
+Summarize the final ownership map.
+
+8. DEPLOYMENT CONFLICTS
+
+---
+
+List unresolved conflicts.
+
+9. GENERATED ARTIFACT VALIDATION
 
 ---
 
 Results.
 
-13. BROWSER NETWORK TEST
+10. AGENT PROTECTED PATHS
 
 ---
 
-Actual API destination.
+List protected categories.
 
-14. AUTHENTICATION TEST
+11. AGENT PRE-CHANGE RULES
+
+---
+
+Summarize.
+
+12. AGENT POST-CHANGE RULES
+
+---
+
+Summarize.
+
+13. KNOWLEDGE VALIDATION
 
 ---
 
 Results.
 
-15. PRODUCTION HEALTH
+14. CONFIGURATION VALIDATION
 
 ---
 
-Actual result.
+Results.
 
-16. PRODUCTION STATUS
-
----
-
-Frontend:
-Backend:
-MCP:
-Database:
-Redis:
-Cloudflare:
-
-17. LIGHT MODE
+15. OWNER DECISIONS
 
 ---
 
-State explicitly that it was deferred.
+List unresolved decisions.
 
-18. OWNER ACTIONS
-
----
-
-List all dashboard/deployment tasks still required.
-
-19. BLOCKED TASKS
-
----
-
-List anything that could not be verified.
-
-20. TEST RESULTS
+16. TEST RESULTS
 
 ---
 
@@ -1264,43 +1202,40 @@ Backend:
 MCP:
 CLI:
 Frontend:
-Routing:
+Security:
+Knowledge:
 Other:
 
-21. BUILD RESULTS
+17. TYPECHECK RESULTS
 
 ---
 
 Frontend:
 MCP:
 CLI:
-Other:
+Backend:
 
-22. FILES CREATED
-
----
-
-List all.
-
-23. FILES MODIFIED
+18. BUILD RESULTS
 
 ---
 
-List all.
+Frontend:
+MCP:
+CLI:
 
-24. FILES DELETED
-
----
-
-NONE or exact list.
-
-25. PRODUCTION DATA CHANGES
+19. PRODUCTION DATA CHANGES
 
 ---
 
 YES / NO
 
-26. SECRETS EXPOSED
+20. PRODUCTION DEPLOYMENT CHANGES
+
+---
+
+YES / NO
+
+21. SECRETS EXPOSED
 
 ---
 
@@ -1308,35 +1243,65 @@ YES / NO
 
 Must be NO.
 
-27. REGRESSIONS
+22. REGRESSIONS
 
 ---
 
 List all.
 
-28. PREVIOUS FINDINGS RECLASSIFIED
+23. FILES CREATED
 
 ---
 
-List important changes in status.
+List all.
+
+24. FILES MODIFIED
+
+---
+
+List all.
+
+25. FILES DELETED
+
+---
+
+NONE or exact list.
+
+26. PHASE 5 FINDING STATUS
+
+---
+
+RESOLVED / PARTIAL / DEFERRED / OWNER REQUIRED / INVALID
+
+27. REMAINING HIGH-RISK ISSUES
+
+---
+
+List them.
+
+28. REMAINING UNKNOWN AREAS
+
+---
+
+List them.
 
 29. KNOWLEDGE BASE UPDATED
 
 ---
 
-List all `.uihub-agent/` files updated.
+List all updated files.
 
-30. IMPORTANT ARCHITECTURAL DISCOVERIES
-
----
-
-Document newly verified architecture facts.
-
-31. IMPORTANT DISCOVERIES FOR PHASE 6
+30. IMPORTANT SECURITY DISCOVERIES
 
 ---
 
-List facts that should influence the next phase.
+List major discoveries.
+
+31. IMPORTANT DISCOVERIES FOR PHASE 7
+
+---
+
+List facts that should influence Phase 7.
 
 32. FINAL GIT / DIFF REVIEW
 
@@ -1351,61 +1316,41 @@ Clean / reviewed / unexpected changes.
 COMPLETED / PARTIAL / BLOCKED
 
 ==================================================
-END OF PHASE 5 REPORT
+END OF PHASE 6 REPORT
 =====================
 
 ---
 
-# 37. FINAL EXECUTION INSTRUCTION
+# 39. FINAL EXECUTION INSTRUCTION
 
-Phase 5 is about making UI HUB's production connectivity understandable and deterministic.
+Phase 6 is a security and governance hardening phase.
 
-Do not assume that:
+Do not treat security as documentation only.
 
-```text
-Vercel
-=
-Web API
-
-Render
-=
-MCP
-
-Cloudflare
-=
-correctly configured
-```
-
-until evidence confirms it.
-
-Do not rely on:
+Where a control claims to exist:
 
 ```text
-HTML 200
+test the actual behavior.
 ```
 
-as proof of API health.
+Do not treat configuration as effective merely because a variable or allowlist exists.
 
-Do not rely on source code alone to determine browser API destinations.
-
-Inspect the emitted production bundle.
-
-Do not expose secrets.
+Do not expose secrets while testing the secret scanner.
 
 Do not modify production data.
 
-Do not send real broadcasts.
+Do not make deployment decisions that require owner authorization.
 
-Do not perform payment transactions.
+Do not resolve the conflicting Render blueprints by guessing.
 
-Do not disable security controls merely to make connectivity succeed.
+Do not perform the light-mode refactor.
 
-Do not make broad UI/theme changes.
+Do not perform broad application refactoring.
 
-When owner-only access is required, record the exact owner action rather than guessing.
+Do not weaken tests or CI gates to obtain green status.
 
-At the end, update the `.uihub-agent/` knowledge system and provide the exact Phase 5 Completion Report.
+The objective is to make future AI-driven development safer, more deterministic, and easier to audit.
 
-The Phase 5 report will be reviewed before Phase 6 is designed.
+At the end, update `.uihub-agent/` and provide the exact Phase 6 Completion Report.
 
-END — UI HUB AGENT PHASE 5
+END — UI HUB AGENT PHASE 6

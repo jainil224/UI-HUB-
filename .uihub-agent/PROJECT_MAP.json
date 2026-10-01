@@ -2,7 +2,7 @@
   "$schema": {
     "generatedBy": ".uihub-agent/scripts/generate-map.mjs",
     "phase": 1,
-    "generatedAt": "2026-10-01T02:04:50.325Z",
+    "generatedAt": "2026-10-01T03:51:34.650Z",
     "note": "Mechanical facts (counts, routes, endpoints, dependencies) are read from source at run time. Purpose strings are curated. Unverifiable items carry status UNKNOWN or confidence low.",
     "regenerateWith": "node .uihub-agent/scripts/generate-map.mjs",
     "verifyWith": "node .uihub-agent/scripts/generate-map.mjs --check"
@@ -30,10 +30,10 @@
     ],
     "structure": "Non-workspace monorepo: frontend, backend, mcp-server, cli, api wrapper, scripts.",
     "codeVolume": {
-      "trackedFilesExcludingVendor": 568,
+      "trackedFilesExcludingVendor": 572,
       "frontendSourceFiles": 353,
-      "backendSourceFiles": 58,
-      "mcpServerSourceFiles": 45,
+      "backendSourceFiles": 59,
+      "mcpServerSourceFiles": 46,
       "cliSourceFiles": 23
     }
   },
@@ -279,7 +279,7 @@
       "path": "backend",
       "type": "directory",
       "purpose": "Source directory at depth 1. Contents are described in the sub-path knowledge files.",
-      "fileCount": 89,
+      "fileCount": 91,
       "keyFiles": [
         "backend/package-lock.json",
         "backend/package.json",
@@ -326,7 +326,7 @@
       "path": "backend/src",
       "type": "directory",
       "purpose": "Source directory at depth 2. Contents are described in the sub-path knowledge files.",
-      "fileCount": 58,
+      "fileCount": 59,
       "keyFiles": [
         "backend/src/server.js"
       ],
@@ -338,8 +338,9 @@
       "path": "backend/src/config",
       "type": "directory",
       "purpose": "Server-side plan definitions and the canonical premium-component id list.",
-      "fileCount": 2,
+      "fileCount": 3,
       "keyFiles": [
+        "backend/src/config/corsPolicy.js",
         "backend/src/config/plans.js",
         "backend/src/config/premiumComponents.js"
       ],
@@ -469,11 +470,12 @@
       "path": "backend/tests",
       "type": "directory",
       "purpose": "node:test suites for accessService and collectionsService.",
-      "fileCount": 5,
+      "fileCount": 6,
       "keyFiles": [
         "backend/tests/accessService.test.js",
         "backend/tests/broadcastAuth.test.js",
         "backend/tests/collectionsService.test.js",
+        "backend/tests/cors.test.js",
         "backend/tests/emailTestSecret.test.js",
         "backend/tests/health.test.js"
       ],
@@ -796,7 +798,7 @@
       "path": "mcp-server",
       "type": "directory",
       "purpose": "Source directory at depth 1. Contents are described in the sub-path knowledge files.",
-      "fileCount": 61,
+      "fileCount": 63,
       "keyFiles": [
         "mcp-server/package-lock.json",
         "mcp-server/package.json",
@@ -825,7 +827,7 @@
       "path": "mcp-server/src",
       "type": "directory",
       "purpose": "Source directory at depth 2. Contents are described in the sub-path knowledge files.",
-      "fileCount": 45,
+      "fileCount": 46,
       "keyFiles": [
         "mcp-server/src/index.ts",
         "mcp-server/src/stdio.ts"
@@ -928,11 +930,12 @@
       "path": "mcp-server/tests",
       "type": "directory",
       "purpose": "Vitest suites: apiKey, auth, permissions, tools.",
-      "fileCount": 5,
+      "fileCount": 6,
       "keyFiles": [
         "mcp-server/tests/apiKey.test.ts",
         "mcp-server/tests/auth.test.ts",
         "mcp-server/tests/configService.test.ts",
+        "mcp-server/tests/cors.test.ts",
         "mcp-server/tests/permissions.test.ts",
         "mcp-server/tests/tools.test.ts"
       ],

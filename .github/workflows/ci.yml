@@ -1,0 +1,262 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Phase 6 (tasks 6.8, 6.20, 6.21): governance.
+#
+# Jobs are separated by concern so a failure in one is never reported as success
+# in another:
+#
+#   security-scan    must run first and block everything else
+#   knowledge        validates .uihub-agent/
+#   build            compiles each package
+#   test             per-package suites
+#   typecheck        non-blocking for the frontend, see below
+#
+# `needs:` is used rather than a single job with steps, because a sequential job
+# cannot express "the secret scan gates the build".
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Security gate. Runs first and gates the jobs that could publish anything.
+  # ---------------------------------------------------------------------------
+  security-scan:
+    name: Security scan (secrets)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # Scanner output contains only path, line, detector, type and a redacted
+      # fingerprint. The matched value is never printed.
+      - name: Secret scan
+        run: npm run check:secrets
+
+      # Confirms that credentials cannot be committed and that the knowledge
+      # base and CI definition are actually tracked.
+      - name: Tracking invariants
+        run: npm run check:tracking
+
+  # ---------------------------------------------------------------------------
+  # 2. Knowledge validation.
+  # ---------------------------------------------------------------------------
+  knowledge:
+    name: Knowledge validation
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Knowledge base validation
+        run: npm run check:knowledge
+
+  # ---------------------------------------------------------------------------
+  # 3. Configuration drift. Non-blocking by design: the current CONFLICTs are
+  #    real, documented, and awaiting owner decisions (OWNER_DECISIONS.md).
+  #    Making this blocking would mean silencing a true finding.
+  # ---------------------------------------------------------------------------
+  config-drift:
+    name: Configuration and documentation drift (non-blocking)
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Deployment and configuration consistency
+        run: npm run check:config
+      - name: Documentation drift
+        run: npm run check:docs
+
+  # ---------------------------------------------------------------------------
+  # 4. Generated artifact freshness.
+  # ---------------------------------------------------------------------------
+  generated:
+    name: Generated artifact freshness
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - name: Verify tracked mcp-server/dist matches a fresh build
+        run: npm run check:generated
+
+  # ---------------------------------------------------------------------------
+  # 5. Builds. Split from tests so a compile failure is not reported as a test
+  #    failure.
+  # ---------------------------------------------------------------------------
+  build-frontend:
+    name: Build — frontend
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  build-mcp:
+    name: Build — MCP server
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    defaults:
+      run:
+        working-directory: mcp-server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: mcp-server/package-lock.json
+      - run: npm ci
+      # `build` runs `tsc`, so it doubles as the MCP typecheck.
+      - run: npm run build
+
+  build-cli:
+    name: Build — CLI
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    defaults:
+      run:
+        working-directory: cli
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: cli/package-lock.json
+      - run: npm ci
+      # `build` runs `tsc -p tsconfig.json`.
+      - run: npm run build
+
+  # ---------------------------------------------------------------------------
+  # 6. Tests.
+  # ---------------------------------------------------------------------------
+  test-backend:
+    name: Test — backend
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      # backend has a postinstall that installs mcp-server, so make sure the
+      # workspace it expects exists before npm ci runs.
+      - name: Prepare mcp-server workspace
+        working-directory: mcp-server
+        run: npm ci --ignore-scripts
+      - run: npm ci
+      - run: npm test
+
+  test-mcp:
+    name: Test — MCP server
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    defaults:
+      run:
+        working-directory: mcp-server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: mcp-server/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  test-cli:
+    name: Test — CLI
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    defaults:
+      run:
+        working-directory: cli
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: cli/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  test-frontend:
+    name: Test — frontend
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test
+
+  # ---------------------------------------------------------------------------
+  # 7. Typecheck. Non-blocking for the frontend, with a measured baseline.
+  # ---------------------------------------------------------------------------
+  typecheck-frontend:
+    name: Typecheck — frontend (known-failing, non-blocking)
+    runs-on: ubuntu-latest
+    needs: [security-scan]
+    # Phase 6 baseline (task 6.21):
+    #   frontend build  : PASS
+    #   frontend lint   : FAIL  (`tsc --noEmit`, ~50 pre-existing errors)
+    #
+    # These errors originate from earlier UI commits, NOT from Phase 6. Phase 6
+    # changed no frontend source. The job is kept visible rather than deleted so
+    # the count can be tracked; `continue-on-error` keeps it from blocking
+    # unrelated work. See .uihub-agent/runtime/TYPECHECK_BASELINE.md.
+    continue-on-error: true
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Typecheck (frontend `lint` script is `tsc --noEmit`)
+        run: npm run lint

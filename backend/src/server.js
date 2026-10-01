@@ -12,6 +12,7 @@ import { globalLimiter, redisStatus } from './middleware/rateLimiters.js';
 import { startUserSyncWorker } from './services/syncService.js';
 import { syncAllComponentsToMongo } from './services/componentSyncService.js';
 import { buildHealthReport } from './services/healthService.js';
+import { buildCorsOptions } from './config/corsPolicy.js';
 
 dotenv.config();
 console.log('Environment variables loaded from .env');
@@ -34,15 +35,6 @@ const PORT = process.env.PORT || 5000;
 
 // Enable 'trust proxy' for Render/Vercel (fixes rate-limiter warnings)
 app.set('trust proxy', 1);
-
-// Update CORS to allow both localhost and production frontend
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'https://ui-hub-design.vercel.app',
-  'https://ui-hub-design-git-main-jainil224s-projects.vercel.app',
-  'https://ui-hub-design-jainil224s-projects.vercel.app'
-];
 
 // 1. Helmet (security headers)
 app.use(helmet({
@@ -67,27 +59,12 @@ app.use(helmet({
 }));
 
 // 2. CORS
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
-
-    // Check if origin is in allowedOrigins or matches a wildcard
-    const isAllowed = allowedOrigins.indexOf(origin) !== -1 ||
-      origin.endsWith('.vercel.app') ||
-      origin.includes('localhost');
-
-    if (isAllowed) {
-      return callback(null, true);
-    } else {
-      console.warn(`[CORS] Blocked origin: ${origin}`);
-      return callback(null, true);
-    }
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma', 'X-Requested-With', 'Accept', 'MCP-Protocol-Version', 'MCP-Session-Id']
-}));
+//
+// The allowlist and the enforcement decision live in config/corsPolicy.js.
+// Before Phase 6 this was inline and returned `callback(null, true)` even when
+// it logged "Blocked origin", so every origin was accepted. See
+// ../.uihub-agent/APIs/CORS_CONTRACT.md.
+app.use(cors(buildCorsOptions()));
 
 // 3. Body parsers (with size limits)
 app.use('/api/v1/payment/webhook', express.raw({ type: 'application/json' }));
