@@ -2,6 +2,7 @@ import type { ComponentConfig } from '../data/componentMetadata';
 import type { ComponentItem } from '../data/componentData';
 import { inferTechs } from './tech';
 import type { ComponentSeoInput } from './metadata';
+import type { ComponentAeoInput } from './aeo';
 
 export type { ComponentConfig };
 
@@ -44,6 +45,38 @@ export interface ComponentPropRow {
     type: string;
     default: string;
     description: string;
+}
+
+/**
+ * Gathers everything `componentAeo()` needs into one plain object.
+ *
+ * Like `toComponentSeoInput`, this receives `config` rather than importing it,
+ * because componentMetadata.ts is ~1.2 MB and must stay off the critical path.
+ * The `itemDescription` field is passed through unfiltered on purpose:
+ * `componentAeo()` is responsible for rejecting testimonial copy.
+ */
+export function toComponentAeoInput(
+    item: Pick<ComponentItem, 'id' | 'title' | 'category' | 'description' | 'isPremium' | 'vibePrompt' | 'code'>,
+    config?: ComponentConfig,
+): ComponentAeoInput {
+    const vibe = config?.vibeMeta;
+
+    return {
+        id: item.id,
+        title: item.title,
+        category: item.category,
+        isPremium: item.isPremium,
+        code: item.code,
+        vibePrompt: item.vibePrompt,
+        itemDescription: item.description,
+        vibeDescription: vibe?.description,
+        behavior: vibe?.behavior,
+        requirements: Array.isArray(vibe?.requirements) ? vibe.requirements : [],
+        libraries: Array.isArray(vibe?.libraries) ? vibe.libraries : [],
+        cssProperties: Array.isArray(vibe?.cssProperties) ? vibe.cssProperties : [],
+        states: vibe?.states,
+        props: propRows(config),
+    };
 }
 
 /** Flattens a COMPONENT_CONFIG entry into rows for the props table. */

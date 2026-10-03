@@ -21,6 +21,23 @@ function booleanProp(props, key) {
     return prop && prop.kind === 'boolean' ? prop.value : undefined;
 }
 
+/**
+ * Reads a backtick template literal, which the lexer classifies as `complex`.
+ * `${...}` interpolations are dropped so only the literal text remains, which
+ * is what both the AEO prose extraction and the language detection need.
+ */
+function templateProp(entryText, props, key) {
+    const prop = props.get(key);
+    if (!prop || prop.kind !== 'complex' || !Array.isArray(prop.span)) return undefined;
+    const raw = entryText.slice(prop.span[0], prop.span[1]);
+    if (!raw.startsWith('`') || raw.length < 2) return undefined;
+    const inner = raw
+        .slice(1, -1)
+        .replace(/\$\{[^}]*\}/g, '')
+        .trim();
+    return inner.length > 0 ? inner : undefined;
+}
+
 export function extractComponents() {
     const source = readDataFile('componentData.tsx');
     const arrayStart = findArrayStart(source, 'export const componentList');
@@ -41,6 +58,8 @@ export function extractComponents() {
             imageUrl: stringProp(props, 'imageUrl'),
             isPremium: booleanProp(props, 'isPremium') ?? false,
             addedAt: stringProp(props, 'addedAt'),
+            code: templateProp(entry.text, props, 'code'),
+            vibePrompt: templateProp(entry.text, props, 'vibePrompt') ?? stringProp(props, 'vibePrompt'),
         });
     }
 

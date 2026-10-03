@@ -257,11 +257,144 @@ async function main() {
     }
     console.log(`[check:seo] runtime/prerender metadata parity verified on ${parityChecked} component routes`);
 
+    // AEO gate. Every indexable component route must carry answer-first content,
+    // the answers must be in the prerendered HTML, must not be hidden, must not
+    // reuse testimonial copy, and must not duplicate another component's answer.
+    let aeoParityChecked = 0;
+    const aeoQuickAnswerIndex = new Map();
+    for (const route of routes.filter((entry) => entry.type === 'component')) {
+
+    if (!route.indexable) continue;
+
+        const aeo = route.aeo;
+        if (!aeo) {
+            fail(`${route.path}: component route has no AEO content`);
+            continue;
+        }
+
+        const html = readFileSync(fileForRoute(route.path), 'utf8');
+
+        const quickAnswer = aeo.blocks.find((block) => block.kind === 'quickAnswer');
+        if (!quickAnswer) {
+            fail(`${route.path}: AEO has no quick answer`);
+        } else {
+            if (quickAnswer.text.trim().length < 40) {
+                fail(`${route.path}: quick answer is only ${quickAnswer.text.trim().length} chars`);
+            }
+            if (!html.includes(`<h2 id="aeo-quickAnswer-0">`)) {
+                fail(`${route.path}: quick answer heading missing from the prerendered HTML`);
+            }
+            // The whole point of AEO: the answer must be readable without
+            // executing anything and without any interaction.
+            if (!html.includes(quickAnswer.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'))) {
+                fail(`${route.path}: quick answer text is not present in the prerendered HTML`);
+            }
+        }
+
+        const requiredKinds = ['quickFacts', 'table', 'faq'];
+        for (const kind of requiredKinds) {
+            if (!aeo.blocks.some((block) => block.kind === kind)) {
+                fail(`${route.path}: AEO is missing a ${kind} block`);
+            }
+        }
+
+        if (aeo.faq.length < 3) {
+            fail(`${route.path}: AEO FAQ has only ${aeo.faq.length} questions (minimum 3)`);
+        }
+
+        const questions = aeo.faq.map((item) => item.question);
+        const answers = aeo.faq.map((item) => item.answer);
+        for (const [label, values] of [
+            ['FAQ question', questions],
+            ['FAQ answer', answers],
+        ]) {
+            const seen = new Set();
+            for (const value of values) {
+                const key = value.trim().toLowerCase();
+                if (seen.has(key)) {
+                    fail(`${route.path}: duplicate ${label} "${value}"`);
+                }
+                seen.add(key);
+            }
+        }
+
+        for (const item of aeo.faq) {
+            if (item.answer.trim().length < 30) {
+                fail(`${route.path}: FAQ answer for "${item.question}" is too short to be useful`);
+            }
+            if (!html.includes(`<summary>${seo.escapeHtml(item.question)}</summary>`)) {
+                fail(`${route.path}: FAQ question "${item.question}" is not in the prerendered HTML`);
+            }
+        }
+
+        // No invented copy. `ComponentItem.description` doubles as testimonial copy
+        // for social-proof components, and that text carries unverifiable claims
+        // ("accelerated our rebuild by 300%"). Assert the forbidden source text is
+        // absent rather than trying to classify generated technical prose, which
+        // legitimately contains percentages and currency values.
+        const rawDescription = stats.componentById.get(route.path.split('/').pop())?.description;
+        if (rawDescription && seo.looksLikeTestimonial(rawDescription)) {
+            const probe = rawDescription.trim().slice(0, 60);
+            if (html.includes(seo.escapeHtml(probe))) {
+                fail(`${route.path}: testimonial copy from componentData leaked into the page`);
+            }
+            for (const item of aeo.faq) {
+                if (item.answer.includes(rawDescription.trim())) {
+                    fail(`${route.path}: FAQ answer reuses the testimonial description verbatim`);
+                }
+            }
+        }
+
+        // Never hide answers. AEO rules forbid text that is present but not
+        // readable, so reject the usual hiding techniques outright.
+        const hiddenTextPatterns = [
+            [/style="[^"]*display:\s*none/i, 'display:none'],
+            [/style="[^"]*visibility:\s*hidden/i, 'visibility:hidden'],
+            [/style="[^"]*font-size:\s*0/i, 'font-size:0'],
+            [/style="[^"]*opacity:\s*0(\.0+)?\b/i, 'opacity:0'],
+            [/style="[^"]*text-indent:\s*-\d/i, 'negative text-indent'],
+            [/style="[^"]*left:\s*-\d{3,}/i, 'off-screen positioning'],
+            [/<(div|span|p)[^>]*aria-hidden="true"[^>]*>[^<]{80,}/i, 'aria-hidden text block'],
+        ];
+        for (const [pattern, label] of hiddenTextPatterns) {
+            if (pattern.test(html)) {
+                fail(`${route.path}: prerendered HTML uses ${label}, which AEO rules forbid`);
+            }
+        }
+
+        // A quick answer must be unique across the catalog, otherwise it is
+        // generic filler rather than a real answer.
+        const quickAnswerKey = quickAnswer?.text.trim().toLowerCase() ?? '';
+        if (quickAnswerKey) {
+            const seen = aeoQuickAnswerIndex.get(quickAnswerKey);
+            if (seen) {
+                fail(`${route.path}: quick answer is identical to ${seen}`);
+            } else {
+                aeoQuickAnswerIndex.set(quickAnswerKey, route.path);
+            }
+        }
+
+        aeoParityChecked += 1;
+    }
+
+    if (aeoParityChecked === 0) {
+        fail('no component routes were checked for AEO content');
+    }
+
+    console.log(
+        `[check:seo] AEO parity verified on ${aeoParityChecked} component routes (${stats.aeoLowConfidence.length} low confidence)`,
+    );
+
     const indexable = routes.filter((route) => route.indexable).length;
     console.log(`[check:seo] ${routes.length} routes, ${indexable} indexable`);
     console.log(
         `[check:seo] data: ${stats.components} components (${stats.componentsWithMetadata} with rich metadata), ${stats.templates} templates, ${stats.buildSections} build sections`,
     );
+    if (stats.aeoLowConfidence.length > 0) {
+        warn(
+            `${stats.aeoLowConfidence.length} components have low-confidence AEO content (no authored description or behaviour): ${stats.aeoLowConfidence.slice(0, 12).join(', ')}${stats.aeoLowConfidence.length > 12 ? ', …' : ''}`,
+        );
+    }
 
     for (const warning of warnings) {
         console.warn(`[check:seo] WARN ${warning}`);

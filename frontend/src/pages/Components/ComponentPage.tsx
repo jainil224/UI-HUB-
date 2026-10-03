@@ -8,7 +8,9 @@ import { DemoErrorBoundary as PreviewBoundary } from './DemoPage';
 import { categorySeo } from '../../seo/taxonomy';
 import { componentDescription, componentIntro, componentPath, componentTitle } from '../../seo/metadata';
 import { breadcrumbJsonLd, imageObjectJsonLd, softwareSourceCodeJsonLd } from '../../seo/jsonld';
-import { propRows, toComponentSeoInput, type ComponentConfig } from '../../seo/component-seo';
+import { propRows, toComponentAeoInput, toComponentSeoInput, type ComponentConfig } from '../../seo/component-seo';
+import { componentAeo } from '../../seo/aeo';
+import AeoContent from '../../components/AeoContent';
 import { SITE_URL } from '../../seo/site';
 
 export default function ComponentPage() {
@@ -43,6 +45,7 @@ export default function ComponentPage() {
     }, [item]);
 
     const seoInput = useMemo(() => (item ? toComponentSeoInput(item, config) : undefined), [item, config]);
+    const aeo = useMemo(() => (item ? componentAeo(toComponentAeoInput(item, config)) : undefined), [item, config]);
     const path = componentPath({ category, id: slug });
     const seoCategory = categorySeo(category);
 
@@ -147,6 +150,13 @@ export default function ComponentPage() {
                     )}
                 </header>
 
+                {/* Answer-first content. Lead blocks sit under the H1 so the
+                    direct answer is the first thing in the DOM; the technical
+                    table, how-to and FAQ render below the preview. */}
+                <div className="mb-10 space-y-8">
+                    <AeoContent aeo={aeo} part="lead" />
+                </div>
+
                 <section
                     aria-label={`${item.title} preview`}
                     className="relative w-full h-[60vh] min-h-[320px] rounded-2xl overflow-hidden border border-white/10 bg-[#0A0B0D]"
@@ -178,6 +188,10 @@ export default function ComponentPage() {
                                 </div>
                             </section>
                         )}
+
+                        <div className="space-y-8">
+                            <AeoContent aeo={aeo} part="detail" />
+                        </div>
 
                         {props.length > 0 && (
                             <section aria-labelledby="props-heading">

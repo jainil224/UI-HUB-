@@ -22,6 +22,7 @@ import {
 } from './jsonld';
 import { CATEGORY_SEO, categoryLabel } from './taxonomy';
 import { DEFAULT_OG_IMAGE, SITE_NAME, absoluteUrl, clampDescription, clampTitle } from './site';
+import type { ComponentAeo } from './aeo';
 
 export type SeoRouteType =
     | 'home'
@@ -50,6 +51,8 @@ export interface SeoRoute {
     priority: number;
     changefreq: 'daily' | 'weekly' | 'monthly' | 'yearly';
     indexable: boolean;
+    /** Answer-first content, present on component routes. */
+    aeo?: ComponentAeo;
 }
 
 export interface BuildWithUIHubInput {
@@ -59,7 +62,7 @@ export interface BuildWithUIHubInput {
 }
 
 export interface SeoManifestInput {
-    components: ComponentSeoInput[];
+    components: (ComponentSeoInput & { aeo?: ComponentAeo })[];
     templates: TemplateSeoInput[];
     buildWithUIHub: BuildWithUIHubInput[];
     buildTemplateIds: string[];
@@ -281,6 +284,7 @@ export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
             changefreq: 'monthly',
             priority: 0.6,
             indexable: true,
+            aeo: component.aeo,
         });
     }
 

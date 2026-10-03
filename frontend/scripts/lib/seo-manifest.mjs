@@ -42,17 +42,21 @@ export async function loadSeoManifest() {
     const templates = extractTemplates();
     const buildWithUIHub = extractBuildWithUIHub(templates);
     const buildTemplateIds = extractBuildWithUIHubTemplateIds(buildWithUIHub);
-    const { config } = await extractComponentConfig();
+    const { config: componentConfig } = await extractComponentConfig();
 
     // Uses the same helper the React routes use, so the prerendered HTML and the
     // client-rendered page can never drift apart.
-    const components = rawComponents.map((component) => ({
-        ...component,
-        ...seo.toComponentSeoInput(component, config[component.id]),
-        propCount: Array.isArray(config[component.id]?.props) ? config[component.id].props.length : 0,
-    }));
+    const components = rawComponents.map((component) => {
+        const config = componentConfig[component.id];
+        return {
+            ...component,
+            ...seo.toComponentSeoInput(component, config),
+            propCount: Array.isArray(config?.props) ? config.props.length : 0,
+            aeo: seo.componentAeo(seo.toComponentAeoInput(component, config)),
+        };
+    });
 
-    const orphanMetadata = Object.keys(config).filter(
+    const orphanMetadata = Object.keys(componentConfig).filter(
         (slug) => !components.some((component) => component.id === slug),
     );
 
@@ -72,13 +76,16 @@ export async function loadSeoManifest() {
     return {
         seo,
         routes,
-        componentConfig: config,
+        componentConfig,
         stats: {
             components: components.length,
             templates: templates.length,
             buildSections: buildWithUIHub.length,
             orphanMetadata,
             componentsWithMetadata: components.filter((component) => component.propCount > 0).length,
+            aeoLowConfidence: components
+                .filter((component) => component.aeo?.confidence === 'low')
+                .map((component) => component.id),
             componentById: new Map(components.map((component) => [component.id, component])),
             categoryCounts: new Map(
                 categorySlugs.map((slug) => [

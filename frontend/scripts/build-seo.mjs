@@ -95,6 +95,7 @@ ${body}
 }
 
 function renderBody(route) {
+    const aeo = route.aeo ? `\n${seo.renderAeoHtml(route.aeo, '    ')}` : '';
     const related =
         route.related.length > 0
             ? `\n    <nav aria-label="Related">\n      <h2>Related</h2>\n      <ul>${route.related
@@ -104,7 +105,7 @@ function renderBody(route) {
 
     return `    <main>
       <h1>${seo.escapeHtml(route.h1)}</h1>
-${markdownToHtml(route.intro)}
+${markdownToHtml(route.intro)}${aeo}
     </main>${related}`;
 }
 
