@@ -97,6 +97,30 @@ mode to avoid, not the example itself.
 Angle-bracket placeholders are stripped from CORS origin lists for the same
 reason: a copied `<your-origin>` must not silently disable enforcement.
 
+## Public identifiers in the client bundle (6.29)
+
+Some values must ship to the browser and are therefore **not** secrets, even
+though they look credential-shaped. Rule: a value is public only when it is
+already published in the client bundle and grants no access on its own.
+
+| Value | Lives in | Why it is public |
+|---|---|---|
+| Firebase web config (`apiKey`, `authDomain`, `projectId`, …) | `frontend/src/lib/firebase.ts` | Only scopes *this* web app. Access is controlled by Firestore/Auth rules and the OAuth client list, never by this config. |
+| Google Analytics measurement ID (`G-…`) | `frontend/index.html` | Identifies the property for measurement only. |
+| Google AdSense client ID (`ca-pub-…`) | `frontend/src/lib/adsense.ts` | Identifies the publisher account for ad serving only. |
+| Razorpay **key ID** (`rzp_live_…`) | `frontend/.env` via `VITE_RAZORPAY_KEY_ID` | The *secret* counterpart is the key secret, which stays server-side. |
+
+The AdSense **manual ad-unit slot IDs** (`data-ad-slot`) are public for the same
+reason. None of the above are covered by `check:secrets`; that is expected, not a
+gap in the scanner.
+
+AdSense **account credentials** (the AdSense dashboard login, and any
+ad-unit/mediation secret) are *not* public and must never enter the frontend
+bundle or any documentation.
+
+The `pub-…` publisher ID written into `frontend/public/ads.txt` is also public by
+necessity — the file is fetched unauthenticated by Google's crawlers.
+
 ## Rotation
 
 | Secret | Rotation path |

@@ -31,12 +31,12 @@
   ],
   "description": "React components discovered from JSX syntax and capitalized exports, with page usage and orphan status.",
   "counts": {
-    "components": 227,
+    "components": 228,
     "orphaned": 5,
     "lazy": 155,
     "confidence": {
       "HIGH": 157,
-      "MEDIUM": 70,
+      "MEDIUM": 71,
       "LOW_CONFIDENCE": 0,
       "UNKNOWN": 0
     }
@@ -1167,6 +1167,33 @@
       ],
       "orphaned": false,
       "confidence": "HIGH"
+    },
+    {
+      "name": "AdSlot",
+      "path": "frontend/src/components/ui/AdSlot.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 93,
+      "exportedSymbols": [],
+      "importsInternal": [
+        "frontend/src/context/CookieConsentContext.tsx",
+        "frontend/src/lib/adsense.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/HomePage/HomePage.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplatesPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/HomePage/HomePage.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplatesPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
     },
     {
       "name": "AsciiCursor",
@@ -4437,12 +4464,13 @@
       "feature": "cookie-consent-context",
       "lazy": false,
       "isBarrel": false,
-      "lines": 129,
+      "lines": 151,
       "exportedSymbols": [
         "useCookieConsent",
         "CookieConsentProvider"
       ],
       "importsInternal": [
+        "frontend/src/lib/adsense.ts",
         "frontend/src/lib/firebase.ts",
         "frontend/src/utils/cookieUtils.ts"
       ],
@@ -4451,6 +4479,7 @@
       ],
       "usedBy": [
         "frontend/src/App.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/pages/legal/CookieSettingsPage.tsx"
       ],

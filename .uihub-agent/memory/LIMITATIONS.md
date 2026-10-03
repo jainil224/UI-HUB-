@@ -38,8 +38,8 @@ understanding belongs upstream, in the task wording.
 **Date:** 2026-10-01 · **Status:** CURRENT
 
 The agent layer knows only what the index contains. Freshness is asserted by
-`npm run agent:index:check` against fingerprint `b7805860f03a` covering 19 artifacts
-and 501 files.
+`npm run agent:index:check` against fingerprint `fe2be01006fe` covering 19 artifacts
+and 505 files.
 
 **The trap this cannot catch.** A file can be indexed and still be wrong about its
 own contents — a stale name, a deleted export, a route that no longer responds. The

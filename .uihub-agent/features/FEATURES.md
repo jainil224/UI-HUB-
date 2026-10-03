@@ -43,6 +43,7 @@ evidence · `low` unverified.
 | 20 | Cookie Consent | implemented | high |
 | 21 | Theming (light/dark) | implemented | high |
 | 22 | Announcement Pipeline | experimental | high |
+| 23 | Advertising (Google AdSense) | implemented | high |
 
 ---
 
@@ -347,7 +348,8 @@ evidence · `low` unverified.
 | **Status** | `implemented` · **confidence** `high` |
 | **Context** | `context/CookieConsentContext.tsx` — `status` `prefs` `showBanner` `acceptAll` `rejectNonEssential` `savePreference` `resetPreference` |
 | **UI** | `CookieBanner.tsx`, `/cookies` → `CookieSettingsPage.tsx` |
-| **Storage** | `utils/cookieUtils.ts` — `ui_hub_cookie_consent`, `ui_hub_cookie_prefs`, 365 days, `SameSite=Lax`. **No `Secure` flag.** |
+| **Storage** | `utils/cookieUtils.ts` — `ui_hub_cookie_consent`, `ui_hub_cookie_prefs`, 365 days, `SameSite=Lax`. **No `Secure` flag.** Mirrored to `localStorage` (`ui_hub_consent_status`, `ui_hub_consent_prefs`), which is the record that survives a lost cookie. |
+| **Banner gate** | `getConsent()` reads cookie → mirror → `unknown`, and `CookieBanner` shows itself **only** on `unknown`. A decision therefore survives refresh and revisit; `/cookies` → Reset clears both stores and re-opens the notice. Guarded by `utils/cookieUtils.test.ts`. |
 | **Always mounted** | `CookieBanner` renders in `AppShell` on every route. |
 
 ---
@@ -378,6 +380,23 @@ evidence · `low` unverified.
 | **Coupling** | Depends on `/preview-capture` and on the frontend + MCP data files staying in sync. |
 | **Why `experimental`** | No CI config exists in the repository, so these are **manual** steps. Whether they run in any automation is `UNKNOWN`. |
 | **Correction** | `README.md` documents 7 `.py` scripts for this. **There are no Python files in the repository.** `../CONFLICTS.md` §7. |
+
+---
+
+## 23. Advertising (Google AdSense)
+
+| | |
+|---|---|
+| **Purpose** | Serve display advertising. Auto ads ("in-page ads") are the active mode; five manual placements are wired and inert. |
+| **Status** | `implemented` · **confidence** `high` |
+| **Account** | Publisher `ca-pub-1145682845044583`. `ads.txt` is authorized with the matching `pub-` line. **No API key exists** — AdSense has none; a publisher ID is a public label, not a credential. |
+| **Loader** | `lib/adsense.ts` — `loadAdSense()` injects `pagead2.googlesyndication.com/.../adsbygoogle.js?client=<publisher>` once, memoised, with `crossorigin="anonymous"` (matches Google's own snippet). |
+| **Never hardcoded** | The script is **not** in `index.html`. Injecting it there would fetch ad scripts for every visitor before consent, breaking the §20 gate and the privacy policy. Verified absent from the built `dist/index.html`. |
+| **Two gates** | ① `isAdSenseEnabled()` = `import.meta.env.PROD`, so no ad request is ever made from `npm run dev` and dev traffic cannot contaminate reporting. ② `AdSlot` requires `prefs.thirdParty`, so nothing renders until the visitor allows third-party cookies. |
+| **Manual slots** | `AD_SLOT_IDS` (`lib/adsense.ts`) — `home-after-stats` (`HomePage.tsx`) · `home-after-categories` (`HomePage.tsx`) · `home-explore` (`ComponentGrid.tsx`) · `templates-top` (`TemplatesPage.tsx`) · `template-detail-bottom` (`TemplateDetailPage.tsx`). All five IDs are `''`, so `AdSlot` returns `null` and reserves no space. Adding a placement means adding a key to `AD_SLOT_IDS` **and** the `AdSlotId` union. |
+| **Consent signals** | `buildConsentSignals()` maps `thirdParty` → `ad_storage` / `ad_user_data` / `ad_personalization`, `analytics` → `analytics_storage`. Pinned by `utils/consentSignals.test.ts`. |
+| **Verify locally** | `npm run preview:ads` (build + `vite preview` on `:4173`). Expect `unfilled` on localhost — no inventory exists there; filled creatives require the deployed domain. |
+| **Blocking dependency** | AdSense serves nothing until the account passes **site review**, independent of the code. `ads.txt` must also stay authorized or AdSense reports "ads.txt is not authorized". |
 
 ---
 

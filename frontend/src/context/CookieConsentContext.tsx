@@ -9,8 +9,10 @@ import {
     type CookiePreferences,
     ALLOW_ALL,
     ESSENTIAL_ONLY,
+    buildConsentSignals,
 } from '../utils/cookieUtils';
 import { enableAnalytics, disableAnalytics } from '../lib/firebase';
+import { loadAdSense } from '../lib/adsense';
 
 declare global {
     interface Window {
@@ -41,32 +43,38 @@ const CookieConsentContext = createContext<CookieConsentContextType>({
 
 export const useCookieConsent = () => useContext(CookieConsentContext);
 
-const updateGtagConsent = (analyticsStorage: 'granted' | 'denied') => {
-    if (typeof window !== 'undefined') {
-        window.dataLayer = window.dataLayer || [];
-        const gtag = window.gtag;
-        if (typeof gtag === 'function') {
-            gtag('consent', 'update', {
-                'ad_storage': analyticsStorage,
-                'ad_user_data': analyticsStorage,
-                'ad_personalization': analyticsStorage,
-                'analytics_storage': analyticsStorage,
-            });
-        } else {
-            window.dataLayer.push({
-                event: 'consent_update',
-                consent: { ...(analyticsStorage === 'granted' ? { analytics_storage: 'granted', ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted' } : { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' }) },
-            });
-        }
+/**
+ * Mirrors the cookie preferences onto Google's Consent Mode v2 signals.
+ *
+ * `ad_storage`, `ad_user_data` and `ad_personalization` follow the third-party
+ * preference, which is what gates Google AdSense. They must NOT follow the
+ * analytics preference: tying them to `analytics` would serve personalized ads
+ * to a visitor who accepted analytics but refused third-party cookies, and would
+ * drop ad_storage to 'denied' for someone who accepted ads but refused analytics.
+ *
+ * The mapping itself lives in `buildConsentSignals` so it can be unit tested.
+ */
+const updateGtagConsent = (analyticsAllowed: boolean, thirdPartyAllowed: boolean): void => {
+    if (typeof window === 'undefined') return;
+
+    const consent = buildConsentSignals(analyticsAllowed, thirdPartyAllowed);
+    window.dataLayer = window.dataLayer || [];
+
+    const gtag = window.gtag;
+    if (typeof gtag === 'function') {
+        gtag('consent', 'update', consent);
+        return;
     }
+
+    window.dataLayer.push({ event: 'consent_update', consent });
 };
 
-const applyAnalytics = (analyticsAllowed: boolean) => {
+const applyConsent = (analyticsAllowed: boolean, thirdPartyAllowed: boolean): void => {
+    updateGtagConsent(analyticsAllowed, thirdPartyAllowed);
+
     if (analyticsAllowed) {
-        updateGtagConsent('granted');
         enableAnalytics();
     } else {
-        updateGtagConsent('denied');
         disableAnalytics();
     }
 };
@@ -86,13 +94,27 @@ export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({
         }
     }, []);
 
+    /**
+     * Loads Google AdSense once the visitor allows third-party cookies.
+     *
+     * Driven from an effect rather than from the click handlers so it also covers
+     * visitors whose third-party preference was saved before this shipped: that
+     * preference is restored from the cookie on mount, so their ad slots would
+     * otherwise never initialize until they re-consented.
+     */
+    useEffect(() => {
+        if (prefs.thirdParty) {
+            loadAdSense();
+        }
+    }, [prefs.thirdParty]);
+
     const acceptAll = useCallback(() => {
         const next = savePreferences({ ...ALLOW_ALL });
         setConsent(next);
         setStatus(next);
         setPrefs({ ...ALLOW_ALL });
         setShowBanner(false);
-        applyAnalytics(true);
+        applyConsent(true, true);
     }, []);
 
     const rejectNonEssential = useCallback(() => {
@@ -101,7 +123,7 @@ export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({
         setStatus(next);
         setPrefs({ ...ESSENTIAL_ONLY });
         setShowBanner(false);
-        applyAnalytics(false);
+        applyConsent(false, false);
     }, []);
 
     const savePreference = useCallback((nextPrefs: CookiePreferences) => {
@@ -110,7 +132,7 @@ export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({
         setStatus(next);
         setPrefs({ ...nextPrefs });
         setShowBanner(false);
-        applyAnalytics(nextPrefs.analytics);
+        applyConsent(nextPrefs.analytics, nextPrefs.thirdParty);
     }, []);
 
     const resetPreference = useCallback(() => {
@@ -118,7 +140,7 @@ export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({
         setStatus('unknown');
         setPrefs({ ...ESSENTIAL_ONLY });
         setShowBanner(true);
-        applyAnalytics(false);
+        applyConsent(false, false);
     }, []);
 
     return (

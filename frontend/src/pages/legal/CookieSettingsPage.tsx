@@ -36,6 +36,8 @@ const policySections: LegalSection[] = [
         heading: 'Third-Party Cookies',
         body: [
             'Google Analytics: See the "Analytics Cookies" section above. For more information, visit https://policies.google.com/privacy.',
+            'Google AdSense: if you allow third-party cookies we load Google\'s advertising script, which may set cookies to serve and measure ads based on your prior visits to this and other sites. Learn more at https://policies.google.com/technologies/ads.',
+            'Turning this off does not remove previously set cookies. You can clear them in your browser settings.',
             'Razorpay: During checkout, Razorpay may place its own cookies to facilitate secure payment processing. These are managed under Razorpay\'s privacy policy at https://razorpay.com/privacy.',
         ],
     },
@@ -243,7 +245,7 @@ const CookieSettingsPage: React.FC = () => {
                     icon={Share2}
                     dot="bg-brand-red"
                     title="Third-Party Cookies"
-                    description="Set by partner services such as Razorpay during checkout to facilitate secure payment processing."
+                    description="Used by Google AdSense to serve and measure advertising, and by Razorpay during checkout to facilitate secure payment processing. If you turn this off, no ad script loads and no ads are shown."
                     checked={draft.thirdParty}
                     onToggle={() => setDraft({ ...draft, thirdParty: !draft.thirdParty })}
                 />

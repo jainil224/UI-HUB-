@@ -31,19 +31,19 @@
   ],
   "description": "Every top-level symbol with file, line, kind, and fan-in. Names that appear more than once are flagged ambiguous.",
   "counts": {
-    "symbols": 2986,
-    "distinctNames": 2383,
-    "ambiguousNames": 383,
+    "symbols": 3017,
+    "distinctNames": 2412,
+    "ambiguousNames": 385,
     "byKind": {
       "CLASS": 10,
-      "COMPONENT": 521,
-      "CONSTANT": 1106,
+      "COMPONENT": 522,
+      "CONSTANT": 1108,
       "FUNCTION": 469,
       "HOOK": 7,
-      "INTERFACE": 107,
-      "NAMESPACE": 1,
-      "TYPE": 24,
-      "VARIABLE": 741
+      "INTERFACE": 109,
+      "NAMESPACE": 2,
+      "TYPE": 26,
+      "VARIABLE": 764
     }
   },
   "symbolsByName": {
@@ -107,6 +107,12 @@
     "__OceanSwellBase": {
       "locations": [
         "frontend/src/components/ui/OceanSwell.tsx:524"
+      ],
+      "ambiguous": false
+    },
+    "__resetAdSenseLoaderForTests": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:116"
       ],
       "ambiguous": false
     },
@@ -253,6 +259,12 @@
     "ActivityPayload": {
       "locations": [
         "frontend/src/utils/activityLogger.ts:4"
+      ],
+      "ambiguous": false
+    },
+    "AD_SLOT_IDS": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:42"
       ],
       "ambiguous": false
     },
@@ -459,6 +471,36 @@
       ],
       "ambiguous": false
     },
+    "ADSENSE_CLIENT_ID": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:24"
+      ],
+      "ambiguous": false
+    },
+    "ADSENSE_SRC": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:15"
+      ],
+      "ambiguous": false
+    },
+    "AdSlot": {
+      "locations": [
+        "frontend/src/components/ui/AdSlot.tsx:37"
+      ],
+      "ambiguous": false
+    },
+    "AdSlotId": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:28"
+      ],
+      "ambiguous": false
+    },
+    "AdSlotProps": {
+      "locations": [
+        "frontend/src/components/ui/AdSlot.tsx:12"
+      ],
+      "ambiguous": false
+    },
     "ADVECTION_SHADER": {
       "locations": [
         "frontend/src/components/ui/AuraCursor.tsx:167"
@@ -486,7 +528,7 @@
     "AISystem": {
       "locations": [
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx:36",
-        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:30",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:31",
         "frontend/src/utils/promptUtils.ts:1"
       ],
       "ambiguous": true
@@ -518,7 +560,7 @@
     },
     "ALLOW_ALL": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:13"
+        "frontend/src/utils/cookieUtils.ts:26"
       ],
       "ambiguous": false
     },
@@ -678,9 +720,9 @@
       ],
       "ambiguous": false
     },
-    "applyAnalytics": {
+    "applyConsent": {
       "locations": [
-        "frontend/src/context/CookieConsentContext.tsx:64"
+        "frontend/src/context/CookieConsentContext.tsx:72"
       ],
       "ambiguous": false
     },
@@ -1256,25 +1298,25 @@
     },
     "BentoCard": {
       "locations": [
-        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:76"
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:77"
       ],
       "ambiguous": false
     },
     "BentoComp": {
       "locations": [
-        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:16"
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:17"
       ],
       "ambiguous": false
     },
     "BentoSpec": {
       "locations": [
-        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:9"
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:10"
       ],
       "ambiguous": false
     },
     "bentoSpecs": {
       "locations": [
-        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:23"
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:24"
       ],
       "ambiguous": false
     },
@@ -1580,6 +1622,12 @@
     "buildColorStrip": {
       "locations": [
         "backend/src/services/brevoService.js:10"
+      ],
+      "ambiguous": false
+    },
+    "buildConsentSignals": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:161"
       ],
       "ambiguous": false
     },
@@ -2055,13 +2103,13 @@
     },
     "CategoryCard": {
       "locations": [
-        "frontend/src/pages/legal/CookieSettingsPage.tsx:104"
+        "frontend/src/pages/legal/CookieSettingsPage.tsx:106"
       ],
       "ambiguous": false
     },
     "CategoryCardProps": {
       "locations": [
-        "frontend/src/pages/legal/CookieSettingsPage.tsx:94"
+        "frontend/src/pages/legal/CookieSettingsPage.tsx:96"
       ],
       "ambiguous": false
     },
@@ -2732,7 +2780,7 @@
     },
     "ComponentGrid": {
       "locations": [
-        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:138"
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:139"
       ],
       "ambiguous": false
     },
@@ -2938,6 +2986,36 @@
       ],
       "ambiguous": true
     },
+    "CONSENT_PREFS_STORAGE_KEY": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:24"
+      ],
+      "ambiguous": false
+    },
+    "CONSENT_STATUS_STORAGE_KEY": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:23"
+      ],
+      "ambiguous": false
+    },
+    "CONSENT_STATUSES": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:29"
+      ],
+      "ambiguous": false
+    },
+    "ConsentSignal": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:143"
+      ],
+      "ambiguous": false
+    },
+    "ConsentSignals": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:145"
+      ],
+      "ambiguous": false
+    },
     "ContactSection": {
       "locations": [
         "frontend/src/components/templates/PortfolioClosing.tsx:435"
@@ -2970,19 +3048,19 @@
     },
     "CookieConsentContext": {
       "locations": [
-        "frontend/src/context/CookieConsentContext.tsx:32"
+        "frontend/src/context/CookieConsentContext.tsx:34"
       ],
       "ambiguous": false
     },
     "CookieConsentContextType": {
       "locations": [
-        "frontend/src/context/CookieConsentContext.tsx:22"
+        "frontend/src/context/CookieConsentContext.tsx:24"
       ],
       "ambiguous": false
     },
     "CookieConsentProvider": {
       "locations": [
-        "frontend/src/context/CookieConsentContext.tsx:74"
+        "frontend/src/context/CookieConsentContext.tsx:82"
       ],
       "ambiguous": false
     },
@@ -3001,7 +3079,7 @@
     "CookieSettingsPage": {
       "locations": [
         "frontend/src/App.tsx:21",
-        "frontend/src/pages/legal/CookieSettingsPage.tsx:129"
+        "frontend/src/pages/legal/CookieSettingsPage.tsx:131"
       ],
       "ambiguous": true
     },
@@ -3593,7 +3671,7 @@
     },
     "DEFAULT_FRAME": {
       "locations": [
-        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:19"
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx:20"
       ],
       "ambiguous": false
     },
@@ -3634,6 +3712,12 @@
         "frontend/src/components/ui/ParticleCursor.tsx:34"
       ],
       "ambiguous": true
+    },
+    "DEFAULT_MIN_HEIGHT": {
+      "locations": [
+        "frontend/src/components/ui/AdSlot.tsx:24"
+      ],
+      "ambiguous": false
     },
     "DEFAULT_PALETTE": {
       "locations": [
@@ -3719,6 +3803,12 @@
       ],
       "ambiguous": true
     },
+    "define": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.test.ts:81"
+      ],
+      "ambiguous": false
+    },
     "DEGRADED": {
       "locations": [
         "backend/src/services/healthService.js:4"
@@ -3753,7 +3843,7 @@
     },
     "deleteCookie": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:27"
+        "frontend/src/utils/cookieUtils.ts:75"
       ],
       "ambiguous": false
     },
@@ -3766,6 +3856,12 @@
     "deleteQueryBatch": {
       "locations": [
         "backend/scripts/resetFirebase.js:14"
+      ],
+      "ambiguous": false
+    },
+    "deleteStorage": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:55"
       ],
       "ambiguous": false
     },
@@ -4006,6 +4102,12 @@
     "DocStep": {
       "locations": [
         "frontend/src/pages/LibraryPage/sections/GetStarted/getStartedData.ts:1"
+      ],
+      "ambiguous": false
+    },
+    "documentStub": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.test.ts:47"
       ],
       "ambiguous": false
     },
@@ -4472,7 +4574,7 @@
     },
     "ESSENTIAL_ONLY": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:14"
+        "frontend/src/utils/cookieUtils.ts:27"
       ],
       "ambiguous": false
     },
@@ -5453,6 +5555,12 @@
       ],
       "ambiguous": false
     },
+    "getAdUnitId": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:59"
+      ],
+      "ambiguous": false
+    },
     "getAlerts": {
       "locations": [
         "frontend/src/services/admin.ts:506"
@@ -5538,13 +5646,13 @@
     },
     "getConsent": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:31"
+        "frontend/src/utils/cookieUtils.ts:79"
       ],
       "ambiguous": false
     },
     "getCookie": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:21"
+        "frontend/src/utils/cookieUtils.ts:69"
       ],
       "ambiguous": false
     },
@@ -5635,7 +5743,7 @@
     },
     "getPreferences": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:48"
+        "frontend/src/utils/cookieUtils.ts:103"
       ],
       "ambiguous": false
     },
@@ -5834,9 +5942,10 @@
     },
     "global": {
       "locations": [
-        "frontend/src/context/CookieConsentContext.tsx:15"
+        "frontend/src/context/CookieConsentContext.tsx:17",
+        "frontend/src/lib/adsense.ts:17"
       ],
-      "ambiguous": false
+      "ambiguous": true
     },
     "globalLimiter": {
       "locations": [
@@ -6908,9 +7017,15 @@
       ],
       "ambiguous": true
     },
+    "isAdSenseEnabled": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:56"
+      ],
+      "ambiguous": false
+    },
     "isAnalyticsAllowed": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:84"
+        "frontend/src/utils/cookieUtils.ts:141"
       ],
       "ambiguous": false
     },
@@ -7042,6 +7157,18 @@
     "isUrlInvalid": {
       "locations": [
         "frontend/src/utils/apiConfig.ts:46"
+      ],
+      "ambiguous": false
+    },
+    "jar": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.test.ts:34"
+      ],
+      "ambiguous": false
+    },
+    "JarEntry": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.test.ts:29"
       ],
       "ambiguous": false
     },
@@ -7509,9 +7636,21 @@
       ],
       "ambiguous": false
     },
+    "loadAdSense": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:70"
+      ],
+      "ambiguous": false
+    },
     "loadedLanguages": {
       "locations": [
         "frontend/src/utils/codeHighlighter.ts:55"
+      ],
+      "ambiguous": false
+    },
+    "loaderPromise": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:61"
       ],
       "ambiguous": false
     },
@@ -7584,6 +7723,12 @@
     "localProgress": {
       "locations": [
         "frontend/src/components/animations/VaporizeTextCycle.tsx:781"
+      ],
+      "ambiguous": false
+    },
+    "localStorageStub": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.test.ts:68"
       ],
       "ambiguous": false
     },
@@ -7671,6 +7816,12 @@
     "logUserActivity": {
       "locations": [
         "frontend/src/utils/activityLogger.ts:13"
+      ],
+      "ambiguous": false
+    },
+    "loseCookies": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.test.ts:86"
       ],
       "ambiguous": false
     },
@@ -10092,7 +10243,7 @@
     "PrivacyPolicyPage": {
       "locations": [
         "frontend/src/App.tsx:18",
-        "frontend/src/pages/legal/PrivacyPolicyPage.tsx:93"
+        "frontend/src/pages/legal/PrivacyPolicyPage.tsx:104"
       ],
       "ambiguous": true
     },
@@ -10215,7 +10366,7 @@
       "locations": [
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx:38",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx:323",
-        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:32"
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:33"
       ],
       "ambiguous": true
     },
@@ -10293,6 +10444,12 @@
     "PUSH": {
       "locations": [
         "frontend/src/components/ui/spider-web.tsx:59"
+      ],
+      "ambiguous": false
+    },
+    "pushAdRequest": {
+      "locations": [
+        "frontend/src/lib/adsense.ts:103"
       ],
       "ambiguous": false
     },
@@ -10521,6 +10678,12 @@
       ],
       "ambiguous": false
     },
+    "readJar": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.test.ts:37"
+      ],
+      "ambiguous": false
+    },
     "readJson": {
       "locations": [
         "cli/src/config.ts:16"
@@ -10530,6 +10693,12 @@
     "readPage": {
       "locations": [
         "backend/src/scripts/migrateFirestoreToMongo.js:70"
+      ],
+      "ambiguous": false
+    },
+    "readStorage": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:37"
       ],
       "ambiguous": false
     },
@@ -10792,7 +10961,7 @@
     },
     "resetConsent": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:43"
+        "frontend/src/utils/cookieUtils.ts:96"
       ],
       "ambiguous": false
     },
@@ -11219,7 +11388,7 @@
     },
     "savePreferences": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:68"
+        "frontend/src/utils/cookieUtils.ts:123"
       ],
       "ambiguous": false
     },
@@ -11761,13 +11930,13 @@
     },
     "setConsent": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:39"
+        "frontend/src/utils/cookieUtils.ts:91"
       ],
       "ambiguous": false
     },
     "setCookie": {
       "locations": [
-        "frontend/src/utils/cookieUtils.ts:16"
+        "frontend/src/utils/cookieUtils.ts:64"
       ],
       "ambiguous": false
     },
@@ -11957,7 +12126,7 @@
     },
     "SIMILAR_PARAM": {
       "locations": [
-        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:41"
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:42"
       ],
       "ambiguous": false
     },
@@ -12776,9 +12945,10 @@
     },
     "storage": {
       "locations": [
-        "frontend/src/lib/firebase.ts:9"
+        "frontend/src/lib/firebase.ts:9",
+        "frontend/src/utils/cookieUtils.test.ts:35"
       ],
-      "ambiguous": false
+      "ambiguous": true
     },
     "store": {
       "locations": [
@@ -13169,7 +13339,7 @@
       "locations": [
         "frontend/src/components/templates/TemplateCodeViewer.tsx:67",
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx:32",
-        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:26"
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:27"
       ],
       "ambiguous": true
     },
@@ -13188,7 +13358,7 @@
     "TemplateDetailPage": {
       "locations": [
         "frontend/src/App.tsx:25",
-        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:43"
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx:44"
       ],
       "ambiguous": true
     },
@@ -13249,7 +13419,7 @@
     "TemplatesPage": {
       "locations": [
         "frontend/src/App.tsx:22",
-        "frontend/src/pages/TemplatesPage/TemplatesPage.tsx:4"
+        "frontend/src/pages/TemplatesPage/TemplatesPage.tsx:5"
       ],
       "ambiguous": true
     },
@@ -13574,13 +13744,13 @@
     },
     "Toggle": {
       "locations": [
-        "frontend/src/pages/legal/CookieSettingsPage.tsx:74"
+        "frontend/src/pages/legal/CookieSettingsPage.tsx:76"
       ],
       "ambiguous": false
     },
     "ToggleProps": {
       "locations": [
-        "frontend/src/pages/legal/CookieSettingsPage.tsx:68"
+        "frontend/src/pages/legal/CookieSettingsPage.tsx:70"
       ],
       "ambiguous": false
     },
@@ -14029,7 +14199,7 @@
     },
     "updateGtagConsent": {
       "locations": [
-        "frontend/src/context/CookieConsentContext.tsx:44"
+        "frontend/src/context/CookieConsentContext.tsx:57"
       ],
       "ambiguous": false
     },
@@ -14101,7 +14271,7 @@
     },
     "useCookieConsent": {
       "locations": [
-        "frontend/src/context/CookieConsentContext.tsx:42"
+        "frontend/src/context/CookieConsentContext.tsx:44"
       ],
       "ambiguous": false
     },
@@ -14912,6 +15082,12 @@
       ],
       "ambiguous": false
     },
+    "writeStorage": {
+      "locations": [
+        "frontend/src/utils/cookieUtils.ts:46"
+      ],
+      "ambiguous": false
+    },
     "yellow": {
       "locations": [
         "cli/src/output.ts:10"
@@ -15314,6 +15490,17 @@
       "inbound": 1
     },
     {
+      "name": "__resetAdSenseLoaderForTests",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 116,
+      "feature": "lib",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
       "name": "__UIHub_PointDNAHelix",
       "kind": "FUNCTION",
       "path": "frontend/src/components/ui/PointDNAHelix.tsx",
@@ -15649,6 +15836,17 @@
       "path": "frontend/src/utils/activityLogger.ts",
       "line": 4,
       "feature": "utils",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
+      "name": "AD_SLOT_IDS",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 42,
+      "feature": "lib",
       "exported": true,
       "isDefault": false,
       "async": false,
@@ -16073,6 +16271,61 @@
       "inbound": 17
     },
     {
+      "name": "ADSENSE_CLIENT_ID",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 24,
+      "feature": "lib",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
+      "name": "ADSENSE_SRC",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 15,
+      "feature": "lib",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
+      "name": "AdSlot",
+      "kind": "COMPONENT",
+      "path": "frontend/src/components/ui/AdSlot.tsx",
+      "line": 37,
+      "feature": "components",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 4
+    },
+    {
+      "name": "AdSlotId",
+      "kind": "TYPE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 28,
+      "feature": "lib",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
+      "name": "AdSlotProps",
+      "kind": "CONSTANT",
+      "path": "frontend/src/components/ui/AdSlot.tsx",
+      "line": 12,
+      "feature": "components",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 4
+    },
+    {
       "name": "ADVECTION_SHADER",
       "kind": "CONSTANT",
       "path": "frontend/src/components/ui/AuraCursor.tsx",
@@ -16131,7 +16384,7 @@
       "name": "AISystem",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
-      "line": 30,
+      "line": 31,
       "feature": "templates-page",
       "exported": false,
       "isDefault": false,
@@ -16208,12 +16461,12 @@
       "name": "ALLOW_ALL",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 13,
+      "line": 26,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "AlpineFooterPreview",
@@ -16557,15 +16810,15 @@
       "inbound": 1
     },
     {
-      "name": "applyAnalytics",
+      "name": "applyConsent",
       "kind": "VARIABLE",
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 64,
+      "line": 72,
       "feature": "cookie-consent-context",
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 3
+      "inbound": 4
     },
     {
       "name": "AppShell",
@@ -17781,7 +18034,7 @@
       "name": "BentoCard",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
-      "line": 76,
+      "line": 77,
       "feature": "home-page",
       "exported": false,
       "isDefault": false,
@@ -17792,7 +18045,7 @@
       "name": "BentoComp",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
-      "line": 16,
+      "line": 17,
       "feature": "home-page",
       "exported": false,
       "isDefault": false,
@@ -17803,7 +18056,7 @@
       "name": "BentoSpec",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
-      "line": 9,
+      "line": 10,
       "feature": "home-page",
       "exported": false,
       "isDefault": false,
@@ -17814,7 +18067,7 @@
       "name": "bentoSpecs",
       "kind": "VARIABLE",
       "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
-      "line": 23,
+      "line": 24,
       "feature": "home-page",
       "exported": false,
       "isDefault": false,
@@ -18482,6 +18735,17 @@
       "inbound": 4
     },
     {
+      "name": "buildConsentSignals",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 161,
+      "feature": "utils",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
+    },
+    {
       "name": "buildCorsOptions",
       "kind": "FUNCTION",
       "path": "backend/src/config/corsPolicy.js",
@@ -18842,7 +19106,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 1
     },
     {
       "name": "buildWithUIHubSectionBySlug",
@@ -19420,7 +19684,7 @@
       "name": "CategoryCard",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/legal/CookieSettingsPage.tsx",
-      "line": 104,
+      "line": 106,
       "feature": "legal",
       "exported": false,
       "isDefault": false,
@@ -19431,7 +19695,7 @@
       "name": "CategoryCardProps",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/legal/CookieSettingsPage.tsx",
-      "line": 94,
+      "line": 96,
       "feature": "legal",
       "exported": false,
       "isDefault": false,
@@ -21092,7 +21356,7 @@
       "name": "ComponentGrid",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
-      "line": 138,
+      "line": 139,
       "feature": "home-page",
       "exported": false,
       "isDefault": false,
@@ -21562,6 +21826,61 @@
       "inbound": 8
     },
     {
+      "name": "CONSENT_PREFS_STORAGE_KEY",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 24,
+      "feature": "utils",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
+    },
+    {
+      "name": "CONSENT_STATUS_STORAGE_KEY",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 23,
+      "feature": "utils",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
+    },
+    {
+      "name": "CONSENT_STATUSES",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 29,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
+    },
+    {
+      "name": "ConsentSignal",
+      "kind": "TYPE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 143,
+      "feature": "utils",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
+    },
+    {
+      "name": "ConsentSignals",
+      "kind": "INTERFACE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 145,
+      "feature": "utils",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
+    },
+    {
       "name": "ContactSection",
       "kind": "COMPONENT",
       "path": "frontend/src/components/templates/PortfolioClosing.tsx",
@@ -21581,7 +21900,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "COOKIE_CONSENT_NAME",
@@ -21592,7 +21911,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "COOKIE_PREFS_NAME",
@@ -21603,7 +21922,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "CookieBanner",
@@ -21620,34 +21939,34 @@
       "name": "CookieConsentContext",
       "kind": "CONSTANT",
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 32,
+      "line": 34,
       "feature": "cookie-consent-context",
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 3
+      "inbound": 4
     },
     {
       "name": "CookieConsentContextType",
       "kind": "CONSTANT",
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 22,
+      "line": 24,
       "feature": "cookie-consent-context",
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 3
+      "inbound": 4
     },
     {
       "name": "CookieConsentProvider",
       "kind": "COMPONENT",
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 74,
+      "line": 82,
       "feature": "cookie-consent-context",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 3
+      "inbound": 4
     },
     {
       "name": "CookieConsentStatus",
@@ -21658,7 +21977,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "CookiePreferences",
@@ -21669,7 +21988,7 @@
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "CookieSettingsPage",
@@ -21686,7 +22005,7 @@
       "name": "CookieSettingsPage",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/legal/CookieSettingsPage.tsx",
-      "line": 129,
+      "line": 131,
       "feature": "legal",
       "exported": false,
       "isDefault": false,
@@ -22973,7 +23292,7 @@
       "name": "DEFAULT_FRAME",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
-      "line": 19,
+      "line": 20,
       "feature": "home-page",
       "exported": false,
       "isDefault": false,
@@ -23122,6 +23441,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "DEFAULT_MIN_HEIGHT",
+      "kind": "CONSTANT",
+      "path": "frontend/src/components/ui/AdSlot.tsx",
+      "line": 24,
+      "feature": "components",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 4
     },
     {
       "name": "DEFAULT_PALETTE",
@@ -23443,6 +23773,17 @@
       "inbound": 1
     },
     {
+      "name": "define",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 81,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "DEGRADED",
       "kind": "VARIABLE",
       "path": "backend/src/services/healthService.js",
@@ -23523,12 +23864,12 @@
       "name": "deleteCookie",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 27,
+      "line": 75,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "deleteEverything",
@@ -23551,6 +23892,17 @@
       "isDefault": false,
       "async": true,
       "inbound": 0
+    },
+    {
+      "name": "deleteStorage",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 55,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
     },
     {
       "name": "DemoErrorBoundary",
@@ -24046,6 +24398,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 2
+    },
+    {
+      "name": "documentStub",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 47,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "DontBeGreedyDemoPage",
@@ -24997,12 +25360,12 @@
       "name": "ESSENTIAL_ONLY",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 14,
+      "line": 27,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "evaluateAiTrial",
@@ -27117,6 +27480,17 @@
       "inbound": 17
     },
     {
+      "name": "getAdUnitId",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 59,
+      "feature": "lib",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
       "name": "getAlerts",
       "kind": "FUNCTION",
       "path": "frontend/src/services/admin.ts",
@@ -27318,23 +27692,23 @@
       "name": "getConsent",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 31,
+      "line": 79,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "getCookie",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 21,
+      "line": 69,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "getData",
@@ -27505,12 +27879,12 @@
       "name": "getPreferences",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 48,
+      "line": 103,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "getPushConfig",
@@ -27879,12 +28253,23 @@
       "name": "global",
       "kind": "NAMESPACE",
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 15,
+      "line": 17,
       "feature": "cookie-consent-context",
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 3
+      "inbound": 4
+    },
+    {
+      "name": "global",
+      "kind": "NAMESPACE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 17,
+      "feature": "lib",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
     },
     {
       "name": "globalLimiter",
@@ -30252,15 +30637,26 @@
       "inbound": 1
     },
     {
+      "name": "isAdSenseEnabled",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 56,
+      "feature": "lib",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
       "name": "isAnalyticsAllowed",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 84,
+      "line": 141,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "isClientAlive",
@@ -30547,6 +30943,28 @@
       "isDefault": false,
       "async": false,
       "inbound": 15
+    },
+    {
+      "name": "jar",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 34,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
+      "name": "JarEntry",
+      "kind": "INTERFACE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 29,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "joinDir",
@@ -31473,6 +31891,17 @@
       "inbound": 3
     },
     {
+      "name": "loadAdSense",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 70,
+      "feature": "lib",
+      "exported": true,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
       "name": "loadedLanguages",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/codeHighlighter.ts",
@@ -31482,6 +31911,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 1
+    },
+    {
+      "name": "loaderPromise",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 61,
+      "feature": "lib",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
     },
     {
       "name": "LoadingDots",
@@ -31614,6 +32054,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 2
+    },
+    {
+      "name": "localStorageStub",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 68,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "log",
@@ -31801,6 +32252,17 @@
       "isDefault": false,
       "async": true,
       "inbound": 2
+    },
+    {
+      "name": "loseCookies",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 86,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
     },
     {
       "name": "LOVABLE_PROMPTS",
@@ -34407,7 +34869,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 1
     },
     {
       "name": "NEW_BADGE_DEFAULT_DAYS",
@@ -37427,7 +37889,7 @@
       "name": "PrivacyPolicyPage",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
-      "line": 93,
+      "line": 104,
       "feature": "legal",
       "exported": false,
       "isDefault": false,
@@ -37680,7 +38142,7 @@
       "name": "PROMPT_OPTIONS",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
-      "line": 32,
+      "line": 33,
       "feature": "templates-page",
       "exported": false,
       "isDefault": false,
@@ -37925,6 +38387,17 @@
       "line": 59,
       "feature": "components",
       "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 2
+    },
+    {
+      "name": "pushAdRequest",
+      "kind": "VARIABLE",
+      "path": "frontend/src/lib/adsense.ts",
+      "line": 103,
+      "feature": "lib",
+      "exported": true,
       "isDefault": false,
       "async": false,
       "inbound": 2
@@ -38425,6 +38898,17 @@
       "inbound": 5
     },
     {
+      "name": "readJar",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 37,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "readJson",
       "kind": "FUNCTION",
       "path": "cli/src/config.ts",
@@ -38445,6 +38929,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 0
+    },
+    {
+      "name": "readStorage",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 37,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
     },
     {
       "name": "readTs",
@@ -39022,12 +39517,12 @@
       "name": "resetConsent",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 43,
+      "line": 96,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "resetParticles",
@@ -39979,12 +40474,12 @@
       "name": "savePreferences",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 68,
+      "line": 123,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "savePushSubscription",
@@ -40589,7 +41084,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 1
     },
     {
       "name": "SECTION_PATH",
@@ -40622,7 +41117,7 @@
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 2
+      "inbound": 1
     },
     {
       "name": "SectionCard",
@@ -41156,23 +41651,23 @@
       "name": "setConsent",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 39,
+      "line": 91,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "setCookie",
       "kind": "VARIABLE",
       "path": "frontend/src/utils/cookieUtils.ts",
-      "line": 16,
+      "line": 64,
       "feature": "utils",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 4
+      "inbound": 6
     },
     {
       "name": "setGuestFavorites",
@@ -41607,7 +42102,7 @@
       "name": "SIMILAR_PARAM",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
-      "line": 41,
+      "line": 42,
       "feature": "templates-page",
       "exported": false,
       "isDefault": false,
@@ -43309,6 +43804,17 @@
       "inbound": 12
     },
     {
+      "name": "storage",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "line": 35,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 0
+    },
+    {
       "name": "store",
       "kind": "VARIABLE",
       "path": "backend/src/middleware/rateLimiters.js",
@@ -44159,7 +44665,7 @@
       "name": "TemplateCodeViewer",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
-      "line": 26,
+      "line": 27,
       "feature": "templates-page",
       "exported": false,
       "isDefault": false,
@@ -44203,7 +44709,7 @@
       "name": "TemplateDetailPage",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
-      "line": 43,
+      "line": 44,
       "feature": "templates-page",
       "exported": false,
       "isDefault": false,
@@ -44324,7 +44830,7 @@
       "name": "TemplatesPage",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/TemplatesPage/TemplatesPage.tsx",
-      "line": 4,
+      "line": 5,
       "feature": "templates-page",
       "exported": false,
       "isDefault": false,
@@ -44984,7 +45490,7 @@
       "name": "Toggle",
       "kind": "COMPONENT",
       "path": "frontend/src/pages/legal/CookieSettingsPage.tsx",
-      "line": 74,
+      "line": 76,
       "feature": "legal",
       "exported": false,
       "isDefault": false,
@@ -44995,7 +45501,7 @@
       "name": "ToggleProps",
       "kind": "CONSTANT",
       "path": "frontend/src/pages/legal/CookieSettingsPage.tsx",
-      "line": 68,
+      "line": 70,
       "feature": "legal",
       "exported": false,
       "isDefault": false,
@@ -45919,12 +46425,12 @@
       "name": "updateGtagConsent",
       "kind": "VARIABLE",
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 44,
+      "line": 57,
       "feature": "cookie-consent-context",
       "exported": false,
       "isDefault": false,
       "async": false,
-      "inbound": 3
+      "inbound": 4
     },
     {
       "name": "updateParticles",
@@ -46051,12 +46557,12 @@
       "name": "useCookieConsent",
       "kind": "VARIABLE",
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 42,
+      "line": 44,
       "feature": "cookie-consent-context",
       "exported": true,
       "isDefault": false,
       "async": false,
-      "inbound": 3
+      "inbound": 4
     },
     {
       "name": "useData",
@@ -47729,6 +48235,17 @@
       "isDefault": false,
       "async": false,
       "inbound": 4
+    },
+    {
+      "name": "writeStorage",
+      "kind": "VARIABLE",
+      "path": "frontend/src/utils/cookieUtils.ts",
+      "line": 46,
+      "feature": "utils",
+      "exported": false,
+      "isDefault": false,
+      "async": false,
+      "inbound": 6
     },
     {
       "name": "yellow",

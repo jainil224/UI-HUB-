@@ -30,10 +30,10 @@
     "cli/tests"
   ],
   "description": "Freshness record for every intelligence artifact. The ONLY file carrying a timestamp.",
-  "generatedAt": "2026-10-02T08:02:59.124Z",
-  "sourceFingerprint": "b7805860f03affe05b0f987ded7b4816f715af0ae3144b12a74f686635bd21ed",
-  "sourceFileCount": 501,
-  "sourceBytes": 8972873,
+  "generatedAt": "2026-10-03T04:33:47.736Z",
+  "sourceFingerprint": "fe2be01006fea5d083b58b14f4f1d4656fa1d7deac96576b74cf6c5cee11ca45",
+  "sourceFileCount": 505,
+  "sourceBytes": 8995061,
   "sourceSnapshot": [
     {
       "path": "api/index.js",
@@ -779,6 +779,11 @@
       "path": "frontend/src/components/templates/registry.ts",
       "size": 8174,
       "sha": "8aef43f7c495144a80b1ab7850ae02abc09fc3ada24164035b72f37bfb06f160"
+    },
+    {
+      "path": "frontend/src/components/ui/AdSlot.tsx",
+      "size": 2923,
+      "sha": "a477417702c89039dd574e0d21c0a01471f32f78d9189ab57a22d73abbf88c0e"
     },
     {
       "path": "frontend/src/components/ui/AsciiCursor.tsx",
@@ -1672,8 +1677,8 @@
     },
     {
       "path": "frontend/src/context/CookieConsentContext.tsx",
-      "size": 4198,
-      "sha": "4e008835951ca1566a624c029d3ba61be21e8d22db8dbcdd63bccff521b7ef73"
+      "size": 4953,
+      "sha": "e3bfc0e862891b1cc1f4dbd5b2f312d2535c05dba7a807ab912738c40117166c"
     },
     {
       "path": "frontend/src/context/SkeletonContext.tsx",
@@ -1769,6 +1774,11 @@
       "path": "frontend/src/hooks/use-mobile.ts",
       "size": 667,
       "sha": "c7f2cb428994a7c4b097c126feba248cd4159fcb7264f97611b98b80e2bb1eec"
+    },
+    {
+      "path": "frontend/src/lib/adsense.ts",
+      "size": 4149,
+      "sha": "001ca5c8679652947b3bdfe4afbc49d5c7debf7b14b02dfdffb8a4e7a4964dda"
     },
     {
       "path": "frontend/src/lib/firebase.ts",
@@ -2047,8 +2057,8 @@
     },
     {
       "path": "frontend/src/pages/HomePage/HomePage.tsx",
-      "size": 590,
-      "sha": "c48341a1e43168e2c7ad49ba05cca485a1a3feb703e32af6e20976b294819f03"
+      "size": 747,
+      "sha": "f079e8ce4a6e9d8b074461b270a0a994b20b222ac050e8f5d9c5394540376cd0"
     },
     {
       "path": "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
@@ -2062,8 +2072,8 @@
     },
     {
       "path": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
-      "size": 11019,
-      "sha": "56bca7b4aaca211cb6a442332c1df3da5265c9e960c3484eab0a3e7833d87a86"
+      "size": 11228,
+      "sha": "d60464587696d2b52924ae3eb8ac62fd5e052a8da7ea8f8a1a40478bdedc206f"
     },
     {
       "path": "frontend/src/pages/HomePage/sections/FAQ.tsx",
@@ -2122,18 +2132,18 @@
     },
     {
       "path": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
-      "size": 20323,
-      "sha": "5654ab46afdc0bc8f8d878babd77ed701585c739daae4583cf807aba5c5979b6"
+      "size": 20621,
+      "sha": "7679fb5d680fdd5b0ba9a53a17dd6d8e1aafb747f1957ddaebb7172d507a8847"
     },
     {
       "path": "frontend/src/pages/TemplatesPage/TemplatesPage.tsx",
-      "size": 309,
-      "sha": "2b52f8e577669d7b7e78c112fa0d06527f403170f31cd400d267261e5130a590"
+      "size": 462,
+      "sha": "a79fc97cd58bf4c37b1f409becd83e66a5bf8300c4b0ce4165c79134ea950a4f"
     },
     {
       "path": "frontend/src/pages/legal/CookieSettingsPage.tsx",
-      "size": 15780,
-      "sha": "c5ff44880dac5f424869f46c459ec6a3f6d437949451051ca9cb9773f6b9d2c2"
+      "size": 16253,
+      "sha": "0c8a475ede7f05a79e2fb89c992f77c6841efc7723b830abceedd2b64eab7ba8"
     },
     {
       "path": "frontend/src/pages/legal/LegalPage.tsx",
@@ -2147,8 +2157,8 @@
     },
     {
       "path": "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
-      "size": 6013,
-      "sha": "7744efabed0bbadb6854599f8ba3d4bf3d2d6db46c90403bda4688449e223912"
+      "size": 7011,
+      "sha": "4b61fa1949191c59f92e92487cf6a44671e1fddb66c5b6e705e1b6e06b3edfa4"
     },
     {
       "path": "frontend/src/pages/legal/TermsPage.tsx",
@@ -2231,9 +2241,19 @@
       "sha": "4d15ce4cfd5dbbb01ec1ba9bb08a6fbbc314dfe143416d5c82835c3544bd65a8"
     },
     {
+      "path": "frontend/src/utils/consentSignals.test.ts",
+      "size": 2241,
+      "sha": "6671f4af84f3a33372cb59cb2daaf018a2f0f4e46937c684e64a7ac8dae247d6"
+    },
+    {
+      "path": "frontend/src/utils/cookieUtils.test.ts",
+      "size": 6647,
+      "sha": "ee9004f32217f8a28097be2a90d342d6a4e03e53f78ab779b0115cc1fadfc304"
+    },
+    {
       "path": "frontend/src/utils/cookieUtils.ts",
-      "size": 3403,
-      "sha": "d9eaccd7931cb4e49966601a70f4770f79ef2b8fe4c785eca86003a655ea435e"
+      "size": 6588,
+      "sha": "2bbdaa58169679ab6397145fd9bb85643a097938a7418e35ed3a0c57a799fa07"
     },
     {
       "path": "frontend/src/utils/mcpConfig.ts",
@@ -2567,11 +2587,11 @@
       "tmp"
     ],
     "totals": {
-      "indexed": 501,
+      "indexed": 505,
       "roleOnly": 15,
       "excludedEntries": 1,
       "excludedFiles": 1,
-      "parseableBytes": 8972873
+      "parseableBytes": 8995061
     },
     "ledger": [
       {
@@ -2583,11 +2603,11 @@
     ]
   },
   "timingsMs": {
-    "discover": 214,
-    "parse": 1962,
-    "resolve": 76,
-    "build": 2034,
-    "total": 4286
+    "discover": 3229,
+    "parse": 1409,
+    "resolve": 38,
+    "build": 1385,
+    "total": 6061
   },
   "artifacts": [
     {
@@ -2596,7 +2616,7 @@
     },
     {
       "path": ".uihub-agent/codebase/COMPONENT_MAP.json",
-      "bytes": 147741
+      "bytes": 148782
     },
     {
       "path": ".uihub-agent/codebase/DATABASE_USAGE_MAP.json",
@@ -2604,11 +2624,11 @@
     },
     {
       "path": ".uihub-agent/codebase/FEATURE_MAP.json",
-      "bytes": 41183
+      "bytes": 41233
     },
     {
       "path": ".uihub-agent/codebase/FILE_ROLE_MAP.json",
-      "bytes": 258166
+      "bytes": 260346
     },
     {
       "path": ".uihub-agent/codebase/HOOKS_MAP.json",
@@ -2620,7 +2640,7 @@
     },
     {
       "path": ".uihub-agent/codebase/PAGE_MAP.json",
-      "bytes": 29432
+      "bytes": 29640
     },
     {
       "path": ".uihub-agent/codebase/ROUTE_MAP.json",
@@ -2640,11 +2660,11 @@
     },
     {
       "path": ".uihub-agent/generated/FEATURE_FILE_INDEX.json",
-      "bytes": 28889
+      "bytes": 29072
     },
     {
       "path": ".uihub-agent/generated/IMPORT_GRAPH.json",
-      "bytes": 587579
+      "bytes": 590750
     },
     {
       "path": ".uihub-agent/generated/KNOWLEDGE_ROUTING_GRAPH.json",
@@ -2652,15 +2672,15 @@
     },
     {
       "path": ".uihub-agent/generated/PAGE_COMPONENT_INDEX.json",
-      "bytes": 245229
+      "bytes": 245841
     },
     {
       "path": ".uihub-agent/generated/REVERSE_DEPENDENCY_MAP.json",
-      "bytes": 230851
+      "bytes": 232183
     },
     {
       "path": ".uihub-agent/generated/SYMBOL_INDEX.json",
-      "bytes": 1170126
+      "bytes": 1181984
     }
   ]
 }

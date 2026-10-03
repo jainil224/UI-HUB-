@@ -231,7 +231,7 @@ npm run agent:index:check
 | **Failure behaviour** | `0` all fresh · `1` drift |
 
 Byte-for-byte comparison, not a heuristic. Expected current state:
-`19/19 fresh, drift=0, fingerprint=b7805860f03a` over `501` files.
+`19/19 fresh, drift=0, fingerprint=fe2be01006fe` over `505` files.
 
 ---
 
@@ -408,7 +408,7 @@ npm run check:secrets:all      # everything, including ignored paths
 | **Failure behaviour** | Non-zero only on `REAL_SECRET`. `PLACEHOLDER`, `MASKED`, `PUBLIC_IDENTIFIER` and `TEST_FIXTURE` are reported, not failed |
 
 Default scope is every file git could commit — by construction, not by directory
-allowlist. Current state: `scope=git-visible files scanned=1299`.
+allowlist. Current state: `scope=git-visible files scanned=1304`.
 
 ---
 

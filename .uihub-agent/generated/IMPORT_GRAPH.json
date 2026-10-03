@@ -31,9 +31,9 @@
   ],
   "description": "Directed import graph. Includes external packages and asset edges; unresolvable specifiers are recorded, never dropped.",
   "counts": {
-    "nodes": 501,
-    "internalEdges": 1123,
-    "externalEdges": 882,
+    "nodes": 505,
+    "internalEdges": 1131,
+    "externalEdges": 885,
     "dynamicEdges": 273,
     "reExportEdges": 39,
     "assetEdges": 11,
@@ -6664,6 +6664,39 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/components/ui/AdSlot.tsx",
+      "to": "frontend/src/context/CookieConsentContext.tsx",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/AdSlot.tsx",
+      "to": "frontend/src/lib/adsense.ts",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/AdSlot.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/components/ui/AsciiCursor.tsx",
       "to": "react",
       "line": 6,
@@ -12187,8 +12220,19 @@
     },
     {
       "from": "frontend/src/context/CookieConsentContext.tsx",
+      "to": "frontend/src/lib/adsense.ts",
+      "line": 15,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/context/CookieConsentContext.tsx",
       "to": "frontend/src/lib/firebase.ts",
-      "line": 13,
+      "line": 14,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -16653,7 +16697,7 @@
     },
     {
       "from": "frontend/src/pages/HomePage/HomePage.tsx",
-      "to": "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+      "to": "frontend/src/components/ui/AdSlot.tsx",
       "line": 7,
       "kind": "import",
       "resolution": "internal",
@@ -16847,6 +16891,17 @@
       "dynamic": false,
       "typeOnly": false,
       "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+      "to": "frontend/src/components/ui/AdSlot.tsx",
+      "line": 8,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
       "confidence": "HIGH"
     },
     {
@@ -18161,7 +18216,7 @@
     {
       "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
       "to": "frontend/src/components/templates/TemplateCodeViewer.tsx",
-      "line": 27,
+      "line": 28,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -18184,6 +18239,17 @@
       "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
       "to": "frontend/src/components/templates/TemplateSimilarRail.tsx",
       "line": 16,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+      "to": "frontend/src/components/ui/AdSlot.tsx",
+      "line": 19,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -18216,7 +18282,7 @@
     {
       "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
       "to": "frontend/src/utils/templatePromptUtils.ts",
-      "line": 165,
+      "line": 166,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -18255,6 +18321,17 @@
       "dynamic": false,
       "typeOnly": false,
       "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/TemplatesPage/TemplatesPage.tsx",
+      "to": "frontend/src/components/ui/AdSlot.tsx",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
       "confidence": "HIGH"
     },
     {
@@ -18761,6 +18838,50 @@
       "dynamic": false,
       "typeOnly": false,
       "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/utils/consentSignals.test.ts",
+      "to": "frontend/src/utils/cookieUtils.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/utils/consentSignals.test.ts",
+      "to": "vitest",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/utils/cookieUtils.test.ts",
+      "to": "frontend/src/utils/cookieUtils.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/utils/cookieUtils.test.ts",
+      "to": "vitest",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
       "confidence": "HIGH"
     },
     {

@@ -1,0 +1,18 @@
+# Google AdSense ads.txt
+#
+# AdSense requires this file at the site root: https://<your-domain>/ads.txt
+# It authorises Google to sell your inventory and must match your AdSense
+# account exactly, or AdSense reports "ads.txt is not authorized".
+#
+# The line below was copied verbatim from AdSense -> Account overview -> AdSense
+# -> AdSense tag status. Do not hand-edit it; the trailing reseller value is
+# account-specific and AdSense rejects a mismatch.
+#
+# Note the publisher ID uses the `pub-` prefix here, not the `ca-pub-` prefix
+# used by the adsbygoogle.js client ID in `frontend/src/lib/adsense.ts`. Both
+# carry the same numeric account ID.
+#
+# This is a public authorisation record, not a credential. Vercel serves
+# frontend/public/ verbatim at the site root, so no route or rewrite is needed.
+
+google.com, pub-1145682845044583, DIRECT, f08c47fec0942fa0

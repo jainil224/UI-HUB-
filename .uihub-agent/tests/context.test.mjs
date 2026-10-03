@@ -328,7 +328,7 @@ test('a test file is classified TEST by filename, not by its directory', () => {
  * TEST_DEPENDENCY had almost nothing to admit, so the trigger the contract
  * promises was effectively dead outside `frontend/src`.
  */
-test('all 18 real test files are indexed and classified TEST', () => {
+test('all 20 real test files are indexed and classified TEST', () => {
   const ix = intel();
   const frm = JSON.parse(
     readFileSync(new URL('../codebase/FILE_ROLE_MAP.json', import.meta.url), 'utf8'),
@@ -353,6 +353,8 @@ test('all 18 real test files are indexed and classified TEST', () => {
     'cli/tests/output.test.ts',
     'frontend/src/routing/vercelRouting.test.ts',
     'frontend/src/utils/apiConfig.test.ts',
+    'frontend/src/utils/consentSignals.test.ts',
+    'frontend/src/utils/cookieUtils.test.ts',
     'mcp-server/tests/apiKey.test.ts',
     'mcp-server/tests/auth.test.ts',
     'mcp-server/tests/configService.test.ts',
@@ -361,7 +363,7 @@ test('all 18 real test files are indexed and classified TEST', () => {
     'mcp-server/tests/tools.test.ts',
   ];
 
-  assert.equal(expected.length, 18, 'the expected list itself drifted from the repository');
+  assert.equal(expected.length, 20, 'the expected list itself drifted from the repository');
   assert.equal(indexed.length, expected.length,
     `expected ${expected.length} TEST files in FILE_ROLE_MAP, found ${indexed.length}`);
   for (const p of expected) {

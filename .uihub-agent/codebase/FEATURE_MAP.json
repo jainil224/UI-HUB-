@@ -354,10 +354,10 @@
     },
     {
       "feature": "components",
-      "files": 243,
+      "files": 244,
       "roles": {
         "BARREL": 4,
-        "COMPONENT": 199,
+        "COMPONENT": 200,
         "DATA": 4,
         "HOOK": 1,
         "MODEL": 5,
@@ -433,6 +433,7 @@
         "frontend/src/components/templates/TemplatePreviewStage.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
         "frontend/src/components/templates/VisionaryOrbHero.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/AsciiCursor.tsx",
         "frontend/src/components/ui/AsciiWater.tsx",
         "frontend/src/components/ui/AuraCursor.tsx",
@@ -622,7 +623,7 @@
         "three-stdlib",
         "zustand"
       ],
-      "lines": 71384
+      "lines": 71477
     },
     {
       "feature": "config",
@@ -707,7 +708,7 @@
       "externalPackages": [
         "react"
       ],
-      "lines": 129
+      "lines": 151
     },
     {
       "feature": "dashboard",
@@ -901,7 +902,7 @@
         "react-icons",
         "react-router-dom"
       ],
-      "lines": 1675
+      "lines": 1680
     },
     {
       "feature": "legal",
@@ -926,13 +927,13 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 760
+      "lines": 773
     },
     {
       "feature": "lib",
-      "files": 2,
+      "files": 3,
       "roles": {
-        "UNKNOWN": 2
+        "UNKNOWN": 3
       },
       "entryPoints": [],
       "components": [],
@@ -944,7 +945,7 @@
         "firebase",
         "tailwind-merge"
       ],
-      "lines": 96
+      "lines": 214
     },
     {
       "feature": "library-page",
@@ -1382,7 +1383,7 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 373
+      "lines": 380
     },
     {
       "feature": "theme-context",
@@ -1449,9 +1450,9 @@
     },
     {
       "feature": "utils",
-      "files": 23,
+      "files": 25,
       "roles": {
-        "TEST": 1,
+        "TEST": 3,
         "UTILITY": 22
       },
       "entryPoints": [],
@@ -1473,7 +1474,7 @@
         "shiki",
         "vitest"
       ],
-      "lines": 3958
+      "lines": 4297
     },
     {
       "feature": "vibe-engine",

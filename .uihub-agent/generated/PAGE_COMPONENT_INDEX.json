@@ -3416,8 +3416,14 @@
     "frontend/src/pages/HomePage/HomePage.tsx": {
       "feature": "home-page",
       "route": "/",
-      "direct": [],
+      "direct": [
+        "frontend/src/components/ui/AdSlot.tsx"
+      ],
       "transitive": [
+        {
+          "path": "frontend/src/components/ui/AdSlot.tsx",
+          "depth": 1
+        },
         {
           "path": "frontend/src/components/ui/SearchBox.tsx",
           "depth": 1
@@ -3940,9 +3946,14 @@
       "feature": "home-page",
       "route": null,
       "direct": [
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Skeleton.tsx"
       ],
       "transitive": [
+        {
+          "path": "frontend/src/components/ui/AdSlot.tsx",
+          "depth": 0
+        },
         {
           "path": "frontend/src/components/ui/Skeleton.tsx",
           "depth": 0
@@ -7731,6 +7742,7 @@
         "frontend/src/components/templates/TemplateCodeViewer.tsx",
         "frontend/src/components/templates/TemplatePreviewStage.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Toast.tsx"
       ],
       "transitive": [
@@ -7744,6 +7756,10 @@
         },
         {
           "path": "frontend/src/components/templates/TemplateSimilarRail.tsx",
+          "depth": 0
+        },
+        {
+          "path": "frontend/src/components/ui/AdSlot.tsx",
           "depth": 0
         },
         {
@@ -8331,8 +8347,14 @@
     "frontend/src/pages/TemplatesPage/TemplatesPage.tsx": {
       "feature": "templates-page",
       "route": "/templates",
-      "direct": [],
+      "direct": [
+        "frontend/src/components/ui/AdSlot.tsx"
+      ],
       "transitive": [
+        {
+          "path": "frontend/src/components/ui/AdSlot.tsx",
+          "depth": 0
+        },
         {
           "path": "frontend/src/components/templates/AuCabaretPoster.tsx",
           "depth": 1

@@ -771,8 +771,10 @@
       "route": "/",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 21,
-      "components": [],
+      "lines": 22,
+      "components": [
+        "frontend/src/components/ui/AdSlot.tsx"
+      ],
       "hooks": [],
       "confidence": "HIGH"
     },
@@ -807,8 +809,9 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 230,
+      "lines": 234,
       "components": [
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Skeleton.tsx"
       ],
       "hooks": [],
@@ -893,7 +896,7 @@
       "route": "/cookies",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 316,
+      "lines": 318,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -929,7 +932,7 @@
       "route": "/privacy",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 105,
+      "lines": 116,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -1051,11 +1054,12 @@
       "route": "/templates/:id",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 360,
+      "lines": 365,
       "components": [
         "frontend/src/components/templates/TemplateCodeViewer.tsx",
         "frontend/src/components/templates/TemplatePreviewStage.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Toast.tsx"
       ],
       "hooks": [],
@@ -1068,8 +1072,10 @@
       "route": "/templates",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 13,
-      "components": [],
+      "lines": 15,
+      "components": [
+        "frontend/src/components/ui/AdSlot.tsx"
+      ],
       "hooks": [],
       "confidence": "HIGH"
     }

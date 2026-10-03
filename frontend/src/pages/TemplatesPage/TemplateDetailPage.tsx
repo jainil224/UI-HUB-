@@ -16,6 +16,7 @@ import { websiteTemplates, buildWithUIHubSlugByTemplateId, TemplateItem } from '
 import TemplateSimilarRail from '../../components/templates/TemplateSimilarRail';
 import { TemplatePreviewStage } from '../../components/templates/TemplatePreviewStage';
 import Toast from '../../components/ui/Toast';
+import AdSlot from '../../components/ui/AdSlot';
 
 // The Code tab is behind a click, but a static import cost this page ~3.2 MB of
 // JavaScript before the preview could paint anything: TemplateCodeViewer pulls
@@ -340,6 +341,10 @@ const TemplateDetailPage = () => {
                                 />
                             )}
                         </section>
+
+                        {/* Kept outside the preview <section> above because that
+                            element becomes `fixed inset-0` in fullscreen. */}
+                        <AdSlot slot="template-detail-bottom" className="mt-8" />
                     </div>
                 </main>
             </div>

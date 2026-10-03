@@ -91,7 +91,7 @@ The customer-facing product. Vite + React 19 + TypeScript.
 
 | Directory | Routes | Notes |
 |---|---|---|
-| `HomePage/` | `/` | 6 sections. `TemplatesSection` **eagerly** imports all 19 template components. |
+| `HomePage/` | `/` | 5 rendered sections. `BuildWithUIHubSection` lives here but is **not** rendered on `/` — it serves `/build-with-ui-hub` only. `TemplatesSection` **eagerly** imports all 19 template components. |
 | `LibraryPage/` | `/library` | 759 L. Category tree, search, hover previews, crown overlays, chunk prefetch. `sections/ComponentDetail/index.tsx` is **~2000 L — the richest page in the app.** |
 | `Dashboard/` | `/dashboard/*` | `MCPPage.tsx` (818 L), `CollectionsPage.tsx` (720 L), `FavoritesPage.tsx` (320 L), `DashboardLayout.tsx`. **Layout performs no auth check.** |
 | `Admin/` | `/admin/mcp/*` | 16 pages + `AdminGuard.tsx` + `AdminLayout.tsx` (194 L, 15-item sidebar). |

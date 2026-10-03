@@ -37,6 +37,16 @@ const sections: LegalSection[] = [
         body: [
             'We use cookies and similar technologies to keep you signed in, remember preferences, and understand how the Service is used.',
             'We use Google Analytics (measurement ID G-QS3XBQBLW8) to collect aggregated usage statistics. You can learn more in our Cookie Settings page and disable non-essential cookies in your browser.',
+            'We use Google AdSense to display advertising. Google and its partners may use cookies or similar technologies to serve and measure ads based on your prior visits to this and other websites. You can opt out of personalised advertising at Google Ads Settings, or opt out of third-party vendor cookies at aboutads.info.',
+        ],
+    },
+    {
+        id: 'advertising',
+        heading: 'Advertising',
+        body: [
+            'This site displays advertising supplied by Google AdSense.',
+            'Ad scripts and advertising cookies are not loaded at all unless you allow third-party cookies in our Cookie Settings. If you decline third-party cookies, no ad script runs and no advertising cookies are set; the site simply shows no ads.',
+            'Where you have allowed third-party cookies, Google may use advertising cookies to serve ads to you. You can change your choice at any time from the Cookie Settings page.',
         ],
     },
     {
@@ -47,6 +57,7 @@ const sections: LegalSection[] = [
             'Razorpay — payment processing and subscription billing.',
             'Brevo — transactional and marketing email delivery.',
             'Google Analytics — anonymous usage measurement.',
+            'Google AdSense — display advertising.',
             'Vercel — website hosting and content delivery.',
             'Each provider processes data under its own privacy policy. We only share the minimum information necessary for the provider to perform its function.',
         ],

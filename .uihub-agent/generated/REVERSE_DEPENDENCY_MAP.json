@@ -31,10 +31,10 @@
   ],
   "description": "For every file: who imports it. The first tool to check before editing anything.",
   "counts": {
-    "tracked": 567,
+    "tracked": 571,
     "externalPackages": 66,
-    "orphans": 51,
-    "deadEnds": 196
+    "orphans": 53,
+    "deadEnds": 197
   },
   "topFanIn": [
     {
@@ -1755,6 +1755,18 @@
       "importedBy": 4,
       "dynamicImporters": [],
       "role": "DATA",
+      "feature": "components"
+    },
+    "frontend/src/components/ui/AdSlot.tsx": {
+      "importers": [
+        "frontend/src/pages/HomePage/HomePage.tsx",
+        "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+        "frontend/src/pages/TemplatesPage/TemplatesPage.tsx"
+      ],
+      "importedBy": 4,
+      "dynamicImporters": [],
+      "role": "COMPONENT",
       "feature": "components"
     },
     "frontend/src/components/ui/AsciiCursor.tsx": {
@@ -3792,10 +3804,11 @@
     "frontend/src/context/CookieConsentContext.tsx": {
       "importers": [
         "frontend/src/App.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/pages/legal/CookieSettingsPage.tsx"
       ],
-      "importedBy": 3,
+      "importedBy": 4,
       "dynamicImporters": [],
       "role": "STATE",
       "feature": "cookie-consent-context"
@@ -4012,6 +4025,16 @@
       "dynamicImporters": [],
       "role": "HOOK",
       "feature": "mobile"
+    },
+    "frontend/src/lib/adsense.ts": {
+      "importers": [
+        "frontend/src/components/ui/AdSlot.tsx",
+        "frontend/src/context/CookieConsentContext.tsx"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "lib"
     },
     "frontend/src/lib/firebase.ts": {
       "importers": [
@@ -4659,10 +4682,9 @@
     },
     "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx": {
       "importers": [
-        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubPage.tsx",
-        "frontend/src/pages/HomePage/HomePage.tsx"
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubPage.tsx"
       ],
-      "importedBy": 2,
+      "importedBy": 1,
       "dynamicImporters": [],
       "role": "PAGE",
       "feature": "home-page"
@@ -5040,13 +5062,29 @@
       "role": "UTILITY",
       "feature": "utils"
     },
+    "frontend/src/utils/consentSignals.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "utils"
+    },
+    "frontend/src/utils/cookieUtils.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "utils"
+    },
     "frontend/src/utils/cookieUtils.ts": {
       "importers": [
         "frontend/src/context/CookieConsentContext.tsx",
         "frontend/src/lib/firebase.ts",
-        "frontend/src/pages/legal/CookieSettingsPage.tsx"
+        "frontend/src/pages/legal/CookieSettingsPage.tsx",
+        "frontend/src/utils/consentSignals.test.ts",
+        "frontend/src/utils/cookieUtils.test.ts"
       ],
-      "importedBy": 4,
+      "importedBy": 6,
       "dynamicImporters": [],
       "role": "UTILITY",
       "feature": "utils"
@@ -6530,6 +6568,7 @@
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
         "frontend/src/components/templates/VisionaryOrbHero.tsx",
         "frontend/src/components/templates/registry.ts",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/AsciiCursor.tsx",
         "frontend/src/components/ui/AsciiWater.tsx",
         "frontend/src/components/ui/AuraCursor.tsx",
@@ -6769,7 +6808,7 @@
         "frontend/src/pages/legal/TermsPage.tsx",
         "frontend/src/utils/checkout.ts"
       ],
-      "importedBy": 281,
+      "importedBy": 282,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6985,6 +7024,8 @@
       "importers": [
         "frontend/src/routing/vercelRouting.test.ts",
         "frontend/src/utils/apiConfig.test.ts",
+        "frontend/src/utils/consentSignals.test.ts",
+        "frontend/src/utils/cookieUtils.test.ts",
         "mcp-server/tests/apiKey.test.ts",
         "mcp-server/tests/auth.test.ts",
         "mcp-server/tests/configService.test.ts",
@@ -6992,7 +7033,7 @@
         "mcp-server/tests/permissions.test.ts",
         "mcp-server/tests/tools.test.ts"
       ],
-      "importedBy": 8,
+      "importedBy": 10,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"

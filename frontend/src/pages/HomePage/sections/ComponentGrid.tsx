@@ -5,6 +5,7 @@ import { ArrowUpRight, Zap, Flame } from 'lucide-react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import { useSkeleton } from '../../../context/SkeletonContext';
 import { ComponentGridSkeleton } from '../../../components/ui/Skeleton';
+import AdSlot from '../../../components/ui/AdSlot';
 
 interface BentoSpec {
     id: string;
@@ -222,6 +223,9 @@ const ComponentGrid = () => {
                     <ArrowUpRight size={16} />
                 </button>
             </motion.div>
+
+            {/* Ad placement: inert until third-party consent AND a real ad-unit ID exist. */}
+            <AdSlot slot="home-explore" className="mt-16" />
         </section>
     );
 };

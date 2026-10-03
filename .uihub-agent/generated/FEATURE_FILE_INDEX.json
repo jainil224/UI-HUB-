@@ -164,6 +164,7 @@
       "frontend/src/components/templates/TemplateSimilarRail.tsx",
       "frontend/src/components/templates/VisionaryOrbHero.tsx",
       "frontend/src/components/templates/registry.ts",
+      "frontend/src/components/ui/AdSlot.tsx",
       "frontend/src/components/ui/AsciiCursor.tsx",
       "frontend/src/components/ui/AsciiWater.tsx",
       "frontend/src/components/ui/AuraCursor.tsx",
@@ -455,6 +456,7 @@
       "frontend/src/pages/legal/TermsPage.tsx"
     ],
     "lib": [
+      "frontend/src/lib/adsense.ts",
       "frontend/src/lib/firebase.ts",
       "frontend/src/lib/utils.ts"
     ],
@@ -632,6 +634,8 @@
       "frontend/src/utils/codeUtils.ts",
       "frontend/src/utils/componentSync.ts",
       "frontend/src/utils/componentUtils.ts",
+      "frontend/src/utils/consentSignals.test.ts",
+      "frontend/src/utils/cookieUtils.test.ts",
       "frontend/src/utils/cookieUtils.ts",
       "frontend/src/utils/mcpConfig.ts",
       "frontend/src/utils/prefetchUtils.ts",
