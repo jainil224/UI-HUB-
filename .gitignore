@@ -52,9 +52,18 @@ firebase.json
 
 # Agent skills & local specs (local only — never pushed to GitHub)
 #
-# NOTE: .uihub-agent/ is intentionally NOT ignored. It is the project knowledge
-# base (architecture, API, deployment, runtime and conflict contracts) and must
-# be tracked so those contracts live with the code. Do not re-add it here.
+# NOTE: .uihub-agent/ is listed below at owner request, BUT its 142 existing
+# files are STILL TRACKED and still pushed. .gitignore has no effect on files
+# already in the index, so that entry only prevents NEW files under
+# .uihub-agent/ from being added — it does NOT untrack anything.
+#
+# The knowledge base stays in the repo because 5 CI jobs (security-scan,
+# knowledge, config-drift, intelligence, task-routing in
+# .github/workflows/ci.yml) and 19 root package.json scripts execute from it.
+# security-scan is a `needs:` gate on most other jobs, so removing the files
+# fails the whole pipeline. To truly untrack it you must BOTH run
+# `git rm -r --cached .uihub-agent` AND remove those CI jobs and scripts.
+# Do not rely on this line alone.
 #
 # NOTE: .github/ is intentionally NOT ignored. CI workflows are project
 # configuration: an untracked workflow means every agent reads a CI definition
@@ -66,6 +75,7 @@ firebase.json
 .agents/
 .opencode/
 .claude/
+.uihub-agent/
 component-specs/
 
 # Originkit CLI credentials (local only — never pushed to GitHub)
