@@ -13,6 +13,7 @@ node_modules/
 
 # Vite
 *.local
+.uihub-agent
 
 # Debug
 npm-debug.log*
