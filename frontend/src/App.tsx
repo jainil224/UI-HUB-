@@ -70,6 +70,10 @@ import { SkeletonProvider } from './context/SkeletonContext';
 import { HeroSkeleton } from './components/ui/Skeleton';
 import TopLoader from './components/ui/TopLoader';
 import { triggerBackgroundComponentSync } from './utils/componentSync';
+import CategoryPage from './pages/Components/CategoryPage';
+import ComponentPage from './pages/Components/ComponentPage';
+import NotFoundPage from './pages/NotFoundPage';
+import { RouteSeoGuard } from './components/Seo';
 const PreviewCapturePage = React.lazy(() => import('./pages/PreviewCapturePage/PreviewCapturePage'));
 
 
@@ -174,7 +178,10 @@ const AppShell = () => {
               <Route path="/templates/:id" element={<TemplateDetailPage />} />
               <Route path="/build-with-ui-hub" element={<BuildWithUIHubPage />} />
               <Route path="/build-with-ui-hub/:slug" element={<BuildWithUIHubDetailPage />} />
-              <Route path="/preview-capture" element={<PreviewCapturePage />} />
+<Route path="/preview-capture" element={<PreviewCapturePage />} />
+              <Route path="/components/:category" element={<CategoryPage />} />
+              <Route path="/components/:category/:slug" element={<ComponentPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </React.Suspense>
         </main>
@@ -185,6 +192,7 @@ const AppShell = () => {
       <TopLoader />
       {!isDemo && !isAdmin && <Navbar />}
       <ScrollToTop />
+            <RouteSeoGuard />
       <CookieBanner />
       <PushNotificationPrompt />
     </>

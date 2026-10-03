@@ -10,7 +10,7 @@ const HaulFooter = React.lazy(() => import('../../components/ui/HaulFooter'));
 const OmniflowFooter = React.lazy(() => import('../../components/ui/OmniflowFooter'));
 const SoraFooter = React.lazy(() => import('../../components/ui/SoraFooter'));
 
-class DemoErrorBoundary extends React.Component<
+export class DemoErrorBoundary extends React.Component<
     { children: React.ReactNode },
     { hasError: boolean; error: Error | null }
 > {

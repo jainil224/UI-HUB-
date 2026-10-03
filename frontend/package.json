@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
+    "build": "vite build && node scripts/build-seo.mjs",
+    "build:seo": "node scripts/build-seo.mjs",
+    "check:seo": "node scripts/check-seo.mjs",
     "preview": "vite preview",
     "preview:ads": "vite build && vite preview --port 4173 --strictPort",
     "favicons": "node scripts/generate-favicons.mjs",

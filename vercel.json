@@ -12,7 +12,55 @@
       "destination": "/api/index.js"
     },
     {
-      "source": "/(.*)",
+      "source": "/library",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/favorites",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/preview-capture",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/signup",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/forgot-password",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/mcp",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/dashboard/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/admin/(.*)",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/demo",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/demo/(.*)",
       "destination": "/index.html"
     }
   ],
@@ -23,6 +71,15 @@
         {
           "key": "Cross-Origin-Opener-Policy",
           "value": "same-origin-allow-popups"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
