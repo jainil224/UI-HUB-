@@ -105,7 +105,7 @@ export function buildAdvancePrompt(m: ComponentManifest): string {
 ██║   ██║██║    ██╔══██║██║   ██║██╔══██╗
 ╚██████╔╝██║    ██║  ██║╚██████╔╝██████╔╝
  ╚═════╝ ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ 
-===  UI HUB  •  UNIVERSAL BLUEPRINT  ===
+
 > UI HUB universal component blueprint. This prompt is tool-agnostic — it works with any AI tool (Cursor, Claude, Lovable, Antigravity, ChatGPT, GitHub Copilot, etc.). Paste it into whichever assistant you use.
 
 # COMPONENT BLUEPRINT: ${m.displayName}
@@ -249,13 +249,20 @@ Create it as its own file, typed, no unused imports. Output the full working cod
 }
 
 import { EMBEDDED_SOURCE_CODE } from '../data/embeddedSourceCode';
+import { getComponentVariant } from '../data/componentVariants';
 
 /**
  * Constructs a Manifest from component data and generates the prompt for the target AI tool.
  */
-export const getFallbackVibePrompt = (componentId: string, system: AISystem, item?: any): string => {
+export const getFallbackVibePrompt = (componentId: string, system: AISystem, item?: any, variantId?: string): string => {
     const comp = item || componentList.find(c => c.id === componentId);
     const title = comp?.title || componentId.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
+
+    // Components with declared variants get a variant-specific blueprint, so the
+    // prompt describes the mode the visitor is actually looking at. The source
+    // itself stays the single combined file either way.
+    const variant = getComponentVariant(componentId, variantId);
+    const displayTitle = variant ? `${title} (${variant.label})` : title;
     
     // Resolve 100% exact full production source code
     let exactCode = EMBEDDED_SOURCE_CODE[componentId];
@@ -269,20 +276,23 @@ export const getFallbackVibePrompt = (componentId: string, system: AISystem, ite
         exactCode = getComponentCode(componentId, { lang: 'js', styling: 'tailwind' }) ?? '';
     }
     if (!exactCode || exactCode.trim() === '') {
-        exactCode = comp?.vibePrompt || `// ${title} Component Implementation\nimport React from 'react';\n\nexport const ${title.replace(/[^a-zA-Z0-9]/g, '')} = () => {\n  return <div className="text-white">${title}</div>;\n};`;
+        exactCode = comp?.vibePrompt || `// ${displayTitle} Component Implementation\nimport React from 'react';\n\nexport const ${title.replace(/[^a-zA-Z0-9]/g, '')} = () => {\n  return <div className="text-white">${displayTitle}</div>;\n};`;
     }
 
+    // A variant's authored behaviour is the blueprint; the generic item copy is
+    // only the fallback for components that declare no variants.
     const rawSpec = (
+        variant?.behaviour ||
         ANTIGRAVITY_PROMPTS[componentId] || 
         LOVABLE_PROMPTS[componentId] || 
         comp?.vibePrompt || 
         comp?.description || 
-        `Cinema-grade '${title}' animated React component built with Tailwind CSS and Framer Motion.`
+        `Cinema-grade '${displayTitle}' animated React component built with Tailwind CSS and Framer Motion.`
     );
 
     const manifest: ComponentManifest = {
         componentId,
-        displayName: title,
+        displayName: displayTitle,
         category: comp?.category || "UI Animation",
         description: rawSpec.split('\n')[0].replace(/^#+\s*/, '') || `Interactive ${title} component.`,
         sourceCode: exactCode,
@@ -346,14 +356,18 @@ export const fetchVibePrompt = async (
     componentId: string,
     system: AISystem,
     token?: string,
-    item?: any
+    item?: any,
+    variantId?: string
 ): Promise<PromptFetchResult> => {
     // Locally-defined components have no backend vault entry, so the backend
     // returns a generic code-less prompt. Force the local source (which embeds
     // the exact component code) for those components.
-    const LOCAL_ONLY_COMPONENTS = ['cinematic-navbar', 'floating-dark-capsule', 'minimal-ai-capsule', 'pill-navbar', 'modern-dark', 'split-navigation-nav', 'awwwards-nav', 'haul-footer', 'omniflow-footer', 'sora-footer', 'alpine-footer', 'leeuwarder-golfclub', 'community-newsletter', 'faizur-portfolio', 'sui-foundation', 'option-wheel', 'otp-code-input', 'password-strength-meter', 'signature-pad', 'drag-drop-upload', 'aurora-bpm-loader', 'ripple-signature-ledger', 'crossfade-typewriter', 'driftwood-gallery', 'reflect-shader', 'infinite-tendrils', 'ocean-swell', 'frost-glass-melt', 'star-burst', 'originkit-hero-24', 'light-cables', 'globe'];
+    //
+    // 'cube-loader' must also stay local: its prompt is variant-aware, and a
+    // server-side entry would be variant-blind and overwrite the local one.
+    const LOCAL_ONLY_COMPONENTS = ['cinematic-navbar', 'floating-dark-capsule', 'minimal-ai-capsule', 'pill-navbar', 'modern-dark', 'split-navigation-nav', 'awwwards-nav', 'haul-footer', 'omniflow-footer', 'sora-footer', 'alpine-footer', 'leeuwarder-golfclub', 'community-newsletter', 'faizur-portfolio', 'sui-foundation', 'option-wheel', 'otp-code-input', 'password-strength-meter', 'signature-pad', 'drag-drop-upload', 'aurora-bpm-loader', 'ripple-signature-ledger', 'crossfade-typewriter', 'driftwood-gallery', 'reflect-shader', 'infinite-tendrils', 'ocean-swell', 'frost-glass-melt', 'star-burst', 'originkit-hero-24', 'light-cables', 'globe', 'cube-loader', 'prism-pyramid'];
     if (LOCAL_ONLY_COMPONENTS.includes(componentId)) {
-        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item) };
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId) };
     }
 
     try {
@@ -391,7 +405,7 @@ export const fetchVibePrompt = async (
             const code = body?.code === 'TRIAL_LIMIT' ? 'TRIAL_LIMIT' as const : 'AUTH_REQUIRED' as const;
             return {
                 ok: false,
-                prompt: getFallbackVibePrompt(componentId, system, item),
+                prompt: getFallbackVibePrompt(componentId, system, item, variantId),
                 code,
                 reason: body?.reason,
                 expiresAt: body?.expiresAt != null ? body.expiresAt : null,
@@ -402,14 +416,14 @@ export const fetchVibePrompt = async (
 
         // Network / server error on premium tool: do not bypass — surface as error.
         if (isPremiumAITool(system)) {
-            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item), code: 'ERROR', status: response.status };
+            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item, variantId), code: 'ERROR', status: response.status };
         }
-        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item) };
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId) };
     } catch (error) {
         if (isPremiumAITool(system)) {
-            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item), code: 'ERROR' };
+            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item, variantId), code: 'ERROR' };
         }
-        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item) };
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId) };
     }
 };
 
