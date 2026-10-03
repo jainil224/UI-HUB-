@@ -22,6 +22,7 @@ import { saveToFavorites, removeFromFavorites, getUserFavorites } from '../../..
 import { listCollections, addToCollection, Collection } from '../../../../services/collections';
 import AuthRequiredModal from '../../../../components/ui/AuthRequiredModal';
 import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMetadata';
+import { COMPONENT_VARIANTS, getDefaultVariant, getComponentVariant } from '../../../../data/componentVariants';
 import Toast from '../../../../components/ui/Toast';
 import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
@@ -118,6 +119,7 @@ const CodeViewer = ({
     isLoadingSource,
     sourceCode,
     compact = false,
+    focusLine,
 }: {
     sourceFileName: string;
     sourceLineCount: number;
@@ -126,7 +128,21 @@ const CodeViewer = ({
     isLoadingSource: boolean;
     sourceCode: string;
     compact?: boolean;
-}) => (
+    /** 1-based line to bring into view. Used to reveal a variant's block. */
+    focusLine?: number;
+}) => {
+    const scrollRef = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (!focusLine || focusLine < 1) return;
+        const el = scrollRef.current;
+        if (!el) return;
+        // Approximate the viewer's line box: py-6 top padding plus ~19.5px per
+        // row, backed off so the target sits comfortably inside the viewport.
+        el.scrollTop = Math.max(0, 24 + (focusLine - 1) * 19.5 - 80);
+    }, [focusLine]);
+
+    return (
     <>
         {/* IDE-style File Header */}
         <div className="flex items-center justify-between gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 bg-black border-b-2 border-white">
@@ -144,7 +160,7 @@ const CodeViewer = ({
         </div>
 
         {/* Code Viewer with Line Numbers */}
-        <div className={`text-xs leading-relaxed overflow-auto custom-scrollbar bg-brand-surface ${compact ? 'min-h-[120px] max-h-[300px]' : 'min-h-[400px] max-h-[600px]'}`}>
+        <div ref={scrollRef} className={`text-xs leading-relaxed overflow-auto custom-scrollbar bg-brand-surface ${compact ? 'min-h-[120px] max-h-[300px]' : 'min-h-[400px] max-h-[600px]'}`}>
             {isLoadingSource ? (
                 <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
                     <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-3" />
@@ -162,7 +178,8 @@ const CodeViewer = ({
             )}
         </div>
     </>
-);
+    );
+};
 
 const PremiumGate = ({ message = "Unlock Premium Components" }: { message?: string }) => (
     <div className="w-full h-[420px] flex flex-col items-center justify-center bg-brand-surface p-8 text-center rounded-[inherit]">
@@ -410,6 +427,40 @@ const ToolCard = React.memo(({
     );
 });
 
+/**
+ * Variant switcher for components that declare more than one visual mode.
+ * Rendered above the tab content so the preview, the source and the AI prompt
+ * all describe the same active variant. Returns null for the 139 components
+ * that declare no variants, so it is inert everywhere else.
+ */
+const VariantSwitcher = ({ componentId, active, onChange }: { componentId: string; active: string; onChange: (variantId: string) => void }) => {
+    const variants = COMPONENT_VARIANTS[componentId];
+    if (!variants?.length) return null;
+    return (
+        <div className="flex flex-wrap items-center gap-2 mb-5" role="group" aria-label="Component variants">
+            <span className="text-[10px] font-black uppercase tracking-widest text-neutral-500 mr-1">Variant</span>
+            {variants.map((v) => {
+                const isActive = v.id === active;
+                return (
+                    <button
+                        key={v.id}
+                        type="button"
+                        onClick={() => onChange(v.id)}
+                        aria-pressed={isActive}
+                        className={`px-3 py-2 rounded border-2 text-[11px] font-black uppercase tracking-wider transition-all cursor-pointer ${
+                            isActive
+                                ? 'bg-white text-black border-white'
+                                : 'bg-transparent text-neutral-400 border-neutral-700 hover:text-white hover:border-neutral-400'
+                        }`}
+                    >
+                        {v.label}
+                    </button>
+                );
+            })}
+        </div>
+    );
+};
+
 const VibeSystemSection = React.memo(({
     item,
     user,
@@ -423,7 +474,8 @@ const VibeSystemSection = React.memo(({
     setTrialExpiresAt,
     componentConfig,
     vanillaCode,
-    setShowAuthModal
+    setShowAuthModal,
+    variant
 }: {
     item: ComponentItem;
     user: any;
@@ -438,6 +490,7 @@ const VibeSystemSection = React.memo(({
     componentConfig: any;
     vanillaCode: string;
     setShowAuthModal: (v: boolean) => void;
+    variant?: string;
 }) => {
     // Normal users default to 'lovable', Pro users default to 'advance'
     const defaultSystem: AISystem = isProUser ? 'advance' : 'lovable';
@@ -445,7 +498,7 @@ const VibeSystemSection = React.memo(({
     const [aiSystem, setAiSystemState] = React.useState<AISystem>(defaultSystem);
     const [isPending, startTransition] = React.useTransition();
     const [copied, setCopied] = React.useState<string | null>(null);
-    const [fetchedPrompt, setFetchedPrompt] = React.useState<string>(() => getFallbackVibePrompt(item.id, defaultSystem, item));
+    const [fetchedPrompt, setFetchedPrompt] = React.useState<string>(() => getFallbackVibePrompt(item.id, defaultSystem, item, variant));
     const [isLoadingPrompt, setIsLoadingPrompt] = React.useState(false);
     const [prevProStatus, setPrevProStatus] = React.useState(isProUser);
     const [vibeExpanded, setVibeExpanded] = React.useState(false);
@@ -506,9 +559,9 @@ const VibeSystemSection = React.memo(({
         try {
             const token = user ? await user.getIdToken() : undefined;
             console.log(`[VibeSystem] Fetching prompt for ${item.id} (${aiSystem})...`);
-            const result = await fetchVibePrompt(item.id, aiSystem, token, item);
+            const result = await fetchVibePrompt(item.id, aiSystem, token, item, variant);
 
-            setFetchedPrompt(result.prompt || getFallbackVibePrompt(item.id, aiSystem, item));
+            setFetchedPrompt(result.prompt || getFallbackVibePrompt(item.id, aiSystem, item, variant));
 
             if (result.ok) {
                 // Premium trial consumed on the server — reflect remaining count + expiry.
@@ -540,15 +593,22 @@ const VibeSystemSection = React.memo(({
             }
         } catch (error) {
             console.warn('[VibeSystem] Falling back to local blueprint for:', item.id);
-            setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item));
+            setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item, variant));
         } finally {
             setIsLoadingPrompt(false);
         }
-    }, [aiSystem, item, user, isProUser, isEntitled, setTrialsRemaining, setTrialExpiresAt]);
+    }, [aiSystem, item, user, isProUser, isEntitled, variant, setTrialsRemaining, setTrialExpiresAt]);
 
     React.useEffect(() => {
         loadPrompt();
     }, [loadPrompt]);
+
+    // Switching variant invalidates the loaded prompt. Seed it synchronously so
+    // the previous variant's blueprint is never shown against the new variant.
+    React.useEffect(() => {
+        setVibeExpanded(false);
+        setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item, variant));
+    }, [variant]);
 
     React.useEffect(() => {
         setVibeExpanded(false);
@@ -924,6 +984,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const navigate = useNavigate();
     const { theme } = useTheme();
     const [tab, setTab] = React.useState<'preview' | 'code' | 'vibe'>('preview');
+    // Single source of truth for the active variant. The preview, the source
+    // view and the AI prompt all read from here, so they cannot disagree.
+    const [variant, setVariant] = React.useState<string>(() => getDefaultVariant(item.id) ?? '');
+    const componentVariants = React.useMemo(() => COMPONENT_VARIANTS[item.id] ?? [], [item.id]);
+    const activeVariant = React.useMemo(() => getComponentVariant(item.id, variant), [item.id, variant]);
     const [copied, setCopied] = React.useState<string | null>(null);
     const [resetKey, setResetKey] = React.useState(0);
     const [isFullscreen, setIsFullscreen] = React.useState(false);
@@ -1016,6 +1081,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     React.useEffect(() => {
         setResetKey(0);
         setFetchedSource('');
+        setVariant(getDefaultVariant(item?.id ?? '') ?? '');
         if (item?.id) {
             logUserActivity({
                 type: 'component.view',
@@ -1360,6 +1426,21 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         setSnippetExpanded(false);
     }, [item.id]);
 
+    // Locate the active variant's block in the combined source file so the code
+    // tab can reveal it. Markers are emitted by CubeLoader.tsx and survive the
+    // embeddedSourceCode round-trip verbatim.
+    const variantLine = React.useMemo(() => {
+        if (!activeVariant) return undefined;
+        const idx = sourceLines.findIndex((l) => l.includes(`VARIANT: ${activeVariant.id} `));
+        return idx >= 0 ? idx + 1 : undefined;
+    }, [sourceLines, activeVariant]);
+
+    // Reveal the full file when the variant changes so its block is reachable.
+    React.useEffect(() => {
+        if (!activeVariant) return;
+        setSnippetExpanded(true);
+    }, [activeVariant?.id]);
+
     const [codeCopied, setCodeCopied] = React.useState(false);
 
     const copyCodeFromPreview = React.useCallback(() => {
@@ -1686,6 +1767,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 </button>
             </div>
 
+            {/* Variant switcher sits above the tab content so Preview, Code and
+                Vibe all describe the same active variant. Inert when the
+                component declares no variants. */}
+            <VariantSwitcher componentId={item.id} active={variant} onChange={setVariant} />
+
             <AnimatePresence mode="wait">
                 {tab === 'preview' ? (
                     <motion.div
@@ -1830,7 +1916,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 transition={{ duration: 0.2, ease: "easeOut" }}
                                                 className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'}`}
                                             >
-                                                {item.preview({ showDemoButton: true })}
+                                                {item.preview({ showDemoButton: true, variant })}
                                             </motion.div>
                                         </React.Suspense>
                                     </div>
@@ -1896,6 +1982,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 )}
                             </div>
 
+                            {activeVariant && (
+                                <div className="flex flex-wrap items-center gap-2 px-3 py-2 bg-black border-2 border-white text-[10px] font-black uppercase tracking-widest">
+                                    <span className="text-neutral-500">Active variant</span>
+                                    <span className="text-white">{activeVariant.label}</span>
+                                    <span className="text-neutral-600">— full switcher source below</span>
+                                </div>
+                            )}
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
                                 {snippetExpanded ? (
                                     <>
@@ -1918,6 +2011,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 sourceLineCount={sourceLineCount}
                                                 isLoadingSource={isLoadingSource}
                                                 sourceCode={sourceCode}
+                                                focusLine={variantLine}
                                             />
                                         )}
                                         <button
@@ -1976,9 +2070,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         setTrialsRemaining={setTrialsRemaining}
                         setTrialExpiresAt={setTrialExpiresAt}
                         componentConfig={componentConfig}
-                        vanillaCode={vanillaCode}
-                        setShowAuthModal={setShowAuthModal}
-                    />
+vanillaCode={vanillaCode}
+                          setShowAuthModal={setShowAuthModal}
+                          variant={variant}
+                      />
                 )}
             </AnimatePresence>
 

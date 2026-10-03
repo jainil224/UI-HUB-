@@ -115,6 +115,8 @@ const QuantumLattice = React.lazy(() => import('../components/ui/QuantumLattice'
 const MatrixRain = React.lazy(() => import('../components/ui/MatrixRain'));
 const LightCables = React.lazy(() => import('../components/ui/LightCables'));
 const Globe = React.lazy(() => import('../components/ui/Globe'));
+const CubeLoader = React.lazy(() => import('../components/ui/CubeLoader'));
+const PrismPyramid = React.lazy(() => import('../components/ui/PrismPyramid'));
 
 
 
@@ -2802,6 +2804,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'quantum-lattice': QuantumLattice,
     'light-cables': LightCables,
     'globe': Globe,
+    'cube-loader': CubeLoader,
+    'prism-pyramid': PrismPyramid,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15257,6 +15261,40 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black flex items-center justify-center">
                 <Globe />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Cube Loader ────────────────────────────────────────
+    {
+        id: "cube-loader",
+        title: "Cube Loader",
+        category: "loader",
+        addedAt: "2026-10-03",
+        newBadgeDays: 120,
+        description: "A two-mode 3D cube loader switcher: an aqua cube with an SVG water-caustic top face, and a black cube banded with white glitch marks — one component, switched with one control.",
+        preview: (opts?: any) => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black flex items-center justify-center">
+                <CubeLoader variant={opts?.variant} showToggle={false} />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Prism Pyramid ──────────────────────────────────────
+    {
+        id: "prism-pyramid",
+        title: "Prism Pyramid",
+        category: "loader",
+        addedAt: "2026-10-03",
+        newBadgeDays: 120,
+        description: "A four-faced 3D pyramid spinner where each triangular face carries its own conic gradient, turning once on its vertical axis every four seconds over a blurred violet base.",
+        preview: (opts?: any) => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black flex items-center justify-center">
+                <PrismPyramid />
             </div>
         ),
         code: "",

@@ -43,6 +43,7 @@ const MatrixRainDemoPage = React.lazy(() => import('./pages/Components/MatrixRai
 const LightCablesDemoPage = React.lazy(() => import('./pages/Components/LightCablesDemoPage'));
 const GlobeDemoPage = React.lazy(() => import('./pages/Components/GlobeDemoPage'));
 const OriginkitHero24DemoPage = React.lazy(() => import('./pages/Components/OriginkitHero24DemoPage'));
+const CubeLoadersDemoPage = React.lazy(() => import('./pages/Components/CubeLoadersDemoPage'));
 const DemoPage = React.lazy(() => import('./pages/Components/DemoPage'));
 const AdminGuard = React.lazy(() => import('./pages/Admin/AdminGuard'));
 const AdminLayout = React.lazy(() => import('./pages/Admin/AdminLayout'));
@@ -168,6 +169,7 @@ const AppShell = () => {
               <Route path="/demo/light-cables" element={<LightCablesDemoPage />} />
               <Route path="/demo/globe" element={<GlobeDemoPage />} />
               <Route path="/demo/originkit-hero-24" element={<OriginkitHero24DemoPage />} />
+              <Route path="/demo/cube-loaders" element={<CubeLoadersDemoPage />} />
               <Route path="/demo/:id" element={<DemoPage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/privacy" element={<PrivacyPolicyPage />} />

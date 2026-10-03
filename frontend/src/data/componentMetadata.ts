@@ -1571,6 +1571,36 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
             requirements: ["Three.js", "d3-geo", "WebGL", "ResizeObserver", "Pointer Events"]
         }
     },
+"cube-loader": {
+        props: [
+            { name: "variant", type: '"caustic" | "monolith"', default: '"caustic"', description: "Which cube to render: the aqua water-caustic cube or the monochrome glitch cube." },
+            { name: "onVariantChange", type: "(variant: CubeLoaderVariantId) => void", default: "undefined", description: "Called with the newly selected variant whenever the built-in switcher is used." },
+            { name: "showToggle", type: "boolean", default: "true", description: "Whether to render the built-in variant switcher. Set false to drive the variant from your own UI." },
+            { name: "className", type: "string", default: "''", description: "Optional class applied to the root container." }
+        ],
+        vibeMeta: {
+            behavior: "A single self-contained 3D cube loader that switches between two visual modes, both living in one component and one stylesheet, with a variant switcher moving between them. Caustic Cube: four 75px walls inside a preserve-3d wrapper, each spaced by a CSS custom property --i (0, 1, 2, 3) through transform rotateY(calc(90deg * var(--i))) translateZ(37.5px) — exactly half the edge length — so the walls close into a solid cube. Its walls carry a vertical aqua gradient from pale cyan through teal to warm yellow, and the flat top face is overlaid with an inline SVG rect displaced by an SVG filter: feTurbulence of type fractalNoise at baseFrequency 0.09 with one octave generates the field and feDisplacementMap shifts the fill through it on the R and G channels at scale 600, producing a rippling water-caustic surface. Monolith Cube: the same four-wall construction in monochrome, with hard white gradient stops at 5.5%, 27.9%, 45.6% and 71.7% reading as torn scanline glitch bands over black, a desaturated plum top face, and a base plate blurred 10px behind four stacked box-shadows alternating #323232 and white for a soft halo. Both modes pitch the form with rotateX(-30deg) and complete one full rotateY(360deg) every 4 seconds on a linear infinite loop. When showToggle is enabled the switcher buttons are 44px tall, expose aria-pressed for the active mode, and show a focus-visible outline.",
+            states: { from: "a single static 3D cube with the switcher idle on Caustic Cube", to: "the selected mode swapping the wall gradient and top-face treatment while the switcher's aria-pressed state moves" },
+            cssProperties: ["CSS custom property index for face rotation", "preserve-3d transform context", "half-edge translateZ for cube closure", "vertical hsl gradient walls", "hard-stop glitch gradient bands", "feTurbulence fractal noise", "feDisplacementMap caustic displacement", "stacked box-shadow base halo", "rotateY spin loop", "aria-pressed variant switcher"],
+            description: "A two-mode 3D cube loader in one component: an aqua cube with an SVG water-caustic top face and a black cube banded with white glitch marks, selected with one control.",
+            libraries: ["react"],
+            requirements: ["CSS 3D transforms (preserve-3d)", "CSS custom properties", "CSS filter blur", "SVG filters (feTurbulence, feDisplacementMap)"]
+        }
+    },
+
+    "prism-pyramid": {
+        props: [
+            { name: "className", type: "string", default: "''", description: "Optional class applied to the root container." }
+        ],
+        vibeMeta: {
+            behavior: "A pure-CSS 3D pyramid spinner with no canvas and no WebGL. Four identical 70px square elements are clipped into triangles with clip-path polygon(50% 0%, 0% 100%, 100% 100%), absolutely centred inside a square stage whose width is min(300px, 100%) and which holds a 1:1 aspect ratio, and each face is filled with its own conic gradient so no two walls read the same. The two rear walls are tilted with rotateZ(-30deg)/rotateZ(30deg) followed by rotateY(90deg) and the two front walls with rotateX(30deg)/rotateX(-30deg); every wall shares transform-origin center top so the faces meet at the apex. A 60px violet plate (#8B5AD5) is laid flat beneath the form with rotateX(90deg) translateZ(-40px) and blurred 12px so it reads as a soft cast shadow. The outer stage is pitched back with rotateX(-20deg) and the inner wrapper completes one full rotateY(360deg) every 4 seconds on a linear infinite loop.",
+            states: { from: "a static four-faced pyramid seen from its pitched apex", to: "the same form turned a full revolution on its vertical axis, each conic gradient face catching the light differently as it passes" },
+            cssProperties: ["preserve-3d transform context", "clip-path triangle walls", "per-wall conic-gradient", "transform-origin center top", "blur cast-shadow plate", "rotateY spin loop"],
+            description: "A four-faced 3D pyramid spinner where each triangular face carries its own conic gradient, turning once on its vertical axis every four seconds over a blurred violet base.",
+            libraries: ["react"],
+            requirements: ["CSS 3D transforms (preserve-3d)", "clip-path", "conic-gradient", "CSS filter blur"]
+        }
+    },
 };
 
 
