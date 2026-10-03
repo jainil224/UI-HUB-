@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "description": "Shape of one entry in memory/ARCHITECTURAL_DECISIONS.md. A decision record captures a choice that constrains future work, the alternatives that were rejected, and what would reverse it. Its purpose is to stop a future session re-litigating a settled question, and equally to stop it applying a settled answer to a case it was never settled for.",
+  "recordTarget": ".uihub-agent/memory/ARCHITECTURAL_DECISIONS.md",
+  "version": "1.0.0",
+  "properties": [
+    {
+      "path": "decisionId",
+      "type": "string",
+      "required": true,
+      "note": "`DEC-001` upward. Separate namespace from the router's `D-nn` series so a durable decision is never confused with a phase-local one."
+    },
+    {
+      "path": "title",
+      "type": "string",
+      "required": true,
+      "note": "The decision as one assertion, not a topic."
+    },
+    {
+      "path": "date",
+      "type": "string",
+      "required": true,
+      "note": "ISO-8601. When the decision was made, not when it was written down."
+    },
+    {
+      "path": "context",
+      "type": "string",
+      "required": true,
+      "note": "The situation that forced a choice. Without this a decision looks arbitrary, and the next reader 'fixes' it."
+    },
+    {
+      "path": "decision",
+      "type": "string",
+      "required": true,
+      "note": "What was decided."
+    },
+    {
+      "path": "reason",
+      "type": "string",
+      "required": true,
+      "note": "Why this option over the others."
+    },
+    {
+      "path": "evidence",
+      "type": "string",
+      "required": true,
+      "note": "What proves it was correct: a measurement, a file, a command output, a recorded observation. A decision with no evidence is a preference, and is labelled as one."
+    },
+    {
+      "path": "alternatives",
+      "type": "string[]",
+      "required": true,
+      "note": "Options considered and rejected, each with why. This is the field with the highest long-term value: it is what prevents the same experiment being run twice."
+    },
+    {
+      "path": "impact",
+      "type": "string",
+      "required": true,
+      "note": "What the decision costs as well as buys. A decision record with no stated cost reads as costless and gets applied too broadly."
+    },
+    {
+      "path": "scope",
+      "type": "string",
+      "required": true,
+      "note": "What the decision applies to, and explicitly what it does not. Scope creep in decisions is the failure mode this field exists to prevent."
+    },
+    {
+      "path": "status",
+      "type": "string",
+      "required": true,
+      "enum": ["CURRENT", "HISTORICAL", "SUPERSEDED", "UNKNOWN"],
+      "note": "CURRENT means verified against the current repository. HISTORICAL means it was true and has not been re-checked."
+    },
+    {
+      "path": "supersedes",
+      "type": "string[]",
+      "required": false,
+      "note": "Earlier decision ids this replaces."
+    },
+    {
+      "path": "supersededBy",
+      "type": "string",
+      "required": false,
+      "note": "Later decision id that replaced this one. Required when status is SUPERSEDED."
+    },
+    {
+      "path": "reversesIf",
+      "type": "string",
+      "required": true,
+      "note": "The observable condition that would justify revisiting. A decision with no reversal condition becomes permanent by inertia."
+    }
+  ],
+  "invariants": [
+    "Only verified decisions are recorded. An unverified belief is recorded with status UNKNOWN, not stated as a decision.",
+    "No decision is invented to fill a category. An empty file is better than a plausible-sounding fabrication.",
+    "Contradicting current source does not delete the record; it sets status to SUPERSEDED with `supersededBy`.",
+    "`alternatives` may not be empty — a decision with no rejected options was not a decision.",
+    "Detail is not duplicated here; heavy detail links to the phase document that owns it."
+  ]
+}

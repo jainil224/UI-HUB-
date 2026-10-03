@@ -75,6 +75,18 @@ const REQUIRED = [
   'codebase/PHASE_7_SIMULATIONS.md',
   'codebase/PHASE_7_CHECKLIST.md',
   'codebase/PHASE_7_CHANGES.md',
+  // Phase 10 - durable memory.
+  //
+  // Only the overview is required, not every memory file. That is deliberate:
+  // assertions 3 and 4 run against REQUIRED files, and several memory files
+  // legitimately quote paths that no longer exist (KNOWN_FAILURES records what
+  // was broken, KNOWN_FIXES records what a now-removed component looked like).
+  // Requiring those would force the records to be softened into something they
+  // are not, which is exactly the falsification this phase forbids.
+  //
+  // MEMORY_OVERVIEW.md is the entry point, so it is the file whose references
+  // must resolve for a future agent to be able to navigate the layer at all.
+  'memory/MEMORY_OVERVIEW.md',
 ];
 
 // ---------------------------------------------------------------------------

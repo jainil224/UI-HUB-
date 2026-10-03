@@ -191,11 +191,11 @@ cosmetic; `TRIGGER_PRIORITY` is documented as such.
 
 ---
 
-## OPEN — Phase 10: should relevance-admitted files be expansion subjects?
+## D-08 — relevance-admitted files are not expansion subjects (RESOLVED in Phase 10)
 
-**Not decided in Phase 9. Deliberately deferred.**
+**Deferred as OPEN in Phase 9. Measured and answered in Phase 10. Durable record: `memory/ARCHITECTURAL_DECISIONS.md` DEC-009.**
 
-S1 coverage is 1/2: `backend/src/middleware/auth.js` is ground-truth-relevant and
+S1 coverage was 1/2: `backend/src/middleware/auth.js` is ground-truth-relevant and
 absent. Verified cause: it is one inbound hop from `paymentRoutes.js`, but
 `paymentRoutes.js` was admitted by *relevance*, not named by the router, so it is
 not an expansion subject. Only
@@ -210,14 +210,32 @@ applied because:
 - it would trade a real precision gain for unbounded context growth on the last day
   of the phase.
 
-**What Phase 10 needs.** A per-trigger answer, not a global one. `TEST_DEPENDENCY`
-already solved this case for conceptual tasks (D-05): relevance-selected subjects
-are safe when the evidence is a *specific* edge, not when it is mere proximity. The
-same test applies here — `DIRECT_DEPENDENCY` from a relevance-admitted file is a real
-edge and probably safe; `RELEVANT_CONSUMER` from one is closer to "nearby", which the
-category model already forbids as a justification.
+**Phase 9 asked for a per-trigger answer, not a global one. That is what was
+measured** (`tasks/EXPANSION_EXPERIMENT.md`, read-only, no trigger enabled):
 
-**Do not resolve this by widening all subjects.** Measure per trigger.
+| Trigger | Would add | Invented files | Verdict |
+|---|---|---|---|
+| `PROTECTED_RELATIONSHIP` | 18 | 9 | REJECT |
+| `DIRECT_DEPENDENCY` | 255 | 117 | REJECT |
+| `RELEVANT_CONSUMER` | 49 | 15 | REJECT |
+| `TEST_DEPENDENCY` | 6 | 0 | DEFER |
+| `STATE_DEPENDENCY` | 1 | 0 | DEFER |
+| `API_DEPENDENCY` | 0 | 0 | NO EFFECT |
+| `SHARED_SERVICE` | 0 | 0 | NO EFFECT |
+
+The Phase 9 hypothesis that `DIRECT_DEPENDENCY` would be "a real edge and probably
+safe" is **refuted by measurement**: it is the worst trigger in the set, inventing
+117 files. Its edges are real edges from files that relevance merely happened to
+admit, which is why they are wrong as *subjects*.
+
+**Decision: do not widen subjects.** C1 — relevance-admitted files stay in the
+bundle and stay out of expansion. `TEST_DEPENDENCY` and `STATE_DEPENDENCY` stay
+deferred: they were clean in this sample, and one clean sample across five
+scenarios is not evidence to enable a trigger.
+
+The S1 coverage gap is therefore **not closed**, and closing it is now an open
+router problem rather than an open decision. Revisit only with a new trigger whose
+measured precision is acceptable, never by widening the subject set globally.
 
 ---
 

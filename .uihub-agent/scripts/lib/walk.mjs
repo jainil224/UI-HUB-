@@ -189,8 +189,15 @@ export function looksBinary(absolute) {
  * The ledger matters: task 7.40 asks for a total-file / indexed-file /
  * excluded-file count, and an exclusion you cannot account for is an exclusion
  * you cannot audit.
+ *
+ * `sniffBinary: false` skips the per-file content read in `looksBinary()`, so
+ * `indexed` becomes a superset that also contains binary files under a code
+ * extension. It is for callers that need the SET OF PATHS and can decide
+ * binariness themselves on a much smaller set — `freshness()` uses it and then
+ * sniffs only the paths the manifest has never recorded. The generator leaves
+ * it on, because the index must never contain a vendor blob.
  */
-export function discover(root, { includeRoleOnly = true } = {}) {
+export function discover(root, { includeRoleOnly = true, sniffBinary = true } = {}) {
   const indexed = [];
   const roleOnly = [];
   const excluded = [];
@@ -238,7 +245,7 @@ export function discover(root, { includeRoleOnly = true } = {}) {
 
       const ext = extname(e.name);
       if (CODE_EXT.has(ext)) {
-        if (looksBinary(abs)) {
+        if (sniffBinary && looksBinary(abs)) {
           excluded.push({ path: rel, kind: 'file', reason: 'binary-content', filesBeneath: 1 });
           continue;
         }

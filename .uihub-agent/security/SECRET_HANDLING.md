@@ -41,12 +41,28 @@ does not treat "looks like a placeholder" as proof of safety.
 |---|---|
 | Firebase **web** `apiKey` (`AIza…` in `frontend/src/main.tsx`) | Not a credential. Firebase restricts use via Security Rules and authorized domains, and the value is shipped to every browser by design. |
 | `MCP_API_KEY_PREFIX` = `uh_live_` | A prefix, not a key. |
+| `uh_live_xxxxxxxxxxxxxxxxxxxxxxxxx` (`README.md`, `MCP.md`, `docs/*.md`) | The documented format example. A run of `x` is a `PLACEHOLDER` by rule, and the `mcp-api-key` detector captures the key *body* specifically so this rule still applies. |
 | `FIREBASE_PROJECT_ID`, `MCP_ADMIN_EMAILS` | Identifiers, not credentials. Personal addresses are published by nature of being admin contacts. |
 | `.env.example` contents | Placeholders by contract. |
 
 Firebase web config keys are classified `PUBLIC_IDENTIFIER` by the scanner, and
 only in `frontend/`. The same prefix under `backend/` or `mcp-server/` is a
 REAL_SECRET, because server-side `AIza` keys are not needed by the web SDK.
+
+## The MCP credential is scanned, not just redacted
+
+An MCP admin API key is a credential by the same rule as every other row in the
+table above: **in git? no.** The `mcp-api-key` detector therefore scans for it
+alongside the other fifteen detectors, and a bare `uh_live_…` in application code
+is a `REAL_SECRET` that fails CI. Nothing about MCP keys is public — they are
+minted per user, stored only as a SHA-256 hash, and never shipped to a browser —
+so unlike the Firebase web key there is no `PUBLIC_IDENTIFIER` case to carve out.
+
+The scanner and the memory redaction layer are separate systems and both are
+required. The scanner decides whether to refuse; redaction decides what a human
+reads. `tests/secret-scan-fixtures.test.mjs` asserts that a raw key is refused by
+the scanner *and* removed by `redactSecrets()`, so neither is standing in for the
+other. Detector detail is in `../security/SECURITY_VALIDATION.md`.
 
 ## Rules for agents
 

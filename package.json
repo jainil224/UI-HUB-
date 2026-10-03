@@ -34,8 +34,11 @@
     "agent:query": "node .uihub-agent/scripts/query-index.mjs",
     "agent:route": "node .uihub-agent/scripts/route-task.mjs",
     "agent:context": "node .uihub-agent/scripts/context-task.mjs",
-    "agent:test": "node --test .uihub-agent/tests/router.test.mjs .uihub-agent/tests/context.test.mjs .uihub-agent/tests/precision.test.mjs",
-    "check:routing": "npm run agent:test && node .uihub-agent/scripts/check-index.mjs"
+    "agent:memory": "node .uihub-agent/scripts/memory-query.mjs",
+    "agent:test": "node --test .uihub-agent/tests/router.test.mjs .uihub-agent/tests/context.test.mjs .uihub-agent/tests/precision.test.mjs .uihub-agent/tests/memory.test.mjs .uihub-agent/tests/expansion-experiment.test.mjs .uihub-agent/tests/prepare-task.test.mjs .uihub-agent/tests/memory-boundaries.test.mjs .uihub-agent/tests/staleness.test.mjs .uihub-agent/tests/freshness-cost.test.mjs .uihub-agent/tests/redaction-hardening.test.mjs .uihub-agent/tests/secret-scan-fixtures.test.mjs",
+    "check:routing": "npm run agent:test && node .uihub-agent/scripts/check-index.mjs",
+    "agent:experiment": "node .uihub-agent/scripts/expansion-experiment.mjs",
+    "agent:prepare": "node .uihub-agent/scripts/prepare-task.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.1.0",

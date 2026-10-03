@@ -42,8 +42,37 @@ false positives from `.glb` models and other assets.
 `mongodb-uri`, `aws-access-key-id`, `aws-secret-access-key` (context-anchored),
 `private-key` (header **and** footer), `private-key-header`, `firebase-service-account`,
 `razorpay-key`, `github-token`, `slack-token`, `stripe-webhook-secret`,
-`google-api-key`, `sendgrid-key`, `bearer-token`, `smtp-credential`,
+`mcp-api-key`, `google-api-key`, `sendgrid-key`, `bearer-token`, `smtp-credential`,
 `vapid-private-key`.
+
+### Detector fixture matrix
+
+`tests/secret-scan-fixtures.test.mjs` pins the verdict of all sixteen detectors, so
+a change to one cannot silently alter another. Before Phase 10 F6 the scanner had
+fifteen detectors and no per-detector matrix; coverage was indirect — two
+assertions that a shape the redaction layer *misses* is still refused, which is
+the opposite direction.
+
+`mcp-api-key` deserves a note because it is the only detector whose floor is below
+its true width. `mcp-server/src/services/apiKeyService.ts` mints
+`` `${config.apiKeyPrefix}${crypto.randomBytes(32).toString('base64url')}` ``, so a
+real key is `uh_live_` + **43** base64url characters. The detector fires at **16**
+body characters, because a `{43}`-only rule would miss a truncated paste — the
+realistic leak, since a key is displayed once and then quoted into issues as a
+prefix. The floor sits above everything the product deliberately shows:
+`getKeyPrefix()` returns a 14-character prefix (a 6-character body) and
+`middleware/auth.ts` echoes a 24-character truncation (a 16-character body) in its
+error text.
+
+The detector captures the **body**, not the whole token. `classify()` tests
+`PLACEHOLDER_VALUE` (`x{3,}`, `your-*`, `my-*`) against the captured value, and this
+repository's committed example is `uh_live_xxxxxxxxxxxxxxxxxxxxxxxxx`, which appears
+in `README.md`, `MCP.md`, `docs/mcp.md` and `docs/cli.md`. Capturing the whole token
+would hide the prefix from that rule and turn nine legitimate documentation lines
+into `REAL_SECRET` findings that fail CI. It has no `lineContext` (a context anchor
+is exactly the defect F5 found in the redaction layer) and no `refine` (there is no
+public MCP identifier to excuse — keys are minted per user, stored only as a
+SHA-256 hash, and never shipped to a browser).
 
 ### Output format
 

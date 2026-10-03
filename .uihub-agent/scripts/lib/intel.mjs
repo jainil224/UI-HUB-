@@ -20,7 +20,7 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { queries, load, ROOT, AGENT_DIR, slash, impactOf } from '../query-index.mjs';
-import { discover } from './walk.mjs';
+import { discover, looksBinary } from './walk.mjs';
 
 export { ROOT, AGENT_DIR, slash, impactOf };
 
@@ -886,9 +886,20 @@ export function freshness() {
   //
   // `discover(ROOT)` is the same call the generator makes, so this sees exactly
   // the universe the manifest recorded and no more.
+  //
+  // `sniffBinary: false` keeps the walk to metadata. `discover()` otherwise
+  // reads the first bytes of every CODE_EXT file to look for a NUL, which made a
+  // routine prepare pull ~8.9 MB across all ~500 indexed files to select a
+  // context of about eleven. The sniff can only ever REMOVE a binary file from
+  // `added`, so it is enough to apply it to the paths this check actually cares
+  // about — the ones the snapshot has never seen. Paths already in the snapshot
+  // are skipped outright, so when nothing has been added (the ordinary case)
+  // this costs no content reads at all.
   try {
-    for (const f of discover(ROOT).indexed) {
-      if (!seen.has(f.path)) added.push(f.path);
+    for (const f of discover(ROOT, { sniffBinary: false }).indexed) {
+      if (seen.has(f.path)) continue;
+      if (looksBinary(f.abs)) continue;
+      added.push(f.path);
     }
   } catch {
     // A failed walk must not make the router lie. Report UNKNOWN rather than

@@ -30,7 +30,7 @@
     "cli/tests"
   ],
   "description": "Freshness record for every intelligence artifact. The ONLY file carrying a timestamp.",
-  "generatedAt": "2026-10-01T12:25:44.322Z",
+  "generatedAt": "2026-10-02T08:02:59.124Z",
   "sourceFingerprint": "b7805860f03affe05b0f987ded7b4816f715af0ae3144b12a74f686635bd21ed",
   "sourceFileCount": 501,
   "sourceBytes": 8972873,
@@ -2583,11 +2583,11 @@
     ]
   },
   "timingsMs": {
-    "discover": 816,
-    "parse": 2393,
-    "resolve": 65,
-    "build": 2492,
-    "total": 5766
+    "discover": 214,
+    "parse": 1962,
+    "resolve": 76,
+    "build": 2034,
+    "total": 4286
   },
   "artifacts": [
     {
@@ -2636,7 +2636,7 @@
     },
     {
       "path": ".uihub-agent/generated/CONTEXT_BUNDLE_SCHEMA.json",
-      "bytes": 5162
+      "bytes": 6694
     },
     {
       "path": ".uihub-agent/generated/FEATURE_FILE_INDEX.json",

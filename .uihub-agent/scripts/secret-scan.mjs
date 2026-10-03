@@ -162,6 +162,45 @@ const DETECTORS = [
     lineLevel: false,
   },
   {
+    id: 'mcp-api-key',
+    type: 'MCP admin API key',
+    // Shape is fixed by `apiKeyService.generateApiKey()`:
+    //   `${config.apiKeyPrefix}${crypto.randomBytes(32).toString('base64url')}`
+    // which is `uh_live_` + 43 base64url characters. The prefix is the literal
+    // default of MCP_API_KEY_PREFIX (config/env.ts) and is committed in
+    // mcp-server/.env.example, so `uh_live_` alone is a documented public value.
+    // base64url only — no `+`, `/` or `=` padding.
+    //
+    // 16 is the detection floor, not the true width. The true width is 43; a
+    // `{43}`-only rule would miss the truncated paste, which is the realistic
+    // leak (a key is displayed once, then people quote prefixes into issues).
+    // The floor is set above everything the product deliberately shows:
+    // `getKeyPrefix()` returns `slice(0, 14)`, i.e. a 6-char body, and
+    // `middleware/auth.ts` echoes `providedKey.slice(0, 24)` — a 16-char body —
+    // back to the caller in its error text.
+    //
+    // The capture group is the BODY, not the whole token. That is deliberate:
+    // `classify()` tests PLACEHOLDER_VALUE (`x{3,}`, `your-*`, `my-*`) against
+    // the captured value, and this repository's documented example is
+    // `uh_live_xxxxxxxxxxxxxxxxxxxxxxxxx`, which appears in README.md, MCP.md,
+    // docs/mcp.md and docs/cli.md. Capturing the whole token would hide the
+    // prefix from that rule and turn nine legitimate documentation lines into
+    // REAL_SECRET findings that fail CI. Capturing the body alone matches
+    // `mongodb-uri`, `aws-secret-access-key`, `smtp-credential` and
+    // `bearer-token`, which all capture the credential portion only.
+    //
+    // No `lineContext`: a context anchor is exactly the F5 defect, where every
+    // redaction shape required an adjacent keyword and a bare key in prose
+    // passed through.
+    // No `refine`: unlike the Firebase web key there is no public MCP
+    // identifier to excuse. MCP keys are minted per user, stored only as a
+    // SHA-256 hash, and never shipped to a browser, so a bare match is a
+    // finding wherever it appears.
+    re: /\buh_live_([A-Za-z0-9_-]{16,})\b/g,
+    groups: [1],
+    lineLevel: false,
+  },
+  {
     id: 'google-api-key',
     type: 'Google API key',
     re: /\bAIza[0-9A-Za-z_\-]{35}\b/g,

@@ -74,6 +74,34 @@ of Phase 9** against a `FRESH` index, where it reproduced exactly. This is the
 | Schema valid | 10 / 10 |
 | `TEST_DEPENDENCY` fired | 0 of 98 expanded files |
 
+**These are the pre-Phase-9 numbers and they are NOT the current baseline.** They
+are kept because TASK 9.42 measured its improvement against them. Phase 9 changed
+the engine afterwards, so the table above is a historical reference point only.
+
+**Current baseline (post-Phase-9, default policy).** Reproduced independently in
+Phase 10 by `npm run agent:experiment`, which builds all ten bundles and matches
+`CONTEXT_QUALITY_REPORT.md` §1 column 3 exactly:
+
+| Metric | Value |
+|---|---|
+| Bundle sizes S1–S10 | 9, 14, 2, 16, 42, 13, 0, 0, 10, 0 |
+| Mean | 10.6 |
+| Largest | 42 (S5) |
+| Smallest | 0 (S7, S8, S10) |
+| Total | 106 |
+| Relevant | 95 |
+| Irrelevant | 11 |
+| Precision | 89.6% |
+| Zero-file bundles | 3 (S7, S8, S10) — all carry an explanation |
+| Schema valid | 10 / 10 |
+| `TEST_DEPENDENCY` fired | 0 of 106 expanded files |
+
+S1 shrank 11 → 9 and S5 grew 32 → 42. S5's growth is a policy effect, not a
+regression: its relevance budget grows to 35 on resolved evidence (4 protected
+areas, 3 subsystems) and the enforced safety ceiling is 60, so 42 is inside both.
+The "5–15 files" figure in the context-size contract is a guideline; 35/60 are the
+enforced numbers. Per-task precision analysis is in `CONTEXT_QUALITY_REPORT.md` §2.
+
 **Metric definitions.** *Relevant* = every selected file except those admitted by
 expansion on the weakest permitted trigger alone (`RELEVANT_CONSUMER`). Those are
 counted *irrelevant* because the file imports something the task named but nothing

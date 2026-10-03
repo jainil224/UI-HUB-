@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "description": "Shape of one entry in memory/TASK_HISTORY.md. Deliberately not JSON Schema: nothing in the agent validates records against a machine schema, and a schema that is never enforced is documentation pretending to be a contract. This file states the shape so a future agent can write a conforming record. No test loads it: the memory tests assert behaviour (precedence, staleness, redaction idempotence, and that memory cannot reach routing), not record field lists.",
+  "recordTarget": ".uihub-agent/memory/TASK_HISTORY.md",
+  "version": "1.0.0",
+  "properties": [
+    {
+      "path": "taskId",
+      "type": "string",
+      "required": true,
+      "note": "Stable, unique, never reused. `task-001` upward."
+    },
+    {
+      "path": "timestamp",
+      "type": "string",
+      "required": true,
+      "note": "ISO-8601 date or date-time. Required by the freshness rule (10.17): a record with no date cannot be classified, only guessed at."
+    },
+    {
+      "path": "task",
+      "type": "string",
+      "required": true,
+      "note": "The task text as the human gave it, unedited. Editing it destroys the only evidence that the router had to work with real phrasing rather than a tidy one."
+    },
+    {
+      "path": "classification",
+      "type": "object",
+      "required": true,
+      "note": "{ intent, categories[], surface[], confidence, confidenceWhy }. Confidence is required so a wrong classification can be recognised later rather than quietly inherited."
+    },
+    {
+      "path": "memoryConsulted",
+      "type": "string[]",
+      "required": true,
+      "note": "Record ids retrieved from this layer before the work started. An empty array is a valid and informative answer: it means memory had nothing to offer."
+    },
+    {
+      "path": "context",
+      "type": "object",
+      "required": true,
+      "note": "{ files, relevant, irrelevant, expandedBy, sizePolicy } — the bundle the router produced. Kept so retrieval can be scored against what was actually loaded."
+    },
+    {
+      "path": "files",
+      "type": "object",
+      "required": true,
+      "note": "{ inspected[], modified[], created[], deleted[] }. Paths only; no file contents."
+    },
+    {
+      "path": "changes",
+      "type": "string",
+      "required": false,
+      "note": "What actually changed and why, in prose. Free text on purpose — see CHANGE_RECORD_SCHEMA.json for the structured form used when the change was non-trivial."
+    },
+    {
+      "path": "validation",
+      "type": "object",
+      "required": true,
+      "note": "{ commands[{ name, result }], tests, builds }. `result` records observed output, not intent, so a later reader can tell 'ran and passed' from 'assumed'."
+    },
+    {
+      "path": "outcome",
+      "type": "string",
+      "required": true,
+      "note": "COMPLETED | PARTIAL | BLOCKED | ABANDONED. PARTIAL must say what remains."
+    },
+    {
+      "path": "problems",
+      "type": "string[]",
+      "required": true,
+      "note": "What went wrong. An empty array on a real task is a smell, not a success."
+    },
+    {
+      "path": "lessons",
+      "type": "string[]",
+      "required": true,
+      "note": "Ids into memory/LESSONS_LEARNED.md. Cross-reference, never a copy."
+    },
+    {
+      "path": "decisions",
+      "type": "string[]",
+      "required": true,
+      "note": "Ids into memory/ARCHITECTURAL_DECISIONS.md, or into tasks/ROUTER_DECISIONS.md where the detail lives."
+    },
+    {
+      "path": "deferred",
+      "type": "string[]",
+      "required": true,
+      "note": "What was deliberately not done, and why. An empty array is allowed; silently dropping work is not."
+    },
+    {
+      "path": "status",
+      "type": "string",
+      "required": true,
+      "enum": ["CURRENT", "HISTORICAL", "SUPERSEDED", "UNKNOWN"],
+      "note": "Freshness class (10.17). A task record is normally HISTORICAL the moment it is written: it describes a past event and is never re-verified against code. CURRENT is reserved for records that make a claim about the present."
+    },
+    {
+      "path": "source",
+      "type": "string",
+      "required": true,
+      "note": "Where the record came from: the agent and session that produced it, plus the commit if one exists. Without provenance a record cannot be audited."
+    },
+    {
+      "path": "supersededBy",
+      "type": "string",
+      "required": false,
+      "note": "Id of the record or the current source that contradicts this one. Required when status is SUPERSEDED — a superseded record with no successor is just a deletion with extra steps."
+    },
+    {
+      "path": "supersededReason",
+      "type": "string",
+      "required": false,
+      "note": "What current evidence disagrees, and where. Required when status is SUPERSEDED."
+    }
+  ],
+  "invariants": [
+    "No credentials, tokens, keys, or connection strings. Scanned by scripts/secret-scan.mjs once tracked.",
+    "No verbatim secret-shaped values even as examples; describe the shape instead.",
+    "Every field marked required is present even when empty — an absent key and an empty list mean different things.",
+    "Records are append-only. A correction adds a new record or sets `supersededBy`; it never edits history in place.",
+    "`memoryConsulted` is written before the work, not reconstructed after it."
+  ]
+}

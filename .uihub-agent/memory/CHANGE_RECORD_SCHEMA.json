@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "description": "Shape of a change record: what changed, why, where, what was tested, what failed, and what was deliberately left. A task record says a task happened; a change record says the repository is different afterwards, and that the difference is accounted for.",
+  "recordTarget": ".uihub-agent/memory/ (referenced from task records; the structured form lives in the task's own record)",
+  "version": "1.0.0",
+  "properties": [
+    {
+      "path": "changeId",
+      "type": "string",
+      "required": true,
+      "note": "`change-001` upward, unique and never reused."
+    },
+    {
+      "path": "taskId",
+      "type": "string",
+      "required": true,
+      "note": "The task record this change came from. Every change is traceable to a task; a change with no task is unexplained drift."
+    },
+    {
+      "path": "timestamp",
+      "type": "string",
+      "required": true,
+      "note": "ISO-8601."
+    },
+    {
+      "path": "what",
+      "type": "string",
+      "required": true,
+      "note": "What is different about the repository now, stated so a reader who never saw the change can tell what happened."
+    },
+    {
+      "path": "why",
+      "type": "string",
+      "required": true,
+      "note": "The reason. A change with a 'what' but no 'why' is the kind of thing the next session cannot evaluate and eventually reverts without understanding it."
+    },
+    {
+      "path": "where",
+      "type": "string[]",
+      "required": true,
+      "note": "Repository-relative paths touched. Generated artifacts are listed here as well as authored files, because a stale artifact is a change nobody made deliberately."
+    },
+    {
+      "path": "category",
+      "type": "string",
+      "required": true,
+      "enum": [
+        "AGENT_INFRASTRUCTURE",
+        "APPLICATION_SOURCE",
+        "GENERATED_ARTIFACT",
+        "DOCUMENTATION",
+        "CONFIGURATION",
+        "TEST",
+        "NONE"
+      ],
+      "note": "Generated artifacts are separated from authored files on purpose. Most unintended changes in a repository like this are a generated file drifting, and they are invisible when mixed into one list."
+    },
+    {
+      "path": "tested",
+      "type": "object",
+      "required": true,
+      "note": "{ commands[], suites[], counts } — what was run, with observed results."
+    },
+    {
+      "path": "failed",
+      "type": "string[]",
+      "required": true,
+      "note": "Commands or checks that failed, and the reason. Empty when everything passed. Never omitted because it is empty."
+    },
+    {
+      "path": "deferred",
+      "type": "string[]",
+      "required": true,
+      "note": "Work identified but deliberately not done, with the reason. This is the field that stops the same finding being 'discovered' again next session."
+    },
+    {
+      "path": "blastRadius",
+      "type": "string",
+      "required": true,
+      "enum": ["AGENT_ONLY", "DOCS_ONLY", "APPLICATION", "PRODUCTION"],
+      "note": "PRODUCTION must be `NONE` in practice for this repository's agent work. Recording it explicitly means a production change cannot be made quietly."
+    },
+    {
+      "path": "reversibility",
+      "type": "string",
+      "required": true,
+      "note": "How to undo it. 'Revert commit X', 'delete the file', or 'requires manual reconstruction — no recipe'."
+    },
+    {
+      "path": "status",
+      "type": "string",
+      "required": true,
+      "enum": ["CURRENT", "HISTORICAL", "SUPERSEDED", "UNKNOWN"],
+      "note": "A change record is HISTORICAL by nature; it describes one moment."
+    },
+    {
+      "path": "source",
+      "type": "string",
+      "required": true,
+      "note": "Agent/session, and the commit hash once committed."
+    }
+  ],
+  "invariants": [
+    "`where` lists every path touched, including generated ones. A partial list is worse than none, because it invites the reader to trust it.",
+    "`failed` is populated even when empty.",
+    "`blastRadius` must state PRODUCTION only with an owner-controlled task behind it.",
+    "No secrets in any field, including `why`.",
+    "Append-only. Supersession is recorded, never erased."
+  ]
+}
