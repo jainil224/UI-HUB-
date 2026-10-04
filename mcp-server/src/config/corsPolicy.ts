@@ -45,6 +45,10 @@ export const DEFAULT_ALLOWED_ORIGINS: readonly string[] = Object.freeze([
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:3001',
+  // New primary domain
+  'https://www.uihub.codes',
+  'https://uihub.codes',
+  // Legacy Vercel domain kept for backward-compatibility during DNS transition
   'https://ui-hub-design.vercel.app',
   'https://ui-hub-design-git-main-jainil224s-projects.vercel.app',
   'https://ui-hub-design-jainil224s-projects.vercel.app',

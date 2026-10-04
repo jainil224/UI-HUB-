@@ -1,4 +1,4 @@
-﻿import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   resolveApiBaseUrl,
   validateApiUrl,
@@ -8,7 +8,7 @@ import {
 } from './apiConfig';
 
 const prodOrigin: ApiLocation = {
-  origin: 'https://ui-hub-design.vercel.app',
+  origin: 'https://www.uihub.codes',
   hostname: 'ui-hub-design.vercel.app',
   protocol: 'https:',
   port: '',
@@ -38,7 +38,7 @@ const warnCount = () => warn.mock.calls.length;
 
 describe('Task 5.16 CASE 1 - production, no env var configured', () => {
   it('resolves to the current origin (same-origin)', () => {
-    expect(resolveApiBaseUrl({ PROD: true }, prodOrigin)).toBe('https://ui-hub-design.vercel.app');
+    expect(resolveApiBaseUrl({ PROD: true }, prodOrigin)).toBe('https://www.uihub.codes');
     expect(warnCount()).toBe(0);
   });
 
@@ -125,26 +125,26 @@ describe('Task 5.16 CASE 5 - malformed or unsafe configured URL', () => {
   it('falls back to the origin for a non-URL string', () => {
     expect(
       resolveApiBaseUrl({ PROD: true, VITE_API_URL: 'not-a-url' }, prodOrigin)
-    ).toBe('https://ui-hub-design.vercel.app');
+    ).toBe('https://www.uihub.codes');
     expect(warned()).toMatch(/not a valid absolute URL/);
   });
 
   it('falls back to the origin for a relative path', () => {
     expect(
       resolveApiBaseUrl({ PROD: true, VITE_API_URL: '/api' }, prodOrigin)
-    ).toBe('https://ui-hub-design.vercel.app');
+    ).toBe('https://www.uihub.codes');
   });
 
   it('rejects a non-http protocol rather than emitting an unusable base', () => {
     expect(
       resolveApiBaseUrl({ PROD: true, VITE_API_URL: 'ftp://api.example.com' }, prodOrigin)
-    ).toBe('https://ui-hub-design.vercel.app');
+    ).toBe('https://www.uihub.codes');
     expect(warned()).toMatch(/unsupported protocol/);
   });
 
   it('treats an empty or whitespace value as unset', () => {
     expect(resolveApiBaseUrl({ PROD: true, VITE_API_URL: '   ' }, prodOrigin)).toBe(
-      'https://ui-hub-design.vercel.app'
+      'https://www.uihub.codes'
     );
     expect(warnCount()).toBe(0);
   });

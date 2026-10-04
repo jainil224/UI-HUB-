@@ -10,6 +10,12 @@
   color: #FFFFFF !important;
 }
 
+/* ── Prevent white flash (FOUC) on page load / refresh ── */
+html, body {
+  background-color: #000000;
+  color: #ffffff;
+}
+
 /* ── Hero Typography Spec (Matching Reference Image) ── */
 .serif-italic {
   font-family: 'Source Serif 4', serif;

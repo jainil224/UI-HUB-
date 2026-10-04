@@ -23,7 +23,7 @@ services:
       - key: MCP_RATE_LIMIT_PRO
         value: 10000
       - key: MCP_ALLOWED_ORIGINS
-        value: https://ui-hub-design.vercel.app,http://localhost:5173,http://localhost:3000
+        value: https://www.uihub.codes,https://uihub.codes,https://ui-hub-design.vercel.app,http://localhost:5173,http://localhost:3000
       - key: MCP_ADMIN_EMAILS
         value: jainil11199@gmail.com,jainil224@gmail.com,jainilpatel2224@gmail.com
       - key: MONGODB_URI

@@ -1,4 +1,4 @@
-export const SITE_URL = 'https://ui-hub-design.vercel.app';
+export const SITE_URL = 'https://www.uihub.codes';
 
 export const SITE_NAME = 'UI Hub';
 

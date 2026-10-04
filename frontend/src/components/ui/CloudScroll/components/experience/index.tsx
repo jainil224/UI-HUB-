@@ -67,7 +67,7 @@ const Experience = () => {
             color='#b9c6d6'
             textAlign='left'
             position={new THREE.Vector3(isMobile ? -1 : -2, 0, isMobile ? 0.4 : 0)}
-            redirectUrl="https://ui-hub-design.vercel.app/">
+            redirectUrl="https://www.uihub.codes/">
             <UiHubProjects/>
           </GridTile>
           <GridTile title='SIDE PROJECTS'

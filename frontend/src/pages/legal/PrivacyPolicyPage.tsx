@@ -6,7 +6,7 @@ const sections: LegalSection[] = [
         id: 'introduction',
         heading: 'Introduction',
         body: [
-            'UI HUB ("we", "us", or "our") operates the website at https://ui-hub-design.vercel.app and provides a curated library of UI components, templates, and AI-ready prompts (the "Service").',
+            'UI HUB ("we", "us", or "our") operates the website at https://www.uihub.codes and provides a curated library of UI components, templates, and AI-ready prompts (the "Service").',
             'This Privacy Policy explains what information we collect, how we use it, with whom we share it, and the choices and rights you have regarding your data. By using the Service, you agree to the practices described in this policy.',
         ],
     },

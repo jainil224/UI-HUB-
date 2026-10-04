@@ -6,7 +6,7 @@ const sections: LegalSection[] = [
         id: 'acceptance',
         heading: 'Acceptance of Terms',
         body: [
-            'By accessing or using UI HUB ("the Service") at https://ui-hub-design.vercel.app, you agree to be bound by these Terms and Conditions. If you do not agree, you must not use the Service.',
+            'By accessing or using UI HUB ("the Service") at https://www.uihub.codes, you agree to be bound by these Terms and Conditions. If you do not agree, you must not use the Service.',
             'We may revise these terms from time to time. Continued use of the Service after updates are posted constitutes acceptance of the revised terms.',
         ],
     },

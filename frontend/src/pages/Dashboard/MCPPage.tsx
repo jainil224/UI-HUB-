@@ -41,10 +41,14 @@ type ToolDef = {
     icon: LucideIcon;
     logo: string;
     logoClass?: string;
+    isCliCommand?: boolean;
     build: (url: string, apiKey?: string) => string;
 };
 
-const JSON_CONFIG = (url: string, apiKey?: string) => `{
+/* ── Exact, per-tool MCP config builders ── */
+
+// Cursor: .cursor/mcp.json
+const CURSOR_CONFIG = (url: string, apiKey?: string) => `{
   "mcpServers": {
     "ui-hub": {
       "url": "${url}",
@@ -54,6 +58,47 @@ const JSON_CONFIG = (url: string, apiKey?: string) => `{
     }
   }
 }`;
+
+// Antigravity (Google Gemini): ~/.gemini/config/mcp_config.json
+const ANTIGRAVITY_CONFIG = (url: string, apiKey?: string) => `{
+  "mcpServers": {
+    "ui-hub": {
+      "url": "${url}",
+      "headers": {
+        "Authorization": "Bearer ${apiKey || 'YOUR_UI_HUB_API_KEY'}"
+      }
+    }
+  }
+}`;
+
+// VS Code / Copilot: .vscode/mcp.json
+const VSCODE_CONFIG = (url: string, apiKey?: string) => `{
+  "servers": {
+    "ui-hub": {
+      "type": "http",
+      "url": "${url}",
+      "headers": {
+        "Authorization": "Bearer ${apiKey || 'YOUR_UI_HUB_API_KEY'}"
+      }
+    }
+  }
+}`;
+
+// Lovable: Settings → Integrations → MCP
+const LOVABLE_CONFIG = (url: string, apiKey?: string) => `{
+  "mcpServers": {
+    "ui-hub": {
+      "url": "${url}",
+      "headers": {
+        "Authorization": "Bearer ${apiKey || 'YOUR_UI_HUB_API_KEY'}"
+      }
+    }
+  }
+}`;
+
+// Claude Code: CLI command
+const CLAUDE_CLI = (url: string, apiKey?: string) =>
+    `claude mcp add ui-hub --transport http ${url} --header "Authorization: Bearer ${apiKey || 'YOUR_UI_HUB_API_KEY'}"`;
 
 /* ── Tool-specific MCP configs (exact structures per tool) ── */
 const TOOLS: ToolDef[] = [
@@ -65,16 +110,7 @@ const TOOLS: ToolDef[] = [
         icon: Boxes,
         logo: '/logos/cursor.svg',
         logoClass: 'brightness-0 invert',
-        build: JSON_CONFIG,
-    },
-    {
-        id: 'claude',
-        label: 'Claude Code',
-        hint: 'Run: claude mcp add ui-hub',
-        color: '#D97757',
-        icon: Terminal,
-        logo: '/logos/claude-color.svg',
-        build: (url, apiKey) => `claude mcp add ui-hub --transport http ${url} --header "Authorization: Bearer ${apiKey || 'YOUR_UI_HUB_API_KEY'}"`,
+        build: CURSOR_CONFIG,
     },
     {
         id: 'antigravity',
@@ -83,7 +119,17 @@ const TOOLS: ToolDef[] = [
         color: '#3B82F6',
         icon: Sparkles,
         logo: '/logos/antigravity-color.svg',
-        build: JSON_CONFIG,
+        build: ANTIGRAVITY_CONFIG,
+    },
+    {
+        id: 'claude',
+        label: 'Claude Code',
+        hint: 'Run in your terminal',
+        color: '#D97757',
+        icon: Terminal,
+        logo: '/logos/claude-color.svg',
+        isCliCommand: true,
+        build: CLAUDE_CLI,
     },
     {
         id: 'vscode',
@@ -92,7 +138,16 @@ const TOOLS: ToolDef[] = [
         color: '#0EA5E9',
         icon: Code2,
         logo: '/logos/copilot-color.svg',
-        build: JSON_CONFIG,
+        build: VSCODE_CONFIG,
+    },
+    {
+        id: 'lovable',
+        label: 'Lovable',
+        hint: 'Settings → Integrations → MCP',
+        color: '#FF6B6B',
+        icon: Sparkles,
+        logo: '/logos/lovable-color.svg',
+        build: LOVABLE_CONFIG,
     },
 ];
 
@@ -138,6 +193,86 @@ const ToolLogo: React.FC<{ tool: ToolDef; size?: number; className?: string }> =
         className={`shrink-0 object-contain ${tool.logoClass || ''} ${className}`}
     />
 );
+
+/* ── Multicolor JSON Syntax Highlighter ── */
+type JsonToken = { text: string; color: string };
+
+function tokenizeJson(json: string): JsonToken[] {
+    const tokens: JsonToken[] = [];
+    // Regex order: string values, keys, numbers, booleans/null, braces/brackets/colons/commas
+    const re = /(\/\/[^\n]*|"(?:[^"\\]|\\.)*"|\btrue\b|\bfalse\b|\bnull\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?|[{}[\],:])/g;
+    let lastIdx = 0;
+    let match: RegExpExecArray | null;
+    // Track whether the last non-whitespace token was a colon so we know if next string is a value.
+    let prevSignificant = '';
+
+    while ((match = re.exec(json)) !== null) {
+        if (match.index > lastIdx) {
+            tokens.push({ text: json.slice(lastIdx, match.index), color: '#9ca3af' });
+        }
+        const tok = match[0];
+        let color = '#9ca3af';
+        if (tok.startsWith('//')) {
+            color = '#6b7280'; // comment — grey
+        } else if (tok.startsWith('"')) {
+            // Determine key vs value by checking if prevSignificant was '{' or ',' or start
+            const isKey = prevSignificant !== ':';
+            color = isKey ? '#60a5fa' : '#4ade80'; // blue for keys, green for string values
+        } else if (tok === 'true' || tok === 'false') {
+            color = '#f472b6'; // pink
+        } else if (tok === 'null') {
+            color = '#a78bfa'; // purple
+        } else if (/^-?[\d.]+/.test(tok)) {
+            color = '#fb923c'; // orange
+        } else if (tok === '{' || tok === '}' || tok === '[' || tok === ']') {
+            color = '#fbbf24'; // yellow for braces
+        } else if (tok === ':') {
+            color = '#e5e7eb';
+        } else if (tok === ',') {
+            color = '#6b7280';
+        }
+        if (tok.trim()) prevSignificant = tok.trim();
+        tokens.push({ text: tok, color });
+        lastIdx = match.index + tok.length;
+    }
+    if (lastIdx < json.length) {
+        tokens.push({ text: json.slice(lastIdx), color: '#9ca3af' });
+    }
+    return tokens;
+}
+
+const JsonHighlight: React.FC<{ code: string; isCli?: boolean }> = ({ code, isCli }) => {
+    if (isCli) {
+        // CLI command coloring: command in green, flags in cyan, values in yellow
+        const parts = code.split(/(?=\s--)/g);
+        return (
+            <pre className="p-3.5 text-xs font-mono overflow-x-auto whitespace-pre bg-black">
+                <span style={{ color: '#4ade80' }}>{parts[0]}</span>
+                {parts.slice(1).map((part, i) => {
+                    const spaceIdx = part.indexOf(' ', 1);
+                    const flag = spaceIdx === -1 ? part : part.slice(0, spaceIdx);
+                    const val = spaceIdx === -1 ? '' : part.slice(spaceIdx);
+                    return (
+                        <span key={i}>
+                            <span style={{ color: '#60a5fa' }}>{flag}</span>
+                            {val && (
+                                <span style={{ color: '#fbbf24' }}>{val}</span>
+                            )}
+                        </span>
+                    );
+                })}
+            </pre>
+        );
+    }
+    const tokens = tokenizeJson(code);
+    return (
+        <pre className="p-3.5 text-xs font-mono overflow-x-auto whitespace-pre bg-black">
+            {tokens.map((t, i) => (
+                <span key={i} style={{ color: t.color }}>{t.text}</span>
+            ))}
+        </pre>
+    );
+};
 
 /* ── Main Page ── */
 const MCPPage: React.FC = () => {
@@ -626,25 +761,16 @@ const MCPPage: React.FC = () => {
                             <div className="border border-neutral-800 bg-black/60 rounded-md overflow-hidden">
                                 <div className="border-b border-neutral-800 px-3.5 py-2 flex items-center justify-between bg-neutral-900/50">
                                     <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                                        Ready-to-paste AI Config (Cursor, Antigravity, VS Code, Claude)
+                                        Ready-to-paste AI Config (Cursor, Antigravity, VS Code, Claude, Lovable)
                                     </span>
                                     <CopyButton
                                         text={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
                                         label="Copy JSON"
                                     />
                                 </div>
-                                <pre className="p-3.5 text-xs font-mono text-brand-green/90 overflow-x-auto whitespace-pre">
-{`{
-  "mcpServers": {
-    "ui-hub": {
-      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",
-      "headers": {
-        "Authorization": "Bearer ${showKey}"
-      }
-    }
-  }
-}`}
-                                </pre>
+                                <JsonHighlight
+                                    code={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
+                                />
                             </div>
                         </motion.div>
                     )}
@@ -762,7 +888,7 @@ const MCPPage: React.FC = () => {
                             <span className="text-neutral-600">· {activeTool.hint}</span>
                         </div>
                     </div>
-                    <pre className={`p-5 text-xs font-mono bg-black overflow-x-auto whitespace-pre ${guideNeedsReplacement ? 'text-brand-yellow' : 'text-brand-green'}`}>{guideConfigText}</pre>
+                    <JsonHighlight code={guideConfigText} isCli={activeTool.isCliCommand} />
                 </div>
 
                 {guideNeedsReplacement ? (

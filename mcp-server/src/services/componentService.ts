@@ -95,7 +95,7 @@ export class ComponentService {
       framework: c.framework,
       styling: c.styling,
       tags: c.tags,
-      previewUrl: `https://ui-hub-design.vercel.app/demo/${c.id}`,
+      previewUrl: `https://www.uihub.codes/demo/${c.id}`,
       isPremium: c.isPremium,
     };
   }
@@ -132,7 +132,7 @@ export class ComponentService {
         framework: 'react',
         styling: 'tailwind',
         tags: ['premium'],
-        previewUrl: `https://ui-hub-design.vercel.app/demo/${id}`,
+        previewUrl: `https://www.uihub.codes/demo/${id}`,
         isPremium: true,
       }));
     return [...catalog, ...premiumOnly];

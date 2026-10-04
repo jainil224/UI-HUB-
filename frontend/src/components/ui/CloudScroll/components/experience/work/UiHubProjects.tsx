@@ -38,7 +38,7 @@ const UiHubProjects = () => {
 
   const handleImageClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    window.open("https://ui-hub-design.vercel.app/", "_blank");
+    window.open("https://www.uihub.codes/", "_blank");
   };
 
   return (
