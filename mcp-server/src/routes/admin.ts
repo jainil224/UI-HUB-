@@ -694,6 +694,31 @@ adminRouter.patch('/api-keys/:id', requireAdmin, async (req: Request, res: Respo
   res.json({ ok: true, id, status: patch.status });
 });
 
+adminRouter.delete('/api-keys/:id', requireAdmin, async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const col = await mongoCollection('mcp_api_keys');
+  const keyId: any = (() => {
+    try {
+      return new ObjectId(id);
+    } catch {
+      return id;
+    }
+  })();
+  const doc = await col.findOne({ _id: keyId }).catch(() => null);
+  if (!doc) {
+    return res.status(404).json({ error: 'NOT_FOUND', message: 'API key not found' });
+  }
+  await col.deleteOne({ _id: keyId });
+  await recordAudit({
+    adminEmail: (req as any).email,
+    action: 'api_key.delete_permanent',
+    targetType: 'api_key',
+    targetId: id,
+    meta: { keyPrefix: doc.key_prefix || '', owner: doc.user_id || '' },
+  });
+  res.json({ ok: true, id, deleted: true });
+});
+
 adminRouter.get('/tools', requireAdmin, async (req: Request, res: Response) => {
   const states = await configService.getToolStates();
   const events = await analyticsService.queryEvents(daysAgoKey(30));

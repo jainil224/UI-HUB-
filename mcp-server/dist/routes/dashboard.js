@@ -28,10 +28,34 @@ dashboardRouter.get('/keys', verifyFirebaseToken, async (req, res) => {
     const keys = await apiKeyService.listApiKeys(uid);
     res.json({ keys });
 });
-// POST /api/dashboard/mcp/keys — create a new API key
+// POST /api/dashboard/mcp/keys — create a new API key (1 per 24 hours; deletion does NOT reset the limit)
 dashboardRouter.post('/keys', verifyFirebaseToken, async (req, res) => {
     const uid = req.uid;
+    const isAdmin = req.isAdmin === true;
     const name = (req.body?.name || 'MCP Key').toString().slice(0, 100);
+    // ── Daily key creation limit (skip for admins) ──────────────────────────────
+    if (!isAdmin) {
+        const col = await mongoCollection('mcp_api_keys');
+        const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000;
+        // Count ALL keys created in the last 24h — including revoked/deleted ones.
+        // This ensures deleting a key does NOT reset the daily creation limit.
+        const recentCount = await col.countDocuments({
+            user_id: uid,
+            created_at: { $gte: oneDayAgo },
+        });
+        if (recentCount >= 1) {
+            // Find the most recently created key to compute the retry-after time
+            const lastKey = await col.findOne({ user_id: uid, created_at: { $gte: oneDayAgo } }, { sort: { created_at: -1 } });
+            const retryAfterMs = lastKey ? (lastKey.created_at + 24 * 60 * 60 * 1000) - Date.now() : 0;
+            const retryAfterSeconds = Math.max(0, Math.ceil(retryAfterMs / 1000));
+            res.setHeader('Retry-After', String(retryAfterSeconds));
+            return res.status(429).json({
+                error: 'DAILY_KEY_LIMIT',
+                message: 'You can only create 1 API key per 24 hours.',
+                retryAfterMs: Math.max(0, retryAfterMs),
+            });
+        }
+    }
     const { plaintextKey, record } = await apiKeyService.createApiKey(uid, name);
     const { key_hash, ...safeRecord } = record;
     res.status(201).json({
