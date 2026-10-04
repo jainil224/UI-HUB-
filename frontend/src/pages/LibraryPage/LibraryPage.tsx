@@ -10,6 +10,7 @@ import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 import { isNewComponent } from '../../utils/componentUtils';
+import AdSlot from '../../components/ui/AdSlot';
 
 interface Category {
     name: string;
@@ -690,60 +691,12 @@ const LibraryPage = () => {
                         </div>
                     </div>
 
-                    {/* MCP Promo Card at Bottom — whole card links to MCP dashboard */}
-                    <div className="w-full">
-                        <Link
-                            to="/dashboard/mcp"
-                            className="block rounded-xl border-2 border-brand-blue bg-brand-surface p-4 text-white brutal-shadow-blue relative overflow-hidden group no-underline hover:-translate-y-0.5 hover:shadow-[5px_5px_0px_0px_#3D5CFF] active:translate-y-0 transition-all cursor-pointer"
-                        >
-                            {/* Ambient brand blue accent */}
-                            <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-brand-blue/15 blur-xl pointer-events-none" />
-                            <div className="absolute -bottom-12 -left-12 w-28 h-28 rounded-full bg-brand-blue/20 blur-xl pointer-events-none" />
-                            <div className="absolute top-0 inset-x-0 h-1 bg-brand-blue" />
-
-                            {/* MCP Badge */}
-                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-black bg-brand-blue text-white text-[9px] font-black uppercase tracking-wider mb-2.5 font-mono shadow-[2px_2px_0px_0px_#000000]">
-                                <Bot size={9} strokeWidth={2.5} />
-                                MCP
-                            </div>
-
-                            {/* Title */}
-                            <h4 className="text-sm font-black text-white uppercase tracking-tight leading-snug mb-1 font-heading">
-                                Use UI HUB <span className="text-brand-blue">in your AI</span>
-                            </h4>
-
-                            {/* Hook */}
-                            <p className="text-[11px] text-neutral-300 leading-relaxed mb-2.5">
-                                Model Context Protocol — connect UI HUB to your AI coding assistant and use components directly in your workflow.
-                            </p>
-
-                            {/* Feature Checklist */}
-                            <ul className="space-y-1.5 mb-3.5">
-                                {[
-                                    'Search components from your AI',
-                                    'Ready-to-paste configs for Cursor · Claude · VS Code',
-                                    'Create an API key in 60 seconds',
-                                ].map(f => (
-                                    <li key={f} className="flex items-start gap-1.5 text-[10.5px] text-neutral-200 font-medium leading-snug">
-                                        <Check size={11} strokeWidth={3} className="text-brand-blue mt-0.5 shrink-0" />
-                                        <span>{f}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            {/* CTA Button */}
-                            <span className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-brand-blue hover:bg-[#324FE0] text-white text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[5px_5px_0px_0px_#000000] transition-all mb-2.5 cursor-pointer font-heading">
-                                <Sparkles size={13} strokeWidth={2.5} />
-                                <span>Set Up MCP</span>
-                                <ArrowRight size={13} strokeWidth={2.5} />
-                            </span>
-
-                            {/* Microcopy */}
-                            <p className="text-center text-[9.5px] text-neutral-400 font-mono uppercase tracking-wider">
-                                Free tier included · 60 second setup
-                            </p>
-                        </Link>
-                    </div>
+                    {/* Ad Slot — replaces MCP promo card; hidden for Pro users automatically */}
+                    <AdSlot
+                        slot="library-sidebar"
+                        minHeight={220}
+                        className="w-full"
+                    />
                 </aside>
             </div>
 

@@ -30,7 +30,8 @@ export type AdSlotId =
     | 'home-after-categories'
     | 'home-explore'
     | 'templates-top'
-    | 'template-detail-bottom';
+    | 'template-detail-bottom'
+    | 'library-sidebar';
 
 /**
  * Manual ad-unit IDs from the AdSense dashboard (AdSense -> Ads -> Ad units).
@@ -40,11 +41,12 @@ export type AdSlotId =
  * invalid ad, so the layout is stable before and after the IDs land.
  */
 export const AD_SLOT_IDS: Record<AdSlotId, string> = {
-    'home-after-stats': '',
-    'home-after-categories': '',
-    'home-explore': '',
-    'templates-top': '',
-    'template-detail-bottom': '',
+    'home-after-stats': '1027542522',
+    'home-after-categories': '8331317476',
+    'home-explore': '7157836600',
+    'templates-top': '4531673262',
+    'template-detail-bottom': '5705154132',
+    'library-sidebar': '3431353743',
 };
 
 /**

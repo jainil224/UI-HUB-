@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useCookieConsent } from '../../context/CookieConsentContext';
+import { useAuth } from '../../context/AuthContext';
 import {
     ADSENSE_CLIENT_ID,
     getAdUnitId,
@@ -40,10 +41,12 @@ const AdSlot: React.FC<AdSlotProps> = ({
     className = '',
 }) => {
     const { prefs } = useCookieConsent();
+    const { isPro } = useAuth();
     const requested = useRef(false);
 
     const adUnitId = getAdUnitId(slot);
-    const enabled = isAdSenseEnabled() && prefs.thirdParty && adUnitId !== '';
+    // Pro subscribers are ad-free — never show ads to paying users.
+    const enabled = isAdSenseEnabled() && !isPro && prefs.thirdParty && adUnitId !== '';
 
     useEffect(() => {
         if (!enabled) {
