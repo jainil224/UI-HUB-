@@ -458,7 +458,7 @@ const LibraryPage = () => {
                             <span className="text-2xl font-black text-brand-blue">{totalComponents}</span>
                         </div>
                     </div>
-                    <nav className="flex-1 overflow-y-auto sidebar-scroll px-3 py-4 space-y-3" onScroll={closePreview} onMouseLeave={closePreview}>
+                    <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain sidebar-scroll px-3 py-4 space-y-3" onScroll={closePreview} onMouseLeave={closePreview}>
                         <div className="border border-neutral-800 rounded bg-brand-bg p-2.5">
                             <button onClick={() => setShowUpdates(!showUpdates)} className="w-full flex items-center justify-between text-[10px] uppercase font-black">
                                 <span>Follow Updates</span>
@@ -573,7 +573,7 @@ const LibraryPage = () => {
                 </aside>
 
                 {/* ── Middle Column: Playground & Documentation ── */}
-                <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto main-scroll p-4 sm:p-6 lg:p-8">
+                <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto overscroll-contain main-scroll p-4 sm:p-6 lg:p-8">
                     <div className="w-full">
                         {/* ── Mobile "All Components" Top Bar / Button ── */}
                         <div className="md:hidden mb-4 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
@@ -622,16 +622,16 @@ const LibraryPage = () => {
                 </main>
 
                 {/* ── Right Column: Pro Card at Top + MCP Card at Bottom ── */}
-                <aside className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 h-full border-l-4 border-black bg-brand-surface/60 p-5 sticky top-0 overflow-y-auto gap-5">
+                <aside className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 h-full border-l-4 border-black bg-brand-surface/60 p-5 sticky top-0 overflow-y-auto overscroll-contain sidebar-scroll gap-5">
                     {/* Pro Promotional Card at Top */}
                     <div className="w-full">
-                        <div className="rounded-xl border-2 border-white bg-brand-surface p-4 text-white brutal-shadow-black relative overflow-hidden group">
+                        <div className="rounded-xl border-2 border-white bg-brand-surface p-3.5 text-white brutal-shadow-black relative overflow-hidden group">
                             {/* Ambient brand blue accent */}
                             <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-brand-blue/15 blur-xl pointer-events-none" />
                             <div className="absolute -bottom-12 -left-12 w-28 h-28 rounded-full bg-emerald-400/10 blur-xl pointer-events-none" />
 
                             {/* PRO Badge */}
-                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-black bg-brand-blue text-white text-[9px] font-black uppercase tracking-wider mb-2.5 font-mono shadow-[2px_2px_0px_0px_#000000]">
+                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-black bg-brand-blue text-white text-[9px] font-black uppercase tracking-wider mb-2 font-mono shadow-[2px_2px_0px_0px_#000000]">
                                 <Crown size={9} strokeWidth={2.5} />
                                 PRO
                             </div>
@@ -642,12 +642,12 @@ const LibraryPage = () => {
                             </h4>
 
                             {/* Hook */}
-                            <p className="text-[11px] text-neutral-300 leading-relaxed mb-2.5">
+                            <p className="text-[11px] text-neutral-300 leading-relaxed mb-2">
                                 Some components are locked. Go Pro to download full source code, generate with premium AI, and get every new drop first.
                             </p>
 
                             {/* Feature Checklist */}
-                            <ul className="space-y-1.5 mb-3.5">
+                            <ul className="space-y-1 mb-2.5">
                                 {[
                                     'Full component source code',
                                     'Premium AI — Antigravity + Claude',
@@ -664,17 +664,12 @@ const LibraryPage = () => {
                             {/* Explore Pro CTA Button */}
                             <Link
                                 to="/pricing"
-                                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-brand-blue hover:bg-[#324FE0] text-white text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[5px_5px_0px_0px_#000000] hover:-translate-y-0.5 active:translate-y-0 transition-all mb-2.5 no-underline cursor-pointer font-heading"
+                                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-brand-blue hover:bg-[#324FE0] text-white text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[5px_5px_0px_0px_#000000] hover:-translate-y-0.5 active:translate-y-0 transition-all mb-2 no-underline cursor-pointer font-heading"
                             >
                                 <Sparkles size={13} strokeWidth={2.5} />
                                 <span>Go Pro</span>
                                 <ArrowRight size={13} strokeWidth={2.5} />
                             </Link>
-
-                            {/* Urgency Microcopy */}
-                            <p className="text-center text-[9.5px] text-neutral-400 font-mono uppercase tracking-wider mb-2">
-                                Upgrade in 30 seconds · Cancel anytime
-                            </p>
 
                             {/* Discount Code Pill */}
                             <div
@@ -692,13 +687,13 @@ const LibraryPage = () => {
                     </div>
 
                     {/* UI HUB Component Library Branding Card */}
-                    <div className="w-full rounded-xl border-2 border-white bg-brand-surface p-4 text-white brutal-shadow-black relative overflow-hidden">
+                    <div className="w-full rounded-xl border-2 border-white bg-brand-surface p-3.5 text-white brutal-shadow-black relative overflow-hidden">
                         {/* Ambient glow */}
                         <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-brand-blue/15 blur-xl pointer-events-none" />
                         <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-[#FFC700]/8 blur-xl pointer-events-none" />
 
                         {/* Header: Logo + version badge */}
-                        <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="flex items-center justify-between gap-2 mb-2">
                             <div className="flex items-center gap-2">
                                 <img
                                     src={uiHubLogo}
@@ -719,17 +714,23 @@ const LibraryPage = () => {
                         </div>
 
                         {/* Tagline */}
-                        <p className="text-[11px] text-neutral-300 leading-relaxed mb-3">
-                            Premium copy-paste components — interactive backgrounds, 3D, micro-animations & AI-ready.
+                        <p className="text-[11px] text-neutral-300 leading-relaxed mb-2">
+                            Every component, template &amp; animation — searchable straight from your AI client.
                         </p>
 
-                        {/* Stats row */}
-                        <div className="grid grid-cols-2 gap-1.5 mb-3">
+                        {/* Kicker */}
+                        <p className="text-[9px] font-mono uppercase tracking-widest text-brand-blue mb-1.5">
+                            Everything your AI can do
+                        </p>
+
+                        {/* Capability stats — tool count mirrors
+                            mcp-server/src/tools/index.ts (TOOLS registry). Keep in sync. */}
+                        <div className="grid grid-cols-2 gap-1.5 mb-2.5">
                             {[
-                                { value: '140+', label: 'Components', color: 'text-white' },
-                                { value: '100%', label: 'Copy & Paste', color: 'text-emerald-400' },
-                                { value: 'TS', label: 'TypeScript', color: 'text-brand-yellow' },
-                                { value: 'MCP', label: 'AI-Ready', color: 'text-brand-blue' },
+                                { value: '14', label: 'AI Tools', color: 'text-brand-blue' },
+                                { value: String(totalComponents), label: 'Components', color: 'text-white' },
+                                { value: '5', label: 'AI Clients', color: 'text-emerald-400' },
+                                { value: '13', label: 'Categories', color: 'text-brand-yellow' },
                             ].map(s => (
                                 <div key={s.label} className="flex flex-col items-start p-2 rounded-lg border-2 border-black bg-black shadow-[2px_2px_0px_0px_#3D5CFF]">
                                     <span className={`text-xs font-black font-mono leading-none ${s.color}`}>{s.value}</span>
@@ -737,20 +738,6 @@ const LibraryPage = () => {
                                 </div>
                             ))}
                         </div>
-
-                        {/* Feature list */}
-                        <ul className="space-y-1.5 mb-3">
-                            {[
-                                'Copy-paste, zero config',
-                                'Works with Lovable, Cursor, Antigravity',
-                                'MCP AI-powered generation',
-                            ].map(f => (
-                                <li key={f} className="flex items-start gap-1.5 text-[10.5px] text-neutral-200 font-medium leading-snug">
-                                    <Check size={11} strokeWidth={3} className="text-emerald-400 mt-0.5 shrink-0" />
-                                    <span>{f}</span>
-                                </li>
-                            ))}
-                        </ul>
 
                         {/* CTA Button — matches site's brutal primary style */}
                         <Link

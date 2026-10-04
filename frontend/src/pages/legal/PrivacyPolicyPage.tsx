@@ -45,8 +45,7 @@ const sections: LegalSection[] = [
         heading: 'Advertising',
         body: [
             'This site displays advertising supplied by Google AdSense.',
-            'Ad scripts and advertising cookies are not loaded at all unless you allow third-party cookies in our Cookie Settings. If you decline third-party cookies, no ad script runs and no advertising cookies are set; the site simply shows no ads.',
-            'Where you have allowed third-party cookies, Google may use advertising cookies to serve ads to you. You can change your choice at any time from the Cookie Settings page.',
+            'Ads are served using Google Consent Mode. If you decline third-party cookies or do not make a choice, your advertising consent signals stay denied: you will still see ads, but they are limited and non-personalized, and no advertising cookies are used to build a profile across sites. Personalised ads are served only where you have allowed third-party cookies in our Cookie Settings. You can change your choice at any time from the Cookie Settings page.',
         ],
     },
     {

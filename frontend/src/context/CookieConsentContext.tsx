@@ -79,34 +79,67 @@ const applyConsent = (analyticsAllowed: boolean, thirdPartyAllowed: boolean): vo
     }
 };
 
+/**
+ * The visitor's remembered decision, read exactly once per document load.
+ *
+ * `getPreferences` / `getConsent` touch `document.cookie` and `localStorage`.
+ * Reading them during render would run them on every re-render, so the first
+ * result is captured in a module-scoped cache and reused as the state seed.
+ */
+interface StoredConsent {
+    status: CookieConsentStatus;
+    prefs: CookiePreferences;
+    analytics: boolean;
+    thirdParty: boolean;
+}
+
+let storedConsent: StoredConsent | null = null;
+
+const readStoredConsent = (): StoredConsent => {
+    if (storedConsent) return storedConsent;
+    const prefs = getPreferences();
+    storedConsent = {
+        status: getConsent(),
+        prefs,
+        analytics: prefs.analytics,
+        thirdParty: prefs.thirdParty,
+    };
+    return storedConsent;
+};
+
 export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [status, setStatus] = useState<CookieConsentStatus>(() => getConsent());
-    const [prefs, setPrefs] = useState<CookiePreferences>(() => getPreferences());
+    const initial = readStoredConsent();
+    const [status, setStatus] = useState<CookieConsentStatus>(initial.status);
+    const [prefs, setPrefs] = useState<CookiePreferences>(initial.prefs);
     const [showBanner, setShowBanner] = useState(false);
 
     useEffect(() => {
-        const existing = getConsent();
-        setStatus(existing);
-        setPrefs(getPreferences());
-        if (existing === 'unknown') {
+        /**
+         * `index.html` sends Consent Mode v2 defaults with every ad signal denied.
+         * Those defaults are only a starting point: without replaying the saved
+         * decision here, a returning visitor who already accepted ads would stay
+         * at denied and get downgraded to limited ads.
+         */
+        applyConsent(initial.analytics, initial.thirdParty);
+
+        if (initial.status === 'unknown') {
             const timer = setTimeout(() => setShowBanner(true), 800);
             return () => clearTimeout(timer);
         }
-    }, []);
+    }, [initial]);
 
     /**
-     * Loads Google AdSense once the visitor allows third-party cookies.
+     * Loads the AdSense script for every visitor, consented or not.
      *
-     * Driven from an effect rather than from the click handlers so it also covers
-     * visitors whose third-party preference was saved before this shipped: that
-     * preference is restored from the cookie on mount, so their ad slots would
-     * otherwise never initialize until they re-consented.
+     * Consent gates the ad *signals*, not the ad *request*. `index.html` already
+     * defaults `ad_storage`, `ad_user_data` and `ad_personalization` to denied,
+     * so a visitor who rejects or never answers gets non-personalized (limited)
+     * ads, and one who accepts gets personalized ads. Loading only after
+     * "Accept All" meant most traffic saw no ads at all.
      */
     useEffect(() => {
-        if (prefs.thirdParty) {
-            loadAdSense();
-        }
-    }, [prefs.thirdParty]);
+        void loadAdSense();
+    }, []);
 
     const acceptAll = useCallback(() => {
         const next = savePreferences({ ...ALLOW_ALL });

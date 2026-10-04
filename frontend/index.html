@@ -123,6 +123,9 @@
       'ad_personalization': 'denied',
       'analytics_storage': 'denied'
     });
+    // Denied ad signals do not suppress ads: they restrict them to non-personalized
+    // (limited) ads. Consent still starts denied here; CookieConsentProvider upgrades
+    // these to granted via gtag('consent','update', ...) for visitors who accept.
     gtag('js', new Date());
     gtag('config', 'G-QS3XBQBLW8');
   </script>

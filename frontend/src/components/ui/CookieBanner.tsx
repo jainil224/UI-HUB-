@@ -32,8 +32,9 @@ const CookieBanner: React.FC = () => {
                                     </p>
                                     <p className="text-xs sm:text-sm text-neutral-400 font-medium leading-relaxed mt-0.5">
                                         We use cookies to improve your browsing experience, analyze site traffic,
-                                        and keep you signed in. You can choose which cookies to allow.
-                                        Read our{' '}
+                                        and keep you signed in. Ads still appear either way — without third-party
+                                        cookies they are limited and non-personalized. You can choose which cookies
+                                        to allow. Read our{' '}
                                         <Link to="/cookies" className="text-brand-blue font-black uppercase tracking-wider text-[11px] hover:text-white transition-colors underline underline-offset-2">
                                             Cookie Settings
                                         </Link>{' '}

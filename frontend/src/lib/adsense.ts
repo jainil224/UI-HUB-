@@ -6,10 +6,13 @@
  * `.uihub-agent/security/SECRET_HANDLING.md`. Never put AdSense account
  * credentials here - only the client ID and manual ad-unit slot IDs.
  *
- * The loader is deliberately NOT hardcoded in `index.html`. Third-party ad
- * scripts must stay dark until the visitor allows third-party cookies, so the
- * script is injected on demand from `CookieConsentContext`. Hardcoding it would
- * fire for every visitor regardless of consent.
+ * The loader is not hardcoded in `index.html`. It is injected on demand from
+ * `CookieConsentProvider` so a single place owns the script's lifecycle and dev
+ * builds can never request it. It runs for every visitor regardless of cookie
+ * consent: the Consent Mode v2 signals in `index.html` are what withhold
+ * personalized ads, and Google serves non-personalized (limited) ads while those
+ * signals are denied. Gating the script on consent instead meant most traffic
+ * saw no ads at all.
  */
 
 const ADSENSE_SRC = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
@@ -65,6 +68,24 @@ export const isAdSenseEnabled = (): boolean => import.meta.env.PROD;
 
 /** Resolves the real ad-unit ID for a placement, or '' when it is not configured yet. */
 export const getAdUnitId = (slot: AdSlotId): string => AD_SLOT_IDS[slot] || '';
+
+export interface AdSlotRequestableInput {
+    adsEnabled: boolean;
+    isPro: boolean;
+    adUnitId: string;
+}
+
+/**
+ * Whether a placement is allowed to request an ad.
+ *
+ * Cookie consent is deliberately NOT an input. Consent gates the ad *signals*
+ * (`buildConsentSignals`), and Google serves non-personalized (limited) ads while
+ * `ad_storage` / `ad_user_data` / `ad_personalization` are denied. Adding a
+ * consent flag back here silently removes every ad for visitors who decline -
+ * which is most traffic - so the input list stays this short on purpose.
+ */
+export const isAdSlotRequestable = ({ adsEnabled, isPro, adUnitId }: AdSlotRequestableInput): boolean =>
+    adsEnabled && !isPro && adUnitId !== '';
 
 let loaderPromise: Promise<void> | null = null;
 

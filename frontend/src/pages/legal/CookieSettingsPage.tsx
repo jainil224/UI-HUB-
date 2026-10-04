@@ -245,7 +245,7 @@ const CookieSettingsPage: React.FC = () => {
                     icon={Share2}
                     dot="bg-brand-red"
                     title="Third-Party Cookies"
-                    description="Used by Google AdSense to serve and measure advertising, and by Razorpay during checkout to facilitate secure payment processing. If you turn this off, no ad script loads and no ads are shown."
+                    description="Used by Google AdSense to serve and measure advertising, and by Razorpay during checkout to facilitate secure payment processing. With this off you still see ads, but they are limited and non-personalized. Turning it on allows personalised ads."
                     checked={draft.thirdParty}
                     onToggle={() => setDraft({ ...draft, thirdParty: !draft.thirdParty })}
                 />

@@ -106,7 +106,7 @@ const AppShell = () => {
           : theme === 'dark'
             ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black'
             : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
-        }`}>
+        } ${isLibrary ? 'md:h-[100dvh] md:overflow-hidden' : ''}`}>
         <main className="flex-1 flex flex-col">
           <React.Suspense fallback={
             <div className="w-full flex-1 flex flex-col">

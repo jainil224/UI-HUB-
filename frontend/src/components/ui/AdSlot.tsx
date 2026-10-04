@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useCookieConsent } from '../../context/CookieConsentContext';
 import { useAuth } from '../../context/AuthContext';
 import {
     ADSENSE_CLIENT_ID,
     getAdUnitId,
     isAdSenseEnabled,
+    isAdSlotRequestable,
     loadAdSense,
     type AdSlotId,
 } from '../../lib/adsense';
@@ -28,7 +28,11 @@ const DEFAULT_MIN_HEIGHT = 280;
 /**
  * A single Google AdSense placement.
  *
- * - Returns null when ads are disabled, Pro user, or consent not given.
+ * - Renders regardless of cookie consent. Consent is handled by Consent Mode v2
+ *   signals, so a visitor who rejects or ignores the banner still gets
+ *   non-personalized (limited) ads.
+ * - Returns null when ads are disabled, the visitor is Pro, or the slot is
+ *   unconfigured.
  * - Collapses automatically when Google sets data-ad-status="unfilled".
  * - Falls back to collapse after 8 s if Google never responds (new ad unit warmup).
  *
@@ -42,7 +46,6 @@ const AdSlot: React.FC<AdSlotProps> = ({
     className = '',
     hideLabel = false,
 }) => {
-    const { prefs } = useCookieConsent();
     const { isPro } = useAuth();
     const insRef = useRef<HTMLModElement>(null);
     const pushed = useRef(false);
@@ -52,9 +55,9 @@ const AdSlot: React.FC<AdSlotProps> = ({
 
     const adUnitId = getAdUnitId(slot);
     // Pro subscribers are ad-free — never show ads to paying users.
-    const enabled = isAdSenseEnabled() && !isPro && prefs.thirdParty && adUnitId !== '';
+    const enabled = isAdSlotRequestable({ adsEnabled: isAdSenseEnabled(), isPro, adUnitId });
 
-    // Step 1: load the AdSense script when consent is given.
+    // Step 1: load the AdSense script. AdSense itself is consent-agnostic here.
     useEffect(() => {
         if (!enabled) {
             pushed.current = false;
