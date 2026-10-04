@@ -25,6 +25,7 @@ import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMeta
 import { COMPONENT_VARIANTS, getDefaultVariant, getComponentVariant } from '../../../../data/componentVariants';
 import Toast from '../../../../components/ui/Toast';
 import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
+import AdSlot from '../../../../components/ui/AdSlot';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
 import { logUserActivity } from '../../../../utils/activityLogger';
 import uiHubLogo from '../../../../Assets/webiste logo.svg';
@@ -743,6 +744,9 @@ const VibeSystemSection = React.memo(({
                     ))}
                 </div>
             </section>
+
+            {/* Ad: natural break between the AI tool selector and the generated blueprint */}
+            <AdSlot slot="component-between-tools-prompt" minHeight={280} />
 
             {/* Vibe Prompt Section - AI Terminal UI */}
             <section className="space-y-4 md:space-y-8">
@@ -1940,7 +1944,11 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -20 }}
+                        className="space-y-6 md:space-y-12"
                     >
+                        {/* Ad: separates the code view from the source listing */}
+                        <AdSlot slot="component-before-source" minHeight={280} />
+
                         {/* Source Code Section */}
                         <section>
                             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6">
@@ -2079,6 +2087,9 @@ vanillaCode={vanillaCode}
 
             {/* ── Use with AI ── */}
             <UseWithAI isPremium={!!item.isPremium} componentId={item.id} />
+
+            {/* Ad: bottom of component detail, after all content */}
+            <AdSlot slot="component-bottom" minHeight={280} />
 
             <AuthRequiredModal
                 isOpen={showAuthModal}

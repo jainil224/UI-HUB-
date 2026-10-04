@@ -31,7 +31,10 @@ export type AdSlotId =
     | 'home-explore'
     | 'templates-top'
     | 'template-detail-bottom'
-    | 'library-sidebar';
+    | 'library-sidebar'
+    | 'component-between-tools-prompt'
+    | 'component-before-source'
+    | 'component-bottom';
 
 /**
  * Manual ad-unit IDs from the AdSense dashboard (AdSense -> Ads -> Ad units).
@@ -47,6 +50,9 @@ export const AD_SLOT_IDS: Record<AdSlotId, string> = {
     'templates-top': '4531673262',
     'template-detail-bottom': '5705154132',
     'library-sidebar': '3431353743',
+    'component-between-tools-prompt': '7932696372',
+    'component-before-source': '5140021238',
+    'component-bottom': '6428043012',
 };
 
 /**
