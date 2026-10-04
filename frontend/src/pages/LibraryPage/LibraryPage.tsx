@@ -691,12 +691,30 @@ const LibraryPage = () => {
                         </div>
                     </div>
 
-                    {/* Ad Slot — replaces MCP promo card; hidden for Pro users automatically */}
-                    <AdSlot
-                        slot="library-sidebar"
-                        minHeight={220}
-                        className="w-full"
-                    />
+                    {/* Ad Card Box — styled container so ad renders inside a visible card */}
+                    {!isPro && (
+                        <div className="w-full rounded-xl border-2 border-neutral-700 bg-brand-surface relative overflow-hidden">
+                            {/* Top accent bar */}
+                            <div className="absolute top-0 inset-x-0 h-0.5 bg-neutral-600" />
+
+                            {/* Label */}
+                            <div className="px-3 pt-3 pb-1 flex items-center gap-1.5">
+                                <span className="text-[9px] font-black uppercase tracking-widest text-neutral-500 font-mono">
+                                    Sponsored
+                                </span>
+                            </div>
+
+                            {/* Ad slot sits inside the card */}
+                            <div className="px-2 pb-2">
+                                <AdSlot
+                                    slot="library-sidebar"
+                                    minHeight={200}
+                                    className="w-full"
+                                    hideLabel
+                                />
+                            </div>
+                        </div>
+                    )}
                 </aside>
             </div>
 

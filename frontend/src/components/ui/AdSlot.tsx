@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCookieConsent } from '../../context/CookieConsentContext';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -20,6 +20,8 @@ interface AdSlotProps {
      */
     minHeight?: number;
     className?: string;
+    /** When true, hides the inner "Advertisement" label (use when the parent card already labels it). */
+    hideLabel?: boolean;
 }
 
 const DEFAULT_MIN_HEIGHT = 280;
@@ -27,22 +29,22 @@ const DEFAULT_MIN_HEIGHT = 280;
 /**
  * A single Google AdSense placement.
  *
- * Renders nothing at all unless ads can actually run, so visitors who decline
- * third-party cookies - and every local dev session - get no empty gaps. Once
- * enabled the space is reserved up front, which is what prevents layout shift.
- *
- * Ad-unit IDs default to empty in `AD_SLOT_IDS`; until the real IDs from the
- * AdSense dashboard are pasted in, every placement stays inert and this returns
- * null. That is deliberate: an empty unit ID must never issue a live ad request.
+ * - Returns null when ads are disabled, Pro user, or consent not given.
+ * - Collapses automatically when Google sets data-ad-status="unfilled".
+ * - Falls back to collapse after 5 s if Google never responds (new ad unit warmup).
  */
 const AdSlot: React.FC<AdSlotProps> = ({
     slot,
     minHeight = DEFAULT_MIN_HEIGHT,
     className = '',
+    hideLabel = false,
 }) => {
     const { prefs } = useCookieConsent();
     const { isPro } = useAuth();
     const requested = useRef(false);
+    const insRef = useRef<HTMLModElement>(null);
+    // null = waiting, true = filled, false = unfilled/collapsed
+    const [filled, setFilled] = useState<boolean | null>(null);
 
     const adUnitId = getAdUnitId(slot);
     // Pro subscribers are ad-free — never show ads to paying users.
@@ -50,16 +52,13 @@ const AdSlot: React.FC<AdSlotProps> = ({
 
     useEffect(() => {
         if (!enabled) {
-            // Allows a fresh push if consent is granted again later: that mounts a
-            // brand new <ins> element, which needs its own request.
             requested.current = false;
+            setFilled(null);
             return;
         }
 
         let cancelled = false;
         loadAdSense().then(() => {
-            // React 19 StrictMode invokes effects twice in development. Without
-            // this guard the same placement would request two ads.
             if (cancelled || requested.current) return;
             requested.current = true;
             pushAdRequest();
@@ -70,7 +69,36 @@ const AdSlot: React.FC<AdSlotProps> = ({
         };
     }, [enabled]);
 
-    if (!enabled) return null;
+    // Watch for Google setting data-ad-status on the <ins> element.
+    useEffect(() => {
+        if (!enabled) return;
+        const ins = insRef.current;
+        if (!ins) return;
+
+        const check = () => {
+            const status = ins.getAttribute('data-ad-status');
+            if (status === 'unfilled') setFilled(false);
+            else if (status === 'filled') setFilled(true);
+        };
+
+        check();
+
+        const observer = new MutationObserver(check);
+        observer.observe(ins, { attributes: true, attributeFilter: ['data-ad-status'] });
+
+        // Collapse after 8 s if Google never responds (new unit still warming up).
+        const timeout = setTimeout(() => {
+            setFilled(prev => (prev === null ? false : prev));
+        }, 8000);
+
+        return () => {
+            observer.disconnect();
+            clearTimeout(timeout);
+        };
+    }, [enabled]);
+
+    // Collapse when disabled or explicitly unfilled.
+    if (!enabled || filled === false) return null;
 
     return (
         <aside
@@ -78,12 +106,15 @@ const AdSlot: React.FC<AdSlotProps> = ({
             aria-label="Advertisement"
             style={{ minHeight: `${minHeight}px` }}
         >
-            <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-neutral-500">
-                Advertisement
-            </p>
+            {!hideLabel && (
+                <p className="mb-2 text-[10px] font-black uppercase tracking-widest text-neutral-500">
+                    Advertisement
+                </p>
+            )}
             <ins
+                ref={insRef}
                 className="adsbygoogle"
-                style={{ display: 'block' }}
+                style={{ display: 'block', minHeight: `${minHeight - (hideLabel ? 0 : 20)}px` }}
                 data-ad-client={ADSENSE_CLIENT_ID}
                 data-ad-slot={adUnitId}
                 data-ad-format="auto"

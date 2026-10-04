@@ -79,7 +79,7 @@ const LoginPage = () => {
     );
 
     return (
-        <main className="relative min-h-screen w-full pt-16 flex items-center justify-center bg-brand-black text-white font-sans overflow-x-hidden px-4 py-10">
+        <main className="relative h-screen w-full flex items-center justify-center bg-brand-black text-white font-sans overflow-hidden px-4">
             {/* Animated Wave Background */}
             <WaveBackground />
             <div className="absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.5),transparent_70%)] pointer-events-none" />
