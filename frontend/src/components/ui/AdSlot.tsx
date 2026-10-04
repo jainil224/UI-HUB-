@@ -6,7 +6,6 @@ import {
     getAdUnitId,
     isAdSenseEnabled,
     loadAdSense,
-    pushAdRequest,
     type AdSlotId,
 } from '../../lib/adsense';
 
@@ -31,7 +30,11 @@ const DEFAULT_MIN_HEIGHT = 280;
  *
  * - Returns null when ads are disabled, Pro user, or consent not given.
  * - Collapses automatically when Google sets data-ad-status="unfilled".
- * - Falls back to collapse after 5 s if Google never responds (new ad unit warmup).
+ * - Falls back to collapse after 8 s if Google never responds (new ad unit warmup).
+ *
+ * FIX: pushAdRequest is now called AFTER the <ins> element is mounted in the DOM,
+ * not immediately when loadAdSense resolves. Each slot independently manages
+ * its own push so multiple slots per page all work correctly.
  */
 const AdSlot: React.FC<AdSlotProps> = ({
     slot,
@@ -41,33 +44,49 @@ const AdSlot: React.FC<AdSlotProps> = ({
 }) => {
     const { prefs } = useCookieConsent();
     const { isPro } = useAuth();
-    const requested = useRef(false);
     const insRef = useRef<HTMLModElement>(null);
+    const pushed = useRef(false);
     // null = waiting, true = filled, false = unfilled/collapsed
     const [filled, setFilled] = useState<boolean | null>(null);
+    const [scriptReady, setScriptReady] = useState(false);
 
     const adUnitId = getAdUnitId(slot);
     // Pro subscribers are ad-free — never show ads to paying users.
     const enabled = isAdSenseEnabled() && !isPro && prefs.thirdParty && adUnitId !== '';
 
+    // Step 1: load the AdSense script when consent is given.
     useEffect(() => {
         if (!enabled) {
-            requested.current = false;
+            pushed.current = false;
             setFilled(null);
+            setScriptReady(false);
             return;
         }
 
         let cancelled = false;
         loadAdSense().then(() => {
-            if (cancelled || requested.current) return;
-            requested.current = true;
-            pushAdRequest();
+            if (!cancelled) setScriptReady(true);
         });
 
         return () => {
             cancelled = true;
         };
     }, [enabled]);
+
+    // Step 2: once the script is ready AND the <ins> is in the DOM, push the ad request.
+    // This is the critical fix: push() must happen AFTER the <ins> element exists in DOM.
+    useEffect(() => {
+        if (!scriptReady || !enabled || pushed.current) return;
+        const ins = insRef.current;
+        if (!ins) return;
+
+        pushed.current = true;
+        try {
+            (window.adsbygoogle = (window as any).adsbygoogle || []).push({});
+        } catch (e) {
+            console.warn('[AdSense] Failed to push ad request:', e);
+        }
+    }, [scriptReady, enabled]);
 
     // Watch for Google setting data-ad-status on the <ins> element.
     useEffect(() => {
@@ -95,7 +114,7 @@ const AdSlot: React.FC<AdSlotProps> = ({
             observer.disconnect();
             clearTimeout(timeout);
         };
-    }, [enabled]);
+    }, [enabled, scriptReady]);
 
     // Collapse when disabled or explicitly unfilled.
     if (!enabled || filled === false) return null;

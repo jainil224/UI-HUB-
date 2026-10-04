@@ -463,6 +463,12 @@ export async function patchApiKey(id: string, action: 'revoke' | 'disable' | 'en
     });
 }
 
+export async function deleteAdminApiKey(id: string): Promise<void> {
+    await request(`/api/admin/mcp/api-keys/${encodeURIComponent(id)}`, {
+        method: 'DELETE',
+    });
+}
+
 export function getTools(): Promise<{ tools: AdminTool[] }> {
     return request<{ tools: AdminTool[] }>('/api/admin/mcp/tools');
 }

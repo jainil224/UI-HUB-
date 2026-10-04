@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { KeyRound, Search, Ban, Play, Undo2, Trash2, RefreshCw } from 'lucide-react';
-import { listAdminKeys, patchApiKey, AdminKey } from '../../services/admin';
+import { listAdminKeys, patchApiKey, deleteAdminApiKey, AdminKey } from '../../services/admin';
 import {
     PageHeader, Panel, PanelHeader, StatusBadge, EmptyState, ErrorState, SkeletonTable,
     Table, Th, Td, Pagination, useData, formatCompact, formatDate, timeAgo, Tone,
@@ -13,6 +13,7 @@ const ApiKeysPage: React.FC = () => {
     const [status, setStatus] = useState('');
     const [page, setPage] = useState(1);
     const [busy, setBusy] = useState<string | null>(null);
+    const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
     const k = useData(() => listAdminKeys({ status, search, page, pageSize: 25 }), [search, status, page]);
 
@@ -27,6 +28,17 @@ const ApiKeysPage: React.FC = () => {
         setBusy(key.id);
         try {
             await patchApiKey(key.id, action);
+            await k.reload();
+        } finally {
+            setBusy(null);
+        }
+    };
+
+    const deletePermanently = async (key: AdminKey) => {
+        setBusy(key.id);
+        setConfirmDeleteId(null);
+        try {
+            await deleteAdminApiKey(key.id);
             await k.reload();
         } finally {
             setBusy(null);
@@ -142,6 +154,33 @@ const ApiKeysPage: React.FC = () => {
                                                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border-2 border-white text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer disabled:opacity-40"
                                                     >
                                                         <Undo2 size={12} /> Restore
+                                                    </button>
+                                                )}
+
+                                                {confirmDeleteId === key.id ? (
+                                                    <div className="flex items-center gap-1">
+                                                        <button
+                                                            onClick={() => void deletePermanently(key)}
+                                                            disabled={busy === key.id}
+                                                            className="inline-flex items-center px-2 py-1.5 rounded-md border border-brand-red bg-brand-red text-white text-[9px] font-black uppercase tracking-widest hover:brightness-110 cursor-pointer"
+                                                        >
+                                                            Confirm
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setConfirmDeleteId(null)}
+                                                            className="inline-flex items-center px-2 py-1.5 rounded-md border border-neutral-700 text-neutral-400 hover:text-white text-[9px] font-black uppercase tracking-widest cursor-pointer"
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                ) : (
+                                                    <button
+                                                        onClick={() => setConfirmDeleteId(key.id)}
+                                                        disabled={busy === key.id}
+                                                        title="Delete key permanently from database"
+                                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-md border border-red-500/50 text-red-400 hover:bg-red-500/10 text-[10px] font-black uppercase tracking-widest cursor-pointer disabled:opacity-40"
+                                                    >
+                                                        <Trash2 size={12} /> Delete
                                                     </button>
                                                 )}
                                             </div>

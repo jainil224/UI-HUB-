@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock, Crown, Check, Sparkles, Bot, Grid2X2, Layers } from 'lucide-react';
+import { Menu as MenuIcon, X, ChevronDown, Home, ArrowRight, Search, Lock, Crown, Check, Sparkles, Bot, Grid2X2, Layers, Zap, Code2 } from 'lucide-react';
 import ComponentDetail from './sections/ComponentDetail/index';
 import GetStartedPage from './sections/GetStarted/GetStartedPage';
 import HoverPreviewPopover from './HoverPreviewPopover';
@@ -10,7 +10,7 @@ import { componentList, ComponentItem } from '../../data/componentData';
 import { useAuth } from '../../context/AuthContext';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 import { isNewComponent } from '../../utils/componentUtils';
-import AdSlot from '../../components/ui/AdSlot';
+import uiHubLogo from '../../Assets/webiste logo.svg';
 
 interface Category {
     name: string;
@@ -573,8 +573,8 @@ const LibraryPage = () => {
                 </aside>
 
                 {/* ── Middle Column: Playground & Documentation ── */}
-                <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto main-scroll p-4 sm:p-6 lg:p-10">
-                    <div className="max-w-4xl mx-auto">
+                <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto main-scroll p-4 sm:p-6 lg:p-8">
+                    <div className="w-full">
                         {/* ── Mobile "All Components" Top Bar / Button ── */}
                         <div className="md:hidden mb-4 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
                             <div className="flex items-center gap-2.5 min-w-0">
@@ -691,30 +691,77 @@ const LibraryPage = () => {
                         </div>
                     </div>
 
-                    {/* Ad Card Box — styled container so ad renders inside a visible card */}
-                    {!isPro && (
-                        <div className="w-full rounded-xl border-2 border-neutral-700 bg-brand-surface relative overflow-hidden">
-                            {/* Top accent bar */}
-                            <div className="absolute top-0 inset-x-0 h-0.5 bg-neutral-600" />
+                    {/* UI HUB Component Library Branding Card */}
+                    <div className="w-full rounded-xl border-2 border-white bg-brand-surface p-4 text-white brutal-shadow-black relative overflow-hidden">
+                        {/* Ambient glow */}
+                        <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-brand-blue/15 blur-xl pointer-events-none" />
+                        <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-[#FFC700]/8 blur-xl pointer-events-none" />
 
-                            {/* Label */}
-                            <div className="px-3 pt-3 pb-1 flex items-center gap-1.5">
-                                <span className="text-[9px] font-black uppercase tracking-widest text-neutral-500 font-mono">
-                                    Sponsored
-                                </span>
-                            </div>
-
-                            {/* Ad slot sits inside the card */}
-                            <div className="px-2 pb-2">
-                                <AdSlot
-                                    slot="library-sidebar"
-                                    minHeight={200}
-                                    className="w-full"
-                                    hideLabel
+                        {/* Header: Logo + version badge */}
+                        <div className="flex items-center justify-between gap-2 mb-3">
+                            <div className="flex items-center gap-2">
+                                <img
+                                    src={uiHubLogo}
+                                    alt="UI HUB"
+                                    className="w-7 h-7 rounded-sm object-contain border border-white/20"
                                 />
+                                <div>
+                                    <p className="text-[8px] font-mono uppercase tracking-widest text-neutral-500 leading-none">Component</p>
+                                    <h4 className="text-[11px] font-black text-white uppercase tracking-tight leading-tight font-heading">
+                                        UI HUB
+                                    </h4>
+                                </div>
+                            </div>
+                            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-black bg-brand-blue text-white text-[9px] font-black uppercase tracking-wider font-mono shadow-[2px_2px_0px_0px_#000000]">
+                                <Sparkles size={8} strokeWidth={2.5} />
+                                LIBRARY
                             </div>
                         </div>
-                    )}
+
+                        {/* Tagline */}
+                        <p className="text-[11px] text-neutral-300 leading-relaxed mb-3">
+                            Premium copy-paste components — interactive backgrounds, 3D, micro-animations & AI-ready.
+                        </p>
+
+                        {/* Stats row */}
+                        <div className="grid grid-cols-2 gap-1.5 mb-3">
+                            {[
+                                { value: '140+', label: 'Components', color: 'text-white' },
+                                { value: '100%', label: 'Copy & Paste', color: 'text-emerald-400' },
+                                { value: 'TS', label: 'TypeScript', color: 'text-brand-yellow' },
+                                { value: 'MCP', label: 'AI-Ready', color: 'text-brand-blue' },
+                            ].map(s => (
+                                <div key={s.label} className="flex flex-col items-start p-2 rounded-lg border-2 border-black bg-black shadow-[2px_2px_0px_0px_#3D5CFF]">
+                                    <span className={`text-xs font-black font-mono leading-none ${s.color}`}>{s.value}</span>
+                                    <span className="text-[9px] font-mono text-neutral-500 uppercase tracking-wide mt-0.5">{s.label}</span>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Feature list */}
+                        <ul className="space-y-1.5 mb-3">
+                            {[
+                                'Copy-paste, zero config',
+                                'Works with Lovable, Cursor, Antigravity',
+                                'MCP AI-powered generation',
+                            ].map(f => (
+                                <li key={f} className="flex items-start gap-1.5 text-[10.5px] text-neutral-200 font-medium leading-snug">
+                                    <Check size={11} strokeWidth={3} className="text-emerald-400 mt-0.5 shrink-0" />
+                                    <span>{f}</span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        {/* CTA Button — matches site's brutal primary style */}
+                        <Link
+                            to="/dashboard/mcp"
+                            className="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg bg-brand-blue hover:bg-[#324FE0] text-white text-xs font-black uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000000] hover:shadow-[5px_5px_0px_0px_#000000] hover:-translate-y-0.5 active:translate-y-0 transition-all no-underline cursor-pointer font-heading"
+                        >
+                            <Bot size={13} strokeWidth={2.5} />
+                            <span>Connect AI</span>
+                            <ArrowRight size={13} strokeWidth={2.5} />
+                        </Link>
+                    </div>
                 </aside>
             </div>
 

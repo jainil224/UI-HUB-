@@ -191,6 +191,13 @@ export async function createApiKey(name: string, onAttempt?: (attempt: number, e
         ...COLD_START_OPTS,
         onAttempt,
     });
+    if (res.status === 429) {
+        const body = await res.json().catch(() => ({}));
+        const err: any = new Error(body?.message || 'You can only create 1 API key per 24 hours.');
+        err.code = body?.error || 'DAILY_KEY_LIMIT';
+        err.retryAfterMs = body?.retryAfterMs ?? 0;
+        throw err;
+    }
     if (!res.ok) throw new Error(`Failed to create key: ${res.status}`);
     return res.json();
 }
@@ -204,6 +211,9 @@ export async function revokeApiKey(id: string, token?: string): Promise<void> {
 }
 
 export async function deleteApiKey(id: string, token?: string): Promise<void> {
+    // Uses the user-facing dashboard route — works for the key owner AND admins.
+    // Admin-only hard-delete (via /admin/keys/:id) is not needed since this endpoint
+    // already verifies the key belongs to the authenticated user.
     const res = await mcpFetch(`${BASE}/api/dashboard/mcp/keys/${id}`, {
         method: 'DELETE',
         headers: await authHeaders(token),

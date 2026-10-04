@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
-    Bot, KeyRound, Copy, Check, Plus, X, Trash2, Shield, Zap, Server,
+    Bot, KeyRound, Copy, Check, Plus, X, Trash2, Ban, Shield, Zap, Server,
     RefreshCw, AlertTriangle, Link2, Fingerprint, LucideIcon,
     Crown, Activity, BarChart3, Database, Cpu, Search, Sparkles, Wifi, ShieldCheck, ArrowUpRight,
     ChevronDown, Code2, Terminal, Boxes
@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { MCP_BASE_URL } from '../../utils/mcpConfig';
 import {
-    getMcpOverview, createApiKey, revokeApiKey, getAdminMetrics,
+    getMcpOverview, createApiKey, revokeApiKey, deleteApiKey, getAdminMetrics,
     McpApiKey, McpStatus, McpUsage, McpAdminMetrics, MCP_AUTH_REQUIRED
 } from '../../services/mcp';
 
@@ -29,6 +29,14 @@ function maskKey(prefix: string): string {
 function formatNum(n?: number | null): string {
     if (n === undefined || n === null || isNaN(n)) return '0';
     return n.toLocaleString('en-US');
+}
+
+function formatCountdown(ms: number): string {
+    const totalSeconds = Math.ceil(ms / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    if (hours > 0) return `${hours}h ${minutes}m`;
+    return `${minutes}m`;
 }
 
 const MCP_SERVER_URL = MCP_BASE_URL;
@@ -151,7 +159,7 @@ const TOOLS: ToolDef[] = [
     },
 ];
 
-const CopyButton: React.FC<{ text: string; label?: string; red?: boolean; warnsIfPlaceholder?: boolean }> = ({ text, label = 'Copy', red = false, warnsIfPlaceholder = false }) => {
+const CopyButton: React.FC<{ text: string; label?: string; red?: boolean; warnsIfPlaceholder?: boolean; emerald?: boolean }> = ({ text, label = 'Copy', red = false, warnsIfPlaceholder = false, emerald = false }) => {
     const [copied, setCopied] = useState(false);
     const [warned, setWarned] = useState(false);
     const handleCopy = () => {
@@ -166,13 +174,15 @@ const CopyButton: React.FC<{ text: string; label?: string; red?: boolean; warnsI
             <button
                 onClick={handleCopy}
                 className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-md border-2 text-[11px] font-black uppercase tracking-widest transition-colors cursor-pointer ${
-                    red
+                    emerald
+                        ? copied ? 'bg-emerald-300 border-emerald-300 text-black' : 'bg-emerald-500 border-emerald-400 text-white hover:bg-emerald-400'
+                        : red
                         ? 'bg-brand-red border-brand-red text-white hover:brightness-110'
                         : 'bg-black border-white text-white hover:bg-neutral-900'
                 }`}
             >
-                {copied ? <Check size={14} className="text-brand-green" /> : <Copy size={14} />}
-                {copied ? 'Copied' : label}
+                {copied ? <Check size={14} className={emerald ? 'text-black' : 'text-brand-green'} /> : <Copy size={14} />}
+                {copied ? 'Copied!' : label}
             </button>
             {warned && (
                 <span className="inline-flex items-center gap-1.5 px-2 py-1 rounded border border-brand-yellow/60 bg-brand-yellow/10 text-[10px] font-bold uppercase tracking-wider text-brand-yellow">
@@ -283,6 +293,7 @@ const MCPPage: React.FC = () => {
     const [adminMetrics, setAdminMetrics] = useState<McpAdminMetrics | null>(null);
     const [activeTool, setActiveTool] = useState<ToolDef>(TOOLS[0]);
     const [toolOpen, setToolOpen] = useState(false);
+    const [modalToolOpen, setModalToolOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [retryAttempt, setRetryAttempt] = useState(0);
@@ -292,6 +303,8 @@ const MCPPage: React.FC = () => {
     const [keyName, setKeyName] = useState('');
     const [creating, setCreating] = useState(false);
     const [revokingId, setRevokingId] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+    const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
     const [authExpired, setAuthExpired] = useState(false);
 
     const load = useCallback(async (refresh = false) => {
@@ -357,7 +370,9 @@ const MCPPage: React.FC = () => {
             // failure hide the just-created key banner.
             void load(true).catch(() => undefined);
         } catch (e: any) {
-            if (e?.message === MCP_AUTH_REQUIRED) {
+            if (e?.code === 'DAILY_KEY_LIMIT') {
+                setError(`Daily limit reached: You can create only 1 API key per 24 hours. Next key available in ${formatCountdown(e.retryAfterMs || msUntilNextKey)}.`);
+            } else if (e?.message === MCP_AUTH_REQUIRED) {
                 setAuthExpired(true);
             } else {
                 setError(e?.message || 'Failed to create key');
@@ -384,6 +399,28 @@ const MCPPage: React.FC = () => {
             }
         } finally {
             setRevokingId(null);
+        }
+    };
+
+    const handleDelete = async (id: string) => {
+        if (deletingId) return;
+        setDeletingId(id);
+        setDeleteConfirmId(null);
+        setError(null);
+        setAuthExpired(false);
+        try {
+            const idToken = await user!.getIdToken();
+            await deleteApiKey(id, idToken);
+            // After deleting, keep showKey banner so user can still copy if open
+            await load(true);
+        } catch (e: any) {
+            if (e?.message === MCP_AUTH_REQUIRED) {
+                setAuthExpired(true);
+            } else {
+                setError(e?.message || 'Failed to delete key');
+            }
+        } finally {
+            setDeletingId(null);
         }
     };
 
@@ -445,12 +482,29 @@ const MCPPage: React.FC = () => {
               .map(([name]) => name)
         : [];
 
+    // ── Daily key creation limit (1 per 24 hours; admins bypass) ────────────────
+    // Computed from created_at of ALL keys (including deleted/revoked) loaded at
+    // startup. Deleting a key does NOT reset the clock — matches backend logic.
+    const lastKeyCreatedAt = keys.reduce((max, k) => Math.max(max, k.created_at || 0), 0);
+    const msSinceLastKey = lastKeyCreatedAt > 0 ? Date.now() - lastKeyCreatedAt : Infinity;
+    const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+    const canCreateKey = isAdmin || msSinceLastKey >= ONE_DAY_MS;
+    const msUntilNextKey = canCreateKey ? 0 : ONE_DAY_MS - msSinceLastKey;
+
     // The plaintext key is only known right after creation (never stored), so the
     // Connection Guide can only embed the real key while the "Key Created" banner
     // is showing. Otherwise it falls back to the placeholder to replace.
     const embeddedKey = showKey && showKey !== '__form__' ? showKey : undefined;
     const guideConfigText = activeTool.build(status?.endpoint || `${MCP_SERVER_URL}/mcp`, embeddedKey);
     const guideNeedsReplacement = !embeddedKey;
+
+    // Config for inside the modal — always has real key embedded
+    const modalConfigText = embeddedKey
+        ? activeTool.build(status?.endpoint || `${MCP_SERVER_URL}/mcp`, embeddedKey)
+        : '';
+    const genericJsonText = embeddedKey
+        ? `{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${embeddedKey}"\n      }\n    }\n  }\n}`
+        : '';
 
     return (
         <div className="flex flex-col gap-8">
@@ -487,55 +541,373 @@ const MCPPage: React.FC = () => {
                 </div>
             )}
 
-            {/* ── Overview card ── */}
-            <motion.header
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="relative"
-            >
-                <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue overflow-hidden">
-                    <div className="absolute top-0 inset-x-0 h-1 bg-brand-blue" />
-                    <div className="absolute inset-0 bg-[radial-gradient(#ffffff04_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
+            {/* ── API Keys section (Moved to Top) ── */}
+            <section>
+                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 className="text-2xl font-black uppercase tracking-tight text-white font-heading">API Keys</h2>
+                        <p className="text-xs text-neutral-400 mt-0.5">Manage keys for MCP authentication (Limit: 1 key per 24 hours)</p>
+                    </div>
+                    {!showKey && (
+                        canCreateKey ? (
+                            <button
+                                onClick={() => setShowKey('__form__')}
+                                disabled={creating}
+                                className="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-brand-blue text-white text-[11px] font-black uppercase tracking-widest border-2 border-black shadow-[3px_3px_0_0_#000] hover:bg-brand-blue-dark transition-colors cursor-pointer disabled:opacity-60"
+                            >
+                                <Plus size={15} /> Create API Key
+                            </button>
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-mono text-neutral-400 border border-neutral-700 bg-neutral-900/80 px-3 py-2 rounded-md">
+                                    ⏳ Next key in {formatCountdown(msUntilNextKey)}
+                                </span>
+                                <button
+                                    disabled
+                                    title="Limit: 1 API key per 24 hours"
+                                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-neutral-800 text-neutral-500 text-[11px] font-black uppercase tracking-widest border border-neutral-700 cursor-not-allowed opacity-60"
+                                >
+                                    <Plus size={14} /> 1 Key / Day
+                                </button>
+                            </div>
+                        )
+                    )}
+                </div>
 
-                    <div className="relative p-6 md:p-8">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 border-2 border-white bg-black rounded-md font-black text-[10px] uppercase tracking-widest text-white mb-5">
-                            <Bot size={12} className="text-brand-blue" />
-                            <span>MCP Overview</span>
-                        </div>
+                {/* Create form / new key display */}
+                <AnimatePresence>
+                    {showKey === '__form__' && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="overflow-hidden"
+                        >
+                            <div className="border-2 border-white bg-brand-surface rounded-lg p-6 mb-6">
+                                <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-2">Key Name (optional)</label>
+                                {!canCreateKey && (
+                                    <div className="mb-4 p-3 rounded-md border border-brand-yellow/50 bg-brand-yellow/10 text-xs text-brand-yellow font-medium">
+                                        ⏳ Daily limit reached: You can create only 1 API key every 24 hours. Next key available in <b>{formatCountdown(msUntilNextKey)}</b>.
+                                    </div>
+                                )}
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <input
+                                        value={keyName}
+                                        onChange={(e) => setKeyName(e.target.value)}
+                                        placeholder="e.g. Cursor"
+                                        disabled={!canCreateKey}
+                                        className="flex-1 px-4 py-3 bg-black border-2 border-neutral-700 rounded-md text-sm text-white placeholder-neutral-600 outline-none focus:border-brand-blue disabled:opacity-50"
+                                    />
+                                    <button
+                                        onClick={() => handleCreate()}
+                                        disabled={creating || !canCreateKey}
+                                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-brand-blue text-white text-[11px] font-black uppercase tracking-widest border-2 border-black shadow-[3px_3px_0_0_#000] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                    >
+                                        {creating ? 'Creating...' : 'Generate Key'}
+                                    </button>
+                                    <button
+                                        onClick={() => setShowKey(null)}
+                                        className="inline-flex items-center justify-center px-4 py-3 rounded-md border-2 border-neutral-700 text-neutral-400 hover:text-white text-[11px] font-black uppercase tracking-widest cursor-pointer"
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
 
-                        <h1 className="text-2xl sm:text-3xl font-bold uppercase tracking-tight text-white font-heading mb-3">
-                            Connect UI HUB to <span className="text-brand-blue">your AI</span>
-                        </h1>
-                        <p className="max-w-2xl text-neutral-400 font-medium text-sm sm:text-base leading-relaxed">
-                            Connect UI HUB to your AI coding assistant and use UI HUB components directly inside your development workflow.
+                    {showKey && showKey !== '__form__' && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="border-2 border-emerald-500/80 bg-neutral-950 rounded-xl p-6 mb-6 shadow-[0_0_35px_rgba(16,185,129,0.18)]"
+                        >
+                            <div className="flex flex-wrap items-center justify-between gap-3 pb-4 mb-4 border-b border-emerald-500/20">
+                                <div className="flex items-center gap-2.5">
+                                    <div className="w-8 h-8 rounded-lg bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-400">
+                                        <ShieldCheck size={18} />
+                                    </div>
+                                    <div>
+                                        <h3 className="text-sm font-black uppercase tracking-wider text-emerald-400 font-heading">
+                                            Key Created — Copy it now
+                                        </h3>
+                                        <p className="text-[11px] text-neutral-400 font-medium">
+                                            Shown once only • copy before dismissing
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    {canCreateKey ? (
+                                        <button
+                                            onClick={() => setShowKey('__form__')}
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 text-[10px] font-black uppercase tracking-widest cursor-pointer transition-colors"
+                                        >
+                                            <Plus size={12} /> Create Another
+                                        </button>
+                                    ) : (
+                                        <span className="text-[10px] font-mono text-neutral-400 border border-neutral-800 bg-neutral-900 px-2.5 py-1.5 rounded">
+                                            ⏳ Next key in {formatCountdown(msUntilNextKey)}
+                                        </span>
+                                    )}
+                                    <button
+                                        onClick={() => setShowKey(null)}
+                                        className="text-neutral-400 hover:text-white cursor-pointer p-1.5 rounded-md hover:bg-neutral-800 transition-colors"
+                                    >
+                                        <X size={18} />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p className="text-xs text-neutral-300 mb-4 leading-relaxed">
+                                For security, the full key is shown <strong className="text-white underline decoration-emerald-500 underline-offset-2">only once</strong>. You can copy the key alone or pick your AI coding tool below to get the exact, ready-to-paste config.
+                            </p>
+
+                            {/* Raw key field with single Copy Key button */}
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 mb-6">
+                                <code className="flex-1 px-4 py-3 bg-black border-2 border-emerald-500/40 rounded-lg text-sm font-mono text-emerald-300 font-semibold break-all select-all shadow-inner">
+                                    {showKey}
+                                </code>
+                                <CopyButton emerald text={showKey} label="Copy Key" />
+                            </div>
+
+                            {/* Connect UI HUB to your AI (in modal) */}
+                            <div className="border border-neutral-800 bg-black/70 rounded-lg p-4">
+                                <div className="flex flex-wrap items-center justify-between gap-3 mb-3 pb-3 border-b border-neutral-800">
+                                    <div className="flex items-center gap-2">
+                                        <Bot size={16} className="text-emerald-400" />
+                                        <span className="text-xs font-black uppercase tracking-wider text-white">
+                                            Connect UI HUB to your AI
+                                        </span>
+                                    </div>
+
+                                    {/* AI tool selector dropdown */}
+                                    <div className="relative">
+                                        <button
+                                            onClick={() => setModalToolOpen((o) => !o)}
+                                            className="inline-flex items-center gap-2.5 rounded-md border-2 border-white/60 bg-black text-white px-3.5 py-2 text-[11px] font-black uppercase tracking-widest hover:border-white transition-colors cursor-pointer"
+                                        >
+                                            <ToolLogo tool={activeTool} size={16} />
+                                            <span style={{ color: activeTool.color }}>{activeTool.label}</span>
+                                            <ChevronDown size={14} className={`transition-transform ${modalToolOpen ? 'rotate-180' : ''}`} />
+                                        </button>
+
+                                        {modalToolOpen && (
+                                            <>
+                                                <div className="fixed inset-0 z-40" onClick={() => setModalToolOpen(false)} />
+                                                <div className="absolute right-0 top-full mt-2 z-50 w-72 rounded-lg border-2 border-white bg-brand-surface shadow-[4px_4px_0_0_#000] overflow-hidden">
+                                                    {TOOLS.map((tool) => (
+                                                        <button
+                                                            key={tool.id}
+                                                            onClick={() => { setActiveTool(tool); setModalToolOpen(false); }}
+                                                            className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${activeTool.id === tool.id ? 'bg-neutral-900' : 'hover:bg-neutral-900/60'}`}
+                                                        >
+                                                            <span className="w-7 h-7 shrink-0 rounded-md border border-white/30 bg-black flex items-center justify-center p-1">
+                                                                <ToolLogo tool={tool} size={18} />
+                                                            </span>
+                                                            <span className="min-w-0 flex-1">
+                                                                <span className="block text-[11px] font-black uppercase tracking-widest text-white">{tool.label}</span>
+                                                                <span className="block text-[10px] text-neutral-400 truncate">{tool.hint}</span>
+                                                            </span>
+                                                            <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: tool.color }} />
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Live config preview */}
+                                <div className="border border-neutral-800 rounded-md overflow-hidden mb-3">
+                                    <div className="px-3 py-1.5 bg-neutral-900/80 border-b border-neutral-800 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+                                        <span>{activeTool.label} format • key embedded</span>
+                                        <span className="text-emerald-400 font-semibold">● Ready to paste</span>
+                                    </div>
+                                    <JsonHighlight code={modalConfigText} isCli={activeTool.isCliCommand} />
+                                </div>
+
+                                {/* Smart copy buttons */}
+                                <div className="flex flex-wrap items-center justify-end gap-2.5">
+                                    <CopyButton emerald text={modalConfigText} label={`Copy ${activeTool.label} Config`} />
+                                    <CopyButton text={genericJsonText} label="Copy Full JSON" />
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Key list */}
+                {keys.length === 0 ? (
+                    <div className="border-2 border-white/20 bg-brand-surface rounded-lg p-10 text-center">
+                        <KeyRound size={32} className="mx-auto mb-4 text-neutral-500" />
+                        <p className="text-neutral-400 font-medium">No API keys yet. Create your first key to connect your AI assistant.</p>
+                    </div>
+                ) : (
+                    <div className="flex flex-col gap-4">
+                        {keys.map((key) => {
+                            const isActive = key.status === 'active';
+                            return (
+                                <div key={key.id} className="border-2 border-white bg-brand-surface rounded-lg p-5 flex flex-col sm:flex-row sm:items-center gap-4">
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-black uppercase tracking-wider text-neutral-400">
+                                                <StatusDot active={isActive} /> {isActive ? 'Active' : key.status}
+                                            </span>
+                                            <span className="text-sm font-bold text-white truncate">{key.name}</span>
+                                        </div>
+                                        <code className="text-xs font-mono text-neutral-400">{maskKey(key.key_prefix)}</code>
+                                    </div>
+                                    <div className="flex flex-col gap-1 text-right text-[11px] text-neutral-500">
+                                        <span>Created: <span className="text-neutral-300 font-medium">{formatDate(key.expires_at ? key.created_at : key.created_at)}</span></span>
+                                        <span>Last used: <span className="text-neutral-300 font-medium">{formatDate(key.last_used_at ?? undefined)}</span></span>
+                                        <div className="mt-2 flex items-center justify-end gap-2">
+                                            {isActive && (
+                                                <button
+                                                    onClick={() => handleRevoke(key.id)}
+                                                    disabled={revokingId === key.id}
+                                                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md border-2 border-brand-yellow/60 text-brand-yellow hover:bg-brand-yellow/10 disabled:opacity-50 disabled:cursor-not-allowed text-[10px] font-black uppercase tracking-widest cursor-pointer"
+                                                >
+                                                    {revokingId === key.id ? (
+                                                        <>
+                                                            <RefreshCw size={12} className="animate-spin" /> Revoking…
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Ban size={12} /> Revoke
+                                                        </>
+                                                    )}
+                                                </button>
+                                            )}
+
+                                            {deleteConfirmId === key.id ? (
+                                                <div className="flex items-center gap-1">
+                                                    <button
+                                                        onClick={() => handleDelete(key.id)}
+                                                        disabled={deletingId === key.id}
+                                                        className="inline-flex items-center px-2.5 py-1.5 rounded-md border border-brand-red bg-brand-red text-white text-[9px] font-black uppercase tracking-widest hover:brightness-110 cursor-pointer"
+                                                    >
+                                                        {deletingId === key.id ? 'Deleting…' : 'Confirm'}
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setDeleteConfirmId(null)}
+                                                        className="inline-flex items-center px-2 py-1.5 rounded-md border border-neutral-700 text-neutral-400 hover:text-white text-[9px] font-black uppercase tracking-widest cursor-pointer"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => setDeleteConfirmId(key.id)}
+                                                    disabled={deletingId === key.id}
+                                                    title="Permanently delete this key"
+                                                    className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-md border border-brand-red/60 text-brand-red hover:bg-brand-red/10 text-[10px] font-black uppercase tracking-widest cursor-pointer disabled:opacity-50"
+                                                >
+                                                    <Trash2 size={12} /> Delete
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+
+                <div className="mt-3 flex items-center justify-between text-[11px] text-neutral-500">
+                    <span>Note: Deleting a key does not reset the 24-hour daily key creation limit.</span>
+                </div>
+
+                {/* Premium note */}
+                {tier === 'FREE' && (
+                    <div className="mt-4 flex items-start gap-3 border-2 border-brand-yellow/40 bg-brand-yellow/5 rounded-lg p-4">
+                        <Link2 size={18} className="text-brand-yellow shrink-0 mt-0.5" />
+                        <p className="text-xs text-neutral-300 leading-relaxed">
+                            Free accounts can search UI HUB components via MCP. To access <strong className="text-white">premium source code</strong>,
+                            templates, and higher usage limits, <a href="/pricing" className="text-brand-blue font-bold underline">upgrade to Pro</a>.
                         </p>
+                    </div>
+                )}
+            </section>
 
-                        {/* Status pills */}
-                        <div className="flex flex-wrap items-center gap-3 mt-6">
-                            <StatusBadge ok={keys.some(k => k.status === 'active')} label="API Key" />
-                            <StatusBadge ok={!!status} label="MCP Server" />
-                            <StatusBadge ok={tier !== 'FREE'} label={tier} />
-                        </div>
-
-                        <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                            <MetaCell icon={Server} label="MCP Endpoint" value={status?.endpoint || `${MCP_SERVER_URL}/mcp`} mono />
-                            <MetaCell icon={KeyRound} label="API Keys" value={`${status?.keys.active ?? keys.filter(k => k.status === 'active').length} active`} />
-                            <MetaCell icon={Zap} label="Plan" value={tier} />
-                            <MetaCell icon={Fingerprint} label="Auth" value="Bearer uh_live_..." mono />
-                        </div>
-
-                        <div className="mt-4 flex items-start gap-2.5 border-2 border-brand-yellow/70 bg-black/60 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300">
-                            <AlertTriangle size={15} className="text-brand-yellow shrink-0 mt-0.5" />
-                            <span>
-                                <strong className="text-white">The endpoint URL alone won't connect.</strong>{' '}
-                                AI tools require the <code className="font-mono text-brand-yellow px-1 bg-neutral-900 rounded">Authorization: Bearer uh_live_...</code>{' '}
-                                header. After creating a key, copy the <strong className="text-white">full ready-to-paste config</strong> below — it embeds your key so a bare URL is never pasted.
-                            </span>
-                        </div>
+            {/* ── Connection Guide ── */}
+            <section>
+                <div className="flex items-center justify-between gap-4 mb-4">
+                    <div>
+                        <h2 className="text-2xl font-black uppercase tracking-tight text-white font-heading">Connect UI HUB to your AI</h2>
+                        <p className="text-xs text-neutral-400 mt-0.5">Select your AI coding tool to get the instant configuration</p>
                     </div>
                 </div>
-            </motion.header>
+
+                <div className="border-2 border-white bg-brand-surface rounded-lg overflow-hidden mb-6">
+                    <div className="border-b-2 border-white bg-brand-bg px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+                        <div className="relative">
+                            <button
+                                onClick={() => setToolOpen((o) => !o)}
+                                className="inline-flex items-center gap-2.5 rounded-md border-2 border-white bg-black text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest hover:bg-neutral-900 transition-colors cursor-pointer"
+                            >
+                                <ToolLogo tool={activeTool} size={18} />
+                                <span style={{ color: activeTool.color }}>{activeTool.label}</span>
+                                <ChevronDown size={14} className={`transition-transform ${toolOpen ? 'rotate-180' : ''}`} />
+                            </button>
+
+                            {toolOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-40" onClick={() => setToolOpen(false)} />
+                                    <div className="absolute top-full left-0 mt-2 z-50 w-72 rounded-lg border-2 border-white bg-brand-surface shadow-[4px_4px_0_0_#000] overflow-hidden">
+                                        {TOOLS.map((tool) => (
+                                            <button
+                                                key={tool.id}
+                                                onClick={() => { setActiveTool(tool); setToolOpen(false); }}
+                                                className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${activeTool.id === tool.id ? 'bg-neutral-900' : 'hover:bg-neutral-900/60'}`}
+                                            >
+                                                <span className="w-7 h-7 shrink-0 rounded-md border border-white/30 bg-black flex items-center justify-center p-1">
+                                                    <ToolLogo tool={tool} size={18} />
+                                                </span>
+                                                <span className="min-w-0 flex-1">
+                                                    <span className="block text-[11px] font-black uppercase tracking-widest text-white">{tool.label}</span>
+                                                    <span className="block text-[10px] text-neutral-400 truncate">{tool.hint}</span>
+                                                </span>
+                                                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: tool.color }} />
+                                            </button>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+
+                        <CopyButton red text={guideConfigText} label="Copy Config" warnsIfPlaceholder={guideNeedsReplacement} />
+                    </div>
+
+                    <div className="relative">
+                        <div className="absolute top-0 inset-x-0 h-1" style={{ backgroundColor: activeTool.color }} />
+                        <div className="flex items-center gap-2 px-5 pt-4 text-[10px] font-black uppercase tracking-widest text-neutral-400">
+                            <ToolLogo tool={activeTool} size={14} />
+                            <span style={{ color: activeTool.color }}>{activeTool.label}</span>
+                            <span className="text-neutral-600">· {activeTool.hint}</span>
+                        </div>
+                    </div>
+                    <JsonHighlight code={guideConfigText} isCli={activeTool.isCliCommand} />
+                </div>
+
+                {guideNeedsReplacement ? (
+                    <div className="flex items-start gap-2.5 border-2 border-brand-red/60 bg-brand-red/10 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300 mb-3">
+                        <AlertTriangle size={15} className="text-brand-red shrink-0 mt-0.5" />
+                        <span>
+                            <strong className="text-white">This config contains a placeholder — it will NOT connect as-is.</strong>{' '}
+                            Replace <code className="font-mono text-brand-yellow bg-neutral-900 px-1 rounded">YOUR_UI_HUB_API_KEY</code> with a key from the list above, or{' '}
+                            <strong className="text-white">create a key</strong> and click <em>Copy Full MCP JSON</em> for a ready-to-paste config with your real key already embedded.
+                        </span>
+                    </div>
+                ) : (
+                    <div className="flex items-start gap-2.5 border-2 border-brand-green/70 bg-brand-green/10 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300 mb-3">
+                        <ShieldCheck size={15} className="text-brand-green shrink-0 mt-0.5" />
+                        <span>
+                            <strong className="text-white">Your key is embedded.</strong>{' '}
+                            This config is ready to paste into {activeTool.label} — it already contains your real <code className="font-mono text-brand-green bg-neutral-900 px-1 rounded">uh_live_...</code> key.
+                        </span>
+                    </div>
+                )}
+            </section>
 
             {/* ── Admin Telemetry & Control Center (ADMIN ONLY) ── */}
             {isAdmin && (
@@ -580,7 +952,7 @@ const MCPPage: React.FC = () => {
                             <div className="text-2xl sm:text-3xl font-black text-white font-heading">
                                 {adminMetrics ? formatNum(adminMetrics.totalRequests) : '—'}
                             </div>
-                            <span className="text-[10px] text-neutral-500 font-medium">Platform-wide MCP hits</span>
+                            <span className="text-[10px] text-neutral-500 font-medium">Recorded calls</span>
                         </div>
 
                         <div className="p-4 rounded-md border border-neutral-800 bg-neutral-900/60">
@@ -659,261 +1031,6 @@ const MCPPage: React.FC = () => {
                     </div>
                 </motion.section>
             )}
-
-            {/* ── API Keys section ── */}
-            <section>
-                <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
-                    <h2 className="text-2xl font-black uppercase tracking-tight text-white font-heading">API Keys</h2>
-                    {!showKey && (
-                        <button
-                            onClick={() => setShowKey('__form__')}
-                            disabled={creating}
-                            className="inline-flex items-center gap-2 px-5 py-3 rounded-md bg-brand-blue text-white text-[11px] font-black uppercase tracking-widest border-2 border-black shadow-[3px_3px_0_0_#000] hover:bg-brand-blue-dark transition-colors cursor-pointer disabled:opacity-60"
-                        >
-                            <Plus size={15} /> Create API Key
-                        </button>
-                    )}
-                </div>
-
-                {/* Create form / new key display */}
-                <AnimatePresence>
-                    {showKey === '__form__' && (
-                        <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            exit={{ opacity: 0, height: 0 }}
-                            className="overflow-hidden"
-                        >
-                            <div className="border-2 border-white bg-brand-surface rounded-lg p-6 mb-6">
-                                <label className="block text-xs font-black uppercase tracking-widest text-neutral-400 mb-2">Key Name (optional)</label>
-                                <div className="flex flex-col sm:flex-row gap-3">
-                                    <input
-                                        value={keyName}
-                                        onChange={(e) => setKeyName(e.target.value)}
-                                        placeholder="e.g. Cursor"
-                                        className="flex-1 px-4 py-3 bg-black border-2 border-neutral-700 rounded-md text-sm text-white placeholder-neutral-600 outline-none focus:border-brand-blue"
-                                    />
-                                    <button
-                                        onClick={() => handleCreate()}
-                                        disabled={creating}
-                                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md bg-brand-blue text-white text-[11px] font-black uppercase tracking-widest border-2 border-black shadow-[3px_3px_0_0_#000] cursor-pointer disabled:opacity-60"
-                                    >
-                                        {creating ? 'Creating...' : 'Generate Key'}
-                                    </button>
-                                    <button
-                                        onClick={() => setShowKey(null)}
-                                        className="inline-flex items-center justify-center px-4 py-3 rounded-md border-2 border-neutral-700 text-neutral-400 hover:text-white text-[11px] font-black uppercase tracking-widest cursor-pointer"
-                                    >
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        </motion.div>
-                    )}
-
-                    {showKey && showKey !== '__form__' && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="border-2 border-brand-green bg-brand-surface rounded-lg p-6 mb-6 brutal-shadow-white"
-                        >
-                            <div className="flex items-center justify-between gap-2 mb-3">
-                                <div className="flex items-center gap-2">
-                                    <Shield size={16} className="text-brand-green" />
-                                    <h3 className="text-xs font-black uppercase tracking-widest text-brand-green">Key Created — Copy it now</h3>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <button
-                                        onClick={() => setShowKey('__form__')}
-                                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border-2 border-brand-blue text-brand-blue hover:bg-brand-blue/10 text-[10px] font-black uppercase tracking-widest cursor-pointer"
-                                    >
-                                        <Plus size={12} /> Create Another
-                                    </button>
-                                    <button onClick={() => setShowKey(null)} className="text-neutral-400 hover:text-white cursor-pointer p-1 rounded hover:bg-neutral-800 transition-colors">
-                                        <X size={18} />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <p className="text-xs text-neutral-400 mb-4">
-                                For security, the full key is shown <strong className="text-white">only once</strong>. You can copy the key alone or copy the complete, ready-to-paste AI config directly.
-                            </p>
-
-                            {/* Raw key field + quick action buttons */}
-                            <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2.5 mb-4">
-                                <code className="flex-1 px-3.5 py-2.5 bg-black border-2 border-neutral-700 rounded-md text-sm font-mono text-brand-green break-all select-all">
-                                    {showKey}
-                                </code>
-                                <div className="flex flex-wrap items-center gap-2">
-                                    <CopyButton text={showKey} label="Copy Key" />
-                                    <CopyButton
-                                        text={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
-                                        label="Copy Full MCP JSON"
-                                    />
-                                    <CopyButton
-                                        text={`claude mcp add ui-hub --transport http ${status?.endpoint || `${MCP_SERVER_URL}/mcp`} --header "Authorization: Bearer ${showKey}"`}
-                                        label="Copy Claude CLI"
-                                    />
-                                </div>
-                            </div>
-
-                            {/* Live AI Configuration snippet preview */}
-                            <div className="border border-neutral-800 bg-black/60 rounded-md overflow-hidden">
-                                <div className="border-b border-neutral-800 px-3.5 py-2 flex items-center justify-between bg-neutral-900/50">
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                                        Ready-to-paste AI Config (Cursor, Antigravity, VS Code, Claude, Lovable)
-                                    </span>
-                                    <CopyButton
-                                        text={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
-                                        label="Copy JSON"
-                                    />
-                                </div>
-                                <JsonHighlight
-                                    code={`{\n  "mcpServers": {\n    "ui-hub": {\n      "url": "${status?.endpoint || `${MCP_SERVER_URL}/mcp`}",\n      "headers": {\n        "Authorization": "Bearer ${showKey}"\n      }\n    }\n  }\n}`}
-                                />
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-
-                {/* Key list */}
-                {keys.length === 0 ? (
-                    <div className="border-2 border-white/20 bg-brand-surface rounded-lg p-10 text-center">
-                        <KeyRound size={32} className="mx-auto mb-4 text-neutral-500" />
-                        <p className="text-neutral-400 font-medium">No API keys yet. Create your first key to connect your AI assistant.</p>
-                    </div>
-                ) : (
-                    <div className="flex flex-col gap-4">
-                        {keys.map((key) => {
-                            const isActive = key.status === 'active';
-                            return (
-                                <div key={key.id} className="border-2 border-white bg-brand-surface rounded-lg p-5 flex flex-col sm:flex-row sm:items-center gap-4">
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-neutral-700 text-[9px] font-black uppercase tracking-wider text-neutral-400">
-                                                <StatusDot active={isActive} /> {isActive ? 'Active' : key.status}
-                                            </span>
-                                            <span className="text-sm font-bold text-white truncate">{key.name}</span>
-                                        </div>
-                                        <code className="text-xs font-mono text-neutral-400">{maskKey(key.key_prefix)}</code>
-                                    </div>
-                                    <div className="flex flex-col gap-1 text-right text-[11px] text-neutral-500">
-                                        <span>Created: <span className="text-neutral-300 font-medium">{formatDate(key.expires_at ? key.created_at : key.created_at)}</span></span>
-                                        <span>Last used: <span className="text-neutral-300 font-medium">{formatDate(key.last_used_at ?? undefined)}</span></span>
-                                        {isActive && (
-                                            <button
-                                                onClick={() => handleRevoke(key.id)}
-                                                disabled={revokingId === key.id}
-                                                className="mt-2 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md border-2 border-brand-red/60 text-brand-red hover:bg-brand-red/10 disabled:opacity-50 disabled:cursor-not-allowed text-[10px] font-black uppercase tracking-widest cursor-pointer"
-                                            >
-                                                {revokingId === key.id ? (
-                                                    <>
-                                                        <RefreshCw size={13} className="animate-spin" /> Revoking…
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Trash2 size={13} /> Revoke
-                                                    </>
-                                                )}
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                )}
-
-                {/* Premium note */}
-                {tier === 'FREE' && (
-                    <div className="mt-4 flex items-start gap-3 border-2 border-brand-yellow/40 bg-brand-yellow/5 rounded-lg p-4">
-                        <Link2 size={18} className="text-brand-yellow shrink-0 mt-0.5" />
-                        <p className="text-xs text-neutral-300 leading-relaxed">
-                            Free accounts can search UI HUB components via MCP. To access <strong className="text-white">premium source code</strong>,
-                            templates, and higher usage limits, <a href="/pricing" className="text-brand-blue font-bold underline">upgrade to Pro</a>.
-                        </p>
-                    </div>
-                )}
-            </section>
-
-            {/* ── Connection Guide ── */}
-            <section>
-                <h2 className="text-2xl font-black uppercase tracking-tight text-white font-heading mb-4">Connect UI HUB to your AI</h2>
-
-                <div className="border-2 border-white bg-brand-surface rounded-lg overflow-hidden mb-6">
-                    <div className="border-b-2 border-white bg-brand-bg px-5 py-3 flex flex-wrap items-center justify-between gap-3">
-                        <div className="relative">
-                            <button
-                                onClick={() => setToolOpen((o) => !o)}
-                                className="inline-flex items-center gap-2.5 rounded-md border-2 border-white bg-black text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-widest hover:bg-neutral-900 transition-colors cursor-pointer"
-                            >
-                                <ToolLogo tool={activeTool} size={18} />
-                                <span style={{ color: activeTool.color }}>{activeTool.label}</span>
-                                <ChevronDown size={14} className={`transition-transform ${toolOpen ? 'rotate-180' : ''}`} />
-                            </button>
-
-                            {toolOpen && (
-                                <>
-                                    <div className="fixed inset-0 z-40" onClick={() => setToolOpen(false)} />
-                                    <div className="absolute top-full left-0 mt-2 z-50 w-72 rounded-lg border-2 border-white bg-brand-surface shadow-[4px_4px_0_0_#000] overflow-hidden">
-                                        {TOOLS.map((tool) => (
-                                            <button
-                                                key={tool.id}
-                                                onClick={() => { setActiveTool(tool); setToolOpen(false); }}
-                                                className={`w-full flex items-center gap-3 px-4 py-3 text-left transition-colors cursor-pointer ${activeTool.id === tool.id ? 'bg-neutral-900' : 'hover:bg-neutral-900/60'}`}
-                                            >
-                                                <span className="w-7 h-7 shrink-0 rounded-md border border-white/30 bg-black flex items-center justify-center p-1">
-                                                    <ToolLogo tool={tool} size={18} />
-                                                </span>
-                                                <span className="min-w-0 flex-1">
-                                                    <span className="block text-[11px] font-black uppercase tracking-widest text-white">{tool.label}</span>
-                                                    <span className="block text-[10px] text-neutral-400 truncate">{tool.hint}</span>
-                                                </span>
-                                                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: tool.color }} />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </>
-                            )}
-                        </div>
-
-                        <CopyButton red text={guideConfigText} label="Copy Config" warnsIfPlaceholder={guideNeedsReplacement} />
-                    </div>
-
-                    <div className="relative">
-                        <div className="absolute top-0 inset-x-0 h-1" style={{ backgroundColor: activeTool.color }} />
-                        <div className="flex items-center gap-2 px-5 pt-4 text-[10px] font-black uppercase tracking-widest text-neutral-400">
-                            <ToolLogo tool={activeTool} size={14} />
-                            <span style={{ color: activeTool.color }}>{activeTool.label}</span>
-                            <span className="text-neutral-600">· {activeTool.hint}</span>
-                        </div>
-                    </div>
-                    <JsonHighlight code={guideConfigText} isCli={activeTool.isCliCommand} />
-                </div>
-
-                {guideNeedsReplacement ? (
-                    <div className="flex items-start gap-2.5 border-2 border-brand-red/60 bg-brand-red/10 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300 mb-3">
-                        <AlertTriangle size={15} className="text-brand-red shrink-0 mt-0.5" />
-                        <span>
-                            <strong className="text-white">This config contains a placeholder — it will NOT connect as-is.</strong>{' '}
-                            Replace <code className="font-mono text-brand-yellow bg-neutral-900 px-1 rounded">YOUR_UI_HUB_API_KEY</code> with a key from the list above, or{' '}
-                            <strong className="text-white">create a key</strong> and click <em>Copy Full MCP JSON</em> for a ready-to-paste config with your real key already embedded.
-                        </span>
-                    </div>
-                ) : (
-                    <div className="flex items-start gap-2.5 border-2 border-brand-green/70 bg-brand-green/10 rounded-md px-4 py-3 text-[12px] font-medium text-neutral-300 mb-3">
-                        <ShieldCheck size={15} className="text-brand-green shrink-0 mt-0.5" />
-                        <span>
-                            <strong className="text-white">Your key is embedded.</strong>{' '}
-                            This config is ready to paste into {activeTool.label} — it already contains your real <code className="font-mono text-brand-green bg-neutral-900 px-1 rounded">uh_live_...</code> key.
-                        </span>
-                    </div>
-                )}
-
-                <p className="text-xs text-neutral-500 font-medium leading-relaxed">
-                    You can copy any single tool config — it pastes the exact structure that tool expects. The config above stays under the "Key Created" banner only; once you dismiss it, your key is hidden again for security and you'll need to replace the placeholder manually.
-                </p>
-            </section>
         </div>
     );
 };
