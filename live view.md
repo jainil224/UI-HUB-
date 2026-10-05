@@ -1,1565 +1,965 @@
-# UI HUB — Production Feature Task
-## Implement a Real, Persistent Template View Counter
+# UI HUB — Implement Real Component View Counter
 
-You are working on the **UI HUB** production codebase.
+I want to add the same real view-count system to the **Components section** of UI HUB.
 
-UI HUB is a platform for discovering and using modern UI components, templates, animations, backgrounds, and other frontend resources.
+Example component page:
 
-The current **Templates** page displays view counts such as:
+`/components/button/payment-transaction`
 
-- `3.9k`
-- `4.8k`
-- `4.2k`
+Currently the component detail page shows:
 
-These values are currently temporary/static/frontend-generated and are **not a real persistent view-counting system**.
+`👁 — views`
 
-Your task is to replace the temporary implementation with a **production-quality, database-backed template view tracking system using the existing UI HUB architecture and Supabase setup**.
+I want this to become a **real, persistent view count stored in Supabase**.
 
----
+## Main Requirement
 
-# 1. PRIMARY GOAL
-
-Implement a real template view system where:
-
-> When a user actually opens a template's detail/view page, that template receives a real persisted view.
-
-The view count must:
-
-- Be stored persistently in Supabase.
-- Be associated with the correct template.
-- Be displayed dynamically in the Templates UI.
-- Avoid counting the same visitor repeatedly through simple page refreshes.
-- Work for both authenticated and anonymous visitors.
-- Be secure against direct client-side database manipulation.
-- Work correctly after deployment on Vercel.
-- Preserve the existing UI/UX and visual design.
-- Avoid introducing unnecessary dependencies.
-
-Do **not** rebuild unrelated parts of the UI HUB application.
-
----
-
-# 2. FIRST: UNDERSTAND THE EXISTING CODEBASE
-
-Before changing code, inspect the existing project.
-
-Do not assume file names, database column names, route names, or component structure.
-
-Identify:
-
-### Frontend
-
-Find:
-
-- Templates listing page.
-- Template card component.
-- Template detail page.
-- Template routing.
-- Existing template data model/type/interface.
-- Existing API/service layer.
-- Existing Supabase client.
-- Authentication implementation.
-- Existing utility functions.
-- Existing state management approach.
-- Existing loading/error UI patterns.
-
-### Backend / Database
-
-Inspect:
-
-- Existing Supabase project integration.
-- Existing database schema.
-- Existing `templates` table.
-- Existing template primary key.
-- Existing template slug/id structure.
-- Existing RLS policies.
-- Existing database functions/RPCs.
-- Existing Edge Functions/API routes if present.
-- Existing migrations.
-- Existing analytics/event tables, if any.
-
-### Important
-
-Use the application's existing architecture and conventions.
-
-For example:
-
-If the application already uses:
+When a user actually opens/views a component detail page:
 
 ```text
-src/lib/supabase.ts
+User opens component page
+        ↓
+Component successfully loads
+        ↓
+Record ONE real view
+        ↓
+Supabase
+        ↓
+Component view count increases
 ```
 
-use the existing client.
+The count shown in the UI must come from the real database.
 
-If it has an established service layer, extend it instead of creating a second architecture.
+### VERY IMPORTANT
 
-If the project already has an API route or Supabase Edge Function pattern, follow that pattern.
+Do **NOT** create fake views.
 
-Do not create duplicate Supabase clients.
+Do NOT use:
 
-Do not introduce an entirely new backend architecture just for this feature.
+- `Math.random()`
+- hardcoded counts
+- generated/random starting numbers
+- frontend-only counters
+- artificial increments
+- fake seed analytics
+- fake "popular" numbers
 
----
+If a component has never been viewed, its real count must be:
 
-# 3. IMPORTANT VIEW-DEFINITION RULE
-
-A view should be recorded when a user **actually opens the template detail page**.
-
-Do NOT count:
-
-- Template cards appearing in the Templates listing.
-- Template cards being rendered.
-- Scrolling through the Templates page.
-- Hovering over a card.
-- Image loading.
-- Search results appearing.
-- Lazy loading.
-- Prefetching.
+`0`
 
 Example:
 
 ```text
-User opens /templates
+New Component
+👁 0 views
+```
+
+After one valid visitor opens it:
+
+```text
+👁 1 view
+```
+
+After another valid unique session opens it:
+
+```text
+👁 2 views
+```
+
+The database must be the source of truth.
+
+---
+
+# 1. FIRST INSPECT THE EXISTING TEMPLATE VIEW SYSTEM
+
+Before implementing anything, inspect the real view-count system already implemented for **Templates**.
+
+Find:
+
+- view table/schema
+- database function/RPC
+- API route or service
+- session ID logic
+- duplicate protection
+- RLS policies
+- view-count query
+- formatting utility
+- frontend tracking hook/function
+
+### IMPORTANT
+
+Do NOT create a completely separate view-count architecture for Components if the existing Template system can be reused.
+
+Prefer extending/generalizing the current architecture.
+
+For example, if the existing system can support:
+
+```text
+content_type
+content_id
+session_id
+created_at
+```
+
+extend it properly.
+
+If the current system is template-specific and cannot safely support Components, create the minimum necessary extension while keeping the architecture consistent.
+
+Avoid duplicate systems such as:
+
+```text
+templateViews.ts
+componentViews.ts
+templateAnalytics.ts
+componentAnalytics.ts
+```
+
+when a reusable implementation is possible.
+
+---
+
+# 2. WHAT COUNTS AS A COMPONENT VIEW?
+
+A component view should be recorded only when the user actually opens the **component detail page**.
+
+For example:
+
+```text
+/components
+```
+
+shows 141 components.
+
+This does NOT create 141 views.
+
+Scrolling through the Components page does NOT create a view.
+
+Rendering component cards does NOT create a view.
+
+Hovering over a component does NOT create a view.
+
+Loading a preview image does NOT create a view.
+
+Search results appearing does NOT create a view.
+
+Only:
+
+```text
+User opens:
+
+/components/button/payment-transaction
+
+        ↓
+
+Component detail page loads successfully
+
+        ↓
+
+Record view
+```
+
+---
+
+# 3. COMPONENT LIST PAGE
+
+The Components listing/sidebar/card UI must use real database counts.
+
+If a component currently displays:
+
+```text
+👁 — views
+```
+
+replace it with the actual count.
+
+Examples:
+
+```text
+👁 0
+👁 1
+👁 25
+👁 1.2k
+👁 4.8k
+```
+
+Do not change the existing visual design unnecessarily.
+
+Keep the current UI HUB design, typography, spacing, icons, and layout.
+
+Only replace the fake/placeholder source with real data.
+
+---
+
+# 4. COMPONENT DETAIL PAGE
+
+On a component detail page such as:
+
+```text
+/components/button/payment-transaction
+```
+
+record the view after the component has been successfully identified/loaded.
+
+Recommended flow:
+
+```text
+Route loads
+   ↓
+Read component slug/id
+   ↓
+Find component
+   ↓
+Verify component exists
+   ↓
+Render component page
+   ↓
+Get current browser session ID
+   ↓
+Record view
+```
+
+Do not attempt to record a view for an invalid/nonexistent component.
+
+---
+
+# 5. DUPLICATE VIEW PROTECTION
+
+Do not increment the database every time the page refreshes.
+
+Use the same session-based duplicate protection as the Template View system.
+
+Desired behavior:
+
+```text
+Session A
     ↓
-30 templates displayed
+Open Payment Transaction
     ↓
-NO views are recorded
++1 view
+
+Refresh Payment Transaction
+    ↓
++0
+
+Navigate away and return during same session
+    ↓
++0
 ```
 
 Then:
 
 ```text
-User clicks "Mood Hero"
+Session B
     ↓
-/templates/mood-hero opens
+Open Payment Transaction
     ↓
-Record one view
++1
 ```
 
-This distinction is extremely important.
+For a different component:
+
+```text
+Session A
+    ↓
+Open Payment Transaction
+    ↓
++1
+
+Open Magic Card Effect
+    ↓
++1
+```
+
+So the uniqueness should conceptually be:
+
+```text
+component_id + session_id
+```
 
 ---
 
-# 4. DUPLICATE VIEW PROTECTION
+# 6. DATABASE MUST BE THE FINAL PROTECTION
 
-Do not implement:
+Frontend logic alone is NOT enough.
 
-```text
-Every page refresh = +1
-```
+Even if the frontend accidentally sends the request twice, the database must prevent duplicate counting.
 
-That would make the analytics inaccurate.
-
-The desired behavior is:
+Use a database-level unique constraint/index or equivalent mechanism:
 
 ```text
-User opens template
-→ +1 view
-
-User refreshes same template during same browser session
-→ +0
-
-User revisits same template during the same session
-→ +0
-
-User opens a different template
-→ +1
-
-New browser session later
-→ can generate another view
+UNIQUE(component_id, session_id)
 ```
 
-Use a lightweight anonymous visitor/session mechanism.
-
-Prefer:
+or, if using a generalized content-view table:
 
 ```text
-sessionStorage
+UNIQUE(content_type, content_id, session_id)
 ```
 
-for the client-side session identifier.
+The exact implementation must match the existing UI HUB schema.
 
-Generate a random UUID once per browser session:
+---
+
+# 7. ATOMIC VIEW RECORDING
+
+The operation must be atomic.
+
+Conceptually:
+
+```text
+Attempt to insert view event
+        ↓
+Was it new?
+   /            \
+ YES            NO
+ ↓              ↓
++1 view        +0
+```
+
+Do NOT perform unsafe frontend logic such as:
+
+```javascript
+views = views + 1
+```
+
+followed by a direct update.
+
+The trusted database/server operation must determine whether the view is new.
+
+---
+
+# 8. SESSION ID
+
+Reuse the existing Template session-ID implementation.
+
+Do not create another unrelated session system.
+
+The session identifier should be generated once per browser session and reused.
+
+Conceptually:
 
 ```text
 uihub_view_session_id
 ```
 
-Example conceptual flow:
-
-```text
-sessionStorage
-    ↓
-Get existing session ID
-    ↓
-If missing:
-    generate UUID
-    store it
-    ↓
-Open template
-    ↓
-send template ID + session ID
-    ↓
-server/database determines whether this session already viewed it
-```
-
-Do NOT use IP addresses as the primary deduplication mechanism.
-
-Do NOT store unnecessary personal information.
+Use the same mechanism already used by Templates unless there is a strong architectural reason not to.
 
 ---
 
-# 5. DATABASE DESIGN
+# 9. AUTHENTICATED + ANONYMOUS USERS
 
-Use the existing database schema discovered during the initial investigation.
+Both must be supported.
 
-If there is already a suitable analytics/view table, reuse or extend it rather than creating a duplicate system.
-
-If no suitable structure exists, implement a dedicated table similar to:
-
-```sql
-template_views
-```
-
-Recommended conceptual structure:
+Anonymous visitor:
 
 ```text
-template_views
------------------------------
-id
-template_id
-session_id
-user_id        nullable
-created_at
+user_id = null
+session_id = valid session ID
 ```
 
-Where:
+Logged-in visitor:
 
-- `id` = unique event ID
-- `template_id` = reference to the template
-- `session_id` = anonymous browser-session identifier
-- `user_id` = authenticated user ID if available
-- `created_at` = timestamp
+```text
+user_id = authenticated user ID
+session_id = valid session ID
+```
 
-The exact data types must match the existing UI HUB schema.
-
-For example, if templates use UUID primary keys, use UUID.
-
-If templates use integer IDs, use integer.
-
-Do not blindly copy this schema without checking the existing database.
+Do not require login just to count a component view.
 
 ---
 
-# 6. UNIQUE CONSTRAINT
+# 10. NO FAKE INITIAL COUNTS
 
-The database itself must protect against duplicate views.
+This requirement is critical.
 
-Create a unique constraint/index conceptually equivalent to:
+Do not convert:
 
-```sql
-UNIQUE(template_id, session_id)
+```text
+0
 ```
 
-This is important because frontend-only duplicate protection is not enough.
+into:
 
-Two browser requests could arrive simultaneously.
+```text
+1.4k
+3.7k
+12.5k
+```
 
-The database must remain the final authority.
+just to make UI HUB look popular.
+
+Do not seed artificial historical views.
+
+Do not generate random values.
+
+Do not add fake "base views".
+
+Real analytics must start from real events.
+
+If existing components already contain fake/hardcoded view numbers, identify them and remove/replace them with the real database value.
+
+---
+
+# 11. EXISTING COMPONENT IDENTIFICATION
+
+Inspect how UI HUB identifies Components.
+
+It may use:
+
+```text
+component_id
+slug
+category
+component key
+database ID
+registry ID
+```
+
+Use the application's canonical stable identifier.
+
+Do NOT use the component display name as the database primary relationship if a stable ID already exists.
 
 For example:
 
 ```text
-Request A → template 123 + session ABC
-Request B → template 123 + session ABC
-
-Both arrive nearly simultaneously
-
-Database
-→ only one view event is accepted
+Payment Transaction
 ```
 
-This makes the system race-condition resistant.
+should not be the primary identifier if the component already has:
+
+```text
+payment-transaction
+```
+
+or a database UUID.
+
+Use the existing architecture.
 
 ---
 
-# 7. VIEW COUNT IMPLEMENTATION
+# 12. SUPABASE SECURITY
 
-There are two acceptable architectures.
+Follow the same security model already implemented for Templates.
 
-Choose the one that best matches the existing UI HUB backend.
-
-## Preferred architecture
-
-Use:
-
-```text
-template_views
-+
-atomic server/database operation
-```
-
-When a new unique view is recorded:
-
-```text
-template_views INSERT succeeds
-        ↓
-template view count increments
-```
-
-Do not trust the frontend to increment the number.
-
-The frontend must never execute something conceptually equivalent to:
-
-```javascript
-views + 1
-```
-
-and then write that value to the database.
-
-The increment must happen atomically on the trusted side.
-
----
-
-# 8. SUPABASE RPC / DATABASE FUNCTION
-
-If appropriate for the existing architecture, create a PostgreSQL function/RPC similar conceptually to:
-
-```text
-record_template_view(template_id, session_id)
-```
-
-Responsibilities:
-
-1. Validate template ID.
-2. Validate session ID.
-3. Attempt to create a unique view event.
-4. Ignore duplicate event for the same template/session.
-5. Increment the total view count only if a new view was created.
-6. Return the resulting count and whether a new view was recorded.
-
-Conceptual response:
-
-```json
-{
-  "view_recorded": true,
-  "views": 4830
-}
-```
-
-For a duplicate:
-
-```json
-{
-  "view_recorded": false,
-  "views": 4830
-}
-```
-
-The exact implementation should follow the project's current Supabase conventions.
-
----
-
-# 9. SECURITY REQUIREMENTS
-
-Security is important.
-
-Do not expose any privileged Supabase credentials to the browser.
-
-Never put:
+Do NOT expose:
 
 ```text
 SUPABASE_SERVICE_ROLE_KEY
 ```
 
-in frontend code.
+to client-side code.
 
-Never expose a service-role key through:
+Never place privileged secrets in:
 
 ```text
 VITE_*
 NEXT_PUBLIC_*
-PUBLIC_*
 ```
 
-or equivalent client-side variables.
+or equivalent public environment variables.
 
-If a service-role operation is required, it must remain server-side.
+Anonymous users must not receive unrestricted permission to modify component rows.
 
----
-
-# 10. RLS / DATABASE ACCESS
-
-Inspect the existing RLS configuration.
-
-The final implementation must follow least-privilege principles.
-
-Anonymous users should be able to record a legitimate template view through the intended controlled mechanism without receiving unrestricted write access to the templates table.
-
-For example, do NOT simply make the entire templates table publicly writable.
-
-Avoid policies equivalent to:
-
-```sql
-UPDATE templates
-USING (true)
-```
-
-for anonymous users.
-
-The user should only be able to invoke the intended view-recording operation.
+Use the existing RPC/API/server-side mechanism for recording views.
 
 ---
 
-# 11. ABUSE RESISTANCE
+# 13. RLS
 
-A client-controlled session ID is not a perfect anti-fraud mechanism.
+Inspect existing Row Level Security policies.
 
-A technically sophisticated user could generate many session IDs.
-
-Therefore:
-
-- Do not claim this system provides perfect fraud prevention.
-- Do provide sensible duplicate protection.
-- Keep the database authoritative.
-- Add basic validation for session IDs.
-- Prevent obviously malformed requests.
-- Follow any existing application rate-limiting architecture.
-
-If UI HUB already has an API/Edge Function rate-limiter, integrate with it.
-
-If there is no rate-limiting infrastructure, do not build a giant separate system for this task unless the existing architecture makes it easy.
-
-A future advanced analytics system can introduce stronger bot/fraud detection.
-
----
-
-# 12. AUTHENTICATED USERS
-
-UI HUB supports user accounts.
-
-The implementation should work for:
-
-### Anonymous user
+The final architecture should allow legitimate view tracking without allowing users to arbitrarily execute:
 
 ```text
-user_id = null
-session_id = generated browser session ID
+UPDATE components
+SET views = 999999999
 ```
 
-### Logged-in user
+The browser must never be able to directly manipulate the component's total view count.
+
+The database/server controls the increment.
+
+---
+
+# 14. VIEW COUNTER MUST NEVER BREAK THE PAGE
+
+This is especially important because the previous Template implementation caused a blank screen.
+
+The new component view tracking must be isolated from the component page rendering.
+
+If the view request fails:
 
 ```text
-user_id = authenticated user's ID
-session_id = browser session ID
+Component page still loads.
+Component preview still works.
+Code tab still works.
+Vibe Prompt still works.
+Fullscreen still works.
+Sidebar still works.
 ```
 
-Do not make authentication mandatory for counting views.
-
-The template should still record views for users who are not logged in.
-
----
-
-# 13. WHEN TO TRIGGER THE VIEW
-
-Trigger the view tracking from the **template detail page**, not from the template card.
-
-The preferred lifecycle is:
+A failed analytics/view request must NOT produce:
 
 ```text
-Template detail page mounts
-        ↓
-Template exists and has loaded
-        ↓
-Generate/retrieve session ID
-        ↓
-Record view
+blank screen
+white screen
+black screen
+runtime crash
+component rendering failure
 ```
 
-Make sure the event is not fired multiple times because of:
-
-- React Strict Mode.
-- Component re-renders.
-- State updates.
-- Dependency changes.
-- Navigation transitions.
-- Development-mode behavior.
-
-For React, carefully design the effect/dependency structure so the view operation is logically triggered only once per template/session.
+The view tracker should fail gracefully.
 
 ---
 
-# 14. IMPORTANT: STRICT MODE
+# 15. REACT SAFETY
 
-React development mode can cause effects to execute more than once.
+Inspect React lifecycle behavior carefully.
 
-Do not assume:
+Make sure view tracking does not execute unnecessarily because of:
 
-```javascript
-useEffect(() => {
-   recordView();
-}, []);
-```
+- React Strict Mode
+- re-rendering
+- state changes
+- route changes
+- query changes
+- component preview state
+- tab switching
 
-automatically guarantees exactly one network/database call in all circumstances.
-
-Use the database uniqueness rule as the true safety mechanism, and where useful also prevent unnecessary duplicate client calls.
-
-The system must remain correct even if the request is accidentally sent twice.
-
-The database must still count only one view.
+The database uniqueness rule must still guarantee correctness if the client accidentally sends two requests.
 
 ---
 
-# 15. TEMPLATE LIST PAGE
+# 16. DO NOT COUNT TAB SWITCHES
 
-The Templates listing page should consume the real database-backed count.
+The detail page contains sections such as:
 
-Replace temporary logic such as:
-
-```javascript
-Math.random()
+```text
+PREVIEW
+CODE
+VIBE PROMPT
 ```
 
-or hardcoded values such as:
-
-```javascript
-3.9
-4.8
-4.2
-```
-
-where those values are being used as fake view counts.
-
-The card should display the actual template view count.
+Switching between these tabs must NOT generate additional views.
 
 Example:
 
 ```text
-👁 4.83k
+Open component
+→ +1
+
+Click CODE
+→ +0
+
+Click VIBE PROMPT
+→ +0
+
+Return to PREVIEW
+→ +0
 ```
 
-The existing visual design must remain consistent.
-
-Do not redesign the entire card.
+The view belongs to the component page visit, not each UI interaction.
 
 ---
 
-# 16. NUMBER FORMATTING
+# 17. FULLSCREEN
 
-Create/reuse a utility for formatting view counts.
+Opening the component preview in fullscreen should NOT create another view if the user has already viewed the component.
 
-Expected behavior:
-
-```text
-0        → 0
-12       → 12
-999      → 999
-1000     → 1k
-1200     → 1.2k
-3912     → 3.9k
-4829     → 4.8k
-10000    → 10k
-125000   → 125k
-1000000  → 1M
-```
-
-Match the existing UI HUB typography and formatting style.
-
-Do not display excessive decimal places.
-
-Avoid:
+Example:
 
 ```text
-4.829000k
-```
+Open component
+→ +1
 
-Prefer:
-
-```text
-4.8k
+Click FULLSCREEN
+→ +0
 ```
 
 ---
 
-# 17. DETAIL PAGE VIEW DISPLAY
+# 18. SIDEBAR NAVIGATION
 
-If the template detail page already displays a view count, update it to use the same real data source.
+The component sidebar contains many components.
 
-There should be only one source of truth.
+Clicking:
+
+```text
+Payment Transaction
+```
+
+should produce one view for that component.
+
+Then clicking:
+
+```text
+Magic Card Effect
+```
+
+should produce one view for the second component.
+
+The route change must correctly identify the newly opened component.
+
+Make sure stale component IDs/slugs are not reused.
+
+---
+
+# 19. SPA ROUTING
+
+UI HUB appears to use client-side routing.
+
+Test navigation such as:
+
+```text
+Component A
+   ↓
+Component B
+   ↓
+Component C
+```
+
+without a full browser refresh.
+
+Each distinct component should correctly trigger its own valid view event.
+
+Do not rely solely on the initial application mount.
+
+Watch for route parameter changes.
+
+---
+
+# 20. PERFORMANCE
+
+Do not introduce an N+1 query problem.
+
+If the Components page contains 100+ components, do NOT make 100 separate database calls just to display counts.
+
+Retrieve view counts efficiently using the existing component query/data layer.
+
+Use the existing architecture wherever possible.
+
+---
+
+# 21. NUMBER FORMATTING
+
+Reuse the existing view-count formatter from Templates.
+
+For example:
+
+```text
+0 → 0
+1 → 1
+25 → 25
+999 → 999
+1000 → 1k
+1200 → 1.2k
+3912 → 3.9k
+4829 → 4.8k
+10000 → 10k
+1000000 → 1M
+```
+
+Do not create a second formatting utility if one already exists.
+
+---
+
+# 22. TEST THESE EXACT SCENARIOS
+
+### Scenario 1 — First component view
+
+```text
+Initial count = 0
+
+Open Payment Transaction
+
+Expected:
+count = 1
+```
+
+### Scenario 2 — Refresh
+
+```text
+Refresh Payment Transaction
+
+Expected:
+count remains 1
+```
+
+### Scenario 3 — Same session revisit
+
+```text
+Leave page
+Return to Payment Transaction
+
+Expected:
+count remains 1
+```
+
+### Scenario 4 — Different component
+
+```text
+Open Magic Card Effect
+
+Expected:
+its count increases by 1
+```
+
+### Scenario 5 — New session
+
+```text
+New browser session
+Open Payment Transaction
+
+Expected:
+count can increase by 1
+```
+
+### Scenario 6 — View tracking failure
+
+Simulate database/API failure.
+
+Expected:
+
+```text
+Component page still renders normally.
+```
+
+### Scenario 7 — Invalid component
+
+Open an invalid component route.
+
+Expected:
+
+```text
+Normal not-found/error handling.
+No view event.
+No runtime crash.
+```
+
+### Scenario 8 — Direct URL
+
+Open:
+
+```text
+/components/button/payment-transaction
+```
+
+directly.
+
+Expected:
+
+```text
+Component loads.
+View records once.
+```
+
+### Scenario 9 — SPA navigation
+
+```text
+Payment Transaction
+↓
+Magic Card Effect
+↓
+Rainbow Button
+```
+
+Each component should correctly process its own view.
+
+---
+
+# 23. TEST FOR FAKE VIEW POSSIBILITY
+
+Do a final audit specifically for fake views.
+
+Search the codebase for:
+
+```text
+Math.random
+random views
+fake views
+mock views
+hardcoded views
+placeholder views
+base views
+views + random
+```
+
+Remove or replace any implementation responsible for displaying fake component view counts.
+
+The final number must have a clear path:
+
+```text
+REAL USER VIEW
+      ↓
+REAL EVENT
+      ↓
+SUPABASE
+      ↓
+REAL COUNT
+      ↓
+UI
+```
+
+There must NOT be a path:
+
+```text
+frontend
+   ↓
+fake number
+   ↓
+UI
+```
+
+---
+
+# 24. USE ONE SOURCE OF TRUTH
+
+The Components listing and Component detail page must use the same real persisted count.
 
 Do not have:
 
 ```text
-Templates card → fake count
-Template detail → database count
+Component listing → fake count
+Component detail → real count
 ```
 
-Both should use the same persisted value.
+Both should use the database-backed value.
 
 ---
 
-# 18. REAL-TIME UI UPDATE
+# 25. DO NOT BREAK EXISTING UI
 
-After the user opens a template and the database records a new view, update the displayed count appropriately.
-
-Example:
-
-Before:
-
-```text
-👁 4.8k
-```
-
-After a new view:
-
-```text
-👁 4.8k
-```
-
-The number may visually remain `4.8k` because of rounding.
-
-The underlying value should still have changed:
-
-```text
-4829 → 4830
-```
-
-If the exact number is displayed:
-
-```text
-4829 → 4830
-```
-
-Do not fake an animation or increment in the UI unless the database operation succeeded.
-
----
-
-# 19. ERROR HANDLING
-
-View tracking must never break the template page.
-
-If recording the view fails:
-
-```text
-Template still loads normally.
-```
-
-Do not show a blocking error such as:
-
-```text
-Failed to load template because view tracking failed.
-```
-
-Instead:
-
-```text
-Template content → continue working
-View tracking → fail gracefully
-```
-
-Log useful information for debugging without leaking secrets.
-
----
-
-# 20. LOADING BEHAVIOR
-
-Do not block the main template rendering while waiting for the view count event.
-
-The preferred behavior:
-
-```text
-Template loads
-    ↓
-User can see/use template
-    ↓
-View tracking runs asynchronously
-```
-
-Do not make view tracking a critical dependency for loading the template.
-
----
-
-# 21. EXISTING TEMPLATE DATA
-
-Before implementing the migration, determine where the current displayed numbers come from.
-
-Possible cases:
-
-### Case A — Already real database values
-
-Preserve them.
-
-### Case B — Hardcoded placeholder values
-
-Do NOT silently claim these numbers are real.
-
-Determine whether they are intentionally seeded values or temporary demo values.
-
-If they are confirmed fake placeholders, the new database field/event system should establish the real starting point.
-
-Do not invent historical views.
-
-Do not fabricate analytics.
-
-If a migration is needed, make the initial state explicit and documented.
-
----
-
-# 22. DATABASE MIGRATION
-
-Create a proper migration following the project's existing migration conventions.
-
-The migration should:
-
-- Create the required view/event table if needed.
-- Add appropriate foreign keys.
-- Add the unique constraint.
-- Add indexes needed for efficient counting/querying.
-- Add/update the view-count column only if required.
-- Create the RPC/database function if using RPC.
-- Configure appropriate security/RLS.
-- Avoid destructive changes.
-- Be reproducible on a fresh database.
-
-Do not manually edit production data without a migration or clearly documented SQL.
-
----
-
-# 23. PERFORMANCE
-
-The Templates page can contain many cards.
-
-Do NOT execute:
-
-```text
-1 query per template card
-```
-
-For example, avoid:
-
-```text
-Template 1 → SELECT views
-Template 2 → SELECT views
-Template 3 → SELECT views
-...
-Template 30 → SELECT views
-```
-
-This creates an N+1 query problem.
-
-The list page should retrieve view counts together with the template data using the most efficient existing query/schema approach.
-
-Examples include:
-
-```text
-templates.views
-```
-
-or:
-
-```text
-aggregate view counts in one query
-```
-
-depending on the existing architecture.
-
----
-
-# 24. INDEXING
-
-If using an event table, create indexes appropriate to actual query patterns.
-
-At minimum consider:
-
-```text
-(template_id, session_id)
-```
-
-for uniqueness/deduplication.
-
-Also consider:
-
-```text
-template_id
-```
-
-for analytics/count retrieval.
-
-Do not create unnecessary indexes.
-
----
-
-# 25. ANALYTICS-FRIENDLY DESIGN
-
-Design the feature so UI HUB can later support:
-
-```text
-Views today
-Views this week
-Views this month
-Trending templates
-Most viewed templates
-Views by category
-Views by date
-```
-
-Therefore, preserve:
-
-```text
-created_at
-template_id
-```
-
-in the event data.
-
-Do not only store a number and throw away the event information if an event table is practical in the existing architecture.
-
----
-
-# 26. FUTURE "TRENDING" SUPPORT
-
-Do not implement full trending logic in this task unless it already exists.
-
-However, the schema should make future queries possible, for example:
-
-```text
-Most viewed templates in last 7 days
-```
-
-This is one reason to retain individual view events.
-
----
-
-# 27. TEMPLATE IDENTIFICATION
-
-Use the existing canonical template identifier.
-
-Do not identify templates using:
-
-```text
-template name
-```
-
-if the application already has:
-
-```text
-template_id
-```
-
-or:
-
-```text
-slug
-```
-
-Prefer the stable primary key for database relationships.
-
-The agent should inspect the current implementation and choose the canonical identifier already used by the project.
-
----
-
-# 28. CLIENT SESSION ID
-
-Create a small reusable utility/service for the session identifier.
-
-Conceptual behavior:
-
-```typescript
-function getViewSessionId(): string {
-  // Get existing session ID
-  // If missing, create UUID
-  // Store it in sessionStorage
-  // Return it
-}
-```
-
-Use a namespaced key such as:
-
-```text
-uihub_view_session_id
-```
-
-Avoid generic keys like:
-
-```text
-session
-```
-
-that could conflict with unrelated application code.
-
----
-
-# 29. PRIVACY
-
-Do not collect unnecessary personal data.
-
-For anonymous view tracking, the basic information should be enough:
-
-```text
-template_id
-session_id
-timestamp
-optional authenticated user ID
-```
-
-Do not introduce:
-
-```text
-phone number
-email
-full IP address
-precise location
-```
-
-unless already required and legitimately handled by an existing analytics/privacy system.
-
----
-
-# 30. BOT / CRAWLER CONSIDERATION
-
-Search engine crawlers and automated bots may access template URLs.
-
-Do not build a complicated crawler-detection system during this task.
-
-However:
-
-- The view system should not be triggered merely by template cards being indexed/rendered.
-- Do not intentionally manufacture views through SEO crawlers.
-- Keep the architecture extensible for future bot filtering.
-
----
-
-# 31. UI DETAILS
-
-The existing Templates page design in the supplied screenshot should remain visually consistent.
-
-Current card structure approximately contains:
-
-```text
-Template preview
-Template title
-Eye icon
-View count
-```
+Do not redesign the component page shown in the screenshot.
 
 Keep:
 
-```text
-👁 3.9k
-```
+- Left component navigation
+- Component title
+- Breadcrumb
+- Preview / Code / Vibe Prompt tabs
+- Fullscreen button
+- Favorite button
+- Share button
+- PRO panel
+- Existing preview area
+- Existing typography/layout
 
-style rather than introducing a large new analytics element.
-
-Only change the source of the number.
-
-The feature should feel native to UI HUB.
-
----
-
-# 32. ACCESSIBILITY
-
-Make sure the eye icon is accessible.
-
-For example:
-
-```html
-<span aria-label="3,912 views">
-```
-
-or an equivalent accessible implementation consistent with the existing UI.
-
-Do not rely exclusively on the icon to communicate the meaning.
+Only integrate the real view counter.
 
 ---
 
-# 33. TYPESCRIPT
+# 26. FINAL VALIDATION
 
-The feature must be fully typed.
-
-Add appropriate types for:
+Before saying the task is complete, run the available:
 
 ```text
-Template
-TemplateView
-RecordTemplateViewResponse
-```
-
-or integrate into existing types.
-
-Avoid:
-
-```typescript
-any
-```
-
-unless there is a legitimate unavoidable reason.
-
----
-
-# 34. TESTING REQUIREMENTS
-
-Add/update tests following existing UI HUB testing conventions.
-
-At minimum test:
-
-### Unit tests
-
-Session ID:
-
-```text
-No session ID
-→ creates ID
-```
-
-```text
-Existing session ID
-→ reuses same ID
-```
-
-View formatting:
-
-```text
-0
-12
-999
-1000
-3912
-4829
-1000000
-```
-
-### Database/API tests
-
-Test:
-
-```text
-First view
-→ creates event
-→ increments count
-```
-
-Duplicate:
-
-```text
-Same template + same session
-→ does not create second event
-→ does not increment count
-```
-
-Different template:
-
-```text
-Different template + same session
-→ new event
-→ increment
-```
-
-Different session:
-
-```text
-Same template + different session
-→ new event
-→ increment
-```
-
-Authenticated user:
-
-```text
-logged-in user
-→ event contains user_id where appropriate
-```
-
-Anonymous user:
-
-```text
-anonymous user
-→ event still works
-```
-
-Invalid input:
-
-```text
-invalid template ID
-invalid session ID
-→ safely rejected
-```
-
-Failure case:
-
-```text
-tracking request fails
-→ template still renders
-```
-
----
-
-# 35. REACT / FRONTEND TEST
-
-Specifically verify that development-mode behavior does not produce inflated counts.
-
-Test or reason through:
-
-```text
-React Strict Mode
-Component mount
-Component re-render
-Route parameter change
-Back/forward navigation
-```
-
-The database constraint must guarantee correctness.
-
----
-
-# 36. END-TO-END TEST
-
-Create an end-to-end flow where practical:
-
-```text
-Open Templates
-↓
-Open template
-↓
-Verify view event/count
-↓
-Refresh
-↓
-Verify no duplicate increment
-```
-
-Then:
-
-```text
-Open another template
-↓
-Verify second template count increments
-```
-
----
-
-# 37. CACHE / STALE DATA
-
-Inspect whether UI HUB uses:
-
-```text
-React Query
-SWR
-server caching
-Next.js caching
-custom caching
-```
-
-or another data layer.
-
-Make sure the new view count does not become permanently stale because of aggressive caching.
-
-Do not disable caching across the entire application.
-
-Only invalidate/refetch the relevant template data where required.
-
----
-
-# 38. PRODUCTION DEPLOYMENT
-
-The implementation must work in production.
-
-Before considering the task complete, verify:
-
-```text
-Local development
-✓
-
-Production build
-✓
-
 TypeScript
-✓
-
 Lint
-✓
-
-Tests
-✓
-
-Supabase migration
-✓
-
-Template listing
-✓
-
-Template detail page
-✓
-
-Anonymous view
-✓
-
-Duplicate protection
-✓
+Unit tests
+Integration tests
+Production build
 ```
 
-Do not consider the feature complete merely because the local UI appears correct.
-
----
-
-# 39. ENVIRONMENT VARIABLES
-
-Inspect current environment configuration.
-
-Do not introduce unnecessary environment variables.
-
-Never expose privileged secrets to the frontend.
-
-Use the existing public Supabase configuration for normal client operations.
-
-If a server-side function requires privileged credentials, use the existing secure server environment convention.
-
----
-
-# 40. IMPORTANT: DO NOT BREAK EXISTING FEATURES
-
-While implementing this feature, do not unintentionally modify:
-
-- Template design.
-- Template filtering.
-- Template search.
-- Template categories.
-- Pagination/infinite scrolling.
-- Template preview.
-- Authentication.
-- Likes.
-- Favorites.
-- Pricing.
-- PRO features.
-- MCP functionality.
-- Existing analytics.
-- Existing SEO/AEO/GEO implementation.
-
-Only modify related code when necessary to integrate real view tracking.
-
----
-
-# 41. FILE/ARCHITECTURE DISCIPLINE
-
-Before creating new files:
-
-1. Search for existing utilities.
-2. Search for existing Supabase helpers.
-3. Search for existing template service code.
-4. Search for existing analytics/event functionality.
-5. Reuse existing abstractions where possible.
-
-Do not create:
+Also manually verify:
 
 ```text
-supabase2.ts
-analytics2.ts
-templateService2.ts
+/components
+/components/button/payment-transaction
 ```
 
-or duplicate functionality.
+and at least 2–3 additional component routes.
 
-Keep the final implementation clean and maintainable.
+Make sure the page does NOT become blank.
 
 ---
 
-# 42. OBSERVABILITY
+# 27. FINAL REPORT
 
-Add useful debugging information where appropriate.
+After implementation, report:
 
-For example:
+### Root architecture
 
-```text
-View recorded successfully
-Duplicate view ignored
-View tracking failed
-```
+Explain whether you:
 
-Do not log:
-
-- Supabase secret keys.
-- Auth tokens.
-- Sensitive user information.
-- Full personal data.
-
-Prefer production-safe structured logging consistent with the existing application.
-
----
-
-# 43. FINAL USER EXPERIENCE
-
-The final behavior should look like this:
-
-```text
-                  UI HUB
-                    │
-                    ▼
-             Templates Page
-                    │
-                    │
-            User clicks template
-                    │
-                    ▼
-             Template Detail
-                    │
-                    ▼
-          Get browser session ID
-                    │
-                    ▼
-         Record template view
-                    │
-                    ▼
-                Supabase
-                    │
-          ┌─────────┴─────────┐
-          │                   │
-     New session/view      Duplicate
-          │                   │
-          ▼                   ▼
-       +1 view             +0 view
-          │                   │
-          └─────────┬─────────┘
-                    ▼
-              Real count
-                    │
-                    ▼
-              UI HUB displays
-                👁 4.8k
-```
-
----
-
-# 44. ACCEPTANCE CRITERIA
-
-The task is complete only when all of the following are true:
+- reused the Template view infrastructure, or
+- extended it, or
+- created a minimal component-specific extension.
 
 ### Database
 
-- [ ] Template views persist in Supabase.
-- [ ] Each view references the correct template.
-- [ ] Anonymous users can generate views.
-- [ ] Logged-in users can generate views.
-- [ ] Duplicate template/session views are prevented at database level.
-- [ ] View count increment is atomic.
-- [ ] Appropriate indexes exist.
-- [ ] RLS/security is correctly configured.
-- [ ] No service-role secret is exposed client-side.
+Show:
+
+- table/function changes
+- unique constraint
+- indexes
+- security/RLS changes
 
 ### Frontend
 
-- [ ] Template detail page records the view.
-- [ ] Templates listing displays real database-backed counts.
-- [ ] Existing fake/random/hardcoded view count logic is removed where applicable.
-- [ ] Refreshing the same template does not repeatedly increment the count in the same session.
-- [ ] Opening another template records another view.
-- [ ] View tracking does not block template rendering.
-- [ ] Tracking failures do not break the page.
+Show:
 
-### Quality
+- component detail integration
+- session handling
+- count display
 
-- [ ] TypeScript passes.
-- [ ] Lint passes.
-- [ ] Existing tests continue passing.
-- [ ] New tests cover view tracking.
-- [ ] Production build succeeds.
-- [ ] No unrelated UI regressions.
-- [ ] Code follows existing UI HUB architecture.
+### Anti-fake protection
 
----
+Explain exactly why the displayed count is a real persisted value and how duplicate requests are prevented.
 
-# 45. IMPORTANT IMPLEMENTATION RULE
-
-Do not immediately start writing code.
-
-First perform:
-
-```text
-DISCOVERY
-→ existing template architecture
-→ existing Supabase architecture
-→ existing database schema
-→ existing routing
-→ existing auth
-→ existing analytics
-→ existing tests
-```
-
-Then produce a short internal implementation assessment.
-
-After that:
-
-```text
-DATABASE
-→ migration/schema/RLS/function
-
-BACKEND
-→ view recording logic
-
-FRONTEND
-→ session ID
-→ template detail tracking
-→ real count display
-
-TESTING
-→ unit
-→ integration
-→ E2E where applicable
-
-VALIDATION
-→ typecheck
-→ lint
-→ build
-→ tests
-```
-
----
-
-# 46. DO NOT MAKE THESE MISTAKES
-
-Never implement view counting using only:
-
-```javascript
-setViews(views + 1)
-```
-
-Never rely only on:
-
-```javascript
-localStorage
-```
-
-for database integrity.
-
-Never expose:
-
-```text
-SUPABASE_SERVICE_ROLE_KEY
-```
-
-to the frontend.
-
-Never allow anonymous users to directly update arbitrary template rows.
-
-Never count template-card impressions as views.
-
-Never count every refresh as a new view.
-
-Never create one database query per template card.
-
-Never fabricate historical view numbers.
-
-Never redesign the Templates page unnecessarily.
-
-Never remove existing UI HUB functionality just to implement this feature.
-
----
-
-# 47. FINAL DELIVERABLE / REPORT
-
-After implementation, provide a concise engineering report containing:
-
-## A. What changed
-
-List the files/components/migrations changed.
-
-## B. Database architecture
-
-Explain:
-
-```text
-tables
-indexes
-constraints
-RLS
-RPC/functions
-```
-
-## C. View-count flow
-
-Explain the complete:
-
-```text
-user → frontend → backend/database → count → UI
-```
-
-flow.
-
-## D. Duplicate protection
-
-Explain exactly how the system prevents:
-
-```text
-refresh spam
-React double execution
-duplicate requests
-```
-
-from inflating the count.
-
-## E. Security
-
-Explain:
-
-```text
-RLS
-privileged credentials
-anonymous access
-validation
-```
-
-## F. Testing
+### Validation
 
 Report:
 
 ```text
 TypeScript: PASS/FAIL
 Lint: PASS/FAIL
-Unit tests: PASS/FAIL
-Integration tests: PASS/FAIL
+Tests: PASS/FAIL
 Build: PASS/FAIL
+Manual component test: PASS/FAIL
 ```
 
-Include the exact failing error if anything fails.
-
-## G. Production readiness
-
-State clearly whether the implementation is:
-
-```text
-READY
-```
-
-or:
-
-```text
-NOT READY
-```
-
-Do not claim success unless the relevant checks actually passed.
+If anything fails, provide the real error. Do not claim success without actually verifying it.
 
 ---
 
-# 48. SUCCESS CRITERIA
+# FINAL SUCCESS CONDITION
 
-The final UI HUB experience should behave like a real production platform:
+The final behavior must be:
 
 ```text
-Template has 4,829 views
-        ↓
-Visitor opens it
-        ↓
-Database records unique view
-        ↓
-Count becomes 4,830
-        ↓
-Templates page eventually displays 4.8k
-        ↓
-Same visitor refreshes
-        ↓
-Count remains 4,830
+Components page
+      ↓
+User opens Payment Transaction
+      ↓
+Component loads successfully
+      ↓
+Real view event recorded
+      ↓
+Supabase count increases
+      ↓
+UI displays real count
 ```
 
-This is the required outcome.
+Example:
 
-Implement the feature using the **existing UI HUB architecture**, with minimal unnecessary changes, strong database integrity, graceful frontend behavior, and production-ready security.
+```text
+Before:
+👁 0
+
+First real visitor:
+👁 1
+
+Refresh:
+👁 1
+
+Same-session revisit:
+👁 1
+
+Another real session:
+👁 2
+```
+
+There must be **no fake, random, hardcoded, or artificially generated view numbers**.
+
+Implement this using the existing UI HUB architecture and reuse the Template view-count infrastructure wherever possible.

@@ -14,17 +14,27 @@ export interface RecordTemplateViewResponse {
     views: number;
 }
 
+export interface RecordComponentViewResponse {
+    componentId: string;
+    viewRecorded: boolean;
+    views: number;
+}
+
 interface TemplateViewCountsResponse {
     counts: Record<string, number>;
 }
+
+type ViewType = 'template' | 'component';
+type ViewCountRegistry = Record<ViewType, Record<string, number>>;
+type LoadedViewIds = Record<ViewType, Map<string, number>>;
 
 const VIEW_SESSION_STORAGE_KEY = 'uihub_view_session_id';
 const VIEW_SESSION_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const VIEW_COUNT_CACHE_MS = 30_000;
 const API_BASE = getApiBaseUrl();
 let memorySessionId: string | null = null;
-let viewCounts: Record<string, number> = {};
-let loadedTemplateIds = new Map<string, number>();
+let viewCounts: ViewCountRegistry = { template: {}, component: {} };
+let loadedViewIds: LoadedViewIds = { template: new Map(), component: new Map() };
 const pendingLoads = new Map<string, Promise<void>>();
 const pendingRecords = new Map<string, Promise<RecordTemplateViewResponse>>();
 const listeners = new Set<() => void>();
@@ -38,7 +48,8 @@ export const subscribeTemplateViewCounts = (listener: () => void): (() => void) 
     return () => listeners.delete(listener);
 };
 
-export const getTemplateViewCountsSnapshot = (): Readonly<Record<string, number>> => viewCounts;
+export const getTemplateViewCountsSnapshot = (): Readonly<Record<string, number>> => viewCounts.template;
+export const getComponentViewCountsSnapshot = (): Readonly<Record<string, number>> => viewCounts.component;
 
 export const parseViewCount = (value: string | number | null | undefined): number => {
     if (typeof value === 'number' && Number.isFinite(value)) {
@@ -107,29 +118,29 @@ export const getViewSessionId = (): string => {
     return memorySessionId;
 };
 
-const setTemplateViewCounts = (nextCounts: Record<string, number>) => {
-    const merged = { ...viewCounts };
+const setViewCounts = (type: ViewType, nextCounts: Record<string, number>) => {
+    const merged = { ...viewCounts[type] };
     for (const [templateId, count] of Object.entries(nextCounts)) {
         merged[templateId] = Math.max(merged[templateId] ?? 0, count);
     }
-    viewCounts = merged;
+    viewCounts = { ...viewCounts, [type]: merged };
     notifyListeners();
 };
 
-export const loadTemplateViewCounts = async (templateIds: readonly string[]): Promise<void> => {
+const loadViewCounts = async (type: ViewType, templateIds: readonly string[]): Promise<void> => {
     const now = Date.now();
     const ids = [...new Set(templateIds.filter(Boolean))].filter((id) => (
-        now - (loadedTemplateIds.get(id) ?? 0) >= VIEW_COUNT_CACHE_MS
+        now - (loadedViewIds[type].get(id) ?? 0) >= VIEW_COUNT_CACHE_MS
     ));
     if (ids.length === 0) return;
 
-    const loadKey = ids.slice().sort().join(',');
+    const loadKey = `${type}:${ids.slice().sort().join(',')}`;
     const existingLoad = pendingLoads.get(loadKey);
     if (existingLoad) return existingLoad;
 
     const load = (async () => {
         try {
-            const query = new URLSearchParams({ ids: ids.join(',') });
+            const query = new URLSearchParams({ type, ids: ids.join(',') });
             const response = await fetch(`${API_BASE}/api/v1/templates/views?${query.toString()}`);
             if (!response.ok) throw new Error(`Template view count request failed (${response.status})`);
             const result = await response.json() as TemplateViewCountsResponse;
@@ -139,8 +150,8 @@ export const loadTemplateViewCounts = async (templateIds: readonly string[]): Pr
                 counts[id] = Number.isFinite(count) && count >= 0 ? Math.floor(count) : 0;
             }
             const loadedAt = Date.now();
-            for (const id of ids) loadedTemplateIds.set(id, loadedAt);
-            setTemplateViewCounts(counts);
+            for (const id of ids) loadedViewIds[type].set(id, loadedAt);
+            setViewCounts(type, counts);
         } catch (error) {
             console.error('[TemplateViews] Could not load persisted view counts:', error);
         } finally {
@@ -152,32 +163,60 @@ export const loadTemplateViewCounts = async (templateIds: readonly string[]): Pr
     return load;
 };
 
+export const loadTemplateViewCounts = (templateIds: readonly string[]): Promise<void> =>
+    loadViewCounts('template', templateIds);
+
+export const loadComponentViewCounts = (componentIds: readonly string[]): Promise<void> =>
+    loadViewCounts('component', componentIds);
+
 export const getTemplateViewCount = (templateId: string | null | undefined): number => {
-    return templateId ? viewCounts[templateId] ?? 0 : 0;
+    return templateId ? viewCounts.template[templateId] ?? 0 : 0;
 };
 
-export const getTemplateViewDisplay = (templateId: string | null | undefined): string =>
-    formatViewCount(getTemplateViewCount(templateId));
+export const hasTemplateViewCount = (templateId: string | null | undefined): boolean =>
+    Boolean(templateId && loadedViewIds.template.has(templateId));
 
-export const recordTemplateView = async (
-    templateId: string,
-): Promise<RecordTemplateViewResponse> => {
+export const getComponentViewCount = (componentId: string | null | undefined): number =>
+    componentId ? viewCounts.component[componentId] ?? 0 : 0;
+
+export const hasComponentViewCount = (componentId: string | null | undefined): boolean =>
+    Boolean(componentId && loadedViewIds.component.has(componentId));
+
+export const getTemplateViewDisplay = (templateId: string | null | undefined): string =>
+    hasTemplateViewCount(templateId) ? formatViewCount(getTemplateViewCount(templateId)) : '—';
+
+export const getComponentViewDisplay = (componentId: string | null | undefined): string =>
+    hasComponentViewCount(componentId) ? formatViewCount(getComponentViewCount(componentId)) : '—';
+
+export const getTemplateViewAccessibleLabel = (templateId: string | null | undefined): string =>
+    hasTemplateViewCount(templateId) ? `${getTemplateViewCount(templateId)} views` : 'View count unavailable';
+
+export const getComponentViewAccessibleLabel = (componentId: string | null | undefined): string =>
+    hasComponentViewCount(componentId)
+        ? `${getComponentViewCount(componentId)} ${getComponentViewCount(componentId) === 1 ? 'view' : 'views'}`
+        : 'View count unavailable';
+
+const recordView = async (
+    type: ViewType,
+    itemId: string,
+): Promise<RecordTemplateViewResponse | RecordComponentViewResponse> => {
     const sessionId = getViewSessionId();
-    const requestKey = `${templateId}:${sessionId}`;
+    const requestKey = `${type}:${itemId}:${sessionId}`;
     const pending = pendingRecords.get(requestKey);
     if (pending) return pending;
 
     const request = (async () => {
         try {
             const user = auth?.currentUser;
-            const token = user ? await user.getIdToken() : null;
+            const token = type === 'template' && user ? await user.getIdToken() : null;
+            const idField = type === 'component' ? 'componentId' : 'templateId';
             const response = await fetch(`${API_BASE}/api/v1/templates/views`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     ...(token ? { Authorization: `Bearer ${token}` } : {}),
                 },
-                body: JSON.stringify({ templateId, sessionId }),
+                body: JSON.stringify({ type, [idField]: itemId, sessionId }),
             });
             if (!response.ok) throw new Error(`Template view request failed (${response.status})`);
 
@@ -185,8 +224,8 @@ export const recordTemplateView = async (
             if (!Number.isFinite(result.views) || result.views < 0) {
                 throw new Error('Template view endpoint returned an invalid count');
             }
-            loadedTemplateIds.set(templateId, Date.now());
-            setTemplateViewCounts({ [templateId]: Math.floor(result.views) });
+            loadedViewIds[type].set(itemId, Date.now());
+            setViewCounts(type, { [itemId]: Math.floor(result.views) });
             return result;
         } catch (error) {
             console.error('[TemplateViews] Could not record persisted view:', error);
@@ -200,10 +239,16 @@ export const recordTemplateView = async (
     return request;
 };
 
+export const recordTemplateView = async (templateId: string): Promise<RecordTemplateViewResponse> =>
+    await recordView('template', templateId) as RecordTemplateViewResponse;
+
+export const recordComponentView = async (componentId: string): Promise<RecordComponentViewResponse> =>
+    await recordView('component', componentId) as RecordComponentViewResponse;
+
 export const resetTemplateViewState = (): void => {
     memorySessionId = null;
-    viewCounts = {};
-    loadedTemplateIds = new Map();
+    viewCounts = { template: {}, component: {} };
+    loadedViewIds = { template: new Map(), component: new Map() };
     pendingLoads.clear();
     pendingRecords.clear();
     notifyListeners();

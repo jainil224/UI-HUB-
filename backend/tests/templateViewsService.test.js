@@ -1,11 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createTemplateViewsService } from '../src/services/templateViewsService.js';
+import {
+  createComponentViewsService,
+  createTemplateViewsService,
+} from '../src/services/templateViewsService.js';
 
 const SESSION_A = 'b5730d08-99df-4eb1-9d0f-b52509eb9a5b';
 const SESSION_B = 'fe6b5be2-ad33-4e5a-ae90-d8196ec949b8';
 
-const createFakeCollection = () => {
+const createFakeCollection = (idField) => {
   const events = new Map();
   const indexes = [];
 
@@ -16,7 +19,7 @@ const createFakeCollection = () => {
       indexes.push({ keys, options });
     },
     insertOne: async (event) => {
-      const key = `${event.templateId}:${event.sessionId}`;
+      const key = `${event[idField]}:${event.sessionId}`;
       if (events.has(key)) {
         const error = new Error('duplicate key');
         error.code = 11000;
@@ -25,15 +28,15 @@ const createFakeCollection = () => {
       events.set(key, event);
       return { acknowledged: true };
     },
-    countDocuments: async ({ templateId }) =>
-      [...events.values()].filter((event) => event.templateId === templateId).length,
+    countDocuments: async (filter) =>
+      [...events.values()].filter((event) => event[idField] === filter[idField]).length,
     aggregate: (pipeline) => ({
       toArray: async () => {
-        const templateIds = pipeline[0].$match.templateId.$in;
+        const ids = pipeline[0].$match[idField].$in;
         const counts = new Map();
         for (const event of events.values()) {
-          if (templateIds.includes(event.templateId)) {
-            counts.set(event.templateId, (counts.get(event.templateId) || 0) + 1);
+          if (ids.includes(event[idField])) {
+            counts.set(event[idField], (counts.get(event[idField]) || 0) + 1);
           }
         }
         return [...counts].map(([_id, views]) => ({ _id, views }));
@@ -43,7 +46,7 @@ const createFakeCollection = () => {
 };
 
 test('records one event per template and session and returns persistent counts', async () => {
-  const collection = createFakeCollection();
+  const collection = createFakeCollection('templateId');
   const service = createTemplateViewsService(async () => collection);
 
   const first = await service.recordTemplateView({
@@ -73,10 +76,14 @@ test('records one event per template and session and returns persistent counts',
   assert.equal(collection.events.get(`portfolio-closing:${SESSION_A}`).userId, null);
   assert.equal(collection.indexes.length, 2);
   assert.equal(collection.indexes[0].options.unique, true);
+  assert.deepEqual(collection.indexes.map((index) => index.options.name), [
+    'template_session_unique',
+    'created_at_template',
+  ]);
 });
 
 test('returns counts for requested template IDs using one aggregate', async () => {
-  const collection = createFakeCollection();
+  const collection = createFakeCollection('templateId');
   const service = createTemplateViewsService(async () => collection);
   await service.recordTemplateView({ templateId: 'mood-hero', sessionId: SESSION_A });
   await service.recordTemplateView({ templateId: 'mood-hero', sessionId: SESSION_B });
@@ -86,6 +93,40 @@ test('returns counts for requested template IDs using one aggregate', async () =
     await service.listTemplateViewCounts(['mood-hero', 'portfolio-closing', 'unknown-template']),
     { 'mood-hero': 2, 'portfolio-closing': 1, 'unknown-template': 0 },
   );
+});
+
+test('tracks components independently from templates with their own deduplication', async () => {
+  const collection = createFakeCollection('componentId');
+  const service = createComponentViewsService(async () => collection);
+
+  const first = await service.recordComponentView({
+    componentId: 'target-cursor',
+    sessionId: SESSION_A,
+    userId: 'firebase-user-1',
+  });
+  const duplicate = await service.recordComponentView({
+    componentId: 'target-cursor',
+    sessionId: SESSION_A,
+  });
+  const otherComponent = await service.recordComponentView({
+    componentId: 'black-hole-cursor',
+    sessionId: SESSION_A,
+  });
+
+  assert.deepEqual(first, { componentId: 'target-cursor', viewRecorded: true, views: 1 });
+  assert.deepEqual(duplicate, { componentId: 'target-cursor', viewRecorded: false, views: 1 });
+  assert.equal(otherComponent.views, 1);
+  assert.equal(collection.events.size, 2);
+  assert.equal(collection.events.get(`target-cursor:${SESSION_A}`).userId, 'firebase-user-1');
+  assert.deepEqual(
+    await service.listComponentViewCounts(['target-cursor', 'black-hole-cursor', 'missing']),
+    { 'target-cursor': 1, 'black-hole-cursor': 1, missing: 0 },
+  );
+  assert.equal(collection.indexes[0].options.unique, true);
+  assert.deepEqual(collection.indexes.map((index) => index.options.name), [
+    'componentId_session_unique',
+    'created_at_componentId',
+  ]);
 });
 
 test('validates template and session identifiers', async () => {

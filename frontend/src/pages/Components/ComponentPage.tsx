@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Eye } from 'lucide-react';
 import { useSeo } from '../../components/Seo';
 import CodeHighlighter from '../../components/ui/CodeHighlighter';
 import { componentList } from '../../data/componentData';
@@ -12,6 +12,12 @@ import { propRows, toComponentAeoInput, toComponentSeoInput, type ComponentConfi
 import { componentAeo } from '../../seo/aeo';
 import AeoContent from '../../components/AeoContent';
 import { SITE_URL } from '../../seo/site';
+import {
+    getComponentViewAccessibleLabel,
+    getComponentViewDisplay,
+    recordComponentView,
+} from '../../services/templateViews';
+import { useComponentViewCounts } from '../../hooks/useTemplateViewCounts';
 
 export default function ComponentPage() {
     const { category = '', slug = '' } = useParams();
@@ -21,6 +27,14 @@ export default function ComponentPage() {
         () => componentList.find((entry) => entry.id === slug && entry.category === category),
         [slug, category],
     );
+    const componentViewCounts = useComponentViewCounts(item ? [item.id] : []);
+
+    useEffect(() => {
+        if (!item) return;
+        void recordComponentView(item.id).catch(() => {
+            // Tracking failure is reported by the service and does not block the component page.
+        });
+    }, [item?.id]);
 
     useEffect(() => {
         let cancelled = false;
@@ -136,6 +150,13 @@ export default function ComponentPage() {
                         )}
                     </div>
                     <p className="text-neutral-400 text-sm sm:text-base">{description}</p>
+                    <p
+                        className="mt-3 inline-flex items-center gap-1.5 text-xs text-neutral-500"
+                        aria-label={getComponentViewAccessibleLabel(item.id)}
+                    >
+                        <Eye size={13} aria-hidden="true" />
+                        {getComponentViewDisplay(item.id)} views
+                    </p>
                     {seoInput!.techs.length > 0 && (
                         <ul className="mt-4 flex flex-wrap gap-2">
                             {seoInput!.techs.map((tech) => (

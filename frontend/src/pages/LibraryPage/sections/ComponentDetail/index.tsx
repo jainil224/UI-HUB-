@@ -29,6 +29,12 @@ import AdSlot from '../../../../components/ui/AdSlot';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
 import { logUserActivity } from '../../../../utils/activityLogger';
 import uiHubLogo from '../../../../Assets/webiste logo.svg';
+import {
+    getComponentViewAccessibleLabel,
+    getComponentViewDisplay,
+    recordComponentView,
+} from '../../../../services/templateViews';
+import { useComponentViewCounts } from '../../../../hooks/useTemplateViewCounts';
 
 
 const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
@@ -987,6 +993,8 @@ class PreviewErrorBoundary extends React.Component<
 const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => void }) => {
     const navigate = useNavigate();
     const { theme } = useTheme();
+    const componentViewCounts = useComponentViewCounts([item.id]);
+    const componentViewDisplay = getComponentViewDisplay(item.id);
     const [tab, setTab] = React.useState<'preview' | 'code' | 'vibe'>('preview');
     // Single source of truth for the active variant. The preview, the source
     // view and the AI prompt all read from here, so they cannot disagree.
@@ -1002,6 +1010,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const promptMenuRef = React.useRef<HTMLDivElement>(null);
     const previewRef = React.useRef<HTMLDivElement>(null);
     const { user, isPro: isProUser, refreshProStatus, purchasedComponents } = useAuth();
+
+    React.useEffect(() => {
+        void recordComponentView(item.id).catch(() => {
+            // Tracking failure is reported by the service and does not block the component.
+        });
+    }, [item.id]);
 
     // Entitled = full Pro (or special account) OR this component was bought outright.
     const canAccessComponent = isProUser || purchasedComponents.includes(item.id.toLowerCase());
@@ -1526,6 +1540,13 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <p className="text-neutral-400 text-sm font-medium leading-relaxed mt-2 max-w-2xl">
                             {item.description || "Production-ready UI component with interactive animations, customizable parameters, and full TypeScript support."}
                         </p>
+                        <span
+                            className="mt-3 inline-flex items-center gap-1.5 text-xs text-neutral-500"
+                            aria-label={getComponentViewAccessibleLabel(item.id)}
+                        >
+                            <Eye size={13} aria-hidden="true" />
+                            {componentViewDisplay} {componentViewDisplay === '1' ? 'view' : 'views'}
+                        </span>
                         {item.contributor && (
                             <div className="flex items-center gap-2.5 mt-4">
                                 {item.contributor.avatar ? (

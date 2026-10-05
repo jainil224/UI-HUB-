@@ -1,8 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
     formatViewCount,
+    getComponentViewAccessibleLabel,
+    getComponentViewDisplay,
+    getComponentViewCount,
+    getTemplateViewAccessibleLabel,
     getTemplateViewCount,
+    getTemplateViewDisplay,
     getViewSessionId,
+    recordComponentView,
     loadTemplateViewCounts,
     recordTemplateView,
     resetTemplateViewState,
@@ -51,11 +57,27 @@ describe('template view API client', () => {
             json: async () => ({ counts: { 'mood-hero': 3912, 'portfolio-closing': 0 } }),
         } as Response);
 
+        expect(getTemplateViewDisplay('portfolio-closing')).toBe('—');
+        expect(getTemplateViewAccessibleLabel('portfolio-closing')).toBe('View count unavailable');
+
         await loadTemplateViewCounts(['mood-hero', 'portfolio-closing']);
 
         expect(fetch).toHaveBeenCalledTimes(1);
         expect(getTemplateViewCount('mood-hero')).toBe(3912);
         expect(getTemplateViewCount('portfolio-closing')).toBe(0);
+        expect(getTemplateViewDisplay('portfolio-closing')).toBe('0');
+        expect(getTemplateViewAccessibleLabel('portfolio-closing')).toBe('0 views');
+    });
+
+    it('does not present a failed count request as a real zero', async () => {
+        vi.mocked(fetch).mockRejectedValueOnce(new Error('network unavailable'));
+
+        await loadTemplateViewCounts(['mood-hero']);
+
+        expect(getTemplateViewDisplay('mood-hero')).toBe('—');
+        expect(getTemplateViewAccessibleLabel('mood-hero')).toBe('View count unavailable');
+        expect(getComponentViewDisplay('target-cursor')).toBe('—');
+        expect(getComponentViewAccessibleLabel('target-cursor')).toBe('View count unavailable');
     });
 
     it('records a view with a session ID and updates from the backend response', async () => {
@@ -76,6 +98,28 @@ describe('template view API client', () => {
         expect(body.templateId).toBe('mood-hero');
         expect(body.sessionId).toBe(getViewSessionId());
         expect(getTemplateViewCount('mood-hero')).toBe(3913);
+    });
+
+    it('records component views in the component namespace', async () => {
+        vi.mocked(fetch).mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({
+                componentId: 'target-cursor',
+                viewRecorded: true,
+                views: 7,
+            }),
+        } as Response);
+
+        const result = await recordComponentView('target-cursor');
+        const [, request] = vi.mocked(fetch).mock.calls[0];
+        const body = JSON.parse(String(request?.body));
+
+        expect(result.componentId).toBe('target-cursor');
+        expect(body).toMatchObject({ type: 'component', componentId: 'target-cursor' });
+        expect(request?.headers).not.toHaveProperty('Authorization');
+        expect(getComponentViewCount('target-cursor')).toBe(7);
+        expect(getComponentViewAccessibleLabel('target-cursor')).toBe('7 views');
+        expect(getTemplateViewCount('target-cursor')).toBe(0);
     });
 
     it('surfaces tracking failures to callers without changing counts', async () => {

@@ -44,7 +44,6 @@ const LibraryPage = () => {
     const [optimisticId, setOptimisticId] = useState<string | null>(null);
     const [activeDocId, setActiveDocId] = useState<string | null>(idFromUrl ? null : docFromUrl || 'introduction');
     const allComponents = useMemo(() => componentList, []);
-
     const activeDoc = GET_STARTED_PAGES.find(p => p.id === activeDocId) || null;
 
     const activeId = optimisticId || idFromUrl || '3d-hero';
@@ -340,7 +339,9 @@ const LibraryPage = () => {
                                                             <span className="inline-flex shrink-0" title="Premium — buy this component ($1.99) or upgrade to Pro"><Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" /></span>
                                                         )}
                                                     </span>
-                                                    <span className="text-[9px] text-neutral-500 uppercase shrink-0">{item.category}</span>
+                                                    <span className="flex shrink-0 items-center gap-2">
+                                                        <span className="text-[9px] text-neutral-500 uppercase">{item.category}</span>
+                                                    </span>
                                                 </button>
                                             );
                                         })}
@@ -421,7 +422,7 @@ const LibraryPage = () => {
                                                                             : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70 hover:translate-x-1'
                                                                     }`}
                                                                 >
-                                                                    <span className="truncate pr-2 flex items-center gap-1.5">
+                                                                    <span className="min-w-0 truncate pr-2 flex items-center gap-1.5">
                                                                         {item.title}
                                                                         {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
                                                                             <span className="inline-flex shrink-0" title="Premium — buy this component ($1.99) or upgrade to Pro"><Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" /></span>
@@ -545,7 +546,7 @@ const LibraryPage = () => {
                                                                         : 'text-neutral-400 hover:text-white hover:bg-neutral-800/70 hover:translate-x-1 hover:border-l-2 hover:border-brand-blue'
                                                                 }`}
                                                             >
-                                                                <span className="truncate pr-2 flex items-center gap-1.5">
+                                                                <span className="min-w-0 truncate pr-2 flex items-center gap-1.5">
                                                                     {item.title}
                                                                     {item.isPremium && !isPro && !purchasedComponents.includes(item.id) && (
                                                                         <span className="inline-flex shrink-0" title="Premium — buy this component ($1.99) or upgrade to Pro"><Lock size={10} className="text-brand-blue shrink-0" aria-label="Premium" /></span>
@@ -556,9 +557,6 @@ const LibraryPage = () => {
                                                                         </span>
                                                                     )}
                                                                 </span>
-                                                                {!isActive && (
-                                                                    <span className="opacity-0 group-hover:opacity-100 text-brand-blue font-bold text-[10px] transition-opacity">→</span>
-                                                                )}
                                                             </button>
                                                         );
                                                     })}

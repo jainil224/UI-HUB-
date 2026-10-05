@@ -7,6 +7,8 @@ import {
   isValidViewSessionId,
   listTemplateViewCounts,
   recordTemplateView,
+  listComponentViewCounts,
+  recordComponentView,
 } from '../services/templateViewsService.js';
 
 const router = express.Router();
@@ -23,6 +25,10 @@ const optionalFirebaseAuth = (req, res, next) => {
 };
 
 router.get('/views', templateViewLimiter, async (req, res) => {
+  const type = req.query.type === undefined ? 'template' : req.query.type;
+  if (type !== 'template' && type !== 'component') {
+    return res.status(400).json({ error: 'INVALID_VIEW_TYPE' });
+  }
   const rawIds = req.query.ids;
   if (typeof rawIds !== 'string') {
     return res.status(400).json({ error: 'INVALID_TEMPLATE_IDS' });
@@ -37,7 +43,9 @@ router.get('/views', templateViewLimiter, async (req, res) => {
   }
 
   try {
-    const counts = await listTemplateViewCounts(templateIds);
+    const counts = type === 'component'
+      ? await listComponentViewCounts(templateIds)
+      : await listTemplateViewCounts(templateIds);
     return res.json({ counts });
   } catch (error) {
     console.error('[TemplateViews] Count query failed:', error?.message || error);
@@ -47,20 +55,30 @@ router.get('/views', templateViewLimiter, async (req, res) => {
 });
 
 router.post('/views', templateViewLimiter, optionalFirebaseAuth, async (req, res) => {
-  const { templateId, sessionId } = req.body || {};
-  if (!isValidTemplateId(templateId)) {
-    return res.status(400).json({ error: 'INVALID_TEMPLATE_ID' });
+  const { type = 'template', templateId, componentId, sessionId } = req.body || {};
+  if (type !== 'template' && type !== 'component') {
+    return res.status(400).json({ error: 'INVALID_VIEW_TYPE' });
+  }
+  const itemId = type === 'component' ? componentId : templateId;
+  if (!isValidTemplateId(itemId)) {
+    return res.status(400).json({ error: type === 'component' ? 'INVALID_COMPONENT_ID' : 'INVALID_TEMPLATE_ID' });
   }
   if (!isValidViewSessionId(sessionId)) {
     return res.status(400).json({ error: 'INVALID_SESSION_ID' });
   }
 
   try {
-    const result = await recordTemplateView({
-      templateId,
-      sessionId,
-      userId: req.user?.uid || null,
-    });
+    const result = type === 'component'
+      ? await recordComponentView({
+          componentId: itemId,
+          sessionId,
+          userId: req.user?.uid || null,
+        })
+      : await recordTemplateView({
+          templateId: itemId,
+          sessionId,
+          userId: req.user?.uid || null,
+        });
     return res.json(result);
   } catch (error) {
     console.error('[TemplateViews] Record failed:', error?.message || error);

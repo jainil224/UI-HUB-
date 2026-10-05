@@ -17,7 +17,6 @@ export default function CategoryPage() {
         () => componentList.filter((item) => item.category === category),
         [category],
     );
-
     const title = seoCategory ? categoryTitle(category, items.length) : 'Category not found | UI Hub';
     const description = seoCategory
         ? categoryDescription(category, items.length)
@@ -130,7 +129,7 @@ export default function CategoryPage() {
                                     <div className="flex items-center justify-between gap-2 px-4 py-3">
                                         <span className="truncate text-sm font-bold">{item.title}</span>
                                         {item.isPremium && (
-                                            <span className="shrink-0 text-[10px] font-black uppercase tracking-widest text-amber-400">
+                                            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400">
                                                 Pro
                                             </span>
                                         )}
