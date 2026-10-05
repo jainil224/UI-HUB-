@@ -7,6 +7,8 @@ import {
     type TemplateItem,
 } from '../../data/templatesData';
 import { prefetchTemplateChunk } from './registry';
+import { formatViewCount } from '../../services/templateViews';
+import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 
 const SECTION_PATH = '/build-with-ui-hub';
 
@@ -88,7 +90,8 @@ const SectionCard: React.FC<{
     template: TemplateItem;
     isActive: boolean;
     onNavigate: () => void;
-}> = ({ template, isActive, onNavigate }) => {
+    viewCount: number;
+}> = ({ template, isActive, onNavigate, viewCount }) => {
     // Warm the preview chunk on hover/focus: several sections pull in three.js,
     // so without it every rail click stalls on a cold chunk load.
     const warm = useCallback(() => prefetchTemplateChunk(template.id), [template.id]);
@@ -120,9 +123,12 @@ const SectionCard: React.FC<{
                     {template.title}
                 </span>
 
-                <span className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-600">
+                <span
+                    className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-600"
+                    aria-label={`${viewCount} views`}
+                >
                     <Eye size={10} aria-hidden="true" />
-                    {template.stats.downloads}
+                    {formatViewCount(viewCount)}
                 </span>
             </div>
         </button>
@@ -154,6 +160,7 @@ const BuildWithUIHubRail: React.FC<BuildWithUIHubRailProps> = ({ activeSlug }) =
         const template = buildWithUIHubTemplateBySlug[entry.slug];
         return template ? [{ slug: entry.slug, template }] : [];
     });
+    const templateViewCounts = useTemplateViewCounts(sections.map((section) => section.template.id));
 
     const handleNavigate = useCallback(
         (slug: string, templateId: string) => {
@@ -191,6 +198,7 @@ const BuildWithUIHubRail: React.FC<BuildWithUIHubRailProps> = ({ activeSlug }) =
                                 key={slug}
                                 template={template}
                                 isActive={slug === activeSlug}
+                                viewCount={templateViewCounts[template.id] ?? 0}
                                 onNavigate={() => handleNavigate(slug, template.id)}
                             />
                         ))}
@@ -215,6 +223,7 @@ const BuildWithUIHubRail: React.FC<BuildWithUIHubRailProps> = ({ activeSlug }) =
                             <SectionCard
                                 template={template}
                                 isActive={slug === activeSlug}
+                                viewCount={templateViewCounts[template.id] ?? 0}
                                 onNavigate={() => handleNavigate(slug, template.id)}
                             />
                         </div>

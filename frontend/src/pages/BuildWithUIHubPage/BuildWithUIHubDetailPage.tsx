@@ -23,6 +23,8 @@ import BuildWithUIHubRail from '../../components/templates/BuildWithUIHubRail';
 import BuildWithUIHubUsedComponents from '../../components/templates/BuildWithUIHubUsedComponents';
 import { buildWithUIHubSectionBySlug } from '../../data/buildWithUIHubSlugs';
 import Toast from '../../components/ui/Toast';
+import { formatViewCount, recordTemplateView } from '../../services/templateViews';
+import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 
 // Both of these sit behind a click - the Code tab and the AI prompt dropdown -
 // but a static import cost the page ~3.2 MB of JavaScript before the preview
@@ -69,6 +71,7 @@ const BuildWithUIHubDetailPage = () => {
         () => buildWithUIHubTemplateBySlug[slug],
         [slug],
     );
+    const templateViewCounts = useTemplateViewCounts(sectionItem ? [sectionItem.id] : []);
 
     // The full section record, which carries the componentIds the "Built with
     // UI HUB" panel below the preview lists. Read from the dependency-free slug
@@ -90,6 +93,13 @@ const BuildWithUIHubDetailPage = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [slug]);
+
+    useEffect(() => {
+        if (!sectionItem) return;
+        void recordTemplateView(sectionItem.id).catch(() => {
+            // Tracking failure is reported by the service and does not block the preview.
+        });
+    }, [sectionItem?.id]);
 
     // Close dropdown on click outside
     useEffect(() => {
@@ -244,8 +254,10 @@ const BuildWithUIHubDetailPage = () => {
                         </div>
 
                         <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-neutral-400">
-                            <Eye size={14} />
-                            <span>{sectionItem.stats.downloads} downloads</span>
+                            <Eye size={14} aria-hidden="true" />
+                            <span aria-label={`${templateViewCounts[sectionItem.id] ?? 0} views`}>
+                                {formatViewCount(templateViewCounts[sectionItem.id] ?? 0)} views
+                            </span>
                             <span className="text-neutral-600">•</span>
                             <span>{sectionItem.framework}</span>
                         </div>

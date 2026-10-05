@@ -17,6 +17,8 @@ import TemplateSimilarRail from '../../components/templates/TemplateSimilarRail'
 import { TemplatePreviewStage } from '../../components/templates/TemplatePreviewStage';
 import Toast from '../../components/ui/Toast';
 import AdSlot from '../../components/ui/AdSlot';
+import { formatViewCount, recordTemplateView } from '../../services/templateViews';
+import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 
 // The Code tab is behind a click, but a static import cost this page ~3.2 MB of
 // JavaScript before the preview could paint anything: TemplateCodeViewer pulls
@@ -52,6 +54,7 @@ const TemplateDetailPage = () => {
         () => websiteTemplates.find((t) => t.id === id),
         [id],
     );
+    const templateViewCounts = useTemplateViewCounts(template ? [template.id] : []);
 
     const similarExpanded = searchParams.get(SIMILAR_PARAM) === 'all';
 
@@ -110,6 +113,13 @@ const TemplateDetailPage = () => {
     }, [id, mainPreviewReady]);
 
     const handleLiveReady = useCallback(() => setMainPreviewReady(true), []);
+
+    useEffect(() => {
+        if (!template) return;
+        void recordTemplateView(template.id).catch(() => {
+            // Tracking failure is reported by the service and does not block the preview.
+        });
+    }, [template?.id]);
 
     // Close dropdown on click outside
     useEffect(() => {
@@ -269,8 +279,10 @@ const TemplateDetailPage = () => {
                         </div>
 
                         <div className="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-neutral-400">
-                            <Eye size={14} />
-                            <span>{template.stats.downloads} downloads</span>
+                            <Eye size={14} aria-hidden="true" />
+                            <span aria-label={`${templateViewCounts[template.id] ?? 0} views`}>
+                                {formatViewCount(templateViewCounts[template.id] ?? 0)} views
+                            </span>
                             <span className="text-neutral-600">•</span>
                             <span>{template.framework}</span>
                         </div>

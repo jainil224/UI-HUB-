@@ -44,9 +44,14 @@ import Labs2586 from '../../../components/templates/Labs2586';
 import { buildTemplatePrompt } from '../../../utils/templatePromptUtils';
 import Toast from '../../../components/ui/Toast';
 import LazyTemplatePreview from '../../../components/ui/LazyTemplatePreview';
+import { formatViewCount } from '../../../services/templateViews';
+import { useTemplateViewCounts } from '../../../hooks/useTemplateViewCounts';
 
 const TemplatesSection = () => {
     const navigate = useNavigate();
+    const templateViewCounts = useTemplateViewCounts(
+        websiteTemplates.filter((template) => !BUILD_WITH_UI_HUB_IDS.includes(template.id)).map((template) => template.id),
+    );
     const [activeTemplate, setActiveTemplate] = useState<TemplateItem | null>(null);
     const [copiedPromptId, setCopiedPromptId] = useState<string | null>(null);
     const [showToast, setShowToast] = useState(false);
@@ -225,9 +230,12 @@ const TemplatesSection = () => {
                                                         </h3>
                                                     </div>
                                                 </div>
-                                                <span className="inline-flex shrink-0 items-center gap-1.5 text-sm text-neutral-300">
-                                                    <Eye size={14} className="text-neutral-400" />
-                                                    {template.stats.downloads}
+                                                <span
+                                                    className="inline-flex shrink-0 items-center gap-1.5 text-sm text-neutral-300"
+                                                    aria-label={`${templateViewCounts[template.id] ?? 0} views`}
+                                                >
+                                                    <Eye size={14} className="text-neutral-400" aria-hidden="true" />
+                                                    {formatViewCount(templateViewCounts[template.id] ?? 0)}
                                                 </span>
                                             </div>
                                         </motion.div>

@@ -7,6 +7,8 @@ import {
     buildWithUIHubSlugByTemplateId,
 } from '../../../data/templatesData';
 import { isNewComponent } from '../../../utils/componentUtils';
+import { formatViewCount } from '../../../services/templateViews';
+import { useTemplateViewCounts } from '../../../hooks/useTemplateViewCounts';
 
 const SECTION_TITLE = 'Build with UI HUB';
 const SECTION_HINT = 'Section-level layouts';
@@ -24,6 +26,7 @@ const BuildWithUIHubSection = () => {
     const navigate = useNavigate();
 
     const components = buildWithUIHubTemplates;
+    const templateViewCounts = useTemplateViewCounts(components.map((component) => component.id));
 
     // Cards link to the public section slug, not the master template id, so the
     // URL stays stable if the underlying template is ever renamed.
@@ -129,9 +132,12 @@ const BuildWithUIHubSection = () => {
                                             NEW
                                         </span>
                                     )}
-                                    <span className="inline-flex items-center gap-1.5 text-sm text-neutral-300">
-                                        <Eye size={14} className="text-neutral-400" />
-                                        {component.stats.downloads}
+                                    <span
+                                        className="inline-flex items-center gap-1.5 text-sm text-neutral-300"
+                                        aria-label={`${templateViewCounts[component.id] ?? 0} views`}
+                                    >
+                                        <Eye size={14} className="text-neutral-400" aria-hidden="true" />
+                                        {formatViewCount(templateViewCounts[component.id] ?? 0)}
                                     </span>
                                 </div>
                             </div>

@@ -8,6 +8,8 @@ import {
     RelatedTemplate,
 } from '../../utils/templateRelevance';
 import { prefetchTemplateChunk } from './registry';
+import { formatViewCount } from '../../services/templateViews';
+import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 
 /** How many matches the rail shows before "Show all" is pressed. */
 export const SIMILAR_COLLAPSED_COUNT = 5;
@@ -159,7 +161,8 @@ const RelatedCard: React.FC<{
     item: RelatedTemplate;
     onNavigate: (id: string) => void;
     suspendVideos: boolean;
-}> = ({ item, onNavigate, suspendVideos }) => {
+    viewCount: number;
+}> = ({ item, onNavigate, suspendVideos, viewCount }) => {
     const { template } = item;
     const matchPercent = toMatchPercent(item.score);
     const [isHovered, setIsHovered] = useState(false);
@@ -196,9 +199,12 @@ const RelatedCard: React.FC<{
                     {template.title}
                 </span>
 
-                <span className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-600">
+                <span
+                    className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-600"
+                    aria-label={`${viewCount} views`}
+                >
                     <Eye size={10} aria-hidden="true" />
-                    {template.stats.downloads}
+                    {formatViewCount(viewCount)}
                 </span>
             </div>
         </button>
@@ -218,7 +224,7 @@ const RelatedCard: React.FC<{
  * visitor is looking at the rail while the live preview is still loading, which
  * is exactly the window `suspendVideos` would otherwise hold paused.
  */
-const CurrentTemplateCard: React.FC<{ template: TemplateItem }> = ({ template }) => {
+const CurrentTemplateCard: React.FC<{ template: TemplateItem; viewCount: number }> = ({ template, viewCount }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     return (
@@ -237,9 +243,12 @@ const CurrentTemplateCard: React.FC<{ template: TemplateItem }> = ({ template })
 
             <div className="min-w-0 px-3 py-2.5">
                 <span className="block truncate text-sm text-white">{template.title}</span>
-                <span className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-500">
+                <span
+                    className="mt-1.5 flex items-center gap-1 text-[10px] text-neutral-500"
+                    aria-label={`${viewCount} views`}
+                >
                     <Eye size={10} aria-hidden="true" />
-                    {template.stats.downloads}
+                    {formatViewCount(viewCount)}
                 </span>
             </div>
         </div>
@@ -272,6 +281,7 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
         () => websiteTemplates.filter((item) => !BUILD_WITH_UI_HUB_IDS.includes(item.id)),
         [],
     );
+    const templateViewCounts = useTemplateViewCounts(similarCatalog.map((item) => item.id));
 
     const allRelated = useMemo(
         () => getRelatedTemplates(template, similarCatalog),
@@ -319,13 +329,17 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-3 pb-4">
                     <div className="space-y-2">
-                        <CurrentTemplateCard template={template} />
+                        <CurrentTemplateCard
+                            template={template}
+                            viewCount={templateViewCounts[template.id] ?? 0}
+                        />
                         {visible.map((item) => (
                             <RelatedCard
                                 key={item.template.id}
                                 item={item}
                                 onNavigate={handleNavigate}
                                 suspendVideos={suspendVideos}
+                                viewCount={templateViewCounts[item.template.id] ?? 0}
                             />
                         ))}
                     </div>
@@ -365,27 +379,39 @@ const TemplateSimilarRail: React.FC<TemplateSimilarRailProps> = ({
 
                 {expanded ? (
                     <div className="mt-3 space-y-2">
-                        <CurrentTemplateCard template={template} />
+                        <CurrentTemplateCard
+                            template={template}
+                            viewCount={templateViewCounts[template.id] ?? 0}
+                        />
                         {visible.map((item) => (
                             <RelatedCard
                                 key={item.template.id}
                                 item={item}
                                 onNavigate={handleNavigate}
                                 suspendVideos={suspendVideos}
+                                viewCount={templateViewCounts[item.template.id] ?? 0}
                             />
                         ))}
                     </div>
                 ) : (
                     <div className="-mx-4 mt-3 flex snap-x snap-mandatory gap-2.5 overflow-x-auto px-4 pb-1">
                         <div className="w-[190px] shrink-0 snap-start">
-                            <CurrentTemplateCard template={template} />
+                            <CurrentTemplateCard
+                                template={template}
+                                viewCount={templateViewCounts[template.id] ?? 0}
+                            />
                         </div>
                         {visible.map((item) => (
                             <div
                                 key={item.template.id}
                                 className="w-[190px] shrink-0 snap-start"
                             >
-                                <RelatedCard item={item} onNavigate={handleNavigate} suspendVideos={suspendVideos} />
+                                <RelatedCard
+                                    item={item}
+                                    onNavigate={handleNavigate}
+                                    suspendVideos={suspendVideos}
+                                    viewCount={templateViewCounts[item.template.id] ?? 0}
+                                />
                             </div>
                         ))}
                     </div>

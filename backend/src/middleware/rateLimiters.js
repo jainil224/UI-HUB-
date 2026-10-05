@@ -94,3 +94,14 @@ export const sourceLimiter = rateLimit({
   message: { success: false, error: 'Source fetch rate exceeded. Please try again later.' },
   ...(store && { store })
 });
+
+// Duplicate requests are safe because MongoDB enforces one event per
+// template/session, while this caps abuse through generated session IDs.
+export const templateViewLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Template view request rate exceeded.' },
+  ...(store && { store })
+});
