@@ -21,16 +21,23 @@ const createViewCollectionService = (
 
   const ensureIndexes = async (views) => {
     if (!indexesReady) {
-      indexesReady = Promise.all([
-        views.createIndex(
-          { [idField]: 1, sessionId: 1 },
-          { unique: true, name: indexNames.unique },
-        ),
-        views.createIndex(
-          { createdAt: -1, [idField]: 1 },
-          { name: indexNames.createdAt },
-        ),
-      ]).catch((error) => {
+      indexesReady = (async () => {
+        const uniqueKeys = { [idField]: 1, sessionId: 1 };
+        const recentKeys = { createdAt: -1, [idField]: 1 };
+        const existingIndexes = await views.indexes();
+        const hasIndex = (keys, requireUnique = false) => existingIndexes.some((index) => (
+          Object.keys(index.key || {}).length === Object.keys(keys).length &&
+          Object.entries(keys).every(([key, direction]) => index.key[key] === direction) &&
+          (!requireUnique || index.unique === true)
+        ));
+
+        if (!hasIndex(uniqueKeys, true)) {
+          await views.createIndex(uniqueKeys, { unique: true, name: indexNames.unique });
+        }
+        if (!hasIndex(recentKeys)) {
+          await views.createIndex(recentKeys, { name: indexNames.createdAt });
+        }
+      })().catch((error) => {
         indexesReady = null;
         throw error;
       });

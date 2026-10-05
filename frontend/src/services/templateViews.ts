@@ -1,4 +1,3 @@
-import { auth } from '../lib/firebase';
 import { getApiBaseUrl } from '../utils/apiConfig';
 
 export interface TemplateView {
@@ -207,15 +206,10 @@ const recordView = async (
 
     const request = (async () => {
         try {
-            const user = auth?.currentUser;
-            const token = type === 'template' && user ? await user.getIdToken() : null;
             const idField = type === 'component' ? 'componentId' : 'templateId';
             const response = await fetch(`${API_BASE}/api/v1/templates/views`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ type, [idField]: itemId, sessionId }),
             });
             if (!response.ok) throw new Error(`Template view request failed (${response.status})`);

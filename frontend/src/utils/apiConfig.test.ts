@@ -100,20 +100,25 @@ describe('Task 5.16 CASE 3 - local development', () => {
 
 describe('Task 5.16 CASE 4 - production with a stale legacy Render URL', () => {
   it.each(KNOWN_DEAD_API_HOSTS.map((h) => [`https://${h}`, h] as const))(
-    'warns loudly about %s but still honours the explicit setting',
+    'warns and falls back to the current origin for %s',
     (url, host) => {
       const resolved = resolveApiBaseUrl({ PROD: true, VITE_API_URL: url }, prodOrigin);
 
-      // Honour the explicit configuration (owner decision, not a silent override).
-      expect(resolved).toBe(url);
+      expect(resolved).toBe(prodOrigin.origin);
 
-      // But make the consequence impossible to miss.
       const message = warned();
       expect(message).toContain('WARNING');
       expect(message).toContain(host);
-      expect(message).toMatch(/UNSET VITE_API_URL/);
+      expect(message).toContain(prodOrigin.origin);
     }
   );
+
+  it('uses same-origin routing when no browser location is available', () => {
+    const resolved = resolveApiBaseUrl(
+      { PROD: true, VITE_API_URL: `https://${KNOWN_DEAD_API_HOSTS[0]}` }
+    );
+    expect(resolved).toBe('');
+  });
 
   it('does not warn for a host that is merely similar but live', () => {
     resolveApiBaseUrl({ PROD: true, VITE_API_URL: 'https://ui-hub.onrender.commander.example' }, prodOrigin);
@@ -179,5 +184,4 @@ describe('isKnownDeadApiHost', () => {
     expect(isKnownDeadApiHost('not-a-url')).toBe(false);
   });
 });
-
 

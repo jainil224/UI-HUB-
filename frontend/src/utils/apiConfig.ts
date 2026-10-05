@@ -84,13 +84,12 @@ export function isKnownDeadApiHost(url: string): boolean {
   return (KNOWN_DEAD_API_HOSTS as readonly string[]).some((h) => host === h);
 }
 
-function warnDeadHost(url: string, host: string): void {
+function warnDeadHost(url: string, host: string, fallback: string): void {
   console.warn(
     `[API Config] WARNING: the configured production API "${url}" points at ` +
       `"${host}", which is verified unreachable (the Render origin is refused ` +
-      `at the Cloudflare edge). Requests to it will fail. This value is being ` +
-      `honoured because it was explicitly configured. To restore same-origin ` +
-      `routing, UNSET VITE_API_URL in the deployment environment and rebuild.`
+      `at the Cloudflare edge). Falling back to the current origin "${fallback}" ` +
+      `for the unified frontend/API deployment.`
   );
 }
 
@@ -117,7 +116,9 @@ export function resolveApiBaseUrl(env: ApiEnv, loc?: ApiLocation): string {
         return fallback;
       }
       if (isKnownDeadApiHost(validated.url)) {
-        warnDeadHost(validated.url, new URL(validated.url).hostname);
+        const fallback = loc?.origin ?? '';
+        warnDeadHost(validated.url, new URL(validated.url).hostname, fallback || '(same-origin)');
+        return fallback;
       } else {
         console.log(`[API Config] Using explicitly configured production API: ${validated.url}`);
       }

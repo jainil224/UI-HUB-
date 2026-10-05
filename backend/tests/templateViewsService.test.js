@@ -10,13 +10,14 @@ const SESSION_B = 'fe6b5be2-ad33-4e5a-ae90-d8196ec949b8';
 
 const createFakeCollection = (idField) => {
   const events = new Map();
-  const indexes = [];
+  const createdIndexes = [];
 
   return {
     events,
-    indexes,
+    createdIndexes,
+    indexes: async () => [{ name: '_id_', key: { _id: 1 } }, ...createdIndexes],
     createIndex: async (keys, options) => {
-      indexes.push({ keys, options });
+      createdIndexes.push({ key: keys, keys, options, name: options.name, unique: options.unique });
     },
     insertOne: async (event) => {
       const key = `${event[idField]}:${event.sessionId}`;
@@ -74,9 +75,9 @@ test('records one event per template and session and returns persistent counts',
   assert.equal(collection.events.size, 3);
   assert.equal(collection.events.get(`mood-hero:${SESSION_A}`).userId, 'firebase-user-1');
   assert.equal(collection.events.get(`portfolio-closing:${SESSION_A}`).userId, null);
-  assert.equal(collection.indexes.length, 2);
-  assert.equal(collection.indexes[0].options.unique, true);
-  assert.deepEqual(collection.indexes.map((index) => index.options.name), [
+  assert.equal(collection.createdIndexes.length, 2);
+  assert.equal(collection.createdIndexes[0].options.unique, true);
+  assert.deepEqual(collection.createdIndexes.map((index) => index.options.name), [
     'template_session_unique',
     'created_at_template',
   ]);
@@ -122,11 +123,29 @@ test('tracks components independently from templates with their own deduplicatio
     await service.listComponentViewCounts(['target-cursor', 'black-hole-cursor', 'missing']),
     { 'target-cursor': 1, 'black-hole-cursor': 1, missing: 0 },
   );
-  assert.equal(collection.indexes[0].options.unique, true);
-  assert.deepEqual(collection.indexes.map((index) => index.options.name), [
+  assert.equal(collection.createdIndexes[0].options.unique, true);
+  assert.deepEqual(collection.createdIndexes.map((index) => index.options.name), [
     'componentId_session_unique',
     'created_at_componentId',
   ]);
+});
+
+test('reuses existing indexes even when MongoDB assigned different names', async () => {
+  const collection = createFakeCollection('componentId');
+  collection.indexes = async () => [
+    { name: '_id_', key: { _id: 1 } },
+    { name: 'legacy_unique_name', key: { componentId: 1, sessionId: 1 }, unique: true },
+    { name: 'legacy_recent_name', key: { createdAt: -1, componentId: 1 } },
+  ];
+  const service = createComponentViewsService(async () => collection);
+
+  const result = await service.recordComponentView({
+    componentId: 'target-cursor',
+    sessionId: SESSION_A,
+  });
+
+  assert.equal(result.views, 1);
+  assert.equal(collection.createdIndexes.length, 0);
 });
 
 test('validates template and session identifiers', async () => {

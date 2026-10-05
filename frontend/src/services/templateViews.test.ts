@@ -97,6 +97,7 @@ describe('template view API client', () => {
         expect(result.viewRecorded).toBe(true);
         expect(body.templateId).toBe('mood-hero');
         expect(body.sessionId).toBe(getViewSessionId());
+        expect(request?.headers).not.toHaveProperty('Authorization');
         expect(getTemplateViewCount('mood-hero')).toBe(3913);
     });
 
