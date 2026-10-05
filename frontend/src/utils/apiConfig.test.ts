@@ -36,15 +36,18 @@ afterEach(() => {
 const warned = () => warn.mock.calls.map((c) => String(c[0])).join('\n');
 const warnCount = () => warn.mock.calls.length;
 
-describe('Task 5.16 CASE 1 - production, no env var configured', () => {
-  it('resolves to the current origin (same-origin)', () => {
-    expect(resolveApiBaseUrl({ PROD: true }, prodOrigin)).toBe('https://www.uihub.codes');
+describe('production defaults', () => {
+  it('routes known UI-HUB production domains to the Mongo-connected API', () => {
+    expect(resolveApiBaseUrl({ PROD: true }, prodOrigin)).toBe('https://ui-hub.onrender.com');
     expect(warnCount()).toBe(0);
   });
 
-  it('never falls back to a Render host', () => {
-    const resolved = resolveApiBaseUrl({ PROD: true }, prodOrigin);
-    expect(resolved).not.toMatch(/onrender\.com/);
+  it('uses same-origin for unrelated production deployments', () => {
+    expect(resolveApiBaseUrl({ PROD: true }, {
+      ...prodOrigin,
+      origin: 'https://other.example',
+      hostname: 'other.example',
+    })).toBe('https://other.example');
   });
 });
 
@@ -100,16 +103,16 @@ describe('Task 5.16 CASE 3 - local development', () => {
 
 describe('Task 5.16 CASE 4 - production with a stale legacy Render URL', () => {
   it.each(KNOWN_DEAD_API_HOSTS.map((h) => [`https://${h}`, h] as const))(
-    'warns and falls back to the current origin for %s',
+    'warns and falls back to the Mongo-connected API for %s',
     (url, host) => {
       const resolved = resolveApiBaseUrl({ PROD: true, VITE_API_URL: url }, prodOrigin);
 
-      expect(resolved).toBe(prodOrigin.origin);
+      expect(resolved).toBe('https://ui-hub.onrender.com');
 
       const message = warned();
       expect(message).toContain('WARNING');
       expect(message).toContain(host);
-      expect(message).toContain(prodOrigin.origin);
+      expect(message).toContain('https://ui-hub.onrender.com');
     }
   );
 
@@ -137,29 +140,29 @@ describe('Task 5.16 CASE 4 - production with a stale legacy Render URL', () => {
 });
 
 describe('Task 5.16 CASE 5 - malformed or unsafe configured URL', () => {
-  it('falls back to the origin for a non-URL string', () => {
+  it('falls back to the healthy API for a non-URL string on the production site', () => {
     expect(
       resolveApiBaseUrl({ PROD: true, VITE_API_URL: 'not-a-url' }, prodOrigin)
-    ).toBe('https://www.uihub.codes');
+    ).toBe('https://ui-hub.onrender.com');
     expect(warned()).toMatch(/not a valid absolute URL/);
   });
 
-  it('falls back to the origin for a relative path', () => {
+  it('falls back to the healthy API for a relative path on the production site', () => {
     expect(
       resolveApiBaseUrl({ PROD: true, VITE_API_URL: '/api' }, prodOrigin)
-    ).toBe('https://www.uihub.codes');
+    ).toBe('https://ui-hub.onrender.com');
   });
 
   it('rejects a non-http protocol rather than emitting an unusable base', () => {
     expect(
       resolveApiBaseUrl({ PROD: true, VITE_API_URL: 'ftp://api.example.com' }, prodOrigin)
-    ).toBe('https://www.uihub.codes');
+    ).toBe('https://ui-hub.onrender.com');
     expect(warned()).toMatch(/unsupported protocol/);
   });
 
   it('treats an empty or whitespace value as unset', () => {
     expect(resolveApiBaseUrl({ PROD: true, VITE_API_URL: '   ' }, prodOrigin)).toBe(
-      'https://www.uihub.codes'
+      'https://ui-hub.onrender.com'
     );
     expect(warnCount()).toBe(0);
   });

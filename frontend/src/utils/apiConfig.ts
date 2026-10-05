@@ -1,11 +1,10 @@
 /**
  * API base URL resolution.
  *
- * Canonical architecture (Phase 5):
- *   - production  -> same-origin by default. The Vercel deployment serves the
- *                    frontend AND /api from one host, so no configuration is
- *                    required and no cross-origin request is made.
- *   - external    -> opt-in, only via an explicit VITE_API_URL.
+ * Canonical production architecture:
+ *   - UI-HUB production sites use the Mongo-connected Render REST API.
+ *   - other deployments use same-origin by default.
+ *   - an explicit, valid VITE_API_URL overrides either default.
  *   - development -> the local backend on port 5000.
  *
  * `VITE_API_URL` is OPTIONAL, not required. It is inlined at build time, so a
@@ -21,6 +20,15 @@
 export const KNOWN_DEAD_API_HOSTS = [
   'ui-hub-backend-mcp.onrender.com',
 ] as const;
+
+const PRODUCTION_API_URL = 'https://ui-hub.onrender.com';
+const UI_HUB_PRODUCTION_HOSTS = new Set([
+  'uihub.codes',
+  'www.uihub.codes',
+  'ui-hub-design.vercel.app',
+  'ui-hub-design-git-main-jainil224s-projects.vercel.app',
+  'ui-hub-design-jainil224s-projects.vercel.app',
+]);
 
 export interface ApiEnv {
   PROD?: boolean;
@@ -87,8 +95,7 @@ function warnDeadHost(url: string, host: string, fallback: string): void {
   console.warn(
     `[API Config] WARNING: the configured production API "${url}" points at ` +
       `"${host}", which is verified unreachable (the Render origin is refused ` +
-      `at the Cloudflare edge). Falling back to the current origin "${fallback}" ` +
-      `for the unified frontend/API deployment.`
+      `at the Cloudflare edge). Falling back to "${fallback}".`
   );
 }
 
@@ -104,18 +111,22 @@ function warnInvalid(raw: string, reason: string, fallback: string): void {
  */
 export function resolveApiBaseUrl(env: ApiEnv, loc?: ApiLocation): string {
   const configuredRaw = env.VITE_API_URL || env.VITE_API_BASE_URL;
+  const originHost = loc?.hostname.toLowerCase();
+  const isUiHubProductionSite = Boolean(
+    originHost && UI_HUB_PRODUCTION_HOSTS.has(originHost)
+  );
+  const fallback = loc
+    ? (isUiHubProductionSite ? PRODUCTION_API_URL : loc.origin)
+    : '';
 
   if (env.PROD) {
     if (configuredRaw !== undefined && configuredRaw !== null && String(configuredRaw).trim() !== '') {
       const validated = validateApiUrl(configuredRaw);
       if (isUrlInvalid(validated)) {
-        // Safe failure: a malformed value must not become a broken request URL.
-        const fallback = loc?.origin ?? '';
         warnInvalid(String(configuredRaw), validated.reason, fallback || 'empty (no origin available)');
         return fallback;
       }
       if (isKnownDeadApiHost(validated.url)) {
-        const fallback = loc?.origin ?? '';
         warnDeadHost(validated.url, new URL(validated.url).hostname, fallback || '(same-origin)');
         return fallback;
       } else {
@@ -124,8 +135,11 @@ export function resolveApiBaseUrl(env: ApiEnv, loc?: ApiLocation): string {
       return validated.url;
     }
 
+    if (isUiHubProductionSite) {
+      console.log(`[API Config] Production: using the Mongo-connected UI-HUB API at ${PRODUCTION_API_URL}.`);
+      return PRODUCTION_API_URL;
+    }
     if (loc) {
-      // Same-origin is the production default and the intended architecture.
       console.log(`[API Config] Production: using same-origin API at ${loc.origin} (no VITE_API_URL set).`);
       return loc.origin;
     }

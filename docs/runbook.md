@@ -4,8 +4,8 @@ Production topology:
 
 | Service | Platform | Source | URL |
 |---|---|---|---|
-| Frontend (Vite/React) | Vercel | repo root via `vercel.json` | https://ui-hub-design.vercel.app |
-| Backend REST API | Vercel serverless | `api/index.js` wraps `backend/src/server.js` | https://ui-hub-design.vercel.app/api |
+| Frontend (Vite/React) | Vercel | repo root via `vercel.json` | https://www.uihub.codes |
+| Backend REST API | Render | unified backend service (`render.yaml`) | https://ui-hub.onrender.com |
 | MCP server | Render | **UI-HUB-MCP repo** (`render.yaml`, standalone) | https://ui-hub-mcp.onrender.com/mcp |
 
 All services auto-deploy on push to the default branch. Secrets (`MONGODB_URI`, `RAZORPAY_*`, `FIREBASE_*`, `BREVO_API_KEY`, `REDIS_URL`, `MCP_FIREBASE_*`) are `sync: false` and must be set once in the Render/Vercel dashboards.
@@ -57,10 +57,11 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 
 ### 3.0 Browser API routing (view counts and other REST requests)
 
-- In the production frontend build environment, set `VITE_API_URL` to
-  `https://ui-hub.onrender.com` so browser API requests reach the Mongo-connected
-  Render backend. This is a Vite build-time variable; changing it requires a
-  frontend rebuild and redeploy.
+- The frontend routes UI-HUB production domains to
+  `https://ui-hub.onrender.com` by default. Keep `VITE_API_URL` set to that URL
+  in the production frontend build environment to make the deployment target
+  explicit. It is a Vite build-time variable; changing it requires a rebuild
+  and redeploy.
 - The Render backend CORS allowlist must include the exact frontend origin
   (`https://www.uihub.codes` and/or `https://uihub.codes`, as applicable).
 - Verify `/health` reports `dependencies.mongodb: connected`, then check both
