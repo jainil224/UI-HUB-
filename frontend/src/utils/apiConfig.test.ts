@@ -120,6 +120,16 @@ describe('Task 5.16 CASE 4 - production with a stale legacy Render URL', () => {
     expect(resolved).toBe('');
   });
 
+  it('keeps the currently live Render API as the configured production base', () => {
+    expect(
+      resolveApiBaseUrl(
+        { PROD: true, VITE_API_URL: 'https://ui-hub.onrender.com' },
+        prodOrigin
+      )
+    ).toBe('https://ui-hub.onrender.com');
+    expect(warnCount()).toBe(0);
+  });
+
   it('does not warn for a host that is merely similar but live', () => {
     resolveApiBaseUrl({ PROD: true, VITE_API_URL: 'https://ui-hub.onrender.commander.example' }, prodOrigin);
     expect(warnCount()).toBe(0);
@@ -178,10 +188,10 @@ describe('validateApiUrl', () => {
 
 describe('isKnownDeadApiHost', () => {
   it('matches only the verified-dead hosts', () => {
-    expect(isKnownDeadApiHost('https://ui-hub.onrender.com')).toBe(true);
-    expect(isKnownDeadApiHost('https://ui-hub.onrender.com/some/path')).toBe(true);
+    expect(isKnownDeadApiHost('https://ui-hub-backend-mcp.onrender.com')).toBe(true);
+    expect(isKnownDeadApiHost('https://ui-hub-backend-mcp.onrender.com/some/path')).toBe(true);
+    expect(isKnownDeadApiHost('https://ui-hub.onrender.com')).toBe(false);
     expect(isKnownDeadApiHost('https://api.example.com')).toBe(false);
     expect(isKnownDeadApiHost('not-a-url')).toBe(false);
   });
 });
-

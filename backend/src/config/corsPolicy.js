@@ -42,6 +42,8 @@ export const DEFAULT_ALLOWED_ORIGINS = Object.freeze([
   'http://localhost:3000',
   // Production
   'https://ui-hub-design.vercel.app',
+  'https://uihub.codes',
+  'https://www.uihub.codes',
   // Known Vercel preview deployments
   'https://ui-hub-design-git-main-jainil224s-projects.vercel.app',
   'https://ui-hub-design-jainil224s-projects.vercel.app',

@@ -25,6 +25,7 @@ import {
 } from '../src/config/corsPolicy.js';
 
 const PROD_ORIGIN = 'https://ui-hub-design.vercel.app';
+const CANONICAL_PROD_ORIGINS = ['https://uihub.codes', 'https://www.uihub.codes'];
 const DEV_ORIGIN = 'http://localhost:5173';
 
 let baseUrl;
@@ -63,6 +64,12 @@ async function probe(origin, { method = 'GET' } = {}) {
 describe('6.2 invariant: allowed / rejected / missing / malformed', () => {
   test('allowed production origin is permitted and echoed', async () => {
     assert.equal(await probe(PROD_ORIGIN), PROD_ORIGIN);
+  });
+
+  test('canonical production website origins are permitted', async () => {
+    for (const origin of CANONICAL_PROD_ORIGINS) {
+      assert.equal(await probe(origin), origin);
+    }
   });
 
   test('allowed development origin is permitted', async () => {

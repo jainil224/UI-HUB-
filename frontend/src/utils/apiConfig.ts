@@ -19,7 +19,6 @@
 
 /** Hosts verified unreachable in production during Phase 4/5. */
 export const KNOWN_DEAD_API_HOSTS = [
-  'ui-hub.onrender.com',
   'ui-hub-backend-mcp.onrender.com',
 ] as const;
 

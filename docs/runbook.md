@@ -55,6 +55,20 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 
 ## 3. Post-deploy QA checklist
 
+### 3.0 Browser API routing (view counts and other REST requests)
+
+- In the production frontend build environment, set `VITE_API_URL` to
+  `https://ui-hub.onrender.com` so browser API requests reach the Mongo-connected
+  Render backend. This is a Vite build-time variable; changing it requires a
+  frontend rebuild and redeploy.
+- The Render backend CORS allowlist must include the exact frontend origin
+  (`https://www.uihub.codes` and/or `https://uihub.codes`, as applicable).
+- Verify `/health` reports `dependencies.mongodb: connected`, then check both
+  `GET /api/v1/templates/views?type=template&ids=<template-id>` and
+  `GET /api/v1/templates/views?type=component&ids=<component-id>` return 200.
+- Do not treat a failed API request as a zero count or replace it with a
+  client-side increment. Counts are persisted by the backend.
+
 ### 3.1 Frontend (browser, logged out + free account)
 - [ ] Hero/preview page for a premium component renders the demo, but the "View Source" /
       "Get Code" action is gated (locked badge / upgrade prompt), not served.
