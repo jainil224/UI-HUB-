@@ -5784,5 +5784,86 @@
         "CSS filter blur"
       ]
     }
+  },
+  "dots-to-solid-text": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: the stage fills its container and scrubs against the nearest scrolling pane instead of the window."
+      },
+      {
+        "name": "showDemoButton",
+        "type": "boolean",
+        "default": "false",
+        "description": "In compact mode, overlay a Live Demo pill that links to the full-screen demo."
+      },
+      {
+        "name": "headline",
+        "type": "string",
+        "default": "\"UI HUB\"",
+        "description": "Wordmark shown at the top of scene one that drifts left as you scroll."
+      },
+      {
+        "name": "quote",
+        "type": "string[]",
+        "default": "['I WANT PEOPLE TO','REMEMBER ME FOR','MORE THAN CODE']",
+        "description": "Exactly three lines. They arrive as a huge dot-matrix wordmark, slide in line by line, shrink to quote size, then get swapped for solid Anton text on a diagonal wipe edge."
+      },
+      {
+        "name": "sub",
+        "type": "string[]",
+        "default": "two caption lines",
+        "description": "Supporting caption that fades in under the assembled quote lines."
+      },
+      {
+        "name": "yardNumbers",
+        "type": "string[]",
+        "default": "['20','30','40','50','40','30']",
+        "description": "Large ghost numbers along the bottom edge of scene one that scroll sideways."
+      },
+      {
+        "name": "cards",
+        "type": "CardData[]",
+        "default": "five UI HUB specialty cards",
+        "description": "Artwork cards that fly in, fan around the stage and drift left in scene one. Each carries title, subtitle, monogram, gradient/beam/field colors and rotation."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A pinned, scroll-scrubbed signature section built on one deterministic 170-unit GSAP timeline (defaults ease 'none', `timeline.to({}, {duration:170})` fixes the length). Scene 1 (0-40): golden-framed brand cards labelled UI / HUB / scroll / Build by / jainil are placed with gsap.set at a fanned baseline and parallax-drift left at per-card speeds while the headline and ghost numbers scroll off. Scene 2 (33-92): the quote is first rendered into a low-resolution offscreen canvas (S = max(3, round(W/380)) cells) and sampled into a dot matrix; an alpha tween fades the dots in, the matrix centers, a dissolve edge e sweeps 1.7 to -0.3, and each line slides home on its own eased x offset (o0-34, o1-34, o2-34). 92-112 the matrix shrinks from 3.4x to the solid font size while the stage background mixes from #07050f to #1d1340. Scene 3 (112-142): bright spans are clipped by a per-line diagonal polygon(0 -5%,X% -5%,X-22% 105%,0 105%) that wipes 0% to 122% on staggered windows (112/119/126) while rowEdge hides the dots behind the revealed text. 140-163: quote icon and caption fade in. In library previews the timeline is driven by an invisible self-contained scroll column inside the card (trigger on a spacer, scroller on that column), playing only when the visitor scrolls within the preview.",
+      "states": {
+        "from": "scene one: fanned brand cards (UI · HUB · scroll · Build by · jainil), headline and yard numbers on the near-black stage",
+        "to": "scene three: solid Anton lines wiped in with caption, stage drifted to plum"
+      },
+      "cssProperties": [
+        "position: sticky stage inside a 1100vh runway",
+        "clip-path polygon wipe with per-line skewed edge",
+        "offscreen-canvas sampled dot matrix",
+        "background-color interpolated by timeline progress",
+        "font metrics measured via canvas measureText + fontBoundingBox"
+      ],
+      "description": "A scroll-stopping signature moment: specialty cards fan and drift past, the quote materializes as a dot matrix, shrinks, then wipes to solid Anton lines as the stage tints to plum.",
+      "libraries": [
+        "react",
+        "gsap",
+        "gsap/ScrollTrigger",
+        "canvas",
+        "offscreen canvas"
+      ],
+      "requirements": [
+        "ScrollTrigger scrub on a pinned runway",
+        "deterministic fromTo tweens with immediateRender:false",
+        "offscreen-canvas pixel sampling for the dot matrix",
+        "document.fonts.load gate for Anton",
+        "debounced rebuild on resize"
+      ]
+    }
   }
 }

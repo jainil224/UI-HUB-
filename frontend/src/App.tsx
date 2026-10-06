@@ -24,6 +24,7 @@ const BuildWithUIHubPage = React.lazy(() => import('./pages/BuildWithUIHubPage/B
 const BuildWithUIHubDetailPage = React.lazy(() => import('./pages/BuildWithUIHubPage/BuildWithUIHubDetailPage'));
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
+const DotsToSolidTextDemoPage = React.lazy(() => import('./pages/Components/DotsToSolidTextDemoPage'));
 const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
 const SplitOrbDemoPage = React.lazy(() => import('./pages/Components/SplitOrbDemoPage'));
 const SegmintDemoPage = React.lazy(() => import('./pages/Components/SegmintDemoPage'));
@@ -150,6 +151,7 @@ const AppShell = () => {
               <Route path="/demo/3d-scroll-animation" element={<Scroll3DAnimationPage />} />
               <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
               <Route path="/demo/section-scroll" element={<SectionScrollPage />} />
+              <Route path="/demo/dots-to-solid-text" element={<DotsToSolidTextDemoPage />} />
               <Route path="/demo/tars-hero-arena" element={<TarsDemoPage />} />
               <Route path="/demo/split-fuzzy-orb" element={<SplitOrbDemoPage />} />
               <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />

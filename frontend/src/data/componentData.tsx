@@ -34,6 +34,7 @@ const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
+const DotsToSolidText = React.lazy(() => import('../components/ui/DotsToSolidText').then(m => ({ default: m.DotsToSolidText })));
 const ScrollExpand = React.lazy(() => import('../components/ui/ScrollExpand'));
 const OptionWheel = React.lazy(() => import('../components/ui/OptionWheel'));
 const HackerBackground = React.lazy(() => import('../components/ui/HackerBackground'));
@@ -2806,6 +2807,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'globe': Globe,
     'cube-loader': CubeLoader,
     'prism-pyramid': PrismPyramid,
+    'dots-to-solid-text': DotsToSolidText,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15299,6 +15301,20 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         ),
         code: "",
         vibePrompt: "",
+    },
+
+    // ── Dots to Solid Text ─────────────────────────────────
+    {
+        id: "dots-to-solid-text",
+        title: "Dots to Solid Text",
+        category: "scroll",
+        isPremium: true,
+        addedAt: "2026-10-06",
+        newBadgeDays: 120,
+        description: "A signature scroll-stopper: five labeled cards (UI · HUB · scroll · Build by · jainil) fan and drift past, the quote materializes as a sampled dot matrix, shrinks, then wipes to solid Anton lines on a diagonal edge as the stage tints to plum.",
+        preview: renderComponent("dots-to-solid-text", "DotsToSolidText", { compact: true, showDemoButton: true }),
+        code: `import { DotsToSolidText } from '@/components/ui/DotsToSolidText';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <DotsToSolidText />\n    </div>\n  );\n}`,
+        vibePrompt: "Create a signature scroll-stopper page section in React + TSX with GSAP + ScrollTrigger. One deterministic 170-unit scrubbed timeline (`timeline.to({}, {duration:170})`, ease 'none', start 'top top' / end 'bottom bottom') choreographs: scene 1 (0-40) golden-framed brand cards labelled UI / HUB / scroll / Build by / jainil placed by gsap.set at a fanned baseline that parallax-drift left at per-card speeds while the headline and ghost numbers scroll off with them; scene 2 (33-92) the three Anton lines are rendered into a low-res offscreen canvas (dot spacing max(3, W/380)) and sampled into a dot matrix that fades in, slides each line home on its own eased offset, and dissolves along an edge that sweeps 1.7 to -0.3; (92-112) the matrix shrinks to quote size while the stage background mixes #07050f -> #1d1340; scene 3 (112-142) solid text replaces the dots line by line through a skewed clip-path polygon(0 -5%,X% -5%,(X-22)% 105%,0 105%) wiping on stagger windows 112/119/126, then a quote icon + caption fade in (140-147). In library/thumbnail previews the full timeline is instead driven by an invisible self-contained scroll column inside the card (trigger on a spacer, scroller on that column), so the animation plays only when the visitor scrolls within the preview itself."
     },
 
 ];

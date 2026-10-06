@@ -110,7 +110,18 @@ const Scroll3DAnimation: React.FC<Scroll3DAnimationProps> = ({
     useGSAP(() => {
         if (!containerRef.current || !isFirstImageLoaded) return;
 
-        const scroller = containerRef.current.closest('.overflow-y-auto, .overflow-auto') || window;
+        // Resolve the scroll container by computed style, not class: utility
+        // classes like `md:overflow-y-auto` never match a `.overflow-y-auto`
+        // selector (the library's main column uses exactly that).
+        const el = containerRef.current;
+        const scroller = ((): HTMLElement | Window => {
+            for (let node = el.parentElement; node; node = node.parentElement) {
+                if (node === document.documentElement || node === document.body) break;
+                const overflowY = getComputedStyle(node).overflowY;
+                if (overflowY === 'auto' || overflowY === 'scroll') return node;
+            }
+            return window;
+        })();
 
         // Master Timeline for all animations
         const mainTl = gsap.timeline({

@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+/* Dots to Solid Text — Canonical ScrollStory port.
+   Values match the reference scroll section verbatim; every selector is
+   scoped under `.dts-root` so it can never collide with other components.
+   `.dts-compact` turns it into a scroll-scrubbed library preview. */
+
+.dts-root {
+  --ink: #07050f;
+  --plum: #1d1340;
+  --violet: #5a2fb0;
+  --gold: #e0b04a;
+  --bone: #cfc6b4;
+  --dust: #8f87a6;
+  --display: "Anton", Impact, "Arial Narrow", sans-serif;
+  --body: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+  position: relative;
+  width: 100%;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: var(--body);
+  color-scheme: dark;
+}
+
+.dts-root .ss-runway {
+  position: relative;
+  height: 1100vh; /* overwritten from JS (900vh on mobile) */
+  overflow-x: clip;
+}
+
+.dts-root .ss-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  background: var(--ink);
+}
+
+.dts-root .ss-layer { position: absolute; inset: 0; pointer-events: none; }
+.dts-root .ss-topglow { background: radial-gradient(70% 38% at 50% 0%, rgba(90, 47, 176, .34), transparent 70%); }
+.dts-root .ss-glow { opacity: .25; background: radial-gradient(60% 55% at 50% 52%, rgba(104, 58, 200, .38), transparent 72%); }
+.dts-root .ss-vignette { background: radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(3, 2, 8, .7) 100%); z-index: 6; }
+
+/* scene 1: parallax cards */
+.dts-root .ss-s1 { z-index: 2; }
+.dts-root .ss-headline {
+  position: absolute; left: 50%; top: 3%; white-space: nowrap;
+  font-family: var(--display); line-height: .95; letter-spacing: .005em;
+  color: var(--violet); opacity: .5; transform: translateX(-50%);
+  -webkit-mask-image: linear-gradient(#000 35%, transparent 100%);
+          mask-image: linear-gradient(#000 35%, transparent 100%);
+  text-shadow: 0 0 40px rgba(90, 47, 176, .5);
+}
+.dts-root .ss-nums { position: absolute; left: 0; bottom: 3%; height: 20%; }
+.dts-root .ss-nums span { position: absolute; bottom: 0; font-family: var(--display); color: rgba(255, 255, 255, .07); line-height: 1; }
+
+.dts-root .ss-card { position: absolute; left: 0; top: 0; margin: 0; will-change: transform; }
+.dts-root .ss-frame {
+  position: relative; width: 100%; height: 100%; padding: 3px; border-radius: 10px; box-sizing: border-box;
+  background: linear-gradient(135deg, #f3d27a, #b8862b 45%, #f0cf74 70%, #8a6218);
+  box-shadow: 0 0 34px rgba(224, 176, 74, .22), 0 18px 40px rgba(0, 0, 0, .55);
+}
+.dts-root .ss-art { width: 100%; height: 100%; border-radius: 8px; overflow: hidden; background: #120a2a; }
+.dts-root .ss-art svg { display: block; width: 100%; height: 100%; }
+.dts-root .ss-sheen {
+  position: absolute; inset: 3px; border-radius: 8px; mix-blend-mode: screen;
+  background: linear-gradient(120deg, rgba(255, 255, 255, .22), transparent 38%, transparent 70%, rgba(255, 255, 255, .08));
+}
+.dts-root .ss-card figcaption {
+  position: absolute; top: 100%; left: -18%; width: 136%; margin-top: 10px; text-align: center;
+  font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em;
+}
+.dts-root .ss-card figcaption b { display: block; font-weight: 600; font-size: clamp(8px, .56vw + 2px, 11px); color: #eee9f7; }
+.dts-root .ss-card figcaption span { display: block; margin-top: 4px; font-weight: 500; font-size: clamp(7px, .42vw + 2px, 9px); color: var(--dust); line-height: 1.5; }
+
+/* scene 2: dot-matrix canvas */
+.dts-root .ss-dots { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3; }
+
+/* scene 3: solid quote */
+.dts-root .ss-quote { position: absolute; left: 50%; top: 50%; z-index: 4; transform: translate(-50%, -50%); text-align: center; }
+.dts-root .ss-qlines { position: relative; }
+.dts-root .ss-qline { position: relative; display: block; white-space: nowrap; font-family: var(--display); text-transform: uppercase; }
+.dts-root .ss-qline .ss-sizer { visibility: hidden; }
+.dts-root .ss-qline .ss-bright {
+  position: absolute; inset: 0; text-align: center; color: var(--bone);
+  clip-path: polygon(0 -5%, 0 -5%, -20% 105%, 0 105%);
+}
+.dts-root .ss-qicon { position: absolute; left: 50%; bottom: 100%; transform: translateX(-50%); font-family: var(--display); color: var(--dust); opacity: 0; line-height: 1; letter-spacing: .08em; }
+.dts-root .ss-qsub { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); width: min(86vw, 560px); opacity: 0; color: var(--dust); font-weight: 500; line-height: 1.55; }
+
+/* fixed UI */
+.dts-root .ss-ui { position: absolute; z-index: 8; color: #fff; }
+.dts-root .ss-logo { top: calc(18px + env(safe-area-inset-top, 0px)); left: 22px; width: 30px; height: 30px; }
+.dts-root .ss-menu { top: calc(22px + env(safe-area-inset-top, 0px)); right: 22px; width: 26px; height: 18px; }
+.dts-root .ss-snd { right: 22px; bottom: 18px; width: 16px; height: 12px; opacity: .7; }
+.dts-root .ss-hint {
+  position: absolute; z-index: 8; left: 50%; bottom: 22px; transform: translateX(-50%); text-align: center;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .28em; color: var(--dust); text-transform: uppercase;
+}
+.dts-root .ss-hint i { display: block; width: 1px; height: 28px; margin: 8px auto 0; background: linear-gradient(var(--dust), transparent); }
+
+.dts-root .ss-outro { background: var(--ink); padding: 18vh 24px; text-align: center; font-family: var(--mono); font-size: 12px; letter-spacing: .18em; color: var(--dust); text-transform: uppercase; }
+.dts-root .ss-outro p { margin: 0 auto; max-width: 46ch; line-height: 1.9; }
+
+/* Live Demo overlay (compact preview only) */
+.dts-root .dts-demo-btn {
+  position: absolute; top: 14px; right: 14px; z-index: 9;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(7, 5, 15, .72); color: #fff; text-decoration: none;
+  font-family: var(--mono); font-size: 10px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, .22); backdrop-filter: blur(10px);
+  transition: background .2s, transform .2s;
+}
+.dts-root .dts-demo-btn:hover { background: rgba(90, 47, 176, .85); transform: translateY(-1px); }
+
+/* preview (compact) mode: a self-contained mini-scroller inside the card.
+   `.ss-scroll` is an invisible scroll column that plays the whole timeline;
+   the stage sticks to it while `.ss-spacer` supplies the scroll range, so the
+   animation is driven only by scrolling within the preview card itself. */
+.dts-compact { height: 100%; min-height: 320px; }
+.dts-compact .ss-scroll { height: 100%; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; }
+.dts-compact .ss-scroll::-webkit-scrollbar { display: none; }
+.dts-compact .ss-stage { position: sticky; top: 0; height: 100%; }
+.dts-compact .ss-spacer { height: 240%; }
+.dts-compact .ss-ui, .dts-compact .ss-outro { display: none; }
+
+@media (max-width: 640px) { .dts-root .ss-logo { left: 16px; } .dts-root .ss-menu, .dts-root .ss-snd { right: 16px; } }
+@media (prefers-reduced-motion: reduce) { .dts-root .ss-hint i { display: none; } }

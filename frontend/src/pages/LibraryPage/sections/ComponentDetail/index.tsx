@@ -1017,15 +1017,33 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         });
     }, [item.id]);
 
-    // Wheel passthrough. The library page scrolls the document, so a wheel over a
-    // preview must never be swallowed. Some previews call stopPropagation or
-    // preventDefault (Three.js canvases, wheel-driven widgets), and some nest an
-    // inner scroller inside an `overflow-hidden` stage, which kills native scroll
-    // chaining. The capture phase runs before those listeners, so forward the delta
-    // to the page only when nothing inside the frame can consume it.
+    // Wheel passthrough. The library page scrolls its scrollable main column, so a
+    // wheel over a preview must never be swallowed. Some previews call
+    // stopPropagation or preventDefault (Three.js canvases, wheel-driven widgets),
+    // and some nest an inner scroller inside an `overflow-hidden` stage, which
+    // kills native scroll chaining. The capture phase runs before those listeners,
+    // so forward the delta to the page scroller only when nothing inside the frame
+    // can consume it.
     React.useEffect(() => {
         const frame = previewRef.current;
         if (!frame || isFullscreen) return;
+
+        // Determine what the page uses to scroll: the nearest ancestor scroll
+        // container of the preview (the library's `main.main-scroll`), or the
+        // window on pages that scroll the document. The document itself never has
+        // `overflowY: scroll` so this walk naturally falls through to the window.
+        const pageScroller = ((): HTMLElement | Window => {
+            for (let node = frame.parentElement; node; node = node.parentElement) {
+                if (node === document.documentElement || node === document.body) break;
+                const overflowY = getComputedStyle(node).overflowY;
+                if (overflowY === 'auto' || overflowY === 'scroll') return node;
+            }
+            return window;
+        })();
+
+        const scrollPage = (top: number) => {
+            pageScroller.scrollBy({ top, left: 0, behavior: 'auto' });
+        };
 
         const canScrollInside = (el: HTMLElement, delta: number) => {
             const max = el.scrollHeight - el.clientHeight;
@@ -1051,7 +1069,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 // the page on the next task, once every listener has had its turn.
                 window.setTimeout(() => {
                     if (!event.defaultPrevented) {
-                        window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+                        scrollPage(delta);
                     }
                 }, 0);
                 return;
@@ -1059,7 +1077,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
             event.preventDefault();
             event.stopPropagation();
-            window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+            scrollPage(delta);
         };
 
         frame.addEventListener('wheel', handleWheel, { passive: false, capture: true });
