@@ -1017,6 +1017,55 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         });
     }, [item.id]);
 
+    // Wheel passthrough. The library page scrolls the document, so a wheel over a
+    // preview must never be swallowed. Some previews call stopPropagation or
+    // preventDefault (Three.js canvases, wheel-driven widgets), and some nest an
+    // inner scroller inside an `overflow-hidden` stage, which kills native scroll
+    // chaining. The capture phase runs before those listeners, so forward the delta
+    // to the page only when nothing inside the frame can consume it.
+    React.useEffect(() => {
+        const frame = previewRef.current;
+        if (!frame || isFullscreen) return;
+
+        const canScrollInside = (el: HTMLElement, delta: number) => {
+            const max = el.scrollHeight - el.clientHeight;
+            if (max <= 1) return false;
+            const overflowY = getComputedStyle(el).overflowY;
+            if (overflowY !== 'auto' && overflowY !== 'scroll') return false;
+            return delta > 0 ? el.scrollTop < max - 1 : el.scrollTop > 1;
+        };
+
+        const handleWheel = (event: WheelEvent) => {
+            const delta = event.deltaY;
+            if (delta === 0) return;
+
+            const target = event.target as HTMLElement | null;
+
+            for (let node = target; node && node !== frame; node = node.parentElement) {
+                if (canScrollInside(node, delta)) return;
+            }
+
+            if (target?.closest?.('[data-preview-wheel-lock]')) {
+                // A component claims this gesture (wheel-driven widgets). Let its own
+                // listener run; if it declines to consume the event, hand the delta to
+                // the page on the next task, once every listener has had its turn.
+                window.setTimeout(() => {
+                    if (!event.defaultPrevented) {
+                        window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+                    }
+                }, 0);
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+            window.scrollBy({ top: delta, left: 0, behavior: 'auto' });
+        };
+
+        frame.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+        return () => frame.removeEventListener('wheel', handleWheel, { capture: true });
+    }, [isFullscreen]);
+
     // Entitled = full Pro (or special account) OR this component was bought outright.
     const canAccessComponent = isProUser || purchasedComponents.includes(item.id.toLowerCase());
     const [currency] = React.useState<Currency>(detectCurrency);
@@ -1719,7 +1768,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             </div>
 
             {/* ── Action Toolbar: Tabs + Fullscreen (sticky below navbar on mobile) ── */}
-            <div className="sticky top-16 md:top-0 z-[45] flex items-center justify-between gap-2 sm:gap-4 py-2 bg-brand-bg/95 backdrop-blur-sm border-y-2 border-neutral-800">
+            <div className="sticky top-16 z-[45] flex items-center justify-between gap-2 sm:gap-4 py-2 bg-brand-bg/95 backdrop-blur-sm border-y-2 border-neutral-800">
                 <div className="flex items-center flex-1 sm:flex-initial gap-1 sm:gap-2 p-1 bg-black border-2 border-white rounded-lg brutal-shadow-black min-w-0">
                     <button
                         onClick={() => setTab('preview')}

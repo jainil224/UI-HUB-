@@ -11,6 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 import { isNewComponent } from '../../utils/componentUtils';
 import uiHubLogo from '../../Assets/webiste logo.svg';
+import { useScrollChainBoundary } from '../../hooks/useScrollChainBoundary';
 
 interface Category {
     name: string;
@@ -75,6 +76,13 @@ const LibraryPage = () => {
     const hoverTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const mainContainerRef = useRef<HTMLElement>(null);
+    const leftAsideRef = useRef<HTMLElement>(null);
+    const rightAsideRef = useRef<HTMLElement>(null);
+
+    // Both sidebars scroll internally; hand the wheel over to the page once they
+    // hit their boundary so the page never feels frozen.
+    useScrollChainBoundary(leftAsideRef);
+    useScrollChainBoundary(rightAsideRef);
 
     useEffect(() => {
         setOptimisticId(null);
@@ -232,7 +240,7 @@ const LibraryPage = () => {
                 .main-scroll::-webkit-scrollbar-thumb { background: #262626; }
             `}</style>
 
-            <div className="flex flex-col md:flex-row relative pt-14 md:pt-16 bg-brand-bg text-white md:h-dvh md:overflow-hidden">
+            <div className="flex flex-col md:flex-row relative pt-14 md:pt-16 bg-brand-bg text-white">
 
                 {/* ── Mobile Menu Drawer ── */}
                 <AnimatePresence>
@@ -449,7 +457,7 @@ const LibraryPage = () => {
                 </AnimatePresence>
 
                 {/* ── Left Column: Categories & Available Components ── */}
-                <aside className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 h-full border-r-4 border-black bg-brand-surface relative">
+                <aside ref={leftAsideRef} onScroll={closePreview} className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 md:sticky md:top-16 md:self-start md:h-[calc(100dvh-4rem)] overflow-y-auto sidebar-scroll border-r-4 border-black bg-brand-surface relative z-30">
                     <div className="shrink-0 px-5 pt-5 pb-4 border-b-2 border-neutral-800 space-y-3">
                         <Link to="/" className="flex items-center gap-2 text-neutral-400 hover:text-white">
                             <Home size={12} /> <span className="text-[10px] font-black uppercase tracking-widest">HOME</span>
@@ -459,7 +467,7 @@ const LibraryPage = () => {
                             <span className="text-2xl font-black text-brand-blue">{totalComponents}</span>
                         </div>
                     </div>
-                    <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain sidebar-scroll px-3 py-4 space-y-3" onScroll={closePreview} onMouseLeave={closePreview}>
+                    <nav className="shrink-0 px-3 py-4 space-y-3" onMouseLeave={closePreview}>
                         <div className="border border-neutral-800 rounded bg-brand-bg p-2.5">
                             <button onClick={() => setShowUpdates(!showUpdates)} className="w-full flex items-center justify-between text-[10px] uppercase font-black">
                                 <span>Follow Updates</span>
@@ -571,7 +579,7 @@ const LibraryPage = () => {
                 </aside>
 
                 {/* ── Middle Column: Playground & Documentation ── */}
-                <main ref={mainContainerRef} className="flex-1 min-h-0 md:overflow-y-auto overscroll-contain main-scroll p-4 sm:p-6 lg:p-8">
+                <main ref={mainContainerRef} className="flex-1 min-w-0 main-scroll p-4 sm:p-6 lg:p-8">
                     <div className="w-full">
                         {/* ── Mobile "All Components" Top Bar / Button ── */}
                         <div className="md:hidden mb-4 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
@@ -620,9 +628,9 @@ const LibraryPage = () => {
                 </main>
 
                 {/* ── Right Column: Pro Card at Top + MCP Card at Bottom ── */}
-                <aside className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 h-full border-l-4 border-black bg-brand-surface/60 p-5 sticky top-0 overflow-y-auto overscroll-contain sidebar-scroll gap-5">
+                <aside ref={rightAsideRef} className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 xl:sticky xl:top-16 xl:self-start xl:max-h-[calc(100dvh-4rem)] border-l-4 border-black bg-brand-surface/60 p-5 overflow-y-auto sidebar-scroll gap-5 z-30">
                     {/* Pro Promotional Card at Top */}
-                    <div className="w-full">
+                    <div className="w-full shrink-0">
                         <div className="rounded-xl border-2 border-white bg-brand-surface p-3.5 text-white brutal-shadow-black relative overflow-hidden group">
                             {/* Ambient brand blue accent */}
                             <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-brand-blue/15 blur-xl pointer-events-none" />
@@ -685,7 +693,7 @@ const LibraryPage = () => {
                     </div>
 
                     {/* UI HUB Component Library Branding Card */}
-                    <div className="w-full rounded-xl border-2 border-white bg-brand-surface p-3.5 text-white brutal-shadow-black relative overflow-hidden">
+                    <div className="w-full shrink-0 rounded-xl border-2 border-white bg-brand-surface p-3.5 text-white brutal-shadow-black relative overflow-hidden">
                         {/* Ambient glow */}
                         <div className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-brand-blue/15 blur-xl pointer-events-none" />
                         <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-[#FFC700]/8 blur-xl pointer-events-none" />

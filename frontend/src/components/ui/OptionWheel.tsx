@@ -219,13 +219,17 @@ const OptionWheel = ({
     const el = rootRef.current;
     if (!el) return;
     const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
       const cfg = cfgRef.current;
       const delta = e.deltaMode === 1 ? e.deltaY * 24 : e.deltaY;
       // Cap each event at one step so notchy mouse wheels move exactly one
       // option per click, while touchpads still scroll continuously.
       const step = Math.max(-1, Math.min(1, delta / cfg.rowH));
-      applyTarget(targetRef.current + step, false);
+      let next = targetRef.current + step;
+      if (!cfg.loop) next = Math.min(Math.max(next, 0), Math.max(cfg.count - 1, 0));
+      // Clamped at an end: leave the event alone so the host page can scroll.
+      if (next === targetRef.current) return;
+      e.preventDefault();
+      applyTarget(next, false);
       if (wheelTimerRef.current) clearTimeout(wheelTimerRef.current);
       wheelTimerRef.current = setTimeout(() => applyTarget(targetRef.current, true), 140);
     };
@@ -312,6 +316,7 @@ const OptionWheel = ({
       role="listbox"
       tabIndex={0}
       aria-label="Option wheel"
+      data-preview-wheel-lock
       className={`relative h-full w-full select-none overflow-hidden outline-none [touch-action:none] ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}${className ? ` ${className}` : ''}`}
       style={
         {
