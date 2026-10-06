@@ -11,7 +11,6 @@ import { useAuth } from '../../context/AuthContext';
 import { prefetchComponentChunk } from '../../utils/prefetchUtils';
 import { isNewComponent } from '../../utils/componentUtils';
 import uiHubLogo from '../../Assets/webiste logo.svg';
-import { useScrollChainBoundary } from '../../hooks/useScrollChainBoundary';
 
 interface Category {
     name: string;
@@ -77,12 +76,13 @@ const LibraryPage = () => {
 
     const mainContainerRef = useRef<HTMLElement>(null);
     const leftAsideRef = useRef<HTMLElement>(null);
-    const rightAsideRef = useRef<HTMLElement>(null);
 
-    // Both sidebars scroll internally; hand the wheel over to the page once they
-    // hit their boundary so the page never feels frozen.
-    useScrollChainBoundary(leftAsideRef);
-    useScrollChainBoundary(rightAsideRef);
+    // Scroll the active component into view in the left pane whenever it
+    // changes, since that pane now scrolls independently of the rest of the page.
+    useEffect(() => {
+        const activeButton = leftAsideRef.current?.querySelector<HTMLElement>('[data-active-component]');
+        activeButton?.scrollIntoView({ block: 'nearest' });
+    }, [highlightedComponentId]);
 
     useEffect(() => {
         setOptimisticId(null);
@@ -240,7 +240,7 @@ const LibraryPage = () => {
                 .main-scroll::-webkit-scrollbar-thumb { background: #262626; }
             `}</style>
 
-            <div className="flex flex-col md:flex-row relative pt-14 md:pt-16 bg-brand-bg text-white">
+            <div className="flex flex-col md:flex-row relative pt-14 md:pt-16 bg-brand-bg text-white md:h-[100dvh] md:overflow-hidden">
 
                 {/* ── Mobile Menu Drawer ── */}
                 <AnimatePresence>
@@ -457,7 +457,7 @@ const LibraryPage = () => {
                 </AnimatePresence>
 
                 {/* ── Left Column: Categories & Available Components ── */}
-                <aside ref={leftAsideRef} onScroll={closePreview} className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 md:sticky md:top-16 md:self-start md:h-[calc(100dvh-4rem)] overflow-y-auto sidebar-scroll border-r-4 border-black bg-brand-surface relative z-30">
+                <aside ref={leftAsideRef} onScroll={closePreview} className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 md:h-full overflow-y-auto sidebar-scroll border-r-4 border-black bg-brand-surface relative z-30">
                     <div className="shrink-0 px-5 pt-5 pb-4 border-b-2 border-neutral-800 space-y-3">
                         <Link to="/" className="flex items-center gap-2 text-neutral-400 hover:text-white">
                             <Home size={12} /> <span className="text-[10px] font-black uppercase tracking-widest">HOME</span>
@@ -544,6 +544,7 @@ const LibraryPage = () => {
                                                         return (
                                                             <button 
                                                                 key={item.id} 
+                                                                data-active-component={isActive ? 'true' : undefined}
                                                                 onClick={() => handleComponentSelect(item)} 
                                                                 onMouseEnter={(e) => handlePreviewEnter(item, e)}
                                                                 onMouseLeave={handlePreviewLeave}
@@ -579,7 +580,7 @@ const LibraryPage = () => {
                 </aside>
 
                 {/* ── Middle Column: Playground & Documentation ── */}
-                <main ref={mainContainerRef} className="flex-1 min-w-0 main-scroll p-4 sm:p-6 lg:p-8">
+                <main ref={mainContainerRef} className="flex-1 min-w-0 main-scroll p-4 sm:p-6 lg:p-8 md:h-full md:overflow-y-auto">
                     <div className="w-full">
                         {/* ── Mobile "All Components" Top Bar / Button ── */}
                         <div className="md:hidden mb-4 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
@@ -628,7 +629,7 @@ const LibraryPage = () => {
                 </main>
 
                 {/* ── Right Column: Pro Card at Top + MCP Card at Bottom ── */}
-                <aside ref={rightAsideRef} className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 xl:sticky xl:top-16 xl:self-start xl:max-h-[calc(100dvh-4rem)] border-l-4 border-black bg-brand-surface/60 p-5 overflow-y-auto sidebar-scroll gap-5 z-30">
+                <aside className="hidden xl:flex flex-col w-64 2xl:w-72 shrink-0 xl:h-full border-l-4 border-black bg-brand-surface/60 p-5 overflow-y-auto sidebar-scroll gap-5 z-30">
                     {/* Pro Promotional Card at Top */}
                     <div className="w-full shrink-0">
                         <div className="rounded-xl border-2 border-white bg-brand-surface p-3.5 text-white brutal-shadow-black relative overflow-hidden group">
