@@ -69,6 +69,18 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
   `GET /api/v1/templates/views?type=component&ids=<component-id>` return 200.
 - Do not treat a failed API request as a zero count or replace it with a
   client-side increment. Counts are persisted by the backend.
+- Dedupe rule (since Oct 2026): **one view per unique visitor per item, for
+  good** — not one per browser session. The client sends a persistent
+  device id (`viewerId: "a:<uuid>"`, localStorage `uihub_view_viewer_id`);
+  signed-in requests go through `verifyOptionalToken` and the backend re-keys
+  the anonymous event onto the account (`u:<uid>`) without a second increment.
+  The database enforces it with a partial unique index
+  `{itemId, viewerId}` (partial on `viewerId: {$type:"string"}`) so legacy
+  pre-viewer events need no migration. Clients that still omit `viewerId`
+  keep the legacy `{itemId, sessionId}` per-session dedupe.
+- Sanity check: repeat `GET .../views?type=component&ids=<id>` — the count
+  must stay flat across refreshes, returning visits, and sign-in, and only
+  grows for a genuinely new browser/visitor.
 
 ### 3.1 Frontend (browser, logged out + free account)
 - [ ] Hero/preview page for a premium component renders the demo, but the "View Source" /

@@ -3,6 +3,7 @@ import { getApiBaseUrl } from '../utils/apiConfig';
 export interface TemplateView {
     templateId: string;
     sessionId: string;
+    viewerId?: string | null;
     userId?: string | null;
     createdAt: string;
 }
@@ -28,10 +29,13 @@ type ViewCountRegistry = Record<ViewType, Record<string, number>>;
 type LoadedViewIds = Record<ViewType, Map<string, number>>;
 
 const VIEW_SESSION_STORAGE_KEY = 'uihub_view_session_id';
-const VIEW_SESSION_ID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const VIEWER_STORAGE_KEY = 'uihub_view_viewer_id';
+const VIEW_UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const VIEW_COUNT_CACHE_MS = 30_000;
 const API_BASE = getApiBaseUrl();
 let memorySessionId: string | null = null;
+let memoryViewerId: string | null = null;
+let authTokenProvider: (() => Promise<string | null>) | null = null;
 let viewCounts: ViewCountRegistry = { template: {}, component: {} };
 let loadedViewIds: LoadedViewIds = { template: new Map(), component: new Map() };
 const pendingLoads = new Map<string, Promise<void>>();
@@ -100,7 +104,7 @@ export const getViewSessionId = (): string => {
 
     try {
         const existingId = window.sessionStorage.getItem(VIEW_SESSION_STORAGE_KEY);
-        if (existingId && VIEW_SESSION_ID_PATTERN.test(existingId)) {
+        if (existingId && VIEW_UUID_PATTERN.test(existingId)) {
             memorySessionId = existingId;
             return existingId;
         }
@@ -115,6 +119,52 @@ export const getViewSessionId = (): string => {
         // Tracking still works for this page lifetime if browser storage is blocked.
     }
     return memorySessionId;
+};
+
+/**
+ * Registers the Firebase ID token source used when recording a view.
+ *
+ * `AuthContext` wires this once. It is a provider rather than a direct import so
+ * this service stays free of the Firebase SDK and remains unit testable.
+ */
+export const setViewAuthTokenProvider = (
+    provider: (() => Promise<string | null>) | null,
+): void => {
+    authTokenProvider = provider;
+};
+
+/**
+ * Stable per-visitor identity.
+ *
+ * The session ID dies with the browser session, so every return visit used to
+ * look like a brand new viewer and inflated the counts. This survives tab close,
+ * browser restarts and days later, which is what makes "one view per person"
+ * possible for guests. It degrades to the current session ID when persistent
+ * storage is blocked, and the backend then falls back to per-session counting.
+ */
+export const getViewerId = (): string => {
+    if (memoryViewerId) return memoryViewerId;
+
+    try {
+        const persistedId = window.localStorage.getItem(VIEWER_STORAGE_KEY);
+        if (persistedId && VIEW_UUID_PATTERN.test(persistedId)) {
+            memoryViewerId = persistedId;
+            return memoryViewerId;
+        }
+    } catch {
+        // Fall through to adopting the session ID.
+    }
+
+    // Adopt the ID this browser already used, so somebody who viewed an item
+    // before per-visitor counting is not counted a second time the moment this
+    // ships. Only the very first visitor id is borrowed from the session.
+    memoryViewerId = getViewSessionId();
+    try {
+        window.localStorage.setItem(VIEWER_STORAGE_KEY, memoryViewerId);
+    } catch {
+        // Tracking still works for this page lifetime if browser storage is blocked.
+    }
+    return memoryViewerId;
 };
 
 const setViewCounts = (type: ViewType, nextCounts: Record<string, number>) => {
@@ -199,18 +249,31 @@ const recordView = async (
     type: ViewType,
     itemId: string,
 ): Promise<RecordTemplateViewResponse | RecordComponentViewResponse> => {
+    const viewerId = getViewerId();
     const sessionId = getViewSessionId();
-    const requestKey = `${type}:${itemId}:${sessionId}`;
+    const requestKey = `${type}:${itemId}:${viewerId}`;
     const pending = pendingRecords.get(requestKey);
     if (pending) return pending;
 
     const request = (async () => {
         try {
             const idField = type === 'component' ? 'componentId' : 'templateId';
+            const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+            try {
+                // Signing in makes the backend dedupe by account instead of by
+                // this browser, so one person counts once across every device.
+                const token = authTokenProvider ? await authTokenProvider() : null;
+                if (token) headers.Authorization = `Bearer ${token}`;
+            } catch (error) {
+                // A token that cannot be read must not cost the visitor their
+                // view: fall back to the anonymous device identity.
+                console.warn('[TemplateViews] Recording view anonymously:', error);
+            }
+
             const response = await fetch(`${API_BASE}/api/v1/templates/views`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type, [idField]: itemId, sessionId }),
+                headers,
+                body: JSON.stringify({ type, [idField]: itemId, sessionId, viewerId }),
             });
             if (!response.ok) throw new Error(`Template view request failed (${response.status})`);
 
@@ -241,6 +304,7 @@ export const recordComponentView = async (componentId: string): Promise<RecordCo
 
 export const resetTemplateViewState = (): void => {
     memorySessionId = null;
+    memoryViewerId = null;
     viewCounts = { template: {}, component: {} };
     loadedViewIds = { template: new Map(), component: new Map() };
     pendingLoads.clear();

@@ -72,6 +72,42 @@ export const verifyToken = async (req, res, next) => {
 };
 
 /**
+ * Best-effort authentication for endpoints that must also serve guests.
+ *
+ * `verifyToken` answers 401 when a token is missing or invalid, which is correct
+ * for protected routes but wrong here: a stale or expired token would then throw
+ * away an action a guest is allowed to perform. This middleware therefore never
+ * sends a response — it downgrades to anonymous and continues.
+ *
+ * @returns {Promise<void>}
+ */
+export const verifyOptionalToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
+  if (!token) {
+    req.user = null;
+    return next();
+  }
+
+  try {
+    req.user = await admin.auth().verifyIdToken(token);
+    return next();
+  } catch (error) {
+    if (!hasCredentials && !IS_PRODUCTION) {
+      try {
+        const devUser = decodeDevToken(token, req);
+        if (devUser) return next();
+      } catch (parseErr) {
+        console.warn('[auth] Dev mode: could not decode optional token:', parseErr.message);
+      }
+    }
+    console.warn('[auth] Optional token rejected, continuing anonymously:', error?.message || error);
+    req.user = null;
+    return next();
+  }
+};
+
+/**
  * Builds the `requireAdmin` middleware.
  *
  * Admin status is read from the database rather than from the token, so a

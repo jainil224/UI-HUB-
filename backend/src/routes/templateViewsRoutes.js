@@ -1,10 +1,11 @@
 import express from 'express';
-import { verifyToken } from '../middleware/auth.js';
+import { verifyOptionalToken } from '../middleware/auth.js';
 import { templateViewLimiter } from '../middleware/rateLimiters.js';
 import { isMongoConnected } from '../services/mongoService.js';
 import {
   isValidTemplateId,
   isValidViewSessionId,
+  isValidViewViewerId,
   listTemplateViewCounts,
   recordTemplateView,
   listComponentViewCounts,
@@ -18,11 +19,6 @@ const dbUnavailable = (res) =>
     error: 'DATABASE_UNAVAILABLE',
     message: 'View counts are temporarily unavailable.',
   });
-
-const optionalFirebaseAuth = (req, res, next) => {
-  if (!req.headers.authorization) return next();
-  return verifyToken(req, res, next);
-};
 
 router.get('/views', templateViewLimiter, async (req, res) => {
   const type = req.query.type === undefined ? 'template' : req.query.type;
@@ -54,8 +50,8 @@ router.get('/views', templateViewLimiter, async (req, res) => {
   }
 });
 
-router.post('/views', templateViewLimiter, optionalFirebaseAuth, async (req, res) => {
-  const { type = 'template', templateId, componentId, sessionId } = req.body || {};
+router.post('/views', templateViewLimiter, verifyOptionalToken, async (req, res) => {
+  const { type = 'template', templateId, componentId, sessionId, viewerId } = req.body || {};
   if (type !== 'template' && type !== 'component') {
     return res.status(400).json({ error: 'INVALID_VIEW_TYPE' });
   }
@@ -66,17 +62,24 @@ router.post('/views', templateViewLimiter, optionalFirebaseAuth, async (req, res
   if (!isValidViewSessionId(sessionId)) {
     return res.status(400).json({ error: 'INVALID_SESSION_ID' });
   }
+  // Optional: a client deployed before per-visitor counting omits it and keeps
+  // the legacy per-session behaviour. A malformed value is still rejected.
+  if (viewerId !== undefined && !isValidViewViewerId(viewerId)) {
+    return res.status(400).json({ error: 'INVALID_VIEWER_ID' });
+  }
 
   try {
     const result = type === 'component'
       ? await recordComponentView({
           componentId: itemId,
           sessionId,
+          viewerId,
           userId: req.user?.uid || null,
         })
       : await recordTemplateView({
           templateId: itemId,
           sessionId,
+          viewerId,
           userId: req.user?.uid || null,
         });
     return res.json(result);

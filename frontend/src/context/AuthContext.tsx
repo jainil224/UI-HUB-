@@ -4,6 +4,7 @@ import { auth } from '../lib/firebase';
 import { getApiBaseUrl } from '../utils/apiConfig';
 import { syncUserWithBackend } from '../utils/syncUser';
 import { logUserActivity } from '../utils/activityLogger';
+import { setViewAuthTokenProvider } from '../services/templateViews';
 import WelcomeNotifications from '../components/ui/WelcomeNotifications';
 
 let syncedThisSession = false;
@@ -45,6 +46,21 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+    // Live view counting needs to know who is signed in so a view is attributed to
+    // the account and counted once across devices. The provider reads the live
+    // user at call time, so it never needs re-registering on sign in or out.
+    useEffect(() => {
+        setViewAuthTokenProvider(async () => {
+            const currentUser = auth.currentUser;
+            if (!currentUser || currentUser.isAnonymous) return null;
+            try {
+                return await currentUser.getIdToken();
+            } catch {
+                return null;
+            }
+        });
+    }, []);
+
     const [user, setUser] = useState<User | null>(null);
     const [isPro, setIsPro] = useState(() => (localStorage.getItem('ui-hub-pro') === 'true' || localStorage.getItem('ui-hub-elite') === 'true'));
     const [loading, setLoading] = useState(true);

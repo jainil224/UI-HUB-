@@ -963,3 +963,37 @@ Another real session:
 There must be **no fake, random, hardcoded, or artificially generated view numbers**.
 
 Implement this using the existing UI HUB architecture and reuse the Template view-count infrastructure wherever possible.
+
+---
+
+# AMENDMENT (Oct 2026) — Per-visitor dedupe, not per-session
+
+Section 5/8 described *session-based* duplicate protection (`component_id + session_id`). That
+was the original mitigation and remains as a fallback, but the counting rule is now:
+
+- **Unique visitor** = a persistent device id stored in
+  `localStorage["uihub_view_viewer_id"]` (generated once per browser, not per tab).
+- A logged-in visitor is identified by their Firebase **account** (`u:<uid>`), which is safer
+  than any id the browser supplies; the backend mints it from the ID token via
+  `verifyOptionalToken` in `backend/src/middleware/auth.js`.
+- **One view per unique visitor per item, forever.** A second browser/session for the same
+  person still counts **+0**. An anonymous view followed by sign-in is *re-keyed* onto the
+  account — no second increment and the count does not move.
+- The database is the final guarantor: a partial unique index `{itemId, viewerId}` with
+  `partialFilterExpression: { viewerId: { $type: "string" } }` on both `template_views` and
+  `component_views`. Events recorded before viewers existed (no `viewerId`) are exempt from
+  that index, so no backfill/migration is required and legacy clients keep working.
+- The client never computes or writes counts; it only posts view events
+  (`frontend/src/services/templateViews.ts`) and reads counts via
+  `GET /api/v1/templates/views?type=component|template&ids=...`.
+
+Scenario update to the earlier matrix:
+
+```text
+Open Payment Transaction (browser A)        → +1
+Refresh                                       → +0
+Same browser, new tab                         → +0
+Return days later, real person, same browser  → +0
+Sign in then open it again                    → +0 (anon view re-keyed to account)
+Second real person (other browser/device)     → +1  → total 2
+```
