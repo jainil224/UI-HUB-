@@ -12,6 +12,8 @@ import { useIsMobile } from '../../../../hooks/use-mobile';
 import * as Animations from '../../../../components/animations/TextAnimations';
 import * as VisualEffects from '../../../../components/animations/VisualEffects';
 import { getComponentCode, withUiHubBranding } from '../../../../utils/codeUtils';
+import { applyComponentCustomization, ComponentCustomization } from '../../../../utils/componentCustomization';
+import { EMBEDDED_SOURCE_CODE } from '../../../../data/embeddedSourceCode';
 import { downloadComponentZip } from '../../../../utils/zipUtils';
 import { fetchVibePrompt, fetchComponentSource, getFallbackVibePrompt, AISystem, VibeMeta } from '../../../../utils/promptUtils';
 import { getApiBaseUrl } from '../../../../utils/apiConfig';
@@ -482,7 +484,8 @@ const VibeSystemSection = React.memo(({
     componentConfig,
     vanillaCode,
     setShowAuthModal,
-    variant
+    variant,
+    customizedSource
 }: {
     item: ComponentItem;
     user: any;
@@ -498,6 +501,7 @@ const VibeSystemSection = React.memo(({
     vanillaCode: string;
     setShowAuthModal: (v: boolean) => void;
     variant?: string;
+    customizedSource?: string;
 }) => {
     // Normal users default to 'lovable', Pro users default to 'advance'
     const defaultSystem: AISystem = isProUser ? 'advance' : 'lovable';
@@ -505,7 +509,7 @@ const VibeSystemSection = React.memo(({
     const [aiSystem, setAiSystemState] = React.useState<AISystem>(defaultSystem);
     const [isPending, startTransition] = React.useTransition();
     const [copied, setCopied] = React.useState<string | null>(null);
-    const [fetchedPrompt, setFetchedPrompt] = React.useState<string>(() => getFallbackVibePrompt(item.id, defaultSystem, item, variant));
+    const [fetchedPrompt, setFetchedPrompt] = React.useState<string>(() => getFallbackVibePrompt(item.id, defaultSystem, item, variant, customizedSource));
     const [isLoadingPrompt, setIsLoadingPrompt] = React.useState(false);
     const [prevProStatus, setPrevProStatus] = React.useState(isProUser);
     const [vibeExpanded, setVibeExpanded] = React.useState(false);
@@ -566,9 +570,9 @@ const VibeSystemSection = React.memo(({
         try {
             const token = user ? await user.getIdToken() : undefined;
             console.log(`[VibeSystem] Fetching prompt for ${item.id} (${aiSystem})...`);
-            const result = await fetchVibePrompt(item.id, aiSystem, token, item, variant);
+            const result = await fetchVibePrompt(item.id, aiSystem, token, item, variant, customizedSource);
 
-            setFetchedPrompt(result.prompt || getFallbackVibePrompt(item.id, aiSystem, item, variant));
+            setFetchedPrompt(result.prompt || getFallbackVibePrompt(item.id, aiSystem, item, variant, customizedSource));
 
             if (result.ok) {
                 // Premium trial consumed on the server — reflect remaining count + expiry.
@@ -600,21 +604,20 @@ const VibeSystemSection = React.memo(({
             }
         } catch (error) {
             console.warn('[VibeSystem] Falling back to local blueprint for:', item.id);
-            setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item, variant));
+            setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item, variant, customizedSource));
         } finally {
             setIsLoadingPrompt(false);
         }
-    }, [aiSystem, item, user, isProUser, isEntitled, variant, setTrialsRemaining, setTrialExpiresAt]);
+    }, [aiSystem, item, user, isProUser, isEntitled, variant, customizedSource, setTrialsRemaining, setTrialExpiresAt]);
 
     React.useEffect(() => {
         loadPrompt();
     }, [loadPrompt]);
-
-    // Switching variant invalidates the loaded prompt. Seed it synchronously so
+    // Reset the expanded state when variant changes so
     // the previous variant's blueprint is never shown against the new variant.
     React.useEffect(() => {
         setVibeExpanded(false);
-        setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item, variant));
+        setFetchedPrompt(getFallbackVibePrompt(item.id, aiSystem, item, variant, customizedSource));
     }, [variant]);
 
     React.useEffect(() => {
@@ -1002,6 +1005,18 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const componentVariants = React.useMemo(() => COMPONENT_VARIANTS[item.id] ?? [], [item.id]);
     const activeVariant = React.useMemo(() => getComponentVariant(item.id, variant), [item.id, variant]);
     const [copied, setCopied] = React.useState<string | null>(null);
+    // Live values tweaked in the interactive preview (e.g. HexaSphere's Wave /
+    // Speed / Power sliders). When set, they are threaded into the Code tab and
+    // the Vibe Prompt so the copied code matches what the visitor tuned.
+    const [customVals, setCustomVals] = React.useState<ComponentCustomization | null>(null);
+    const handleCustomize = React.useCallback(
+        (vals: ComponentCustomization | null) => setCustomVals(vals ?? null),
+        []
+    );
+    const customizedSource = React.useMemo(
+        () => (customVals ? applyComponentCustomization(EMBEDDED_SOURCE_CODE[item.id] || '', item.id, customVals) : undefined),
+        [customVals, item.id]
+    );
     const [resetKey, setResetKey] = React.useState(0);
     const [isFullscreen, setIsFullscreen] = React.useState(false);
     const [promptMenuOpen, setPromptMenuOpen] = React.useState(false);
@@ -1117,8 +1132,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         try {
             // Mirror the VIBE terminal exactly: server prompt first, local fallback otherwise.
             const token = user && !user.isAnonymous ? await user.getIdToken() : undefined;
-            const result = await fetchVibePrompt(item.id, system, token, item);
-            const prompt = result.prompt || getFallbackVibePrompt(item.id, system, item);
+            const result = await fetchVibePrompt(item.id, system, token, item, variant, customizedSource);
+            const prompt = result.prompt || getFallbackVibePrompt(item.id, system, item, variant, customizedSource);
             await navigator.clipboard.writeText(prompt);
             setPromptCopied(system);
             setPromptMenuOpen(false);
@@ -1128,7 +1143,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             setShowToast(true);
             setTimeout(() => setPromptCopied(null), 2000);
         } catch (error) {
-            const prompt = getFallbackVibePrompt(item.id, system, item);
+            const prompt = getFallbackVibePrompt(item.id, system, item, variant, customizedSource);
             try {
                 await navigator.clipboard.writeText(prompt);
             } catch (clipErr) {
@@ -1142,7 +1157,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         } finally {
             setPromptCopying(null);
         }
-    }, [item.id, item, user, promptCopying]);
+    }, [item, variant, customizedSource, user, promptCopying]);
 
     React.useEffect(() => {
         const handlePointerDown = (e: MouseEvent | TouchEvent) => {
@@ -1167,6 +1182,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         setResetKey(0);
         setFetchedSource('');
         setVariant(getDefaultVariant(item?.id ?? '') ?? '');
+        setCustomVals(null);
         if (item?.id) {
             logUserActivity({
                 type: 'component.view',
@@ -1442,6 +1458,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             }
         }
 
+        // Reflect any live preview tweaks (e.g. HexaSphere sliders) in the ZIP.
+        reactCode = applyComponentCustomization(reactCode ?? '', item.id, customVals);
+
         let assets: { url: string; fileName: string }[] = [];
 
         if (item.id === '3d-scroll-animation') {
@@ -1486,11 +1505,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     const sourceCode = React.useMemo(() => {
         const hasValidSource = fetchedSource && !fetchedSource.includes('Failed to load source code');
-        if (hasValidSource) return withUiHubBranding(fetchedSource, item.id);
-        // Premium components are stripped from the bundle; the bundled fallback
-        // is null, and entitled users always receive it via the server fetch above.
-        return getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }) || '// Upgrade to Pro to access the full premium source code.';
-    }, [fetchedSource, item.id]);
+        const raw = hasValidSource ? fetchedSource : (getComponentCode(item.id, { lang: 'ts', styling: 'tailwind' }) || '// Upgrade to Pro to access the full premium source code.');
+        const tailored = applyComponentCustomization(raw, item.id, customVals);
+        return withUiHubBranding(tailored, item.id);
+    }, [fetchedSource, item.id, customVals]);
     const sourceFileName = `${item.title.replace(/\s+/g, '')}.tsx`;
     const [snippetExpanded, setSnippetExpanded] = React.useState(false);
     const isMobile = useIsMobile();
@@ -2008,7 +2026,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                 transition={{ duration: 0.2, ease: "easeOut" }}
                                                 className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'}`}
                                             >
-                                                {item.preview({ showDemoButton: true, variant })}
+                                                {item.preview({ showDemoButton: true, variant, onCustomize: handleCustomize })}
                                             </motion.div>
                                         </React.Suspense>
                                     </div>
@@ -2169,6 +2187,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 vanillaCode={vanillaCode}
                           setShowAuthModal={setShowAuthModal}
                           variant={variant}
+                          customizedSource={customizedSource}
                       />
                 )}
             </AnimatePresence>

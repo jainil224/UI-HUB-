@@ -1,4 +1,4 @@
-export type AISystem = 'antigravity' | 'lovable' | 'cursor' | 'claude' | 'advance';
+﻿export type AISystem = 'antigravity' | 'lovable' | 'cursor' | 'claude' | 'advance';
 
 export interface VibeMeta {
     behavior: string;
@@ -99,14 +99,14 @@ export function buildAdvancePrompt(m: ComponentManifest): string {
         ? m.knownGotchas.map(g => `- ${g}`).join("\n") 
         : "- Ensure parent container has proper bounding dimensions and overflow handling.";
 
-    return `██╗   ██╗██╗    ██╗  ██╗██╗   ██╗██████╗ 
-██║   ██║██║    ██║  ██║██║   ██║██╔══██╗
-██║   ██║██║    ███████║██║   ██║██████╔╝
-██║   ██║██║    ██╔══██║██║   ██║██╔══██╗
-╚██████╔╝██║    ██║  ██║╚██████╔╝██████╔╝
- ╚═════╝ ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ 
+    return `â–ˆâ–ˆâ•—   â–ˆâ–ˆâ•—â–ˆâ–ˆâ•—    â–ˆâ–ˆâ•—  â–ˆâ–ˆâ•—â–ˆâ–ˆâ•—   â–ˆâ–ˆâ•—â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— 
+â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—
+â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•
+â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—
+â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•
+ â•šâ•â•â•â•â•â• â•šâ•â•    â•šâ•â•  â•šâ•â• â•šâ•â•â•â•â•â• â•šâ•â•â•â•â•â• 
 
-> UI HUB universal component blueprint. This prompt is tool-agnostic — it works with any AI tool (Cursor, Claude, Lovable, Antigravity, ChatGPT, GitHub Copilot, etc.). Paste it into whichever assistant you use.
+> UI HUB universal component blueprint. This prompt is tool-agnostic â€” it works with any AI tool (Cursor, Claude, Lovable, Antigravity, ChatGPT, GitHub Copilot, etc.). Paste it into whichever assistant you use.
 
 # COMPONENT BLUEPRINT: ${m.displayName}
 
@@ -185,7 +185,7 @@ What it should look/feel like: ${m.description}
 Animation & Physics Techniques Used:
 ${features.map(f => `- ${f}`).join("\n")}
 
-Here is the exact reference implementation — use it as ground truth for structure, animation values, and easing:
+Here is the exact reference implementation â€” use it as ground truth for structure, animation values, and easing:
 
 ${codeBlock(m.sourceCode, `${m.componentId}.tsx`)}
 
@@ -213,7 +213,7 @@ It should react to: ${triggers}.
 Animation Stack & Techniques Used:
 ${features.map(f => `- ${f}`).join("\n")}
 
-Use this reference implementation as your guide for exact animation timing and structure — port the logic faithfully even if you restructure the surrounding files:
+Use this reference implementation as your guide for exact animation timing and structure â€” port the logic faithfully even if you restructure the surrounding files:
 
 ${codeBlock(m.sourceCode, `${m.componentId}.tsx`)}
 
@@ -254,7 +254,7 @@ import { getComponentVariant } from '../data/componentVariants';
 /**
  * Constructs a Manifest from component data and generates the prompt for the target AI tool.
  */
-export const getFallbackVibePrompt = (componentId: string, system: AISystem, item?: any, variantId?: string): string => {
+export const getFallbackVibePrompt = (componentId: string, system: AISystem, item?: any, variantId?: string, customizedSource?: string): string => {
     const comp = item || componentList.find(c => c.id === componentId);
     const title = comp?.title || componentId.split('-').map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(' ');
 
@@ -264,8 +264,10 @@ export const getFallbackVibePrompt = (componentId: string, system: AISystem, ite
     const variant = getComponentVariant(componentId, variantId);
     const displayTitle = variant ? `${title} (${variant.label})` : title;
     
-    // Resolve 100% exact full production source code
-    let exactCode = EMBEDDED_SOURCE_CODE[componentId];
+    // Resolve 100% exact full production source code. A live customization
+    // (e.g. HexaSphere Wave/Speed/Power tweaked in the preview) takes priority
+    // so the prompt embeds the code exactly as the visitor tuned it.
+    let exactCode = customizedSource || EMBEDDED_SOURCE_CODE[componentId];
     if (!exactCode || exactCode.trim() === '') {
         exactCode = comp?.code;
     }
@@ -357,7 +359,8 @@ export const fetchVibePrompt = async (
     system: AISystem,
     token?: string,
     item?: any,
-    variantId?: string
+    variantId?: string,
+    customizedSource?: string
 ): Promise<PromptFetchResult> => {
     // Locally-defined components have no backend vault entry, so the backend
     // returns a generic code-less prompt. Force the local source (which embeds
@@ -365,9 +368,9 @@ export const fetchVibePrompt = async (
     //
     // 'cube-loader' must also stay local: its prompt is variant-aware, and a
     // server-side entry would be variant-blind and overwrite the local one.
-    const LOCAL_ONLY_COMPONENTS = ['cinematic-navbar', 'floating-dark-capsule', 'minimal-ai-capsule', 'pill-navbar', 'modern-dark', 'split-navigation-nav', 'awwwards-nav', 'haul-footer', 'omniflow-footer', 'sora-footer', 'alpine-footer', 'leeuwarder-golfclub', 'community-newsletter', 'faizur-portfolio', 'sui-foundation', 'option-wheel', 'otp-code-input', 'password-strength-meter', 'signature-pad', 'drag-drop-upload', 'aurora-bpm-loader', 'ripple-signature-ledger', 'crossfade-typewriter', 'driftwood-gallery', 'reflect-shader', 'infinite-tendrils', 'ocean-swell', 'frost-glass-melt', 'star-burst', 'originkit-hero-24', 'light-cables', 'globe', 'cube-loader', 'prism-pyramid'];
+    const LOCAL_ONLY_COMPONENTS = ['cinematic-navbar', 'floating-dark-capsule', 'minimal-ai-capsule', 'pill-navbar', 'modern-dark', 'split-navigation-nav', 'awwwards-nav', 'haul-footer', 'omniflow-footer', 'sora-footer', 'alpine-footer', 'leeuwarder-golfclub', 'community-newsletter', 'faizur-portfolio', 'sui-foundation', 'option-wheel', 'otp-code-input', 'password-strength-meter', 'signature-pad', 'drag-drop-upload', 'aurora-bpm-loader', 'ripple-signature-ledger', 'crossfade-typewriter', 'driftwood-gallery', 'reflect-shader', 'infinite-tendrils', 'ocean-swell', 'frost-glass-melt', 'star-burst', 'originkit-hero-24', 'light-cables', 'globe', 'cube-loader', 'prism-pyramid', 'hexa-sphere'];
     if (LOCAL_ONLY_COMPONENTS.includes(componentId)) {
-        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId) };
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource) };
     }
 
     try {
@@ -405,7 +408,7 @@ export const fetchVibePrompt = async (
             const code = body?.code === 'TRIAL_LIMIT' ? 'TRIAL_LIMIT' as const : 'AUTH_REQUIRED' as const;
             return {
                 ok: false,
-                prompt: getFallbackVibePrompt(componentId, system, item, variantId),
+                prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource),
                 code,
                 reason: body?.reason,
                 expiresAt: body?.expiresAt != null ? body.expiresAt : null,
@@ -414,16 +417,16 @@ export const fetchVibePrompt = async (
             };
         }
 
-        // Network / server error on premium tool: do not bypass — surface as error.
+        // Network / server error on premium tool: do not bypass â€” surface as error.
         if (isPremiumAITool(system)) {
-            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item, variantId), code: 'ERROR', status: response.status };
+            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource), code: 'ERROR', status: response.status };
         }
-        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId) };
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource) };
     } catch (error) {
         if (isPremiumAITool(system)) {
-            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item, variantId), code: 'ERROR' };
+            return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource), code: 'ERROR' };
         }
-        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId) };
+        return { ok: true, prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource) };
     }
 };
 

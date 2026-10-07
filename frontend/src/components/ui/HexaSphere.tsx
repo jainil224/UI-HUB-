@@ -13,16 +13,34 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import "./HexaSphere.css";
 
+export interface HexaSphereSettings {
+    /** Whether the wave band travels automatically. */
+    auto: boolean;
+    /** Wave band position on the sphere (slider: -1..1). */
+    level: number;
+    /** Wave travel speed (slider: 0.05..2). */
+    speed: number;
+    /** Wave lift power (slider: 0..1.6). */
+    amp: number;
+    /** Wave frame: sphere (true) or screen (false). */
+    lock?: boolean;
+}
+
 export interface HexaSphereProps {
     /** Optional class applied to the root container. */
     className?: string;
     /** Whether to show the bottom wave-control panel (default true). */
     showControls?: boolean;
+    /** Emits the current Wave / Speed / Power (and Auto) settings whenever the
+     *  user tweaks them in the control panel, so a host page can persist the
+     *  customized values into the code / vibe prompt. */
+    onSettingsChange?: (settings: HexaSphereSettings) => void;
 }
 
 export const HexaSphere: React.FC<HexaSphereProps> = ({
     className = "",
     showControls = true,
+    onSettingsChange,
 }) => {
     const stageRef = useRef<HTMLDivElement>(null);
     const ringRef = useRef<HTMLDivElement>(null);
@@ -31,6 +49,8 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
     const ampRef = useRef<HTMLInputElement>(null);
     const autoRef = useRef<HTMLButtonElement>(null);
     const lockRef = useRef<HTMLButtonElement>(null);
+    const settingsRef = useRef(onSettingsChange);
+    settingsRef.current = onSettingsChange;
 
     useEffect(() => {
         const stage = stageRef.current;
@@ -177,6 +197,29 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
         let edge = -0.2, phase = 0;
         const W = { auto: true, level: -0.2, speed: 0.42, amp: 1 };
 
+        // Coalesce reports into one animation frame: a single slider drag fires
+        // several `input` events per frame, and each report re-renders the host
+        // page (code tab + vibe prompt). One coalesced update per frame keeps the
+        // preview responsive instead of stuttering under the slider.
+        let reportRaf = 0;
+        let pendingLock: boolean | undefined;
+        const report = (lock?: boolean) => {
+            if (lock !== undefined) pendingLock = lock;
+            if (reportRaf) return;
+            reportRaf = requestAnimationFrame(() => {
+                reportRaf = 0;
+                const l = pendingLock;
+                pendingLock = undefined;
+                settingsRef.current?.({
+                    auto: W.auto,
+                    level: W.level,
+                    speed: W.speed,
+                    amp: W.amp,
+                    lock: l,
+                });
+            });
+        };
+
         const rotate = (dx: number, dy: number) => {
             const a = Math.hypot(dx, dy) * 0.011;
             if (!a) return;
@@ -189,10 +232,11 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
             return { x: clientX - r.left, y: clientY - r.top };
         };
 
-        const setAuto = (v: boolean) => {
+        const setAuto = (v: boolean, silent = false) => {
             W.auto = v;
             if (autoRef.current) autoRef.current.textContent = "Auto: " + (v ? "on" : "off");
             if (v) phase = Math.asin(Math.max(-1, Math.min(1, (edge + 0.2) / 0.55)));
+            if (!silent) report();
         };
 
         const onPointerDown = (e: PointerEvent) => {
@@ -224,11 +268,16 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
             setAuto(false);
             W.level = Math.max(-1, Math.min(1, edge - e.deltaY * 0.001));
             if (lvlRef.current) lvlRef.current.value = String(W.level);
+            report();
         };
 
         const onInput = (obj: { key: "level" | "speed" | "amp" }, e: Event) => {
-            if (obj.key === "level") setAuto(false);
+            // Silent: turning Auto off must not report on its own, otherwise the
+            // Wave slider emits two updates for one gesture and the host page
+            // re-renders twice per event.
+            if (obj.key === "level") setAuto(false, true);
             W[obj.key] = Number((e.target as HTMLInputElement).value);
+            report();
         };
 
         const onAutoClick = () => setAuto(!W.auto);
@@ -236,6 +285,7 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
             const u = mat.uniforms.uLocal;
             u.value = u.value ? 0 : 1;
             if (lockRef.current) lockRef.current.textContent = "Wave: " + (u.value ? "sphere" : "screen");
+            report(u.value ? true : false);
         };
 
         const onLvlInput = (e: Event) => onInput({ key: "level" }, e);
@@ -311,6 +361,7 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
 
         return () => {
             cancelAnimationFrame(raf);
+            if (reportRaf) { cancelAnimationFrame(reportRaf); reportRaf = 0; }
             window.removeEventListener("resize", resize);
             ro.disconnect();
             cv.removeEventListener("pointerdown", onPointerDown);
@@ -351,7 +402,7 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
                             max="1"
                             step="0.01"
                             defaultValue="-0.2"
-                            className="w-28 accent-sky-400"
+                            className="hx-lvl flex-1 min-w-0 accent-sky-400"
                         />
                     </label>
                     <label className="flex items-center gap-2">
@@ -363,7 +414,7 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
                             max="2"
                             step="0.01"
                             defaultValue="0.42"
-                            className="w-20 accent-sky-400"
+                            className="hx-spd flex-1 min-w-0 accent-sky-400"
                         />
                     </label>
                     <label className="flex items-center gap-2">
@@ -375,7 +426,7 @@ export const HexaSphere: React.FC<HexaSphereProps> = ({
                             max="1.6"
                             step="0.01"
                             defaultValue="1"
-                            className="w-20 accent-sky-400"
+                            className="hx-amp flex-1 min-w-0 accent-sky-400"
                         />
                     </label>
                     <button

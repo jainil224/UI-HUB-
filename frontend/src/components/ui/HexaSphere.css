@@ -20,23 +20,28 @@
     touch-action: none;
 }
 
+/* Opacity only: `.hx-panel` owns `transform` for its centring, and a
+   `transform` here would win over it for the whole animation fill. */
 @keyframes hx-fade {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: none; }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 .hx-panel {
     position: absolute;
-    inset-inline: 0;
-    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    top: 50%;
+    right: calc(1.5rem + env(safe-area-inset-right, 0px));
+    transform: translateY(-50%);
     z-index: 20;
-    margin-inline: auto;
     display: flex;
-    width: min(92vw, 34rem);
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem 1.5rem;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: min(46vw, 17rem);
+    max-height: calc(100% - 3rem);
+    overflow-y: auto;
+    gap: 0.75rem;
     border-radius: 1rem;
     border: 1px solid rgba(125, 211, 252, 0.15);
     background: rgba(255, 255, 255, 0.05);
@@ -47,6 +52,26 @@
     text-transform: uppercase;
     color: rgba(224, 242, 254, 0.7);
     backdrop-filter: blur(12px);
+}
+
+/* Narrow viewports: the card would cover the sphere on the right, so it drops
+   back to the original full-width strip along the bottom. */
+@media (max-width: 640px) {
+    .hx-panel {
+        top: auto;
+        bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+        inset-inline: 0;
+        transform: none;
+        margin-inline: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        width: min(92vw, 34rem);
+        max-height: none;
+        overflow: visible;
+        gap: 0.75rem 1.5rem;
+    }
 }
 
 .hx-fade {
