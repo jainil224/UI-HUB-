@@ -291,7 +291,14 @@ export function Globe({
         camera.position.set(0, 0, cameraDistance);
         camera.lookAt(0, 0, 0);
 
-        const renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        let renderer: WebGLRenderer;
+        try {
+            renderer = new WebGLRenderer({ antialias: true, alpha: true });
+        } catch (err) {
+            console.warn("[Globe] WebGL unavailable", err);
+            setError("WebGL is not supported in this browser");
+            return;
+        }
         renderer.setSize(containerWidth, containerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.outputColorSpace = "srgb";
@@ -304,6 +311,12 @@ export function Globe({
         canvas.style.opacity = "0";
         canvas.style.visibility = "hidden";
         container.appendChild(canvas);
+
+        const showGlobe = () => {
+            canvas.style.opacity = "1";
+            canvas.style.visibility = "visible";
+            renderer.render(scene, camera);
+        };
 
         const resolvedOceanColor = oceanColor;
         const resolvedOutlineColor = outlineColor;
@@ -476,12 +489,68 @@ export function Globe({
         let dotInstances: InstancedMesh | Mesh | null = null;
         let markerMeshes: Mesh[] = [];
 
+        const buildDotField = (
+            onLand: ((lng: number, lat: number) => boolean) | null
+        ) => {
+            const dotCoordinates: number[][] = [];
+            const baseStep = dotSpacing * 0.08;
+            for (let lat = -90; lat <= 90; lat += baseStep) {
+                const latRad = (Math.abs(lat) * Math.PI) / 180;
+                const cosLat = Math.cos(latRad);
+                const lngStep =
+                    cosLat > 0.01 ? baseStep / Math.max(0.3, cosLat) : 360;
+                for (let lng = -180; lng < 180; lng += lngStep) {
+                    if (onLand === null || onLand(lng, lat)) {
+                        dotCoordinates.push([lng, lat]);
+                    }
+                }
+            }
+            if (dotCoordinates.length === 0) return;
+            const dotGeometry = new SphereGeometry(
+                0.01 * dotSizeMultiplier,
+                4,
+                4
+            );
+            const dotColorObj = resolvedDotColor
+                ? new Color(resolvedDotColor)
+                : new Color(0.6, 0.6, 0.6);
+            const dotMaterial = new MeshBasicMaterial({
+                color: dotColorObj,
+                transparent: dotRgba.a < 1 || dotRgba.a === 0,
+                opacity: dotRgba.a,
+            });
+            const instanced = new InstancedMesh(
+                dotGeometry,
+                dotMaterial,
+                dotCoordinates.length
+            );
+            const matrix = new Matrix4();
+            for (let i = 0; i < dotCoordinates.length; i++) {
+                const [lng, lat] = dotCoordinates[i];
+                const pos = latLngToPosition(lat, lng);
+                matrix.makeScale(1, 1, 1);
+                matrix.setPosition(
+                    pos.x * globeRadius,
+                    pos.y * globeRadius,
+                    pos.z * globeRadius
+                );
+                instanced.setMatrixAt(i, matrix);
+            }
+            instanced.instanceMatrix.needsUpdate = true;
+            dotInstances = instanced;
+            globeGroup.add(dotInstances);
+        };
+
         const loadWorldData = async () => {
             try {
                 setIsLoading(true);
+                const controller = new AbortController();
+                const fetchTimer = setTimeout(() => controller.abort(), 15000);
                 const response = await fetch(
-                    "https://raw.githubusercontent.com/martynafford/natural-earth-geojson/refs/heads/master/50m/physical/ne_50m_land.json"
+                    "https://raw.githubusercontent.com/martynafford/natural-earth-geojson/refs/heads/master/50m/physical/ne_50m_land.json",
+                    { signal: controller.signal }
                 );
+                clearTimeout(fetchTimer);
                 if (!response.ok) throw new Error("Failed to load land data");
                 const landFeatures = await response.json();
 
@@ -687,66 +756,23 @@ export function Globe({
                     dotInstances = new Mesh(fillGeometry, fillMaterial);
                     globeGroup.add(dotInstances);
                 } else {
-                    const dotCoordinates: number[][] = [];
-                    const baseStep = dotSpacing * 0.08;
-                    for (let lat = -90; lat <= 90; lat += baseStep) {
-                        const latRad = (Math.abs(lat) * Math.PI) / 180;
-                        const cosLat = Math.cos(latRad);
-                        const lngStep =
-                            cosLat > 0.01
-                                ? baseStep / Math.max(0.3, cosLat)
-                                : 360;
-                        for (let lng = -180; lng < 180; lng += lngStep) {
-                            if (allDots || isOnLand(lng, lat)) {
-                                dotCoordinates.push([lng, lat]);
-                            }
-                        }
-                    }
-
-                    if (dotCoordinates.length > 0) {
-                        const dotGeometry = new SphereGeometry(
-                            0.01 * dotSizeMultiplier,
-                            4,
-                            4
-                        );
-                        const dotColorObj = resolvedDotColor
-                            ? new Color(resolvedDotColor)
-                            : new Color(0.6, 0.6, 0.6);
-                        const dotMaterial = new MeshBasicMaterial({
-                            color: dotColorObj,
-                            transparent: dotRgba.a < 1 || dotRgba.a === 0,
-                            opacity: dotRgba.a,
-                        });
-                        const instanced = new InstancedMesh(
-                            dotGeometry,
-                            dotMaterial,
-                            dotCoordinates.length
-                        );
-                        const matrix = new Matrix4();
-                        for (let i = 0; i < dotCoordinates.length; i++) {
-                            const [lng, lat] = dotCoordinates[i];
-                            const pos = latLngToPosition(lat, lng);
-                            matrix.makeScale(1, 1, 1);
-                            matrix.setPosition(
-                                pos.x * globeRadius,
-                                pos.y * globeRadius,
-                                pos.z * globeRadius
-                            );
-                            instanced.setMatrixAt(i, matrix);
-                        }
-                        instanced.instanceMatrix.needsUpdate = true;
-                        dotInstances = instanced;
-                        globeGroup.add(dotInstances);
-                    }
+                    buildDotField((lng, lat) => allDots || isOnLand(lng, lat));
                 }
 
                 updateMarkers();
-                renderer.render(scene, camera);
-                canvas.style.opacity = "1";
-                canvas.style.visibility = "visible";
+                showGlobe();
                 setIsLoading(false);
             } catch (err) {
-                setError("Failed to load land map data");
+                // Remote land data unreachable (offline / blocked / timed out):
+                // keep the globe fully visible with a full-sphere dot field
+                // instead of an error screen.
+                console.warn(
+                    "[Globe] Land data unavailable, showing full-sphere dots",
+                    err
+                );
+                buildDotField(null);
+                updateMarkers();
+                showGlobe();
                 setIsLoading(false);
             }
         };
@@ -954,6 +980,10 @@ export function Globe({
         });
         resizeObserver.observe(container);
 
+        // Show the base globe (ocean / outline / graticule) immediately so it is
+        // visible even while the land data streams in — never a blank canvas.
+        // (The spin loop is started below when rotationSpeed !== 0.)
+        showGlobe();
         loadWorldData();
 
         return () => {

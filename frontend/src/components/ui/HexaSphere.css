@@ -1,0 +1,54 @@
+/* hexa-sphere — UI HUB
+   Scoped styles only. Global/`:root` rules from the reference HTML are applied
+   to the component root so embedding never leaks document-wide changes. */
+
+.hx-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: #000;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+.hx-stage canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+@keyframes hx-fade {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+}
+
+.hx-panel {
+    position: absolute;
+    inset-inline: 0;
+    bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+    z-index: 20;
+    margin-inline: auto;
+    display: flex;
+    width: min(92vw, 34rem);
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(125, 211, 252, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.75rem 1.25rem;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.125em;
+    text-transform: uppercase;
+    color: rgba(224, 242, 254, 0.7);
+    backdrop-filter: blur(12px);
+}
+
+.hx-fade {
+    animation: hx-fade 1.6s 0.6s both;
+}

@@ -27,6 +27,7 @@ const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScr
 const DotsToSolidTextDemoPage = React.lazy(() => import('./pages/Components/DotsToSolidTextDemoPage'));
 const MostarCinematicScrollDemoPage = React.lazy(() => import('./pages/Components/MostarCinematicScrollDemoPage'));
 const AntigravityAnimationDemoPage = React.lazy(() => import('./pages/Components/AntigravityAnimationDemoPage'));
+const HexaSphereDemoPage = React.lazy(() => import('./pages/Components/HexaSphereDemoPage'));
 const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
 const SplitOrbDemoPage = React.lazy(() => import('./pages/Components/SplitOrbDemoPage'));
 const SegmintDemoPage = React.lazy(() => import('./pages/Components/SegmintDemoPage'));
@@ -176,6 +177,7 @@ const AppShell = () => {
               <Route path="/demo/globe" element={<GlobeDemoPage />} />
               <Route path="/demo/originkit-hero-24" element={<OriginkitHero24DemoPage />} />
               <Route path="/demo/cube-loaders" element={<CubeLoadersDemoPage />} />
+              <Route path="/demo/hexa-sphere" element={<HexaSphereDemoPage />} />
               <Route path="/demo/:id" element={<DemoPage />} />
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/privacy" element={<PrivacyPolicyPage />} />
