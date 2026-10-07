@@ -5968,5 +5968,53 @@
         "Google Fonts (Inter Tight, JetBrains Mono) via CSS @import"
       ]
     }
+  },
+  "hexa-sphere": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "showControls",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to show the bottom wave-control panel (Wave/Speed/Power sliders, Auto and Wave sphere/screen toggles)."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A hollow sphere of thousands of thin hexagonal tiles rendered on a pure-black background via a single Three.js ShaderMaterial. Geometry is built as the dual of a 4x-subdivided icosahedron (2,562 vertices): every vertex becomes one tile (12 pentagons plus hexagons), ring points are the normalized centroids of the touching triangles sorted by angle in the tangent plane and pulled 0.88 toward the tile centre to leave thin black gaps, and each tile is extruded into a thin prism (radius 1.0 -> 1.07, top triangle-fan + side quads, no bottom) into one BufferGeometry with position, aCenter and aNormal attributes; DoubleSide with dimmed back faces reads as hollow. All animation lives on the GPU in the vertex shader: uRot (a Matrix3 converted from a trackball Quaternion) rotates geometry, wc = mix(worldCentre, objectCentre, uLocal) lets the wave either follow the sphere or stay screen-fixed, d = wc.y - uEdge + sin noise, band = exp(-d*d*55.0), hover influence m = uMouseOn * smoothstep(0.75, 0.0, distance(worldCentre, uMouse)) flares each tile by band*0.95*uAmp + m*1.1 rad and lifts it band*0.08*uAmp + m*0.18 along its centre direction via Rodrigues' rotation, the normal rotates the same way. The fragment shader flips normals and dims back faces to 0.22, keys tiles by vLit = 1 - smoothstep(-0.06, 0.1, d), adds cyan-blue band/hover glow and a per-tile hash (vH) brightness variation (0.65 + 0.7*vH) so rotation reads. Interaction is a 360° trackball: pointer drag premultiplies a quaternion about axis (dy, dx, 0) by hypot*0.011 with setPointerCapture and pointer-events handled natively; released velocity decays 0.95/frame then a slow idle Y-spin resumes (skipped under prefers-reduced-motion); hover raycasts a hidden r=1.05 sphere and eases uMouseOn (ring cursor div + grab/grabbing cursor); click pulses power 60% decaying 0.93; native non-passive wheel moves uEdge and disables auto. Wave state { auto, level, speed, amp } drives auto sine motion (phase asin-resumed on re-enable), uEdge eases 0.12, auto mode writes the controlled slider values imperatively; the panel (Tailwind glassmorphism, absolute bottom centre, stopPropagation on pointerdown) hosts Wave/Speed/Power sliders, Auto on/off and Wave sphere/screen (uLocal) toggles. Canvas fills the container with stage-relative coordinates, resize handled via window + ResizeObserver, camera z 4.6 (7.2 portrait), DPR capped 2, dt capped 0.05.",
+      "states": {
+        "from": "a near-black hex-tile sphere with a faint glowing wave band hugging the lower geometry",
+        "to": "a dragged/reoriented sphere with a lifted, tilted ice-blue wave band and hover-lit tiles"
+      },
+      "cssProperties": [
+        "single ShaderMaterial with uRot Matrix3 trackball rotation",
+        "hexasphere dual-of-icosahedron tile extrusion with aCenter/aNormal attributes",
+        "GLSL wave band exp(-d*d*55) with uLocal sphere/screen mix",
+        "per-tile hash vH brightness variation",
+        "native pointer trackball quaternion with inertia + idle Y-spin",
+        "hidden-sphere raycast hover with cursor states",
+        "non-passive wheel wave control",
+        "imperative slider value writes from the rAF loop",
+        "absolute glassmorphism Tailwind control panel with stopPropagation"
+      ],
+      "description": "An interactive hex-tile sphere with a glowing ice-blue bottom and a travelling wave band of lifted, tilted tiles you can spin 360°, light up and steer.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "Three.js ShaderMaterial with custom GLSL",
+        "WebGL / Float32BufferAttribute geometry",
+        "Pointer Events with setPointerCapture",
+        "requestAnimationFrame loop with capped delta",
+        "ResizeObserver + devicePixelRatio cap",
+        "non-passive wheel listener",
+        "prefers-reduced-motion matchMedia (idle spin gating)"
+      ]
+    }
   }
 }
