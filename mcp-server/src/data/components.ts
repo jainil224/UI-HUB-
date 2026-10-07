@@ -58,6 +58,8 @@ const PREMIUM_IDS = new Set([
   "morphing-rings",
   "lightfall",
   "dots-to-solid-text",
+  "mostar-cinematic-scroll",
+  "antigravity-animation",
   "black-hole-3d",
   "card-cascade",
   "generating-orb",
@@ -217,7 +219,9 @@ const CATEGORY_MAP: Record<string, string> = {
   "globe": "interactive-background",
   "cube-loader": "loader",
   "prism-pyramid": "loader",
-  "dots-to-solid-text": "scroll"
+  "dots-to-solid-text": "scroll",
+  "mostar-cinematic-scroll": "scroll",
+  "antigravity-animation": "scroll"
 };
 
 // id -> common dependencies
@@ -364,6 +368,8 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'cube-loader': ["react"],
   'prism-pyramid': ["react"],
   'dots-to-solid-text': ["react","framer-motion"],
+  'mostar-cinematic-scroll': ["react","framer-motion"],
+  'antigravity-animation': ["react","framer-motion"],
 };
 
 function humanizeId(id: string): string {

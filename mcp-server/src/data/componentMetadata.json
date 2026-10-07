@@ -5865,5 +5865,108 @@
         "debounced rebuild on resize"
       ]
     }
+  },
+  "mostar-cinematic-scroll": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: the stage fills its container and the whole story scrubs against an inner scroll column (the .site-shell element) instead of the window, with --mc-vh derived from the container height."
+      },
+      {
+        "name": "showDemoButton",
+        "type": "boolean",
+        "default": "false",
+        "description": "In compact mode, overlay a Live Demo pill that links to the full-screen demo page."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A ~3700px scroll rig: a sticky 100vh .stage inside .cinema-scroll carries seven remote PNG scene layers (sky, back-four glow, bazaar, splitframe left/right, bridge, river close-up). A vanilla requestAnimationFrame engine reads scroll progress (lerped at 0.14, snapping under 0.08px) plus damped pointer parallax (lerp 0.12) and writes ~50 CSS custom properties per frame using clamp / smoothstep / segmentInOut helpers. Phase 1 (0-650px): the Ogg Medium MOSTAR title and intro copy exit. Phase 2 (560-1620px, segmentInOut): the bridge widens 67.2cqw->105cqw, lifts, then launches -760px while the splitframe halves part to -/+46cqw (enter^1.5), the river close-up fades in, blur ramps to 14px, brightness drops 25.5%, a blue 74,181,224 shade gradient rises to 0.465/0.42/0.51, and the bridge fact panel slides +58px->-86px. Phase 3 (1760-2700px): bazaar saturation +0.18 and the bazaar panel takes over. Phase 4 (2760-3560px): the sights slider flies in from 420cqw on enter^1.55, counter-scaled by 1/backScale so cards stay screen-true. Phase 5 (3360-3660px): round prev/next controls fade in and become clickable past 0.98, driving a 15-card (3-set) infinite slider with 640ms cubic-bezier(0.22,1,0.36,1) transitions and instant-jump normalization at the set boundaries. Responsive rules are container queries (1500/1100/640px on the root container) so the same markup fits a 296-540px library frame; vh-driven positions resolve through a --mc-vh variable set from the view height.",
+      "states": {
+        "from": "opening frame: MOSTAR title centered over the bridge scene with intro copy and cream pills",
+        "to": "final frame: sights slider parked mid-track with prev/next controls active over the bazaar backdrop"
+      },
+      "cssProperties": [
+        "~50 CSS custom properties written per rAF frame on the root (--back-*, --bridge-*, --split-*, --frame2-*, --panel*, --sights-*, --shade-*)",
+        "position: sticky stage inside calc(100*var(--mc-vh) + 3700px) runway",
+        "container queries via container: mc / inline-size",
+        "linear-gradient shade driven by rgba(var(--blur-tint), var(--shade-*-alpha))",
+        "mix-blend-mode: screen on the back-four layer",
+        "transform/opacity/filter will-change layers"
+      ],
+      "description": "A cinematic three-screen scroll story for Mostar city built as a pure CSS-variable + requestAnimationFrame scrub engine: parallax scene layers, a bridge that widens and splits under blue haze, fact panels, then an infinite sights slider flying in from the side.",
+      "libraries": [
+        "react",
+        "react-router-dom",
+        "lucide-react"
+      ],
+      "requirements": [
+        "sticky positioning with overflow:hidden stage",
+        "CSS custom property writes from a rAF loop",
+        "CSS container queries",
+        "ResizeObserver",
+        "prefers-reduced-motion matchMedia snap",
+        "remote font (Ogg Medium woff2) and remote PNG layers"
+      ]
+    }
+  },
+  "antigravity-animation": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: the stage fills its container and the whole sequence scrubs against an inner scroll column (the .ag-shell element) instead of the window, with --ag-vh derived from the container height."
+      },
+      {
+        "name": "showDemoButton",
+        "type": "boolean",
+        "default": "false",
+        "description": "In compact mode, overlay a Live Demo pill that links to the full-screen demo page."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A 700vh scroll rig: a sticky 100vh .stage carries a framed quote hero, a six-layer SVG bell-glow, a black takeover section and a static loop copy. A vanilla requestAnimationFrame engine lerps the raw scroll fraction toward its target at 0.12 per frame, maps it to sequence progress p = clamp(s*T/(T-1)) and loop-reveal progress rv = clamp(s*T-(T-1)) with T = runwayHeight/viewHeight - 1, and writes inline styles per frame. Chapter 1 (p 0.02-0.12): the hero exits with -120px rise, 0.96 scale and eased fade. Chapter 2 (p 0-0.32): a bellPath math helper generates six nested bell curves (cream/yellow/amber/orange/red/black) whose width, height and exponent morph with g = ramp(p,0,0.3)^1.25 so the glow grows from a thin bottom rim to a full dome, a black veil fades in behind it, and the nav flips .dark. Chapter 3 (p 0.26-1): the black section's headline focuses from 15% opacity / 6px blur / +30px, a winding SVG timeline path draws itself via strokeDashoffset with a 70px white leading tip, the camera follows the drawing head (translate3d x/y + ±1.4° sine roll), five milestone cards positioned from getPointAtLength fade along the curve, and a side progress bar scaleY plus percent readout track the draw (world opacity fades out at p 0.95-1). The final screen slides a static copy of the opening frame up from below; hitting the bottom silently jumps the scroll to zero for an infinite loop, and wheel-up at the top jumps to the end first. Positions resolve through a --ag-vh pixel unit set from the view height; the 700px breakpoint is a container query on the root.",
+      "states": {
+        "from": "opening frame: framed quote card with corner ticks and side rules on white, ink nav",
+        "to": "loop frame: white opening copy revealed over the finished timeline with the nav back to light"
+      },
+      "cssProperties": [
+        "--ag-vh pixel unit set from view height on the root",
+        "position: sticky stage inside calc(700 * var(--ag-vh)) runway",
+        "container queries via container: ag / inline-size (700px breakpoint)",
+        "strokeDashoffset / strokeDasharray draws on the timeline paths",
+        "transform/opacity/filter/will-change layers (hero, veil, dark, headline, world, loop)",
+        "cqw units for frame, rules, quote and headline sizing"
+      ],
+      "description": "A scroll-driven longevity timeline: a framed quote hero exits as a six-layer bell-curve glow swallows the screen into a black section, where a milestone SVG path draws itself under a scrolling camera and the sequence loops seamlessly back to the start.",
+      "libraries": [
+        "react",
+        "react-router-dom",
+        "lucide-react"
+      ],
+      "requirements": [
+        "sticky positioning with overflow:hidden stage",
+        "SVG getTotalLength/getPointAtLength path math from a rAF loop",
+        "CSS container queries and cqw units",
+        "CSS custom property (--ag-vh) writes on resize",
+        "wheel + scroll listeners with reverse-jump loop logic",
+        "prefers-reduced-motion matchMedia static frame",
+        "Google Fonts (Inter Tight, JetBrains Mono) via CSS @import"
+      ]
+    }
   }
 }

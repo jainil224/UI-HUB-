@@ -1,0 +1,422 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+.antigravity-animation,
+.antigravity-animation * {
+  box-sizing: border-box;
+}
+
+.antigravity-animation {
+  --white: #fff;
+  --black: #000;
+  --ink: #0d0d0d;
+  --orange: #ff5a1f;
+  --mute: #8a8a8a;
+  --sans: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  --ag-vh: 1vh;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  container: ag / inline-size;
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.antigravity-animation a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* NAV */
+.antigravity-animation .nav {
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 20px 14px;
+  color: var(--ink);
+  transition: color 0.35s;
+}
+.antigravity-animation .nav.dark {
+  color: var(--white);
+}
+.antigravity-animation .logo {
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.antigravity-animation .links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.antigravity-animation .btn {
+  background: var(--orange);
+  color: #fff;
+  padding: 11px 16px;
+  font: 500 11px/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* SEQUENCE WRAPPER: 600vh of scrubbing + 100vh loop reveal */
+.antigravity-animation .seq {
+  height: calc(700 * var(--ag-vh));
+  position: relative;
+}
+.antigravity-animation .stage {
+  position: sticky;
+  top: 0;
+  height: calc(100 * var(--ag-vh));
+  overflow: hidden;
+  background: var(--white);
+}
+.antigravity-animation .layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* HERO */
+.antigravity-animation .hero {
+  display: grid;
+  place-items: center;
+  color: var(--ink);
+  will-change: transform, opacity;
+}
+.antigravity-animation .frame {
+  position: relative;
+  width: min(380px, 86cqw);
+  padding: 64px 24px 54px;
+  text-align: center;
+}
+.antigravity-animation .frame i {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border: 0 solid #9a9a9a;
+}
+.antigravity-animation .frame i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+}
+.antigravity-animation .frame i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-width: 1px 1px 0 0;
+}
+.antigravity-animation .frame i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 1px 1px;
+}
+.antigravity-animation .frame i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-width: 0 1px 1px 0;
+}
+.antigravity-animation .dots {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+}
+.antigravity-animation .dots b {
+  width: 7px;
+  height: 7px;
+  border: 1px solid #bbb;
+}
+.antigravity-animation .dots b:last-child {
+  background: var(--orange);
+  border-color: var(--orange);
+}
+.antigravity-animation .quote {
+  margin: 0;
+  font-size: clamp(30px, 4.2cqw, 50px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+.antigravity-animation .who {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font: 400 9px/1 var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #777;
+}
+.antigravity-animation .who span {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #d9c3b0, #8d6a54);
+}
+.antigravity-animation .rule {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  width: 28cqw;
+  background: linear-gradient(90deg, transparent, #d4d4d4);
+}
+.antigravity-animation .rule.l {
+  left: 0;
+}
+.antigravity-animation .rule.r {
+  right: 0;
+  transform: scaleX(-1);
+}
+
+/* GLOW (nested bell curves) */
+.antigravity-animation .bell {
+  inset: -40px;
+  width: calc(100% + 80px);
+  height: calc(100% + 80px);
+  pointer-events: none;
+  filter: blur(14px);
+}
+.antigravity-animation .veil {
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* BLACK SECTION */
+.antigravity-animation .dark {
+  opacity: 0;
+  background: var(--black);
+}
+.antigravity-animation .headline {
+  position: absolute;
+  top: calc(11 * var(--ag-vh) + env(safe-area-inset-top, 0px));
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0 20px;
+  text-align: center;
+  font-size: clamp(28px, 3.6cqw, 46px);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  z-index: 3;
+  will-change: opacity, filter, transform;
+}
+.antigravity-animation .view {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 14%, #000 34%);
+  mask-image: linear-gradient(to bottom, transparent 14%, #000 34%);
+}
+.antigravity-animation .world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  aspect-ratio: 1000 / 1800;
+  will-change: transform;
+}
+.antigravity-animation .world svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.antigravity-animation .ms {
+  position: absolute;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+.antigravity-animation .ms .dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px;
+  border-radius: 50%;
+  background: var(--orange);
+  box-shadow: 0 0 0 5px rgba(255, 90, 31, 0.2), 0 0 18px var(--orange);
+}
+.antigravity-animation .ms .vl {
+  position: absolute;
+  width: 1px;
+  height: calc(70 * var(--ag-vh));
+  background: linear-gradient(rgba(255, 255, 255, 0.28), transparent);
+}
+.antigravity-animation .ms .tag {
+  position: absolute;
+  white-space: nowrap;
+  top: -26px;
+  transform: translateX(-50%);
+  font: 500 10px/1 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.antigravity-animation .ms .card {
+  position: absolute;
+  top: -4px;
+  width: 210px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #9a9a9a;
+}
+.antigravity-animation .ms .card h4 {
+  margin: 0 0 5px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.antigravity-animation .ms .card ul {
+  margin: 0;
+  padding: 0;
+}
+.antigravity-animation .ms .card li {
+  list-style: none;
+  padding-left: 11px;
+  position: relative;
+}
+.antigravity-animation .ms .card li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 4px;
+  height: 4px;
+  background: var(--orange);
+}
+.antigravity-animation .ms.L .card {
+  right: 18px;
+  text-align: right;
+}
+.antigravity-animation .ms.L .card li {
+  padding: 0 11px 0 0;
+}
+.antigravity-animation .ms.L .card li::before {
+  left: auto;
+  right: 0;
+}
+.antigravity-animation .ms.R .card {
+  left: 18px;
+}
+
+.antigravity-animation .prog {
+  position: absolute;
+  left: 20px;
+  bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+  z-index: 4;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  font: 400 10px/1.3 var(--mono);
+  color: var(--mute);
+  letter-spacing: 0.06em;
+}
+.antigravity-animation .prog .bar {
+  width: 1px;
+  height: 44px;
+  background: #333;
+  position: relative;
+  overflow: hidden;
+}
+.antigravity-animation .prog .bar i {
+  position: absolute;
+  inset: 0;
+  background: var(--orange);
+  transform-origin: 50% 100%;
+  transform: scaleY(0);
+}
+.antigravity-animation .pct {
+  color: var(--orange);
+}
+
+/* LOOP LAYER: static copy of the start state, slides up from the bottom */
+.antigravity-animation .loop {
+  background: var(--white);
+  z-index: 5;
+  will-change: transform;
+  transform: translateY(100%);
+}
+
+/* LIVE DEMO PILL */
+.antigravity-animation .ag-demo-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(13, 13, 13, 0.72);
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, transform 0.2s;
+}
+.antigravity-animation .ag-demo-btn:hover {
+  background: rgba(13, 13, 13, 0.9);
+  transform: translateY(-1px);
+}
+
+/* COMPACT PREVIEW: the shell becomes the scroller */
+.antigravity-animation.ag-compact {
+  height: 100%;
+  min-height: 0;
+}
+.antigravity-animation.ag-compact .ag-shell {
+  height: 100%;
+  min-height: 0;
+  overflow-x: clip;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.antigravity-animation.ag-compact .ag-shell::-webkit-scrollbar {
+  display: none;
+}
+
+@container ag (max-width: 700px) {
+  .antigravity-animation .links a:not(.btn) {
+    display: none;
+  }
+  .antigravity-animation .seq {
+    height: calc(560 * var(--ag-vh));
+  }
+  .antigravity-animation .ms .card {
+    width: 150px;
+  }
+  .antigravity-animation .rule {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .antigravity-animation .seq {
+    height: calc(100 * var(--ag-vh));
+  }
+}

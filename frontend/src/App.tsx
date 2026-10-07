@@ -25,6 +25,8 @@ const BuildWithUIHubDetailPage = React.lazy(() => import('./pages/BuildWithUIHub
 const TemplateDetailPage = React.lazy(() => import('./pages/TemplatesPage/TemplateDetailPage'));
 const SectionScrollPage = React.lazy(() => import('./pages/Components/SectionScrollPage'));
 const DotsToSolidTextDemoPage = React.lazy(() => import('./pages/Components/DotsToSolidTextDemoPage'));
+const MostarCinematicScrollDemoPage = React.lazy(() => import('./pages/Components/MostarCinematicScrollDemoPage'));
+const AntigravityAnimationDemoPage = React.lazy(() => import('./pages/Components/AntigravityAnimationDemoPage'));
 const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
 const SplitOrbDemoPage = React.lazy(() => import('./pages/Components/SplitOrbDemoPage'));
 const SegmintDemoPage = React.lazy(() => import('./pages/Components/SegmintDemoPage'));
@@ -152,6 +154,8 @@ const AppShell = () => {
               <Route path="/demo/3d-slider" element={<ThreeDSliderPage />} />
               <Route path="/demo/section-scroll" element={<SectionScrollPage />} />
               <Route path="/demo/dots-to-solid-text" element={<DotsToSolidTextDemoPage />} />
+              <Route path="/demo/mostar-cinematic-scroll" element={<MostarCinematicScrollDemoPage />} />
+              <Route path="/demo/antigravity-animation" element={<AntigravityAnimationDemoPage />} />
               <Route path="/demo/tars-hero-arena" element={<TarsDemoPage />} />
               <Route path="/demo/split-fuzzy-orb" element={<SplitOrbDemoPage />} />
               <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />

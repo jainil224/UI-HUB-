@@ -34,8 +34,10 @@ const ToonhubHero = React.lazy(() => import('../components/ui/ToonhubHero'));
 const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTransition').then(m => ({ default: m.SVGPageTransition })));
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
-const DotsToSolidText = React.lazy(() => import('../components/ui/DotsToSolidText').then(m => ({ default: m.DotsToSolidText })));
-const ScrollExpand = React.lazy(() => import('../components/ui/ScrollExpand'));
+ const DotsToSolidText = React.lazy(() => import('../components/ui/DotsToSolidText').then(m => ({ default: m.DotsToSolidText })));
+ const MostarCinematicScroll = React.lazy(() => import('../components/ui/MostarCinematicScroll').then(m => ({ default: m.MostarCinematicScroll })));
+ const AntigravityAnimation = React.lazy(() => import('../components/ui/AntigravityAnimation').then(m => ({ default: m.AntigravityAnimation })));
+ const ScrollExpand = React.lazy(() => import('../components/ui/ScrollExpand'));
 const OptionWheel = React.lazy(() => import('../components/ui/OptionWheel'));
 const HackerBackground = React.lazy(() => import('../components/ui/HackerBackground'));
 const BeamGridBackground = React.lazy(() => import('../components/ui/BeamGridBackground'));
@@ -2808,6 +2810,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cube-loader': CubeLoader,
     'prism-pyramid': PrismPyramid,
     'dots-to-solid-text': DotsToSolidText,
+    'mostar-cinematic-scroll': MostarCinematicScroll,
+    'antigravity-animation': AntigravityAnimation,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15315,6 +15319,34 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: renderComponent("dots-to-solid-text", "DotsToSolidText", { compact: true, showDemoButton: true }),
         code: `import { DotsToSolidText } from '@/components/ui/DotsToSolidText';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] rounded-3xl overflow-hidden border border-white/5">\n      <DotsToSolidText />\n    </div>\n  );\n}`,
         vibePrompt: "Create a signature scroll-stopper page section in React + TSX with GSAP + ScrollTrigger. One deterministic 170-unit scrubbed timeline (`timeline.to({}, {duration:170})`, ease 'none', start 'top top' / end 'bottom bottom') choreographs: scene 1 (0-40) golden-framed brand cards labelled UI / HUB / scroll / Build by / jainil placed by gsap.set at a fanned baseline that parallax-drift left at per-card speeds while the headline and ghost numbers scroll off with them; scene 2 (33-92) the three Anton lines are rendered into a low-res offscreen canvas (dot spacing max(3, W/380)) and sampled into a dot matrix that fades in, slides each line home on its own eased offset, and dissolves along an edge that sweeps 1.7 to -0.3; (92-112) the matrix shrinks to quote size while the stage background mixes #07050f -> #1d1340; scene 3 (112-142) solid text replaces the dots line by line through a skewed clip-path polygon(0 -5%,X% -5%,(X-22)% 105%,0 105%) wiping on stagger windows 112/119/126, then a quote icon + caption fade in (140-147). In library/thumbnail previews the full timeline is instead driven by an invisible self-contained scroll column inside the card (trigger on a spacer, scroller on that column), so the animation plays only when the visitor scrolls within the preview itself."
+    },
+
+    // ── Mostar Cinematic Scroll ─────────────────────────────
+    {
+        id: "mostar-cinematic-scroll",
+        title: "Mostar Cinematic Scroll",
+        category: "scroll",
+        isPremium: true,
+        addedAt: "2026-10-06",
+        newBadgeDays: 120,
+        description: "A cinematic scroll story for Mostar city: pointer-parallax scene layers, a MOSTAR hero that exits while the Old Bridge widens and the splitframe halves part under a blue haze, UNESCO fact panels, then a 15-card infinite sights slider that flies in from the side with counter-scaled positioning and 640ms eased looping.",
+        preview: renderComponent("mostar-cinematic-scroll", "MostarCinematicScroll", { compact: true, showDemoButton: true }),
+        code: `import MostarCinematicScroll from '@/components/ui/MostarCinematicScroll';\n\nexport default function Page() {\n  return <MostarCinematicScroll />;\n}`,
+        vibePrompt: "Create a cinematic single-page scroll story in React + TSX (vanilla requestAnimationFrame engine, no animation library) that reproduces a three-screen Mostar city narrative over ~3700px of scroll against a sticky 100vh stage: layered remote PNG scene images (sky, glowing backdrop, bazaar, two splitframe halves, bridge, river close-up) driven entirely by CSS custom properties written per frame with clamp/smoothstep/segmentInOut math plus damped pointer parallax. Choreography: 0-650px the Ogg Medium MOSTAR title rises -210px, scales to 0.92 and fades while the intro copy sinks +90px; 560-1620px the bridge widens 67.2vw to 105vw then launches up -760px as the splitframe halves part to -/+46vw, global blur ramps to 14px with a blue 74,181,224 shade gradient, and the bridge fact panel slides +58px to -86px; 1760-2700px the bazaar layer gains saturation and the bazaar panel with an 'Open old town notes' pill takes over; 2760-3560px a sights slider flies in from 420vw on an enter^1.55 ease, counter-scaled by 1/backScale so cards stay screen-true; 3360-3660px round prev/next controls fade in and drive an infinite 3-set clone slider with 640ms cubic-bezier(0.22,1,0.36,1) track transitions and instant-jump normalization. Use container queries (1500/1100/640px) so the same component sizes correctly inside a 296-540px library preview frame, and in compact mode the scene scrubs against an inner scroll column instead of the window; honor prefers-reduced-motion by snapping values and zeroing parallax."
+    },
+
+    // ── Antigravity Animation ─────────────────────────────
+    {
+        id: "antigravity-animation",
+        title: "Antigravity Animation",
+        category: "scroll",
+        isPremium: true,
+        addedAt: "2026-10-07",
+        newBadgeDays: 120,
+        description: "A scroll-driven longevity story: a framed quote hero exits as a six-layer bell-curve glow swallows the screen into a black section, where an SVG milestone path draws itself under a scrolling camera, five age-labeled cards fade along the curve, the progress meter tracks the draw, and the final screen loops seamlessly back to the opening frame.",
+        preview: renderComponent("antigravity-animation", "AntigravityAnimation", { compact: true, showDemoButton: true }),
+        code: `import AntigravityAnimation from '@/components/ui/AntigravityAnimation';\n\nexport default function Page() {\n  return <AntigravityAnimation />;\n}`,
+        vibePrompt: "Create a scroll-driven single-page story section in React + TSX with a vanilla requestAnimationFrame engine (no animation library): a 700vh sequence whose sticky 100vh stage scrubs through three chapters from one scroll fraction s. The engine lerps the raw fraction toward its target at 0.12 per frame, maps it to sequence progress p = clamp(s*T/(T-1)) and loop-reveal progress rv = clamp(s*T-(T-1)) where T = runwayHeight/viewHeight - 1. Chapter 1 (p 0.02-0.12): a framed quote card with corner ticks, three dots, gradient side rules and an avatar byline exits with -120px rise, 0.96 scale and an eased fade. Chapter 2 (p 0-0.32): a six-layer SVG bell-glow (cream to black nested bell curves generated by a math path helper whose width/height/exponent morph with g = ramp(p,0,0.3)^1.25) grows from a thin bottom rim into a full dome, a black veil fades in behind it, and the top nav flips to dark. Chapter 3 (p 0.26-1): a black section takes over, its headline focuses from 15% opacity / 6px blur / +30px to sharp, then a winding SVG timeline path draws itself (strokeDashoffset with a 70px white leading tip), the camera follows the drawing head with translate3d x/y plus a ±1.4° sine roll, five milestone cards (dot, vertical light line, age tag, list card) positioned from getPointAtLength fade in and out along the curve, and a side progress bar plus percent readout track the draw. The last 100vh reveals a static copy of the opening frame sliding up from the bottom; reaching the very end silently jumps the scroll back to zero for an infinite loop, and wheel-up at the top jumps to the end first (reverse loop). Size everything with container queries (700px breakpoint), derive a --ag-vh pixel unit from the view height, and in compact preview mode scrub against an inner scroll column instead of the window; honor prefers-reduced-motion with a static frame. Use Inter Tight and JetBrains Mono from Google Fonts."
     },
 
 ];
