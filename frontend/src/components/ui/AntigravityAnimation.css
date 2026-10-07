@@ -220,8 +220,8 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 14%, #000 34%);
-  mask-image: linear-gradient(to bottom, transparent 14%, #000 34%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 6%, #000 12%);
+  mask-image: linear-gradient(to bottom, transparent 6%, #000 12%);
 }
 .antigravity-animation .world {
   position: absolute;

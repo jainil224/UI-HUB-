@@ -50,8 +50,8 @@ function Hero({ innerRef }: { innerRef?: any }) {
       <div className="frame">
         <i /><i /><i /><i />
         <div className="dots" aria-hidden="true"><b /><b /><b /></div>
-        <p className="quote">Becoming a healthier dad for my kids – priceless.</p>
-        <div className="who"><span />Jordan Hayes, founder of Capital</div>
+        <p className="quote">Beautiful, ready-to-use components for your next build.</p>
+        <div className="who"><span />UI-HUB, curated interactive library</div>
       </div>
     </div>
   );
@@ -165,7 +165,7 @@ export function AntigravityAnimation({
       done.current.style.strokeDashoffset = `${L * (1 - q)}`;
       tip.current.style.strokeDasharray = `${Math.min(70, len)} ${L * 2}`;
       tip.current.style.strokeDashoffset = `${-Math.max(0, len - 70)}`;
-      const y = viewH() * 0.64 - pt.y * sc;
+      const y = viewH() * 0.72 - pt.y * sc;
       const x = (0.5 - pt.x / W) * sc * 60;
       world.current.style.transform =
         `translate3d(${x}px,${y}px,0) rotate(${Math.sin(q * 3.1) * 1.4}deg)`;
@@ -261,9 +261,9 @@ export function AntigravityAnimation({
               <div className="view" aria-hidden="true">
                 <div className="world" ref={world}>
                   <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" fill="none">
-                    <path ref={base} d={PATH} stroke="rgba(255,255,255,.14)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
-                    <path ref={done} d={PATH} stroke="#ff6a1f" strokeWidth="1.8" vectorEffect="non-scaling-stroke" />
-                    <path ref={tip} d={PATH} stroke="#fff" strokeWidth="2.2" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
+                    <path ref={base} d={PATH} stroke="rgba(255,255,255,.38)" strokeWidth="1.5" vectorEffect="non-scaling-stroke" />
+                    <path ref={done} d={PATH} stroke="#ff6a1f" strokeWidth="2.4" vectorEffect="non-scaling-stroke" />
+                    <path ref={tip} d={PATH} stroke="#fff" strokeWidth="2.6" strokeLinecap="round" vectorEffect="non-scaling-stroke" />
                   </svg>
 
                   {MILESTONES.map((m, i) =>
