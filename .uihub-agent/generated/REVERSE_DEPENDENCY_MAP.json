@@ -31,10 +31,10 @@
   ],
   "description": "For every file: who imports it. The first tool to check before editing anything.",
   "counts": {
-    "tracked": 571,
-    "externalPackages": 66,
-    "orphans": 53,
-    "deadEnds": 197
+    "tracked": 619,
+    "externalPackages": 67,
+    "orphans": 62,
+    "deadEnds": 213
   },
   "topFanIn": [
     {
@@ -45,7 +45,7 @@
     },
     {
       "path": "backend/src/services/mongoService.js",
-      "importedBy": 24,
+      "importedBy": 26,
       "role": "SERVICE",
       "feature": "mongo-service"
     },
@@ -60,6 +60,12 @@
       "importedBy": 21,
       "role": "SERVICE",
       "feature": "mcp"
+    },
+    {
+      "path": "frontend/src/data/componentData.tsx",
+      "importedBy": 19,
+      "role": "DATA",
+      "feature": "data"
     },
     {
       "path": "frontend/src/components/admin/AdminUi.tsx",
@@ -80,10 +86,10 @@
       "feature": "cli"
     },
     {
-      "path": "frontend/src/data/componentData.tsx",
+      "path": "frontend/src/utils/apiConfig.ts",
       "importedBy": 16,
-      "role": "DATA",
-      "feature": "data"
+      "role": "UTILITY",
+      "feature": "utils"
     },
     {
       "path": "mcp-server/src/services/componentService.ts",
@@ -110,16 +116,16 @@
       "feature": "cli"
     },
     {
-      "path": "frontend/src/utils/apiConfig.ts",
-      "importedBy": 15,
-      "role": "UTILITY",
-      "feature": "utils"
-    },
-    {
       "path": "mcp-server/src/services/permissionService.ts",
       "importedBy": 15,
       "role": "SERVICE",
       "feature": "mcp"
+    },
+    {
+      "path": "frontend/src/context/AuthContext.tsx",
+      "importedBy": 14,
+      "role": "STATE",
+      "feature": "auth-context"
     },
     {
       "path": "frontend/src/data/templatesData.ts",
@@ -146,12 +152,6 @@
       "feature": "components"
     },
     {
-      "path": "frontend/src/context/AuthContext.tsx",
-      "importedBy": 13,
-      "role": "STATE",
-      "feature": "auth-context"
-    },
-    {
       "path": "mcp-server/src/types/index.ts",
       "importedBy": 13,
       "role": "TYPE",
@@ -170,6 +170,12 @@
       "feature": "lib"
     },
     {
+      "path": "frontend/src/services/templateViews.ts",
+      "importedBy": 11,
+      "role": "SERVICE",
+      "feature": "services"
+    },
+    {
       "path": "backend/src/utils/sendEmail.js",
       "importedBy": 10,
       "role": "UTILITY",
@@ -179,12 +185,6 @@
       "path": "mcp-server/src/config/env.ts",
       "importedBy": 9,
       "role": "CONFIG",
-      "feature": "mcp"
-    },
-    {
-      "path": "mcp-server/src/services/mongo.ts",
-      "importedBy": 8,
-      "role": "SERVICE",
       "feature": "mcp"
     }
   ],
@@ -405,10 +405,11 @@
         "backend/src/routes/componentRoutes.js",
         "backend/src/routes/favoritesRoutes.js",
         "backend/src/routes/paymentRoutes.js",
+        "backend/src/routes/templateViewsRoutes.js",
         "backend/src/routes/userRoutes.js",
         "backend/tests/broadcastAuth.test.js"
       ],
-      "importedBy": 6,
+      "importedBy": 7,
       "dynamicImporters": [],
       "role": "MIDDLEWARE",
       "feature": "middleware"
@@ -418,9 +419,10 @@
         "backend/src/routes/componentRoutes.js",
         "backend/src/routes/configRoutes.js",
         "backend/src/routes/paymentRoutes.js",
+        "backend/src/routes/templateViewsRoutes.js",
         "backend/src/server.js"
       ],
-      "importedBy": 4,
+      "importedBy": 5,
       "dynamicImporters": [],
       "role": "MIDDLEWARE",
       "feature": "middleware"
@@ -478,6 +480,15 @@
       "dynamicImporters": [],
       "role": "ROUTE_CONFIG",
       "feature": "payment-routes"
+    },
+    "backend/src/routes/templateViewsRoutes.js": {
+      "importers": [
+        "backend/src/server.js"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [],
+      "role": "ROUTE_CONFIG",
+      "feature": "template-views-routes"
     },
     "backend/src/routes/userRoutes.js": {
       "importers": [
@@ -740,6 +751,7 @@
         "backend/src/routes/collectionsRoutes.js",
         "backend/src/routes/componentRoutes.js",
         "backend/src/routes/favoritesRoutes.js",
+        "backend/src/routes/templateViewsRoutes.js",
         "backend/src/routes/userRoutes.js",
         "backend/src/scripts/initMongo.js",
         "backend/src/scripts/migrateFirestoreToMongo.js",
@@ -757,10 +769,11 @@
         "backend/src/services/healthService.js",
         "backend/src/services/pushService.js",
         "backend/src/services/syncService.js",
+        "backend/src/services/templateViewsService.js",
         "backend/src/services/userService.js",
         "backend/tests/collectionsService.test.js"
       ],
-      "importedBy": 24,
+      "importedBy": 26,
       "dynamicImporters": [
         "backend/tests/collectionsService.test.js"
       ],
@@ -804,6 +817,18 @@
       "dynamicImporters": [],
       "role": "SERVICE",
       "feature": "sync-service"
+    },
+    "backend/src/services/templateViewsService.js": {
+      "importers": [
+        "backend/src/routes/templateViewsRoutes.js",
+        "backend/tests/templateViewsService.test.js"
+      ],
+      "importedBy": 3,
+      "dynamicImporters": [
+        "backend/tests/templateViewsService.test.js"
+      ],
+      "role": "SERVICE",
+      "feature": "template-views-service"
     },
     "backend/src/services/userService.js": {
       "importers": [
@@ -907,6 +932,13 @@
       "feature": "shared"
     },
     "backend/tests/health.test.js": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "shared"
+    },
+    "backend/tests/templateViewsService.test.js": {
       "importers": [],
       "importedBy": 0,
       "dynamicImporters": [],
@@ -1229,9 +1261,58 @@
       "role": "TEST",
       "feature": "shared"
     },
+    "frontend/scripts/build-seo.mjs": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "SCRIPT",
+      "feature": "shared"
+    },
+    "frontend/scripts/check-seo.mjs": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "SCRIPT",
+      "feature": "shared"
+    },
     "frontend/scripts/generate-favicons.mjs": {
       "importers": [],
       "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "SCRIPT",
+      "feature": "shared"
+    },
+    "frontend/scripts/lib/extract-content.mjs": {
+      "importers": [
+        "frontend/scripts/lib/seo-manifest.mjs"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [],
+      "role": "SCRIPT",
+      "feature": "shared"
+    },
+    "frontend/scripts/lib/js-lex.mjs": {
+      "importers": [
+        "frontend/scripts/lib/extract-content.mjs"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [],
+      "role": "SCRIPT",
+      "feature": "shared"
+    },
+    "frontend/scripts/lib/seo-bundle.entry.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "BARREL",
+      "feature": "shared"
+    },
+    "frontend/scripts/lib/seo-manifest.mjs": {
+      "importers": [
+        "frontend/scripts/build-seo.mjs",
+        "frontend/scripts/check-seo.mjs"
+      ],
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "SCRIPT",
       "feature": "shared"
@@ -1244,6 +1325,28 @@
       "dynamicImporters": [],
       "role": "UNKNOWN",
       "feature": "frontend-root"
+    },
+    "frontend/src/components/AeoContent.tsx": {
+      "importers": [
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/seo/aeo.test.ts"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
+    "frontend/src/components/Seo.tsx": {
+      "importers": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/NotFoundPage.tsx"
+      ],
+      "importedBy": 4,
+      "dynamicImporters": [],
+      "role": "COMPONENT",
+      "feature": "components"
     },
     "frontend/src/components/admin/AdminUi.tsx": {
       "importers": [
@@ -1598,6 +1701,18 @@
       "role": "COMPONENT",
       "feature": "components"
     },
+    "frontend/src/components/templates/NeuralKineticsHero.tsx": {
+      "importers": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [
+        "frontend/src/components/templates/registry.ts"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
     "frontend/src/components/templates/OriginkitHero24.tsx": {
       "importers": [
         "frontend/src/components/templates/registry.ts",
@@ -1761,11 +1876,24 @@
       "importers": [
         "frontend/src/pages/HomePage/HomePage.tsx",
         "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
         "frontend/src/pages/TemplatesPage/TemplatesPage.tsx"
       ],
-      "importedBy": 4,
+      "importedBy": 5,
       "dynamicImporters": [],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
+    "frontend/src/components/ui/AntigravityAnimation.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
+      ],
       "role": "COMPONENT",
       "feature": "components"
     },
@@ -2347,9 +2475,10 @@
     },
     "frontend/src/components/ui/CodeHighlighter.tsx": {
       "importers": [
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "COMPONENT",
       "feature": "components"
@@ -2374,12 +2503,36 @@
       "role": "COMPONENT",
       "feature": "components"
     },
+    "frontend/src/components/ui/CubeLoader.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/CubeLoadersDemoPage.tsx"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
     "frontend/src/components/ui/CustomPricingCard.tsx": {
       "importers": [
         "frontend/src/pages/PricingPage/PricingPage.tsx"
       ],
       "importedBy": 1,
       "dynamicImporters": [],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
+    "frontend/src/components/ui/DotsToSolidText.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
+      ],
       "role": "COMPONENT",
       "feature": "components"
     },
@@ -2437,6 +2590,17 @@
       "dynamicImporters": [
         "frontend/src/data/componentData.tsx",
         "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
+    "frontend/src/components/ui/FeatherSphere.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
       ],
       "role": "COMPONENT",
       "feature": "components"
@@ -2604,6 +2768,18 @@
       "dynamicImporters": [
         "frontend/src/data/componentData.tsx",
         "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
+    "frontend/src/components/ui/HexaSphere.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/HexaSphereDemoPage.tsx"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
       ],
       "role": "COMPONENT",
       "feature": "components"
@@ -2852,6 +3028,18 @@
       "role": "COMPONENT",
       "feature": "components"
     },
+    "frontend/src/components/ui/MostarCinematicScroll.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
     "frontend/src/components/ui/MouseGravityBackground.tsx": {
       "importers": [
         "frontend/src/data/componentData.tsx",
@@ -2976,6 +3164,17 @@
       "role": "COMPONENT",
       "feature": "components"
     },
+    "frontend/src/components/ui/ParticleSun.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
     "frontend/src/components/ui/PasswordStrengthMeter.tsx": {
       "importers": [
         "frontend/src/data/componentData.tsx"
@@ -3019,6 +3218,17 @@
       "feature": "components"
     },
     "frontend/src/components/ui/PointDNAHelix.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
+    "frontend/src/components/ui/PrismPyramid.tsx": {
       "importers": [
         "frontend/src/data/componentData.tsx"
       ],
@@ -3276,6 +3486,17 @@
       "dynamicImporters": [
         "frontend/src/data/componentData.tsx",
         "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "role": "COMPONENT",
+      "feature": "components"
+    },
+    "frontend/src/components/ui/StreakSphere.tsx": {
+      "importers": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/data/componentData.tsx"
       ],
       "role": "COMPONENT",
       "feature": "components"
@@ -3783,6 +4004,7 @@
     "frontend/src/context/AuthContext.tsx": {
       "importers": [
         "frontend/src/App.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Navbar.tsx",
         "frontend/src/components/ui/PushNotificationPrompt.tsx",
         "frontend/src/pages/Admin/AdminGuard.tsx",
@@ -3796,7 +4018,7 @@
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/pages/PricingPage/PricingPage.tsx"
       ],
-      "importedBy": 13,
+      "importedBy": 14,
       "dynamicImporters": [],
       "role": "STATE",
       "feature": "auth-context"
@@ -3804,11 +4026,10 @@
     "frontend/src/context/CookieConsentContext.tsx": {
       "importers": [
         "frontend/src/App.tsx",
-        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/pages/legal/CookieSettingsPage.tsx"
       ],
-      "importedBy": 4,
+      "importedBy": 3,
       "dynamicImporters": [],
       "role": "STATE",
       "feature": "cookie-consent-context"
@@ -3877,6 +4098,8 @@
       "importers": [
         "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
         "frontend/src/components/ui/SearchBox.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/Components/DemoPage.tsx",
         "frontend/src/pages/Dashboard/CollectionsPage.tsx",
         "frontend/src/pages/Dashboard/FavoritesPage.tsx",
@@ -3886,12 +4109,13 @@
         "frontend/src/pages/LibraryPage/LibraryPage.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
+        "frontend/src/seo/component-seo.ts",
         "frontend/src/services/community.tsx",
         "frontend/src/services/favorites.ts",
         "frontend/src/utils/promptUtils.ts",
         "frontend/src/utils/searchIndex.ts"
       ],
-      "importedBy": 16,
+      "importedBy": 19,
       "dynamicImporters": [
         "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
         "frontend/src/utils/searchIndex.ts"
@@ -3911,19 +4135,42 @@
     },
     "frontend/src/data/componentMetadata.ts": {
       "importers": [
-        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/seo/component-seo.ts"
       ],
-      "importedBy": 1,
+      "importedBy": 3,
+      "dynamicImporters": [
+        "frontend/src/pages/Components/ComponentPage.tsx"
+      ],
+      "role": "DATA",
+      "feature": "data"
+    },
+    "frontend/src/data/componentVariants.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "data"
+    },
+    "frontend/src/data/componentVariants.ts": {
+      "importers": [
+        "frontend/src/data/componentVariants.test.ts",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/utils/promptUtils.ts"
+      ],
+      "importedBy": 3,
       "dynamicImporters": [],
       "role": "DATA",
       "feature": "data"
     },
     "frontend/src/data/embeddedSourceCode.ts": {
       "importers": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/utils/codeUtils.ts",
         "frontend/src/utils/promptUtils.ts"
       ],
-      "importedBy": 2,
+      "importedBy": 3,
       "dynamicImporters": [],
       "role": "DATA",
       "feature": "data"
@@ -4026,12 +4273,43 @@
       "role": "HOOK",
       "feature": "mobile"
     },
+    "frontend/src/hooks/useScrollChainBoundary.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "HOOK",
+      "feature": "scroll-chain-boundary"
+    },
+    "frontend/src/hooks/useTemplateViewCounts.ts": {
+      "importers": [
+        "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
+      ],
+      "importedBy": 8,
+      "dynamicImporters": [],
+      "role": "HOOK",
+      "feature": "template-view-counts"
+    },
+    "frontend/src/lib/adsense.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "lib"
+    },
     "frontend/src/lib/adsense.ts": {
       "importers": [
         "frontend/src/components/ui/AdSlot.tsx",
-        "frontend/src/context/CookieConsentContext.tsx"
+        "frontend/src/context/CookieConsentContext.tsx",
+        "frontend/src/lib/adsense.test.ts"
       ],
-      "importedBy": 2,
+      "importedBy": 3,
       "dynamicImporters": [],
       "role": "UNKNOWN",
       "feature": "lib"
@@ -4356,6 +4634,17 @@
       "role": "PAGE",
       "feature": "build-with-uihub-page"
     },
+    "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/App.tsx"
+      ],
+      "role": "PAGE",
+      "feature": "components"
+    },
     "frontend/src/pages/Components/AuCabaretDemoPage.tsx": {
       "importers": [
         "frontend/src/App.tsx"
@@ -4367,6 +4656,15 @@
       "role": "PAGE",
       "feature": "components"
     },
+    "frontend/src/pages/Components/CategoryPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [],
+      "role": "PAGE",
+      "feature": "components"
+    },
     "frontend/src/pages/Components/CloudScrollPage.tsx": {
       "importers": [],
       "importedBy": 0,
@@ -4374,7 +4672,16 @@
       "role": "PAGE",
       "feature": "components"
     },
-    "frontend/src/pages/Components/DemoPage.tsx": {
+    "frontend/src/pages/Components/ComponentPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [],
+      "role": "PAGE",
+      "feature": "components"
+    },
+    "frontend/src/pages/Components/CubeLoadersDemoPage.tsx": {
       "importers": [
         "frontend/src/App.tsx"
       ],
@@ -4385,7 +4692,30 @@
       "role": "PAGE",
       "feature": "components"
     },
+    "frontend/src/pages/Components/DemoPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [
+        "frontend/src/App.tsx"
+      ],
+      "role": "PAGE",
+      "feature": "components"
+    },
     "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/App.tsx"
+      ],
+      "role": "PAGE",
+      "feature": "components"
+    },
+    "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx": {
       "importers": [
         "frontend/src/App.tsx"
       ],
@@ -4408,6 +4738,17 @@
       "feature": "components"
     },
     "frontend/src/pages/Components/HaosDemoPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/App.tsx"
+      ],
+      "role": "PAGE",
+      "feature": "components"
+    },
+    "frontend/src/pages/Components/HexaSphereDemoPage.tsx": {
       "importers": [
         "frontend/src/App.tsx"
       ],
@@ -4496,6 +4837,17 @@
       "feature": "components"
     },
     "frontend/src/pages/Components/MentalityDemoPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [
+        "frontend/src/App.tsx"
+      ],
+      "role": "PAGE",
+      "feature": "components"
+    },
+    "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx": {
       "importers": [
         "frontend/src/App.tsx"
       ],
@@ -4662,9 +5014,10 @@
     },
     "frontend/src/pages/Dashboard/components/ComponentPreviewTile.tsx": {
       "importers": [
+        "frontend/src/pages/Components/CategoryPage.tsx",
         "frontend/src/pages/Dashboard/CollectionsPage.tsx"
       ],
-      "importedBy": 1,
+      "importedBy": 2,
       "dynamicImporters": [],
       "role": "PAGE",
       "feature": "dashboard"
@@ -4791,6 +5144,15 @@
       "role": "PAGE",
       "feature": "library-page"
     },
+    "frontend/src/pages/NotFoundPage.tsx": {
+      "importers": [
+        "frontend/src/App.tsx"
+      ],
+      "importedBy": 1,
+      "dynamicImporters": [],
+      "role": "PAGE",
+      "feature": "not-found-page"
+    },
     "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx": {
       "importers": [
         "frontend/src/App.tsx"
@@ -4898,6 +5260,113 @@
       "role": "TEST",
       "feature": "routing"
     },
+    "frontend/src/seo/aeo.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "seo"
+    },
+    "frontend/src/seo/aeo.ts": {
+      "importers": [
+        "frontend/scripts/lib/seo-bundle.entry.ts",
+        "frontend/src/components/AeoContent.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/seo/aeo.test.ts",
+        "frontend/src/seo/component-seo.ts",
+        "frontend/src/seo/routes.ts"
+      ],
+      "importedBy": 8,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
+    "frontend/src/seo/component-seo.ts": {
+      "importers": [
+        "frontend/scripts/lib/seo-bundle.entry.ts",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/seo/aeo.ts"
+      ],
+      "importedBy": 3,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
+    "frontend/src/seo/jsonld.ts": {
+      "importers": [
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/seo/routes.ts"
+      ],
+      "importedBy": 3,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
+    "frontend/src/seo/metadata.ts": {
+      "importers": [
+        "frontend/scripts/lib/seo-bundle.entry.ts",
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/seo/component-seo.ts",
+        "frontend/src/seo/routes.ts"
+      ],
+      "importedBy": 5,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
+    "frontend/src/seo/routes.ts": {
+      "importers": [
+        "frontend/scripts/lib/seo-bundle.entry.ts",
+        "frontend/src/components/Seo.tsx"
+      ],
+      "importedBy": 3,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
+    "frontend/src/seo/site.ts": {
+      "importers": [
+        "frontend/scripts/lib/seo-bundle.entry.ts",
+        "frontend/src/components/Seo.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/seo/aeo.ts",
+        "frontend/src/seo/jsonld.ts",
+        "frontend/src/seo/metadata.ts",
+        "frontend/src/seo/routes.ts"
+      ],
+      "importedBy": 8,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
+    "frontend/src/seo/taxonomy.ts": {
+      "importers": [
+        "frontend/scripts/lib/seo-bundle.entry.ts",
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/NotFoundPage.tsx",
+        "frontend/src/seo/aeo.ts",
+        "frontend/src/seo/metadata.ts",
+        "frontend/src/seo/routes.ts"
+      ],
+      "importedBy": 7,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
+    "frontend/src/seo/tech.ts": {
+      "importers": [
+        "frontend/scripts/lib/seo-bundle.entry.ts",
+        "frontend/src/seo/component-seo.ts"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [],
+      "role": "UNKNOWN",
+      "feature": "seo"
+    },
     "frontend/src/services/admin.ts": {
       "importers": [
         "frontend/src/pages/Admin/AdminGuard.tsx",
@@ -4964,6 +5433,32 @@
       "role": "SERVICE",
       "feature": "services"
     },
+    "frontend/src/services/templateViews.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "services"
+    },
+    "frontend/src/services/templateViews.ts": {
+      "importers": [
+        "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/context/AuthContext.tsx",
+        "frontend/src/hooks/useTemplateViewCounts.ts",
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+        "frontend/src/services/templateViews.test.ts"
+      ],
+      "importedBy": 11,
+      "dynamicImporters": [],
+      "role": "SERVICE",
+      "feature": "services"
+    },
     "frontend/src/utils/activityLogger.ts": {
       "importers": [
         "frontend/src/context/AuthContext.tsx",
@@ -4991,6 +5486,7 @@
         "frontend/src/services/community.tsx",
         "frontend/src/services/favorites.ts",
         "frontend/src/services/mcp.ts",
+        "frontend/src/services/templateViews.ts",
         "frontend/src/utils/activityLogger.ts",
         "frontend/src/utils/apiConfig.test.ts",
         "frontend/src/utils/checkout.ts",
@@ -4999,7 +5495,7 @@
         "frontend/src/utils/pushService.ts",
         "frontend/src/utils/syncUser.ts"
       ],
-      "importedBy": 15,
+      "importedBy": 16,
       "dynamicImporters": [],
       "role": "UTILITY",
       "feature": "utils"
@@ -5039,6 +5535,15 @@
         "frontend/src/utils/promptUtils.ts"
       ],
       "importedBy": 2,
+      "dynamicImporters": [],
+      "role": "UTILITY",
+      "feature": "utils"
+    },
+    "frontend/src/utils/componentCustomization.ts": {
+      "importers": [
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "importedBy": 1,
       "dynamicImporters": [],
       "role": "UTILITY",
       "feature": "utils"
@@ -5112,12 +5617,21 @@
       "role": "UTILITY",
       "feature": "utils"
     },
+    "frontend/src/utils/promptEncoding.test.ts": {
+      "importers": [],
+      "importedBy": 0,
+      "dynamicImporters": [],
+      "role": "TEST",
+      "feature": "utils"
+    },
     "frontend/src/utils/promptUtils.ts": {
       "importers": [
+        "frontend/src/data/componentVariants.test.ts",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/utils/promptEncoding.test.ts",
         "frontend/src/utils/templatePromptUtils.ts"
       ],
-      "importedBy": 2,
+      "importedBy": 4,
       "dynamicImporters": [],
       "role": "UTILITY",
       "feature": "utils"
@@ -5920,6 +6434,16 @@
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
     },
+    "external:esbuild": {
+      "importers": [
+        "frontend/scripts/lib/extract-content.mjs",
+        "frontend/scripts/lib/seo-manifest.mjs"
+      ],
+      "importedBy": 2,
+      "dynamicImporters": [],
+      "role": "EXTERNAL_PACKAGE",
+      "feature": "shared"
+    },
     "external:express": {
       "importers": [
         "backend/src/routes/collectionsRoutes.js",
@@ -5927,6 +6451,7 @@
         "backend/src/routes/configRoutes.js",
         "backend/src/routes/favoritesRoutes.js",
         "backend/src/routes/paymentRoutes.js",
+        "backend/src/routes/templateViewsRoutes.js",
         "backend/src/routes/userRoutes.js",
         "backend/src/server.js",
         "backend/tests/cors.test.js",
@@ -5942,7 +6467,7 @@
         "mcp-server/src/types/index.ts",
         "mcp-server/tests/cors.test.ts"
       ],
-      "importedBy": 19,
+      "importedBy": 20,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6085,13 +6610,14 @@
         "frontend/src/components/ui/CloudScroll/components/experience/work/UiHubProjects.tsx",
         "frontend/src/components/ui/CloudScroll/components/footer/index.tsx",
         "frontend/src/components/ui/CloudScroll/components/hero/index.tsx",
+        "frontend/src/components/ui/DotsToSolidText.tsx",
         "frontend/src/components/ui/InfiniteMarquee.tsx",
         "frontend/src/components/ui/SVGPageTransition.tsx",
         "frontend/src/components/ui/Scroll3DAnimation.tsx",
         "frontend/src/components/ui/SectionScroll.tsx",
         "frontend/src/components/ui/SmoothScroll.tsx"
       ],
-      "importedBy": 19,
+      "importedBy": 20,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6147,12 +6673,14 @@
         "frontend/src/components/templates/LogoHere.tsx",
         "frontend/src/components/templates/LumosHero.tsx",
         "frontend/src/components/templates/MoodHero.tsx",
+        "frontend/src/components/templates/NeuralKineticsHero.tsx",
         "frontend/src/components/templates/TarsHeroArena.tsx",
         "frontend/src/components/templates/TemplateCodeViewer.tsx",
         "frontend/src/components/templates/TemplatePreview.tsx",
         "frontend/src/components/templates/TemplatePreviewStage.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
         "frontend/src/components/templates/VisionaryOrbHero.tsx",
+        "frontend/src/components/ui/AntigravityAnimation.tsx",
         "frontend/src/components/ui/AuthBrandPanel.tsx",
         "frontend/src/components/ui/AuthRequiredModal.tsx",
         "frontend/src/components/ui/CardCascade.tsx",
@@ -6160,10 +6688,12 @@
         "frontend/src/components/ui/CloudScroll/CloudScroll.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/DotsToSolidText.tsx",
         "frontend/src/components/ui/DragDropUpload.tsx",
         "frontend/src/components/ui/FaizurPortfolio.tsx",
         "frontend/src/components/ui/Footer.tsx",
         "frontend/src/components/ui/HaulFooter.tsx",
+        "frontend/src/components/ui/MostarCinematicScroll.tsx",
         "frontend/src/components/ui/Navbar.tsx",
         "frontend/src/components/ui/OmniflowFooter.tsx",
         "frontend/src/components/ui/PasswordStrengthMeter.tsx",
@@ -6204,10 +6734,14 @@
         "frontend/src/pages/Auth/LoginPage.tsx",
         "frontend/src/pages/Auth/SignupPage.tsx",
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
         "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
         "frontend/src/pages/Components/CloudScrollPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/Components/DemoPage.tsx",
         "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+        "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
         "frontend/src/pages/Components/HaosDemoPage.tsx",
         "frontend/src/pages/Components/HeyoDemoPage.tsx",
         "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
@@ -6215,6 +6749,7 @@
         "frontend/src/pages/Components/LoveAppDemoPage.tsx",
         "frontend/src/pages/Components/LumosDemoPage.tsx",
         "frontend/src/pages/Components/MentalityDemoPage.tsx",
+        "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
         "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
         "frontend/src/pages/Components/PaipaiDemoPage.tsx",
         "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
@@ -6240,7 +6775,7 @@
         "frontend/src/pages/legal/CookieSettingsPage.tsx",
         "frontend/src/pages/legal/LegalPage.tsx"
       ],
-      "importedBy": 104,
+      "importedBy": 113,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6261,11 +6796,13 @@
       "importers": [
         "frontend/src/components/animations/TextAnimations.tsx",
         "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/templates/NeuralKineticsHero.tsx",
         "frontend/src/components/templates/PortfolioClosing.tsx",
         "frontend/src/components/ui/AuthRequiredModal.tsx",
         "frontend/src/components/ui/BloomingFlower.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/FeatherSphere.tsx",
         "frontend/src/components/ui/GalaxyButton.tsx",
         "frontend/src/components/ui/LiquidFillButton.tsx",
         "frontend/src/components/ui/LiquidGlassCard.tsx",
@@ -6291,7 +6828,7 @@
         "frontend/src/pages/PricingPage/PricingPage.tsx",
         "frontend/src/pages/legal/LegalPage.tsx"
       ],
-      "importedBy": 31,
+      "importedBy": 33,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6304,12 +6841,13 @@
         "backend/tests/cors.test.js",
         "backend/tests/emailTestSecret.test.js",
         "backend/tests/health.test.js",
+        "backend/tests/templateViewsService.test.js",
         "cli/tests/args.test.ts",
         "cli/tests/config.test.ts",
         "cli/tests/mcp.test.ts",
         "cli/tests/output.test.ts"
       ],
-      "importedBy": 10,
+      "importedBy": 11,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6334,7 +6872,11 @@
         "cli/src/cli.ts",
         "cli/src/commands/util.ts",
         "cli/src/config.ts",
+        "frontend/scripts/build-seo.mjs",
+        "frontend/scripts/check-seo.mjs",
         "frontend/scripts/generate-favicons.mjs",
+        "frontend/scripts/lib/extract-content.mjs",
+        "frontend/scripts/lib/seo-manifest.mjs",
         "frontend/src/routing/vercelRouting.test.ts",
         "mcp-server/src/services/componentService.ts",
         "scripts/announcement/build-banner.mjs",
@@ -6342,7 +6884,7 @@
         "scripts/announcement/check-png.mjs",
         "scripts/announcement/generate-manifest.mjs"
       ],
-      "importedBy": 16,
+      "importedBy": 20,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6377,7 +6919,11 @@
         "backend/src/utils/firebaseAdmin.js",
         "cli/src/commands/util.ts",
         "cli/src/config.ts",
+        "frontend/scripts/build-seo.mjs",
+        "frontend/scripts/check-seo.mjs",
         "frontend/scripts/generate-favicons.mjs",
+        "frontend/scripts/lib/extract-content.mjs",
+        "frontend/scripts/lib/seo-manifest.mjs",
         "frontend/src/routing/vercelRouting.test.ts",
         "mcp-server/src/services/componentService.ts",
         "scripts/announcement/build-banner.mjs",
@@ -6386,7 +6932,7 @@
         "scripts/announcement/generate-manifest.mjs",
         "scripts/announcement/preview-screenshot.mjs"
       ],
-      "importedBy": 16,
+      "importedBy": 20,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6418,12 +6964,13 @@
         "backend/tests/cors.test.js",
         "backend/tests/emailTestSecret.test.js",
         "backend/tests/health.test.js",
+        "backend/tests/templateViewsService.test.js",
         "cli/tests/args.test.ts",
         "cli/tests/config.test.ts",
         "cli/tests/mcp.test.ts",
         "cli/tests/output.test.ts"
       ],
-      "importedBy": 10,
+      "importedBy": 11,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6436,6 +6983,8 @@
         "backend/src/services/announcementService.js",
         "backend/src/utils/firebaseAdmin.js",
         "frontend/scripts/generate-favicons.mjs",
+        "frontend/scripts/lib/extract-content.mjs",
+        "frontend/scripts/lib/seo-manifest.mjs",
         "frontend/src/routing/vercelRouting.test.ts",
         "mcp-server/src/services/componentService.ts",
         "scripts/announcement/build-banner.mjs",
@@ -6444,7 +6993,7 @@
         "scripts/announcement/generate-manifest.mjs",
         "scripts/announcement/preview-screenshot.mjs"
       ],
-      "importedBy": 13,
+      "importedBy": 15,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6526,6 +7075,8 @@
     "external:react": {
       "importers": [
         "frontend/src/App.tsx",
+        "frontend/src/components/AeoContent.tsx",
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/admin/AdminUi.tsx",
         "frontend/src/components/admin/Charts.tsx",
         "frontend/src/components/animations/MeshText.tsx",
@@ -6555,6 +7106,7 @@
         "frontend/src/components/templates/LumosHero.tsx",
         "frontend/src/components/templates/MentalityHero.tsx",
         "frontend/src/components/templates/MoodHero.tsx",
+        "frontend/src/components/templates/NeuralKineticsHero.tsx",
         "frontend/src/components/templates/OriginkitHero24.tsx",
         "frontend/src/components/templates/PaipaiKuaishou.tsx",
         "frontend/src/components/templates/PortfolioClosing.tsx",
@@ -6569,6 +7121,7 @@
         "frontend/src/components/templates/VisionaryOrbHero.tsx",
         "frontend/src/components/templates/registry.ts",
         "frontend/src/components/ui/AdSlot.tsx",
+        "frontend/src/components/ui/AntigravityAnimation.tsx",
         "frontend/src/components/ui/AsciiCursor.tsx",
         "frontend/src/components/ui/AsciiWater.tsx",
         "frontend/src/components/ui/AuraCursor.tsx",
@@ -6609,12 +7162,15 @@
         "frontend/src/components/ui/CodeHighlighter.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/components/ui/CrossfadeTypewriter.tsx",
+        "frontend/src/components/ui/CubeLoader.tsx",
         "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/DotsToSolidText.tsx",
         "frontend/src/components/ui/DragDropUpload.tsx",
         "frontend/src/components/ui/DriftwoodGallery.tsx",
         "frontend/src/components/ui/EmberHusk.tsx",
         "frontend/src/components/ui/FaizurPortfolio.tsx",
         "frontend/src/components/ui/FallBeamBackground.tsx",
+        "frontend/src/components/ui/FeatherSphere.tsx",
         "frontend/src/components/ui/Footer.tsx",
         "frontend/src/components/ui/FrostGlassMelt.tsx",
         "frontend/src/components/ui/GalaxyButton.tsx",
@@ -6629,6 +7185,7 @@
         "frontend/src/components/ui/HaulFooter.tsx",
         "frontend/src/components/ui/HeartCursor.tsx",
         "frontend/src/components/ui/HellBackground.tsx",
+        "frontend/src/components/ui/HexaSphere.tsx",
         "frontend/src/components/ui/Hourglass.tsx",
         "frontend/src/components/ui/ImageCompare.tsx",
         "frontend/src/components/ui/ImageLens.tsx",
@@ -6650,6 +7207,7 @@
         "frontend/src/components/ui/MatrixRain.tsx",
         "frontend/src/components/ui/MorphingGlow.tsx",
         "frontend/src/components/ui/MorphingRings.tsx",
+        "frontend/src/components/ui/MostarCinematicScroll.tsx",
         "frontend/src/components/ui/MouseGravityBackground.tsx",
         "frontend/src/components/ui/Navbar.tsx",
         "frontend/src/components/ui/NeonBorder.tsx",
@@ -6661,11 +7219,13 @@
         "frontend/src/components/ui/ParticleCursor.tsx",
         "frontend/src/components/ui/ParticleLoader.tsx",
         "frontend/src/components/ui/ParticleSphere.tsx",
+        "frontend/src/components/ui/ParticleSun.tsx",
         "frontend/src/components/ui/PasswordStrengthMeter.tsx",
         "frontend/src/components/ui/PixelBounce.tsx",
         "frontend/src/components/ui/PixelDrift.tsx",
         "frontend/src/components/ui/PlanBadge.tsx",
         "frontend/src/components/ui/PointDNAHelix.tsx",
+        "frontend/src/components/ui/PrismPyramid.tsx",
         "frontend/src/components/ui/PushNotificationPrompt.tsx",
         "frontend/src/components/ui/QuantumLattice.tsx",
         "frontend/src/components/ui/RainStorm.tsx",
@@ -6688,6 +7248,7 @@
         "frontend/src/components/ui/SpaceBackground.tsx",
         "frontend/src/components/ui/StarBurst.tsx",
         "frontend/src/components/ui/StarCursor.tsx",
+        "frontend/src/components/ui/StreakSphere.tsx",
         "frontend/src/components/ui/SuiFoundation.tsx",
         "frontend/src/components/ui/SuperMario.tsx",
         "frontend/src/components/ui/TargetCursor.tsx",
@@ -6732,6 +7293,8 @@
         "frontend/src/context/ThemeContext.tsx",
         "frontend/src/data/componentData.tsx",
         "frontend/src/hooks/use-mobile.ts",
+        "frontend/src/hooks/useScrollChainBoundary.ts",
+        "frontend/src/hooks/useTemplateViewCounts.ts",
         "frontend/src/main.tsx",
         "frontend/src/pages/Admin/AdminGuard.tsx",
         "frontend/src/pages/Admin/AdminLayout.tsx",
@@ -6756,12 +7319,18 @@
         "frontend/src/pages/Auth/SignupPage.tsx",
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubPage.tsx",
+        "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
         "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
         "frontend/src/pages/Components/CloudScrollPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
         "frontend/src/pages/Components/DemoPage.tsx",
         "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+        "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
         "frontend/src/pages/Components/GlobeDemoPage.tsx",
         "frontend/src/pages/Components/HaosDemoPage.tsx",
+        "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
         "frontend/src/pages/Components/HeyoDemoPage.tsx",
         "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
         "frontend/src/pages/Components/LightCablesDemoPage.tsx",
@@ -6770,6 +7339,7 @@
         "frontend/src/pages/Components/LumosDemoPage.tsx",
         "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
         "frontend/src/pages/Components/MentalityDemoPage.tsx",
+        "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
         "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
         "frontend/src/pages/Components/PaipaiDemoPage.tsx",
         "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
@@ -6797,6 +7367,7 @@
         "frontend/src/pages/LibraryPage/LibraryPage.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/pages/LibraryPage/sections/GetStarted/GetStartedPage.tsx",
+        "frontend/src/pages/NotFoundPage.tsx",
         "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
         "frontend/src/pages/PricingPage/PricingPage.tsx",
         "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
@@ -6806,9 +7377,10 @@
         "frontend/src/pages/legal/PaymentPolicyPage.tsx",
         "frontend/src/pages/legal/PrivacyPolicyPage.tsx",
         "frontend/src/pages/legal/TermsPage.tsx",
+        "frontend/src/seo/aeo.test.ts",
         "frontend/src/utils/checkout.ts"
       ],
-      "importedBy": 282,
+      "importedBy": 305,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6826,9 +7398,10 @@
     "external:react-dom": {
       "importers": [
         "frontend/src/main.tsx",
-        "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx"
+        "frontend/src/pages/LibraryPage/HoverPreviewPopover.tsx",
+        "frontend/src/seo/aeo.test.ts"
       ],
-      "importedBy": 2,
+      "importedBy": 3,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6846,14 +7419,18 @@
     "external:react-router-dom": {
       "importers": [
         "frontend/src/App.tsx",
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/templates/BuildWithUIHubRail.tsx",
         "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/components/ui/AntigravityAnimation.tsx",
         "frontend/src/components/ui/AuthBrandPanel.tsx",
         "frontend/src/components/ui/AuthRequiredModal.tsx",
         "frontend/src/components/ui/CloudScroll/CloudScroll.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
+        "frontend/src/components/ui/DotsToSolidText.tsx",
         "frontend/src/components/ui/Footer.tsx",
+        "frontend/src/components/ui/MostarCinematicScroll.tsx",
         "frontend/src/components/ui/Navbar.tsx",
         "frontend/src/components/ui/Scroll3DAnimation.tsx",
         "frontend/src/components/ui/SearchBox.tsx",
@@ -6871,10 +7448,14 @@
         "frontend/src/pages/Auth/LoginPage.tsx",
         "frontend/src/pages/Auth/SignupPage.tsx",
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
         "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
         "frontend/src/pages/Components/CloudScrollPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/Components/DemoPage.tsx",
         "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+        "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
         "frontend/src/pages/Components/HaosDemoPage.tsx",
         "frontend/src/pages/Components/HeyoDemoPage.tsx",
         "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
@@ -6882,6 +7463,7 @@
         "frontend/src/pages/Components/LoveAppDemoPage.tsx",
         "frontend/src/pages/Components/LumosDemoPage.tsx",
         "frontend/src/pages/Components/MentalityDemoPage.tsx",
+        "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
         "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
         "frontend/src/pages/Components/PaipaiDemoPage.tsx",
         "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
@@ -6900,11 +7482,12 @@
         "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
         "frontend/src/pages/LibraryPage/LibraryPage.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/NotFoundPage.tsx",
         "frontend/src/pages/PricingPage/PricingPage.tsx",
         "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
         "frontend/src/pages/legal/LegalPage.tsx"
       ],
-      "importedBy": 58,
+      "importedBy": 68,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -6957,6 +7540,7 @@
     },
     "external:three": {
       "importers": [
+        "frontend/src/components/templates/NeuralKineticsHero.tsx",
         "frontend/src/components/templates/OriginkitHero24.tsx",
         "frontend/src/components/templates/PaipaiKuaishou.tsx",
         "frontend/src/components/templates/VisionaryOrbHero.tsx",
@@ -6980,13 +7564,17 @@
         "frontend/src/components/ui/CloudScroll/constants/work.ts",
         "frontend/src/components/ui/CloudScroll/types/work.ts",
         "frontend/src/components/ui/EmberHusk.tsx",
+        "frontend/src/components/ui/FeatherSphere.tsx",
         "frontend/src/components/ui/Globe.tsx",
         "frontend/src/components/ui/GlobeMesh.tsx",
+        "frontend/src/components/ui/HexaSphere.tsx",
         "frontend/src/components/ui/OceanSwell.tsx",
         "frontend/src/components/ui/ParticleSphere.tsx",
+        "frontend/src/components/ui/ParticleSun.tsx",
+        "frontend/src/components/ui/StreakSphere.tsx",
         "frontend/src/components/ui/Tornado.tsx"
       ],
-      "importedBy": 28,
+      "importedBy": 33,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"
@@ -7022,10 +7610,15 @@
     },
     "external:vitest": {
       "importers": [
+        "frontend/src/data/componentVariants.test.ts",
+        "frontend/src/lib/adsense.test.ts",
         "frontend/src/routing/vercelRouting.test.ts",
+        "frontend/src/seo/aeo.test.ts",
+        "frontend/src/services/templateViews.test.ts",
         "frontend/src/utils/apiConfig.test.ts",
         "frontend/src/utils/consentSignals.test.ts",
         "frontend/src/utils/cookieUtils.test.ts",
+        "frontend/src/utils/promptEncoding.test.ts",
         "mcp-server/tests/apiKey.test.ts",
         "mcp-server/tests/auth.test.ts",
         "mcp-server/tests/configService.test.ts",
@@ -7033,7 +7626,7 @@
         "mcp-server/tests/permissions.test.ts",
         "mcp-server/tests/tools.test.ts"
       ],
-      "importedBy": 10,
+      "importedBy": 15,
       "dynamicImporters": [],
       "role": "EXTERNAL_PACKAGE",
       "feature": "shared"

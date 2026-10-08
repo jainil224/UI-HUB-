@@ -31,9 +31,9 @@
   ],
   "description": "Service-layer modules in backend, frontend, and MCP, with their data-layer reach and consumers.",
   "counts": {
-    "services": 30,
-    "backend": 18,
-    "frontend": 5,
+    "services": 32,
+    "backend": 19,
+    "frontend": 6,
     "withDatabase": 4
   },
   "services": [
@@ -42,7 +42,7 @@
       "path": "backend/src/services/accessService.js",
       "layer": "backend",
       "feature": "access-service",
-      "lines": 194,
+      "lines": 212,
       "exportedSymbols": [
         "resolveComponentMeta",
         "getUserEntitlements",
@@ -320,6 +320,7 @@
         "backend/src/routes/collectionsRoutes.js",
         "backend/src/routes/componentRoutes.js",
         "backend/src/routes/favoritesRoutes.js",
+        "backend/src/routes/templateViewsRoutes.js",
         "backend/src/routes/userRoutes.js",
         "backend/src/scripts/initMongo.js",
         "backend/src/scripts/migrateFirestoreToMongo.js",
@@ -337,6 +338,7 @@
         "backend/src/services/healthService.js",
         "backend/src/services/pushService.js",
         "backend/src/services/syncService.js",
+        "backend/src/services/templateViewsService.js",
         "backend/src/services/userService.js",
         "backend/tests/collectionsService.test.js"
       ],
@@ -435,6 +437,33 @@
       "confidence": "HIGH"
     },
     {
+      "name": "templateViewsService",
+      "path": "backend/src/services/templateViewsService.js",
+      "layer": "backend",
+      "feature": "template-views-service",
+      "lines": 206,
+      "exportedSymbols": [
+        "isValidTemplateId",
+        "isValidViewSessionId",
+        "isValidViewViewerId",
+        "createTemplateViewsService",
+        "createComponentViewsService",
+        "listTemplateViewCounts",
+        "recordTemplateView",
+        "listComponentViewCounts",
+        "recordComponentView",
+        "templateViewsService"
+      ],
+      "usedBy": [
+        "backend/src/routes/templateViewsRoutes.js",
+        "backend/tests/templateViewsService.test.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
       "name": "userService",
       "path": "backend/src/services/userService.js",
       "layer": "backend",
@@ -486,7 +515,7 @@
       "path": "frontend/src/services/admin.ts",
       "layer": "frontend",
       "feature": "services",
-      "lines": 578,
+      "lines": 584,
       "exportedSymbols": [
         "AdminStatus",
         "AdminRange",
@@ -522,6 +551,7 @@
         "unsuspendUser",
         "listAdminKeys",
         "patchApiKey",
+        "deleteAdminApiKey",
         "getTools",
         "setTool",
         "getComponents",
@@ -642,7 +672,7 @@
       "path": "frontend/src/services/mcp.ts",
       "layer": "frontend",
       "feature": "services",
-      "lines": 259,
+      "lines": 269,
       "exportedSymbols": [
         "MCP_AUTH_REQUIRED",
         "FetchWithRetryOptions",
@@ -662,6 +692,56 @@
       ],
       "usedBy": [
         "frontend/src/pages/Dashboard/MCPPage.tsx"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "templateViews",
+      "path": "frontend/src/services/templateViews.ts",
+      "layer": "frontend",
+      "feature": "services",
+      "lines": 314,
+      "exportedSymbols": [
+        "TemplateView",
+        "RecordTemplateViewResponse",
+        "RecordComponentViewResponse",
+        "subscribeTemplateViewCounts",
+        "getTemplateViewCountsSnapshot",
+        "getComponentViewCountsSnapshot",
+        "parseViewCount",
+        "formatViewCount",
+        "getViewSessionId",
+        "setViewAuthTokenProvider",
+        "getViewerId",
+        "loadTemplateViewCounts",
+        "loadComponentViewCounts",
+        "getTemplateViewCount",
+        "hasTemplateViewCount",
+        "getComponentViewCount",
+        "hasComponentViewCount",
+        "getTemplateViewDisplay",
+        "getComponentViewDisplay",
+        "getTemplateViewAccessibleLabel",
+        "getComponentViewAccessibleLabel",
+        "recordTemplateView",
+        "recordComponentView",
+        "resetTemplateViewState"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/context/AuthContext.tsx",
+        "frontend/src/hooks/useTemplateViewCounts.ts",
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+        "frontend/src/services/templateViews.test.ts"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,

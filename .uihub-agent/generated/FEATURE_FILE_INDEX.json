@@ -31,7 +31,7 @@
   ],
   "description": "Feature  file list, the inverse of FEATURE_MAP, shaped for a single lookup.",
   "counts": {
-    "features": 56
+    "features": 62
   },
   "index": {
     "access-service": [
@@ -122,6 +122,8 @@
       "backend/src/services/componentSyncService.js"
     ],
     "components": [
+      "frontend/src/components/AeoContent.tsx",
+      "frontend/src/components/Seo.tsx",
       "frontend/src/components/admin/AdminUi.tsx",
       "frontend/src/components/admin/Charts.tsx",
       "frontend/src/components/animations/MeshText.tsx",
@@ -151,6 +153,7 @@
       "frontend/src/components/templates/LumosHero.tsx",
       "frontend/src/components/templates/MentalityHero.tsx",
       "frontend/src/components/templates/MoodHero.tsx",
+      "frontend/src/components/templates/NeuralKineticsHero.tsx",
       "frontend/src/components/templates/OriginkitHero24.tsx",
       "frontend/src/components/templates/PaipaiKuaishou.tsx",
       "frontend/src/components/templates/PortfolioClosing.tsx",
@@ -165,6 +168,7 @@
       "frontend/src/components/templates/VisionaryOrbHero.tsx",
       "frontend/src/components/templates/registry.ts",
       "frontend/src/components/ui/AdSlot.tsx",
+      "frontend/src/components/ui/AntigravityAnimation.tsx",
       "frontend/src/components/ui/AsciiCursor.tsx",
       "frontend/src/components/ui/AsciiWater.tsx",
       "frontend/src/components/ui/AuraCursor.tsx",
@@ -223,12 +227,15 @@
       "frontend/src/components/ui/CodeHighlighter.tsx",
       "frontend/src/components/ui/CookieBanner.tsx",
       "frontend/src/components/ui/CrossfadeTypewriter.tsx",
+      "frontend/src/components/ui/CubeLoader.tsx",
       "frontend/src/components/ui/CustomPricingCard.tsx",
+      "frontend/src/components/ui/DotsToSolidText.tsx",
       "frontend/src/components/ui/DragDropUpload.tsx",
       "frontend/src/components/ui/DriftwoodGallery.tsx",
       "frontend/src/components/ui/EmberHusk.tsx",
       "frontend/src/components/ui/FaizurPortfolio.tsx",
       "frontend/src/components/ui/FallBeamBackground.tsx",
+      "frontend/src/components/ui/FeatherSphere.tsx",
       "frontend/src/components/ui/Footer.tsx",
       "frontend/src/components/ui/FrostGlassMelt.tsx",
       "frontend/src/components/ui/GalaxyButton.tsx",
@@ -243,6 +250,7 @@
       "frontend/src/components/ui/HaulFooter.tsx",
       "frontend/src/components/ui/HeartCursor.tsx",
       "frontend/src/components/ui/HellBackground.tsx",
+      "frontend/src/components/ui/HexaSphere.tsx",
       "frontend/src/components/ui/Hourglass.tsx",
       "frontend/src/components/ui/ImageCompare.tsx",
       "frontend/src/components/ui/ImageLens.tsx",
@@ -264,6 +272,7 @@
       "frontend/src/components/ui/MatrixRain.tsx",
       "frontend/src/components/ui/MorphingGlow.tsx",
       "frontend/src/components/ui/MorphingRings.tsx",
+      "frontend/src/components/ui/MostarCinematicScroll.tsx",
       "frontend/src/components/ui/MouseGravityBackground.tsx",
       "frontend/src/components/ui/Navbar.tsx",
       "frontend/src/components/ui/NeonBorder.tsx",
@@ -275,11 +284,13 @@
       "frontend/src/components/ui/ParticleCursor.tsx",
       "frontend/src/components/ui/ParticleLoader.tsx",
       "frontend/src/components/ui/ParticleSphere.tsx",
+      "frontend/src/components/ui/ParticleSun.tsx",
       "frontend/src/components/ui/PasswordStrengthMeter.tsx",
       "frontend/src/components/ui/PixelBounce.tsx",
       "frontend/src/components/ui/PixelDrift.tsx",
       "frontend/src/components/ui/PlanBadge.tsx",
       "frontend/src/components/ui/PointDNAHelix.tsx",
+      "frontend/src/components/ui/PrismPyramid.tsx",
       "frontend/src/components/ui/PushNotificationPrompt.tsx",
       "frontend/src/components/ui/QuantumLattice.tsx",
       "frontend/src/components/ui/RainStorm.tsx",
@@ -302,6 +313,7 @@
       "frontend/src/components/ui/SpaceBackground.tsx",
       "frontend/src/components/ui/StarBurst.tsx",
       "frontend/src/components/ui/StarCursor.tsx",
+      "frontend/src/components/ui/StreakSphere.tsx",
       "frontend/src/components/ui/SuiFoundation.tsx",
       "frontend/src/components/ui/SuperMario.tsx",
       "frontend/src/components/ui/TargetCursor.tsx",
@@ -342,12 +354,18 @@
       "frontend/src/components/ui/spider-web.tsx",
       "frontend/src/components/ui/spiral-images.tsx",
       "frontend/src/components/ui/testimonials-card.tsx",
+      "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
       "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+      "frontend/src/pages/Components/CategoryPage.tsx",
       "frontend/src/pages/Components/CloudScrollPage.tsx",
+      "frontend/src/pages/Components/ComponentPage.tsx",
+      "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
       "frontend/src/pages/Components/DemoPage.tsx",
       "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+      "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
       "frontend/src/pages/Components/GlobeDemoPage.tsx",
       "frontend/src/pages/Components/HaosDemoPage.tsx",
+      "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
       "frontend/src/pages/Components/HeyoDemoPage.tsx",
       "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
       "frontend/src/pages/Components/LightCablesDemoPage.tsx",
@@ -356,6 +374,7 @@
       "frontend/src/pages/Components/LumosDemoPage.tsx",
       "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
       "frontend/src/pages/Components/MentalityDemoPage.tsx",
+      "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
       "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
       "frontend/src/pages/Components/PaipaiDemoPage.tsx",
       "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
@@ -405,6 +424,8 @@
       "frontend/src/data/componentData.tsx",
       "frontend/src/data/componentFullSources.ts",
       "frontend/src/data/componentMetadata.ts",
+      "frontend/src/data/componentVariants.test.ts",
+      "frontend/src/data/componentVariants.ts",
       "frontend/src/data/embeddedSourceCode.ts",
       "frontend/src/data/haulFooterSource.ts",
       "frontend/src/data/lovablePrompts.ts",
@@ -456,6 +477,7 @@
       "frontend/src/pages/legal/TermsPage.tsx"
     ],
     "lib": [
+      "frontend/src/lib/adsense.test.ts",
       "frontend/src/lib/adsense.ts",
       "frontend/src/lib/firebase.ts",
       "frontend/src/lib/utils.ts"
@@ -519,6 +541,9 @@
     "mongo-service": [
       "backend/src/services/mongoService.js"
     ],
+    "not-found-page": [
+      "frontend/src/pages/NotFoundPage.tsx"
+    ],
     "payment-routes": [
       "backend/src/routes/paymentRoutes.js"
     ],
@@ -558,12 +583,28 @@
       "backend/src/scripts/testEmailRequest.js",
       "backend/src/scripts/testReceiptAndEmails.js"
     ],
+    "scroll-chain-boundary": [
+      "frontend/src/hooks/useScrollChainBoundary.ts"
+    ],
+    "seo": [
+      "frontend/src/seo/aeo.test.ts",
+      "frontend/src/seo/aeo.ts",
+      "frontend/src/seo/component-seo.ts",
+      "frontend/src/seo/jsonld.ts",
+      "frontend/src/seo/metadata.ts",
+      "frontend/src/seo/routes.ts",
+      "frontend/src/seo/site.ts",
+      "frontend/src/seo/taxonomy.ts",
+      "frontend/src/seo/tech.ts"
+    ],
     "services": [
       "frontend/src/services/admin.ts",
       "frontend/src/services/collections.ts",
       "frontend/src/services/community.tsx",
       "frontend/src/services/favorites.ts",
-      "frontend/src/services/mcp.ts"
+      "frontend/src/services/mcp.ts",
+      "frontend/src/services/templateViews.test.ts",
+      "frontend/src/services/templateViews.ts"
     ],
     "shared": [
       "backend/scripts/backfillUsers.js",
@@ -585,11 +626,18 @@
       "backend/tests/cors.test.js",
       "backend/tests/emailTestSecret.test.js",
       "backend/tests/health.test.js",
+      "backend/tests/templateViewsService.test.js",
       "cli/tests/args.test.ts",
       "cli/tests/config.test.ts",
       "cli/tests/mcp.test.ts",
       "cli/tests/output.test.ts",
+      "frontend/scripts/build-seo.mjs",
+      "frontend/scripts/check-seo.mjs",
       "frontend/scripts/generate-favicons.mjs",
+      "frontend/scripts/lib/extract-content.mjs",
+      "frontend/scripts/lib/js-lex.mjs",
+      "frontend/scripts/lib/seo-bundle.entry.ts",
+      "frontend/scripts/lib/seo-manifest.mjs",
       "mcp-server/tests/apiKey.test.ts",
       "mcp-server/tests/auth.test.ts",
       "mcp-server/tests/configService.test.ts",
@@ -607,6 +655,15 @@
     ],
     "sync-service": [
       "backend/src/services/syncService.js"
+    ],
+    "template-view-counts": [
+      "frontend/src/hooks/useTemplateViewCounts.ts"
+    ],
+    "template-views-routes": [
+      "backend/src/routes/templateViewsRoutes.js"
+    ],
+    "template-views-service": [
+      "backend/src/services/templateViewsService.js"
     ],
     "templates-page": [
       "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
@@ -632,6 +689,7 @@
       "frontend/src/utils/checkout.ts",
       "frontend/src/utils/codeHighlighter.ts",
       "frontend/src/utils/codeUtils.ts",
+      "frontend/src/utils/componentCustomization.ts",
       "frontend/src/utils/componentSync.ts",
       "frontend/src/utils/componentUtils.ts",
       "frontend/src/utils/consentSignals.test.ts",
@@ -639,6 +697,7 @@
       "frontend/src/utils/cookieUtils.ts",
       "frontend/src/utils/mcpConfig.ts",
       "frontend/src/utils/prefetchUtils.ts",
+      "frontend/src/utils/promptEncoding.test.ts",
       "frontend/src/utils/promptUtils.ts",
       "frontend/src/utils/pushService.ts",
       "frontend/src/utils/razorpayUtils.ts",

@@ -31,8 +31,8 @@
   ],
   "description": "Custom hooks. A file qualifies only if it is named use* AND exports something -- not either alone.",
   "counts": {
-    "hooks": 2,
-    "unused": 0
+    "hooks": 4,
+    "unused": 1
   },
   "hooks": [
     {
@@ -71,6 +71,38 @@
       "usedBy": [
         "frontend/src/components/ui/CardCascade.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "useScrollChainBoundary",
+      "path": "frontend/src/hooks/useScrollChainBoundary.ts",
+      "feature": "scroll-chain-boundary",
+      "lines": 37,
+      "exportedSymbols": [
+        "useScrollChainBoundary"
+      ],
+      "usedBy": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "useTemplateViewCounts",
+      "path": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "feature": "template-view-counts",
+      "lines": 39,
+      "exportedSymbols": [
+        "useTemplateViewCounts",
+        "useComponentViewCounts"
+      ],
+      "usedBy": [
+        "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/TemplateSimilarRail.tsx",
+        "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+        "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+        "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx"
       ],
       "confidence": "HIGH"
     }

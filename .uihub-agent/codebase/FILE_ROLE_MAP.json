@@ -31,28 +31,28 @@
   ],
   "description": "Every indexed source file with its role, the evidence for that role, and its edge counts.",
   "counts": {
-    "files": 505,
+    "files": 552,
     "byRole": {
-      "BARREL": 5,
-      "COMPONENT": 200,
+      "BARREL": 6,
+      "COMPONENT": 212,
       "CONFIG": 8,
       "CONTROLLER": 2,
-      "DATA": 26,
+      "DATA": 27,
       "ENTRY": 4,
-      "HOOK": 2,
+      "HOOK": 4,
       "MCP_TOOL": 16,
       "MIDDLEWARE": 8,
       "MODEL": 5,
-      "PAGE": 74,
-      "ROUTE_CONFIG": 9,
-      "SCRIPT": 35,
-      "SERVICE": 30,
+      "PAGE": 82,
+      "ROUTE_CONFIG": 10,
+      "SCRIPT": 40,
+      "SERVICE": 32,
       "STATE": 7,
       "TEMPLATE": 1,
-      "TEST": 20,
+      "TEST": 26,
       "TYPE": 7,
-      "UNKNOWN": 24,
-      "UTILITY": 22
+      "UNKNOWN": 32,
+      "UTILITY": 23
     }
   },
   "files": [
@@ -119,7 +119,7 @@
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".js",
       "lines": 23,
-      "bytes": 838,
+      "bytes": 860,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -155,7 +155,7 @@
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".js",
       "lines": 593,
-      "bytes": 18791,
+      "bytes": 19383,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -316,8 +316,8 @@
       "feature": "config",
       "featureConfidence": "HIGH",
       "ext": ".js",
-      "lines": 156,
-      "bytes": 5542,
+      "lines": 158,
+      "bytes": 5596,
       "exports": [
         "DEFAULT_ALLOWED_ORIGINS",
         "parseOriginList",
@@ -341,8 +341,8 @@
       "feature": "config",
       "featureConfidence": "HIGH",
       "ext": ".js",
-      "lines": 57,
-      "bytes": 1734,
+      "lines": 58,
+      "bytes": 1825,
       "exports": [
         "PLANS",
         "CATEGORY_PRICES",
@@ -427,7 +427,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 19,
-      "bytes": 237879,
+      "bytes": 237882,
       "exports": [
         "COMPONENT_FULL_SOURCES"
       ],
@@ -447,7 +447,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 5658,
-      "bytes": 186955,
+      "bytes": 187285,
       "exports": [
         "ANTIGRAVITY_PROMPTS"
       ],
@@ -467,7 +467,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 3276,
-      "bytes": 151169,
+      "bytes": 151218,
       "exports": [
         "CLAUDE_PROMPTS"
       ],
@@ -487,7 +487,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 1989,
-      "bytes": 86282,
+      "bytes": 86445,
       "exports": [
         "LOVABLE_PROMPTS"
       ],
@@ -507,7 +507,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 97,
-      "bytes": 947294,
+      "bytes": 947304,
       "exports": [
         "EMBEDDED_SOURCE_CODE"
       ],
@@ -546,17 +546,18 @@
       "feature": "middleware",
       "featureConfidence": "HIGH",
       "ext": ".js",
-      "lines": 130,
-      "bytes": 4706,
+      "lines": 166,
+      "bytes": 5957,
       "exports": [
         "verifyToken",
+        "verifyOptionalToken",
         "createRequireAdmin",
         "requireAdmin"
       ],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 6,
+      "inbound": 7,
       "outbound": 2,
       "orphaned": false
     },
@@ -568,8 +569,8 @@
       "feature": "middleware",
       "featureConfidence": "HIGH",
       "ext": ".js",
-      "lines": 97,
-      "bytes": 3875,
+      "lines": 108,
+      "bytes": 4269,
       "exports": [
         "redisStatus",
         "globalLimiter",
@@ -578,12 +579,13 @@
         "createOrderLimiter",
         "verifyPaymentLimiter",
         "webhookLimiter",
-        "sourceLimiter"
+        "sourceLimiter",
+        "templateViewLimiter"
       ],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 4,
+      "inbound": 5,
       "outbound": 0,
       "orphaned": false
     },
@@ -699,6 +701,24 @@
       "orphaned": false
     },
     {
+      "path": "backend/src/routes/templateViewsRoutes.js",
+      "role": "ROUTE_CONFIG",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "template-views-routes",
+      "featureConfidence": "HIGH",
+      "ext": ".js",
+      "lines": 94,
+      "bytes": 3404,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 1,
+      "outbound": 4,
+      "orphaned": false
+    },
+    {
       "path": "backend/src/routes/userRoutes.js",
       "role": "ROUTE_CONFIG",
       "roleSource": "path-convention",
@@ -745,7 +765,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 64,
-      "bytes": 2168,
+      "bytes": 2231,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -943,7 +963,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 325,
-      "bytes": 14048,
+      "bytes": 14372,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -1014,14 +1034,14 @@
       "feature": "backend-root",
       "featureConfidence": "HIGH",
       "ext": ".js",
-      "lines": 185,
-      "bytes": 7541,
+      "lines": 187,
+      "bytes": 7660,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
       "inbound": 1,
-      "outbound": 11,
+      "outbound": 12,
       "orphaned": false
     },
     {
@@ -1032,8 +1052,8 @@
       "feature": "access-service",
       "featureConfidence": "HIGH",
       "ext": ".js",
-      "lines": 194,
-      "bytes": 6476,
+      "lines": 212,
+      "bytes": 7262,
       "exports": [
         "resolveComponentMeta",
         "getUserEntitlements",
@@ -1155,7 +1175,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 300,
-      "bytes": 9810,
+      "bytes": 10109,
       "exports": [
         "inferCategory",
         "formatTitle",
@@ -1309,7 +1329,7 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 24,
+      "inbound": 26,
       "outbound": 0,
       "orphaned": false
     },
@@ -1322,7 +1342,7 @@
       "featureConfidence": "HIGH",
       "ext": ".js",
       "lines": 155,
-      "bytes": 6379,
+      "bytes": 6380,
       "exports": [
         "generateVibePrompt",
         "getComponentSource"
@@ -1397,6 +1417,35 @@
       "usesJsx": false,
       "inbound": 1,
       "outbound": 4,
+      "orphaned": false
+    },
+    {
+      "path": "backend/src/services/templateViewsService.js",
+      "role": "SERVICE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "template-views-service",
+      "featureConfidence": "HIGH",
+      "ext": ".js",
+      "lines": 206,
+      "bytes": 7968,
+      "exports": [
+        "isValidTemplateId",
+        "isValidViewSessionId",
+        "isValidViewViewerId",
+        "createTemplateViewsService",
+        "createComponentViewsService",
+        "listTemplateViewCounts",
+        "recordTemplateView",
+        "listComponentViewCounts",
+        "recordComponentView",
+        "templateViewsService"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 3,
+      "outbound": 1,
       "orphaned": false
     },
     {
@@ -1523,8 +1572,8 @@
       "feature": "shared",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".js",
-      "lines": 108,
-      "bytes": 4809,
+      "lines": 140,
+      "bytes": 6874,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -1577,8 +1626,8 @@
       "feature": "shared",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".js",
-      "lines": 249,
-      "bytes": 9873,
+      "lines": 256,
+      "bytes": 10144,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -1621,6 +1670,24 @@
       "usesJsx": false,
       "inbound": 0,
       "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "backend/tests/templateViewsService.test.js",
+      "role": "TEST",
+      "roleSource": "test-filename",
+      "confidence": "HIGH",
+      "feature": "shared",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".js",
+      "lines": 342,
+      "bytes": 13302,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 2,
       "orphaned": false
     },
     {
@@ -2187,6 +2254,42 @@
       "orphaned": false
     },
     {
+      "path": "frontend/scripts/build-seo.mjs",
+      "role": "SCRIPT",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "shared",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".mjs",
+      "lines": 254,
+      "bytes": 9445,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/scripts/check-seo.mjs",
+      "role": "SCRIPT",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "shared",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".mjs",
+      "lines": 421,
+      "bytes": 17642,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
       "path": "frontend/scripts/generate-favicons.mjs",
       "role": "SCRIPT",
       "roleSource": "path-convention",
@@ -2205,6 +2308,93 @@
       "orphaned": true
     },
     {
+      "path": "frontend/scripts/lib/extract-content.mjs",
+      "role": "SCRIPT",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "shared",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".mjs",
+      "lines": 194,
+      "bytes": 7200,
+      "exports": [
+        "extractComponents",
+        "extractTemplates",
+        "extractBuildWithUIHub",
+        "extractComponentConfig",
+        "extractBuildWithUIHubTemplateIds"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 1,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/scripts/lib/js-lex.mjs",
+      "role": "SCRIPT",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "shared",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".mjs",
+      "lines": 310,
+      "bytes": 8927,
+      "exports": [
+        "findArrayStart",
+        "scanArrayEntries",
+        "scanObjectProps",
+        "collectStrings",
+        "unquote",
+        "looseJsonParse"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 1,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "role": "BARREL",
+      "roleSource": "ast:re-export-only",
+      "confidence": "HIGH",
+      "feature": "shared",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 30,
+      "bytes": 1022,
+      "exports": [],
+      "isBarrel": true,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 9,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/scripts/lib/seo-manifest.mjs",
+      "role": "SCRIPT",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "shared",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".mjs",
+      "lines": 100,
+      "bytes": 3395,
+      "exports": [
+        "loadSeoManifest"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 2,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/App.tsx",
       "role": "UNKNOWN",
       "roleSource": "no-rule-matched",
@@ -2212,14 +2402,58 @@
       "feature": "frontend-root",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".tsx",
-      "lines": 217,
-      "bytes": 13249,
+      "lines": 235,
+      "bytes": 14722,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 74,
+      "outbound": 83,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/components/AeoContent.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 178,
+      "bytes": 6781,
+      "exports": [
+        "AeoContent"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 2,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/components/Seo.tsx",
+      "role": "COMPONENT",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 119,
+      "bytes": 4694,
+      "exports": [
+        "SeoJsonLd",
+        "SeoConfig",
+        "useSeo",
+        "Seo",
+        "RouteSeoGuard"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 4,
+      "outbound": 2,
       "orphaned": false
     },
     {
@@ -2320,7 +2554,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 691,
-      "bytes": 23545,
+      "bytes": 24235,
       "exports": [
         "TransitionValue",
         "PixelDriftProps",
@@ -2651,14 +2885,14 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 229,
-      "bytes": 9465,
+      "lines": 238,
+      "bytes": 10004,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 2,
+      "outbound": 4,
       "orphaned": false
     },
     {
@@ -2669,8 +2903,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 172,
-      "bytes": 7121,
+      "lines": 173,
+      "bytes": 7334,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -2945,6 +3179,26 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 1206,
+      "bytes": 38224,
+      "exports": [
+        "NeuralKineticsHero"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 2,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/components/templates/OriginkitHero24.tsx",
       "role": "COMPONENT",
       "roleSource": "ast:jsx+capitalized-export",
@@ -3171,8 +3425,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 422,
-      "bytes": 18456,
+      "lines": 448,
+      "bytes": 20186,
       "exports": [
         "SIMILAR_COLLAPSED_COUNT"
       ],
@@ -3180,7 +3434,7 @@
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 3,
+      "outbound": 5,
       "orphaned": false
     },
     {
@@ -3211,8 +3465,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".ts",
-      "lines": 181,
-      "bytes": 8174,
+      "lines": 186,
+      "bytes": 8651,
       "exports": [
         "TEMPLATE_PREVIEWS",
         "TemplatePreviewSource",
@@ -3227,7 +3481,7 @@
       "isTypeOnly": false,
       "usesJsx": false,
       "inbound": 4,
-      "outbound": 21,
+      "outbound": 22,
       "orphaned": false
     },
     {
@@ -3238,14 +3492,35 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 93,
-      "bytes": 2923,
+      "lines": 149,
+      "bytes": 5054,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
-      "inbound": 4,
+      "inbound": 5,
       "outbound": 2,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 309,
+      "bytes": 13063,
+      "exports": [
+        "AntigravityAnimationProps",
+        "AntigravityAnimation"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 2,
+      "outbound": 0,
       "orphaned": false
     },
     {
@@ -3298,7 +3573,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 1522,
-      "bytes": 52326,
+      "bytes": 53847,
       "exports": [
         "AuraCursor"
       ],
@@ -3394,7 +3669,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 528,
-      "bytes": 18221,
+      "bytes": 18748,
       "exports": [
         "BlackHole"
       ],
@@ -3474,7 +3749,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 640,
-      "bytes": 19008,
+      "bytes": 19647,
       "exports": [
         "BloomingFlower"
       ],
@@ -3494,7 +3769,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 664,
-      "bytes": 26074,
+      "bytes": 26737,
       "exports": [
         "CardCascade"
       ],
@@ -3534,7 +3809,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 440,
-      "bytes": 15376,
+      "bytes": 15815,
       "exports": [
         "Chandelier"
       ],
@@ -3740,7 +4015,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 87,
-      "bytes": 2841,
+      "bytes": 2832,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -3868,7 +4143,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 72,
-      "bytes": 2288,
+      "bytes": 2279,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -4312,7 +4587,7 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
-      "inbound": 1,
+      "inbound": 2,
       "outbound": 0,
       "orphaned": false
     },
@@ -4324,8 +4599,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 67,
-      "bytes": 4033,
+      "lines": 68,
+      "bytes": 4212,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -4355,6 +4630,32 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/components/ui/CubeLoader.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 310,
+      "bytes": 9451,
+      "exports": [
+        "CubeLoaderVariantId",
+        "CUBE_LOADER_VARIANT_ORDER",
+        "CUBE_LOADER_VARIANT_LABELS",
+        "CausticCube",
+        "MonolithCube",
+        "CubeLoaderProps",
+        "CubeLoader"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 2,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/components/ui/CustomPricingCard.tsx",
       "role": "COMPONENT",
       "roleSource": "ast:jsx+capitalized-export",
@@ -4362,8 +4663,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 518,
-      "bytes": 22382,
+      "lines": 533,
+      "bytes": 22774,
       "exports": [
         "CategoryKey",
         "CATEGORIES"
@@ -4373,6 +4674,28 @@
       "usesJsx": true,
       "inbound": 1,
       "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 516,
+      "bytes": 22081,
+      "exports": [
+        "CardData",
+        "DotsToSolidTextProps",
+        "DotsToSolidText"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 2,
+      "outbound": 0,
       "orphaned": false
     },
     {
@@ -4487,6 +4810,27 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/components/ui/FeatherSphere.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 251,
+      "bytes": 12625,
+      "exports": [
+        "FeatherSphereProps",
+        "FeatherSphere"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/components/ui/Footer.tsx",
       "role": "COMPONENT",
       "roleSource": "path-convention",
@@ -4495,7 +4839,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 236,
-      "bytes": 13531,
+      "bytes": 13766,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -4554,7 +4898,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 230,
-      "bytes": 7611,
+      "bytes": 7840,
       "exports": [
         "GearSystem"
       ],
@@ -4574,7 +4918,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 145,
-      "bytes": 5328,
+      "bytes": 5472,
       "exports": [
         "GeneratingOrb"
       ],
@@ -4593,8 +4937,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 1043,
-      "bytes": 43015,
+      "lines": 1073,
+      "bytes": 43843,
       "exports": [
         "Marker",
         "MarkerConfig",
@@ -4679,7 +5023,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 558,
-      "bytes": 17086,
+      "bytes": 17643,
       "exports": [
         "GravitationalVortexProps",
         "GravitationalVortex"
@@ -4774,6 +5118,28 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/components/ui/HexaSphere.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 461,
+      "bytes": 20115,
+      "exports": [
+        "HexaSphereSettings",
+        "HexaSphereProps",
+        "HexaSphere"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 2,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/components/ui/Hourglass.tsx",
       "role": "COMPONENT",
       "roleSource": "ast:jsx+capitalized-export",
@@ -4782,7 +5148,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 319,
-      "bytes": 15121,
+      "bytes": 15439,
       "exports": [
         "Hourglass"
       ],
@@ -4910,7 +5276,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 112,
-      "bytes": 5627,
+      "bytes": 5738,
       "exports": [
         "IsometricPortal"
       ],
@@ -4993,7 +5359,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 409,
-      "bytes": 11993,
+      "bytes": 12401,
       "exports": [
         "Lightfall"
       ],
@@ -5172,7 +5538,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 183,
-      "bytes": 6952,
+      "bytes": 7134,
       "exports": [
         "MorphingGlow"
       ],
@@ -5192,9 +5558,30 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 805,
-      "bytes": 31641,
+      "bytes": 32445,
       "exports": [
         "MorphingRings"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 2,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 471,
+      "bytes": 20312,
+      "exports": [
+        "MostarCinematicScrollProps",
+        "MostarCinematicScroll"
       ],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -5310,8 +5697,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 350,
-      "bytes": 11266,
+      "lines": 355,
+      "bytes": 11529,
       "exports": [
         "OptionWheelProps"
       ],
@@ -5411,9 +5798,30 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 1403,
-      "bytes": 57053,
+      "bytes": 58455,
       "exports": [
         "ParticleSphereRefactor"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/components/ui/ParticleSun.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 304,
+      "bytes": 14976,
+      "exports": [
+        "ParticleSunProps",
+        "ParticleSun"
       ],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -5471,7 +5879,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 475,
-      "bytes": 19882,
+      "bytes": 20356,
       "exports": [
         "PixelDriftProps",
         "PixelDrift"
@@ -5512,10 +5920,30 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 1530,
-      "bytes": 29114,
+      "bytes": 30643,
       "exports": [
         "PointDNAHelixProps",
         "PointDNAHelix"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/components/ui/PrismPyramid.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 91,
+      "bytes": 2585,
+      "exports": [
+        "PrismPyramid"
       ],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -5673,8 +6101,8 @@
       "feature": "components",
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
-      "lines": 332,
-      "bytes": 16209,
+      "lines": 343,
+      "bytes": 16812,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -5962,6 +6390,27 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/components/ui/StreakSphere.tsx",
+      "role": "COMPONENT",
+      "roleSource": "ast:jsx+capitalized-export",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "MEDIUM",
+      "ext": ".tsx",
+      "lines": 539,
+      "bytes": 22449,
+      "exports": [
+        "StreakSphereProps",
+        "StreakSphere"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/components/ui/SuiFoundation.tsx",
       "role": "COMPONENT",
       "roleSource": "ast:jsx+capitalized-export",
@@ -5991,7 +6440,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 303,
-      "bytes": 22532,
+      "bytes": 22834,
       "exports": [
         "SuperMario"
       ],
@@ -6150,7 +6599,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 1420,
-      "bytes": 22562,
+      "bytes": 23981,
       "exports": [
         "TwinGalaxyRings"
       ],
@@ -6497,7 +6946,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 249,
-      "bytes": 10932,
+      "bytes": 11180,
       "exports": [
         "InfinityImageProps",
         "InfinityImage"
@@ -6538,7 +6987,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 38,
-      "bytes": 1433,
+      "bytes": 1470,
       "exports": [
         "IsometricGridBackgroundProps",
         "IsometricGridBackground"
@@ -6642,7 +7091,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 176,
-      "bytes": 6515,
+      "bytes": 6690,
       "exports": [
         "RadialGlowButtonProps",
         "RadialGlowButton"
@@ -6723,7 +7172,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 513,
-      "bytes": 16470,
+      "bytes": 16982,
       "exports": [
         "SpiderWebProps",
         "SpiderWeb"
@@ -6744,7 +7193,7 @@
       "featureConfidence": "MEDIUM",
       "ext": ".tsx",
       "lines": 324,
-      "bytes": 11164,
+      "bytes": 11487,
       "exports": [
         "SpiralImages"
       ],
@@ -6785,8 +7234,8 @@
       "feature": "auth-context",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".tsx",
-      "lines": 317,
-      "bytes": 13605,
+      "lines": 333,
+      "bytes": 14285,
       "exports": [
         "useAuth",
         "AuthProvider"
@@ -6794,8 +7243,8 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
-      "inbound": 13,
-      "outbound": 5,
+      "inbound": 14,
+      "outbound": 6,
       "orphaned": false
     },
     {
@@ -6806,8 +7255,8 @@
       "feature": "cookie-consent-context",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".tsx",
-      "lines": 151,
-      "bytes": 4953,
+      "lines": 184,
+      "bytes": 6109,
       "exports": [
         "useCookieConsent",
         "CookieConsentProvider"
@@ -6815,7 +7264,7 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
-      "inbound": 4,
+      "inbound": 3,
       "outbound": 3,
       "orphaned": false
     },
@@ -6889,8 +7338,8 @@
       "feature": "data",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 74,
-      "bytes": 3192,
+      "lines": 82,
+      "bytes": 3568,
       "exports": [
         "BuildWithUIHubSection",
         "BUILD_WITH_UI_HUB_SECTIONS",
@@ -6953,8 +7402,8 @@
       "feature": "data",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".tsx",
-      "lines": 15267,
-      "bytes": 745355,
+      "lines": 15429,
+      "bytes": 764531,
       "exports": [
         "RubiksCube",
         "ComponentItem",
@@ -6964,8 +7413,8 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
-      "inbound": 16,
-      "outbound": 118,
+      "inbound": 19,
+      "outbound": 127,
       "orphaned": false
     },
     {
@@ -6996,8 +7445,8 @@
       "feature": "data",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 1577,
-      "bytes": 159350,
+      "lines": 1727,
+      "bytes": 189482,
       "exports": [
         "PropDefinition",
         "VibeMeta",
@@ -7007,7 +7456,49 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 1,
+      "inbound": 3,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/data/componentVariants.test.ts",
+      "role": "TEST",
+      "roleSource": "test-filename",
+      "confidence": "HIGH",
+      "feature": "data",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 55,
+      "bytes": 2856,
+      "exports": [],
+      "isBarrel": null,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 2,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/data/componentVariants.ts",
+      "role": "DATA",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "data",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 52,
+      "bytes": 4283,
+      "exports": [
+        "ComponentVariantDef",
+        "COMPONENT_VARIANTS",
+        "getComponentVariants",
+        "getDefaultVariant",
+        "getComponentVariant"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 3,
       "outbound": 0,
       "orphaned": false
     },
@@ -7019,15 +7510,15 @@
       "feature": "data",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 690,
-      "bytes": 920499,
+      "lines": 104,
+      "bytes": 1076573,
       "exports": [
         "EMBEDDED_SOURCE_CODE"
       ],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 2,
+      "inbound": 3,
       "outbound": 0,
       "orphaned": false
     },
@@ -7160,8 +7651,8 @@
       "feature": "data",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 46,
-      "bytes": 2460,
+      "lines": 48,
+      "bytes": 2648,
       "exports": [
         "TEMPLATE_SOURCE_CODE"
       ],
@@ -7169,7 +7660,7 @@
       "isTypeOnly": false,
       "usesJsx": false,
       "inbound": 2,
-      "outbound": 20,
+      "outbound": 21,
       "orphaned": false
     },
     {
@@ -7180,8 +7671,8 @@
       "feature": "data",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 8021,
-      "bytes": 891721,
+      "lines": 8181,
+      "bytes": 903287,
       "exports": [
         "TemplateItem",
         "templateCategories",
@@ -7218,6 +7709,65 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/hooks/useScrollChainBoundary.ts",
+      "role": "HOOK",
+      "roleSource": "ast:use-prefix-and-exports",
+      "confidence": "HIGH",
+      "feature": "scroll-chain-boundary",
+      "featureConfidence": "HIGH",
+      "ext": ".ts",
+      "lines": 37,
+      "bytes": 1259,
+      "exports": [
+        "useScrollChainBoundary"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 0,
+      "orphaned": true
+    },
+    {
+      "path": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "role": "HOOK",
+      "roleSource": "ast:use-prefix-and-exports",
+      "confidence": "HIGH",
+      "feature": "template-view-counts",
+      "featureConfidence": "HIGH",
+      "ext": ".ts",
+      "lines": 39,
+      "bytes": 1137,
+      "exports": [
+        "useTemplateViewCounts",
+        "useComponentViewCounts"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 8,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/lib/adsense.test.ts",
+      "role": "TEST",
+      "roleSource": "test-filename",
+      "confidence": "HIGH",
+      "feature": "lib",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 56,
+      "bytes": 2306,
+      "exports": [],
+      "isBarrel": null,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/lib/adsense.ts",
       "role": "UNKNOWN",
       "roleSource": "no-rule-matched",
@@ -7225,14 +7775,16 @@
       "feature": "lib",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 118,
-      "bytes": 4149,
+      "lines": 147,
+      "bytes": 5565,
       "exports": [
         "ADSENSE_CLIENT_ID",
         "AdSlotId",
         "AD_SLOT_IDS",
         "isAdSenseEnabled",
         "getAdUnitId",
+        "AdSlotRequestableInput",
+        "isAdSlotRequestable",
         "loadAdSense",
         "pushAdRequest",
         "__resetAdSenseLoaderForTests"
@@ -7240,7 +7792,7 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 2,
+      "inbound": 3,
       "outbound": 0,
       "orphaned": false
     },
@@ -7389,8 +7941,8 @@
       "feature": "admin",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 179,
-      "bytes": 11800,
+      "lines": 218,
+      "bytes": 14616,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -7660,7 +8212,7 @@
       "featureConfidence": "HIGH",
       "ext": ".tsx",
       "lines": 239,
-      "bytes": 13404,
+      "bytes": 13386,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -7695,14 +8247,14 @@
       "feature": "build-with-uihub-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 341,
-      "bytes": 18969,
+      "lines": 353,
+      "bytes": 19990,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 8,
+      "outbound": 10,
       "orphaned": false
     },
     {
@@ -7715,6 +8267,24 @@
       "ext": ".tsx",
       "lines": 13,
       "bytes": 334,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 25,
+      "bytes": 1011,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -7744,6 +8314,26 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/pages/Components/CategoryPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 177,
+      "bytes": 8235,
+      "exports": [
+        "CategoryPage"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 7,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/pages/Components/CloudScrollPage.tsx",
       "role": "PAGE",
       "roleSource": "path-convention",
@@ -7762,6 +8352,46 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/pages/Components/ComponentPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 307,
+      "bytes": 15318,
+      "exports": [
+        "ComponentPage"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 14,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 24,
+      "bytes": 881,
+      "exports": [
+        "CubeLoadersDemoPage"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/pages/Components/DemoPage.tsx",
       "role": "PAGE",
       "roleSource": "path-convention",
@@ -7770,12 +8400,14 @@
       "featureConfidence": "HIGH",
       "ext": ".tsx",
       "lines": 158,
-      "bytes": 8042,
-      "exports": [],
+      "bytes": 8049,
+      "exports": [
+        "DemoErrorBoundary"
+      ],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
-      "inbound": 1,
+      "inbound": 2,
       "outbound": 7,
       "orphaned": false
     },
@@ -7792,6 +8424,24 @@
       "exports": [
         "DontBeGreedyDemoPage"
       ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 24,
+      "bytes": 989,
+      "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
@@ -7832,6 +8482,24 @@
       "exports": [
         "HaosDemoPage"
       ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 12,
+      "bytes": 308,
+      "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
@@ -7992,6 +8660,24 @@
       "exports": [
         "MentalityDemoPage"
       ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "components",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 25,
+      "bytes": 1022,
+      "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
@@ -8251,8 +8937,8 @@
       "feature": "dashboard",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 819,
-      "bytes": 47765,
+      "lines": 1062,
+      "bytes": 60735,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8270,12 +8956,12 @@
       "featureConfidence": "HIGH",
       "ext": ".tsx",
       "lines": 58,
-      "bytes": 2244,
+      "bytes": 2301,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
-      "inbound": 1,
+      "inbound": 2,
       "outbound": 1,
       "orphaned": false
     },
@@ -8305,14 +8991,14 @@
       "feature": "home-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 149,
-      "bytes": 8787,
+      "lines": 156,
+      "bytes": 9487,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 2,
+      "outbound": 4,
       "orphaned": false
     },
     {
@@ -8342,7 +9028,7 @@
       "featureConfidence": "HIGH",
       "ext": ".tsx",
       "lines": 234,
-      "bytes": 11228,
+      "bytes": 11461,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8413,14 +9099,14 @@
       "feature": "home-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 448,
-      "bytes": 31046,
+      "lines": 456,
+      "bytes": 31646,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 22,
+      "outbound": 24,
       "orphaned": false
     },
     {
@@ -8432,7 +9118,7 @@
       "featureConfidence": "HIGH",
       "ext": ".tsx",
       "lines": 117,
-      "bytes": 5501,
+      "bytes": 5617,
       "exports": [
         "HoverPreviewPopover"
       ],
@@ -8451,8 +9137,8 @@
       "feature": "library-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 776,
-      "bytes": 54072,
+      "lines": 790,
+      "bytes": 55218,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8469,14 +9155,14 @@
       "feature": "library-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 2086,
-      "bytes": 119559,
+      "lines": 2299,
+      "bytes": 130791,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 22,
+      "outbound": 28,
       "orphaned": false
     },
     {
@@ -8524,6 +9210,26 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/pages/NotFoundPage.tsx",
+      "role": "PAGE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "not-found-page",
+      "featureConfidence": "HIGH",
+      "ext": ".tsx",
+      "lines": 69,
+      "bytes": 3238,
+      "exports": [
+        "NotFoundPage"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": true,
+      "inbound": 1,
+      "outbound": 2,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
       "role": "PAGE",
       "roleSource": "path-convention",
@@ -8531,8 +9237,8 @@
       "feature": "preview-capture-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 51,
-      "bytes": 1590,
+      "lines": 54,
+      "bytes": 1643,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8549,8 +9255,8 @@
       "feature": "pricing-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 505,
-      "bytes": 25854,
+      "lines": 507,
+      "bytes": 25951,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8567,14 +9273,14 @@
       "feature": "templates-page",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 365,
-      "bytes": 20621,
+      "lines": 377,
+      "bytes": 21285,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": true,
       "inbound": 1,
-      "outbound": 7,
+      "outbound": 9,
       "orphaned": false
     },
     {
@@ -8604,7 +9310,7 @@
       "featureConfidence": "HIGH",
       "ext": ".tsx",
       "lines": 318,
-      "bytes": 16253,
+      "bytes": 16305,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8661,8 +9367,8 @@
       "feature": "legal",
       "featureConfidence": "HIGH",
       "ext": ".tsx",
-      "lines": 116,
-      "bytes": 7011,
+      "lines": 115,
+      "bytes": 7033,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8680,7 +9386,7 @@
       "featureConfidence": "HIGH",
       "ext": ".tsx",
       "lines": 106,
-      "bytes": 6140,
+      "bytes": 6131,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8697,8 +9403,8 @@
       "feature": "routing",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 87,
-      "bytes": 3625,
+      "lines": 136,
+      "bytes": 5352,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8708,6 +9414,239 @@
       "orphaned": true
     },
     {
+      "path": "frontend/src/seo/aeo.test.ts",
+      "role": "TEST",
+      "roleSource": "test-filename",
+      "confidence": "HIGH",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 202,
+      "bytes": 9451,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 3,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/aeo.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 571,
+      "bytes": 23512,
+      "exports": [
+        "AeoConfidence",
+        "AeoFact",
+        "AeoFaqItem",
+        "AeoBlock",
+        "ComponentAeo",
+        "ComponentAeoInput",
+        "looksLikeTestimonial",
+        "componentAeo",
+        "renderAeoHtml"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 8,
+      "outbound": 3,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/component-seo.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 93,
+      "bytes": 3514,
+      "exports": [
+        "toComponentSeoInput",
+        "ComponentPropRow",
+        "toComponentAeoInput",
+        "propRows"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 3,
+      "outbound": 5,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/jsonld.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 102,
+      "bytes": 2819,
+      "exports": [
+        "Breadcrumb",
+        "organizationJsonLd",
+        "webSiteJsonLd",
+        "breadcrumbJsonLd",
+        "collectionPageJsonLd",
+        "softwareSourceCodeJsonLd",
+        "imageObjectJsonLd"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 3,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/metadata.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 228,
+      "bytes": 9940,
+      "exports": [
+        "ComponentSeoInput",
+        "TemplateSeoInput",
+        "techLabels",
+        "technologyPhrase",
+        "componentPath",
+        "componentTitle",
+        "componentDescription",
+        "componentIntro",
+        "categoryTitle",
+        "categoryDescription",
+        "categoryIntro",
+        "templateTitle",
+        "templateDescription",
+        "templateIntro"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 5,
+      "outbound": 2,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/routes.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 372,
+      "bytes": 15146,
+      "exports": [
+        "SeoRouteType",
+        "SeoRoute",
+        "BuildWithUIHubInput",
+        "SeoManifestInput",
+        "INDEXABLE_ROBOTS",
+        "NOINDEX_ROBOTS",
+        "buildSeoManifest",
+        "NOINDEX_PATHS",
+        "NOINDEX_PREFIXES"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 3,
+      "outbound": 5,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/site.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 121,
+      "bytes": 3963,
+      "exports": [
+        "SITE_URL",
+        "SITE_NAME",
+        "DEFAULT_OG_IMAGE",
+        "TITLE_MAX",
+        "DESCRIPTION_MAX",
+        "absoluteUrl",
+        "DANGLING_WORDS",
+        "clampTitle",
+        "clampDescription",
+        "indefiniteArticle",
+        "lowerPhrase",
+        "escapeHtml",
+        "escapeXml"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 8,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/taxonomy.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 267,
+      "bytes": 12915,
+      "exports": [
+        "CategorySeo",
+        "CATEGORY_SEO",
+        "CATEGORY_BY_SLUG",
+        "categorySeo",
+        "categoryLabel",
+        "categorySingular"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 7,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/seo/tech.ts",
+      "role": "UNKNOWN",
+      "roleSource": "no-rule-matched",
+      "confidence": "LOW_CONFIDENCE",
+      "feature": "seo",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 20,
+      "bytes": 540,
+      "exports": [
+        "inferTechs"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 2,
+      "outbound": 0,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/services/admin.ts",
       "role": "SERVICE",
       "roleSource": "path-convention",
@@ -8715,8 +9654,8 @@
       "feature": "services",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 578,
-      "bytes": 17807,
+      "lines": 584,
+      "bytes": 17992,
       "exports": [
         "AdminStatus",
         "AdminRange",
@@ -8752,6 +9691,7 @@
         "unsuspendUser",
         "listAdminKeys",
         "patchApiKey",
+        "deleteAdminApiKey",
         "getTools",
         "setTool",
         "getComponents",
@@ -8862,8 +9802,8 @@
       "feature": "services",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 259,
-      "bytes": 8799,
+      "lines": 269,
+      "bytes": 9353,
       "exports": [
         "MCP_AUTH_REQUIRED",
         "FetchWithRetryOptions",
@@ -8886,6 +9826,67 @@
       "usesJsx": false,
       "inbound": 1,
       "outbound": 3,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/services/templateViews.test.ts",
+      "role": "TEST",
+      "roleSource": "test-filename",
+      "confidence": "HIGH",
+      "feature": "services",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 212,
+      "bytes": 8841,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/services/templateViews.ts",
+      "role": "SERVICE",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "services",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 314,
+      "bytes": 13100,
+      "exports": [
+        "TemplateView",
+        "RecordTemplateViewResponse",
+        "RecordComponentViewResponse",
+        "subscribeTemplateViewCounts",
+        "getTemplateViewCountsSnapshot",
+        "getComponentViewCountsSnapshot",
+        "parseViewCount",
+        "formatViewCount",
+        "getViewSessionId",
+        "setViewAuthTokenProvider",
+        "getViewerId",
+        "loadTemplateViewCounts",
+        "loadComponentViewCounts",
+        "getTemplateViewCount",
+        "hasTemplateViewCount",
+        "getComponentViewCount",
+        "hasComponentViewCount",
+        "getTemplateViewDisplay",
+        "getComponentViewDisplay",
+        "getTemplateViewAccessibleLabel",
+        "getComponentViewAccessibleLabel",
+        "recordTemplateView",
+        "recordComponentView",
+        "resetTemplateViewState"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 11,
+      "outbound": 1,
       "orphaned": false
     },
     {
@@ -8917,8 +9918,8 @@
       "feature": "utils",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 184,
-      "bytes": 6576,
+      "lines": 201,
+      "bytes": 7209,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -8935,8 +9936,8 @@
       "feature": "utils",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 171,
-      "bytes": 6145,
+      "lines": 185,
+      "bytes": 6441,
       "exports": [
         "KNOWN_DEAD_API_HOSTS",
         "ApiEnv",
@@ -8951,7 +9952,7 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 15,
+      "inbound": 16,
       "outbound": 0,
       "orphaned": false
     },
@@ -9047,6 +10048,27 @@
       "usesJsx": false,
       "inbound": 2,
       "outbound": 8,
+      "orphaned": false
+    },
+    {
+      "path": "frontend/src/utils/componentCustomization.ts",
+      "role": "UTILITY",
+      "roleSource": "path-convention",
+      "confidence": "HIGH",
+      "feature": "utils",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 62,
+      "bytes": 2501,
+      "exports": [
+        "ComponentCustomization",
+        "applyComponentCustomization"
+      ],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 1,
+      "outbound": 0,
       "orphaned": false
     },
     {
@@ -9195,7 +10217,7 @@
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
       "lines": 106,
-      "bytes": 5976,
+      "bytes": 6081,
       "exports": [
         "prefetchComponentChunk"
       ],
@@ -9207,6 +10229,24 @@
       "orphaned": false
     },
     {
+      "path": "frontend/src/utils/promptEncoding.test.ts",
+      "role": "TEST",
+      "roleSource": "test-filename",
+      "confidence": "HIGH",
+      "feature": "utils",
+      "featureConfidence": "LOW_CONFIDENCE",
+      "ext": ".ts",
+      "lines": 49,
+      "bytes": 2163,
+      "exports": [],
+      "isBarrel": false,
+      "isTypeOnly": false,
+      "usesJsx": false,
+      "inbound": 0,
+      "outbound": 1,
+      "orphaned": false
+    },
+    {
       "path": "frontend/src/utils/promptUtils.ts",
       "role": "UTILITY",
       "roleSource": "path-convention",
@@ -9214,8 +10254,8 @@
       "feature": "utils",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 441,
-      "bytes": 19062,
+      "lines": 458,
+      "bytes": 21141,
       "exports": [
         "AISystem",
         "VibeMeta",
@@ -9234,8 +10274,8 @@
       "isBarrel": false,
       "isTypeOnly": false,
       "usesJsx": false,
-      "inbound": 2,
-      "outbound": 6,
+      "inbound": 4,
+      "outbound": 7,
       "orphaned": false
     },
     {
@@ -9290,8 +10330,8 @@
       "feature": "utils",
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
-      "lines": 98,
-      "bytes": 3050,
+      "lines": 99,
+      "bytes": 3090,
       "exports": [
         "COMPONENT_CATEGORY_COLORS",
         "SearchEverythingResult",
@@ -9353,7 +10393,7 @@
       "featureConfidence": "LOW_CONFIDENCE",
       "ext": ".ts",
       "lines": 418,
-      "bytes": 14528,
+      "bytes": 14945,
       "exports": [
         "RELEVANCE_WEIGHTS",
         "MAX_RELEVANCE_SCORE",
@@ -9441,8 +10481,8 @@
       "feature": "mcp",
       "featureConfidence": "HIGH",
       "ext": ".ts",
-      "lines": 140,
-      "bytes": 4828,
+      "lines": 144,
+      "bytes": 4986,
       "exports": [
         "DEFAULT_ALLOWED_ORIGINS",
         "parseOriginList",
@@ -9488,8 +10528,8 @@
       "feature": "mcp",
       "featureConfidence": "HIGH",
       "ext": ".ts",
-      "lines": 393,
-      "bytes": 14789,
+      "lines": 415,
+      "bytes": 14984,
       "exports": [
         "ComponentMeta",
         "COMPONENT_METADATA",
@@ -9629,8 +10669,8 @@
       "feature": "mcp",
       "featureConfidence": "HIGH",
       "ext": ".ts",
-      "lines": 1379,
-      "bytes": 48601,
+      "lines": 1404,
+      "bytes": 49397,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,
@@ -9647,8 +10687,8 @@
       "feature": "mcp",
       "featureConfidence": "HIGH",
       "ext": ".ts",
-      "lines": 194,
-      "bytes": 6768,
+      "lines": 222,
+      "bytes": 8112,
       "exports": [
         "dashboardRouter"
       ],
@@ -9760,7 +10800,7 @@
       "featureConfidence": "HIGH",
       "ext": ".ts",
       "lines": 427,
-      "bytes": 14796,
+      "bytes": 14778,
       "exports": [
         "ComponentService",
         "componentService"
@@ -10148,7 +11188,7 @@
       "featureConfidence": "HIGH",
       "ext": ".ts",
       "lines": 53,
-      "bytes": 2184,
+      "bytes": 2209,
       "exports": [
         "search_components"
       ],
@@ -10408,7 +11448,7 @@
       "featureConfidence": "HIGH",
       "ext": ".mjs",
       "lines": 224,
-      "bytes": 9480,
+      "bytes": 9554,
       "exports": [],
       "isBarrel": false,
       "isTypeOnly": false,

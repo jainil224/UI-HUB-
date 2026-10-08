@@ -31,12 +31,12 @@
   ],
   "description": "Served HTTP routes derived from router call syntax (receiver is a router, verb is an HTTP method, first argument is a string literal starting with \"/\"), plus MCP tool registrations. Outbound client calls and dynamically computed route paths are listed separately so neither is mistaken for a served endpoint nor silently dropped.",
   "counts": {
-    "endpoints": 69,
+    "endpoints": 72,
     "byMethod": {
-      "DELETE": 5,
-      "GET": 34,
+      "DELETE": 6,
+      "GET": 35,
       "PATCH": 3,
-      "POST": 26,
+      "POST": 27,
       "PUT": 1
     },
     "mcpRegistrations": 14,
@@ -146,6 +146,14 @@
     {
       "method": "GET",
       "path": "/api-keys",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api-keys/:id",
       "feature": "mcp",
       "handlers": [
         "mcp-server/src/routes/admin.ts"
@@ -588,6 +596,22 @@
       "feature": "payment-routes",
       "handlers": [
         "backend/src/routes/paymentRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/views",
+      "feature": "template-views-routes",
+      "handlers": [
+        "backend/src/routes/templateViewsRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/views",
+      "feature": "template-views-routes",
+      "handlers": [
+        "backend/src/routes/templateViewsRoutes.js"
       ]
     },
     {

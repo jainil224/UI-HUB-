@@ -31,14 +31,14 @@
   ],
   "description": "Directed import graph. Includes external packages and asset edges; unresolvable specifiers are recorded, never dropped.",
   "counts": {
-    "nodes": 505,
-    "internalEdges": 1131,
-    "externalEdges": 885,
-    "dynamicEdges": 273,
-    "reExportEdges": 39,
-    "assetEdges": 11,
+    "nodes": 552,
+    "internalEdges": 1249,
+    "externalEdges": 962,
+    "dynamicEdges": 290,
+    "reExportEdges": 48,
+    "assetEdges": 16,
     "unresolvedEdges": 3,
-    "isolatedNodes": 14
+    "isolatedNodes": 15
   },
   "edges": [
     {
@@ -834,6 +834,61 @@
       "confidence": "HIGH"
     },
     {
+      "from": "backend/src/routes/templateViewsRoutes.js",
+      "to": "backend/src/middleware/auth.js",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/src/routes/templateViewsRoutes.js",
+      "to": "backend/src/middleware/rateLimiters.js",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/src/routes/templateViewsRoutes.js",
+      "to": "backend/src/services/mongoService.js",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/src/routes/templateViewsRoutes.js",
+      "to": "backend/src/services/templateViewsService.js",
+      "line": 5,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/src/routes/templateViewsRoutes.js",
+      "to": "express",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "backend/src/routes/userRoutes.js",
       "to": "backend/src/middleware/auth.js",
       "line": 3,
@@ -1518,7 +1573,7 @@
     {
       "from": "backend/src/server.js",
       "to": "backend/src/config/corsPolicy.js",
-      "line": 15,
+      "line": 16,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -1529,7 +1584,7 @@
     {
       "from": "backend/src/server.js",
       "to": "backend/src/middleware/rateLimiters.js",
-      "line": 11,
+      "line": 12,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -1594,6 +1649,17 @@
     },
     {
       "from": "backend/src/server.js",
+      "to": "backend/src/routes/templateViewsRoutes.js",
+      "line": 11,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/src/server.js",
       "to": "backend/src/routes/userRoutes.js",
       "line": 6,
       "kind": "import",
@@ -1606,17 +1672,6 @@
     {
       "from": "backend/src/server.js",
       "to": "backend/src/services/componentSyncService.js",
-      "line": 13,
-      "kind": "import",
-      "resolution": "internal",
-      "dynamic": false,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "backend/src/server.js",
-      "to": "backend/src/services/healthService.js",
       "line": 14,
       "kind": "import",
       "resolution": "internal",
@@ -1627,8 +1682,19 @@
     },
     {
       "from": "backend/src/server.js",
+      "to": "backend/src/services/healthService.js",
+      "line": 15,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/src/server.js",
       "to": "backend/src/services/syncService.js",
-      "line": 12,
+      "line": 13,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -1683,7 +1749,7 @@
     {
       "from": "backend/src/server.js",
       "to": "node:fs",
-      "line": 90,
+      "line": 92,
       "kind": "dynamic",
       "resolution": "external",
       "dynamic": true,
@@ -1694,7 +1760,7 @@
     {
       "from": "backend/src/server.js",
       "to": "node:path",
-      "line": 91,
+      "line": 93,
       "kind": "dynamic",
       "resolution": "external",
       "dynamic": true,
@@ -1705,7 +1771,7 @@
     {
       "from": "backend/src/server.js",
       "to": "node:url",
-      "line": 92,
+      "line": 94,
       "kind": "dynamic",
       "resolution": "external",
       "dynamic": true,
@@ -2220,6 +2286,17 @@
       "confidence": "HIGH"
     },
     {
+      "from": "backend/src/services/templateViewsService.js",
+      "to": "backend/src/services/mongoService.js",
+      "line": 1,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
       "from": "backend/src/services/userService.js",
       "to": "backend/src/services/mongoService.js",
       "line": 1,
@@ -2562,6 +2639,50 @@
     },
     {
       "from": "backend/tests/health.test.js",
+      "to": "node:test",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/tests/templateViewsService.test.js",
+      "to": "backend/src/services/templateViewsService.js",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/tests/templateViewsService.test.js",
+      "to": "backend/src/services/templateViewsService.js",
+      "line": 326,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/tests/templateViewsService.test.js",
+      "to": "node:assert/strict",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "backend/tests/templateViewsService.test.js",
       "to": "node:test",
       "line": 1,
       "kind": "import",
@@ -3980,6 +4101,72 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/scripts/build-seo.mjs",
+      "to": "frontend/scripts/lib/seo-manifest.mjs",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/build-seo.mjs",
+      "to": "node:fs",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/build-seo.mjs",
+      "to": "node:path",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/check-seo.mjs",
+      "to": "frontend/scripts/lib/seo-manifest.mjs",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/check-seo.mjs",
+      "to": "node:fs",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/check-seo.mjs",
+      "to": "node:path",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/scripts/generate-favicons.mjs",
       "to": "node:fs",
       "line": 3,
@@ -4024,9 +4211,229 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/scripts/lib/extract-content.mjs",
+      "to": "esbuild",
+      "line": 4,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/extract-content.mjs",
+      "to": "frontend/scripts/lib/js-lex.mjs",
+      "line": 5,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/extract-content.mjs",
+      "to": "node:fs",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/extract-content.mjs",
+      "to": "node:path",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/extract-content.mjs",
+      "to": "node:url",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 28,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 29,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/component-seo.ts",
+      "line": 27,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/metadata.ts",
+      "line": 19,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/routes.ts",
+      "line": 16,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/routes.ts",
+      "line": 17,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/site.ts",
+      "line": 5,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/taxonomy.ts",
+      "line": 30,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-bundle.entry.ts",
+      "to": "frontend/src/seo/tech.ts",
+      "line": 18,
+      "kind": "reExport",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-manifest.mjs",
+      "to": "esbuild",
+      "line": 4,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-manifest.mjs",
+      "to": "frontend/scripts/lib/extract-content.mjs",
+      "line": 5,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-manifest.mjs",
+      "to": "node:fs",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-manifest.mjs",
+      "to": "node:path",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/scripts/lib/seo-manifest.mjs",
+      "to": "node:url",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/components/Seo.tsx",
+      "line": 81,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/ui/CookieBanner.tsx",
-      "line": 66,
+      "line": 71,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4059,7 +4466,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/ui/PushNotificationPrompt.tsx",
-      "line": 67,
+      "line": 72,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4070,17 +4477,6 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/ui/ScrollToTop.tsx",
-      "line": 65,
-      "kind": "import",
-      "resolution": "internal",
-      "dynamic": false,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/components/ui/Skeleton.tsx",
       "line": 70,
       "kind": "import",
       "resolution": "internal",
@@ -4091,8 +4487,19 @@
     },
     {
       "from": "frontend/src/App.tsx",
+      "to": "frontend/src/components/ui/Skeleton.tsx",
+      "line": 75,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/ui/SmoothScroll.tsx",
-      "line": 194,
+      "line": 212,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4103,7 +4510,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/components/ui/TopLoader.tsx",
-      "line": 71,
+      "line": 76,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4114,7 +4521,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/context/AuthContext.tsx",
-      "line": 195,
+      "line": 213,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4125,7 +4532,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/context/CookieConsentContext.tsx",
-      "line": 68,
+      "line": 73,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4136,7 +4543,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/context/SkeletonContext.tsx",
-      "line": 69,
+      "line": 74,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4158,7 +4565,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/context/ThemeContext.tsx",
-      "line": 196,
+      "line": 214,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4169,127 +4576,6 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Admin/AdminGuard.tsx",
-      "line": 47,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/AdminLayout.tsx",
-      "line": 48,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/AlertsPage.tsx",
-      "line": 61,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/AnalyticsPage.tsx",
-      "line": 50,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/ApiKeysPage.tsx",
-      "line": 57,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/AuditPage.tsx",
-      "line": 63,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/ComponentsPage.tsx",
-      "line": 53,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/ExportPage.tsx",
-      "line": 64,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/HealthPage.tsx",
-      "line": 60,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/LogsPage.tsx",
-      "line": 58,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/OverviewPage.tsx",
-      "line": 49,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/PlaygroundPage.tsx",
       "line": 52,
       "kind": "dynamic",
       "resolution": "internal",
@@ -4300,8 +4586,8 @@
     },
     {
       "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/SearchPage.tsx",
-      "line": 54,
+      "to": "frontend/src/pages/Admin/AdminLayout.tsx",
+      "line": 53,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4311,8 +4597,8 @@
     },
     {
       "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/SecurityPage.tsx",
-      "line": 59,
+      "to": "frontend/src/pages/Admin/AlertsPage.tsx",
+      "line": 66,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4322,7 +4608,18 @@
     },
     {
       "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/SettingsPage.tsx",
+      "to": "frontend/src/pages/Admin/AnalyticsPage.tsx",
+      "line": 55,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/ApiKeysPage.tsx",
       "line": 62,
       "kind": "dynamic",
       "resolution": "internal",
@@ -4333,8 +4630,8 @@
     },
     {
       "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/ToolsPage.tsx",
-      "line": 51,
+      "to": "frontend/src/pages/Admin/AuditPage.tsx",
+      "line": 68,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4344,7 +4641,106 @@
     },
     {
       "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Admin/UserDetailPage.tsx",
+      "to": "frontend/src/pages/Admin/ComponentsPage.tsx",
+      "line": 58,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/ExportPage.tsx",
+      "line": 69,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/HealthPage.tsx",
+      "line": 65,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/LogsPage.tsx",
+      "line": 63,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/OverviewPage.tsx",
+      "line": 54,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/PlaygroundPage.tsx",
+      "line": 57,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/SearchPage.tsx",
+      "line": 59,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/SecurityPage.tsx",
+      "line": 64,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/SettingsPage.tsx",
+      "line": 67,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/ToolsPage.tsx",
       "line": 56,
       "kind": "dynamic",
       "resolution": "internal",
@@ -4355,8 +4751,19 @@
     },
     {
       "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Admin/UserDetailPage.tsx",
+      "line": 61,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Admin/UsersPage.tsx",
-      "line": 55,
+      "line": 60,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4421,8 +4828,52 @@
     },
     {
       "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "line": 29,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
-      "line": 36,
+      "line": 40,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/CategoryPage.tsx",
+      "line": 78,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/ComponentPage.tsx",
+      "line": 79,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
+      "line": 50,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4433,7 +4884,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/DemoPage.tsx",
-      "line": 46,
+      "line": 51,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4444,7 +4895,18 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
-      "line": 37,
+      "line": 41,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
+      "line": 27,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4455,7 +4917,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/GlobeDemoPage.tsx",
-      "line": 44,
+      "line": 48,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4466,6 +4928,17 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/HaosDemoPage.tsx",
+      "line": 34,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
       "line": 30,
       "kind": "dynamic",
       "resolution": "internal",
@@ -4477,39 +4950,6 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/HeyoDemoPage.tsx",
-      "line": 35,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
-      "line": 32,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Components/LightCablesDemoPage.tsx",
-      "line": 43,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/App.tsx",
-      "to": "frontend/src/pages/Components/LogoHereDemoPage.tsx",
       "line": 39,
       "kind": "dynamic",
       "resolution": "internal",
@@ -4520,8 +4960,41 @@
     },
     {
       "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
+      "line": 36,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/LightCablesDemoPage.tsx",
+      "line": 47,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/LogoHereDemoPage.tsx",
+      "line": 43,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/LoveAppDemoPage.tsx",
-      "line": 34,
+      "line": 38,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4532,7 +5005,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/LumosDemoPage.tsx",
-      "line": 33,
+      "line": 37,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4543,7 +5016,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
-      "line": 42,
+      "line": 46,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4554,7 +5027,18 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/MentalityDemoPage.tsx",
-      "line": 31,
+      "line": 35,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
+      "line": 28,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4565,7 +5049,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
-      "line": 45,
+      "line": 49,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4576,7 +5060,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/PaipaiDemoPage.tsx",
-      "line": 38,
+      "line": 42,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4609,7 +5093,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/SegmintDemoPage.tsx",
-      "line": 29,
+      "line": 33,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4620,7 +5104,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/SkyDemoPage.tsx",
-      "line": 41,
+      "line": 45,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4631,7 +5115,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/SplitOrbDemoPage.tsx",
-      "line": 28,
+      "line": 32,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4642,7 +5126,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/SuiOverflowDemoPage.tsx",
-      "line": 40,
+      "line": 44,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4653,7 +5137,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/Components/TarsDemoPage.tsx",
-      "line": 27,
+      "line": 31,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4784,8 +5268,19 @@
     },
     {
       "from": "frontend/src/App.tsx",
+      "to": "frontend/src/pages/NotFoundPage.tsx",
+      "line": 80,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/App.tsx",
       "to": "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
-      "line": 73,
+      "line": 82,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -4829,7 +5324,7 @@
     {
       "from": "frontend/src/App.tsx",
       "to": "frontend/src/utils/componentSync.ts",
-      "line": 72,
+      "line": 77,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -4918,6 +5413,28 @@
       "from": "frontend/src/components/admin/Charts.tsx",
       "to": "recharts",
       "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/AeoContent.tsx",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/AeoContent.tsx",
+      "to": "react",
+      "line": 1,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -5729,6 +6246,50 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/components/Seo.tsx",
+      "to": "frontend/src/seo/routes.ts",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/Seo.tsx",
+      "to": "frontend/src/seo/site.ts",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/Seo.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/Seo.tsx",
+      "to": "react-router-dom",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/components/templates/AuCabaretPoster.tsx",
       "to": "lucide-react",
       "line": 2,
@@ -5765,6 +6326,28 @@
       "from": "frontend/src/components/templates/BuildWithUIHubRail.tsx",
       "to": "frontend/src/data/templatesData.ts",
       "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 11,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 10,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -6048,6 +6631,50 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "to": "lucide-react",
+      "line": 22,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "to": "motion/react",
+      "line": 21,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "to": "react",
+      "line": 20,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "to": "three",
+      "line": 23,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/components/templates/OriginkitHero24.tsx",
       "to": "d3-geo",
       "line": 26,
@@ -6260,6 +6887,17 @@
       "from": "frontend/src/components/templates/registry.ts",
       "to": "frontend/src/components/templates/MoodHero.tsx",
       "line": 19,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/registry.ts",
+      "to": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "line": 38,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -6588,6 +7226,28 @@
     },
     {
       "from": "frontend/src/components/templates/TemplateSimilarRail.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 12,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/TemplateSimilarRail.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 11,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/templates/TemplateSimilarRail.tsx",
       "to": "frontend/src/utils/templateRelevance.ts",
       "line": 5,
       "kind": "import",
@@ -6665,7 +7325,7 @@
     },
     {
       "from": "frontend/src/components/ui/AdSlot.tsx",
-      "to": "frontend/src/context/CookieConsentContext.tsx",
+      "to": "frontend/src/context/AuthContext.tsx",
       "line": 2,
       "kind": "import",
       "resolution": "internal",
@@ -6689,6 +7349,39 @@
       "from": "frontend/src/components/ui/AdSlot.tsx",
       "to": "react",
       "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "to": "react-router-dom",
+      "line": 2,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -9293,6 +9986,17 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/components/ui/CubeLoader.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/components/ui/CustomPricingCard.tsx",
       "to": "frontend/src/components/ui/PlanBadge.tsx",
       "line": 4,
@@ -9373,6 +10077,61 @@
       "from": "frontend/src/components/ui/diagonal-carousel.tsx",
       "to": "react",
       "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "to": "gsap",
+      "line": 4,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "to": "gsap/ScrollTrigger",
+      "line": 5,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "to": "react-router-dom",
+      "line": 2,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -9472,6 +10231,50 @@
       "from": "frontend/src/components/ui/FallBeamBackground.tsx",
       "to": "react",
       "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/FeatherSphere.tsx",
+      "to": "motion",
+      "line": 18,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/FeatherSphere.tsx",
+      "to": "react",
+      "line": 15,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/FeatherSphere.tsx",
+      "to": "react",
+      "line": 16,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/FeatherSphere.tsx",
+      "to": "three",
+      "line": 17,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -9802,6 +10605,39 @@
       "from": "frontend/src/components/ui/HellBackground.tsx",
       "to": "react",
       "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/HexaSphere.tsx",
+      "to": "react",
+      "line": 11,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/HexaSphere.tsx",
+      "to": "react",
+      "line": 12,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/HexaSphere.tsx",
+      "to": "three",
+      "line": 13,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -10393,6 +11229,39 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "to": "react-router-dom",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/components/ui/MouseGravityBackground.tsx",
       "to": "react",
       "line": 1,
@@ -10734,6 +11603,39 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/components/ui/ParticleSun.tsx",
+      "to": "react",
+      "line": 15,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/ParticleSun.tsx",
+      "to": "react",
+      "line": 16,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/ParticleSun.tsx",
+      "to": "three",
+      "line": 17,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/components/ui/PasswordStrengthMeter.tsx",
       "to": "lucide-react",
       "line": 2,
@@ -10913,6 +11815,17 @@
       "from": "frontend/src/components/ui/PointDNAHelix.tsx",
       "to": "react",
       "line": 4,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/PrismPyramid.tsx",
+      "to": "react",
+      "line": 1,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -11724,6 +12637,39 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/components/ui/StreakSphere.tsx",
+      "to": "react",
+      "line": 10,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/StreakSphere.tsx",
+      "to": "react",
+      "line": 11,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/components/ui/StreakSphere.tsx",
+      "to": "three",
+      "line": 12,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/components/ui/SuiFoundation.tsx",
       "to": "react",
       "line": 1,
@@ -12155,7 +13101,7 @@
     {
       "from": "frontend/src/context/AuthContext.tsx",
       "to": "frontend/src/components/ui/WelcomeNotifications.tsx",
-      "line": 7,
+      "line": 8,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -12167,6 +13113,17 @@
       "from": "frontend/src/context/AuthContext.tsx",
       "to": "frontend/src/lib/firebase.ts",
       "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/context/AuthContext.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 7,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -12287,7 +13244,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/animations/SocialTooltipButtons.tsx",
-      "line": 65,
+      "line": 69,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12298,7 +13255,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/animations/TextAnimations.tsx",
-      "line": 127,
+      "line": 136,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -12309,7 +13266,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/animations/TextAnimations.tsx",
-      "line": 2674,
+      "line": 2683,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12320,7 +13277,18 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/animations/VisualEffects.tsx",
-      "line": 2675,
+      "line": 2684,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "line": 39,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12342,7 +13310,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/AsciiWater.tsx",
-      "line": 83,
+      "line": 87,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12364,7 +13332,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/AuroraBpmLoader.tsx",
-      "line": 105,
+      "line": 109,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12375,7 +13343,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/background-boxes.tsx",
-      "line": 59,
+      "line": 63,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12386,7 +13354,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/background-paths.tsx",
-      "line": 60,
+      "line": 64,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12397,7 +13365,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/BeamGridBackground.tsx",
-      "line": 40,
+      "line": 44,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12408,7 +13376,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/BlackHole.tsx",
-      "line": 77,
+      "line": 81,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12441,7 +13409,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/BlockDrift.tsx",
-      "line": 81,
+      "line": 85,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12452,7 +13420,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/BloomingFlower.tsx",
-      "line": 78,
+      "line": 82,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12463,7 +13431,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/border-beam.tsx",
-      "line": 61,
+      "line": 65,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12496,7 +13464,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/Chandelier.tsx",
-      "line": 79,
+      "line": 83,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12507,7 +13475,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/corner-border-button.tsx",
-      "line": 45,
+      "line": 49,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12518,7 +13486,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/corner-button.tsx",
-      "line": 46,
+      "line": 50,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12529,7 +13497,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/creepy-button.tsx",
-      "line": 47,
+      "line": 51,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12540,50 +13508,6 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/CrossfadeTypewriter.tsx",
-      "line": 107,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/data/componentData.tsx",
-      "to": "frontend/src/components/ui/diagonal-carousel.tsx",
-      "line": 68,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/data/componentData.tsx",
-      "to": "frontend/src/components/ui/DragDropUpload.tsx",
-      "line": 104,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/data/componentData.tsx",
-      "to": "frontend/src/components/ui/DriftwoodGallery.tsx",
-      "line": 108,
-      "kind": "dynamic",
-      "resolution": "internal",
-      "dynamic": true,
-      "typeOnly": false,
-      "via": "relative",
-      "confidence": "HIGH"
-    },
-    {
-      "from": "frontend/src/data/componentData.tsx",
-      "to": "frontend/src/components/ui/EmberHusk.tsx",
       "line": 111,
       "kind": "dynamic",
       "resolution": "internal",
@@ -12594,8 +13518,85 @@
     },
     {
       "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/CubeLoader.tsx",
+      "line": 122,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/diagonal-carousel.tsx",
+      "line": 72,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "line": 37,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/DragDropUpload.tsx",
+      "line": 108,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/DriftwoodGallery.tsx",
+      "line": 112,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/EmberHusk.tsx",
+      "line": 115,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/FallBeamBackground.tsx",
-      "line": 41,
+      "line": 45,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/FeatherSphere.tsx",
+      "line": 126,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12606,7 +13607,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/FrostGlassMelt.tsx",
-      "line": 88,
+      "line": 92,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12617,7 +13618,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/GalaxyButton.tsx",
-      "line": 63,
+      "line": 67,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12628,7 +13629,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/GearSystem.tsx",
-      "line": 93,
+      "line": 97,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12639,7 +13640,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/GeneratingOrb.tsx",
-      "line": 95,
+      "line": 99,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12650,7 +13651,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/Globe.tsx",
-      "line": 117,
+      "line": 121,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12661,7 +13662,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/GlobeMesh.tsx",
-      "line": 84,
+      "line": 88,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12672,7 +13673,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/GlowButton.tsx",
-      "line": 62,
+      "line": 66,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12683,7 +13684,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/GradientOrb.tsx",
-      "line": 98,
+      "line": 102,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12705,7 +13706,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/HackerBackground.tsx",
-      "line": 39,
+      "line": 43,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12727,7 +13728,18 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/HellBackground.tsx",
-      "line": 42,
+      "line": 46,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/HexaSphere.tsx",
+      "line": 40,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12738,7 +13750,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/Hourglass.tsx",
-      "line": 94,
+      "line": 98,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12749,7 +13761,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/image-collage.tsx",
-      "line": 70,
+      "line": 74,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12760,7 +13772,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/image-trail.tsx",
-      "line": 66,
+      "line": 70,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12771,7 +13783,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/ImageCompare.tsx",
-      "line": 72,
+      "line": 76,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12782,7 +13794,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/ImageLens.tsx",
-      "line": 71,
+      "line": 75,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12804,7 +13816,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/InfiniteTendrils.tsx",
-      "line": 86,
+      "line": 90,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12815,7 +13827,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/infinity-image.tsx",
-      "line": 51,
+      "line": 55,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12826,7 +13838,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/interactive-hover-button.tsx",
-      "line": 52,
+      "line": 56,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12837,7 +13849,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/InteractiveGridBackground.tsx",
-      "line": 43,
+      "line": 47,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12848,7 +13860,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/isometric-grid-background.tsx",
-      "line": 53,
+      "line": 57,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12859,7 +13871,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/IsometricPortal.tsx",
-      "line": 91,
+      "line": 95,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12881,7 +13893,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/LightCables.tsx",
-      "line": 116,
+      "line": 120,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12892,7 +13904,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/Lightfall.tsx",
-      "line": 82,
+      "line": 86,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12914,7 +13926,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/LizardCursor.tsx",
-      "line": 1145,
+      "line": 1154,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12925,7 +13937,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/Logo.tsx",
-      "line": 126,
+      "line": 135,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -12936,7 +13948,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/magic-card.tsx",
-      "line": 54,
+      "line": 58,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12980,7 +13992,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/marquee-hover-button.tsx",
-      "line": 55,
+      "line": 59,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -12991,7 +14003,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/MatrixRain.tsx",
-      "line": 115,
+      "line": 119,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13002,7 +14014,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/MorphingGlow.tsx",
-      "line": 92,
+      "line": 96,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13013,7 +14025,18 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/MorphingRings.tsx",
-      "line": 80,
+      "line": 84,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "line": 38,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13035,7 +14058,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/NeonBorder.tsx",
-      "line": 113,
+      "line": 117,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13046,7 +14069,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/OceanSwell.tsx",
-      "line": 87,
+      "line": 91,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13057,7 +14080,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/OptionWheel.tsx",
-      "line": 38,
+      "line": 42,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13068,7 +14091,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/OrbitButton.tsx",
-      "line": 64,
+      "line": 68,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13079,7 +14102,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/OtpCodeInput.tsx",
-      "line": 101,
+      "line": 105,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13101,7 +14124,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/ParticleLoader.tsx",
-      "line": 112,
+      "line": 116,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13112,7 +14135,18 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/ParticleSphere.tsx",
-      "line": 76,
+      "line": 80,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/ParticleSun.tsx",
+      "line": 124,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13123,7 +14157,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/PasswordStrengthMeter.tsx",
-      "line": 102,
+      "line": 106,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13134,7 +14168,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/payment-transaction-button.tsx",
-      "line": 56,
+      "line": 60,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13145,7 +14179,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/perspective-carousel.tsx",
-      "line": 67,
+      "line": 71,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13156,7 +14190,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/PixelBounce.tsx",
-      "line": 97,
+      "line": 101,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13167,7 +14201,18 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/PointDNAHelix.tsx",
-      "line": 73,
+      "line": 77,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/PrismPyramid.tsx",
+      "line": 123,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13178,7 +14223,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/QuantumLattice.tsx",
-      "line": 114,
+      "line": 118,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13189,7 +14234,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/radial-glow-button.tsx",
-      "line": 48,
+      "line": 52,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13200,7 +14245,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/rainbow-button.tsx",
-      "line": 57,
+      "line": 61,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13211,7 +14256,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/RainStorm.tsx",
-      "line": 109,
+      "line": 113,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13222,7 +14267,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/ReflectShader.tsx",
-      "line": 85,
+      "line": 89,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13233,7 +14278,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/RippleSignatureLedger.tsx",
-      "line": 106,
+      "line": 110,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13266,7 +14311,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/ScrollExpand.tsx",
-      "line": 37,
+      "line": 41,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13288,7 +14333,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/SignaturePad.tsx",
-      "line": 103,
+      "line": 107,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13299,7 +14344,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/Sky.tsx",
-      "line": 90,
+      "line": 94,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13332,7 +14377,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/sparkles-background.tsx",
-      "line": 58,
+      "line": 62,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13343,7 +14388,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/spider-web.tsx",
-      "line": 49,
+      "line": 53,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13354,7 +14399,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/spiral-images.tsx",
-      "line": 50,
+      "line": 54,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13365,7 +14410,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/StarBurst.tsx",
-      "line": 89,
+      "line": 93,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13387,7 +14432,18 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/StarCursor.tsx",
-      "line": 1292,
+      "line": 1301,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentData.tsx",
+      "to": "frontend/src/components/ui/StreakSphere.tsx",
+      "line": 125,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13398,7 +14454,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/SuperMario.tsx",
-      "line": 99,
+      "line": 103,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13431,7 +14487,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/testimonials-card.tsx",
-      "line": 69,
+      "line": 73,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13464,7 +14520,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/Tornado.tsx",
-      "line": 75,
+      "line": 79,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13475,7 +14531,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/TradingCandles.tsx",
-      "line": 96,
+      "line": 100,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13486,7 +14542,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/TwinGalaxyRings.tsx",
-      "line": 74,
+      "line": 78,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13508,7 +14564,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/VectorWordmark.tsx",
-      "line": 110,
+      "line": 114,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13530,7 +14586,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/VenomCursor.tsx",
-      "line": 1580,
+      "line": 1589,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13541,7 +14597,7 @@
     {
       "from": "frontend/src/data/componentData.tsx",
       "to": "frontend/src/components/ui/WaveBackground.tsx",
-      "line": 44,
+      "line": 48,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -13594,9 +14650,42 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/data/componentVariants.test.ts",
+      "to": "frontend/src/data/componentVariants.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentVariants.test.ts",
+      "to": "frontend/src/utils/promptUtils.ts",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/componentVariants.test.ts",
+      "to": "vitest",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/data/templatesData.ts",
       "to": "frontend/src/data/buildWithUIHubSlugs.ts",
-      "line": 7994,
+      "line": 8154,
       "kind": "reExport",
       "resolution": "internal",
       "dynamic": false,
@@ -13607,7 +14696,7 @@
     {
       "from": "frontend/src/data/templatesData.ts",
       "to": "frontend/src/data/buildWithUIHubSlugs.ts",
-      "line": 7999,
+      "line": 8159,
       "kind": "reExport",
       "resolution": "internal",
       "dynamic": false,
@@ -13618,7 +14707,7 @@
     {
       "from": "frontend/src/data/templatesData.ts",
       "to": "frontend/src/data/buildWithUIHubSlugs.ts",
-      "line": 8001,
+      "line": 8161,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -13760,6 +14849,17 @@
     },
     {
       "from": "frontend/src/data/templateSourceCode.ts",
+      "to": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "line": 21,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/data/templateSourceCode.ts",
       "to": "frontend/src/components/templates/OriginkitHero24.tsx",
       "line": 19,
       "kind": "import",
@@ -13849,6 +14949,72 @@
     {
       "from": "frontend/src/hooks/use-mobile.ts",
       "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/hooks/useScrollChainBoundary.ts",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/hooks/useScrollChainBoundary.ts",
+      "to": "react",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/lib/adsense.test.ts",
+      "to": "frontend/src/lib/adsense.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/lib/adsense.test.ts",
+      "to": "vitest",
       "line": 1,
       "kind": "import",
       "resolution": "external",
@@ -15257,7 +16423,7 @@
     {
       "from": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
       "to": "frontend/src/components/templates/TemplateCodeViewer.tsx",
-      "line": 33,
+      "line": 35,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -15311,8 +16477,30 @@
     },
     {
       "from": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 27,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 26,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
       "to": "frontend/src/utils/templatePromptUtils.ts",
-      "line": 144,
+      "line": 154,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -15376,6 +16564,50 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "to": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "to": "react-router-dom",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
       "to": "frontend/src/components/templates/AuCabaretPoster.tsx",
       "line": 4,
@@ -15420,6 +16652,116 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "frontend/src/components/Seo.tsx",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "frontend/src/data/componentData.tsx",
+      "line": 6,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "frontend/src/pages/Dashboard/components/ComponentPreviewTile.tsx",
+      "line": 5,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "frontend/src/seo/jsonld.ts",
+      "line": 9,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "frontend/src/seo/metadata.ts",
+      "line": 8,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "frontend/src/seo/site.ts",
+      "line": 10,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "frontend/src/seo/taxonomy.ts",
+      "line": 7,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CategoryPage.tsx",
+      "to": "react-router-dom",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/pages/Components/CloudScrollPage.tsx",
       "to": "frontend/src/components/ui/CloudScroll/CloudScroll.tsx",
       "line": 4,
@@ -15456,6 +16798,215 @@
       "from": "frontend/src/pages/Components/CloudScrollPage.tsx",
       "to": "react-router-dom",
       "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/components/AeoContent.tsx",
+      "line": 13,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/components/Seo.tsx",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/components/ui/CodeHighlighter.tsx",
+      "line": 5,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/data/componentData.tsx",
+      "line": 6,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/data/componentMetadata.ts",
+      "line": 42,
+      "kind": "dynamic",
+      "resolution": "internal",
+      "dynamic": true,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 20,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/pages/Components/DemoPage.tsx",
+      "line": 7,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 12,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/seo/component-seo.ts",
+      "line": 11,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/seo/jsonld.ts",
+      "line": 10,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/seo/metadata.ts",
+      "line": 9,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/seo/site.ts",
+      "line": 14,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/seo/taxonomy.ts",
+      "line": 8,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 15,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/ComponentPage.tsx",
+      "to": "react-router-dom",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
+      "to": "frontend/src/components/ui/CubeLoader.tsx",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
+      "to": "react",
+      "line": 1,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -15618,6 +17169,50 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
+      "to": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
+      "to": "react-router-dom",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/pages/Components/GlobeDemoPage.tsx",
       "to": "frontend/src/components/ui/Globe.tsx",
       "line": 2,
@@ -15676,6 +17271,28 @@
       "from": "frontend/src/pages/Components/HaosDemoPage.tsx",
       "to": "react-router-dom",
       "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
+      "to": "frontend/src/components/ui/HexaSphere.tsx",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
+      "to": "react",
+      "line": 1,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -15984,6 +17601,50 @@
       "from": "frontend/src/pages/Components/MentalityDemoPage.tsx",
       "to": "react-router-dom",
       "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
+      "to": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
+      "to": "lucide-react",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
+      "to": "react-router-dom",
+      "line": 2,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -16796,6 +18457,28 @@
     },
     {
       "from": "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 11,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 10,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/HomePage/sections/BuildWithUIHubSection.tsx",
       "to": "frontend/src/utils/componentUtils.ts",
       "line": 9,
       "kind": "import",
@@ -17346,6 +19029,28 @@
     },
     {
       "from": "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 48,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 47,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/HomePage/sections/TemplatesSection.tsx",
       "to": "frontend/src/utils/templatePromptUtils.ts",
       "line": 44,
       "kind": "import",
@@ -17797,8 +19502,19 @@
     },
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+      "to": "frontend/src/components/ui/AdSlot.tsx",
+      "line": 30,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/components/ui/AuthRequiredModal.tsx",
-      "line": 23,
+      "line": 25,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17809,7 +19525,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/components/ui/CheckoutOverlay.tsx",
-      "line": 19,
+      "line": 21,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17831,7 +19547,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/components/ui/Skeleton.tsx",
-      "line": 26,
+      "line": 29,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17842,7 +19558,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/components/ui/Toast.tsx",
-      "line": 25,
+      "line": 28,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17853,7 +19569,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/context/AuthContext.tsx",
-      "line": 20,
+      "line": 22,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17875,7 +19591,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/data/componentData.tsx",
-      "line": 63,
+      "line": 73,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17886,7 +19602,29 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/data/componentMetadata.ts",
-      "line": 24,
+      "line": 26,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+      "to": "frontend/src/data/componentVariants.ts",
+      "line": 27,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+      "to": "frontend/src/data/embeddedSourceCode.ts",
+      "line": 16,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17907,8 +19645,19 @@
     },
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 39,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/services/collections.ts",
-      "line": 22,
+      "line": 24,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17919,7 +19668,18 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/services/favorites.ts",
-      "line": 21,
+      "line": 23,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 34,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17930,7 +19690,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/utils/activityLogger.ts",
-      "line": 28,
+      "line": 32,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17941,7 +19701,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/utils/apiConfig.ts",
-      "line": 17,
+      "line": 19,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17952,7 +19712,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/utils/checkout.ts",
-      "line": 18,
+      "line": 20,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17973,8 +19733,19 @@
     },
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
+      "to": "frontend/src/utils/componentCustomization.ts",
+      "line": 15,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/utils/mcpConfig.ts",
-      "line": 2014,
+      "line": 2227,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17985,7 +19756,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/utils/prefetchUtils.ts",
-      "line": 27,
+      "line": 31,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -17996,7 +19767,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/utils/promptUtils.ts",
-      "line": 16,
+      "line": 18,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -18007,7 +19778,7 @@
     {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "to": "frontend/src/utils/zipUtils.ts",
-      "line": 15,
+      "line": 17,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -18074,6 +19845,50 @@
       "from": "frontend/src/pages/LibraryPage/sections/GetStarted/GetStartedPage.tsx",
       "to": "react",
       "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/NotFoundPage.tsx",
+      "to": "frontend/src/components/Seo.tsx",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/NotFoundPage.tsx",
+      "to": "frontend/src/seo/taxonomy.ts",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/NotFoundPage.tsx",
+      "to": "react",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/NotFoundPage.tsx",
+      "to": "react-router-dom",
+      "line": 2,
       "kind": "import",
       "resolution": "external",
       "dynamic": false,
@@ -18216,7 +20031,7 @@
     {
       "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
       "to": "frontend/src/components/templates/TemplateCodeViewer.tsx",
-      "line": 28,
+      "line": 30,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -18281,8 +20096,30 @@
     },
     {
       "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+      "to": "frontend/src/hooks/useTemplateViewCounts.ts",
+      "line": 21,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 20,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
       "to": "frontend/src/utils/templatePromptUtils.ts",
-      "line": 166,
+      "line": 176,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -18401,6 +20238,248 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/seo/aeo.test.ts",
+      "to": "frontend/src/components/AeoContent.tsx",
+      "line": 6,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.test.ts",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.test.ts",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 5,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.test.ts",
+      "to": "react",
+      "line": 2,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.test.ts",
+      "to": "react-dom/server",
+      "line": 3,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.test.ts",
+      "to": "vitest",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.ts",
+      "to": "frontend/src/seo/component-seo.ts",
+      "line": 1,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.ts",
+      "to": "frontend/src/seo/site.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/aeo.ts",
+      "to": "frontend/src/seo/taxonomy.ts",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/component-seo.ts",
+      "to": "frontend/src/data/componentData.tsx",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/component-seo.ts",
+      "to": "frontend/src/data/componentMetadata.ts",
+      "line": 1,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/component-seo.ts",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 5,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/component-seo.ts",
+      "to": "frontend/src/seo/metadata.ts",
+      "line": 4,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/component-seo.ts",
+      "to": "frontend/src/seo/tech.ts",
+      "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/jsonld.ts",
+      "to": "frontend/src/seo/site.ts",
+      "line": 1,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/metadata.ts",
+      "to": "frontend/src/seo/site.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/metadata.ts",
+      "to": "frontend/src/seo/taxonomy.ts",
+      "line": 1,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/routes.ts",
+      "to": "frontend/src/seo/aeo.ts",
+      "line": 25,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": true,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/routes.ts",
+      "to": "frontend/src/seo/jsonld.ts",
+      "line": 15,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/routes.ts",
+      "to": "frontend/src/seo/metadata.ts",
+      "line": 1,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/routes.ts",
+      "to": "frontend/src/seo/site.ts",
+      "line": 24,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/seo/routes.ts",
+      "to": "frontend/src/seo/taxonomy.ts",
+      "line": 23,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/services/admin.ts",
       "to": "frontend/src/lib/firebase.ts",
       "line": 1,
@@ -18525,6 +20604,39 @@
       "from": "frontend/src/services/mcp.ts",
       "to": "frontend/src/utils/mcpConfig.ts",
       "line": 3,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/services/templateViews.test.ts",
+      "to": "frontend/src/services/templateViews.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/services/templateViews.test.ts",
+      "to": "vitest",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/services/templateViews.ts",
+      "to": "frontend/src/utils/apiConfig.ts",
+      "line": 1,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -19600,6 +21712,28 @@
       "confidence": "HIGH"
     },
     {
+      "from": "frontend/src/utils/promptEncoding.test.ts",
+      "to": "frontend/src/utils/promptUtils.ts",
+      "line": 2,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/utils/promptEncoding.test.ts",
+      "to": "vitest",
+      "line": 1,
+      "kind": "import",
+      "resolution": "external",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "package",
+      "confidence": "HIGH"
+    },
+    {
       "from": "frontend/src/utils/promptUtils.ts",
       "to": "frontend/src/data/antigravityPrompts.ts",
       "line": 32,
@@ -19614,6 +21748,17 @@
       "from": "frontend/src/utils/promptUtils.ts",
       "to": "frontend/src/data/componentData.tsx",
       "line": 34,
+      "kind": "import",
+      "resolution": "internal",
+      "dynamic": false,
+      "typeOnly": false,
+      "via": "relative",
+      "confidence": "HIGH"
+    },
+    {
+      "from": "frontend/src/utils/promptUtils.ts",
+      "to": "frontend/src/data/componentVariants.ts",
+      "line": 252,
       "kind": "import",
       "resolution": "internal",
       "dynamic": false,
@@ -19701,7 +21846,7 @@
     {
       "from": "frontend/src/utils/searchIndex.ts",
       "to": "frontend/src/data/componentData.tsx",
-      "line": 33,
+      "line": 34,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -19723,7 +21868,7 @@
     {
       "from": "frontend/src/utils/searchIndex.ts",
       "to": "frontend/src/data/templatesData.ts",
-      "line": 34,
+      "line": 35,
       "kind": "dynamic",
       "resolution": "internal",
       "dynamic": true,
@@ -22220,6 +24365,22 @@
   ],
   "assetEdges": [
     {
+      "from": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "specifier": "./AntigravityAnimation.css",
+      "line": 4,
+      "kind": "import",
+      "resolution": "asset",
+      "dynamic": false,
+      "typeOnly": false,
+      "named": null,
+      "defaultImport": null,
+      "namespaceImport": null,
+      "via": null,
+      "confidence": "MEDIUM",
+      "detail": "asset",
+      "resolvedKind": "asset"
+    },
+    {
       "from": "frontend/src/components/ui/CardsBeam.tsx",
       "specifier": "./CardsBeam.css",
       "line": 3,
@@ -22252,6 +24413,38 @@
       "resolvedKind": "asset"
     },
     {
+      "from": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "specifier": "./DotsToSolidText.css",
+      "line": 7,
+      "kind": "import",
+      "resolution": "asset",
+      "dynamic": false,
+      "typeOnly": false,
+      "named": null,
+      "defaultImport": null,
+      "namespaceImport": null,
+      "via": null,
+      "confidence": "MEDIUM",
+      "detail": "asset",
+      "resolvedKind": "asset"
+    },
+    {
+      "from": "frontend/src/components/ui/HexaSphere.tsx",
+      "specifier": "./HexaSphere.css",
+      "line": 14,
+      "kind": "import",
+      "resolution": "asset",
+      "dynamic": false,
+      "typeOnly": false,
+      "named": null,
+      "defaultImport": null,
+      "namespaceImport": null,
+      "via": null,
+      "confidence": "MEDIUM",
+      "detail": "asset",
+      "resolvedKind": "asset"
+    },
+    {
       "from": "frontend/src/components/ui/Logo.tsx",
       "specifier": "../../Assets/webiste logo.svg",
       "line": 2,
@@ -22271,6 +24464,22 @@
       "from": "frontend/src/components/ui/Logo.tsx",
       "specifier": "./Logo.css",
       "line": 3,
+      "kind": "import",
+      "resolution": "asset",
+      "dynamic": false,
+      "typeOnly": false,
+      "named": null,
+      "defaultImport": null,
+      "namespaceImport": null,
+      "via": null,
+      "confidence": "MEDIUM",
+      "detail": "asset",
+      "resolvedKind": "asset"
+    },
+    {
+      "from": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "specifier": "./MostarCinematicScroll.css",
+      "line": 5,
       "kind": "import",
       "resolution": "asset",
       "dynamic": false,
@@ -22380,9 +24589,25 @@
       "resolvedKind": "asset"
     },
     {
+      "from": "frontend/src/pages/LibraryPage/LibraryPage.tsx",
+      "specifier": "../../Assets/webiste logo.svg",
+      "line": 13,
+      "kind": "import",
+      "resolution": "asset",
+      "dynamic": false,
+      "typeOnly": false,
+      "named": null,
+      "defaultImport": "uiHubLogo",
+      "namespaceImport": null,
+      "via": null,
+      "confidence": "MEDIUM",
+      "detail": "asset",
+      "resolvedKind": "asset"
+    },
+    {
       "from": "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
       "specifier": "../../../../Assets/webiste logo.svg",
-      "line": 29,
+      "line": 33,
       "kind": "import",
       "resolution": "asset",
       "dynamic": false,
@@ -22400,7 +24625,7 @@
     {
       "from": "backend/src/server.js",
       "specifier": "../../mcp-server/dist/routes/mcp.js",
-      "line": 107,
+      "line": 109,
       "kind": "dynamic",
       "resolution": "unresolved",
       "dynamic": true,
@@ -22416,7 +24641,7 @@
     {
       "from": "backend/src/server.js",
       "specifier": "../../mcp-server/dist/routes/dashboard.js",
-      "line": 108,
+      "line": 110,
       "kind": "dynamic",
       "resolution": "unresolved",
       "dynamic": true,
@@ -22432,7 +24657,7 @@
     {
       "from": "backend/src/server.js",
       "specifier": "../../mcp-server/dist/routes/admin.js",
-      "line": 109,
+      "line": 111,
       "kind": "dynamic",
       "resolution": "unresolved",
       "dynamic": true,

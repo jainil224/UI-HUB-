@@ -31,8 +31,8 @@
   ],
   "description": "Page entry points with their route, direct component dependencies, and hooks.",
   "counts": {
-    "pages": 74,
-    "withRoute": 60
+    "pages": 82,
+    "withRoute": 68
   },
   "pages": [
     {
@@ -97,7 +97,7 @@
       "route": "api-keys",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 179,
+      "lines": 218,
       "components": [
         "frontend/src/components/admin/AdminUi.tsx"
       ],
@@ -341,7 +341,7 @@
       "route": "/build-with-ui-hub/:slug",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 341,
+      "lines": 353,
       "components": [
         "frontend/src/components/templates/BuildWithUIHubRail.tsx",
         "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
@@ -349,7 +349,9 @@
         "frontend/src/components/templates/TemplatePreviewStage.tsx",
         "frontend/src/components/ui/Toast.tsx"
       ],
-      "hooks": [],
+      "hooks": [
+        "frontend/src/hooks/useTemplateViewCounts.ts"
+      ],
       "confidence": "HIGH"
     },
     {
@@ -361,6 +363,20 @@
       "isBarrel": false,
       "lines": 13,
       "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "name": "AntigravityAnimationDemoPage",
+      "feature": "components",
+      "route": "/demo/antigravity-animation",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 25,
+      "components": [
+        "frontend/src/components/ui/AntigravityAnimation.tsx"
+      ],
       "hooks": [],
       "confidence": "HIGH"
     },
@@ -379,6 +395,20 @@
       "confidence": "HIGH"
     },
     {
+      "path": "frontend/src/pages/Components/CategoryPage.tsx",
+      "name": "CategoryPage",
+      "feature": "components",
+      "route": "/components/:category",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 177,
+      "components": [
+        "frontend/src/components/Seo.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
       "path": "frontend/src/pages/Components/CloudScrollPage.tsx",
       "name": "CloudScrollPage",
       "feature": "components",
@@ -388,6 +418,38 @@
       "lines": 29,
       "components": [
         "frontend/src/components/ui/CloudScroll/CloudScroll.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/ComponentPage.tsx",
+      "name": "ComponentPage",
+      "feature": "components",
+      "route": "/components/:category/:slug",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 307,
+      "components": [
+        "frontend/src/components/AeoContent.tsx",
+        "frontend/src/components/Seo.tsx",
+        "frontend/src/components/ui/CodeHighlighter.tsx"
+      ],
+      "hooks": [
+        "frontend/src/hooks/useTemplateViewCounts.ts"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
+      "name": "CubeLoadersDemoPage",
+      "feature": "components",
+      "route": "/demo/cube-loaders",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 24,
+      "components": [
+        "frontend/src/components/ui/CubeLoader.tsx"
       ],
       "hooks": [],
       "confidence": "HIGH"
@@ -425,6 +487,20 @@
       "confidence": "HIGH"
     },
     {
+      "path": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
+      "name": "DotsToSolidTextDemoPage",
+      "feature": "components",
+      "route": "/demo/dots-to-solid-text",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 24,
+      "components": [
+        "frontend/src/components/ui/DotsToSolidText.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
       "path": "frontend/src/pages/Components/GlobeDemoPage.tsx",
       "name": "GlobeDemoPage",
       "feature": "components",
@@ -448,6 +524,20 @@
       "lines": 35,
       "components": [
         "frontend/src/components/templates/HaosShowcase.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
+      "name": "HexaSphereDemoPage",
+      "feature": "components",
+      "route": "/demo/hexa-sphere",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 12,
+      "components": [
+        "frontend/src/components/ui/HexaSphere.tsx"
       ],
       "hooks": [],
       "confidence": "HIGH"
@@ -560,6 +650,20 @@
       "lines": 34,
       "components": [
         "frontend/src/components/templates/MentalityHero.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
+      "name": "MostarCinematicScrollDemoPage",
+      "feature": "components",
+      "route": "/demo/mostar-cinematic-scroll",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 25,
+      "components": [
+        "frontend/src/components/ui/MostarCinematicScroll.tsx"
       ],
       "hooks": [],
       "confidence": "HIGH"
@@ -759,7 +863,7 @@
       "route": "mcp",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 819,
+      "lines": 1062,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -785,9 +889,11 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 149,
+      "lines": 156,
       "components": [],
-      "hooks": [],
+      "hooks": [
+        "frontend/src/hooks/useTemplateViewCounts.ts"
+      ],
       "confidence": "HIGH"
     },
     {
@@ -863,7 +969,7 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 448,
+      "lines": 456,
       "components": [
         "frontend/src/components/templates/AuCabaretPoster.tsx",
         "frontend/src/components/templates/DontBeGreedyFooter.tsx",
@@ -886,7 +992,9 @@
         "frontend/src/components/ui/LazyTemplatePreview.tsx",
         "frontend/src/components/ui/Toast.tsx"
       ],
-      "hooks": [],
+      "hooks": [
+        "frontend/src/hooks/useTemplateViewCounts.ts"
+      ],
       "confidence": "HIGH"
     },
     {
@@ -932,7 +1040,7 @@
       "route": "/privacy",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 116,
+      "lines": 115,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -968,7 +1076,7 @@
       "route": "/library",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 776,
+      "lines": 790,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -980,10 +1088,11 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 2086,
+      "lines": 2299,
       "components": [
         "frontend/src/components/animations/TextAnimations.tsx",
         "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/AuthRequiredModal.tsx",
         "frontend/src/components/ui/CheckoutOverlay.tsx",
         "frontend/src/components/ui/CodeHighlighter.tsx",
@@ -991,7 +1100,8 @@
         "frontend/src/components/ui/Toast.tsx"
       ],
       "hooks": [
-        "frontend/src/hooks/use-mobile.ts"
+        "frontend/src/hooks/use-mobile.ts",
+        "frontend/src/hooks/useTemplateViewCounts.ts"
       ],
       "confidence": "HIGH"
     },
@@ -1020,13 +1130,27 @@
       "confidence": "HIGH"
     },
     {
+      "path": "frontend/src/pages/NotFoundPage.tsx",
+      "name": "NotFoundPage",
+      "feature": "not-found-page",
+      "route": "*",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 69,
+      "components": [
+        "frontend/src/components/Seo.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
       "path": "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
       "name": "PreviewCapturePage",
       "feature": "preview-capture-page",
       "route": "/preview-capture",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 51,
+      "lines": 54,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -1038,7 +1162,7 @@
       "route": "/pricing",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 505,
+      "lines": 507,
       "components": [
         "frontend/src/components/ui/CheckoutOverlay.tsx",
         "frontend/src/components/ui/CustomPricingCard.tsx",
@@ -1054,7 +1178,7 @@
       "route": "/templates/:id",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 365,
+      "lines": 377,
       "components": [
         "frontend/src/components/templates/TemplateCodeViewer.tsx",
         "frontend/src/components/templates/TemplatePreviewStage.tsx",
@@ -1062,7 +1186,9 @@
         "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Toast.tsx"
       ],
-      "hooks": [],
+      "hooks": [
+        "frontend/src/hooks/useTemplateViewCounts.ts"
+      ],
       "confidence": "HIGH"
     },
     {

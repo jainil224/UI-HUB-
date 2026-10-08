@@ -31,9 +31,9 @@
   ],
   "description": "Router declarations. `association` records HOW a route was matched to a component file.",
   "counts": {
-    "routes": 63,
+    "routes": 71,
     "association": {
-      "HIGH": 60,
+      "HIGH": 68,
       "MEDIUM": 0,
       "LOW_CONFIDENCE": 3,
       "UNKNOWN": 0
@@ -74,6 +74,16 @@
       "confidence": "LOW_CONFIDENCE"
     },
     {
+      "path": "*",
+      "index": false,
+      "element": "NotFoundPage",
+      "componentFile": "frontend/src/pages/NotFoundPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "router-element",
+      "confidence": "HIGH"
+    },
+    {
       "path": "/",
       "index": false,
       "element": "HomePage",
@@ -111,6 +121,26 @@
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/components/:category",
+      "index": false,
+      "element": "CategoryPage",
+      "componentFile": "frontend/src/pages/Components/CategoryPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "router-element",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/components/:category/:slug",
+      "index": false,
+      "element": "ComponentPage",
+      "componentFile": "frontend/src/pages/Components/ComponentPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "router-element",
       "confidence": "HIGH"
     },
     {
@@ -164,10 +194,40 @@
       "confidence": "HIGH"
     },
     {
+      "path": "/demo/antigravity-animation",
+      "index": false,
+      "element": "AntigravityAnimationDemoPage",
+      "componentFile": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/cube-loaders",
+      "index": false,
+      "element": "CubeLoadersDemoPage",
+      "componentFile": "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
       "path": "/demo/dont-be-greedy",
       "index": false,
       "element": "DontBeGreedyDemoPage",
       "componentFile": "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/dots-to-solid-text",
+      "index": false,
+      "element": "DotsToSolidTextDemoPage",
+      "componentFile": "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",
@@ -188,6 +248,16 @@
       "index": false,
       "element": "HaosDemoPage",
       "componentFile": "frontend/src/pages/Components/HaosDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/hexa-sphere",
+      "index": false,
+      "element": "HexaSphereDemoPage",
+      "componentFile": "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",
@@ -278,6 +348,16 @@
       "index": false,
       "element": "MentalityDemoPage",
       "componentFile": "frontend/src/pages/Components/MentalityDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/mostar-cinematic-scroll",
+      "index": false,
+      "element": "MostarCinematicScrollDemoPage",
+      "componentFile": "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",

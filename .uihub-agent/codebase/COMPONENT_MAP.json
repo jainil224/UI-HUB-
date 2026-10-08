@@ -31,12 +31,12 @@
   ],
   "description": "React components discovered from JSX syntax and capitalized exports, with page usage and orphan status.",
   "counts": {
-    "components": 228,
+    "components": 245,
     "orphaned": 5,
-    "lazy": 155,
+    "lazy": 167,
     "confidence": {
-      "HIGH": 157,
-      "MEDIUM": 71,
+      "HIGH": 168,
+      "MEDIUM": 77,
       "LOW_CONFIDENCE": 0,
       "UNKNOWN": 0
     }
@@ -146,6 +146,29 @@
         "frontend/src/pages/Admin/OverviewPage.tsx",
         "frontend/src/pages/Admin/SearchPage.tsx",
         "frontend/src/pages/Admin/UserDetailPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "AeoContent",
+      "path": "frontend/src/components/AeoContent.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 178,
+      "exportedSymbols": [
+        "AeoContent"
+      ],
+      "importsInternal": [
+        "frontend/src/seo/aeo.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Components/ComponentPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/seo/aeo.test.ts"
       ],
       "orphaned": false,
       "confidence": "HIGH"
@@ -506,6 +529,38 @@
       "confidence": "HIGH"
     },
     {
+      "name": "Seo",
+      "path": "frontend/src/components/Seo.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 119,
+      "exportedSymbols": [
+        "SeoJsonLd",
+        "SeoConfig",
+        "useSeo",
+        "Seo",
+        "RouteSeoGuard"
+      ],
+      "importsInternal": [
+        "frontend/src/seo/routes.ts",
+        "frontend/src/seo/site.ts"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/NotFoundPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/NotFoundPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
       "name": "AuCabaretPoster",
       "path": "frontend/src/components/templates/AuCabaretPoster.tsx",
       "feature": "components",
@@ -535,11 +590,13 @@
       "feature": "components",
       "lazy": false,
       "isBarrel": false,
-      "lines": 229,
+      "lines": 238,
       "exportedSymbols": [],
       "importsInternal": [
         "frontend/src/components/templates/registry.ts",
-        "frontend/src/data/templatesData.ts"
+        "frontend/src/data/templatesData.ts",
+        "frontend/src/hooks/useTemplateViewCounts.ts",
+        "frontend/src/services/templateViews.ts"
       ],
       "usedByPages": [
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx"
@@ -556,7 +613,7 @@
       "feature": "components",
       "lazy": false,
       "isBarrel": false,
-      "lines": 172,
+      "lines": 173,
       "exportedSymbols": [],
       "importsInternal": [
         "frontend/src/data/componentData.tsx"
@@ -874,6 +931,25 @@
       "confidence": "HIGH"
     },
     {
+      "name": "NeuralKineticsHero",
+      "path": "frontend/src/components/templates/NeuralKineticsHero.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 1206,
+      "exportedSymbols": [
+        "NeuralKineticsHero"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/components/templates/registry.ts",
+        "frontend/src/data/templateSourceCode.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
       "name": "OriginkitHero24",
       "path": "frontend/src/components/templates/OriginkitHero24.tsx",
       "feature": "components",
@@ -1131,13 +1207,15 @@
       "feature": "components",
       "lazy": false,
       "isBarrel": false,
-      "lines": 422,
+      "lines": 448,
       "exportedSymbols": [
         "SIMILAR_COLLAPSED_COUNT"
       ],
       "importsInternal": [
         "frontend/src/components/templates/registry.ts",
         "frontend/src/data/templatesData.ts",
+        "frontend/src/hooks/useTemplateViewCounts.ts",
+        "frontend/src/services/templateViews.ts",
         "frontend/src/utils/templateRelevance.ts"
       ],
       "usedByPages": [
@@ -1174,26 +1252,50 @@
       "feature": "components",
       "lazy": false,
       "isBarrel": false,
-      "lines": 93,
+      "lines": 149,
       "exportedSymbols": [],
       "importsInternal": [
-        "frontend/src/context/CookieConsentContext.tsx",
+        "frontend/src/context/AuthContext.tsx",
         "frontend/src/lib/adsense.ts"
       ],
       "usedByPages": [
         "frontend/src/pages/HomePage/HomePage.tsx",
         "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
         "frontend/src/pages/TemplatesPage/TemplatesPage.tsx"
       ],
       "usedBy": [
         "frontend/src/pages/HomePage/HomePage.tsx",
         "frontend/src/pages/HomePage/sections/ComponentGrid.tsx",
+        "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/pages/TemplatesPage/TemplateDetailPage.tsx",
         "frontend/src/pages/TemplatesPage/TemplatesPage.tsx"
       ],
       "orphaned": false,
       "confidence": "MEDIUM"
+    },
+    {
+      "name": "AntigravityAnimation",
+      "path": "frontend/src/components/ui/AntigravityAnimation.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 309,
+      "exportedSymbols": [
+        "AntigravityAnimationProps",
+        "AntigravityAnimation"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
     },
     {
       "name": "AsciiCursor",
@@ -2051,9 +2153,11 @@
       "exportedSymbols": [],
       "importsInternal": [],
       "usedByPages": [
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
       ],
       "usedBy": [
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx"
       ],
       "orphaned": false,
@@ -2065,7 +2169,7 @@
       "feature": "components",
       "lazy": false,
       "isBarrel": false,
-      "lines": 67,
+      "lines": 68,
       "exportedSymbols": [],
       "importsInternal": [
         "frontend/src/context/CookieConsentContext.tsx"
@@ -2162,12 +2266,39 @@
       "confidence": "HIGH"
     },
     {
+      "name": "CubeLoader",
+      "path": "frontend/src/components/ui/CubeLoader.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 310,
+      "exportedSymbols": [
+        "CubeLoaderVariantId",
+        "CUBE_LOADER_VARIANT_ORDER",
+        "CUBE_LOADER_VARIANT_LABELS",
+        "CausticCube",
+        "MonolithCube",
+        "CubeLoaderProps",
+        "CubeLoader"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/CubeLoadersDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/CubeLoadersDemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
       "name": "CustomPricingCard",
       "path": "frontend/src/components/ui/CustomPricingCard.tsx",
       "feature": "components",
       "lazy": false,
       "isBarrel": false,
-      "lines": 518,
+      "lines": 533,
       "exportedSymbols": [
         "CategoryKey",
         "CATEGORIES"
@@ -2203,6 +2334,29 @@
       "usedBy": [
         "frontend/src/data/componentData.tsx",
         "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "DotsToSolidText",
+      "path": "frontend/src/components/ui/DotsToSolidText.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 516,
+      "exportedSymbols": [
+        "CardData",
+        "DotsToSolidTextProps",
+        "DotsToSolidText"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx"
       ],
       "orphaned": false,
       "confidence": "HIGH"
@@ -2313,6 +2467,25 @@
       "confidence": "HIGH"
     },
     {
+      "name": "FeatherSphere",
+      "path": "frontend/src/components/ui/FeatherSphere.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 251,
+      "exportedSymbols": [
+        "FeatherSphereProps",
+        "FeatherSphere"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
       "name": "Footer",
       "path": "frontend/src/components/ui/Footer.tsx",
       "feature": "components",
@@ -2414,7 +2587,7 @@
       "feature": "components",
       "lazy": true,
       "isBarrel": false,
-      "lines": 1043,
+      "lines": 1073,
       "exportedSymbols": [
         "Marker",
         "MarkerConfig",
@@ -2589,6 +2762,29 @@
         "frontend/src/components/animations/VisualEffects.tsx",
         "frontend/src/data/componentData.tsx",
         "frontend/src/utils/prefetchUtils.ts"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "HexaSphere",
+      "path": "frontend/src/components/ui/HexaSphere.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 461,
+      "exportedSymbols": [
+        "HexaSphereSettings",
+        "HexaSphereProps",
+        "HexaSphere"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/HexaSphereDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/HexaSphereDemoPage.tsx"
       ],
       "orphaned": false,
       "confidence": "HIGH"
@@ -3164,6 +3360,28 @@
       "confidence": "HIGH"
     },
     {
+      "name": "MostarCinematicScroll",
+      "path": "frontend/src/components/ui/MostarCinematicScroll.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 471,
+      "exportedSymbols": [
+        "MostarCinematicScrollProps",
+        "MostarCinematicScroll"
+      ],
+      "importsInternal": [],
+      "usedByPages": [
+        "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
       "name": "MouseGravityBackground",
       "path": "frontend/src/components/ui/MouseGravityBackground.tsx",
       "feature": "components",
@@ -3269,7 +3487,7 @@
       "feature": "components",
       "lazy": true,
       "isBarrel": false,
-      "lines": 350,
+      "lines": 355,
       "exportedSymbols": [
         "OptionWheelProps"
       ],
@@ -3366,6 +3584,25 @@
       "lines": 1403,
       "exportedSymbols": [
         "ParticleSphereRefactor"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "ParticleSun",
+      "path": "frontend/src/components/ui/ParticleSun.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 304,
+      "exportedSymbols": [
+        "ParticleSunProps",
+        "ParticleSun"
       ],
       "importsInternal": [],
       "usedByPages": [],
@@ -3507,6 +3744,24 @@
       "exportedSymbols": [
         "PointDNAHelixProps",
         "PointDNAHelix"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
+      "name": "PrismPyramid",
+      "path": "frontend/src/components/ui/PrismPyramid.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 91,
+      "exportedSymbols": [
+        "PrismPyramid"
       ],
       "importsInternal": [],
       "usedByPages": [],
@@ -3677,7 +3932,7 @@
       "feature": "components",
       "lazy": true,
       "isBarrel": false,
-      "lines": 332,
+      "lines": 343,
       "exportedSymbols": [],
       "importsInternal": [],
       "usedByPages": [
@@ -4054,6 +4309,25 @@
       "confidence": "HIGH"
     },
     {
+      "name": "StreakSphere",
+      "path": "frontend/src/components/ui/StreakSphere.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 539,
+      "exportedSymbols": [
+        "StreakSphereProps",
+        "StreakSphere"
+      ],
+      "importsInternal": [],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/data/componentData.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "HIGH"
+    },
+    {
       "name": "SuiFoundation",
       "path": "frontend/src/components/ui/SuiFoundation.tsx",
       "feature": "components",
@@ -4416,7 +4690,7 @@
       "feature": "auth-context",
       "lazy": false,
       "isBarrel": false,
-      "lines": 317,
+      "lines": 333,
       "exportedSymbols": [
         "useAuth",
         "AuthProvider"
@@ -4424,6 +4698,7 @@
       "importsInternal": [
         "frontend/src/components/ui/WelcomeNotifications.tsx",
         "frontend/src/lib/firebase.ts",
+        "frontend/src/services/templateViews.ts",
         "frontend/src/utils/activityLogger.ts",
         "frontend/src/utils/apiConfig.ts",
         "frontend/src/utils/syncUser.ts"
@@ -4442,6 +4717,7 @@
       ],
       "usedBy": [
         "frontend/src/App.tsx",
+        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Navbar.tsx",
         "frontend/src/components/ui/PushNotificationPrompt.tsx",
         "frontend/src/pages/Admin/AdminGuard.tsx",
@@ -4464,7 +4740,7 @@
       "feature": "cookie-consent-context",
       "lazy": false,
       "isBarrel": false,
-      "lines": 151,
+      "lines": 184,
       "exportedSymbols": [
         "useCookieConsent",
         "CookieConsentProvider"
@@ -4479,7 +4755,6 @@
       ],
       "usedBy": [
         "frontend/src/App.tsx",
-        "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/pages/legal/CookieSettingsPage.tsx"
       ],
@@ -4540,7 +4815,7 @@
       "feature": "data",
       "lazy": true,
       "isBarrel": false,
-      "lines": 15267,
+      "lines": 15429,
       "exportedSymbols": [
         "RubiksCube",
         "ComponentItem",
@@ -4551,6 +4826,7 @@
         "frontend/src/components/animations/SocialTooltipButtons.tsx",
         "frontend/src/components/animations/TextAnimations.tsx",
         "frontend/src/components/animations/VisualEffects.tsx",
+        "frontend/src/components/ui/AntigravityAnimation.tsx",
         "frontend/src/components/ui/AsciiCursor.tsx",
         "frontend/src/components/ui/AsciiWater.tsx",
         "frontend/src/components/ui/AuraCursor.tsx",
@@ -4565,10 +4841,13 @@
         "frontend/src/components/ui/CardsBeam.tsx",
         "frontend/src/components/ui/Chandelier.tsx",
         "frontend/src/components/ui/CrossfadeTypewriter.tsx",
+        "frontend/src/components/ui/CubeLoader.tsx",
+        "frontend/src/components/ui/DotsToSolidText.tsx",
         "frontend/src/components/ui/DragDropUpload.tsx",
         "frontend/src/components/ui/DriftwoodGallery.tsx",
         "frontend/src/components/ui/EmberHusk.tsx",
         "frontend/src/components/ui/FallBeamBackground.tsx",
+        "frontend/src/components/ui/FeatherSphere.tsx",
         "frontend/src/components/ui/FrostGlassMelt.tsx",
         "frontend/src/components/ui/GalaxyButton.tsx",
         "frontend/src/components/ui/GearSystem.tsx",
@@ -4581,6 +4860,7 @@
         "frontend/src/components/ui/HackerBackground.tsx",
         "frontend/src/components/ui/HeartCursor.tsx",
         "frontend/src/components/ui/HellBackground.tsx",
+        "frontend/src/components/ui/HexaSphere.tsx",
         "frontend/src/components/ui/Hourglass.tsx",
         "frontend/src/components/ui/ImageCompare.tsx",
         "frontend/src/components/ui/ImageLens.tsx",
@@ -4599,6 +4879,7 @@
         "frontend/src/components/ui/MatrixRain.tsx",
         "frontend/src/components/ui/MorphingGlow.tsx",
         "frontend/src/components/ui/MorphingRings.tsx",
+        "frontend/src/components/ui/MostarCinematicScroll.tsx",
         "frontend/src/components/ui/MouseGravityBackground.tsx",
         "frontend/src/components/ui/NeonBorder.tsx",
         "frontend/src/components/ui/OceanSwell.tsx",
@@ -4608,9 +4889,11 @@
         "frontend/src/components/ui/ParticleCursor.tsx",
         "frontend/src/components/ui/ParticleLoader.tsx",
         "frontend/src/components/ui/ParticleSphere.tsx",
+        "frontend/src/components/ui/ParticleSun.tsx",
         "frontend/src/components/ui/PasswordStrengthMeter.tsx",
         "frontend/src/components/ui/PixelBounce.tsx",
         "frontend/src/components/ui/PointDNAHelix.tsx",
+        "frontend/src/components/ui/PrismPyramid.tsx",
         "frontend/src/components/ui/QuantumLattice.tsx",
         "frontend/src/components/ui/RainStorm.tsx",
         "frontend/src/components/ui/ReflectShader.tsx",
@@ -4626,6 +4909,7 @@
         "frontend/src/components/ui/SpaceBackground.tsx",
         "frontend/src/components/ui/StarBurst.tsx",
         "frontend/src/components/ui/StarCursor.tsx",
+        "frontend/src/components/ui/StreakSphere.tsx",
         "frontend/src/components/ui/SuperMario.tsx",
         "frontend/src/components/ui/TargetCursor.tsx",
         "frontend/src/components/ui/ThreeDSlider.tsx",
@@ -4664,6 +4948,8 @@
         "frontend/src/data/lovablePrompts.ts"
       ],
       "usedByPages": [
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/Components/DemoPage.tsx",
         "frontend/src/pages/Dashboard/CollectionsPage.tsx",
         "frontend/src/pages/Dashboard/FavoritesPage.tsx",
@@ -4677,6 +4963,8 @@
       "usedBy": [
         "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
         "frontend/src/components/ui/SearchBox.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
         "frontend/src/pages/Components/DemoPage.tsx",
         "frontend/src/pages/Dashboard/CollectionsPage.tsx",
         "frontend/src/pages/Dashboard/FavoritesPage.tsx",
@@ -4686,6 +4974,7 @@
         "frontend/src/pages/LibraryPage/LibraryPage.tsx",
         "frontend/src/pages/LibraryPage/sections/ComponentDetail/index.tsx",
         "frontend/src/pages/PreviewCapturePage/PreviewCapturePage.tsx",
+        "frontend/src/seo/component-seo.ts",
         "frontend/src/services/community.tsx",
         "frontend/src/services/favorites.ts",
         "frontend/src/utils/promptUtils.ts",
@@ -4730,6 +5019,114 @@
       "usedByPages": [],
       "usedBy": [
         "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "CategoryPage",
+      "path": "frontend/src/pages/Components/CategoryPage.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 177,
+      "exportedSymbols": [
+        "CategoryPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/Seo.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/pages/Dashboard/components/ComponentPreviewTile.tsx",
+        "frontend/src/seo/jsonld.ts",
+        "frontend/src/seo/metadata.ts",
+        "frontend/src/seo/site.ts",
+        "frontend/src/seo/taxonomy.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "ComponentPage",
+      "path": "frontend/src/pages/Components/ComponentPage.tsx",
+      "feature": "components",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 307,
+      "exportedSymbols": [
+        "ComponentPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/AeoContent.tsx",
+        "frontend/src/components/Seo.tsx",
+        "frontend/src/components/ui/CodeHighlighter.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/data/componentMetadata.ts",
+        "frontend/src/hooks/useTemplateViewCounts.ts",
+        "frontend/src/pages/Components/DemoPage.tsx",
+        "frontend/src/seo/aeo.ts",
+        "frontend/src/seo/component-seo.ts",
+        "frontend/src/seo/jsonld.ts",
+        "frontend/src/seo/metadata.ts",
+        "frontend/src/seo/site.ts",
+        "frontend/src/seo/taxonomy.ts",
+        "frontend/src/services/templateViews.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "CubeLoadersDemoPage",
+      "path": "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 24,
+      "exportedSymbols": [
+        "CubeLoadersDemoPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/CubeLoader.tsx"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "DemoPage",
+      "path": "frontend/src/pages/Components/DemoPage.tsx",
+      "feature": "components",
+      "lazy": true,
+      "isBarrel": false,
+      "lines": 158,
+      "exportedSymbols": [
+        "DemoErrorBoundary"
+      ],
+      "importsInternal": [
+        "frontend/src/components/ui/FaizurPortfolio.tsx",
+        "frontend/src/components/ui/HaulFooter.tsx",
+        "frontend/src/components/ui/OmniflowFooter.tsx",
+        "frontend/src/components/ui/SoraFooter.tsx",
+        "frontend/src/components/ui/SuiFoundation.tsx",
+        "frontend/src/data/componentData.tsx",
+        "frontend/src/services/community.tsx"
+      ],
+      "usedByPages": [
+        "frontend/src/pages/Components/ComponentPage.tsx"
+      ],
+      "usedBy": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx"
       ],
       "orphaned": false,
       "confidence": "MEDIUM"
@@ -5122,6 +5519,27 @@
       ],
       "usedBy": [
         "frontend/src/pages/LibraryPage/LibraryPage.tsx"
+      ],
+      "orphaned": false,
+      "confidence": "MEDIUM"
+    },
+    {
+      "name": "NotFoundPage",
+      "path": "frontend/src/pages/NotFoundPage.tsx",
+      "feature": "not-found-page",
+      "lazy": false,
+      "isBarrel": false,
+      "lines": 69,
+      "exportedSymbols": [
+        "NotFoundPage"
+      ],
+      "importsInternal": [
+        "frontend/src/components/Seo.tsx",
+        "frontend/src/seo/taxonomy.ts"
+      ],
+      "usedByPages": [],
+      "usedBy": [
+        "frontend/src/App.tsx"
       ],
       "orphaned": false,
       "confidence": "MEDIUM"

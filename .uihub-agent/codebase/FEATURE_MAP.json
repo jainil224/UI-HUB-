@@ -31,7 +31,7 @@
   ],
   "description": "Feature clusters inferred from directory structure, cross-checked against role assignment.",
   "counts": {
-    "features": 56
+    "features": 62
   },
   "features": [
     {
@@ -48,7 +48,7 @@
       "hooks": [],
       "endpoints": [],
       "externalPackages": [],
-      "lines": 194
+      "lines": 212
     },
     {
       "feature": "activity-log-service",
@@ -101,7 +101,7 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 2893
+      "lines": 2932
     },
     {
       "feature": "announcement-service",
@@ -176,7 +176,7 @@
         "firebase",
         "react"
       ],
-      "lines": 317
+      "lines": 333
     },
     {
       "feature": "backend-root",
@@ -204,7 +204,7 @@
         "node:path",
         "node:url"
       ],
-      "lines": 185
+      "lines": 187
     },
     {
       "feature": "brevo-service",
@@ -243,7 +243,7 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 354
+      "lines": 366
     },
     {
       "feature": "cli",
@@ -354,24 +354,30 @@
     },
     {
       "feature": "components",
-      "files": 244,
+      "files": 263,
       "roles": {
         "BARREL": 4,
-        "COMPONENT": 200,
+        "COMPONENT": 212,
         "DATA": 4,
         "HOOK": 1,
         "MODEL": 5,
-        "PAGE": 24,
+        "PAGE": 31,
         "STATE": 3,
         "TYPE": 3
       },
       "entryPoints": [
+        "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
         "frontend/src/pages/Components/AuCabaretDemoPage.tsx",
+        "frontend/src/pages/Components/CategoryPage.tsx",
         "frontend/src/pages/Components/CloudScrollPage.tsx",
+        "frontend/src/pages/Components/ComponentPage.tsx",
+        "frontend/src/pages/Components/CubeLoadersDemoPage.tsx",
         "frontend/src/pages/Components/DemoPage.tsx",
         "frontend/src/pages/Components/DontBeGreedyDemoPage.tsx",
+        "frontend/src/pages/Components/DotsToSolidTextDemoPage.tsx",
         "frontend/src/pages/Components/GlobeDemoPage.tsx",
         "frontend/src/pages/Components/HaosDemoPage.tsx",
+        "frontend/src/pages/Components/HexaSphereDemoPage.tsx",
         "frontend/src/pages/Components/HeyoDemoPage.tsx",
         "frontend/src/pages/Components/InteriorDesignDemoPage.tsx",
         "frontend/src/pages/Components/LightCablesDemoPage.tsx",
@@ -380,6 +386,7 @@
         "frontend/src/pages/Components/LumosDemoPage.tsx",
         "frontend/src/pages/Components/MatrixRainDemoPage.tsx",
         "frontend/src/pages/Components/MentalityDemoPage.tsx",
+        "frontend/src/pages/Components/MostarCinematicScrollDemoPage.tsx",
         "frontend/src/pages/Components/OriginkitHero24DemoPage.tsx",
         "frontend/src/pages/Components/PaipaiDemoPage.tsx",
         "frontend/src/pages/Components/Scroll3DAnimationPage.tsx",
@@ -392,6 +399,8 @@
         "frontend/src/pages/Components/ThreeDSliderPage.tsx"
       ],
       "components": [
+        "frontend/src/components/AeoContent.tsx",
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/admin/AdminUi.tsx",
         "frontend/src/components/admin/Charts.tsx",
         "frontend/src/components/animations/MeshText.tsx",
@@ -421,6 +430,7 @@
         "frontend/src/components/templates/LumosHero.tsx",
         "frontend/src/components/templates/MentalityHero.tsx",
         "frontend/src/components/templates/MoodHero.tsx",
+        "frontend/src/components/templates/NeuralKineticsHero.tsx",
         "frontend/src/components/templates/OriginkitHero24.tsx",
         "frontend/src/components/templates/PaipaiKuaishou.tsx",
         "frontend/src/components/templates/PortfolioClosing.tsx",
@@ -434,6 +444,7 @@
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
         "frontend/src/components/templates/VisionaryOrbHero.tsx",
         "frontend/src/components/ui/AdSlot.tsx",
+        "frontend/src/components/ui/AntigravityAnimation.tsx",
         "frontend/src/components/ui/AsciiCursor.tsx",
         "frontend/src/components/ui/AsciiWater.tsx",
         "frontend/src/components/ui/AuraCursor.tsx",
@@ -473,12 +484,15 @@
         "frontend/src/components/ui/CodeHighlighter.tsx",
         "frontend/src/components/ui/CookieBanner.tsx",
         "frontend/src/components/ui/CrossfadeTypewriter.tsx",
+        "frontend/src/components/ui/CubeLoader.tsx",
         "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/DotsToSolidText.tsx",
         "frontend/src/components/ui/DragDropUpload.tsx",
         "frontend/src/components/ui/DriftwoodGallery.tsx",
         "frontend/src/components/ui/EmberHusk.tsx",
         "frontend/src/components/ui/FaizurPortfolio.tsx",
         "frontend/src/components/ui/FallBeamBackground.tsx",
+        "frontend/src/components/ui/FeatherSphere.tsx",
         "frontend/src/components/ui/Footer.tsx",
         "frontend/src/components/ui/FrostGlassMelt.tsx",
         "frontend/src/components/ui/GalaxyButton.tsx",
@@ -493,6 +507,7 @@
         "frontend/src/components/ui/HaulFooter.tsx",
         "frontend/src/components/ui/HeartCursor.tsx",
         "frontend/src/components/ui/HellBackground.tsx",
+        "frontend/src/components/ui/HexaSphere.tsx",
         "frontend/src/components/ui/Hourglass.tsx",
         "frontend/src/components/ui/ImageCompare.tsx",
         "frontend/src/components/ui/ImageLens.tsx",
@@ -514,6 +529,7 @@
         "frontend/src/components/ui/MatrixRain.tsx",
         "frontend/src/components/ui/MorphingGlow.tsx",
         "frontend/src/components/ui/MorphingRings.tsx",
+        "frontend/src/components/ui/MostarCinematicScroll.tsx",
         "frontend/src/components/ui/MouseGravityBackground.tsx",
         "frontend/src/components/ui/Navbar.tsx",
         "frontend/src/components/ui/NeonBorder.tsx",
@@ -525,11 +541,13 @@
         "frontend/src/components/ui/ParticleCursor.tsx",
         "frontend/src/components/ui/ParticleLoader.tsx",
         "frontend/src/components/ui/ParticleSphere.tsx",
+        "frontend/src/components/ui/ParticleSun.tsx",
         "frontend/src/components/ui/PasswordStrengthMeter.tsx",
         "frontend/src/components/ui/PixelBounce.tsx",
         "frontend/src/components/ui/PixelDrift.tsx",
         "frontend/src/components/ui/PlanBadge.tsx",
         "frontend/src/components/ui/PointDNAHelix.tsx",
+        "frontend/src/components/ui/PrismPyramid.tsx",
         "frontend/src/components/ui/PushNotificationPrompt.tsx",
         "frontend/src/components/ui/QuantumLattice.tsx",
         "frontend/src/components/ui/RainStorm.tsx",
@@ -552,6 +570,7 @@
         "frontend/src/components/ui/SpaceBackground.tsx",
         "frontend/src/components/ui/StarBurst.tsx",
         "frontend/src/components/ui/StarCursor.tsx",
+        "frontend/src/components/ui/StreakSphere.tsx",
         "frontend/src/components/ui/SuiFoundation.tsx",
         "frontend/src/components/ui/SuperMario.tsx",
         "frontend/src/components/ui/TargetCursor.tsx",
@@ -623,7 +642,7 @@
         "three-stdlib",
         "zustand"
       ],
-      "lines": 71477
+      "lines": 76985
     },
     {
       "feature": "config",
@@ -637,7 +656,7 @@
       "hooks": [],
       "endpoints": [],
       "externalPackages": [],
-      "lines": 274
+      "lines": 277
     },
     {
       "feature": "config-routes",
@@ -708,7 +727,7 @@
       "externalPackages": [
         "react"
       ],
-      "lines": 151
+      "lines": 184
     },
     {
       "feature": "dashboard",
@@ -734,13 +753,14 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 1989
+      "lines": 2232
     },
     {
       "feature": "data",
-      "files": 21,
+      "files": 23,
       "roles": {
-        "DATA": 21
+        "DATA": 22,
+        "TEST": 1
       },
       "entryPoints": [],
       "components": [],
@@ -748,9 +768,10 @@
       "hooks": [],
       "endpoints": [],
       "externalPackages": [
-        "react"
+        "react",
+        "vitest"
       ],
-      "lines": 40809
+      "lines": 40812
     },
     {
       "feature": "email-log-service",
@@ -856,7 +877,7 @@
         "react-dom",
         "react-router-dom"
       ],
-      "lines": 280
+      "lines": 298
     },
     {
       "feature": "health-service",
@@ -902,7 +923,7 @@
         "react-icons",
         "react-router-dom"
       ],
-      "lines": 1680
+      "lines": 1695
     },
     {
       "feature": "legal",
@@ -927,12 +948,13 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 773
+      "lines": 772
     },
     {
       "feature": "lib",
-      "files": 3,
+      "files": 4,
       "roles": {
+        "TEST": 1,
         "UNKNOWN": 3
       },
       "entryPoints": [],
@@ -943,9 +965,10 @@
       "externalPackages": [
         "clsx",
         "firebase",
-        "tailwind-merge"
+        "tailwind-merge",
+        "vitest"
       ],
-      "lines": 214
+      "lines": 299
     },
     {
       "feature": "library-page",
@@ -972,7 +995,7 @@
         "react-dom",
         "react-router-dom"
       ],
-      "lines": 3526
+      "lines": 3753
     },
     {
       "feature": "mcp",
@@ -1004,6 +1027,7 @@
       "hooks": [],
       "endpoints": [
         "DELETE /",
+        "DELETE /api-keys/:id",
         "DELETE /keys/:id",
         "GET /",
         "GET /",
@@ -1059,7 +1083,7 @@
         "node:url",
         "zod"
       ],
-      "lines": 5929
+      "lines": 6008
     },
     {
       "feature": "middleware",
@@ -1078,7 +1102,7 @@
         "ioredis",
         "rate-limit-redis"
       ],
-      "lines": 282
+      "lines": 329
     },
     {
       "feature": "mobile",
@@ -1118,6 +1142,25 @@
       "lines": 180
     },
     {
+      "feature": "not-found-page",
+      "files": 1,
+      "roles": {
+        "PAGE": 1
+      },
+      "entryPoints": [
+        "frontend/src/pages/NotFoundPage.tsx"
+      ],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react",
+        "react-router-dom"
+      ],
+      "lines": 69
+    },
+    {
       "feature": "payment-routes",
       "files": 1,
       "roles": {
@@ -1154,7 +1197,7 @@
       "externalPackages": [
         "react"
       ],
-      "lines": 51
+      "lines": 54
     },
     {
       "feature": "pricing-page",
@@ -1175,7 +1218,7 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 505
+      "lines": 507
     },
     {
       "feature": "prompt-service",
@@ -1252,7 +1295,7 @@
         "node:url",
         "vitest"
       ],
-      "lines": 87
+      "lines": 136
     },
     {
       "feature": "scripts",
@@ -1278,10 +1321,48 @@
       "lines": 1556
     },
     {
-      "feature": "services",
-      "files": 5,
+      "feature": "scroll-chain-boundary",
+      "files": 1,
       "roles": {
-        "SERVICE": 5
+        "HOOK": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [
+        "frontend/src/hooks/useScrollChainBoundary.ts"
+      ],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 37
+    },
+    {
+      "feature": "seo",
+      "files": 9,
+      "roles": {
+        "TEST": 1,
+        "UNKNOWN": 8
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [
+        "react",
+        "react-dom",
+        "vitest"
+      ],
+      "lines": 1976
+    },
+    {
+      "feature": "services",
+      "files": 7,
+      "roles": {
+        "SERVICE": 6,
+        "TEST": 1
       },
       "entryPoints": [],
       "components": [],
@@ -1290,19 +1371,23 @@
         "frontend/src/services/collections.ts",
         "frontend/src/services/community.tsx",
         "frontend/src/services/favorites.ts",
-        "frontend/src/services/mcp.ts"
+        "frontend/src/services/mcp.ts",
+        "frontend/src/services/templateViews.ts"
       ],
       "hooks": [],
       "endpoints": [],
-      "externalPackages": [],
-      "lines": 1201
+      "externalPackages": [
+        "vitest"
+      ],
+      "lines": 1743
     },
     {
       "feature": "shared",
-      "files": 35,
+      "files": 42,
       "roles": {
-        "SCRIPT": 19,
-        "TEST": 16
+        "BARREL": 1,
+        "SCRIPT": 24,
+        "TEST": 17
       },
       "entryPoints": [],
       "components": [],
@@ -1311,6 +1396,7 @@
       "endpoints": [],
       "externalPackages": [
         "cors",
+        "esbuild",
         "express",
         "firebase-admin",
         "fs",
@@ -1330,7 +1416,7 @@
         "url",
         "vitest"
       ],
-      "lines": 3825
+      "lines": 5515
     },
     {
       "feature": "skeleton-context",
@@ -1365,6 +1451,59 @@
       "lines": 113
     },
     {
+      "feature": "template-view-counts",
+      "files": 1,
+      "roles": {
+        "HOOK": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [
+        "frontend/src/hooks/useTemplateViewCounts.ts"
+      ],
+      "endpoints": [],
+      "externalPackages": [
+        "react"
+      ],
+      "lines": 39
+    },
+    {
+      "feature": "template-views-routes",
+      "files": 1,
+      "roles": {
+        "ROUTE_CONFIG": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [],
+      "hooks": [],
+      "endpoints": [
+        "GET /views",
+        "POST /views"
+      ],
+      "externalPackages": [
+        "express"
+      ],
+      "lines": 94
+    },
+    {
+      "feature": "template-views-service",
+      "files": 1,
+      "roles": {
+        "SERVICE": 1
+      },
+      "entryPoints": [],
+      "components": [],
+      "services": [
+        "backend/src/services/templateViewsService.js"
+      ],
+      "hooks": [],
+      "endpoints": [],
+      "externalPackages": [],
+      "lines": 206
+    },
+    {
       "feature": "templates-page",
       "files": 2,
       "roles": {
@@ -1383,7 +1522,7 @@
         "react",
         "react-router-dom"
       ],
-      "lines": 380
+      "lines": 392
     },
     {
       "feature": "theme-context",
@@ -1450,10 +1589,10 @@
     },
     {
       "feature": "utils",
-      "files": 25,
+      "files": 27,
       "roles": {
-        "TEST": 3,
-        "UTILITY": 22
+        "TEST": 4,
+        "UTILITY": 23
       },
       "entryPoints": [],
       "components": [],
@@ -1474,7 +1613,7 @@
         "shiki",
         "vitest"
       ],
-      "lines": 4297
+      "lines": 4457
     },
     {
       "feature": "vibe-engine",

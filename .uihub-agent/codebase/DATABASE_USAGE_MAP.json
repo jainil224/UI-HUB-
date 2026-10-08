@@ -31,7 +31,7 @@
   ],
   "description": "Data-layer reach per file: Mongo collections, mongoose models, Prisma, raw SQL.",
   "counts": {
-    "files": 17,
+    "files": 18,
     "distinctCollections": 4,
     "models": 0,
     "prisma": 0
@@ -126,6 +126,14 @@
     },
     {
       "file": "backend/tests/collectionsService.test.js",
+      "feature": "shared",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
+      "file": "backend/tests/templateViewsService.test.js",
       "feature": "shared",
       "collections": [],
       "models": [],
