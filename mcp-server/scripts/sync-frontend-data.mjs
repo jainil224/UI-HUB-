@@ -170,6 +170,7 @@ const CATEGORY_DESCRIPTIONS = {
   'interactive-background': 'Interactive canvas/WebGL backgrounds',
   loader: 'Loading and preloader animations',
   navbar: 'Navigation bar layouts',
+  'particles-background': 'Particle background components',
   scroll: 'Scroll-triggered animations',
   text: 'Text and typography animations',
 };
@@ -177,6 +178,7 @@ const CATEGORY_DESCRIPTIONS = {
 const DEPENDENCY_HINTS = {
   '3d': ['react', 'three', '@react-three/fiber', '@react-three/drei'],
   'interactive-background': ['react', 'three', '@react-three/fiber', '@react-three/drei'],
+  'particles-background': ['react', 'three'],
 };
 
 function humanizeId(id) {

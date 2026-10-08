@@ -10,7 +10,7 @@ export const search_components = createTool(
   z.object({
     query: z.string().optional().describe('Free-text search keyword, e.g. "pricing card"'),
 category: z
-      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'scroll', 'text'])
+      .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'particles-background', 'scroll', 'text'])
       .optional()
       .describe('Component category'),
     framework: z.enum(['react']).optional().describe('Component framework'),
