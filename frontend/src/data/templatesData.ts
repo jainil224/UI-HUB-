@@ -7983,6 +7983,166 @@ Include:
     mount node.`
     }
   },
+  {
+    id: 'neural-kinetics-hero',
+    title: 'Neural Kinetics',
+    description: 'Full-screen blush fintech hero: a procedural pink-and-white feather sphere rendered by a raw Three.js fragment shader orbits behind a pill navbar, a thin-weight "One Card, Zero Limits. Worldwide." headline, glass tag pills and two working dialogs.',
+    category: 'SaaS & AI',
+    badge: 'NEW',
+    framework: 'React 19 (TypeScript)',
+    styling: 'Scoped Pure CSS',
+    animation: 'Three.js Procedural Feather Shader + Drag/Wheel/Double-Click Inertia + Motion Entrance Choreography',
+    isPro: false,
+    previewVideo: '/assets/template-previews/Neural Kinetics.webm',
+    liveDemoUrl: 'https://ai.studio/apps/643b2fb6-eba3-44db-8ec4-a8628c2ffba8',
+    githubUrl: 'https://github.com/ui-hub/neural-kinetics-hero',
+    previewGradient: 'from-[#170912] via-[#3B182B] to-[#E8367F]',
+    accentColor: '#E8367F',
+    stats: {
+      pages: 1,
+      rating: 5.0,
+      downloads: '0'
+    },
+    features: [
+      'Procedural feather sphere — one fragment shader on a 160x120 sphere builds sawtooth feather tiers with per-tooth random heights, a five-stop deep-rose to porcelain-white radiant ramp, a luminous pole convergence highlight and stardust points, looped at a stepped 25 fps over a 0.96s reference cycle',
+      'Pointer physics: drag to spin with velocity decay and throw momentum, wheel zoom clamped to 0.55-1.85, double-click toggles 2.5x loop speed, and the pointer eases a subtle tilt into the sphere',
+      'Transparent WebGL canvas floating over a blush radial background (#FEE8F1 to #F8E3EE) with 24 pulsing pink stardust particles',
+      'Pill navbar with a rotating menu icon, an Advanced Bionics / Cognitive AI tags pill and an Adaptive Systems pill that opens the capabilities dialog',
+      'Footer block: glowing subtitle dot, 300-weight fluid headline (clamp 2.5-4.5rem), See Features / How It Works pill buttons and glass tag pills over a fade-up gradient',
+      'Two working dialogs: a five-entry navigation overlay that routes into either info modal, plus a Features and How It Works modal with backdrop blur, both animated with Motion scale/fade',
+      'Fully self-contained single file: navbar, sphere, dialogs and the entire stylesheet scoped under one root class, responsive at 768px, with prefers-reduced-motion parking the shader loop'
+    ],
+    promptPreview: `Build an exact, pixel-accurate recreation of the "Neural Kinetics" full-screen fintech hero in React 19, TypeScript, Motion (framer-motion compatible 'motion/react' package), lucide-react and raw Three.js. Pure scoped CSS — no Tailwind utilities.
+Live Demo Reference: https://ai.studio/apps/643b2fb6-eba3-44db-8ec4-a8628c2ffba8
+
+================================================================================
+1. DESIGN TOKENS
+================================================================================
+- Stage background: radial-gradient(circle at 50% 50%, #FEE8F1 0%, #FDF2F7 50%, #F8E3EE 100%)
+- Ink: #170912 (headings, primary button), #180C14 (body), #3B182B (muted labels)
+- Accent rose: #E8367F (subtitle dot, glow), pill surface #F8E3EE, hover #F4D3E3
+- Feather ramp: #BD2966 (shadow) -> #F2478A -> #FA8ABA -> #FFD1E8 -> #FFFFFF (highlight)
+- Font: Inter 300/400/500/600 (already loaded site-wide). Headline is font-weight 300.
+
+================================================================================
+2. STAGE
+================================================================================
+- Root: <main> with class "nkx-hero", position relative, width 100%, height exactly
+  720px (NEVER 100vh — this renders inside a fixed 1280x720 preview canvas),
+  overflow hidden, isolation isolate, display flex, column, justify-content
+  space-between, the blush radial background and Inter as its font-family.
+- EVERY selector in the inline <style> block is scoped under .nkx-hero
+  (e.g. .nkx-hero .navbar) so nothing leaks into the host page. The standalone
+  project's global resets (*, html/body, #root) are omitted entirely — the host
+  app's Tailwind preflight already provides them.
+- The navbar and the modal backdrops are position: absolute (NOT fixed) so they
+  resolve against the root, not the viewport.
+
+================================================================================
+3. THE FEATHER SPHERE (Three.js, raw — self-contained in the same file)
+================================================================================
+- A div.stage class "feather-stage", position absolute inset 0, z-index 5, flex
+  centered, holds a transparent WebGLRenderer (antialias, alpha, clearAlpha 0,
+  pixelRatio capped at 2).
+- OrthographicCamera frustum recomputed on resize: unit = min(w,h) * fill / 2
+  with fill 0.68 desktop / 0.78 below 768px, then left/right/top/bottom =
+  +/- w/2/unit and +/- h/2/unit.
+- Sphere: SphereGeometry(1, 160, 120) with matrixAutoUpdate false, oriented by
+  makeBasis(e1, pole, e2) where pole = normalize(0.4866, 0.7428, 0.4598),
+  e1 = pole x (0,0,1), e2 = pole x e1. Held in a group offset by (0.008, 0.011).
+- Fragment shader (verbatim constants): loopSec 0.96, steps 24 (the loop is
+  quantised to 25 fps: u = floor(u * 24) / 24), K 1.3, M -3, J 0.55, G 0.85,
+  Nt 20. It computes per-vertex value noise (hash-based), a sawtooth tooth
+  profile with per-tooth random height and peak (teeth()), then
+  f = (th + 0.12*th^2)*K + ph*M - uT + jag and L = (0.10 + 0.90*fract(f)^G)
+  modulated by two streak noise taps, brightened near the pole, lit by
+  uLight = (-0.45, 0.2, 1) with a pow(nd, 4) specular, rim-darkened by
+  (1 - n.z)^2.2, and finally coloured through a five-stop ramp
+  (0.74,0.16,0.40)/(0.95,0.28,0.54)/(0.98,0.54,0.73)/(1.00,0.82,0.91)/(1.00,0.99,1.00)
+  split at 0.25/0.50/0.78, mixed to near-white at the pole.
+- Stardust: 24 points on a 1.25-2.6 ring at z -2, PointsMaterial #EB4888,
+  size 2.2 no attenuation, opacity pulsing 0.25 + 0.4*|sin(now*0.003)|.
+- Interaction: pointerdown captures and slows the loop to rateT 0.35; pointermove
+  while dragging adds dx/dy * 0.004 to angular velocity with 0.9 per-frame decay;
+  the pointer also normalises to -1..1 against the stage's getBoundingClientRect
+  (NOT window — the preview canvas is scaled) and eases a 0.2 rad tilt plus the
+  uMouse/uOn uniforms; wheel is preventDefault with zoomT clamped
+  0.55..1.85 via 1 - deltaY*0.0012; double-click toggles rateT between 1 and 2.5.
+  After release the spin decays at k = dt * 2.2 (0.4 for the first 600ms).
+- Loop: one rAF driven by THREE.Clock with dt clamped to 0.05; all eases are
+  min(dt * rate, 1) lerps. prefers-reduced-motion freezes the shader clock.
+- Cleanup must cancel the rAF, remove the window resize listener and all six
+  canvas listeners (pointerdown/up/leave/move, wheel passive:false, dblclick),
+  detach the canvas, and dispose renderer, material, sphere geometry, points
+  geometry and points material.
+
+================================================================================
+4. NAVBAR (absolute, top 0, full width, z-50)
+================================================================================
+- pointer-events none on the bar, auto on .nav-left / .nav-right.
+- Left: brand (24px SVG of two 3.2x18 rounded rects rotated -35deg in #000, plus
+  "NeuralKinetics" 14px/600 hidden below 768px), a black pill Menu button
+  (padding 3px 12px 3px 3px, white 28px circle with a lucide Plus 12/3 that
+  rotates 90deg on hover, "Menu" 11px/500 white), and a #F8E3EE tags pill with
+  "Advanced Bionics" / dot / "Cognitive AI" (11px/500 #3b182b, shown >= 768px).
+- Right: #F8E3EE pill with a 28px #170912 circle holding a four-dot 12px SVG grid
+  and "Adaptive Systems" label (hidden below 768px); clicking opens the Features
+  modal.
+- Entrance: motion.nav from y -16 / opacity 0 over 0.8s, easing [0.16,1,0.3,1].
+
+================================================================================
+5. FOOTER (bottom, z-30, fade-up gradient)
+================================================================================
+- background linear-gradient(to top, #FDF1F6 0%, rgba(253,241,246,0.90) 55%,
+  transparent 100%), padding 24/20/28 mobile and 32/32/36 desktop in a row layout
+  justify-between align-end at >= 768px; pointer-events none with auto on the
+  left and right blocks.
+- Left column (gap 16, max-width 780): subtitle row (8px #E8367F dot with an
+  8px glow + "Best digital banking card 2026" 13px rgba(35,15,28,0.65));
+  <h1 class="hero-heading"> two block spans "One Card, Zero" / "Limits. Worldwide."
+  at font-weight 300, clamp(2.5rem, 5.5vw, 4.5rem), letter-spacing -0.03em,
+  line-height 1, color #170912; then the button group.
+- Buttons: .btn-primary (#170912 pill, white, 13px/500, hover translateY(-2px)
+  with a #2e1224 fill and 0 6px 18px shadow) opens the Features modal;
+  .btn-secondary (white/65 pill, 1px rgba(220,80,135,0.35) border,
+  backdrop-blur 8px, hover solidifies to white/0.9 with a #D23273 border) opens
+  How It Works. Both use the same cubic-bezier(0.16,1,0.3,1) 0.2s transitions.
+- Right: three glass tag pills "Neuromorphic" / "AGI" / "Cybernetics"
+  (white/85, 1px rgba(225,90,140,0.22), 11px/500 #3b182b, hover lifts 1px).
+- Entrance choreography: footer delay 0.5s/1s, subtitle 0.6s, heading 0.8s,
+  buttons 1.0s, tag pills 1.1s — all easing [0.16,1,0.3,1].
+
+================================================================================
+6. DIALOGS (both use class .menu-backdrop: absolute inset 0, z-99, black/40,
+   backdrop-blur 8px, flex centered)
+================================================================================
+- Menu overlay (menuOpen state): white card, radius 24, padding 32, max-width 440,
+  header "Navigation" 18px/600 + a 32px #F4F4F6 round close button with a lucide
+  X 18. Five .menu-nav-link rows (radius 12, #fafafa, hover #f0f0f2 and
+  translateX(3px)) — Core Architecture/v4.2, Neural Protocols/Active, Global
+  Liquidity Engine/Zero-latency, Bionic Biometrics/L4 Secure, Institutional
+  Access/Direct — each row closes the menu and opens one of the two info modals;
+  the tag sits right with a 13px ArrowUpRight.
+- Info modal (activeModal state, 'features' | 'how-it-works'): white card radius
+  20, max-width 500, padding 28. Header title is "Architectural Capabilities" or
+  "Kinetic Workflow". Features: intro paragraph then three #F8F8FA rows with a
+  black 8px-radius icon tile (lucide Zap / ShieldCheck / Globe 16): Sub-Millisecond
+  Execution, Neuromorphic Identity, Global Universal Parity. How It Works: intro
+  then three numbered 28px black circles: Zero-Knowledge Provisioning, Adaptive
+  Dynamic Routing, Cognitive Risk Neutralization. A full-width .btn-primary
+  "Dismiss" closes it. Cards animate scale 0.95 -> 1 with y 10/15 over 0.3/0.35s;
+  clicking the backdrop closes; e.stopPropagation() inside the card.
+
+================================================================================
+7. RULES
+================================================================================
+- Single self-contained file: the sphere, the dialogs and the whole stylesheet
+  live inline (a const CSS template string rendered through <style> inside the
+  root). No external CSS files, no document.title writes, no global selectors.
+- Responsive breakpoint at 768px only (brand name, tags pill, adaptive label,
+  footer row layout).
+- prefers-reduced-motion: the shader clock stops; the scene stays rendered.`
+  },
 ];
 
 /**

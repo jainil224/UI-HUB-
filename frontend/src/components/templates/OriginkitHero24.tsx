@@ -484,11 +484,73 @@ function Globe({
         let dotInstances: InstancedMesh | Mesh | null = null;
         let markerMeshes: Mesh[] = [];
 
+        const buildDotField = (
+            onLand: ((lng: number, lat: number) => boolean) | null
+        ) => {
+            const dotCoordinates: number[][] = [];
+            const baseStep = dotSpacing * 0.08;
+            for (let lat = -90; lat <= 90; lat += baseStep) {
+                const latRad = (Math.abs(lat) * Math.PI) / 180;
+                const cosLat = Math.cos(latRad);
+                const lngStep =
+                    cosLat > 0.01
+                        ? baseStep / Math.max(0.3, cosLat)
+                        : 360;
+                for (let lng = -180; lng < 180; lng += lngStep) {
+                    if (allDots || onLand === null || onLand(lng, lat)) {
+                        dotCoordinates.push([lng, lat]);
+                    }
+                }
+            }
+
+            if (dotCoordinates.length > 0) {
+                const dotGeometry = new SphereGeometry(
+                    0.01 * dotSizeMultiplier,
+                    4,
+                    4
+                );
+                const dotColorObj = resolvedDotColor
+                    ? new Color(resolvedDotColor)
+                    : new Color(0.6, 0.6, 0.6);
+                const dotMaterial = new MeshBasicMaterial({
+                    color: dotColorObj,
+                    transparent: dotRgba.a < 1 || dotRgba.a === 0,
+                    opacity: dotRgba.a,
+                });
+                const instanced = new InstancedMesh(
+                    dotGeometry,
+                    dotMaterial,
+                    dotCoordinates.length
+                );
+                const matrix = new Matrix4();
+                for (let i = 0; i < dotCoordinates.length; i++) {
+                    const [lng, lat] = dotCoordinates[i];
+                    const pos = latLngToPosition(lat, lng);
+                    matrix.makeScale(1, 1, 1);
+                    matrix.setPosition(
+                        pos.x * globeRadius,
+                        pos.y * globeRadius,
+                        pos.z * globeRadius
+                    );
+                    instanced.setMatrixAt(i, matrix);
+                }
+                instanced.instanceMatrix.needsUpdate = true;
+                dotInstances = instanced;
+                globeGroup.add(dotInstances);
+            }
+        };
+
         const loadWorldData = async () => {
             try {
-                const response = await fetch(
-                    "https://raw.githubusercontent.com/martynafford/natural-earth-geojson/refs/heads/master/50m/physical/ne_50m_land.json"
-                );
+                let response: Response;
+                try {
+                    response = await fetch("/data/ne_50m_land.json");
+                    if (!response.ok) throw new Error("Local data not found");
+                } catch {
+                    response = await fetch(
+                        "https://raw.githubusercontent.com/martynafford/natural-earth-geojson/refs/heads/master/50m/physical/ne_50m_land.json"
+                    );
+                }
                 if (cancelled) return;
                 if (!response.ok) throw new Error("Failed to load land data");
                 const landFeatures = await response.json();
@@ -689,57 +751,7 @@ function Globe({
                     dotInstances = new Mesh(fillGeometry, fillMaterial);
                     globeGroup.add(dotInstances);
                 } else {
-                    const dotCoordinates: number[][] = [];
-                    const baseStep = dotSpacing * 0.08;
-                    for (let lat = -90; lat <= 90; lat += baseStep) {
-                        const latRad = (Math.abs(lat) * Math.PI) / 180;
-                        const cosLat = Math.cos(latRad);
-                        const lngStep =
-                            cosLat > 0.01
-                                ? baseStep / Math.max(0.3, cosLat)
-                                : 360;
-                        for (let lng = -180; lng < 180; lng += lngStep) {
-                            if (allDots || isOnLand(lng, lat)) {
-                                dotCoordinates.push([lng, lat]);
-                            }
-                        }
-                    }
-
-                    if (dotCoordinates.length > 0) {
-                        const dotGeometry = new SphereGeometry(
-                            0.01 * dotSizeMultiplier,
-                            4,
-                            4
-                        );
-                        const dotColorObj = resolvedDotColor
-                            ? new Color(resolvedDotColor)
-                            : new Color(0.6, 0.6, 0.6);
-                        const dotMaterial = new MeshBasicMaterial({
-                            color: dotColorObj,
-                            transparent: dotRgba.a < 1 || dotRgba.a === 0,
-                            opacity: dotRgba.a,
-                        });
-                        const instanced = new InstancedMesh(
-                            dotGeometry,
-                            dotMaterial,
-                            dotCoordinates.length
-                        );
-                        const matrix = new Matrix4();
-                        for (let i = 0; i < dotCoordinates.length; i++) {
-                            const [lng, lat] = dotCoordinates[i];
-                            const pos = latLngToPosition(lat, lng);
-                            matrix.makeScale(1, 1, 1);
-                            matrix.setPosition(
-                                pos.x * globeRadius,
-                                pos.y * globeRadius,
-                                pos.z * globeRadius
-                            );
-                            instanced.setMatrixAt(i, matrix);
-                        }
-                        instanced.instanceMatrix.needsUpdate = true;
-                        dotInstances = instanced;
-                        globeGroup.add(dotInstances);
-                    }
+                    buildDotField(isOnLand);
                 }
 
                 updateMarkers();
@@ -747,7 +759,13 @@ function Globe({
                 canvas.style.opacity = "1";
                 canvas.style.visibility = "visible";
             } catch (err) {
-                if (!cancelled) setError("Failed to load land map data");
+                console.warn("[Globe] Land data fallback to full-sphere dots", err);
+                if (cancelled) return;
+                buildDotField(null);
+                updateMarkers();
+                renderer.render(scene, camera);
+                canvas.style.opacity = "1";
+                canvas.style.visibility = "visible";
             }
         };
 

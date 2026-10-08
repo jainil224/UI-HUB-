@@ -45,13 +45,16 @@ export interface BuildWithUIHubSection {
  * needed to publish a new section URL.
  */
 export const BUILD_WITH_UI_HUB_SECTIONS: BuildWithUIHubSection[] = [
-  { slug: 'UIHUB-hero-1', templateId: 'originkit-hero-24', componentIds: [] },
+  { slug: 'UIHUB-hero-1', templateId: 'originkit-hero-24', componentIds: ['globe'] },
   {
     slug: 'UIHUB-hero-2',
     templateId: 'visionary-orb-hero',
-    // The Visionary section is a single self-contained component, so the panel
-    // lists exactly that one. Add ids here as sections start composing parts.
-    componentIds: ['visionary-orb-hero'],
+    componentIds: ['particle-sphere'],
+  },
+  {
+    slug: 'UIHUB-hero-3',
+    templateId: 'neural-kinetics-hero',
+    componentIds: ['feather-sphere'],
   },
 ];
 

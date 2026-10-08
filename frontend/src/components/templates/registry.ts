@@ -34,7 +34,8 @@ export const TEMPLATE_PREVIEWS: Record<string, () => Promise<{ default: React.Co
     'sui-overflow': () => import('./SuiOverflow'),
     'graphic-designer-portfolio': () => import('./GraphicDesignerPortfolio'),
     'originkit-hero-24': () => import('./OriginkitHero24'),
-  'visionary-orb-hero': () => import('./VisionaryOrbHero'),
+    'visionary-orb-hero': () => import('./VisionaryOrbHero'),
+    'neural-kinetics-hero': () => import('./NeuralKineticsHero'),
 };
 
 /**
@@ -94,6 +95,9 @@ export const TEMPLATE_SOURCE_FILES: Record<string, string> = {
   // The orb, hand, nav, headline and card all live in one self-contained file,
   // which is what the single-file Code tab requires.
   'visionary-orb-hero': 'VisionaryOrbHero.tsx',
+  // Navbar, feather sphere shader, dialogs and the scoped stylesheet are all
+  // inlined into one file for the same reason.
+  'neural-kinetics-hero': 'NeuralKineticsHero.tsx',
 };
 
 /**
@@ -153,7 +157,8 @@ export const TEMPLATE_PREVIEW_BGS: Record<string, string> = {
     'sui-overflow': 'bg-[#F2EFE6]',
     'graphic-designer-portfolio': 'bg-[#F7F6F2]',
     'originkit-hero-24': 'bg-[#101216]',
-  'visionary-orb-hero': 'bg-[#080305]',
+    'visionary-orb-hero': 'bg-[#080305]',
+    'neural-kinetics-hero': 'bg-[#FDF1F6]',
 };
 
 const prefetchedChunks = new Set<string>();

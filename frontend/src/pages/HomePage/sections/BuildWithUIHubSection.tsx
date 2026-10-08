@@ -20,6 +20,7 @@ const SECTION_HINT = 'Section-level layouts';
  */
 const NEW_BADGE_BY_ID: Record<string, { addedAt: string; newBadgeDays?: number }> = {
     'originkit-hero-24': { addedAt: '2026-09-28', newBadgeDays: 120 },
+    'neural-kinetics-hero': { addedAt: '2026-10-08', newBadgeDays: 120 },
 };
 
 const BuildWithUIHubSection = () => {

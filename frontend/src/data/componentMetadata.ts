@@ -1704,6 +1704,23 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
         }
     },
 
+    "feather-sphere": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional class applied to the root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for the root container." },
+            { name: "showHint", type: "boolean", default: "true", description: "Whether to show the bottom interaction hint." },
+            { name: "hintText", type: "string", default: '"move to tilt & light · drag to spin · scroll to zoom"', description: "Text for the interaction hint." }
+        ],
+        vibeMeta: {
+            behavior: "A procedural feather sphere rendered with Three.js ShaderMaterial: one fragment shader on a 160x120 SphereGeometry builds sawtooth feather tiers with per-tooth random heights (a five-stop deep-rose to porcelain-white radiant ramp), a luminous pole-convergence highlight and an ambient starfield, looped at a stepped 25 fps over a 0.96s reference cycle. The sphere is transformed by a fixed pole-aligned basis so the feather streaks converge at a reference screen position. Pointer movement eases a subtle tilt and steers the specular light with a soft glow term; dragging adds spin velocity with throw momentum that decays and settles back, scrolling eases an orthographic zoom between 0.55x and 1.9x, and double-click toggles the loop between 1x and 2.5x speed (dragging also slows the loop to 0.35x while held). An intro motion eases the zoom from 0.7 to 1 and fades the hint in after 1.2s.",
+            states: { from: "resting feather sphere with the hint hidden", to: "tilted and lit by the pointer with momentum spin, zoomed by wheel or sped up by double-click" },
+            cssProperties: ["relative full-bleed root with min-height 380px and overflow: hidden", "absolute inset-0 stage sized by a ResizeObserver", "canvas display block with touch-action none and grab/grabbing cursors", "absolute bottom hint with uppercase tracking, safe-area padding and pointer-events: none", "requestAnimationFrame render loop with capped delta", "prefers-reduced-motion freezes the shader clock"],
+            description: "A procedural feather sphere built from one fragment shader: sawtooth feather tiers ramp from deep rose to porcelain white, a luminous pole glow and starfield sit on a near-black stage, and the pointer eases a tilt and steers the light while drag spins, scroll zooms and double-click toggles 2.5x speed.",
+            libraries: ["react", "three", "motion"],
+            requirements: ["Three.js ShaderMaterial with custom GLSL", "ResizeObserver on the stage container", "requestAnimationFrame loop with stepped shader clock", "Pointer event listeners with pointer capture for drag", "Wheel listener with preventDefault for zoom", "Motion (animate) for intro zoom and hint fade", "prefers-reduced-motion matchMedia gating"]
+        }
+    },
+
 };
 
 

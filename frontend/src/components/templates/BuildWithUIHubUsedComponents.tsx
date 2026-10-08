@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowUpRight, Boxes, Loader2 } from 'lucide-react';
+import { Eye, Loader2 } from 'lucide-react';
+import { useComponentViewCounts } from '../../hooks/useTemplateViewCounts';
+import { formatViewCount, getComponentViewDisplay } from '../../services/templateViews';
 
 /**
- * "Built with UI HUB" panel for the Build with UI HUB detail page.
+ * "Components Used" section for the Build with UI HUB detail page.
  *
- * Renders below the section preview and names the catalog components that
- * section is made from, each linking through to that component. Lives here
- * rather than in TemplatePreviewStage because that stage is shared with
- * /templates/:id, and this panel belongs to the Build area only.
+ * Renders below the section preview and displays cards with live previews of the
+ * catalog components used to build this section. Each card displays the component's
+ * preview, title, view count, and links to the component in the library.
  */
 
 interface UsedComponent {
@@ -16,6 +17,8 @@ interface UsedComponent {
     title: string;
     category: string;
     description: string;
+    preview?: (props?: any) => React.ReactNode;
+    imageUrl?: string;
 }
 
 interface BuildWithUIHubUsedComponentsProps {
@@ -23,10 +26,66 @@ interface BuildWithUIHubUsedComponentsProps {
     componentIds: string[];
 }
 
+const NATURAL_SIZE_CATEGORIES = new Set(['button', 'text', 'effect', 'image-interaction', 'form']);
+
+const FIT_STYLE: React.CSSProperties = {
+    minWidth: 0,
+    minHeight: 0,
+    width: '100%',
+    height: '100%',
+    borderRadius: 0,
+    border: 'none',
+};
+
+function fitPreview(node: React.ReactNode): React.ReactNode {
+    if (!React.isValidElement(node)) return node;
+    const el = node as React.ReactElement<{ style?: React.CSSProperties }>;
+    return React.cloneElement<{ style?: React.CSSProperties }>(el, {
+        style: { ...el.props.style, ...FIT_STYLE },
+    });
+}
+
+class PreviewErrorBoundary extends React.Component<
+    { children: React.ReactNode },
+    { hasError: boolean }
+> {
+    constructor(props: { children: React.ReactNode }) {
+        super(props);
+        this.state = { hasError: false };
+    }
+
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+
+    componentDidCatch(error: any) {
+        console.warn('Component preview failed to render:', error);
+    }
+
+    render() {
+        if (this.state.hasError) {
+            return (
+                <div className="flex h-full w-full items-center justify-center bg-[#050505] text-xs font-mono text-neutral-500">
+                    Preview unavailable
+                </div>
+            );
+        }
+        return this.props.children;
+    }
+}
+
+function PreviewFallback() {
+    return (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-[#050505] text-neutral-500">
+            <Loader2 size={18} className="animate-spin text-[#1F4BFF]" />
+            <span className="text-[11px] font-medium tracking-wide">Loading preview...</span>
+        </div>
+    );
+}
+
 /**
  * The catalog is a ~760 kB module, far too heavy to pull in on the detail
- * page's critical path, so it is resolved after mount. searchIndex.ts lazy
- * imports the same module for the same reason.
+ * page's critical path, so it is resolved after mount.
  */
 function useCatalogComponents(componentIds: string[]): {
     components: UsedComponent[];
@@ -47,17 +106,19 @@ function useCatalogComponents(componentIds: string[]): {
 
         import('../../data/componentData').then(({ componentList }) => {
             if (cancelled) return;
-            const wanted = new Set(componentIds);
-            setComponents(
-                componentList
-                    .filter((item) => wanted.has(item.id))
-                    .map((item) => ({
-                        id: item.id,
-                        title: item.title,
-                        category: item.category,
-                        description: item.description ?? '',
-                    })),
-            );
+            const catalogMap = new Map(componentList.map((item) => [item.id, item]));
+            const resolved = componentIds
+                .map((id) => catalogMap.get(id))
+                .filter((item): item is NonNullable<typeof item> => Boolean(item))
+                .map((item) => ({
+                    id: item.id,
+                    title: item.title,
+                    category: item.category,
+                    description: item.description ?? '',
+                    preview: item.preview,
+                    imageUrl: item.imageUrl,
+                }));
+            setComponents(resolved);
             setIsLoading(false);
         });
 
@@ -70,29 +131,12 @@ function useCatalogComponents(componentIds: string[]): {
     return { components, isLoading };
 }
 
-const CATEGORY_LABEL: Record<string, string> = {
-    '3d': '3D',
-    text: 'Text',
-    effect: 'Effect',
-    background: 'Background',
-    'interactive-background': 'Interactive',
-    'particles-background': 'Particles',
-    button: 'Button',
-    cursor: 'Cursor',
-    scroll: 'Scroll',
-    'image-interaction': 'Image',
-    loader: 'Loader',
-    navbar: 'Navbar',
-    footer: 'Footer',
-    form: 'Form',
-    custom: 'Custom',
-};
-
 const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> = ({
     componentIds,
 }) => {
     const navigate = useNavigate();
     const { components, isLoading } = useCatalogComponents(componentIds);
+    const viewCounts = useComponentViewCounts(componentIds);
 
     // A section with no declared components renders nothing at all rather than
     // an empty shell, so the panel never becomes a dead heading.
@@ -101,69 +145,98 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
     const openComponent = (id: string) => navigate(`/library?id=${encodeURIComponent(id)}`);
 
     return (
-        <section className="mt-4 overflow-hidden rounded-xl border border-white/10 bg-[#141519]">
-            <header className="flex min-h-14 items-center justify-between gap-3 border-b border-white/10 px-3 py-3 sm:px-4">
-                <div className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-[#25262a] text-neutral-300">
-                        <Boxes size={15} />
-                    </span>
-                    <div className="min-w-0">
-                        <h2 className="text-sm font-medium text-neutral-200">
-                            Built with UI HUB
-                        </h2>
-                        <p className="text-[11px] text-neutral-500">
-                            {componentIds.length === 1
-                                ? 'This section is 1 UI HUB component'
-                                : `This section uses ${componentIds.length} UI HUB components`}
-                        </p>
-                    </div>
-                </div>
-            </header>
+        <section className="mt-8">
+            <div className="mb-4">
+                <h2 className="text-base sm:text-lg font-semibold text-neutral-100">
+                    Components Used
+                </h2>
+                <p className="mt-0.5 text-xs text-neutral-400">
+                    {componentIds.length === 1
+                        ? 'This section is 1 UI HUB component'
+                        : `This section uses ${componentIds.length} UI HUB components`}
+                </p>
+            </div>
 
             {isLoading ? (
-                <div className="flex items-center gap-2 px-3 py-4 text-[12px] text-neutral-500 sm:px-4">
-                    <Loader2 size={14} className="animate-spin" />
-                    Loading components...
+                <div className="flex items-center gap-2 py-6 text-xs text-neutral-500">
+                    <Loader2 size={16} className="animate-spin text-[#1F4BFF]" />
+                    <span>Loading components...</span>
                 </div>
             ) : components.length === 0 ? (
-                <p className="px-3 py-4 text-[12px] text-neutral-500 sm:px-4">
+                <p className="py-4 text-xs text-neutral-500">
                     Component details are unavailable right now.
                 </p>
             ) : (
-                <ul className="divide-y divide-white/[0.06]">
-                    {components.map((component) => (
-                        <li key={component.id}>
-                            <button
-                                type="button"
+                <div className="flex flex-wrap gap-5">
+                    {components.map((component) => {
+                        const rawCount = viewCounts[component.id];
+                        const displayCount =
+                            rawCount !== undefined
+                                ? formatViewCount(rawCount)
+                                : getComponentViewDisplay(component.id);
+                        const natural = NATURAL_SIZE_CATEGORIES.has(component.category);
+
+                        return (
+                            <div
+                                key={component.id}
                                 onClick={() => openComponent(component.id)}
-                                className="group flex w-full items-start gap-3 px-3 py-3.5 text-left transition-colors hover:bg-white/[0.04] sm:px-4"
+                                role="button"
+                                tabIndex={0}
+                                aria-label={`Open ${component.title} in component library`}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        openComponent(component.id);
+                                    }
+                                }}
+                                className="group relative flex flex-col w-full sm:w-[360px] md:w-[380px] overflow-hidden rounded-2xl border border-white/10 bg-[#0d0e12] hover:border-white/25 transition-all duration-300 hover:shadow-2xl hover:shadow-black/70 cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#1F4BFF]"
                             >
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <span className="text-sm font-medium text-neutral-100">
-                                            {component.title}
-                                        </span>
-                                        <span className="rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-neutral-400">
-                                            {CATEGORY_LABEL[component.category] ??
-                                                component.category}
-                                        </span>
-                                        <code className="text-[10px] text-neutral-600">
-                                            {component.id}
-                                        </code>
-                                    </div>
-                                    {component.description ? (
-                                        <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-relaxed text-neutral-400">
-                                            {component.description}
-                                        </p>
-                                    ) : null}
+                                {/* Preview Canvas / Stage */}
+                                <div className="relative w-full h-[220px] sm:h-[240px] overflow-hidden bg-black flex items-center justify-center">
+                                    {component.preview ? (
+                                        <div className="pointer-events-none relative w-full h-full flex items-center justify-center overflow-hidden">
+                                            <PreviewErrorBoundary>
+                                                <React.Suspense fallback={<PreviewFallback />}>
+                                                    {natural ? (
+                                                        <div className="w-full h-full flex items-center justify-center p-6">
+                                                            {component.preview()}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="w-full h-full overflow-hidden flex items-center justify-center">
+                                                            {fitPreview(component.preview())}
+                                                        </div>
+                                                    )}
+                                                </React.Suspense>
+                                            </PreviewErrorBoundary>
+                                        </div>
+                                    ) : component.imageUrl ? (
+                                        <img
+                                            src={component.imageUrl}
+                                            alt={component.title}
+                                            className="w-full h-full object-cover"
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-neutral-950 text-xs font-mono text-neutral-500">
+                                            No preview available
+                                        </div>
+                                    )}
                                 </div>
-                                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-white/10 bg-[#25262a] text-neutral-400 transition-colors group-hover:border-[#1F4BFF] group-hover:text-white">
-                                    <ArrowUpRight size={14} />
-                                </span>
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+
+                                {/* Bottom Info Bar matching reference image */}
+                                <div className="flex items-center justify-between px-4 py-3 bg-[#131418] border-t border-white/10">
+                                    <span className="text-sm font-medium text-neutral-200 group-hover:text-white transition-colors truncate">
+                                        {component.title}
+                                    </span>
+                                    <div className="flex items-center gap-1.5 text-xs text-neutral-400 font-medium shrink-0 ml-3">
+                                        <Eye size={13} className="text-neutral-400" />
+                                        <span>{displayCount !== '—' ? displayCount : '0'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
             )}
         </section>
     );

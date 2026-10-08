@@ -210,7 +210,8 @@ const CATEGORY_MAP = {
     "antigravity-animation": "scroll",
     "hexa-sphere": "interactive-background",
     "particle-sun": "particles-background",
-    "streak-sphere": "particles-background"
+    "streak-sphere": "particles-background",
+    "feather-sphere": "interactive-background"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -361,6 +362,7 @@ const DEPENDENCIES_MAP = {
     'hexa-sphere': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'particle-sun': ["react", "three"],
     'streak-sphere': ["react", "three"],
+    'feather-sphere': ["react", "three", "@react-three/fiber", "@react-three/drei"],
 };
 function humanizeId(id) {
     return id

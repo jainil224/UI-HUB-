@@ -225,7 +225,8 @@ const CATEGORY_MAP: Record<string, string> = {
   "antigravity-animation": "scroll",
   "hexa-sphere": "interactive-background",
   "particle-sun": "particles-background",
-  "streak-sphere": "particles-background"
+  "streak-sphere": "particles-background",
+  "feather-sphere": "interactive-background"
 };
 
 // id -> common dependencies
@@ -377,6 +378,7 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'hexa-sphere': ["react","three","@react-three/fiber","@react-three/drei"],
   'particle-sun': ["react","three"],
   'streak-sphere': ["react","three"],
+  'feather-sphere': ["react","three","@react-three/fiber","@react-three/drei"],
 };
 
 function humanizeId(id: string): string {

@@ -123,6 +123,7 @@ const CubeLoader = React.lazy(() => import('../components/ui/CubeLoader'));
 const PrismPyramid = React.lazy(() => import('../components/ui/PrismPyramid'));
 const ParticleSun = React.lazy(() => import('../components/ui/ParticleSun'));
 const StreakSphere = React.lazy(() => import('../components/ui/StreakSphere'));
+const FeatherSphere = React.lazy(() => import('../components/ui/FeatherSphere'));
 
 
 
@@ -2818,6 +2819,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'hexa-sphere': HexaSphere,
     'particle-sun': ParticleSun,
     'streak-sphere': StreakSphere,
+    'feather-sphere': FeatherSphere,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15400,6 +15402,23 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-black [&>div]:min-h-0">
                 <StreakSphere />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // 🪶 Feather Sphere 🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶🪶
+    {
+        id: "feather-sphere",
+        title: "Feather Sphere",
+        category: "interactive-background",
+        addedAt: "2026-10-08",
+        newBadgeDays: 120,
+        description: "A procedural feather sphere built from one fragment shader: sawtooth feather tiers with per-tooth random height ramp from deep rose to porcelain white, a luminous pole-convergence glow and a starfield sit on a near-black stage while the pointer eases a tilt and steers the specular light, drag spins with throw momentum, scroll zooms and double-click toggles 2.5x loop speed.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#050505] [&>div]:min-h-0">
+                <FeatherSphere />
             </div>
         ),
         code: "",

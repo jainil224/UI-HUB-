@@ -22,13 +22,13 @@ export const ScaledTemplateScene: React.FC<{ children: React.ReactNode }> = ({ c
     const [scale, setScale] = useState(1);
     const [canvasHeight, setCanvasHeight] = useState(0);
 
-    // Scale the 1280px canvas to the container width (never upscale beyond 1)
+    // Scale the 1280px canvas proportionally to the container width so preview fills edge-to-edge
     useEffect(() => {
         const el = containerRef.current;
         if (!el) return;
         const update = () => {
             const w = el.clientWidth;
-            if (w > 0) setScale(Math.min(1, w / CANVAS_WIDTH));
+            if (w > 0) setScale(w / CANVAS_WIDTH);
         };
         update();
         const ro = new ResizeObserver(update);

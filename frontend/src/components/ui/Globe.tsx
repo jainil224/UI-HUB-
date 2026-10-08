@@ -544,13 +544,19 @@ export function Globe({
         const loadWorldData = async () => {
             try {
                 setIsLoading(true);
-                const controller = new AbortController();
-                const fetchTimer = setTimeout(() => controller.abort(), 15000);
-                const response = await fetch(
-                    "https://raw.githubusercontent.com/martynafford/natural-earth-geojson/refs/heads/master/50m/physical/ne_50m_land.json",
-                    { signal: controller.signal }
-                );
-                clearTimeout(fetchTimer);
+                let response: Response;
+                try {
+                    response = await fetch("/data/ne_50m_land.json");
+                    if (!response.ok) throw new Error("Local data not found");
+                } catch {
+                    const controller = new AbortController();
+                    const fetchTimer = setTimeout(() => controller.abort(), 15000);
+                    response = await fetch(
+                        "https://raw.githubusercontent.com/martynafford/natural-earth-geojson/refs/heads/master/50m/physical/ne_50m_land.json",
+                        { signal: controller.signal }
+                    );
+                    clearTimeout(fetchTimer);
+                }
                 if (!response.ok) throw new Error("Failed to load land data");
                 const landFeatures = await response.json();
 
