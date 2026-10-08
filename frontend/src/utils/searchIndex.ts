@@ -13,6 +13,7 @@ export const COMPONENT_CATEGORY_COLORS: Record<string, string> = {
     scroll: '#FBBF24',
     'image-interaction': '#FB7185',
     'interactive-background': '#2DD4BF',
+    'particles-background': '#FACC15',
     loader: '#A3E635',
     navbar: '#60A5FA',
     footer: '#F59E0B',

@@ -86,6 +86,24 @@ export const getUserEntitlements = async (uid, email) => {
 };
 
 /**
+ * Category entitlement check with legacy aliasing.
+ *
+ * Components recategorized as `particles-background` remain covered by an
+ * existing `interactive-background` purchase, so customers who bought that
+ * category before the split do not lose access to the moved components.
+ * The alias is one-directional: a particles-background purchase does NOT
+ * grant access to interactive-background components.
+ *
+ * @param {string[]} list - purchased category keys (or entitlement strings)
+ * @param {string} category - the component's current category
+ * @returns {boolean}
+ */
+const categoryEntitled = (list, category) =>
+  Array.isArray(list) &&
+  (list.includes(category) ||
+    (category === 'particles-background' && list.includes('interactive-background')));
+
+/**
  * Pure decision logic for whether a user may receive a component's source code.
  *
  * A user is entitled when ANY of the following hold:
@@ -130,7 +148,7 @@ export const decideAccess = (reqUser, meta, plan) => {
 
   // 3b. Custom plan users only for their purchased categories.
   if (plan.isCustom) {
-    if (plan.selectedCategories.includes(meta.category)) {
+    if (categoryEntitled(plan.selectedCategories, meta.category)) {
       return { allowed: true, tier: 'custom' };
     }
     return { allowed: false, reason: 'CATEGORY_REQUIRED', tier: 'custom' };
@@ -139,7 +157,7 @@ export const decideAccess = (reqUser, meta, plan) => {
   // 3c. Bundles / a-la-carte entitlements (id or category).
   if (
     plan.entitlements.includes(meta.id) ||
-    plan.entitlements.includes(meta.category)
+    categoryEntitled(plan.entitlements, meta.category)
   ) {
     return { allowed: true, tier: 'bundle' };
   }

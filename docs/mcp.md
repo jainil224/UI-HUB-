@@ -111,7 +111,7 @@ Search UI HUB components by name, category, framework, styling, tags, or premium
 | Parameter | Type | Description |
 |-----------|------|-------------|
 | `query` | string (optional) | Free-text keyword, e.g. `"pricing card"` |
-| `category` | string (optional) | `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `form`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `scroll`, `text` |
+| `category` | string (optional) | `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `form`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `particles-background`, `scroll`, `text` |
 | `framework` | string (optional) | `react` |
 | `styling` | string (optional) | `tailwind`, `css`, `scss` |
 | `tags` | string[] (optional) | Tags to filter by |

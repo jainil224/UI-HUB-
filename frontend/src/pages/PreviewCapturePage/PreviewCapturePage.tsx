@@ -7,7 +7,7 @@ import { componentList } from '../../data/componentData';
  * full-bleed on a dark canvas. Not linked anywhere in the UI.
  *
  * ?ids=one,two,three  → renders exactly those components (defaults to all
- *                       interactive-background components).
+ *                       interactive-background and particles-background components).
  */
 const PreviewCapturePage = () => {
   const params = new URLSearchParams(window.location.search);
@@ -16,9 +16,12 @@ const PreviewCapturePage = () => {
     .map((s) => s.trim())
     .filter(Boolean);
 
-  const selected = (ids.length > 0 ? ids : null)
-    ? componentList.filter((c) => (ids.length > 0 ? ids.includes(c.id) : c.category === 'interactive-background'))
-    : componentList.filter((c) => c.category === 'interactive-background');
+  const isCaptured = (c: { category: string }) =>
+    c.category === 'interactive-background' || c.category === 'particles-background';
+
+  const selected = ids.length > 0
+    ? componentList.filter((c) => ids.includes(c.id))
+    : componentList.filter(isCaptured);
 
   React.useEffect(() => {
     document.body.style.background = '#0A0A0A';

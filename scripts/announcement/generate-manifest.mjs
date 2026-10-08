@@ -180,9 +180,9 @@ function main() {
         };
     });
 
-    // Verify banner ids are interactive-background for a consistent visual.
+    // Verify banner ids are interactive-background or particles-background for a consistent visual.
     const badCategory = CURATED_BANNER_IDS.filter(
-        (id) => categoryMap.get(id) !== 'interactive-background',
+        (id) => categoryMap.get(id) !== 'interactive-background' && categoryMap.get(id) !== 'particles-background',
     );
     if (badCategory.length > 0) {
         console.error(`⚠️  Non interactive-background banner ids: ${badCategory.join(', ')}`);

@@ -76,6 +76,7 @@ const CATEGORY_LABEL: Record<string, string> = {
     effect: 'Effect',
     background: 'Background',
     'interactive-background': 'Interactive',
+    'particles-background': 'Particles',
     button: 'Button',
     cursor: 'Cursor',
     scroll: 'Scroll',

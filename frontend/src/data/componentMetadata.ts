@@ -1669,6 +1669,41 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
             requirements: ["Three.js ShaderMaterial with custom GLSL", "WebGL / Float32BufferAttribute geometry", "Pointer Events with setPointerCapture", "requestAnimationFrame loop with capped delta", "ResizeObserver + devicePixelRatio cap", "non-passive wheel listener", "prefers-reduced-motion matchMedia (idle spin gating)"]
         }
     },
+
+    "particle-sun": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional class applied to the root container." }
+        ],
+        vibeMeta: {
+            behavior: "A single Three.js ShaderMaterial draws ~150,000 additive-blended points as a particle sun on pure black. Geometry is built once with a seeded LCG RNG so the layout is deterministic: 58% inner shell (radius 1 - pow(rnd,2.2)*0.5, biased to the surface), 14% crisp limb ring (0.985..1.015) and the rest fuzzy halo (1.0..1.42), each point carrying position, aSeed (vec4) and aType (0 shell / 1 rim / 2 halo) attributes. All motion lives in the vertex shader: a seamless loop phase a = uTime*2PI/9.0 drives a vec3(cos, sin, cos) flow field that displaces points by 3D value noise (0.10 shell, 0.02 rim, 0.16 halo) so the animation loops exactly every 9 seconds; an intro bloom scales the cloud from 0.2 to 1.0 over 1.6s. Lighting comes from one uLight direction keyframed over the loop (front, right limb, behind, left limb, front, smoothstep between keys): diffuse pow(dot,3)*front*2.6 plus a pow(1-|n.z|,2.2) rim term boosted 5x on the limb ring; halo points instead stretch radially toward the lit limb. Colour blends green vec3(.10,.60,.32) to teal vec3(.10,.70,.66) by value noise, toward yellow at high noise/glow and hot white at peak glow, with ~2.5% of points randomly red or violet, all textured by a value-noise filament ridge and dimmed 0.55 on the back side. Pointer interaction: moving the pointer steers uLight (blended with the timeline, released after 2.2s idle) and tilts the sphere (rotation.y / rotation.x eased from pointer position), the pointer repels nearby points on the xy plane with exp falloff, and pointerdown fires a gaussian shockwave ring that pushes points along their normals; prefers-reduced-motion slows time and disables pointer influence. Sizing uses a ResizeObserver on the container: sphere diameter = 72% of width clamped to 50% of height, DPR capped at 2, point size scaled to the occupied diameter; geometry, material, renderer, listeners and the rAF loop are disposed on unmount.",
+            states: { from: "a compact, dim particle seed at the centre of a black panel", to: "a fully bloomed green-teal particle sun with a sweeping light, glowing limb and an expanding click shockwave" },
+            cssProperties: ["position: relative full-bleed container with overflow: hidden", "canvas sized by ResizeObserver on the container", "Web Animations API opacity keyframes for the hint line", "requestAnimationFrame render loop", "AdditiveBlending with depthWrite disabled"],
+            description: "A 150,000-particle sun whose light source orbits a seamless 9-second loop: green-teal shell, crisp limb, fuzzy halo, noise filaments, pointer-steered lighting and click shockwaves.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js ShaderMaterial with custom GLSL", "WebGL / BufferGeometry point attributes (position, aSeed, aType)", "ResizeObserver on the container", "requestAnimationFrame loop with capped delta", "pointermove / pointerdown / pointerleave listeners", "Web Animations API (element.animate) for the hint fade", "prefers-reduced-motion matchMedia gating"]
+        }
+    },
+
+    "streak-sphere": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional class applied to the root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for the root container." },
+            { name: "streaks", type: "number", default: "1000", description: "Number of streak lines travelling down meridians." },
+            { name: "sparks", type: "number", default: "900", description: "Number of ambient sparks drifting down the shell." },
+            { name: "speed", type: "number", default: "1", description: "Speed multiplier for rotation and streak flow." },
+            { name: "showHint", type: "boolean", default: "true", description: "Whether to show the bottom interaction hint." },
+            { name: "hintText", type: "string", default: '"move · press"', description: "Text for the interaction hint." }
+        ],
+        vibeMeta: {
+            behavior: "A WebGL particle sphere with incandescent neon-purple streaks streaming down meridians, reflecting onto a specular floor plane with distance-attenuated fade, rim lighting, interactive pointer tilt spring, and pulse shockwave. Built with Three.js ShaderMaterial, custom vertex/fragment GLSL, and OrthographicCamera. The canvas is full-bleed: the authored 500-unit-tall logical frame is extended to the container's aspect ratio (horizontally in landscape, vertically in portrait) so the preview never letterboxes, with the sphere core offset into the widened frame. A scaled background quad (modelMatrix-applied PlaneGeometry) covers the whole viewport and composes the glow bowl, mirrored reflection, a violet floor haze hugging the reflection line, an edge vignette, and film grain; an ambient dust starfield of ~340 additive points is mapped in-shader over the full logical viewport with seamless integer-period drift, sway and twinkle, dimmed over the sphere core. Pointer coordinates map through the current CSS-pixels-per-logical-unit factor.",
+            states: { from: "resting purple glow sphere on a dark reflective floor", to: "tilted active meridian streak flow with accelerated speeds and expanding shockwave ring" },
+            cssProperties: ["position: relative full-bleed container with overflow: hidden", "cursor: crosshair", "canvas sized edge-to-edge by ResizeObserver on the container", "aspect-adaptive orthographic camera bounds with landscape core offset", "requestAnimationFrame render loop", "AdditiveBlending with depthWrite disabled"],
+            description: "A glowing particle sphere with incandescent neon-purple streaks streaming down meridians, mirroring onto a specular floor plane with distance-attenuated fade, ambient dust and floor haze filling the full-bleed frame, interactive pointer tilt spring, and shockwave pulses.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js ShaderMaterial with custom GLSL", "WebGL BufferGeometry line and point attributes", "ResizeObserver on the container", "requestAnimationFrame loop with critically-damped spring physics", "Pointer event listeners with pulse on pointerdown", "prefers-reduced-motion support"]
+        }
+    },
+
 };
 
 

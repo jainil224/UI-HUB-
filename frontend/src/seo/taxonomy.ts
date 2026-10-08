@@ -232,6 +232,22 @@ export const CATEGORY_SEO: CategorySeo[] = [
             'Components submitted by the community through the UI Hub contribution flow. Titles, descriptions and technology details come from what the contributor supplied, so treat the metadata as community-provided rather than curated. If a component is broken or mislabelled, open it in the library and use the report control.',
         minItemsForIndex: 3,
     },
+    {
+        slug: 'particles-background',
+        label: 'Particle Backgrounds',
+        singular: 'Particle Background',
+        primaryKeyword: 'particle background for website',
+        secondaryKeywords: [
+            'particle background react',
+            'particle sphere background',
+            'three.js particle background',
+            'animated particle webgl',
+            'particle effects for website',
+        ],
+        intro:
+            'Particle backgrounds render tens of thousands of points on the GPU: spheres, halos, fields and constellations that drift, glow and react to the pointer. They are the heaviest components in the library, so each one lists its rendering approach and requirements before you copy it. Use them as hero backdrops, section backgrounds or full-page intros where a static gradient would fall flat.',
+        minItemsForIndex: 3,
+    },
 ];
 
 export const CATEGORY_BY_SLUG: Record<string, CategorySeo> = Object.fromEntries(

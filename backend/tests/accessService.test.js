@@ -106,3 +106,35 @@ test('plain free user with record -> denied PREMIUM_REQUIRED', () => {
   const res = decideAccess(user(), premiumMeta, plan());
   assert.deepEqual(res, { allowed: false, reason: 'PREMIUM_REQUIRED', tier: 'free' });
 });
+
+// ── particles-background alias ─────────────────────────────────────────────
+// Components recategorized from interactive-background to particles-background
+// must stay accessible to customers who bought the original category.
+
+const particlesMeta = { id: 'gravitational-vortex', isPro: true, category: 'particles-background' };
+
+test('custom plan with legacy interactive-background purchase covers particles-background component', () => {
+  const res = decideAccess(user(), particlesMeta, plan({ isCustom: true, selectedCategories: ['interactive-background'] }));
+  assert.deepEqual(res, { allowed: true, tier: 'custom' });
+});
+
+test('custom plan with direct particles-background purchase covers particles-background component', () => {
+  const res = decideAccess(user(), particlesMeta, plan({ isCustom: true, selectedCategories: ['particles-background'] }));
+  assert.deepEqual(res, { allowed: true, tier: 'custom' });
+});
+
+test('alias is one-directional — particles-background purchase does not unlock interactive-background components', () => {
+  const interactiveMeta = { id: 'blooming-flower', isPro: true, category: 'interactive-background' };
+  const res = decideAccess(user(), interactiveMeta, plan({ isCustom: true, selectedCategories: ['particles-background'] }));
+  assert.deepEqual(res, { allowed: false, reason: 'CATEGORY_REQUIRED', tier: 'custom' });
+});
+
+test('bundle entitlement with legacy interactive-background category covers particles-background component', () => {
+  const res = decideAccess(user(), particlesMeta, plan({ entitlements: ['interactive-background'] }));
+  assert.deepEqual(res, { allowed: true, tier: 'bundle' });
+});
+
+test('custom plan with neither category -> CATEGORY_REQUIRED for particles-background component', () => {
+  const res = decideAccess(user(), particlesMeta, plan({ isCustom: true, selectedCategories: ['cursor'] }));
+  assert.deepEqual(res, { allowed: false, reason: 'CATEGORY_REQUIRED', tier: 'custom' });
+});

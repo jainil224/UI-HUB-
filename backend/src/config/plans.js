@@ -40,6 +40,7 @@ export const CATEGORY_PRICES = {
   miscellaneous: { name: 'Miscellaneous', usd: 1.99, inr: 39, tier: 2 },
   // Tier 3 - Premium
   'interactive-background': { name: 'Interactive Backgrounds', usd: 2.99, inr: 59, tier: 3 },
+  'particles-background': { name: 'Particles Backgrounds', usd: 2.99, inr: 59, tier: 3 },
   '3d': { name: '3D Components', usd: 2.99, inr: 59, tier: 3 },
 };
 

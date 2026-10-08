@@ -10,6 +10,7 @@ export type CategoryKey =
     | 'image-interaction' 
     | 'miscellaneous' 
     | 'interactive-background' 
+    | 'particles-background' 
     | '3d';
 
 interface CategoryInfo {
@@ -130,13 +131,27 @@ export const CATEGORIES: CategoryInfo[] = [
         tierName: 'PREMIUM',
         usd: 2.99,
         inr: 59,
-        count: 16,
+        count: 18,
         icon: <Layout className="w-4 h-4" />,
         description: 'Dynamic background effects',
         premiumComponents: [
-            'Gravitational Vortex',
             'Blooming Flower',
             'Chandelier',
+        ],
+    },
+    {
+        key: 'particles-background',
+        name: 'Particles Backgrounds',
+        tier: 3,
+        tierName: 'PREMIUM',
+        usd: 2.99,
+        inr: 59,
+        count: 10,
+        icon: <Sparkles className="w-4 h-4" />,
+        description: 'Particle-driven WebGL backgrounds',
+        premiumComponents: [
+            'Gravitational Vortex',
+            'Black Hole',
             'Twin Galaxy Rings',
             'Tornado',
             'Morphing Rings',
