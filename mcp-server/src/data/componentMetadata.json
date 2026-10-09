@@ -6186,5 +6186,74 @@
         "prefers-reduced-motion matchMedia gating"
       ]
     }
+  },
+  "wave-tunnel": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "progress",
+        "type": "MotionValue<number>",
+        "default": "undefined",
+        "description": "Optional framer-motion scroll progress (0..1). When omitted the component drives its own scroll (window in full mode, internal shell in compact)."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true (library preview) the shell becomes an internal scroll container so the dive plays inside the card."
+      },
+      {
+        "name": "showDemoButton",
+        "type": "boolean",
+        "default": "false",
+        "description": "Show the Live Demo pill linking to /demo/wave-tunnel."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A scroll-dive through a point-cloud wave tunnel rendered with Three.js ShaderMaterial + BufferGeometry. nu=90 rings x nv=190 points are stored as aIJ index pairs (no positions); in the vertex shader u = fract((aIJ.x + uPhase + uTravel)/nu) flows by exactly one cell per 2s loop, v = aIJ.y/(nv-1), theta = v * turns(1) * 2PI. Radius is rOuter(3.4) * uShrink * (1 - 0.10*v) tapered mix(1, 0.55, smoothstep(0.35,1,u)), rippled by three traveling terms (0.10*sin(th*3 + u*18 - w) + 0.06*sin(th*7 - u*30 + 2w) + 0.18*(fractalNoise-0.5), w = uTime*2PI/loopSeconds) with intensity eased off by ease = pow(u,1.6); depth z = 1.2 + ease*length(12). p.xy -= hole[1.5,0.9] so the camera sits off-axis inside the barrel. A vanishing-point lens shift (applyLens: projectionMatrix elements[8] = -(vp[0]*(1-progress*0.9)), [9] = -(vp[1]*(1-progress))) pitches the tunnel, fov 70 (85 when portrait). Scrolling dives uTravel = progress * nu * 1.6, shrinks the barrel to 70%, rolls rotation.z by progress * 1.4 (progress smoothed 0.07 toward the raw scroll target); the pointer eases camera tilt/look through tilt 0.12 and pushes points away in screen space (dir * exp(-|d|^2/mouseRadius^2) * mouseStrength, d.x scaled by aspect) with uMouseOn lerping in on hover. Points render white (vec4(vec3(1.), vA*smoothstep(.5,.28,dist)), vA = smoothstep(1,.82,u)*smoothstep(0,.03,u)), transparent depthTest off, point size clamp(uPx*5/depth, 1, uPx*1.15) with uPx = pointPx(3)*dpr, frustumCulled false, preserveDrawingBuffer for deterministic captures. A parallax section HUD overlays four sections (01 Into the wave / 02 Depth / 03 Motion / 04 Beyond): huge outline numeral on the fast layer, title on the mid layer, tagline on the slow layer, with opacity/scale/blur keyed to scroll, plus a top progress hairline (scaleX), a bottom scroll hint fading out by 6% scroll, and a 36px spring cursor ring in mix-blend-difference with cursor:none. Layout is a 600vh scroll sequence with a sticky full-viewport stage and slow canvas parallax (y 0% -> -4%, scale 1.04 -> 1.18). Reduced motion freezes the wave clock (t = 0) while keeping the scroll dive; a ?t= query param captures a deterministic frame. compact mode swaps window scrolling for an internal overflow shell (overscroll-behavior contain); resize observer re-sizes renderer/camera; geometry, material, renderer, listeners, observer and the rAF loop are disposed on unmount.",
+      "states": {
+        "from": "barrel at rest with the wave rippling and hint visible at the top of the dive",
+        "to": "deep dive with the pointer pushing points back, section titles cascading past, the top hairline filling and the camera rolling"
+      },
+      "cssProperties": [
+        "relative full-bleed root, height 100vh (compact: 100%)",
+        "600vh scroll sequence (600*var(--wt-vh)) with a sticky full-viewport stage",
+        "canvas parallax wrapper (motion y/scale) behind the tunnel",
+        "absolute parallax sections: outline numeral (34vw), title, tagline with opacity/scale/blur",
+        "top progress hairline (scaleX), bottom scroll hint fading by 6%",
+        "36px spring cursor ring with mix-blend-difference and cursor:none on the stage",
+        "compact internal shell: overflow-y auto, overscroll-behavior contain, hidden scrollbar",
+        "container queries tighten section sizes below 620px"
+      ],
+      "description": "A scroll-dive through a wave-tunnelled point cloud: 17,100 white Three.js points in rings that curl one revolution per tunnel length, rippled by sinusoids + noise in the vertex shader, with the camera inside the barrel, a lens-shifted vanishing point, pointer push-back, and a parallax section HUD over a 600vh dive.",
+      "libraries": [
+        "react",
+        "three",
+        "framer-motion"
+      ],
+      "requirements": [
+        "Three.js ShaderMaterial with custom GLSL vertex/fragment",
+        "WebGL BufferGeometry with aIJ index attribute",
+        "PerspectiveCamera with per-frame projectionMatrix lens shift",
+        "requestAnimationFrame loop (THREE.Clock)",
+        "ResizeObserver on the gl container",
+        "Scroll listener on the internal shell (compact) or window (full)",
+        "Pointer listeners on window feeding a lerped target + uMouseOn",
+        "prefers-reduced-motion matchMedia (freezes wave clock, keeps scroll)",
+        "framer-motion useMotionValue/useSpring/useTransform for parallax HUD",
+        "React Router Link for the demo pill"
+      ]
+    }
   }
 }
