@@ -6,6 +6,15 @@ const FRONTEND_ROOT = join(import.meta.dirname, '..');
 const DIST = join(FRONTEND_ROOT, 'dist');
 const GENERATED_MARKER = join(DIST, '.seo-generated.json');
 
+// Empties the prerendered #root before the first paint. React mounts with
+// createRoot and replaces #root's children anyway, but only once the app
+// bundle has loaded; until then the raw SEO article would be visible. This
+// inline script runs during HTML parsing, so visitors never see that seed.
+// It only runs when JS is enabled: non-JS crawlers still read the article
+// straight from the source, so the answer-first content stays readable
+// without executing anything (no CSS hiding involved).
+const SEED_WIPE = '<script>try{var e=document.getElementById("root");if(e)e.textContent="";}catch(e){}</script>';
+
 let seo = null;
 
 function log(message) {
@@ -89,6 +98,7 @@ ${jsonLd}
     <div id="root">
 ${body}
     </div>
+    ${SEED_WIPE}
   </body>
 </html>
 `;
@@ -147,6 +157,7 @@ ${appTags.map((tag) => `    ${tag}`).join('\n')}
       <p><a href="/">Go to the UI Hub home page</a>, browse <a href="/templates">website templates</a>, or search the <a href="/library">component library</a>.</p>
     </main>
     </div>
+    ${SEED_WIPE}
   </body>
 </html>
 `;
