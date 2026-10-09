@@ -109,7 +109,10 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 - [ ] Free key rate limit (150/day default) enforced via `MCP_RATE_LIMIT_FREE`; the 429 is a JSON-RPC
       error with `data.retryAfterSeconds` and `Retry-After` / `X-RateLimit-*` headers.
 - [ ] Admin → **Live Activity** shows the requests above (or the empty-state note if just deployed).
-- [ ] Admin → **AI Search**, **Diagnostics**, **Alerts** tabs load without errors (engine tab shows counts).
+- [ ] Admin → **AI Search**, **Diagnostics**, **Fix Center**, **Alerts** tabs load without errors (engine tab shows counts).
+- [ ] Admin → **Logs** → **Export CSV** downloads `mcp-logs-*.csv` with masked user IDs.
+- [ ] Admin → **Logs** → **Delete logs from database** prompts for confirmation, then removes the
+      matching `mcp_analytics` rows (verify the table count drops and an `audit` entry is written).
 
 ### 3.4 CLI (smoke test with fresh keys)
 - [ ] `ui-hub --version` → `0.1.0`, exit 0.
@@ -133,6 +136,8 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 | Pro key gets `COMPONENT_NOT_FOUND` for a premium id | premium id missing from the unified catalog (`premiumCatalog.ts`) | confirm the id is in `frontend/src/data/premiumComponents.ts` and `src/data/sourceCode.json`; rerun `npm run build` (41/41 coverage gate) |
 | Free key can fetch premium code | gating bypassed in a `get_*` tool | tools must call `permissionService.authorize`; rerun `npx vitest run tests/premiumGating.test.ts` |
 | Clients show a generic error on limit | 429 missing JSON-RPC envelope/headers | ensure `rateLimiter.ts` returns the `-32029` envelope + `Retry-After`; rerun `npx vitest run tests/rateLimit.test.ts` |
+| Fix Center is empty but failures are visible | only **unresolved** diagnostics + live signals are listed | resolve stale diagnostics (Admin → Diagnostics) or confirm the range includes the failing traffic; rerun `npx vitest run tests/fixCenterService.test.ts` |
+| `DELETE /logs` returns 400 `BAD_REQUEST` ("Refusing to delete all logs") | no filters and no range were supplied (guards against accidental full wipe) | narrow by `event`/`status`/`result`/`search`, provide a range, or send `confirm=ALL` intentionally |
 
 ## 5. Keeping data in sync (routine component changes)
 

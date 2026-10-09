@@ -501,6 +501,26 @@ export function getLogs(params?: { event?: string; status?: number | string; res
     return request<AdminLogList>(`/api/admin/mcp/logs?${p.toString()}`);
 }
 
+export interface AdminLogDeleteResult {
+    ok: boolean;
+    deleted: number;
+    remaining: number;
+    docsTouched: number;
+    range: AdminRange;
+    filters: Record<string, string | number | null>;
+}
+
+export function deleteLogs(params?: { event?: string; status?: number | string; result?: string; search?: string; range?: string; confirm?: string }): Promise<AdminLogDeleteResult> {
+    const p = new URLSearchParams();
+    if (params?.event) p.set('event', params.event);
+    if (params?.status !== undefined && params?.status !== '') p.set('status', String(params.status));
+    if (params?.result) p.set('result', params.result);
+    if (params?.search) p.set('search', params.search);
+    if (params?.range) p.set('range', params.range);
+    if (params?.confirm) p.set('confirm', params.confirm);
+    return request<AdminLogDeleteResult>(`/api/admin/mcp/logs?${p.toString()}`, { method: 'DELETE' });
+}
+
 export function getSecurity(): Promise<AdminSecurity> {
     return request<AdminSecurity>('/api/admin/mcp/security');
 }
@@ -549,12 +569,23 @@ export function runPlayground(payload: PlaygroundRequest): Promise<PlaygroundRes
     });
 }
 
-export type ExportType = 'events' | 'users' | 'components' | 'search' | 'stats' | 'keys';
+export type ExportType = 'events' | 'logs' | 'users' | 'components' | 'search' | 'stats' | 'keys';
 export type ExportFormat = 'csv' | 'json';
 
-export async function downloadExport(type: ExportType, format: ExportFormat, range?: string, filename?: string): Promise<void> {
+export async function downloadExport(
+    type: ExportType,
+    format: ExportFormat,
+    range?: string,
+    filename?: string,
+    params?: Record<string, string | number | undefined>,
+): Promise<void> {
     const p = new URLSearchParams({ type, format });
     if (range) p.set('range', range);
+    if (params) {
+        for (const [k, v] of Object.entries(params)) {
+            if (v !== undefined && v !== '') p.set(k, String(v));
+        }
+    }
     let res: Response | null = null;
     for (let attempt = 0; attempt < 2; attempt++) {
         try {
@@ -707,6 +738,41 @@ export interface AdminDiagnostics {
     byCategory: Record<string, number>;
     bySeverity: Record<string, number>;
     engineState: Record<string, unknown> | null;
+}
+
+export interface AdminFixCenterItem {
+    id: string;
+    source: 'diagnostic' | 'signal';
+    category: string;
+    severity: string;
+    title: string;
+    summary: string;
+    occurrences: number;
+    lastSeen: number | null;
+    firstSeen?: number | null;
+    evidence: Record<string, unknown>;
+    fixPrompt: string;
+    href?: string | null;
+}
+
+export interface AdminFixCenter {
+    range: AdminRange;
+    generatedAt: number;
+    totals: {
+        unresolvedDiagnostics: number;
+        activeSignals: number;
+        items: number;
+        bySource: Record<string, number>;
+        bySeverity: Record<string, number>;
+        byCategory: Record<string, number>;
+    };
+    items: AdminFixCenterItem[];
+    engineState: Record<string, unknown> | null;
+}
+
+export function getFixCenter(range?: string): Promise<AdminFixCenter> {
+    const q = range ? `?range=${encodeURIComponent(range)}` : '';
+    return request<AdminFixCenter>(`/api/admin/mcp/fix-center${q}`);
 }
 
 export interface AdminAlertRule {

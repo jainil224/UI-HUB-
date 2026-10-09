@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { configService } from '../config/configService.js';
 import { requireAdmin } from '../middleware/requireAdmin.js';
-import { analyticsService, aggregateEvents, McpEvent, McpStats, ToolUsage } from '../services/analyticsService.js';
+import { analyticsService, AnalyticsService, aggregateEvents, McpEvent, McpStats, ToolUsage } from '../services/analyticsService.js';
 import { recordAudit, listAudit } from '../services/auditService.js';
 import { getCollection as mongoCollection } from '../services/mongo.js';
 import { componentService } from '../services/componentService.js';
@@ -24,6 +24,14 @@ import {
   getAlertEvent,
   applyAlertAction,
 } from '../services/alertService.js';
+import {
+  eventsToLogRows,
+  logsToCsv,
+  mapLogRow,
+  matchesLogFilters,
+  type LogFilters,
+} from '../services/logService.js';
+import { deriveSignals, buildSignalPrompt } from '../services/fixCenterService.js';
 
 const adminRouter = Router();
 
@@ -519,7 +527,7 @@ adminRouter.get('/users', requireAdmin, async (req: Request, res: Response) => {
   const pageSize = clampInt(req.query.pageSize, 25, 1, 100);
   const total = users.length;
   const start = (page - 1) * pageSize;
-  const rows = users.slice(start, start + pageSize).map((u) => ({ ...u, uid: maskUid(u.uid), keys: undefined }));
+  const rows = users.slice(start, start + pageSize).map((u) => ({ ...u, uidMasked: maskUid(u.uid), keys: undefined }));
 
   res.json({
     total,
@@ -543,7 +551,7 @@ adminRouter.get('/users/:id', requireAdmin, async (req: Request, res: Response) 
 
   const stats = aggregateEvents(userEvents);
   res.json({
-    user: { ...user, uid: maskUid(uid) },
+    user: { ...user, uid, uidMasked: maskUid(uid) },
     range,
     stats: {
       requests: userEvents.length,
@@ -915,48 +923,15 @@ adminRouter.get('/logs', requireAdmin, async (req: Request, res: Response) => {
   const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
   const page = clampInt(req.query.page, 1, 1, 100000);
   const pageSize = clampInt(req.query.pageSize, 25, 1, 200);
-  const eventFilter = String(req.query.event || '').trim();
-  const search = String(req.query.search || '').toLowerCase().trim();
-  const statusFilter = req.query.status !== undefined ? parseInt(String(req.query.status), 10) : NaN;
-  const resultFilter = String(req.query.result || '').trim();
 
-  const statusOf = (e: McpEvent): number => {
-    if (e.statusCode) return e.statusCode;
-    if (e.success === false || e.errorCode) {
-      const code = String(e.errorCode || '').toUpperCase();
-      if (code === 'RATE_LIMIT' || code === 'RATE_LIMITED') return 429;
-      if (code === 'INSUFFICIENT_TIER' || code === 'PREMIUM_REQUIRED' || code === 'PREMIUM_ACCESS_DENIED') return 403;
-      if (code === 'AUTH_FAILURE' || code === 'INVALID_API_KEY') return 401;
-      if (e.event === 'auth_failure') return 401;
-      if (e.event === 'rate_limit') return 429;
-      if (e.event === 'premium_denied') return 403;
-      return 500;
-    }
-    return 200;
+  const filters: LogFilters = {
+    event: str(req.query.event),
+    status: req.query.status !== undefined ? String(req.query.status) : undefined,
+    result: str(req.query.result),
+    search: str(req.query.search),
   };
 
-  let rows = events
-    .map((e) => ({
-      ...e,
-      status: statusOf(e),
-      result: e.statusCode ? (e.statusCode < 400 ? 'success' : 'error') : e.success === false && !e.errorCode ? 'error' : e.errorCode ? 'error' : 'success',
-      ts: e.timestamp,
-    }))
-    .sort((a, b) => b.ts - a.ts);
-
-  if (eventFilter) rows = rows.filter((e) => e.event === eventFilter);
-  if (!isNaN(statusFilter)) rows = rows.filter((e) => e.status === statusFilter);
-  if (resultFilter) rows = rows.filter((e) => e.result === resultFilter);
-  if (search) {
-    rows = rows.filter(
-      (e) =>
-        String(e.tool || '').toLowerCase().includes(search) ||
-        String(e.componentId || '').toLowerCase().includes(search) ||
-        String(e.query || '').toLowerCase().includes(search) ||
-        String(e.keyPrefix || '').toLowerCase().includes(search) ||
-        String(e.errorCode || '').toLowerCase().includes(search)
-    );
-  }
+  const rows = eventsToLogRows(events, filters);
 
   const total = rows.length;
   const start = (page - 1) * pageSize;
@@ -972,6 +947,77 @@ adminRouter.get('/logs', requireAdmin, async (req: Request, res: Response) => {
     range,
     events: pageRows,
   });
+});
+
+/**
+ * DELETE /api/admin/mcp/logs
+ * Purge MCP analytics log events from MongoDB by filter and/or range.
+ * When no filters are supplied, `confirm=ALL` is required as a safety guard.
+ */
+adminRouter.delete('/logs', requireAdmin, async (req: Request, res: Response) => {
+  const range = parseRange(req.query as Record<string, any>);
+  const filters: LogFilters = {
+    event: str(req.query.event),
+    status: req.query.status !== undefined ? String(req.query.status) : undefined,
+    result: str(req.query.result),
+    search: str(req.query.search),
+  };
+  const hasFilter = Boolean(filters.event || filters.result || filters.search || (filters.status !== undefined && filters.status !== ''));
+  const confirm = String(req.query.confirm || '').toUpperCase();
+
+  if (!hasFilter && req.query.from === undefined && req.query.range === undefined && req.query.to === undefined && confirm !== 'ALL') {
+    return res.status(400).json({
+      error: 'BAD_REQUEST',
+      message: 'Refusing to delete all logs. Provide a date range/filter, or pass confirm=ALL to purge everything.',
+    });
+  }
+
+  const col = await mongoCollection('mcp_analytics');
+  const docs = await col.find({ date: { $gte: range.fromKey, $lte: range.toKey } }).toArray();
+
+  let deleted = 0;
+  let remaining = 0;
+  let docsTouched = 0;
+
+  for (const doc of docs) {
+    const all: McpEvent[] = Array.isArray(doc.events) ? doc.events : [];
+    if (all.length === 0) continue;
+    // Keep events that do NOT match; the matched set is purged.
+    const survivors = all.filter((e) => !matchesLogFilters(mapLogRow(e), filters));
+    const removed = all.length - survivors.length;
+    if (removed === 0) {
+      remaining += all.length;
+      continue;
+    }
+    docsTouched++;
+    deleted += removed;
+    remaining += survivors.length;
+    if (survivors.length === 0) {
+      await col.deleteOne({ _id: doc._id });
+    } else {
+      await col.updateOne({ _id: doc._id }, { $set: { events: survivors } });
+    }
+  }
+
+  AnalyticsService.invalidateQueryCache();
+
+  await recordAudit({
+    adminEmail: (req as any).email,
+    action: 'logs.delete',
+    targetType: 'logs',
+    meta: {
+      event: filters.event || null,
+      status: filters.status ?? null,
+      result: filters.result || null,
+      search: filters.search || null,
+      fromKey: range.fromKey,
+      toKey: range.toKey,
+      deleted,
+      docsTouched,
+    },
+  });
+
+  res.json({ ok: true, deleted, remaining, docsTouched, range, filters });
 });
 
 adminRouter.get('/security', requireAdmin, async (req: Request, res: Response) => {
@@ -1213,6 +1259,21 @@ adminRouter.get('/export', requireAdmin, async (req: Request, res: Response) => 
   res.setHeader('Content-Type', mime);
   res.setHeader('Content-Disposition', `attachment; filename="ui-hub-mcp-${type}-${stamp}.${format === 'csv' ? 'csv' : 'json'}"`);
 
+  if (type === 'logs') {
+    const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
+    const filters: LogFilters = {
+      event: str(req.query.event),
+      status: req.query.status !== undefined ? String(req.query.status) : undefined,
+      result: str(req.query.result),
+      search: str(req.query.search),
+    };
+    const rows = eventsToLogRows(events, filters);
+    if (format === 'csv') {
+      return res.send(logsToCsv(rows, maskUid));
+    }
+    return res.json({ type, range, total: rows.length, events: rows });
+  }
+
   if (type === 'events') {
     const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
     const sorted = events.sort((a, b) => a.timestamp - b.timestamp);
@@ -1332,89 +1393,6 @@ adminRouter.get('/export', requireAdmin, async (req: Request, res: Response) => 
     return res.send(toCsv(headers, rows));
   }
   return res.json({ type, range, stats });
-});
-
-/**
- * GET /api/admin/mcp/logs
- * Unified log viewer querying MongoDB activity_logs and mcp_analytics.
- */
-adminRouter.get('/logs', requireAdmin, async (req: Request, res: Response) => {
-  const page = Math.max(1, parseInt(String(req.query.page || '1'), 10));
-  const pageSize = Math.min(100, Math.max(5, parseInt(String(req.query.pageSize || '25'), 10)));
-  const eventFilter = String(req.query.event || '').trim();
-  const search = String(req.query.search || '').trim();
-  const statusFilter = String(req.query.status || '').trim();
-  const resultFilter = String(req.query.result || '').trim();
-
-  try {
-    const actCol = await mongoCollection('activity_logs');
-    const filter: any = {};
-
-    if (eventFilter) {
-      filter.type = eventFilter;
-    }
-
-    if (resultFilter === 'error') {
-      filter.level = { $in: ['error', 'warn'] };
-    } else if (resultFilter === 'success') {
-      filter.level = { $nin: ['error', 'warn'] };
-    }
-
-    if (search) {
-      filter.$or = [
-        { email: { $regex: search, $options: 'i' } },
-        { type: { $regex: search, $options: 'i' } },
-        { userId: { $regex: search, $options: 'i' } },
-        { 'metadata.componentId': { $regex: search, $options: 'i' } },
-        { 'metadata.displayName': { $regex: search, $options: 'i' } },
-      ];
-    }
-
-    const skip = (page - 1) * pageSize;
-    const [total, rawLogs] = await Promise.all([
-      actCol.countDocuments(filter),
-      actCol.find(filter).sort({ createdAt: -1 }).skip(skip).limit(pageSize).toArray(),
-    ]);
-
-    const events = rawLogs.map((doc: any) => {
-      const isErr = doc.level === 'error' || doc.level === 'warn';
-      const statusCode = isErr ? 500 : 200;
-      const ts = doc.createdAt instanceof Date ? doc.createdAt.getTime() : (typeof doc.createdAt === 'number' ? doc.createdAt : Date.now());
-
-      return {
-        event: doc.type || 'unknown',
-        timestamp: ts,
-        userId: doc.email || doc.userId || 'anonymous',
-        keyPrefix: doc.metadata?.provider || 'web',
-        tier: doc.metadata?.tier || 'free',
-        componentId: doc.metadata?.componentId,
-        tool: doc.metadata?.system || doc.metadata?.tool || doc.type,
-        query: doc.metadata?.query || doc.metadata?.displayName || doc.email,
-        success: !isErr,
-        errorCode: isErr ? doc.metadata?.error || 'ERROR' : undefined,
-        statusCode,
-        status: statusCode,
-        result: isErr ? 'error' : 'success',
-      };
-    });
-
-    const now = Date.now();
-    return res.json({
-      total,
-      page,
-      pageSize,
-      range: {
-        from: now - 30 * 86400000,
-        to: now,
-        fromKey: new Date(now - 30 * 86400000).toISOString().slice(0, 10),
-        toKey: new Date(now).toISOString().slice(0, 10),
-      },
-      events,
-    });
-  } catch (err: any) {
-    console.error('[AdminLogs] Failed to fetch logs:', err?.message);
-    return res.status(500).json({ error: 'Failed to retrieve logs' });
-  }
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1560,6 +1538,91 @@ adminRouter.get('/search-analytics', requireAdmin, async (req: Request, res: Res
     range,
     summary,
     note: result.total === 0 ? 'No search telemetry captured yet for this range (instrumentation is live).' : undefined,
+  });
+});
+
+adminRouter.get('/fix-center', requireAdmin, async (req: Request, res: Response) => {
+  const range = parseRange(req.query as Record<string, any>);
+  const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
+  const cfg = await configService.get();
+  const toolStates = await configService.getToolStates();
+
+  const signals = deriveSignals(events, {
+    authEnabled: cfg.authEnabled,
+    analyticsEnabled: cfg.analyticsEnabled,
+    loggingEnabled: cfg.loggingEnabled,
+    tools: toolStates,
+  });
+
+  const diagResult = await queryDiagnostics({ resolutionState: 'unresolved', pageSize: 200 });
+
+  const diagItems = diagResult.items.map((d) => ({
+    id: `diag:${d.id}`,
+    source: 'diagnostic' as const,
+    category: String(d.category),
+    severity: String(d.severity),
+    title: d.title,
+    summary: d.errorSummary || 'A failure was recorded for this fingerprint.',
+    occurrences: d.occurrences,
+    lastSeen: d.lastSeen,
+    firstSeen: d.firstSeen,
+    evidence: {
+      fingerprint: d.fingerprint,
+      tool: d.tool || null,
+      method: d.method || null,
+      resourceType: d.resourceType || null,
+      resourceId: d.resourceId || null,
+      query: d.query || null,
+      url: d.url || null,
+      statusCode: d.statusCode ?? null,
+      errorCode: d.errorCode || null,
+      clientName: d.clientName || null,
+    },
+    fixPrompt: buildFixPrompt(d),
+    href: `/admin/mcp/diagnostics?focus=${encodeURIComponent(d.id)}`,
+  }));
+
+  const signalItems = signals.map((s) => ({
+    id: `signal:${s.key}`,
+    source: 'signal' as const,
+    category: s.category,
+    severity: s.severity,
+    title: s.title,
+    summary: s.summary,
+    occurrences: s.occurrences,
+    lastSeen: s.lastSeen,
+    firstSeen: null as number | null,
+    evidence: s.evidence,
+    fixPrompt: buildSignalPrompt(s),
+    href: null as string | null,
+  }));
+
+  const severityRank: Record<string, number> = { critical: 0, warning: 1, info: 2 };
+  const items = [...diagItems, ...signalItems].sort(
+    (a, b) =>
+      (severityRank[a.severity] ?? 3) - (severityRank[b.severity] ?? 3) ||
+      (b.lastSeen || 0) - (a.lastSeen || 0)
+  );
+
+  const countBy = (key: 'source' | 'severity' | 'category') => {
+    const out: Record<string, number> = {};
+    for (const item of items) out[item[key]] = (out[item[key]] || 0) + 1;
+    return out;
+  };
+
+  res.json({
+    range,
+    generatedAt: Date.now(),
+    totals: {
+      unresolvedDiagnostics: diagItems.length,
+      activeSignals: signalItems.length,
+      items: items.length,
+      bySource: countBy('source'),
+      bySeverity: countBy('severity'),
+      byCategory: countBy('category'),
+    },
+    items,
+    engineState: await getEngineState(),
   });
 });
 

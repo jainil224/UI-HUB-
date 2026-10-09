@@ -67,6 +67,7 @@ const AlertsPage = React.lazy(() => import('./pages/Admin/AlertsPage'));
 const LiveActivityPage = React.lazy(() => import('./pages/Admin/LiveActivityPage'));
 const AiSearchPage = React.lazy(() => import('./pages/Admin/AiSearchPage'));
 const DiagnosticsPage = React.lazy(() => import('./pages/Admin/DiagnosticsPage'));
+const FixCenterPage = React.lazy(() => import('./pages/Admin/FixCenterPage'));
 const SettingsPage = React.lazy(() => import('./pages/Admin/SettingsPage'));
 const AuditPage = React.lazy(() => import('./pages/Admin/AuditPage'));
 const ExportPage = React.lazy(() => import('./pages/Admin/ExportPage'));
@@ -149,6 +150,7 @@ const AppShell = () => {
                   <Route path="health" element={<HealthPage />} />
                   <Route path="alerts" element={<AlertsPage />} />
                   <Route path="diagnostics" element={<DiagnosticsPage />} />
+                  <Route path="fix-center" element={<FixCenterPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="audit" element={<AuditPage />} />
                   <Route path="export" element={<ExportPage />} />

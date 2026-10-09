@@ -444,10 +444,24 @@ also used for transport-level failures.
 
 | Method | Path | Description |
 |:---|:---|:---|
+| GET | `/overview` | Dashboard metrics for a range |
+| GET | `/logs` | Paginated MCP request logs; supports `event`, `status`, `result`, `search`, `page`, `pageSize` |
+| DELETE | `/logs` | Permanently purge MCP logs from `mcp_analytics` for the selected range/filters (send `confirm=all` when no filters are supplied) |
+| GET | `/export?type=logs` | CSV export of MCP logs (same range/filters as `/logs`; user IDs are masked) |
+| GET | `/fix-center` | Real-data-only list of actionable problems (unresolved diagnostics + live signals), each with a deterministic copyable fix prompt |
+| GET | `/diagnostics` | Paginated diagnostic fingerprints (filter by category/severity/state/tool/resourceType) |
+| GET | `/diagnostics/:id` | Single diagnostic fingerprint |
+| POST | `/diagnostics/:id/generate-fix-prompt` | Generate a copyable fix prompt for one diagnostic |
+| POST | `/diagnostics/:id/status` | Update a diagnostic's resolution state |
 | GET | `/metrics` | Global usage metrics across all keys |
 | GET | `/users` | Registered API-key users |
+| GET | `/users/:uid` | Per-user detail |
 | GET | `/audit` | Audit trail of key + analytics events |
 | POST | `/config` | Toggle runtime config (e.g. logging) |
+
+> **Purging logs is destructive and irreversible.** `DELETE /logs` only removes rows from the
+> `mcp_analytics` collection; it does not touch audit history or API keys.
+
 
 `MCP_ADMIN_EMAILS` (comma-separated) controls admin elevation; tier is resolved through Firebase via the
 `firebaseService.getUserTier()` check (ADMIN or ELITE).
@@ -535,7 +549,7 @@ cd mcp-server
 npm install
 npm run dev          # tsx watch src/index.ts  → http://localhost:3001
 npm run stdio        # local stdio transport with ADMIN access
-npm test             # vitest — 54 unit tests
+npm test             # vitest — 160 unit tests
 npm run build        # tsc + coverage guard + copy data
 ```
 

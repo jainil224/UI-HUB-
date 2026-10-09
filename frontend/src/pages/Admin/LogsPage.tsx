@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { ScrollText, Search, RefreshCw } from 'lucide-react';
-import { getLogs } from '../../services/admin';
+import { ScrollText, Search, RefreshCw, Download, Trash2, AlertTriangle } from 'lucide-react';
+import { getLogs, deleteLogs, downloadExport } from '../../services/admin';
 import {
     PageHeader, Panel, PanelHeader, StatusBadge, EmptyState, ErrorState, SkeletonTable,
     Table, Th, Td, Pagination, useData, formatCompact, formatDate, timeAgo, Tone,
@@ -36,13 +36,25 @@ const RESULTS = [
     { value: 'error', label: 'Error' },
 ];
 
+const RANGES = [
+    { value: '7d', label: 'Last 7 days' },
+    { value: '30d', label: 'Last 30 days' },
+    { value: '90d', label: 'Last 90 days' },
+];
+
 const LogsPage: React.FC = () => {
     const [event, setEvent] = useState('');
     const [status, setStatus] = useState('');
     const [result, setResult] = useState('');
     const [search, setSearch] = useState('');
+    const [range, setRange] = useState('30d');
     const [page, setPage] = useState(1);
     const [debounced, setDebounced] = useState('');
+    const [exporting, setExporting] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [notice, setNotice] = useState<string | null>(null);
+    const [actionError, setActionError] = useState<string | null>(null);
 
     const l = useData(
         () => getLogs({ event, status, result, search: debounced, page, pageSize: 25 }),
@@ -60,6 +72,49 @@ const LogsPage: React.FC = () => {
         if (patch.result !== undefined) setResult(patch.result);
         if (patch.page !== undefined) setPage(patch.page);
         else setPage(1);
+    };
+
+    const filterCount = [event, status, result, debounced].filter(Boolean).length;
+
+    const handleExport = async () => {
+        setExporting(true);
+        setActionError(null);
+        try {
+            const stamp = new Date().toISOString().slice(0, 10);
+            await downloadExport('logs', 'csv', range, `ui-hub-mcp-logs-${stamp}.csv`, {
+                event,
+                status,
+                result,
+                search: debounced,
+            });
+            setNotice('Logs exported to CSV.');
+        } catch (e) {
+            setActionError(e instanceof Error ? e.message : 'Export failed');
+        } finally {
+            setExporting(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        setDeleting(true);
+        setActionError(null);
+        try {
+            const res = await deleteLogs({
+                event,
+                status,
+                result,
+                search: debounced,
+                range,
+                confirm: filterCount === 0 ? 'ALL' : undefined,
+            });
+            setNotice(`Deleted ${formatCompact(res.deleted)} log event(s) from the database.`);
+            setConfirmOpen(false);
+            await l.reload();
+        } catch (e) {
+            setActionError(e instanceof Error ? e.message : 'Delete failed');
+        } finally {
+            setDeleting(false);
+        }
     };
 
     if (l.loading) return <SkeletonTable rows={10} />;
@@ -81,11 +136,33 @@ const LogsPage: React.FC = () => {
                 title="Request Logs"
                 subtitle={`${formatCompact(data.total)} events in range`}
                 actions={
-                    <button onClick={() => void l.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
-                        <RefreshCw size={13} /> Refresh
-                    </button>
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => void handleExport()}
+                            disabled={exporting}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer disabled:opacity-40"
+                        >
+                            <Download size={13} /> {exporting ? 'Exporting…' : 'Export CSV'}
+                        </button>
+                        <button
+                            onClick={() => { setConfirmOpen(true); setNotice(null); setActionError(null); }}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-red text-[10px] font-black uppercase tracking-widest text-white hover:bg-red-700 transition-colors cursor-pointer"
+                        >
+                            Delete logs
+                        </button>
+                        <button onClick={() => void l.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                            <RefreshCw size={13} /> Refresh
+                        </button>
+                    </div>
                 }
             />
+
+            {notice && (
+                <div className="mb-4 rounded-md border-2 border-white bg-brand-blue/10 px-4 py-3 text-xs font-mono text-white">{notice}</div>
+            )}
+            {actionError && (
+                <div className="mb-6"><ErrorState message={actionError} onRetry={() => setActionError(null)} /></div>
+            )}
 
             <Panel className="mb-6">
                 <PanelHeader title="Filters" actions={<ScrollText size={14} className="text-brand-blue" />} />
@@ -98,6 +175,9 @@ const LogsPage: React.FC = () => {
                     </select>
                     <select value={result} onChange={(e) => apply({ result: e.target.value })} className="rounded-md border-2 border-white/40 bg-brand-bg px-3 py-2.5 text-xs font-black uppercase tracking-widest text-white outline-none focus:border-brand-blue cursor-pointer">
                         {RESULTS.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
+                    </select>
+                    <select value={range} onChange={(e) => setRange(e.target.value)} className="rounded-md border-2 border-white/40 bg-brand-bg px-3 py-2.5 text-xs font-black uppercase tracking-widest text-white outline-none focus:border-brand-blue cursor-pointer" title="Export / delete range">
+                        {RANGES.map((r) => <option key={r.value} value={r.value}>{r.label}</option>)}
                     </select>
                     <div className="flex-1 min-w-[220px] max-w-xs relative">
                         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-500" />
@@ -150,6 +230,42 @@ const LogsPage: React.FC = () => {
                     </Table>
                     <Pagination page={data.page} pageSize={data.pageSize} total={data.total} onPage={(p) => apply({ page: p })} />
                 </Panel>
+            )}
+
+            {confirmOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4" onClick={() => !deleting && setConfirmOpen(false)}>
+                    <div className="w-full max-w-md rounded-md border-2 border-white bg-brand-surface p-6" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-start gap-3">
+                            <span className="shrink-0 inline-flex h-10 w-10 items-center justify-center rounded-md border-2 border-white bg-brand-red text-white">
+                                <AlertTriangle size={18} />
+                            </span>
+                            <div>
+                                <h3 className="text-sm font-black uppercase tracking-widest text-white">Delete logs from database</h3>
+                                <p className="mt-2 text-xs text-neutral-300">
+                                    {filterCount === 0
+                                        ? `No filters are active — this will permanently delete ALL MCP logs in the last ${range.replace('d', ' days')}.`
+                                        : `This permanently deletes logs matching the current filters in the ${range} range. This cannot be undone.`}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="mt-6 flex items-center justify-end gap-3">
+                            <button
+                                onClick={() => setConfirmOpen(false)}
+                                disabled={deleting}
+                                className="px-4 py-2 rounded-md border-2 border-white bg-brand-bg text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer disabled:opacity-40"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={() => void handleDelete()}
+                                disabled={deleting}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-red text-[10px] font-black uppercase tracking-widest text-white hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-40"
+                            >
+                                <Trash2 size={13} /> {deleting ? 'Deleting…' : 'Delete from DB'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
