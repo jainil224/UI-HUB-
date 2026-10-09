@@ -875,7 +875,7 @@ adminRouter.post('/playground', requireAdmin, async (req, res) => {
 });
 adminRouter.get('/logs', requireAdmin, async (req, res) => {
     const range = parseRange(req.query);
-    const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
+    const entries = await analyticsService.queryLogEntries(range.fromKey, range.toKey);
     const page = clampInt(req.query.page, 1, 1, 100000);
     const pageSize = clampInt(req.query.pageSize, 25, 1, 200);
     const filters = {
@@ -884,12 +884,12 @@ adminRouter.get('/logs', requireAdmin, async (req, res) => {
         result: str(req.query.result),
         search: str(req.query.search),
     };
-    const rows = eventsToLogRows(events, filters);
+    const rows = eventsToLogRows(entries, filters);
     const total = rows.length;
     const start = (page - 1) * pageSize;
     const pageRows = rows.slice(start, start + pageSize).map((e, i) => ({
         ...e,
-        id: String(e._id || `${e.timestamp}-${e.event}-${i}-${Math.random().toString(36).slice(2, 6)}`),
+        id: String(e.docId && e.eventId !== undefined ? `${e.docId}:${e.eventId}` : e._id || `${e.timestamp}-${e.event}-${i}`),
         userId: maskUid(String(e.userId || '')),
     }));
     res.json({
@@ -967,36 +967,66 @@ adminRouter.delete('/logs', requireAdmin, async (req, res) => {
     res.json({ ok: true, deleted, remaining, docsTouched, range, filters });
 });
 /**
- * DELETE /api/admin/mcp/logs/item?eventId=...&docId=...
- * Per-row delete for log entries. Finds the specific event in the daily bucket.
+ * DELETE /api/admin/mcp/logs/item?docId=...&eventId=...
+ * Per-row delete for log entries. `docId` is the `mcp_analytics` bucket `_id`
+ * and `eventId` is the index of the event within that bucket's `events` array
+ * (both returned by GET /logs). Removes exactly one event.
  */
 adminRouter.delete('/logs/item', requireAdmin, async (req, res) => {
-    const eventId = str(req.query.eventId);
     const docId = str(req.query.docId);
-    if (!eventId && !docId) {
-        return res.status(400).json({ error: 'BAD_REQUEST', message: 'eventId or docId required' });
+    const eventId = str(req.query.eventId);
+    if (docId === undefined && eventId === undefined) {
+        return res.status(400).json({ error: 'BAD_REQUEST', message: 'docId or eventId required' });
     }
     const col = await mongoCollection('mcp_analytics');
-    const docs = docId ? await col.find({ _id: (() => { try {
-            return new ObjectId(docId);
+    let query = {};
+    if (docId) {
+        let oid = docId;
+        try {
+            oid = new ObjectId(docId);
         }
         catch {
-            return docId;
-        } })() }).toArray() : await col.find().toArray();
+            oid = docId;
+        }
+        query = { _id: oid };
+    }
+    const docs = await col.find(query).toArray();
     let deleted = 0;
     for (const d of docs) {
         const all = Array.isArray(d.events) ? d.events : [];
-        const survivors = all.filter((e) => String(e._id || e.timestamp || '') !== eventId);
-        if (survivors.length !== all.length) {
-            deleted = all.length - survivors.length;
-            if (survivors.length === 0)
-                await col.deleteOne({ _id: d._id });
-            else
-                await col.updateOne({ _id: d._id }, { $set: { events: survivors } });
-            break;
+        if (all.length === 0)
+            continue;
+        // Preferred identity: eventId is the stable index into the events array.
+        const idx = eventId !== undefined ? parseInt(eventId, 10) : NaN;
+        let removeAt = -1;
+        if (!isNaN(idx) && idx >= 0 && idx < all.length) {
+            removeAt = idx;
         }
+        else if (eventId !== undefined) {
+            // Fallback for legacy callers: match by embedded _id or timestamp.
+            removeAt = all.findIndex((e) => String(e._id || e.timestamp || '') === eventId);
+        }
+        if (removeAt === -1)
+            continue;
+        const survivors = all.slice();
+        survivors.splice(removeAt, 1);
+        if (survivors.length === 0) {
+            await col.deleteOne({ _id: d._id });
+        }
+        else {
+            await col.updateOne({ _id: d._id }, { $set: { events: survivors } });
+        }
+        deleted = 1;
+        break;
     }
     AnalyticsService.invalidateQueryCache();
+    await recordAudit({
+        adminEmail: req.email,
+        action: 'logs.item.delete',
+        targetType: 'logs',
+        targetId: docId || undefined,
+        meta: { docId: docId || null, eventId: eventId ?? null, deleted },
+    });
     res.json({ ok: true, deleted });
 });
 adminRouter.get('/security', requireAdmin, async (req, res) => {

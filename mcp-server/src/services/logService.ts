@@ -10,6 +10,10 @@ export interface LogRow extends McpEvent {
   status: number;
   result: string;
   ts: number;
+  /** `_id` of the `mcp_analytics` bucket the event lives in, when annotated. */
+  docId?: string;
+  /** Index of the event within its bucket's `events` array, when annotated. */
+  eventId?: string;
 }
 
 export interface LogFilters {

@@ -31,6 +31,17 @@ export interface McpEvent {
   responseTimeMs?: number;
 }
 
+/**
+ * A log event annotated with its storage identity: the `_id` of the
+ * `mcp_analytics` bucket document it lives in (`docId`) and its index within
+ * that document's `events` array (`eventId`). This is the stable identity the
+ * per-row `DELETE /logs/item` endpoint relies on.
+ */
+export interface LogEventEntry extends McpEvent {
+  docId: string;
+  eventId: string;
+}
+
 export interface DailySummary {
   totalRequests: number;
   requestsToday: number;
@@ -266,6 +277,45 @@ export class AnalyticsService {
       return events;
     } catch (error: any) {
       console.error('[AnalyticsService] Error querying events:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Like `queryEvents`, but annotates each event with the `_id` of the
+   * `mcp_analytics` bucket it lives in (`docId`) and its index within that
+   * bucket's `events` array (`eventId`). Used by the admin `/logs` view so each
+   * row can be addressed by the per-row delete endpoint.
+   */
+  async queryLogEntries(fromKey: string, toKey?: string, opts?: { refresh?: boolean; maxEvents?: number }): Promise<LogEventEntry[]> {
+    try {
+      const db = await this.getDb();
+      const cacheKey = `entries:${fromKey}__${toKey || ''}`;
+      const cached = AnalyticsService.queryCache.get(cacheKey);
+      if (!opts?.refresh && cached && Date.now() < cached.expiresAt) {
+        return cached.events as unknown as LogEventEntry[];
+      }
+      const filter: Record<string, any> = { date: { $gte: fromKey } };
+      if (toKey) filter.date.$lte = toKey;
+      const docs = await db.find(filter).toArray();
+      const entries: LogEventEntry[] = [];
+      const max = opts?.maxEvents ?? AnalyticsService.QUERY_EVENT_CAP;
+      docs.forEach((doc) => {
+        if (entries.length >= max) return;
+        const data = doc as any;
+        if (Array.isArray(data.events)) {
+          data.events.slice(0, max - entries.length).forEach((e: McpEvent, idx: number) => {
+            entries.push({ ...e, docId: String(data._id), eventId: String(idx) });
+          });
+        }
+      });
+      AnalyticsService.queryCache.set(cacheKey, {
+        expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS,
+        events: entries as unknown as McpEvent[],
+      });
+      return entries;
+    } catch (error: any) {
+      console.error('[AnalyticsService] Error querying log entries:', error);
       return [];
     }
   }

@@ -216,6 +216,47 @@ export class AnalyticsService {
             return [];
         }
     }
+    /**
+     * Like `queryEvents`, but annotates each event with the `_id` of the
+     * `mcp_analytics` bucket it lives in (`docId`) and its index within that
+     * bucket's `events` array (`eventId`). Used by the admin `/logs` view so each
+     * row can be addressed by the per-row delete endpoint.
+     */
+    async queryLogEntries(fromKey, toKey, opts) {
+        try {
+            const db = await this.getDb();
+            const cacheKey = `entries:${fromKey}__${toKey || ''}`;
+            const cached = AnalyticsService.queryCache.get(cacheKey);
+            if (!opts?.refresh && cached && Date.now() < cached.expiresAt) {
+                return cached.events;
+            }
+            const filter = { date: { $gte: fromKey } };
+            if (toKey)
+                filter.date.$lte = toKey;
+            const docs = await db.find(filter).toArray();
+            const entries = [];
+            const max = opts?.maxEvents ?? AnalyticsService.QUERY_EVENT_CAP;
+            docs.forEach((doc) => {
+                if (entries.length >= max)
+                    return;
+                const data = doc;
+                if (Array.isArray(data.events)) {
+                    data.events.slice(0, max - entries.length).forEach((e, idx) => {
+                        entries.push({ ...e, docId: String(data._id), eventId: String(idx) });
+                    });
+                }
+            });
+            AnalyticsService.queryCache.set(cacheKey, {
+                expiresAt: Date.now() + AnalyticsService.QUERY_CACHE_TTL_MS,
+                events: entries,
+            });
+            return entries;
+        }
+        catch (error) {
+            console.error('[AnalyticsService] Error querying log entries:', error);
+            return [];
+        }
+    }
     async getActiveKeyCountByUser() {
         const counts = new Map();
         try {
