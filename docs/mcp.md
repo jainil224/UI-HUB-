@@ -350,10 +350,10 @@ removed or changed. All are gated behind `requireAdmin` (ADMIN/ELITE).
   diagnostics with live signals (auth failures, rate limits, premium denials, zero-result
   searches, disabled config/tools). Every item carries a deterministic fix prompt; when everything
   is healthy the list is empty and nothing is fabricated.
-- **Logs** (`/admin/mcp/logs`) — paginated `mcp_analytics` request logs with an in-page
-  **Delete logs from database** action and CSV export (`/export?type=logs`). Deleting is destructive
-  and only removes `mcp_analytics` rows for the selected range/filters; audit history and keys are
-  untouched.
+- **Logs** (`/admin/mcp/logs`) — paginated `mcp_analytics` request logs with a per-row
+  **delete** action, an in-page **Delete logs from database** action and CSV export
+  (`/export?type=logs`). Deleting is destructive and only removes `mcp_analytics` rows for the
+  selected range/filters; audit history and keys are untouched.
 - **Alerts engine** (`/admin/mcp/alerts`) — the `mcp_alert_rules` / `mcp_alert_events`
   collections plus a guarded in-process scheduler (Render MCP service only). Each event
   supports acknowledge / resolve / reopen / mute. The legacy analytics alerts remain on the

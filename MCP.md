@@ -447,6 +447,7 @@ also used for transport-level failures.
 | GET | `/overview` | Dashboard metrics for a range |
 | GET | `/logs` | Paginated MCP request logs; supports `event`, `status`, `result`, `search`, `page`, `pageSize` |
 | DELETE | `/logs` | Permanently purge MCP logs from `mcp_analytics` for the selected range/filters (send `confirm=all` when no filters are supplied) |
+| DELETE | `/logs/item` | Delete a single log entry by `docId` (bucket `_id`) and `eventId` (index within the bucket's `events` array), both returned by `GET /logs` |
 | GET | `/export?type=logs` | CSV export of MCP logs (same range/filters as `/logs`; user IDs are masked) |
 | GET | `/fix-center` | Real-data-only list of actionable problems (unresolved diagnostics + live signals), each with a deterministic copyable fix prompt |
 | GET | `/diagnostics` | Paginated diagnostic fingerprints (filter by category/severity/state/tool/resourceType) |

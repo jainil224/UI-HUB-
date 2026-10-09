@@ -303,6 +303,9 @@ export interface McpLogEntry {
     responseTimeMs?: number;
     status: number;
     result: string;
+    id?: string;
+    docId?: string;
+    eventId?: string;
 }
 
 export interface AdminLogList {
@@ -490,12 +493,13 @@ export function getSearchAnalytics(range?: string): Promise<AdminSearch> {
     return request<AdminSearch>(`/api/admin/mcp/search${q}`);
 }
 
-export function getLogs(params?: { event?: string; status?: number | string; result?: string; search?: string; page?: number; pageSize?: number }): Promise<AdminLogList> {
+export function getLogs(params?: { event?: string; status?: number | string; result?: string; search?: string; range?: string; page?: number; pageSize?: number }): Promise<AdminLogList> {
     const p = new URLSearchParams();
     if (params?.event) p.set('event', params.event);
     if (params?.status !== undefined && params?.status !== '') p.set('status', String(params.status));
     if (params?.result) p.set('result', params.result);
     if (params?.search) p.set('search', params.search);
+    if (params?.range) p.set('range', params.range);
     p.set('page', String(params?.page || 1));
     p.set('pageSize', String(params?.pageSize || 25));
     return request<AdminLogList>(`/api/admin/mcp/logs?${p.toString()}`);
@@ -519,6 +523,13 @@ export function deleteLogs(params?: { event?: string; status?: number | string; 
     if (params?.range) p.set('range', params.range);
     if (params?.confirm) p.set('confirm', params.confirm);
     return request<AdminLogDeleteResult>(`/api/admin/mcp/logs?${p.toString()}`, { method: 'DELETE' });
+}
+
+export function deleteLogItem(params: { docId?: string; eventId?: string }): Promise<{ ok: boolean; deleted: number }> {
+    const p = new URLSearchParams();
+    if (params.docId) p.set('docId', params.docId);
+    if (params.eventId !== undefined) p.set('eventId', String(params.eventId));
+    return request<{ ok: boolean; deleted: number }>(`/api/admin/mcp/logs/item?${p.toString()}`, { method: 'DELETE' });
 }
 
 export function getSecurity(): Promise<AdminSecurity> {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollText, Search, RefreshCw, Download, Trash2, AlertTriangle } from 'lucide-react';
-import { getLogs, deleteLogs, downloadExport } from '../../services/admin';
+import { getLogs, deleteLogs, deleteLogItem, downloadExport } from '../../services/admin';
+import type { McpLogEntry } from '../../services/admin';
 import {
     PageHeader, Panel, PanelHeader, StatusBadge, EmptyState, ErrorState, SkeletonTable,
     Table, Th, Td, Pagination, useData, formatCompact, formatDate, timeAgo, Tone,
@@ -53,12 +54,14 @@ const LogsPage: React.FC = () => {
     const [exporting, setExporting] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [confirmRow, setConfirmRow] = useState<string | null>(null);
+    const [deletingRow, setDeletingRow] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
     const [actionError, setActionError] = useState<string | null>(null);
 
     const l = useData(
-        () => getLogs({ event, status, result, search: debounced, page, pageSize: 25 }),
-        [event, status, result, debounced, page]
+        () => getLogs({ event, status, result, search: debounced, range, page, pageSize: 25 }),
+        [event, status, result, debounced, range, page]
     );
 
     React.useEffect(() => {
@@ -114,6 +117,25 @@ const LogsPage: React.FC = () => {
             setActionError(e instanceof Error ? e.message : 'Delete failed');
         } finally {
             setDeleting(false);
+        }
+    };
+
+    const rowKey = (entry: McpLogEntry, i: number): string =>
+        entry.id || (entry.docId && entry.eventId !== undefined ? `${entry.docId}:${entry.eventId}` : String(i));
+
+    const handleDeleteRow = async (entry: McpLogEntry) => {
+        const key = entry.id || `${entry.docId}:${entry.eventId}`;
+        setDeletingRow(key);
+        setActionError(null);
+        try {
+            const res = await deleteLogItem({ docId: entry.docId, eventId: entry.eventId });
+            setNotice(res.deleted > 0 ? 'Log entry deleted from the database.' : 'That log entry was already gone.');
+            setConfirmRow(null);
+            await l.reload();
+        } catch (e) {
+            setActionError(e instanceof Error ? e.message : 'Delete failed');
+        } finally {
+            setDeletingRow(null);
         }
     };
 
@@ -207,11 +229,12 @@ const LogsPage: React.FC = () => {
                                 <Th>Key</Th>
                                 <Th>Tier</Th>
                                 <Th>Status</Th>
+                                <Th>Actions</Th>
                             </tr>
                         </thead>
                         <tbody>
                             {data.events.map((e, i) => (
-                                <tr key={i} className="hover:bg-neutral-900/40 transition-colors">
+                                <tr key={rowKey(e, i)} className="hover:bg-neutral-900/40 transition-colors">
                                     <Td className="text-neutral-400">{formatDate(e.timestamp)}</Td>
                                     <Td className="font-mono text-brand-blue">{e.event}</Td>
                                     <Td>
@@ -223,6 +246,34 @@ const LogsPage: React.FC = () => {
                                     <Td><span className="font-mono text-xs uppercase">{e.tier || '—'}</span></Td>
                                     <Td>
                                         <StatusBadge value={e.result === 'error' ? e.errorCode || `HTTP ${e.status}` : `HTTP ${e.status}`} tone={statusTone(e)} />
+                                    </Td>
+                                    <Td>
+                                        {confirmRow === rowKey(e, i) ? (
+                                            <div className="flex items-center gap-1.5">
+                                                <button
+                                                    onClick={() => void handleDeleteRow(e)}
+                                                    disabled={deletingRow === rowKey(e, i)}
+                                                    className="inline-flex items-center gap-1 rounded-md border-2 border-white bg-brand-red px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-white hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-40"
+                                                >
+                                                    {deletingRow === rowKey(e, i) ? 'Deleting…' : 'Confirm'}
+                                                </button>
+                                                <button
+                                                    onClick={() => setConfirmRow(null)}
+                                                    disabled={deletingRow === rowKey(e, i)}
+                                                    className="rounded-md border-2 border-white bg-brand-bg px-2.5 py-1 text-[9px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer disabled:opacity-40"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => { setConfirmRow(rowKey(e, i)); setNotice(null); setActionError(null); }}
+                                                title="Delete this log entry"
+                                                className="inline-flex items-center justify-center w-7 h-7 rounded-md border-2 border-white/60 bg-brand-surface text-neutral-300 hover:text-white hover:border-white hover:bg-red-700 transition-colors cursor-pointer"
+                                            >
+                                                <Trash2 size={12} />
+                                            </button>
+                                        )}
                                     </Td>
                                 </tr>
                             ))}

@@ -111,6 +111,8 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 - [ ] Admin → **Live Activity** shows the requests above (or the empty-state note if just deployed).
 - [ ] Admin → **AI Search**, **Diagnostics**, **Fix Center**, **Alerts** tabs load without errors (engine tab shows counts).
 - [ ] Admin → **Logs** → **Export CSV** downloads `mcp-logs-*.csv` with masked user IDs.
+- [ ] Admin → **Logs** → per-row trash button removes a single log entry (verify only that row
+      disappears and an `logs.item.delete` audit entry is written).
 - [ ] Admin → **Logs** → **Delete logs from database** prompts for confirmation, then removes the
       matching `mcp_analytics` rows (verify the table count drops and an `audit` entry is written).
 
