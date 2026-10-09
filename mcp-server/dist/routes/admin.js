@@ -315,7 +315,8 @@ adminRouter.get('/status', requireAdmin, (req, res) => {
 });
 adminRouter.get('/overview', requireAdmin, async (req, res) => {
     const range = parseRange(req.query);
-    const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
+    const refresh = str(req.query.refresh) === '1';
+    const events = await analyticsService.queryEvents(range.fromKey, range.toKey, { refresh });
     const stats = aggregateEvents(events);
     const keys = await getAllKeys();
     const activeKeys = keys.filter((k) => String(k.status || 'active') === 'active').length;
@@ -399,7 +400,7 @@ adminRouter.get('/analytics', requireAdmin, async (req, res) => {
     const total = items.length;
     const success = items.filter((e) => e.success).length;
     const errors = total - success;
-    const errorRate = total ? (errors / total) * 100 : 0;
+    const errorRate = total ? errors / total : 0;
     const latencies = items.map((e) => typeof e.latencyMs === 'number' ? e.latencyMs : 0).filter((n) => n > 0);
     const avgResponseTimeMs = latencies.length ? Math.round(latencies.reduce((s, n) => s + n, 0) / latencies.length) : 0;
     const rateLimitEvents = items.filter((e) => e.errorCode === 'RATE_LIMIT_EXCEEDED' || e.status === 'rate_limited').length;
@@ -409,18 +410,33 @@ adminRouter.get('/analytics', requireAdmin, async (req, res) => {
     for (const e of items) {
         const name = e.toolName || e.method || 'unknown';
         if (!byTool[name])
-            byTool[name] = { name, total: 0, success: 0, errors: 0, avgLatency: 0 };
-        byTool[name].total++;
+            byTool[name] = { name, total: 0, success: 0, failed: 0, latencySum: 0, latencyCount: 0, users: new Set(), lastUsed: 0 };
+        const t = byTool[name];
+        t.total++;
         if (e.success)
-            byTool[name].success++;
+            t.success++;
         else
-            byTool[name].errors++;
+            t.failed++;
+        const who = e.userId || e.apiKeyId;
+        if (who)
+            t.users.add(String(who));
+        const ts = typeof e.timestamp === 'number' ? e.timestamp : new Date(e.timestamp).getTime();
+        if (ts && ts > t.lastUsed)
+            t.lastUsed = ts;
+        if (typeof e.latencyMs === 'number' && e.latencyMs > 0) {
+            t.latencySum += e.latencyMs;
+            t.latencyCount++;
+        }
     }
-    const toolList = Object.values(byTool).map(t => {
-        const tt = items.filter((e) => (e.toolName || e.method || 'unknown') === t.name && typeof e.latencyMs === 'number' && e.latencyMs > 0);
-        const avg = tt.length ? Math.round(tt.reduce((s, n) => s + n.latencyMs, 0) / tt.length) : 0;
-        return { ...t, avgLatency: avg, errorRate: t.total ? (t.errors / t.total) * 100 : 0 };
-    }).sort((a, b) => b.total - a.total);
+    const toolList = Object.values(byTool).map((t) => ({
+        name: t.name,
+        total: t.total,
+        success: t.success,
+        failed: t.failed,
+        uniqueUsers: t.users.size,
+        avgResponseTimeMs: t.latencyCount ? Math.round(t.latencySum / t.latencyCount) : 0,
+        lastUsed: t.lastUsed,
+    })).sort((a, b) => b.total - a.total);
     const byDayMap = {};
     for (const e of items) {
         const d = new Date(e.timestamp);
@@ -442,7 +458,7 @@ adminRouter.get('/analytics', requireAdmin, async (req, res) => {
         summary: {
             requests: total,
             uniqueUsers: new Set(items.map((e) => e.userId || e.apiKeyId).filter(Boolean)).size,
-            errorRate: Math.round(errorRate * 100) / 100,
+            errorRate: Math.round(errorRate * 10000) / 10000,
             avgResponseTimeMs,
             rateLimitEvents,
             premiumDenied,
@@ -875,7 +891,8 @@ adminRouter.post('/playground', requireAdmin, async (req, res) => {
 });
 adminRouter.get('/logs', requireAdmin, async (req, res) => {
     const range = parseRange(req.query);
-    const entries = await analyticsService.queryLogEntries(range.fromKey, range.toKey);
+    const refresh = str(req.query.refresh) === '1';
+    const entries = await analyticsService.queryLogEntries(range.fromKey, range.toKey, { refresh });
     const page = clampInt(req.query.page, 1, 1, 100000);
     const pageSize = clampInt(req.query.pageSize, 25, 1, 200);
     const filters = {
