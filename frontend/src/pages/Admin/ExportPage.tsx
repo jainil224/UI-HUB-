@@ -7,10 +7,13 @@ import {
 
 const EXPORT_TYPES: Array<{ id: ExportType; label: string; desc: string; icon: typeof Package }> = [
     { id: 'events', label: 'MCP Logs', desc: 'Every analytics event with timestamps, user, key, tool and status.', icon: Package },
+    { id: 'activity', label: 'Live Activity', desc: 'Request telemetry (mcp_request_events) for full audit.', icon: Package },
+    { id: 'diagnostics', label: 'Diagnostics', desc: 'Failure diagnostics groups with occurrences and fix prompts.', icon: Package },
     { id: 'users', label: 'User Analytics', desc: 'Users with plans, key counts, request totals and activity.', icon: Package },
     { id: 'components', label: 'Component Analytics', desc: 'Component usage from MCP — fetches, code fetches and unique users.', icon: Package },
     { id: 'search', label: 'Search Analytics', desc: 'Top search queries plus zero-result gaps.', icon: Package },
     { id: 'keys', label: 'API Keys', desc: 'All keys, owners, statuses and timestamps.', icon: Package },
+    { id: 'audit', label: 'Audit Log', desc: 'Admin actions with target and metadata.', icon: Package },
     { id: 'stats', label: 'Usage Analytics', desc: 'Aggregate summary — requests, unique users, error rate and more.', icon: Package },
 ];
 

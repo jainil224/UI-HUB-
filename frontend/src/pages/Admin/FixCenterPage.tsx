@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Wrench, ShieldAlert, Activity, RefreshCw, Copy, Check, Bug, Crown, Gauge } from 'lucide-react';
-import { getFixCenter, type AdminFixCenterItem } from '../../services/admin';
+import { getFixCenter, type AdminFixCenterItem, setDiagnosticStatus, resolveAlert } from '../../services/admin';
 import {
     PageHeader, Panel, PanelHeader, StatCard, StatusBadge, EmptyState, ErrorState, SkeletonBlock,
     useData, timeAgo, formatCompact, Tone,
@@ -21,6 +21,8 @@ const FixCenterPage: React.FC = () => {
     const [selected, setSelected] = useState<AdminFixCenterItem | null>(null);
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [copiedAll, setCopiedAll] = useState(false);
+    const [filter, setFilter] = useState<'pending' | 'completed' | 'all'>('pending');
+    const [marking, setMarking] = useState<string | null>(null);
 
     const d = useData(() => getFixCenter(range), [range]);
 
@@ -41,7 +43,14 @@ const FixCenterPage: React.FC = () => {
 
     const data = d.data!;
     const items = data.items.filter(
-        (i) => (!source || i.source === source) && (!severity || i.severity === severity)
+        (i) => {
+            const base = (!source || i.source === source) && (!severity || i.severity === severity);
+            if (!base) return false;
+            if (filter === 'all') return true;
+            const resolved = (i.resolution === 'resolved') || (i.status === 'resolved');
+            if (filter === 'completed') return resolved;
+            return !resolved;
+        }
     );
 
     const copy = async (item: AdminFixCenterItem) => {
@@ -51,6 +60,41 @@ const FixCenterPage: React.FC = () => {
             setTimeout(() => setCopiedId((id) => (id === item.id ? null : id)), 1500);
         } catch {
             // clipboard unavailable
+        }
+    };
+
+    const markResolved = async (item: AdminFixCenterItem) => {
+        setMarking(item.id);
+        try {
+            if (item.source === 'diagnostic') {
+                const id = item.diagnosticId || item.id.replace(/^diag:/, '');
+                await setDiagnosticStatus(id, 'resolved');
+            } else if (item.source === 'signal') {
+                const key = (item.evidence as any)?.key || item.id.replace(/^signal:/, '');
+                if (key && key !== item.id) await resolveAlert(key);
+            }
+            await d.reload();
+            if (selected?.id === item.id) setSelected(null);
+        } catch (e: any) {
+            console.error(e);
+        } finally {
+            setMarking(null);
+        }
+    };
+
+    const markPending = async (item: AdminFixCenterItem) => {
+        setMarking(item.id);
+        try {
+            if (item.source === 'diagnostic') {
+                const id = item.diagnosticId || item.id.replace(/^diag:/, '');
+                await setDiagnosticStatus(id, 'reopened');
+            }
+            await d.reload();
+            if (selected?.id === item.id) setSelected(null);
+        } catch (e: any) {
+            console.error(e);
+        } finally {
+            setMarking(null);
         }
     };
 
@@ -74,12 +118,17 @@ const FixCenterPage: React.FC = () => {
                 subtitle="Every real, unresolved problem across the MCP server, each paired with a copy-paste fix prompt."
                 actions={
                     <div className="flex items-center gap-2">
-                        <select value={range} onChange={(e) => setRange(e.target.value)} className="rounded-md border-2 border-white/40 bg-brand-bg px-3 py-2.5 text-xs font-black uppercase tracking-widest text-white outline-none focus:border-brand-blue cursor-pointer">
-                            <option value="7d">Last 7 days</option>
-                            <option value="30d">Last 30 days</option>
-                            <option value="90d">Last 90 days</option>
-                        </select>
-                        <button onClick={() => void d.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <select value={range} onChange={(e) => setRange(e.target.value)} className="rounded-md border-2 border-white/40 bg-brand-bg px-3 py-2.5 text-xs font-black uppercase tracking-widest text-white outline-none focus:border-brand-blue cursor-pointer">
+                        <option value="7d">Last 7 days</option>
+                        <option value="30d">Last 30 days</option>
+                        <option value="90d">Last 90 days</option>
+                    </select>
+                    <div className="flex items-center gap-1 border-2 border-white rounded-md overflow-hidden">
+                        {(['pending','completed','all'] as const).map(f=>(
+                            <button key={f} onClick={()=>setFilter(f)} className={`px-3 py-2 text-[10px] font-black uppercase tracking-widest ${filter===f?'bg-brand-blue text-white':'bg-brand-surface text-neutral-400 hover:text-white'}`}>{f}</button>
+                        ))}
+                    </div>
+                    <button onClick={() => void d.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                             <RefreshCw size={13} /> Refresh
                         </button>
                     </div>
@@ -148,6 +197,7 @@ const FixCenterPage: React.FC = () => {
                                                 <div className="flex items-center gap-2 flex-wrap">
                                                     <h3 className="text-sm font-black text-white truncate">{item.title}</h3>
                                                     <StatusBadge value={item.severity} tone={severityTone(item.severity)} />
+                                                    <StatusBadge value={item.resolution||item.status||'pending'} tone={(item.resolution==='resolved'||item.status==='resolved')?'ok':'warn'} />
                                                     <StatusBadge value={item.source} tone={item.source === 'diagnostic' ? 'violet' : 'blue'} />
                                                 </div>
                                                 <p className="text-[11px] text-neutral-400 mt-1 line-clamp-2">{item.summary}</p>
@@ -205,6 +255,18 @@ const FixCenterPage: React.FC = () => {
                                     </button>
                                 </div>
                                 <pre className="text-[11px] leading-relaxed text-neutral-200 bg-brand-bg border-2 border-white rounded-md p-4 whitespace-pre-wrap break-words max-h-[420px] overflow-y-auto">{selected.fixPrompt}</pre>
+                            </div>
+                            <div className="border-t-2 border-white/20 pt-4 flex justify-between">
+                                <div className="text-[10px] text-neutral-500">
+                                    Status: {selected.resolution||selected.status||'pending'}
+                                </div>
+                                <div className="flex gap-2">
+                                    {((selected.resolution==='resolved'||selected.status==='resolved')) ? (
+                                        <button onClick={()=>void markPending(selected)} disabled={marking===selected.id} className="px-3 py-2 border-2 border-white rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-neutral-900 disabled:opacity-40">{marking===selected.id?'...':'Mark as Pending'}</button>
+                                    ) : (
+                                        <button onClick={()=>void markResolved(selected)} disabled={marking===selected.id} className="px-3 py-2 border-2 border-brand-blue bg-brand-blue text-white rounded-md text-[10px] font-black uppercase tracking-widest hover:bg-brand-blue/90 disabled:opacity-40">{marking===selected.id?'...':'Mark as Complete'}</button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

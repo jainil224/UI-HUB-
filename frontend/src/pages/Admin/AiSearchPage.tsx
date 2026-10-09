@@ -41,6 +41,11 @@ const AiSearchPage: React.FC = () => {
                 }
             />
 
+            <div className="mb-6 rounded-md border-2 border-white bg-yellow-500/10 p-4 text-xs text-white">
+                <div className="font-black uppercase tracking-widest mb-1">Usage</div>
+                <div className="text-neutral-200">Search events come from <code>mcp_search_events</code> (behavior_search, component_search etc.). If this is empty, run the AI/behavior search tools from clients to generate telemetry.</div>
+            </div>
+
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <StatCard label="Searches" value={formatNum(s.totalSearches)} icon={Search} tone="blue" />
                 <StatCard label="Zero-Result Rate" value={formatPct(s.zeroResultRate)} sub={`${formatNum(s.zeroResults)} empty results`} icon={AlertTriangle} tone={s.zeroResultRate > 0.3 ? 'bad' : 'warn'} />

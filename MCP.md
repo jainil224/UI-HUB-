@@ -600,6 +600,7 @@ You should get a `200` with JSON-RPC `result` + `serverInfo` — not a 404, empt
 
 | Symptom | Cause | Fix |
 |:---|:---|:---|
+| `MISSING_API_KEY` (at `initialize`) | Client configured with the URL only — no `Authorization` header | Add `Authorization: Bearer uh_live_…`; pasting only the endpoint will not work. The handshake is authenticated, so this is rejected once, immediately |
 | `INVALID_API_KEY` | Key copied partially, revoked, or wrong prefix | Recreate the key; verify `uh_live_` prefix |
 | `RATE_LIMIT_EXCEEDED` | Free daily limit (100) reached | Wait for reset or upgrade to Pro |
 | `PREMIUM_ACCESS_REQUIRED` | Free key asked for premium source/prompts | Upgrade to Pro |

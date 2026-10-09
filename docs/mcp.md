@@ -298,6 +298,9 @@ The MCP server returns structured JSON errors:
 **Server not reachable**
 - Confirm the MCP server is deployed and the endpoint URL is correct.
 - Check that your client sends the `Authorization: Bearer <ui_hub_key>` header.
+- The handshake (`initialize`) is authenticated too, so configuring only the
+  endpoint URL is rejected immediately with `MISSING_API_KEY` — the key header
+  is required from the very first request.
 
 ---
 

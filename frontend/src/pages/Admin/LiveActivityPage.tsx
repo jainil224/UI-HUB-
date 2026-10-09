@@ -120,6 +120,8 @@ const LiveActivityPage: React.FC = () => {
                                     <Th>Time</Th>
                                     <Th>Status</Th>
                                     <Th>Method / Tool</Th>
+                                    <Th>User</Th>
+                                    <Th>Key</Th>
                                     <Th>Client</Th>
                                     <Th>Resource</Th>
                                     <Th>Latency</Th>
@@ -134,9 +136,14 @@ const LiveActivityPage: React.FC = () => {
                                             <div className="text-xs font-mono">{ev.toolName || ev.method}</div>
                                             {ev.query && <div className="text-[10px] text-neutral-500 truncate max-w-[220px]">{ev.query}</div>}
                                         </Td>
+                                        <Td className="text-xs">
+                                            <div className="text-white truncate max-w-[160px]">{ev.userName || (ev.userId ? ev.userId.slice(0, 8) + '…' : '—')}</div>
+                                            {ev.userName && ev.userId && <div className="text-[10px] font-mono text-neutral-500 truncate max-w-[160px]">{ev.userId.slice(0, 8)}…</div>}
+                                        </Td>
+                                        <Td className="text-[11px] font-mono text-neutral-300">{ev.keyPrefix || '—'}</Td>
                                         <Td className="text-xs">{ev.clientName || 'Unknown MCP client'}</Td>
-                                        <Td className="text-xs text-neutral-400">{ev.resourceType || '—'}{ev.resourceId ? `:${ev.resourceId}` : ''}</Td>
-                                        <Td className="text-xs font-mono">{formatMs(ev.latencyMs)}</Td>
+                                        <Td className="text-xs">{ev.resourceType ? `${ev.resourceType}${ev.resourceId ? ':' + ev.resourceId : ''}` : '—'}</Td>
+                                        <Td className="text-xs">{formatMs(ev.latencyMs)}</Td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -165,7 +172,7 @@ const LiveActivityPage: React.FC = () => {
                                 ['Error category', selected.errorCategory || '—'],
                                 ['Client', selected.clientName ? `${selected.clientName} ${selected.clientVersion || ''}` : 'Unknown MCP client'],
                                 ['Session', selected.sessionId || '—'],
-                                ['User', selected.userId || '—'],
+                                ['User', selected.userName ? `${selected.userName} (${selected.userId || '—'})` : (selected.userId || '—')],
                                 ['Key prefix', selected.keyPrefix || '—'],
                                 ['Tier', selected.tier || '—'],
                                 ['Resource', selected.resourceType ? `${selected.resourceType}${selected.resourceId ? ':' + selected.resourceId : ''}` : '—'],

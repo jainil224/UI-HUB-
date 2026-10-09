@@ -569,7 +569,7 @@ export function runPlayground(payload: PlaygroundRequest): Promise<PlaygroundRes
     });
 }
 
-export type ExportType = 'events' | 'logs' | 'users' | 'components' | 'search' | 'stats' | 'keys';
+export type ExportType = 'events' | 'logs' | 'users' | 'components' | 'search' | 'stats' | 'keys' | 'diagnostics' | 'activity' | 'audit';
 export type ExportFormat = 'csv' | 'json';
 
 export async function downloadExport(
@@ -626,6 +626,7 @@ export interface AdminRequestEvent {
     method: string;
     toolName?: string;
     userId?: string;
+    userName?: string;
     apiKeyId?: string;
     keyPrefix?: string;
     tier?: string;
@@ -753,6 +754,10 @@ export interface AdminFixCenterItem {
     evidence: Record<string, unknown>;
     fixPrompt: string;
     href?: string | null;
+    status?: string;
+    resolution?: string;
+    diagnosticId?: string;
+    fingerprint?: string;
 }
 
 export interface AdminFixCenter {
