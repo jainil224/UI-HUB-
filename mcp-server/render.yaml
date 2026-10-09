@@ -19,7 +19,7 @@ services:
       - key: MCP_API_KEY_PREFIX
         value: uh_live_
       - key: MCP_RATE_LIMIT_FREE
-        value: 100
+        value: 150
       - key: MCP_RATE_LIMIT_PRO
         value: 10000
       - key: MCP_ALLOWED_ORIGINS
@@ -38,3 +38,13 @@ services:
         sync: false
       - key: REDIS_URL
         sync: false
+      # Observability (additive). The alert scheduler runs in-process on this
+      # single Render MCP instance only; serverless runtimes must leave it false.
+      - key: MCP_ALERTS_SCHEDULER_ENABLED
+        value: "true"
+      - key: MCP_ALERTS_INTERVAL_MS
+        value: "60000"
+      - key: MCP_DIAGNOSTICS_RETENTION_DAYS
+        value: "90"
+      - key: MCP_LINKCHECK_ENABLED
+        value: "false"

@@ -102,7 +102,14 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 - [ ] Pro key on a premium id → `200` with full source.
 - [ ] **Regression sweep: all 43 premium ids return `200` via `getSourceCode` with a Pro key** —
       includes the three backfilled ids `black-hole`, `rubiks-cube`, `toonhub-hero`.
-- [ ] Free key rate limit (100/day default) enforced via `MCP_RATE_LIMIT_FREE`.
+- [ ] Free key `search_components` / `list_all_components` **shows** premium ids marked
+      `access: "premium-required"` (locked, no code); Pro key shows `premium-available`.
+- [ ] Natural-language query (`"add Particle Sun as my hero section"`) returns real component matches,
+      not an empty list.
+- [ ] Free key rate limit (150/day default) enforced via `MCP_RATE_LIMIT_FREE`; the 429 is a JSON-RPC
+      error with `data.retryAfterSeconds` and `Retry-After` / `X-RateLimit-*` headers.
+- [ ] Admin → **Live Activity** shows the requests above (or the empty-state note if just deployed).
+- [ ] Admin → **AI Search**, **Diagnostics**, **Alerts** tabs load without errors (engine tab shows counts).
 
 ### 3.4 CLI (smoke test with fresh keys)
 - [ ] `ui-hub --version` → `0.1.0`, exit 0.
@@ -118,6 +125,14 @@ Expected: `check-source-coverage OK: 43/43 premium ids present (124 total)` and
 | Backend can't resolve a premium id | id neither embedded nor resolvable on disk | `cd backend; npm run sync:premium` (embeds idempotently), rerun `npm test`, commit + deploy |
 | Deploy fails at `check-source-coverage` | canonical premium set has an id absent from data | run `npm run sync:data`; if the component file doesn't exist, fix the canonical list in `frontend/src/data/premiumComponents.ts` + `backend/src/config/premiumComponents.js` |
 | Vercel frontend can't fetch API | CORS / allowed origins | confirm `MCP_ALLOWED_ORIGINS` (Render MCP service) + backend CORS include the prod origin |
+| Live Activity / Diagnostics empty after deploy | instrumentation has not seen traffic yet, or the new indexes weren't created | wait for MCP traffic; confirm the boot log shows `[Indexes] ✓ mcp_request_events indexed`; re-run `setupProductionDatabase.js` (section 5b) |
+| Alerts engine tab shows "Engine idle" | scheduler disabled or no evaluation yet | confirm `MCP_ALERTS_SCHEDULER_ENABLED=true` on the **Render MCP service only** (never on Vercel/serverless); the first run fires ~15s after boot |
+| Duplicate alert events across instances | multiple schedulers racing | the scheduler uses a Mongo lease (`mcp_config/alertSchedulerLease`); ensure only the single Render MCP instance runs with the scheduler enabled |
+| Need to reduce telemetry volume | retention too long | lower `MCP_DIAGNOSTICS_RETENTION_DAYS`, or `MCP_REQUEST_RETENTION_DAYS` / `MCP_SEARCH_RETENTION_DAYS` / `MCP_ALERT_RETENTION_DAYS`; TTL indexes are applied on boot |
+| `search_components` returns wrong/empty results | synonym/tag mismatch in `searchEngine.ts` | check `SYNONYMS`/`STOPWORDS`, add the term, rerun `npx vitest run tests/searchEngine.test.ts` |
+| Pro key gets `COMPONENT_NOT_FOUND` for a premium id | premium id missing from the unified catalog (`premiumCatalog.ts`) | confirm the id is in `frontend/src/data/premiumComponents.ts` and `src/data/sourceCode.json`; rerun `npm run build` (41/41 coverage gate) |
+| Free key can fetch premium code | gating bypassed in a `get_*` tool | tools must call `permissionService.authorize`; rerun `npx vitest run tests/premiumGating.test.ts` |
+| Clients show a generic error on limit | 429 missing JSON-RPC envelope/headers | ensure `rateLimiter.ts` returns the `-32029` envelope + `Retry-After`; rerun `npx vitest run tests/rateLimit.test.ts` |
 
 ## 5. Keeping data in sync (routine component changes)
 

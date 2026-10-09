@@ -1,8 +1,30 @@
 import { apiKeyService } from '../services/apiKeyService.js';
 import { firebaseService } from '../services/firebase.js';
 import { analyticsService } from '../services/analyticsService.js';
+import { telemetryService } from '../services/telemetryService.js';
+import { hashValue } from '../services/redaction.js';
 /** Max ms to wait for DB-backed auth. On cold start MongoDB can be slow. */
 const AUTH_TIMEOUT_MS = 7000;
+/** Record a denied authentication attempt for the admin observability views. */
+function emitAuthFailure(req, errorCode) {
+    const ctx = req.mcpTelemetry || {};
+    telemetryService.recordRequest({
+        correlationId: ctx.correlationId || 'unknown',
+        method: typeof req.body?.method === 'string' ? req.body.method : 'unknown',
+        status: 'authorization_denied',
+        success: false,
+        errorCode,
+        errorCategory: 'auth_failure',
+        statusCode: 200,
+        clientName: ctx.clientName,
+        clientVersion: ctx.clientVersion,
+        sessionId: ctx.sessionId,
+        transport: 'streamable-http',
+        latencyMs: ctx.startedAt ? Date.now() - ctx.startedAt : undefined,
+        ipHash: hashValue(req.ip || ''),
+        timestamp: Date.now(),
+    });
+}
 /**
  * Race a promise against a timeout.
  * Returns the result or throws an error if it takes too long.
@@ -67,6 +89,7 @@ export async function authenticateMcp(req, res, next) {
             timestamp: Date.now(),
             errorCode: 'MISSING_API_KEY',
         });
+        emitAuthFailure(req, 'MISSING_API_KEY');
         return res.status(200).json({
             jsonrpc: '2.0',
             id: req.body?.id ?? null,
@@ -88,6 +111,7 @@ export async function authenticateMcp(req, res, next) {
                 errorCode: 'INVALID_API_KEY',
                 keyPrefix: apiKey.slice(0, 14),
             });
+            emitAuthFailure(req, 'INVALID_API_KEY');
             return res.status(200).json({
                 jsonrpc: '2.0',
                 id: req.body?.id ?? null,
@@ -123,6 +147,7 @@ export async function authenticateMcp(req, res, next) {
     }
     catch (err) {
         console.error('[Auth] Authentication error:', err?.message || err);
+        emitAuthFailure(req, 'DB_ERROR');
         // On timeout or DB error, return a JSON-RPC error so the client knows why
         return res.status(200).json({
             jsonrpc: '2.0',

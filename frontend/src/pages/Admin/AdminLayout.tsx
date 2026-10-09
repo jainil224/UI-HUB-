@@ -3,13 +3,15 @@ import { Outlet, NavLink, Link, useLocation } from 'react-router-dom';
 import {
     LayoutDashboard, BarChart3, Wrench, FlaskConical, Boxes, Search, Users,
     KeyRound, ScrollText, ShieldCheck, HeartPulse, BellRing, Settings, History,
-    Download, ChevronLeft, Menu, X, ArrowLeft, Bot
+    Download, ChevronLeft, Menu, X, ArrowLeft, Bot, Radio, Sparkles, Stethoscope
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const ADMIN_NAV = [
     { to: '/admin/mcp/overview', label: 'Overview', icon: LayoutDashboard },
+    { to: '/admin/mcp/activity', label: 'Live Activity', icon: Radio },
     { to: '/admin/mcp/analytics', label: 'Analytics', icon: BarChart3 },
+    { to: '/admin/mcp/search-analytics', label: 'AI Search', icon: Sparkles },
     { to: '/admin/mcp/tools', label: 'Tools', icon: Wrench },
     { to: '/admin/mcp/playground', label: 'Playground', icon: FlaskConical },
     { to: '/admin/mcp/components', label: 'Components', icon: Boxes },
@@ -20,6 +22,7 @@ export const ADMIN_NAV = [
     { to: '/admin/mcp/security', label: 'Security', icon: ShieldCheck },
     { to: '/admin/mcp/health', label: 'Server Health', icon: HeartPulse },
     { to: '/admin/mcp/alerts', label: 'Alerts', icon: BellRing },
+    { to: '/admin/mcp/diagnostics', label: 'Diagnostics', icon: Stethoscope },
     { to: '/admin/mcp/settings', label: 'Settings', icon: Settings },
     { to: '/admin/mcp/audit', label: 'Audit', icon: History },
     { to: '/admin/mcp/export', label: 'Export', icon: Download },

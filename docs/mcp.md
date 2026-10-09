@@ -104,27 +104,33 @@ Place the generic configuration in your project's `.vscode/mcp.json`:
 
 ### `search_components`
 
-Search UI HUB components by name, category, framework, styling, tags, or premium status.
+Search UI HUB components by natural-language intent or structured filters. Queries are tokenized and
+matched against id, name, description, category and tags with synonym expansion (e.g. `sun` → `solar`,
+`hero` → `navbar`/`landing`), so a prompt like `"add Particle Sun as my hero section"` resolves to real
+components. Matching is fully local and deterministic — no external/embedding service is used.
 
 **Parameters:**
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| `query` | string (optional) | Free-text keyword, e.g. `"pricing card"` |
+| `query` | string (optional) | Free-text intent, e.g. `"particle sun hero"` |
 | `category` | string (optional) | `3d`, `background`, `button`, `cursor`, `effect`, `footer`, `form`, `image-interaction`, `interactive-background`, `loader`, `navbar`, `particles-background`, `scroll`, `text` |
 | `framework` | string (optional) | `react` |
 | `styling` | string (optional) | `tailwind`, `css`, `scss` |
 | `tags` | string[] (optional) | Tags to filter by |
 | `isPremium` | boolean (optional) | `true` = premium only |
 
-**Response:** array of `{ id, name, description, category, framework, styling, tags, previewUrl, isPremium, access }`.
+**Response:** array of `{ id, name, description, category, framework, styling, tags, previewUrl, isPremium, access, matchedOn, score }`.
 
-Premium components are **completely hidden** from free-tier keys — they never appear in search results, so an AI on a
-free key cannot discover pro content at all. Pro/Elite keys see premium items marked `premium-available`.
+Premium results are **visible but locked** to free-tier keys: they appear with `access: "premium-required"`
+and **never include source code**. Pro/Elite/Admin keys see them as `access: "premium-available"`. Free
+keys are told premium content exists (so intent like "particle sun" still resolves) but cannot fetch its
+code — `get_component*` returns `PREMIUM_ACCESS_REQUIRED`.
 
 ### `list_all_components`
 
-Enumerate the entire UI HUB catalog with pagination (tier-aware — free keys get only free components).
+Enumerate the entire UI HUB catalog with pagination. Premium components are always listed: free keys see
+them marked `access: "premium-required"` (locked), Pro/Elite/Admin see `access: "premium-available"`.
 
 **Parameters:** `category` (optional), `limit` (optional, 1–200, default 100), `offset` (optional, 0-based)
 
@@ -208,15 +214,36 @@ tools/call
 
 | Capability | Free | Pro |
 |------------|------|-----|
-| MCP requests/day | 100 | 10,000+ |
+| MCP requests/day | 150 | 10,000+ |
 | Component search | ✅ | ✅ |
 | Component metadata | ✅ | ✅ |
-| Premium components | ❌ | ✅ |
+| Premium components (discover) | ✅ (locked) | ✅ |
+| Premium source code | ❌ | ✅ |
 | Premium templates | ❌ | ✅ |
 | Premium animations | ❌ | ✅ |
 | Full source code | Free components only | All components |
 
 Limits are configurable via environment variables (`MCP_RATE_LIMIT_FREE`, `MCP_RATE_LIMIT_PRO`).
+
+### Rate-limit response (HTTP 429)
+
+When a key exhausts its daily quota the server returns a **JSON-RPC error** (not a bare body) plus
+standard headers, so MCP clients can display a useful message and back off:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 42,
+  "error": {
+    "code": -32029,
+    "message": "You have exceeded your current MCP usage limit. Wait for the daily reset or upgrade your plan.",
+    "data": { "limit": 150, "remaining": 0, "resetAt": 1790000000000, "retryAfterSeconds": 3600 }
+  }
+}
+```
+
+Headers: `Retry-After`, `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (epoch seconds).
+The counter resets at **UTC midnight**.
 
 ---
 
@@ -226,7 +253,11 @@ Limits are configurable via environment variables (`MCP_RATE_LIMIT_FREE`, `MCP_R
 - Non-essential key metadata (prefix, dates) is shown in the dashboard; the full secret is never exposed after creation.
 - API keys can be **revoked** at any time from the dashboard.
 - Rate limiting is enforced per API key and per plan.
-- Premium content is protected server-side; free users receive `PREMIUM_ACCESS_REQUIRED`.
+- Premium content is protected server-side. Free keys may **discover** premium items (search/list show
+  them marked `premium-required`) but never receive their source — any `get_*` call returns
+  `PREMIUM_ACCESS_REQUIRED`.
+- Premium-only catalog ids (the 41 curated premium components) resolve through the same unified catalog,
+  so Pro/Elite/Admin keys can fetch them; free keys always get `PREMIUM_ACCESS_REQUIRED`.
 - Raw API keys and private database fields are never returned in MCP responses or logs.
 
 ---
@@ -254,10 +285,12 @@ The MCP server returns structured JSON errors:
 - Recreate the key from the MCP dashboard.
 
 **"RATE_LIMIT_EXCEEDED"**
-- Free accounts are limited to 100 MCP requests/day. Wait for the next day or upgrade to Pro.
+- Free accounts are limited to 150 MCP requests/day. The 429 is a JSON-RPC error carrying
+  `data.retryAfterSeconds` and a `Retry-After` header; the counter resets at UTC midnight.
 
 **"PREMIUM_ACCESS_REQUIRED"**
-- The requested component is premium. Upgrade to Pro for full source access.
+- The requested component is premium. Free keys can find it via search (marked `premium-required`) but
+  need Pro for source access.
 
 **"COMPONENT_NOT_FOUND"**
 - Check the `componentId` spelling. Use `search_components` or `list_categories` to find valid IDs.
@@ -294,4 +327,33 @@ npm run build       # tsc + coverage guard + copy data into dist
 - The build runs `scripts/check-source-coverage.mjs`, which **fails the build** if any
   canonical premium id is missing from `sourceCode.json` — this catches premium components
   (e.g. `black-hole`, `rubiks-cube`, `toonhub-hero`) that would otherwise 404 via MCP/CLI.
+
+### Admin observability (additive)
+
+The MCP admin dashboard (`/admin/mcp/*`) includes observability surfaces that are layered
+**additively** on top of the legacy analytics — no existing collection, endpoint, or page is
+removed or changed. All are gated behind `requireAdmin` (ADMIN/ELITE).
+
+- **Live Activity** (`/admin/mcp/activity`) — per-request telemetry from the new
+  `mcp_request_events` collection: correlation id, client, tool, latency, outcome and error
+  category. `authorization_denied` and `rate_limited` outcomes are recorded from the auth and
+  rate-limit middleware too.
+- **AI Search Analytics** (`/admin/mcp/search-analytics`) — new `mcp_search_events`
+  collection: what agents search for, zero-result rate, and fetch/code retrieval throughput.
+- **Diagnostics** (`/admin/mcp/diagnostics`) — the `mcp_diagnostics` collection groups failures
+  by a stable fingerprint (15 categories) with compact evidence and a deterministic, copyable
+  AI repair prompt. Prompts are built locally — no external AI API key is required.
+- **Alerts engine** (`/admin/mcp/alerts`) — the `mcp_alert_rules` / `mcp_alert_events`
+  collections plus a guarded in-process scheduler (Render MCP service only). Each event
+  supports acknowledge / resolve / reopen / mute. The legacy analytics alerts remain on the
+  same page under the "Configured Alerts" tab.
+
+Redaction runs **before persistence**: API keys, bearer tokens, connection strings and sensitive
+URL query params are stripped. Raw IPs are stored only as a non-reversible hash. The scheduler
+is disabled automatically when `MCP_ALERTS_SCHEDULER_ENABLED=false` (use this on serverless).
+
+New collections and their TTLs are created by `ensureTelemetryIndexes()` on boot and by
+`backend/src/scripts/setupProductionDatabase.js` (section 5b): `mcp_request_events` (30d),
+`mcp_search_events` (30d), `mcp_diagnostics` (90d), `mcp_alert_rules` (permanent),
+`mcp_alert_events` (180d).
 

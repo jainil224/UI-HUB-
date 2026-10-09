@@ -228,7 +228,7 @@ cannot be recovered.
 readable message — but it means **HTTP status cannot be used to detect MCP auth
 failure.** DB calls are wrapped in a 7-second timeout to survive cold starts.
 
-Rate limits: FREE **100**, PRO **10000** (`MCP_RATE_LIMIT_FREE` / `_PRO`).
+Rate limits: FREE **150**, PRO **10000** (`MCP_RATE_LIMIT_FREE` / `_PRO`).
 Tier comes from Firebase with a FREE fallback.
 
 ### 6.3 The 14 tools

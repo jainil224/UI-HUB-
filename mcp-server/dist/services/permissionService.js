@@ -1,3 +1,4 @@
+import config from '../config/env.js';
 export class PermissionService {
     static instance;
     static getInstance() {
@@ -21,19 +22,19 @@ export class PermissionService {
         return user.tier === 'ADMIN' || user.tier === 'ELITE';
     }
     /**
-     * Get the rate limit for a user's tier.
-     * Returns configured values based on plan.
+     * Get the rate limit for a user's tier. Mirrors the real limiter in
+     * middleware/rateLimiter.ts so the two never disagree.
      */
     getRateLimit(user) {
         switch (user.tier) {
             case 'PRO':
+                return config.rateLimitPro;
             case 'ELITE':
             case 'ADMIN':
-                // Pro/Admin users get the higher limit (or unlimited marker)
                 return Number.MAX_SAFE_INTEGER;
             case 'FREE':
             default:
-                return 100; // 100 requests per day for free users
+                return config.rateLimitFree;
         }
     }
     /**

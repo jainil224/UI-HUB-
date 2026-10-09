@@ -256,7 +256,7 @@ evidence · `low` unverified.
 | **Tools** | **14** — `search_components`, `get_component`, `get_component_code`, `search_templates`, `get_template`, `search_animations`, `get_animation_code`, `list_categories`, `get_dependencies`, `get_component_metadata`, `search_by_behavior`, `get_ai_prompts`, `get_template_source`, `list_all_components` |
 | **Data** | `mcp-server/src/data/` — generated. `components.ts` (137), `sourceCode.json` (148), `premiumComponents.json` (41), + 5 more. |
 | **Auth** | `Authorization: Bearer uh_live_…` (+ `?key=`, `x-api-key`). SHA-256 hashed in MongoDB. Rejections return **HTTP 200** with a JSON-RPC error envelope, not 401. |
-| **Rate limits** | FREE 100 / PRO 10000 (`MCP_RATE_LIMIT_FREE` / `_PRO`) |
+| **Rate limits** | FREE 150 / PRO 10000 (`MCP_RATE_LIMIT_FREE` / `_PRO`) |
 | **User surface** | `/dashboard/mcp` (`MCPPage.tsx`, 818 L) — endpoint + header instructions, tier, key CRUD, usage stats. |
 | **Detail** | `../APIs/API_OVERVIEW.md` §6. |
 

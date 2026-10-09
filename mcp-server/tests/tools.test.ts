@@ -32,7 +32,11 @@ describe('ComponentService', () => {
   it('searches components by keyword', () => {
     const results = componentService.searchComponents({ query: 'cursor' });
     expect(results.length).toBeGreaterThan(0);
-    expect(results.every((c) => c.id.includes('cursor') || c.tags.some((t) => t.includes('cursor')))).toBe(true);
+    expect(
+      results.some(
+        (c) => c.id.includes('cursor') || c.category === 'cursor' || c.tags.some((t) => t.includes('cursor'))
+      )
+    ).toBe(true);
   });
 
   it('searches components by category', () => {
@@ -240,18 +244,22 @@ describe('MCP Tools', () => {
 });
 
 describe('MCP Tools — premium isolation for free keys', () => {
-  it('search_components hides all premium components from free keys', async () => {
+  it('search_components surfaces premium to free keys as locked (not hidden)', async () => {
     const result = await tool('search_components').handler({ query: '' }, { user: freeUser });
     const data = parse(result);
     expect(data.count).toBeGreaterThan(0);
-    expect(data.components.every((c: any) => c.isPremium === false)).toBe(true);
-    expect(data.components.every((c: any) => c.access === 'free')).toBe(true);
+    const premium = data.components.find((c: any) => c.isPremium);
+    expect(premium).toBeDefined();
+    expect(premium.access).toBe('premium-required');
+    expect(premium.code).toBeUndefined();
   });
 
-  it('search_components isPremium:true returns nothing for free keys', async () => {
+  it('search_components isPremium:true returns locked premium for free keys', async () => {
     const result = await tool('search_components').handler({ isPremium: true }, { user: freeUser });
     const data = parse(result);
-    expect(data.count).toBe(0);
+    expect(data.count).toBeGreaterThan(0);
+    expect(data.components.every((c: any) => c.isPremium === true)).toBe(true);
+    expect(data.components.every((c: any) => c.access === 'premium-required')).toBe(true);
   });
 
   it('search_components exposes premium components to pro keys', async () => {
@@ -262,10 +270,13 @@ describe('MCP Tools — premium isolation for free keys', () => {
     expect(data.components.every((c: any) => c.access === 'premium-available')).toBe(true);
   });
 
-  it('search_by_behavior hides all premium components from free keys', async () => {
+  it('search_by_behavior surfaces premium to free keys as locked', async () => {
     const result = await tool('search_by_behavior').handler({ query: 'particle' }, { user: freeUser });
     const data = parse(result);
-    expect(data.components.every((c: any) => c.isPremium === false)).toBe(true);
+    expect(data.components.length).toBeGreaterThan(0);
+    const premium = data.components.find((c: any) => c.isPremium);
+    expect(premium).toBeDefined();
+    expect(premium.access).toBe('premium-required');
   });
 
   it('search_templates hides premium templates from free keys', async () => {
@@ -286,26 +297,28 @@ describe('MCP Tools — premium isolation for free keys', () => {
     expect(data.count).toBeGreaterThan(0);
   });
 
-  it('list_all_components returns only free components for free keys', async () => {
+  it('list_all_components includes premium ids as locked for free keys', async () => {
     const result = await tool('list_all_components').handler({ limit: 200 }, { user: freeUser });
     const data = parse(result);
     expect(data.total).toBeGreaterThan(0);
     expect(data.count).toBe(data.total);
-    expect(data.components.every((c: any) => c.isPremium === false)).toBe(true);
-    expect(data.components.some((c: any) => c.id === 'black-hole')).toBe(false);
-    expect(data.components.some((c: any) => c.id === 'rubiks-cube')).toBe(false);
-    expect(data.components.some((c: any) => c.id === 'toonhub-hero')).toBe(false);
-  });
-
-  it('list_all_components includes premium + premium-only ids for pro keys', async () => {
-    const free = parse(await tool('list_all_components').handler({ limit: 200 }, { user: freeUser }));
-    const result = await tool('list_all_components').handler({ limit: 200 }, { user: proUser });
-    const data = parse(result);
-    expect(data.total).toBeGreaterThan(free.total);
-    expect(data.components.some((c: any) => c.isPremium === true)).toBe(true);
+    expect(
+      data.components.every((c: any) => (c.isPremium ? c.access === 'premium-required' : c.access === 'free'))
+    ).toBe(true);
     expect(data.components.some((c: any) => c.id === 'black-hole')).toBe(true);
     expect(data.components.some((c: any) => c.id === 'rubiks-cube')).toBe(true);
     expect(data.components.some((c: any) => c.id === 'toonhub-hero')).toBe(true);
+  });
+
+  it('list_all_components marks premium available for pro keys (same total)', async () => {
+    const free = parse(await tool('list_all_components').handler({ limit: 200 }, { user: freeUser }));
+    const result = await tool('list_all_components').handler({ limit: 200 }, { user: proUser });
+    const data = parse(result);
+    expect(data.total).toBe(free.total);
+    expect(data.components.some((c: any) => c.isPremium === true && c.access === 'premium-available')).toBe(true);
+    expect(data.components.some((c: any) => c.id === 'black-hole' && c.access === 'premium-available')).toBe(true);
+    expect(data.components.some((c: any) => c.id === 'rubiks-cube' && c.access === 'premium-available')).toBe(true);
+    expect(data.components.some((c: any) => c.id === 'toonhub-hero' && c.access === 'premium-available')).toBe(true);
   });
 
   it('list_all_components supports category + pagination', async () => {

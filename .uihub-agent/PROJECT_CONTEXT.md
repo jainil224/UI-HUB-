@@ -166,7 +166,7 @@ MCP client (Claude Desktop, an agent, or the UI HUB CLI)
 ```
 
 Keys are created at `/dashboard/mcp` (Firebase ID token) and the plaintext is
-returned **once**. Rate limits differ by tier (`MCP_RATE_LIMIT_FREE` 100,
+returned **once**. Rate limits differ by tier (`MCP_RATE_LIMIT_FREE` 150,
 `MCP_RATE_LIMIT_PRO` 10000).
 
 ### 4.5 Operate the service

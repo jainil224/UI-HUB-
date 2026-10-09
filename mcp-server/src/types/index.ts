@@ -145,6 +145,10 @@ export interface TemplateCatalogItem {
 export interface McpRequestContext {
   user?: McpUser;
   ip?: string;
+  /** Per-request correlation id (best-effort cross-request correlation). */
+  correlationId?: string;
+  client?: { name?: string; version?: string };
+  sessionId?: string;
 }
 
 export interface AuthenticatedRequest extends Request {

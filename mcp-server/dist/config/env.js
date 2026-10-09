@@ -20,7 +20,7 @@ const config = {
     nodeEnv: process.env.NODE_ENV || 'development',
     mcpServerUrl: process.env.MCP_SERVER_URL || 'https://ui-hub-mcp.onrender.com',
     apiKeyPrefix: process.env.MCP_API_KEY_PREFIX || 'uh_live_',
-    rateLimitFree: parseInt(process.env.MCP_RATE_LIMIT_FREE || '100', 10),
+    rateLimitFree: parseInt(process.env.MCP_RATE_LIMIT_FREE || '150', 10),
     rateLimitPro: parseInt(process.env.MCP_RATE_LIMIT_PRO || '10000', 10),
     firebase: {
         projectId: process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID,
@@ -32,6 +32,13 @@ const config = {
     redisUrl: process.env.REDIS_URL,
     allowedOrigins: parseList(process.env.MCP_ALLOWED_ORIGINS),
     adminEmails: parseList(process.env.MCP_ADMIN_EMAILS),
+    observability: {
+        alertsSchedulerEnabled: !['false', '0', 'off'].includes((process.env.MCP_ALERTS_SCHEDULER_ENABLED || '').trim().toLowerCase()),
+        alertsIntervalMs: parseInt(process.env.MCP_ALERTS_INTERVAL_MS || '60000', 10),
+        diagnosticsRetentionDays: parseInt(process.env.MCP_DIAGNOSTICS_RETENTION_DAYS || '90', 10),
+        linkCheckEnabled: ['true', '1', 'on'].includes((process.env.MCP_LINKCHECK_ENABLED || '').trim().toLowerCase()),
+        linkCheckAllowedHosts: parseList(process.env.MCP_LINKCHECK_ALLOWED_HOSTS),
+    },
 };
 export default config;
 //# sourceMappingURL=env.js.map

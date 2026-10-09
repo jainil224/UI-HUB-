@@ -10,6 +10,9 @@ import { dashboardRouter } from './routes/dashboard.js';
 import { adminRouter } from './routes/admin.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { analyticsService } from './services/analyticsService.js';
+import { telemetryService } from './services/telemetryService.js';
+import { ensureTelemetryIndexes } from './services/telemetryIndexes.js';
+import { startAlertScheduler, stopAlertScheduler } from './services/alertScheduler.js';
 import { getDb, getClient } from './services/mongo.js';
 const app = express();
 const PORT = config.port;
@@ -90,14 +93,23 @@ if (isMain) {
     getClient()
         .then(() => console.log('[Mongo] Eager connection established'))
         .catch((e) => console.warn(`[Mongo] Eager connection failed (will retry on demand): ${e?.message}`));
+    // Additive observability bootstrap: ensure indexes then start the guarded
+    // alert evaluation scheduler. Failures are logged and never block startup.
+    ensureTelemetryIndexes()
+        .then(() => startAlertScheduler())
+        .catch((e) => console.warn(`[Observability] bootstrap warning: ${e?.message}`));
     started = app.listen(PORT, '0.0.0.0', () => {
         console.log(`[MCP Server] Running on http://0.0.0.0:${PORT}`);
         console.log(`[MCP Server] Health: http://localhost:${PORT}/health`);
         console.log(`[MCP Server] MCP endpoint: ${config.mcpServerUrl}/mcp`);
     });
     const shutdown = (signal) => {
-        console.log(`[MCP Server] ${signal} received — flushing analytics before exit...`);
-        Promise.race([analyticsService.flushNow(), new Promise((r) => setTimeout(r, 3000))])
+        console.log(`[MCP Server] ${signal} received — flushing telemetry before exit...`);
+        stopAlertScheduler();
+        Promise.race([
+            Promise.all([analyticsService.flushNow(), telemetryService.flushNow()]),
+            new Promise((r) => setTimeout(r, 3000)),
+        ])
             .catch(() => { })
             .finally(() => process.exit(0));
         setTimeout(() => process.exit(0), 4000).unref();

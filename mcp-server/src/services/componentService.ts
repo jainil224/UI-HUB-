@@ -1,5 +1,7 @@
 import { COMPONENT_METADATA, CATEGORY_LIST, ComponentMeta } from '../data/components.js';
 import type { AnimationDetail, AnimationSummary, AiPrompts, ComponentDetail, ComponentMetadata, ComponentSummary, TemplateDetail, TemplateSummary, TemplateCatalogItem } from '../types/index.js';
+import { getPremiumOnlyMeta, getPremiumOnlyMetas } from './premiumCatalog.js';
+import { searchCatalog, type SearchDoc, type SearchHit } from './searchEngine.js';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -115,26 +117,9 @@ export class ComponentService {
   getFullCatalog(): ComponentSummary[] {
     const catalog = this.getAllComponents();
     const catalogIds = new Set(catalog.map((c) => c.id));
-    const premiumIds = loadJson<string[]>('premiumComponents.json') || [];
-    const premiumOnly = premiumIds
-      .filter((id) => !catalogIds.has(id))
-      .map((id) => ({
-        id,
-        name: id
-          .split('-')
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join(' '),
-        description: `Premium ${id
-          .split('-')
-          .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-          .join(' ')} — premium-only UI HUB component`,
-        category: 'premium',
-        framework: 'react',
-        styling: 'tailwind',
-        tags: ['premium'],
-        previewUrl: `https://www.uihub.codes/demo/${id}`,
-        isPremium: true,
-      }));
+    const premiumOnly = getPremiumOnlyMetas()
+      .filter((m) => !catalogIds.has(m.id))
+      .map((m) => this.metaToSummary(m));
     return [...catalog, ...premiumOnly];
   }
 
@@ -146,49 +131,80 @@ export class ComponentService {
     tags?: string[];
     isPremium?: boolean;
   }): ComponentSummary[] {
-    let results = this.getFullCatalog();
+    return this.searchComponentHits(params).map((h) => h.item);
+  }
 
-    if (params.query) {
-      const q = params.query.toLowerCase().trim();
-      results = results.filter(
-        (c) =>
-          c.name.toLowerCase().includes(q) ||
-          c.id.toLowerCase().includes(q) ||
-          c.tags.some((t) => t.toLowerCase().includes(q)) ||
-          (c.description || '').toLowerCase().includes(q)
-      );
-    }
+  /**
+   * Ranked search over the full catalog (including premium-only components)
+   * using the deterministic search engine. Returns score/matchedOn so callers
+   * can label tier access without hiding relevant premium matches.
+   */
+  searchComponentHits(params: {
+    query?: string;
+    category?: string;
+    framework?: string;
+    styling?: string;
+    tags?: string[];
+    isPremium?: boolean;
+  }): SearchHit[] {
+    let pool = this.getFullCatalog();
 
     if (params.category) {
       const category = params.category.toLowerCase();
-      results = results.filter((c) => c.category === category);
+      pool = pool.filter((c) => c.category === category);
     }
-
     if (params.framework) {
       const framework = params.framework.toLowerCase();
-      results = results.filter((c) => c.framework === framework as ComponentSummary['framework']);
+      pool = pool.filter((c) => c.framework === framework);
     }
-
     if (params.styling) {
       const styling = params.styling.toLowerCase();
-      results = results.filter((c) => c.styling === styling as ComponentSummary['styling']);
+      pool = pool.filter((c) => c.styling === styling);
     }
-
     if (params.tags && params.tags.length > 0) {
-      results = results.filter((c) =>
+      pool = pool.filter((c) =>
         params.tags!.every((tag) => c.tags.some((t) => t.toLowerCase().includes(tag.toLowerCase())))
       );
     }
-
     if (params.isPremium !== undefined) {
-      results = results.filter((c) => c.isPremium === params.isPremium);
+      pool = pool.filter((c) => c.isPremium === params.isPremium);
     }
 
-    return results.slice(0, 20);
+    if (!params.query || !params.query.trim()) {
+      return pool.slice(0, 50).map((item) => ({ item, score: 0, matchedTokens: 0 }));
+    }
+
+    const docs: SearchDoc[] = pool.map((item) => ({
+      item,
+      behaviorText: this.behaviorTextFor(item.id),
+    }));
+    return searchCatalog(params.query, docs, { limit: 50 });
+  }
+
+  /** Combined behavior/vibe text for a component (metadata + vibe prompts). */
+  private behaviorTextCache = new Map<string, string>();
+
+  private behaviorTextFor(id: string): string {
+    const cached = this.behaviorTextCache.get(id);
+    if (cached !== undefined) return cached;
+
+    const full = loadMetadataMap()[id];
+    const vibe = loadVibePrompts()[id] || '';
+    const parts = [
+      full?.vibeMeta?.behavior,
+      full?.vibeMeta?.description,
+      ...(full?.vibeMeta?.requirements || []),
+      vibe,
+    ]
+      .filter((p): p is string => typeof p === 'string' && p.length > 0)
+      .join(' ');
+
+    this.behaviorTextCache.set(id, parts);
+    return parts;
   }
 
   async getComponent(componentId: string, includeCode = false): Promise<ComponentDetail | null> {
-    const comp = COMPONENT_METADATA.find((c) => c.id === componentId);
+    const comp = this.getComponentMeta(componentId);
     if (!comp) return null;
 
     const code = this.getCode(componentId);
@@ -209,13 +225,15 @@ export class ComponentService {
   }
 
   async getDependencies(componentId: string): Promise<string[] | null> {
-    const comp = COMPONENT_METADATA.find((c) => c.id === componentId);
+    const comp = this.getComponentMeta(componentId);
     if (!comp) return null;
     return comp.dependencies;
   }
 
   getComponentMeta(componentId: string): ComponentMeta | undefined {
-    return COMPONENT_METADATA.find((c) => c.id === componentId);
+    const direct = COMPONENT_METADATA.find((c) => c.id === componentId);
+    if (direct) return direct;
+    return getPremiumOnlyMeta(componentId) ?? undefined;
   }
 
   /** Full AI prompts (claude/antigravity/lovable) for a component, if any exist. */
@@ -231,7 +249,7 @@ export class ComponentService {
 
   /** Rich metadata (props + vibe) for a component, falling back to the vibe prompt. */
   getComponentMetadata(componentId: string): ComponentMetadata | null {
-    const meta = COMPONENT_METADATA.find((c) => c.id === componentId);
+    const meta = this.getComponentMeta(componentId);
     if (!meta) return null;
 
     const full = loadMetadataMap()[componentId];
@@ -265,33 +283,9 @@ export class ComponentService {
     return { template, source: sources[templateId] || null };
   }
 
-  /** Search components by behavior/vibe keywords (props+behavior metadata and vibe prompts). */
+  /** Search components by behavior/vibe keywords (delegates to the ranked engine). */
   searchByBehavior(query: string): ComponentSummary[] {
-    const q = query.toLowerCase().trim();
-    if (!q) return [];
-    const metadata = loadMetadataMap();
-    const vibePrompts = loadVibePrompts();
-
-    const results: Array<ComponentSummary & { matchedOn?: string }> = [];
-    for (const comp of COMPONENT_METADATA) {
-      const full = metadata[comp.id];
-      const behavior = full?.vibeMeta?.behavior?.toLowerCase() || '';
-      const desc = full?.vibeMeta?.description?.toLowerCase() || '';
-      const requirements = (full?.vibeMeta?.requirements || []).join(' ').toLowerCase();
-      const vibePrompt = (vibePrompts[comp.id] || '').toLowerCase();
-
-      const matchedOn =
-        behavior.includes(q) ? 'behavior'
-        : desc.includes(q) ? 'description'
-        : requirements.includes(q) ? 'requirements'
-        : vibePrompt.includes(q) ? 'vibe'
-        : null;
-
-      if (matchedOn) {
-        results.push({ ...this.metaToSummary(comp), matchedOn });
-      }
-    }
-    return results.slice(0, 20);
+    return this.searchComponentHits({ query }).map((h) => h.item);
   }
 
   listCategories(excludePremium = false): Array<{ slug: string; label: string; count: number }> {
@@ -336,7 +330,7 @@ export class ComponentService {
 
   async getTemplate(templateId: string): Promise<TemplateDetail | null> {
     const componentId = templateId.replace(/^template-/, '');
-    const comp = COMPONENT_METADATA.find((c) => c.id === componentId);
+    const comp = this.getComponentMeta(componentId);
     if (!comp) return null;
 
     const code = this.getCode(componentId);
@@ -391,7 +385,7 @@ export class ComponentService {
 
   async getAnimationCode(animationId: string): Promise<AnimationDetail | null> {
     const componentId = animationId.replace(/^anim-/, '');
-    const comp = COMPONENT_METADATA.find((c) => c.id === componentId);
+    const comp = this.getComponentMeta(componentId);
     if (!comp) return null;
 
     const code = this.getCode(componentId);

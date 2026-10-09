@@ -248,7 +248,7 @@ held in process memory is per-instance:
 | `MONGODB_DB` | `uihub` | literal |
 | `MCP_SERVER_URL` | `https://ui-hub-mcp.onrender.com` | **stale — see below** |
 | `MCP_API_KEY_PREFIX` | `uh_live_` | literal |
-| `MCP_RATE_LIMIT_FREE` | `100` | matches `mcp_config` seed |
+| `MCP_RATE_LIMIT_FREE` | `150` | matches `mcp_config` seed |
 | `MCP_RATE_LIMIT_PRO` | `10000` | matches `mcp_config` seed |
 | `MCP_ALLOWED_ORIGINS` | Vercel prod + `localhost:5173`, `localhost:3000` | **5173 is stale** |
 | `MCP_ADMIN_EMAILS` | **three real Gmail addresses, in plaintext** | PII in a tracked file |

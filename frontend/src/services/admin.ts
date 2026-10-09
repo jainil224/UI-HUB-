@@ -582,3 +582,253 @@ export async function downloadExport(type: ExportType, format: ExportFormat, ran
     a.remove();
     URL.revokeObjectURL(url);
 }
+
+/* ────────────────────────────────────────────────────────────────────────────
+ * Observability (additive): Live Activity, AI Search Analytics, Diagnostics,
+ * and the actionable Alerts engine. These endpoints are new; legacy admin
+ * methods above are unchanged.
+ * ──────────────────────────────────────────────────────────────────────────── */
+
+export interface AdminRequestEvent {
+    id: string;
+    correlationId: string;
+    method: string;
+    toolName?: string;
+    userId?: string;
+    apiKeyId?: string;
+    keyPrefix?: string;
+    tier?: string;
+    clientName?: string;
+    clientVersion?: string;
+    sessionId?: string;
+    status: string;
+    success: boolean;
+    errorCode?: string;
+    errorCategory?: string;
+    statusCode?: number;
+    latencyMs?: number;
+    resultCount?: number;
+    resourceType?: string;
+    resourceId?: string;
+    query?: string;
+    timestamp: number;
+}
+
+export interface AdminActivity {
+    total: number;
+    page: number;
+    pageSize: number;
+    items: AdminRequestEvent[];
+    range: AdminRange;
+    summary: { byStatus: Record<string, number>; byClient: Record<string, number>; avgLatencyMs: number };
+    note?: string;
+}
+
+export interface AdminSearchEvent {
+    id: string;
+    correlationId: string;
+    resourceType: string;
+    tool?: string;
+    query?: string;
+    queryNormalized?: string;
+    resultCount: number;
+    zeroResults: boolean;
+    fetched?: boolean;
+    codeRetrieved?: boolean;
+    returnedIds?: string[];
+    failureCategory?: string;
+    clientName?: string;
+    tier?: string;
+    latencyMs?: number;
+    timestamp: number;
+}
+
+export interface AdminSearchAnalytics {
+    total: number;
+    page: number;
+    pageSize: number;
+    items: AdminSearchEvent[];
+    range: AdminRange;
+    summary: {
+        totalSearches: number;
+        zeroResults: number;
+        zeroResultRate: number;
+        fetched: number;
+        codeRetrieved: number;
+        fetchThroughRate: number;
+        topQueries: Array<{ query: string; count: number; zeroResults: number }>;
+    };
+    note?: string;
+}
+
+export interface AdminDiagnosticSample {
+    at: number;
+    correlationId?: string;
+    method?: string;
+    tool?: string;
+    status?: number;
+    errorCode?: string;
+    latencyMs?: number;
+    query?: string;
+    url?: string;
+}
+
+export interface AdminDiagnostic {
+    id: string;
+    fingerprint: string;
+    category: string;
+    severity: string;
+    title: string;
+    tool?: string;
+    method?: string;
+    resourceType?: string;
+    resourceId?: string;
+    query?: string;
+    url?: string;
+    statusCode?: number;
+    errorCode?: string;
+    errorSummary: string;
+    clientName?: string;
+    userId?: string;
+    apiKeyId?: string;
+    occurrences: number;
+    firstSeen: number;
+    lastSeen: number;
+    resolution: string;
+    notes?: string;
+    sampleEvents?: AdminDiagnosticSample[];
+}
+
+export interface AdminDiagnostics {
+    total: number;
+    page: number;
+    pageSize: number;
+    items: AdminDiagnostic[];
+    byCategory: Record<string, number>;
+    bySeverity: Record<string, number>;
+    engineState: Record<string, unknown> | null;
+}
+
+export interface AdminAlertRule {
+    ruleId: string;
+    name: string;
+    description?: string;
+    enabled: boolean;
+    severity: string;
+    metric: string;
+    comparator: string;
+    threshold: number;
+    windowMinutes?: number;
+    cooldownMinutes?: number;
+    updatedAt?: number;
+    updatedBy?: string;
+}
+
+export interface AdminAlertEvent {
+    id: string;
+    ruleId: string;
+    ruleName?: string;
+    severity: string;
+    status: 'open' | 'acknowledged' | 'resolved' | 'muted';
+    fingerprint?: string;
+    title: string;
+    message: string;
+    value?: number;
+    threshold?: number;
+    firstDetected: number;
+    lastDetected: number;
+    resolvedAt?: number;
+    mutedUntil?: number;
+    owner?: string;
+    notes?: string;
+}
+
+export interface AdminAlertEventList {
+    total: number;
+    page: number;
+    pageSize: number;
+    items: AdminAlertEvent[];
+    counts: Record<string, number>;
+    engineState: Record<string, unknown> | null;
+}
+
+export interface ObservabilityParams {
+    from?: string;
+    to?: string;
+    range?: string;
+    page?: number;
+    pageSize?: number;
+    [key: string]: string | number | undefined;
+}
+
+function buildQuery(params?: ObservabilityParams): string {
+    const p = new URLSearchParams();
+    if (params) {
+        for (const [k, v] of Object.entries(params)) {
+            if (v !== undefined && v !== null && v !== '') p.set(k, String(v));
+        }
+    }
+    const qs = p.toString();
+    return qs ? `?${qs}` : '';
+}
+
+export function getActivity(params?: ObservabilityParams): Promise<AdminActivity> {
+    return request<AdminActivity>(`/api/admin/mcp/activity${buildQuery(params)}`);
+}
+
+export function getActivityEvent(eventId: string): Promise<{ item: AdminRequestEvent }> {
+    return request<{ item: AdminRequestEvent }>(`/api/admin/mcp/activity/${encodeURIComponent(eventId)}`);
+}
+
+export function getAiSearchAnalytics(params?: ObservabilityParams): Promise<AdminSearchAnalytics> {
+    return request<AdminSearchAnalytics>(`/api/admin/mcp/search-analytics${buildQuery(params)}`);
+}
+
+export function getDiagnostics(params?: ObservabilityParams): Promise<AdminDiagnostics> {
+    return request<AdminDiagnostics>(`/api/admin/mcp/diagnostics${buildQuery(params)}`);
+}
+
+export function getDiagnostic(id: string): Promise<{ item: AdminDiagnostic }> {
+    return request<{ item: AdminDiagnostic }>(`/api/admin/mcp/diagnostics/${encodeURIComponent(id)}`);
+}
+
+export function generateFixPrompt(id: string): Promise<{ id: string; fingerprint: string; category: string; prompt: string }> {
+    return request(`/api/admin/mcp/diagnostics/${encodeURIComponent(id)}/generate-fix-prompt`, { method: 'POST' });
+}
+
+export function setDiagnosticStatus(id: string, status: string, notes?: string): Promise<{ item: AdminDiagnostic }> {
+    return request(`/api/admin/mcp/diagnostics/${encodeURIComponent(id)}/status`, {
+        method: 'POST',
+        body: JSON.stringify({ status, notes }),
+    });
+}
+
+export function getAlertRules(): Promise<{ rules: AdminAlertRule[]; engineState: Record<string, unknown> | null }> {
+    return request(`/api/admin/mcp/alerts/rules`);
+}
+
+export function createAlertRule(patch: Partial<AdminAlertRule>): Promise<{ rule: AdminAlertRule }> {
+    return request(`/api/admin/mcp/alerts/rules`, { method: 'POST', body: JSON.stringify(patch) });
+}
+
+export function updateAlertRule(ruleId: string, patch: Partial<AdminAlertRule>): Promise<{ rule: AdminAlertRule }> {
+    return request(`/api/admin/mcp/alerts/rules/${encodeURIComponent(ruleId)}`, {
+        method: 'PATCH',
+        body: JSON.stringify(patch),
+    });
+}
+
+export function getAlertEvents(params?: ObservabilityParams): Promise<AdminAlertEventList> {
+    return request<AdminAlertEventList>(`/api/admin/mcp/alerts/events${buildQuery(params)}`);
+}
+
+export function getAlertEvent(id: string): Promise<{ item: AdminAlertEvent }> {
+    return request<{ item: AdminAlertEvent }>(`/api/admin/mcp/alerts/events/${encodeURIComponent(id)}`);
+}
+
+export function alertAction(id: string, action: 'acknowledge' | 'resolve' | 'reopen' | 'mute', body?: { notes?: string; muteMinutes?: number }): Promise<{ item: AdminAlertEvent }> {
+    return request(`/api/admin/mcp/alerts/events/${encodeURIComponent(id)}/${action}`, {
+        method: 'POST',
+        body: JSON.stringify(body || {}),
+    });
+}

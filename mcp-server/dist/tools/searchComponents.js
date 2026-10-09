@@ -3,8 +3,8 @@ import { createTool } from './helpers.js';
 import { componentService } from '../services/componentService.js';
 import { analyticsService } from '../services/analyticsService.js';
 import { permissionService } from '../services/permissionService.js';
-export const search_components = createTool('search_components', 'Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Returns structured component metadata. Premium components are hidden completely for free-tier keys.', z.object({
-    query: z.string().optional().describe('Free-text search keyword, e.g. "pricing card"'),
+export const search_components = createTool('search_components', 'Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Natural-language queries are tokenized and ranked. Premium components are returned for free-tier keys as locked results (access: "premium-required") — their code is never included and cannot be fetched without Pro.', z.object({
+    query: z.string().optional().describe('Free-text search keyword, e.g. "pricing card", "particle sun", "hero section"'),
     category: z
         .enum(['3d', 'background', 'button', 'cursor', 'effect', 'footer', 'form', 'image-interaction', 'interactive-background', 'loader', 'navbar', 'particles-background', 'scroll', 'text'])
         .optional()
@@ -14,10 +14,8 @@ export const search_components = createTool('search_components', 'Search UI HUB 
     tags: z.array(z.string()).optional().describe('Optional tags to filter by'),
     isPremium: z.boolean().optional().describe('Filter by premium status (true = premium only)'),
 }), { requiresPremium: false }, async (args, user) => {
-    let results = componentService.searchComponents(args);
-    // Free-tier keys: premium components are completely hidden from search.
     const canPremium = permissionService.canAccessPremium(user);
-    results = permissionService.filterVisibleByTier(results, user);
+    const hits = componentService.searchComponentHits(args);
     await analyticsService.track({
         event: 'component_search',
         userId: user.userId,
@@ -27,15 +25,20 @@ export const search_components = createTool('search_components', 'Search UI HUB 
         tool: 'search_components',
         query: args.query,
         timestamp: Date.now(),
-        success: results.length > 0,
+        success: hits.length > 0,
     });
-    const visible = results.map((c) => ({
-        ...c,
-        access: c.isPremium ? (canPremium ? 'premium-available' : 'premium-required') : 'free',
+    // Premium matches are surfaced as LOCKED (not hidden) so the agent can tell
+    // the user a Pro component exists instead of hallucinating one. Code is
+    // never part of a search result and remains gated in get_component_code.
+    const components = hits.map((h) => ({
+        ...h.item,
+        access: h.item.isPremium ? (canPremium ? 'premium-available' : 'premium-required') : 'free',
+        ...(h.matchedOn ? { matchedOn: h.matchedOn } : {}),
+        ...(h.score ? { score: Math.round(h.score) } : {}),
     }));
     return {
-        count: visible.length,
-        components: visible,
+        count: components.length,
+        components,
     };
 });
 //# sourceMappingURL=searchComponents.js.map

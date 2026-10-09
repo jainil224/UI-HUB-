@@ -7,6 +7,9 @@ import { recordAudit, listAudit } from '../services/auditService.js';
 import { getCollection as mongoCollection } from '../services/mongo.js';
 import { componentService } from '../services/componentService.js';
 import { TOOLS } from '../tools/index.js';
+import { telemetryService, SEARCH_EVENTS_COLLECTION } from '../services/telemetryService.js';
+import { queryDiagnostics, getDiagnostic, updateDiagnosticStatus, buildFixPrompt, } from '../services/diagnosticsService.js';
+import { ensureRules, createRule, updateRule, getEngineState, listAlertEvents, getAlertEvent, applyAlertAction, } from '../services/alertService.js';
 const adminRouter = Router();
 const ADMIN_BASE = '/api/admin/mcp';
 function dateKeyFor(ts) {
@@ -1291,6 +1294,254 @@ adminRouter.get('/logs', requireAdmin, async (req, res) => {
         console.error('[AdminLogs] Failed to fetch logs:', err?.message);
         return res.status(500).json({ error: 'Failed to retrieve logs' });
     }
+});
+// ─────────────────────────────────────────────────────────────────────────────
+// Observability (additive): Live Activity, AI Search Analytics, Diagnostics,
+// and the actionable Alerts engine. All endpoints are additive; the legacy
+// `/alerts` resolve/unresolve workflow above is untouched.
+// ─────────────────────────────────────────────────────────────────────────────
+const throttleMap = new Map();
+function underThrottle(key, minMs) {
+    const now = Date.now();
+    const last = throttleMap.get(key) || 0;
+    if (now - last < minMs)
+        return false;
+    throttleMap.set(key, now);
+    if (throttleMap.size > 1000) {
+        for (const [k, v] of throttleMap) {
+            if (now - v > 60000)
+                throttleMap.delete(k);
+        }
+    }
+    return true;
+}
+function str(v) {
+    if (v === undefined || v === null || v === '')
+        return undefined;
+    return String(v);
+}
+function summarizeRequests(items) {
+    const byStatus = {};
+    const byClient = {};
+    let latencySum = 0;
+    let latencyCount = 0;
+    for (const e of items) {
+        const s = e.status || 'unknown';
+        byStatus[s] = (byStatus[s] || 0) + 1;
+        const c = e.clientName || 'Unknown MCP client';
+        byClient[c] = (byClient[c] || 0) + 1;
+        if (typeof e.latencyMs === 'number') {
+            latencySum += e.latencyMs;
+            latencyCount++;
+        }
+    }
+    return { byStatus, byClient, avgLatencyMs: latencyCount ? Math.round(latencySum / latencyCount) : 0 };
+}
+adminRouter.get('/activity', requireAdmin, async (req, res) => {
+    const range = parseRange(req.query);
+    const page = clampInt(req.query.page, 1, 1, 100000);
+    const pageSize = clampInt(req.query.pageSize, 50, 1, 200);
+    const result = await telemetryService.queryRequests({
+        fromTs: range.fromTs,
+        toTs: range.toTs,
+        userId: str(req.query.userId),
+        client: str(req.query.client),
+        method: str(req.query.method),
+        toolName: str(req.query.toolName),
+        status: str(req.query.status),
+        resourceType: str(req.query.resourceType),
+        errorCategory: str(req.query.errorCategory),
+        page,
+        pageSize,
+    });
+    res.json({
+        ...result,
+        range,
+        summary: summarizeRequests(result.items),
+        note: result.total === 0 ? 'No telemetry captured yet for this range (instrumentation is live).' : undefined,
+    });
+});
+adminRouter.get('/activity/:eventId', requireAdmin, async (req, res) => {
+    const item = await telemetryService.getRequest(req.params.eventId);
+    if (!item)
+        return res.status(404).json({ error: 'NOT_FOUND', message: 'Request event not found' });
+    res.json({ item });
+});
+adminRouter.get('/search-analytics', requireAdmin, async (req, res) => {
+    const range = parseRange(req.query);
+    const page = clampInt(req.query.page, 1, 1, 100000);
+    const pageSize = clampInt(req.query.pageSize, 50, 1, 200);
+    const zeroResultsParam = str(req.query.zeroResults);
+    const result = await telemetryService.querySearches({
+        fromTs: range.fromTs,
+        toTs: range.toTs,
+        userId: str(req.query.userId),
+        resourceType: str(req.query.resourceType),
+        zeroResults: zeroResultsParam === undefined ? undefined : zeroResultsParam === 'true',
+        query: str(req.query.q),
+        page,
+        pageSize,
+    });
+    const summary = {
+        totalSearches: 0,
+        zeroResults: 0,
+        zeroResultRate: 0,
+        fetched: 0,
+        codeRetrieved: 0,
+        fetchThroughRate: 0,
+        topQueries: [],
+    };
+    try {
+        const col = await mongoCollection(SEARCH_EVENTS_COLLECTION);
+        const match = { timestamp: { $gte: range.fromTs, $lte: range.toTs } };
+        const [totalSearches, zeroResults, fetched, codeRetrieved] = await Promise.all([
+            col.countDocuments(match),
+            col.countDocuments({ ...match, zeroResults: true }),
+            col.countDocuments({ ...match, fetched: true }),
+            col.countDocuments({ ...match, codeRetrieved: true }),
+        ]);
+        const agg = await col
+            .aggregate([
+            { $match: match },
+            {
+                $group: {
+                    _id: '$queryNormalized',
+                    count: { $sum: 1 },
+                    zeroResults: { $sum: { $cond: ['$zeroResults', 1, 0] } },
+                },
+            },
+            { $sort: { count: -1 } },
+            { $limit: 25 },
+        ])
+            .toArray();
+        summary.totalSearches = totalSearches;
+        summary.zeroResults = zeroResults;
+        summary.zeroResultRate = totalSearches ? Number((zeroResults / totalSearches).toFixed(4)) : 0;
+        summary.fetched = fetched;
+        summary.codeRetrieved = codeRetrieved;
+        summary.fetchThroughRate = totalSearches ? Number((fetched / totalSearches).toFixed(4)) : 0;
+        summary.topQueries = agg.map((a) => ({
+            query: a._id || '(empty)',
+            count: a.count,
+            zeroResults: a.zeroResults,
+        }));
+    }
+    catch (err) {
+        console.error('[AdminSearchAnalytics] aggregation failed:', err?.message);
+    }
+    res.json({
+        ...result,
+        range,
+        summary,
+        note: result.total === 0 ? 'No search telemetry captured yet for this range (instrumentation is live).' : undefined,
+    });
+});
+adminRouter.get('/diagnostics', requireAdmin, async (req, res) => {
+    const stateParam = str(req.query.state);
+    const result = await queryDiagnostics({
+        category: str(req.query.category),
+        severity: str(req.query.severity),
+        resolutionState: stateParam === 'resolved' ? 'resolved' : stateParam === 'unresolved' ? 'unresolved' : undefined,
+        tool: str(req.query.tool),
+        resourceType: str(req.query.resourceType),
+        fromTs: req.query.from ? new Date(String(req.query.from)).getTime() || undefined : undefined,
+        toTs: req.query.to ? new Date(String(req.query.to)).getTime() || undefined : undefined,
+        page: clampInt(req.query.page, 1, 1, 100000),
+        pageSize: clampInt(req.query.pageSize, 25, 1, 200),
+    });
+    res.json({ ...result, engineState: await getEngineState() });
+});
+adminRouter.get('/diagnostics/:id', requireAdmin, async (req, res) => {
+    const item = await getDiagnostic(req.params.id);
+    if (!item)
+        return res.status(404).json({ error: 'NOT_FOUND', message: 'Diagnostic not found' });
+    res.json({ item });
+});
+adminRouter.post('/diagnostics/:id/generate-fix-prompt', requireAdmin, async (req, res) => {
+    if (!underThrottle(`prompt:${req.email || req.ip}`, 3000)) {
+        return res.status(429).json({ error: 'RATE_LIMIT_EXCEEDED', message: 'Please wait a moment before generating another prompt.' });
+    }
+    const item = await getDiagnostic(req.params.id);
+    if (!item)
+        return res.status(404).json({ error: 'NOT_FOUND', message: 'Diagnostic not found' });
+    const prompt = buildFixPrompt(item);
+    await recordAudit({
+        adminEmail: req.email,
+        action: 'diagnostic.generate_fix_prompt',
+        targetType: 'diagnostic',
+        targetId: item.fingerprint,
+    });
+    res.json({ id: item.id, fingerprint: item.fingerprint, category: item.category, prompt });
+});
+adminRouter.post('/diagnostics/:id/status', requireAdmin, async (req, res) => {
+    const status = String(req.body?.status || '');
+    try {
+        const item = await updateDiagnosticStatus(req.params.id, status, { notes: req.body?.notes });
+        if (!item)
+            return res.status(404).json({ error: 'NOT_FOUND', message: 'Diagnostic not found' });
+        await recordAudit({
+            adminEmail: req.email,
+            action: 'diagnostic.status',
+            targetType: 'diagnostic',
+            targetId: item.fingerprint,
+            meta: { status },
+        });
+        res.json({ item });
+    }
+    catch (err) {
+        const message = err?.message === 'invalid_status'
+            ? 'status must be one of: open, investigating, resolved, reopened'
+            : err?.message || 'Failed to update status';
+        return res.status(400).json({ error: 'BAD_REQUEST', message });
+    }
+});
+adminRouter.get('/alerts/rules', requireAdmin, async (_req, res) => {
+    const rules = await ensureRules();
+    res.json({ rules, engineState: await getEngineState() });
+});
+adminRouter.post('/alerts/rules', requireAdmin, async (req, res) => {
+    const rule = await createRule(req.body || {}, req.email || 'admin');
+    if (!rule)
+        return res.status(400).json({ error: 'BAD_REQUEST', message: 'Unable to create rule' });
+    res.json({ rule });
+});
+adminRouter.patch('/alerts/rules/:ruleId', requireAdmin, async (req, res) => {
+    const rule = await updateRule(req.params.ruleId, req.body || {}, req.email || 'admin');
+    if (!rule)
+        return res.status(404).json({ error: 'NOT_FOUND', message: 'Alert rule not found' });
+    res.json({ rule });
+});
+adminRouter.get('/alerts/events', requireAdmin, async (req, res) => {
+    const result = await listAlertEvents({
+        status: str(req.query.status),
+        severity: str(req.query.severity),
+        ruleId: str(req.query.ruleId),
+        page: clampInt(req.query.page, 1, 1, 100000),
+        pageSize: clampInt(req.query.pageSize, 50, 1, 200),
+    });
+    res.json({ ...result, engineState: await getEngineState() });
+});
+adminRouter.get('/alerts/events/:id', requireAdmin, async (req, res) => {
+    const item = await getAlertEvent(req.params.id);
+    if (!item)
+        return res.status(404).json({ error: 'NOT_FOUND', message: 'Alert event not found' });
+    res.json({ item });
+});
+adminRouter.post('/alerts/events/:id/:action', requireAdmin, async (req, res) => {
+    const action = req.params.action;
+    const valid = ['acknowledge', 'resolve', 'reopen', 'mute'];
+    if (!valid.includes(action)) {
+        return res.status(400).json({ error: 'BAD_REQUEST', message: `action must be one of: ${valid.join(', ')}` });
+    }
+    const muteMinutes = req.body?.muteMinutes !== undefined ? clampInt(req.body.muteMinutes, 60, 1, 10080) : undefined;
+    const item = await applyAlertAction(req.params.id, action, {
+        adminEmail: req.email || 'admin',
+        notes: req.body?.notes,
+        muteMinutes,
+    });
+    if (!item)
+        return res.status(404).json({ error: 'NOT_FOUND', message: 'Alert event not found' });
+    res.json({ item });
 });
 export { adminRouter, ADMIN_BASE };
 //# sourceMappingURL=admin.js.map

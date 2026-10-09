@@ -4,6 +4,10 @@ import { mcpRateLimiter } from '../middleware/rateLimiter.js';
 import { TOOLS } from '../tools/index.js';
 import { analyticsService } from '../services/analyticsService.js';
 import { configService } from '../config/configService.js';
+import { telemetryService, toolTelemetry, buildRequestStatus } from '../services/telemetryService.js';
+import { recordFailure } from '../services/diagnosticsService.js';
+import { hashValue, redactText } from '../services/redaction.js';
+import { categoryForOutcome, extractClientInfo, extractFilters, extractResourceId, parseToolResult, } from '../services/mcpInstrumentation.js';
 import crypto from 'crypto';
 /**
  * MCP Streamable HTTP transport.
@@ -82,7 +86,6 @@ mcpRouter.get('/health', (_req, res) => {
         timestamp: new Date().toISOString(),
     });
 });
-// ── Session store (in-memory; used for Streamable HTTP session tracking) ─────
 const sessionStore = new Map();
 // ── Auth middleware ───────────────────────────────────────────────────────────
 /**
@@ -127,6 +130,17 @@ mcpRouter.post('/', async (req, res) => {
         return jsonRpcError(res, body?.id, -32600, 'Invalid Request: expected JSON-RPC 2.0', 400);
     }
     const { method, id, params } = body;
+    // ── Instrumentation context (additive) ────────────────────────────────────
+    // A per-request correlation id links a search to a subsequent fetch, and is
+    // surfaced in the admin Live Activity / Diagnostics views. Best-effort only.
+    const startedAt = Date.now();
+    const correlationId = crypto.randomUUID();
+    const inboundSessionId = req.headers['mcp-session-id'];
+    const inboundSession = inboundSessionId ? sessionStore.get(inboundSessionId) : undefined;
+    const clientName = inboundSession?.clientName;
+    const clientVersion = inboundSession?.clientVersion;
+    const sessionId = inboundSessionId || inboundSession?.clientId;
+    req.mcpTelemetry = { correlationId, clientName, clientVersion, sessionId, startedAt };
     // Negotiated protocol version — take it from the request header if present,
     // otherwise derive it from `initialize` params / default to the latest stable.
     const protocolVersion = req.headers['mcp-protocol-version'] ||
@@ -137,8 +151,15 @@ mcpRouter.post('/', async (req, res) => {
     // correctly (and quickly) is what prevents "request terminated without
     // response" errors in Antigravity, Cursor, Claude Code, etc.
     if (method === 'initialize') {
-        const sessionId = crypto.randomUUID();
-        sessionStore.set(sessionId, { clientId: sessionId, createdAt: Date.now() });
+        const newSessionId = crypto.randomUUID();
+        const clientInfo = extractClientInfo(params);
+        sessionStore.set(newSessionId, {
+            clientId: newSessionId,
+            createdAt: Date.now(),
+            clientName: clientInfo.name,
+            clientVersion: clientInfo.version,
+            protocolVersion: params?.protocolVersion,
+        });
         // Clean up old sessions (older than 1 hour) to prevent memory leaks
         const oneHourAgo = Date.now() - 60 * 60 * 1000;
         for (const [sid, session] of sessionStore) {
@@ -146,6 +167,22 @@ mcpRouter.post('/', async (req, res) => {
                 sessionStore.delete(sid);
         }
         const clientProtocolVersion = params?.protocolVersion || '2024-11-05';
+        // New telemetry only (legacy analytics intentionally NOT touched for
+        // initialize so existing aggregate numbers stay identical).
+        telemetryService.recordRequest({
+            correlationId,
+            method: 'initialize',
+            status: 'success',
+            success: true,
+            clientName: clientInfo.name,
+            clientVersion: clientInfo.version,
+            sessionId: newSessionId,
+            transport: req.headers.accept?.includes('text/event-stream') ? 'sse' : 'streamable-http',
+            statusCode: 200,
+            latencyMs: Date.now() - startedAt,
+            ipHash: hashValue(req.ip || ''),
+            timestamp: Date.now(),
+        });
         return jsonRpcSuccess(res, id, {
             protocolVersion: clientProtocolVersion,
             capabilities: {
@@ -155,7 +192,7 @@ mcpRouter.post('/', async (req, res) => {
                 name: 'ui-hub',
                 version: '1.0.0',
             },
-        }, sessionId, clientProtocolVersion);
+        }, newSessionId, clientProtocolVersion);
     }
     // ── STEP 2: Handle `ping` without auth (keep-alive, no session needed) ────
     if (method === 'ping') {
@@ -207,9 +244,19 @@ mcpRouter.post('/', async (req, res) => {
     });
     if (!rateLimitPassed || res.headersSent)
         return;
-    // ── STEP 6: Track analytics ───────────────────────────────────────────────
-    const startedAt = Date.now();
+    // ── STEP 6: Track analytics (legacy aggregate + new observability) ────────
+    let toolName;
+    let isError = false;
+    let errorCode;
+    let errorSummary;
+    let errorCategory;
+    let resultCount;
+    let resourceType;
+    let resourceId;
+    let returnedIds;
+    let zeroResults = false;
     res.on('finish', () => {
+        // Legacy telemetry — left byte-for-byte compatible.
         void analyticsService.track({
             event: 'mcp_request',
             userId: user.userId,
@@ -222,6 +269,80 @@ mcpRouter.post('/', async (req, res) => {
             responseTimeMs: Date.now() - startedAt,
             success: res.statusCode < 400,
         });
+        // New flat telemetry + diagnostics (best-effort, never throws).
+        const tele = toolTelemetry(toolName);
+        const isSearch = tele?.kind === 'search';
+        const searchZero = isSearch && zeroResults && !isError;
+        const status = buildRequestStatus({ isError, errorCode, errorCategory, zeroResults: searchZero });
+        const latencyMs = Date.now() - startedAt;
+        const queryText = params?.arguments?.query;
+        telemetryService.recordRequest({
+            correlationId,
+            method,
+            protocolTool: method,
+            toolName,
+            userId: user.userId,
+            apiKeyId: user.keyId,
+            keyPrefix: user.keyPrefix,
+            tier: user.tier,
+            clientName,
+            clientVersion,
+            sessionId,
+            transport: req.headers.accept?.includes('text/event-stream') ? 'sse' : 'streamable-http',
+            status,
+            success: !isError && !searchZero,
+            errorCode,
+            errorCategory,
+            statusCode: res.statusCode,
+            latencyMs,
+            resultCount,
+            resourceType,
+            resourceId,
+            query: typeof queryText === 'string' ? queryText : undefined,
+            ipHash: hashValue(req.ip || ''),
+            timestamp: Date.now(),
+        });
+        if (isSearch && tele) {
+            telemetryService.recordSearch({
+                correlationId,
+                resourceType: tele.resourceType,
+                tool: toolName,
+                query: typeof queryText === 'string' ? queryText : undefined,
+                filters: extractFilters(params?.arguments),
+                resultCount: resultCount ?? 0,
+                zeroResults: searchZero,
+                returnedIds,
+                failureCategory: isError ? errorCategory : undefined,
+                clientName,
+                tier: user.tier,
+                userId: user.userId,
+                apiKeyId: user.keyId,
+                latencyMs,
+                timestamp: Date.now(),
+            });
+        }
+        if (isError || searchZero) {
+            void recordFailure({
+                errorCode,
+                message: errorSummary,
+                explicitCategory: errorCategory,
+                zeroResults: searchZero,
+                tool: toolName,
+                method,
+                resourceType: tele?.resourceType,
+                resourceId,
+                query: typeof queryText === 'string' ? queryText : undefined,
+                statusCode: res.statusCode,
+                clientName,
+                userId: user.userId,
+                apiKeyId: user.keyId,
+                correlationId,
+                latencyMs,
+            });
+        }
+        if (tele && (tele.kind === 'fetch' || tele.kind === 'code') && !isError) {
+            void telemetryService.markSearchFetched(user.userId, resourceId, tele.kind === 'code');
+        }
     });
     // ── STEP 7: Dispatch authenticated methods ────────────────────────────────
     try {
@@ -245,23 +366,55 @@ mcpRouter.post('/', async (req, res) => {
             }
             case 'tools/call': {
                 const { name, arguments: args } = params || {};
+                toolName = typeof name === 'string' ? name : undefined;
+                resourceType = toolTelemetry(toolName)?.resourceType;
+                resourceId = extractResourceId(toolName, args);
                 const tool = TOOLS.find((t) => t.name === name);
                 if (!tool) {
+                    isError = true;
+                    errorCode = 'METHOD_NOT_FOUND';
+                    errorCategory = 'protocol_error';
+                    errorSummary = `Unknown tool: ${name}`;
                     return jsonRpcError(res, id, -32601, `Unknown tool: ${name}`, 200, protocolVersion);
                 }
                 const enabled = await configService.isToolEnabled(name);
                 if (!enabled) {
+                    isError = true;
+                    errorCode = 'TOOL_DISABLED';
+                    errorCategory = 'tool_execution_error';
+                    errorSummary = `Tool disabled: ${name}`;
                     return jsonRpcError(res, id, -32601, `Tool disabled: ${name}`, 200, protocolVersion);
                 }
-                const result = await tool.handler(args || {}, { user });
+                const result = await tool.handler(args || {}, {
+                    user,
+                    correlationId,
+                    client: clientName ? { name: clientName, version: clientVersion } : undefined,
+                    sessionId,
+                });
+                const parsed = parseToolResult(result);
+                isError = parsed.isError;
+                errorCode = parsed.errorCode;
+                errorSummary = parsed.errorMessage;
+                resultCount = parsed.resultCount;
+                returnedIds = parsed.returnedIds;
+                zeroResults = parsed.zeroResults;
+                errorCategory = categoryForOutcome(parsed);
                 return jsonRpcSuccess(res, id, result, undefined, protocolVersion);
             }
             default:
+                isError = true;
+                errorCode = 'METHOD_NOT_FOUND';
+                errorCategory = 'protocol_error';
+                errorSummary = `Method not found: ${method}`;
                 return jsonRpcError(res, id, -32601, `Method not found: ${method}`, 200, protocolVersion);
         }
     }
     catch (err) {
         console.error('[MCP] Internal error:', err);
+        isError = true;
+        errorCode = 'INTERNAL_ERROR';
+        errorCategory = 'internal_error';
+        errorSummary = redactText(err?.message || 'Unknown error');
         return jsonRpcError(res, id, -32603, `Internal error: ${err?.message || 'Unknown error'}`);
     }
 });

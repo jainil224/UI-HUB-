@@ -68,7 +68,7 @@ class ConfigService {
     }
 
     const merged: McpAppConfig = {
-      rateLimitFree: config.rateLimitFree || 100,
+      rateLimitFree: config.rateLimitFree || 150,
       rateLimitPro: config.rateLimitPro || 10000,
       authEnabled: true,
       analyticsEnabled: true,

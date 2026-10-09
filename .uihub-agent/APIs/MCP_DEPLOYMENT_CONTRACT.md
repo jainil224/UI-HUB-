@@ -134,7 +134,7 @@ Required for the MCP service (full table in
 | `MONGODB_DB` | `uihub` | |
 | `MCP_SERVER_URL` | required | the advertised public endpoint; a wrong value produces a wrong discovery payload |
 | `MCP_API_KEY_PREFIX` | `uh_live_` | must match what the dashboard mints |
-| `MCP_RATE_LIMIT_FREE` / `_PRO` | set | `100` / `10000` |
+| `MCP_RATE_LIMIT_FREE` / `_PRO` | set | `150` / `10000` |
 | `MCP_ALLOWED_ORIGINS` | set | currently inert; see `API_ARCHITECTURE.md` 5.1 |
 | `MCP_ADMIN_EMAILS` | set | reconcile the two lists before deploy |
 | `FIREBASE_*` | required, secret | token verification |

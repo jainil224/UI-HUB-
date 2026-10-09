@@ -64,6 +64,9 @@ const LogsPage = React.lazy(() => import('./pages/Admin/LogsPage'));
 const SecurityPage = React.lazy(() => import('./pages/Admin/SecurityPage'));
 const HealthPage = React.lazy(() => import('./pages/Admin/HealthPage'));
 const AlertsPage = React.lazy(() => import('./pages/Admin/AlertsPage'));
+const LiveActivityPage = React.lazy(() => import('./pages/Admin/LiveActivityPage'));
+const AiSearchPage = React.lazy(() => import('./pages/Admin/AiSearchPage'));
+const DiagnosticsPage = React.lazy(() => import('./pages/Admin/DiagnosticsPage'));
 const SettingsPage = React.lazy(() => import('./pages/Admin/SettingsPage'));
 const AuditPage = React.lazy(() => import('./pages/Admin/AuditPage'));
 const ExportPage = React.lazy(() => import('./pages/Admin/ExportPage'));
@@ -131,7 +134,9 @@ const AppShell = () => {
                 <Route element={<AdminLayout />}>
                   <Route index element={<Navigate to="/admin/mcp/overview" replace />} />
                   <Route path="overview" element={<OverviewPage />} />
+                  <Route path="activity" element={<LiveActivityPage />} />
                   <Route path="analytics" element={<AnalyticsPage />} />
+                  <Route path="search-analytics" element={<AiSearchPage />} />
                   <Route path="tools" element={<ToolsPage />} />
                   <Route path="playground" element={<PlaygroundPage />} />
                   <Route path="components" element={<ComponentsPage />} />
@@ -143,6 +148,7 @@ const AppShell = () => {
                   <Route path="security" element={<SecurityPage />} />
                   <Route path="health" element={<HealthPage />} />
                   <Route path="alerts" element={<AlertsPage />} />
+                  <Route path="diagnostics" element={<DiagnosticsPage />} />
                   <Route path="settings" element={<SettingsPage />} />
                   <Route path="audit" element={<AuditPage />} />
                   <Route path="export" element={<ExportPage />} />

@@ -231,7 +231,7 @@ async function setupDatabase() {
     {
       $setOnInsert: {
         _id: 'app',
-        rateLimitFree: 100,
+        rateLimitFree: 150,
         rateLimitPro: 10000,
         authEnabled: true,
         analyticsEnabled: true,
@@ -250,6 +250,51 @@ async function setupDatabase() {
     { upsert: true }
   );
   console.log('  ✓ mcp_config singleton document initialized');
+
+  // ─────────────────────────────────────────────────────────
+  // 5b. MCP OBSERVABILITY (ADDITIVE): request/search telemetry,
+  //     diagnostics, and the actionable alert engine. These are new,
+  //     separate collections — existing MCP collections are untouched.
+  // ─────────────────────────────────────────────────────────
+  console.log('\n[5b/7] Initializing MCP observability collections...');
+
+  const mcpRequestEvents = await mongoService.getCollection('mcp_request_events');
+  await mcpRequestEvents.createIndex({ timestamp: -1 }, { background: true });
+  await mcpRequestEvents.createIndex({ userId: 1, timestamp: -1 }, { background: true });
+  await mcpRequestEvents.createIndex({ toolName: 1, timestamp: -1 }, { background: true });
+  await mcpRequestEvents.createIndex({ status: 1, timestamp: -1 }, { background: true });
+  await mcpRequestEvents.createIndex({ correlationId: 1 }, { background: true });
+  await mcpRequestEvents.createIndex({ clientName: 1 }, { background: true });
+  await mcpRequestEvents.createIndex({ timestamp: 1 }, { expireAfterSeconds: 30 * 86400, background: true });
+  console.log('  ✓ mcp_request_events indexed with 30-Day TTL');
+
+  const mcpSearchEvents = await mongoService.getCollection('mcp_search_events');
+  await mcpSearchEvents.createIndex({ timestamp: -1 }, { background: true });
+  await mcpSearchEvents.createIndex({ queryNormalized: 1 }, { background: true });
+  await mcpSearchEvents.createIndex({ resourceType: 1, timestamp: -1 }, { background: true });
+  await mcpSearchEvents.createIndex({ zeroResults: 1, timestamp: -1 }, { background: true });
+  await mcpSearchEvents.createIndex({ returnedIds: 1 }, { background: true });
+  await mcpSearchEvents.createIndex({ timestamp: 1 }, { expireAfterSeconds: 30 * 86400, background: true });
+  console.log('  ✓ mcp_search_events indexed with 30-Day TTL');
+
+  const mcpDiagnostics = await mongoService.getCollection('mcp_diagnostics');
+  await mcpDiagnostics.createIndex({ fingerprint: 1 }, { unique: true, background: true });
+  await mcpDiagnostics.createIndex({ category: 1, lastSeen: -1 }, { background: true });
+  await mcpDiagnostics.createIndex({ severity: 1, lastSeen: -1 }, { background: true });
+  await mcpDiagnostics.createIndex({ resolution: 1 }, { background: true });
+  await mcpDiagnostics.createIndex({ lastSeen: 1 }, { expireAfterSeconds: 90 * 86400, background: true });
+  console.log('  ✓ mcp_diagnostics indexed with 90-Day TTL');
+
+  const mcpAlertRules = await mongoService.getCollection('mcp_alert_rules');
+  await mcpAlertRules.createIndex({ ruleId: 1 }, { unique: true, background: true });
+  console.log('  ✓ mcp_alert_rules indexed');
+
+  const mcpAlertEvents = await mongoService.getCollection('mcp_alert_events');
+  await mcpAlertEvents.createIndex({ ruleId: 1, fingerprint: 1, status: 1 }, { background: true });
+  await mcpAlertEvents.createIndex({ status: 1, lastDetected: -1 }, { background: true });
+  await mcpAlertEvents.createIndex({ severity: 1 }, { background: true });
+  await mcpAlertEvents.createIndex({ lastDetected: 1 }, { expireAfterSeconds: 180 * 86400, background: true });
+  console.log('  ✓ mcp_alert_events indexed with 180-Day TTL');
 
   // ─────────────────────────────────────────────────────────
   // 6. COMPONENTS & FAVORITES SEEDING

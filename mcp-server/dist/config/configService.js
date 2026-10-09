@@ -57,7 +57,7 @@ class ConfigService {
             return this.cache;
         }
         const merged = {
-            rateLimitFree: config.rateLimitFree || 100,
+            rateLimitFree: config.rateLimitFree || 150,
             rateLimitPro: config.rateLimitPro || 10000,
             authEnabled: true,
             analyticsEnabled: true,
