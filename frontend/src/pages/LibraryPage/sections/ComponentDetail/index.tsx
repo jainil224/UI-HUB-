@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '../../../../context/ThemeContext';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion, useInView, useMotionValue } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
     Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown, ChevronUp,
@@ -38,6 +38,123 @@ import {
 } from '../../../../services/templateViews';
 import { useComponentViewCounts } from '../../../../hooks/useTemplateViewCounts';
 
+
+/**
+ * Scroll-reveal wrapper for the component detail tab blocks. Fades and lifts
+ * its children as they enter the viewport (once), and renders them instantly
+ * when the visitor prefers reduced motion. Purely additive: it wraps existing
+ * block-level elements without changing layout or behaviour.
+ */
+const Reveal = ({
+    children,
+    className,
+    delay = 0,
+    fadeOnly = false,
+    scale = true,
+}: {
+    children: React.ReactNode;
+    className?: string;
+    delay?: number;
+    fadeOnly?: boolean;
+    scale?: boolean;
+}) => {
+    const reduceMotion = useReducedMotion();
+    const hidden = fadeOnly
+        ? { opacity: 0 }
+        : scale
+            ? { opacity: 0, y: 28, scale: 0.985 }
+            : { opacity: 0, y: 28 };
+    const shown = fadeOnly
+        ? { opacity: 1 }
+        : scale
+            ? { opacity: 1, y: 0, scale: 1 }
+            : { opacity: 1, y: 0 };
+    return (
+        <motion.div
+            className={className}
+            initial={reduceMotion ? false : hidden}
+            whileInView={reduceMotion ? undefined : shown}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay }}
+        >
+            {children}
+        </motion.div>
+    );
+};
+
+/**
+ * Resolves whatever scrolls the page: the nearest scrollable ancestor (the
+ * library's `main.main-scroll`) or the window when the document itself scrolls.
+ */
+const findNearestScroller = (el: HTMLElement | null): HTMLElement | Window => {
+    for (let node = el?.parentElement ?? null; node; node = node.parentElement) {
+        if (node === document.documentElement || node === document.body) break;
+        const overflowY = getComputedStyle(node).overflowY;
+        if (overflowY === 'auto' || overflowY === 'scroll') return node;
+    }
+    return window;
+};
+
+/**
+ * Contained scroll parallax: a decorative watermark drifts as its section
+ * passes through the viewport while the interactive foreground stays put. It is
+ * scroll-linked against the page's real scroller (see `findNearestScroller`)
+ * and renders statically when the visitor prefers reduced motion.
+ */
+const SectionParallax = ({
+    icon: Icon,
+    iconClassName = 'text-white',
+    className,
+    distance = 28,
+    children,
+}: {
+    icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+    iconClassName?: string;
+    className?: string;
+    distance?: number;
+    children: React.ReactNode;
+}) => {
+    const ref = React.useRef<HTMLDivElement>(null);
+    const y = useMotionValue(0);
+    const reduceMotion = useReducedMotion();
+
+    React.useEffect(() => {
+        if (reduceMotion) return;
+        const el = ref.current;
+        if (!el) return;
+        const scroller = findNearestScroller(el);
+        let raf = 0;
+        const update = () => {
+            raf = 0;
+            const rect = el.getBoundingClientRect();
+            const vh = window.innerHeight || 1;
+            const progress = Math.min(1, Math.max(0, (vh - rect.top) / (vh + rect.height)));
+            y.set((0.5 - progress) * 2 * distance);
+        };
+        const onScroll = () => { if (!raf) raf = requestAnimationFrame(update); };
+        update();
+        scroller.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll);
+        return () => {
+            if (raf) cancelAnimationFrame(raf);
+            scroller.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', onScroll);
+        };
+    }, [reduceMotion, distance, y]);
+
+    return (
+        <div ref={ref} className="relative">
+            <motion.div
+                aria-hidden="true"
+                style={{ y: reduceMotion ? 0 : y }}
+                className={`pointer-events-none select-none absolute right-1 sm:right-4 -top-2 z-0 opacity-[0.05] ${iconClassName}`}
+            >
+                <Icon className="w-32 h-32 sm:w-60 sm:h-60" strokeWidth={1} />
+            </motion.div>
+            <div className={`relative z-10 ${className ?? ''}`}>{children}</div>
+        </div>
+    );
+};
 
 const PropsTable = ({ props }: { props: PropDefinition[]; theme?: string }) => (
     <div className="w-full overflow-x-auto">
@@ -692,6 +809,8 @@ const VibeSystemSection = React.memo(({
             className="space-y-6 md:space-y-12"
         >
             {/* Tool Selector */}
+            <Reveal>
+            <SectionParallax icon={Zap} iconClassName="text-brand-yellow">
             <section className="space-y-3 md:space-y-6">
                 <div className="px-2 lg:px-4">
                     <p className="md:hidden text-[10px] uppercase tracking-widest font-black text-neutral-500">Select AI Tool</p>
@@ -753,11 +872,15 @@ const VibeSystemSection = React.memo(({
                     ))}
                 </div>
             </section>
+            </SectionParallax>
+            </Reveal>
 
             {/* Ad: natural break between the AI tool selector and the generated blueprint */}
             <AdSlot slot="component-between-tools-prompt" minHeight={280} />
 
             {/* Vibe Prompt Section - AI Terminal UI */}
+            <Reveal delay={0.08} scale={false}>
+            <SectionParallax icon={Zap} iconClassName="text-brand-yellow">
             <section className="space-y-4 md:space-y-8">
                 <div className="flex items-end justify-between gap-3 px-2">
                     <div className="space-y-1">
@@ -929,6 +1052,8 @@ const VibeSystemSection = React.memo(({
                     </div>
                 </div>
             </section>
+            </SectionParallax>
+            </Reveal>
 
             {/* Holographic Toast Notification */}
             <Toast
@@ -1024,6 +1149,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [promptCopying, setPromptCopying] = React.useState<AISystem | null>(null);
     const promptMenuRef = React.useRef<HTMLDivElement>(null);
     const previewRef = React.useRef<HTMLDivElement>(null);
+    // Mount the live preview (and its rAF/WebGL loops) only while its frame is
+    // near the viewport, so scrolling past a heavy component stays smooth.
+    const previewInView = useInView(previewRef, { margin: '300px 0px 300px 0px' });
     const { user, isPro: isProUser, refreshProStatus, purchasedComponents } = useAuth();
 
     React.useEffect(() => {
@@ -1032,52 +1160,49 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         });
     }, [item.id]);
 
-    // Wheel passthrough. The library page scrolls its scrollable main column, so a
-    // wheel over a preview must never be swallowed. Some previews call
-    // stopPropagation or preventDefault (Three.js canvases, wheel-driven widgets),
-    // and some nest an inner scroller inside an `overflow-hidden` stage, which
-    // kills native scroll chaining. The capture phase runs before those listeners,
-    // so forward the delta to the page scroller only when nothing inside the frame
-    // can consume it.
+    // Wheel passthrough — only when the preview actually nests its own scroller.
+    //
+    // The library scrolls its own main column, and a preview can nest an
+    // `overflow-hidden` stage around an inner scroller, which kills native scroll
+    // chaining. For that narrow case we forward the delta to the page once the
+    // inner scroller hits its boundary. Crucially, if the preview has no nested
+    // scroller we attach nothing: a non-passive wheel listener over the whole
+    // frame would force every tick onto the main thread (while the live preview
+    // renders) and make scrolling feel laggy. Leaving it to the browser keeps the
+    // compositor fast path intact.
     React.useEffect(() => {
         const frame = previewRef.current;
         if (!frame || isFullscreen) return;
 
-        // Determine what the page uses to scroll: the nearest ancestor scroll
-        // container of the preview (the library's `main.main-scroll`), or the
-        // window on pages that scroll the document. The document itself never has
-        // `overflowY: scroll` so this walk naturally falls through to the window.
-        const pageScroller = ((): HTMLElement | Window => {
-            for (let node = frame.parentElement; node; node = node.parentElement) {
-                if (node === document.documentElement || node === document.body) break;
-                const overflowY = getComputedStyle(node).overflowY;
-                if (overflowY === 'auto' || overflowY === 'scroll') return node;
-            }
-            return window;
-        })();
-
+        const pageScroller = findNearestScroller(frame);
         const scrollPage = (top: number) => {
             pageScroller.scrollBy({ top, left: 0, behavior: 'auto' });
         };
 
-        const canScrollInside = (el: HTMLElement, delta: number) => {
-            const max = el.scrollHeight - el.clientHeight;
-            if (max <= 1) return false;
-            const overflowY = getComputedStyle(el).overflowY;
-            if (overflowY !== 'auto' && overflowY !== 'scroll') return false;
-            return delta > 0 ? el.scrollTop < max - 1 : el.scrollTop > 1;
+        let nestedScrollers: HTMLElement[] = [];
+        let wheelAttached = false;
+
+        const scan = () => {
+            nestedScrollers = Array.from(frame.querySelectorAll<HTMLElement>('*')).filter((el) => {
+                const overflowY = getComputedStyle(el).overflowY;
+                return (overflowY === 'auto' || overflowY === 'scroll') && el.scrollHeight - el.clientHeight > 1;
+            });
         };
 
         const handleWheel = (event: WheelEvent) => {
-            const delta = event.deltaY;
+            const delta = event.deltaMode === 1 ? event.deltaY * 16 : event.deltaY;
             if (delta === 0) return;
 
-            const target = event.target as HTMLElement | null;
-
-            for (let node = target; node && node !== frame; node = node.parentElement) {
-                if (canScrollInside(node, delta)) return;
+            // If any nested scroller can still move in this direction, let it.
+            for (const el of nestedScrollers) {
+                if (!el.isConnected) continue;
+                const max = el.scrollHeight - el.clientHeight;
+                if (max <= 1) continue;
+                const canMove = delta > 0 ? el.scrollTop < max - 1 : el.scrollTop > 1;
+                if (canMove) return;
             }
 
+            const target = event.target as HTMLElement | null;
             if (target?.closest?.('[data-preview-wheel-lock]')) {
                 // A component claims this gesture (wheel-driven widgets). Let its own
                 // listener run; if it declines to consume the event, hand the delta to
@@ -1095,8 +1220,37 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             scrollPage(delta);
         };
 
-        frame.addEventListener('wheel', handleWheel, { passive: false, capture: true });
-        return () => frame.removeEventListener('wheel', handleWheel, { capture: true });
+        // Keep the non-passive listener in sync with the (lazily mounted) preview
+        // content: attach only while a nested scroller is present.
+        const sync = () => {
+            scan();
+            const needed = nestedScrollers.length > 0;
+            if (needed && !wheelAttached) {
+                frame.addEventListener('wheel', handleWheel, { passive: false, capture: true });
+                wheelAttached = true;
+            } else if (!needed && wheelAttached) {
+                frame.removeEventListener('wheel', handleWheel, { capture: true } as EventListenerOptions);
+                wheelAttached = false;
+            }
+        };
+
+        let raf = 0;
+        const schedule = () => {
+            if (raf) return;
+            raf = requestAnimationFrame(() => { raf = 0; sync(); });
+        };
+
+        schedule();
+        const observer = new MutationObserver(schedule);
+        observer.observe(frame, { childList: true, subtree: true });
+        const settleTimer = window.setTimeout(sync, 1000);
+
+        return () => {
+            observer.disconnect();
+            window.clearTimeout(settleTimer);
+            if (raf) cancelAnimationFrame(raf);
+            if (wheelAttached) frame.removeEventListener('wheel', handleWheel, { capture: true } as EventListenerOptions);
+        };
     }, [isFullscreen]);
 
     // Entitled = full Pro (or special account) OR this component was bought outright.
@@ -1891,16 +2045,20 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         exit={{ opacity: 0, x: 20 }}
                         className="space-y-6 md:space-y-12"
                     >
+                        <SectionParallax icon={Eye} className="space-y-6 md:space-y-12">
                         {item.imageUrl && (
-                            <div className="mb-8">
-                                <h3 className="text-xl font-black uppercase tracking-tight text-white mb-4">Preview Image</h3>
-                                <div className="aspect-video w-full rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
-                                    <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                            <Reveal>
+                                <div className="mb-8">
+                                    <h3 className="text-xl font-black uppercase tracking-tight text-white mb-4">Preview Image</h3>
+                                    <div className="aspect-video w-full rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
+                                        <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />
+                                    </div>
                                 </div>
-                            </div>
+                            </Reveal>
                         )}
 
                         {/* Interactive Demo Frame with Browser Mockup Chrome */}
+                        <Reveal fadeOnly delay={0.05}>
                         <div
                             id="preview"
                             ref={previewRef}
@@ -2012,37 +2170,45 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                             </div>
 
                             <div className={`relative w-full flex-1 min-h-0 ${item.category === 'footer' || isFullscreen ? 'overflow-y-auto overflow-x-hidden block' : 'flex items-center justify-center overflow-hidden'}`}>
-                                <PreviewErrorBoundary 
-                                    key={`${item.id}-${resetKey}`} 
-                                    componentId={item.id}
-                                    onReset={() => setResetKey(k => k + 1)}
-                                >
-                                    <div className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'} ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
-                                        <React.Suspense fallback={<PreviewSkeleton />}>
-                                            <motion.div
-                                                key={`preview-${item.id}-${resetKey}`}
-                                                initial={{ opacity: 0 }}
-                                                animate={{ opacity: 1 }}
-                                                transition={{ duration: 0.2, ease: "easeOut" }}
-                                                className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'}`}
-                                            >
-                                                {item.preview({ showDemoButton: true, variant, onCustomize: handleCustomize })}
-                                            </motion.div>
-                                        </React.Suspense>
-                                    </div>
-                                </PreviewErrorBoundary>
+                                {previewInView || isFullscreen ? (
+                                    <PreviewErrorBoundary 
+                                        key={`${item.id}-${resetKey}`} 
+                                        componentId={item.id}
+                                        onReset={() => setResetKey(k => k + 1)}
+                                    >
+                                        <div className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'} ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
+                                            <React.Suspense fallback={<PreviewSkeleton />}>
+                                                <motion.div
+                                                    key={`preview-${item.id}-${resetKey}`}
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ duration: 0.2, ease: "easeOut" }}
+                                                    className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'}`}
+                                                >
+                                                    {item.preview({ showDemoButton: true, variant, onCustomize: handleCustomize })}
+                                                </motion.div>
+                                            </React.Suspense>
+                                        </div>
+                                    </PreviewErrorBoundary>
+                                ) : (
+                                    <PreviewSkeleton />
+                                )}
                             </div>
                         </div>
+                        </Reveal>
 
                         {/* Props Table */}
                         {componentConfig.props.length > 0 && (
-                            <section id="props" className="space-y-4">
-                                <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white px-2">Props</h3>
-                                <div className="rounded-lg border-2 border-white bg-brand-surface brutal-shadow-black p-4">
-                                    <PropsTable props={componentConfig.props} />
-                                </div>
-                            </section>
+                            <Reveal delay={0.1}>
+                                <section id="props" className="space-y-4">
+                                    <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white px-2">Props</h3>
+                                    <div className="rounded-lg border-2 border-white bg-brand-surface brutal-shadow-black p-4">
+                                        <PropsTable props={componentConfig.props} />
+                                    </div>
+                                </section>
+                            </Reveal>
                         )}
+                        </SectionParallax>
                     </motion.div>
                 ) : tab === 'code' ? (
                     <motion.div
@@ -2056,6 +2222,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <AdSlot slot="component-before-source" minHeight={280} />
 
                         {/* Source Code Section */}
+                        <Reveal scale={false}>
+                        <SectionParallax icon={Code}>
                         <section>
                             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6">
                                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Source Code</h3>
@@ -2170,6 +2338,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 )}
                             </div>
                         </section>
+                        </SectionParallax>
+                        </Reveal>
                     </motion.div>
                 ) : (
                     <VibeSystemSection
