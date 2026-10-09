@@ -41,7 +41,7 @@ const PlaygroundPage: React.FC = () => {
     const [copied, setCopied] = useState(false);
 
     if (tools.loading) return <SkeletonTable rows={3} />;
-    if (tools.error) return <ErrorState message={tools.error} onRetry={() => void tools.reload()} />;
+    if (tools.error) return <ErrorState message={tools.error} onRetry={() => void tools.reload(true)} />;
 
     const available = tools.data!.tools.filter((t) => t.enabled);
     const currentTool = available.find((t) => t.name === selected) || available[0];
@@ -92,7 +92,7 @@ const PlaygroundPage: React.FC = () => {
                 title="MCP Playground"
                 subtitle="Execute real MCP tools against the live server with admin context. Responses are not simulated."
                 actions={
-                    <button onClick={() => void tools.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void tools.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RotateCcw size={13} /> Reload Tools
                     </button>
                 }

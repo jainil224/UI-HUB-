@@ -508,6 +508,17 @@ const MCPPage: React.FC = () => {
 
     return (
         <div className="flex flex-col gap-8">
+            {/* ── Refresh toolbar ── */}
+            <div className="-mb-4 flex justify-end">
+                <button
+                    onClick={() => void load(true)}
+                    disabled={loading}
+                    className="inline-flex items-center gap-2 px-3 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer disabled:opacity-40"
+                >
+                    <RefreshCw size={13} /> Refresh
+                </button>
+            </div>
+
             {/* ── Session expired banner ── */}
             {authExpired && (
                 <div className="flex items-start gap-3 border-2 border-brand-yellow bg-brand-yellow/10 rounded-lg p-4">
@@ -537,7 +548,7 @@ const MCPPage: React.FC = () => {
                             Tried {MCP_SERVER_URL} after multiple retries. If it fails to stay up, enable a keep-alive (see KEEPALIVE.md). Local dev? Set <code className="font-mono bg-black px-1 rounded">VITE_MCP_API_URL=http://localhost:3001</code>.
                         </p>
                     </div>
-                    <button onClick={() => void load()} className="text-neutral-400 hover:text-white transition-colors cursor-pointer"><RefreshCw size={16} /></button>
+                    <button onClick={() => void load(true)} className="text-neutral-400 hover:text-white transition-colors cursor-pointer"><RefreshCw size={16} /></button>
                 </div>
             )}
 

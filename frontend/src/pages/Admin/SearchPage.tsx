@@ -25,7 +25,7 @@ const SearchPage: React.FC = () => {
             </div>
         );
     }
-    if (d.error) return <ErrorState message={d.error} onRetry={() => void d.reload()} />;
+    if (d.error) return <ErrorState message={d.error} onRetry={() => void d.reload(true)} />;
 
     const data = d.data!;
     const maxCount = Math.max(1, ...data.topSearches.map((s) => s.count));
@@ -42,7 +42,7 @@ const SearchPage: React.FC = () => {
                                 {r.label}
                             </button>
                         ))}
-                        <button onClick={() => void d.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                        <button onClick={() => void d.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                             <RefreshCw size={13} /> Refresh
                         </button>
                     </div>

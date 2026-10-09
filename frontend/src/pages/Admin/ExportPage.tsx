@@ -32,7 +32,7 @@ const ExportPage: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     if (status.loading) return null;
-    if (status.error) return <ErrorState message={status.error} onRetry={() => void status.reload()} />;
+    if (status.error) return <ErrorState message={status.error} onRetry={() => void status.reload(true)} />;
 
     const run = async () => {
         setError(null);

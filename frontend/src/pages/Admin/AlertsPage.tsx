@@ -46,7 +46,7 @@ const AlertsPage: React.FC = () => {
     );
 
     if (a.loading && !a.data && e.loading && !e.data) return <SkeletonTable rows={6} />;
-    if (a.error && !a.data && e.error && !e.data) return <ErrorState message={a.error || e.error} onRetry={() => { void a.reload(); void e.reload(); }} />;
+    if (a.error && !a.data && e.error && !e.data) return <ErrorState message={a.error || e.error} onRetry={() => { void a.reload(true); void e.reload(true); }} />;
 
     const alerts = a.data?.alerts || [];
     const active = alerts.filter((x) => !x.resolved);
@@ -59,7 +59,7 @@ const AlertsPage: React.FC = () => {
         try {
             if (alert.resolved) await unresolveAlert(alert.key);
             else await resolveAlert(alert.key);
-            await a.reload();
+            await a.reload(true);
         } finally {
             setBusy(null);
         }
@@ -69,13 +69,13 @@ const AlertsPage: React.FC = () => {
         setBusy(ev.id);
         try {
             await alertAction(ev.id, action, action === 'mute' ? { muteMinutes: 60 } : undefined);
-            await e.reload();
+            await e.reload(true);
         } finally {
             setBusy(null);
         }
     };
 
-    const refresh = () => { void a.reload(); void e.reload(); };
+    const refresh = () => { void a.reload(true); void e.reload(true); };
 
     return (
         <div>

@@ -22,7 +22,7 @@ const SettingsPage: React.FC = () => {
     }, [s.data]);
 
     if (s.loading) return <SkeletonBlock className="h-96" />;
-    if (s.error) return <ErrorState message={s.error} onRetry={() => void s.reload()} />;
+    if (s.error) return <ErrorState message={s.error} onRetry={() => void s.reload(true)} />;
     if (!form) return null;
 
     const setNum = (key: 'rateLimitFree' | 'rateLimitPro', value: string) => {

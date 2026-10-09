@@ -38,7 +38,7 @@ const AuditPage: React.FC = () => {
     const a = useData(() => getAudit(page, 25), [page]);
 
     if (a.loading) return <SkeletonTable rows={8} />;
-    if (a.error) return <ErrorState message={a.error} onRetry={() => void a.reload()} />;
+    if (a.error) return <ErrorState message={a.error} onRetry={() => void a.reload(true)} />;
 
     const data = a.data!;
 
@@ -48,7 +48,7 @@ const AuditPage: React.FC = () => {
                 title="Audit Log"
                 subtitle="Every privileged action taken in the admin console — who, what, when."
                 actions={
-                    <button onClick={() => void a.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void a.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }

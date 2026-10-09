@@ -67,14 +67,14 @@ const DiagnosticsPage: React.FC = () => {
         try {
             const { item } = await setDiagnosticStatus(selected.id, status);
             setSelected(item);
-            await d.reload();
+            await d.reload(true);
         } finally {
             setBusy(false);
         }
     };
 
     if (d.loading && !d.data) return <SkeletonTable rows={8} />;
-    if (d.error && !d.data) return <ErrorState message={d.error} onRetry={() => void d.reload()} />;
+    if (d.error && !d.data) return <ErrorState message={d.error} onRetry={() => void d.reload(true)} />;
 
     const data = d.data!;
     const categories = Object.keys(data.byCategory || {});
@@ -85,7 +85,7 @@ const DiagnosticsPage: React.FC = () => {
                 title="Failed Searches & Diagnostics"
                 subtitle="Grouped failure fingerprints with the evidence needed to reproduce, plus a ready-to-paste AI repair prompt."
                 actions={
-                    <button onClick={() => void d.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void d.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }

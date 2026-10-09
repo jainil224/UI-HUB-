@@ -10,7 +10,7 @@ const SecurityPage: React.FC = () => {
     const s = useData(() => getSecurity(), []);
 
     if (s.loading) return <SkeletonTable rows={6} />;
-    if (s.error) return <ErrorState message={s.error} onRetry={() => void s.reload()} />;
+    if (s.error) return <ErrorState message={s.error} onRetry={() => void s.reload(true)} />;
 
     const data = s.data!;
     const maxRate = Math.max(1, ...data.rateLimitTopKeys.map((r) => r.count));
@@ -21,7 +21,7 @@ const SecurityPage: React.FC = () => {
                 title="Security"
                 subtitle="Authentication failures, rate limiting and premium-access denials across the MCP service."
                 actions={
-                    <button onClick={() => void s.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void s.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }

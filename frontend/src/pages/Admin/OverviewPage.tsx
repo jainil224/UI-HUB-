@@ -19,8 +19,8 @@ const RANGES: Array<{ id: string; label: string }> = [
 
 const OverviewPage: React.FC = () => {
     const [range, setRange] = useState('30d');
-    const overview = useData(() => getOverview(range), [range], { intervalMs: 20000 });
-    const activity = useData(() => getLogs({ pageSize: 8 }), [], { intervalMs: 20000 });
+    const overview = useData((refresh) => getOverview(range, refresh), [range], { intervalMs: 20000 });
+    const activity = useData((refresh) => getLogs({ pageSize: 8, refresh }), [], { intervalMs: 20000 });
 
     if (overview.loading || activity.loading) {
         return (
@@ -36,7 +36,7 @@ const OverviewPage: React.FC = () => {
     }
 
     if (overview.error) {
-        return <ErrorState message={overview.error} onRetry={() => void overview.reload()} />;
+        return <ErrorState message={overview.error} onRetry={() => void overview.reload(true)} />;
     }
 
     const d = overview.data!;
@@ -90,7 +90,7 @@ const OverviewPage: React.FC = () => {
                             </button>
                         ))}
                         <button
-                            onClick={() => void Promise.all([overview.reload(), activity.reload()])}
+                            onClick={() => void Promise.all([overview.reload(true), activity.reload(true)])}
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer"
                         >
                             <RefreshCw size={13} /> Refresh

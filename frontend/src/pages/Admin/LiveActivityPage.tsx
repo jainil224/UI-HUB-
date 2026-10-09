@@ -47,7 +47,7 @@ const LiveActivityPage: React.FC = () => {
     };
 
     if (a.loading && !a.data) return <SkeletonTable rows={8} />;
-    if (a.error && !a.data) return <ErrorState message={a.error} onRetry={() => void a.reload()} />;
+    if (a.error && !a.data) return <ErrorState message={a.error} onRetry={() => void a.reload(true)} />;
 
     const data = a.data!;
     const byStatus = data.summary?.byStatus || {};
@@ -65,7 +65,7 @@ const LiveActivityPage: React.FC = () => {
                         >
                             <Radio size={13} className={auto ? 'animate-pulse' : ''} /> {auto ? 'Live' : 'Paused'}
                         </button>
-                        <button onClick={() => void a.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                        <button onClick={() => void a.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                             <RefreshCw size={13} /> Refresh
                         </button>
                     </>

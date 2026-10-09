@@ -16,7 +16,7 @@ const AiSearchPage: React.FC = () => {
     );
 
     if (a.loading && !a.data) return <SkeletonTable rows={8} />;
-    if (a.error && !a.data) return <ErrorState message={a.error} onRetry={() => void a.reload()} />;
+    if (a.error && !a.data) return <ErrorState message={a.error} onRetry={() => void a.reload(true)} />;
 
     const data = a.data!;
     const s = data.summary;
@@ -34,7 +34,7 @@ const AiSearchPage: React.FC = () => {
                             <option value="30d">Last 30 days</option>
                             <option value="90d">Last 90 days</option>
                         </select>
-                        <button onClick={() => void a.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                        <button onClick={() => void a.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                             <RefreshCw size={13} /> Refresh
                         </button>
                     </>

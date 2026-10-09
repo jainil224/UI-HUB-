@@ -23,7 +23,7 @@ const ComponentsPage: React.FC = () => {
             </div>
         );
     }
-    if (c.error) return <ErrorState message={c.error} onRetry={() => void c.reload()} />;
+    if (c.error) return <ErrorState message={c.error} onRetry={() => void c.reload(true)} />;
 
     let leaderboard: TopComponentUsage[] = [...(data?.topComponents || [])];
     if (sort === 'code') leaderboard.sort((a, b) => b.codeFetches - a.codeFetches);
@@ -52,7 +52,7 @@ const ComponentsPage: React.FC = () => {
                 title="Component Analytics"
                 subtitle="Which UI HUB components developers actually request through MCP."
                 actions={
-                    <button onClick={() => void Promise.all([c.reload(), s.reload()])} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void Promise.all([c.reload(true), s.reload(true)])} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }

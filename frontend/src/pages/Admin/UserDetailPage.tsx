@@ -27,7 +27,7 @@ const UserDetailPage: React.FC = () => {
             </div>
         );
     }
-    if (d.error) return <ErrorState message={d.error} onRetry={() => void d.reload()} />;
+    if (d.error) return <ErrorState message={d.error} onRetry={() => void d.reload(true)} />;
 
     const data = d.data!;
     const user = data.user;
@@ -37,7 +37,7 @@ const UserDetailPage: React.FC = () => {
         try {
             if (user.status === 'suspended') await unsuspendUser(user.uid);
             else await suspendUser(user.uid);
-            await d.reload();
+            await d.reload(true);
         } finally {
             setBusy(false);
         }

@@ -29,7 +29,7 @@ const AnalyticsPage: React.FC = () => {
             </div>
         );
     }
-    if (a.error) return <ErrorState message={a.error} onRetry={() => void a.reload()} />;
+    if (a.error) return <ErrorState message={a.error} onRetry={() => void a.reload(true)} />;
 
     const d: AdminAnalytics = a.data!;
     const tools = toolFilter ? d.byTool.filter((t) => t.name === toolFilter) : d.byTool;
@@ -57,7 +57,7 @@ const AnalyticsPage: React.FC = () => {
                                 {r.label}
                             </button>
                         ))}
-                        <button onClick={() => void a.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                        <button onClick={() => void a.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                             <RefreshCw size={13} /> Refresh
                         </button>
                     </div>

@@ -132,10 +132,10 @@ export interface DataState<T> {
     data: T | null;
     loading: boolean;
     error: string | null;
-    reload: () => Promise<void>;
+    reload: (force?: boolean) => Promise<void>;
 }
 
-export function useData<T>(loader: () => Promise<T>, deps: React.DependencyList = [], options?: { intervalMs?: number }): DataState<T> {
+export function useData<T>(loader: (force?: boolean) => Promise<T>, deps: React.DependencyList = [], options?: { intervalMs?: number }): DataState<T> {
     const [data, setData] = React.useState<T | null>(null);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
@@ -145,11 +145,11 @@ export function useData<T>(loader: () => Promise<T>, deps: React.DependencyList 
     const optionsRef = React.useRef(options);
     optionsRef.current = options;
 
-    const reload = React.useCallback(async () => {
+    const reload = React.useCallback(async (force = false) => {
         if (dataRef.current === null) setLoading(true);
         setError(null);
         try {
-            const result = await loaderRef.current();
+            const result = await loaderRef.current(force);
             dataRef.current = result;
             setData(result);
         } catch (e: any) {

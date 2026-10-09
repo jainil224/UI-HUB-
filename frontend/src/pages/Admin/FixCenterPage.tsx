@@ -39,7 +39,7 @@ const FixCenterPage: React.FC = () => {
             </div>
         );
     }
-    if (d.error) return <ErrorState message={d.error} onRetry={() => void d.reload()} />;
+    if (d.error) return <ErrorState message={d.error} onRetry={() => void d.reload(true)} />;
 
     const data = d.data!;
     const items = data.items.filter(
@@ -73,7 +73,7 @@ const FixCenterPage: React.FC = () => {
                 const key = (item.evidence as any)?.key || item.id.replace(/^signal:/, '');
                 if (key && key !== item.id) await resolveAlert(key);
             }
-            await d.reload();
+            await d.reload(true);
             if (selected?.id === item.id) setSelected(null);
         } catch (e: any) {
             console.error(e);
@@ -89,7 +89,7 @@ const FixCenterPage: React.FC = () => {
                 const id = item.diagnosticId || item.id.replace(/^diag:/, '');
                 await setDiagnosticStatus(id, 'reopened');
             }
-            await d.reload();
+            await d.reload(true);
             if (selected?.id === item.id) setSelected(null);
         } catch (e: any) {
             console.error(e);
@@ -128,7 +128,7 @@ const FixCenterPage: React.FC = () => {
                             <button key={f} onClick={()=>setFilter(f)} className={`px-3 py-2 text-[10px] font-black uppercase tracking-widest ${filter===f?'bg-brand-blue text-white':'bg-brand-surface text-neutral-400 hover:text-white'}`}>{f}</button>
                         ))}
                     </div>
-                    <button onClick={() => void d.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void d.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                             <RefreshCw size={13} /> Refresh
                         </button>
                     </div>

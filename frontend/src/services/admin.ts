@@ -410,13 +410,18 @@ export async function getAdminStatus(): Promise<AdminStatus> {
     return status;
 }
 
-export function getOverview(range?: string): Promise<AdminOverview> {
+export function getOverview(range?: string, refresh = false): Promise<AdminOverview> {
     const key = range || 'default';
-    const cached = overviewCache.get(key);
-    if (cached && Date.now() < cached.expiresAt) {
-        return Promise.resolve(cached.value);
+    if (!refresh) {
+        const cached = overviewCache.get(key);
+        if (cached && Date.now() < cached.expiresAt) {
+            return Promise.resolve(cached.value);
+        }
     }
-    const q = range ? `?range=${encodeURIComponent(range)}` : '';
+    const p = new URLSearchParams();
+    if (range) p.set('range', range);
+    if (refresh) p.set('refresh', '1');
+    const q = p.toString() ? `?${p.toString()}` : '';
     return request<AdminOverview>(`/api/admin/mcp/overview${q}`).then((data) => {
         overviewCache.set(key, { value: data, expiresAt: Date.now() + OVERVIEW_TTL_MS });
         return data;
@@ -493,13 +498,14 @@ export function getSearchAnalytics(range?: string): Promise<AdminSearch> {
     return request<AdminSearch>(`/api/admin/mcp/search${q}`);
 }
 
-export function getLogs(params?: { event?: string; status?: number | string; result?: string; search?: string; range?: string; page?: number; pageSize?: number }): Promise<AdminLogList> {
+export function getLogs(params?: { event?: string; status?: number | string; result?: string; search?: string; range?: string; page?: number; pageSize?: number; refresh?: boolean }): Promise<AdminLogList> {
     const p = new URLSearchParams();
     if (params?.event) p.set('event', params.event);
     if (params?.status !== undefined && params?.status !== '') p.set('status', String(params.status));
     if (params?.result) p.set('result', params.result);
     if (params?.search) p.set('search', params.search);
     if (params?.range) p.set('range', params.range);
+    if (params?.refresh) p.set('refresh', '1');
     p.set('page', String(params?.page || 1));
     p.set('pageSize', String(params?.pageSize || 25));
     return request<AdminLogList>(`/api/admin/mcp/logs?${p.toString()}`);

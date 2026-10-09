@@ -60,7 +60,7 @@ const LogsPage: React.FC = () => {
     const [actionError, setActionError] = useState<string | null>(null);
 
     const l = useData(
-        () => getLogs({ event, status, result, search: debounced, range, page, pageSize: 25 }),
+        (refresh) => getLogs({ event, status, result, search: debounced, range, page, pageSize: 25, refresh }),
         [event, status, result, debounced, range, page]
     );
 
@@ -112,7 +112,7 @@ const LogsPage: React.FC = () => {
             });
             setNotice(`Deleted ${formatCompact(res.deleted)} log event(s) from the database.`);
             setConfirmOpen(false);
-            await l.reload();
+            await l.reload(true);
         } catch (e) {
             setActionError(e instanceof Error ? e.message : 'Delete failed');
         } finally {
@@ -131,7 +131,7 @@ const LogsPage: React.FC = () => {
             const res = await deleteLogItem({ docId: entry.docId, eventId: entry.eventId });
             setNotice(res.deleted > 0 ? 'Log entry deleted from the database.' : 'That log entry was already gone.');
             setConfirmRow(null);
-            await l.reload();
+            await l.reload(true);
         } catch (e) {
             setActionError(e instanceof Error ? e.message : 'Delete failed');
         } finally {
@@ -140,7 +140,7 @@ const LogsPage: React.FC = () => {
     };
 
     if (l.loading) return <SkeletonTable rows={10} />;
-    if (l.error) return <ErrorState message={l.error} onRetry={() => void l.reload()} />;
+    if (l.error) return <ErrorState message={l.error} onRetry={() => void l.reload(true)} />;
 
     const data = l.data!;
 
@@ -172,7 +172,7 @@ const LogsPage: React.FC = () => {
                         >
                             Delete logs
                         </button>
-                        <button onClick={() => void l.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                        <button onClick={() => void l.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                             <RefreshCw size={13} /> Refresh
                         </button>
                     </div>

@@ -32,14 +32,14 @@ const UsersPage: React.FC = () => {
         try {
             if (user.status === 'suspended') await unsuspendUser(user.uid);
             else await suspendUser(user.uid);
-            await u.reload();
+            await u.reload(true);
         } finally {
             setBusy(null);
         }
     };
 
     if (u.loading) return <SkeletonTable rows={8} />;
-    if (u.error) return <ErrorState message={u.error} onRetry={() => void u.reload()} />;
+    if (u.error) return <ErrorState message={u.error} onRetry={() => void u.reload(true)} />;
 
     const data = u.data!;
 
@@ -49,7 +49,7 @@ const UsersPage: React.FC = () => {
                 title="MCP Users"
                 subtitle="Everyone with access to the MCP service — plans, keys, requests and activity."
                 actions={
-                    <button onClick={() => void u.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void u.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }

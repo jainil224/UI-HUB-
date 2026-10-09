@@ -40,7 +40,7 @@ const HealthPage: React.FC = () => {
             </div>
         );
     }
-    if (h.error) return <ErrorState message={h.error} onRetry={() => void h.reload()} />;
+    if (h.error) return <ErrorState message={h.error} onRetry={() => void h.reload(true)} />;
 
     const data = h.data!;
 
@@ -50,7 +50,7 @@ const HealthPage: React.FC = () => {
                 title="Server Health"
                 subtitle="Live status of the MCP server process and its MongoDB connection."
                 actions={
-                    <button onClick={() => void h.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void h.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }

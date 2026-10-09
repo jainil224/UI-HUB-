@@ -24,7 +24,7 @@ const ToolsPage: React.FC = () => {
     const [busy, setBusy] = React.useState<string | null>(null);
 
     if (t.loading) return <SkeletonTable rows={9} />;
-    if (t.error) return <ErrorState message={t.error} onRetry={() => void t.reload()} />;
+    if (t.error) return <ErrorState message={t.error} onRetry={() => void t.reload(true)} />;
 
     const tools = t.data!.tools;
 
@@ -32,7 +32,7 @@ const ToolsPage: React.FC = () => {
         setBusy(tool.name);
         try {
             await setTool(tool.name, !tool.enabled);
-            await t.reload();
+            await t.reload(true);
         } finally {
             setBusy(null);
         }
@@ -44,7 +44,7 @@ const ToolsPage: React.FC = () => {
                 title="MCP Tools"
                 subtitle="Control which MCP tools are available. Disabling a tool is enforced server-side — it is immediately removed from tools/list and calls return a tool-disabled error."
                 actions={
-                    <button onClick={() => void t.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void t.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }

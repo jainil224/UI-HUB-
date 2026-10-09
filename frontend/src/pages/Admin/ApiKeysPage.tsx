@@ -28,7 +28,7 @@ const ApiKeysPage: React.FC = () => {
         setBusy(key.id);
         try {
             await patchApiKey(key.id, action);
-            await k.reload();
+            await k.reload(true);
         } finally {
             setBusy(null);
         }
@@ -39,14 +39,14 @@ const ApiKeysPage: React.FC = () => {
         setConfirmDeleteId(null);
         try {
             await deleteAdminApiKey(key.id);
-            await k.reload();
+            await k.reload(true);
         } finally {
             setBusy(null);
         }
     };
 
     if (k.loading) return <SkeletonTable rows={8} />;
-    if (k.error) return <ErrorState message={k.error} onRetry={() => void k.reload()} />;
+    if (k.error) return <ErrorState message={k.error} onRetry={() => void k.reload(true)} />;
 
     const data = k.data!;
 
@@ -56,7 +56,7 @@ const ApiKeysPage: React.FC = () => {
                 title="API Keys"
                 subtitle="All keys issued to MCP clients. Revoke immediately to cut off access."
                 actions={
-                    <button onClick={() => void k.reload()} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
+                    <button onClick={() => void k.reload(true)} className="inline-flex items-center gap-2 px-4 py-2 rounded-md border-2 border-white bg-brand-surface text-[10px] font-black uppercase tracking-widest text-white hover:bg-neutral-900 transition-colors cursor-pointer">
                         <RefreshCw size={13} /> Refresh
                     </button>
                 }
