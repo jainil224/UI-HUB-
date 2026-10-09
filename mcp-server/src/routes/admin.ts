@@ -469,43 +469,69 @@ adminRouter.get('/overview', requireAdmin, async (req: Request, res: Response) =
 
 adminRouter.get('/analytics', requireAdmin, async (req: Request, res: Response) => {
   const range = parseRange(req.query as Record<string, any>);
-  const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
-  const stats = aggregateEvents(events);
+  const requests = await telemetryService.queryRequests({ fromTs: range.fromTs, toTs: range.toTs, page: 1, pageSize: 50000 });
+  const items = requests.items;
 
-  const tools = Object.entries(stats.byTool)
-    .map(([name, usage]) => ({ ...usage, name }))
-    .sort((a, b) => b.total - a.total);
+  const total = items.length;
+  const success = items.filter((e: any) => e.success).length;
+  const errors = total - success;
+  const errorRate = total ? (errors / total) * 100 : 0;
+  const latencies = items.map((e: any) => typeof e.latencyMs === 'number' ? e.latencyMs : 0).filter((n) => n > 0);
+  const avgResponseTimeMs = latencies.length ? Math.round(latencies.reduce((s,n)=>s+n,0)/latencies.length) : 0;
+  const rateLimitEvents = items.filter((e:any)=>e.errorCode==='RATE_LIMIT_EXCEEDED'||e.status==='rate_limited').length;
+  const premiumDenied = items.filter((e:any)=>e.errorCode==='PREMIUM_ACCESS_REQUIRED'||e.errorCategory==='premium_denied').length;
+  const authFailures = items.filter((e:any)=>e.errorCategory==='auth_failure'||e.status==='authorization_denied').length;
 
-  const series = Object.entries(stats.byDay)
-    .map(([date, requests]) => ({ date, requests }))
-    .sort((a, b) => a.date.localeCompare(b.date));
+  const byTool: Record<string, { name:string; total:number; success:number; errors:number; avgLatency:number; }>= {};
+  for (const e of items) {
+    const name = e.toolName || e.method || 'unknown';
+    if (!byTool[name]) byTool[name]={name,total:0,success:0,errors:0,avgLatency:0};
+    byTool[name].total++;
+    if (e.success) byTool[name].success++; else byTool[name].errors++;
+  }
+  const toolList = Object.values(byTool).map(t=>{
+    const tt = items.filter((e:any)=>(e.toolName||e.method||'unknown')===t.name && typeof e.latencyMs==='number'&&e.latencyMs>0);
+    const avg = tt.length? Math.round(tt.reduce((s,n:any)=>s+n.latencyMs,0)/tt.length):0;
+    return {...t, avgLatency:avg, errorRate:t.total? (t.errors/t.total)*100:0};
+  }).sort((a,b)=>b.total-a.total);
 
+  const byDayMap: Record<string,number>={};
+  for (const e of items) {
+    const d=new Date(e.timestamp);
+    const k=`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+    byDayMap[k]=(byDayMap[k]||0)+1;
+  }
+  const byDay=Object.entries(byDayMap).map(([date,requests])=>({date,requests})).sort((a,b)=>a.date.localeCompare(b.date));
+
+  const byTier: Record<string,number>={};
+  const byStatus: Record<string,number>={};
+  for (const e of items) {
+    const t=e.tier||'unknown';
+    byTier[t]=(byTier[t]||0)+1;
+    const s=e.status||'unknown';
+    byStatus[s]=(byStatus[s]||0)+1;
+  }
+
+  const topComponents = [] as any[];
   res.json({
     range,
     summary: {
-      requests: stats.requests,
-      uniqueUsers: stats.uniqueUsers,
-      errorRate: stats.errorRate,
-      avgResponseTimeMs: stats.avgResponseTimeMs,
-      rateLimitEvents: stats.rateLimitEvents,
-      premiumDenied: stats.premiumDenied,
-      authFailures: stats.authFailures,
+      requests: total,
+      uniqueUsers: new Set(items.map((e: any) => e.userId || e.apiKeyId).filter(Boolean)).size,
+      errorRate: Math.round(errorRate * 100) / 100,
+      avgResponseTimeMs,
+      rateLimitEvents,
+      premiumDenied,
+      authFailures,
     },
-    byDay: series,
-    byTool: tools,
-    byTier: stats.byTier,
-    byStatus: stats.byStatus,
-    topComponents: stats.topComponents.map((c) => {
-      const meta = componentService.getComponentMeta(c.id);
-      return {
-        ...c,
-        title: meta?.title || c.id,
-        category: meta?.category || 'unknown',
-        isPremium: meta?.isPremium ?? false,
-      };
-    }),
+    byDay,
+    byTool: toolList,
+    byTier,
+    byStatus,
+    topComponents,
   });
 });
+
 
 adminRouter.get('/users', requireAdmin, async (req: Request, res: Response) => {
   const range = parseRange(req.query as Record<string, any>);
@@ -745,24 +771,45 @@ adminRouter.delete('/api-keys/:id', requireAdmin, async (req: Request, res: Resp
 
 adminRouter.get('/tools', requireAdmin, async (req: Request, res: Response) => {
   const states = await configService.getToolStates();
-  const events = await analyticsService.queryEvents(daysAgoKey(30));
-  const stats = aggregateEvents(events);
-  const usageMap = stats.byTool;
+  const range = parseRange(req.query as Record<string, any>);
+  const requests = await telemetryService.queryRequests({ fromTs: range.fromTs, toTs: range.toTs, page: 1, pageSize: 50000 });
+  const items = requests.items;
+  const usageMap: Record<string, { total:number; success:number; failed:number; errors:number; errorRate:number; avgResponseTimeMs:number; lastUsed:number; uniqueUsers:number }> = {};
+
+  for (const e of items) {
+    const name = e.toolName || e.method || 'unknown';
+    if (!usageMap[name]) usageMap[name]={total:0,success:0,failed:0,errors:0,errorRate:0,avgResponseTimeMs:0,lastUsed:0,uniqueUsers:0};
+    usageMap[name].total++;
+    if (e.success) usageMap[name].success++; else { usageMap[name].failed++; usageMap[name].errors++; }
+    if (e.timestamp > usageMap[name].lastUsed) usageMap[name].lastUsed = e.timestamp;
+  }
+
+  for (const k of Object.keys(usageMap)) {
+    const u=usageMap[k];
+    u.errorRate = u.total? (u.errors/u.total)*100:0;
+    const tt = items.filter((e:any)=>(e.toolName||e.method||'unknown')===k && typeof e.latencyMs==='number'&&e.latencyMs>0);
+    u.avgResponseTimeMs = tt.length? Math.round(tt.reduce((s,n:any)=>s+n.latencyMs,0)/tt.length):0;
+    const users = new Set(items.filter((e:any)=>(e.toolName||e.method||'unknown')===k).map((e:any)=>e.userId||e.apiKeyId).filter(Boolean));
+    u.uniqueUsers = users.size;
+  }
 
   const tools = Object.keys(states).map((name) => {
     const usage = usageMap[name] || {
       total: 0,
       success: 0,
       failed: 0,
+      errors: 0,
+      errorRate: 0,
       uniqueUsers: 0,
       avgResponseTimeMs: 0,
       lastUsed: 0,
-    };
+    } as any;
     return {
       ...usage,
       name,
       enabled: states[name],
       category: classifyTool(name),
+      errorRate: Math.round(((usage as any).errorRate || 0) * 100) / 100,
     };
   });
 
@@ -832,6 +879,7 @@ adminRouter.get('/components', requireAdmin, async (req: Request, res: Response)
       return { ...c, title: meta?.title || c.id, category: meta?.category || 'unknown', isPremium: meta?.isPremium ?? false };
     }),
     catalog,
+    templates: componentService.getTemplateCatalog(),
   });
 });
 
@@ -935,8 +983,9 @@ adminRouter.get('/logs', requireAdmin, async (req: Request, res: Response) => {
 
   const total = rows.length;
   const start = (page - 1) * pageSize;
-  const pageRows = rows.slice(start, start + pageSize).map((e) => ({
+  const pageRows = rows.slice(start, start + pageSize).map((e, i) => ({
     ...e,
+    id: String((e as any)._id || `${e.timestamp}-${e.event}-${i}-${Math.random().toString(36).slice(2,6)}`),
     userId: maskUid(String(e.userId || '')),
   }));
 
@@ -946,6 +995,7 @@ adminRouter.get('/logs', requireAdmin, async (req: Request, res: Response) => {
     pageSize,
     range,
     events: pageRows,
+    items: pageRows,
   });
 });
 
@@ -1018,6 +1068,33 @@ adminRouter.delete('/logs', requireAdmin, async (req: Request, res: Response) =>
   });
 
   res.json({ ok: true, deleted, remaining, docsTouched, range, filters });
+});
+
+/**
+ * DELETE /api/admin/mcp/logs/item?eventId=...&docId=...
+ * Per-row delete for log entries. Finds the specific event in the daily bucket.
+ */
+adminRouter.delete('/logs/item', requireAdmin, async (req: Request, res: Response) => {
+  const eventId = str(req.query.eventId);
+  const docId = str(req.query.docId);
+  if (!eventId && !docId) {
+    return res.status(400).json({ error: 'BAD_REQUEST', message: 'eventId or docId required' });
+  }
+  const col = await mongoCollection('mcp_analytics');
+  const docs = docId ? await col.find({ _id: (()=>{try{return new ObjectId(docId)}catch{return docId}})() as any }).toArray() : await col.find().toArray();
+  let deleted = 0;
+  for (const d of docs) {
+    const all: McpEvent[] = Array.isArray(d.events) ? d.events : [];
+    const survivors = all.filter((e:any)=> String((e as any)._id||e.timestamp||'') !== eventId);
+    if (survivors.length !== all.length) {
+      deleted = all.length - survivors.length;
+      if (survivors.length===0) await col.deleteOne({_id:d._id});
+      else await col.updateOne({_id:d._id}, {$set:{events:survivors}});
+      break;
+    }
+  }
+  AnalyticsService.invalidateQueryCache();
+  res.json({ ok:true, deleted });
 });
 
 adminRouter.get('/security', requireAdmin, async (req: Request, res: Response) => {
@@ -1377,6 +1454,100 @@ adminRouter.get('/export', requireAdmin, async (req: Request, res: Response) => 
     });
   }
 
+  if (type === 'diagnostics') {
+    const resolutionState = str(req.query.resolutionState);
+    const diag = await queryDiagnostics({
+      resolutionState: resolutionState === 'resolved' || resolutionState === 'unresolved' ? resolutionState : undefined,
+      fromTs: range.fromTs,
+      toTs: range.toTs,
+      pageSize: 5000,
+    });
+    const rows = diag.items.map((d) => ({
+      id: d.id,
+      fingerprint: d.fingerprint,
+      category: d.category,
+      severity: d.severity,
+      resolution: d.resolution,
+      title: d.title,
+      errorSummary: d.errorSummary,
+      tool: d.tool || '',
+      method: d.method || '',
+      resourceType: d.resourceType || '',
+      resourceId: d.resourceId || '',
+      query: d.query || '',
+      statusCode: d.statusCode ?? '',
+      errorCode: d.errorCode || '',
+      clientName: d.clientName || '',
+      occurrences: d.occurrences,
+      firstSeen: d.firstSeen,
+      lastSeen: d.lastSeen,
+      notes: d.notes || '',
+    }));
+    if (format === 'csv') {
+      const headers = ['id', 'fingerprint', 'category', 'severity', 'resolution', 'title', 'errorSummary', 'tool', 'method', 'resourceType', 'resourceId', 'query', 'statusCode', 'errorCode', 'clientName', 'occurrences', 'firstSeen', 'lastSeen', 'notes'];
+      return res.send(toCsv(headers, rows as any[]));
+    }
+    return res.json({ type, range, total: rows.length, diagnostics: rows });
+  }
+
+  if (type === 'activity') {
+    const reqs = await telemetryService.queryRequests({
+      fromTs: range.fromTs,
+      toTs: range.toTs,
+      status: str(req.query.status),
+      errorCategory: str(req.query.errorCategory),
+      toolName: str(req.query.toolName),
+      client: str(req.query.client),
+      page: 1,
+      pageSize: 50000,
+    });
+    const rows = (reqs.items as any[]).map((e) => ({
+      id: e._id || e.id || '',
+      timestamp: e.timestamp,
+      status: e.status,
+      success: e.success,
+      method: e.method,
+      toolName: e.toolName || '',
+      clientName: e.clientName || '',
+      clientVersion: e.clientVersion || '',
+      userId: maskUid(String(e.userId || '')),
+      keyPrefix: e.keyPrefix || '',
+      tier: e.tier || '',
+      resourceType: e.resourceType || '',
+      resourceId: e.resourceId || '',
+      query: e.query || '',
+      statusCode: e.statusCode ?? '',
+      errorCode: e.errorCode || '',
+      errorCategory: e.errorCategory || '',
+      latencyMs: e.latencyMs ?? '',
+      resultCount: e.resultCount ?? '',
+      correlationId: e.correlationId || '',
+    }));
+    if (format === 'csv') {
+      const headers = ['id', 'timestamp', 'status', 'success', 'method', 'toolName', 'clientName', 'userId', 'keyPrefix', 'tier', 'resourceType', 'resourceId', 'query', 'statusCode', 'errorCode', 'errorCategory', 'latencyMs', 'resultCount', 'correlationId'];
+      return res.send(toCsv(headers, rows as any[]));
+    }
+    return res.json({ type, range, total: rows.length, activity: rows });
+  }
+
+  if (type === 'audit') {
+    const audit = (await listAudit(5000)) as any[];
+    const rows = audit.map((e: any) => ({
+      id: e.id,
+      at: e.at,
+      adminEmail: e.adminEmail,
+      action: e.action,
+      targetType: e.targetType,
+      targetId: e.targetId || '',
+      meta: e.meta ? JSON.stringify(e.meta) : '',
+    }));
+    if (format === 'csv') {
+      const headers = ['id', 'at', 'adminEmail', 'action', 'targetType', 'targetId', 'meta'];
+      return res.send(toCsv(headers, rows as any[]));
+    }
+    return res.json({ type, total: rows.length, audit: rows });
+  }
+
   if (type === 'users') {
     const users = await buildUsers(events);
     if (format === 'csv') {
@@ -1438,6 +1609,71 @@ function summarizeRequests(items: Array<Record<string, any>>): Record<string, an
   return { byStatus, byClient, avgLatencyMs: latencyCount ? Math.round(latencySum / latencyCount) : 0 };
 }
 
+/**
+ * Resolve the human-friendly owner name and API-key prefix for activity rows.
+ * Telemetry stores only opaque ids; admins need to see WHO made the request and
+ * WHICH key. Best-effort: a dev/no-DB environment simply leaves fields blank.
+ */
+async function enrichActivityItems(items: Array<Record<string, any>>): Promise<void> {
+  if (!Array.isArray(items) || items.length === 0) return;
+
+  const uids = new Set<string>();
+  const keyIds = new Set<string>();
+  for (const e of items) {
+    if (e.userId) uids.add(String(e.userId));
+    if (e.apiKeyId) keyIds.add(String(e.apiKeyId));
+  }
+
+  const keyById = new Map<string, { keyPrefix: string; userId: string }>();
+  if (keyIds.size > 0) {
+    try {
+      const col = await mongoCollection('mcp_api_keys');
+      const objectIds = Array.from(keyIds)
+        .filter((id) => ObjectId.isValid(id) && id.length === 24)
+        .map((id) => new ObjectId(id));
+      const or: Array<Record<string, any>> = [{ _id: { $in: objectIds as any } }];
+      const docs = await col.find({ $or: or }).toArray();
+      for (const d of docs as any[]) {
+        const id = String(d?._id ?? '');
+        if (!keyIds.has(id)) continue;
+        keyById.set(id, {
+          keyPrefix: String(d.key_prefix || ''),
+          userId: String(d.user_id || ''),
+        });
+        if (d.user_id) uids.add(String(d.user_id));
+      }
+    } catch {
+      // no DB (dev / unconfigured)
+    }
+  }
+
+  const nameByUid = new Map<string, string>();
+  if (uids.size > 0) {
+    try {
+      const col = await mongoCollection('users');
+      const docs = await col.find({ uid: { $in: Array.from(uids) } as any }).toArray();
+      for (const d of docs as any[]) {
+        const uid = String(d?.uid || '');
+        if (!uid) continue;
+        nameByUid.set(uid, String(d.displayName || d.name || d.fullName || d.email || ''));
+      }
+    } catch {
+      // no DB (dev / unconfigured)
+    }
+  }
+
+  for (const e of items) {
+    const key = e.apiKeyId ? keyById.get(String(e.apiKeyId)) : undefined;
+    if (key) {
+      e.keyPrefix = key.keyPrefix;
+      if (!e.userId && key.userId) e.userId = key.userId;
+    }
+    const uid = e.userId ? String(e.userId) : '';
+    const name = uid ? nameByUid.get(uid) : '';
+    if (name) e.userName = name;
+  }
+}
+
 adminRouter.get('/activity', requireAdmin, async (req: Request, res: Response) => {
   const range = parseRange(req.query as Record<string, any>);
   const page = clampInt(req.query.page, 1, 1, 100000);
@@ -1455,10 +1691,13 @@ adminRouter.get('/activity', requireAdmin, async (req: Request, res: Response) =
     page,
     pageSize,
   });
+  const items = result.items as unknown as Array<Record<string, any>>;
+  await enrichActivityItems(items);
   res.json({
     ...result,
+    items,
     range,
-    summary: summarizeRequests(result.items as unknown as Array<Record<string, any>>),
+    summary: summarizeRequests(items),
     note: result.total === 0 ? 'No telemetry captured yet for this range (instrumentation is live).' : undefined,
   });
 });
@@ -1568,18 +1807,23 @@ adminRouter.get('/fix-center', requireAdmin, async (req: Request, res: Response)
     firstSeen: d.firstSeen,
     evidence: {
       fingerprint: d.fingerprint,
-      tool: d.tool || null,
-      method: d.method || null,
-      resourceType: d.resourceType || null,
-      resourceId: d.resourceId || null,
-      query: d.query || null,
-      url: d.url || null,
-      statusCode: d.statusCode ?? null,
-      errorCode: d.errorCode || null,
-      clientName: d.clientName || null,
+      method: d.method,
+      tool: d.tool,
+      resourceType: d.resourceType,
+      resourceId: d.resourceId,
+      query: d.query,
+      url: d.url,
+      statusCode: d.statusCode,
+      errorCode: d.errorCode,
+      clientName: d.clientName,
+      sampleEvents: d.sampleEvents,
     },
     fixPrompt: buildFixPrompt(d),
-    href: `/admin/mcp/diagnostics?focus=${encodeURIComponent(d.id)}`,
+    href: `/admin/mcp/diagnostics/${d.id}`,
+    status: d.resolution || 'open',
+    resolution: d.resolution || 'open',
+    diagnosticId: d.id,
+    fingerprint: d.fingerprint,
   }));
 
   const signalItems = signals.map((s) => ({

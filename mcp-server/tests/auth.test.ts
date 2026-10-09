@@ -104,6 +104,35 @@ describe('MCP HTTP endpoint', () => {
     expect(names).toContain('search_components');
   });
 
+  // Regression: `initialize` used to be answered BEFORE auth, so a keyless
+  // client got a 200 success + session and then produced a cascade of -32001
+  // failures on every later method (the auth_failure "flood" the Fix Center
+  // flagged). The handshake must now reject an unauthenticated caller once.
+  it('rejects initialize without an API key (fail-fast, 200 + JSON-RPC -32001)', async () => {
+    const res = await request(app)
+      .post('/mcp')
+      .send({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'initialize',
+        params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'test', version: '1' } },
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.error.code).toBe(-32001);
+    expect(res.body.result).toBeUndefined();
+    expect(res.headers['mcp-session-id']).toBeUndefined();
+  });
+
+  it('rejects initialize with an invalid API key (200 + JSON-RPC -32001)', async () => {
+    const res = await request(app)
+      .post('/mcp')
+      .set('Authorization', 'Bearer uh_live_invalidkey')
+      .send({ jsonrpc: '2.0', id: 1, method: 'initialize' });
+    expect(res.status).toBe(200);
+    expect(res.body.error.code).toBe(-32001);
+    expect(res.body.result).toBeUndefined();
+  });
+
   it('accepts a valid API key and initializes', async () => {
     const res = await request(app)
       .post('/mcp')

@@ -5,6 +5,7 @@ import { firebaseService } from '../services/firebase.js';
 import { analyticsService } from '../services/analyticsService.js';
 import { telemetryService } from '../services/telemetryService.js';
 import { hashValue } from '../services/redaction.js';
+import { recordFailure } from '../services/diagnosticsService.js';
 
 /** Max ms to wait for DB-backed auth. On cold start MongoDB can be slow. */
 const AUTH_TIMEOUT_MS = 7000;
@@ -27,6 +28,26 @@ function emitAuthFailure(req: AuthenticatedRequest, errorCode: string): void {
     latencyMs: ctx.startedAt ? Date.now() - ctx.startedAt : undefined,
     ipHash: hashValue(req.ip || ''),
     timestamp: Date.now(),
+  });
+}
+
+/**
+ * Auth failures are rejected before the transport-layer instrumentation runs, so
+ * they would otherwise never reach the Diagnostics store. Aggregate them here so
+ * the Diagnostics page and Fix Center reflect the real failure traffic (e.g. a
+ * misconfigured client flooding missing-key requests).
+ */
+function recordAuthDiagnostic(req: AuthenticatedRequest, errorCode: string, message: string): void {
+  const ctx = (req as any).mcpTelemetry || {};
+  void recordFailure({
+    errorCode,
+    explicitCategory: 'auth_failure',
+    message,
+    method: typeof (req.body as any)?.method === 'string' ? (req.body as any).method : undefined,
+    statusCode: 401,
+    clientName: ctx.clientName,
+    correlationId: ctx.correlationId,
+    latencyMs: ctx.startedAt ? Date.now() - ctx.startedAt : undefined,
   });
 }
 
@@ -104,6 +125,7 @@ export async function authenticateMcp(req: AuthenticatedRequest, res: Response, 
       errorCode: 'MISSING_API_KEY',
     });
     emitAuthFailure(req, 'MISSING_API_KEY');
+    recordAuthDiagnostic(req, 'MISSING_API_KEY', 'Unauthorized: missing API key (no Authorization header or key query param)');
     return res.status(200).json({
       jsonrpc: '2.0',
       id: (req.body as any)?.id ?? null,
@@ -135,6 +157,7 @@ export async function authenticateMcp(req: AuthenticatedRequest, res: Response, 
         keyPrefix: apiKey.slice(0, 14),
       });
       emitAuthFailure(req, 'INVALID_API_KEY');
+      recordAuthDiagnostic(req, 'INVALID_API_KEY', `Invalid API key (reason: ${reason})`);
       return res.status(200).json({
         jsonrpc: '2.0',
         id: (req.body as any)?.id ?? null,
@@ -178,6 +201,7 @@ export async function authenticateMcp(req: AuthenticatedRequest, res: Response, 
   } catch (err: any) {
     console.error('[Auth] Authentication error:', err?.message || err);
     emitAuthFailure(req, 'DB_ERROR');
+    recordAuthDiagnostic(req, 'DB_ERROR', err?.message || 'Authentication backend error');
     // On timeout or DB error, return a JSON-RPC error so the client knows why
     return res.status(200).json({
       jsonrpc: '2.0',

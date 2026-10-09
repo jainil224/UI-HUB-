@@ -13,10 +13,14 @@ import crypto from 'crypto';
  * MCP Streamable HTTP transport.
  * Implements the MCP JSON-RPC 2.0 protocol over HTTP.
  *
- * IMPORTANT: `initialize` MUST be handled BEFORE authentication per the MCP spec.
- * Clients (Antigravity, Cursor, Claude Code, etc.) send `initialize` first to
- * negotiate the protocol — gating it behind auth causes "request terminated
- * without response" errors.
+ * The API key is required from the very first message: when auth is enabled,
+ * `initialize` is authenticated like every other method. Rejecting an
+ * unauthenticated client at the handshake returns ONE clear JSON-RPC error
+ * instead of handing it a session that then fails on every later method.
+ * Because the middleware returns a parseable JSON-RPC envelope (not a raw 401),
+ * clients (Antigravity, Cursor, Claude Code, etc.) still surface the message —
+ * unlike the old bare-401 behaviour that caused "request terminated without
+ * response" errors.
  */
 export const mcpRouter = Router();
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -118,11 +122,23 @@ async function optionalAuth(req, res, next) {
         return authenticateMcp(req, res, next);
     }
 }
+/**
+ * Run the inline auth check and await its completion. The middleware writes the
+ * JSON-RPC error envelope itself on rejection, so callers only need to check
+ * `res.headersSent` afterwards.
+ */
+async function runOptionalAuth(req, res) {
+    await new Promise((resolve, reject) => {
+        optionalAuth(req, res, (err) => (err ? reject(err) : resolve()));
+    }).catch((err) => {
+        console.error('[MCP] Auth middleware error:', err);
+    });
+}
 // ── Main MCP POST endpoint ────────────────────────────────────────────────────
 //
-// The MCP protocol requires that `initialize` is answered BEFORE auth so
-// clients can negotiate the session. We handle it first, then authenticate
-// all other methods.
+// `initialize` is authenticated first (when auth is enabled) so a keyless or
+// misconfigured client is rejected ONCE at the handshake with a clear JSON-RPC
+// error, rather than being handed a session that fails on every later method.
 mcpRouter.post('/', async (req, res) => {
     const body = req.body;
     // Validate JSON-RPC envelope
@@ -146,11 +162,18 @@ mcpRouter.post('/', async (req, res) => {
     const protocolVersion = req.headers['mcp-protocol-version'] ||
         (method === 'initialize' && params?.protocolVersion) ||
         '2024-11-05';
-    // ── STEP 1: Handle `initialize` WITHOUT auth (MCP spec requirement) ──────
-    // This is the very first message any MCP client sends. Responding to it
-    // correctly (and quickly) is what prevents "request terminated without
-    // response" errors in Antigravity, Cursor, Claude Code, etc.
+    // ── STEP 1: Authenticate `initialize` ─────────────────────────────────────
+    // The handshake requires the API key like every other method. Rejecting here
+    // returns ONE parseable JSON-RPC error (not a raw 401), which is what keeps
+    // clients such as Antigravity, Cursor and Claude Code from "terminating
+    // without response" while still failing fast on a missing/invalid key.
     if (method === 'initialize') {
+        await runOptionalAuth(req, res);
+        if (res.headersSent)
+            return;
+        if (!req.user) {
+            return jsonRpcError(res, id, -32001, 'Unauthorized: missing or invalid API key', 200, protocolVersion);
+        }
         const newSessionId = crypto.randomUUID();
         const clientInfo = extractClientInfo(params);
         sessionStore.set(newSessionId, {
@@ -207,16 +230,8 @@ mcpRouter.post('/', async (req, res) => {
     // ── STEP 4: Authenticate all other methods ────────────────────────────────
     // Run auth inline so we can return a proper JSON-RPC error (not HTTP 401)
     // which MCP clients can actually understand and display.
-    await new Promise((resolve, reject) => {
-        optionalAuth(req, res, (err) => {
-            if (err)
-                return reject(err);
-            resolve();
-        });
-    }).catch((err) => {
-        console.error('[MCP] Auth middleware error:', err);
-    });
-    // If auth middleware already sent a response (401), stop here
+    await runOptionalAuth(req, res);
+    // If auth middleware already sent a response, stop here
     if (res.headersSent)
         return;
     const user = req.user;

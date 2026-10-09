@@ -4,6 +4,7 @@ import { configService } from '../config/configService.js';
 import { analyticsService } from '../services/analyticsService.js';
 import { telemetryService } from '../services/telemetryService.js';
 import { hashValue } from '../services/redaction.js';
+import { recordFailure } from '../services/diagnosticsService.js';
 const SECONDS_IN_DAY = 24 * 60 * 60;
 /** Next UTC midnight in epoch ms — the moment the daily counter rolls over. */
 function nextUtcMidnightMs(now = Date.now()) {
@@ -54,6 +55,21 @@ function sendRateLimited(req, res, limit, user, resetAt) {
         timestamp: Date.now(),
     });
     emitRateLimited(req);
+    // Auth/rate-limit rejections never reach the route's finish hook, so capture
+    // the rate-limit failure directly so it shows up in Diagnostics / Fix Center.
+    void recordFailure({
+        errorCode: 'RATE_LIMIT_EXCEEDED',
+        explicitCategory: 'rate_limit',
+        message: `Rate limit exceeded (limit ${limit}/day for ${user.tier})`,
+        tool: req.body?.params?.name,
+        method: typeof req.body?.method === 'string' ? req.body.method : 'tools/call',
+        userId: user.userId,
+        apiKeyId: user.keyId,
+        statusCode: 429,
+        correlationId: req.mcpTelemetry?.correlationId,
+        clientName: req.mcpTelemetry?.clientName,
+        latencyMs: req.mcpTelemetry?.startedAt ? Date.now() - req.mcpTelemetry.startedAt : undefined,
+    });
     const retryAfterSeconds = Math.max(1, Math.ceil((resetAt - Date.now()) / 1000));
     res.set('Retry-After', String(retryAfterSeconds));
     res.set('X-RateLimit-Limit', String(limit));
