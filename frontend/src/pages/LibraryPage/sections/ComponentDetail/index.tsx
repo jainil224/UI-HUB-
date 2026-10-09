@@ -1753,9 +1753,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
             className="flex flex-col gap-6 md:gap-10 pb-24"
         >
@@ -1957,8 +1957,8 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                 </div>
             </div>
 
-            {/* ── Action Toolbar: Tabs + Fullscreen (sticky below navbar on mobile) ── */}
-            <div className="sticky top-16 z-[45] flex items-center justify-between gap-2 sm:gap-4 py-2 bg-brand-bg/95 backdrop-blur-sm border-y-2 border-neutral-800">
+            {/* ── Action Toolbar: Tabs + Fullscreen ── */}
+            <div className="flex items-center justify-between gap-2 sm:gap-4 py-2 bg-brand-bg/95 border-y-2 border-neutral-800">
                 <div className="flex items-center flex-1 sm:flex-initial gap-1 sm:gap-2 p-1 bg-black border-2 border-white rounded-lg brutal-shadow-black min-w-0">
                     <button
                         onClick={() => setTab('preview')}
