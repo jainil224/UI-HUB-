@@ -124,6 +124,7 @@ const PrismPyramid = React.lazy(() => import('../components/ui/PrismPyramid'));
 const ParticleSun = React.lazy(() => import('../components/ui/ParticleSun'));
 const StreakSphere = React.lazy(() => import('../components/ui/StreakSphere'));
 const FeatherSphere = React.lazy(() => import('../components/ui/FeatherSphere'));
+const WaveTunnel = React.lazy(() => import('../components/ui/WaveTunnel'));
 
 
 
@@ -2820,6 +2821,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'particle-sun': ParticleSun,
     'streak-sphere': StreakSphere,
     'feather-sphere': FeatherSphere,
+    'wave-tunnel': WaveTunnel,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15423,6 +15425,19 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         ),
         code: "",
         vibePrompt: "",
+    },
+
+    // ── Wave Tunnel ───────────────────────────────────────
+    {
+        id: "wave-tunnel",
+        title: "Wave Tunnel",
+        category: "particles-background",
+        addedAt: "2026-10-10",
+        newBadgeDays: 120,
+        description: "A scroll-dive through a white point-cloud tunnel in Three.js: rings curl and ripple endlessly as you scroll, the pointer pushes points back, and parallax sections fade in as you descend.",
+        preview: renderComponent("wave-tunnel", "WaveTunnel", { compact: true }),
+        code: `import { WaveTunnel } from '@/components/ui/WaveTunnel';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[600px] bg-black rounded-3xl overflow-hidden">\n      <WaveTunnel compact />\n    </div>\n  );\n}`,
+        vibePrompt: "Create a scroll-dive wave-tunnel point cloud in React + TSX + Three.js (ShaderMaterial, attribute aIJ as [nu, nv] index pairs, no geometry positions written). nu=90 samples along the tunnel axis, nv=190 around the curl; in the vertex shader u = fract((aIJ.x + uPhase + uTravel) / nu) flows by exactly one cell per loop (loopSeconds 2), v = aIJ.y / (nv-1), and theta = v * turns * 2PI with turns 1.0. The spiral radius is rOuter 3.4 * uShrink * (1 - 0.10*v), tapered mix(1, 0.55, smoothstep(0.35, 1, u)), and three traveling ripples (0.10*sin(th*3 + u*18 - w) + 0.06*sin(th*7 - u*30 + 2w) + 0.18*(noise-0.5), w = uTime*2PI/loopSeconds) scale the radius by mix(1, 0.4, pow(u,1.6)); depth z = 1.2 + pow(u,1.6)*length(12), with p.xy -= hole [1.5, 0.9] so the camera sits off-axis inside the barrel. The camera is a PerspectiveCamera fixed at origin with a per-frame lens shift applyLens: projectionMatrix elements[8] = -(vp[0]*(1 - progress*0.9)), elements[9] = -(vp[1]*(1 - progress)), fov 70 (85 when the viewport is portrait). Scrolling drives uTravel = progress * nu * 1.6 (progress smoothed toward the raw scroll target by lerp 0.07), uShrink = 1 - progress * 0.3, and camera.rotation.z = progress * 1.4; the pointer sets a target (NDC) that eases the camera tilt/look (rotation.y = -cur.x*tilt, .x = cur.y*tilt, tilt 0.12) and a screen-space uMouse with uMouseOn lerping in/out that pushes points away: dir * exp(-|d|²/mouseRadius²) * mouseStrength, d scaled by uAspect on x. Points are white (fragment vec4(vec3(1.), vA*smoothstep(.5,.28,dist))) with vA = smoothstep(1, .82, u) * smoothstep(0, .03, u), transparent material depthTest false, point size clamp(uPx*5/depth, 1, uPx*1.15) with uPx = pointPx 3 * devicePixelRatio, frustumCulled false. A parallax section HUD overlays four sections (01 Into the wave / 02 Depth / 03 Motion / 04 Beyond): each has a huge outline numeral (34vw, -webkit-text-stroke) moving on a fast layer, a title on a mid layer, and a tagline on a slow layer, opacity/scale/blur transitions keyed to scroll, plus a top progress hairline (scaleX), a bottom scroll hint fading by 6% scroll, and a 36px spring cursor ring in mix-blend-difference with cursor:none. Layout is a 600vh scroll sequence with a sticky full-viewport stage; the component takes an optional framer-motion progress MotionValue and otherwise drives its own scroll (window in full mode, an internal overflow shell in compact preview). Reduced motion freezes the wave clock (t = 0) while keeping the scroll dive; a ?t= query param captures a deterministic frame."
     },
 
 ];

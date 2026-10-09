@@ -1,0 +1,183 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap");
+
+.wt-root,
+.wt-root * {
+  box-sizing: border-box;
+}
+
+.wt-root {
+  --wt-vh: 1vh;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  container: wt / inline-size;
+  background: #000;
+  color: #fff;
+  font-family: "Inter Tight", system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wt-root a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.wt-root .wt-shell {
+  height: 100%;
+}
+
+/* scroll sequence: 600vh of scrub with a sticky stage */
+.wt-root .wt-seq {
+  height: calc(600 * var(--wt-vh));
+  position: relative;
+}
+.wt-root .wt-stage {
+  position: sticky;
+  top: 0;
+  height: calc(100 * var(--wt-vh));
+  overflow: hidden;
+  background: #000;
+  cursor: none;
+}
+
+/* canvas wrapper with slow parallax drift */
+.wt-root .wt-parallax {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.wt-root .wt-gl {
+  position: absolute;
+  inset: 0;
+}
+.wt-root .wt-gl canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* parallax sections */
+.wt-root .wt-sec {
+  z-index: 3;
+  will-change: transform, opacity, filter;
+}
+.wt-root .wt-sec .wt-num {
+  font-size: 34vw;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+}
+.wt-root .wt-sec .wt-title {
+  font-size: clamp(2.75rem, 8vw, 6rem);
+  line-height: 1;
+}
+.wt-root .wt-sec .wt-tag {
+  bottom: 22vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+@container wt (max-width: 620px) {
+  .wt-sec .wt-num {
+    font-size: 30cqw;
+  }
+  .wt-sec .wt-title {
+    font-size: clamp(1.5rem, 9cqw, 3rem);
+  }
+  .wt-sec .wt-tag {
+    bottom: 12vh;
+    font-size: 11px;
+  }
+}
+
+/* scroll hint */
+.wt-root .wt-hint {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+}
+
+/* top progress hairline */
+.wt-root .wt-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.7);
+  transform-origin: left center;
+  z-index: 6;
+}
+
+/* custom cursor ring */
+.wt-root .wt-cursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 7;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 9999px;
+  mix-blend-mode: difference;
+  will-change: transform;
+}
+
+/* LIVE DEMO PILL */
+.wt-root .wt-demo-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 70;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(5, 8, 12, 0.72);
+  color: #fff;
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.wt-root .wt-demo-btn:hover {
+  background: rgba(8, 12, 18, 0.95);
+  transform: translateY(-1px);
+}
+
+/* COMPACT PREVIEW: the shell becomes the scroller */
+.wt-root.wt-compact {
+  height: 100%;
+  min-height: 0;
+}
+.wt-root.wt-compact .wt-shell {
+  height: 100%;
+  min-height: 0;
+  overflow-x: clip;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.wt-root.wt-compact .wt-shell::-webkit-scrollbar {
+  display: none;
+}
+
+/* reduced motion: the wave clock is frozen in WaveTunnel.tsx (t = 0),
+   but the scroll dive + parallax sections remain interactive. */
