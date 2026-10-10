@@ -543,7 +543,7 @@ Follow-up pass (verified after the main work):
 - `frontend` `npm run build` (`vite build && node scripts/build-seo.mjs`) → **passed**; 192 routes (191 indexable) from 149 components, 20 templates, 3 build sections.
 - `frontend` `npm run check:seo` → **OK**, exit 0 (metadata parity 149/149, AEO parity 149/149, sitemap+robots valid; 67 low-confidence AEO warn, pre-existing; asserts GSC/AdSense/application-name/apple-mobile-web-app-title/viewport in `dist/index.html`).
 - Root `npm run check:frontend` (the exact composite the CI workflow runs) → **EXIT 0**.
-- Spot checks on `dist/`: preserved app-owned metas each exactly once; `robots.txt` still `Disallow: /library`; `sitemap.xml` has no `/library` and no `<lastmod>` on static URLs (96 component `<lastmod>` entries from real `addedAt`); `404.html` is noindex with an `<h1>` and app script; category pages emit `Home › category` breadcrumbs.
+- Spot checks on `dist/`: preserved app-owned metas each exactly once; `robots.txt` disallows ONLY private/auth-gated routes (`/dashboard`, `/admin`, …) — public noindex routes (`/library`, `/favorites`, `/demo/*`, auth pages, `/preview-capture`) stay crawlable so Google can read their noindex meta (`ROBOTS_BLOCKED_PATHS`/`ROBOTS_BLOCKED_PREFIXES` in `routes.ts`, enforced by `check:seo` and `seo.test.ts`); `sitemap.xml` has no `/library` and no `<lastmod>` on static URLs (96 component `<lastmod>` entries from real `addedAt`); `404.html` is noindex with an `<h1>` and app script; category pages emit `Home › category` breadcrumbs.
 
 **Root `npm run check` (root, all steps) → EXIT 1**, stops at `check:tracking`. Per-step results (each actually run):
 - `check:secrets` → **pass** (0 issues).

@@ -4,6 +4,8 @@ import {
     INDEXABLE_ROBOTS,
     NOINDEX_PATHS,
     NOINDEX_PREFIXES,
+    ROBOTS_BLOCKED_PATHS,
+    ROBOTS_BLOCKED_PREFIXES,
     buildDetailSeoRoute,
     buildSeoManifest,
     homeSeoRoute,
@@ -72,6 +74,47 @@ describe('noindex handling for client-side navigation', () => {
     it('normalizes trailing slashes for private paths', () => {
         expect(isSeoNoIndexPath('/library/')).toBe(true);
         expect(isSeoNoIndexPath('/')).toBe(false);
+    });
+});
+
+describe('robots.txt blocking stays limited to private routes', () => {
+    // Public noindex routes must remain crawlable so Google can read the
+    // noindex directive. Adding any of them to ROBOTS_BLOCKED would hide that
+    // directive behind a robots.txt Disallow.
+    it.each(['/login', '/signup', '/forgot-password', '/library', '/favorites', '/preview-capture'])(
+        'keeps public noindex route %s crawlable',
+        (path) => {
+            expect(ROBOTS_BLOCKED_PATHS.some((rule) => rule.path === path)).toBe(false);
+            expect(ROBOTS_BLOCKED_PREFIXES.some((rule) => rule.prefix === path)).toBe(false);
+        },
+    );
+
+    it('keeps the /demo/ showcase prefix crawlable', () => {
+        expect(ROBOTS_BLOCKED_PREFIXES.some((rule) => rule.prefix === '/demo/')).toBe(false);
+    });
+
+    // Private routes keep their robots.txt Disallow. That is not the security
+    // boundary - the auth guard is - but blocking auth-only pages from crawl is
+    // intentional, so each one must be listed in ROBOTS_BLOCKED_PATHS.
+    it.each(['/dashboard', '/dashboard/mcp', '/dashboard/collections', '/admin/mcp'])(
+        'keeps private route %s robots-blocked',
+        (path) => {
+            expect(ROBOTS_BLOCKED_PATHS.some((rule) => rule.path === path)).toBe(true);
+        },
+    );
+
+    it('keeps private prefixes robots-blocked', () => {
+        expect(ROBOTS_BLOCKED_PREFIXES.some((rule) => rule.prefix === '/admin/')).toBe(true);
+        expect(ROBOTS_BLOCKED_PREFIXES.some((rule) => rule.prefix === '/dashboard/')).toBe(true);
+    });
+
+    it('every robots-blocked route is also noindex at runtime', () => {
+        for (const rule of ROBOTS_BLOCKED_PATHS) {
+            expect(isSeoNoIndexPath(rule.path)).toBe(true);
+        }
+        for (const rule of ROBOTS_BLOCKED_PREFIXES) {
+            expect(isSeoNoIndexPath(`${rule.prefix}example`)).toBe(true);
+        }
     });
 });
 

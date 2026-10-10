@@ -392,3 +392,21 @@ export const NOINDEX_PREFIXES: { prefix: string; reason: string }[] = [
     { prefix: '/admin/', reason: 'private' },
     { prefix: '/dashboard/', reason: 'private' },
 ];
+
+// The ONLY routes robots.txt may disallow. A Disallow stops Google from
+// crawling the route, so the noindex directive it serves could never be read.
+// That trade-off is acceptable here because these pages require authentication
+// anyway - the real protection is the auth guard, never robots.txt. Public
+// noindex routes must stay out of this list (and therefore crawlable) so Google
+// can discover and honor their noindex meta.
+export const ROBOTS_BLOCKED_PATHS: { path: string; reason: string }[] = [
+    { path: '/dashboard', reason: 'private' },
+    { path: '/dashboard/mcp', reason: 'private' },
+    { path: '/dashboard/collections', reason: 'private' },
+    { path: '/admin/mcp', reason: 'private' },
+];
+
+export const ROBOTS_BLOCKED_PREFIXES: { prefix: string; reason: string }[] = [
+    { prefix: '/admin/', reason: 'private' },
+    { prefix: '/dashboard/', reason: 'private' },
+];

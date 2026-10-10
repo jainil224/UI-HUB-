@@ -227,14 +227,35 @@ async function main() {
         if (!robots.includes(`Sitemap: ${seo.SITE_URL}/sitemap.xml`)) {
             fail('robots.txt does not advertise the sitemap');
         }
-        for (const blocked of seo.NOINDEX_PATHS) {
+
+        // Only private, auth-gated routes may be disallowed. A public noindex
+        // route that is Disallowed hides its noindex directive from Google.
+        const robotsBlocked = new Set([
+            ...seo.ROBOTS_BLOCKED_PATHS.map((entry) => entry.path),
+            ...seo.ROBOTS_BLOCKED_PREFIXES.map((entry) => entry.prefix),
+        ]);
+
+        for (const blocked of seo.ROBOTS_BLOCKED_PATHS) {
             if (!robots.includes(`Disallow: ${blocked.path}`)) {
-                fail(`robots.txt is missing Disallow for ${blocked.path}`);
+                fail(`robots.txt is missing Disallow for private route ${blocked.path}`);
             }
         }
-        for (const blocked of seo.NOINDEX_PREFIXES) {
+        for (const blocked of seo.ROBOTS_BLOCKED_PREFIXES) {
             if (!robots.includes(`Disallow: ${blocked.prefix}`)) {
-                fail(`robots.txt is missing Disallow for ${blocked.prefix}`);
+                fail(`robots.txt is missing Disallow for private prefix ${blocked.prefix}`);
+            }
+        }
+
+        for (const entry of seo.NOINDEX_PATHS) {
+            if (robotsBlocked.has(entry.path)) continue;
+            if (robots.includes(`Disallow: ${entry.path}`)) {
+                fail(`robots.txt disallows public noindex route ${entry.path} - the crawler must be able to read its noindex directive`);
+            }
+        }
+        for (const entry of seo.NOINDEX_PREFIXES) {
+            if (robotsBlocked.has(entry.prefix)) continue;
+            if (robots.includes(`Disallow: ${entry.prefix}`)) {
+                fail(`robots.txt disallows public noindex prefix ${entry.prefix} - the crawler must be able to read its noindex directive`);
             }
         }
     }

@@ -197,8 +197,12 @@ ${urls}
 }
 
 function renderRobots(manifest) {
-    const blocked = manifest.NOINDEX_PATHS.map((entry) => `Disallow: ${entry.path}`).join('\n');
-    const prefixes = manifest.NOINDEX_PREFIXES.map((entry) => `Disallow: ${entry.prefix}`).join('\n');
+    // Only private, auth-gated routes are disallowed. Public noindex routes
+    // (/library, /favorites, /demo/*, auth pages, …) must stay crawlable so
+    // Google can read the noindex directive they serve; blocking them here
+    // would hide that directive.
+    const blocked = manifest.ROBOTS_BLOCKED_PATHS.map((entry) => `Disallow: ${entry.path}`).join('\n');
+    const prefixes = manifest.ROBOTS_BLOCKED_PREFIXES.map((entry) => `Disallow: ${entry.prefix}`).join('\n');
 
     return `User-agent: *
 Allow: /

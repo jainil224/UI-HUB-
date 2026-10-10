@@ -13,7 +13,7 @@ export {
     clampDescription,
     DANGLING_WORDS,
 } from '../../src/seo/site';
-export { buildSeoManifest, NOINDEX_PATHS, NOINDEX_PREFIXES } from '../../src/seo/routes';
+export { buildSeoManifest, NOINDEX_PATHS, NOINDEX_PREFIXES, ROBOTS_BLOCKED_PATHS, ROBOTS_BLOCKED_PREFIXES } from '../../src/seo/routes';
 export type { SeoRoute } from '../../src/seo/routes';
 export { inferTechs } from '../../src/seo/tech';
 export {
