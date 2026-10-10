@@ -47,6 +47,7 @@ export const PREMIUM_COMPONENT_IDS = new Set([
   'section-scroll',
   'solar-system',
   'spider-web',
+  'spider-crawler',
   'spiral-images',
   'spotlight-cards',
   'super-mario',

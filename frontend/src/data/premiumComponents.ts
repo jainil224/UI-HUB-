@@ -40,6 +40,7 @@ export const PREMIUM_COMPONENT_IDS = new Set<string>([
   'section-scroll',
   'solar-system',
   'spider-web',
+  'spider-crawler',
   'spiral-images',
   'spotlight-cards',
   'super-mario',

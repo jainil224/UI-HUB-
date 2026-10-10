@@ -28,6 +28,7 @@ const DotsToSolidTextDemoPage = React.lazy(() => import('./pages/Components/Dots
 const MostarCinematicScrollDemoPage = React.lazy(() => import('./pages/Components/MostarCinematicScrollDemoPage'));
 const AntigravityAnimationDemoPage = React.lazy(() => import('./pages/Components/AntigravityAnimationDemoPage'));
 const WaveTunnelDemoPage = React.lazy(() => import('./pages/Components/WaveTunnelDemoPage'));
+const SpiderCrawlerDemoPage = React.lazy(() => import('./pages/Components/SpiderCrawlerDemoPage'));
 const HexaSphereDemoPage = React.lazy(() => import('./pages/Components/HexaSphereDemoPage'));
 const TarsDemoPage = React.lazy(() => import('./pages/Components/TarsDemoPage'));
 const SplitOrbDemoPage = React.lazy(() => import('./pages/Components/SplitOrbDemoPage'));
@@ -167,6 +168,7 @@ const AppShell = () => {
               <Route path="/demo/mostar-cinematic-scroll" element={<MostarCinematicScrollDemoPage />} />
               <Route path="/demo/antigravity-animation" element={<AntigravityAnimationDemoPage />} />
               <Route path="/demo/wave-tunnel" element={<WaveTunnelDemoPage />} />
+              <Route path="/demo/spider-crawler" element={<SpiderCrawlerDemoPage />} />
               <Route path="/demo/tars-hero-arena" element={<TarsDemoPage />} />
               <Route path="/demo/split-fuzzy-orb" element={<SplitOrbDemoPage />} />
               <Route path="/demo/segmint-2026" element={<SegmintDemoPage />} />
