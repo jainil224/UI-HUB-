@@ -345,7 +345,7 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
       return `<li class="${num % 8 === 0 ? "l3" : ""}"><b>${num}.</b>^ ${r[0]}${title}${tail}</li>`;
     }
 
-    const LINES = 150;
+    const LINES = 60;
     function buildPage() {
       let lis = "";
       for (let n = 1; n <= LINES; n++) lis += refItem(n);
@@ -505,7 +505,7 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
     const N_LEG = 8;
     const LEN1 = 44,
       LEN2 = 54,
-      BODY_MAX = 340,
+      BODY_MAX = 440,
       STEP_THR = 28;
     const HIP_Y = [-17, -6, 5, 16];
     const HOME_X = [60, 74, 72, 56];
@@ -751,12 +751,12 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
           dy = T.y - body.y,
           d = Math.hypot(dx, dy);
         if (d < 1.2) {
-          const k = Math.exp(-dt * 14);
+          const k = Math.exp(-dt * 16);
           body.vx *= k;
           body.vy *= k;
         } else {
-          const sp = Math.min(BODY_MAX, d * 3);
-          const k = Math.min(1, dt * 12);
+          const sp = Math.min(BODY_MAX, d * 3.5);
+          const k = Math.min(1, dt * 14);
           body.vx += ((dx / d) * sp - body.vx) * k;
           body.vy += ((dy / d) * sp - body.vy) * k;
         }
@@ -768,10 +768,10 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
       }
       body.x = clamp(body.x + body.vx * dt, 0, CFG.W);
       body.y = clamp(body.y + body.vy * dt, 0, CFG.VIEW_H);
-      if (Math.hypot(body.vx, body.vy) > 45) {
+      if (Math.hypot(body.vx, body.vy) > 40) {
         let da = Math.atan2(body.vx, -body.vy) - body.ang;
         da = Math.atan2(Math.sin(da), Math.cos(da));
-        body.ang += da * Math.min(1, dt * 6);
+        body.ang += da * Math.min(1, dt * 7);
       }
     }
 
@@ -911,25 +911,19 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
         k.g = Math.max(k.g, v);
         glowing.add(k);
       });
-      const [r, g, b] = glowRGB;
       for (const k of glowing) {
         if (!c.has(k)) k.g -= dt * 1.1;
         k.flash = Math.max(0, k.flash - dt * 2.8);
         if (k.g <= 0.01) {
           k.g = 0;
           k.el.style.color = "";
-          k.el.style.textShadow = "";
           glowing.delete(k);
           continue;
         }
-        const q = k.g,
-          w = Math.round(lerp(190, 255, q));
+        // Ultra-low latency: color switch only, offloading heavy blur shadows to GPU 2D canvas
+        const q = k.g;
+        const w = Math.round(lerp(185, 255, q));
         k.el.style.color = `rgb(${w},${w},255)`;
-        k.el.style.textShadow = `0 0 ${4 + 8 * q}px rgba(${r},${g},${b},${
-          0.95 * q
-        }), 0 0 ${10 + 16 * q + 8 * k.flash}px rgba(${r},${g},${b},${
-          0.55 * q + 0.4 * k.flash
-        })`;
       }
     }
 
@@ -1038,31 +1032,40 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
     };
     let wheelImp = 0;
     let edgeV = 0;
+    let rootRect = root.getBoundingClientRect();
+
+    const updateRect = () => {
+      rootRect = root.getBoundingClientRect();
+    };
 
     const toView = (clientX: number, clientY: number) => {
-      const rect = root.getBoundingClientRect();
       return {
-        x: (clientX - rect.left) / stageScale,
-        y: (clientY - rect.top) / stageScale,
+        x: (clientX - rootRect.left) / stageScale,
+        y: (clientY - rootRect.top) / stageScale,
       };
     };
 
-    function aim(p: { x: number; y: number }) {
+    function aim(p: { x: number; y: number }, updateCursorNow = false) {
       ptr.x = clamp(p.x, 0, CFG.W);
       ptr.y = clamp(p.y, 0, CFG.H);
       ptr.seen = true;
       ptr.in = true;
       body.target = { x: ptr.x, y: ptr.y };
-      cursorEl.style.display = "block";
-      cursorEl.style.transform = `translate(${ptr.x - 3}px, ${ptr.y - 2}px)`;
+      if (updateCursorNow) {
+        cursorEl.style.display = "block";
+        cursorEl.style.transform = `translate3d(${ptr.x - 3}px, ${ptr.y - 2}px, 0)`;
+      }
     }
 
     const onPointerMove = (e: PointerEvent) => {
-      aim(toView(e.clientX, e.clientY));
+      const p = toView(e.clientX, e.clientY);
+      aim(p, true);
     };
 
     const onPointerEnter = (e: PointerEvent) => {
-      aim(toView(e.clientX, e.clientY));
+      updateRect();
+      const p = toView(e.clientX, e.clientY);
+      aim(p, true);
     };
 
     const onPointerLeave = () => {
@@ -1070,7 +1073,8 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
     };
 
     const onPointerDown = (e: PointerEvent) => {
-      aim(toView(e.clientX, e.clientY));
+      updateRect();
+      aim(toView(e.clientX, e.clientY), true);
       burst();
     };
 
@@ -1101,6 +1105,7 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
 
     /* ---------- Resize / Fit ---------- */
     function fit() {
+      updateRect();
       const vw = root.clientWidth || 720;
       const vh = root.clientHeight || 520;
       stageScale = clamp(vw / 720, 0.5, 1.4);
@@ -1245,9 +1250,9 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
 
       drawGlitches(rt, scrollY);
 
-      if (ptr.seen) {
+      if (ptr.seen && !ptr.in) {
         cursorEl.style.display = "block";
-        cursorEl.style.transform = `translate(${ptr.x - 3}px, ${ptr.y - 2}px)`;
+        cursorEl.style.transform = `translate3d(${ptr.x - 3}px, ${ptr.y - 2}px, 0)`;
       }
 
       renderer.render(scene, cam);

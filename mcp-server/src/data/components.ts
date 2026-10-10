@@ -61,6 +61,7 @@ const PREMIUM_IDS = new Set([
   "dots-to-solid-text",
   "mostar-cinematic-scroll",
   "antigravity-animation",
+  "spider-crawler",
   "black-hole-3d",
   "card-cascade",
   "generating-orb",
