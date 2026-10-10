@@ -345,7 +345,7 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
       return `<li class="${num % 8 === 0 ? "l3" : ""}"><b>${num}.</b>^ ${r[0]}${title}${tail}</li>`;
     }
 
-    const LINES = 60;
+    const LINES = 50;
     function buildPage() {
       let lis = "";
       for (let n = 1; n <= LINES; n++) lis += refItem(n);
