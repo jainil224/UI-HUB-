@@ -67,6 +67,23 @@ async function main() {
         }
     }
 
+    // The prerendered pages reuse the built shell <head>. Application-owned
+    // tags such as Google Search Console verification and AdSense site
+    // verification must survive that rebuild, otherwise verification breaks.
+    // Rendered on every prerendered page, so the home page is the canary.
+    const homeHtml = readFileSync(join(DIST, 'index.html'), 'utf8');
+    for (const [marker, label] of [
+        ['name="google-site-verification"', 'Google Search Console site verification meta'],
+        ['name="google-adsense-account"', 'Google AdSense site verification meta'],
+        ['name="application-name"', 'application-name meta'],
+        ['name="apple-mobile-web-app-title"', 'apple-mobile-web-app-title (Add to Home Screen) meta'],
+        ['name="viewport"', 'viewport meta'],
+    ]) {
+        if (!homeHtml.includes(marker)) {
+            fail(`dist/index.html is missing the ${label} (${marker})`);
+        }
+    }
+
     const routePathByTitle = new Map(routes.map((route) => [route.title, route.path]));
     const routePathByDescription = new Map(routes.map((route) => [route.description, route.path]));
 

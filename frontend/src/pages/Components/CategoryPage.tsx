@@ -8,6 +8,7 @@ import { CATEGORY_SEO, categorySeo } from '../../seo/taxonomy';
 import { categoryDescription, categoryIntro, categoryTitle } from '../../seo/metadata';
 import { breadcrumbJsonLd, collectionPageJsonLd } from '../../seo/jsonld';
 import { SITE_URL } from '../../seo/site';
+import { INDEXABLE_ROBOTS, NOINDEX_ROBOTS } from '../../seo/routes';
 
 export default function CategoryPage() {
     const { category = '' } = useParams();
@@ -22,6 +23,7 @@ export default function CategoryPage() {
         ? categoryDescription(category, items.length)
         : 'That component category does not exist on UI Hub.';
     const canonicalPath = `/components/${category}`;
+    const indexable = seoCategory ? items.length >= seoCategory.minItemsForIndex : false;
 
     const breadcrumbs = useMemo(
         () => [
@@ -36,6 +38,7 @@ export default function CategoryPage() {
         title,
         description,
         canonicalPath,
+        robots: seoCategory ? (indexable ? INDEXABLE_ROBOTS : NOINDEX_ROBOTS) : 'noindex, follow',
         jsonLd: seoCategory
             ? [
                   breadcrumbJsonLd(breadcrumbs) as Record<string, unknown>,

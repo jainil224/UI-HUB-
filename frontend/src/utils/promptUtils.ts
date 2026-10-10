@@ -99,14 +99,14 @@ export function buildAdvancePrompt(m: ComponentManifest): string {
         ? m.knownGotchas.map(g => `- ${g}`).join("\n") 
         : "- Ensure parent container has proper bounding dimensions and overflow handling.";
 
-    return `â–ˆâ–ˆâ•—   â–ˆâ–ˆâ•—â–ˆâ–ˆâ•—    â–ˆâ–ˆâ•—  â–ˆâ–ˆâ•—â–ˆâ–ˆâ•—   â–ˆâ–ˆâ•—â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•— 
-â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—
-â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•
-â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•‘   â–ˆâ–ˆâ•‘â–ˆâ–ˆâ•”â•â•â–ˆâ–ˆâ•—
-â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ•‘    â–ˆâ–ˆâ•‘  â–ˆâ–ˆâ•‘â•šâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ•”â•
- â•šâ•â•â•â•â•â• â•šâ•â•    â•šâ•â•  â•šâ•â• â•šâ•â•â•â•â•â• â•šâ•â•â•â•â•â• 
+    return `██╗   ██╗██╗    ██╗  ██╗██╗   ██╗██████╗ 
+██║   ██║██║    ██║  ██║██║   ██║██╔══██╗
+██║   ██║██║    ███████║██║   ██║██████╔╝
+██║   ██║██║    ██╔══██║██║   ██║██╔══██╗
+╚██████╔╝██║    ██║  ██║╚██████╔╝██████╔╝
+ ╚═════╝ ╚═╝    ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ 
 
-> UI HUB universal component blueprint. This prompt is tool-agnostic â€” it works with any AI tool (Cursor, Claude, Lovable, Antigravity, ChatGPT, GitHub Copilot, etc.). Paste it into whichever assistant you use.
+> UI HUB universal component blueprint. This prompt is tool-agnostic — it works with any AI tool (Cursor, Claude, Lovable, Antigravity, ChatGPT, GitHub Copilot, etc.). Paste it into whichever assistant you use.
 
 # COMPONENT BLUEPRINT: ${m.displayName}
 
@@ -185,7 +185,7 @@ What it should look/feel like: ${m.description}
 Animation & Physics Techniques Used:
 ${features.map(f => `- ${f}`).join("\n")}
 
-Here is the exact reference implementation â€” use it as ground truth for structure, animation values, and easing:
+Here is the exact reference implementation — use it as ground truth for structure, animation values, and easing:
 
 ${codeBlock(m.sourceCode, `${m.componentId}.tsx`)}
 
@@ -213,7 +213,7 @@ It should react to: ${triggers}.
 Animation Stack & Techniques Used:
 ${features.map(f => `- ${f}`).join("\n")}
 
-Use this reference implementation as your guide for exact animation timing and structure â€” port the logic faithfully even if you restructure the surrounding files:
+Use this reference implementation as your guide for exact animation timing and structure — port the logic faithfully even if you restructure the surrounding files:
 
 ${codeBlock(m.sourceCode, `${m.componentId}.tsx`)}
 
@@ -417,7 +417,7 @@ export const fetchVibePrompt = async (
             };
         }
 
-        // Network / server error on premium tool: do not bypass â€” surface as error.
+        // Network / server error on premium tool: do not bypass — surface as error.
         if (isPremiumAITool(system)) {
             return { ok: false, prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource), code: 'ERROR', status: response.status };
         }

@@ -61,6 +61,8 @@ export interface BuildWithUIHubInput {
     description?: string;
 }
 
+export type TemplateSeoEntry = TemplateSeoInput & { id: string };
+
 export interface SeoManifestInput {
     components: (ComponentSeoInput & { aeo?: ComponentAeo })[];
     templates: TemplateSeoInput[];
@@ -144,23 +146,16 @@ function homeIntro(componentCount: number, templateCount: number, categoryCount:
     ].join('\n\n');
 }
 
-export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
-    const routes: SeoRoute[] = [];
-    const { components, templates, buildWithUIHub, buildTemplateIds } = input;
-
-    const buildMasters = new Set(buildTemplateIds);
-    const gridTemplates = templates.filter((template) => !buildMasters.has(template.id));
-    const indexableComponents = components.filter((component) => component.category !== 'custom');
-
-    routes.push({
+export function homeSeoRoute(componentCount: number, templateCount: number, categoryCount: number): SeoRoute {
+    return {
         path: '/',
         type: 'home',
         title: clampTitle('UI Hub – Free React UI Components & Animated Backgrounds'),
         description: clampDescription(
             'Browse free React and Tailwind CSS UI components: animated backgrounds, 3D effects, custom cursors, buttons, navbars and footers. Live preview, copy the code, or use the AI prompts for Lovable, Claude and Cursor.',
         ),
-        h1: 'UI Components, Templates and Animated Backgrounds',
-        intro: homeIntro(components.length, gridTemplates.length, CATEGORY_SEO.length),
+        h1: 'Craft the Future, of UI',
+        intro: homeIntro(componentCount, templateCount, categoryCount),
         robots: INDEXABLE_ROBOTS,
         canonical: absoluteUrl('/'),
         ogImage: DEFAULT_OG_IMAGE,
@@ -173,34 +168,113 @@ export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
         changefreq: 'weekly',
         priority: 1.0,
         indexable: true,
-    });
+    };
+}
+
+export function staticSeoRoute(path: string): SeoRoute | undefined {
+    const route = STATIC_ROUTES.find((entry) => entry.path === path);
+    if (!route) return undefined;
+
+    return {
+        path: route.path,
+        type: route.path === '/templates' ? 'templates-index' : route.path === '/build-with-ui-hub' ? 'build-index' : 'static',
+        title: route.title,
+        description: route.description,
+        h1: route.h1,
+        intro: '',
+        robots: INDEXABLE_ROBOTS,
+        canonical: absoluteUrl(route.path),
+        ogImage: DEFAULT_OG_IMAGE,
+        breadcrumbs: [
+            { name: 'Home', path: '/' },
+            { name: route.h1, path: route.path },
+        ],
+        jsonLd: [breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: route.h1, path: route.path }])].filter(
+            Boolean,
+        ) as object[],
+        related: [],
+        changefreq: route.changefreq,
+        priority: route.priority,
+        indexable: true,
+    };
+}
+
+export function templateSeoRoute(template: TemplateSeoEntry, gridTemplates: TemplateSeoEntry[]): SeoRoute {
+    const path = `/templates/${template.id}`;
+    const breadcrumbs = [
+        { name: 'Home', path: '/' },
+        { name: 'Templates', path: '/templates' },
+        { name: template.title, path },
+    ];
+    return {
+        path,
+        type: 'template',
+        title: templateTitle(template),
+        description: templateDescription(template),
+        h1: template.title,
+        intro: templateIntro(template),
+        robots: INDEXABLE_ROBOTS,
+        canonical: absoluteUrl(path),
+        ogImage: template.imageUrl ?? DEFAULT_OG_IMAGE,
+        breadcrumbs,
+        jsonLd: [breadcrumbJsonLd(breadcrumbs)].filter(Boolean) as object[],
+        related: gridTemplates
+            .filter((other) => other.id !== template.id)
+            .slice(0, 6)
+            .map((other) => ({ path: `/templates/${other.id}`, title: other.title })),
+        changefreq: 'monthly',
+        priority: 0.7,
+        indexable: true,
+    };
+}
+
+export function buildDetailSeoRoute(entry: BuildWithUIHubInput, all: BuildWithUIHubInput[]): SeoRoute {
+    const path = `/build-with-ui-hub/${entry.slug}`;
+    const breadcrumbs = [
+        { name: 'Home', path: '/' },
+        { name: 'Build with UI HUB', path: '/build-with-ui-hub' },
+        { name: entry.title, path },
+    ];
+    const description =
+        entry.description?.trim() ||
+        `${entry.title} rebuilt as a complete UI HUB section. Preview the full page section live, then copy the code into your project.`;
+    return {
+        path,
+        type: 'build-detail',
+        title: clampTitle(`${entry.title} – Free Website Section | ${SITE_NAME}`),
+        description: clampDescription(description),
+        h1: entry.title,
+        intro: `**${entry.title}** is available as a complete website section in UI HUB. Preview the section in the browser, review the markup and animation setup, then copy it into your own project.`,
+        robots: INDEXABLE_ROBOTS,
+        canonical: absoluteUrl(path),
+        ogImage: DEFAULT_OG_IMAGE,
+        breadcrumbs,
+        jsonLd: [breadcrumbJsonLd(breadcrumbs)].filter(Boolean) as object[],
+        related: all
+            .filter((other) => other.slug !== entry.slug)
+            .slice(0, 6)
+            .map((other) => ({ path: `/build-with-ui-hub/${other.slug}`, title: other.title })),
+        changefreq: 'monthly',
+        priority: 0.6,
+        indexable: true,
+    };
+}
+
+export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
+    const routes: SeoRoute[] = [];
+    const { components, templates, buildWithUIHub, buildTemplateIds } = input;
+
+    const buildMasters = new Set(buildTemplateIds);
+    const gridTemplates = templates.filter((template) => !buildMasters.has(template.id));
+    const indexableComponents = components.filter((component) => component.category !== 'custom');
+
+    routes.push(
+        homeSeoRoute(components.length, gridTemplates.length, CATEGORY_SEO.length),
+    );
 
     for (const route of STATIC_ROUTES) {
-        routes.push({
-            path: route.path,
-            type: route.path === '/templates' ? 'templates-index' : route.path === '/build-with-ui-hub' ? 'build-index' : 'static',
-            title: route.title,
-            description: route.description,
-            h1: route.h1,
-            intro: '',
-            robots: INDEXABLE_ROBOTS,
-            canonical: absoluteUrl(route.path),
-            ogImage: DEFAULT_OG_IMAGE,
-            breadcrumbs:
-                route.path === '/'
-                    ? [{ name: 'Home', path: '/' }]
-                    : [
-                          { name: 'Home', path: '/' },
-                          { name: route.h1, path: route.path },
-                      ],
-            jsonLd: [breadcrumbJsonLd([{ name: 'Home', path: '/' }, { name: route.h1, path: route.path }])].filter(
-                Boolean,
-            ) as object[],
-            related: [],
-            changefreq: route.changefreq,
-            priority: route.priority,
-            indexable: true,
-        });
+        const built = staticSeoRoute(route.path);
+        if (built) routes.push(built);
     }
 
     for (const category of CATEGORY_SEO) {
@@ -208,9 +282,10 @@ export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
         const path = `/components/${category.slug}`;
         const breadcrumbs = [
             { name: 'Home', path: '/' },
-            // /library is the real component index. There is no /components page,
-            // so linking there would be a dead end (and a 404 in production).
-            { name: 'Components', path: '/library' },
+            // No middle crumb: /library is deliberately noindex (private
+            // collection/search view), so a breadcrumb pointing at it would
+            // reference a non-indexable URL. There is no /components index
+            // page, so the next crumb is the category itself.
             { name: category.label, path },
         ];
         const indexable = items.length >= category.minItemsForIndex;
@@ -289,64 +364,11 @@ export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
     }
 
     for (const template of gridTemplates) {
-        const path = `/templates/${template.id}`;
-        const breadcrumbs = [
-            { name: 'Home', path: '/' },
-            { name: 'Templates', path: '/templates' },
-            { name: template.title, path },
-        ];
-        routes.push({
-            path,
-            type: 'template',
-            title: templateTitle(template),
-            description: templateDescription(template),
-            h1: template.title,
-            intro: templateIntro(template),
-            robots: INDEXABLE_ROBOTS,
-            canonical: absoluteUrl(path),
-            ogImage: template.imageUrl ?? DEFAULT_OG_IMAGE,
-            breadcrumbs,
-            jsonLd: [breadcrumbJsonLd(breadcrumbs)].filter(Boolean) as object[],
-            related: gridTemplates
-                .filter((other) => other.id !== template.id)
-                .slice(0, 6)
-                .map((other) => ({ path: `/templates/${other.id}`, title: other.title })),
-            changefreq: 'monthly',
-            priority: 0.7,
-            indexable: true,
-        });
+        routes.push(templateSeoRoute(template, gridTemplates));
     }
 
     for (const entry of buildWithUIHub) {
-        const path = `/build-with-ui-hub/${entry.slug}`;
-        const breadcrumbs = [
-            { name: 'Home', path: '/' },
-            { name: 'Build with UI HUB', path: '/build-with-ui-hub' },
-            { name: entry.title, path },
-        ];
-        const description =
-            entry.description?.trim() ||
-            `${entry.title} rebuilt as a complete UI HUB section. Preview the full page section live, then copy the code into your project.`;
-        routes.push({
-            path,
-            type: 'build-detail',
-            title: clampTitle(`${entry.title} – Free Website Section | ${SITE_NAME}`),
-            description: clampDescription(description),
-            h1: entry.title,
-            intro: `**${entry.title}** is available as a complete website section in UI HUB. Preview the section in the browser, review the markup and animation setup, then copy it into your own project.`,
-            robots: INDEXABLE_ROBOTS,
-            canonical: absoluteUrl(path),
-            ogImage: DEFAULT_OG_IMAGE,
-            breadcrumbs,
-            jsonLd: [breadcrumbJsonLd(breadcrumbs)].filter(Boolean) as object[],
-            related: buildWithUIHub
-                .filter((other) => other.slug !== entry.slug)
-                .slice(0, 6)
-                .map((other) => ({ path: `/build-with-ui-hub/${other.slug}`, title: other.title })),
-            changefreq: 'monthly',
-            priority: 0.6,
-            indexable: true,
-        });
+        routes.push(buildDetailSeoRoute(entry, buildWithUIHub));
     }
 
     return routes;
@@ -356,7 +378,7 @@ export const NOINDEX_PATHS: { path: string; reason: string }[] = [
     { path: '/login', reason: 'authentication' },
     { path: '/signup', reason: 'authentication' },
     { path: '/forgot-password', reason: 'authentication' },
-    { path: '/library', reason: 'personal collection view' },
+    { path: '/library', reason: 'SPA browse/search view; component and category pages carry the indexed content' },
     { path: '/favorites', reason: 'personal collection view' },
     { path: '/dashboard', reason: 'private' },
     { path: '/dashboard/mcp', reason: 'private' },

@@ -1,4 +1,4 @@
-import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL, absoluteUrl } from './site';
+import { DEFAULT_OG_IMAGE, SITE_ALTERNATE_NAMES, SITE_NAME, SITE_URL, absoluteUrl } from './site';
 
 export interface Breadcrumb {
     name: string;
@@ -25,6 +25,7 @@ export function webSiteJsonLd(): object {
         '@type': 'WebSite',
         '@id': `${SITE_URL}/#website`,
         name: SITE_NAME,
+        alternateName: SITE_ALTERNATE_NAMES,
         url: `${SITE_URL}/`,
         publisher: { '@id': `${SITE_URL}/#organization` },
     };

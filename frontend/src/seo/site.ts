@@ -2,6 +2,13 @@ export const SITE_URL = 'https://www.uihub.codes';
 
 export const SITE_NAME = 'UI Hub';
 
+/**
+ * Brand aliases people search for. Exposed to structured data as the
+ * alternateName so search engines can reconcile UI Hub, UI HUB and the bare
+ * domain as the same site.
+ */
+export const SITE_ALTERNATE_NAMES = ['UI HUB', 'UIHub', 'uihub.codes'];
+
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/ui-hub-banner.png`;
 
 export const TITLE_MAX = 60;

@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Link, useLocation } from 'react-router-dom';
 import { ArrowRight, Home, ShieldCheck, FileText, CreditCard, Cookie } from 'lucide-react';
+import { useSeo } from '../../components/Seo';
+import { staticPageSeoConfig } from '../../seo/runtime';
 
 export interface LegalSection {
     id: string;
@@ -60,6 +62,20 @@ const navLinks = [
 
 const LegalPage: React.FC<LegalPageProps> = ({ eyebrow, title, subtitle, updatedLabel, updatedDate, children }) => {
     const { pathname } = useLocation();
+
+    // Legal routes keep their prerendered head on client navigation. /cookies is
+    // reachable from the nav pills but has no prerendered document, so it gets a
+    // sensible inline config instead of inheriting a stale one.
+    const config = staticPageSeoConfig(pathname);
+    useSeo(
+        config ?? {
+            title: 'Cookie Settings | UI Hub',
+            description: 'Manage cookie preferences and consent settings for UI HUB.',
+            canonicalPath: pathname,
+            robots: 'index, follow',
+            jsonLd: [],
+        },
+    );
 
     return (
         <section className="relative py-16 sm:py-24 px-4 sm:px-6 overflow-hidden bg-brand-bg">

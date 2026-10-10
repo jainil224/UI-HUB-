@@ -91,7 +91,7 @@ export function Seo(_config: SeoConfig) {
     return null;
 }
 
-function isPrivatePath(pathname: string): boolean {
+export function isSeoNoIndexPath(pathname: string): boolean {
     const normalized = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
     if (NOINDEX_PATHS.some((rule) => rule.path === normalized)) return true;
     return NOINDEX_PREFIXES.some((rule) => pathname.startsWith(rule.prefix));
@@ -102,12 +102,16 @@ function isPrivatePath(pathname: string): boolean {
  * through the SPA fallback, which resolves to the prerendered home document.
  * Without this guard they would inherit the home page's canonical URL, pointing
  * search engines at the wrong page. Mount once inside the Router.
+ *
+ * Public routes are managed by each page's own `useSeo` call, so leaving a
+ * private route restores indexable robots, a canonical URL and the page's own
+ * meta on the next navigation.
  */
 export function RouteSeoGuard() {
     const location = useLocation();
 
     useEffect(() => {
-        if (!isPrivatePath(location.pathname)) return;
+        if (!isSeoNoIndexPath(location.pathname)) return;
 
         upsertMeta('meta[name="robots"]', 'name', 'robots', 'noindex, nofollow');
         for (const element of Array.from(document.head.querySelectorAll('link[rel="canonical"]'))) {

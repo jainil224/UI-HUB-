@@ -25,6 +25,8 @@ import { buildWithUIHubSectionBySlug } from '../../data/buildWithUIHubSlugs';
 import Toast from '../../components/ui/Toast';
 import { formatViewCount, recordTemplateView } from '../../services/templateViews';
 import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
+import { useSeo } from '../../components/Seo';
+import { buildDetailSeoConfig } from '../../seo/runtime';
 
 // Both of these sit behind a click - the Code tab and the AI prompt dropdown -
 // but a static import cost the page ~3.2 MB of JavaScript before the preview
@@ -113,6 +115,19 @@ const BuildWithUIHubDetailPage = () => {
         }
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, [promptMenuOpen]);
+
+    // Runtime head must match the prerendered document for this slug.
+    const seoConfig = useMemo(() => (slug ? buildDetailSeoConfig(slug) : undefined), [slug]);
+    useSeo(
+        seoConfig ?? {
+            title: 'Section Not Found | UI Hub',
+            description:
+                'That Build with UI HUB section could not be found. Browse all free page sections on UI HUB instead.',
+            canonicalPath: '/404',
+            robots: 'noindex, follow',
+            jsonLd: [],
+        },
+    );
 
     // Canonical URL guard. A slug that is actually a master template id - an old
     // link, or the id before the section was given a slug of its own - is sent

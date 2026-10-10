@@ -63,9 +63,18 @@ function readAppShellTags() {
     const scripts = [...withoutJsonLd.matchAll(/<script\b[^>]*>[\s\S]*?<\/script>/g)].map((match) => match[0]);
     const links = [...withoutJsonLd.matchAll(/<link\b[^>]*>/g)].map((match) => match[0]);
 
-    const seoOwnedLink = /rel="canonical"|name="description"|name="robots"|property="og:|name="twitter:/;
+    const seoOwnedLink = /rel="canonical"|property="og:|name="twitter:/;
 
-    return [...links.filter((tag) => !seoOwnedLink.test(tag)), ...scripts];
+    // Application-owned head <meta> tags that the SEO renderer does not produce
+    // itself but must keep: Google Search Console verification, AdSense site
+    // verification, application identity, viewport and any SDK/verification
+    // tags. Only SEO-owned and duplicated-by-the-renderer tags are dropped.
+    const seoOwnedMeta = /charset|name="(description|robots)"|property="og:|name="twitter:/i;
+    const metas = [...withoutJsonLd.matchAll(/<meta\b[^>]*>/g)]
+        .map((match) => match[0])
+        .filter((tag) => !seoOwnedMeta.test(tag));
+
+    return [...links.filter((tag) => !seoOwnedLink.test(tag)), ...metas, ...scripts];
 }
 
 function renderHtml({ route, body, appTags }) {
@@ -163,14 +172,17 @@ ${appTags.map((tag) => `    ${tag}`).join('\n')}
 `;
 }
 
-function renderSitemap(routes, lastmod) {
+function renderSitemap(routes) {
     const urls = routes
         .filter((route) => route.indexable)
         .map((route) => {
             const priority = route.priority.toFixed(1);
+            // Only component routes carry a true lastmod (their addedAt date).
+            // Static routes used to inherit today's build date, which made the
+            // whole sitemap claim to change every deploy against nothing.
+            const lastmod = route.lastmod ? `\n    <lastmod>${seo.escapeXml(route.lastmod)}</lastmod>` : '';
             return `  <url>
-    <loc>${seo.escapeXml(route.canonical)}</loc>
-    <lastmod>${seo.escapeXml(route.lastmod ?? lastmod)}</lastmod>
+    <loc>${seo.escapeXml(route.canonical)}</loc>${lastmod}
     <changefreq>${route.changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`;
@@ -239,7 +251,6 @@ async function main() {
     rmSync(join(DIST, 'seo'), { recursive: true, force: true });
     cleanPreviousOutput(routes.map((route) => route.path));
 
-    const lastmod = new Date().toISOString().slice(0, 10);
     const appTags = readAppShellTags();
     for (const route of routes) {
         const target = fileForRoute(route.path);
@@ -249,7 +260,7 @@ async function main() {
 
     writeFileSync(join(DIST, '404.html'), renderNotFound(appTags), 'utf8');
 
-    writeFileSync(join(DIST, 'sitemap.xml'), renderSitemap(routes, lastmod), 'utf8');
+    writeFileSync(join(DIST, 'sitemap.xml'), renderSitemap(routes), 'utf8');
     writeFileSync(join(DIST, 'robots.txt'), renderRobots(seo), 'utf8');
 
     const indexable = routes.filter((route) => route.indexable);

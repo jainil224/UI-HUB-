@@ -19,6 +19,8 @@ import Toast from '../../components/ui/Toast';
 import AdSlot from '../../components/ui/AdSlot';
 import { formatViewCount, recordTemplateView } from '../../services/templateViews';
 import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
+import { useSeo } from '../../components/Seo';
+import { buildDetailSeoConfig, templateSeoConfig } from '../../seo/runtime';
 
 // The Code tab is behind a click, but a static import cost this page ~3.2 MB of
 // JavaScript before the preview could paint anything: TemplateCodeViewer pulls
@@ -120,6 +122,27 @@ const TemplateDetailPage = () => {
             // Tracking failure is reported by the service and does not block the preview.
         });
     }, [template?.id]);
+
+    // Runtime head must match the prerendered page. Templates promoted to a
+    // "Build with UI HUB" section redirect to their build-detail page, so use
+    // that page's metadata here rather than the template's own /templates route
+    // (which has no prerendered document).
+    const seoConfig = useMemo(() => {
+        if (!id) return undefined;
+        const buildSlug = buildWithUIHubSlugByTemplateId[id];
+        return buildSlug ? buildDetailSeoConfig(buildSlug) : templateSeoConfig(id);
+    }, [id]);
+
+    useSeo(
+        seoConfig ?? {
+            title: 'Template Not Found | UI Hub',
+            description:
+                'That template could not be found. Browse all free React and Tailwind website templates on UI HUB instead.',
+            canonicalPath: '/404',
+            robots: 'noindex, follow',
+            jsonLd: [],
+        },
+    );
 
     // Close dropdown on click outside
     useEffect(() => {

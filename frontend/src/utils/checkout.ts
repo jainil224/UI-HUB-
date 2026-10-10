@@ -35,8 +35,8 @@ interface StartCheckoutParams {
 
 /**
  * Shared Razorpay checkout flow (extracted from PricingPage).
- * Renders nothing itself â€” returns overlay state the caller feeds into
- * <CheckoutOverlay>, and runs the full create-order â†’ razorpay â†’ verify loop.
+ * Renders nothing itself — returns overlay state the caller feeds into
+ * <CheckoutOverlay>, and runs the full create-order → razorpay → verify loop.
  */
 export const useRazorpayCheckout = () => {
     const [checkoutStatus, setCheckoutStatusRaw] = useState<CheckoutStatus>('idle');
