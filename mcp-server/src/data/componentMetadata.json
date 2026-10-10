@@ -6255,5 +6255,61 @@
         "React Router Link for the demo pill"
       ]
     }
+  },
+  "spider-crawler": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true (library preview), uses compact sizing."
+      },
+      {
+        "name": "showDemoButton",
+        "type": "boolean",
+        "default": "false",
+        "description": "Show the Live Demo pill linking to /demo/spider-crawler."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A cursor-following spider over a Wikipedia-style reference list. 8 legs use two-bone IK, tetrapod gait (A = L1,R2,L3,R4, B = R1,L2,R3,L4), seeded RNG, nearest word tracked by Y band. Body moves to pointer with critically damped velocity; scroll (wheel+keys+edge-follow) wraps scrollY keeping feet/tokens/glows/glitches aligned. Canvas FX renders glitch kinds with weights, spawn near crawler and on planted words, burst on pointerdown; glowing words decay. Three.js OrthographicCamera (0,720,0,1280,-10,10), LineSegments for legs, head plane+edge+dot, custom SVG arrow cursor shown after first pointermove, REDUCED motion supported.",
+      "states": {
+        "from": "resting on the reference grid",
+        "to": "crawling toward pointer, planting legs on words with glitch and glow"
+      },
+      "cssProperties": [
+        "relative full-bleed root with overflow:hidden, background:#000, cursor:none",
+        "@import Outfit+JetBrains Mono",
+        "stage/grid for 720x1280 logical view scaled via ResizeObserver",
+        "FX and GL canvases layered (pointer-events:none)",
+        "SVG cursor fixed, hidden until first pointermove"
+      ],
+      "description": "A spider that walks toward your pointer over a Wikipedia-style reference list, planting all eight legs on the words with glitch overlays and glowing text.",
+      "libraries": [
+        "react",
+        "three",
+        "motion"
+      ],
+      "requirements": [
+        "Three.js OrthographicCamera and LineSegments/Mesh materials",
+        "2D Canvas 2D context for glitch FX",
+        "ResizeObserver on root; toView uses root.getBoundingClientRect()",
+        "Pointer/wheel/keydown listeners (wheel {passive:false} + preventDefault)",
+        "requestAnimationFrame loop with dt, wrapScroll maintaining loopP",
+        "prefers-reduced-motion matchMedia gating"
+      ]
+    }
   }
 }
