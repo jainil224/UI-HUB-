@@ -192,9 +192,7 @@ const CATEGORY_MAP = {
     "signature-pad": "form",
     "drag-drop-upload": "form",
     "aurora-bpm-loader": "loader",
-    "ripple-signature-ledger": "image-interaction",
     "crossfade-typewriter": "text",
-    "driftwood-gallery": "image-interaction",
     "rain-storm": "interactive-background",
     "vector-wordmark": "text",
     "ember-husk": "interactive-background",
@@ -215,7 +213,11 @@ const CATEGORY_MAP = {
     "feather-sphere": "interactive-background",
     "wave-tunnel": "particles-background",
     "spider-crawler": "cursor",
-    "light-beam-type": "text"
+    "light-beam-type": "text",
+    "neon-rain": "particles-background",
+    "violet-cascade": "particles-background",
+    "pulse-lattice": "particles-background",
+    "atelier-drift": "image-interaction"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -346,9 +348,7 @@ const DEPENDENCIES_MAP = {
     'signature-pad': ["react"],
     'drag-drop-upload': ["react"],
     'aurora-bpm-loader': ["react"],
-    'ripple-signature-ledger': ["react", "framer-motion"],
     'crossfade-typewriter': ["react", "framer-motion"],
-    'driftwood-gallery': ["react", "framer-motion"],
     'rain-storm': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'vector-wordmark': ["react", "framer-motion"],
     'ember-husk': ["react", "three", "@react-three/fiber", "@react-three/drei"],
@@ -370,6 +370,10 @@ const DEPENDENCIES_MAP = {
     'wave-tunnel': ["react", "three"],
     'spider-crawler': ["react"],
     'light-beam-type': ["react", "framer-motion"],
+    'neon-rain': ["react", "three"],
+    'violet-cascade': ["react", "three"],
+    'pulse-lattice': ["react", "three"],
+    'atelier-drift': ["react", "framer-motion"],
 };
 function humanizeId(id) {
     return id

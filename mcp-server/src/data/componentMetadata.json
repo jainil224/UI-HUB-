@@ -5761,6 +5761,60 @@
       ]
     }
   },
+  "atelier-drift": {
+    "props": [
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "Preview mode: the stage fills its container and the whole story scrubs against an inner scroll column (.ad-scroll) instead of the window, with --ad-vh1 / --ad-vw1 derived from the container's client size."
+      },
+      {
+        "name": "showDemoButton",
+        "type": "boolean",
+        "default": "false",
+        "description": "In compact mode, float a bottom-center \"Full Preview\" pill that opens the full-screen demo (/demo/atelier-drift) in a new tab."
+      },
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Additional class names for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A pinned, scroll-scrubbed eight-stage award-style microsite for an abstract portrait franchise. Every layout length resolves through two 1% units (--ad-vh1 / --ad-vw1) written from JS: compact mode measures the inner .ad-scroll column's client size and passes it as the ScrollTrigger scroller, non-compact measures the window. gsap.context + ctx.revert() (StrictMode-safe) and a shared ScrollCtx scroll root drive all eight timelines (defaults ease 'none'). Scene 1 pin 340%: grip pattern enters (yPercent 20 -> 0), brand cards fan open and drift left at per-card xSpeeds while chips tick, headline A blurs out and headline B slides in; a progress fill scales to 'max'. Scene 2 pin 300%: the frame re-enters, a registration panel rises 34% and overshoots +6%, its art butterfly closes to a 24px rounded square and a trust row shuffles up while logos counter-rotate. Scene 3 pin 520%: hero words fade in, then a page-flip flips the backdrop to the vision frame; sample icons orbit into place, illustration tiles pop in, the sentence line whips across as the sub-sentence slides up. Scene 4 pin 300%: six avatar portraits fly in from their identity-strip positions with depth-scaled travel (near ones bigger/faster), each tagged by a name chip that tracks its drift. Scene 5 dynamic (scrollWidth - viewport + 40% viewport): a discovery track plus eight creator-graphic cards slides horizontally under a lens label; travel tracks canvas width, the hbar fills with x/.max. Scene 6 pin 340%: a 3x5 creator grid slides down, then a founder card swells from one train cell (scale 1 -> 2.45, translate to center) with its identity chip scaling to stay legible. Scene 7 pin 400%: membership plans slide in, a lime marquee ribbon rises from beneath with doubled infinitely-tiled copies translating -100% and cycling, and the quotes mark scales from 0.3 to 1. Scene 8: two finale panels (pink 'own the alt', white 'watch it live') lift 20% and butterfly art parallaxes -12% on the canvas demo while the footer inverts. reducedMotion is read via matchMedia once and swaps every scrub timeline to scrub:true. On resize (or compact scroller resize via ResizeObserver) the CSS units and ScrollTriggers refresh, and the nav/progress Live-Demo overlay stays pinned to the scroller.",
+      "states": {
+        "from": "the hero: grip pattern + fans of brand cards against warm paper",
+        "to": "two finale panels lifting to reveal a lime-marquee membership footer"
+      },
+      "cssProperties": [
+        "two whole-viewport 1% units (--ad-vh1/--ad-vw1) written from JS on mount/resize",
+        "GSAP ScrollTrigger pins of 340 / 300 / 520 / 300 / dynamic / 340 / 400 (% of the scroll viewport)",
+        "pow2.inOut overshoot ramps (14% -> -6%) for stage re-entries",
+        "accumulating per-card xSpeed parallax drift inside the pinned runway",
+        "chips/tags tracking their drifting avatars via absolute positioning + onclick prevention",
+        "a profile-strip x scaleX cap derived from canvas width / scrollWidth",
+        "the founder card scale-swell from one grid cell with inverse-scaled identity chip",
+        "the marquee using two overlapping copies of the same tile, infinately translating -100%",
+        "prefers-reduced-motion read via matchMedia at mount (all scrubbed timelines)"
+      ],
+      "description": "An eight-stage scroll-driven brand site for an abstract portrait franchise: fans of generated-portrait cards, a registration panel, a vision-frame swap, name-tagged drifting avatars, a horizontal discovery track, a founder-card swell and a lime membership marquee, all pinned and scrubbed by ScrollTrigger.",
+      "libraries": [
+        "react",
+        "gsap",
+        "gsap/ScrollTrigger",
+        "google fonts (Bricolage Grotesque + DM Sans)"
+      ],
+      "requirements": [
+        "deterministic ScrollTrigger pins with custom scroller support",
+        "a shared scroll root (window or an inner scroll column) with refresh on resize + document.fonts.ready",
+        "JS-set CSS 1% units (--ad-vh1/--ad-vw1) so vh/vw layouts resize when the preview card does",
+        "prefers-reduced-motion matchMedia",
+        "Google Fonts Bricolage Grotesque + DM Sans"
+      ]
+    }
+  },
   "mostar-cinematic-scroll": {
     "props": [
       {
