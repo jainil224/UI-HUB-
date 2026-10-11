@@ -47,6 +47,7 @@ const PREMIUM_IDS = new Set([
     "dots-to-solid-text",
     "mostar-cinematic-scroll",
     "antigravity-animation",
+    "spider-crawler",
     "black-hole-3d",
     "card-cascade",
     "generating-orb",
@@ -211,7 +212,10 @@ const CATEGORY_MAP = {
     "hexa-sphere": "interactive-background",
     "particle-sun": "particles-background",
     "streak-sphere": "particles-background",
-    "feather-sphere": "interactive-background"
+    "feather-sphere": "interactive-background",
+    "wave-tunnel": "particles-background",
+    "spider-crawler": "cursor",
+    "light-beam-type": "text"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -363,6 +367,9 @@ const DEPENDENCIES_MAP = {
     'particle-sun': ["react", "three"],
     'streak-sphere': ["react", "three"],
     'feather-sphere': ["react", "three", "@react-three/fiber", "@react-three/drei"],
+    'wave-tunnel': ["react", "three"],
+    'spider-crawler': ["react"],
+    'light-beam-type': ["react", "framer-motion"],
 };
 function humanizeId(id) {
     return id
