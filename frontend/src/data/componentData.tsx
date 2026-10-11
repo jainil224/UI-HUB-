@@ -35,6 +35,7 @@ const SVGPageTransition = React.lazy(() => import('../components/ui/SVGPageTrans
 const SectionScroll = React.lazy(() => import('../components/ui/SectionScroll').then(m => ({ default: m.SectionScroll })));
 const InfiniteMarquee = React.lazy(() => import('../components/ui/InfiniteMarquee').then(m => ({ default: m.InfiniteMarquee })));
  const DotsToSolidText = React.lazy(() => import('../components/ui/DotsToSolidText').then(m => ({ default: m.DotsToSolidText })));
+ const AtelierDrift = React.lazy(() => import('../components/ui/AtelierDrift').then(m => ({ default: m.AtelierDrift })));
  const MostarCinematicScroll = React.lazy(() => import('../components/ui/MostarCinematicScroll').then(m => ({ default: m.MostarCinematicScroll })));
  const AntigravityAnimation = React.lazy(() => import('../components/ui/AntigravityAnimation').then(m => ({ default: m.AntigravityAnimation })));
  const HexaSphere = React.lazy(() => import('../components/ui/HexaSphere').then(m => ({ default: m.HexaSphere })));
@@ -2822,6 +2823,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'cube-loader': CubeLoader,
     'prism-pyramid': PrismPyramid,
     'dots-to-solid-text': DotsToSolidText,
+    'atelier-drift': AtelierDrift,
     'mostar-cinematic-scroll': MostarCinematicScroll,
     'antigravity-animation': AntigravityAnimation,
     'hexa-sphere': HexaSphere,
@@ -15451,6 +15453,24 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000] [&>div]:min-h-0">
                 <PulseLattice compact />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Atelier Drift ──────────────────────────────────────
+    {
+        id: "atelier-drift",
+        title: "Atelier Drift",
+        category: "image-interaction",
+        addedAt: "2026-10-11",
+        newBadgeDays: 120,
+        description: "An award-style scroll microsite: eight pinned stages drift between abstract portrait tiles, a fanned card stack, a registry-vision frame, avatars floating at different depths, a horizontal creator track, a swelling founder card, and a lime membership ribbon — generated faces, reduced-motion safe, fully scrubbed via GSAP ScrollTrigger.",
+        isFullBleed: true,
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#f6f6f3] [&>div]:min-h-0">
+                <AtelierDrift compact showDemoButton />
             </div>
         ),
         code: "",
