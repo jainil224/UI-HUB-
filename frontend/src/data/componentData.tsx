@@ -107,9 +107,7 @@ const PasswordStrengthMeter = React.lazy(() => import('../components/ui/Password
 const SignaturePad = React.lazy(() => import('../components/ui/SignaturePad').then(m => ({ default: m.SignaturePad })));
 const DragDropUpload = React.lazy(() => import('../components/ui/DragDropUpload').then(m => ({ default: m.DragDropUpload })));
 const AuroraBpmLoader = React.lazy(() => import('../components/ui/AuroraBpmLoader').then(m => ({ default: m.AuroraBpmLoader })));
-const RippleSignatureLedger = React.lazy(() => import('../components/ui/RippleSignatureLedger').then(m => ({ default: m.RippleSignatureLedger })));
 const CrossfadeTypewriter = React.lazy(() => import('../components/ui/CrossfadeTypewriter').then(m => ({ default: m.CrossfadeTypewriter })));
-const DriftwoodGallery = React.lazy(() => import('../components/ui/DriftwoodGallery').then(m => ({ default: m.DriftwoodGallery })));
 const RainStorm = React.lazy(() => import('../components/ui/RainStorm'));
 const VectorWordmark = React.lazy(() => import('../components/ui/VectorWordmark'));
 const EmberHusk = React.lazy(() => import('../components/ui/EmberHusk'));
@@ -4979,30 +4977,6 @@ const AuroraBpmLoaderPreview: React.FC = () => {
     );
 };
 
-// ── Ripple Signature Ledger preview ──
-const RippleSignatureLedgerPreview: React.FC = () => {
-    return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-            minHeight: '380px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'radial-gradient(120% 120% at 50% 0%, #0c0c09 0%, #080806 60%, #040403 100%)',
-            padding: 28,
-        }}>
-            <div style={{ width: '100%', maxWidth: 420, height: 240 }}>
-                <Suspense fallback={null}>
-                    <RippleSignatureLedger
-                        image={{ src: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=800', alt: 'ledger' }}
-                    />
-                </Suspense>
-            </div>
-        </div>
-    );
-};
-
 // ── Crossfade Typewriter preview ──
 const CrossfadeTypewriterPreview: React.FC = () => {
     return (
@@ -5023,34 +4997,6 @@ const CrossfadeTypewriterPreview: React.FC = () => {
                             'the tide keeps the ledger.',
                             'ink remembers the drift.',
                             'paper holds a constant hum.',
-                        ]}
-                    />
-                </Suspense>
-            </div>
-        </div>
-    );
-};
-
-// ── Driftwood Gallery preview ──
-const DriftwoodGalleryPreview: React.FC = () => {
-    return (
-        <div style={{
-            width: '100%',
-            height: '100%',
-            minHeight: '380px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: 'radial-gradient(120% 120% at 50% 0%, #1a170f 0%, #110f09 60%, #080703 100%)',
-            padding: 28,
-        }}>
-            <div style={{ width: '100%', maxWidth: 480, height: 300 }}>
-                <Suspense fallback={null}>
-                    <DriftwoodGallery
-                        images={[
-                            { src: 'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=800', alt: 'dune' },
-                            { src: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=800', alt: 'shore' },
-                            { src: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800', alt: 'wood' },
                         ]}
                     />
                 </Suspense>
@@ -15103,19 +15049,6 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         vibePrompt: "",
     },
 
-    // ── Ripple Signature Ledger ─────────────────────────
-    {
-        id: "ripple-signature-ledger",
-        title: "Ripple Signature Ledger",
-        category: "image-interaction",
-        addedAt: "2026-09-17",
-        newBadgeDays: 120,
-        description: "Click or touch a photo to stamp shadowed coin-settle wax seals that expand, squash, and slowly dissolve.",
-        preview: () => <RippleSignatureLedgerPreview />,
-        code: "",
-        vibePrompt: "",
-    },
-
     // ── Crossfade Typewriter ────────────────────────────
     {
         id: "crossfade-typewriter",
@@ -15125,19 +15058,6 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         newBadgeDays: 120,
         description: "Cycles through every line: the previous line dims while the next types, holds, then swaps — with a blinking caret.",
         preview: () => <CrossfadeTypewriterPreview />,
-        code: "",
-        vibePrompt: "",
-    },
-
-    // ── Driftwood Gallery ───────────────────────────────
-    {
-        id: "driftwood-gallery",
-        title: "Driftwood Gallery",
-        category: "image-interaction",
-        addedAt: "2026-09-17",
-        newBadgeDays: 120,
-        description: "A tide-bobbed photo gallery in a driftwood frame with smooth ref-driven parallax tilt, hover-paused auto-slides, and jump dots.",
-        preview: () => <DriftwoodGalleryPreview />,
         code: "",
         vibePrompt: "",
     },

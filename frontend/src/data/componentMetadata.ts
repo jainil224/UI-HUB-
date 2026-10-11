@@ -1158,22 +1158,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             requirements: ["svg path + getTotalLength", "SMIL <animate>", "inline styles + scoped <style>", "controlled/uncontrolled progress"]
         }
     },
-    "ripple-signature-ledger": {
-        props: [
-            { name: "image", type: "{ src: string; alt?: string }", default: "-", description: "Background photo the seals are stamped onto." },
-            { name: "ringColor", type: "string", default: "'rgba(214, 190, 150, '", description: "Ring rgba prefix; alpha appended per seal and the inner tick ring derives from it." },
-            { name: "maxSeals", type: "number", default: "3", description: "Max concurrent stamps; oldest is dropped." },
-            { name: "autoSeal", type: "boolean", default: "true", description: "Stamp one demo seal shortly after mount so a still preview tells its story." }
-        ],
-        vibeMeta: {
-            behavior: "Pointer-down stamps a coin-settle wax seal onto the photo (touch, pen, and mouse). Each seal expands from 14 to 60px, then squashes vertically while alpha bleeds out; a soft radial drop shadow and an ink centre dot sell the hand-stamped ledger look. The inner tick ring derives its hue from ringColor, and fully-faded seals are pruned every frame.",
-            states: { from: "pointer-down spawns a growing ring", to: "ring settles into a squashed, shadowed, fading wax seal" },
-            cssProperties: ["canvas 2d", "requestAnimationFrame loop", "radial-gradient shadow", "devicePixelRatio"],
-            description: "Canvas seal-stamping ledger: rings expand, shadow up, coin-settle, and dissolve.",
-            libraries: ["react"],
-            requirements: ["canvas 2d", "pointerdown (touch/pen/mouse)", "ResizeObserver", "devicePixelRatio scaling", "raf loop with prune"]
-        }
-    },
     "crossfade-typewriter": {
         props: [
             { name: "lines", type: "string[]", default: "[]", description: "Any number of lines cycled as a two-slot crossfade typewriter." },
@@ -1189,22 +1173,6 @@ export const COMPONENT_CONFIG: Record<string, ComponentConfig> = {
             description: "N-line crossfade typewriter: previous line dims while the next types, then swaps.",
             libraries: ["react"],
             requirements: ["inline styles + scoped <style>", "interval tick with ref state machine", "N-line cycling", "reduced-motion static mode"]
-        }
-    },
-    "driftwood-gallery": {
-        props: [
-            { name: "images", type: "{ src: string; alt?: string; tint?: string }[]", default: "[]", description: "Photos cycled by the gallery." },
-            { name: "intervalMs", type: "number", default: "5200", description: "Time per slide (pauses while the pointer rests on it)." },
-            { name: "waveAmp", type: "number", default: "6", description: "Idle tide-bob amplitude in px." },
-            { name: "showDots", type: "boolean", default: "true", description: "Show clickable slide dots below the counter." }
-        ],
-        vibeMeta: {
-            behavior: "A photo gallery behind a weathered driftwood frame on a sand-grain field. The frame tilts with the pointer (perspective rotate) and the deck bobs on a continuous time-based sine — no index jumps, no per-frame React re-renders (transforms are written straight to the DOM). Slides crossfade on an interval that pauses on hover, and dots + counter jump to any slide.",
-            states: { from: "image 1 centered, frame flat", to: "frame tilting to pointer while the deck tide-bobs, next slide crossfading in" },
-            cssProperties: ["ref-driven perspective rotate", "time-based bob", "sepia/saturate filters", "crossfade", "slide dots"],
-            description: "Driftwood-framed gallery with ref-driven parallax tilt, a continuous tide bob, and jump dots.",
-            libraries: ["react"],
-            requirements: ["inline styles", "PointerEvent via JSX handlers", "interval timer with hover pause", "continuous time-based wave", "reduced-motion static bob"]
         }
     },
     "reflect-shader": {
