@@ -697,30 +697,19 @@ adminRouter.delete('/api-keys/:id', requireAdmin, async (req, res) => {
 adminRouter.get('/tools', requireAdmin, async (req, res) => {
     const states = await configService.getToolStates();
     const range = parseRange(req.query);
-    const requests = await telemetryService.queryRequests({ fromTs: range.fromTs, toTs: range.toTs, page: 1, pageSize: 50000 });
-    const items = requests.items;
+    const aggregates = await telemetryService.aggregateByTool(range.fromTs, range.toTs);
     const usageMap = {};
-    for (const e of items) {
-        const name = e.toolName || e.method || 'unknown';
-        if (!usageMap[name])
-            usageMap[name] = { total: 0, success: 0, failed: 0, errors: 0, errorRate: 0, avgResponseTimeMs: 0, lastUsed: 0, uniqueUsers: 0 };
-        usageMap[name].total++;
-        if (e.success)
-            usageMap[name].success++;
-        else {
-            usageMap[name].failed++;
-            usageMap[name].errors++;
-        }
-        if (e.timestamp > usageMap[name].lastUsed)
-            usageMap[name].lastUsed = e.timestamp;
-    }
-    for (const k of Object.keys(usageMap)) {
-        const u = usageMap[k];
-        u.errorRate = u.total ? (u.errors / u.total) * 100 : 0;
-        const tt = items.filter((e) => (e.toolName || e.method || 'unknown') === k && typeof e.latencyMs === 'number' && e.latencyMs > 0);
-        u.avgResponseTimeMs = tt.length ? Math.round(tt.reduce((s, n) => s + n.latencyMs, 0) / tt.length) : 0;
-        const users = new Set(items.filter((e) => (e.toolName || e.method || 'unknown') === k).map((e) => e.userId || e.apiKeyId).filter(Boolean));
-        u.uniqueUsers = users.size;
+    for (const a of aggregates) {
+        usageMap[a.name] = {
+            total: a.total,
+            success: a.success,
+            failed: a.failed,
+            errors: a.failed,
+            errorRate: a.total ? (a.failed / a.total) * 100 : 0,
+            avgResponseTimeMs: a.avgResponseTimeMs,
+            lastUsed: a.lastUsed,
+            uniqueUsers: a.uniqueUsers,
+        };
     }
     const tools = Object.keys(states).map((name) => {
         const usage = usageMap[name] || {
@@ -776,8 +765,8 @@ adminRouter.patch('/tools/:name', requireAdmin, async (req, res) => {
 });
 adminRouter.get('/components', requireAdmin, async (req, res) => {
     const range = parseRange(req.query);
-    const events = await analyticsService.queryEvents(range.fromKey, range.toKey);
-    const stats = aggregateEvents(events);
+    const usage = await telemetryService.aggregateByComponent(range.fromTs, range.toTs);
+    const usageById = new Map(usage.map((u) => [u.id, u]));
     const all = componentService.getAllComponents();
     const premium = all.filter((c) => c.isPremium).length;
     const q = String(req.query.search || '').toLowerCase();
@@ -785,28 +774,38 @@ adminRouter.get('/components', requireAdmin, async (req, res) => {
         .filter((c) => !q || c.name.toLowerCase().includes(q) || c.id.toLowerCase().includes(q))
         .slice(0, 100)
         .map((c) => {
-        const usage = stats.topComponents.find((t) => t.id === c.id);
+        const u = usageById.get(c.id);
         return {
             id: c.id,
             name: c.name,
             category: c.category,
             isPremium: c.isPremium,
-            usageCount: usage?.count || 0,
-            uniqueUsers: usage?.uniqueUsers || 0,
-            codeFetches: usage?.codeFetches || 0,
+            usageCount: u?.total || 0,
+            uniqueUsers: u?.uniqueUsers || 0,
+            codeFetches: u?.codeFetches || 0,
         };
     })
         .sort((a, b) => b.usageCount - a.usageCount);
+    const topComponents = usage.map((u) => {
+        const meta = componentService.getComponentMeta(u.id);
+        return {
+            id: u.id,
+            count: u.total,
+            codeFetches: u.codeFetches,
+            uniqueUsers: u.uniqueUsers,
+            lastUsed: u.lastUsed,
+            title: meta?.title || u.id,
+            category: meta?.category || 'unknown',
+            isPremium: meta?.isPremium ?? false,
+        };
+    });
     res.json({
         range,
         total: all.length,
         premiumCount: premium,
-        usedComponents: stats.topComponents.length,
-        requestedComponentCalls: stats.topComponents.reduce((n, c) => n + c.count, 0),
-        topComponents: stats.topComponents.map((c) => {
-            const meta = componentService.getComponentMeta(c.id);
-            return { ...c, title: meta?.title || c.id, category: meta?.category || 'unknown', isPremium: meta?.isPremium ?? false };
-        }),
+        usedComponents: topComponents.length,
+        requestedComponentCalls: topComponents.reduce((n, c) => n + c.count, 0),
+        topComponents,
         catalog,
         templates: componentService.getTemplateCatalog(),
     });

@@ -25,6 +25,8 @@ export function toolTelemetry(toolName) {
         return undefined;
     return TOOL_TELEMETRY[toolName];
 }
+/** Tool names that return component source code (counted as `codeFetches`). */
+const COMPONENT_CODE_TOOLS = ['get_component_code'];
 const FLUSH_DELAY_MS = 5000;
 const MAX_BUFFER = 250;
 export class TelemetryService {
@@ -239,6 +241,124 @@ export class TelemetryService {
         catch (error) {
             console.error('[Telemetry] querySearches failed:', redactText(error?.message || error));
             return { total: 0, page, pageSize, items: [] };
+        }
+    }
+    /**
+     * Aggregate request volume per tool over the whole range.
+     *
+     * Unlike `queryRequests` (which is paginated and capped for display), this
+     * runs a Mongo aggregation over every matching document, so admin per-tool
+     * usage is never truncated. Events without a `toolName` (initialize,
+     * tools/list, …) fall back to their JSON-RPC `method`.
+     */
+    async aggregateByTool(fromTs, toTs) {
+        try {
+            const col = await getCollection(REQUEST_EVENTS_COLLECTION);
+            const match = {};
+            if (fromTs || toTs) {
+                match.timestamp = {};
+                if (fromTs)
+                    match.timestamp.$gte = fromTs;
+                if (toTs)
+                    match.timestamp.$lte = toTs;
+            }
+            const rows = await col.aggregate([
+                { $match: match },
+                {
+                    $group: {
+                        _id: { $ifNull: ['$toolName', { $ifNull: ['$method', 'unknown'] }] },
+                        total: { $sum: 1 },
+                        success: { $sum: { $cond: [{ $eq: ['$success', true] }, 1, 0] } },
+                        failed: { $sum: { $cond: [{ $eq: ['$success', true] }, 0, 1] } },
+                        latencySum: { $sum: { $cond: [{ $gt: ['$latencyMs', 0] }, '$latencyMs', 0] } },
+                        latencyCount: { $sum: { $cond: [{ $gt: ['$latencyMs', 0] }, 1, 0] } },
+                        users: { $addToSet: { $ifNull: ['$userId', '$apiKeyId'] } },
+                        lastUsed: { $max: '$timestamp' },
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        name: '$_id',
+                        total: 1,
+                        success: 1,
+                        failed: 1,
+                        uniqueUsers: { $size: { $setDifference: ['$users', [null]] } },
+                        latencySum: 1,
+                        latencyCount: 1,
+                        lastUsed: 1,
+                    },
+                },
+                { $sort: { total: -1 } },
+            ]).toArray();
+            return rows.map((r) => ({
+                name: String(r.name ?? 'unknown'),
+                total: Number(r.total) || 0,
+                success: Number(r.success) || 0,
+                failed: Number(r.failed) || 0,
+                uniqueUsers: Number(r.uniqueUsers) || 0,
+                avgResponseTimeMs: Number(r.latencyCount) > 0 ? Math.round(Number(r.latencySum) / Number(r.latencyCount)) : 0,
+                lastUsed: Number(r.lastUsed) || 0,
+            }));
+        }
+        catch (error) {
+            console.error('[Telemetry] aggregateByTool failed:', redactText(error?.message || error));
+            return [];
+        }
+    }
+    /**
+     * Aggregate per-component usage (fetch + code) over the whole range, keyed by
+     * `resourceId`. Backs the admin components leaderboard so it reflects real
+     * telemetry instead of the legacy analytics buckets.
+     */
+    async aggregateByComponent(fromTs, toTs) {
+        try {
+            const col = await getCollection(REQUEST_EVENTS_COLLECTION);
+            const match = {
+                resourceType: 'component',
+                resourceId: { $nin: [null, ''] },
+            };
+            if (fromTs || toTs) {
+                match.timestamp = {};
+                if (fromTs)
+                    match.timestamp.$gte = fromTs;
+                if (toTs)
+                    match.timestamp.$lte = toTs;
+            }
+            const rows = await col.aggregate([
+                { $match: match },
+                {
+                    $group: {
+                        _id: '$resourceId',
+                        total: { $sum: 1 },
+                        codeFetches: { $sum: { $cond: [{ $in: ['$toolName', COMPONENT_CODE_TOOLS] }, 1, 0] } },
+                        users: { $addToSet: { $ifNull: ['$userId', '$apiKeyId'] } },
+                        lastUsed: { $max: '$timestamp' },
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        id: '$_id',
+                        total: 1,
+                        codeFetches: 1,
+                        uniqueUsers: { $size: { $setDifference: ['$users', [null]] } },
+                        lastUsed: 1,
+                    },
+                },
+                { $sort: { total: -1 } },
+            ]).toArray();
+            return rows.map((r) => ({
+                id: String(r.id),
+                total: Number(r.total) || 0,
+                codeFetches: Number(r.codeFetches) || 0,
+                uniqueUsers: Number(r.uniqueUsers) || 0,
+                lastUsed: Number(r.lastUsed) || 0,
+            }));
+        }
+        catch (error) {
+            console.error('[Telemetry] aggregateByComponent failed:', redactText(error?.message || error));
+            return [];
         }
     }
     /** Aggregate counts for the alert engine over a recent window. */
