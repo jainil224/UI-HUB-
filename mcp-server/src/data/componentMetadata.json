@@ -6433,5 +6433,125 @@
         "full dispose on unmount (cancel rAF, disconnect ResizeObserver, dispose geometries/materials/renderer)"
       ]
     }
+  },
+  "violet-cascade": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true (library preview), fills a compact card instead of a full viewport."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "default": "\"move · click\"",
+        "description": "Hint line shown at the bottom."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "One Three.js scene with two additive point clouds plus a reflection plane, all driven by shared uniforms. A 14,000-point 'beam' (uFlow 1) and a 7,000-point 'ring' halo (uFlow 0) share one vertex/fragment shader. Per particle: seed = (angle, radialBiasedRadius, lifePhase, speed) where speed is (1 or 2)/2.88 so the loop is seamless. The beam's life = fract(phase + uTime*speed) makes particles fall from ringY (1.42) down by fall (1.35); its alpha = pow(1-life,1.5)*(.45+.55*twinkle) and color mixes hi vec3(.93,.85,1) to lo vec3(.36,.2,1) by smoothstep(0,.55,life). The ring is a near-static halo (life = phase*.035), full hi color, alpha = .55+.45*twinkle. Both apply a pointer repulsion f = exp(-dot(d,d)/.14)*uAct and push xy by normalize(d)*f*.38, and scale alpha by (1 + uPulse*.8 + f*1.2). gl_PointSize = aSize*uPx*(1+f*1.4)*(20/-mv.z) gives perspective sizing. The group tilts: rotation.x = tilt (.14) and parallax rotation.y toward pointer x and rotation.x toward pointer y, eased by .06. The pool mesh (PlaneGeometry 2.4x1.3 at y = poolY+0.35) is a fragment-shader field of vertical streaks: value-noise column pattern (col = p.x*48 + sin(t*9+uTime*2)*.8), smoothstep streak mask * upward env exp(-t*3.2), plus a bright surface band exp(-(t/.09)^2), an x envelope exp(-(|x|/.72)^4), a pointer glow mx = exp(-(p.x-uMouse.x)^2/.07)*uAct and a click pulse uPulse that decays (uPulse *= .04^dt). A second 2D canvas holds a quarter-scale drawImage of the WebGL frame, screen-blended and CSS-blurred into a bloom.",
+      "states": {
+        "from": "a violet ring of particles hovering above a faint reflective pool in a near-black stage",
+        "to": "a full violet cascade: the ring spins and particles stream down into the shimmering streak pool while the whole group tilts toward the pointer"
+      },
+      "cssProperties": [
+        "position: relative container, background #030305, overflow hidden, cursor crosshair, touch-action none",
+        "1.4s ease-out opacity fade-in on mount applied via a vc-in keyframe",
+        "two absolute inset-0 canvases (vc-gl WebGL, vc-glow 2D bloom)",
+        "vc-glow uses mix-blend-mode screen, filter blur(14px) brightness(1.5), opacity .95",
+        "centered uppercase letter-spaced .vc-hint line near the bottom",
+        "devicePixelRatio capped at 2"
+      ],
+      "description": "A floating violet ring of 21,000 additive particles spins and cascades downward into a reflective pool of procedural light streaks, with pointer repulsion, a click pulse, parallax tilt toward the cursor and a CSS-blurred bloom pass.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "Three.js WebGLRenderer + ShaderMaterial with custom GLSL (one shared particle shader + one pool shader)",
+        "Points + BufferGeometry with custom aSeed (vec4) and aSize attributes",
+        "PerspectiveCamera with fov derived per-resize from the visible extent",
+        "AdditiveBlending with depthWrite disabled",
+        "seeded deterministic RNG for particle layout",
+        "ResizeObserver on the container + window resize (recomputes camera + bloom canvas)",
+        "requestAnimationFrame render loop driven by THREE.Clock with capped delta",
+        "second 2D canvas bloom (downscaled drawImage + CSS blur)",
+        "pointermove / pointerdown / pointerleave / pointerup listeners on the container with getBoundingClientRect-local coordinates",
+        "prefers-reduced-motion matchMedia (0.25x time scale)",
+        "full dispose on unmount (cancel rAF, disconnect ResizeObserver, dispose geometries/materials/renderer)"
+      ]
+    }
+  },
+  "pulse-lattice": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true (library preview), fills a compact card instead of a full viewport."
+      },
+      {
+        "name": "hint",
+        "type": "string",
+        "default": "\"Hover over the grid to wake it · drag to orbit · scroll / pinch to zoom · click for ripple · double-click to reset\"",
+        "description": "Hint line shown briefly at the top."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single Three.js Mesh of hex-lattice ribbon edges. The grid is generated once: over extentX 80 and z from zFar -110 to zNear 60, hexagonal cells (hexR 1.6, horizontal step sqrt(3)*R, vertical step 1.5*R, odd rows offset) contribute their 6 edges, deduplicated by a rounded-coordinate Set, then each edge expands to a 4-vertex quad (aEnd = other endpoint, aCorner = (along 0/1, side ±1)) with an index buffer. One ShaderMaterial (additive, depthTest/depthWrite off, DoubleSide) does everything per frame. Vertex: displace both endpoints by height(xz) = uAmp*uPeak*exp(-r2/(2*uSigma^2)) - uDip*uDipDepth*exp(-r2/(2*uDipSigma^2)) plus up to 4 ripple rings (uRip arrived positions, expanding at uSpeed) using cos(x*0.8)*exp(-x^2/9)*exp(-age*0.8)/(1+0.07r); project both ends, build a screen-space normal, and offset by aCorner.y * a screen-space half-width lerped between uLine.x/uLine.y by clamp(14/dist); pass vH = wp.y/uPeak, vSide, and a distance fade vFade from uFade (+uShift). Fragment: t = clamp(vH*1.15 + uAmp*0.45), color purple->blue->cyan, alpha = (1-smoothstep(0.55,1,abs(vSide))) * vFade. The cover profile (ease/gauss) is retained. Interaction: hover ramps uAmp (0->1) with a short dip; the pointer casts onto the y=0 plane (Raycaster + Plane) to move uCenter (bump, lerped by follow 0.22) which drags the bulge under the cursor; dragging orbits yaw/pitch (rotSpeed 0.0055, clamped pitch -1.2..1.53), wheel/pinch scale R (clamped 8..60), a click spawns a ripple + speed boost, double-click/keys 0/t/u and the HUD set front/angle/top/under (goal/current orbit smoothed by damp 0.12). Camera sits at target + R*(sin yaw cos pitch, sin pitch, cos yaw cos pitch) looking at target [0,0.2,-16]; port fov widens on portrait.",
+      "states": {
+        "from": "a dormant violet hex grid on black with the hint and view HUD",
+        "to": "a woken lattice pulsing purple→cyan with the bulge tracking the pointer, orbiting and rippling on click"
+      },
+      "cssProperties": [
+        "position: relative full-bleed container, background #000, overflow hidden, cursor grab, touch-action none",
+        "block full-size canvas (cursor grab / grabbing while dragging)",
+        "absolute centered pill .pl-hud with blurred backdrop holding Front/Angle/Top/Under buttons",
+        "absolute top-center .pl-hint line that fades out on first pointer move",
+        "devicePixelRatio capped at 2"
+      ],
+      "description": "An interactive infinite hexagonal lattice of additive ribbon edges over black that breathes with a central bulge and a ring dip, tints purple→blue→cyan by height, and responds to hover, drag-orbit, zoom, click ripples and view presets.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "Three.js WebGLRenderer + ShaderMaterial with custom GLSL",
+        "procedurally built BufferGeometry: hex-edge lattice expanded to quads with aCorner/aEnd attributes and an index buffer",
+        "screen-space ribbon expansion in the vertex shader (uses uRes in device pixels)",
+        "Raycaster + Plane intersection to place the pointer bump on the y=0 floor",
+        "Pointer Events with pointer capture + two-pointer pinch zoom",
+        "orbit goal/current smoothing + MathUtils.clamp limits",
+        "ResizeObserver on the container + window resize (recomputes camera aspect/fov and uRes)",
+        "requestAnimationFrame render loop driven by THREE.Clock with capped delta",
+        "prefers-reduced-motion matchMedia (drops the breathing term)",
+        "full dispose on unmount (cancel rAF, disconnect ResizeObserver, dispose geometry/material/renderer, remove all listeners)"
+      ]
+    }
   }
 }
