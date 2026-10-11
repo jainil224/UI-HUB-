@@ -1,0 +1,77 @@
+/* pulse-lattice — UI HUB
+   Pure-black stage hosting the WebGL hex lattice. The orbit HUD and the hint line are
+   anchored to the component container (not the viewport) so they stay inside a library
+   card or the demo stage. */
+
+.pl-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  overflow: hidden;
+  background: #000;
+  color-scheme: dark;
+  touch-action: none;
+}
+
+.pl-root.pl-compact {
+  min-height: 0;
+}
+
+.pl-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.pl-canvas.drag {
+  cursor: grabbing;
+}
+
+.pl-hud {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(10, 10, 30, 0.55);
+  border: 1px solid rgba(90, 120, 255, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.pl-hud button {
+  all: unset;
+  cursor: pointer;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  color: #b9c6ff;
+}
+
+.pl-hud button:hover {
+  background: rgba(80, 110, 255, 0.25);
+  color: #fff;
+}
+
+.pl-hint {
+  position: absolute;
+  top: calc(16px + env(safe-area-inset-top, 0px));
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  text-align: center;
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: .04em;
+  color: rgba(160, 180, 255, 0.7);
+  pointer-events: none;
+  transition: opacity 1.2s;
+}

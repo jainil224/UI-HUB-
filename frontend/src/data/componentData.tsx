@@ -128,6 +128,8 @@ const WaveTunnel = React.lazy(() => import('../components/ui/WaveTunnel'));
 const SpiderCrawler = React.lazy(() => import('../components/ui/SpiderCrawler'));
 const LightBeamType = React.lazy(() => import('../components/ui/LightBeamType'));
 const NeonRain = React.lazy(() => import('../components/ui/NeonRain'));
+const VioletCascade = React.lazy(() => import('../components/ui/VioletCascade'));
+const PulseLattice = React.lazy(() => import('../components/ui/PulseLattice'));
 
 
 
@@ -2832,6 +2834,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'spider-crawler': SpiderCrawler,
     'light-beam-type': LightBeamType,
     'neon-rain': NeonRain,
+    'violet-cascade': VioletCascade,
+    'pulse-lattice': PulseLattice,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15493,6 +15497,40 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000102] [&>div]:min-h-0">
                 <NeonRain compact />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Violet Cascade ─────────────────────────────────────
+    {
+        id: "violet-cascade",
+        title: "Violet Cascade",
+        category: "particles-background",
+        addedAt: "2026-10-11",
+        newBadgeDays: 120,
+        description: "A floating violet ring of 21k additive particles spins and cascades downward into a reflective pool of procedural light streaks — the pointer repels the particles, the whole group parallax-tilts toward the cursor, and a click fires a pulse through the beam and the pool surface.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#030305] [&>div]:min-h-0">
+                <VioletCascade compact />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Pulse Lattice ──────────────────────────────────────
+    {
+        id: "pulse-lattice",
+        title: "Pulse Lattice",
+        category: "particles-background",
+        addedAt: "2026-10-11",
+        newBadgeDays: 120,
+        description: "An infinite hexagonal lattice of glowing ribbon edges over pure black, breathing with a central bulge and ring dip and tinted purple → blue → cyan by height — it wakes on hover, drag orbits, the wheel/pinch zooms, clicks drop expanding ripples and double-click resets the view.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000] [&>div]:min-h-0">
+                <PulseLattice compact />
             </div>
         ),
         code: "",
