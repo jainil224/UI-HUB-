@@ -283,7 +283,7 @@ const Navbar = () => {
                     {/* Badge — ALWAYS visible directly without hover */}
                     <span className={`flex items-center gap-0.5 px-2.5 py-0.5 rounded-md text-[11px] font-black tracking-wider shrink-0 transition-shadow duration-200 ${
                         isPro
-                            ? 'bg-[#1F4BFF] text-white shadow-[0_0_12px_rgba(31,75,255,0.5)] group-hover:shadow-[0_0_16px_rgba(31,75,255,0.75)]'
+                            ? 'bg-[#FFC700] text-black shadow-[0_0_12px_rgba(255,199,0,0.45)] group-hover:shadow-[0_0_16px_rgba(255,199,0,0.7)]'
                             : planTier === 'custom'
                             ? 'bg-[#06B6D4] text-white shadow-[0_0_12px_rgba(6,182,212,0.5)]'
                             : 'bg-white/[0.12] text-white/90 border border-white/20'
