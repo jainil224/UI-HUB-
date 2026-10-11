@@ -1,0 +1,128 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,800&family=IBM+Plex+Mono:wght@400&display=swap');
+
+/* Layout: pure black stage. A fixture sits just above the top edge; its beam drops to the
+   pointer and only the letters it touches light up. The floor around them stays black. */
+.lbt-stage {
+  --lbt-bg: #000000;
+  --lbt-glow: 175 208 255;
+  --lbt-glow-deep: 110 160 255;
+  --lbt-muted: #5a6275;
+  --lbt-display: "Archivo", "Arial Black", "Helvetica Neue", Arial, sans-serif;
+  --lbt-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  overflow: hidden;
+  background: var(--lbt-bg);
+  color: #eef4ff;
+  touch-action: none;
+  cursor: crosshair;
+  color-scheme: dark;
+  user-select: none;
+  container-type: inline-size;
+}
+
+.lbt-stage.lbt-compact {
+  min-height: 180px;
+}
+
+.lbt-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+
+.lbt-floor {
+  position: absolute;
+  left: 50%;
+  top: 74%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  perspective: 1100px;
+  pointer-events: none;
+}
+
+.lbt-plane {
+  margin: 0;
+  font-family: var(--lbt-display);
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: clamp(2.6rem, 14cqw, 12rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  transform: rotateX(56deg) rotateZ(6deg);
+  transform-style: preserve-3d;
+}
+
+/* --g is how much light reaches this letter: 0 is fully invisible, 1 is full beam.
+   The bloom is built from four stacked text-shadows: a crisp near-white core hugging the
+   glyph, then progressively wider, dimmer blue halos. Because text-shadow traces the glyph
+   outline, the glow appears only on the letters and leaves the surrounding floor pure black. */
+.lbt-ch {
+  --g: 0;
+  display: inline-block;
+  color: rgb(
+    calc(140 + 112 * var(--g))
+    calc(176 + 76 * var(--g))
+    calc(232 + 23 * var(--g))
+    / calc(0.99 * var(--g))
+  );
+  text-shadow:
+    0 0 calc(1px + 5px * var(--g)) rgb(238 245 255 / calc(0.95 * var(--g))),
+    0 0 calc(4px + 13px * var(--g)) rgb(var(--lbt-glow) / calc(0.8 * var(--g) * var(--g))),
+    0 0 calc(11px + 27px * var(--g)) rgb(var(--lbt-glow) / calc(0.55 * var(--g) * var(--g))),
+    0 0 calc(24px + 46px * var(--g)) rgb(var(--lbt-glow-deep) / calc(0.42 * var(--g) * var(--g) * var(--g)));
+}
+
+.lbt-gap {
+  display: inline-block;
+  width: 0.34em;
+}
+
+.lbt-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.6s ease;
+}
+
+.lbt-word {
+  font-family: var(--lbt-display);
+  font-weight: 800;
+  font-stretch: 125%;
+  font-size: clamp(1.4rem, 4cqw, 2.6rem);
+  letter-spacing: 0.3em;
+  padding-left: 0.3em;
+  text-transform: uppercase;
+  color: rgb(205 220 250 / 0.6);
+  animation: lbt-breathe 3.2s ease-in-out infinite;
+}
+
+@keyframes lbt-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lbt-word {
+    animation: none;
+  }
+}
+
+.lbt-stage.lbt-on .lbt-hint {
+  opacity: 0;
+}

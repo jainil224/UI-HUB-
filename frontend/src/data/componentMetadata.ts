@@ -1756,6 +1756,41 @@ requirements: ["Canvas 2D", "requestAnimationFrame loop", "ResizeObserver", "Int
         }
     },
 
+    "light-beam-type": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional class applied to the root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for the root container." },
+            { name: "compact", type: "boolean", default: "false", description: "When true (library preview), uses compact sizing (min-height 180px)." },
+            { name: "text", type: "string", default: '"UI HUB"', description: "The word shown on the floor. Characters light up as the beam sweeps over them; spaces become gaps." },
+            { name: "hint", type: "string", default: '"Hover"', description: "The hint word shown centered before the beam is aimed." }
+        ],
+        vibeMeta: {
+            behavior: "A text animation on a pure black stage. A light fixture sits just above the top edge (ax = W*0.38, ay = -H*0.03); on pointer activity its lamp warms up (I += (want-I)*(1-exp(-(want?5:1.6)*dt))) and the beam drops from the fixture to an aim point with a cubic ease (P clamps 0..1 over 0.5s, Pe = ease(P) = 1-(1-P)^3). The aim point is a spring with weight: aimT.x = clamp(pointerX, uL-rx*0.25, uR+rx*0.25), aimT.y = uCy + clamp((pointerY-uCy)/(H*0.5),-1,1)*ry*0.7, integrated in 3 substeps (accel (aimT-aim)*60, damp exp(-9*h)) for a little overshoot. Letters are read from the DOM (.lbt-ch) with getBoundingClientRect; the row bounds give uL/uR/uW, and rx = clamp(uW*0.22, 70, 240), ry = rx*0.55. Each letter's light is g = (1 - hypot((cx-aimX)/rx,(cy-aimY)/ry))*1.5 clamped 0..1, then smoothstepped g*g*(3-2g) and scaled by Ie*reach where reach = clamp((Pe-0.75)/0.25,0,1) so letters only light once the beam reaches the floor. Per letter --g drives a color ramp of rgb and a four-layer text-shadow bloom (a crisp near-white core hugging the glyph plus progressively wider, dimmer blue halos) so the glow traces only the letters. The canvas draws a cone haze (linear gradient), 36 light streaks with per-streak jitter/flicker/edge falloff, 80 drifting dust motes that advance along the beam, and a radial glow at the fixture, all under globalCompositeOperation 'lighter'. The hint word hides (.lbt-on) while the pointer is active.",
+            states: { from: "black stage with the breathing 'Hover' hint and dark letters", to: "the beam down at the pointer with the touched letters glowing blue-white and dust drifting in the cone" },
+            cssProperties: ["relative full-bleed .lbt-stage, black background, min-height 480px (compact 180px), cursor crosshair, touch-action none, container-type inline-size", "@import Archivo + IBM Plex Mono", ".lbt-plane rotateX(56deg) rotateZ(6deg) perspective 1100px, clamp(2.6rem,14cqw,12rem)", ".lbt-ch --g variable driving rgb() color and a four-layer text-shadow bloom (near-white core + wide blue halos)", ".lbt-gap 0.34em inline gap", ".lbt-hint breathing hint fading via .lbt-on", ".lbt-canvas absolute inset 0, blur(0.5px), pointer-events none"],
+            description: "A volumetric light beam drops from a fixture above the stage to your pointer and lights only the letters it touches — spring-weighted aim, cone haze, 36 flickering light streaks, 80 drifting dust motes, a warm-up flicker and a radial fixture glow over a pure black floor.",
+            libraries: ["react"],
+            requirements: ["2D Canvas 2D context (devicePixelRatio up to 2)", "requestAnimationFrame loop with dt clamped to 0.05s", "Pointer listeners (pointermove/pointerdown/pointerleave/pointercancel) on the stage", "ResizeObserver on the stage + window resize", "getBoundingClientRect per letter per frame to build the text row bounds", "CSS custom property --g written per letter for lighting", "globalCompositeOperation 'lighter' for additive beams and dust", "prefers-reduced-motion matchMedia (snaps aim, freezes flicker/motes and hint breathing, fast beam drop)"]
+        }
+    },
+
+    "neon-rain": {
+        props: [
+            { name: "className", type: "string", default: '""', description: "Optional class applied to the root container." },
+            { name: "style", type: "React.CSSProperties", default: "{}", description: "Optional inline styles for the root container." },
+            { name: "compact", type: "boolean", default: "false", description: "When true (library preview), fills a compact card instead of a full viewport." },
+            { name: "hint", type: "string", default: '"Move the cursor · click to pulse"', description: "Hint line shown briefly on mount." }
+        ],
+        vibeMeta: {
+            behavior: "A single WebGL scene on a pure black (#000102) stage with one shared uniform block and additive blending (depthTest/depthWrite off). Three layers: (1) a full-screen floor-glow quad (PlaneGeometry 2x2, renderOrder 0) whose fragment shader reads gl_FragCoord to build neon-cyan columns — per-column height hh1 = (14 + 150*pow(h1(floor(x)),3)) * boost with slow sin flicker fl1, plus medium (floor(x/3)) and wide (floor(x/9)) height columns, a vertical falloff base = (0.72*exp(-b/34) + 0.3*exp(-b/95)) * bandNoise, a pointer glow band fm = exp(-((x-mx)/130)^2)*uActive and a click shockwave ring = exp(-((|x-pulseX| - age*380)/34)^2)*exp(-age*1.8); (2) ~175 instanced streaks (InstancedBufferGeometry from a 1x1 PlaneGeometry, renderOrder 1) that fall with head = mod(phase*travel + speed*uSc*uTime, travel) and a power(2.3) tail fading from vec3(0,.5,.72) to vec3(0,.92,1) with a white head; (3) ~900 additive Points sparkles (renderOrder 2) with a twinkle = 0.72 + 0.28*sin(uTime*7 + seed*40) and a palette of 5 neon blues/cyans. Streak/dot counts scale with area/(580*580) (streaks capped 900, dots capped 4000) and uSc = max(0.6, h/580) so the look matches the 580px reference. Pointer: everything pushed along sign(d.x) with exp(-|d|^2/r^2)*uActive (r = 150*uSc for streaks, *0.9 for dots) plus a velocity sway; the pointer is spring-smoothed each frame (k=140, damping 2*sqrt(k*0.6)*0.85, mass 0.6) and a pointerdown pulses the floor ring at that x. prefers-reduced-motion runs the clock at 0.2x.",
+            states: { from: "black stage with a faint neon-cyan floor hum and the hint line", to: "a full neon downpour: 175 cyan streaks + 900 sparkles swirling away from the pointer over a pulsing floodlit floor" },
+            cssProperties: ["position: relative full-bleed container, background #000102, overflow hidden, cursor crosshair, touch-action none", "opacity 0 -> 1 fade-in over 1.6s cubic-bezier(.22,1,.36,1) applied via an .nr-on class", "absolute inset-0 canvas sized by ResizeObserver on the container", "monospace .nr-hint line at top center fading in at 1.2s and out at 6s", "devicePixelRatio capped at 2"],
+            description: "A neon downpour of additive light-trail rain over infinite depth: 175 glowing cyan streaks plus ~900 twinkling sparkles above a weighted neon-cyan floor that hums in flickering columns, with pointer swirl/repulsion, a spring-smoothed pointer and a click shockwave ring across the floor.",
+            libraries: ["react", "three"],
+            requirements: ["Three.js WebGLRenderer + ShaderMaterial with custom GLSL", "InstancedBufferGeometry + InstancedBufferAttribute for streaks, Points + BufferGeometry for sparkles", "AdditiveBlending with depthTest/depthWrite disabled", "ResizeObserver on the container (rebuilds geometry per resize)", "requestAnimationFrame render loop with capped delta", "pointermove / pointerdown / pointerleave / pointercancel listeners on the container with getBoundingClientRect-local coordinates", "spring-smoothed pointer integrator", "prefers-reduced-motion matchMedia (0.2x time scale)", "full dispose on unmount (cancel rAF, disconnect ResizeObserver, dispose geometries/materials/renderer)"]
+        }
+    },
+
 };
 
 

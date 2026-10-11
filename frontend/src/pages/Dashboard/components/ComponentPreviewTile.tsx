@@ -27,7 +27,7 @@ const ComponentPreviewTile = ({ item, className = '' }: ComponentPreviewTileProp
         );
     }
 
-    const natural = NATURAL_SIZE_CATEGORIES.has(item.category);
+    const natural = NATURAL_SIZE_CATEGORIES.has(item.category) && !item.isFullBleed;
 
     return (
         <div className={`relative overflow-hidden bg-neutral-950 pointer-events-none ${className}`}>

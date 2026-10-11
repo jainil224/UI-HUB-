@@ -37,7 +37,7 @@ interface HoverPreviewPopoverProps {
 }
 
 export default function HoverPreviewPopover({ item, rect, onClose }: HoverPreviewPopoverProps) {
-    const natural = NATURAL_SIZE_CATEGORIES.has(item.category);
+    const natural = NATURAL_SIZE_CATEGORIES.has(item.category) && !item.isFullBleed;
 
     let left = rect.right + GAP;
     if (left + CARD_WIDTH > window.innerWidth - GAP) {

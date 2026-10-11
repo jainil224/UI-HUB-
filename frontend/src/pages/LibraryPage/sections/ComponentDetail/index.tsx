@@ -2176,7 +2176,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                         componentId={item.id}
                                         onReset={() => setResetKey(k => k + 1)}
                                     >
-                                        <div className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'} ${item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction' ? 'p-6 md:p-12' : ''}`}>
+                                        <div className={`w-full ${item.category === 'footer' || isFullscreen ? 'min-h-full' : 'h-full flex items-center justify-center'} ${(item.category === 'button' || item.category === 'text' || item.category === 'effect' || item.category === 'image-interaction') && !item.isFullBleed ? 'p-6 md:p-12' : ''}`}>
                                             <React.Suspense fallback={<PreviewSkeleton />}>
                                                 <motion.div
                                                     key={`preview-${item.id}-${resetKey}`}

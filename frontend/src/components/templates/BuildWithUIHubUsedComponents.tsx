@@ -19,6 +19,7 @@ interface UsedComponent {
     description: string;
     preview?: (props?: any) => React.ReactNode;
     imageUrl?: string;
+    isFullBleed?: boolean;
 }
 
 interface BuildWithUIHubUsedComponentsProps {
@@ -117,6 +118,7 @@ function useCatalogComponents(componentIds: string[]): {
                     description: item.description ?? '',
                     preview: item.preview,
                     imageUrl: item.imageUrl,
+                    isFullBleed: item.isFullBleed,
                 }));
             setComponents(resolved);
             setIsLoading(false);
@@ -174,7 +176,7 @@ const BuildWithUIHubUsedComponents: React.FC<BuildWithUIHubUsedComponentsProps> 
                             rawCount !== undefined
                                 ? formatViewCount(rawCount)
                                 : getComponentViewDisplay(component.id);
-                        const natural = NATURAL_SIZE_CATEGORIES.has(component.category);
+                        const natural = NATURAL_SIZE_CATEGORIES.has(component.category) && !component.isFullBleed;
 
                         return (
                             <div

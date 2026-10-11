@@ -126,6 +126,8 @@ const StreakSphere = React.lazy(() => import('../components/ui/StreakSphere'));
 const FeatherSphere = React.lazy(() => import('../components/ui/FeatherSphere'));
 const WaveTunnel = React.lazy(() => import('../components/ui/WaveTunnel'));
 const SpiderCrawler = React.lazy(() => import('../components/ui/SpiderCrawler'));
+const LightBeamType = React.lazy(() => import('../components/ui/LightBeamType'));
+const NeonRain = React.lazy(() => import('../components/ui/NeonRain'));
 
 
 
@@ -2666,6 +2668,10 @@ export type ComponentItem = {
     };
     imageUrl?: string;
     isPremium?: boolean;
+    /** Full-bleed previews (canvas/background-like effects) should fill their
+     * preview container edge-to-edge instead of being inset by the natural-size
+     * padding used for content-sized components. */
+    isFullBleed?: boolean;
     downloadUrl?: string;
     liveUrl?: string;
     /** ISO date the component was added — drives the auto-expiring "NEW" badge. */
@@ -2824,6 +2830,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'feather-sphere': FeatherSphere,
     'wave-tunnel': WaveTunnel,
     'spider-crawler': SpiderCrawler,
+    'light-beam-type': LightBeamType,
+    'neon-rain': NeonRain,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15454,6 +15462,41 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: renderComponent("spider-crawler", "SpiderCrawler", { compact: true }),
         code: "import { SpiderCrawler } from '@/components/ui/SpiderCrawler';\n\nexport default function Demo() {\n  return (\n    <div className=\"w-full h-[600px] bg-black rounded-3xl overflow-hidden\">\n      <SpiderCrawler compact />\n    </div>\n  );\n}",
         vibePrompt: "Cursor-category Spider Crawler: 8-leg two-bone IK, tetrapod gait, seeded RNG, endless reference scroll, nearest-word tracking, pointer-follow critically damped, wheel+keys+edge scroll wrap, canvas glitch+glow, OrthographicCamera with head, SVG cursor after first move, REDUCED motion, ResizeObserver sizing from root with wheel preventDefault.",
+    },
+
+    // ── Light Beam Type ─────────────────────────────────────
+    {
+        id: "light-beam-type",
+        title: "Light Beam Type",
+        category: "text",
+        isFullBleed: true,
+        addedAt: "2026-10-11",
+        newBadgeDays: 120,
+        description: "A fixture above the stage drops a volumetric light beam to your pointer and only the letters it touches light up — spring-weighted aim, cone haze, drifting dust motes, a warm-up flicker, and a black floor that keeps the rest of the type dark.",
+        preview: () => (
+            <div className="absolute inset-0 bg-black overflow-hidden">
+                <LightBeamType compact />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Neon Rain ──────────────────────────────────────────
+    {
+        id: "neon-rain",
+        title: "Neon Rain",
+        category: "particles-background",
+        addedAt: "2026-10-11",
+        newBadgeDays: 120,
+        description: "A WebGL downpour of additive neon-cyan light-trail streaks falling over infinite depth, trailed by ~900 twinkling sparkles above a weighted neon floor that hums in flickering columns — the pointer swirls and pushes the rain and lights a soft glow band, and a click fires an expanding shockwave ring across the floor.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000102] [&>div]:min-h-0">
+                <NeonRain compact />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
     },
 
 ];

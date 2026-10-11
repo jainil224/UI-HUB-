@@ -101,9 +101,10 @@ const DemoPage: React.FC = () => {
         );
     }
 
-    const isCenteredCategory = componentItem.category === 'button' || 
+    const isCenteredCategory = !componentItem.isFullBleed && (
+                               componentItem.category === 'button' || 
                                componentItem.category === 'text' || 
-                               componentItem.category === 'effect';
+                               componentItem.category === 'effect');
 
     const isScrollable = (componentItem.category as string) === 'footer' || 
                          (componentItem.category as string) === 'navbar' || 

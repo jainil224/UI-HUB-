@@ -275,9 +275,15 @@ const FavoritesPage = () => {
 
                                                     {comp?.preview ? (
                                                         <div className="absolute inset-0 w-full h-full favorites-preview">
-                                                            <div className="w-full h-full flex items-center justify-center transform scale-[0.65] origin-center relative pointer-events-none transition-transform duration-300 group-hover:scale-[0.7]">
-                                                                {comp.preview()}
-                                                            </div>
+                                                            {comp.isFullBleed ? (
+                                                                <div className="w-full h-full relative pointer-events-none">
+                                                                    {comp.preview()}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="w-full h-full flex items-center justify-center transform scale-[0.65] origin-center relative pointer-events-none transition-transform duration-300 group-hover:scale-[0.7]">
+                                                                    {comp.preview()}
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     ) : (
                                                         <div className="flex flex-col items-center gap-3 z-10">
