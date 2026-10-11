@@ -129,7 +129,7 @@ describe('template view API client', () => {
         expect(result.viewRecorded).toBe(true);
         expect(body.templateId).toBe('mood-hero');
         expect(body.sessionId).toBe(getViewSessionId());
-        expect(body.viewerId).toBe(getViewerId());
+        expect(body.viewerId).toBe(`a:${getViewerId()}`);
         expect(request?.headers).not.toHaveProperty('Authorization');
         expect(getTemplateViewCount('mood-hero')).toBe(3913);
     });
@@ -161,7 +161,7 @@ describe('template view API client', () => {
 
         const [, request] = vi.mocked(fetch).mock.calls[0];
         expect(request?.headers).not.toHaveProperty('Authorization');
-        expect(JSON.parse(String(request?.body)).viewerId).toBe(getViewerId());
+        expect(JSON.parse(String(request?.body)).viewerId).toBe(`a:${getViewerId()}`);
         expect(getTemplateViewCount('mood-hero')).toBe(3914);
         warn.mockRestore();
     });
@@ -193,7 +193,7 @@ describe('template view API client', () => {
 
         expect(result.componentId).toBe('target-cursor');
         expect(body).toMatchObject({ type: 'component', componentId: 'target-cursor' });
-        expect(body.viewerId).toBe(getViewerId());
+        expect(body.viewerId).toBe(`a:${getViewerId()}`);
         expect(request?.headers).not.toHaveProperty('Authorization');
         expect(getComponentViewCount('target-cursor')).toBe(7);
         expect(getComponentViewAccessibleLabel('target-cursor')).toBe('7 views');

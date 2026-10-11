@@ -273,7 +273,9 @@ const recordView = async (
             const response = await fetch(`${API_BASE}/api/v1/templates/views`, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ type, [idField]: itemId, sessionId, viewerId }),
+                // The backend treats the `a:` prefix as the anonymous authority
+                // marker; a bare UUID is rejected as an invalid viewer id.
+                body: JSON.stringify({ type, [idField]: itemId, sessionId, viewerId: `a:${viewerId}` }),
             });
             if (!response.ok) throw new Error(`Template view request failed (${response.status})`);
 
