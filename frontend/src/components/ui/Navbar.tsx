@@ -263,16 +263,20 @@ const Navbar = () => {
                 <Link to="/favorites" title="Profile"
                     className="flex items-center gap-2.5 px-2.5 py-1 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/20 transition-all duration-200 group">
 
-                    {/* Avatar — blue ring glow + green online dot ALWAYS visible */}
+                    {/* Avatar — yellow ring for PRO (blue for standard) + green online dot ALWAYS visible */}
                     <div className="relative shrink-0">
-                        <div className="w-8 h-8 rounded-full border-2 border-[#1F4BFF] shadow-[0_0_12px_rgba(31,75,255,0.45)] overflow-hidden transition-all duration-200 group-hover:shadow-[0_0_16px_rgba(31,75,255,0.7)]">
+                        <div className={`w-8 h-8 rounded-full border-2 overflow-hidden transition-all duration-200 ${
+                            isPro
+                                ? 'border-[#FFC700] shadow-[0_0_10px_rgba(255,199,0,0.45)] group-hover:shadow-[0_0_14px_rgba(255,199,0,0.7)]'
+                                : 'border-[#1F4BFF] shadow-[0_0_10px_rgba(31,75,255,0.45)] group-hover:shadow-[0_0_14px_rgba(31,75,255,0.7)]'
+                        }`}>
                             {user.photoURL
                                 ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
-                                : <div className="w-full h-full bg-[#1F4BFF] flex items-center justify-center"><UserIcon size={13} className="text-white" /></div>
+                                : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={13} /></div>
                             }
                         </div>
                         {/* Green online dot badge */}
-                        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#22C55E] border-2 border-[#09090f] shadow-[0_0_6px_rgba(34,197,94,0.8)]" />
+                        <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#22C55E] border-2 border-[#09090f] shadow-[0_0_4px_rgba(34,197,94,0.6)]" />
                     </div>
 
                     {/* Name — prominent and crisp */}
@@ -419,8 +423,12 @@ const Navbar = () => {
                         {/* Avatar + hamburger */}
                         <div className="flex items-center gap-1.5 shrink-0">
                             {user ? (
-                                <Link to="/favorites" aria-label="Profile" className="w-8 h-8 rounded-full border-2 border-[#1F4BFF] shadow-[0_0_10px_rgba(31,75,255,0.45)] overflow-hidden">
-                                    {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-[#1F4BFF] flex items-center justify-center"><UserIcon size={13} className="text-white" /></div>}
+                                <Link to="/favorites" aria-label="Profile" className={`w-8 h-8 rounded-full border-2 overflow-hidden ${
+                                    isPro
+                                        ? 'border-[#FFC700] shadow-[0_0_10px_rgba(255,199,0,0.45)]'
+                                        : 'border-[#1F4BFF] shadow-[0_0_10px_rgba(31,75,255,0.45)]'
+                                }`}>
+                                    {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={13} /></div>}
                                 </Link>
                             ) : (
                                 <Link to="/login" className="px-2.5 py-1.5 rounded-md text-[11px] font-semibold text-white/55 bg-white/[0.05] border border-white/[0.07]">Sign in</Link>
@@ -447,8 +455,10 @@ const Navbar = () => {
                                     {user && (
                                         <Link to="/favorites" onClick={() => setIsOpen(false)} className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.04] border border-white/[0.06] mb-1.5">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full border border-white/[0.12] overflow-hidden shrink-0">
-                                                    {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full bg-[#1F4BFF] flex items-center justify-center"><UserIcon size={15} className="text-white" /></div>}
+                                                <div className={`w-9 h-9 rounded-full border-2 overflow-hidden shrink-0 ${
+                                                    isPro ? 'border-[#FFC700]' : 'border-white/[0.12]'
+                                                }`}>
+                                                    {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={15} /></div>}
                                                 </div>
                                                 <div>
                                                     <p className="text-[13px] font-black text-white/90 uppercase tracking-wider">{user.displayName || 'User'}</p>
