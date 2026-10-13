@@ -6502,5 +6502,134 @@
         "full dispose on unmount (cancel rAF, disconnect ResizeObserver, dispose geometry/material/renderer, remove all listeners)"
       ]
     }
+  },
+  "liquid-glass-orb": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "showHint",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to show the bottom interaction hint."
+      },
+      {
+        "name": "hintText",
+        "type": "string",
+        "default": "\"move your cursor\"",
+        "description": "Text for the interaction hint."
+      },
+      {
+        "name": "interactive",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether the pointer warps and lights the orb."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A raw-WebGL fragment shader paints the full 500x500 field (glass dome + top-lit halo) on a near-black #01020a stage. The field is a five-layer warp loop (warp() adds sin/cos offsets of amplitude 0.62/fi for fi = 1..5) fed into a two-term interference field; the dome samples that field on a sphere normal (n.xy * 2.7 + (0,0.3)) and derives a numeric gradient (finite difference e = 0.02) that tilts the shaded normal, so the surface churns like liquid. Shading mixes a dark-to-blue gradient-lit dome by pow(diff,1.25), adds a fresnel blue rim and an iridescent thin-film sheen (cos of the field phase + N.L) weighted by the gradient magnitude, plus a white specular (exponent 22). The animation clock runs a seamless 5.76s loop (uA = t/DUR * 2PI) driving the warp layers and a traveling ripple term. The 500x500 buffer is contain-fitted to its stage by a ResizeObserver (largest axis-aligned square that fits — never cropped or stretched), so the full orb is always visible inside any preview box. The pointer (mouse and touch, scoped to the canvas) sets a target bump centre (px-250)/157 and -(py-232)/157 in orb space, eased by 0.2 per frame, and a hover amount eased by 0.09 that grows a gaussian bump (exp(-dd*5)) in the surface, adds a rippling specular catch and brightens the halo and rim; on pointer leave the hover eases back to rest.",
+      "states": {
+        "from": "a resting glass orb on near-black with a soft top-lit blue halo and slowly churning liquid refraction",
+        "to": "the pointer pressed into the surface as a soft bump with a rippling specular catch and a brightened halo"
+      },
+      "cssProperties": [
+        "relative full-bleed root, min-height 380px, background #01020a, overflow hidden, flex centered",
+        "absolute inset-0 stage flex-centered",
+        "block canvas, intrinsic 500x500 buffer, CSS contain-fitted to the stage by ResizeObserver (largest square, never cropped or stretched)",
+        "touch-action none, crosshair cursor, and full mouse + touch pointer handling when interactive",
+        "absolute bottom interaction hint, uppercase tracking, safe-area padding, pointer-events none",
+        "requestAnimationFrame render loop with a seamless 5.76s clock"
+      ],
+      "description": "A raw-WebGL liquid glass orb: five stacked warp layers bend a warped-noise refraction field into a churning iridescent glass dome under a top-lit blue halo, and the pointer drags a soft gaussian bump through the surface that ripples the refraction and steers the light.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Raw WebGL1 context (no library) with a vertex + fragment GLSL program",
+        "custom fragment shader with a 5-iteration warp loop and finite-difference field gradient",
+        "TRIANGLE_STRIP full-screen quad (attribute vec2 a)",
+        "requestAnimationFrame loop with a seamless 5.76s clock",
+        "Pointer Events (mouse + touch: pointermove/pointerleave/pointercancel plus touchmove/touchend/touchcancel, passive) scoped to the component canvas with getBoundingClientRect-local coordinates",
+        "linear easing of the bump centre (0.2) and hover amount (0.09) per frame",
+        "ResizeObserver contain-fits the 500x500 buffer inside the stage (largest axis-aligned square, never cropped or stretched)",
+        "graceful 2D-canvas radial-gradient fallback when WebGL is unavailable",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, delete program, WEBGL_lose_context)"
+      ]
+    }
+  },
+  "comet-trail": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "showHint",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to show the bottom interaction hint."
+      },
+      {
+        "name": "hintText",
+        "type": "string",
+        "default": "\"Move to scatter the tail · click or tap for a shockwave\"",
+        "description": "Text for the interaction hint."
+      },
+      {
+        "name": "interactive",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether the pointer scatters the tail/stars and clicks fire a shockwave."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single Canvas 2D scene on pure black, deterministic via a seeded mulberry32 RNG and periodic over a seamless 4.56 s loop (f = t * (1000/30), 152 frames). Painter order is stars → tail → head → cursor. Star field: ~805 stars in three depth layers (450/300/55) live in a periodic (u along drift, v across) field of length LU 860; per frame u = ((u0 + j*LU*t/DUR) % LU) - LU/2 and each star sits at (280 + u*SD + v*SP - FX.px*j*7, 280 + u*SD.y + v*SP.y - FX.py*j*7), so nearer layers (larger j, r and alpha) scroll faster (~190/380/570 px/s) and parallax more; twinkle alpha = a * (0.78 + 0.22*sin(2π*(k*t/DUR + ph))). Tail: 3200 dots plus 10 grey debris specks flow along a 34° axis (distance travelled u = (u0 + 2*LT*t/DUR) % LT, LT 547 → ~240 px/s); lateral Gaussian offset widens with distance (z*(2.4 + 0.075*u)) plus a per-dot sine wobble; colour is lerped through COLOR_STOPS from cyan (40,180,235) through (1,153,214)@90 to indigo (25,23,211)@330+, and dots fade in over the first 14 px. Head: fixed at (271,286), a radial gradient from white → cyan → deep blue → black drawn with globalCompositeOperation 'lighter', radius 72*(1 + 0.3*prox + 0.7*flare) so it swells near the pointer and flares on a click, plus a hard white core of radius 2.3*(1 + 0.6*flare). Interaction: the pointer (mouse or touch via Pointer Events) eases sx,sy toward a target (k = 1 - e^(-dt*12)) and a 0..1 activity (k = 1 - e^(-dt*5)) drives a 95 px repulsion with quadratic falloff (q² * 42) on both tail and stars and a ±(sx/W-0.5)*2 parallax; a click/tap pushes a shockwave {x,y,t0} onto FX.waves (max 5) so rings expand at 340 px/s, gaussian-shove nearby points (exp(-e²)*exp(-age*2.2)*34) for 1.6 s, and a small cyan ring cursor plus a dashed repulsion circle are stroked.",
+      "states": {
+        "from": "a resting blue comet on pure black with a still star field and a faint hint",
+        "to": "the pointer scattering the tail and stars within a soft radius, the head swelling, and a click firing an expanding cyan shockwave ring"
+      },
+      "cssProperties": [
+        "relative full-bleed root, min-height 380px, background #000, overflow hidden, flex centered",
+        "absolute inset-0 stage flex-centered",
+        "block canvas, intrinsic 560x560 buffer, CSS cover-fitted to the stage by ResizeObserver (scaled by the larger axis to fill the box edge-to-edge, overflow centred and cropped, never stretched)",
+        "touch-action none and a hidden system cursor (a ring cursor is drawn when interactive)",
+        "absolute bottom interaction hint, uppercase tracking, safe-area padding, pointer-events none, fades on first contact",
+        "requestAnimationFrame render loop with a seamless 4.56s clock at 33.3 fps"
+      ],
+      "description": "A blue comet drifting through pure-black space: a fixed white head inside a wide additive cyan-to-deep-blue halo trails 3,200 distance-faded dots along a 34° axis, an 800-star three-layer field drifts and twinkles, the pointer scatters particles and stars within a soft 95px radius with parallax, and a click fires an expanding shockwave that flares the head.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D context (no library)",
+        "seeded deterministic RNG (mulberry32) for the star field and tail layout",
+        "periodic, seamless 4.56s / 33.3 fps clock (152 frames)",
+        "additive (globalCompositeOperation 'lighter') radial-gradient comet head",
+        "per-frame gaussian repulsion + expanding click shockwaves over particles and stars",
+        "Pointer Events (mouse + touch: pointermove/pointerdown/pointerleave/pointercancel) scoped to the component canvas with getBoundingClientRect-local coordinates",
+        "eased pointer position and activity (1 - e^(-dt*12) / 1 - e^(-dt*5)) and canvas parallax",
+        "ResizeObserver cover-fits the 560x560 buffer to the stage (scaled by the larger axis to fill the box edge-to-edge, overflow centred and cropped, never stretched)",
+        "prefers-reduced-motion matchMedia (parks the loop clock; the scene still responds to the pointer)",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, clear the hint timeout)"
+      ]
+    }
   }
 }

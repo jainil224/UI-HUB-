@@ -232,7 +232,9 @@ const CATEGORY_MAP: Record<string, string> = {
   "neon-rain": "particles-background",
   "violet-cascade": "particles-background",
   "pulse-lattice": "particles-background",
-  "atelier-drift": "image-interaction"
+  "atelier-drift": "image-interaction",
+  "liquid-glass-orb": "interactive-background",
+  "comet-trail": "particles-background"
 };
 
 // id -> common dependencies
@@ -390,6 +392,8 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'violet-cascade': ["react","three"],
   'pulse-lattice': ["react","three"],
   'atelier-drift': ["react","framer-motion"],
+  'liquid-glass-orb': ["react","three","@react-three/fiber","@react-three/drei"],
+  'comet-trail': ["react","three"],
 };
 
 function humanizeId(id: string): string {
