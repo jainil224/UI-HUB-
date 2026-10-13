@@ -129,6 +129,8 @@ const LightBeamType = React.lazy(() => import('../components/ui/LightBeamType'))
 const NeonRain = React.lazy(() => import('../components/ui/NeonRain'));
 const VioletCascade = React.lazy(() => import('../components/ui/VioletCascade'));
 const PulseLattice = React.lazy(() => import('../components/ui/PulseLattice'));
+const LiquidGlassOrb = React.lazy(() => import('../components/ui/LiquidGlassOrb'));
+const CometTrail = React.lazy(() => import('../components/ui/CometTrail'));
 
 
 
@@ -2836,6 +2838,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'neon-rain': NeonRain,
     'violet-cascade': VioletCascade,
     'pulse-lattice': PulseLattice,
+    'liquid-glass-orb': LiquidGlassOrb,
+'comet-trail': CometTrail,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15471,6 +15475,40 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#f6f6f3] [&>div]:min-h-0">
                 <AtelierDrift compact showDemoButton />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Liquid Glass Orb ───────────────────────────────────
+    {
+        id: "liquid-glass-orb",
+        title: "Liquid Glass Orb",
+        category: "interactive-background",
+        addedAt: "2026-10-13",
+        newBadgeDays: 120,
+        description: "A raw-WebGL liquid glass orb: a five-layer warped-noise refraction field renders an iridescent glass dome under a top-lit blue halo, and the pointer drags a soft gaussian bump through the surface that ripples the refraction and steers the specular light.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#01020a] [&>div]:min-h-0">
+                <LiquidGlassOrb />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Comet Trail ────────────────────────────────────────
+    {
+        id: "comet-trail",
+        title: "Comet Trail",
+        category: "particles-background",
+        addedAt: "2026-10-13",
+        newBadgeDays: 120,
+        description: "A blue comet drifting through pure-black space: a fixed white head inside a wide additive cyan-to-deep-blue halo trails 3,200 distance-faded dots along a 34° axis, an 800-star three-layer field drifts and twinkles, the pointer scatters particles and stars within a soft 95px radius with parallax, and a click fires an expanding shockwave that flares the head.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000] [&>div]:min-h-0">
+                <CometTrail />
             </div>
         ),
         code: "",
