@@ -44,10 +44,11 @@ const bentoSpecs: BentoSpec[] = [
         frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[160%] h-[170%] flex items-center justify-center',
     },
     {
-        id: 'lizard-cursor',
+        id: 'spider-crawler',
         className: '',
-        // Mini landing page (~400px tall) — zoom out so the whole demo fits the tile
-        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[175%] h-[400px] scale-[0.62] max-sm:scale-[0.55] flex items-center justify-center',
+        // The crawler owns a 720-wide stage and fits itself via its own fit();
+        // give it a 400px-tall window centered in the 240px cell.
+        frame: 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[175%] h-[400px] flex items-center justify-center',
     },
     {
         id: 'point-dna-helix',

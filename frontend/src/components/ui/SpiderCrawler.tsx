@@ -1079,11 +1079,17 @@ export const SpiderCrawler: React.FC<SpiderCrawlerProps> = ({
     };
 
     const onWheel = (e: WheelEvent) => {
+      // Only claim the wheel while the pointer is over the component, so an
+      // embedded preview never traps the page's own scrolling.
+      if (!ptr.in) return;
       wheelImp += e.deltaY / stageScale;
       e.preventDefault();
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
+      // Same guard for the window-level key capture: Arrow/Page keys scroll
+      // this reference list only while the pointer is inside, never page-wide.
+      if (!ptr.in) return;
       const k = {
         ArrowUp: -120,
         ArrowDown: 120,
