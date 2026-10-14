@@ -181,6 +181,7 @@ export default function ComponentPage() {
                 <section
                     aria-label={`${item.title} preview`}
                     className="relative w-full h-[60vh] min-h-[320px] rounded-2xl overflow-hidden border border-white/10 bg-[#0A0B0D]"
+                    style={{ contain: 'paint' }}
                 >
                     <PreviewBoundary>
                         <Suspense

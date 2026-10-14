@@ -83,7 +83,7 @@ export default function HoverPreviewPopover({ item, rect, onClose }: HoverPrevie
                         <span className="text-[8px] uppercase tracking-widest text-neutral-500 font-black">{item.category}</span>
                     </div>
                 </div>
-                <div className="relative overflow-hidden bg-neutral-950" style={{ height: PREVIEW_HEIGHT }}>
+                <div className="relative overflow-hidden bg-neutral-950" style={{ height: PREVIEW_HEIGHT, contain: 'paint' }}>
                     <React.Suspense fallback={<PreviewFallback />}>
                         {natural ? (
                             <div className="w-full h-full flex items-center justify-center p-6">

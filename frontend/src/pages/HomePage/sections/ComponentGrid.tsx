@@ -94,7 +94,7 @@ const BentoCard = ({ spec, comp }: { spec: BentoSpec; comp: BentoComp }) => {
             className={`group relative rounded-xl border-2 border-neutral-800 bg-[#0B0B0D] overflow-hidden cursor-pointer select-none hover:border-white hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_#000000] transition-all duration-200 ${spec.className}`}
         >
             {/* Live preview — cover-fitted so it always fills the tile edge-to-edge */}
-            <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden" style={{ contain: 'paint' }}>
                 {inView ? (
                     <div className={spec.frame ?? DEFAULT_FRAME}>
                         <React.Suspense

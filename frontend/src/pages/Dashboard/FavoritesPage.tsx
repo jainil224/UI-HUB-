@@ -274,7 +274,7 @@ const FavoritesPage = () => {
                                                     <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
 
                                                     {comp?.preview ? (
-                                                        <div className="absolute inset-0 w-full h-full favorites-preview">
+                                                        <div className="absolute inset-0 w-full h-full favorites-preview" style={{ contain: 'paint' }}>
                                                             {comp.isFullBleed ? (
                                                                 <div className="w-full h-full relative pointer-events-none">
                                                                     {comp.preview()}

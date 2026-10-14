@@ -5,6 +5,7 @@
 
 import * as React from "react";
 import { useEffect, useMemo, useRef } from "react";
+import { setNativeCursorHidden } from "../../utils/scopedCursor";
 
 type MagicCursorProps = {
   label?: boolean;
@@ -82,14 +83,11 @@ export function MagicCursor({
     const frameEl = frameRef.current;
     if (!host || !frameEl) return;
 
-    const tag = document.createElement("style");
-    tag.textContent = `*, a, button, [role="button"] { cursor: none !important; }`;
     let cursorHidden = false;
     const hideNativeCursor = (hide: boolean) => {
       if (hide === cursorHidden) return;
       cursorHidden = hide;
-      if (hide) document.head.appendChild(tag);
-      else tag.remove();
+      setNativeCursorHidden(frameEl, hide);
     };
 
     let targetX = -9999;

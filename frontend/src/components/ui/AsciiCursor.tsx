@@ -5,6 +5,7 @@
 
 import * as React from "react";
 import { useEffect, useRef } from "react";
+import { setNativeCursorHidden } from "../../utils/scopedCursor";
 
 const POOL = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]|:;<>,.?/~";
 
@@ -140,14 +141,11 @@ function AsciiCursorBase(props: AsciiCursorProps) {
         // The native cursor is only replaced while the pointer is over this
         // frame — hiding it document-wide would blank it over the whole page
         // for a component that only owns its own section.
-        const previousCursor = document.documentElement.style.cursor;
         let cursorHidden = false;
         const hideNativeCursor = (hide: boolean) => {
             if (hide === cursorHidden) return;
             cursorHidden = hide;
-            document.documentElement.style.cursor = hide
-                ? "none"
-                : previousCursor;
+            setNativeCursorHidden(canvas, hide);
         };
 
         // Tracked on the document, not on the canvas: the canvas passes events

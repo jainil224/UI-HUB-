@@ -1449,6 +1449,7 @@ const CursorPreviewShell: React.FC<{
                 minHeight: '100%',
                 background,
                 overflow: 'hidden',
+                contain: 'paint',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

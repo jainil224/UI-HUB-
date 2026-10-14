@@ -42,6 +42,7 @@ const PreviewCapturePage = () => {
             background: '#0A0A0A',
             overflow: 'hidden',
             position: 'relative',
+            contain: 'paint',
           }}
         >
           {item.preview()}

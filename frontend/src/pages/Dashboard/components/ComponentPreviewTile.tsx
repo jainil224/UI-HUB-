@@ -30,7 +30,10 @@ const ComponentPreviewTile = ({ item, className = '' }: ComponentPreviewTileProp
     const natural = NATURAL_SIZE_CATEGORIES.has(item.category) && !item.isFullBleed;
 
     return (
-        <div className={`relative overflow-hidden bg-neutral-950 pointer-events-none ${className}`}>
+        <div
+            className={`relative overflow-hidden bg-neutral-950 pointer-events-none ${className}`}
+            style={{ contain: 'paint' }}
+        >
             <React.Suspense fallback={<PreviewFallback />}>
                 {natural ? (
                     <div className="w-full h-full flex items-center justify-center p-6">

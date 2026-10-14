@@ -5,6 +5,7 @@
 
 import * as React from "react";
 import { useEffect, useRef } from "react";
+import { setNativeCursorHidden } from "../../utils/scopedCursor";
 
 type Particle = {
     x: number;
@@ -145,14 +146,11 @@ export function ParticleCursor({
         let spawnAcc = 0;
         let pending = false;
 
-        const styleTag = document.createElement("style");
-        styleTag.textContent = `*, a, button, [role="button"] { cursor: none !important; }`;
         let cursorHidden = false;
         const hideNativeCursor = (hide: boolean) => {
             if (hide === cursorHidden) return;
             cursorHidden = hide;
-            if (hide) document.head.appendChild(styleTag);
-            else styleTag.remove();
+            setNativeCursorHidden(canvas, hide);
         };
 
         const onMove = (e: PointerEvent) => {
@@ -272,7 +270,7 @@ export function ParticleCursor({
                 "pointerleave",
                 onWindowLeave
             );
-            styleTag.remove();
+            setNativeCursorHidden(canvas, false);
         };
     }, []);
 
