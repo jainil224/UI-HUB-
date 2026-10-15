@@ -1,0 +1,50 @@
+/* ── FILE: frontend/src/components/ui/MercuryAnimation.css ── */
+
+/* Root fills whatever box it is dropped into (page section, full-screen demo,
+   or a preview tile) so the WebGL canvas can cover it edge to edge. */
+.mercury-root {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    overflow: hidden;
+    background: #03040a;
+    cursor: grab;
+}
+
+.mercury-root:active {
+    cursor: grabbing;
+}
+
+.mercury-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+}
+
+.mercury-canvas.drag {
+    cursor: grabbing;
+}
+
+/* fading loader shown while the surface is forged */
+.mercury-load {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6b7390;
+    font: 500 12px/1.4 ui-monospace, "SFMono-Regular", "Menlo", "Consolas", monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+    z-index: 1;
+}
+
+.mercury-gone {
+    opacity: 0;
+}

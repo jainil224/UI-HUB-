@@ -29,6 +29,7 @@ export const PREMIUM_COMPONENT_IDS = new Set<string>([
   'isometric-portal',
   'lightfall',
   'lizard-cursor',
+  'mercury-animation',
   'moon-animation',
   'morphing-glow',
   'morphing-rings',
