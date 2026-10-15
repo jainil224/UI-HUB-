@@ -1,0 +1,10 @@
+/* SaturnAnimation — minimal overrides */
+.saturn-canvas {
+    display: block;
+    touch-action: none;
+    cursor: grab;
+}
+
+.saturn-canvas.drag {
+    cursor: grabbing;
+}

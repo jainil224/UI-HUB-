@@ -11,7 +11,8 @@ export type CategoryKey =
     | 'miscellaneous' 
     | 'interactive-background' 
     | 'particles-background' 
-    | '3d';
+    | '3d'
+    | 'space';
 
 interface CategoryInfo {
     key: CategoryKey;
@@ -175,6 +176,21 @@ export const CATEGORIES: CategoryInfo[] = [
             '3D Rubiks Cube',
             'Cards Beam',
             'Solar System',
+        ],
+    },
+    {
+        key: 'space',
+        name: 'Space & Planets',
+        tier: 3,
+        tierName: 'PREMIUM',
+        usd: 2.99,
+        inr: 59,
+        count: 2,
+        icon: <Sparkles className="w-4 h-4" />,
+        description: 'Planets, moons & orbital scenes',
+        premiumComponents: [
+            'Moon Animation',
+            'Saturn Animation',
         ],
     },
 ];

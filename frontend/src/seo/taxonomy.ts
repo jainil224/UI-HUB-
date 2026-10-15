@@ -248,6 +248,22 @@ export const CATEGORY_SEO: CategorySeo[] = [
             'Particle backgrounds render tens of thousands of points on the GPU: spheres, halos, fields and constellations that drift, glow and react to the pointer. They are the heaviest components in the library, so each one lists its rendering approach and requirements before you copy it. Use them as hero backdrops, section backgrounds or full-page intros where a static gradient would fall flat.',
         minItemsForIndex: 3,
     },
+    {
+        slug: 'space',
+        label: 'Space & Planets',
+        singular: 'Space Animation',
+        primaryKeyword: 'space animation react',
+        secondaryKeywords: [
+            'planet animation react',
+            'moon animation css',
+            'solar system animation',
+            'space background react',
+            'orbit animation webgl',
+        ],
+        intro:
+            'Celestial components that render real planets, moons and orbital scenes in the browser: procedurally textured spheres, rotating bodies and interactive space backdrops. Each one is built as a self-contained React component with documented props, so you can drop a rotating moon or planet straight into a hero, a section or a full-page intro. Preview it live, then copy the exact source.',
+        minItemsForIndex: 3,
+    },
 ];
 
 export const CATEGORY_BY_SLUG: Record<string, CategorySeo> = Object.fromEntries(

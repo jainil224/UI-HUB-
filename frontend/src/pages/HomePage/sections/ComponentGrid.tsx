@@ -143,7 +143,8 @@ const ComponentGrid = () => {
 
     const bentoComponents = bentoSpecs
         .map(spec => ({ spec, comp: componentList.find(c => c.id === spec.id) }))
-        .filter((item): item is { spec: BentoSpec; comp: BentoComp } => Boolean(item.comp));
+        .filter((item): item is { spec: BentoSpec; comp: BentoComp } =>
+            item.comp !== undefined && item.comp.category !== 'space');
 
     return (
         <section id="explore" className="relative py-24 md:py-32 px-4 sm:px-6 max-w-[1400px] mx-auto w-full bg-brand-bg">

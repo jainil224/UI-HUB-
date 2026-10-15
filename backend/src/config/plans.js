@@ -42,6 +42,7 @@ export const CATEGORY_PRICES = {
   'interactive-background': { name: 'Interactive Backgrounds', usd: 2.99, inr: 59, tier: 3 },
   'particles-background': { name: 'Particles Backgrounds', usd: 2.99, inr: 59, tier: 3 },
   '3d': { name: '3D Components', usd: 2.99, inr: 59, tier: 3 },
+  'space': { name: 'Space & Planets', usd: 2.99, inr: 59, tier: 3 },
 };
 
 export const COMPONENT_PRICE = {

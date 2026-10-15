@@ -131,6 +131,8 @@ const VioletCascade = React.lazy(() => import('../components/ui/VioletCascade'))
 const PulseLattice = React.lazy(() => import('../components/ui/PulseLattice'));
 const LiquidGlassOrb = React.lazy(() => import('../components/ui/LiquidGlassOrb'));
 const CometTrail = React.lazy(() => import('../components/ui/CometTrail'));
+const MoonAnimation = React.lazy(() => import('../components/ui/MoonAnimation'));
+const SaturnAnimation = React.lazy(() => import('../components/ui/SaturnAnimation'));
 
 
 
@@ -2657,7 +2659,7 @@ const AwwwardsNavPreview: React.FC = () => {
 export type ComponentItem = {
     id: string;
     title: string;
-    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "particles-background" | "loader" | "navbar" | "footer" | "form";
+    category: "text" | "effect" | "background" | "button" | "cursor" | "3d" | "custom" | "scroll" | "image-interaction" | "interactive-background" | "particles-background" | "loader" | "navbar" | "footer" | "form" | "space";
     preview: (props?: any) => React.ReactNode;
     code: string;
     vibePrompt: string;
@@ -2840,7 +2842,9 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'violet-cascade': VioletCascade,
     'pulse-lattice': PulseLattice,
     'liquid-glass-orb': LiquidGlassOrb,
-'comet-trail': CometTrail,
+    'comet-trail': CometTrail,
+    'moon-animation': MoonAnimation,
+    'saturn-animation': SaturnAnimation,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15510,6 +15514,42 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000] [&>div]:min-h-0">
                 <CometTrail />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Moon Animation ─────────────────────────────────────
+    {
+        id: "moon-animation",
+        title: "Moon Animation",
+        category: "space",
+        addedAt: "2026-10-15",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A photoreal, fully procedural Moon in a drifting Milky Way. A seeded CPU pass forges a 2048×1024 lunar surface (real near-side maria, ~60 named craters, 11k random craters, bright ray systems) and a raw-WebGL raytraced sphere renders it with Lommel-Seeliger shading, bump-mapped relief, level-of-detail micro-craters, earthshine on the night side and a cursor spotlight. Drag to spin it 360°, scroll to zoom, hover to read feature names and coordinates.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#02030a] [&>div]:min-h-0">
+                <MoonAnimation />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Saturn Animation ───────────────────────────────────
+    {
+        id: "saturn-animation",
+        title: "Saturn Animation",
+        category: "space",
+        addedAt: "2026-10-15",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A cinematic procedural Saturn rendered entirely in Canvas 2D — no WebGL, no libraries. A per-pixel CPU raytrace spins a true oblate sphere with differential rotation, banded albedo, a pale storm oval and a dark spot, limb-darkened and lit from a single direction, while 15,000 ring particles orbit at real Keplerian speeds across C/B/A tone bands with Cassini and Encke gaps, cast the planet's shadow and pass both behind and in front of the planet. A small moon circles on the equatorial plane under a drifting twinkling starfield. Move to offset and roll the scene, drag to boost the spin, click for a ring-sized burst — all closed-form and seekable, honouring prefers-reduced-motion.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000] [&>div]:min-h-0">
+                <SaturnAnimation />
             </div>
         ),
         code: "",

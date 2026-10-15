@@ -1,0 +1,139 @@
+/* MoonAnimation — scoped port of "The Moon" standalone template.
+   The original html/body + fixed full-viewport canvases are scoped to this
+   root container so the component fills whatever box it is placed in. */
+
+.moon-root {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    background: #02030a;
+    overflow: hidden;
+    touch-action: none;
+    cursor: grab;
+    color-scheme: dark;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.moon-root.is-dragging {
+    cursor: grabbing;
+}
+
+.moon-root canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.moon-root .moon-ov {
+    pointer-events: none;
+}
+
+.moon-root .moon-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    min-width: 150px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    color: #dfe9ff;
+    font: 12px/1.45 system-ui, -apple-system, sans-serif;
+    background: rgba(8, 12, 28, 0.72);
+    border: 1px solid rgba(160, 190, 255, 0.28);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
+    transition: opacity 0.18s ease;
+}
+
+.moon-root .moon-label.on {
+    opacity: 1;
+}
+
+.moon-root .moon-label b {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+
+.moon-root .moon-label span {
+    display: block;
+    color: #9fb2dd;
+}
+
+.moon-root .moon-label i {
+    display: block;
+    margin-top: 3px;
+    color: #7fd0ff;
+    font-style: normal;
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+}
+
+.moon-root .moon-loader {
+    position: absolute;
+    inset: 0;
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #a9b7da;
+    font: 14px system-ui, sans-serif;
+    pointer-events: none;
+    transition: opacity 1s ease;
+}
+
+.moon-root .moon-loader.off {
+    opacity: 0;
+}
+
+.moon-root .moon-track {
+    width: 180px;
+    height: 3px;
+    background: rgba(150, 170, 220, 0.18);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.moon-root .moon-bar {
+    width: 0;
+    height: 100%;
+    background: #9fc4ff;
+    transition: width 0.2s;
+}
+
+.moon-root .moon-hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(22px + env(safe-area-inset-bottom, 0px));
+    text-align: center;
+    z-index: 4;
+    color: rgba(190, 205, 240, 0.75);
+    font: 12px system-ui, sans-serif;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    transition: opacity 1.2s;
+    pointer-events: none;
+    padding: 0 12px;
+}
+
+.moon-root .moon-hint.on {
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .moon-root .moon-loader,
+    .moon-root .moon-hint,
+    .moon-root .moon-label {
+        transition: none;
+    }
+}
