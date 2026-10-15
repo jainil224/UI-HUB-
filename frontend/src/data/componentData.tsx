@@ -15566,7 +15566,7 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         addedAt: "2026-10-15",
         newBadgeDays: 120,
         isPremium: true,
-        description: "A realistic, endlessly spinning Mercury globe built with three.js on a full-bleed WebGL canvas — one sphere, nothing else. The surface, relief and glints are forged from scratch in-browser: a seamless 3D-Perlin equirectangular colour map (heavy cratering, pale ray systems, one large pale basin, enhanced-colour blue/gold tinting, polar brightening), a grayscale bump map derived from the colour map's fine detail, a thin blue-gold rim glow, ~170 rayed-crater glints that turn with the planet and 2,400 twinkling background stars. Drag in any direction to turn it a full 360° on both axes with fading momentum, wheel or two-finger pinch to zoom 0.6x-2.2x, double-click to reset and Space to pause.",
+        description: "A realistic, endlessly spinning Mercury globe built with three.js on a full-bleed WebGL canvas — one sphere, nothing else. A photographic 2048x1024 equirectangular colour map and its relief (bump) map wrap a MeshStandardMaterial sphere lit by a single low sun from the upper left, edged with a thin blue-gold rim glow; 170 twinkling glints sit on the brightest crater rays as children of the planet so they turn with it, over 2,400 drifting background stars. Drag in any direction to turn it a full 360° on both axes with fading momentum, wheel or two-finger pinch to zoom 0.6x-2.2x, double-click to reset and Space to pause.",
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#03040a] [&>div]:min-h-0">
                 <MercuryAnimation />
