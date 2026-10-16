@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '../../../../context/ThemeContext';
-import { motion, AnimatePresence, useReducedMotion, useInView, useMotionValue } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion, useMotionValue } from 'motion/react';
 import {
     ChevronLeft, RotateCcw, Eye, Code,
     Check, Copy, Zap, Brain, Heart, ExternalLink, Download, Lock, ChevronDown, ChevronUp,
@@ -1149,9 +1149,29 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
     const [promptCopying, setPromptCopying] = React.useState<AISystem | null>(null);
     const promptMenuRef = React.useRef<HTMLDivElement>(null);
     const previewRef = React.useRef<HTMLDivElement>(null);
+    const [previewNode, setPreviewNode] = React.useState<HTMLDivElement | null>(null);
+    const [previewInView, setPreviewInView] = React.useState(false);
     // Mount the live preview (and its rAF/WebGL loops) only while its frame is
-    // near the viewport, so scrolling past a heavy component stays smooth.
-    const previewInView = useInView(previewRef, { margin: '300px 0px 300px 0px' });
+    // near the viewport, so scrolling past a heavy component stays smooth. The
+    // observer is keyed to the node itself because a tab switch destroys and
+    // recreates the frame; a stable ref would keep watching the detached element
+    // and never re-observe the new one, pinning the preview to the skeleton.
+    React.useEffect(() => {
+        if (!previewNode) {
+            setPreviewInView(false);
+            return;
+        }
+        const observer = new IntersectionObserver(
+            ([entry]) => setPreviewInView(entry.isIntersecting),
+            { rootMargin: '300px 0px 300px 0px' },
+        );
+        observer.observe(previewNode);
+        return () => observer.disconnect();
+    }, [previewNode]);
+    const attachPreviewRef = React.useCallback((node: HTMLDivElement | null) => {
+        previewRef.current = node;
+        setPreviewNode(node);
+    }, []);
     const { user, isPro: isProUser, refreshProStatus, purchasedComponents } = useAuth();
 
     React.useEffect(() => {
@@ -2061,7 +2081,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <Reveal fadeOnly delay={0.05}>
                         <div
                             id="preview"
-                            ref={previewRef}
+                            ref={attachPreviewRef}
                             className={`w-full rounded-xl overflow-hidden flex flex-col bg-brand-surface border-2 border-white brutal-shadow-black ${isFullscreen ? 'fixed inset-0 z-[9999] rounded-none bg-black h-screen' : 'relative h-[420px] sm:h-[480px] md:h-[540px]'}`}
                         >
                             {/* Browser Mockup Top Bar */}
