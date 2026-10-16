@@ -134,6 +134,7 @@ const CometTrail = React.lazy(() => import('../components/ui/CometTrail'));
 const MoonAnimation = React.lazy(() => import('../components/ui/MoonAnimation'));
 const SaturnAnimation = React.lazy(() => import('../components/ui/SaturnAnimation'));
 const MercuryAnimation = React.lazy(() => import('../components/ui/MercuryAnimation'));
+const NeptuneAnimation = React.lazy(() => import('../components/ui/NeptuneAnimation'));
 
 
 
@@ -2847,6 +2848,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'moon-animation': MoonAnimation,
     'saturn-animation': SaturnAnimation,
     'mercury-animation': MercuryAnimation,
+    'neptune-animation': NeptuneAnimation,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15570,6 +15572,24 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#03040a] [&>div]:min-h-0">
                 <MercuryAnimation />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Neptune Animation ──────────────────────────────────
+    {
+        id: "neptune-animation",
+        title: "Neptune Animation",
+        category: "space",
+        addedAt: "2026-10-16",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A fully procedural, endlessly rotating Neptune built on a raw WebGL1 fragment shader — one raytraced sphere, no textures, no libraries. Differential zonal winds band the blue methane deck (equator lags, high latitudes run ahead) while four domain-warped eddies twist the flow, bright cirrus belts brighten cloud tops, and the Great Dark Spot drifts west with bright companion clouds as the Small Dark Spot races south. A pointer-following light leans the planet toward the cursor with parallax stars behind. Drag in any direction to turn it a full 360° with fading momentum, wheel or two-finger pinch to zoom 0.7x-1.8x, double-click to reset, arrow keys to turn and +/- to zoom, and hover a storm for a named callout.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#02040b] [&>div]:min-h-0">
+                <NeptuneAnimation />
             </div>
         ),
         code: "",

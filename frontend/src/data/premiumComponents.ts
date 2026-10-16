@@ -34,6 +34,7 @@ export const PREMIUM_COMPONENT_IDS = new Set<string>([
   'morphing-glow',
   'morphing-rings',
   'mouse-gravity-background',
+  'neptune-animation',
   'particle-sphere',
   'pixel-drift',
   'point-dna-helix',

@@ -520,6 +520,13 @@ void main(){
                     gl.uniform1f(U.uTime, s.time % 100); gl.uniform2f(U.uMouse, s.mx, s.my); gl.uniform1f(U.uHover, s.hover);
                     gl.uniform1f(U.uTint, s.tint); gl.uniform1f(U.uFull, s.full);
                     gl.drawArrays(gl.TRIANGLES, 0, 3);
+                },
+                dispose() {
+                    const shaders = gl.getAttachedShaders(prog) || [];
+                    for (const s of shaders) gl.deleteShader(s);
+                    gl.deleteProgram(prog);
+                    gl.deleteBuffer(buf);
+                    gl.deleteTexture(tex);
                 }
             };
         }
@@ -810,7 +817,7 @@ void main(){
             if (!glCtx) { msg!.textContent = 'WebGL is needed to render the moon.'; return; }
             try { MG = createMoonGL(glCtx, TEXDATA, MOON_TW, MOON_TH); }
             catch (e: any) { msg!.textContent = 'Graphics error: ' + String(e.message).slice(0, 80); return; }
-            if (cancelled) return;
+            if (cancelled) { MG.dispose(); MG = null; return; }
             ready = true; frameT = 0;
             loader!.classList.add('off');
             if (showHint) {
@@ -833,10 +840,11 @@ void main(){
             root.removeEventListener('wheel', onWheel);
             window.removeEventListener('keydown', onKeyDown);
             for (const id of timers) clearTimeout(id);
-            if (glCtx) {
-                const ext = glCtx.getExtension('WEBGL_lose_context');
-                if (ext) ext.loseContext();
-            }
+            /* Release the GPU objects, but NEVER loseContext(): a canvas hands back
+               the same context for its lifetime, so React StrictMode's
+               mount -> cleanup -> mount would reuse a force-lost one and the moon
+               would fail to render (showing the "WebGL is needed" message). */
+            if (MG) { MG.dispose(); MG = null; }
         };
     }, [compact, showHint, hintText]);
 
