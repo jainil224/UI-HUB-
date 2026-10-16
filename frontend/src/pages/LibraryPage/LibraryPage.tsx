@@ -461,7 +461,7 @@ const LibraryPage = () => {
                 </AnimatePresence>
 
                 {/* ── Left Column: Categories & Available Components ── */}
-                <aside ref={leftAsideRef} onScroll={closePreview} className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 md:h-full overflow-y-auto sidebar-scroll border-r-4 border-black bg-brand-surface relative z-30">
+                <aside ref={leftAsideRef} onScroll={closePreview} className="hidden md:flex flex-col w-64 lg:w-72 shrink-0 md:h-full overflow-hidden border-r-4 border-black bg-brand-surface relative z-30">
                     <div className="shrink-0 px-5 pt-5 pb-4 border-b-2 border-neutral-800 space-y-3">
                         <Link to="/" className="flex items-center gap-2 text-neutral-400 hover:text-white">
                             <Home size={12} /> <span className="text-[10px] font-black uppercase tracking-widest">HOME</span>
@@ -471,7 +471,7 @@ const LibraryPage = () => {
                             <span className="text-2xl font-black text-brand-blue">{totalComponents}</span>
                         </div>
                     </div>
-                    <nav className="shrink-0 px-3 py-4 space-y-3" onMouseLeave={closePreview}>
+                    <nav className="flex-1 min-h-0 overflow-y-auto sidebar-scroll px-3 py-4 space-y-3" onMouseLeave={closePreview}>
                         <div className="border border-neutral-800 rounded bg-brand-bg p-2.5">
                             <button onClick={() => setShowUpdates(!showUpdates)} className="w-full flex items-center justify-between text-[10px] uppercase font-black">
                                 <span>Follow Updates</span>
@@ -581,6 +581,19 @@ const LibraryPage = () => {
                             </div>
                         </div>
                     </nav>
+
+                    {/* Pinned Left Sidebar Footer */}
+                    <div className="shrink-0 p-3 border-t-2 border-neutral-800 bg-brand-surface/90">
+                        <div className="flex items-center justify-between px-2.5 py-2 rounded-lg border border-neutral-800 bg-brand-bg text-[10px] font-mono text-neutral-400">
+                            <span className="flex items-center gap-1.5">
+                                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                <span>LIBRARY LIVE</span>
+                            </span>
+                            <span className="text-[9px] uppercase tracking-wider font-black text-brand-blue font-heading">
+                                v2.4
+                            </span>
+                        </div>
+                    </div>
                 </aside>
 
                 {/* ── Middle Column: Playground & Documentation ── */}
@@ -694,6 +707,45 @@ const LibraryPage = () => {
                                 <span>⚡</span>
                                 <span>Pro Access - 30% off: <strong className="text-emerald-400 font-bold font-mono">UIHUB30</strong></span>
                             </div>
+                        </div>
+                    </div>
+
+                    {/* Middle: On This Page Quick Nav (eliminates dead space when reading component details) */}
+                    <div className="w-full shrink-0 rounded-xl border-2 border-neutral-800 bg-brand-surface p-3 text-white brutal-shadow-black">
+                        <div className="flex items-center justify-between mb-2">
+                            <span className="text-[9px] font-mono uppercase tracking-widest text-neutral-400 font-black">
+                                On This Page
+                            </span>
+                            <span className="text-[9px] font-mono text-brand-blue font-bold truncate max-w-[110px]">
+                                {activeDoc ? activeDoc.title : activeComponent.title}
+                            </span>
+                        </div>
+                        <div className="flex flex-col gap-1 text-[11px] font-heading uppercase tracking-wider">
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    if (mainContainerRef.current) {
+                                        mainContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }
+                                }}
+                                className="flex items-center justify-between px-2.5 py-1.5 rounded-md text-left text-neutral-300 hover:text-white hover:bg-neutral-800/80 transition-all cursor-pointer"
+                            >
+                                <span>1. Preview &amp; Playground</span>
+                                <span className="text-brand-yellow font-mono text-[10px]">01</span>
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    const el = document.getElementById('props');
+                                    if (el) {
+                                        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                    }
+                                }}
+                                className="flex items-center justify-between px-2.5 py-1.5 rounded-md text-left text-neutral-300 hover:text-white hover:bg-neutral-800/80 transition-all cursor-pointer"
+                            >
+                                <span>2. Props &amp; Types</span>
+                                <span className="text-brand-blue font-mono text-[10px]">02</span>
+                            </button>
                         </div>
                     </div>
 

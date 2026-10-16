@@ -112,13 +112,15 @@ const AppShell = () => {
 
   return (
     <>
-      <div className={`min-h-[100dvh] flex flex-col overflow-x-clip transition-colors duration-300 ${isDemo
+      <div className={`min-h-[100dvh] flex flex-col overflow-x-clip transition-colors duration-300 ${
+        isLibrary ? 'md:h-[100dvh] md:overflow-hidden' : ''
+      } ${isDemo
           ? 'bg-neutral-950 text-white'
           : theme === 'dark'
             ? 'bg-brand-black text-white selection:bg-brand-green selection:text-black'
             : 'bg-[#CFE6F7] text-[#0A0F14] selection:bg-[#5FA3D6] selection:text-white'
         }`}>
-        <main className="flex-1 flex flex-col">
+        <main className={`flex-1 flex flex-col ${isLibrary ? 'md:h-full md:overflow-hidden min-h-0' : ''}`}>
           <React.Suspense fallback={
             <div className="w-full flex-1 flex flex-col">
               <HeroSkeleton />
@@ -215,7 +217,7 @@ const AppShell = () => {
 
       <TopLoader />
       {!isDemo && !isAdmin && <Navbar />}
-      <ScrollToTop />
+      {!isLibrary && <ScrollToTop />}
             <RouteSeoGuard />
       <CookieBanner />
       <PushNotificationPrompt />
