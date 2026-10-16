@@ -6802,5 +6802,51 @@
         "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, dispose geometries/materials/textures, renderer.dispose + forceContextLoss)"
       ]
     }
+  },
+  "neptune-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single full-bleed raw-WebGL1 canvas raytraces one sphere over a procedural fragment shader — no textures, no libraries. The shader samples a domain-warped cloud deck in the planet frame: four twisting eddies (twist() curls the sampling coords around a point), two-phase differential zonal winds (equator lags, high latitudes run ahead, capped by a pair of flow-map phases), value-noise fbm3/fbm4 bands for the blue methane tone, gaussian latitude belts of bright cirrus, the Great Dark Spot (an elongated ellipse drifting west with bright companion clouds), and the faster southern Small Dark Spot. The sky behind is near-black with a faint nebula and a sparse twinkling star grid (parallax by pointer). A pointer-following light direction lights the disk (diffuse + limb + rim + inner atmosphere), the planet leans slightly toward the pointer, and hovering a storm eases an accelerating highlight (uHi) and shows a pill callout with its name. Drag in any direction to turn it 360 degrees via a re-orthonormalised 3x3 trackball with flick momentum, wheel or two-finger pinch zooms 0.7x to 1.8x, double-click resets, arrow keys turn and +/- zoom, 0 resets. prefers-reduced-motion freezes the flow.",
+      "states": {
+        "from": "Neptune quietly spinning under a still starfield, a slow parallax drift following the cursor, no callout visible",
+        "to": "the user dragging the planet in any direction with momentum, zooming 0.7x-1.8x, hovering a storm to reveal its named callout, or double-clicking / pressing 0 to snap back home"
+      },
+      "cssProperties": [
+        "relative full-bleed root, width/height 100%, min-height 380px, background #02040b, overflow hidden",
+        "absolute inset-0 block canvas, touch-action none, default cursor (grab over the disk, grabbing while dragging)",
+        "absolute pill callout (rounded-full, translucent panel, blurred) that fades in via opacity while hovering a storm",
+        "absolute inset-0 centered WebGL fallback message (display flex)",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A fully procedural, endlessly rotating Neptune built on a raw WebGL1 fragment shader — one raytraced sphere, no textures, no libraries. Differential zonal winds band the blue methane deck (equator lags, high latitudes run ahead) while four domain-warped eddies twist the flow, bright cirrus belts brighten cloud tops, and the Great Dark Spot drifts west with bright companion clouds as the Small Dark Spot races south. A pointer-following light leans the planet toward the cursor with parallax stars behind. Drag in any direction to turn it a full 360° with fading momentum, wheel or two-finger pinch to zoom 0.7x-1.8x, double-click to reset, arrow keys to turn and +/- to zoom, and hover a storm for a named callout.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "raw WebGL1 (no three.js/gsap) — one full-screen triangle, a single fragment shader, and a mat3 'view -> planet' uniform",
+        "hash13/hash12 value noise with fbm3 and fbm4 octave sums for the cloud deck, nebula and domain warp",
+        "procedural planet frame: lat=asin(q.y), lon=atan(q.x,q.z) sampled after a re-orthonormalised 3x3 rotation (mul/tr/Rx/Ry/Rz/ortho + a glm column-major upload)",
+        "twist() domain-warped eddies and two-phase differential zonal winds (wz = -0.009*cos(2*lat)+0.003*sin(9*lat))",
+        "Great Dark Spot (drifting lat/lon ellipse + companion clouds) and a faster southern Small Dark Spot, both picked in JS with the same ell() maths for the hover callout",
+        "pointer-following light (default [-0.55,0.42,0.72]) with lean + star parallax easing, hover highlight uniform (uHi) and a DOM pill label",
+        "3x3 trackball drag with flick momentum, pointer-capture, two-finger pinch and wheel zoom clamped 0.7x-1.8x, double-click / key reset",
+        "dynamic resolution guard: DPR-base * quality with a 2.4e6 px cap, dropping quality 0.8x if frames run slow",
+        "ResizeObserver scopes sizing to the container; keyboard is guarded to fire only over the canvas",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, WEBGL_lose_context)"
+      ]
+    }
   }
 }

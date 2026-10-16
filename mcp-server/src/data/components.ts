@@ -65,6 +65,7 @@ const PREMIUM_IDS = new Set([
   "moon-animation",
   "saturn-animation",
   "mercury-animation",
+  "neptune-animation",
   "black-hole-3d",
   "card-cascade",
   "generating-orb",
@@ -240,7 +241,8 @@ const CATEGORY_MAP: Record<string, string> = {
   "comet-trail": "particles-background",
   "moon-animation": "space",
   "saturn-animation": "space",
-  "mercury-animation": "space"
+  "mercury-animation": "space",
+  "neptune-animation": "space"
 };
 
 // id -> common dependencies
@@ -403,6 +405,7 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'moon-animation': ["react"],
   'saturn-animation': ["react"],
   'mercury-animation': ["react"],
+  'neptune-animation': ["react"],
 };
 
 function humanizeId(id: string): string {
