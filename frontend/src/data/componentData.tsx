@@ -135,6 +135,7 @@ const MoonAnimation = React.lazy(() => import('../components/ui/MoonAnimation'))
 const SaturnAnimation = React.lazy(() => import('../components/ui/SaturnAnimation'));
 const MercuryAnimation = React.lazy(() => import('../components/ui/MercuryAnimation'));
 const NeptuneAnimation = React.lazy(() => import('../components/ui/NeptuneAnimation'));
+const PlutoAnimation = React.lazy(() => import('../components/ui/PlutoAnimation'));
 
 
 
@@ -2849,6 +2850,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'saturn-animation': SaturnAnimation,
     'mercury-animation': MercuryAnimation,
     'neptune-animation': NeptuneAnimation,
+    'pluto-animation': PlutoAnimation,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15590,6 +15592,24 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#02040b] [&>div]:min-h-0">
                 <NeptuneAnimation />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Pluto Animation ────────────────────────────────────
+    {
+        id: "pluto-animation",
+        title: "Pluto Animation",
+        category: "space",
+        addedAt: "2026-10-16",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A fully procedural, endlessly rotating Pluto rendered entirely in Canvas 2D — no WebGL, no libraries. A seeded CPU pass forges a 2048x1024 equirectangular surface (grey-white nitrogen-and-water ice, pink-grey southern blotches, the dark maculae belt, the reddish Cthulhu Macula and the cream Sputnik Planitia with its convection cells and blocky water-ice mountains), then scatters thousands of power-law impact craters and packs a level-of-detail mip chain. A software sphere renderer raytraces the disc per pixel with slope-based relief, a single sun, limb shading and a thin bluish atmosphere haze. Drag in any direction to turn it a full 360° (Pluto's real retrograde spin), flick for momentum, double-click or 0 to reset, arrow keys to nudge and Space to pause.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000000] [&>div]:min-h-0">
+                <PlutoAnimation />
             </div>
         ),
         code: "",

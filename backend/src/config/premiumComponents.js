@@ -44,6 +44,7 @@ export const PREMIUM_COMPONENT_IDS = new Set([
   'neptune-animation',
   'particle-sphere',
   'pixel-drift',
+  'pluto-animation',
   'point-dna-helix',
   'radial-glow-button',
   'rubiks-cube',

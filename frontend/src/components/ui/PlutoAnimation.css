@@ -1,0 +1,96 @@
+/* PlutoAnimation — scoped port of the "Rotating Pluto" standalone template.
+   The original :root tokens / html,body / fixed full-viewport canvas are scoped
+   to this root container so the component fits whatever box it is placed in.
+   The canvas keeps a fixed 800x800 software buffer and is scaled down to the
+   container's shorter side by the component (ResizeObserver). */
+
+.pluto-root {
+    --space: #000;
+    --ink: #d7d3cc;
+    --dim: #8c8a86;
+    --heart: #d9a86c;
+    color-scheme: dark;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: var(--space);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.pluto-root .pluto-canvas {
+    display: block;
+    background: var(--space);
+    cursor: grab;
+    touch-action: none;
+    outline: none;
+}
+
+.pluto-root .pluto-canvas.grabbing {
+    cursor: grabbing;
+}
+
+.pluto-root .pluto-hint {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    text-align: center;
+    font: 12px/1.4 system-ui, sans-serif;
+    letter-spacing: 0.04em;
+    color: var(--dim);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s;
+    padding: 0 16px;
+}
+
+.pluto-root .pluto-hint.show {
+    opacity: 1;
+}
+
+.pluto-root .pluto-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--space);
+    z-index: 20;
+    color: var(--ink);
+    font: 14px system-ui, sans-serif;
+    transition: opacity 0.5s;
+}
+
+.pluto-root .pluto-loading .pluto-track {
+    width: 220px;
+    height: 3px;
+    background: #222;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.pluto-root .pluto-loading .pluto-fill {
+    height: 100%;
+    width: 0;
+    background: var(--heart);
+    transition: width 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pluto-root .pluto-hint,
+    .pluto-root .pluto-loading {
+        transition: none;
+    }
+}

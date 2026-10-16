@@ -185,7 +185,7 @@ export const CATEGORIES: CategoryInfo[] = [
         tierName: 'PREMIUM',
         usd: 2.99,
         inr: 59,
-        count: 4,
+        count: 5,
         icon: <Sparkles className="w-4 h-4" />,
         description: 'Planets, moons & orbital scenes',
         premiumComponents: [
@@ -193,6 +193,7 @@ export const CATEGORIES: CategoryInfo[] = [
             'Saturn Animation',
             'Mercury Animation',
             'Neptune Animation',
+            'Pluto Animation',
         ],
     },
 ];
