@@ -19,15 +19,23 @@
 // region-maths, the terrain generator, the software renderer and the trackball are
 // kept from the reference. Only the scaffolding changed: the html/body + `#cv`/
 // `#hint`/`#loading` nodes became scoped refs on a container, every fixed overlay
-// became absolutely positioned inside the root, the canvas is cover-fitted to the
-// container's shorter side with a ResizeObserver so the disc always centres, the
-// async generator gained a cancellable yield (so StrictMode's mount -> cleanup ->
-// mount aborts the first pass instead of leaving it burning CPU), pointer
-// coordinates stay canvas-relative, and the window keyboard listener is guarded by
-// an over-the-canvas pointer check (repo convention) so it never hijacks page keys.
-// Teardown cancels the RAF, drops the ResizeObserver, clears the hint/loading
-// timers and unbinds every listener. The demo's `window.__ready` boot flag is
-// preserved.
+// became absolutely positioned inside the root, the render buffer is sized to the
+// container's shorter side (capped at the original 800px) and rebuilt on an
+// rAF-throttled ResizeObserver so the disc always centres, the async generator
+// gained a cancellable yield (so StrictMode's mount -> cleanup -> mount aborts the
+// first pass instead of leaving it burning CPU), pointer coordinates stay
+// canvas-relative, and the window keyboard listener is guarded by an
+// over-the-canvas pointer check (repo convention) so it never hijacks page keys.
+//
+// Performance: this is a CPU software renderer, so the whole loop is gated by an
+// IntersectionObserver + the Page Visibility API — an off-screen tile (e.g. in the
+// library grid) never burns a core, and the one-time terrain build is deferred and
+// paused until the box is actually on screen. The buffer edge follows the display
+// size, so a typical preview tile rasterises ~4x fewer pixels per frame than the
+// reference's fixed 800x800.
+//
+// Teardown cancels the RAF, drops the observers, clears the hint/loading timers and
+// unbinds every listener. The demo's `window.__ready` boot flag is preserved.
 
 import * as React from "react";
 import { useEffect, useRef } from "react";
@@ -509,13 +517,15 @@ const PlutoCore = { generate, createRenderer, TAU, D2R };
 /* ================================================================
    SETTINGS
    ================================================================ */
-const W = 800, H = 800;      /* canvas pixels                                    */
-const R = 355;               /* disc radius in px                                */
+const SIZE_MAX = 800;        /* max render-buffer edge, px (native detail)       */
+const SIZE_MIN = 220;        /* min render-buffer edge, px                        */
+const DISC_RATIO = 355 / 800;/* disc radius per unit of buffer edge              */
 const DUR = 60;              /* seconds for one full spin (loops seamlessly)     */
 const LAT_SUB = 33;          /* starting tilt: north pole leans toward viewer    */
 const LON0 = 165;            /* starting sub-viewer longitude (heart lower right) */
 const DIR = 1;               /* +1 = retrograde, Pluto's real spin (right to left) */
 const INERTIA = 2.6;         /* fling decay per second                           */
+const RENDER_MS = 1000 / 40; /* software-raster frame cap — the 60s spin is slow */
 
 export interface PlutoAnimationProps {
     /** Optional class applied to the root container. */
@@ -547,38 +557,196 @@ export const PlutoAnimation: React.FC<PlutoAnimationProps> = ({
         const ctx = cv.getContext("2d", { alpha: false });
         if (!ctx) return;
 
-        cv.width = W; cv.height = H;
-
         const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
         let cancelled = false;
-        let rafId = 0;
+        let rafId = 0, resizeRaf = 0;
         let ro: ResizeObserver | null = null;
+        let io: IntersectionObserver | null = null;
         let hintShow = 0, hintHide = 0, loadDone = 0;
         const teardown: Array<() => void> = [];
-
-        /* keep the square canvas centred and fitted to the container's shorter side */
-        const sizeCanvas = () => {
-            const s = Math.max(1, Math.min(root.clientWidth || 1, root.clientHeight || 1));
-            cv.style.width = s + "px";
-            cv.style.height = s + "px";
-        };
-        sizeCanvas();
-        ro = new ResizeObserver(sizeCanvas);
-        ro.observe(root);
-
         const ABORT: any = { abort: true };
 
+        /* CPU renderer: only do work while the planet is on screen and the tab is
+           visible. An off-screen tile (e.g. in the library grid) would otherwise
+           keep rasterising every frame and pin a whole core. */
+        let visible = typeof IntersectionObserver === "undefined";
+
+        /* Render resolution follows the box (capped at the original 800px buffer).
+           The disc is redrawn pixel by pixel every frame, so a smaller buffer is much
+           cheaper while staying pixel-crisp at the size the component is shown. */
+        let bufW = 0, bufH = 0, bufR = 0, texTW = 2048;
+        let tex: any = null, rnd: any = null, img: any = null;
+
+        let Q = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+        let dirty = false, first = true;
+        let spinning = !REDUCED, drag: any = null, hovering = false;
+        const vel = { x: 0, y: 0 };
+        let lon = LON0 * D2R, lastTs: number | null = null, lastRender = 0;
+
+        const mul = (a: any, b: any) => {
+            const r = new Array(9);
+            for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) r[i * 3 + j] = a[i * 3] * b[j] + a[i * 3 + 1] * b[3 + j] + a[i * 3 + 2] * b[6 + j];
+            return r;
+        };
+        function ortho(m: any) { /* Gram-Schmidt so repeated drags never skew the matrix */
+            let a = [m[0], m[1], m[2]], b = [m[3], m[4], m[5]];
+            const na = Math.hypot(...a); a = a.map((v) => v / na);
+            const d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; b = [b[0] - d * a[0], b[1] - d * a[1], b[2] - d * a[2]];
+            const nb = Math.hypot(...b); b = b.map((v) => v / nb);
+            const c = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+            return [a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]];
+        }
+        /* ax: turn about the screen's vertical axis (drag left/right); ay: about the horizontal axis (drag up/down) */
+        function turn(ax: number, ay: number) {
+            const cy = Math.cos(ax), sy = Math.sin(ax), cx = Math.cos(ay), sx = Math.sin(ay);
+            const Ry = [cy, 0, sy, 0, 1, 0, -sy, 0, cy], Rx = [1, 0, 0, 0, cx, -sx, 0, sx, cx];
+            Q = ortho(mul(mul(Ry, Rx), Q)); dirty = true;
+        }
+
+        /* keep the square buffer centred and fitted to the container's shorter side */
+        const applySize = () => {
+            const shorter = Math.min(root.clientWidth || SIZE_MIN, root.clientHeight || SIZE_MIN);
+            const s = Math.round(Math.max(SIZE_MIN, Math.min(SIZE_MAX, shorter)));
+            bufW = s; bufH = s; bufR = Math.round(s * DISC_RATIO);
+            cv.width = bufW; cv.height = bufH;
+            cv.style.width = s + "px"; cv.style.height = s + "px";
+        };
+        /* (re)build the per-pixel view tables for the current buffer size */
+        const build = () => {
+            if (!tex) return;
+            rnd = PlutoCore.createRenderer({ W: bufW, H: bufH, R: bufR, tex, latSub: LAT_SUB });
+            img = ctx.createImageData(bufW, bufH);
+            rnd.initBackground(img.data);
+            dirty = true; first = true;
+        };
+        applySize();
+        ro = new ResizeObserver(() => {
+            if (resizeRaf) return;
+            resizeRaf = requestAnimationFrame(() => { resizeRaf = 0; applySize(); build(); });
+        });
+        ro.observe(root);
+        teardown.push(() => { if (resizeRaf) cancelAnimationFrame(resizeRaf); });
+
+        /* pause everything while the box is off-screen */
+        if (typeof IntersectionObserver !== "undefined") {
+            io = new IntersectionObserver((entries) => { for (const en of entries) visible = en.isIntersecting; }, { rootMargin: "120px 0px" });
+            io.observe(root);
+        } else {
+            visible = true;
+        }
+        const waitVisible = () => new Promise<void>((res, rej) => {
+            const poll = () => { if (cancelled) return rej(ABORT); if (visible && !document.hidden) return res(); setTimeout(poll, 120); };
+            poll();
+        });
+
+        /* ---------- pointer / touch / keyboard ---------- */
+        const pxScale = () => bufW / cv.getBoundingClientRect().width;
+
+        const onPointerDown = (e: PointerEvent) => {
+            try { cv.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+            cv.classList.add('grabbing'); hint.classList.remove('show');
+            drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() }; vel.x = 0; vel.y = 0;
+        };
+        const onPointerMove = (e: PointerEvent) => {
+            if (!drag || e.pointerId !== drag.id) return;
+            const now = performance.now(), dt = Math.max(1, now - drag.t) / 1000, k = pxScale() / bufR;
+            const dx = (e.clientX - drag.x) * k, dy = (e.clientY - drag.y) * k;
+            turn(dx, dy);
+            vel.x = vel.x * 0.5 + (dx / dt) * 0.5; vel.y = vel.y * 0.5 + (dy / dt) * 0.5;
+            drag.x = e.clientX; drag.y = e.clientY; drag.t = now;
+        };
+        const release = (e: PointerEvent) => {
+            if (!drag || (e && e.pointerId !== drag.id)) return;
+            if (performance.now() - drag.t > 90) { vel.x = 0; vel.y = 0; }   /* held still before letting go: no fling */
+            drag = null; cv.classList.remove('grabbing');
+        };
+        const onDblClick = () => { Q = [1, 0, 0, 0, 1, 0, 0, 0, 1]; vel.x = 0; vel.y = 0; dirty = true; };
+        const onKeyDown = (e: KeyboardEvent) => {
+            const s = 6 * D2R;
+            if (e.key === 'ArrowLeft') { turn(-s, 0); e.preventDefault(); }
+            else if (e.key === 'ArrowRight') { turn(s, 0); e.preventDefault(); }
+            else if (e.key === 'ArrowUp') { turn(0, -s); e.preventDefault(); }
+            else if (e.key === 'ArrowDown') { turn(0, s); e.preventDefault(); }
+            else if (e.key === ' ') { spinning = !spinning; e.preventDefault(); }
+            else if (e.key === 'Escape' || e.key === '0') { Q = [1, 0, 0, 0, 1, 0, 0, 0, 1]; dirty = true; }
+        };
+        /* global spacebar: only while the pointer is over the canvas, so page keys are never hijacked */
+        const onWinKeyDown = (e: KeyboardEvent) => {
+            if (!hovering) return;
+            if (e.key === ' ' && document.activeElement === document.body) { spinning = !spinning; e.preventDefault(); }
+        };
+        const onEnter = () => { hovering = true; };
+        const onLeave = () => { hovering = false; };
+
+        cv.addEventListener('pointerdown', onPointerDown);
+        cv.addEventListener('pointermove', onPointerMove);
+        cv.addEventListener('pointerup', release);
+        cv.addEventListener('pointercancel', release);
+        cv.addEventListener('dblclick', onDblClick);
+        cv.addEventListener('keydown', onKeyDown);
+        cv.addEventListener('pointerenter', onEnter);
+        cv.addEventListener('pointerleave', onLeave);
+        window.addEventListener('keydown', onWinKeyDown);
+        teardown.push(() => {
+            cv.removeEventListener('pointerdown', onPointerDown);
+            cv.removeEventListener('pointermove', onPointerMove);
+            cv.removeEventListener('pointerup', release);
+            cv.removeEventListener('pointercancel', release);
+            cv.removeEventListener('dblclick', onDblClick);
+            cv.removeEventListener('keydown', onKeyDown);
+            cv.removeEventListener('pointerenter', onEnter);
+            cv.removeEventListener('pointerleave', onLeave);
+            window.removeEventListener('keydown', onWinKeyDown);
+        });
+
+        /* ---------- clock ---------- */
+        function frame(ts: number) {
+            if (cancelled) return;
+            if (lastTs == null) lastTs = ts;
+            const dt = Math.min(0.1, (ts - lastTs) / 1000); lastTs = ts;
+            if (visible && !document.hidden && rnd && img) {
+                if (!drag && (Math.abs(vel.x) > 0.01 || Math.abs(vel.y) > 0.01)) {
+                    turn(vel.x * dt, vel.y * dt);
+                    const f = Math.exp(-INERTIA * dt); vel.x *= f; vel.y *= f;
+                }
+                if (spinning && !drag) lon += DIR * TAU / DUR * dt;
+                if (dirty) { rnd.setOrientation(Q); dirty = false; first = true; }
+                /* the spin is deliberately slow (one turn / 60s), so capping the CPU
+                   raster to ~40fps is imperceptible yet roughly halves the work */
+                if ((first || spinning) && (lastRender === 0 || ts - lastRender >= RENDER_MS)) {
+                    rnd.render(img.data, lon); ctx.putImageData(img, 0, 0);
+                    first = false; lastRender = ts;
+                }
+            }
+            rafId = requestAnimationFrame(frame);
+        }
+
+        (window as any).__play = () => { spinning = true; };
+        (window as any).__pause = () => { spinning = false; };
+        (window as any).__turn = (yawDeg: number, pitchDeg: number) => { turn(yawDeg * D2R, pitchDeg * D2R); };
+        (window as any).__reset = () => { Q = [1, 0, 0, 0, 1, 0, 0, 0, 1]; dirty = true; };
+
         (async () => {
-            let tex: any;
+            /* defer the one-time terrain build until the box is actually on screen */
+            try { await waitVisible(); } catch (e) { if (e === ABORT) return; return; }
+            if (cancelled) return;
+
+            /* texture resolution is chosen once, from the laid-out size */
+            texTW = bufW >= 560 ? 2048 : bufW >= 400 ? 1536 : 1024;
             try {
                 tex = await PlutoCore.generate({
-                    TW: 2048,
+                    TW: texTW,
                     onProgress: (p: number, s: string) => {
                         fill.style.width = Math.round(p * 100) + "%";
                         msg.textContent = s + "\u2026";
                     },
-                    yield: () => new Promise<void>((res, rej) => setTimeout(() => (cancelled ? rej(ABORT) : res()), 0)),
+                    /* pause the multi-second build whenever the box scrolls off-screen */
+                    yield: () => {
+                        if (cancelled) return Promise.reject(ABORT);
+                        if (!visible || document.hidden) return waitVisible();
+                        return new Promise<void>((r) => setTimeout(r, 0));
+                    },
                 });
             } catch (e) {
                 if (e === ABORT) return;
@@ -587,127 +755,22 @@ export const PlutoAnimation: React.FC<PlutoAnimationProps> = ({
             }
             if (cancelled) return;
 
-            const rnd = PlutoCore.createRenderer({ W, H, R, tex, latSub: LAT_SUB });
-            const img = ctx.createImageData(W, H);
-            rnd.initBackground(img.data);
+            build();
             loading.style.opacity = "0";
             loadDone = window.setTimeout(() => { loading.style.display = "none"; }, 600);
             hintShow = window.setTimeout(() => hint.classList.add("show"), 700);
             hintHide = window.setTimeout(() => hint.classList.remove("show"), 6500);
 
-            /* ---------- orientation (free 360-degree drag) ---------- */
-            const I3 = [1, 0, 0, 0, 1, 0, 0, 0, 1];
-            let Q = I3.slice(), dirty = false;
-            const mul = (a: any, b: any) => {
-                const r = new Array(9);
-                for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) r[i * 3 + j] = a[i * 3] * b[j] + a[i * 3 + 1] * b[3 + j] + a[i * 3 + 2] * b[6 + j];
-                return r;
-            };
-            function ortho(m: any) { /* Gram-Schmidt so repeated drags never skew the matrix */
-                let a = [m[0], m[1], m[2]], b = [m[3], m[4], m[5]];
-                const na = Math.hypot(...a); a = a.map((v) => v / na);
-                const d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; b = [b[0] - d * a[0], b[1] - d * a[1], b[2] - d * a[2]];
-                const nb = Math.hypot(...b); b = b.map((v) => v / nb);
-                const c = [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-                return [a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]];
-            }
-            /* ax: turn about the screen's vertical axis (drag left/right); ay: about the horizontal axis (drag up/down) */
-            function turn(ax: number, ay: number) {
-                const cy = Math.cos(ax), sy = Math.sin(ax), cx = Math.cos(ay), sx = Math.sin(ay);
-                const Ry = [cy, 0, sy, 0, 1, 0, -sy, 0, cy], Rx = [1, 0, 0, 0, cx, -sx, 0, sx, cx];
-                Q = ortho(mul(mul(Ry, Rx), Q)); dirty = true;
-            }
-
-            /* ---------- pointer / touch / keyboard ---------- */
-            let drag: any = null, vel = { x: 0, y: 0 }, spinning = !REDUCED, hovering = false;
-            const pxScale = () => W / cv.getBoundingClientRect().width;
-
-            const onPointerDown = (e: PointerEvent) => {
-                try { cv.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-                cv.classList.add('grabbing'); hint.classList.remove('show');
-                drag = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now() }; vel = { x: 0, y: 0 };
-            };
-            const onPointerMove = (e: PointerEvent) => {
-                if (!drag || e.pointerId !== drag.id) return;
-                const now = performance.now(), dt = Math.max(1, now - drag.t) / 1000, k = pxScale() / R;
-                const dx = (e.clientX - drag.x) * k, dy = (e.clientY - drag.y) * k;
-                turn(dx, dy);
-                vel.x = vel.x * 0.5 + (dx / dt) * 0.5; vel.y = vel.y * 0.5 + (dy / dt) * 0.5;
-                drag.x = e.clientX; drag.y = e.clientY; drag.t = now;
-            };
-            const release = (e: PointerEvent) => {
-                if (!drag || (e && e.pointerId !== drag.id)) return;
-                if (performance.now() - drag.t > 90) vel = { x: 0, y: 0 };   /* held still before letting go: no fling */
-                drag = null; cv.classList.remove('grabbing');
-            };
-            const onDblClick = () => { Q = I3.slice(); vel = { x: 0, y: 0 }; dirty = true; };
-            const onKeyDown = (e: KeyboardEvent) => {
-                const s = 6 * D2R;
-                if (e.key === 'ArrowLeft') { turn(-s, 0); e.preventDefault(); }
-                else if (e.key === 'ArrowRight') { turn(s, 0); e.preventDefault(); }
-                else if (e.key === 'ArrowUp') { turn(0, -s); e.preventDefault(); }
-                else if (e.key === 'ArrowDown') { turn(0, s); e.preventDefault(); }
-                else if (e.key === ' ') { spinning = !spinning; e.preventDefault(); }
-                else if (e.key === 'Escape' || e.key === '0') { Q = I3.slice(); dirty = true; }
-            };
-            /* global spacebar: only while the pointer is over the canvas, so page keys are never hijacked */
-            const onWinKeyDown = (e: KeyboardEvent) => {
-                if (!hovering) return;
-                if (e.key === ' ' && document.activeElement === document.body) { spinning = !spinning; e.preventDefault(); }
-            };
-            const onEnter = () => { hovering = true; };
-            const onLeave = () => { hovering = false; };
-
-            cv.addEventListener('pointerdown', onPointerDown);
-            cv.addEventListener('pointermove', onPointerMove);
-            cv.addEventListener('pointerup', release);
-            cv.addEventListener('pointercancel', release);
-            cv.addEventListener('dblclick', onDblClick);
-            cv.addEventListener('keydown', onKeyDown);
-            cv.addEventListener('pointerenter', onEnter);
-            cv.addEventListener('pointerleave', onLeave);
-            window.addEventListener('keydown', onWinKeyDown);
-            teardown.push(() => {
-                cv.removeEventListener('pointerdown', onPointerDown);
-                cv.removeEventListener('pointermove', onPointerMove);
-                cv.removeEventListener('pointerup', release);
-                cv.removeEventListener('pointercancel', release);
-                cv.removeEventListener('dblclick', onDblClick);
-                cv.removeEventListener('keydown', onKeyDown);
-                cv.removeEventListener('pointerenter', onEnter);
-                cv.removeEventListener('pointerleave', onLeave);
-                window.removeEventListener('keydown', onWinKeyDown);
-            });
-
-            /* ---------- clock ---------- */
-            let lon = LON0 * D2R, lastTs: number | null = null, first = true;
-            function frame(ts: number) {
-                if (cancelled) return;
-                if (lastTs == null) lastTs = ts;
-                const dt = Math.min(0.1, (ts - lastTs) / 1000); lastTs = ts;
-                if (!drag && (Math.abs(vel.x) > 0.01 || Math.abs(vel.y) > 0.01)) {
-                    turn(vel.x * dt, vel.y * dt);
-                    const f = Math.exp(-INERTIA * dt); vel.x *= f; vel.y *= f;
-                }
-                if (spinning && !drag) lon += DIR * TAU / DUR * dt;
-                if (dirty) { rnd.setOrientation(Q); dirty = false; first = true; }
-                if (first || spinning) { rnd.render(img.data, lon); ctx.putImageData(img, 0, 0); first = false; }
-                rafId = requestAnimationFrame(frame);
-            }
             rafId = requestAnimationFrame(frame);
-            teardown.push(() => cancelAnimationFrame(rafId));
-
-            (window as any).__play = () => { spinning = true; };
-            (window as any).__pause = () => { spinning = false; };
-            (window as any).__turn = (yawDeg: number, pitchDeg: number) => { turn(yawDeg * D2R, pitchDeg * D2R); };
-            (window as any).__reset = () => { Q = I3.slice(); dirty = true; };
             (window as any).__ready = true;
         })();
 
         return () => {
             cancelled = true;
             if (rafId) cancelAnimationFrame(rafId);
+            if (resizeRaf) cancelAnimationFrame(resizeRaf);
             if (ro) ro.disconnect();
+            if (io) io.disconnect();
             if (hintShow) clearTimeout(hintShow);
             if (hintHide) clearTimeout(hintHide);
             if (loadDone) clearTimeout(loadDone);
