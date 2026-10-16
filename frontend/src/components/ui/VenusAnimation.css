@@ -1,0 +1,117 @@
+/* VenusAnimation — scoped port of the "Venus – Rotating" standalone template.
+   The original :root tokens / html,body / fixed full-viewport canvas are scoped
+   to this root container so the component fits whatever box it is placed in.
+   The disc itself is rasterised into a fixed design-resolution offscreen buffer
+   and blitted to a container-sized canvas; the whole loop pauses while off-screen
+   or the tab is hidden. The template's chrome (the bottom transport bar and the
+   inspect legend) is intentionally omitted — the reference CSS hides it, so the
+   shipped look is the clean auto-rotating planet with the +/- zoom buttons. */
+
+.venus-root {
+    --space: #02030a;
+    --warm: #ffb347;
+    color-scheme: dark;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: var(--space);
+    color: #eee;
+    font: 13px system-ui, -apple-system, 'Segoe UI', sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.venus-root * {
+    box-sizing: border-box;
+}
+
+.venus-root .venus-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: var(--space);
+    cursor: grab;
+    touch-action: none;
+    outline: none;
+}
+
+.venus-root .venus-canvas.drag {
+    cursor: grabbing;
+}
+
+.venus-root.inspect .venus-canvas {
+    cursor: crosshair;
+}
+
+.venus-root .venus-tip {
+    position: absolute;
+    display: none;
+    pointer-events: none;
+    z-index: 10;
+    background: rgba(0, 0, 0, .88);
+    border: 1px solid #777;
+    border-radius: 6px;
+    padding: 6px 9px;
+    font: 12px ui-monospace, Menlo, monospace;
+    line-height: 1.5;
+    max-width: 260px;
+    color: #eee;
+}
+
+.venus-root .venus-tip b {
+    color: var(--warm);
+}
+
+.venus-root .venus-zoombar {
+    position: absolute;
+    right: 12px;
+    bottom: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 5;
+}
+
+.venus-root .venus-zbtn {
+    width: 40px;
+    height: 40px;
+    font: 22px system-ui, sans-serif;
+    border-radius: 50%;
+    border: 1px solid #666;
+    background: rgba(20, 20, 26, .8);
+    color: var(--warm);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.venus-root .venus-zbtn:hover {
+    border-color: var(--warm);
+}
+
+.venus-root .venus-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--space);
+    color: var(--warm);
+    z-index: 20;
+    font: 14px system-ui, sans-serif;
+    transition: opacity .5s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .venus-root .venus-loading {
+        transition: none;
+    }
+}

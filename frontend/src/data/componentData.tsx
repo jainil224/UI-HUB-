@@ -136,6 +136,8 @@ const SaturnAnimation = React.lazy(() => import('../components/ui/SaturnAnimatio
 const MercuryAnimation = React.lazy(() => import('../components/ui/MercuryAnimation'));
 const NeptuneAnimation = React.lazy(() => import('../components/ui/NeptuneAnimation'));
 const PlutoAnimation = React.lazy(() => import('../components/ui/PlutoAnimation'));
+const VenusAnimation = React.lazy(() => import('../components/ui/VenusAnimation'));
+const UranusAnimation = React.lazy(() => import('../components/ui/UranusAnimation'));
 
 
 
@@ -2851,6 +2853,8 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'mercury-animation': MercuryAnimation,
     'neptune-animation': NeptuneAnimation,
     'pluto-animation': PlutoAnimation,
+    'venus-animation': VenusAnimation,
+    'uranus-animation': UranusAnimation,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15610,6 +15614,42 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#000000] [&>div]:min-h-0">
                 <PlutoAnimation />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Venus Animation ────────────────────────────────────
+    {
+        id: "venus-animation",
+        title: "Venus Animation",
+        category: "space",
+        addedAt: "2026-10-16",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A fully procedural, endlessly rotating Venus rendered entirely in Canvas 2D — no WebGL, no libraries. A seeded CPU pass forges a 1024x512 equirectangular surface (dark umber volcanic plains, the orange-gold highlands of Ishtar Terra / Lakshmi Planum, Maxwell Montes, the Aphrodite Terra spans, Thetis Regio, Alpha / Beta / Atla Regio and Artemis, plus named volcanoes and craters — Maat Mons, Sapas Mons, Ozza Mons, Sif Mons, Rhea Mons, Theia Mons, Idunn Mons, the Mead and Cleopatra craters — over scattered impact craters, shield domes and a fine radar speckle). A per-pixel software sphere pass maps the texture with bilinear sampling, a single directional sun, a soft terminator and a thin atmospheric limb glow. Drag in any direction to turn it, flick for momentum, wheel or two-finger pinch to zoom 0.5x-2.2x, +/- keys or the on-screen buttons to zoom, and press i to probe the surface for its real Magellan geography.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#02030a] [&>div]:min-h-0">
+                <VenusAnimation />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Uranus Animation ───────────────────────────────────
+    {
+        id: "uranus-animation",
+        title: "Uranus Animation",
+        category: "space",
+        addedAt: "2026-10-16",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A fully procedural, endlessly rotating Uranus rendered by a single raw-WebGL1 fragment shader — no textures, no libraries. One raytraced sphere samples an fbm/domain-warped methane atmosphere: broad soft belts with fine latitude streaks, a slightly greener equator and bluer mid latitudes, a bright polar haze cap (stronger on the sunlit pole), evolving methane cloud streaks and a thin high-altitude haze drifting a little faster than the belts. The planet's faint 13-ring system is drawn procedurally too — a dusty inner band, six narrow bright rings, the hair-thin epsilon ring and a field of tiny twinkling ring particles — and its bands cast soft shadows back onto the cloud tops. Drag in any direction to turn it through any angle, flick for momentum, double-click or r to reset, arrow keys to nudge and Space to pause, and press i to reveal the spin axis, the pole marker and a live latitude/longitude or ring-name probe.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#020407] [&>div]:min-h-0">
+                <UranusAnimation />
             </div>
         ),
         code: "",

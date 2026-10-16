@@ -52,6 +52,8 @@ export const PREMIUM_COMPONENT_IDS = new Set<string>([
   'toonhub-hero',
   'tornado',
   'twin-galaxy-rings',
+  'uranus-animation',
+  'venus-animation',
 ]);
 
 export const isPremiumComponentId = (id?: string | null): boolean => {
