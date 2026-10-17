@@ -597,7 +597,7 @@ const LibraryPage = () => {
                 </aside>
 
                 {/* ── Middle Column: Playground & Documentation ── */}
-                <main ref={mainContainerRef} className="flex-1 min-w-0 main-scroll p-4 sm:p-6 lg:p-8 md:h-full md:overflow-y-auto">
+                <main ref={mainContainerRef} className="flex-1 min-w-0 main-scroll p-4 sm:p-6 lg:px-8 lg:py-6 md:h-full md:overflow-y-auto">
                     <div className="w-full">
                         {/* ── Mobile "All Components" Top Bar / Button ── */}
                         <div className="md:hidden mb-4 p-2.5 sm:p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-xl flex items-center justify-between gap-3 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
