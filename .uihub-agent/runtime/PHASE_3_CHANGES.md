@@ -108,7 +108,7 @@ slash was being treated as a module specifier.
 
 EVIDENCE:
 `node --test tests/` ->
-`Cannot find module 'C:\Users\Admin\Documents\GitHub\UI-HUB-\backend\tests'`.
+`Cannot find module 'D:\UI-HUB-\backend\tests'`.
 The real suite was never executing.
 
 FIX:

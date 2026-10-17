@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | Verified on | 2026-09-30 (UTC timestamps captured per probe) |
-| Repository | `C:\Users\Admin\Documents\GitHub\UI-HUB-` |
+| Repository | `D:\UI-HUB-` |
 | Commit under test | `41938a67` |
 | Working tree | `M agent.md` (owner-edited), `?? .uihub-agent/` - no source modified |
 | Tooling | Node `v24.21.0`, npm `11.19.0`, mongosh present, `curl.exe` |
