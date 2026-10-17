@@ -604,13 +604,18 @@ export const PlutoAnimation: React.FC<PlutoAnimationProps> = ({
             Q = ortho(mul(mul(Ry, Rx), Q)); dirty = true;
         }
 
-        /* keep the square buffer centred and fitted to the container's shorter side */
+        /* fill the container full-bleed; disc stays circular, centred on the shorter
+           side. Backing store uses a uniform scale so the planet never distorts. */
         const applySize = () => {
-            const shorter = Math.min(root.clientWidth || SIZE_MIN, root.clientHeight || SIZE_MIN);
-            const s = Math.round(Math.max(SIZE_MIN, Math.min(SIZE_MAX, shorter)));
-            bufW = s; bufH = s; bufR = Math.round(s * DISC_RATIO);
+            const cw = Math.max(1, root.clientWidth), ch = Math.max(1, root.clientHeight);
+            const dpr = window.devicePixelRatio || 1;
+            const shortCss = Math.min(cw, ch);
+            const s = Math.round(Math.max(SIZE_MIN, Math.min(SIZE_MAX, shortCss * dpr)));
+            const k = s / shortCss;                       /* uniform px-per-css-px scale */
+            bufW = Math.max(1, Math.round(cw * k)); bufH = Math.max(1, Math.round(ch * k));
+            bufR = Math.round(s * DISC_RATIO);
             cv.width = bufW; cv.height = bufH;
-            cv.style.width = s + "px"; cv.style.height = s + "px";
+            cv.style.width = cw + "px"; cv.style.height = ch + "px";
         };
         /* (re)build the per-pixel view tables for the current buffer size */
         const build = () => {
@@ -732,8 +737,8 @@ export const PlutoAnimation: React.FC<PlutoAnimationProps> = ({
             try { await waitVisible(); } catch (e) { if (e === ABORT) return; return; }
             if (cancelled) return;
 
-            /* texture resolution is chosen once, from the laid-out size */
-            texTW = bufW >= 560 ? 2048 : bufW >= 400 ? 1536 : 1024;
+            /* texture resolution is chosen once, from the disc's shorter-edge size */
+            texTW = Math.min(bufW, bufH) >= 560 ? 2048 : Math.min(bufW, bufH) >= 400 ? 1536 : 1024;
             try {
                 tex = await PlutoCore.generate({
                     TW: texTW,

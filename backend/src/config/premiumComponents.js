@@ -36,6 +36,7 @@ export const PREMIUM_COMPONENT_IDS = new Set([
   'isometric-portal',
   'lightfall',
   'lizard-cursor',
+  'mars-animation',
   'mercury-animation',
   'moon-animation',
   'morphing-glow',

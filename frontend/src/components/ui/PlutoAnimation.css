@@ -1,9 +1,10 @@
 /* PlutoAnimation — scoped port of the "Rotating Pluto" standalone template.
    The original :root tokens / html,body / fixed full-viewport canvas are scoped
    to this root container so the component fits whatever box it is placed in.
-   The canvas software buffer is sized to the container's shorter side (capped at
-   800px) by the component (rAF-throttled ResizeObserver), and all rendering pauses
-   while it is off-screen or the tab is hidden. */
+   The canvas software buffer is sized full-bleed (fills the container) with the
+   disc centred on the shorter side (capped at 800px) by the component
+   (rAF-throttled ResizeObserver), and all rendering pauses while it is
+   off-screen or the tab is hidden. */
 
 .pluto-root {
     --space: #000;

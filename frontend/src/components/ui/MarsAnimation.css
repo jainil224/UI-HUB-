@@ -1,0 +1,153 @@
+/* MarsAnimation — scoped port of the "Rotating Mars" standalone template.
+   The original :root tokens / html,body / fixed full-viewport #stage + overlays
+   are scoped to this root container so the component fits whatever box it is
+   placed in. The canvas is sized full-bleed (fills the container) by the
+   component (rAF-throttled ResizeObserver) with the disc centred on the shorter
+   side, and all rendering pauses while it is off-screen or the tab is hidden. */
+
+.mars-root {
+    --bg: #04040a;
+    --ink: #f4e4d8;
+    --dim: #a89089;
+    --accent: #ff7a45;
+    --panel: rgba(16, 10, 12, .72);
+    --line: rgba(255, 190, 160, .2);
+    --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+    color-scheme: dark;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: var(--bg);
+    color: var(--ink);
+    font: 13px/1.4 var(--mono);
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mars-root .mars-canvas {
+    display: block;
+    touch-action: none;
+    cursor: grab;
+    outline: none;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent), linear-gradient(to bottom, transparent, #000 6%, #000 94%, transparent);
+    mask-composite: intersect;
+}
+
+.mars-root .mars-canvas.dragging {
+    cursor: grabbing;
+}
+
+.mars-root.inspect .mars-canvas {
+    cursor: crosshair;
+}
+
+.mars-root.inspect .mars-canvas.dragging {
+    cursor: grabbing;
+}
+
+.mars-root .mars-legend {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-end;
+    pointer-events: none;
+    max-width: 52%;
+    z-index: 4;
+}
+
+.mars-root .mars-legend .mars-chip {
+    font-size: 11px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    padding: 2px 9px;
+    border-radius: 10px;
+    color: var(--ink);
+    white-space: nowrap;
+}
+
+.mars-root .mars-legend .mars-chip i {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 7px;
+}
+
+.mars-root .mars-tip {
+    position: absolute;
+    display: none;
+    pointer-events: none;
+    z-index: 5;
+    background: rgba(10, 6, 8, .9);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 12px;
+    line-height: 1.55;
+    max-width: 250px;
+}
+
+.mars-root .mars-tip b {
+    color: var(--accent);
+    font-weight: 500;
+}
+
+.mars-root .mars-tip span {
+    color: var(--dim);
+}
+
+.mars-root .mars-boot {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    font: 500 13px var(--mono);
+    letter-spacing: .14em;
+    color: var(--dim);
+    text-transform: uppercase;
+    z-index: 20;
+}
+
+.mars-root .mars-sunbox {
+    position: absolute;
+    z-index: 6;
+    left: 16px;
+    bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--dim);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 12px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.mars-root .mars-sunbox input {
+    width: 130px;
+    max-width: 40vw;
+    accent-color: var(--accent);
+    margin: 0;
+    min-width: 0;
+}
+
+.mars-root .mars-sunbox input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}

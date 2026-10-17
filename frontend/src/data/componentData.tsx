@@ -138,6 +138,7 @@ const NeptuneAnimation = React.lazy(() => import('../components/ui/NeptuneAnimat
 const PlutoAnimation = React.lazy(() => import('../components/ui/PlutoAnimation'));
 const VenusAnimation = React.lazy(() => import('../components/ui/VenusAnimation'));
 const UranusAnimation = React.lazy(() => import('../components/ui/UranusAnimation'));
+const MarsAnimation = React.lazy(() => import('../components/ui/MarsAnimation'));
 
 
 
@@ -2855,6 +2856,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'pluto-animation': PlutoAnimation,
     'venus-animation': VenusAnimation,
     'uranus-animation': UranusAnimation,
+    'mars-animation': MarsAnimation,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15650,6 +15652,24 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#020407] [&>div]:min-h-0">
                 <UranusAnimation />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Mars Animation ──────────────────────────────────────
+    {
+        id: "mars-animation",
+        title: "Mars Animation",
+        category: "space",
+        addedAt: "2026-10-17",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A fully procedural, endlessly rotating Mars rendered entirely in Canvas 2D — no WebGL, no libraries. A seeded CPU pass forges a seamless equirectangular surface (the broad albedo features of Syrtis Major, Acidalia Planitia and the Mare belts; the bright Hellas and Argyre basins; the Tharsis bulge and Olympus Mons; the Valles Marineris and Kasei Valles canyons; the spiral-capped polar ice caps; ~2,300 power-law craters with ejecta rays and wind streaks) and raytraces the disc per pixel with bump-mapped relief, a dust-laned Milky Way behind it and two moons. Drag in any direction to turn the planet, flick for momentum, double-click or r to reset, arrow keys to nudge and Space to pause. A Sun slider re-lights the scene, and pressing i reveals the rotation axis, a graticule and a live probe that names the hovered feature, canyon, crater or moon.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#04040a] [&>div]:min-h-0">
+                <MarsAnimation />
             </div>
         ),
         code: "",
