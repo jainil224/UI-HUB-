@@ -139,6 +139,7 @@ const PlutoAnimation = React.lazy(() => import('../components/ui/PlutoAnimation'
 const VenusAnimation = React.lazy(() => import('../components/ui/VenusAnimation'));
 const UranusAnimation = React.lazy(() => import('../components/ui/UranusAnimation'));
 const MarsAnimation = React.lazy(() => import('../components/ui/MarsAnimation'));
+const JupiterAnimation = React.lazy(() => import('../components/ui/JupiterAnimation'));
 
 
 
@@ -2857,6 +2858,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'venus-animation': VenusAnimation,
     'uranus-animation': UranusAnimation,
     'mars-animation': MarsAnimation,
+    'jupiter-animation': JupiterAnimation,
 };
 
 // Lazy component resolver - returns a factory function to avoid eager initialization
@@ -15670,6 +15672,24 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         preview: () => (
             <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#04040a] [&>div]:min-h-0">
                 <MarsAnimation />
+            </div>
+        ),
+        code: "",
+        vibePrompt: "",
+    },
+
+    // ── Jupiter Animation ─────────────────────────────────
+    {
+        id: "jupiter-animation",
+        title: "Jupiter Animation",
+        category: "space",
+        addedAt: "2026-10-17",
+        newBadgeDays: 120,
+        isPremium: true,
+        description: "A fully procedural, endlessly rotating Jupiter rendered by a two-pass raw-WebGL1 pipeline — no textures, no libraries. A bake shader paints a 2048x1024 equirectangular surface in 16 scissored strips so the page never stalls: a latitude colour palette warped by two stages of fbm domain warp, zone/belt turbulence tied to the Great Red Spot's longitudes, popcorn convective cells in the bright zones, diagonal festoons and dark blue-grey hot spots on the equatorial belt edge, a polar haze, the swirling Great Red Spot itself, plus 56 seeded small ovals and dots (white ovals, brown dots and a ringed oval around the Great Belt Arc). A second raytraced sphere shader samples that baked map with a single sun, limb shading, a warm and a cool limb glow and a sparse star field. Drag in any direction to turn the planet, flick for momentum, wheel or two-finger pinch to zoom 0.5x-2.4x, double-click to reset and Space to pause.",
+        preview: () => (
+            <div className="w-full h-full min-h-[380px] rounded-3xl overflow-hidden border border-white/10 relative bg-[#020203] [&>div]:min-h-0">
+                <JupiterAnimation />
             </div>
         ),
         code: "",

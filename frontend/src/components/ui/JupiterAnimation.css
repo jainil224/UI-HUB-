@@ -1,0 +1,56 @@
+/* JupiterAnimation — scoped port of the "Jupiter Rotating" standalone WebGL template.
+   The original :root tokens / html,body / fixed full-viewport #gl canvas + #nogl
+   fallback are scoped to this root container so the planet fills whatever box it
+   is placed in. The canvas is sized full-bleed (fills the container) by the
+   component (rAF-throttled ResizeObserver) with the disc centred, and rendering
+   pauses while it is off-screen or the tab is hidden. */
+
+.jupiter-root {
+    --bg: #020203;
+    --fg: #ece6dc;
+    color-scheme: dark;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    overflow: hidden;
+    box-sizing: border-box;
+    background: var(--bg);
+    color: var(--fg);
+    font: 14px/1.5 system-ui, sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.jupiter-root .jupiter-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: grab;
+    touch-action: none;
+    background: var(--bg);
+    outline: none;
+}
+
+.jupiter-root.dragging .jupiter-canvas {
+    cursor: grabbing;
+}
+
+.jupiter-root .jupiter-fallback {
+    display: none;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px;
+    color: #ece6dc;
+    background: var(--bg);
+}
+
+.jupiter-root.nogl .jupiter-fallback {
+    display: flex;
+}

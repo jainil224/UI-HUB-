@@ -27,6 +27,7 @@ export const PREMIUM_COMPONENT_IDS = new Set<string>([
   'interactive-grid-background',
   'isometric-grid-background',
   'isometric-portal',
+  'jupiter-animation',
   'lightfall',
   'lizard-cursor',
   'mars-animation',
