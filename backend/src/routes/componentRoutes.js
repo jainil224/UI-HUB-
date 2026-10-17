@@ -127,6 +127,27 @@ router.get('/:id/prompt/:system', optionalVerifyToken, async (req, res) => {
   const { id, system } = req.params;
 
   try {
+    // Premium components embed the full source in every vibe prompt, so the
+    // same entitlement as /source is required before ANY prompt is served —
+    // regardless of which AI tool is requested. Free components short-circuit
+    // to allowed=true inside canAccessComponent.
+    const meta = await resolveComponentMeta(id);
+    const access = await canAccessComponent(req.user, meta);
+    if (!access.allowed) {
+      logActivity({
+        type: 'ai.prompt_denied',
+        userId: req.user?.uid,
+        email: req.user?.email,
+        level: 'warn',
+        metadata: { componentId: id, system, reason: access.reason, tier: access.tier },
+      });
+      return res.status(403).json({
+        error: 'Premium component. Upgrade to Pro or purchase this component to access its prompts.',
+        code: access.reason === 'AUTH_REQUIRED' ? 'AUTH_REQUIRED' : 'PREMIUM_REQUIRED',
+        reason: access.reason,
+      });
+    }
+
     if (isPremiumTool(system)) {
       // enforcePremiumTrial always sends a response (prompt consumed, or 403).
       await enforcePremiumTrial(req, res, system);

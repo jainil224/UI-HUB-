@@ -339,7 +339,7 @@ export interface PromptFetchResult {
     consumed?: boolean;
     trialsRemaining?: number;
     expiresAt?: number | null;
-    code?: 'AUTH_REQUIRED' | 'TRIAL_LIMIT' | 'ERROR';
+    code?: 'AUTH_REQUIRED' | 'PREMIUM_REQUIRED' | 'TRIAL_LIMIT' | 'ERROR';
     reason?: 'COUNT' | 'EXPIRY';
     status?: number;
 }
@@ -405,7 +405,11 @@ export const fetchVibePrompt = async (
         } else if (response.status === 403) {
             let body: any = {};
             try { body = await response.json(); } catch (e) { /* ignore */ }
-            const code = body?.code === 'TRIAL_LIMIT' ? 'TRIAL_LIMIT' as const : 'AUTH_REQUIRED' as const;
+            const code = body?.code === 'TRIAL_LIMIT'
+                ? 'TRIAL_LIMIT' as const
+                : body?.code === 'PREMIUM_REQUIRED'
+                    ? 'PREMIUM_REQUIRED' as const
+                    : 'AUTH_REQUIRED' as const;
             return {
                 ok: false,
                 prompt: getFallbackVibePrompt(componentId, system, item, variantId, customizedSource),

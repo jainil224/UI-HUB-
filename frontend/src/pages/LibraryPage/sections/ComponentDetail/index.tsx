@@ -1301,12 +1301,28 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     const copyPromptFromPreview = React.useCallback(async (system: AISystem) => {
         if (promptCopying) return;
-        setPromptCopying(system);
         const label = PROMPT_OPTIONS.find(o => o.system === system)?.label || system.toUpperCase();
+        // Premium components embed the full source in every vibe prompt. Block
+        // free users before anything is fetched or written to the clipboard.
+        if (item.isPremium && !canAccessComponent) {
+            setPromptMenuOpen(false);
+            setToastMessage(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
+            setShowToast(true);
+            return;
+        }
+        setPromptCopying(system);
         try {
             // Mirror the VIBE terminal exactly: server prompt first, local fallback otherwise.
             const token = user && !user.isAnonymous ? await user.getIdToken() : undefined;
             const result = await fetchVibePrompt(item.id, system, token, item, variant, customizedSource);
+            // Server refused — premium component without an entitlement. Never copy
+            // the local fallback here: it also embeds the source.
+            if (result.code === 'PREMIUM_REQUIRED') {
+                setPromptMenuOpen(false);
+                setToastMessage(`LOCKED — BUY FOR ${buyPriceLabel} OR UPGRADE TO PRO`);
+                setShowToast(true);
+                return;
+            }
             const prompt = result.prompt || getFallbackVibePrompt(item.id, system, item, variant, customizedSource);
             await navigator.clipboard.writeText(prompt);
             setPromptCopied(system);
@@ -1331,7 +1347,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
         } finally {
             setPromptCopying(null);
         }
-    }, [item, variant, customizedSource, user, promptCopying]);
+    }, [item, variant, customizedSource, user, promptCopying, canAccessComponent, buyPriceLabel]);
 
     React.useEffect(() => {
         const handlePointerDown = (e: MouseEvent | TouchEvent) => {
@@ -1720,6 +1736,10 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
 
     const [codeCopied, setCodeCopied] = React.useState(false);
 
+    // The Preview copy dropdown hands out source-embedded prompts, so premium
+    // components are fully locked for users without an entitlement.
+    const promptMenuLocked = item.isPremium && !canAccessComponent;
+
     const copyCodeFromPreview = React.useCallback(() => {
         if (item.isPremium && !canAccessComponent) {
             setPromptMenuOpen(false);
@@ -1777,7 +1797,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: "easeOut" }}
-            className="flex flex-col gap-6 md:gap-10 pb-24"
+            className="flex flex-col gap-6 md:gap-8 pb-6 w-full"
         >
             {/* ── Section: Overview & Header ── */}
             <div id="overview" className="flex flex-col space-y-4 pt-2">
@@ -2117,22 +2137,30 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                     <button
                                                         type="button"
                                                         onClick={copyCodeFromPreview}
-                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors cursor-pointer ${
-                                                            codeCopied
-                                                                ? 'bg-brand-green/10 hover:bg-brand-green/10'
-                                                                : 'hover:bg-neutral-900 active:bg-neutral-800'
+                                                        className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors ${
+                                                            promptMenuLocked
+                                                                ? 'cursor-not-allowed'
+                                                                : codeCopied
+                                                                    ? 'bg-brand-green/10 hover:bg-brand-green/10 cursor-pointer'
+                                                                    : 'hover:bg-neutral-900 active:bg-neutral-800 cursor-pointer'
                                                         }`}
                                                     >
                                                         <span className="w-[18px] flex items-center justify-center shrink-0">
-                                                            <Code size={16} className={codeCopied ? 'text-brand-green' : 'text-white'} strokeWidth={2.5} />
+                                                            {promptMenuLocked ? (
+                                                                <Lock size={15} className="text-brand-yellow" />
+                                                            ) : (
+                                                                <Code size={16} className={codeCopied ? 'text-brand-green' : 'text-white'} strokeWidth={2.5} />
+                                                            )}
                                                         </span>
                                                         <span className={`text-[10.5px] font-mono font-black uppercase tracking-wider flex-1 ${
-                                                            codeCopied ? 'text-brand-green' : 'text-neutral-300'
+                                                            promptMenuLocked ? 'text-neutral-500' : codeCopied ? 'text-brand-green' : 'text-neutral-300'
                                                         }`}>
                                                             EXACT CODE
                                                         </span>
                                                         <span className="w-4 flex items-center justify-center shrink-0">
-                                                            {codeCopied && (
+                                                            {promptMenuLocked ? (
+                                                                <span className="text-[8px] font-black uppercase tracking-widest text-brand-yellow border border-brand-yellow rounded px-1 leading-[1.4]">PRO</span>
+                                                            ) : codeCopied && (
                                                                 <Check size={13} className="text-brand-green" strokeWidth={3} />
                                                             )}
                                                         </span>
@@ -2148,24 +2176,32 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                                             type="button"
                                                             onClick={() => copyPromptFromPreview(opt.system)}
                                                             disabled={promptCopying === opt.system}
-                                                            className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors cursor-pointer ${
-                                                                promptCopying === opt.system
-                                                                    ? 'opacity-60 cursor-default'
-                                                                    : promptCopied === opt.system
-                                                                        ? 'bg-brand-green/10 hover:bg-brand-green/10'
-                                                                        : 'hover:bg-neutral-900 active:bg-neutral-800'
+                                                            className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-md text-left transition-colors ${
+                                                                promptMenuLocked
+                                                                    ? 'cursor-not-allowed'
+                                                                    : promptCopying === opt.system
+                                                                        ? 'opacity-60 cursor-default'
+                                                                        : promptCopied === opt.system
+                                                                            ? 'bg-brand-green/10 hover:bg-brand-green/10 cursor-pointer'
+                                                                            : 'hover:bg-neutral-900 active:bg-neutral-800 cursor-pointer'
                                                             }`}
                                                         >
                                                             <span className="w-[18px] flex items-center justify-center shrink-0">
-                                                                <ToolIcon tool={opt.system} active={false} size={16} />
+                                                                {promptMenuLocked ? (
+                                                                    <Lock size={15} className="text-brand-yellow" />
+                                                                ) : (
+                                                                    <ToolIcon tool={opt.system} active={false} size={16} />
+                                                                )}
                                                             </span>
                                                             <span className={`text-[10.5px] font-mono font-black uppercase tracking-wider flex-1 ${
-                                                                promptCopied === opt.system ? 'text-brand-green' : 'text-neutral-300'
+                                                                promptMenuLocked ? 'text-neutral-500' : promptCopied === opt.system ? 'text-brand-green' : 'text-neutral-300'
                                                             }`}>
                                                                 {opt.label}
                                                             </span>
                                                             <span className="w-4 flex items-center justify-center shrink-0">
-                                                                {promptCopying === opt.system ? (
+                                                                {promptMenuLocked ? (
+                                                                    <span className="text-[8px] font-black uppercase tracking-widest text-brand-yellow border border-brand-yellow rounded px-1 leading-[1.4]">PRO</span>
+                                                                ) : promptCopying === opt.system ? (
                                                                     <Loader2 size={13} className="animate-spin text-brand-blue" />
                                                                 ) : (
                                                                     promptCopied === opt.system && (
@@ -2220,9 +2256,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         {/* Props Table */}
                         {componentConfig.props.length > 0 && (
                             <Reveal delay={0.1}>
-                                <section id="props" className="space-y-4">
-                                    <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white px-2">Props</h3>
-                                    <div className="rounded-lg border-2 border-white bg-brand-surface brutal-shadow-black p-4">
+                                <section id="props" className="space-y-4 w-full">
+                                    <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Props</h3>
+                                    <div className="w-full rounded-lg border-2 border-white bg-brand-surface brutal-shadow-black p-4">
                                         <PropsTable props={componentConfig.props} />
                                     </div>
                                 </section>
@@ -2434,7 +2470,7 @@ const UseWithAI: React.FC<{ isPremium: boolean; componentId: string }> = ({ isPr
     };
 
     return (
-        <section className="mt-6 md:mt-10">
+        <section className="w-full mt-0">
             <div className="relative border-2 border-white bg-brand-surface rounded-lg brutal-shadow-blue overflow-hidden">
                 <div className="absolute top-0 inset-x-0 h-1 bg-brand-blue" />
                 <div className="absolute inset-0 bg-[radial-gradient(#ffffff04_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
