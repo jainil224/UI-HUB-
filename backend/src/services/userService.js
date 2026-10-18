@@ -1,10 +1,24 @@
 import { getCollection, executeWithRetry } from './mongoService.js';
+import { isOwnCloudinaryUrl } from './cloudinaryService.js';
 
 const USERS_COLLECTION = 'users';
 
 export const PREMIUM_AI_TOOLS = ['advance', 'antigravity', 'claude'];
 export const MAX_FREE_AI_TRIALS = 2;
 export const TRIAL_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+export const USERNAME_RE = /^[a-zA-Z0-9_]{3,30}$/;
+export const DISPLAY_NAME_MAX = 60;
+
+/** Thrown by profile mutations so routes can map a cause to an HTTP status. */
+export class ProfileError extends Error {
+  constructor(message, code, status = 400) {
+    super(message);
+    this.name = 'ProfileError';
+    this.code = code;
+    this.status = status;
+  }
+}
 
 /**
  * User Service
@@ -245,4 +259,139 @@ export const recordPremiumTrialUse = async (uid, email) => {
     console.error('[Trial] Error recording premium trial use:', error);
     throw error;
   }
+};
+
+/* ==========================================================================
+ * Profile
+ * ======================================================================== */
+
+/** Lowercases and trims a raw username so uniqueness is case-insensitive. */
+export const normalizeUsername = (value) => String(value ?? '').trim().toLowerCase();
+
+/**
+ * Reduces a stored user document to the subset that is safe to expose.
+ * @param {object|null} doc
+ * @param {{ uid?: string, email?: string }} [fallback]
+ */
+const sanitizeProfile = (doc, fallback = {}) => ({
+  uid: doc?.uid || fallback.uid || null,
+  email: doc?.email || fallback.email || null,
+  username: doc?.username || null,
+  displayName: doc?.displayName || fallback.displayName || null,
+  avatarUrl: doc?.avatarUrl || null,
+  avatarPublicId: doc?.avatarPublicId || null,
+  planTier: doc?.planTier || (doc?.status ? String(doc.status).toLowerCase() : 'free'),
+  status: doc?.status || 'FREE',
+  createdAt: doc?.createdAt || null,
+  profileUpdatedAt: doc?.profileUpdatedAt || null,
+});
+
+/**
+ * Creates the unique (sparse) index that enforces username uniqueness.
+ * Idempotent; safe to call on every boot.
+ * @returns {Promise<boolean>}
+ */
+export const ensureProfileIndexes = async () => {
+  try {
+    const users = await getCollection(USERS_COLLECTION);
+    await users.createIndex({ username: 1 }, { unique: true, sparse: true });
+    return true;
+  } catch (error) {
+    console.warn('[Profile] Could not ensure username index:', error.message);
+    return false;
+  }
+};
+
+/**
+ * Reads a user's profile.
+ * @returns {Promise<object>}
+ */
+export const getUserProfile = async (uid, email) => {
+  const { data } = await findUserData(uid, email);
+  return sanitizeProfile(data, { uid, email: (email || '').toLowerCase() });
+};
+
+/**
+ * Checks whether a username can be claimed. A user may "keep" their own handle.
+ * @returns {Promise<{ available: boolean, reason?: string }>}
+ */
+export const isUsernameAvailable = async (handle, { uid, email } = {}) => {
+  const username = normalizeUsername(handle);
+  if (!USERNAME_RE.test(username)) return { available: false, reason: 'INVALID' };
+
+  const users = await getCollection(USERS_COLLECTION);
+  const existing = await users.findOne({ username }, { projection: { _id: 1 } });
+  if (!existing) return { available: true };
+
+  const { data } = await findUserData(uid, email);
+  if (data && String(existing._id) === String(data._id)) return { available: true };
+  return { available: false, reason: 'TAKEN' };
+};
+
+/**
+ * Applies validated profile changes and returns the fresh profile.
+ * Only `displayName`, `username` and `avatarUrl`/`avatarPublicId` are writable.
+ * @returns {Promise<object>}
+ */
+export const updateUserProfile = async (uid, email, updates = {}) => {
+  const emailKey = (email || '').trim().toLowerCase();
+  const { data } = await findUserData(uid, email);
+  const targetId = data?._id || emailKey || uid;
+  if (!targetId) throw new ProfileError('Could not resolve the user account', 'NO_USER', 400);
+
+  const users = await getCollection(USERS_COLLECTION);
+  const now = new Date();
+  const set = { updatedAt: now, profileUpdatedAt: now };
+
+  if (updates.displayName !== undefined) {
+    const displayName = String(updates.displayName || '').trim();
+    if (!displayName) throw new ProfileError('Name cannot be empty', 'INVALID_NAME');
+    if (displayName.length > DISPLAY_NAME_MAX) {
+      throw new ProfileError(`Name must be ${DISPLAY_NAME_MAX} characters or fewer`, 'INVALID_NAME');
+    }
+    set.displayName = displayName;
+  }
+
+  if (updates.username !== undefined && updates.username !== null && String(updates.username).trim() !== '') {
+    const username = normalizeUsername(updates.username);
+    if (!USERNAME_RE.test(username)) {
+      throw new ProfileError(
+        'Username must be 3-30 characters using letters, numbers or underscore',
+        'INVALID_USERNAME'
+      );
+    }
+    const clash = await users.findOne({ username }, { projection: { _id: 1 } });
+    if (clash && String(clash._id) !== String(targetId)) {
+      throw new ProfileError('That username is already taken', 'USERNAME_TAKEN', 409);
+    }
+    set.username = username;
+  }
+
+  if (updates.avatarUrl !== undefined) {
+    if (updates.avatarUrl === null || updates.avatarUrl === '') {
+      set.avatarUrl = null;
+      set.avatarPublicId = null;
+    } else if (isOwnCloudinaryUrl(updates.avatarUrl)) {
+      set.avatarUrl = updates.avatarUrl;
+      set.avatarPublicId =
+        typeof updates.avatarPublicId === 'string' && updates.avatarPublicId
+          ? updates.avatarPublicId
+          : data?.avatarPublicId || null;
+    } else {
+      throw new ProfileError('Avatar must be an image hosted by Cloudinary', 'INVALID_AVATAR_URL');
+    }
+  }
+
+  if (!data) {
+    await users.updateOne(
+      { _id: targetId },
+      { $set: { _id: targetId, email: emailKey, uid, planTier: 'free', status: 'FREE', createdAt: now, ...set } },
+      { upsert: true }
+    );
+  } else {
+    await users.updateOne({ _id: targetId }, { $set: set });
+  }
+
+  const fresh = await users.findOne({ _id: targetId });
+  return sanitizeProfile(fresh, { uid, email: emailKey });
 };

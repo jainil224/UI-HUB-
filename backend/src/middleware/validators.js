@@ -52,3 +52,35 @@ export const validateVerifyPayment = [
     next();
   }
 ];
+
+export const validateUpdateProfile = [
+  body('displayName')
+    .optional()
+    .isString()
+    .trim()
+    .isLength({ min: 1, max: 60 })
+    .withMessage('Name must be 1-60 characters'),
+  body('username')
+    .optional({ nullable: true })
+    .isString()
+    .trim()
+    .matches(/^[a-zA-Z0-9_]{3,30}$/)
+    .withMessage('Username must be 3-30 characters (letters, numbers, underscore)'),
+  body('avatarUrl')
+    .optional({ nullable: true })
+    .isString()
+    .isLength({ max: 500 })
+    .withMessage('Invalid avatar URL'),
+  body('avatarPublicId')
+    .optional({ nullable: true })
+    .isString()
+    .isLength({ max: 300 })
+    .withMessage('Invalid avatar reference'),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+    next();
+  }
+];

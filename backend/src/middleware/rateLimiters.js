@@ -105,3 +105,23 @@ export const templateViewLimiter = rateLimit({
   message: { success: false, error: 'Template view request rate exceeded.' },
   ...(store && { store })
 });
+
+// ─── Tier 8: Profile writes (name / username / avatar removal) ────────────
+export const profileUpdateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30, // 30 profile mutations per 15 min per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Too many profile updates. Please slow down.' },
+  ...(store && { store })
+});
+
+// ─── Tier 9: Avatar upload signatures (strict — each triggers a Cloudinary) ─
+export const avatarUploadLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 20, // 20 avatar uploads per hour per IP
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, error: 'Avatar upload limit reached. Please try again later.' },
+  ...(store && { store })
+});

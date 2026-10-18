@@ -1,7 +1,24 @@
 import express from 'express';
 import admin, { hasCredentials } from '../utils/firebaseAdmin.js';
 import { verifyToken, requireAdmin } from '../middleware/auth.js';
-import { checkProStatus, checkEliteStatus, evaluateAiTrial, MAX_FREE_AI_TRIALS } from '../services/userService.js';
+import {
+    checkProStatus,
+    checkEliteStatus,
+    evaluateAiTrial,
+    MAX_FREE_AI_TRIALS,
+    getUserProfile,
+    updateUserProfile,
+    isUsernameAvailable,
+    ProfileError,
+} from '../services/userService.js';
+import {
+    createUploadSignature,
+    destroyAsset,
+    isCloudinaryConfigured,
+    MAX_AVATAR_BYTES,
+} from '../services/cloudinaryService.js';
+import { profileUpdateLimiter, avatarUploadLimiter } from '../middleware/rateLimiters.js';
+import { validateUpdateProfile } from '../middleware/validators.js';
 import { sendWelcomeEmail, sendFreeSubscriptionEmail, sendProSubscriptionEmail, sendReengagementEmail, sendAnnouncementEmail } from '../utils/sendEmail.js';
 import { getCollection } from '../services/mongoService.js';
 import { logActivity } from '../services/activityLogService.js';
@@ -924,6 +941,159 @@ router.post('/activity', optionalVerifyToken, async (req, res) => {
     } catch (err) {
         console.error('[UserActivity] Error logging user activity:', err.message);
         res.status(500).json({ success: false, error: 'Failed to record activity' });
+    }
+});
+
+/* ==========================================================================
+ * Profile — avatar (Cloudinary direct upload) + editable name / username
+ * ======================================================================== */
+
+const profileIdentity = (req) => ({
+    uid: req.user?.uid || null,
+    email: req.user?.email || null,
+});
+
+/**
+ * @route GET /api/v1/users/profile
+ * @desc Current user's profile + Cloudinary availability
+ * @access Private
+ */
+router.get('/profile', verifyToken, async (req, res) => {
+    try {
+        const { uid, email } = profileIdentity(req);
+        const profile = await getUserProfile(uid, email);
+        res.json({
+            success: true,
+            profile,
+            cloudinary: { configured: isCloudinaryConfigured(), maxBytes: MAX_AVATAR_BYTES },
+        });
+    } catch (error) {
+        console.error('[Profile] GET error:', error.message);
+        res.status(500).json({ success: false, error: 'Failed to load profile' });
+    }
+});
+
+/**
+ * @route GET /api/v1/users/username-available?handle=
+ * @desc Check whether a username is free (caller keeps their own)
+ * @access Private
+ */
+router.get('/username-available', verifyToken, async (req, res) => {
+    try {
+        const { uid, email } = profileIdentity(req);
+        const result = await isUsernameAvailable(req.query.handle, { uid, email });
+        res.json({ success: true, ...result });
+    } catch (error) {
+        console.error('[Profile] username check error:', error.message);
+        res.status(500).json({ success: false, error: 'Failed to check username' });
+    }
+});
+
+/**
+ * @route PUT /api/v1/users/profile
+ * @desc Update display name, unique username and/or avatar
+ * @access Private
+ */
+router.put('/profile', verifyToken, profileUpdateLimiter, validateUpdateProfile, async (req, res) => {
+    try {
+        const { uid, email } = profileIdentity(req);
+        const { displayName, username, avatarUrl, avatarPublicId } = req.body || {};
+
+        const before = await getUserProfile(uid, email);
+        const profile = await updateUserProfile(uid, email, { displayName, username, avatarUrl, avatarPublicId });
+
+        // A new avatar replaced the old one → reclaim the orphaned asset.
+        if (before.avatarPublicId && before.avatarPublicId !== profile.avatarPublicId) {
+            destroyAsset(before.avatarPublicId).catch(() => {});
+        }
+
+        // Mirror identity to Firebase so other surfaces stay consistent.
+        if (hasCredentials && uid) {
+            try {
+                await admin.auth().updateUser(uid, {
+                    ...(displayName !== undefined ? { displayName: profile.displayName } : {}),
+                    ...(avatarUrl !== undefined ? { photoURL: profile.avatarUrl || null } : {}),
+                });
+            } catch (fbErr) {
+                console.warn('[Profile] Firebase mirror skipped:', fbErr.message);
+            }
+        }
+
+        logActivity({
+            type: 'user.profile_updated',
+            userId: uid,
+            email,
+            level: 'info',
+            metadata: { fields: Object.keys(req.body || {}) },
+        });
+
+        res.json({ success: true, profile });
+    } catch (error) {
+        if (error instanceof ProfileError) {
+            return res.status(error.status).json({ success: false, code: error.code, error: error.message });
+        }
+        console.error('[Profile] PUT error:', error.message);
+        res.status(500).json({ success: false, error: 'Failed to update profile' });
+    }
+});
+
+/**
+ * @route POST /api/v1/users/avatar-signature
+ * @desc Signed Cloudinary upload params so the browser can upload directly
+ * @access Private
+ */
+router.post('/avatar-signature', verifyToken, avatarUploadLimiter, async (req, res) => {
+    try {
+        if (!isCloudinaryConfigured()) {
+            return res.status(503).json({
+                success: false,
+                code: 'CLOUDINARY_NOT_CONFIGURED',
+                error: 'Image uploads are not configured yet.',
+            });
+        }
+        const signature = createUploadSignature();
+        res.json({ success: true, ...signature });
+    } catch (error) {
+        console.error('[Profile] signature error:', error.message);
+        res.status(500).json({ success: false, error: 'Failed to create upload signature' });
+    }
+});
+
+/**
+ * @route DELETE /api/v1/users/avatar
+ * @desc Remove the current avatar from Cloudinary and the profile
+ * @access Private
+ */
+router.delete('/avatar', verifyToken, profileUpdateLimiter, async (req, res) => {
+    try {
+        const { uid, email } = profileIdentity(req);
+        const current = await getUserProfile(uid, email);
+
+        if (current.avatarPublicId) {
+            destroyAsset(current.avatarPublicId).catch(() => {});
+        }
+        const profile = await updateUserProfile(uid, email, { avatarUrl: null });
+
+        if (hasCredentials && uid) {
+            try {
+                await admin.auth().updateUser(uid, { photoURL: null });
+            } catch (fbErr) {
+                console.warn('[Profile] Firebase mirror skipped:', fbErr.message);
+            }
+        }
+
+        logActivity({
+            type: 'user.avatar_removed',
+            userId: uid,
+            email,
+            level: 'info',
+            metadata: {},
+        });
+
+        res.json({ success: true, profile });
+    } catch (error) {
+        console.error('[Profile] delete avatar error:', error.message);
+        res.status(500).json({ success: false, error: 'Failed to remove avatar' });
     }
 });
 

@@ -19,7 +19,7 @@ import { getUserFavorites, removeFromFavorites, FavoriteItem } from '../../servi
 const SECTIONS_ANCHOR = '/build-with-ui-hub';
 
 const Navbar = () => {
-    const { user, isPro, loading, planType } = useAuth();
+    const { user, isPro, loading, planType, profile } = useAuth();
     const { isLoading } = useSkeleton();
     const [isOpen, setIsOpen] = useState(false);
     const location = useLocation();
@@ -95,6 +95,7 @@ const Navbar = () => {
     const isLibraryMenuActive = isLibrary || isTemplates || isBuildWithUIHub;
     const isMcp = location.pathname.startsWith('/dashboard/mcp') || location.pathname === '/mcp';
     const isPricing = location.pathname === '/pricing';
+    const isProfile = location.pathname.startsWith('/profile');
 
     const [showToast, setShowToast] = useState(false);
     const [toastMsg, setToastMsg] = useState('');
@@ -260,7 +261,7 @@ const Navbar = () => {
         user ? (
             /* avatar | NAME | PRO pill | [→] */
             <div className="flex items-center gap-2">
-                <Link to="/favorites" title="Profile"
+                <Link to="/profile" title="Profile"
                     className="flex items-center gap-2.5 px-2.5 py-1 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/20 transition-all duration-200 group">
 
                     {/* Avatar — yellow ring for PRO (blue for standard) + green online dot ALWAYS visible */}
@@ -270,8 +271,8 @@ const Navbar = () => {
                                 ? 'border-[#FFC700] shadow-[0_0_10px_rgba(255,199,0,0.45)] group-hover:shadow-[0_0_14px_rgba(255,199,0,0.7)]'
                                 : 'border-[#1F4BFF] shadow-[0_0_10px_rgba(31,75,255,0.45)] group-hover:shadow-[0_0_14px_rgba(31,75,255,0.7)]'
                         }`}>
-                            {user.photoURL
-                                ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" />
+                            {(profile?.avatarUrl || user.photoURL)
+                                ? <img src={profile?.avatarUrl || user.photoURL || undefined} alt="" className="w-full h-full object-cover" />
                                 : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={13} /></div>
                             }
                         </div>
@@ -281,7 +282,7 @@ const Navbar = () => {
 
                     {/* Name — prominent and crisp */}
                     <span className="hidden lg:block text-[13px] font-black text-white uppercase tracking-wider">
-                        {user.displayName?.split(' ')[0] || 'User'}
+                        {(profile?.displayName || user.displayName)?.split(' ')[0] || 'User'}
                     </span>
 
                     {/* Badge — ALWAYS visible directly without hover */}
@@ -423,12 +424,12 @@ const Navbar = () => {
                         {/* Avatar + hamburger */}
                         <div className="flex items-center gap-1.5 shrink-0">
                             {user ? (
-                                <Link to="/favorites" aria-label="Profile" className={`w-8 h-8 rounded-full border-2 overflow-hidden ${
+                                <Link to="/profile" aria-label="Profile" className={`w-8 h-8 rounded-full border-2 overflow-hidden ${
                                     isPro
                                         ? 'border-[#FFC700] shadow-[0_0_10px_rgba(255,199,0,0.45)]'
                                         : 'border-[#1F4BFF] shadow-[0_0_10px_rgba(31,75,255,0.45)]'
                                 }`}>
-                                    {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={13} /></div>}
+                                    {(profile?.avatarUrl || user.photoURL) ? <img src={profile?.avatarUrl || user.photoURL || undefined} alt="" className="w-full h-full object-cover" /> : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={13} /></div>}
                                 </Link>
                             ) : (
                                 <Link to="/login" className="px-2.5 py-1.5 rounded-md text-[11px] font-semibold text-white/55 bg-white/[0.05] border border-white/[0.07]">Sign in</Link>
@@ -453,15 +454,15 @@ const Navbar = () => {
                                 className="lg:hidden border-t border-white/[0.05] bg-[rgba(8,8,14,0.97)] backdrop-blur-2xl overflow-hidden">
                                 <div className="px-4 py-4 flex flex-col gap-1">
                                     {user && (
-                                        <Link to="/favorites" onClick={() => setIsOpen(false)} className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.04] border border-white/[0.06] mb-1.5">
+                                        <Link to="/profile" onClick={() => setIsOpen(false)} className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.04] border border-white/[0.06] mb-1.5">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-9 h-9 rounded-full border-2 overflow-hidden shrink-0 ${
                                                     isPro ? 'border-[#FFC700]' : 'border-white/[0.12]'
                                                 }`}>
-                                                    {user.photoURL ? <img src={user.photoURL} alt="" className="w-full h-full object-cover" /> : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={15} /></div>}
+                                                    {(profile?.avatarUrl || user.photoURL) ? <img src={profile?.avatarUrl || user.photoURL || undefined} alt="" className="w-full h-full object-cover" /> : <div className={`w-full h-full flex items-center justify-center ${isPro ? 'bg-[#FFC700] text-black' : 'bg-[#1F4BFF] text-white'}`}><UserIcon size={15} /></div>}
                                                 </div>
                                                 <div>
-                                                    <p className="text-[13px] font-black text-white/90 uppercase tracking-wider">{user.displayName || 'User'}</p>
+                                                    <p className="text-[13px] font-black text-white/90 uppercase tracking-wider">{profile?.displayName || user.displayName || 'User'}</p>
                                                     <p className="text-[11px] text-white/30">{user.email}</p>
                                                 </div>
                                             </div>
@@ -480,6 +481,7 @@ const Navbar = () => {
                                         { to: SECTIONS_ANCHOR, label: 'Build with UI HUB', active: isBuildWithUIHub },
                                         { to: '/dashboard/mcp', label: 'MCP', active: isMcp },
                                         { to: '/pricing', label: 'Pricing', active: isPricing },
+                                        ...(user ? [{ to: '/profile', label: 'Profile', active: isProfile }] : []),
                                     ].map(({ to, label, active }) => (
                                         <Link key={to + label} to={to} onClick={() => setIsOpen(false)}
                                             className={`flex items-center gap-3 px-4 py-3 rounded-xl text-[13px] font-bold uppercase tracking-wider transition-all ${active ? 'bg-[#1F4BFF]/15 text-white border border-[#1F4BFF]/20' : 'text-white/40 hover:text-white hover:bg-white/[0.05]'}`}>

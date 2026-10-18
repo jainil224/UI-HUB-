@@ -5,6 +5,7 @@ import { getApiBaseUrl } from '../utils/apiConfig';
 import { syncUserWithBackend } from '../utils/syncUser';
 import { logUserActivity } from '../utils/activityLogger';
 import { setViewAuthTokenProvider } from '../services/templateViews';
+import { getProfile, type ProfileData } from '../services/profile';
 import WelcomeNotifications from '../components/ui/WelcomeNotifications';
 
 let syncedThisSession = false;
@@ -29,6 +30,8 @@ interface AuthContextType {
     hasCategoryAccess: (category: string) => boolean;
     purchasedComponents: string[];
     hasComponentAccess: (id: string) => boolean;
+    profile: ProfileData | null;
+    refreshProfile: () => Promise<ProfileData | null>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -41,6 +44,8 @@ const AuthContext = createContext<AuthContextType>({
     hasCategoryAccess: () => false,
     purchasedComponents: [],
     hasComponentAccess: () => false,
+    profile: null,
+    refreshProfile: async () => null,
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -75,6 +80,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             return [];
         }
     });
+    const [profile, setProfile] = useState<ProfileData | null>(null);
     const welcomeFiredForRef = useRef<string | null>(null);
 
     const fireWelcome = (u: User, alreadyShown: boolean | null) => {
@@ -204,6 +210,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }, []);
 
+    // Loads the editable profile (display name, unique username, avatar) from
+    // the backend, which is the source of truth. Failures are non-fatal so the
+    // app still works if MongoDB is briefly unavailable.
+    const refreshProfile = useCallback(async (): Promise<ProfileData | null> => {
+        const currentUser = auth.currentUser;
+        if (!currentUser) {
+            setProfile(null);
+            return null;
+        }
+        try {
+            const { profile: fresh } = await getProfile();
+            setProfile(fresh);
+            return fresh;
+        } catch (error) {
+            const code = (error as { code?: string })?.code;
+            if (code !== 'DATABASE_UNAVAILABLE') {
+                console.error('[Auth] Failed to load profile:', error);
+            }
+            return null;
+        }
+    }, []);
+
     useEffect(() => {
         const checkRedirect = async () => {
             try {
@@ -250,6 +278,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
                 try {
                     await refreshProStatus();
+                    await refreshProfile();
                 } finally {
                     setLoading(false);
                 }
@@ -259,13 +288,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 setPlanType('free');
                 setSelectedCategories([]);
                 setPurchasedComponents([]);
+                setProfile(null);
                 localStorage.setItem('ui-hub-purchased-components', '[]');
                 setLoading(false);
             }
         });
 
         return unsubscribe;
-    }, [refreshProStatus]);
+    }, [refreshProStatus, refreshProfile]);
 
     const isSpecialUser = user?.email === 'jainil11199@gmail.com';
 
@@ -315,7 +345,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }, [refreshProStatus]);
 
     return (
-        <AuthContext.Provider value={{ user, isPro: isPro || isSpecialUser, loading, refreshProStatus, planType, selectedCategories, hasCategoryAccess, purchasedComponents, hasComponentAccess }}>
+        <AuthContext.Provider value={{ user, isPro: isPro || isSpecialUser, loading, refreshProStatus, planType, selectedCategories, hasCategoryAccess, purchasedComponents, hasComponentAccess, profile, refreshProfile }}>
             {/* Always render children immediately to unblock app mount */}
             {children}
 

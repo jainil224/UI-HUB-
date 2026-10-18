@@ -6,6 +6,7 @@ import Footer from './components/ui/Footer';
 const HomePage = React.lazy(() => import('./pages/HomePage/HomePage'));
 const LibraryPage = React.lazy(() => import('./pages/LibraryPage/LibraryPage'));
 const FavoritesPage = React.lazy(() => import('./pages/Dashboard/FavoritesPage'));
+const ProfilePage = React.lazy(() => import('./pages/Profile/ProfilePage'));
 const DashboardLayout = React.lazy(() => import('./pages/Dashboard/DashboardLayout'));
 const MCPPage = React.lazy(() => import('./pages/Dashboard/MCPPage'));
 const CollectionsPage = React.lazy(() => import('./pages/Dashboard/CollectionsPage'));
@@ -130,6 +131,7 @@ const AppShell = () => {
               <Route path="/" element={<HomePage />} />
               <Route path="/library" element={<LibraryPage />} />
               <Route path="/favorites" element={<FavoritesPage />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/dashboard" element={<DashboardLayout />}>
                 <Route index element={<Navigate to="/dashboard/mcp" replace />} />
                 <Route path="mcp" element={<MCPPage />} />

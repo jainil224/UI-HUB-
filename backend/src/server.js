@@ -12,6 +12,7 @@ import templateViewsRoutes from './routes/templateViewsRoutes.js';
 import { globalLimiter, redisStatus } from './middleware/rateLimiters.js';
 import { startUserSyncWorker } from './services/syncService.js';
 import { syncAllComponentsToMongo } from './services/componentSyncService.js';
+import { ensureProfileIndexes } from './services/userService.js';
 import { buildHealthReport } from './services/healthService.js';
 import { buildCorsOptions } from './config/corsPolicy.js';
 
@@ -156,6 +157,9 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
     syncAllComponentsToMongo().catch((err) =>
       console.error('[Startup] Component sync notice:', err.message)
     );
+    ensureProfileIndexes().catch((err) =>
+      console.error('[Startup] Profile index notice:', err.message)
+    );
     startUserSyncWorker();
   });
 
@@ -182,5 +186,8 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   // Vercel runs the exported app as a serverless function, without app.listen().
   syncAllComponentsToMongo().catch((err) =>
     console.error('[Startup] Component sync notice:', err.message)
+  );
+  ensureProfileIndexes().catch((err) =>
+    console.error('[Startup] Profile index notice:', err.message)
   );
 }
