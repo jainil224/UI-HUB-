@@ -7,8 +7,13 @@ export const PREMIUM_AI_TOOLS = ['advance', 'antigravity', 'claude'];
 export const MAX_FREE_AI_TRIALS = 2;
 export const TRIAL_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-export const USERNAME_RE = /^[a-zA-Z0-9_]{3,30}$/;
+export const USERNAME_RE = /^(?=.*[A-Z])[A-Za-z0-9._-]{3,30}$/;
+export const USERNAME_RULE_MESSAGE =
+  'Username must be 3-30 characters using letters, numbers, dot, underscore or hyphen, and include at least one capital letter.';
 export const DISPLAY_NAME_MAX = 60;
+
+/** Legacy unique index on the (formerly lowercased) username field. */
+const LEGACY_USERNAME_INDEX = 'username_1';
 
 /** Thrown by profile mutations so routes can map a cause to an HTTP status. */
 export class ProfileError extends Error {
@@ -287,18 +292,47 @@ const sanitizeProfile = (doc, fallback = {}) => ({
 });
 
 /**
- * Creates the unique (sparse) index that enforces username uniqueness.
+ * Creates the unique (sparse) index that enforces case-insensitive username
+ * uniqueness. Migrates away from the legacy index on the raw `username` field
+ * and backfills `usernameLower` for pre-existing documents.
  * Idempotent; safe to call on every boot.
  * @returns {Promise<boolean>}
  */
 export const ensureProfileIndexes = async () => {
   try {
     const users = await getCollection(USERS_COLLECTION);
-    await users.createIndex({ username: 1 }, { unique: true, sparse: true });
+
+    await users.dropIndex(LEGACY_USERNAME_INDEX).catch(() => {});
+
+    await users
+      .createIndex({ usernameLower: 1 }, { unique: true, sparse: true, name: 'usernameLower_1' })
+      .catch(async (error) => {
+        if (error?.code === 85) return;
+        throw error;
+      });
+
+    await backfillUsernameLower(users);
     return true;
   } catch (error) {
     console.warn('[Profile] Could not ensure username index:', error.message);
     return false;
+  }
+};
+
+/** Populates `usernameLower` on documents saved before case-insensitive keys. */
+const backfillUsernameLower = async (users) => {
+  const missing = await users
+    .find(
+      { username: { $type: 'string' }, usernameLower: { $exists: false } },
+      { projection: { _id: 1, username: 1 } }
+    )
+    .toArray()
+    .catch(() => []);
+
+  for (const doc of missing) {
+    await users
+      .updateOne({ _id: doc._id }, { $set: { usernameLower: normalizeUsername(doc.username) } })
+      .catch(() => {});
   }
 };
 
@@ -316,11 +350,14 @@ export const getUserProfile = async (uid, email) => {
  * @returns {Promise<{ available: boolean, reason?: string }>}
  */
 export const isUsernameAvailable = async (handle, { uid, email } = {}) => {
-  const username = normalizeUsername(handle);
+  const username = String(handle ?? '').trim();
   if (!USERNAME_RE.test(username)) return { available: false, reason: 'INVALID' };
 
   const users = await getCollection(USERS_COLLECTION);
-  const existing = await users.findOne({ username }, { projection: { _id: 1 } });
+  const existing = await users.findOne(
+    { usernameLower: normalizeUsername(username) },
+    { projection: { _id: 1 } }
+  );
   if (!existing) return { available: true };
 
   const { data } = await findUserData(uid, email);
@@ -353,18 +390,17 @@ export const updateUserProfile = async (uid, email, updates = {}) => {
   }
 
   if (updates.username !== undefined && updates.username !== null && String(updates.username).trim() !== '') {
-    const username = normalizeUsername(updates.username);
+    const username = String(updates.username).trim();
     if (!USERNAME_RE.test(username)) {
-      throw new ProfileError(
-        'Username must be 3-30 characters using letters, numbers or underscore',
-        'INVALID_USERNAME'
-      );
+      throw new ProfileError(USERNAME_RULE_MESSAGE, 'INVALID_USERNAME');
     }
-    const clash = await users.findOne({ username }, { projection: { _id: 1 } });
+    const usernameLower = normalizeUsername(username);
+    const clash = await users.findOne({ usernameLower }, { projection: { _id: 1 } });
     if (clash && String(clash._id) !== String(targetId)) {
       throw new ProfileError('That username is already taken', 'USERNAME_TAKEN', 409);
     }
     set.username = username;
+    set.usernameLower = usernameLower;
   }
 
   if (updates.avatarUrl !== undefined) {

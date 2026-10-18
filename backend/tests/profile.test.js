@@ -134,6 +134,67 @@ test('destroyAsset refuses foreign ids and unconfigured clouds (no network)', as
   });
 });
 
+/** Runs `fn` with `global.fetch` replaced, restoring it afterwards. */
+const withFetch = async (impl, fn) => {
+  const original = global.fetch;
+  global.fetch = impl;
+  try {
+    return await fn();
+  } finally {
+    global.fetch = original;
+  }
+};
+
+test('getAssetInfo reads the real asset bytes via the Admin API', async () => {
+  const { getAssetInfo } = await loadCloudinary(CLOUD_ENV);
+  let calledUrl;
+  const info = await withFetch(
+    async (url) => {
+      calledUrl = String(url);
+      return {
+        ok: true,
+        json: async () => ({
+          resources: [
+            { public_id: 'ui-hub/avatars/abc', bytes: 1234, width: 512, height: 512, format: 'png' },
+          ],
+        }),
+      };
+    },
+    () => getAssetInfo('ui-hub/avatars/abc')
+  );
+  assert.equal(info.bytes, 1234);
+  assert.equal(info.width, 512);
+  assert.equal(info.format, 'png');
+  assert.ok(calledUrl.includes('/resources/image/upload'));
+  assert.ok(calledUrl.includes('public_ids'));
+});
+
+test('getAssetInfo returns null when the asset is missing', async () => {
+  const { getAssetInfo } = await loadCloudinary(CLOUD_ENV);
+  const info = await withFetch(
+    async () => ({ ok: true, json: async () => ({ resources: [] }) }),
+    () => getAssetInfo('ui-hub/avatars/none')
+  );
+  assert.equal(info, null);
+});
+
+test('getAssetInfo throws on an Admin API error', async () => {
+  const { getAssetInfo } = await loadCloudinary(CLOUD_ENV);
+  await assert.rejects(
+    withFetch(async () => ({ ok: false, status: 500 }), () => getAssetInfo('ui-hub/avatars/abc')),
+    /HTTP 500/
+  );
+});
+
+test('getAssetInfo throws when Cloudinary is unconfigured', async () => {
+  const { getAssetInfo } = await loadCloudinary({
+    CLOUDINARY_CLOUD_NAME: undefined,
+    CLOUDINARY_API_KEY: undefined,
+    CLOUDINARY_API_SECRET: undefined,
+  });
+  await assert.rejects(() => getAssetInfo('ui-hub/avatars/abc'), /CLOUDINARY_NOT_CONFIGURED/);
+});
+
 /* ─────────────────────────────────────────────────────────────────────────
  * Profile validators
  * ───────────────────────────────────────────────────────────────────────── */
@@ -172,12 +233,19 @@ test('validateUpdateProfile accepts a valid payload', async () => {
   const { validateUpdateProfile } = await import('../src/middleware/validators.js');
   const result = await runValidatorChain(validateUpdateProfile, {
     displayName: 'Ada Lovelace',
-    username: 'ada_dev',
+    username: 'Ada_Dev',
     avatarUrl: 'https://res.cloudinary.com/demo-cloud/image/upload/v1/av.png',
     avatarPublicId: 'ui-hub/avatars/abc',
   });
   assert.equal(result.passed, true);
   assert.equal(result.status, 200);
+});
+
+test('validateUpdateProfile rejects a username without a capital letter', async () => {
+  const { validateUpdateProfile } = await import('../src/middleware/validators.js');
+  const result = await runValidatorChain(validateUpdateProfile, { username: 'ada_dev' });
+  assert.equal(result.status, 400);
+  assert.ok(result.body.errors.some((e) => e.path === 'username'));
 });
 
 test('validateUpdateProfile rejects an invalid username', async () => {
@@ -214,13 +282,18 @@ test('normalizeUsername trims and lowercases', async () => {
 
 test('USERNAME_RE enforces the documented handle rules', async () => {
   const { USERNAME_RE } = await import('../src/services/userService.js');
-  assert.equal(USERNAME_RE.test('ada_dev'), true);
-  assert.equal(USERNAME_RE.test('abc'), true);
-  assert.equal(USERNAME_RE.test('a'.repeat(30)), true);
-  assert.equal(USERNAME_RE.test('ab'), false);
-  assert.equal(USERNAME_RE.test('a'.repeat(31)), false);
+  assert.equal(USERNAME_RE.test('Ada_dev'), true);
+  assert.equal(USERNAME_RE.test('Abc'), true);
+  assert.equal(USERNAME_RE.test('John.Doe'), true);
+  assert.equal(USERNAME_RE.test('John-Doe'), true);
+  assert.equal(USERNAME_RE.test('JOHN'), true);
+  assert.equal(USERNAME_RE.test('A'.repeat(30)), true, '30 chars with a capital is allowed');
+  assert.equal(USERNAME_RE.test('ada_dev'), false, 'a capital letter is required');
+  assert.equal(USERNAME_RE.test('ab'), false, 'too short');
+  assert.equal(USERNAME_RE.test('a'.repeat(31)), false, 'too long');
   assert.equal(USERNAME_RE.test('has space'), false);
-  assert.equal(USERNAME_RE.test('bad-dash'), false);
+  assert.equal(USERNAME_RE.test('Ada@dev'), false);
+  assert.equal(USERNAME_RE.test('bad!dash'), false);
 });
 
 test('ProfileError carries a code and status', async () => {

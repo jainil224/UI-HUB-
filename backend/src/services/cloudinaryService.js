@@ -143,6 +143,51 @@ export const destroyAsset = async (publicId) => {
   }
 };
 
+/**
+ * Looks up an uploaded asset via the Cloudinary Admin API to read its real
+ * metadata (notably `bytes`). Cloudinary cannot enforce a max file size on the
+ * upload endpoint or via presets, so this is how the server verifies the limit
+ * after the browser upload completes.
+ *
+ * Never throws for a missing asset — returns `null` in that case. Throws only
+ * when Cloudinary is unconfigured or the request itself fails (callers treat
+ * that as fail-open; the browser-side size guard still applies).
+ *
+ * @param {string} publicId
+ * @returns {Promise<null | { publicId: string, bytes: number, width?: number, height?: number, format?: string }>}
+ */
+export const getAssetInfo = async (publicId) => {
+  if (!isCloudinaryConfigured()) {
+    throw new Error('CLOUDINARY_NOT_CONFIGURED');
+  }
+  if (typeof publicId !== 'string' || !publicId) return null;
+
+  const query = new URLSearchParams({ 'public_ids[]': publicId, max_results: '1' });
+  const auth = Buffer.from(`${API_KEY}:${API_SECRET}`).toString('base64');
+
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/resources/image/upload?${query.toString()}`,
+    { headers: { Authorization: `Basic ${auth}` } }
+  );
+  if (!res.ok) {
+    throw new Error(`Cloudinary admin API responded with HTTP ${res.status}`);
+  }
+
+  const json = await res.json().catch(() => ({}));
+  const asset = Array.isArray(json?.resources)
+    ? json.resources.find((item) => item?.public_id === publicId) || json.resources[0]
+    : null;
+  if (!asset) return null;
+
+  return {
+    publicId: asset.public_id,
+    bytes: Number(asset.bytes) || 0,
+    width: asset.width,
+    height: asset.height,
+    format: asset.format,
+  };
+};
+
 export default {
   isCloudinaryConfigured,
   createUploadSignature,
@@ -150,6 +195,7 @@ export default {
   isOwnCloudinaryUrl,
   isOwnAvatarPublicId,
   destroyAsset,
+  getAssetInfo,
   ALLOWED_AVATAR_FORMATS,
   MAX_AVATAR_BYTES,
 };

@@ -14,7 +14,9 @@ import {
 import {
     createUploadSignature,
     destroyAsset,
+    getAssetInfo,
     isCloudinaryConfigured,
+    isOwnAvatarPublicId,
     MAX_AVATAR_BYTES,
 } from '../services/cloudinaryService.js';
 import { profileUpdateLimiter, avatarUploadLimiter } from '../middleware/rateLimiters.js';
@@ -954,6 +956,39 @@ const profileIdentity = (req) => ({
 });
 
 /**
+ * Server-side enforcement of the avatar size limit.
+ *
+ * Cloudinary cannot enforce a max file size on the upload endpoint or via
+ * presets, so after the browser uploads we read the real asset `bytes` from the
+ * Cloudinary Admin API. If it exceeds the limit the asset is deleted and the
+ * save is rejected. A network/Admin-API failure is treated as fail-open (the
+ * browser-side guard still applies) rather than blocking valid saves.
+ *
+ * @param {string} avatarPublicId
+ * @returns {Promise<void>}
+ */
+const enforceAvatarSize = async (avatarPublicId) => {
+    let info;
+    try {
+        info = await getAssetInfo(avatarPublicId);
+    } catch (err) {
+        console.warn('[Profile] Avatar size verification skipped:', err.message);
+        return;
+    }
+    if (!info) {
+        throw new ProfileError('Uploaded avatar could not be found', 'AVATAR_NOT_FOUND', 400);
+    }
+    if (info.bytes > MAX_AVATAR_BYTES) {
+        destroyAsset(avatarPublicId).catch(() => {});
+        throw new ProfileError(
+            `Avatar must be ${Math.round(MAX_AVATAR_BYTES / (1024 * 1024))} MB or smaller`,
+            'AVATAR_TOO_LARGE',
+            413
+        );
+    }
+};
+
+/**
  * @route GET /api/v1/users/profile
  * @desc Current user's profile + Cloudinary availability
  * @access Private
@@ -1000,6 +1035,21 @@ router.put('/profile', verifyToken, profileUpdateLimiter, validateUpdateProfile,
         const { displayName, username, avatarUrl, avatarPublicId } = req.body || {};
 
         const before = await getUserProfile(uid, email);
+
+        // A newly uploaded avatar is verified against the real asset size before
+        // it is linked to the profile.
+        const isNewAvatar =
+            typeof avatarUrl === 'string' &&
+            avatarUrl !== '' &&
+            avatarUrl !== before.avatarUrl &&
+            typeof avatarPublicId === 'string' &&
+            avatarPublicId !== '' &&
+            avatarPublicId !== before.avatarPublicId &&
+            isOwnAvatarPublicId(avatarPublicId);
+        if (isNewAvatar) {
+            await enforceAvatarSize(avatarPublicId);
+        }
+
         const profile = await updateUserProfile(uid, email, { displayName, username, avatarUrl, avatarPublicId });
 
         // A new avatar replaced the old one → reclaim the orphaned asset.
@@ -1051,6 +1101,18 @@ router.post('/avatar-signature', verifyToken, avatarUploadLimiter, async (req, r
                 error: 'Image uploads are not configured yet.',
             });
         }
+
+        // Early, cheap guard: refuse to sign uploads the client already reports
+        // as oversized. The real byte size is verified again after upload.
+        const declaredSize = Number(req.body?.size);
+        if (Number.isFinite(declaredSize) && declaredSize > MAX_AVATAR_BYTES) {
+            return res.status(413).json({
+                success: false,
+                code: 'AVATAR_TOO_LARGE',
+                error: `Image must be ${Math.round(MAX_AVATAR_BYTES / (1024 * 1024))} MB or smaller`,
+            });
+        }
+
         const signature = createUploadSignature();
         res.json({ success: true, ...signature });
     } catch (error) {

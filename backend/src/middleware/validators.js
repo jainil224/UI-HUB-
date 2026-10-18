@@ -64,8 +64,10 @@ export const validateUpdateProfile = [
     .optional({ nullable: true })
     .isString()
     .trim()
-    .matches(/^[a-zA-Z0-9_]{3,30}$/)
-    .withMessage('Username must be 3-30 characters (letters, numbers, underscore)'),
+    .matches(/^(?=.*[A-Z])[A-Za-z0-9._-]{3,30}$/)
+    .withMessage(
+      'Username must be 3-30 characters (letters, numbers, dot, underscore, hyphen) with at least one capital letter'
+    ),
   body('avatarUrl')
     .optional({ nullable: true })
     .isString()
