@@ -1,11 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Camera, Loader2, Trash2, AlertCircle, User as UserIcon } from 'lucide-react';
+import { type Area } from 'react-easy-crop';
 import {
     requestAvatarSignature,
     uploadAvatarToCloudinary,
-    resizeImageToSquare,
+    cropImageToSquare,
     ProfileError,
 } from '../../services/profile';
+import ImageCropModal from './ImageCropModal';
 
 interface AvatarUploaderProps {
     avatarUrl: string | null;
@@ -31,20 +33,40 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({
     onRemoved,
 }) => {
     const inputRef = useRef<HTMLInputElement>(null);
+    const cropSourceRef = useRef<string | null>(null);
     const [busy, setBusy] = useState(false);
     const [progress, setProgress] = useState(0);
     const [error, setError] = useState<string | null>(null);
+    const [cropSource, setCropSource] = useState<string | null>(null);
 
     const ring = isPro
         ? 'border-[#FFC700] shadow-[0_0_18px_rgba(255,199,0,0.45)]'
         : 'border-[#1F4BFF] shadow-[0_0_18px_rgba(31,75,255,0.45)]';
+
+    const closeCrop = () => {
+        if (cropSourceRef.current) {
+            URL.revokeObjectURL(cropSourceRef.current);
+            cropSourceRef.current = null;
+        }
+        setCropSource(null);
+    };
+
+    useEffect(() => {
+        // Release any object URL left behind if the component unmounts mid-crop.
+        return () => {
+            if (cropSourceRef.current) {
+                URL.revokeObjectURL(cropSourceRef.current);
+                cropSourceRef.current = null;
+            }
+        };
+    }, []);
 
     const pickFile = () => {
         if (disabled || busy) return;
         inputRef.current?.click();
     };
 
-    const handleFile = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFile = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         event.target.value = '';
         if (!file) return;
@@ -64,13 +86,24 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({
             return;
         }
 
+        // Open the crop dialog; the upload starts only after the user confirms.
+        closeCrop();
+        const url = URL.createObjectURL(file);
+        cropSourceRef.current = url;
+        setCropSource(url);
+    };
+
+    const handleCropConfirm = async (area: Area) => {
+        if (!cropSource) return;
+        const source = cropSource;
         setBusy(true);
         setProgress(0);
         try {
-            const optimized = await resizeImageToSquare(file, 512);
+            const optimized = await cropImageToSquare(source, area, 512);
             const signature = await requestAvatarSignature();
             const { url, publicId } = await uploadAvatarToCloudinary(optimized, signature, setProgress);
             await onUploaded(url, publicId);
+            closeCrop();
         } catch (err) {
             setError(err instanceof ProfileError ? err.message : 'Upload failed. Please try again.');
         } finally {
@@ -135,7 +168,7 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({
                 <p className="text-sm font-black uppercase tracking-wider text-white/90">Profile photo</p>
                 <p className="mt-1 text-xs text-white/40">
                     {cloudinaryConfigured
-                        ? `JPG, PNG or WebP. Up to ${MAX_DISPLAY_MB(maxBytes)} MB. Square crop applied automatically.`
+                        ? `JPG, PNG or WebP. Up to ${MAX_DISPLAY_MB(maxBytes)} MB. You can crop it before saving.`
                         : 'Uploads are disabled until Cloudinary is configured on the server.'}
                 </p>
 
@@ -166,6 +199,15 @@ const AvatarUploader: React.FC<AvatarUploaderProps> = ({
                     </p>
                 )}
             </div>
+
+            {cropSource && (
+                <ImageCropModal
+                    imageSrc={cropSource}
+                    busy={busy}
+                    onCancel={closeCrop}
+                    onConfirm={handleCropConfirm}
+                />
+            )}
         </div>
     );
 };

@@ -9,6 +9,8 @@ import {
     getUserProfile,
     updateUserProfile,
     isUsernameAvailable,
+    isDisplayNameAvailable,
+    normalizeDisplayName,
     ProfileError,
 } from '../services/userService.js';
 import {
@@ -642,37 +644,71 @@ router.post('/sync', verifyToken, async (req, res) => {
             const isNewUser = !existingMongoUser;
             const now = new Date();
 
+            const isDuplicateKey = (error) =>
+                error?.code === 11000 || /E11000/i.test(String(error?.message || ''));
+            const displayNameLower = normalizeDisplayName(resolvedName);
+
             if (isNewUser) {
-                await usersCol.updateOne(
-                    { _id: userEmailKey },
-                    {
-                        $set: {
-                            _id: userEmailKey,
-                            email: userEmailKey,
-                            uid,
-                            displayName: resolvedName,
-                            planTier: 'free',
-                            status: 'FREE',
-                            createdAt: now,
-                            lastLogin: now,
-                            lastActive: now,
-                            updatedAt: now,
-                        }
-                    },
-                    { upsert: true }
-                );
+                const newUserFields = {
+                    _id: userEmailKey,
+                    email: userEmailKey,
+                    uid,
+                    displayName: resolvedName,
+                    displayNameLower,
+                    planTier: 'free',
+                    status: 'FREE',
+                    createdAt: now,
+                    lastLogin: now,
+                    lastActive: now,
+                    updatedAt: now,
+                };
+                try {
+                    await usersCol.updateOne(
+                        { _id: userEmailKey },
+                        { $set: newUserFields },
+                        { upsert: true }
+                    );
+                } catch (error) {
+                    // Another account may already own this display name. Sync
+                    // must never fail sign-in, so retry without the name; the
+                    // user can claim a unique one from the profile page.
+                    if (!isDuplicateKey(error)) throw error;
+                    const { displayName: _dn, displayNameLower: _dnl, ...withoutName } = newUserFields;
+                    await usersCol.updateOne(
+                        { _id: userEmailKey },
+                        { $set: withoutName },
+                        { upsert: true }
+                    );
+                }
             } else {
-                await usersCol.updateOne(
-                    { _id: existingMongoUser._id || userEmailKey },
-                    {
-                        $set: {
-                            displayName: resolvedName || existingMongoUser.displayName,
-                            lastLogin: now,
-                            lastActive: now,
-                            updatedAt: now,
-                        }
-                    }
-                );
+                const updateFields = {
+                    lastLogin: now,
+                    lastActive: now,
+                    updatedAt: now,
+                };
+                const nextLower = normalizeDisplayName(resolvedName || existingMongoUser.displayName);
+                // Only write the name when it actually changes; an unchanged
+                // name is owned by this same document and cannot clash.
+                if (nextLower && nextLower !== existingMongoUser.displayNameLower) {
+                    updateFields.displayName = resolvedName || existingMongoUser.displayName;
+                    updateFields.displayNameLower = nextLower;
+                }
+                try {
+                    await usersCol.updateOne(
+                        { _id: existingMongoUser._id || userEmailKey },
+                        { $set: updateFields }
+                    );
+                } catch (error) {
+                    // A different account owns this display name. Keep the
+                    // existing one and let the rest of the sync proceed.
+                    if (!isDuplicateKey(error)) throw error;
+                    delete updateFields.displayName;
+                    delete updateFields.displayNameLower;
+                    await usersCol.updateOne(
+                        { _id: existingMongoUser._id || userEmailKey },
+                        { $set: updateFields }
+                    );
+                }
             }
 
             // Log user login / signup activity to MongoDB activity_logs
@@ -1021,6 +1057,22 @@ router.get('/username-available', verifyToken, async (req, res) => {
     } catch (error) {
         console.error('[Profile] username check error:', error.message);
         res.status(500).json({ success: false, error: 'Failed to check username' });
+    }
+});
+
+/**
+ * @route GET /api/v1/users/display-name-available?name=
+ * @desc Check whether a display name is free (caller keeps their own)
+ * @access Private
+ */
+router.get('/display-name-available', verifyToken, async (req, res) => {
+    try {
+        const { uid, email } = profileIdentity(req);
+        const result = await isDisplayNameAvailable(req.query.name, { uid, email });
+        res.json({ success: true, ...result });
+    } catch (error) {
+        console.error('[Profile] display-name check error:', error.message);
+        res.status(500).json({ success: false, error: 'Failed to check display name' });
     }
 });
 

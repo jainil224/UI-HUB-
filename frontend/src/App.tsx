@@ -108,6 +108,7 @@ const AppShell = () => {
   const isAuth = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/forgot-password';
   const isDemo = location.pathname.startsWith('/demo');
   const isTemplates = location.pathname.startsWith('/templates');
+  const isProfile = location.pathname.startsWith('/profile');
   // The Build with UI HUB section and its detail page mirror /templates, footer included.
   const isBuildWithUIHub = location.pathname.startsWith('/build-with-ui-hub');
 
@@ -214,7 +215,7 @@ const AppShell = () => {
           </React.Suspense>
         </main>
 
-        {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && !isTemplates && !isBuildWithUIHub && <Footer />}
+        {!isLibrary && !isAuth && !isDemo && !isDashboard && !isAdmin && !isTemplates && !isBuildWithUIHub && !isProfile && <Footer />}
       </div>
 
       <TopLoader />

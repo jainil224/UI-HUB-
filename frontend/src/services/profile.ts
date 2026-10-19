@@ -111,6 +111,17 @@ export const checkUsername = async (
     return { available: data.available, reason: data.reason };
 };
 
+export const checkDisplayName = async (
+    name: string,
+    signal?: AbortSignal
+): Promise<{ available: boolean; reason?: string }> => {
+    const data = await request<{ success: boolean; available: boolean; reason?: string }>(
+        `/api/v1/users/display-name-available?name=${encodeURIComponent(name)}`,
+        { signal }
+    );
+    return { available: data.available, reason: data.reason };
+};
+
 export const requestAvatarSignature = async (): Promise<AvatarSignature> => {
     const data = await request<{ success: boolean } & AvatarSignature>('/api/v1/users/avatar-signature', {
         method: 'POST',
@@ -211,4 +222,40 @@ export const resizeImageToSquare = async (file: File, size = 512): Promise<File>
 
     const baseName = (file.name || 'avatar').replace(/\.[^.]+$/, '');
     return new File([blob], `${baseName}.jpg`, { type: 'image/jpeg' });
+};
+
+/** Loads an image (blob/data URL) into an HTMLImageElement. */
+const loadImage = (src: string): Promise<HTMLImageElement> =>
+    new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new ProfileError('Could not read the image.', 'CROP_FAILED'));
+        img.src = src;
+    });
+
+/**
+ * Crops the selected region of an image and downscales it to a square JPEG.
+ * `area` is the pixel region reported by the crop UI.
+ */
+export const cropImageToSquare = async (
+    imageSrc: string,
+    area: { x: number; y: number; width: number; height: number },
+    size = 512
+): Promise<File> => {
+    const image = await loadImage(imageSrc);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new ProfileError('Could not process the image.', 'CROP_FAILED');
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(image, area.x, area.y, area.width, area.height, 0, 0, size, size);
+
+    const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob((b) => resolve(b), 'image/jpeg', 0.9)
+    );
+    if (!blob) throw new ProfileError('Could not process the image.', 'CROP_FAILED');
+
+    return new File([blob], 'avatar.jpg', { type: 'image/jpeg' });
 };

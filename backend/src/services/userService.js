@@ -7,10 +7,10 @@ export const PREMIUM_AI_TOOLS = ['advance', 'antigravity', 'claude'];
 export const MAX_FREE_AI_TRIALS = 2;
 export const TRIAL_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-export const USERNAME_RE = /^(?=.*\d)[A-Z][A-Za-z0-9_-]{2,6}$/;
+export const USERNAME_RE = /^(?=.*\d)[A-Z][A-Za-z0-9_-]{2,14}$/;
 export const USERNAME_RULE_MESSAGE =
-  'Username must be 3-7 characters, start with a capital letter, include at least one number, and use only letters, numbers, hyphen or underscore.';
-export const DISPLAY_NAME_MAX = 60;
+  'Username must be 3-15 characters, start with a capital letter, include at least one number, and use only letters, numbers, hyphen or underscore.';
+export const DISPLAY_NAME_MAX = 15;
 
 /** Legacy unique index on the (formerly lowercased) username field. */
 const LEGACY_USERNAME_INDEX = 'username_1';
@@ -273,6 +273,9 @@ export const recordPremiumTrialUse = async (uid, email) => {
 /** Lowercases and trims a raw username so uniqueness is case-insensitive. */
 export const normalizeUsername = (value) => String(value ?? '').trim().toLowerCase();
 
+/** Lowercases and trims a display name so uniqueness is case-insensitive. */
+export const normalizeDisplayName = (value) => String(value ?? '').trim().toLowerCase();
+
 /**
  * Reduces a stored user document to the subset that is safe to expose.
  * @param {object|null} doc
@@ -311,11 +314,44 @@ export const ensureProfileIndexes = async () => {
         throw error;
       });
 
+    // Display names are unique case-insensitively too, but optional. A sparse
+    // index on the lowercased key lets legacy users without a key coexist.
+    await users
+      .createIndex({ displayNameLower: 1 }, { unique: true, sparse: true, name: 'displayNameLower_1' })
+      .catch(async (error) => {
+        if (error?.code === 85) return;
+        // Existing duplicate display names would block index creation. Log and
+        // continue so boot succeeds; the app-level check still enforces 409.
+        console.warn('[Profile] Could not create display-name index:', error.message);
+      });
+
     await backfillUsernameLower(users);
+    await backfillDisplayNameLower(users);
     return true;
   } catch (error) {
     console.warn('[Profile] Could not ensure username index:', error.message);
     return false;
+  }
+};
+
+/** Populates `displayNameLower` on documents saved before case-insensitive keys. */
+const backfillDisplayNameLower = async (users) => {
+  const missing = await users
+    .find(
+      { displayName: { $type: 'string' }, displayNameLower: { $exists: false } },
+      { projection: { _id: 1, displayName: 1 } }
+    )
+    .toArray()
+    .catch(() => []);
+
+  for (const doc of missing) {
+    const displayNameLower = normalizeDisplayName(doc.displayName);
+    if (!displayNameLower) continue;
+    // Skip documents whose name is already owned by another account so a
+    // legacy duplicate cannot make the unique index unbootable.
+    await users
+      .updateOne({ _id: doc._id }, { $set: { displayNameLower } })
+      .catch(() => {});
   }
 };
 
@@ -366,6 +402,28 @@ export const isUsernameAvailable = async (handle, { uid, email } = {}) => {
 };
 
 /**
+ * Checks whether a display name can be claimed. A user may "keep" their own.
+ * @returns {Promise<{ available: boolean, reason?: string }>}
+ */
+export const isDisplayNameAvailable = async (name, { uid, email } = {}) => {
+  const displayName = String(name ?? '').trim();
+  if (!displayName || displayName.length > DISPLAY_NAME_MAX) {
+    return { available: false, reason: 'INVALID' };
+  }
+
+  const users = await getCollection(USERS_COLLECTION);
+  const existing = await users.findOne(
+    { displayNameLower: normalizeDisplayName(displayName) },
+    { projection: { _id: 1 } }
+  );
+  if (!existing) return { available: true };
+
+  const { data } = await findUserData(uid, email);
+  if (data && String(existing._id) === String(data._id)) return { available: true };
+  return { available: false, reason: 'TAKEN' };
+};
+
+/**
  * Applies validated profile changes and returns the fresh profile.
  * Only `displayName`, `username` and `avatarUrl`/`avatarPublicId` are writable.
  * @returns {Promise<object>}
@@ -386,7 +444,17 @@ export const updateUserProfile = async (uid, email, updates = {}) => {
     if (displayName.length > DISPLAY_NAME_MAX) {
       throw new ProfileError(`Name must be ${DISPLAY_NAME_MAX} characters or fewer`, 'INVALID_NAME');
     }
+    const displayNameLower = normalizeDisplayName(displayName);
+    const clash = await users.findOne({ displayNameLower }, { projection: { _id: 1 } });
+    if (clash && String(clash._id) !== String(targetId)) {
+      throw new ProfileError(
+        'This display name is already taken by another user',
+        'DISPLAY_NAME_TAKEN',
+        409
+      );
+    }
     set.displayName = displayName;
+    set.displayNameLower = displayNameLower;
   }
 
   if (updates.username !== undefined && updates.username !== null && String(updates.username).trim() !== '') {
@@ -397,7 +465,7 @@ export const updateUserProfile = async (uid, email, updates = {}) => {
     const usernameLower = normalizeUsername(username);
     const clash = await users.findOne({ usernameLower }, { projection: { _id: 1 } });
     if (clash && String(clash._id) !== String(targetId)) {
-      throw new ProfileError('That username is already taken', 'USERNAME_TAKEN', 409);
+      throw new ProfileError('This username is already taken by another user', 'USERNAME_TAKEN', 409);
     }
     set.username = username;
     set.usernameLower = usernameLower;
@@ -418,14 +486,31 @@ export const updateUserProfile = async (uid, email, updates = {}) => {
     }
   }
 
-  if (!data) {
-    await users.updateOne(
-      { _id: targetId },
-      { $set: { _id: targetId, email: emailKey, uid, planTier: 'free', status: 'FREE', createdAt: now, ...set } },
-      { upsert: true }
-    );
-  } else {
-    await users.updateOne({ _id: targetId }, { $set: set });
+  try {
+    if (!data) {
+      await users.updateOne(
+        { _id: targetId },
+        { $set: { _id: targetId, email: emailKey, uid, planTier: 'free', status: 'FREE', createdAt: now, ...set } },
+        { upsert: true }
+      );
+    } else {
+      await users.updateOne({ _id: targetId }, { $set: set });
+    }
+  } catch (error) {
+    // A concurrent write can win the race between the pre-check and this write.
+    if (error?.code === 11000) {
+      if (set.displayNameLower !== undefined) {
+        throw new ProfileError(
+          'This display name is already taken by another user',
+          'DISPLAY_NAME_TAKEN',
+          409
+        );
+      }
+      if (set.usernameLower !== undefined) {
+        throw new ProfileError('This username is already taken by another user', 'USERNAME_TAKEN', 409);
+      }
+    }
+    throw error;
   }
 
   const fresh = await users.findOne({ _id: targetId });

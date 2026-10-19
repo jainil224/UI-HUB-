@@ -44,6 +44,12 @@ const seedUsers = async () => {
     await users.createIndex({ usernameLower: 1 }, { unique: true, sparse: true, name: 'usernameLower_1' });
     console.log('[SeedScript] Ensured unique sparse index on users.usernameLower');
 
+    // Display names are unique case-insensitively but optional (sparse).
+    await users
+      .createIndex({ displayNameLower: 1 }, { unique: true, sparse: true, name: 'displayNameLower_1' })
+      .catch((error) => console.warn('[SeedScript] Could not create display-name index:', error.message));
+    console.log('[SeedScript] Ensured unique sparse index on users.displayNameLower');
+
     for (const user of ADMIN_USERS) {
       const email = user.email.toLowerCase();
       await users.updateOne(

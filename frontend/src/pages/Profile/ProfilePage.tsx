@@ -5,18 +5,40 @@ import { updateProfile as updateFirebaseProfile } from 'firebase/auth';
 import { AtSign, Check, Loader2, Lock, Mail, Save, ShieldCheck, AlertCircle, User as UserIcon } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import PlanBadge, { PlanTier } from '../../components/ui/PlanBadge';
+import RuleChecklist, { RuleChecklistCriterion } from '../../components/ui/RuleChecklist';
 import AvatarUploader from './AvatarUploader';
+import ProfileSkeleton from './ProfileSkeleton';
 import {
     getProfile,
     updateProfile,
     deleteAvatar,
     checkUsername,
+    checkDisplayName,
     ProfileError,
     type CloudinaryStatus,
 } from '../../services/profile';
 import { USERNAME_RE, USERNAME_RULE_MESSAGE, usernameKey } from '../../utils/username';
 
 type HandleState = 'idle' | 'checking' | 'available' | 'taken' | 'invalid';
+
+const USERNAME_CRITERIA: RuleChecklistCriterion[] = [
+    { id: 'length', label: '3–15 characters', test: (v) => v.trim().length >= 3 && v.trim().length <= 15 },
+    { id: 'capital', label: 'Starts with a capital letter', test: (v) => /^[A-Z]/.test(v) },
+    { id: 'number', label: 'Contains a number', test: (v) => /\d/.test(v) },
+    {
+        id: 'chars',
+        label: 'Only letters, numbers, - or _',
+        test: (v) => /^[A-Za-z0-9_-]*$/.test(v),
+    },
+];
+
+const DISPLAY_NAME_CRITERIA_BASE: RuleChecklistCriterion[] = [
+    {
+        id: 'length',
+        label: '1–15 characters',
+        test: (v) => v.trim().length >= 1 && v.trim().length <= 15,
+    },
+];
 
 const ProfilePage: React.FC = () => {
     const { user, profile, refreshProfile, isPro, planType, loading: authLoading } = useAuth();
@@ -28,6 +50,7 @@ const ProfilePage: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
     const [handleState, setHandleState] = useState<HandleState>('idle');
+    const [nameState, setNameState] = useState<'idle' | 'checking' | 'available' | 'taken'>('idle');
     const [error, setError] = useState<string | null>(null);
     const [notice, setNotice] = useState<string | null>(null);
 
@@ -96,6 +119,41 @@ const ProfilePage: React.FC = () => {
             controller.abort();
         };
     }, [username, savedHandle]);
+
+    // Debounced display-name uniqueness check (skips when unchanged).
+    useEffect(() => {
+        const name = displayName.trim();
+        if (!name || name === savedName) {
+            setNameState('idle');
+            return;
+        }
+        setNameState('checking');
+        const controller = new AbortController();
+        const timer = setTimeout(async () => {
+            try {
+                const res = await checkDisplayName(name, controller.signal);
+                setNameState(res.available ? 'available' : 'taken');
+            } catch (err) {
+                if ((err as any)?.name !== 'AbortError') setNameState('idle');
+            }
+        }, 450);
+        return () => {
+            clearTimeout(timer);
+            controller.abort();
+        };
+    }, [displayName, savedName]);
+
+    const displayNameCriteria = useMemo<RuleChecklistCriterion[]>(
+        () => [
+            ...DISPLAY_NAME_CRITERIA_BASE,
+            {
+                id: 'unique',
+                label: 'Not already taken',
+                test: () => nameState === 'available' || nameState === 'idle',
+            },
+        ],
+        [nameState]
+    );
 
     const dirtyName = displayName.trim() !== savedName;
     const dirtyHandle = usernameKey(username) !== savedHandle && username.trim() !== '';
@@ -170,7 +228,7 @@ const ProfilePage: React.FC = () => {
             case 'available':
                 return { tone: 'ok', text: 'Username is available.' };
             case 'taken':
-                return { tone: 'error', text: 'That username is taken.' };
+                return { tone: 'error', text: 'This username is already taken by another user.' };
             case 'invalid':
                 return { tone: 'error', text: USERNAME_RULE_MESSAGE };
             default:
@@ -181,11 +239,7 @@ const ProfilePage: React.FC = () => {
     }, [handleState, profile?.username]);
 
     if (authLoading || (user && loading)) {
-        return (
-            <main className="flex min-h-screen items-center justify-center bg-brand-bg pt-24">
-                <Loader2 className="h-7 w-7 animate-spin text-white/60" />
-            </main>
-        );
+        return <ProfileSkeleton />;
     }
 
     if (!user) {
@@ -233,16 +287,20 @@ const ProfilePage: React.FC = () => {
                         <div>
                             <label htmlFor="displayName" className="mb-1.5 flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-white/60">
                                 <UserIcon size={13} /> Display name
+                                <span className={`ml-auto tracking-normal ${displayName.length >= 15 ? 'text-rose-300' : 'text-white/30'}`}>
+                                    {displayName.length}/15
+                                </span>
                             </label>
                             <input
                                 id="displayName"
                                 type="text"
                                 value={displayName}
-                                maxLength={60}
+                                maxLength={15}
                                 onChange={(e) => setDisplayName(e.target.value)}
                                 placeholder="Your name"
                                 className="w-full rounded-md border-2 border-white/15 bg-black/30 px-4 py-3 text-sm font-semibold text-white outline-none transition placeholder:text-white/25 focus:border-[#1F4BFF]"
                             />
+                            <RuleChecklist value={displayName} criteria={displayNameCriteria} />
                         </div>
 
                         <div>
@@ -255,7 +313,7 @@ const ProfilePage: React.FC = () => {
                                     id="username"
                                     type="text"
                                     value={username}
-                                    maxLength={7}
+                                    maxLength={15}
                                     onChange={(e) => setUsername(e.target.value)}
                                     placeholder="Jainil1"
                                     className={`w-full rounded-md border-2 bg-black/30 py-3 pl-9 pr-10 text-sm font-semibold text-white outline-none transition placeholder:text-white/25 ${
@@ -284,6 +342,7 @@ const ProfilePage: React.FC = () => {
                             >
                                 {handleHint.text}
                             </p>
+                            <RuleChecklist value={username} criteria={USERNAME_CRITERIA} />
                         </div>
 
                         <div className="rounded-md border-2 border-white/10 bg-black/20 px-4 py-3">

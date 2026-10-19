@@ -258,9 +258,15 @@ test('validateUpdateProfile rejects an invalid username', async () => {
 
 test('validateUpdateProfile rejects an over-long display name', async () => {
   const { validateUpdateProfile } = await import('../src/middleware/validators.js');
-  const result = await runValidatorChain(validateUpdateProfile, { displayName: 'x'.repeat(61) });
+  const result = await runValidatorChain(validateUpdateProfile, { displayName: 'x'.repeat(16) });
   assert.equal(result.status, 400);
   assert.ok(result.body.errors.some((e) => e.path === 'displayName'));
+});
+
+test('validateUpdateProfile accepts a 15-character display name', async () => {
+  const { validateUpdateProfile } = await import('../src/middleware/validators.js');
+  const result = await runValidatorChain(validateUpdateProfile, { displayName: 'x'.repeat(15) });
+  assert.equal(result.passed, true);
 });
 
 test('validateUpdateProfile allows clearing the avatar with null', async () => {
@@ -280,17 +286,31 @@ test('normalizeUsername trims and lowercases', async () => {
   assert.equal(normalizeUsername(undefined), '');
 });
 
+test('normalizeDisplayName trims and lowercases', async () => {
+  const { normalizeDisplayName } = await import('../src/services/userService.js');
+  assert.equal(normalizeDisplayName('  Jainil22 '), 'jainil22');
+  assert.equal(normalizeDisplayName(null), '');
+  assert.equal(normalizeDisplayName(undefined), '');
+});
+
+test('DISPLAY_NAME_MAX is 15', async () => {
+  const { DISPLAY_NAME_MAX } = await import('../src/services/userService.js');
+  assert.equal(DISPLAY_NAME_MAX, 15);
+});
+
 test('USERNAME_RE enforces the documented handle rules', async () => {
   const { USERNAME_RE } = await import('../src/services/userService.js');
   assert.equal(USERNAME_RE.test('Ja1'), true, 'minimum length with a digit');
   assert.equal(USERNAME_RE.test('J_1'), true);
   assert.equal(USERNAME_RE.test('J-1'), true);
-  assert.equal(USERNAME_RE.test('Jainil1'), true, 'maximum length');
+  assert.equal(USERNAME_RE.test('Jainil1'), true);
+  assert.equal(USERNAME_RE.test('Jainil01'), true, '8 characters is allowed');
+  assert.equal(USERNAME_RE.test('Jainil123456789'), true, 'maximum length (15)');
   assert.equal(USERNAME_RE.test('JaNiL01'), true, 'case after the first letter is free');
   assert.equal(USERNAME_RE.test('JAINIL1'), true);
   assert.equal(USERNAME_RE.test('Jain_1'), true);
   assert.equal(USERNAME_RE.test('J1'), false, 'too short');
-  assert.equal(USERNAME_RE.test('Jainil01'), false, 'too long');
+  assert.equal(USERNAME_RE.test('Jainil1234567890'), false, 'too long (16)');
   assert.equal(USERNAME_RE.test('jainil1'), false, 'must start with a capital letter');
   assert.equal(USERNAME_RE.test('1ainil'), false, 'cannot start with a number');
   assert.equal(USERNAME_RE.test('Jainil'), false, 'a number is required');
@@ -326,6 +346,7 @@ test('userRoutes exposes the profile endpoints', async () => {
   assert.ok(routes.has('GET /profile'), 'missing GET /profile');
   assert.ok(routes.has('PUT /profile'), 'missing PUT /profile');
   assert.ok(routes.has('GET /username-available'), 'missing GET /username-available');
+  assert.ok(routes.has('GET /display-name-available'), 'missing GET /display-name-available');
   assert.ok(routes.has('POST /avatar-signature'), 'missing POST /avatar-signature');
   assert.ok(routes.has('DELETE /avatar'), 'missing DELETE /avatar');
 

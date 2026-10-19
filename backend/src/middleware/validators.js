@@ -58,15 +58,15 @@ export const validateUpdateProfile = [
     .optional()
     .isString()
     .trim()
-    .isLength({ min: 1, max: 60 })
-    .withMessage('Name must be 1-60 characters'),
+    .isLength({ min: 1, max: 15 })
+    .withMessage('Name must be 1-15 characters'),
   body('username')
     .optional({ nullable: true })
     .isString()
     .trim()
-    .matches(/^(?=.*\d)[A-Z][A-Za-z0-9_-]{2,6}$/)
+    .matches(/^(?=.*\d)[A-Z][A-Za-z0-9_-]{2,14}$/)
     .withMessage(
-      'Username must be 3-7 characters, start with a capital letter, include at least one number, and use only letters, numbers, hyphen or underscore'
+      'Username must be 3-15 characters, start with a capital letter, include at least one number, and use only letters, numbers, hyphen or underscore'
     ),
   body('avatarUrl')
     .optional({ nullable: true })

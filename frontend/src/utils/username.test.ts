@@ -2,8 +2,8 @@ import { describe, it, expect } from 'vitest';
 import { USERNAME_RE, USERNAME_RULE_MESSAGE, validateUsername, usernameKey } from './username';
 
 describe('USERNAME_RE', () => {
-  it('accepts handles that start with a capital, include a number and stay 3-7 chars', () => {
-    for (const handle of ['Ja1', 'J_1', 'J-1', 'Jainil1', 'JaNiL01', 'JAINIL1', 'Jain_1']) {
+  it('accepts handles that start with a capital, include a number and stay 3-15 chars', () => {
+    for (const handle of ['Ja1', 'J_1', 'J-1', 'Jainil1', 'JaNiL01', 'JAINIL1', 'Jain_1', 'Jainil01', 'Jainil123456789']) {
       expect(USERNAME_RE.test(handle), handle).toBe(true);
     }
   });
@@ -11,7 +11,7 @@ describe('USERNAME_RE', () => {
   it('rejects handles that break any rule', () => {
     for (const handle of [
       'J1', // too short
-      'Jainil01', // too long
+      'Jainil1234567890', // too long (16)
       'jainil1', // no leading capital
       '1ainil', // starts with a number
       'Jainil', // no number
