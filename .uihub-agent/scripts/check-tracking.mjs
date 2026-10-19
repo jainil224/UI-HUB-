@@ -45,8 +45,16 @@ function git(args) {
  * 0 = ignored, 1 = not ignored. Exit 128 means the path was malformed.
  */
 function isIgnored(path) {
-  const { status } = spawnSync('git', ['check-ignore', '-q', '--', path], { stdio: 'ignore' });
-  return status === 0;
+  // `.gitignore` uses directory-only patterns (`.claude/`, `.agents/`, ...).
+  // `git check-ignore` only matches those against a path that resolves to an
+  // existing directory, so the bare name of an absent directory reports as
+  // "not ignored". Probe both forms so the result is identical whether or not
+  // the directory exists locally (it never exists in a fresh CI checkout).
+  for (const candidate of [path, `${path.replace(/\/+$/, '')}/`]) {
+    const { status } = spawnSync('git', ['check-ignore', '-q', '--', candidate], { stdio: 'ignore' });
+    if (status === 0) return true;
+  }
+  return false;
 }
 
 function isTracked(path) {
@@ -125,7 +133,9 @@ rule('ci-workflows-tracked', 'every workflow file on disk must be tracked by git
 // 3. Agent instruction files trackable
 // ---------------------------------------------------------------------------
 
-for (const f of ['agent.md', '.uihub-agent/AGENT.md', '.uihub-agent/rules/DO_NOT_CHANGE.md']) {
+// `agent.md` was removed in Phase 6 (task 6.9/6.10) and replaced by the tracked
+// `.uihub-agent/AGENT.md` + `DO_NOT_CHANGE.md` pair, so it is no longer required.
+for (const f of ['.uihub-agent/AGENT.md', '.uihub-agent/rules/DO_NOT_CHANGE.md']) {
   rule(`agent-file:${f}`, `${f} must be tracked`, () => ({
     status: isTracked(f) ? 'PASS' : 'FAIL',
     detail: isTracked(f) ? 'tracked' : 'not tracked',
