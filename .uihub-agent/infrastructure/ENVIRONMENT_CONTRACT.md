@@ -115,6 +115,11 @@ Template: `mcp-server/.env.example`. See
 | `MONGODB_URI` / `MONGODB_DB` | yes | keys and usage |
 | `FIREBASE_*` | yes, secret | API-key token verification |
 | `REDIS_URL` | no | in-memory rate limiting when absent |
+| `MCP_ALERTS_SCHEDULER_ENABLED` | no (default on) | in-process alert scheduler; set `false` on serverless |
+| `MCP_ALERTS_INTERVAL_MS` | no (default `60000`) | alert scheduler tick interval |
+| `MCP_DIAGNOSTICS_RETENTION_DAYS` | no (default `90`) | diagnostics data retention window |
+| `MCP_LINKCHECK_ENABLED` | no (default off) | enable the link-check job |
+| `MCP_LINKCHECK_ALLOWED_HOSTS` | no | allowlist of hosts the link checker may probe |
 
 ### 4.1 `MCP_ALLOWED_ORIGINS` does not currently enforce anything
 

@@ -1,11 +1,14 @@
-# Render Blueprint for Unified UI-HUB Production Deployment (Core Backend + MCP Server)
+# Render Blueprint for UI-HUB Production Backend (Express API).
+# Topology is SPLIT: this service runs the backend only. The MCP server is a
+# separate Render service declared in mcp-server/render.yaml (ui-hub-mcp) and
+# consumed here via MCP_SERVER_URL. See DEPLOYMENT_CONFLICTS.md.
 services:
   - type: web
     name: ui-hub-backend-mcp
     runtime: node
     plan: starter
     region: oregon
-    buildCommand: cd mcp-server && npm install && npm run build && cd ../backend && npm install
+    buildCommand: cd backend && npm install
     startCommand: cd backend && npm start
     healthCheckPath: /health
     envVars:
@@ -24,7 +27,7 @@ services:
       - key: MCP_RATE_LIMIT_PRO
         value: 10000
       - key: MCP_ALLOWED_ORIGINS
-        value: https://ui-hub-design.vercel.app,http://localhost:5173,http://localhost:3000
+        value: https://ui-hub-design.vercel.app,https://uihub.codes,https://www.uihub.codes
       - key: MCP_ADMIN_EMAILS
         value: jainil11199@gmail.com,jainilpatel2224@gmail.com,jainil224@gmail.com
       - key: BREVO_API_KEY

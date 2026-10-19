@@ -51,6 +51,8 @@ app.use(helmet({
         "https://ui-hub-design.vercel.app",
         "https://ui-hub-design-git-main-jainil224s-projects.vercel.app",
         "https://ui-hub-design-jainil224s-projects.vercel.app",
+        "https://uihub.codes",
+        "https://www.uihub.codes",
         "https://api.razorpay.com"
       ],
       imgSrc: ["'self'", "data:", "https:"],

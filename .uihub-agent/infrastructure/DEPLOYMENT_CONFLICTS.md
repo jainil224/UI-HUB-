@@ -8,6 +8,20 @@ cannot make. Phase 6 does not choose.
 
 ---
 
+## 0. Resolved decisions (this pass)
+
+| # | Decision | Resolution | Evidence |
+|---|---|---|---|
+| Topology | Unified vs split Render deployment | **SPLIT.** `render.yaml` deploys the backend only; the MCP server is the separate `ui-hub-mcp` service in `mcp-server/render.yaml`. | Root `render.yaml` sets `MCP_SERVER_URL=https://ui-hub-mcp.onrender.com`, i.e. the backend *consumes* a distinct MCP service; the "Unified" header was stale and has been corrected, and the wasted MCP build step removed. |
+| `MCP_ALLOWED_ORIGINS` localhost | Drop dev origins from production? | **YES.** Removed `http://localhost:5173` and `http://localhost:3000` from both production blueprints. | Dev origins in a production blueprint let any local dev server reach production MCP now that CORS is enforced; they belong in `.env.example`. |
+
+The `render-blueprint-count` check reports CONFLICT whenever two blueprints
+exist by design (an owner-decision gate). With topology resolved to the split
+above, the two blueprints are intentional and non-overlapping; the check stays
+CONFLICT by design and does not block CI (`config-drift` is `continue-on-error`).
+
+---
+
 ## 1. The two blueprints
 
 ### `render.yaml` (repository root)
