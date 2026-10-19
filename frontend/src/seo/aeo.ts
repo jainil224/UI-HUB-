@@ -89,7 +89,9 @@ export function looksLikeTestimonial(value: string | undefined): boolean {
     const signals: RegExp[] = [
         /\b(our|we|my)\s+(agency|team|client|studio|company|portfolio|brand|product)\b/i,
         /\b(accelerated|boosted|increased|reduced|cut)\s+[^.]{0,40}\bby\s+\d/i,
-        /\b(unmatched|unrivalled|world[- ]class|best[- ]in[- ]class|award|winning)\b/i,
+        /\b(unmatched|unrivalled|world[- ]class|best[- ]in[- ]class)\b/i,
+        /\baward\b(?!-style)/i,
+        /\bwinning\b/i,
         /\$\s?\d/,
         /\b(10x|100x|1000x)\b/i,
         /\bhighly recommend\b/i,

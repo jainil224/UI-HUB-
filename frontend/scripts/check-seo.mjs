@@ -324,7 +324,7 @@ async function main() {
             }
             // The whole point of AEO: the answer must be readable without
             // executing anything and without any interaction.
-            if (!html.includes(quickAnswer.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'))) {
+            if (!html.includes(seo.escapeHtml(quickAnswer.text))) {
                 fail(`${route.path}: quick answer text is not present in the prerendered HTML`);
             }
         }
