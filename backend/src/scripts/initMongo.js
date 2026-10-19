@@ -6,7 +6,7 @@ const ADMIN_USERS = [
   {
     email: 'jainil11199@gmail.com',
     status: 'ELITE',
-    username: 'Jainil11199',
+    username: 'Jainil1',
     displayName: 'Jainil (Admin)',
     proExpiry: '2027-03-24',
     isAdmin: true,
@@ -14,14 +14,14 @@ const ADMIN_USERS = [
   {
     email: 'jainil224@gmail.com',
     status: 'PRO',
-    username: 'Jainil224',
+    username: 'Jainil2',
     displayName: 'Jainil 224',
     proExpiry: '2027-03-24',
   },
   {
     email: 'jainilpatel2224@gmail.com',
     status: 'ELITE',
-    username: 'Jainilpatel2224',
+    username: 'Jainil3',
     displayName: 'Jainil (Elite)',
     proExpiry: '2027-03-24',
     isAdmin: true,

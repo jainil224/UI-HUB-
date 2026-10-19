@@ -7,9 +7,9 @@ export const PREMIUM_AI_TOOLS = ['advance', 'antigravity', 'claude'];
 export const MAX_FREE_AI_TRIALS = 2;
 export const TRIAL_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-export const USERNAME_RE = /^(?=.*[A-Z])[A-Za-z0-9._-]{3,30}$/;
+export const USERNAME_RE = /^(?=.*\d)[A-Z][A-Za-z0-9_-]{2,6}$/;
 export const USERNAME_RULE_MESSAGE =
-  'Username must be 3-30 characters using letters, numbers, dot, underscore or hyphen, and include at least one capital letter.';
+  'Username must be 3-7 characters, start with a capital letter, include at least one number, and use only letters, numbers, hyphen or underscore.';
 export const DISPLAY_NAME_MAX = 60;
 
 /** Legacy unique index on the (formerly lowercased) username field. */

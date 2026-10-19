@@ -255,9 +255,9 @@ const ProfilePage: React.FC = () => {
                                     id="username"
                                     type="text"
                                     value={username}
-                                    maxLength={30}
+                                    maxLength={7}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="Your_Handle"
+                                    placeholder="Jainil1"
                                     className={`w-full rounded-md border-2 bg-black/30 py-3 pl-9 pr-10 text-sm font-semibold text-white outline-none transition placeholder:text-white/25 ${
                                         handleState === 'taken' || handleState === 'invalid'
                                             ? 'border-rose-500/60'

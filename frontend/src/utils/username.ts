@@ -1,15 +1,16 @@
 /**
  * Username rules, shared between the profile form and the backend contract.
  *
- * A handle is 3-30 characters, may contain letters, numbers, dot, underscore
- * and hyphen, and must include at least one capital letter. Case is preserved
- * for display; uniqueness is enforced case-insensitively on the server.
+ * A handle is 3-7 characters, must start with a capital letter, must include at
+ * least one number, and may contain letters, numbers, hyphen and underscore
+ * (only those two symbols). Case is preserved for display; uniqueness is
+ * enforced case-insensitively on the server.
  */
 
-export const USERNAME_RE = /^(?=.*[A-Z])[A-Za-z0-9._-]{3,30}$/;
+export const USERNAME_RE = /^(?=.*\d)[A-Z][A-Za-z0-9_-]{2,6}$/;
 
 export const USERNAME_RULE_MESSAGE =
-  'Use 3-30 characters: letters, numbers, dot, underscore or hyphen, with at least one capital letter.';
+  'Use 3-7 characters, start with a capital letter, include a number, and use only letters, numbers, - or _.';
 
 export type UsernameCheck = { valid: boolean; reason?: string };
 

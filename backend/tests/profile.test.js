@@ -233,7 +233,7 @@ test('validateUpdateProfile accepts a valid payload', async () => {
   const { validateUpdateProfile } = await import('../src/middleware/validators.js');
   const result = await runValidatorChain(validateUpdateProfile, {
     displayName: 'Ada Lovelace',
-    username: 'Ada_Dev',
+    username: 'Jainil1',
     avatarUrl: 'https://res.cloudinary.com/demo-cloud/image/upload/v1/av.png',
     avatarPublicId: 'ui-hub/avatars/abc',
   });
@@ -241,9 +241,9 @@ test('validateUpdateProfile accepts a valid payload', async () => {
   assert.equal(result.status, 200);
 });
 
-test('validateUpdateProfile rejects a username without a capital letter', async () => {
+test('validateUpdateProfile rejects a username without a leading capital', async () => {
   const { validateUpdateProfile } = await import('../src/middleware/validators.js');
-  const result = await runValidatorChain(validateUpdateProfile, { username: 'ada_dev' });
+  const result = await runValidatorChain(validateUpdateProfile, { username: 'jainil1' });
   assert.equal(result.status, 400);
   assert.ok(result.body.errors.some((e) => e.path === 'username'));
 });
@@ -282,18 +282,21 @@ test('normalizeUsername trims and lowercases', async () => {
 
 test('USERNAME_RE enforces the documented handle rules', async () => {
   const { USERNAME_RE } = await import('../src/services/userService.js');
-  assert.equal(USERNAME_RE.test('Ada_dev'), true);
-  assert.equal(USERNAME_RE.test('Abc'), true);
-  assert.equal(USERNAME_RE.test('John.Doe'), true);
-  assert.equal(USERNAME_RE.test('John-Doe'), true);
-  assert.equal(USERNAME_RE.test('JOHN'), true);
-  assert.equal(USERNAME_RE.test('A'.repeat(30)), true, '30 chars with a capital is allowed');
-  assert.equal(USERNAME_RE.test('ada_dev'), false, 'a capital letter is required');
-  assert.equal(USERNAME_RE.test('ab'), false, 'too short');
-  assert.equal(USERNAME_RE.test('a'.repeat(31)), false, 'too long');
-  assert.equal(USERNAME_RE.test('has space'), false);
-  assert.equal(USERNAME_RE.test('Ada@dev'), false);
-  assert.equal(USERNAME_RE.test('bad!dash'), false);
+  assert.equal(USERNAME_RE.test('Ja1'), true, 'minimum length with a digit');
+  assert.equal(USERNAME_RE.test('J_1'), true);
+  assert.equal(USERNAME_RE.test('J-1'), true);
+  assert.equal(USERNAME_RE.test('Jainil1'), true, 'maximum length');
+  assert.equal(USERNAME_RE.test('JaNiL01'), true, 'case after the first letter is free');
+  assert.equal(USERNAME_RE.test('JAINIL1'), true);
+  assert.equal(USERNAME_RE.test('Jain_1'), true);
+  assert.equal(USERNAME_RE.test('J1'), false, 'too short');
+  assert.equal(USERNAME_RE.test('Jainil01'), false, 'too long');
+  assert.equal(USERNAME_RE.test('jainil1'), false, 'must start with a capital letter');
+  assert.equal(USERNAME_RE.test('1ainil'), false, 'cannot start with a number');
+  assert.equal(USERNAME_RE.test('Jainil'), false, 'a number is required');
+  assert.equal(USERNAME_RE.test('J.1'), false, 'dot is not allowed');
+  assert.equal(USERNAME_RE.test('J 1'), false, 'spaces are not allowed');
+  assert.equal(USERNAME_RE.test('J@1'), false, 'other symbols are not allowed');
 });
 
 test('ProfileError carries a code and status', async () => {
