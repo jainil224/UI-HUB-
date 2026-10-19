@@ -14,8 +14,8 @@ import {
     ProfileError,
     type CloudinaryStatus,
 } from '../../services/profile';
+import { USERNAME_RE, USERNAME_RULE_MESSAGE, usernameKey } from '../../utils/username';
 
-const USERNAME_RE = /^[a-zA-Z0-9_]{3,30}$/;
 type HandleState = 'idle' | 'checking' | 'available' | 'taken' | 'invalid';
 
 const ProfilePage: React.FC = () => {
@@ -72,8 +72,8 @@ const ProfilePage: React.FC = () => {
 
     // Debounced username availability check.
     useEffect(() => {
-        const handle = username.trim().toLowerCase();
-        if (!handle || handle === savedHandle) {
+        const handle = username.trim();
+        if (!handle || usernameKey(handle) === savedHandle) {
             setHandleState('idle');
             return;
         }
@@ -98,7 +98,7 @@ const ProfilePage: React.FC = () => {
     }, [username, savedHandle]);
 
     const dirtyName = displayName.trim() !== savedName;
-    const dirtyHandle = username.trim().toLowerCase() !== savedHandle && username.trim() !== '';
+    const dirtyHandle = usernameKey(username) !== savedHandle && username.trim() !== '';
     const handleValid = handleState === 'idle' || handleState === 'available';
     const canSave = !saving && (dirtyName || dirtyHandle) && handleValid && displayName.trim().length > 0;
 
@@ -129,8 +129,9 @@ const ProfilePage: React.FC = () => {
             const updates: { displayName?: string; username?: string } = {};
             if (dirtyName) updates.displayName = displayName.trim();
             if (dirtyHandle) {
-                if (!USERNAME_RE.test(username.trim())) throw new ProfileError('Username must be 3-30 letters, numbers or underscore.', 'INVALID_USERNAME');
-                updates.username = username.trim().toLowerCase();
+                const handle = username.trim();
+                if (!USERNAME_RE.test(handle)) throw new ProfileError(USERNAME_RULE_MESSAGE, 'INVALID_USERNAME');
+                updates.username = handle;
             }
 
             const updated = await updateProfile(updates);
@@ -171,11 +172,13 @@ const ProfilePage: React.FC = () => {
             case 'taken':
                 return { tone: 'error', text: 'That username is taken.' };
             case 'invalid':
-                return { tone: 'error', text: 'Use 3-30 letters, numbers or underscore.' };
+                return { tone: 'error', text: USERNAME_RULE_MESSAGE };
             default:
-                return savedHandle ? { tone: 'muted', text: `Your handle: @${savedHandle}` } : { tone: 'muted', text: 'Pick a unique handle.' };
+                return profile?.username
+                    ? { tone: 'muted', text: `Your handle: @${profile.username}` }
+                    : { tone: 'muted', text: 'Pick a unique handle.' };
         }
-    }, [handleState, savedHandle]);
+    }, [handleState, profile?.username]);
 
     if (authLoading || (user && loading)) {
         return (
@@ -254,7 +257,7 @@ const ProfilePage: React.FC = () => {
                                     value={username}
                                     maxLength={30}
                                     onChange={(e) => setUsername(e.target.value)}
-                                    placeholder="your_handle"
+                                    placeholder="Your_Handle"
                                     className={`w-full rounded-md border-2 bg-black/30 py-3 pl-9 pr-10 text-sm font-semibold text-white outline-none transition placeholder:text-white/25 ${
                                         handleState === 'taken' || handleState === 'invalid'
                                             ? 'border-rose-500/60'
