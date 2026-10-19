@@ -31,8 +31,8 @@
   ],
   "description": "Page entry points with their route, direct component dependencies, and hooks.",
   "counts": {
-    "pages": 82,
-    "withRoute": 68
+    "pages": 91,
+    "withRoute": 76
   },
   "pages": [
     {
@@ -56,8 +56,22 @@
       "route": "(none)",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 194,
+      "lines": 199,
       "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/AiSearchPage.tsx",
+      "name": "AiSearchPage",
+      "feature": "admin",
+      "route": "search-analytics",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 155,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
       "hooks": [],
       "confidence": "HIGH"
     },
@@ -68,7 +82,7 @@
       "route": "alerts",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 127,
+      "lines": 247,
       "components": [
         "frontend/src/components/admin/AdminUi.tsx"
       ],
@@ -133,13 +147,41 @@
       "confidence": "HIGH"
     },
     {
+      "path": "frontend/src/pages/Admin/DiagnosticsPage.tsx",
+      "name": "DiagnosticsPage",
+      "feature": "admin",
+      "route": "diagnostics",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 238,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
       "path": "frontend/src/pages/Admin/ExportPage.tsx",
       "name": "ExportPage",
       "feature": "admin",
       "route": "export",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 122,
+      "lines": 125,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Admin/FixCenterPage.tsx",
+      "name": "FixCenterPage",
+      "feature": "admin",
+      "route": "fix-center",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 280,
       "components": [
         "frontend/src/components/admin/AdminUi.tsx"
       ],
@@ -161,13 +203,27 @@
       "confidence": "HIGH"
     },
     {
+      "path": "frontend/src/pages/Admin/LiveActivityPage.tsx",
+      "name": "LiveActivityPage",
+      "feature": "admin",
+      "route": "activity",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 198,
+      "components": [
+        "frontend/src/components/admin/AdminUi.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
       "path": "frontend/src/pages/Admin/LogsPage.tsx",
       "name": "LogsPage",
       "feature": "admin",
       "route": "logs",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 158,
+      "lines": 326,
       "components": [
         "frontend/src/components/admin/AdminUi.tsx"
       ],
@@ -341,8 +397,9 @@
       "route": "/build-with-ui-hub/:slug",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 353,
+      "lines": 368,
       "components": [
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/templates/BuildWithUIHubRail.tsx",
         "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
         "frontend/src/components/templates/TemplateCodeViewer.tsx",
@@ -361,8 +418,10 @@
       "route": "/build-with-ui-hub",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 13,
-      "components": [],
+      "lines": 17,
+      "components": [
+        "frontend/src/components/Seo.tsx"
+      ],
       "hooks": [],
       "confidence": "HIGH"
     },
@@ -376,6 +435,20 @@
       "lines": 25,
       "components": [
         "frontend/src/components/ui/AntigravityAnimation.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Components/AtelierDriftDemoPage.tsx",
+      "name": "AtelierDriftDemoPage",
+      "feature": "components",
+      "route": "/demo/atelier-drift",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 25,
+      "components": [
+        "frontend/src/components/ui/AtelierDrift.tsx"
       ],
       "hooks": [],
       "confidence": "HIGH"
@@ -401,7 +474,7 @@
       "route": "/components/:category",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 177,
+      "lines": 180,
       "components": [
         "frontend/src/components/Seo.tsx"
       ],
@@ -429,7 +502,7 @@
       "route": "/components/:category/:slug",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 307,
+      "lines": 308,
       "components": [
         "frontend/src/components/AeoContent.tsx",
         "frontend/src/components/Seo.tsx",
@@ -461,7 +534,7 @@
       "route": "/demo/:id",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 158,
+      "lines": 159,
       "components": [
         "frontend/src/components/ui/FaizurPortfolio.tsx",
         "frontend/src/components/ui/HaulFooter.tsx",
@@ -753,6 +826,20 @@
       "confidence": "HIGH"
     },
     {
+      "path": "frontend/src/pages/Components/SpiderCrawlerDemoPage.tsx",
+      "name": "SpiderCrawlerDemoPage",
+      "feature": "components",
+      "route": "/demo/spider-crawler",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 25,
+      "components": [
+        "frontend/src/components/ui/SpiderCrawler.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
       "path": "frontend/src/pages/Components/SplitOrbDemoPage.tsx",
       "name": "SplitOrbDemoPage",
       "feature": "components",
@@ -809,6 +896,20 @@
       "confidence": "HIGH"
     },
     {
+      "path": "frontend/src/pages/Components/WaveTunnelDemoPage.tsx",
+      "name": "WaveTunnelDemoPage",
+      "feature": "components",
+      "route": "/demo/wave-tunnel",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 24,
+      "components": [
+        "frontend/src/components/ui/WaveTunnel.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
       "path": "frontend/src/pages/Dashboard/CollectionsPage.tsx",
       "name": "CollectionsPage",
       "feature": "dashboard",
@@ -827,7 +928,7 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 58,
+      "lines": 61,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -851,7 +952,7 @@
       "route": "/favorites",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 321,
+      "lines": 327,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -863,7 +964,7 @@
       "route": "mcp",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 1062,
+      "lines": 1073,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -875,8 +976,9 @@
       "route": "/",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 22,
+      "lines": 28,
       "components": [
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/ui/AdSlot.tsx"
       ],
       "hooks": [],
@@ -915,7 +1017,7 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 234,
+      "lines": 236,
       "components": [
         "frontend/src/components/ui/AdSlot.tsx",
         "frontend/src/components/ui/Skeleton.tsx"
@@ -1016,8 +1118,10 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 148,
-      "components": [],
+      "lines": 164,
+      "components": [
+        "frontend/src/components/Seo.tsx"
+      ],
       "hooks": [],
       "confidence": "HIGH"
     },
@@ -1076,7 +1180,7 @@
       "route": "/library",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 790,
+      "lines": 844,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -1088,7 +1192,7 @@
       "route": null,
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 2299,
+      "lines": 2525,
       "components": [
         "frontend/src/components/animations/TextAnimations.tsx",
         "frontend/src/components/animations/VisualEffects.tsx",
@@ -1150,7 +1254,7 @@
       "route": "/preview-capture",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 54,
+      "lines": 55,
       "components": [],
       "hooks": [],
       "confidence": "HIGH"
@@ -1162,10 +1266,37 @@
       "route": "/pricing",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 507,
+      "lines": 520,
       "components": [
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/ui/CheckoutOverlay.tsx",
         "frontend/src/components/ui/CustomPricingCard.tsx",
+        "frontend/src/components/ui/PlanBadge.tsx"
+      ],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Profile/AvatarUploader.tsx",
+      "name": "AvatarUploader",
+      "feature": "profile",
+      "route": null,
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 174,
+      "components": [],
+      "hooks": [],
+      "confidence": "HIGH"
+    },
+    {
+      "path": "frontend/src/pages/Profile/ProfilePage.tsx",
+      "name": "ProfilePage",
+      "feature": "profile",
+      "route": "/profile",
+      "role": "PAGE",
+      "isBarrel": false,
+      "lines": 341,
+      "components": [
         "frontend/src/components/ui/PlanBadge.tsx"
       ],
       "hooks": [],
@@ -1178,8 +1309,9 @@
       "route": "/templates/:id",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 377,
+      "lines": 400,
       "components": [
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/templates/TemplateCodeViewer.tsx",
         "frontend/src/components/templates/TemplatePreviewStage.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
@@ -1198,8 +1330,9 @@
       "route": "/templates",
       "role": "PAGE",
       "isBarrel": false,
-      "lines": 15,
+      "lines": 19,
       "components": [
+        "frontend/src/components/Seo.tsx",
         "frontend/src/components/ui/AdSlot.tsx"
       ],
       "hooks": [],

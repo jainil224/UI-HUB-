@@ -659,7 +659,7 @@ test('TEST 11: the canonical benchmark is unchanged by the composition layer', (
     'Fix WebM template preview performance': 14,
     'Edit frontend/src/components/templates/TemplatePreview.tsx': 2,
     'Fix the auth middleware': 16,
-    'Add an MCP tool': 42,
+    'Add an MCP tool': 43,
     'Fix TemplateCard so the similar rail shows WebM previews': 13,
     'Fix an XSS vulnerability in the comment renderer': 0,
     'Why is the site loading slowly?': 0,

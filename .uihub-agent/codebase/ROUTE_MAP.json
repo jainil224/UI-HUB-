@@ -31,9 +31,9 @@
   ],
   "description": "Router declarations. `association` records HOW a route was matched to a component file.",
   "counts": {
-    "routes": 71,
+    "routes": 79,
     "association": {
-      "HIGH": 68,
+      "HIGH": 76,
       "MEDIUM": 0,
       "LOW_CONFIDENCE": 3,
       "UNKNOWN": 0
@@ -198,6 +198,16 @@
       "index": false,
       "element": "AntigravityAnimationDemoPage",
       "componentFile": "frontend/src/pages/Components/AntigravityAnimationDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/atelier-drift",
+      "index": false,
+      "element": "AtelierDriftDemoPage",
+      "componentFile": "frontend/src/pages/Components/AtelierDriftDemoPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",
@@ -414,6 +424,16 @@
       "confidence": "HIGH"
     },
     {
+      "path": "/demo/spider-crawler",
+      "index": false,
+      "element": "SpiderCrawlerDemoPage",
+      "componentFile": "frontend/src/pages/Components/SpiderCrawlerDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
       "path": "/demo/split-fuzzy-orb",
       "index": false,
       "element": "SplitOrbDemoPage",
@@ -438,6 +458,16 @@
       "index": false,
       "element": "TarsDemoPage",
       "componentFile": "frontend/src/pages/Components/TarsDemoPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "/demo/wave-tunnel",
+      "index": false,
+      "element": "WaveTunnelDemoPage",
+      "componentFile": "frontend/src/pages/Components/WaveTunnelDemoPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",
@@ -534,6 +564,16 @@
       "confidence": "HIGH"
     },
     {
+      "path": "/profile",
+      "index": false,
+      "element": "ProfilePage",
+      "componentFile": "frontend/src/pages/Profile/ProfilePage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
       "path": "/signup",
       "index": false,
       "element": "SignupPage",
@@ -568,6 +608,16 @@
       "index": false,
       "element": "TermsPage",
       "componentFile": "frontend/src/pages/legal/TermsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "activity",
+      "index": false,
+      "element": "LiveActivityPage",
+      "componentFile": "frontend/src/pages/Admin/LiveActivityPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",
@@ -634,10 +684,30 @@
       "confidence": "HIGH"
     },
     {
+      "path": "diagnostics",
+      "index": false,
+      "element": "DiagnosticsPage",
+      "componentFile": "frontend/src/pages/Admin/DiagnosticsPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
       "path": "export",
       "index": false,
       "element": "ExportPage",
       "componentFile": "frontend/src/pages/Admin/ExportPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "fix-center",
+      "index": false,
+      "element": "FixCenterPage",
+      "componentFile": "frontend/src/pages/Admin/FixCenterPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",
@@ -698,6 +768,16 @@
       "index": false,
       "element": "SearchPage",
       "componentFile": "frontend/src/pages/Admin/SearchPage.tsx",
+      "declaredIn": "frontend/src/App.tsx",
+      "routerSource": "router-element",
+      "association": "lazy-import",
+      "confidence": "HIGH"
+    },
+    {
+      "path": "search-analytics",
+      "index": false,
+      "element": "AiSearchPage",
+      "componentFile": "frontend/src/pages/Admin/AiSearchPage.tsx",
       "declaredIn": "frontend/src/App.tsx",
       "routerSource": "router-element",
       "association": "lazy-import",

@@ -96,6 +96,7 @@
       ],
       "usedBy": [
         "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
         "frontend/src/pages/BuildWithUIHubPage/BuildWithUIHubDetailPage.tsx",
         "frontend/src/pages/Components/ComponentPage.tsx",

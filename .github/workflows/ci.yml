@@ -97,7 +97,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+          cache-dependency-path: mcp-server/package-lock.json
       - run: npm ci
+      - name: Install mcp-server dependencies
+        working-directory: mcp-server
+        run: npm ci
       - name: Verify tracked mcp-server/dist matches a fresh build
         run: npm run check:generated
 
@@ -157,6 +162,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
+      - run: npm ci
       - name: Router + context bundle tests
         run: npm run agent:test
       - name: Routing matrix agrees with the router module

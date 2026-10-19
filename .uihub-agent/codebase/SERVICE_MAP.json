@@ -31,10 +31,10 @@
   ],
   "description": "Service-layer modules in backend, frontend, and MCP, with their data-layer reach and consumers.",
   "counts": {
-    "services": 32,
-    "backend": 19,
-    "frontend": 6,
-    "withDatabase": 4
+    "services": 46,
+    "backend": 20,
+    "frontend": 7,
+    "withDatabase": 5
   },
   "services": [
     {
@@ -133,6 +133,35 @@
       "touchesStorage": false,
       "externalPackages": [
         "axios"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "cloudinaryService",
+      "path": "backend/src/services/cloudinaryService.js",
+      "layer": "backend",
+      "feature": "cloudinary-service",
+      "lines": 202,
+      "exportedSymbols": [
+        "ALLOWED_AVATAR_FORMATS",
+        "MAX_AVATAR_BYTES",
+        "isCloudinaryConfigured",
+        "signParams",
+        "createUploadSignature",
+        "isOwnCloudinaryUrl",
+        "isOwnAvatarPublicId",
+        "destroyAsset",
+        "getAssetInfo"
+      ],
+      "usedBy": [
+        "backend/src/routes/userRoutes.js",
+        "backend/src/services/userService.js"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "dotenv",
+        "node:crypto"
       ],
       "confidence": "HIGH"
     },
@@ -468,20 +497,31 @@
       "path": "backend/src/services/userService.js",
       "layer": "backend",
       "feature": "user-service",
-      "lines": 249,
+      "lines": 434,
       "exportedSymbols": [
         "PREMIUM_AI_TOOLS",
         "MAX_FREE_AI_TRIALS",
         "TRIAL_WINDOW_MS",
+        "USERNAME_RE",
+        "USERNAME_RULE_MESSAGE",
+        "DISPLAY_NAME_MAX",
+        "ProfileError",
         "checkEliteStatus",
         "checkProStatus",
         "getUserTrialState",
         "evaluateAiTrial",
-        "recordPremiumTrialUse"
+        "recordPremiumTrialUse",
+        "normalizeUsername",
+        "ensureProfileIndexes",
+        "getUserProfile",
+        "isUsernameAvailable",
+        "updateUserProfile"
       ],
       "usedBy": [
         "backend/src/routes/componentRoutes.js",
-        "backend/src/routes/userRoutes.js"
+        "backend/src/routes/userRoutes.js",
+        "backend/src/server.js",
+        "backend/tests/profile.test.js"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
@@ -515,7 +555,7 @@
       "path": "frontend/src/services/admin.ts",
       "layer": "frontend",
       "feature": "services",
-      "lines": 584,
+      "lines": 922,
       "exportedSymbols": [
         "AdminStatus",
         "AdminRange",
@@ -557,6 +597,9 @@
         "getComponents",
         "getSearchAnalytics",
         "getLogs",
+        "AdminLogDeleteResult",
+        "deleteLogs",
+        "deleteLogItem",
         "getSecurity",
         "getHealth",
         "getAlerts",
@@ -569,17 +612,48 @@
         "runPlayground",
         "ExportType",
         "ExportFormat",
-        "downloadExport"
+        "downloadExport",
+        "AdminRequestEvent",
+        "AdminActivity",
+        "AdminSearchEvent",
+        "AdminSearchAnalytics",
+        "AdminDiagnosticSample",
+        "AdminDiagnostic",
+        "AdminDiagnostics",
+        "AdminFixCenterItem",
+        "AdminFixCenter",
+        "getFixCenter",
+        "AdminAlertRule",
+        "AdminAlertEvent",
+        "AdminAlertEventList",
+        "ObservabilityParams",
+        "getActivity",
+        "getActivityEvent",
+        "getAiSearchAnalytics",
+        "getDiagnostics",
+        "getDiagnostic",
+        "generateFixPrompt",
+        "setDiagnosticStatus",
+        "getAlertRules",
+        "createAlertRule",
+        "updateAlertRule",
+        "getAlertEvents",
+        "getAlertEvent",
+        "alertAction"
       ],
       "usedBy": [
         "frontend/src/pages/Admin/AdminGuard.tsx",
+        "frontend/src/pages/Admin/AiSearchPage.tsx",
         "frontend/src/pages/Admin/AlertsPage.tsx",
         "frontend/src/pages/Admin/AnalyticsPage.tsx",
         "frontend/src/pages/Admin/ApiKeysPage.tsx",
         "frontend/src/pages/Admin/AuditPage.tsx",
         "frontend/src/pages/Admin/ComponentsPage.tsx",
+        "frontend/src/pages/Admin/DiagnosticsPage.tsx",
         "frontend/src/pages/Admin/ExportPage.tsx",
+        "frontend/src/pages/Admin/FixCenterPage.tsx",
         "frontend/src/pages/Admin/HealthPage.tsx",
+        "frontend/src/pages/Admin/LiveActivityPage.tsx",
         "frontend/src/pages/Admin/LogsPage.tsx",
         "frontend/src/pages/Admin/OverviewPage.tsx",
         "frontend/src/pages/Admin/PlaygroundPage.tsx",
@@ -699,11 +773,42 @@
       "confidence": "HIGH"
     },
     {
+      "name": "profile",
+      "path": "frontend/src/services/profile.ts",
+      "layer": "frontend",
+      "feature": "services",
+      "lines": 215,
+      "exportedSymbols": [
+        "ProfileData",
+        "CloudinaryStatus",
+        "AvatarSignature",
+        "UpdateProfileInput",
+        "ProfileError",
+        "getProfile",
+        "updateProfile",
+        "checkUsername",
+        "requestAvatarSignature",
+        "deleteAvatar",
+        "uploadAvatarToCloudinary",
+        "resizeImageToSquare"
+      ],
+      "usedBy": [
+        "frontend/src/context/AuthContext.tsx",
+        "frontend/src/pages/Profile/AvatarUploader.tsx",
+        "frontend/src/pages/Profile/ProfilePage.tsx",
+        "frontend/src/services/profile.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
       "name": "templateViews",
       "path": "frontend/src/services/templateViews.ts",
       "layer": "frontend",
       "feature": "services",
-      "lines": 314,
+      "lines": 316,
       "exportedSymbols": [
         "TemplateView",
         "RecordTemplateViewResponse",
@@ -732,6 +837,7 @@
       ],
       "usedBy": [
         "frontend/src/components/templates/BuildWithUIHubRail.tsx",
+        "frontend/src/components/templates/BuildWithUIHubUsedComponents.tsx",
         "frontend/src/components/templates/TemplateSimilarRail.tsx",
         "frontend/src/context/AuthContext.tsx",
         "frontend/src/hooks/useTemplateViewCounts.ts",
@@ -749,14 +855,80 @@
       "confidence": "HIGH"
     },
     {
+      "name": "alertScheduler",
+      "path": "mcp-server/src/services/alertScheduler.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 95,
+      "exportedSymbols": [
+        "alertSchedulerIntervalMs",
+        "alertSchedulerEnabled",
+        "runAlertEvaluationOnce",
+        "startAlertScheduler",
+        "stopAlertScheduler"
+      ],
+      "usedBy": [
+        "mcp-server/src/index.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "alertService",
+      "path": "mcp-server/src/services/alertService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 657,
+      "exportedSymbols": [
+        "ALERT_RULES_COLLECTION",
+        "ALERT_EVENTS_COLLECTION",
+        "DIAGNOSTICS_COLLECTION_NAME",
+        "AlertStatus",
+        "AlertThreshold",
+        "AlertRule",
+        "AlertEvent",
+        "DEFAULT_RULES",
+        "AlertMetrics",
+        "AlertCandidate",
+        "evaluateRules",
+        "collectMetrics",
+        "ensureRules",
+        "getRules",
+        "createRule",
+        "updateRule",
+        "evaluateAndPersist",
+        "setEngineState",
+        "getEngineState",
+        "AlertEventQuery",
+        "listAlertEvents",
+        "getAlertEvent",
+        "applyAlertAction"
+      ],
+      "usedBy": [
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/services/alertScheduler.ts",
+        "mcp-server/src/services/telemetryIndexes.ts",
+        "mcp-server/tests/observability.test.ts"
+      ],
+      "touchesDatabase": true,
+      "touchesStorage": false,
+      "externalPackages": [
+        "mongodb"
+      ],
+      "confidence": "HIGH"
+    },
+    {
       "name": "analyticsService",
       "path": "mcp-server/src/services/analyticsService.ts",
       "layer": "shared",
       "feature": "mcp",
-      "lines": 476,
+      "lines": 526,
       "exportedSymbols": [
         "McpEventType",
         "McpEvent",
+        "LogEventEntry",
         "DailySummary",
         "AnalyticsService",
         "ToolUsage",
@@ -773,6 +945,8 @@
         "mcp-server/src/routes/admin.ts",
         "mcp-server/src/routes/dashboard.ts",
         "mcp-server/src/routes/mcp.ts",
+        "mcp-server/src/services/fixCenterService.ts",
+        "mcp-server/src/services/logService.ts",
         "mcp-server/src/tools/getAiPrompts.ts",
         "mcp-server/src/tools/getAnimationCode.ts",
         "mcp-server/src/tools/getComponent.ts",
@@ -787,7 +961,10 @@
         "mcp-server/src/tools/searchAnimations.ts",
         "mcp-server/src/tools/searchByBehavior.ts",
         "mcp-server/src/tools/searchComponents.ts",
-        "mcp-server/src/tools/searchTemplates.ts"
+        "mcp-server/src/tools/searchTemplates.ts",
+        "mcp-server/tests/adminLogs.test.ts",
+        "mcp-server/tests/fixCenterService.test.ts",
+        "mcp-server/tests/logService.test.ts"
       ],
       "touchesDatabase": true,
       "touchesStorage": false,
@@ -829,7 +1006,8 @@
         "listAudit"
       ],
       "usedBy": [
-        "mcp-server/src/routes/admin.ts"
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/services/alertService.ts"
       ],
       "touchesDatabase": true,
       "touchesStorage": false,
@@ -841,7 +1019,7 @@
       "path": "mcp-server/src/services/componentService.ts",
       "layer": "shared",
       "feature": "mcp",
-      "lines": 427,
+      "lines": 421,
       "exportedSymbols": [
         "ComponentService",
         "componentService"
@@ -862,6 +1040,8 @@
         "mcp-server/src/tools/searchByBehavior.ts",
         "mcp-server/src/tools/searchComponents.ts",
         "mcp-server/src/tools/searchTemplates.ts",
+        "mcp-server/tests/premiumGating.test.ts",
+        "mcp-server/tests/searchEngine.test.ts",
         "mcp-server/tests/tools.test.ts"
       ],
       "touchesDatabase": false,
@@ -870,6 +1050,72 @@
         "node:fs",
         "node:path",
         "node:url"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "diagnosticsService",
+      "path": "mcp-server/src/services/diagnosticsService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 374,
+      "exportedSymbols": [
+        "DIAGNOSTICS_COLLECTION",
+        "ResolutionStatus",
+        "DiagnosticSample",
+        "DiagnosticRecord",
+        "FailureInput",
+        "recordFailure",
+        "DiagnosticsQuery",
+        "queryDiagnostics",
+        "getDiagnostic",
+        "updateDiagnosticStatus",
+        "buildFixPrompt",
+        "validateResourceUrl"
+      ],
+      "usedBy": [
+        "mcp-server/src/middleware/auth.ts",
+        "mcp-server/src/middleware/rateLimiter.ts",
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/routes/mcp.ts",
+        "mcp-server/src/services/telemetryIndexes.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "mongodb"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "failureClassifier",
+      "path": "mcp-server/src/services/failureClassifier.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 154,
+      "exportedSymbols": [
+        "FailureCategory",
+        "FailureSeverity",
+        "FAILURE_CATEGORIES",
+        "severityForCategory",
+        "humanCategory",
+        "FailureInput",
+        "classifyFailure",
+        "computeFingerprint",
+        "shortErrorSummary"
+      ],
+      "usedBy": [
+        "mcp-server/src/routes/mcp.ts",
+        "mcp-server/src/services/alertService.ts",
+        "mcp-server/src/services/diagnosticsService.ts",
+        "mcp-server/src/services/mcpInstrumentation.ts",
+        "mcp-server/src/services/telemetryService.ts",
+        "mcp-server/tests/observability.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "node:crypto"
       ],
       "confidence": "HIGH"
     },
@@ -897,6 +1143,77 @@
       "confidence": "HIGH"
     },
     {
+      "name": "fixCenterService",
+      "path": "mcp-server/src/services/fixCenterService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 240,
+      "exportedSymbols": [
+        "Severity",
+        "FixSignal",
+        "FixConfigInput",
+        "deriveSignals",
+        "buildSignalPrompt"
+      ],
+      "usedBy": [
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/tests/fixCenterService.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "logService",
+      "path": "mcp-server/src/services/logService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 133,
+      "exportedSymbols": [
+        "LogRow",
+        "LogFilters",
+        "statusOf",
+        "resultOf",
+        "mapLogRow",
+        "resultOfEvent",
+        "matchesLogFilters",
+        "eventsToLogRows",
+        "logsToCsv"
+      ],
+      "usedBy": [
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/tests/logService.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "mcpInstrumentation",
+      "path": "mcp-server/src/services/mcpInstrumentation.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 103,
+      "exportedSymbols": [
+        "ParsedToolResult",
+        "extractClientInfo",
+        "extractResourceId",
+        "extractFilters",
+        "parseToolResult",
+        "categoryForOutcome"
+      ],
+      "usedBy": [
+        "mcp-server/src/routes/mcp.ts",
+        "mcp-server/tests/observability.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
       "name": "mongo",
       "path": "mcp-server/src/services/mongo.ts",
       "layer": "shared",
@@ -914,10 +1231,15 @@
         "mcp-server/src/index.ts",
         "mcp-server/src/routes/admin.ts",
         "mcp-server/src/routes/dashboard.ts",
+        "mcp-server/src/services/alertScheduler.ts",
+        "mcp-server/src/services/alertService.ts",
         "mcp-server/src/services/analyticsService.ts",
         "mcp-server/src/services/apiKeyService.ts",
         "mcp-server/src/services/auditService.ts",
-        "mcp-server/src/services/firebase.ts"
+        "mcp-server/src/services/diagnosticsService.ts",
+        "mcp-server/src/services/firebase.ts",
+        "mcp-server/src/services/telemetryIndexes.ts",
+        "mcp-server/src/services/telemetryService.ts"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
@@ -931,7 +1253,7 @@
       "path": "mcp-server/src/services/permissionService.ts",
       "layer": "shared",
       "feature": "mcp",
-      "lines": 76,
+      "lines": 77,
       "exportedSymbols": [
         "PermissionService",
         "permissionService"
@@ -950,11 +1272,147 @@
         "mcp-server/src/tools/searchByBehavior.ts",
         "mcp-server/src/tools/searchComponents.ts",
         "mcp-server/src/tools/searchTemplates.ts",
-        "mcp-server/tests/permissions.test.ts"
+        "mcp-server/tests/permissions.test.ts",
+        "mcp-server/tests/premiumGating.test.ts"
       ],
       "touchesDatabase": false,
       "touchesStorage": false,
       "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "premiumCatalog",
+      "path": "mcp-server/src/services/premiumCatalog.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 180,
+      "exportedSymbols": [
+        "allPremiumIds",
+        "isPremiumOnlyId",
+        "getPremiumOnlyMeta",
+        "getPremiumOnlyMetas"
+      ],
+      "usedBy": [
+        "mcp-server/src/services/componentService.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "node:fs",
+        "node:path",
+        "node:url"
+      ],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "redaction",
+      "path": "mcp-server/src/services/redaction.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 158,
+      "exportedSymbols": [
+        "redactText",
+        "sanitizeText",
+        "normalizeQuery",
+        "SafeUrl",
+        "sanitizeUrl",
+        "hashValue"
+      ],
+      "usedBy": [
+        "mcp-server/src/middleware/auth.ts",
+        "mcp-server/src/middleware/rateLimiter.ts",
+        "mcp-server/src/routes/mcp.ts",
+        "mcp-server/src/services/alertScheduler.ts",
+        "mcp-server/src/services/alertService.ts",
+        "mcp-server/src/services/diagnosticsService.ts",
+        "mcp-server/src/services/failureClassifier.ts",
+        "mcp-server/src/services/mcpInstrumentation.ts",
+        "mcp-server/src/services/telemetryIndexes.ts",
+        "mcp-server/src/services/telemetryService.ts",
+        "mcp-server/tests/observability.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "searchEngine",
+      "path": "mcp-server/src/services/searchEngine.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 249,
+      "exportedSymbols": [
+        "tokenize",
+        "SearchDoc",
+        "SearchHit",
+        "searchCatalog"
+      ],
+      "usedBy": [
+        "mcp-server/src/services/componentService.ts",
+        "mcp-server/tests/searchEngine.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "telemetryIndexes",
+      "path": "mcp-server/src/services/telemetryIndexes.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 99,
+      "exportedSymbols": [
+        "ensureTelemetryIndexes"
+      ],
+      "usedBy": [
+        "mcp-server/src/index.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [],
+      "confidence": "HIGH"
+    },
+    {
+      "name": "telemetryService",
+      "path": "mcp-server/src/services/telemetryService.ts",
+      "layer": "shared",
+      "feature": "mcp",
+      "lines": 565,
+      "exportedSymbols": [
+        "REQUEST_EVENTS_COLLECTION",
+        "SEARCH_EVENTS_COLLECTION",
+        "RequestStatus",
+        "ResourceType",
+        "RequestEvent",
+        "SearchEvent",
+        "ToolTelemetry",
+        "TOOL_TELEMETRY",
+        "toolTelemetry",
+        "ToolAggregate",
+        "ComponentAggregate",
+        "RequestQuery",
+        "SearchQuery",
+        "TelemetryService",
+        "telemetryService",
+        "buildRequestStatus"
+      ],
+      "usedBy": [
+        "mcp-server/src/index.ts",
+        "mcp-server/src/middleware/auth.ts",
+        "mcp-server/src/middleware/rateLimiter.ts",
+        "mcp-server/src/routes/admin.ts",
+        "mcp-server/src/routes/mcp.ts",
+        "mcp-server/src/services/alertService.ts",
+        "mcp-server/src/services/telemetryIndexes.ts",
+        "mcp-server/tests/observability.test.ts"
+      ],
+      "touchesDatabase": false,
+      "touchesStorage": false,
+      "externalPackages": [
+        "mongodb"
+      ],
       "confidence": "HIGH"
     }
   ]

@@ -6631,5 +6631,473 @@
         "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, clear the hint timeout)"
       ]
     }
+  },
+  "moon-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true (library preview), forges a smaller 1024x512 lunar texture for faster boot instead of the full 2048x1024."
+      },
+      {
+        "name": "showHint",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to show the fading interaction hint."
+      },
+      {
+        "name": "hintText",
+        "type": "string",
+        "default": "\"Drag to rotate the Moon 360° · scroll or double-tap to zoom · R to reset\"",
+        "description": "Text for the interaction hint."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "Three stacked canvases fill the root: a 2D sky canvas (drifting Milky Way + twinkling three-depth starfield + occasional shooting star + vignette), a raw-WebGL1 canvas that raytraces the Moon sphere in a fragment shader, and a 2D overlay canvas that draws the dashed hover-feature outline. Boot forges a seeded (mulberry32 20261014) lunar texture on the CPU: a 2048x1024 (or 1024x512 compact) albedo/height/mare-mask pass with real near-side maria, ~60 named craters, 11,000 random craters and 8 bright ray systems, then bakes it to a Uint8Array (albedo, clampped nx/ny relief, mare mask) uploaded as an RGBA mipmapped texture. The GLSL sphere raytrace computes the body-space normal, samples the albedo/relief/mask, adds two octaves of level-of-detail cellular micro-craters on the sphere, applies Lommel-Seeliger shading with a bump-mapped normal, an opposition surge near full phase, earthshine on the night side and a warm/cool mare tint, plus a hover spotlight and pulsing rings that follow the cursor. The Moon plays real time-compressed motion (optical libration ±7.9°/±6.7°, a 150s phase cycle with earthshine, sky drift/parallactic roll ±14°, and a ±3% perigee-apogee size change); a trackball matrix U is stacked on top so drag spins it a full 360° with inertia. The pointer (mouse or touch) drags to spin, scrolls/pinches or double-taps to zoom 1x-3x, hover reads the nearest named feature (maria, craters, mountain ranges) and shows a label with lat/lon plus a dashed outline, and R/arrows rotate or reset.",
+      "states": {
+        "from": "a slowly librating, phase-cycling Moon in a still Milky Way while the lunar surface is forged (progress bar)",
+        "to": "a user-spun Moon with drag inertia and zoom, a cursor spotlight, and hover labels naming maria/craters with coordinates"
+      },
+      "cssProperties": [
+        "relative full-bleed root, min-height 380px, background #02030a, overflow hidden",
+        "three absolute inset-0 full-size canvases (sky/gl/overlay), overlay pointer-events none",
+        "touch-action none and grab/grabbing cursors, user-select none, dark color-scheme",
+        "absolute glass hover label (blurred, bordered) with name / kind / coordinates, opacity transition",
+        "centered loader with a progress track/bar (opacity transition, off class)",
+        "absolute bottom interaction hint fading in/out, safe-area padding, pointer-events none",
+        "requestAnimationFrame render loop (paused when document.hidden)"
+      ],
+      "description": "A photoreal, fully procedural Moon in a drifting Milky Way. A seeded CPU pass forges a 2048×1024 lunar surface (real near-side maria, ~60 named craters, 11k random craters, bright ray systems) and a raw-WebGL raytraced sphere renders it with Lommel-Seeliger shading, bump-mapped relief, level-of-detail micro-craters, earthshine on the night side and a cursor spotlight. Drag to spin it 360°, scroll to zoom, hover to read feature names and coordinates.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D context for the sky/starfield and the overlay (no library)",
+        "raw WebGL1 context (no library) with a vertex + fragment GLSL program for the raytraced sphere",
+        "seeded deterministic RNG (mulberry32 20261014) for the maria/crater/ray tables and the 520-star field",
+        "procedural 2048x1024 (or 1024x512 compact) lunar texture generated on the CPU and uploaded as an RGBA mipmapped texture (EXT_texture_filter_anisotropic when available)",
+        "fragment-shader sphere raytrace with Lommel-Seeliger shading, bump-mapped relief, two cellular micro-crater LOD octaves and a hover spotlight",
+        "optical-libration / phase / parallactic-roll motion plus a stacked trackball rotation matrix with drag inertia",
+        "Pointer Events (mouse + touch: pointermove/pointerdown/pointerup/pointerleave/pointercancel) scoped to the component root with getBoundingClientRect-local coordinates",
+        "wheel (passive: false) and double-tap zoom, keyboard (arrows/R) gated on pointer-over",
+        "ResizeObserver resizes the canvases to the root and caps the device pixel ratio",
+        "prefers-reduced-motion matchMedia (slows the clock, disables shooting stars)",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, clear hint timeouts, WEBGL_lose_context)"
+      ]
+    }
+  },
+  "saturn-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "showHint",
+        "type": "boolean",
+        "default": "true",
+        "description": "Whether to show the fading interaction hint."
+      },
+      {
+        "name": "hintText",
+        "type": "string",
+        "default": "\"move · drag · click\"",
+        "description": "Text for the interaction hint."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single full-bleed 2D canvas holds a fixed 608x1080 stage. Boot seeds a deterministic LCG (a 256x256 value-noise lattice at seed 7, 340 twinkling stars at seed 42 and 15,000 ring particles at seed 2024 in C/B/A tone bands with Cassini and Encke gaps), precomputes per-pixel constants for a 2x-supersampled planet sprite (unit sphere x/y/z, limb-darkening + diffuse light term, edge alpha), then each frame draws the far ring half, an atmospheric glow, a black occluder disc, the CPU-raytraced planet sprite (differential-latitude spin, banded albedo, pale storm oval, dark spot, ring-shadow band, limb darkening), the near ring half with the planet's shadow cast on it, the equatorial moon (clipped behind the planet when far) and a drifting twinkling starfield. Ring opening (rho) and roll (theta) sweep on a 22s closed-form cycle, the pole tilt follows the ring (e = asin rho) and every motion term is closed-form so any time renders directly. The pointer offsets and rolls the whole scene, a drag adds a decaying spin boost, a click swells the ring/moon radii (burst), and the hint fades on first contact or after 6s.",
+      "states": {
+        "from": "a quietly rotating ringed planet and its moon under a still starfield, ring particles drifting at Keplerian speeds, the hint visible",
+        "to": "the pointer offsetting and rolling the scene, a drag boosting the spin, a click bursting the ring and moon outward"
+      },
+      "cssProperties": [
+        "relative full-bleed root, min-height 380px, background #000, overflow hidden, select-none, flex centered",
+        "absolute inset-0 stage flex-centered",
+        "block canvas, intrinsic 608x1080 buffer, CSS cover-fitted to the stage by ResizeObserver (scaled by the larger axis to fill the box edge-to-edge, overflow centred and cropped, never stretched)",
+        "touch-action none and grab/grabbing cursors",
+        "absolute bottom interaction hint, uppercase tracking, safe-area padding, pointer-events none, fades over 1.2s",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A cinematic procedural Saturn rendered entirely in Canvas 2D — no WebGL, no libraries. A per-pixel CPU raytrace spins a true oblate sphere with differential rotation, banded albedo, a pale storm oval and a dark spot, limb-darkened and lit from a single direction, while 15,000 ring particles orbit at real Keplerian speeds across C/B/A tone bands with Cassini and Encke gaps, cast the planet's shadow and pass both behind and in front of the planet. A small moon circles on the equatorial plane under a drifting twinkling starfield. Move to offset and roll the scene, drag to boost the spin, click for a ring-sized burst — all closed-form and seekable, honouring prefers-reduced-motion.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D context (no library)",
+        "seeded deterministic LCG RNG (linear congruential 1664525/1013904223) for the noise lattice, starfield and ring particles",
+        "precomputed per-pixel sphere constants and a CPU raytrace into an offscreen 2x planet sprite",
+        "Keplerian differential ring orbit (w ~ r^-1.5) with C/B/A tone bands, Cassini and Encke gaps and the planet's shadow on the far ring",
+        "closed-form seekable motion (ring opening/roll on a 22s cycle, differential spin, equatorial moon orbit)",
+        "Pointer Events (mouse + touch: pointermove/pointerdown/pointerup/pointerleave/pointercancel) scoped to the component canvas with getBoundingClientRect-local coordinates and setPointerCapture",
+        "ResizeObserver cover-fits the 608x1080 buffer to the stage (scaled by the larger axis to fill the box edge-to-edge, overflow centred and cropped, never stretched)",
+        "prefers-reduced-motion matchMedia (parks the clock; the scene still draws a static pose)",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, clear the hint timeout)"
+      ]
+    }
+  },
+  "mercury-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single full-bleed WebGL canvas (three.js) holds one sphere and nothing else. Two textures are loaded from /assets/mercury-animation/ — a 2048x1024 equirectangular colour map (sRGB) and its grayscale relief (bump) map — and applied to a SphereGeometry(1,192,128) MeshStandardMaterial (map + bumpMap + emissiveMap, bumpScale 0.4, roughness 0.97, metalness 0, emissiveIntensity 0.1). A low sun from the upper left (DirectionalLight 1.25 at (-2.4,1.4,2.8) + AmbientLight 0.42) lights the crater relief and casts a soft shadow on the right limb. A thin blue-gold additive BackSide shell gives the rim glow, 170 twinkling glints (from a [lon,lat,brightness] crater-ray table) are added as children of the planet so they turn with it, and 2,400 background stars fill the field — both star and glint fields are additive point sprites with a twinkle/core+spike shader. The inner mesh spins on its own axis (one turn per 60s) while an outer group carries the user's world-space quaternion: drag in any direction to turn it 360 degrees on both axes with fading flick momentum, wheel or two-finger pinch zooms 0.6x to 2.2x, double-click resets, Space toggles pause. prefers-reduced-motion starts it paused.",
+      "states": {
+        "from": "a Mercury globe quietly spinning on its axis under a still starfield, its rayed craters glinting, the fading loader visible briefly while the textures load",
+        "to": "the user dragging the globe in any direction with momentum, zooming closer or further, double-clicking to snap back home, or pausing the spin with Space"
+      },
+      "cssProperties": [
+        "relative full-bleed root, width/height 100%, min-height 380px, background #03040a, overflow hidden, grab cursor",
+        "absolute inset-0 block canvas, touch-action none, grabbing cursor while dragging",
+        "absolute inset-0 centered monospace uppercase loader that fades out (opacity) once the planet is built",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A realistic, endlessly spinning Mercury globe built with three.js on a full-bleed WebGL canvas — one sphere, nothing else. A photographic 2048x1024 equirectangular colour map and its relief (bump) map wrap a MeshStandardMaterial sphere lit by a single low sun from the upper left, edged with a thin blue-gold rim glow; 170 twinkling glints sit on the brightest crater rays as children of the planet so they turn with it, over 2,400 drifting background stars. Drag in any direction to turn it a full 360° on both axes with fading momentum, wheel or two-finger pinch to zoom 0.6x-2.2x, double-click to reset and Space to pause.",
+      "libraries": [
+        "react",
+        "three"
+      ],
+      "requirements": [
+        "three.js (WebGLRenderer, Scene, PerspectiveCamera, SphereGeometry, MeshStandardMaterial, ShaderMaterial, Points, Texture, Quaternion)",
+        "two asset textures served from /assets/mercury-animation/mercury_texture.jpg (2048x1024 colour, sRGB) and mercury_bump.jpg (2048x1024 relief, linear), each with max anisotropy",
+        "an inlined 170-entry [lon,lat,brightness] crater-ray glint table mapped onto the sphere radius 1.004",
+        "additive point-sprite shaders for 2,400 twinkling background stars and the 170 ray glints (twinkle from a per-point phase, core+4-point-spike falloff)",
+        "world-space quaternion drag (premultiplied axis-angle on both axes) with fading flick momentum",
+        "wheel and two-finger pinch zoom clamped 0.6x-2.2x, double-click reset to the home quaternion",
+        "ResizeObserver drives renderer.setSize and camera aspect (planet ~60% of the shorter side)",
+        "prefers-reduced-motion matchMedia (starts paused)",
+        "Space toggles pause only while the pointer is over the canvas",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, dispose geometries/materials/textures, renderer.dispose + forceContextLoss)"
+      ]
+    }
+  },
+  "neptune-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single full-bleed raw-WebGL1 canvas raytraces one sphere over a procedural fragment shader — no textures, no libraries. The shader samples a domain-warped cloud deck in the planet frame: four twisting eddies (twist() curls the sampling coords around a point), two-phase differential zonal winds (equator lags, high latitudes run ahead, capped by a pair of flow-map phases), value-noise fbm3/fbm4 bands for the blue methane tone, gaussian latitude belts of bright cirrus, the Great Dark Spot (an elongated ellipse drifting west with bright companion clouds), and the faster southern Small Dark Spot. The sky behind is near-black with a faint nebula and a sparse twinkling star grid (parallax by pointer). A pointer-following light direction lights the disk (diffuse + limb + rim + inner atmosphere), the planet leans slightly toward the pointer, and hovering a storm eases an accelerating highlight (uHi) and shows a pill callout with its name. Drag in any direction to turn it 360 degrees via a re-orthonormalised 3x3 trackball with flick momentum, wheel or two-finger pinch zooms 0.7x to 1.8x, double-click resets, arrow keys turn and +/- zoom, 0 resets. prefers-reduced-motion freezes the flow.",
+      "states": {
+        "from": "Neptune quietly spinning under a still starfield, a slow parallax drift following the cursor, no callout visible",
+        "to": "the user dragging the planet in any direction with momentum, zooming 0.7x-1.8x, hovering a storm to reveal its named callout, or double-clicking / pressing 0 to snap back home"
+      },
+      "cssProperties": [
+        "relative full-bleed root, width/height 100%, min-height 380px, background #02040b, overflow hidden",
+        "absolute inset-0 block canvas, touch-action none, default cursor (grab over the disk, grabbing while dragging)",
+        "absolute pill callout (rounded-full, translucent panel, blurred) that fades in via opacity while hovering a storm",
+        "absolute inset-0 centered WebGL fallback message (display flex)",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A fully procedural, endlessly rotating Neptune built on a raw WebGL1 fragment shader — one raytraced sphere, no textures, no libraries. Differential zonal winds band the blue methane deck (equator lags, high latitudes run ahead) while four domain-warped eddies twist the flow, bright cirrus belts brighten cloud tops, and the Great Dark Spot drifts west with bright companion clouds as the Small Dark Spot races south. A pointer-following light leans the planet toward the cursor with parallax stars behind. Drag in any direction to turn it a full 360° with fading momentum, wheel or two-finger pinch to zoom 0.7x-1.8x, double-click to reset, arrow keys to turn and +/- to zoom, and hover a storm for a named callout.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "raw WebGL1 (no three.js/gsap) — one full-screen triangle, a single fragment shader, and a mat3 'view -> planet' uniform",
+        "hash13/hash12 value noise with fbm3 and fbm4 octave sums for the cloud deck, nebula and domain warp",
+        "procedural planet frame: lat=asin(q.y), lon=atan(q.x,q.z) sampled after a re-orthonormalised 3x3 rotation (mul/tr/Rx/Ry/Rz/ortho + a glm column-major upload)",
+        "twist() domain-warped eddies and two-phase differential zonal winds (wz = -0.009*cos(2*lat)+0.003*sin(9*lat))",
+        "Great Dark Spot (drifting lat/lon ellipse + companion clouds) and a faster southern Small Dark Spot, both picked in JS with the same ell() maths for the hover callout",
+        "pointer-following light (default [-0.55,0.42,0.72]) with lean + star parallax easing, hover highlight uniform (uHi) and a DOM pill label",
+        "3x3 trackball drag with flick momentum, pointer-capture, two-finger pinch and wheel zoom clamped 0.7x-1.8x, double-click / key reset",
+        "dynamic resolution guard: DPR-base * quality with a 2.4e6 px cap, dropping quality 0.8x if frames run slow",
+        "ResizeObserver scopes sizing to the container; keyboard is guarded to fire only over the canvas",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver, remove listeners, WEBGL_lose_context)"
+      ]
+    }
+  },
+  "pluto-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single Canvas 2D software renderer — no WebGL, no libraries. A seeded CPU pass builds a 2048x1024 equirectangular surface: a warm/cool grey-white ice base, northern blue-grey patches, yellow-orange Lowell Regio and high-north terrain, greyish-pink southern blotches with red speckle, an equatorial dark-maculae belt, the reddish Cthulhu Macula (dark maroon -> brick red -> pinkish edge), a second dark patch, the bright pink-grey west lobe of Tombaugh Regio, and the cream Sputnik Planitia with worley convection cells and a blocky water-ice mountain zone along its west rim, all fractured along two axis lines. Pass 2 scatters ~4300 power-law impact craters (with ejecta, ice rims and floor shading) plus 260 brown rim pits. Pass 3 packs 5 bytes/texel (RGB + 2 slope bytes) and builds four mip levels. createRenderer pre-computes per-pixel view tables and raytraces the disc: mip + extra-tap texture fetch, slope bump against the sun direction, limb and haze, plus a thin bluish atmosphere ring and a background haze pass. Drag in any direction to turn it 360 degrees with a re-orthonormalised 3x3 trackball and flick inertia, double-click or 0 resets, arrow keys nudge, Space pauses. prefers-reduced-motion stops the auto-spin (still draggable). The software buffer is full-bleed (fills the container, disc centred on the shorter side, capped at 800px), and the whole loop is gated by an IntersectionObserver and the Page Visibility API, so the planet only rasterises while it is actually on screen.",
+      "states": {
+        "from": "a loading overlay counting through terrain generation, then Pluto spinning retrograde under a black sky with a faint bluish rim",
+        "to": "the user dragging the dwarf planet in any direction with momentum, double-clicking / pressing 0 to snap back home, or pausing the spin with Space"
+      },
+      "cssProperties": [
+        "relative flex-centred root, width/height 100%, min-height 380px, black background, overflow hidden",
+        "a full-bleed software canvas that fills the container with the disc centred on the shorter side (pixel buffer capped at 800px per shorter edge) and rebuilt on an rAF-throttled ResizeObserver",
+        "absolute hint line at the bottom that fades in then out",
+        "absolute inset-0 loading overlay with a 220px progress track filled by generation progress",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A fully procedural, endlessly rotating Pluto rendered entirely in Canvas 2D — no WebGL, no libraries. A seeded CPU pass forges a 2048x1024 equirectangular surface (grey-white nitrogen-and-water ice, pink-grey southern blotches, the dark maculae belt, the reddish Cthulhu Macula and the cream Sputnik Planitia with its convection cells and blocky water-ice mountains), then scatters thousands of power-law impact craters and packs a level-of-detail mip chain. A software sphere renderer raytraces the disc per pixel with slope-based relief, a single sun, limb shading and a thin bluish atmosphere haze. Drag in any direction to turn it a full 360° (Pluto's real retrograde spin), flick for momentum, double-click or 0 to reset, arrow keys to nudge and Space to pause.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D context (no WebGL, no three.js/gsap)",
+        "seeded mulberry32 RNG + permuted 3D gradient value noise with fbm and hash3/worley helpers",
+        "equirectangular terrain generator (async, yielding every 32 rows / 256 craters, cancellable) with named ellipsoidal regions (Sputnik Planitia, Tombaugh Regio west lobe, Cthulhu Macula, Lowell Regio, a dark macula)",
+        "software sphere renderer with per-pixel precomputed view tables (u/v, light elevation/azimuth, coverage, haze), a 4-level mip chain and extra u-taps at the poles/limb",
+        "slope-bump lighting from the packed gradient bytes plus limb, ambient and a bluish atmosphere haze pass",
+        "3x3 trackball drag (mul/ortho/turn) with flick inertia, pointer-capture, double-click / key reset",
+        "full-bleed render buffer that fills the container (disc centred on the shorter side, capped at 800px), rebuilt on an rAF-throttled ResizeObserver; pointer maths use getBoundingClientRect",
+        "prefers-reduced-motion matchMedia (stops the auto-spin; still draggable)",
+        "Space toggles pause only while the pointer is over the canvas",
+        "IntersectionObserver + Page Visibility gate: rendering pauses off-screen or when the tab is hidden, and the one-time terrain build is deferred and paused until the box is visible",
+        "full teardown on unmount (cancel rAFs, disconnect ResizeObserver + IntersectionObserver, clear hint/loading timers, remove listeners, abort an in-flight generation)"
+      ]
+    }
+  },
+  "venus-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A single Canvas 2D software renderer — no WebGL, no libraries. A seeded CPU pass builds a 1024x512 equirectangular surface: dark umber/orange/gold/pale-yellow volcanic plains driven by layered value-noise fbm (warped fbm, a cubed ridge term and a low-frequency term), real Magellan highlands drawn as angular-radius ellipses on the sphere (Lakshmi Planum / Ishtar Terra, Maxwell Montes, the Aphrodite Terra spans, Thetis Regio, Alpha / Beta / Atla Regio, Artemis), a fine radar speckle, plus named volcanoes and craters stamped as radial profiles (Maat Mons, Sapas Mons, Ozza Mons, Sif Mons, Rhea Mons, Theia Mons, Idunn Mons, the Mead and Cleopatra craters), 80 random impact craters and 45 shield domes. The colours come from a 256-entry ramp LUT (dark umber -> orange -> gold -> pale yellow). buildMap pre-computes per-pixel sphere tables (u/v, latitude, sun shade, rim glow, alpha coverage) for the current tilt; retilt() refreshes them when the camera tilts. renderSphere does a bilinear texture fetch per disc pixel and applies the shade + orange atmospheric limb. drawFrame paints the near-black sky, twinkling stars, a radial orange glow, then blits the disc scaled by zoom. Drag in any direction to turn it with a flick (yaw += momentum, decaying 0.94/frame) and vertical tilt clamped to +/-1.45 rad, wheel or two-finger pinch zooms 0.5x-2.2x, +/- keys or the on-screen buttons zoom, and hovering + i/e toggles an inspect probe that reports lat/lon and the nearest named feature/highland. prefers-reduced-motion stops the auto-spin (still draggable). The whole loop is gated by an IntersectionObserver and the Page Visibility API, the one-time texture build is deferred and yields until on screen, and the raster is capped at ~40fps.",
+      "states": {
+        "from": "a loading overlay ('Forming Venus surface…') counting through the texture build, then Venus spinning right-to-left under a black sky with a faint orange glow and a soft atmospheric limb",
+        "to": "the user dragging the planet in any direction with momentum, zooming 0.5x-2.2x with the wheel / pinch / buttons, or hovering and pressing i to probe the surface for its real Venusian geography"
+      },
+      "cssProperties": [
+        "relative flex-centred root, width/height 100%, min-height 380px, near-black #02030a background, overflow hidden",
+        "an absolute full-bleed canvas sized to the container (DPR capped at 2) whose disc buffer follows the container's shorter side (capped at 560px)",
+        "absolute tooltip probe (monospace, translucent panel, bordered) shown while inspecting",
+        "absolute bottom-right stacked circular +/- zoom buttons",
+        "absolute inset-0 loading overlay that fades out",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A fully procedural, endlessly rotating Venus rendered entirely in Canvas 2D — no WebGL, no libraries. A seeded CPU pass forges a 1024x512 equirectangular surface (dark umber volcanic plains, the orange-gold highlands of Ishtar Terra / Lakshmi Planum, Maxwell Montes, the Aphrodite Terra spans, Thetis Regio, Alpha / Beta / Atla Regio and Artemis, plus named volcanoes and craters — Maat Mons, Sapas Mons, Ozza Mons, Sif Mons, Rhea Mons, Theia Mons, Idunn Mons, the Mead and Cleopatra craters — over scattered impact craters, shield domes and a fine radar speckle). A per-pixel software sphere pass maps the texture with bilinear sampling, a single directional sun, a soft terminator and a thin atmospheric limb glow. Drag in any direction to turn it, flick for momentum, wheel or two-finger pinch to zoom 0.5x-2.2x, +/- keys or the on-screen buttons to zoom, and press i to probe the surface for its real Magellan geography.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D context (no WebGL, no three.js/gsap)",
+        "seeded LCG RNG + 3D value noise with fbm, imul-hash H3, plus an ll() lat/lon -> unit-vector helper",
+        "equirectangular texture generator (async, yielding every 16 rows, cancellable): layered warped fbm + cubed ridge + low-frequency term, angular-radius highland ellipses, radar speckle, and radial-profile volcanoes/impact craters/shield domes",
+        "256-entry colour-ramp LUT (dark umber -> orange -> gold -> pale yellow)",
+        "per-pixel software sphere mapping tables (u, v, latitude, sun shade, rim glow, alpha coverage) built once per tilt; retilt() refreshes on tilt change; renderSphere does a bilinear fetch + shade + orange limb glow",
+        "a fixed 1024x512 texture blitted onto a container-sized canvas with a twinkling starfield and a radial orange glow",
+        "trackball drag (yaw + tilt, tilt clamped +/-1.45) with a 0.94/frame flick, pointer-capture, wheel + two-finger pinch zoom clamped 0.5x-2.2x, +/- keys, on-screen buttons",
+        "render disc buffer sized to the container's shorter side (capped at 560px) on an rAF-throttled ResizeObserver; pointer maths use getBoundingClientRect",
+        "prefers-reduced-motion matchMedia (stops the auto-spin; still draggable)",
+        "inspect probe (hover + i / Escape) that maps the hovered disc pixel back to lat/lon and the nearest named feature or highland",
+        "IntersectionObserver + Page Visibility gate: rendering pauses off-screen or when the tab is hidden, and the one-time texture build is deferred and paused until the box is visible; the raster is capped at ~40fps",
+        "full teardown on unmount (cancel rAFs, disconnect ResizeObserver + IntersectionObserver, clear the loading timer, remove listeners, abort an in-flight build)"
+      ]
+    }
+  },
+  "uranus-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A full-bleed raw-WebGL1 fragment shader raytraces one sphere over a procedural atmosphere — no textures, no libraries. The shader samples a value-noise fbm/domain-warped cloud deck in the planet frame: broad soft belts plus fine latitude streaks, a slightly greener equator and bluer mid latitudes, a bright polar haze cap that is stronger on the sunlit pole, two crossfading methane cloud-streak samples that keep evolving, a thin high-altitude haze drifting a little faster than the belts, and the planet's faint 13-ring system (a dusty inner band, six narrow bright rings, the hair-thin epsilon (e) ring and a field of tiny twinkling ring particles) drawn as a procedural rotated-plane pass whose bands also cast soft shadow stripes back onto the cloud tops. A second 2D overlay canvas draws the inspect legend and a live probe. Drag in any direction to turn the planet through any angle via the same orientation trackball as the reference (planet frame U/V/pole A, re-orthonormalised after every rotation) with flick momentum, and double-click / r resets. Hovering the canvas enables the keyboard: i toggles inspect (spin-axis dashes, the pole marker and a readout of the hovered latitude/longitude or ring name), Space pauses, Escape clears, arrow keys nudge and r resets. prefers-reduced-motion starts it paused. The render loop is gated by an IntersectionObserver and the Page Visibility API so an off-screen tile never burns the GPU.",
+      "states": {
+        "from": "Uranus quietly spinning on its tilted axis under a black sky, its rings hazy and faint, no legend or probe visible",
+        "to": "the user dragging the planet through any angle with momentum, double-clicking / pressing r to snap back home, or hovering + pressing i to reveal the spin axis and probe the atmosphere or a ring by name"
+      },
+      "cssProperties": [
+        "relative full-bleed root, width/height 100%, min-height 380px, background #020407, overflow hidden, monospace",
+        "two absolute inset-0 block canvases: the WebGL layer (grab/grabbing cursor, touch-action none) under a pointer-events-none 2D overlay",
+        "absolute top-right inspect legend of rounded chips (hidden until .inspect), each with a small coloured dot",
+        "absolute tooltip (monospace, translucent panel, blurred, bordered) shown while inspecting",
+        "absolute inset-0 centered WebGL fallback message (display flex via the .nogl root class)",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A fully procedural, endlessly rotating Uranus rendered by a single raw-WebGL1 fragment shader — one raytraced sphere, no textures, no libraries. An fbm/domain-warped methane atmosphere gives broad soft belts with fine latitude streaks, a slightly greener equator and bluer mid latitudes, a bright polar haze cap (stronger on the sunlit pole), evolving methane cloud streaks and a thin high-altitude haze drifting a little faster than the belts. The planet's faint 13-ring system is drawn procedurally too — a dusty inner band, six narrow bright rings, the hair-thin epsilon ring and a field of tiny twinkling ring particles — and its bands cast soft shadows onto the cloud tops. Drag in any direction to turn it through any angle, flick for momentum, double-click or r to reset, arrow keys to nudge and Space to pause, and press i to reveal the spin axis, the pole marker and a live latitude/longitude or ring-name probe.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "raw WebGL1 (no three.js/gsap) — one full-screen triangle, a single fragment shader, and uU/uV/uA 'planet frame in view space' uniforms",
+        "h21/h31 value noise with a 4-octave fbm and an ln() narrow-ring helper",
+        "procedural planet frame (uU/uV/uA) raytraced in the shader: broad belts + fine latitude streaks, greener equator / bluer mid latitudes, a pole haze cap brighter on the sunlit pole, two crossfading methane streak samples and a faster thin high-altitude haze",
+        "ringLayers(rr) profile (dusty band mask, six narrow rings via ln(), a hair-thin epsilon ring) plus a per-cell ring-particle pass with twinkle, and the ring bands casting shadow stripes onto the cloud tops",
+        "orientation trackball (planet frame U/V/pole A with re-orthonormalisation) driven by drag in any direction with flick momentum",
+        "pointer maths use getBoundingClientRect-local coordinates; drag uses pointer capture",
+        "DPR capped at 2 with a 3.2e6 px budget; sized from the container with a ResizeObserver (the window resize became a ResizeObserver on the root)",
+        "keyboard (i / Space / Escape / arrows / r) gated on pointer-over so page keys are never hijacked",
+        "prefers-reduced-motion matchMedia (starts paused; still draggable)",
+        "IntersectionObserver + Page Visibility gate: rendering pauses off-screen or when the tab is hidden",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver + IntersectionObserver, remove listeners, deleteProgram/deleteShader/deleteBuffer; never loseContext)"
+      ]
+    }
+  },
+  "mars-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      },
+      {
+        "name": "compact",
+        "type": "boolean",
+        "default": "false",
+        "description": "When true (library preview), forges a smaller 1024x512 surface instead of the full 2048x1024 for faster boot."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A fully procedural, endlessly rotating Mars rendered entirely in Canvas 2D — no WebGL, no libraries. A seeded CPU pass forges a seamless equirectangular surface in slices (broad albedo features like Syrtis Major, Acidalia Planitia and the Mare belts; the bright Hellas and Argyre basins; the Tharsis bulge with Olympus Mons and the Ascraeus/Pavonis/Arsia group; the Valles Marineris, Ius Chasma, Kasei Valles and Noctis Labyrinthus canyons; the spiral-capped polar ice caps; the 71°N rings; plus ~2,300 power-law craters with ejecta rays and wind streaks) packed into albedo / east-north slope / dust-hue / cloud channels at 2048x1024, then raytraces the disc per pixel with bump-mapped relief, a dust-laned Milky Way behind it, twinkling stars, a dusty-orange limb glow and two moons (Phobos and Deimos) that circle in front and behind. Drag in any direction to turn the planet via a three-vector trackball (north axis + lon0 + east, re-projected after every rotation) with flick momentum, and double-click / r resets. Hovering the canvas enables the keyboard: i toggles inspect (rotation axis, dashed graticule, orbit ellipses and a probe that names the hovered feature, canyon, crater or moon with its latitude/longitude), Space pauses, Escape clears, arrow keys nudge and r resets. A Sun slider re-lights the whole scene. prefers-reduced-motion starts it paused. Rendering is gated by an IntersectionObserver and the Page Visibility API so an off-screen tile never burns CPU, and it auto-drops to a coarser level-of-detail if a frame runs long.",
+      "states": {
+        "from": "Mars quietly spinning under a deep-space Milky Way, its rust-red disc, polar caps and two moons visible, no legend or probe",
+        "to": "the user dragging the planet through any angle with momentum, double-clicking / pressing r to snap back home, sliding the Sun to re-light the scene, or hovering + pressing i to reveal the axis, graticule, orbits and a live probe that names the hovered geography"
+      },
+      "cssProperties": [
+        "relative flex-centred root, width/height 100%, min-height 380px, #04040a background, overflow hidden, monospace",
+        "a full-bleed block canvas that fills the container with the disc centred on the shorter side (grab/grabbing cursor, touch-action none, dual-axis mask-image fade at the edges; DPR capped at 2, uniform backing-store scale, shorter edge 360–900px)",
+        "absolute bottom-left Sun slider panel (translucent panel, blurred backdrop, accented range input)",
+        "absolute top-right inspect legend of rounded chips (hidden until .inspect), each with a small coloured dot",
+        "absolute tooltip probe (monospace, translucent panel, bordered) shown while inspecting",
+        "absolute inset-0 'Forming Mars NN%' boot overlay that hides once the texture finishes",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A fully procedural, endlessly rotating Mars rendered entirely in Canvas 2D — no WebGL, no libraries. A seeded CPU pass forges a seamless equirectangular surface (the broad albedo features of Syrtis Major, Acidalia Planitia and the Mare belts; the bright Hellas and Argyre basins; the Tharsis bulge and Olympus Mons; the Valles Marineris and Kasei Valles canyons; the spiral-capped polar ice caps; ~2,300 power-law craters with ejecta rays and wind streaks) and raytraces the disc per pixel with bump-mapped relief, a dust-laned Milky Way behind it and two moons. Drag in any direction to turn the planet, flick for momentum, double-click or r to reset, arrow keys to nudge and Space to pause. A Sun slider re-lights the scene, and pressing i reveals the rotation axis, a graticule and a live probe that names the hovered feature, canyon, crater or moon.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "Canvas 2D context only (no WebGL, no three.js/gsap) — one offscreen disc buffer per level-of-detail plus the visible canvas",
+        "seeded mulberry32 RNG + 3D Perlin value noise with fbm, plus unit()/cross()/dot()/norm() vector helpers",
+        "an 8192-entry colour-ramp LUT (256 albedo x 32 dust-hue steps, grey basalt -> red -> yellow ochre)",
+        "an async (generator) surface texture build in short 14ms slices so the page never freezes: a 1024x512 broad-feature pass (domain-warped fbm, angular-radius dark/bright feature blobs, volcano bumps, canyon trenches, polar caps, 71°N rings, cloud ridges) resampled to 2048x1024 with fine grain, then ~2,300 power-law craters with ejecta rays and wind streaks, then east/north slope quantisation + baked ambient occlusion",
+        "per-pixel sphere map sets (px/py/pz + light-dependent qx/qy/qz, PL, haze, cloud-shade, uB, EL, NL, vRow, cRow) built once per size; orient() refreshes only while the user turns the planet; renderPlanet does a horizontal-wrap texture fetch + bump-shaded diffuse + cloud + haze, then putImageData",
+        "a hand-built background canvas: a dust-laned Milky Way band (additive radial gradients), dark dust lanes, 560 multi-tint stars with glow and ~70 twinklers, rebuilt on resize",
+        "orientation trackball (north axis AX + lon0 XP + east YP, re-projected after every rotation) driven by drag in any direction with exponential flick momentum, pointer capture, double-click / r to reset",
+        "two moons (Phobos, Deimos) drawn as lit radial-gradient discs that pass in front of and behind the planet along dashed orbit ellipses",
+        "full-bleed canvas that fills the container (disc centred on the shorter side) at a uniform DPR-capped scale on a rAF-throttled ResizeObserver (the window resize became a ResizeObserver on the root); pointer maths use getBoundingClientRect and scale to the backing store per axis",
+        "adaptive level-of-detail: drops to a coarser map set if frames run long, and renders the coarse set while dragging",
+        "a re-lightable Sun slider (light-set refresh across both map sets)",
+        "inspect probe (hover + i / Escape) that names the hovered named feature, canyon or crater, or one of the two moons, with latitude/longitude and a drawn graticule + axis",
+        "keyboard (i / Space / Escape / arrows / r) gated on pointer-over so page keys are never hijacked",
+        "prefers-reduced-motion matchMedia (starts paused; still draggable)",
+        "IntersectionObserver + Page Visibility gate: rendering pauses off-screen or when the tab is hidden",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver + IntersectionObserver, clear the boot timer, remove all canvas / Sun-slider / window-keyboard listeners)"
+      ]
+    }
+  },
+  "jupiter-animation": {
+    "props": [
+      {
+        "name": "className",
+        "type": "string",
+        "default": "\"\"",
+        "description": "Optional class applied to the root container."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "{}",
+        "description": "Optional inline styles for the root container."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A two-pass raw-WebGL1 pipeline — no textures, no libraries. A bake fragment shader paints a 2048x1024 equirectangular surface into an FBO in 16 scissored strips (one strip per frame, so the page never stalls): a latitude colour palette (30 stops, south pole to north pole) sampled from a 1024x1 texture unit, domain-warped by two fbm stages into zones and belts, with turbulence strength driven by the Great Red Spot's longitudes; popcorn convective cells brighten the zones, diagonal festoons and dark blue-grey hot spots sit on the equatorial belt edge, a polar haze cools the poles, the swirling Great Red Spot is drawn with a white collar and a dark core, and 56 seeded ovals/dots (white ovals, brown dots and a ringed oval around the Great Belt Arc) are stamped via per-oval uniforms. A second raytraced sphere shader samples the baked map on the fly: a sparse star field, a warm horizon haze, a single sun with limb shading, a warm and a cool limb glow and a soft edge alpha. Drag in any direction to turn the planet via a tilt/yaw trackball with flick momentum, wheel or two-finger pinch zooms 0.5x-2.4x, double-click resets, and Space pauses. prefers-reduced-motion starts it paused. The render loop is gated by an IntersectionObserver and the Page Visibility API so an off-screen tile never burns the GPU.",
+      "states": {
+        "from": "Jupiter quietly spinning on a black sky, its zones/belts, festoons and the Great Red Spot visible, no drag",
+        "to": "the user dragging the planet in any direction with momentum, zooming 0.5x-2.4x with the wheel / pinch, double-clicking to snap back home, or pausing the spin with Space"
+      },
+      "cssProperties": [
+        "relative full-bleed root, width/height 100%, min-height 380px, background #020203, overflow hidden",
+        "absolute inset-0 block canvas, touch-action none, cursor grab / grabbing while dragging",
+        "absolute inset-0 centered WebGL fallback message (display flex via the .nogl root class)",
+        "requestAnimationFrame render loop"
+      ],
+      "description": "A fully procedural, endlessly rotating Jupiter rendered by a two-pass raw-WebGL1 pipeline — no textures, no libraries. A bake shader paints a 2048x1024 equirectangular surface in 16 scissored strips so the page never stalls: a latitude colour palette warped by two stages of fbm domain warp, zone/belt turbulence tied to the Great Red Spot's longitudes, popcorn convective cells in the bright zones, diagonal festoons and dark blue-grey hot spots on the equatorial belt edge, a polar haze, the swirling Great Red Spot itself, plus 56 seeded small ovals and dots (white ovals, brown dots and a ringed oval around the Great Belt Arc). A second raytraced sphere shader samples that baked map with a single sun, limb shading, a warm and a cool limb glow and a sparse star field. Drag in any direction to turn the planet, flick for momentum, wheel or two-finger pinch to zoom 0.5x-2.4x, double-click to reset and Space to pause.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "raw WebGL1 (no three.js/gsap) — two programs (a bake shader and a raytraced-sphere shader) sharing one full-screen quad",
+        "hash/vn value noise with a 4-octave fbm, a wrapped-angle helper wr() and an embedding emb() for the domain warp",
+        "a latitude colour palette (30 stops, south pole to north pole) baked into a 1024x1 texture on unit 1 and sampled by the bake shader",
+        "an FBO-backed 2048x1024 surface bake painted in 16 scissored strips (one per frame) so the page never stalls",
+        "bake-stage maths: two fbm domain-warp passes (broad meanders + fine folds), turbulence banded by the Great Red Spot longitudes, popcorn cells, festoons, hot spots, polar haze, the Great Red Spot (spiral swirls + white collar) and 56 seeded ovals/dots passed as vec4/vec2 uniform arrays",
+        "raytraced sphere sampling the baked map on unit 0: roll/tilt rotation, a single sun with limb shading, warm + cool limb glows, a warm horizon haze and a sparse star field",
+        "trackball drag (yaw + tilt, tilt clamped +/-PI/2) with a 0.94/frame flick, pointer-capture, wheel + two-finger pinch zoom clamped 0.5x-2.4x, double-click reset",
+        "sizing from the container box with a DPR cap and a 1.6e6 px budget, rebuilt on a rAF-throttled ResizeObserver (the window resize became a ResizeObserver on the root)",
+        "prefers-reduced-motion matchMedia (stops the auto-spin; still draggable)",
+        "Space toggles pause only while the pointer is over the canvas",
+        "IntersectionObserver + Page Visibility gate: rendering pauses off-screen or when the tab is hidden, and the one-time strip bake is deferred and paused until the box is visible",
+        "full teardown on unmount (cancel rAF, disconnect ResizeObserver + IntersectionObserver, remove listeners, deleteProgram/deleteShader/deleteBuffer/deleteTexture/deleteFramebuffer; never loseContext)"
+      ]
+    }
   }
 }

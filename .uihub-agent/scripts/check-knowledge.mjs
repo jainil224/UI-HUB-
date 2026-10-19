@@ -16,6 +16,17 @@
 
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+
+/**
+ * A gitignored path (e.g. `backend/service-account.json`) legitimately exists
+ * on a developer's disk but is absent from a fresh CI checkout. Docs that
+ * reference it are accurate for humans, so the validator must not flag them.
+ */
+function isGitIgnored(p) {
+  const { status } = spawnSync('git', ['check-ignore', '-q', '--', p], { stdio: 'ignore' });
+  return status === 0;
+}
 
 const KB = '.uihub-agent';
 const problems = [];
@@ -158,6 +169,7 @@ let map = null;
     for (const m of text.matchAll(CANDIDATE)) {
       const target = m[1];
       if (target.includes('*') || target.includes('<')) continue;
+      if (isGitIgnored(target)) continue;
       checked++;
       if (!existsSync(target)) {
         problem(`${KB}/${rel}: references non-existent path \`${target}\``);
@@ -192,7 +204,7 @@ if (map) {
   const walk = (node, path) => {
     if (typeof node === 'string') {
       if (PATH_EXT.test(node) && !/\s/.test(node) && TOP_LEVEL.test(node) && !node.includes('*')) {
-        if (!existsSync(node)) problem(`PROJECT_MAP.json references missing file: ${node} (at ${path})`);
+        if (!isGitIgnored(node) && !existsSync(node)) problem(`PROJECT_MAP.json references missing file: ${node} (at ${path})`);
       }
       return;
     }

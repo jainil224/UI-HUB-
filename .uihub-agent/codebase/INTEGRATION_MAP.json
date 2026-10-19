@@ -31,10 +31,10 @@
   ],
   "description": "External service surface, derived from imported package names and env vars actually read.",
   "counts": {
-    "files": 30,
+    "files": 33,
     "integrations": 6,
-    "envVarsReferenced": 55,
-    "envVarsDeclared": 55
+    "envVarsReferenced": 64,
+    "envVarsDeclared": 64
   },
   "integrations": [
     {
@@ -55,7 +55,8 @@
         "backend/src/services/mongoService.js",
         "mcp-server/src/routes/admin.ts",
         "mcp-server/src/services/apiKeyService.ts",
-        "mcp-server/src/services/mongo.ts"
+        "mcp-server/src/services/mongo.ts",
+        "mcp-server/tests/adminLogs.test.ts"
       ],
       "packageNames": [
         "mongodb"
@@ -146,6 +147,30 @@
       ]
     },
     {
+      "name": "CLOUDINARY_API_KEY",
+      "readIn": [
+        "backend/src/services/cloudinaryService.js"
+      ]
+    },
+    {
+      "name": "CLOUDINARY_API_SECRET",
+      "readIn": [
+        "backend/src/services/cloudinaryService.js"
+      ]
+    },
+    {
+      "name": "CLOUDINARY_CLOUD_NAME",
+      "readIn": [
+        "backend/src/services/cloudinaryService.js"
+      ]
+    },
+    {
+      "name": "CLOUDINARY_UPLOAD_FOLDER",
+      "readIn": [
+        "backend/src/services/cloudinaryService.js"
+      ]
+    },
+    {
       "name": "EMAIL_TEST_SECRET",
       "readIn": [
         "backend/src/routes/userRoutes.js",
@@ -229,6 +254,20 @@
       ]
     },
     {
+      "name": "MCP_ALERTS_INTERVAL_MS",
+      "readIn": [
+        "mcp-server/src/config/env.ts",
+        "mcp-server/src/services/alertScheduler.ts"
+      ]
+    },
+    {
+      "name": "MCP_ALERTS_SCHEDULER_ENABLED",
+      "readIn": [
+        "mcp-server/src/config/env.ts",
+        "mcp-server/src/services/alertScheduler.ts"
+      ]
+    },
+    {
       "name": "MCP_ALLOWED_ORIGINS",
       "readIn": [
         "mcp-server/src/config/env.ts"
@@ -236,6 +275,24 @@
     },
     {
       "name": "MCP_API_KEY_PREFIX",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_DIAGNOSTICS_RETENTION_DAYS",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_LINKCHECK_ALLOWED_HOSTS",
+      "readIn": [
+        "mcp-server/src/config/env.ts"
+      ]
+    },
+    {
+      "name": "MCP_LINKCHECK_ENABLED",
       "readIn": [
         "mcp-server/src/config/env.ts"
       ]

@@ -31,7 +31,7 @@
   ],
   "description": "Data-layer reach per file: Mongo collections, mongoose models, Prisma, raw SQL.",
   "counts": {
-    "files": 18,
+    "files": 20,
     "distinctCollections": 4,
     "models": 0,
     "prisma": 0
@@ -173,6 +173,14 @@
       "rawSql": true
     },
     {
+      "file": "mcp-server/src/services/alertService.ts",
+      "feature": "mcp",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
+    },
+    {
       "file": "mcp-server/src/services/analyticsService.ts",
       "feature": "mcp",
       "collections": [
@@ -201,6 +209,14 @@
       "models": [],
       "prisma": false,
       "rawSql": false
+    },
+    {
+      "file": "mcp-server/tests/adminLogs.test.ts",
+      "feature": "shared",
+      "collections": [],
+      "models": [],
+      "prisma": false,
+      "rawSql": true
     }
   ]
 }

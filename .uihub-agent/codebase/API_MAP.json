@@ -31,13 +31,13 @@
   ],
   "description": "Served HTTP routes derived from router call syntax (receiver is a router, verb is an HTTP method, first argument is a string literal starting with \"/\"), plus MCP tool registrations. Outbound client calls and dynamically computed route paths are listed separately so neither is mistaken for a served endpoint nor silently dropped.",
   "counts": {
-    "endpoints": 72,
+    "endpoints": 93,
     "byMethod": {
-      "DELETE": 6,
-      "GET": 35,
-      "PATCH": 3,
-      "POST": 27,
-      "PUT": 1
+      "DELETE": 9,
+      "GET": 46,
+      "PATCH": 4,
+      "POST": 32,
+      "PUT": 2
     },
     "mcpRegistrations": 14,
     "outboundClientCalls": 5,
@@ -96,11 +96,27 @@
       ]
     },
     {
+      "method": "GET",
+      "path": "/activity",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
       "method": "POST",
       "path": "/activity",
       "feature": "user-routes",
       "handlers": [
         "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/activity/:eventId",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
       ]
     },
     {
@@ -130,6 +146,54 @@
     {
       "method": "POST",
       "path": "/alerts/:key/unresolve",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/alerts/events",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/alerts/events/:id",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/alerts/events/:id/:action",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/alerts/rules",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/alerts/rules",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/alerts/rules/:ruleId",
       "feature": "mcp",
       "handlers": [
         "mcp-server/src/routes/admin.ts"
@@ -181,6 +245,22 @@
       "feature": "mcp",
       "handlers": [
         "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/avatar",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/avatar-signature",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
       ]
     },
     {
@@ -304,6 +384,38 @@
       ]
     },
     {
+      "method": "GET",
+      "path": "/diagnostics",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/diagnostics/:id",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/diagnostics/:id/generate-fix-prompt",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/diagnostics/:id/status",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
       "method": "POST",
       "path": "/email-test",
       "feature": "user-routes",
@@ -349,6 +461,14 @@
       "feature": "config-routes",
       "handlers": [
         "backend/src/routes/configRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/fix-center",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
       ]
     },
     {
@@ -403,8 +523,24 @@
       ]
     },
     {
+      "method": "DELETE",
+      "path": "/logs",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
       "method": "GET",
       "path": "/logs",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/logs/item",
       "feature": "mcp",
       "handlers": [
         "mcp-server/src/routes/admin.ts"
@@ -430,6 +566,22 @@
     {
       "method": "POST",
       "path": "/pro-email-test",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/profile",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/profile",
       "feature": "user-routes",
       "handlers": [
         "backend/src/routes/userRoutes.js"
@@ -486,6 +638,14 @@
     {
       "method": "GET",
       "path": "/search",
+      "feature": "mcp",
+      "handlers": [
+        "mcp-server/src/routes/admin.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/search-analytics",
       "feature": "mcp",
       "handlers": [
         "mcp-server/src/routes/admin.ts"
@@ -556,6 +716,14 @@
       "feature": "mcp",
       "handlers": [
         "mcp-server/src/routes/dashboard.ts"
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/username-available",
+      "feature": "user-routes",
+      "handlers": [
+        "backend/src/routes/userRoutes.js"
       ]
     },
     {
@@ -745,7 +913,7 @@
       "file": "mcp-server/src/tools/listAllComponents.ts",
       "line": 7,
       "factory": "createTool",
-      "description": "List the ENTIRE UI HUB component catalog with pagination. Premium components are hidden completely for free-tier keys and only appear for Pro/Elite/Admin keys."
+      "description": "List the ENTIRE UI HUB component catalog with pagination. Premium components are included for free-tier keys as locked results (access: \"premium-required\") — their code is never included and cannot be"
     },
     {
       "tool": "list_categories",
@@ -777,7 +945,7 @@
       "file": "mcp-server/src/tools/searchComponents.ts",
       "line": 7,
       "factory": "createTool",
-      "description": "Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Returns structured component metadata. Premium components are hidden completely for free-tier key"
+      "description": "Search UI HUB components by name, category, framework, styling, tags, keyword, or free/premium status. Natural-language queries are tokenized and ranked. Premium components are returned for free-tier "
     },
     {
       "tool": "search_templates",

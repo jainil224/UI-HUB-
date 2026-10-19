@@ -48,6 +48,15 @@ const PREMIUM_IDS = new Set([
     "mostar-cinematic-scroll",
     "antigravity-animation",
     "spider-crawler",
+    "moon-animation",
+    "saturn-animation",
+    "mercury-animation",
+    "neptune-animation",
+    "pluto-animation",
+    "venus-animation",
+    "uranus-animation",
+    "mars-animation",
+    "jupiter-animation",
     "black-hole-3d",
     "card-cascade",
     "generating-orb",
@@ -219,7 +228,16 @@ const CATEGORY_MAP = {
     "pulse-lattice": "particles-background",
     "atelier-drift": "image-interaction",
     "liquid-glass-orb": "interactive-background",
-    "comet-trail": "particles-background"
+    "comet-trail": "particles-background",
+    "moon-animation": "space",
+    "saturn-animation": "space",
+    "mercury-animation": "space",
+    "neptune-animation": "space",
+    "pluto-animation": "space",
+    "venus-animation": "space",
+    "uranus-animation": "space",
+    "mars-animation": "space",
+    "jupiter-animation": "space"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -378,6 +396,15 @@ const DEPENDENCIES_MAP = {
     'atelier-drift': ["react", "framer-motion"],
     'liquid-glass-orb': ["react", "three", "@react-three/fiber", "@react-three/drei"],
     'comet-trail': ["react", "three"],
+    'moon-animation': ["react"],
+    'saturn-animation': ["react"],
+    'mercury-animation': ["react"],
+    'neptune-animation': ["react"],
+    'pluto-animation': ["react"],
+    'venus-animation': ["react"],
+    'uranus-animation': ["react"],
+    'mars-animation': ["react"],
+    'jupiter-animation': ["react"],
 };
 function humanizeId(id) {
     return id
