@@ -12,7 +12,6 @@ import {
     buildConsentSignals,
 } from '../utils/cookieUtils';
 import { enableAnalytics, disableAnalytics } from '../lib/firebase';
-import { loadAdSense } from '../lib/adsense';
 
 declare global {
     interface Window {
@@ -129,16 +128,9 @@ export const CookieConsentProvider: React.FC<{ children: React.ReactNode }> = ({
     }, [initial]);
 
     /**
-     * Loads the AdSense script for every visitor, consented or not.
-     *
-     * Consent gates the ad *signals*, not the ad *request*. `index.html` already
-     * defaults `ad_storage`, `ad_user_data` and `ad_personalization` to denied,
-     * so a visitor who rejects or never answers gets non-personalized (limited)
-     * ads, and one who accepts gets personalized ads. Loading only after
-     * "Accept All" meant most traffic saw no ads at all.
+     * Ads removed.
      */
     useEffect(() => {
-        void loadAdSense();
     }, []);
 
     const acceptAll = useCallback(() => {
