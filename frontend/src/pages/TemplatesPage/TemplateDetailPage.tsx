@@ -16,7 +16,6 @@ import { websiteTemplates, buildWithUIHubSlugByTemplateId, TemplateItem } from '
 import TemplateSimilarRail from '../../components/templates/TemplateSimilarRail';
 import { TemplatePreviewStage } from '../../components/templates/TemplatePreviewStage';
 import Toast from '../../components/ui/Toast';
-import AdSlot from '../../components/ui/AdSlot';
 import { formatViewCount, recordTemplateView } from '../../services/templateViews';
 import { useTemplateViewCounts } from '../../hooks/useTemplateViewCounts';
 import { useSeo } from '../../components/Seo';
@@ -377,9 +376,6 @@ const TemplateDetailPage = () => {
                             )}
                         </section>
 
-                        {/* Kept outside the preview <section> above because that
-                            element becomes `fixed inset-0` in fullscreen. */}
-                        <AdSlot slot="template-detail-bottom" className="mt-8" />
                     </div>
                 </main>
             </div>

@@ -27,7 +27,6 @@ import { COMPONENT_CONFIG, PropDefinition } from '../../../../data/componentMeta
 import { COMPONENT_VARIANTS, getDefaultVariant, getComponentVariant } from '../../../../data/componentVariants';
 import Toast from '../../../../components/ui/Toast';
 import { PreviewSkeleton } from '../../../../components/ui/Skeleton';
-import AdSlot from '../../../../components/ui/AdSlot';
 import { prefetchComponentChunk } from '../../../../utils/prefetchUtils';
 import { logUserActivity } from '../../../../utils/activityLogger';
 import uiHubLogo from '../../../../Assets/webiste logo.svg';
@@ -875,8 +874,7 @@ const VibeSystemSection = React.memo(({
             </SectionParallax>
             </Reveal>
 
-            {/* Ad: natural break between the AI tool selector and the generated blueprint */}
-            <AdSlot slot="component-between-tools-prompt" minHeight={280} />
+
 
             {/* Vibe Prompt Section - AI Terminal UI */}
             <Reveal delay={0.08} scale={false}>
@@ -2021,6 +2019,7 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                     >
                         <Code size={13} className="shrink-0" />
                         <span>Code</span>
+                        {!isProUser && <Lock size={11} className="shrink-0 text-brand-yellow" />}
                     </button>
                     <button
                         onClick={() => setTab('vibe')}
@@ -2274,8 +2273,6 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         exit={{ opacity: 0, x: -20 }}
                         className="space-y-6 md:space-y-12"
                     >
-                        {/* Ad: separates the code view from the source listing */}
-                        <AdSlot slot="component-before-source" minHeight={280} />
 
                         {/* Source Code Section */}
                         <Reveal scale={false}>
@@ -2283,7 +2280,12 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                         <section>
                             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 mb-6">
                                 <h3 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">Source Code</h3>
-                                {item.isPremium && !canAccessComponent ? (
+                                {!isProUser ? (
+                                    <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-brand-yellow bg-brand-bg text-brand-yellow text-xs font-black uppercase tracking-wider">
+                                        <Lock size={13} />
+                                        <span>PRO ONLY</span>
+                                    </div>
+                                ) : item.isPremium && !canAccessComponent ? (
                                     <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg border-2 border-brand-yellow bg-brand-bg text-brand-yellow text-xs font-black uppercase tracking-wider">
                                         <Lock size={13} />
                                         <span>Premium</span>
@@ -2328,7 +2330,9 @@ const ComponentDetail = ({ item, onBack }: { item: ComponentItem; onBack: () => 
                                 </div>
                             )}
                             <div className="rounded-lg overflow-hidden border-2 border-white bg-brand-surface brutal-shadow-black">
-                                {snippetExpanded ? (
+                                {!isProUser ? (
+                                    <PremiumGate message="Source code is available for Pro members only. Upgrade to Pro to view, copy, download, and use the full component source in your projects." />
+                                ) : snippetExpanded ? (
                                     <>
                                         {item.isPremium && !canAccessComponent ? (
                                             <ProBlurGate
@@ -2420,9 +2424,6 @@ vanillaCode={vanillaCode}
 
             {/* ── Use with AI ── */}
             <UseWithAI isPremium={!!item.isPremium} componentId={item.id} />
-
-            {/* Ad: bottom of component detail, after all content */}
-            <AdSlot slot="component-bottom" minHeight={280} />
 
             <AuthRequiredModal
                 isOpen={showAuthModal}
