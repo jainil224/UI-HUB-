@@ -54,6 +54,7 @@ const RadialGlowButton = React.lazy(() => import('../components/ui/radial-glow-b
 const SpiderWeb = React.lazy(() => import('../components/ui/spider-web'));
 const SpiralImages = React.lazy(() => import('../components/ui/spiral-images'));
 const InfinityImage = React.lazy(() => import('../components/ui/infinity-image'));
+const ReelmarkCarousel = React.lazy(() => import('../components/ui/reelmark-carousel'));
 const InteractiveHoverButton = React.lazy(() => import('../components/ui/interactive-hover-button'));
 const IsometricGridBackground = React.lazy(() => import('../components/ui/isometric-grid-background').then(m => ({ default: m.IsometricGridBackground })));
 const MagicCard = React.lazy(() => import('../components/ui/magic-card').then(m => ({ default: m.MagicCard })));
@@ -2767,6 +2768,7 @@ const UI_COMPONENTS: Record<string, React.LazyExoticComponent<any>> = {
     'spider-web': SpiderWeb,
     'spiral-images': SpiralImages,
     'infinity-image': InfinityImage,
+    'reelmark-carousel': ReelmarkCarousel,
     'interactive-hover-button': InteractiveHoverButton,
     'isometric-grid-background': IsometricGridBackground,
     'magic-card-effect': MagicCard,
@@ -7150,6 +7152,29 @@ export function ImageCollageDemo() {
         ),
         code: "",
         vibePrompt: "",
+    },
+
+    {
+        id: "reelmark-carousel",
+        title: "Reelmark Carousel",
+        category: "image-interaction",
+        addedAt: "2026-10-28",
+        newBadgeDays: 120,
+        description: "A curved image carousel with draggable motion, auto-scroll, and smooth card transforms.",
+        preview: () => (
+            <div className="w-full h-full min-h-[420px] rounded-3xl overflow-hidden border border-white/10 relative">
+                <ReelmarkCarousel className="w-full h-full" images={[
+                    "https://share.google/kNie9z4tCNVVtLZju",
+                    "https://share.google/O5X3wlrqBdAMQR9m2",
+                    "https://share.google/oP62BDNUAUmtwlmJL",
+                    "https://share.google/iavMJQYpR1V03Yu2i",
+                    "https://share.google/TSdxBg7X6yNabVsqk",
+                    "https://share.google/amZUVXErmXsS9eiLP",
+                ]} />
+            </div>
+        ),
+        code: `import ReelmarkCarousel from '@/components/ui/reelmark-carousel';\n\nexport const Demo = () => (\n  <div className="w-full h-[600px] rounded-3xl overflow-hidden">\n    <ReelmarkCarousel />\n  </div>\n);`,
+        vibePrompt: "Create a curved carousel of cards that follow a parabolic curve with drag and auto-scroll. Cards have rounded corners clipped along a curved path, support video or images, and smoothly sync playback.",
     },
     {
         id: "point-dna-helix",
