@@ -115,6 +115,20 @@ ${body}
 
 function renderBody(route) {
     const aeo = route.aeo ? `\n${seo.renderAeoHtml(route.aeo, '    ')}` : '';
+
+    let itemsHeading = 'Explore';
+    if (route.type === 'category') itemsHeading = 'Components in this category';
+    else if (route.type === 'templates-index') itemsHeading = 'Website Templates';
+    else if (route.type === 'build-index') itemsHeading = 'Full Page Sections';
+    else if (route.type === 'home') itemsHeading = 'Explore UI HUB';
+
+    const items =
+        route.items && route.items.length > 0
+            ? `\n    <section aria-label="${itemsHeading}">\n      <h2>${itemsHeading}</h2>\n      <ul>${route.items
+                  .map((item) => `<li><a href="${seo.escapeHtml(item.path)}">${seo.escapeHtml(item.title)}</a></li>`)
+                  .join('')}</ul>\n    </section>`
+            : '';
+
     const related =
         route.related.length > 0
             ? `\n    <nav aria-label="Related">\n      <h2>Related</h2>\n      <ul>${route.related
@@ -122,10 +136,12 @@ function renderBody(route) {
                   .join('')}</ul>\n    </nav>`
             : '';
 
+    const footer = `\n    <footer>\n      <nav aria-label="Legal and resources">\n        <h2>Resources &amp; Policies</h2>\n        <ul>\n          <li><a href="/pricing">Pricing</a></li>\n          <li><a href="/privacy">Privacy Policy</a></li>\n          <li><a href="/terms">Terms of Service</a></li>\n          <li><a href="/payment-policy">Payment Policy</a></li>\n          <li><a href="/cookies">Cookie Settings</a></li>\n        </ul>\n      </nav>\n    </footer>`;
+
     return `    <main>
       <h1>${seo.escapeHtml(route.h1)}</h1>
-${markdownToHtml(route.intro)}${aeo}
-    </main>${related}`;
+${markdownToHtml(route.intro)}${aeo}${items}
+    </main>${related}${footer}`;
 }
 
 function renderNotFound(appTags) {

@@ -94,6 +94,7 @@ const OceanSwell = React.lazy(() => import('../components/ui/OceanSwell'));
 const FrostGlassMelt = React.lazy(() => import('../components/ui/FrostGlassMelt'));
 const StarBurst = React.lazy(() => import('../components/ui/StarBurst'));
 const VenomButton = React.lazy(() => import('../components/ui/VenomButton'));
+const SpiderButton = React.lazy(() => import('../components/ui/SpiderButton'));
 const Sky = React.lazy(() => import('../components/ui/Sky'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
@@ -15739,6 +15740,25 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         ),
         code: `import VenomButton from '@/components/ui/VenomButton';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[520px] flex items-center justify-center bg-[#F0F0F0] rounded-3xl">\n      <VenomButton label="We are Venom" />\n    </div>\n  );\n}`,
         vibePrompt: "Create a 'Venom Button' component in React + TypeScript (no animation libraries) that renders a pill <button> on a WebGL1 canvas plus a Canvas 2D overlay, both driven by one rAF loop with all live state in refs. The WebGL layer is a single fragment shader evaluating a signed-distance field: a rounded pill body merged (smooth-min) with cone capsules for every tentacle segment, plus spikes and droplets; the field is converted to a height field (z = sqrt(s * (2B - s))) to derive normals from finite differences, then shaded with a procedural environment map (fresnel rim + two specular lobes) and an offset soft shadow. Up to 7 main strands are 12-point Verlet chains rooted on the pill perimeter, tip-pinned to grip points on a drawn glove hand (or an arrow, or the OS cursor), solved with 14 distance-relaxation iterations and 2 smoothing passes, cycling idle -> seek -> grow -> hold -> snap. On release the mound recoils, spikes burst from the perimeter and droplets spray under gravity. A Canvas 2D layer draws the hand paths, thin hair strands, web threads between held strands, and a goo coating that creeps over each grip with a per-grip skin-in/skin-out envelope. When autoplay is on and the pointer is away, a Catmull-Rom ghost hand tours the button. Props: background, gooColor, textColor, font, label, size, strands, reach, cursor, autoplay, onClick, advanced (33 nested tuning keys), style. Respects prefers-reduced-motion, caps devicePixelRatio at 2, downscales the GL buffer when frames run slow, and falls back to a gradient pill when WebGL is unavailable.",
+    },
+
+    // ---- Spider Button -------------------------------------------------
+    {
+        id: "spider-button",
+        title: "Spider Button",
+        category: "button",
+        addedAt: "2026-11-01",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "A lacquered red pill button strung with spider-web strands that sense a drawn glove, lunge to grab it, splat webbing across it and snap back under gravity.",
+        preview: () => (
+            <div className="w-full h-full flex items-center justify-center overflow-hidden bg-black">
+                <SpiderButton autoplay />
+            </div>
+        ),
+        code: `import SpiderButton from '@/components/ui/SpiderButton';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[520px] flex items-center justify-center bg-black rounded-3xl">\n      <SpiderButton label="let’s collaborate" autoplay />\n    </div>\n  );\n}`,
+        vibePrompt: "Create a 'Spider Button' component in React + TypeScript (no animation libraries) that renders a pill <button> on a WebGL1 canvas plus a Canvas 2D overlay, both driven by one rAF loop with all live state in refs. The WebGL layer is a single fragment shader evaluating a signed-distance field for the rounded pill, converting it to a height field (z = sqrt(max(1e-3, s * (2B - s)))) so normals come from finite differences, then shading it as lacquered suit material: a procedural environment map (rim band, top sheen, two side reflections) scaled by fresnel, two sharp specular glints and an offset soft drop shadow that is suppressed on dark backgrounds. Up to 7 main strands are 12-point Verlet chains rooted on the pill perimeter and tip-pinned to eight grip points on a drawn glove (or an arrow, or the OS cursor), solved with 14 distance-relaxation iterations plus 2 smoothing passes, cycling idle -> seek -> grow -> hold -> snap with gravity 65 and separate damping/snapDamping. A Canvas 2D layer paints the pill's cobweb border (two inset thread rings plus four procedural cobwebs, one draped), radiating sense lines that flicker toward the pointer, the strand web with cross-links, a per-grip webbing splat that creeps over the caught hand, and the hand itself with its cuff and seam lines. When autoplay is on and the pointer is away, a Catmull-Rom ghost hand tours the stage. Props: background, suitColor, webColor, cobwebs, textColor, font, label, size, strands, reach, cursor, autoplay, onClick, advanced (28 nested tuning keys), style. Respects prefers-reduced-motion, caps devicePixelRatio at 2, and falls back to a red gradient pill when WebGL is unavailable.",
     },
 
 ];

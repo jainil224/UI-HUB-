@@ -47,6 +47,12 @@ export interface SeoRoute {
     breadcrumbs: Breadcrumb[];
     jsonLd: object[];
     related: { path: string; title: string }[];
+    /**
+     * Child page links for index/category routes. Rendered as a visible item
+     * list so Googlebot can crawl all child pages via internal links, not only
+     * via the sitemap. Absent on component/template/static routes.
+     */
+    items?: { path: string; title: string }[];
     lastmod?: string;
     priority: number;
     changefreq: 'daily' | 'weekly' | 'monthly' | 'yearly';
@@ -165,6 +171,14 @@ export function homeSeoRoute(componentCount: number, templateCount: number, cate
             path: `/components/${category.slug}`,
             title: category.label,
         })),
+        items: [
+            { path: '/templates', title: 'Website Templates' },
+            { path: '/build-with-ui-hub', title: 'Build with UI HUB' },
+            ...CATEGORY_SEO.map((category) => ({
+                path: `/components/${category.slug}`,
+                title: category.label,
+            })),
+        ],
         changefreq: 'weekly',
         priority: 1.0,
         indexable: true,
@@ -274,7 +288,15 @@ export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
 
     for (const route of STATIC_ROUTES) {
         const built = staticSeoRoute(route.path);
-        if (built) routes.push(built);
+        if (!built) continue;
+        if (built.path === '/templates') {
+            built.items = gridTemplates.map((t) => ({ path: `/templates/${t.id}`, title: t.title }));
+        }
+        if (built.path === '/build-with-ui-hub') {
+            built.items = buildWithUIHub.map((entry) => ({ path: `/build-with-ui-hub/${entry.slug}`, title: entry.title }));
+            built.intro = '**Build with UI HUB** lets you preview complete, production-ready website sections, including full hero sections, footers and marketing blocks. Browse the sections below, preview each one live, then copy the code into your own project.';
+        }
+        routes.push(built);
     }
 
     for (const category of CATEGORY_SEO) {
@@ -315,6 +337,7 @@ export function buildSeoManifest(input: SeoManifestInput): SeoRoute[] {
             related: CATEGORY_SEO.filter((other) => other.slug !== category.slug)
                 .slice(0, 6)
                 .map((other) => ({ path: `/components/${other.slug}`, title: other.label })),
+            items: collectionItems.map((item) => ({ path: item.path, title: item.name })),
             changefreq: 'weekly',
             priority: indexable ? 0.8 : 0.2,
             indexable,
