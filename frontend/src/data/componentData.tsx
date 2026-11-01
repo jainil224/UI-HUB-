@@ -93,6 +93,7 @@ const InfiniteTendrils = React.lazy(() => import('../components/ui/InfiniteTendr
 const OceanSwell = React.lazy(() => import('../components/ui/OceanSwell'));
 const FrostGlassMelt = React.lazy(() => import('../components/ui/FrostGlassMelt'));
 const StarBurst = React.lazy(() => import('../components/ui/StarBurst'));
+const VenomButton = React.lazy(() => import('../components/ui/VenomButton'));
 const Sky = React.lazy(() => import('../components/ui/Sky'));
 const IsometricPortal = React.lazy(() => import('../components/ui/IsometricPortal'));
 const MorphingGlow = React.lazy(() => import('../components/ui/MorphingGlow'));
@@ -15719,6 +15720,25 @@ Live Link: https://ai.studio/apps/e15c9ca4-119e-4483-a2a9-14b15669f991`,
         ),
         code: "",
         vibePrompt: "",
+    },
+
+    // ---- Venom Button --------------------------------------------------
+    {
+        id: "venom-button",
+        title: "Venom Button",
+        category: "button",
+        addedAt: "2026-11-01",
+        newBadgeDays: 120,
+        isPremium: false,
+        isFullBleed: true,
+        description: "A symbiote pill button whose goo tentacles lunge at a drawn hand, crawl over it as a venom coating, and snap back with spikes and droplets.",
+        preview: () => (
+            <div className="w-full h-full flex items-center justify-center overflow-hidden bg-[#F0F0F0]">
+                <VenomButton />
+            </div>
+        ),
+        code: `import VenomButton from '@/components/ui/VenomButton';\n\nexport default function Demo() {\n  return (\n    <div className="w-full h-[520px] flex items-center justify-center bg-[#F0F0F0] rounded-3xl">\n      <VenomButton label="We are Venom" />\n    </div>\n  );\n}`,
+        vibePrompt: "Create a 'Venom Button' component in React + TypeScript (no animation libraries) that renders a pill <button> on a WebGL1 canvas plus a Canvas 2D overlay, both driven by one rAF loop with all live state in refs. The WebGL layer is a single fragment shader evaluating a signed-distance field: a rounded pill body merged (smooth-min) with cone capsules for every tentacle segment, plus spikes and droplets; the field is converted to a height field (z = sqrt(s * (2B - s))) to derive normals from finite differences, then shaded with a procedural environment map (fresnel rim + two specular lobes) and an offset soft shadow. Up to 7 main strands are 12-point Verlet chains rooted on the pill perimeter, tip-pinned to grip points on a drawn glove hand (or an arrow, or the OS cursor), solved with 14 distance-relaxation iterations and 2 smoothing passes, cycling idle -> seek -> grow -> hold -> snap. On release the mound recoils, spikes burst from the perimeter and droplets spray under gravity. A Canvas 2D layer draws the hand paths, thin hair strands, web threads between held strands, and a goo coating that creeps over each grip with a per-grip skin-in/skin-out envelope. When autoplay is on and the pointer is away, a Catmull-Rom ghost hand tours the button. Props: background, gooColor, textColor, font, label, size, strands, reach, cursor, autoplay, onClick, advanced (33 nested tuning keys), style. Respects prefers-reduced-motion, caps devicePixelRatio at 2, downscales the GL buffer when frames run slow, and falls back to a gradient pill when WebGL is unavailable.",
     },
 
 ];

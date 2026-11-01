@@ -49,6 +49,7 @@ const PREFETCH_MAP: Record<string, () => Promise<any>> = {
     'background-paths': () => import('../components/ui/background-paths'),
 
     // Buttons
+    'venom-button': () => import('../components/ui/VenomButton'),
     'corner-border-button': () => import('../components/ui/corner-border-button'),
     'corner-button': () => import('../components/ui/corner-button'),
     'creepy-button': () => import('../components/ui/creepy-button'),
