@@ -4494,6 +4494,311 @@
       ]
     }
   },
+  "venom-button": {
+    "props": [
+      {
+        "name": "background",
+        "type": "string",
+        "default": "\"#F0F0F0\"",
+        "description": "Stage background behind the pill; also decides whether the goo drop-shadow is drawn."
+      },
+      {
+        "name": "gooColor",
+        "type": "string",
+        "default": "\"#020203\"",
+        "description": "Base symbiote colour for strands, spikes, droplets and the hand coating."
+      },
+      {
+        "name": "textColor",
+        "type": "string",
+        "default": "\"#FFFFFF\"",
+        "description": "Pill label colour."
+      },
+      {
+        "name": "font",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Overrides the pill's font family / size / weight / spacing."
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "default": "\"We are Venom\"",
+        "description": "Pill label text."
+      },
+      {
+        "name": "size",
+        "type": "number",
+        "default": "100",
+        "description": "Pill height in px 24-240; horizontal padding scales with it."
+      },
+      {
+        "name": "strands",
+        "type": "number",
+        "default": "7",
+        "description": "Main tentacle count 2-7; each main strand spawns one thin hair strand."
+      },
+      {
+        "name": "reach",
+        "type": "number",
+        "default": "140",
+        "description": "Distance at which grabbed strands snap back, 0-2000 px."
+      },
+      {
+        "name": "cursor",
+        "type": "\"glove\" | \"arrow\" | \"native\"",
+        "default": "\"glove\"",
+        "description": "Drawn overlay hand: symbiote glove, arrow, or the OS cursor."
+      },
+      {
+        "name": "autoplay",
+        "type": "boolean",
+        "default": "true",
+        "description": "Idle ghost hand tours the button while the pointer is away."
+      },
+      {
+        "name": "onClick",
+        "type": "() => void",
+        "default": "undefined",
+        "description": "Fired when the pill is clicked."
+      },
+      {
+        "name": "style",
+        "type": "React.CSSProperties",
+        "default": "undefined",
+        "description": "Outer stage style override; spreads last, so it can replace the intrinsic minWidth/minHeight."
+      },
+      {
+        "name": "advanced.hover",
+        "type": "number",
+        "default": "50",
+        "description": "Hover intensity multiplier applied to sense / reach / release, 0-100."
+      },
+      {
+        "name": "advanced.grain",
+        "type": "number",
+        "default": "0",
+        "description": "Film-grain overlay opacity, 0-100."
+      },
+      {
+        "name": "advanced.vignette",
+        "type": "number",
+        "default": "0",
+        "description": "Radial vignette darkness, 0-100."
+      },
+      {
+        "name": "advanced.sense",
+        "type": "number",
+        "default": "290",
+        "description": "Pointer distance at which strands start reaching, 0-2000 px."
+      },
+      {
+        "name": "advanced.release",
+        "type": "number",
+        "default": "215",
+        "description": "Pointer distance at which a grabbed strand snaps, 0-2000 px."
+      },
+      {
+        "name": "advanced.shine",
+        "type": "string",
+        "default": "\"#EDF0F7\"",
+        "description": "Specular and rim-light colour."
+      },
+      {
+        "name": "advanced.rim",
+        "type": "number",
+        "default": "100",
+        "description": "Rim-light strength, 0-300."
+      },
+      {
+        "name": "advanced.glint",
+        "type": "number",
+        "default": "100",
+        "description": "Two-lobe specular glint strength, 0-300."
+      },
+      {
+        "name": "advanced.shadow",
+        "type": "number",
+        "default": "20",
+        "description": "Goo drop-shadow strength, 0-100; skipped on dark backgrounds."
+      },
+      {
+        "name": "advanced.gloveScale",
+        "type": "number",
+        "default": "155",
+        "description": "Drawn hand scale as a percentage, 50-400."
+      },
+      {
+        "name": "advanced.pressScale",
+        "type": "number",
+        "default": "96",
+        "description": "Pill squash factor while pressed, 50-100."
+      },
+      {
+        "name": "advanced.strandWidth",
+        "type": "number",
+        "default": "100",
+        "description": "Tentacle thickness multiplier, 20-300."
+      },
+      {
+        "name": "advanced.pulse",
+        "type": "number",
+        "default": "24",
+        "description": "Thickness pulse travelling along held strands, 0-100."
+      },
+      {
+        "name": "advanced.stretchThin",
+        "type": "number",
+        "default": "50",
+        "description": "How much strands thin out as they stretch, 0-90."
+      },
+      {
+        "name": "advanced.gravity",
+        "type": "number",
+        "default": "260",
+        "description": "Downward acceleration applied to strand joints, 0-2000."
+      },
+      {
+        "name": "advanced.damping",
+        "type": "number",
+        "default": "92",
+        "description": "Verlet velocity retention while reaching, 0-99."
+      },
+      {
+        "name": "advanced.snapDamping",
+        "type": "number",
+        "default": "86",
+        "description": "Verlet velocity retention during the snap-back, 0-99."
+      },
+      {
+        "name": "advanced.sway",
+        "type": "number",
+        "default": "14",
+        "description": "Idle sine sway amplitude, 0-100."
+      },
+      {
+        "name": "advanced.dart",
+        "type": "number",
+        "default": "28",
+        "description": "Probabilistic tip darts while seeking, 0-100."
+      },
+      {
+        "name": "advanced.lungeMs",
+        "type": "number",
+        "default": "300",
+        "description": "Grab lunge duration, 50-3000 ms."
+      },
+      {
+        "name": "advanced.coil",
+        "type": "number",
+        "default": "13",
+        "description": "Pre-grab coil radius in px, 0-60."
+      },
+      {
+        "name": "advanced.coilAngle",
+        "type": "number",
+        "default": "468",
+        "description": "Coil rotation during the lunge, 0-1440 degrees."
+      },
+      {
+        "name": "advanced.mound",
+        "type": "number",
+        "default": "100",
+        "description": "Metaball mound bulge at the grab point, 0-300."
+      },
+      {
+        "name": "advanced.recoil",
+        "type": "number",
+        "default": "90",
+        "description": "Impulse applied to the mound on a violent snap, 0-400."
+      },
+      {
+        "name": "advanced.spikes",
+        "type": "number",
+        "default": "100",
+        "description": "Spike burst count and size on snap, 0-300."
+      },
+      {
+        "name": "advanced.drops",
+        "type": "number",
+        "default": "0",
+        "description": "Droplet spray probability on snap, 0-100."
+      },
+      {
+        "name": "advanced.skinInMs",
+        "type": "number",
+        "default": "2000",
+        "description": "Time for goo to crawl over a gripped hand, 100-20000 ms."
+      },
+      {
+        "name": "advanced.skinOutMs",
+        "type": "number",
+        "default": "700",
+        "description": "Time for the goo coating to retreat, 50-20000 ms."
+      },
+      {
+        "name": "advanced.lingerMs",
+        "type": "number",
+        "default": "1700",
+        "description": "How long a touch pointer stays 'inside' after lift, 0-10000 ms."
+      },
+      {
+        "name": "advanced.fingerLift",
+        "type": "number",
+        "default": "52",
+        "description": "Y offset lifting the grab point above a touch pointer, 0-200 px."
+      },
+      {
+        "name": "advanced.ghostDelayMs",
+        "type": "number",
+        "default": "2500",
+        "description": "Idle delay before the ghost hand resumes, 0-30000 ms."
+      },
+      {
+        "name": "advanced.hairs",
+        "type": "boolean",
+        "default": "true",
+        "description": "Draw the thin hair strands between main tentacles."
+      },
+      {
+        "name": "advanced.webs",
+        "type": "boolean",
+        "default": "true",
+        "description": "Draw web threads between held strands."
+      }
+    ],
+    "vibeMeta": {
+      "behavior": "A WebGL1 metaball goo button. A signed-distance field (rounded pill merged with smooth-min cone capsules for every strand segment, plus spikes and droplets) is converted to a height field (z = sqrt(s * (2B - s))) so normals come from finite differences; shading is a procedural env map with fresnel rim, two specular lobes and an offset soft shadow. Up to 7 main strands are 12-point Verlet chains rooted on the pill perimeter and tip-pinned to grip points on a drawn glove hand (or arrow, or the OS cursor), solved with 14 relaxation iterations plus 2 smoothing passes, cycling idle -> seek -> grow -> hold -> snap. On release the mound recoils, spikes burst and droplets spray. A Canvas 2D overlay draws the hand, hair strands, web threads and a goo coating that creeps over each grip.",
+      "states": {
+        "from": "idle pill with a ghost hand touring around it",
+        "to": "strands lunged out, hand skinned in symbiote, violent snap-back with spikes and droplets"
+      },
+      "cssProperties": [
+        "webgl1",
+        "signed distance field",
+        "smooth-min metaballs",
+        "verlet chains",
+        "canvas 2d overlay",
+        "radial gradient coating"
+      ],
+      "description": "A symbiote pill button whose goo tentacles lunge at a drawn hand, crawl over it as venom, and snap back with spikes and droplets.",
+      "libraries": [
+        "react"
+      ],
+      "requirements": [
+        "WebGL1 fragment shader (SDF metaballs)",
+        "Canvas 2D overlay",
+        "requestAnimationFrame loop",
+        "Verlet strand simulation with relaxation",
+        "ResizeObserver",
+        "pointer and keyboard event handling",
+        "prefers-reduced-motion support",
+        "devicePixelRatio cap of 2",
+        "adaptive GL buffer downscale on slow frames",
+        "WebGL failure fallback pill"
+      ]
+    }
+  },
   "rain-storm": {
     "props": [
       {

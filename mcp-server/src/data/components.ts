@@ -253,7 +253,8 @@ const CATEGORY_MAP: Record<string, string> = {
   "venus-animation": "space",
   "uranus-animation": "space",
   "mars-animation": "space",
-  "jupiter-animation": "space"
+  "jupiter-animation": "space",
+  "venom-button": "button"
 };
 
 // id -> common dependencies
@@ -423,6 +424,7 @@ const DEPENDENCIES_MAP: Record<string, string[]> = {
   'uranus-animation': ["react"],
   'mars-animation': ["react"],
   'jupiter-animation': ["react"],
+  'venom-button': ["react"],
 };
 
 function humanizeId(id: string): string {

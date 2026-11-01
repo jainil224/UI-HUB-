@@ -158,6 +158,7 @@ const CATEGORY_MAP = {
     "image-collage": "image-interaction",
     "image-lens": "image-interaction",
     "image-compare": "image-interaction",
+    "reelmark-carousel": "image-interaction",
     "point-dna-helix": "particles-background",
     "twin-galaxy-rings": "particles-background",
     "tornado": "particles-background",
@@ -237,7 +238,8 @@ const CATEGORY_MAP = {
     "venus-animation": "space",
     "uranus-animation": "space",
     "mars-animation": "space",
-    "jupiter-animation": "space"
+    "jupiter-animation": "space",
+    "venom-button": "button"
 };
 // id -> common dependencies
 const DEPENDENCIES_MAP = {
@@ -325,6 +327,7 @@ const DEPENDENCIES_MAP = {
     'image-collage': ["react", "framer-motion"],
     'image-lens': ["react", "framer-motion"],
     'image-compare': ["react", "framer-motion"],
+    'reelmark-carousel': ["react", "framer-motion"],
     'point-dna-helix': ["react", "three"],
     'twin-galaxy-rings': ["react", "three"],
     'tornado': ["react", "three"],
@@ -405,6 +408,7 @@ const DEPENDENCIES_MAP = {
     'uranus-animation': ["react"],
     'mars-animation': ["react"],
     'jupiter-animation': ["react"],
+    'venom-button': ["react"],
 };
 function humanizeId(id) {
     return id
